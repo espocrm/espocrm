@@ -867,57 +867,6 @@ define('views/fields/base', ['view'], function (Dep) {
                     content: tooltipText,
                     preventDestroyOnRender: true,
                 }, this);
-
-                return;
-
-                let $body = $('body');
-
-                let hidePopover = () => {
-                    $body.off('click.popover-' + this.cid);
-
-                    this.stopListening(this, 'mode-changed', hidePopover);
-
-                    $a.popover('hide');
-                };
-
-                $a.popover({
-                    placement: 'bottom',
-                    container: 'body',
-                    html: true,
-                    content: tooltipText,
-                    trigger: 'manual',
-                })
-                .on('shown.bs.popover', () => {
-                    $body.off('click.popover-' + this.cid);
-
-                    this.stopListening(this, 'mode-changed', hidePopover);
-
-                    $body.on('click.popover-' + this.cid , e => {
-                        if ($(e.target).closest('.popover-content').get(0)) {
-                            return;
-                        }
-
-                        if ($.contains($a.get(0), e.target)) {
-                            return;
-                        }
-
-                        hidePopover();
-                    });
-
-                    this.listenToOnce(this, 'mode-changed', hidePopover);
-                });
-
-                $a.on('click', function () {
-                    $(this).popover('toggle');
-                });
-            });
-
-            this.on('remove', () => {
-                if ($a) {
-                    $a.popover('destroy');
-                }
-
-                $('body').off('click.popover-' + this.cid);
             });
         },
 
