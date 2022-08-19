@@ -553,7 +553,9 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 if (message === '' && (this.seed.get('attachmentsIds') || []).length === 0) {
                     this.notify('Post cannot be empty', 'error');
                     this.$textarea.prop('disabled', false);
-                    this.enablePostButton();
+                    this.controlPostButtonAvailability();
+
+                    this.$textarea.focus();
 
                     return;
                 }
@@ -586,7 +588,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     })
                     .catch(() => {
                         this.$textarea.prop('disabled', false);
-                        this.enablePostButton();
+                        this.controlPostButtonAvailability();
                     });
             });
         },
