@@ -776,32 +776,39 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
             return new Dialog(options);
         },
 
+
+        /**
+         * @typedef {Object} Espo.Ui~PopoverOptions
+         * @property {'bottom'|'top'} placement A placement.
+         * @property {string} [container='body'] A container selector.
+         * @property {string} [content] An HTML content.
+         * @property {string} [text] A text.
+         * @property {'manual'|'click'|'hover'|'focus'} [trigger='manual'] A trigger type.
+         * @property {boolean} [noToggleInit=false] Skip init toggle on click.
+         */
+
         /**
          * Init a popover.
          *
          * @param {JQuery} $el An element.
-         * @param {{
-         *     placement: 'bottom'|'top',
-         *     container: string,
-         *     content: string,
-         *     trigger: 'manual'|'click'|'hover'|'focus',
-         *     noToggleInit: boolean,
-         * }} o Options.
+         * @param {Espo.Ui~PopoverOptions} o Options.
          * @param {module:view} [view] A view.
          */
         popover: function ($el, o, view) {
+            let $body = $('body')
+
+            let content = o.content || Handlebars.Utils.escapeExpression(o.text || '');
+
             $el.popover({
                 placement: o.placement || 'bottom',
                 container: o.container || 'body',
                 html: true,
-                content: o.content || o.text,
+                content: content,
                 trigger: o.trigger || 'manual',
             }).on('shown.bs.popover', () => {
                 if (!view) {
                     return;
                 }
-
-                let $body = $('body')
 
                 $body.off('click.popover-' + view.cid);
 
@@ -818,8 +825,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                         return;
                     }
 
-                    $('body').off('click.popover-' + view.cid);
-
+                    $body.off('click.popover-' + view.cid);
                     $el.popover('hide');
                 });
             });
@@ -833,12 +839,12 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
             if (view) {
                 view.on('remove', () => {
                     $el.popover('destroy');
-                    $('body').off('click.popover-' + view.cid);
+                    $body.off('click.popover-' + view.cid);
                 });
 
                 view.on('render', () => {
                     $el.popover('destroy');
-                    $('body').off('click.popover-' + view.cid);
+                    $body.off('click.popover-' + view.cid);
                 });
             }
         },
