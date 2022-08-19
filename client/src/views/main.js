@@ -170,6 +170,10 @@ define('views/main', ['view'], function (Dep) {
                 this.$headerActionsContainer = this.$el.find('.page-header .header-buttons');
             });
 
+            this.on('header-rendered', () => {
+                this.$headerActionsContainer = this.$el.find('.page-header .header-buttons');
+            });
+
             this.on('after:render', () => this.adjustButtons());
 
             if (this.shortcutKeys) {
@@ -399,14 +403,14 @@ define('views/main', ['view'], function (Dep) {
             this.menu[type][method](item);
 
             if (!doNotReRender && this.isRendered()) {
-                this.getView('header').reRender();
+                this.getHeaderView().reRender();
 
                 return;
             }
 
             if (!doNotReRender && this.isBeingRendered()) {
                 this.once('after:render', () => {
-                    this.getView('header').reRender();
+                    this.getHeaderView().reRender();
                 });
             }
         },
@@ -437,14 +441,14 @@ define('views/main', ['view'], function (Dep) {
             }
 
             if (!doNotReRender && this.isRendered()) {
-                this.getView('header').reRender();
+                this.getHeaderView().reRender();
 
                 return;
             }
 
             if (!doNotReRender && this.isBeingRendered()) {
                 this.once('after:render', () => {
-                    this.getView('header').reRender();
+                    this.getHeaderView().reRender();
                 });
 
                 return;
