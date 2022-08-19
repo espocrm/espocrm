@@ -791,19 +791,23 @@ define('views/fields/base', ['view'], function (Dep) {
                             return;
                         }
 
-                        var changed = false;
+                        let changed = false;
 
-                        this.getAttributeList().forEach((attribute) => {
+                        this.getAttributeList().forEach(attribute => {
                             if (model.hasChanged(attribute)) {
                                 changed = true;
                             }
                         });
 
-                        if (changed && !options.skipReRender) {
+                        if (!changed) {
+                            return;
+                        }
+
+                        if (!options.skipReRender) {
                             this.reRender();
                         }
 
-                        if (changed && options.highlight) {
+                        if (options.highlight) {
                             this.trigger('highlight');
                         }
                     }
