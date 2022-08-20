@@ -37,7 +37,7 @@ class Data
 {
     private ?string $message = null;
 
-    private ?string$token = null;
+    private ?string $token = null;
 
     private ?string $view = null;
 
