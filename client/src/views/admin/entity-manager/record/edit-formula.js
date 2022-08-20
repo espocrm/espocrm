@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/entity-manager/record/edit-formula', 'views/record/base', function (Dep) {
+define('views/admin/entity-manager/record/edit-formula', ['views/record/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,12 +34,11 @@ Espo.define('views/admin/entity-manager/record/edit-formula', 'views/record/base
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.createField('beforeSaveCustomScript', 'views/fields/formula', {
                 targetEntityType: this.options.targetEntityType,
                 height: 500
             }, 'edit');
-        }
-
+        },
     });
 });
-

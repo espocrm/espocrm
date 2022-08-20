@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/conditions-string/group-not', 'views/admin/dynamic-logic/conditions-string/group-base', function (Dep) {
+define('views/admin/dynamic-logic/conditions-string/group-not',
+['views/admin/dynamic-logic/conditions-string/group-base'], function (Dep) {
 
     return Dep.extend({
 
@@ -49,15 +50,12 @@ Espo.define('views/admin/dynamic-logic/conditions-string/group-not', 'views/admi
             this.itemData = this.options.itemData || {};
             this.viewList = [];
 
-
             var i = 0;
             var key = 'view-' + this.level.toString() + '-' + this.number.toString() + '-' + i.toString();
 
             this.createItemView(i, key, this.itemData.value);
             this.viewKey = key;
-        }
-
+        },
     });
-
 });
 

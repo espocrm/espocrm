@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/conditions-string/item-multiple-values-base', 'views/admin/dynamic-logic/conditions-string/item-base', function (Dep) {
+define('views/admin/dynamic-logic/conditions-string/item-multiple-values-base',
+['views/admin/dynamic-logic/conditions-string/item-base'], function (Dep) {
 
     return Dep.extend({
 
@@ -38,13 +39,12 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-multiple-values-ba
                 scope: this.scope,
                 operator: this.operator,
                 operatorString: this.operatorString,
-                field: this.field
+                field: this.field,
             };
         },
 
         populateValues: function () {
         },
-
 
         getValueViewKey: function (i) {
             return 'view-' + this.level.toString() + '-' + this.number.toString() + '-' + i.toString();
@@ -54,14 +54,17 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-multiple-values-ba
             var valueList = this.itemData.value || [];
 
             var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
-            var viewName = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) || this.getFieldManager().getViewName(fieldType);
+            var viewName = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) ||
+                this.getFieldManager().getViewName(fieldType);
 
             this.valueViewDataList = [];
+
             valueList.forEach(function (value, i) {
                 var model = this.model.clone();
                 model.set(this.itemData.attribute, value);
 
                 var key = this.getValueViewKey(i);
+
                 this.valueViewDataList.push({
                     key: key,
                     isEnd: i === valueList.length - 1
@@ -74,8 +77,5 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-multiple-values-ba
                 });
             }, this);
         },
-
     });
-
 });
-

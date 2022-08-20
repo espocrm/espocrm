@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/modals/add-field', ['views/modal', 'model'], function (Dep, Model) {
+define('views/admin/dynamic-logic/modals/add-field', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -60,8 +60,6 @@ Espo.define('views/admin/dynamic-logic/modals/add-field', ['views/modal', 'model
                     this.trigger('add-field', list[0]);
                 }, this);
             });
-        }
-
+        },
     });
 });
-

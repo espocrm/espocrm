@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/conditions-string/item-base', 'view', function (Dep) {
+define('views/admin/dynamic-logic/conditions-string/item-base', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -84,7 +84,8 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-base', 'view', fun
             var key = this.getValueViewKey();
 
             var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
-            var viewName = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) || this.getFieldManager().getViewName(fieldType);
+            var viewName = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) ||
+                this.getFieldManager().getViewName(fieldType);
 
             this.createView('value', viewName, {
                 model: this.model,
@@ -92,8 +93,6 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-base', 'view', fun
                 el: this.getSelector() + ' [data-view-key="'+key+'"]'
             });
         },
-
     });
-
 });
 

@@ -26,10 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'views/admin/dynamic-logic/conditions-string/item-value-varchar',
-    'views/admin/dynamic-logic/conditions-string/item-base',
-    function (Dep) {
+define('views/admin/dynamic-logic/conditions-string/item-value-varchar',
+['views/admin/dynamic-logic/conditions-string/item-base'], function (Dep) {
 
     return Dep.extend({
 
@@ -46,7 +44,5 @@ define(
                 el: this.getSelector() + '[data-view-key="'+key+'"]',
             });
         },
-
     });
 });
-
