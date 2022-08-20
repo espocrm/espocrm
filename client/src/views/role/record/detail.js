@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/role/record/detail', 'views/record/detail', function (Dep) {
+define('views/role/record/detail', ['views/record/detail'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,6 +42,7 @@ Espo.define('views/role/record/detail', 'views/record/detail', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.createView('extra', this.tableView, {
                 el: this.options.el + ' .extra',
                 model: this.model

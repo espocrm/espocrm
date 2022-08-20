@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/record/list', 'views/record/list', function (Dep) {
+define('views/user/record/list', ['views/record/list'], function (Dep) {
 
     return Dep.extend({
 
@@ -47,9 +47,11 @@ Espo.define('views/user/record/list', 'views/record/list', function (Dep) {
 
                 this.layoutName = 'listApi';
             }
+
             if (this.scope === 'PortalUser') {
                 this.layoutName = 'listPortal';
             }
+
             if (!this.getUser().isAdmin()) {
                 this.removeMassAction('massUpdate');
                 this.removeMassAction('export');
@@ -62,9 +64,8 @@ Espo.define('views/user/record/list', 'views/record/list', function (Dep) {
             if (model.isPortal()) {
                 return 'PortalUser';
             }
+
             return this.scope;
-        }
+        },
     });
-
 });
-

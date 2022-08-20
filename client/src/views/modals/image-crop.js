@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/modals/image-crop', ['views/modal', 'lib!Cropper'], function (Dep, Cropper) {
+define('views/modals/image-crop', ['views/modal', 'lib!Cropper'], function (Dep, Cropper) {
 
     return Dep.extend({
 
@@ -48,24 +48,26 @@ Espo.define('views/modals/image-crop', ['views/modal', 'lib!Cropper'], function 
                 {
                     name: 'crop',
                     label: 'Submit',
-                    style: 'primary'
+                    style: 'primary',
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel'
-                }
+                    label: 'Cancel',
+                },
             ];
 
-            this.on('remove', function () {
+            this.on('remove', () => {
                 if (this.$img.length) {
                     this.$img.cropper('destroy');
                     this.$img.parent().empty();
                 }
-            }, this);
+            });
         },
 
         afterRender: function () {
-            var $img = this.$img = $('<img>').attr('src', this.options.contents).addClass('hidden');
+            var $img = this.$img = $('<img>')
+                .attr('src', this.options.contents)
+                .addClass('hidden');
 
             this.$el.find('.image-container').append($img);
 
@@ -77,15 +79,12 @@ Espo.define('views/modals/image-crop', ['views/modal', 'lib!Cropper'], function 
                     rotatable: false,
                 });
             }, 50);
-
         },
 
         actionCrop: function () {
             var dataUrl = this.$img.cropper('getDataURL', 'image/jpeg');
             this.trigger('crop', dataUrl);
             this.close();
-        }
-
+        },
     });
 });
-

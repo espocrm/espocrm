@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/role/record/edit', 'views/record/edit', function (Dep) {
+define('views/role/record/edit', ['views/record/edit'], function (Dep) {
 
     return Dep.extend({
 
@@ -49,20 +49,25 @@ Espo.define('views/role/record/edit', 'views/record/edit', function (Dep) {
 
             for (var i in scopeList) {
                 var scope = scopeList[i];
-                if (this.$el.find('select[name="' + scope + '"]').val() == 'not-set') {
+
+                if (this.$el.find('select[name="' + scope + '"]').val() === 'not-set') {
                     continue;
                 }
-                if (this.$el.find('select[name="' + scope + '"]').val() == 'disabled') {
+
+                if (this.$el.find('select[name="' + scope + '"]').val() === 'disabled') {
                     data['data'][scope] = false;
                 } else {
                     var o = true;
-                    if (aclTypeMap[scope] != 'boolean') {
+
+                    if (aclTypeMap[scope] !== 'boolean') {
                         o = {};
+
                         for (var j in actionList) {
                             var action = actionList[j];
                             o[action] = this.$el.find('select[name="' + scope + '-' + action + '"]').val();
                         }
                     }
+
                     data['data'][scope] = o;
                 }
             }
@@ -97,16 +102,13 @@ Espo.define('views/role/record/edit', 'views/record/edit', function (Dep) {
             this.createView('extra', this.tableView, {
                 mode: 'edit',
                 el: this.options.el + ' .extra',
-                model: this.model
-            }, function (view) {
-                this.listenTo(view, 'change', function () {
+                model: this.model,
+            }, (view) => {
+                this.listenTo(view, 'change', () => {
                     var data = this.fetch();
                     this.model.set(data);
-                }, this);
-            }, this);
-        }
-
+                });
+            });
+        },
     });
 });
-
-

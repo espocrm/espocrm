@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/global-search/name-field', 'views/fields/base', function (Dep) {
+define('views/global-search/name-field', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -39,7 +39,6 @@ Espo.define('views/global-search/name-field', 'views/fields/base', function (Dep
                 id: this.model.id,
                 iconHtml: this.getHelper().getScopeColorIconHtml(this.model.get('_scope'))
             };
-        }
-
+        },
     });
 });
