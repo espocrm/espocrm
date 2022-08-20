@@ -435,7 +435,6 @@ function (Dep, MassActionHelper, ExportHelper) {
              * @this module:views/record/list.Class
              */
             'click a.link': function (e) {
-                console.log(e);
                 if (e.ctrlKey || e.metaKey || e.shiftKey) {
                     return;
                 }
