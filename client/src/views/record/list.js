@@ -422,6 +422,11 @@ function (Dep, MassActionHelper, ExportHelper) {
         noDataDisabled: false,
 
         /**
+         * @private
+         */
+        _lastChecked: null,
+
+        /**
          * @inheritDoc
          */
         events: {
@@ -537,15 +542,25 @@ function (Dep, MassActionHelper, ExportHelper) {
              * @this module:views/record/list.Class
              */
             'click .record-checkbox': function (e) {
-                let $target = $(e.currentTarget);
+                const $target = $(e.currentTarget);
 
-                let id = $target.attr('data-id');
+                if (e.shiftKey && this._lastChecked) {
+                    const $checkboxes = this.$el.find('input.record-checkbox');
+                    const start = $checkboxes.index($target);
+                    const end = $checkboxes.index(this._lastChecked);
+                    const checked = this._lastChecked.prop('checked');
 
-                if (e.currentTarget.checked) {
-                    this.checkRecord(id, $target);
+                    $checkboxes.slice(Math.min(start, end), Math.max(start, end) + 1).each((i, el) => {
+                        const $el = $(el);
+
+                        $el.prop('checked', checked);
+                        this.checkboxClick($el, checked);
+                    });
                 } else {
-                    this.uncheckRecord(id, $target);
+                    this.checkboxClick($target, $target.is(':checked'));
                 }
+
+                this._lastChecked = $target;
             },
             /**
              * @param {JQueryKeyEventObject} e
@@ -591,6 +606,23 @@ function (Dep, MassActionHelper, ExportHelper) {
             'click a.reset-custom-order': function () {
                 this.resetCustomOrder();
             },
+        },
+
+        /**
+         * 
+         * @param {JQuery} $checkbox 
+         * @param {boolean} checked 
+         * 
+         * @private
+         */
+        checkboxClick: function ($checkbox, checked) {
+            const id = $checkbox.attr('data-id');
+
+            if (checked) {
+                this.checkRecord(id, $checkbox);
+            } else {
+                this.uncheckRecord(id, $checkbox);
+            }
         },
 
         resetCustomOrder: function () {
