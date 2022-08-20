@@ -27,7 +27,7 @@
  ************************************************************************/
 
 define('views/scheduled-job/fields/scheduling',
-    ['views/fields/varchar', 'lib!cronstrue'], function (Dep, cronstrue) {
+['views/fields/varchar', 'lib!cronstrue'], function (Dep, cronstrue) {
 
     return Dep.extend({
 
@@ -52,12 +52,15 @@ define('views/scheduled-job/fields/scheduling',
         },
 
         showText: function () {
-            if (!this.$text || !this.$text.length) return;
+            if (!this.$text || !this.$text.length) {
+                return;
+            }
 
             var exp = this.model.get(this.name);
 
             if (!exp) {
                 this.$text.text('');
+
                 return;
             }
 
@@ -91,6 +94,5 @@ define('views/scheduled-job/fields/scheduling',
 
             this.$text.text(text);
         },
-
     });
 });

@@ -26,17 +26,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email/record/row-actions/dashlet', 'views/record/row-actions/default', function (Dep) {
+define('views/email/record/row-actions/dashlet', ['views/record/row-actions/default'], function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.listenTo(this.model, 'change:isImportant', function () {
-                setTimeout(function () {
+
+            this.listenTo(this.model, 'change:isImportant', () => {
+                setTimeout(() => {
                     this.reRender();
-                }.bind(this), 10);
-            }, this);
+                }, 10);
+            });
         },
 
         getActionList: function () {
@@ -47,6 +48,7 @@ Espo.define('views/email/record/row-actions/dashlet', 'views/record/row-actions/
                     id: this.model.id
                 }
             }];
+
             if (this.options.acl.edit) {
                 list = list.concat([
                     {
@@ -58,6 +60,7 @@ Espo.define('views/email/record/row-actions/dashlet', 'views/record/row-actions/
                     }
                 ]);
             }
+
             if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
                 if (!this.model.get('inTrash')) {
                     list.push({
@@ -77,6 +80,7 @@ Espo.define('views/email/record/row-actions/dashlet', 'views/record/row-actions/
                     });
                 }
             }
+
             if (this.getAcl().checkModel(this.model, 'delete')) {
                 list.push({
                     action: 'quickRemove',
@@ -86,6 +90,7 @@ Espo.define('views/email/record/row-actions/dashlet', 'views/record/row-actions/
                     }
                 });
             }
+
             if (this.model.get('isUsers')) {
                 if (!this.model.get('isImportant')) {
                     list.push({
@@ -105,11 +110,8 @@ Espo.define('views/email/record/row-actions/dashlet', 'views/record/row-actions/
                     });
                 }
             }
+
             return list;
-        }
-
+        },
     });
-
 });
-
-

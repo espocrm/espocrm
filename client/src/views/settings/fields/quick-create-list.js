@@ -25,22 +25,28 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/settings/fields/quick-create-list', 'views/fields/array', function (Dep) {
+
+define('views/settings/fields/quick-create-list', ['views/fields/array'], function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
 
-            this.params.options =  Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
-                if (this.getMetadata().get('scopes.' + scope + '.disabled')) return;
-                return this.getMetadata().get('scopes.' + scope + '.entity') && this.getMetadata().get('scopes.' + scope + '.object');
-            }, this).sort(function (v1, v2) {
-                return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
-            }.bind(this));
+            this.params.options =  Object.keys(this.getMetadata().get('scopes'))
+                .filter(scope => {
+                    if (this.getMetadata().get('scopes.' + scope + '.disabled')) {
+                        return;
+                    }
+
+                    return this.getMetadata().get('scopes.' + scope + '.entity') &&
+                        this.getMetadata().get('scopes.' + scope + '.object');
+                })
+                .sort((v1, v2) => {
+                    return this.translate(v1, 'scopeNamesPlural')
+                        .localeCompare(this.translate(v2, 'scopeNamesPlural'));
+                });
 
             Dep.prototype.setup.call(this);
-        }
-
+        },
     });
-
 });

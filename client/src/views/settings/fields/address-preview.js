@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/settings/fields/address-preview', 'views/fields/address', function (Dep) {
+
+define('views/settings/fields/address-preview', ['views/fields/address'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,6 +35,7 @@ Espo.define('views/settings/fields/address-preview', 'views/fields/address', fun
 
             var mainModel = this.model;
             var model = mainModel.clone();
+
             model.name = mainModel.name;
 
             model.set({
@@ -41,13 +43,14 @@ Espo.define('views/settings/fields/address-preview', 'views/fields/address', fun
                 addressPreviewPostalCode: 'PostalCode',
                 addressPreviewCity: 'City',
                 addressPreviewState: 'State',
-                addressPreviewCountry: 'Country'
+                addressPreviewCountry: 'Country',
             });
 
-            this.listenTo(mainModel, 'change:addressFormat', function () {
+            this.listenTo(mainModel, 'change:addressFormat', () => {
                 model.set('addressFormat', mainModel.get('addressFormat'));
+
                 this.reRender();
-            }, this);
+            });
 
             this.model = model;
         },
@@ -55,7 +58,5 @@ Espo.define('views/settings/fields/address-preview', 'views/fields/address', fun
         getAddressFormat: function () {
             return this.model.get('addressFormat') || 1;
         },
-
     });
-
 });

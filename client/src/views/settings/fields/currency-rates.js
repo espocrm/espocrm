@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/settings/fields/currency-rates', 'views/fields/base', function (Dep) {
+
+define('views/settings/fields/currency-rates', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -36,23 +37,26 @@ Espo.define('views/settings/fields/currency-rates', 'views/fields/base', functio
             var currencyRates = this.model.get('currencyRates') || {};
 
             var rateValues = {};
-            (this.model.get('currencyList') || []).forEach(function (currency) {
-                if (currency != baseCurrency) {
+
+            (this.model.get('currencyList') || []).forEach(currency => {
+                if (currency !== baseCurrency) {
                     rateValues[currency] = currencyRates[currency];
+
                     if (!rateValues[currency]) {
                         if (currencyRates[baseCurrency]) {
                             rateValues[currency] = Math.round(1 / currencyRates[baseCurrency] * 1000) / 1000;
                         }
+
                         if (!rateValues[currency]) {
                             rateValues[currency] = 1.00
                         }
                     }
                 }
-            }, this);
+            });
 
             return {
                 rateValues: rateValues,
-                baseCurrency: baseCurrency
+                baseCurrency: baseCurrency,
             };
         },
 
@@ -67,13 +71,15 @@ Espo.define('views/settings/fields/currency-rates', 'views/fields/base', functio
 
             var currencyList = this.model.get('currencyList') || [];
 
-            currencyList.forEach(function (currency) {
-                if (currency != baseCurrency) {
-                    currencyRates[currency] = parseFloat(this.$el.find('input[data-currency="'+currency+'"]').val() || 1);
+            currencyList.forEach(currency => {
+                if (currency !== baseCurrency) {
+                    currencyRates[currency] = parseFloat(
+                        this.$el.find('input[data-currency="'+currency+'"]').val() || 1);
                 }
-            }, this);
+            });
 
             delete currencyRates[baseCurrency];
+
             for (var c in currencyRates) {
                 if (!~currencyList.indexOf(c)) {
                     delete currencyRates[c];
@@ -83,8 +89,6 @@ Espo.define('views/settings/fields/currency-rates', 'views/fields/base', functio
             data[this.name] = currencyRates;
 
             return data;
-        }
-
+        },
     });
-
 });

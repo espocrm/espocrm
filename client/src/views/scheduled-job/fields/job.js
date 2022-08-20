@@ -25,43 +25,49 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/scheduled-job/fields/job', 'views/fields/enum', function (Dep) {
+
+define('views/scheduled-job/fields/job', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            if (this.mode == 'edit' || this.mode == 'detail') {
+            if (this.isEditMode() || this.isDetailMode()) {
                 this.wait(true);
-                $.ajax({
-                    url: 'Admin/jobs',
-                    success: function (data) {
-                        this.params.options = data.filter(function (item) {
+
+                Espo.Ajax
+                    .getRequest('Admin/jobs')
+                    .then(data => {
+                        this.params.options = data.filter(item => {
                             return !this.getMetadata().get(['entityDefs', 'ScheduledJob', 'jobs', item, 'isSystem']);
-                        }, this);
+                        });
+
                         this.params.options.unshift('');
+
                         this.wait(false);
-                    }.bind(this)
-                });
+                    });
             }
 
             if (this.model.isNew()) {
-                this.on('change', function () {
+                this.on('change', () => {
                     var job = this.model.get('job');
+
                     if (job) {
                         var label = this.getLanguage().translateOption(job, 'job', 'ScheduledJob');
-                        var scheduling = this.getMetadata().get('entityDefs.ScheduledJob.jobSchedulingMap.' + job) || '*/10 * * * *';
+                        var scheduling = this.getMetadata().get('entityDefs.ScheduledJob.jobSchedulingMap.' + job) ||
+                            '*/10 * * * *';
+
                         this.model.set('name', label);
                         this.model.set('scheduling', scheduling);
-                    } else {
-                        this.model.set('name', '');
-                        this.model.set('scheduling', '');
+
+                        return;
                     }
-                }, this);
+
+                    this.model.set('name', '');
+                    this.model.set('scheduling', '');
+                });
             }
-        }
-
+        },
     });
-
 });

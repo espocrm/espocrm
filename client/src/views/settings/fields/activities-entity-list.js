@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/settings/fields/activities-entity-list', 'views/fields/entity-type-list', function (Dep) {
+
+define('views/settings/fields/activities-entity-list', ['views/fields/entity-type-list'], function (Dep) {
 
     return Dep.extend({
 
@@ -33,14 +34,14 @@ Espo.define('views/settings/fields/activities-entity-list', 'views/fields/entity
 
             Dep.prototype.setupOptions.call(this);
 
-            this.params.options = this.params.options.filter(function (scope) {
+            this.params.options = this.params.options.filter(scope => {
                 if (scope === 'Email') return;
                 if (this.getMetadata().get('scopes.' + scope + '.disabled')) return;
                 if (!this.getMetadata().get('scopes.' + scope + '.object')) return;
                 if (!this.getMetadata().get('scopes.' + scope + '.activity')) return;
-                return true;
-            }, this)
-        },
 
+                return true;
+            });
+        },
     });
 });

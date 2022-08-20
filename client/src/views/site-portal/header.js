@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/site-portal/header', 'views/site/header', function (Dep) {
+define('views/site-portal/header', ['views/site/header'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,7 +37,4 @@ Espo.define('views/site-portal/header', 'views/site/header', function (Dep) {
         customViewPath: ['clientDefs', 'App', 'portalNavbarView'],
 
     });
-
 });
-
-

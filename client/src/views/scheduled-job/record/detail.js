@@ -26,13 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/scheduled-job/record/detail', 'views/record/detail', function (Dep) {
+define('views/scheduled-job/record/detail', ['views/record/detail'], function (Dep) {
 
     return Dep.extend({
 
-    	duplicateAction: false
-
+        duplicateAction: false,
     });
-
 });
-

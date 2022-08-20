@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/settings/fields/stream-email-notifications-entity-list', 'views/fields/entity-type-list', function (Dep) {
+define('views/settings/fields/stream-email-notifications-entity-list',
+['views/fields/entity-type-list'], function (Dep) {
 
     return Dep.extend({
 
@@ -38,9 +39,9 @@ Espo.define('views/settings/fields/stream-email-notifications-entity-list', 'vie
                 if (this.getMetadata().get('scopes.' + scope + '.disabled')) return;
                 if (!this.getMetadata().get('scopes.' + scope + '.object')) return;
                 if (!this.getMetadata().get('scopes.' + scope + '.stream')) return;
+
                 return true;
             }, this)
         },
-
     });
 });
