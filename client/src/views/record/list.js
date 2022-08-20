@@ -512,13 +512,7 @@ function (Dep, MassActionHelper, ExportHelper) {
             'click .record-checkbox': function (e) {
                 const $target = $(e.currentTarget);
 
-                if (!this._lastChecked) {
-                    this._lastChecked = $target;
-
-                    return;
-                }
-
-                if (e.shiftKey) {
+                if (e.shiftKey && this._lastChecked) {
                     const $checkboxes = this.$el.find('input.record-checkbox');
                     const start = $checkboxes.index($target);
                     const end = $checkboxes.index(this._lastChecked);
