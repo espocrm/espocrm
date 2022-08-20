@@ -83,7 +83,7 @@ class UserAclManagerProvider
         $aclManager = $this->aclManager;
 
         if ($user->isPortal() && !$this->applicationState->isPortal()) {
-            /** @var ?\Espo\Entities\Portal */
+            /** @var ?\Espo\Entities\Portal $portal */
             $portal = $this->entityManager
                 ->getRDBRepository(User::ENTITY_TYPE)
                 ->getRelation($user, 'portals')

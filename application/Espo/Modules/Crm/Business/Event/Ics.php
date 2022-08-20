@@ -87,21 +87,21 @@ class Ics
     private function generate(): void
     {
         $this->output =
-            "BEGIN:VCALENDAR\n".
-            "VERSION:2.0\n".
-            "PRODID:-" . $this->prodid . "\n".
-            "METHOD:REQUEST\n".
-            "BEGIN:VEVENT\n".
-            "DTSTART:" . $this->formatTimestamp($this->startDate) . "\n".
-            "DTEND:" . $this->formatTimestamp($this->endDate) . "\n".
-            "SUMMARY:" . $this->escapeString($this->summary) . "\n".
-            "LOCATION:" . $this->escapeString($this->address) . "\n".
-            "ORGANIZER;CN=" . $this->escapeString($this->who) . ":MAILTO:" . $this->escapeString($this->email) . "\n".
-            "DESCRIPTION:" . $this->escapeString($this->formatMultiline($this->description)) . "\n".
-            "UID:" . $this->uid . "\n".
-            "SEQUENCE:0\n".
-            "DTSTAMP:" . $this->formatTimestamp(time())."\n".
-            "END:VEVENT\n".
+            "BEGIN:VCALENDAR\r\n".
+            "VERSION:2.0\r\n".
+            "PRODID:-" . $this->prodid . "\r\n".
+            "METHOD:REQUEST\r\n".
+            "BEGIN:VEVENT\r\n".
+            "DTSTART:" . $this->formatTimestamp($this->startDate) . "\r\n".
+            "DTEND:" . $this->formatTimestamp($this->endDate) . "\r\n".
+            "SUMMARY:" . $this->escapeString($this->summary) . "\r\n".
+            "LOCATION:" . $this->escapeString($this->address) . "\r\n".
+            "ORGANIZER;CN=" . $this->escapeString($this->who) . ":MAILTO:" . $this->escapeString($this->email) . "\r\n".
+            "DESCRIPTION:" . $this->escapeString($this->formatMultiline($this->description)) . "\r\n".
+            "UID:" . $this->uid . "\r\n".
+            "SEQUENCE:0\r\n".
+            "DTSTAMP:" . $this->formatTimestamp(time())."\r\n".
+            "END:VEVENT\r\n".
             "END:VCALENDAR";
     }
 
@@ -130,6 +130,6 @@ class Ics
             return '';
         }
 
-        return str_replace(["\r\n", "\n"], "\\n", $string);
+        return str_replace(["\r\n", "\n"], "\\r\\n", $string);
     }
 }

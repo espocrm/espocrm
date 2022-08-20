@@ -259,7 +259,7 @@ class NamespaceLoader
             $this->vendorNamespaces = [];
 
             if ($useCache && $this->dataCache->has($this->cacheKey)) {
-                /** @var ?array<string,mixed>*/
+                /** @var ?array<string,mixed> $cachedData */
                 $cachedData = $this->dataCache->get($this->cacheKey);
 
                 $this->vendorNamespaces = $cachedData;

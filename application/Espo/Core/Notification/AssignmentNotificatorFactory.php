@@ -74,7 +74,7 @@ class AssignmentNotificatorFactory
      */
     private function getClassName(string $entityType): string
     {
-        /** @var ?class-string<AssignmentNotificator> */
+        /** @var ?class-string<AssignmentNotificator> $className1 */
         $className1 = $this->metadata->get(['notificationDefs', $entityType, 'assignmentNotificatorClassName']);
 
         if ($className1) {
@@ -82,7 +82,7 @@ class AssignmentNotificatorFactory
         }
 
         /* For backward compatibility. */
-        /** @var ?class-string<AssignmentNotificator> */
+        /** @var ?class-string<AssignmentNotificator> $className2 */
         $className2 = $this->classFinder->find('Notificators', $entityType);
 
         if ($className2) {

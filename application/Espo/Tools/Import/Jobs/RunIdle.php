@@ -68,7 +68,7 @@ class RunIdle implements Job
 
         $params = ImportParams::fromRaw($raw->params);
 
-        /** @var ?User */
+        /** @var ?User $user */
         $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {

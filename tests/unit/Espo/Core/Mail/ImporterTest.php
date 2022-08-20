@@ -34,6 +34,8 @@ use Espo\Entities\Email;
 
 use Espo\Core\Notification\AssignmentNotificator;
 
+use Espo\ORM\Value\ValueAccessor;
+use Espo\ORM\Value\ValueAccessorFactory;
 use Espo\Core\{
     Mail\Importer,
     Mail\Importer\Data as ImporterData,
@@ -55,8 +57,6 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
 {
     function setUp(): void
     {
-        //$GLOBALS['log'] = $this->createMock(Log::class);
-
         $entityManager = $this->entityManager = $this->createMock(EntityManager::class);
 
         $this->config = $this->createMock(Config::class);
@@ -115,13 +115,21 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
              ['Lead', $emptyRepository],
         ];
 
+        $valueAccessor = $this->createMock(ValueAccessor::class);
+        $valueAccessorFactory = $this->createMock(ValueAccessorFactory::class);
+
+        $valueAccessorFactory
+            ->expects($this->any())
+            ->method('create')
+            ->willReturn(
+                $valueAccessor
+            );
+
         $emailDefs = require('tests/unit/testData/Core/Mail/email_defs.php');
-
-        $this->email = new Email('Email', $emailDefs, $entityManager);
-
         $attachmentDefs = require('tests/unit/testData/Core/Mail/attachment_defs.php');
 
-        $attachment = new Attachment('Attachment', $attachmentDefs, $entityManager);
+        $this->email = new Email('Email', $emailDefs, $entityManager, $valueAccessorFactory);
+        $attachment = new Attachment('Attachment', $attachmentDefs, $entityManager, $valueAccessorFactory);
 
         $this->attachment = $attachment;
 

@@ -21,7 +21,8 @@
                     {{#each fieldList}}
                         <li>
                             <a
-                                href="javascript:"
+                                role="button"
+                                tabindex="0"
                                 data-action="addField"
                                 data-name="{{./this}}"
                             >{{translate this scope=../scope category='fields'}}</a></li>

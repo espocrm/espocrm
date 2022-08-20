@@ -5,12 +5,27 @@
     "body": "Conteúdo",
     "subject": "Assunto",
     "attachments": "Anexos",
-    "insertField": "Inserir Campo"
+    "category": "Categorias",
+    "insertField": "Espaços Reservados"
   },
   "labels": {
-    "Create EmailTemplate": "Criar Template de E-mail"
+    "Create EmailTemplate": "Criar Template de E-mail",
+    "Available placeholders": "Espaços reservados disponíveis"
+  },
+  "tooltips": {
+    "oneOff": "Verifique se você vai usar este template apenas uma vez. Ex: para e-mail em massa."
   },
   "presetFilters": {
     "actual": "Atual"
+  },
+  "placeholderTexts": {
+    "optOutLink": "link de cancelamento de inscrição",
+    "today": "Data de hoje",
+    "now": "Data e hora atuais",
+    "currentYear": "Ano Atual",
+    "optOutUrl": "URL para um link de cancelamento de assinatura"
+  },
+  "messages": {
+    "infoText": "Marcadores de posição disponíveis:\n\n{optOutUrl} &#8211; URL para um link de cancelamento de assinatura;\n\n{optOutLink} &#8211; um link de cancelamento de inscrição."
   }
 }

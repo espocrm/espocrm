@@ -87,7 +87,7 @@ class LinkMultipleFactory implements ValueFactory
             $this->loadLinkMultipleField($entity, $field);
         }
 
-        /** @var string[] */
+        /** @var string[] $idList */
         $idList = $entity->getLinkMultipleIdList($field);
 
         $nameMap = $entity->get($field . 'Names') ?? (object) [];

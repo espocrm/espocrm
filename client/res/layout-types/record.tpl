@@ -68,7 +68,11 @@
                             spanClass = 'col-sm-12';
                         }
                     %>
-                    <div class="cell <%= spanClass %> form-group<% if (cell.field) { %>{{#if hiddenFields.<%= cell.field %>}} hidden-cell{{/if}}<% } %>" data-name="<%= cell.field %>">
+                    <div
+                        class="cell <%= spanClass %> form-group<% if (cell.field) { %>{{#if hiddenFields.<%= cell.field %>}} hidden-cell{{/if}}<% } %>"
+                        data-name="<%= cell.field %>"
+                        tabindex="-1"
+                    >
                         <% if (!cell.noLabel) { %><label class="control-label<% if (cell.field) { %>{{#if hiddenFields.<%= cell.field %>}} hidden{{/if}}<% } %>" data-name="<%= cell.field %>"><span class="label-text"><%
                             if ('customLabel' in cell) {
                                 print (cell.customLabel);
@@ -171,7 +175,7 @@
 if (hasHiddenPanel) {
 %>
 <div class="panel panel-default panels-show-more-delimiter" data-name="showMoreDelimiter" data-tab="0">
-    <a href="javascript:" data-action="showMoreDetailPanels" title="{{translate 'Show more'}}">
+    <a role="button" tabindex="0" data-action="showMoreDetailPanels" title="{{translate 'Show more'}}">
         <span class="fas fa-ellipsis-h fa-lg"></span>
     </a>
 </div>

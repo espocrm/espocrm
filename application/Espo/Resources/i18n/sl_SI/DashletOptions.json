@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "title": "Naslov",
+    "dateFrom": "Datum, od",
+    "dateTo": "Datum do",
+    "autorefreshInterval": "Interval samodejnega osveževanja",
+    "displayRecords": "Prikaži zapise",
+    "isDoubleHeight": "Višina 2x",
+    "mode": "Način",
+    "enabledScopeList": "Kaj prikazati",
+    "users": "Uporabniki",
+    "entityType": "Vrsta entitete",
+    "primaryFilter": "Primarni filter",
+    "boolFilterList": "Dodatni filtri",
+    "sortBy": "Naročilo (polje)",
+    "sortDirection": "Naročilo (smer)",
+    "expandedLayout": "Postavitev",
+    "dateFilter": "Datumski filter",
+    "skipOwn": "Ne pokaži lastnih zapisov"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Teden (dnevni red)",
+      "basicWeek": "teden",
+      "month": "mesec",
+      "basicDay": "dan",
+      "agendaDay": "Dan (dnevni red)",
+      "timeline": "Časovnica"
+    }
+  },
+  "messages": {
+    "selectEntityType": "Izberite Vrsta subjekta v možnostih dashleta."
+  },
+  "tooltips": {
+    "skipOwn": "Dejanja vašega uporabniškega računa ne bodo prikazana."
+  }
+}

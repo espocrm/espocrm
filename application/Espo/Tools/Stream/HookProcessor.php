@@ -379,7 +379,7 @@ class HookProcessor
         $assignedUserId = $entity->get('assignedUserId');
         $createdById = $entity->get('createdById');
 
-        /** @var string[] */
+        /** @var string[] $assignedUserIdList */
         $assignedUserIdList = $hasAssignedUsersField ? $entity->getLinkMultipleIdList('assignedUsers') : [];
 
         if (
@@ -472,7 +472,7 @@ class HookProcessor
             return;
         }
 
-        /** @var string[] */
+        /** @var string[] $assignedUserIdList */
         $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
         $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds') ?? [];
 
@@ -552,7 +552,7 @@ class HookProcessor
         if (is_null($this->statusFields)) {
             $this->statusFields = [];
 
-            /** @var array<string,array<string,mixed>> */
+            /** @var array<string,array<string,mixed>> $scopes */
             $scopes = $this->metadata->get('scopes', []);
 
             foreach ($scopes as $scope => $data) {

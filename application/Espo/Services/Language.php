@@ -122,7 +122,7 @@ class Language
             unset($data['Campaign']['presetFilters']);
         }
         else {
-            /** @var string[] */
+            /** @var string[] $scopeList */
             $scopeList = array_keys($this->metadata->get(['scopes'], []));
 
             foreach ($scopeList as $scope) {

@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "name": "Ime",
+    "parent": "starš",
+    "status": "Stanje",
+    "dateStart": "Začetek datuma",
+    "dateEnd": "Datum zapadlosti",
+    "dateStartDate": "Datum začetka (ves dan)",
+    "dateEndDate": "Konec datuma (ves dan)",
+    "priority": "Prioriteta",
+    "description": "Opis",
+    "isOverdue": "Je zamujen",
+    "account": "račun",
+    "dateCompleted": "Datum dokončanja",
+    "attachments": "priloge",
+    "reminders": "Opomniki",
+    "contact": "Kontakt"
+  },
+  "links": {
+    "attachments": "priloge",
+    "account": "račun",
+    "contact": "Kontakt",
+    "email": "E-naslov"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Ni se začelo",
+      "Started": "Začelo",
+      "Completed": "Dokončano",
+      "Canceled": "Prekinjeno",
+      "Deferred": "Odloženo"
+    },
+    "priority": {
+      "Low": "Nizka",
+      "Normal": "normalno",
+      "High": "visoko",
+      "Urgent": "Nujno"
+    }
+  },
+  "labels": {
+    "Create Task": "Ustvari nalogo",
+    "Complete": "Popolna",
+    "overdue": "zapadel"
+  },
+  "presetFilters": {
+    "actual": "Dejansko",
+    "completed": "Dokončano",
+    "todays": "Današnji",
+    "overdue": "Zamujen rok",
+    "deferred": "Odloženo"
+  },
+  "nameOptions": {
+    "replyToEmail": "Odgovor na e-pošto"
+  }
+}

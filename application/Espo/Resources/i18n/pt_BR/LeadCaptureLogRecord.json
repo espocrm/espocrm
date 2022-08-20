@@ -1,1 +1,13 @@
-{}
+{
+  "fields": {
+    "number": "Número",
+    "target": "Alvo",
+    "leadCapture": "Captura de Lead",
+    "createdAt": "Inserido Em",
+    "isCreated": "É Lead Criado"
+  },
+  "links": {
+    "leadCapture": "Captura de Lead",
+    "target": "Alvo"
+  }
+}

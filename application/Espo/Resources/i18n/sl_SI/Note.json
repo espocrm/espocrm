@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "post": "Objavi",
+    "attachments": "priloge",
+    "targetType": "Tarča",
+    "teams": "Ekipe",
+    "users": "Uporabniki",
+    "portals": "Portali",
+    "type": "Vrsta",
+    "isGlobal": "Je globalno",
+    "isInternal": "Je interno (za interne uporabnike)",
+    "related": "Povezano",
+    "createdByGender": "Ustvarjeno glede na spol",
+    "data": "podatki",
+    "number": "številka"
+  },
+  "filters": {
+    "all": "Vse",
+    "posts": "Objave",
+    "updates": "Posodobitve"
+  },
+  "messages": {
+    "writeMessage": "Tukaj napišite svoje sporočilo"
+  },
+  "options": {
+    "targetType": {
+      "self": "sebi",
+      "users": "določenemu uporabniku(-om)",
+      "teams": "določeni ekipi",
+      "all": "vsem internim uporabnikom",
+      "portals": "uporabnikom portala"
+    },
+    "type": {
+      "Post": "Objavi"
+    }
+  },
+  "links": {
+    "superParent": "Super starš",
+    "related": "Povezano"
+  }
+}

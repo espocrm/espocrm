@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/replied', 'views/fields/link', function (Dep) {
+define('views/email/fields/replied', ['views/fields/link'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,11 +37,10 @@ define('views/email/fields/replied', 'views/fields/link', function (Dep) {
                 var $a = this.$el.find('a');
                 if ($a.get(0)) {
                     $(
-                        '<span class="fa fa-arrow-left fa-sm link-field-icon text-soft"></span>'
+                        '<span class="fas fa-arrow-left fa-sm link-field-icon text-soft"></span>'
                     ).insertBefore($a);
                 }
             }
         },
-
     });
 });

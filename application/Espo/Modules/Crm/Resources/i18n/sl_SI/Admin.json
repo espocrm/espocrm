@@ -1,0 +1,10 @@
+{
+  "layouts": {
+    "listForAccount": "Seznam (za račun)",
+    "listForContact": "Seznam (za stik)"
+  },
+  "templates": {
+    "invitation": "Vabilo",
+    "reminder": "Opomnik"
+  }
+}

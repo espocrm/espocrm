@@ -39,7 +39,7 @@ define('crm:views/meeting/modals/detail', ['views/modals/detail'], function (Dep
 
             this.addButton({
                 name: 'setAcceptanceStatus',
-                html: buttonData.html,
+                text: buttonData.text,
                 hidden: this.hasAcceptanceStatusButton(),
                 style: buttonData.style,
                 className: 'btn-text',
@@ -51,20 +51,20 @@ define('crm:views/meeting/modals/detail', ['views/modals/detail'], function (Dep
             ) {
                 this.addDropdownItem({
                     name: 'setHeld',
-                    html: this.translate('Set Held', 'labels', this.model.entityType),
+                    text: this.translate('Set Held', 'labels', this.model.entityType),
                     hidden: true,
                 });
 
                 this.addDropdownItem({
                     name: 'setNotHeld',
-                    html: this.translate('Set Not Held', 'labels', this.model.entityType),
+                    text: this.translate('Set Not Held', 'labels', this.model.entityType),
                     hidden: true,
                 });
             }
 
             this.addDropdownItem({
                 name: 'sendInvitations',
-                html: this.translate('Send Invitations', 'labels', 'Meeting'),
+                text: this.translate('Send Invitations', 'labels', 'Meeting'),
                 hidden: !this.isSendInvitationsToBeDisplayed(),
             });
 
@@ -147,24 +147,24 @@ define('crm:views/meeting/modals/detail', ['views/modals/detail'], function (Dep
         },
 
         getAcceptanceButtonData: function () {
-            var acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
+            let acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
 
-            var html;
-            var style = 'default';
+            let text;
+            let style = 'default';
 
             if (acceptanceStatus && acceptanceStatus !== 'None') {
-                html = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
+                text = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
+
                 style = this.getMetadata()
-                    .get(
-                        ['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'style', acceptanceStatus]
-                    );
+                    .get(['entityDefs', this.model.entityType,
+                        'fields', 'acceptanceStatus', 'style', acceptanceStatus]);
             } else {
-                html = this.translate('Acceptance', 'labels', 'Meeting');
+                text = this.translate('Acceptance', 'labels', 'Meeting');
             }
 
             return {
                 style: style,
-                html: html
+                text: text,
             };
         },
 
@@ -177,11 +177,11 @@ define('crm:views/meeting/modals/detail', ['views/modals/detail'], function (Dep
                 return;
             }
 
-            var data = this.getAcceptanceButtonData();
+            let data = this.getAcceptanceButtonData();
 
-            var $button = this.$el.find('.modal-footer [data-name="setAcceptanceStatus"]');
+            let $button = this.$el.find('.modal-footer [data-name="setAcceptanceStatus"]');
 
-            $button.html(data.html);
+            $button.text(data.text);
 
             $button.removeClass('btn-default');
             $button.removeClass('btn-success');

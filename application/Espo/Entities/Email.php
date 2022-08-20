@@ -203,7 +203,7 @@ class Email extends Entity
             return $this->getFromContainer('bodyPlain');
         }
 
-        /** @var string */
+        /** @var string $body */
         $body = $this->get('body') ?? '';
 
         $breaks = ["<br />", "<br>", "<br/>", "<br />", "&lt;br /&gt;", "&lt;br/&gt;", "&lt;br&gt;"];
@@ -238,7 +238,7 @@ class Email extends Entity
         ];
 
         foreach ($reList as $i => $re) {
-            /** @var string */
+            /** @var string $body */
             $body = mb_ereg_replace($re, $replaceList[$i], $body, 'i');
         }
 
@@ -311,7 +311,7 @@ class Email extends Entity
                 throw new RuntimeException();
             }
 
-            /** @var Attachment|null */
+            /** @var Attachment|null $attachment */
             $attachment = $this->entityManager->getEntity('Attachment', $id);
 
             if ($attachment) {

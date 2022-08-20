@@ -35,8 +35,7 @@ define('model-factory', [], function () {
      * @name Class
      * @memberOf module:model-factory
      */
-    let ModelFactory = function (loader, metadata, user) {
-        this.loader = loader;
+    let ModelFactory = function (metadata, user) {
         this.metadata = metadata;
         this.user = user;
 
@@ -44,11 +43,6 @@ define('model-factory', [], function () {
     };
 
     _.extend(ModelFactory.prototype, /** @lends module:model-factory.Class# */ {
-
-        /**
-         * @private
-         */
-        loader: null,
 
         /**
          * @private

@@ -56,7 +56,7 @@ class UniqueId extends \Espo\Core\ORM\Entity
 
     public function getCreatedAt(): DateTime
     {
-        /** @var ?DateTime */
+        /** @var ?DateTime $value */
         $value = $this->getValueObject('createdAt');
 
         if (!$value) {

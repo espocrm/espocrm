@@ -36,13 +36,7 @@ define('views/address-map/view', ['views/main'], function (Dep) {
         `,
 
         setup: function () {
-            var field = this.options.field;
-
             this.scope = this.model.entityType;
-
-            this.headerHtml = this.getHelper().sanitizeHtml(
-                this.translate(field, 'fields', this.model.entityType)
-            );
 
             this.createView('header', 'views/header', {
                 model: this.model,

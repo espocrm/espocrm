@@ -7,7 +7,11 @@
 </div>
 {{#if isCut}}
 <div class="see-more-container hidden">
-    <a href="javascript:" data-action="seeMoreText">{{translate 'See more'}}</a>
+    <a
+        role="button"
+        tabindex="0"
+        data-action="seeMoreText"
+    ><span class="fas fa-sm fa-chevron-down"></span> <span class="text">{{translate 'See more'}}</span></a>
 </div>
 {{/if}}
 {{else}}

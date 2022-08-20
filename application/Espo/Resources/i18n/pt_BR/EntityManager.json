@@ -15,14 +15,37 @@
     "entityForeign": "Entidade Estrangeira",
     "linkForeign": "Link Estrangeiro",
     "labelForeign": "Rótulo Estrangeiro",
-    "disabled": "Desabilitado"
+    "sortBy": "Ordem Padrão (campo)",
+    "sortDirection": "Ordem Padrão (direção)",
+    "relationName": "Nome Tabela Intermediária",
+    "disabled": "Desabilitado",
+    "textFilterFields": "Campos de Filtro de Texto",
+    "audited": "Auditado",
+    "statusField": "Campo de Status",
+    "beforeSaveCustomScript": "Script Personalizado Antes de Salvar",
+    "color": "Cor",
+    "kanbanViewMode": "Visualização Kanban",
+    "kanbanStatusIgnoreList": "Grupos ignorados na visualização Kanban",
+    "iconClass": "Ícone",
+    "fullTextSearch": "Pesquisa de Texto Completa",
+    "countDisabled": "Desabilitar contagem de registros",
+    "parentEntityTypeList": "Tipos de Entidade Pai",
+    "foreignLinkEntityTypeList": "Chaves estrangeiras",
+    "entity": "Entidade",
+    "optimisticConcurrencyControl": "Controle de concorrência otimista"
   },
   "options": {
     "type": {
       "": "Nenhum",
       "Person": "Pessoa",
+      "CategoryTree": "Árvore de Categoria",
       "Event": "Evento",
       "Company": "Empresa"
+    },
+    "linkType": {
+      "manyToMany": "Muitos-para-Muitos",
+      "oneToMany": "Um-para-Muitos",
+      "manyToOne": "Muitos-para-Um"
     },
     "sortDirection": {
       "asc": "Ascendente",
@@ -31,6 +54,20 @@
   },
   "messages": {
     "entityCreated": "A entidade foi criada",
-    "linkAlreadyExists": "Conflito: o link já existe."
+    "linkAlreadyExists": "Conflito: o link já existe.",
+    "linkConflict": "Conflito de nome: link ou campo com o mesmo nome já existe.",
+    "confirmRemove": "Tem certeza de que deseja remover o tipo de entidade do sistema?"
+  },
+  "tooltips": {
+    "statusField": "As atualizações deste campo são registradas no stream.",
+    "textFilterFields": "Campos usados pela pesquisa de texto.",
+    "stream": "Se a entidade tem um Stream.",
+    "disabled": "Verifique se você não precisa dessa entidade em seu sistema.",
+    "linkAudited": "Criar registro relacionado e vincular com registro existente será registrado no Stream.",
+    "linkMultipleField": "O campo Link Múltiplo fornece uma maneira prática de editar relações. Não use se você tiver um grande número de registros relacionados.",
+    "entityType": "Base Plus - possui painéis de Atividades, Histórico e Tarefas.\n\nEvento - disponível nos painéis de Calendário e Atividades",
+    "fullTextSearch": "A reconstrução em execução é necessária.",
+    "countDisabled": "O número total não será exibido na list view. Pode diminuir o tempo de carregamento quando a tabela no DB é grande.",
+    "optimisticConcurrencyControl": "Evita conflitos de escrita."
   }
 }

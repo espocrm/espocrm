@@ -10,7 +10,8 @@
     "users": "Usuários",
     "contacts": "Contatos",
     "reminders": "Lembretes",
-    "account": "Conta"
+    "account": "Conta",
+    "acceptanceStatus": "Status de Aceitação"
   },
   "options": {
     "status": {
@@ -29,9 +30,13 @@
       "Tentative": "Tentativa"
     }
   },
+  "massActions": {
+    "setHeld": "Marcar para Realizar",
+    "setNotHeld": "Marcar Não Realizado"
+  },
   "labels": {
     "Create Call": "Criar Ligação",
-    "Set Held": "Marcar como realizada",
+    "Set Held": "Marcar como Realizada",
     "Set Not Held": "Marcar como não realizada",
     "Send Invitations": "Enviar Convites"
   },

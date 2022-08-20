@@ -39,7 +39,7 @@ class UserData extends Database
 {
     public function getByUserId(string $userId): ?UserDataEntity
     {
-        /** @var ?UserDataEntity */
+        /** @var ?UserDataEntity $userData */
         $userData = $this
             ->where(['userId' => $userId])
             ->findOne();

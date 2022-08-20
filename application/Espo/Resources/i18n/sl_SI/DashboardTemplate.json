@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "layout": "Postavitev",
+    "append": "Pripni (ne odstrani uporabniških zavihkov)"
+  },
+  "labels": {
+    "Create DashboardTemplate": "Ustvari predlogo",
+    "Deploy to Users": "Razmesti uporabnikom",
+    "Deploy to Team": "Razmesti v ekipo"
+  }
+}

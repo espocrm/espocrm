@@ -42,28 +42,72 @@ define('views/modals/compose-email', ['views/modals/edit'], function (Dep) {
 
         wasModified: false,
 
+        shortcutKeys: {
+            'Control+Enter': function (e) {
+                if (this.buttonList.findIndex(item => item.name === 'send' && !item.hidden) === -1) {
+                    return;
+                }
+
+                e.stopPropagation();
+                e.preventDefault();
+
+                this.actionSend();
+
+            },
+            'Control+KeyS': function (e) {
+                if (this.buttonList.findIndex(item => item.name === 'saveDraft' && !item.hidden) === -1) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.actionSaveDraft();
+            },
+            'Escape': function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                let focusedFieldView = this.getRecordView().getFocusedFieldView();
+
+                if (focusedFieldView) {
+                    this.model.set(focusedFieldView.fetch());
+                }
+
+                if (this.getRecordView().isChanged) {
+                    this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
+                        .then(() => this.actionClose());
+
+                    return;
+                }
+
+                this.actionClose();
+            },
+        },
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
             this.buttonList.unshift({
                 name: 'saveDraft',
                 text: this.translate('Save Draft', 'labels', 'Email'),
+                title: 'Ctrl+S',
             });
 
             this.buttonList.unshift({
                 name: 'send',
                 text: this.translate('Send', 'labels', 'Email'),
                 style: 'primary',
+                title: 'Ctrl+Enter',
             });
 
             this.$header = $('<a>')
-                .attr('href', 'javascript:')
+                .attr('role', 'button')
+                .attr('tabindex', '0')
                 .attr('data-action', 'fullFormDraft')
                 .text(this.getLanguage().translate('Compose Email'));
 
             this.events['click a[data-action="fullFormDraft"]'] = () => this.actionFullFormDraft();
-
-            this.headerHtml = this.getLanguage().translate('Compose Email');
 
             if (
                 this.getConfig().get('emailForceUseExternalClient') ||
@@ -77,10 +121,8 @@ define('views/modals/compose-email', ['views/modals/edit'], function (Dep) {
 
                     var emailHelper = new EmailHelper();
 
-                    var link = emailHelper
+                    document.location.href = emailHelper
                         .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
-
-                    document.location.href = link;
                 });
 
                 this.once('after:render', () => {
@@ -115,6 +157,7 @@ define('views/modals/compose-email', ['views/modals/edit'], function (Dep) {
                 removeAttachmentsOnSelectTemplate: this.options.removeAttachmentsOnSelectTemplate,
                 signatureDisabled: this.options.signatureDisabled,
                 appendSignature: this.options.appendSignature,
+                focusForCreate: this.options.focusForCreate,
                 exit: () => {},
             };
 
@@ -236,6 +279,8 @@ define('views/modals/compose-email', ['views/modals/edit'], function (Dep) {
             this.actionSaveDraft()
                 .then(() => {
                     this.getRouter().navigate('#Email/edit/' + this.model.id, {trigger: true});
+
+                    this.close();
                 })
                 .catch(reason => {
                     if (reason === 'notModified') {

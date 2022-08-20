@@ -3,7 +3,8 @@
     "name": "Nome",
     "version": "Versão",
     "description": "Descrição",
-    "isInstalled": "Instalada"
+    "isInstalled": "Instalada",
+    "checkVersionUrl": "Uma URL para verificar novas versões"
   },
   "labels": {
     "Uninstall": "Desinstalar",

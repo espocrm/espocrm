@@ -1,0 +1,56 @@
+{
+  "fields": {
+    "name": "Ime",
+    "emailAddress": "E-naslov",
+    "accountRole": "Naslov",
+    "account": "račun",
+    "accounts": "Računi",
+    "phoneNumber": "Telefon",
+    "accountType": "Vrsta računa",
+    "doNotCall": "Ne kliči",
+    "address": "Naslov",
+    "opportunityRole": "Priložnostna vloga",
+    "description": "Opis",
+    "campaign": "Kampanja",
+    "targetLists": "Seznami ciljev",
+    "targetList": "Ciljni seznam",
+    "portalUser": "Uporabnik portala",
+    "originalLead": "Originalni svinec",
+    "acceptanceStatus": "Status sprejema",
+    "accountIsInactive": "Račun neaktiven",
+    "acceptanceStatusMeetings": "Status sprejema (sestanki)",
+    "acceptanceStatusCalls": "Stanje sprejema (klici)",
+    "title": "Naslov računa",
+    "hasPortalUser": "Ima uporabnika portala"
+  },
+  "links": {
+    "opportunities": "Priložnosti",
+    "cases": "Primeri",
+    "targetLists": "Seznami ciljev",
+    "campaignLogRecords": "Dnevnik akcije",
+    "campaign": "Kampanja",
+    "account": "Račun (primarni)",
+    "accounts": "Računi",
+    "casesPrimary": "Primeri (primarni)",
+    "portalUser": "Uporabnik portala",
+    "originalLead": "Originalni svinec",
+    "documents": "Dokumenti",
+    "tasksPrimary": "Naloge (razširjeno)",
+    "opportunitiesPrimary": "Priložnosti (primarno)"
+  },
+  "labels": {
+    "Create Contact": "Ustvari stik"
+  },
+  "options": {
+    "opportunityRole": {
+      "Decision Maker": "Odločevalec",
+      "Evaluator": "Ocenjevalec",
+      "Influencer": "vplivnež"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "Uporabniki portala",
+    "notPortalUsers": "Ne uporabniki portala",
+    "accountActive": "Aktiven"
+  }
+}

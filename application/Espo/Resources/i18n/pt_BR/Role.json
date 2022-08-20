@@ -5,18 +5,31 @@
     "assignmentPermission": "Atribuição de Permissões",
     "userPermission": "Permissão de Usuário",
     "portalPermission": "Permissão de Portal",
-    "exportPermission": "Exportar Permissão"
+    "groupEmailAccountPermission": "Permissão da Conta de Email do Grupo",
+    "exportPermission": "Exportar Permissão",
+    "dataPrivacyPermission": "Permissão de Privacidade de Dados",
+    "massUpdatePermission": "Permissão de Atualização em Massa",
+    "followerManagementPermission": "Permissão de Gerenciamento de Seguidores"
   },
   "links": {
     "users": "Usuários",
     "teams": "Times"
   },
   "tooltips": {
-    "assignmentPermission": "Premite restringir a habilidade para usuários atribuírem registros para outros usuários.\n\ntudo - nenhuma restrição\n\ntime - pode atribuir para usuários do seu time\n\nenhum - pode atribuir apenas para si mesmo"
+    "assignmentPermission": "Permite restringir a habilidade para usuários atribuírem registros para outros usuários.\n\ntudo - nenhuma restrição\n\ntime - pode atribuir para usuários do seu time\n\nnenhum - pode atribuir apenas para si mesmo",
+    "userPermission": "Permite restringir a habilidade para usuários visualizarem atividades, calendários e fluxos de outros usuários.\n\ntudo - nenhuma restrição\n\ntime - pode ver atividades dos colegas de time apenas\n\nnenhum - não pode visualizar",
+    "portalPermission": "Define um acesso às informações do portal, capacidade de postar mensagens para usuários do portal.",
+    "groupEmailAccountPermission": "Define um acesso às contas de e-mail do grupo, uma capacidade de enviar e-mails do grupo SMTP.",
+    "dataPrivacyPermission": "Permite visualizar e apagar dados pessoais.",
+    "exportPermission": "Define se os usuários têm a capacidade de exportar registros.",
+    "massUpdatePermission": "Define se os usuários têm a capacidade de fazer atualização em massa de registros.",
+    "followerManagementPermission": "Permite gerenciar seguidores de registros específicos."
   },
   "labels": {
     "Access": "Acesso",
-    "Create Role": "Criar Regra"
+    "Create Role": "Criar Regra",
+    "Scope Level": "Nível do Escopo",
+    "Field Level": "Nível do Campo"
   },
   "options": {
     "accessList": {
@@ -31,13 +44,15 @@
       "contact": "contato",
       "own": "próprio",
       "no": "nenhum",
-      "yes": "sim"
+      "yes": "sim",
+      "not-set": "indefinido"
     }
   },
   "actions": {
     "read": "Ler",
     "edit": "Editar",
     "delete": "Excluir",
+    "stream": "Fluxo",
     "create": "Criar"
   },
   "messages": {

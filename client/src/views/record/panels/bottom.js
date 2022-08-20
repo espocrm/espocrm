@@ -116,8 +116,8 @@ define('views/record/panels/bottom', ['view'], function (Dep) {
             this.readOnly = this.readOnly || this.options.readOnly;
             this.inlineEditDisabled = this.inlineEditDisabled || this.options.inlineEditDisabled;
 
-            this.buttonList = _.clone(this.defs.buttonList || this.buttonList || []);
-            this.actionList = _.clone(this.defs.actionList || this.actionList || []);
+            this.buttonList = Espo.Utils.cloneDeep(this.defs.buttonList || this.buttonList || []);
+            this.actionList = Espo.Utils.cloneDeep(this.defs.actionList || this.actionList || []);
 
             this.fieldList = this.options.fieldList || this.fieldList || [];
 

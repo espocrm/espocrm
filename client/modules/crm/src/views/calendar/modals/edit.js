@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep) {
+define('crm:views/calendar/modals/edit', ['views/modals/edit'], function (Dep) {
 
     return Dep.extend({
 
@@ -215,7 +215,7 @@ define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep) {
             Dep.prototype.setup.call(this);
 
             if (!this.id) {
-                this.headerHtml = this.translate('Create', 'labels', 'Calendar');
+                this.headerText = this.translate('Create', 'labels', 'Calendar');
             }
 
             if (this.id) {
@@ -224,6 +224,10 @@ define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep) {
                     text: this.translate('Remove')
                 });
             }
+
+            this.once('after:save', () => {
+                this.$el.find('.scope-switcher').remove();
+            })
         },
 
         actionRemove: function () {

@@ -12,35 +12,61 @@
     "Result": "Resultado",
     "Show records": "Exibir Registros",
     "Remove Duplicates": "Remover Duplicados",
+    "importedCount": "Importados (Quant.)",
+    "duplicateCount": "Duplicados (Quant.)",
+    "updatedCount": "Atualizados (Quant.)",
     "Create Only": "Criar Apenas",
     "Create and Update": "Criar & Atualizar",
     "Update Only": "Somente Atualizar",
     "Update by": "Atualizado por",
     "Set as Not Duplicate": "Marcar como não duplicado",
     "File (CSV)": "Arquivo (CSV)",
+    "First Row Value": "Valor Primeira Linha",
     "Skip": "Pular",
+    "Header Row Value": "Valor Linha do Cabeçalho",
     "Field": "Campo",
     "What to Import?": "O que Importar?",
     "Entity Type": "Tipo de Entidade",
     "What to do?": "O que fazer?",
     "Properties": "Propriedades",
+    "Header Row": "Linha do Cabeçalho",
+    "Person Name Format": "Formato Nome da Pessoa",
     "John Smith": "João Silva",
     "Smith John": "Silva João",
     "Smith, John": "Silva, João",
     "Field Delimiter": "Delimitar Campo",
     "Date Format": "Formato da Data",
+    "Decimal Mark": "Ponto Decimal",
+    "Text Qualifier": "Qualificador de Texto",
     "Time Format": "Formato de data",
     "Currency": "Moeda",
     "Preview": "Anterior",
     "Next": "Próximo",
     "Step 1": "Passo 1",
     "Step 2": "Passo 2",
+    "Double Quote": "Aspas Duplas",
+    "Single Quote": "Aspas Simples",
     "Imported": "Importado",
-    "Duplicates": "Duplicados"
+    "Duplicates": "Duplicados",
+    "Skip searching for duplicates": "Pular a busca por duplicatas",
+    "Timezone": "Fuso Horário",
+    "Remove Import Log": "Remover Log de Importação",
+    "New Import": "Nova Importação",
+    "Import Results": "Resultados da Importação",
+    "Silent Mode": "Modo silencioso",
+    "New import with same params": "Nova importação com os mesmos parâmetros",
+    "Run Manually": "Executar Manualmente"
   },
   "messages": {
     "utf8": "Deve estar codificado com UTF-8",
-    "duplicatesRemoved": "Duplicados removidos"
+    "duplicatesRemoved": "Duplicados removidos",
+    "inIdle": "Executar em modo inativo (para big data; via cron)",
+    "revert": "Isso removerá todos os registros importados permanentemente.",
+    "removeDuplicates": "Isso removerá permanentemente todos os registros importados que foram reconhecidos como duplicados.",
+    "confirmRevert": "Isso removerá todos os registros importados permanentemente. Tem certeza?",
+    "confirmRemoveDuplicates": "Isso removerá permanentemente todos os registros importados que foram reconhecidos como duplicados. Tem certeza?",
+    "removeImportLog": "Isso removerá o log de importação. Todos os registros importados serão mantidos. Use-o se tiver certeza de que a importação está correta.",
+    "confirmRemoveImportLog": "Isso removerá o log de importação. Todos os registros importados serão mantidos. Você não poderá reverter os resultados da importação. Tem certeza?"
   },
   "fields": {
     "file": "Arquivo",
@@ -48,5 +74,29 @@
     "imported": "Registros Importados",
     "duplicates": "Registros Duplicados",
     "updated": "Registros Atualizados"
+  },
+  "options": {
+    "status": {
+      "Failed": "Falhou",
+      "In Process": "Em Processo",
+      "Complete": "Completo",
+      "Standby": "Em Espera",
+      "Pending": "Pendente"
+    },
+    "personNameFormat": {
+      "f l": "Primeiro Último",
+      "l f": "Último Primeiro",
+      "f m l": "Primeiro Meio Último",
+      "l f m": "Último Primeiro Meio",
+      "l, f": "Último, Primeiro"
+    }
+  },
+  "strings": {
+    "commandToRun": "Comando para executar (da CLI)",
+    "saveAsDefault": "Salvar como padrão"
+  },
+  "tooltips": {
+    "manualMode": "Se marcado, você precisará executar a importação manualmente da CLI. O comando será mostrado após configurar a importação.",
+    "silentMode": "A maioria dos scripts pós-salvamento será ignorada, as notas de transmissão não serão criadas. A importação será executada mais rapidamente."
   }
 }

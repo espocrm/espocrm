@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "layoutList": "Postavitve"
+  },
+  "labels": {
+    "Create LayoutSet": "Ustvari nabor postavitev",
+    "Edit Layouts": "Uredi postavitve"
+  }
+}

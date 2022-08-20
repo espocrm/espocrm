@@ -50,4 +50,6 @@ class FailReason
     public const HASH_NOT_MATCHED = 'Hash not matched';
 
     public const METHOD_NOT_ALLOWED = 'Not allowed authentication method';
+
+    public const DISCREPANT_DATA = 'Discrepant authentication data';
 }

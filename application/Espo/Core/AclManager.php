@@ -618,7 +618,7 @@ class AclManager
         }
 
         if ($permission === Table::LEVEL_TEAM) {
-            /** @var string[] */
+            /** @var string[] $teamIdList */
             $teamIdList = $user->getLinkMultipleIdList('teams');
 
             /** @var \Espo\Repositories\User $userRepository */

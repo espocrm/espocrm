@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/calendar/calendar-page', 'view', function (Dep) {
+define('crm:views/calendar/calendar-page', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,7 +34,14 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
 
         el: '#main',
 
-        fullCalendarModeList: ['month', 'agendaWeek', 'agendaDay', 'basicWeek', 'basicDay', 'listWeek'],
+        fullCalendarModeList: [
+            'month',
+            'agendaWeek',
+            'agendaDay',
+            'basicWeek',
+            'basicDay',
+            'listWeek',
+        ],
 
         events: {
             'click [data-action="createCustomView"]': function () {
@@ -45,6 +52,66 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
             }
         },
 
+        /**
+         * A shortcut-key => action map.
+         *
+         * @protected
+         * @type {?Object.<string,function (JQueryKeyEventObject): void>}
+         */
+        shortcutKeys: {
+            'Home': function (e) {
+                this.handleShortcutKeyHome(e);
+            },
+            'Numpad7': function (e) {
+                this.handleShortcutKeyHome(e);
+            },
+            'Numpad4': function (e) {
+                this.handleShortcutKeyArrowLeft(e);
+            },
+            'Numpad6': function (e) {
+                this.handleShortcutKeyArrowRight(e);
+            },
+            'ArrowLeft': function (e) {
+                this.handleShortcutKeyArrowLeft(e);
+            },
+            'ArrowRight': function (e) {
+                this.handleShortcutKeyArrowRight(e);
+            },
+            'Minus': function (e) {
+                this.handleShortcutKeyMinus(e);
+            },
+            'Equal': function (e) {
+                this.handleShortcutKeyPlus(e);
+            },
+            'NumpadSubtract': function (e) {
+                this.handleShortcutKeyMinus(e);
+            },
+            'NumpadAdd': function (e) {
+                this.handleShortcutKeyPlus(e);
+            },
+            'Digit1': function (e) {
+                this.handleShortcutKeyDigit(e, 1);
+            },
+            'Digit2': function (e) {
+                this.handleShortcutKeyDigit(e, 2);
+            },
+            'Digit3': function (e) {
+                this.handleShortcutKeyDigit(e, 3);
+            },
+            'Digit4': function (e) {
+                this.handleShortcutKeyDigit(e, 4);
+            },
+            'Digit5': function (e) {
+                this.handleShortcutKeyDigit(e, 5);
+            },
+            'Digit6': function (e) {
+                this.handleShortcutKeyDigit(e, 6);
+            },
+            'Control+Space': function (e) {
+                this.handleShortcutKeyControlSpace(e);
+            },
+        },
+
         setup: function () {
             this.mode = this.mode || this.options.mode || null;
             this.date = this.date || this.options.date || null;
@@ -53,9 +120,9 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
                 this.mode = this.getStorage().get('state', 'calendarMode') || null;
 
                 if (this.mode && this.mode.indexOf('view-') === 0) {
-                    var viewId = this.mode.substr(5);
-                    var calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
-                    var isFound = false;
+                    let viewId = this.mode.substr(5);
+                    let calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
+                    let isFound = false;
 
                     calendarViewDataList.forEach(item => {
                         if (item.id === viewId) {
@@ -73,6 +140,14 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
                 }
             }
 
+            this.events['keydown.main'] = e => {
+                let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                if (typeof this.shortcutKeys[key] === 'function') {
+                    this.shortcutKeys[key].call(this, e);
+                }
+            }
+
             if (!this.mode || ~this.fullCalendarModeList.indexOf(this.mode) || this.mode.indexOf('view-') === 0) {
                 this.setupCalendar();
             }
@@ -83,8 +158,12 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
             }
         },
 
+        afterRender: function () {
+            this.$el.focus();
+        },
+
         updateUrl: function (trigger) {
-            var url = '#Calendar/show';
+            let url = '#Calendar/show';
 
             if (this.mode || this.date) {
                 url += '/';
@@ -110,7 +189,8 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
         },
 
         setupCalendar: function () {
-            var viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) || 'crm:views/calendar/calendar';
+            let viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) ||
+                'crm:views/calendar/calendar';
 
             this.createView('calendar', viewName, {
                 date: this.date,
@@ -119,7 +199,7 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
                 mode: this.mode,
                 el: '#main > .calendar-container',
             }, view => {
-                var initial = true;
+                let initial = true;
 
                 this.listenTo(view, 'view', (date, mode) => {
                     this.date = date;
@@ -141,12 +221,15 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
 
                     if (refresh) {
                         this.updateUrl(true);
+
                         return;
                     }
 
                     if (!~this.fullCalendarModeList.indexOf(mode)) {
                         this.updateUrl(true);
                     }
+
+                    this.$el.focus();
                 });
             });
         },
@@ -199,7 +282,7 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
         },
 
         editCustomView: function () {
-            var viewId = this.getView('calendar').viewId;
+            let viewId = this.getView('calendar').viewId;
 
             if (!viewId) {
                 return;
@@ -212,10 +295,9 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
 
                 this.listenToOnce(view, 'after:save', (data) => {
                     view.close();
-                    var calendarView = this.getView('calendar');
 
+                    let calendarView = this.getView('calendar');
                     calendarView.setupMode();
-
                     calendarView.reRender();
                 });
 
@@ -228,6 +310,116 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
                     this.updateUrl(true);
                 });
             });
-        }
+        },
+
+        /**
+         * @private
+         * @return {module:view.Class}
+         */
+        getCalendarView: function () {
+            return this.getView('calendar');
+        },
+
+        /**
+         * @private
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyHome: function (e) {
+            e.preventDefault();
+
+            this.getCalendarView().actionToday();
+        },
+
+        /**
+         * @private
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyArrowLeft: function (e) {
+            e.preventDefault();
+
+            this.getCalendarView().actionPrevious();
+        },
+
+        /**
+         * @private
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyArrowRight: function (e) {
+            e.preventDefault();
+
+            this.getCalendarView().actionNext();
+        },
+
+        /**
+         * @private
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyMinus: function (e) {
+            if (!this.getCalendarView().actionZoomOut) {
+                return;
+            }
+
+            e.preventDefault();
+
+            this.getCalendarView().actionZoomOut();
+        },
+
+        /**
+         * @private
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyPlus: function (e) {
+            if (!this.getCalendarView().actionZoomIn) {
+                return;
+            }
+
+            e.preventDefault();
+
+            this.getCalendarView().actionZoomIn();
+        },
+
+        /**
+         * @private
+         * @param {JQueryKeyEventObject} e
+         * @param {Number} digit
+         */
+        handleShortcutKeyDigit: function (e, digit) {
+            let modeList = this.getCalendarView().hasView('modeButtons') ?
+                this.getCalendarView()
+                    .getView('modeButtons')
+                    .getModeDataList(true)
+                    .map(item => item.mode) :
+                this.getCalendarView().modeList;
+
+            let mode = modeList[digit - 1];
+
+            if (!mode) {
+                return;
+            }
+
+            e.preventDefault();
+
+            if (mode === this.mode) {
+                this.getCalendarView().actionRefresh();
+
+                return;
+            }
+
+            this.getCalendarView().selectMode(mode);
+        },
+
+        /**
+         * @private
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyControlSpace: function (e) {
+            if (!this.getCalendarView().createEvent) {
+                return;
+            }
+
+            e.preventDefault();
+
+            this.getCalendarView().createEvent();
+        },
     });
 });

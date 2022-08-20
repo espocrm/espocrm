@@ -32,5 +32,5 @@
 {{/if}}
 
 <div class="stream-date-container">
-    <span class="text-muted small">{{{createdAt}}}</span>
+    <a class="text-muted small" href="#Note/view/{{model.id}}">{{{createdAt}}}</a>
 </div>

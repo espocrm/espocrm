@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "name": "Ime",
+    "status": "Stanje",
+    "isHtml": "Je Html",
+    "body": "Telo",
+    "subject": "Predmet",
+    "attachments": "priloge",
+    "oneOff": "Enkratno",
+    "category": "Kategorija",
+    "insertField": "Nadomestni znaki"
+  },
+  "labels": {
+    "Create EmailTemplate": "Ustvari e-poštno predlogo",
+    "Info": "Informacije",
+    "Available placeholders": "Oznake mesta, ki so na voljo"
+  },
+  "tooltips": {
+    "oneOff": "Preverite, ali boste to predlogo uporabili samo enkrat. Npr. za množično elektronsko pošto."
+  },
+  "presetFilters": {
+    "actual": "Dejansko"
+  },
+  "placeholderTexts": {
+    "optOutLink": "povezava za odjavo",
+    "today": "Današnji datum",
+    "now": "Trenutni datum in čas",
+    "currentYear": "Trenutno leto",
+    "optOutUrl": "URL za povezavo za odjavo"
+  },
+  "messages": {
+    "infoText": "Razpoložljivi nadomestni znaki: {optOutUrl} &#8211; URL za povezavo za odjavo; {optOutLink} &#8211; povezava za odjavo."
+  }
+}

@@ -20,10 +20,22 @@
     "signature": "Assinatura do E-mail",
     "dashboardTabList": "Lista de Aba",
     "tabList": "Lista de Aba",
+    "defaultReminders": "Lembretes Padrão",
     "theme": "Tema",
-    "useCustomTabList": "Customizar Lista de Aba",
+    "useCustomTabList": "Personalizar Lista de Aba",
     "receiveAssignmentEmailNotifications": "Receber e-mail de notificação quando designado",
-    "autoFollowEntityTypeList": "Auto-Seguir"
+    "receiveMentionEmailNotifications": "Notificações por email sobre menções em postagens",
+    "receiveStreamEmailNotifications": "Notificações por email sobre postagens e atualizações de status",
+    "dashboardLayout": "Layout de Dashboard",
+    "emailReplyForceHtml": "Resposta de Email em HTML",
+    "autoFollowEntityTypeList": "Auto-Seguir",
+    "emailReplyToAllByDefault": "Resposta por Email para todos por padrão",
+    "doNotFillAssignedUserIfNotRequired": "Não preencha previamente o usuário designado na criação do registro",
+    "followCreatedEntities": "Seguir automaticamente registros criados",
+    "emailUseExternalClient": "Use um cliente de email externo",
+    "scopeColorsDisabled": "Desativar cores do escopo",
+    "assignmentNotificationsIgnoreEntityTypeList": "Notificações de Atribuição no Aplicativo",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Notificações de atribuição de email"
   },
   "options": {
     "weekStart": {
@@ -34,9 +46,13 @@
   "labels": {
     "Notifications": "Notificações",
     "User Interface": "Interface de Usuário",
-    "Locale": "Local"
+    "Locale": "Local",
+    "Reset Dashboard to Default": "Redefinir Dashboard para o padrão"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "O usuário seguirá automaticamente todos os novos registros das entidades selecionadas, verá informações no fluxo e receberá notificações."
+    "autoFollowEntityTypeList": "O usuário seguirá automaticamente todos os novos registros das entidades selecionadas, verá informações no fluxo e receberá notificações.",
+    "doNotFillAssignedUserIfNotRequired": "Ao criar o registro, o usuário desginado não será preenchido com o próprio usuário, a menos que o campo seja obrigatório.",
+    "followCreatedEntities": "Ao criar novos registros, eles serão seguidos automaticamente mesmo que atribuídos a outro usuário.",
+    "followCreatedEntityTypeList": "Ao criar novos registros de tipos de entidade selecionados, eles serão seguidos automaticamente mesmo se atribuídos a outro usuário."
   }
 }

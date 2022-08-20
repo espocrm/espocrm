@@ -66,7 +66,7 @@ class LinkParentType
 
     public function checkPattern(Entity $entity, string $field): bool
     {
-        /** @var ?string */
+        /** @var ?string $idValue */
         $idValue = $entity->get($field . 'Id');
 
         if ($idValue === null) {
@@ -86,14 +86,14 @@ class LinkParentType
 
     public function checkValid(Entity $entity, string $field): bool
     {
-        /** @var ?string */
+        /** @var ?string $typeValue */
         $typeValue = $entity->get($field . 'Type');
 
         if ($typeValue === null) {
             return true;
         }
 
-        /** @var ?string[] */
+        /** @var ?string[] $entityTypeList */
         $entityTypeList = $this->defs
             ->getEntity($entity->getEntityType())
             ->getField($field)

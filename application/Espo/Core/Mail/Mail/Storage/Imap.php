@@ -44,13 +44,14 @@ class Imap extends \Laminas\Mail\Storage\Imap
     }
 
     /**
+     * @param string $date A date in the `d-M-Y` format.
      * @return int[]
      */
     public function getIdsSinceDate(string $date): array
     {
         assert($this->protocol !== null);
 
-        return $this->protocol->search(['SINCE "' . $date . '"']);
+        return $this->protocol->search(['SINCE ' . $date]);
     }
 
     /**
@@ -61,7 +62,7 @@ class Imap extends \Laminas\Mail\Storage\Imap
     {
         assert($this->protocol !== null);
 
-        /** @var array{'RFC822.HEADER': string, FLAGS: string[]} */
+        /** @var array{'RFC822.HEADER': string, FLAGS: string[]} $data */
         $data = $this->protocol->fetch(['FLAGS', 'RFC822.HEADER'], $id);
 
         $header = $data['RFC822.HEADER'];

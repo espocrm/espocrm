@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-account/modals/select-folder', 'views/modal', function (Dep) {
+define('views/email-account/modals/select-folder', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -49,9 +49,7 @@ define('views/email-account/modals/select-folder', 'views/modal', function (Dep)
         },
 
         setup: function () {
-            this.headerHtml = this.translate('Select');
+            this.headerText = this.translate('Select');
         },
-
     });
 });
-

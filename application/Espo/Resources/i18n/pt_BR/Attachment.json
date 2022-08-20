@@ -1,5 +1,26 @@
 {
   "insertFromSourceLabels": {
     "Document": "Inserir Documento"
+  },
+  "fields": {
+    "role": "Regra",
+    "file": "Arquivo",
+    "type": "Tipo",
+    "field": "Campo",
+    "storage": "Armazenamento",
+    "size": "Tam. (bytes)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Anexo",
+      "Inline Attachment": "Anexo Inline",
+      "Import File": "Importar Arquivo",
+      "Export File": "Exportar Arquivo",
+      "Mail Merge": "Mala Direta",
+      "Mass Pdf": "PDF em Massa"
+    }
+  },
+  "presetFilters": {
+    "orphan": "Órfão"
   }
 }

@@ -103,7 +103,8 @@ define('views/detail', ['views/main'], function (Dep) {
                 name: 'follow',
                 label: 'Follow',
                 style: 'default',
-                html: '<span class="fas fa-rss fa-sm"></span> ' + this.translate('Follow'),
+                iconHtml: '<span class="fas fa-rss fa-sm"></span>',
+                text: this.translate('Follow'),
                 action: 'follow',
             }, true);
         },
@@ -174,10 +175,11 @@ define('views/detail', ['views/main'], function (Dep) {
          * Set up a record.
          */
         setupRecord: function () {
-            var o = {
+            let o = {
                 model: this.model,
                 el: '#main > .record',
                 scope: this.scope,
+                shortcutKeysEnabled: true,
             };
 
             this.optionsToPass.forEach((option) => {

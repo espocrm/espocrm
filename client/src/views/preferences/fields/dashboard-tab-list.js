@@ -40,6 +40,8 @@ define('views/preferences/fields/dashboard-tab-list', ['views/fields/array'], fu
             list.forEach(value => {
                 this.translatedOptions[value] = value;
             });
+
+            this.validations.push('uniqueLabel');
         },
 
         getItemHtml: function (value) {
@@ -70,7 +72,8 @@ define('views/preferences/fields/dashboard-tab-list', ['views/fields/array'], fu
                         .css('vertical-align', 'top')
                         .append(
                             $('<a>')
-                                .attr('href', 'javascript:')
+                                .attr('role', 'button')
+                                .attr('tabindex', '0')
                                 .addClass('pull-right')
                                 .attr('data-value', value)
                                 .attr('data-action', 'removeValue')
@@ -83,6 +86,28 @@ define('views/preferences/fields/dashboard-tab-list', ['views/fields/array'], fu
                     $('<br>').css('clear', 'both')
                 )
                 .get(0).outerHTML;
+        },
+
+        validateUniqueLabel: function () {
+            let keyList = this.model.get(this.name) || [];
+            let labels = this.model.get('translatedOptions') || {};
+            let metLabelList = [];
+
+            for (let key of keyList) {
+                let label = labels[key];
+
+                if (!label) {
+                    return true;
+                }
+
+                if (metLabelList.indexOf(label) !== -1) {
+                    return true;
+                }
+
+                metLabelList.push(label);
+            }
+
+            return false;
         },
 
         fetch: function () {

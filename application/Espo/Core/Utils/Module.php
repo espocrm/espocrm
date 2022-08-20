@@ -117,7 +117,7 @@ class Module
             $this->dataCache &&
             $this->dataCache->has($this->cacheKey)
         ) {
-            /** @var array<string,array<string,mixed>> */
+            /** @var array<string,array<string,mixed>> $data */
             $data = $this->dataCache->get($this->cacheKey);
 
             $this->data = $data;

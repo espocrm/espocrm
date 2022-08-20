@@ -47,10 +47,9 @@ define('views/modals/mass-action', ['views/modal', 'model'], function (Dep, Mode
             this.id = this.options.id;
             this.status = 'Pending';
 
-            this.headerHtml = this.getHelper().escapeString(
+            this.headerText =
                 this.translate('Mass Action') + ': ' +
-                this.translate(this.action, 'massActions')
-            );
+                this.translate(this.action, 'massActions');
 
             this.model = new Model();
             this.model.name = 'MassAction';
@@ -106,7 +105,12 @@ define('views/modals/mass-action', ['views/modal', 'model'], function (Dep, Mode
             });
 
             this.on('close', () => {
-                if (this.model.get('status') !== 'Pending') {
+                let status = this.model.get('status');
+
+                if (
+                    status !== 'Pending' &&
+                    status !== 'Running'
+                ) {
                     return;
                 }
 
@@ -126,14 +130,15 @@ define('views/modals/mass-action', ['views/modal', 'model'], function (Dep, Mode
                 .then(response => {
                     let status = response.status;
 
-                    if (status === 'Pending') {
+                    this.model.set('status', status);
+
+                    if (status === 'Pending' || status === 'Running') {
                         setTimeout(() => this.checkStatus(), this.checkInterval);
 
                         return;
                     }
 
                     this.model.set({
-                        status: response.status,
                         processedCount: response.processedCount,
                     });
 

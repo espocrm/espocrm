@@ -43,9 +43,10 @@ use RuntimeException;
 
 class Espo implements Login
 {
-    private $userFinder;
+    public const NAME = 'Espo';
 
-    private $passwordHash;
+    private UserFinder $userFinder;
+    private PasswordHash $passwordHash;
 
     public function __construct(UserFinder $userFinder, PasswordHash $passwordHash)
     {
@@ -81,7 +82,7 @@ class Espo implements Login
             return Result::fail(FailReason::WRONG_CREDENTIALS);
         }
 
-        if ($authToken && $user->id !== $authToken->getUserId()) {
+        if ($authToken && $user->getId() !== $authToken->getUserId()) {
             return Result::fail(FailReason::USER_TOKEN_MISMATCH);
         }
 

@@ -79,27 +79,32 @@ define('crm:views/account/fields/shipping-address', 'views/fields/address', func
         },
 
         copy: function (fieldFrom) {
-            var attrList = Object.keys(this.getMetadata().get('fields.address.fields')).forEach(function (attr) {
-                destField = this.name + Espo.Utils.upperCaseFirst(attr);
-                sourceField = fieldFrom + Espo.Utils.upperCaseFirst(attr);
+            Object.keys(this.getMetadata().get('fields.address.fields'))
+                .forEach(attr => {
+                    let destField = this.name + Espo.Utils.upperCaseFirst(attr);
+                    let sourceField = fieldFrom + Espo.Utils.upperCaseFirst(attr);
 
-                this.model.set(destField, this.model.get(sourceField));
-            }, this);
+                    this.model.set(destField, this.model.get(sourceField));
+                });
         },
 
         toShowCopyButton: function () {
             var billingIsNotEmpty = false;
             var shippingIsNotEmpty = false;
-            this.attributePartList.forEach(function (part) {
-                var attribute = this.copyFrom + Espo.Utils.upperCaseFirst(part);
-                if (this.model.get(attribute)) {
+
+            this.attributePartList.forEach(part => {
+                let attribute1 = this.copyFrom + Espo.Utils.upperCaseFirst(part);
+
+                if (this.model.get(attribute1)) {
                     billingIsNotEmpty = true;
                 }
-                var attribute = this.name + Espo.Utils.upperCaseFirst(part);
-                if (this.model.get(attribute)) {
+
+                let attribute2 = this.name + Espo.Utils.upperCaseFirst(part);
+
+                if (this.model.get(attribute2)) {
                     shippingIsNotEmpty = true;
                 }
-            }, this);
+            });
 
             return billingIsNotEmpty && !shippingIsNotEmpty;
         },

@@ -228,7 +228,7 @@ class SystemRequirements
         switch ($type) {
             case 'requiredPhpVersion':
                 $actualVersion = $this->systemHelper->getPhpVersion();
-                /** @var string */
+                /** @var string $requiredVersion */
                 $requiredVersion = $data;
 
                 $acceptable = true;

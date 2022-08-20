@@ -209,7 +209,7 @@ class Merger
     {
         $list = [];
 
-        /** @var iterable<PhoneNumber> */
+        /** @var iterable<PhoneNumber> $collection */
         $collection = $this->entityManager
             ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, 'phoneNumbers')
@@ -229,7 +229,7 @@ class Merger
     {
         $list = [];
 
-        /** @var iterable<EmailAddress> */
+        /** @var iterable<EmailAddress> $collection */
         $collection = $this->entityManager
             ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, 'emailAddresses')

@@ -8,6 +8,7 @@
                 data-phone-number="{{valueForLink}}"
                 data-action="dial"
                 style="display: inline-block;"
+                class="selectable"
             >
             {{/unless}}
             {{/unless}}
@@ -24,7 +25,12 @@
     {{/each}}
 {{else}}
     {{#if value}}
-    {{#if lineThrough}}<s>{{/if}}<a href="tel:{{valueForLink}}" data-phone-number="{{valueForLink}}" data-action="dial">{{value}}</a>{{#if lineThrough}}</s>{{/if}}
+    {{#if lineThrough}}<s>{{/if}}<a
+            href="tel:{{valueForLink}}"
+            data-phone-number="{{valueForLink}}"
+            data-action="dial"
+            class="selectable"
+        >{{value}}</a>{{#if lineThrough}}</s>{{/if}}
     {{else}}
         {{#if valueIsSet}}<span class="none-value">{{translate 'None'}}</span>{{else}}
         <span class="loading-value">...</span>{{/if}}

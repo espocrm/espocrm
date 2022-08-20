@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Primary": "Primarni",
+    "Opted Out": "Izključeno",
+    "Invalid": "Neveljavno"
+  },
+  "fields": {
+    "optOut": "Izključeno",
+    "invalid": "Neveljavno"
+  },
+  "presetFilters": {
+    "orphan": "sirota"
+  }
+}

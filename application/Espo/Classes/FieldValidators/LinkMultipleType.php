@@ -57,7 +57,7 @@ class LinkMultipleType
             return false;
         }
 
-        /** @var string[] */
+        /** @var string[] $idList */
         $idList = $entity->getLinkMultipleIdList($field);
 
         return count($idList) > 0;
@@ -65,7 +65,7 @@ class LinkMultipleType
 
     public function checkPattern(Entity $entity, string $field): bool
     {
-        /** @var ?mixed[] */
+        /** @var ?mixed[] $idList */
         $idList = $entity->get($field . 'Ids');
 
         if ($idList === null || $idList === []) {
@@ -103,14 +103,14 @@ class LinkMultipleType
             return true;
         }
 
-        /** @var ?stdClass */
+        /** @var ?stdClass $columnsData */
         $columnsData = $entity->get($field . 'Columns');
 
         if ($columnsData === null) {
             return true;
         }
 
-        /** @var ?array<string,string> */
+        /** @var ?array<string,string> $columnsMap */
         $columnsMap = $this->defs
             ->getEntity($entity->getEntityType())
             ->getField($field)
@@ -229,10 +229,10 @@ class LinkMultipleType
             return false;
         }
 
-        /** @var ?string */
+        /** @var ?string $path */
         $path = $fieldDefs->getParam('optionsPath');
 
-        /** @var string[]|null|false */
+        /** @var string[]|null|false $optionList */
         $optionList = $path ?
             $this->metadata->get($path) :
             $fieldDefs->getParam('options');

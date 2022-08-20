@@ -93,7 +93,7 @@ class MassRecalculateFormula implements MassAction
                 'modifiedById' => 'system',
             ]);
 
-            /** @var string */
+            /** @var string $id */
             $id = $entity->getId();
 
             $ids[] = $id;

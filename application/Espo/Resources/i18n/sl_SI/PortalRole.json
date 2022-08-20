@@ -1,0 +1,19 @@
+{
+  "links": {
+    "users": "Uporabniki"
+  },
+  "labels": {
+    "Access": "Dostop",
+    "Create PortalRole": "Ustvari vlogo portala",
+    "Scope Level": "Raven obsega",
+    "Field Level": "Raven polja"
+  },
+  "fields": {
+    "exportPermission": "Izvozno dovoljenje",
+    "massUpdatePermission": "Dovoljenje za množično posodabljanje"
+  },
+  "tooltips": {
+    "exportPermission": "Določa, ali imajo uporabniki portala možnost izvoza zapisov.",
+    "massUpdatePermission": "Določa, ali imajo uporabniki portala možnost množičnega posodabljanja zapisov."
+  }
+}

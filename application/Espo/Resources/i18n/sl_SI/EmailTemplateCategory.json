@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "Ustvari kategorijo",
+    "Manage Categories": "Upravljanje kategorij",
+    "EmailTemplates": "E-poštne predloge"
+  },
+  "fields": {
+    "order": "naročilo",
+    "childList": "Seznam otrok"
+  },
+  "links": {
+    "emailTemplates": "E-poštne predloge"
+  }
+}

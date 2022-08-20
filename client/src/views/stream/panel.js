@@ -59,19 +59,24 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 }
 
             },
-            'keypress textarea[data-name="post"]': function (e) {
-                if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
+            'keydown textarea[data-name="post"]': function (e) {
+                if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
+                    e.stopPropagation();
+                    e.preventDefault();
+
                     this.post();
                 }
-                else if (e.keyCode === 9) {
-                    var $text = $(e.currentTarget);
+
+                // Don't hide to be able to focus on the upload button.
+                /*if (e.code === 'Tab') {
+                    let $text = $(e.currentTarget);
 
                     if ($text.val() === '') {
                         this.disablePostingMode();
                     }
-                }
+                }*/
             },
-            'keyup textarea[data-name="post"]': function (e) {
+            'keyup textarea[data-name="post"]': function () {
                 this.controlPreviewButton();
                 this.controlPostButtonAvailability(this.$textarea.val());
             },
@@ -383,7 +388,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             this.$postContainer = this.$el.find('.post-container');
             this.$postButton = this.$el.find('button.post');
 
-            var storedText = this.getSessionStorage().get(this.storageTextKey);
+            let storedText = this.getSessionStorage().get(this.storageTextKey);
 
             if (storedText && storedText.length) {
                 this.hasStoredText = true;
@@ -396,7 +401,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 this.$el.find('.action[data-action="switchInternalMode"]').addClass('enabled');
             }
 
-            var collection = this.collection;
+            let collection = this.collection;
 
             this.listenToOnce(collection, 'sync', () => {
                 this.createView('list', 'views/stream/record/list', {
@@ -411,7 +416,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 this.stopListening(this.model, 'destroy');
 
                 setTimeout(() => {
-                    this.listenTo(this.model, 'all', (event) => {
+                    this.listenTo(this.model, 'all', event => {
                         if (!~['sync', 'after:relate'].indexOf(event)) {
                             return;
                         }
@@ -429,14 +434,12 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 collection.fetch();
             }
             else {
-                this.once('show', () => {
-                    collection.fetch();
-                });
+                this.once('show', () => collection.fetch());
             }
 
-            var assignmentPermission = this.getAcl().get('assignmentPermission');
+            let assignmentPermission = this.getAcl().getPermissionLevel('assignmentPermission');
 
-            var buildUserListUrl = (term) => {
+            let buildUserListUrl = term => {
                 var url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({'primaryFilter': 'active'});
 
                 if (assignmentPermission === 'team') {
@@ -457,16 +460,15 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                             return;
                         }
 
-                        $.ajax({
-                            url: buildUserListUrl(term),
-                        }).then((data) => {
-                            callback(data.list)
-                        });
+                        Espo.Ajax
+                            .getRequest(buildUserListUrl(term))
+                            .then(data => callback(data.list));
                     },
                     template: (mention) => {
                         return this.getHelper()
                             .escapeString(mention.name) +
-                            ' <span class="text-muted">@' + this.getHelper().escapeString(mention.userName) + '</span>';
+                            ' <span class="text-muted">@' +
+                            this.getHelper().escapeString(mention.userName) + '</span>';
                     },
                     replace: (o) => {
                         return '$1@' + o.userName + '';
@@ -480,16 +482,12 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 });
             }
 
-            var $a = this.$el.find('.buttons-panel a.stream-post-info');
+            let $a = this.$el.find('.buttons-panel a.stream-post-info');
 
-            var message = this.getHelper().transformMarkdownInlineText(
-                this.translate('infoMention', 'messages', 'Stream')
-            ) + '<br><br>' +
-            this.getHelper().transformMarkdownInlineText(
-                this.translate('infoSyntax', 'messages', 'Stream') + ':'
-            ) + '<br>';
+            let text1 = this.translate('infoMention', 'messages', 'Stream');
+            let text2 = this.translate('infoSyntax', 'messages', 'Stream');
 
-            var syntaxItemList = [
+            let syntaxItemList = [
                 ['code', '`{text}`'],
                 ['multilineCode', '```{text}```'],
                 ['strongText', '**{text}**'],
@@ -499,59 +497,28 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 ['link', '[{text}](url)'],
             ];
 
-            var messageItemList = [];
+            let messageItemList = [];
 
-            syntaxItemList.forEach((item) => {
-                var text = this.translate(item[0], 'syntaxItems', 'Stream');
-                var result = item[1].replace('{text}', text);
+            syntaxItemList.forEach(item => {
+                let text = this.translate(item[0], 'syntaxItems', 'Stream');
+                let result = item[1].replace('{text}', text);
 
                 messageItemList.push(result);
             });
 
-            message += '<ul>' + messageItemList.map((item) => {
-                return '<li>'+ item + '</li>';
-            }).join('') + '</ul>';
+            let $ul = $('<ul>')
+                .append(
+                    messageItemList.map(text => $('<li>').text(text))
+                );
 
-            $a.popover({
-                placement: 'bottom',
-                container: 'body',
-                content: message,
-                html: true,
-            }).on('shown.bs.popover', () => {
-                $('body').off('click.popover-' + this.cid);
+            let messageHtml =
+                this.getHelper().transformMarkdownInlineText(text1) + '<br><br>' +
+                this.getHelper().transformMarkdownInlineText(text2) + ':<br>' +
+                $ul.get(0).outerHTML;
 
-                $('body').on('click.popover-' + this.cid , (e) => {
-                    if (e.target.classList.contains('popover-content')) {
-                        return;
-                    }
-
-                    if ($(e.target).closest('.popover-content').get(0)) {
-                        return;
-                    }
-
-                    if ($.contains($a.get(0), e.target)) {
-                        return;
-                    }
-
-                    $('body').off('click.popover-' + this.cid);
-
-                    $a.popover('hide');
-
-                    e.stopPropagation();
-                });
-            });
-
-            $a.on('click', function () {
-                $(this).popover('toggle');
-            });
-
-            this.on('remove', () => {
-                if ($a) {
-                    $a.popover('destroy');
-                }
-
-                $('body').off('click.popover-' + this.cid);
-            });
+            Espo.Ui.popover($a, {
+                content: messageHtml,
+            }, this);
 
             this.createView('attachments', 'views/stream/fields/attachment-multiple', {
                 model: this.seed,
@@ -560,7 +527,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 defs: {
                     name: 'attachments',
                 },
-            }, (view) => {
+            }, view => {
                 view.render();
             });
         },
@@ -586,7 +553,9 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 if (message === '' && (this.seed.get('attachmentsIds') || []).length === 0) {
                     this.notify('Post cannot be empty', 'error');
                     this.$textarea.prop('disabled', false);
-                    this.enablePostButton();
+                    this.controlPostButtonAvailability();
+
+                    this.$textarea.focus();
 
                     return;
                 }
@@ -619,7 +588,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     })
                     .catch(() => {
                         this.$textarea.prop('disabled', false);
-                        this.enablePostButton();
+                        this.controlPostButtonAvailability();
                     });
             });
         },
@@ -640,7 +609,14 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
             this.actionList.push({
                 action: 'viewPostList',
-                html: this.translate('View List') + ' &middot; ' + this.translate('posts', 'filters', 'Note'),
+                html:
+                    $('<span>')
+                        .append(
+                            $('<span>').text(this.translate('View List')),
+                            ' &middot; ',
+                            $('<span>').text(this.translate('posts', 'filters', 'Note')),
+                        )
+                        .get(0).innerHTML,
             });
 
             this.actionList.push(false);
@@ -656,12 +632,19 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
                 this.actionList.push({
                     action: 'selectFilter',
-                    html: '<span class="check-icon fas fa-check pull-right' +
-                        (!selected ? ' hidden' : '') + '"></span><div>' + this.translate(item, 'filters', 'Note') +
-                        '</div>',
+                    html:
+                        $('<span>')
+                            .append(
+                                $('<span>')
+                                    .addClass('check-icon fas fa-check pull-right')
+                                    .addClass(!selected ? ' hidden' : ''),
+                                $('<div>')
+                                    .text(this.translate(item, 'filters', 'Note')),
+                            )
+                            .get(0).innerHTML,
                     data: {
-                        name: item
-                    }
+                        name: item,
+                    },
                 });
             });
         },

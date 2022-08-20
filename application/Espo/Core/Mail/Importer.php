@@ -187,7 +187,7 @@ class Importer
             $parser->hasHeader($message, 'message-Id') &&
             $parser->getHeader($message, 'message-Id')
         ) {
-            /** @var string */
+            /** @var string $messageId */
             $messageId = $parser->getMessageId($message);
 
             $email->set('messageId', $messageId);
@@ -204,9 +204,25 @@ class Importer
             }
         }
 
+        if ($parser->hasHeader($message, 'date')) {
+            try {
+                /** @var string $dateHeaderValue */
+                $dateHeaderValue = $parser->getHeader($message, 'date');
+
+                $dt = new DateTime($dateHeaderValue);
+
+                $dateSent = $dt
+                    ->setTimezone(new DateTimeZone('UTC'))
+                    ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
+
+                $email->set('dateSent', $dateSent);
+            }
+            catch (Exception $e) {}
+        }
+
         $duplicate = $this->findDuplicate($email);
 
-        if ($duplicate && $duplicate->get('status') !== Email::STATUS_BEING_IMPORTED) {
+        if ($duplicate && $duplicate->getStatus() !== Email::STATUS_BEING_IMPORTED) {
             /** @var Email $duplicate */
             $duplicate = $this->entityManager->getEntityById(Email::ENTITY_TYPE, $duplicate->getId());
 
@@ -221,28 +237,13 @@ class Importer
             return $duplicate;
         }
 
-        if ($parser->hasHeader($message, 'date')) {
-            try {
-                /** @var string */
-                $dateHeaderValue = $parser->getHeader($message, 'date');
-
-                $dt = new DateTime($dateHeaderValue);
-
-                $dateSent = $dt
-                    ->setTimezone(new DateTimeZone('UTC'))
-                    ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
-
-                $email->set('dateSent', $dateSent);
-            }
-            catch (Exception $e) {}
-        }
-        else {
+        if (!$email->getDateSent()) {
             $email->set('dateSent', date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT));
         }
 
         if ($parser->hasHeader($message, 'delivery-Date')) {
             try {
-                /** @var string */
+                /** @var string $deliveryDateHeaderValue */
                 $deliveryDateHeaderValue = $parser->getHeader($message, 'delivery-Date');
 
                 $dt = new DateTime($deliveryDateHeaderValue);
@@ -296,7 +297,7 @@ class Importer
                 if ($replied) {
                     $email->set('repliedId', $replied->getId());
 
-                    /** @var string[] */
+                    /** @var string[] $repliedTeamIdList */
                     $repliedTeamIdList = $replied->getLinkMultipleIdList('teams');
 
                     foreach ($repliedTeamIdList as $repliedTeamId) {
@@ -314,9 +315,9 @@ class Importer
             $replied->getParentId() &&
             $replied->getParentType()
         ) {
-            /** @var string */
+            /** @var string $parentId */
             $parentId = $replied->getParentId();
-            /** @var string */
+            /** @var string $parentType */
             $parentType = $replied->getParentType();
 
             $parentEntity = $this->entityManager->getEntityById($parentType, $parentId);
@@ -473,7 +474,7 @@ class Importer
             return;
         }
 
-        /** @var string[] */
+        /** @var string[] $parentTeamIdList */
         $parentTeamIdList = $parent->getLinkMultipleIdList('teams');
 
         foreach ($parentTeamIdList as $parentTeamId) {
@@ -532,7 +533,7 @@ class Importer
         $email->set('parentId', $parentId);
 
         if ($parentType === Lead::ENTITY_TYPE) {
-            /** @var ?Lead */
+            /** @var ?Lead $parent */
             $parent = $this->entityManager->getEntityById(Lead::ENTITY_TYPE, $parentId);
 
             if (!$parent) {
@@ -668,7 +669,7 @@ class Importer
 
         $duplicate->loadLinkMultipleField('users');
 
-        /** @var string[] */
+        /** @var string[] $fetchedUserIdList */
         $fetchedUserIdList = $duplicate->getLinkMultipleIdList('users');
 
         $duplicate->setLinkMultipleIdList('users', []);
@@ -725,7 +726,7 @@ class Importer
             );
         }
 
-        /** @var string[] */
+        /** @var string[] $fetchedTeamIdList */
         $fetchedTeamIdList = $duplicate->getLinkMultipleIdList('teams');
 
         foreach ($teamIdList as $teamId) {

@@ -7,10 +7,20 @@
     "monitoredFolders": "Pastas monitoradas",
     "fetchSince": "Recuperar desde",
     "emailAddress": "Endereço de E-mail",
+    "sentFolder": "Enviar pasta",
     "storeSentEmails": "Armazenar emails enviados",
+    "keepFetchedEmailsUnread": "Manter e-mails buscados como não lidos",
+    "emailFolder": "Colocar na Pasta",
     "useSmtp": "Usar SMTP",
+    "smtpHost": "Host SMTP",
+    "smtpPort": "Porta SMTP",
+    "smtpAuth": "Autenticação SMTP",
+    "smtpSecurity": "Segurança SMTP",
     "smtpUsername": "Usuário SMTP",
-    "smtpPassword": "Senha SMTP"
+    "smtpPassword": "Senha SMTP",
+    "useImap": "Buscar emails",
+    "smtpAuthMechanism": "Mecanismo de Autenticação SMTP",
+    "security": "Segurança"
   },
   "links": {
     "filters": "Filtros"
@@ -24,10 +34,17 @@
   "labels": {
     "Create EmailAccount": "Criar conta de e-mail",
     "Main": "Principal",
-    "Test Connection": "Testar conexão"
+    "Test Connection": "Testar conexão",
+    "Send Test Email": "Enviar Email de Teste"
   },
   "messages": {
     "couldNotConnectToImap": "Não foi possível conectar ao servidor IMAP",
     "connectionIsOk": "Conexão está OK"
+  },
+  "tooltips": {
+    "monitoredFolders": "Várias pastas devem ser separadas por vírgula.\n\nVocê pode adicionar uma pasta 'Enviados' para sincronizar emails enviados de um cliente de email externo.",
+    "storeSentEmails": "Os emails enviados serão armazenados no servidor IMAP. O campo Endereço de email deve corresponder ao endereço de onde os emails serão enviados.",
+    "useSmtp": "A capacidade de enviar emails.",
+    "emailAddress": "O registro do usuário (usuário designado) deve ter o mesmo endereço de email para poder usar esta conta de email para envio."
   }
 }

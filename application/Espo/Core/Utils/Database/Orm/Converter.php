@@ -201,20 +201,20 @@ class Converter
                 $ormMetadata[$entityType]['skipRebuild'] = true;
             }
 
-            /** @var array<string,array<string,mixed>> */
+            /** @var array<string,array<string,mixed>> $ormMetadata */
             $ormMetadata = Util::merge($ormMetadata, $this->convertEntity($entityType, $entityMetadata));
         }
 
         $ormMetadata = $this->afterFieldsProcess($ormMetadata);
 
         foreach ($ormMetadata as $entityType => $entityOrmMetadata) {
-            /** @var array<string,array<string,mixed>> */
+            /** @var array<string,array<string,mixed>> $ormMetadata */
             $ormMetadata = Util::merge(
                 $ormMetadata,
                 $this->createRelationsEntityDefs($entityType, $entityOrmMetadata)
             );
 
-            /** @var array<string,array<string,mixed>> */
+            /** @var array<string,array<string,mixed>> $ormMetadata */
             $ormMetadata = Util::merge(
                 $ormMetadata,
                 $this->createAdditionalEntityTypes($entityType, $entityOrmMetadata)
@@ -513,7 +513,7 @@ class Converter
                     unset($fieldResult['unset']);
                 }
 
-                /** @var array<string,mixed> */
+                /** @var array<string,mixed> $ormMetadata */
                 $ormMetadata = Util::merge($ormMetadata, $fieldResult);
             }
 
@@ -530,7 +530,7 @@ class Converter
                     ]
                 ];
 
-                /** @var array<string,mixed> */
+                /** @var array<string,mixed> $ormMetadata */
                 $ormMetadata = Util::merge($ormMetadata, $defaultMetadataPart);
             }
         }
@@ -588,7 +588,7 @@ class Converter
         }
 
         if (isset($fieldTypeMetadata['fieldDefs'])) {
-            /** @var array<string,mixed> */
+            /** @var array<string,mixed> $attributeParams */
             $attributeParams = Util::merge($attributeParams, $fieldTypeMetadata['fieldDefs']);
         }
 
@@ -644,7 +644,7 @@ class Converter
             $convertedLink = $this->getRelationManager()->convert($linkName, $linkParams, $entityType, $ormMetadata);
 
             if (isset($convertedLink)) {
-                /** @var array<string,mixed> */
+                /** @var array<string,mixed> $relationships */
                 $relationships = Util::merge($convertedLink, $relationships);
             }
         }

@@ -1,6 +1,6 @@
 <div class="container content">
-    <div class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2">
-    <div id="login" class="panel panel-default">
+    <div class="container-centering">
+    <div id="login" class="panel panel-default block-center-sm">
         <div class="panel-heading">
             <div class="logo-container">
                 <img src="{{logoSrc}}" class="logo">
@@ -8,7 +8,7 @@
         </div>
         <div class="panel-body">
             <div>
-                <form id="login-form" onsubmit="return false;">
+                <form id="login-form">
                     <div class="form-group">
                         <label for="field-username">{{translate 'Username'}}</label>
                         <input
@@ -38,7 +38,7 @@
                     <div class="margin-top-2x">
                         {{#if showForgotPassword}}
                         <a
-                            href="javascript:"
+                            role="button"
                             class="btn btn-link btn-text btn-text-hoverable btn-sm pull-right margin-top-sm"
                             data-action="passwordChangeRequest"
                             tabindex="4"

@@ -4,7 +4,13 @@
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu pull-right">
-            <li><a href="javascript:" class="action" data-action="quickRemove" data-id="{{model.id}}">{{translate 'Remove'}}</a></li>
+            <li><a
+                role="button"
+                tabindex="0"
+                class="action"
+                data-action="quickRemove"
+                data-id="{{model.id}}"
+            >{{translate 'Remove'}}</a></li>
         </ul>
         </div>
     </div>

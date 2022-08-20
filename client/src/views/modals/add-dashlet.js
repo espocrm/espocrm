@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/add-dashlet', 'views/modal', function (Dep) {
+define('views/modals/add-dashlet', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -53,29 +53,34 @@ define('views/modals/add-dashlet', 'views/modal', function (Dep) {
         },
 
         setup: function () {
-            this.headerHtml = this.translate('Add Dashlet');
+            this.headerText = this.translate('Add Dashlet');
 
-            var dashletList = Object.keys(this.getMetadata().get('dashlets') || {}).sort(function (v1, v2) {
-                return this.translate(v1, 'dashlets').localeCompare(this.translate(v2, 'dashlets'));
-            }.bind(this));
+            var dashletList = Object.keys(this.getMetadata().get('dashlets') || {})
+                .sort((v1, v2) => {
+                    return this.translate(v1, 'dashlets').localeCompare(this.translate(v2, 'dashlets'));
+                });
 
             this.dashletList = [];
 
-            dashletList.forEach(function (item) {
+            dashletList.forEach(item => {
                 var aclScope = this.getMetadata().get('dashlets.' + item + '.aclScope') || null;
+
                 if (aclScope) {
                     if (!this.getAcl().check(aclScope)) {
                         return;
                     }
                 }
+
                 var accessDataList = this.getMetadata().get(['dashlets', item, 'accessDataList']) || null;
+
                 if (accessDataList) {
                     if (!Espo.Utils.checkAccessDataList(accessDataList, this.getAcl(), this.getUser())) {
                         return false;
                     }
                 }
+
                 this.dashletList.push(item);
-            }, this);
+            });
         },
     });
 });

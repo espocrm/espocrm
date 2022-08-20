@@ -98,31 +98,31 @@ define('controllers/record', ['controller'], function (Dep) {
         },
 
         actionList: function (options) {
-            var isReturn = options.isReturn;
+            let isReturn = options.isReturn || this.getRouter().backProcessed;
 
-            if (this.getRouter().backProcessed) {
-                isReturn = true;
+            let key = this.name + 'List';
+
+            if (!isReturn && this.getStoredMainView(key)) {
+                this.clearStoredMainView(key);
             }
 
-            var key = this.name + 'List';
+            this.getCollection(collection => {
+                let mediator = {};
 
-            if (!isReturn) {
-                var stored = this.getStoredMainView(key);
-
-                if (stored) {
-                    this.clearStoredMainView(key);
-                }
-            }
-
-            this.getCollection(function (collection) {
-                this.listenToOnce(this.baseController, 'action', () => {
+                let abort = () => {
                     collection.abortLastFetch();
-                });
+                    mediator.abort = true;
+                };
+
+                this.listenToOnce(this.baseController, 'action', abort);
+                this.listenToOnce(collection, 'sync', () =>
+                    this.stopListening(this.baseController, 'action', abort));
 
                 this.main(this.getViewName('list'), {
                     scope: this.name,
                     collection: collection,
                     params: options,
+                    mediator: mediator,
                 }, null, isReturn, key);
             }, this, false);
         },
@@ -401,7 +401,7 @@ define('controllers/record', ['controller'], function (Dep) {
          * Get a collection for the current controller.
          *
          * @protected
-         * @param {Function|null} [callback]
+         * @param {function(module:collection.Class): void|null} [callback]
          * @param {Object|null} [context]
          * @param {boolean} [usePreviouslyFetched=false] Use a previously fetched.
          * @return {Promise<module:collection.Class>}

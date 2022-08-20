@@ -32,7 +32,7 @@ namespace tests\unit\Espo\ORM\Repository;
 require_once 'tests/unit/testData/DB/Entities.php';
 
 use Espo\ORM\{
-    Mapper\MysqlMapper,
+    Mapper\BaseMapper,
     Repository\RDBRepository as Repository,
     Repository\RDBRelation,
     Repository\RDBRelationSelectBuilder,
@@ -75,7 +75,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
 
         $this->collectionFactory = new CollectionFactory($this->entityManager);
 
-        $this->mapper = $this->getMockBuilder(MysqlMapper::class)->disableOriginalConstructor()->getMock();
+        $this->mapper = $this->getMockBuilder(BaseMapper::class)->disableOriginalConstructor()->getMock();
 
         $entityManager
             ->method('getMapper')

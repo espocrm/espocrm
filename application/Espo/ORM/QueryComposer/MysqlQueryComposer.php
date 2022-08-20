@@ -35,9 +35,9 @@ use LogicException;
 
 class MysqlQueryComposer extends BaseQueryComposer
 {
-    public function composeLockTable(LockTableQuery $queryParams): string
+    public function composeLockTable(LockTableQuery $query): string
     {
-        $params = $queryParams->getRaw();
+        $params = $query->getRaw();
 
         $table = $this->toDb($this->sanitize($params['table']));
 

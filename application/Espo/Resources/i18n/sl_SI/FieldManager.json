@@ -1,0 +1,137 @@
+{
+  "labels": {
+    "Dynamic Logic": "Dinamična logika",
+    "Name": "Ime",
+    "Label": "Oznaka",
+    "Type": "Vrsta"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "Noben",
+      "javascript: return this.dateTime.getNow(1);": "zdaj",
+      "javascript: return this.dateTime.getNow(5);": "Zdaj (5m)",
+      "javascript: return this.dateTime.getNow(15);": "Zdaj (15m)",
+      "javascript: return this.dateTime.getNow(30);": "Zdaj (30m)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 ura",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 uri",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 ure",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 ure",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 ur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 ur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 ur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 ur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 ur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 ur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 ur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 ur",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 dan",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 dni",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 dni",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 dni",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 dni",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 dni",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 teden"
+    },
+    "dateDefault": {
+      "": "Noben",
+      "javascript: return this.dateTime.getToday();": "Danes",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 dan",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 teden",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 tedna",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 tedne",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 mesec",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 meseca",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 mesece",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 mesece",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 mesecev",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 mesecev",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 mesecev",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 mesecev",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 mesecev",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 mesecev",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 mesecev",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 leto"
+    },
+    "barcodeType": {
+      "QRcode": "QR koda"
+    }
+  },
+  "tooltips": {
+    "audited": "Posodobitve bodo zabeležene v toku.",
+    "required": "Polje bo obvezno. Ne sme biti prazno.",
+    "default": "Vrednost bo privzeto nastavljena ob ustvarjanju.",
+    "min": "Najmanjša sprejemljiva vrednost.",
+    "max": "Največja sprejemljiva vrednost.",
+    "seeMoreDisabled": "Če ni označeno, bodo dolga besedila skrajšana.",
+    "lengthOfCut": "Kako dolgo je lahko besedilo, preden bo izrezano.",
+    "maxLength": "Največja sprejemljiva dolžina besedila.",
+    "before": "Vrednost datuma mora biti pred vrednostjo datuma podanega polja.",
+    "after": "Vrednost datuma mora biti za vrednostjo datuma podanega polja.",
+    "readOnly": "Uporabnik ne more določiti vrednosti polja. Lahko pa se izračuna po formuli.",
+    "maxFileSize": "Če je prazno ali 0, ni omejitve.",
+    "fileAccept": "Katere vrste datotek sprejeti. Možno je dodati elemente po meri.",
+    "barcodeLastChar": "Za tip EAN-13.",
+    "conversionDisabled": "Dejanje pretvorbe valute ne bo uporabljeno za to polje."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "ulica",
+      "city": "Mesto",
+      "state": "Država",
+      "country": "Država",
+      "postalCode": "Poštna številka",
+      "map": "Zemljevid"
+    },
+    "personName": {
+      "salutation": "pozdrav",
+      "first": "najprej",
+      "last": "Zadnji",
+      "middle": "Sredina"
+    },
+    "currency": {
+      "converted": "(pretvorjeno)",
+      "currency": "(Valuta)"
+    },
+    "datetimeOptional": {
+      "date": "Datum"
+    }
+  },
+  "fieldInfo": {
+    "varchar": "Enovrstično besedilo.",
+    "enum": "Izbirno polje, lahko izberete samo eno vrednost.",
+    "text": "Večvrstično besedilo s podporo za označevanje.",
+    "date": "Datum brez časa.",
+    "datetime": "Datum in čas",
+    "currency": "Vrednost valute. Število s plavajočo številko s kodo valute.",
+    "int": "Celo število.",
+    "float": "Število z decimalnim delom.",
+    "bool": "Potrditveno polje. Dve možni vrednosti: true in false.",
+    "multiEnum": "Seznam vrednosti, lahko izberete več vrednosti. Seznam je urejen.",
+    "checklist": "Seznam potrditvenih polj.",
+    "array": "Seznam vrednosti, podoben polju Multi-Enum.",
+    "address": "Naslov z ulico, mestom, državo, poštno številko in državo.",
+    "url": "Za shranjevanje povezav.",
+    "wysiwyg": "Besedilo s podporo za HTML.",
+    "file": "Za nalaganje datotek.",
+    "image": "Za nalaganje slik.",
+    "attachmentMultiple": "Omogoča nalaganje več datotek.",
+    "number": "Samodejno naraščajoče število vrste niza z možno predpono in določeno dolžino.",
+    "autoincrement": "Ustvarjeno samodejno naraščajoče celo število samo za branje.",
+    "barcode": "Črtna koda. Lahko se natisne v PDF.",
+    "email": "Niz e-poštnih naslovov z njihovimi parametri: Izključen, Neveljaven, Primarni.",
+    "phone": "Niz telefonskih številk z njihovimi parametri: Vrsta, Izključena, Neveljavna, Primarna.",
+    "foreign": "Polje povezanega zapisa. Le za branje.",
+    "link": "Zapis, povezan prek razmerja Pripada (več proti enemu ali eden proti enemu).",
+    "linkParent": "Zapis, povezan prek razmerja Pripada staršu. Lahko je različnih vrst entitet.",
+    "linkMultiple": "Nabor zapisov, povezanih prek razmerja Ima-Veliko (mnogo proti mnogo ali eden proti mnogo). Vsa razmerja nimajo polj z več povezavami. Veljajo le tisti, kjer so omogočeni parametri Link-Multiple."
+  }
+}

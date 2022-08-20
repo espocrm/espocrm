@@ -136,7 +136,7 @@ return [
     'followCreatedEntities' => false,
     'b2cMode' => false,
     'restrictedMode' => false,
-    'theme' => 'Hazyblue',
+    'theme' => 'Espo',
     'themeParams' => (object) ['navbar' => 'side'],
     'massEmailMaxPerHourCount' => 100,
     'massEmailVerp' => false,
@@ -215,5 +215,10 @@ return [
     'passwordGenerateLength' => 10,
     'massActionIdleCountThreshold' => 100,
     'exportIdleCountThreshold' => 1000,
+    'clientSecurityHeadersDisabled' => false,
+    'clientCspDisabled' => false,
+    'clientCspScriptSourceList' => [
+        'https://maps.googleapis.com',
+    ],
     'isInstalled' => false,
 ];

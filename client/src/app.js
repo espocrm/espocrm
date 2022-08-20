@@ -151,6 +151,8 @@ function (
 
         this.initCache(options)
             .then(() => this.init(options, callback));
+
+        this.initDomEventListeners();
     };
 
     /**
@@ -420,7 +422,7 @@ function (
                 this.language.loadDefault()
             ])
             .then(() => {
-                this.loader.isDeveloperMode = this.settings.get('isDeveloperMode');
+                this.loader.setIsDeveloperMode(this.settings.get('isDeveloperMode'));
                 this.loader.addLibsConfig(this.settings.get('jsLibs') || {});
 
                 this.user = new User();
@@ -433,8 +435,8 @@ function (
                 this.fieldManager.acl = this.acl;
 
                 this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
-                this.modelFactory = new ModelFactory(this.loader, this.metadata, this.user);
-                this.collectionFactory = new CollectionFactory(this.loader, this.modelFactory, this.settings);
+                this.modelFactory = new ModelFactory(this.metadata, this.user);
+                this.collectionFactory = new CollectionFactory(this.modelFactory, this.settings);
 
                 if (this.settings.get('useWebSocket')) {
                     this.webSocketManager = new WebSocketManager(this.settings);
@@ -509,7 +511,7 @@ function (
 
                     promiseList.push(
                         new Promise(resolve => {
-                            this.loader.load(implClassName, implClass => {
+                            this.loader.require(implClassName, implClass => {
                                 aclImplementationClassMap[scope] = implClass;
 
                                 resolve();
@@ -646,6 +648,8 @@ function (
         },
 
         /**
+         * @param {string} name
+         * @param {function(module:controller.Class): void} callback
          * @private
          */
         getController: function (name, callback) {
@@ -820,14 +824,14 @@ function (
                 resources: {
                     loaders: {
                         template: (name, callback) => {
-                            var path = getResourcePath('template', name);
+                            let path = getResourcePath('template', name);
 
-                            this.loader.load('res!' + path, callback);
+                            this.loader.require('res!' + path, callback);
                         },
                         layoutTemplate: (name, callback) => {
-                            var path = getResourcePath('layoutTemplate', name);
+                            let path = getResourcePath('layoutTemplate', name);
 
-                            this.loader.load('res!' + path, callback);
+                            this.loader.require('res!' + path, callback);
                         },
                     },
                 },
@@ -902,7 +906,7 @@ function (
 
             this.broadcastChannel = null;
 
-            xhr = new XMLHttpRequest;
+            let xhr = new XMLHttpRequest;
 
             xhr.open('GET', this.basePath + this.apiUrl + '/');
             xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));
@@ -929,11 +933,10 @@ function (
          * @private
          */
         setCookieAuth: function (username, token) {
-            var date = new Date();
+            let date = new Date();
 
             date.setTime(date.getTime() + (1000 * 24*60*60*1000));
 
-            document.cookie = 'auth-username='+username+'; SameSite=Lax; expires='+date.toGMTString()+'; path=/';
             document.cookie = 'auth-token='+token+'; SameSite=Lax; expires='+date.toGMTString()+'; path=/';
         },
 
@@ -941,7 +944,6 @@ function (
          * @private
          */
         unsetCookieAuth: function () {
-            document.cookie = 'auth-username' + '=; SameSite=Lax; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
             document.cookie = 'auth-token' + '=; SameSite=Lax; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
         },
 
@@ -1223,6 +1225,26 @@ function (
             });
 
             this.viewHelper.broadcastChannel = this.broadcastChannel;
+        },
+
+        initDomEventListeners: function () {
+            $(document).on('keydown.espo.button', e => {
+                if (
+                    e.code !== 'Enter' ||
+                    e.target.tagName !== 'A' ||
+                    e.target.getAttribute('role') !== 'button' ||
+                    e.target.getAttribute('href') ||
+                    e.ctrlKey ||
+                    e.altKey ||
+                    e.metaKey
+                ) {
+                    return;
+                }
+
+                $(e.target).click();
+
+                e.preventDefault();
+            });
         },
 
     }, Backbone.Events);

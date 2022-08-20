@@ -10,7 +10,7 @@
     </div>
     <div class="stream-head-text-container">
         <span class="text-muted message">{{{message}}}</span>
-        <a href="javascript:" data-action="expandDetails"><span class="fas fa-chevron-down"></span></a>
+        <a role="button" tabindex="0" data-action="expandDetails"><span class="fas fa-chevron-down"></span></a>
     </div>
 </div>
 
@@ -46,5 +46,5 @@
 </div>
 
 <div class="stream-date-container">
-    <span class="text-muted small">{{{createdAt}}}</span>
+    <a class="text-muted small" href="#Note/view/{{model.id}}">{{{createdAt}}}</a>
 </div>

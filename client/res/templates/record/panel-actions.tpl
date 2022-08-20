@@ -5,7 +5,7 @@
     data-action="{{action}}"
     data-panel="{{../defs.name}}" {{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}
     title="{{#if title}}{{translate title scope=../scope}}{{/if}}"
->{{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}</button>
+>{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}</button>
 {{/each}}
 
 {{#if actionList}}
@@ -18,14 +18,15 @@
     {{#each actionList}}
     {{#if this}}
     <li><a
-        href="{{#if link}}{{link}}{{else}}javascript:{{/if}}"
+        {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+        tabindex="0"
         class="action{{#if hidden}} hidden{{/if}}"
         {{#if action}}
             data-panel="{{../defs.name}}"
             data-action="{{action}}"
         {{/if}}
         {{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}
-    >{{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}</a></li>
+    >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}</a></li>
     {{else}}
     {{#unless @first}}
     {{#unless @last}}

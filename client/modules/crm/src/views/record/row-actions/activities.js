@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/record/row-actions/activities', 'views/record/row-actions/relationship', function (Dep) {
+define('crm:views/record/row-actions/activities', ['views/record/row-actions/relationship'], function (Dep) {
 
     return Dep.extend({
 
@@ -35,9 +35,9 @@ define('crm:views/record/row-actions/activities', 'views/record/row-actions/rela
                 action: 'quickView',
                 label: 'View',
                 data: {
-                    id: this.model.id
+                    id: this.model.id,
                 },
-                link: '#' + this.model.name + '/view/' + this.model.id
+                link: '#' + this.model.name + '/view/' + this.model.id,
             }];
 
             if (this.options.acl.edit) {
@@ -45,26 +45,26 @@ define('crm:views/record/row-actions/activities', 'views/record/row-actions/rela
                     action: 'quickEdit',
                     label: 'Edit',
                     data: {
-                        id: this.model.id
+                        id: this.model.id,
                     },
-                    link: '#' + this.model.name + '/edit/' + this.model.id
+                    link: '#' + this.model.name + '/edit/' + this.model.id,
                 });
 
-                if (this.model.name == 'Meeting' || this.model.name == 'Call') {
+                if (this.model.entityType === 'Meeting' || this.model.entityType === 'Call') {
                     list.push({
                         action: 'setHeld',
-                        html: this.translate('Set Held', 'labels', 'Meeting'),
+                        text: this.translate('Set Held', 'labels', 'Meeting'),
                         data: {
-                            id: this.model.id
-                        }
+                            id: this.model.id,
+                        },
                     });
 
                     list.push({
                         action: 'setNotHeld',
-                        html: this.translate('Set Not Held', 'labels', 'Meeting'),
+                        text: this.translate('Set Not Held', 'labels', 'Meeting'),
                         data: {
-                            id: this.model.id
-                        }
+                            id: this.model.id,
+                        },
                     });
                 }
             }
@@ -74,13 +74,12 @@ define('crm:views/record/row-actions/activities', 'views/record/row-actions/rela
                     action: 'removeRelated',
                     label: 'Remove',
                     data: {
-                        id: this.model.id
+                        id: this.model.id,
                     }
                 });
             }
 
             return list;
         },
-
     });
 });

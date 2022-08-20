@@ -17,11 +17,12 @@
         <div class="attachments-container">
             {{{attachments}}}
         </div>
-        <a href="javascript:" class="text-muted pull-right stream-post-info">
+        <a role="button" tabindex="-1" class="text-muted pull-right stream-post-info">
             <span class="fas fa-info-circle"></span>
         </a>
         <a
-            href="javascript:"
+            role="button"
+            tabindex="0"
             class="text-muted pull-right stream-post-preview hidden action"
             title="{{translate 'Preview'}}"
             data-action="preview"

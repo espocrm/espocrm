@@ -133,7 +133,7 @@ class Manager
             ->find();
 
         foreach ($list as $webhook) {
-            /** @var string */
+            /** @var string $event */
             $event = $webhook->getEvent();
 
             $data[$event] = true;

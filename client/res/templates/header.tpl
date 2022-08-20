@@ -6,15 +6,16 @@
         <div class="header-buttons btn-group pull-right">
             {{#each items.buttons}}
                 <a
-                    {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}}
+                    {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                    tabindex="0"
                     class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}} btn-xs-wide action{{#if hidden}} hidden{{/if}}{{#if className}} {{className}}{{/if}}"
                     data-name="{{name}}"
                     data-action="{{action}}"
-                    {{#each data}} data-{{@key}}="{{./this}}"{{/each}}{{#if title}}
-                    title="{{title}}"{{/if}}
+                    {{#each data}} data-{{@key}}="{{./this}}"{{/each}}
+                    {{#if title}}title="{{title}}"{{/if}}
                 >
                 {{#if iconHtml}}{{{iconHtml}}}{{/if}}
-                {{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}
+                {{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}
                 </a>
             {{/each}}
 
@@ -27,12 +28,15 @@
                     {{#each items.actions}}
                     <li class="{{#if hidden}}hidden{{/if}}">
                         <a
-                            {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}}
+                            {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                            tabindex="0"
                             class="action"
                             data-name="{{name}}"
                             data-action="{{action}}"
                             {{#each data}} data-{{@key}}="{{./this}}"{{/each}}
-                        >{{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}</a></li>
+                            {{#if title}}title="{{title}}"{{/if}}
+                        >{{#if iconHtml}}{{{iconHtml}}}{{/if}}
+                            {{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}</a></li>
                     {{/each}}
                 </ul>
                 </div>
@@ -52,14 +56,15 @@
                         {{#if this}}
                         <li class="{{#if hidden}}hidden{{/if}}">
                             <a
-                                {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}}
+                                {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                                tabindex="0"
                                 class="action"
                                 data-name="{{name}}"
                                 data-action="{{action}}"
                                 {{#each data}} data-{{@key}}="{{./this}}"{{/each}}
                             >
                             {{#if iconHtml}}{{{iconHtml}}} {{/if}}
-                            {{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}</a></li>
+                            {{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}</a></li>
                         {{else}}
                             {{#unless @first}}
                             {{#unless @last}}

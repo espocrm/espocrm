@@ -269,9 +269,10 @@ class Installer
         return [
             'Espo',
             'Dark',
+            'Glass',
+            'Hazyblue',
             'Sakura',
             'Violet',
-            'Hazyblue',
         ];
     }
 

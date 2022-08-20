@@ -1,0 +1,16 @@
+{
+  "messages": {
+    "infoMention": "Vnesite **@uporabniškoime**, da uporabnika omenite v objavi.",
+    "infoSyntax": "Razpoložljiva sintaksa označevanja",
+    "couldNotAddFollowerUserHasNoAccessToStream": "Uporabnika '{userName}' ni bilo mogoče dodati med spremljevalce. Uporabnik nima 'stream' dostopa do zapisa."
+  },
+  "syntaxItems": {
+    "code": "Koda",
+    "multilineCode": "večvrstična koda",
+    "strongText": "močno besedilo",
+    "emphasizedText": "poudarjeno besedilo",
+    "deletedText": "izbrisano besedilo",
+    "blockquote": "citat bloka",
+    "link": "povezava"
+  }
+}

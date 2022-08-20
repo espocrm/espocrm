@@ -490,7 +490,7 @@ class BaseMapper implements RDBMapper
      */
     public function countRelated(Entity $entity, string $relationName, ?Select $select = null): int
     {
-        /** @var int|null */
+        /** @var int|null $result */
         $result = $this->selectRelatedInternal($entity, $relationName, $select, true);
 
         return (int) $result;

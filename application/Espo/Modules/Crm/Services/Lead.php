@@ -102,7 +102,7 @@ class Lead extends Record implements
      */
     public function getConvertAttributes(string $id): array
     {
-        /** @var LeadEntity */
+        /** @var LeadEntity $lead */
         $lead = $this->getEntity($id);
 
         if (!$this->acl->check($lead, 'read')) {
@@ -111,12 +111,12 @@ class Lead extends Record implements
 
         $data = [];
 
-        /** @var string[] */
+        /** @var string[] $entityList */
         $entityList = $this->metadata->get('entityDefs.Lead.convertEntityList', []);
 
         $ignoreAttributeList = ['createdAt', 'modifiedAt', 'modifiedById', 'modifiedByName', 'createdById', 'createdByName'];
 
-        /** @var array<string,array<string,string>> */
+        /** @var array<string,array<string,string>> $convertFieldsDefs */
         $convertFieldsDefs = $this->metadata->get('entityDefs.Lead.convertFields', []);
 
         foreach ($entityList as $entityType) {
@@ -127,7 +127,7 @@ class Lead extends Record implements
             $attributes = [];
             $fieldMap = [];
 
-            /** @var string[] */
+            /** @var string[] $fieldList */
             $fieldList = array_keys($this->metadata->get('entityDefs.Lead.fields', []));
 
             foreach ($fieldList as $field) {
@@ -238,7 +238,7 @@ class Lead extends Record implements
      */
     public function convert(string $id, object $recordsData, ?object $additionalData = null): LeadEntity
     {
-        /** @var LeadEntity */
+        /** @var LeadEntity $lead */
         $lead = $this->getEntity($id);
 
         $additionalData = $additionalData ?? (object) [];
@@ -264,8 +264,7 @@ class Lead extends Record implements
             $account->set(get_object_vars($recordsData->Account));
 
             if ($duplicateCheck) {
-                /** @var Account[] */
-                /** @var iterable<Account> */
+                /** @var Account[] $rDuplicateList */
                 $rDuplicateList = $this->recordServiceContainer
                     ->get('Account')
                     ->findDuplicates($account);
@@ -297,8 +296,7 @@ class Lead extends Record implements
             }
 
             if ($duplicateCheck) {
-                /** @var Contact[] */
-                /** @var iterable<Contact> */
+                /** @var Contact[] $rDuplicateList */
                 $rDuplicateList = $this->recordServiceContainer
                     ->get('Contact')
                     ->findDuplicates($contact);
@@ -336,8 +334,7 @@ class Lead extends Record implements
             }
 
             if ($duplicateCheck) {
-                /** @var Opportunity[] */
-                /** @var iterable<Opportunity> */
+                /** @var Opportunity[] $rDuplicateList */
                 $rDuplicateList = $this->recordServiceContainer
                     ->get('Opportunity')
                     ->findDuplicates($opportunity);

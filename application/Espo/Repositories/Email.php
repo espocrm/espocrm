@@ -421,7 +421,7 @@ class Email extends Database implements
 
     public function applyUsersFilters(EmailEntity $entity): void
     {
-        /** @var string[] */
+        /** @var string[] $userIdList */
         $userIdList = $entity->getLinkMultipleIdList('users');
 
         foreach ($userIdList as $userId) {
@@ -460,7 +460,7 @@ class Email extends Database implements
                 $entity->get('parentId') &&
                 $entity->isAttributeChanged('parentId')
             ) {
-                /** @var \Espo\ORM\Collection<EmailEntity> */
+                /** @var \Espo\ORM\Collection<EmailEntity> $replyList */
                 $replyList = $this->findRelated($entity, 'replies');
 
                 foreach ($replyList as $reply) {

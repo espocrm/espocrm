@@ -135,7 +135,7 @@ class Cleanup implements JobDataLess
 
         foreach ($items as $name => $item) {
             try {
-                /** @var class-string<\Espo\Core\Cleanup\Cleanup> */
+                /** @var class-string<\Espo\Core\Cleanup\Cleanup> $className */
                 $className = $item['className'];
 
                 $obj = $injectableFactory->create($className);
@@ -362,7 +362,7 @@ class Cleanup implements JobDataLess
 
         $datetimeFrom->modify($fromPeriod);
 
-        /** @var string[] */
+        /** @var string[] $scopeList */
         $scopeList = array_keys($this->metadata->get(['scopes']));
 
         foreach ($scopeList as $scope) {
@@ -572,7 +572,7 @@ class Cleanup implements JobDataLess
         $fileManager = $this->fileManager;
 
         if ($fileManager->exists($path)) {
-            /** @var string[] */
+            /** @var string[] $fileList */
             $fileList = $fileManager->getFileList($path, false, '', false);
 
             foreach ($fileList as $dirName) {
@@ -731,7 +731,7 @@ class Cleanup implements JobDataLess
 
         $datetime = new DateTime($period);
 
-        /** @var string[] */
+        /** @var string[] $scopeList */
         $scopeList = array_keys($this->metadata->get(['scopes']));
 
         foreach ($scopeList as $scope) {

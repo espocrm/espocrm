@@ -28,7 +28,6 @@
                 "delete": "own",
                 "create": "yes"
             },
-            "EmailAccount": false,
             "ExternalAccount": false,
             "Role": false,
             "PortalRole": false,

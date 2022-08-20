@@ -92,7 +92,7 @@ class CaseObj extends Record
      */
     public function getEmailAddressList(string $id): array
     {
-        /** @var CaseEntity */
+        /** @var CaseEntity $entity */
         $entity = $this->getEntity($id);
 
         $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($this->getEntityType());

@@ -1,0 +1,47 @@
+{
+  "fields": {
+    "name": "Ime",
+    "campaign": "Kampanja",
+    "isActive": "Je aktiven",
+    "subscribeToTargetList": "Naročite se na Target List",
+    "subscribeContactToTargetList": "Naročite se Kontakt, če obstaja",
+    "targetList": "Ciljni seznam",
+    "fieldList": "Polja koristne obremenitve",
+    "optInConfirmation": "Dvojna prijava",
+    "optInConfirmationEmailTemplate": "Potrditvena e-poštna predloga za prijavo",
+    "optInConfirmationLifetime": "Življenjska doba potrditve privolitve (ure)",
+    "optInConfirmationSuccessMessage": "Besedilo za prikaz po potrditvi privolitve",
+    "leadSource": "Vodilni vir",
+    "apiKey": "API ključ",
+    "targetTeam": "Ciljna ekipa",
+    "exampleRequestMethod": "Metoda",
+    "exampleRequestPayload": "Tovor",
+    "createLeadBeforeOptInConfirmation": "Ustvari potencialno stranko pred potrditvijo",
+    "duplicateCheck": "Preverjanje dvojnika",
+    "skipOptInConfirmationIfSubscribed": "Preskoči potrditev, če je potencialna stranka že na ciljnem seznamu",
+    "smtpAccount": "Račun SMTP",
+    "inboundEmail": "E-poštni račun skupine"
+  },
+  "links": {
+    "targetList": "Ciljni seznam",
+    "campaign": "Kampanja",
+    "optInConfirmationEmailTemplate": "Potrditvena e-poštna predloga za prijavo",
+    "targetTeam": "Ciljna ekipa",
+    "logRecords": "Dnevnik",
+    "inboundEmail": "E-poštni račun skupine"
+  },
+  "labels": {
+    "Create LeadCapture": "Ustvarite vstopno točko",
+    "Generate New API Key": "Ustvari nov ključ API",
+    "Request": "Prošnja",
+    "Confirm Opt-In": "Potrdite prijavo"
+  },
+  "messages": {
+    "generateApiKey": "Ustvari nov ključ API",
+    "optInConfirmationExpired": "Potrditvena povezava za prijavo je potekla.",
+    "optInIsConfirmed": "Prijava je potrjena."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown je podprt."
+  }
+}

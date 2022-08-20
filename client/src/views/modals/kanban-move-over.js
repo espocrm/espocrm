@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/kanban-move-over', 'views/modal', function (Dep) {
+define('views/modals/kanban-move-over', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -51,13 +51,20 @@ define('views/modals/kanban-move-over', 'views/modal', function (Dep) {
 
             this.statusField = this.options.statusField;
 
-            this.headerHtml = '';
-            this.headerHtml += this.getLanguage().translate(this.scope, 'scopeNames');
+            this.$header = $('<span>');
+
+            this.$header.append(
+                $('<span>').text(this.getLanguage().translate(this.scope, 'scopeNames'))
+            );
+
             if (this.model.get('name')) {
-                this.headerHtml += ' <span class="chevron-right"></span> ' +
-                    Handlebars.Utils.escapeExpression(this.model.get('name'));
+                this.$header.append(' <span class="chevron-right"></span> ');
+                this.$header.append(
+                    $('<span>').text(this.model.get('name'))
+                )
             }
-            this.headerHtml = iconHtml + this.headerHtml;
+
+            this.$header.prepend(iconHtml);
 
             this.buttonList = [
                 {
@@ -68,14 +75,14 @@ define('views/modals/kanban-move-over', 'views/modal', function (Dep) {
 
             this.optionDataList = [];
 
-            (this.getMetadata().get(
-                ['entityDefs', this.scope, 'fields', this.statusField, 'options']) || []
-            ).forEach(function (item) {
-                this.optionDataList.push({
-                    value: item,
-                    label: this.getLanguage().translateOption(item, this.statusField, this.scope),
+            (this.getMetadata()
+                    .get(['entityDefs', this.scope, 'fields', this.statusField, 'options']) || [])
+                .forEach((item) => {
+                    this.optionDataList.push({
+                        value: item,
+                        label: this.getLanguage().translateOption(item, this.statusField, this.scope),
+                    });
                 });
-            }, this);
         },
 
         moveTo: function (status) {
@@ -91,12 +98,11 @@ define('views/modals/kanban-move-over', 'views/modal', function (Dep) {
                         isMoveTo: true,
                     }
                 )
-                .then(function () {
+                .then(() => {
                     Espo.Ui.success(this.translate('Done'));
-                }.bind(this));
+                });
 
             this.close();
         },
-
     });
 });

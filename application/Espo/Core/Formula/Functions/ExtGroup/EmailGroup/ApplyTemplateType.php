@@ -99,7 +99,7 @@ class ApplyTemplateType extends BaseFunction implements
             return false;
         }
 
-        /** @var \Espo\Services\EmailTemplate */
+        /** @var \Espo\Services\EmailTemplate $emailTemplateService */
         $emailTemplateService = $this->serviceFactory->create('EmailTemplate');
 
         $params = [];
@@ -122,7 +122,7 @@ class ApplyTemplateType extends BaseFunction implements
 
         $data = $emailTemplateService->parseTemplate($emailTemplate, $params, true, true);
 
-        /** @var string[] */
+        /** @var string[] $attachmentsIds */
         $attachmentsIds = $email->getLinkMultipleIdList('attachments');
 
         $attachmentsIds = array_merge($attachmentsIds, $data['attachmentsIds']);

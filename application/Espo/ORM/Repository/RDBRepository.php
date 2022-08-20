@@ -346,7 +346,7 @@ class RDBRepository implements Repository
             );
         }
 
-        /** @var Collection<TEntity>|TEntity|null */
+        /** @var Collection<TEntity>|TEntity|null $result */
         $result = $this->getMapper()->selectRelated($entity, $relationName, $select);
 
         if ($result instanceof SthCollection) {
@@ -806,7 +806,7 @@ class RDBRepository implements Repository
             throw new RuntimeException("Can't clone a query of a different entity type.");
         }
 
-        /** @var RDBSelectBuilder<TEntity> */
+        /** @var RDBSelectBuilder<TEntity> $builder */
         $builder = new RDBSelectBuilder($this->entityManager, $this->entityType, $query);
 
         return $builder;
@@ -1000,7 +1000,7 @@ class RDBRepository implements Repository
      */
     protected function createSelectBuilder(): RDBSelectBuilder
     {
-        /** @var RDBSelectBuilder<TEntity> */
+        /** @var RDBSelectBuilder<TEntity> $builder */
         $builder = new RDBSelectBuilder($this->entityManager, $this->entityType);
 
         return $builder;

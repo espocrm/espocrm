@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/modals/action-history', ['views/modal', 'search-manager'], function (Dep, SearchManager) {
+define('views/modals/action-history', ['views/modal', 'search-manager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -44,26 +44,28 @@ Espo.define('views/modals/action-history', ['views/modal', 'search-manager'], fu
             this.buttonList = [
                 {
                     name: 'cancel',
-                    label: 'Close'
+                    label: 'Close',
                 }
             ];
 
             this.scope = this.entityType = this.options.scope || this.scope;
 
-            this.headerHtml = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
-            this.headerHtml = '<a href="#ActionHistoryRecord" class="action" data-action="listView">' + this.headerHtml + '</a>';
+            this.$header = $('<a>')
+                .attr('href', '#ActionHistoryRecord')
+                .addClass('action')
+                .attr('data-action', 'listView')
+                .text(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
 
             this.waitForView('list');
 
-            this.getCollectionFactory().create(this.scope, function (collection) {
+            this.getCollectionFactory().create(this.scope, collection => {
                 collection.maxSize = this.getConfig().get('recordsPerPage') || 20;
                 this.collection = collection;
 
                 this.loadSearch();
                 this.loadList();
                 collection.fetch();
-            }, this);
-
+            });
         },
 
         actionListView: function () {
@@ -72,27 +74,27 @@ Espo.define('views/modals/action-history', ['views/modal', 'search-manager'], fu
         },
 
         loadSearch: function () {
-            var searchManager = this.searchManager = new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
+            var searchManager = this.searchManager =
+                new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
 
             this.collection.data.boolFilterList = ['onlyMy'];
 
             this.collection.where = searchManager.getWhere();
-
 
             this.createView('search', 'views/record/search', {
                 collection: this.collection,
                 el: this.containerSelector + ' .search-container',
                 searchManager: searchManager,
                 disableSavePreset: true,
-                textFilterDisabled: true
+                textFilterDisabled: true,
             });
         },
 
         loadList: function () {
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
-                           'views/record/list';
+            let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
+               'views/record/list';
 
-            this.listenToOnce(this.collection, 'sync', function () {
+            this.listenToOnce(this.collection, 'sync', () => {
                 this.createView('list', viewName, {
                     collection: this.collection,
                     el: this.containerSelector + ' .list-container',
@@ -103,9 +105,9 @@ Espo.define('views/modals/action-history', ['views/modal', 'search-manager'], fu
                     type: 'listSmall',
                     searchManager: this.searchManager,
                     checkAllResultDisabled: true,
-                    buttonsDisabled: true
+                    buttonsDisabled: true,
                 });
-            }, this);
+            });
         },
     });
 });

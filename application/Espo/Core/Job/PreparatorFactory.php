@@ -51,7 +51,7 @@ class PreparatorFactory
      */
     public function create(string $name): Preparator
     {
-        /** @var ?class-string<Preparator> */
+        /** @var ?class-string<Preparator> $className */
         $className = $this->metadataProvider->getPreparatorClassName($name);
 
         if (!$className) {

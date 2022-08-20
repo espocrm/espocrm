@@ -32,6 +32,7 @@ namespace Espo\Core\ApplicationRunners;
 use Espo\Core\{
     Application\Runner,
     DataManager,
+    Exceptions\Error,
 };
 
 /**
@@ -48,6 +49,9 @@ class ClearCache implements Runner
         $this->dataManager = $dataManager;
     }
 
+    /**
+     * @throws Error
+     */
     public function run(): void
     {
         $this->dataManager->clearCache();

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/contact/modals/select-for-portal-user', 'views/modals/select-records', function (Dep) {
+define('crm:views/contact/modals/select-for-portal-user', ['views/modals/select-records'], function (Dep) {
 
     return Dep.extend({
 
@@ -35,14 +35,13 @@ Espo.define('crm:views/contact/modals/select-for-portal-user', 'views/modals/sel
 
             this.buttonList.unshift({
                 name: 'skip',
-                html: this.translate('Proceed w/o Contact', 'labels', 'User')
+                text: this.translate('Proceed w/o Contact', 'labels', 'User')
             });
         },
 
         actionSkip: function () {
             this.trigger('skip');
             this.remove();
-        }
-
+        },
     });
 });

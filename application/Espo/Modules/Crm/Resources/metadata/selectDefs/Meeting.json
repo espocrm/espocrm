@@ -4,6 +4,13 @@
         "duration": [
             "dateStart",
             "dateEnd"
+        ],
+        "dateStart": [
+            "dateEnd"
+        ],
+        "dateStartDate": [
+            "dateEnd",
+            "dateEndDate"
         ]
     },
     "primaryFilterClassNameMap": {

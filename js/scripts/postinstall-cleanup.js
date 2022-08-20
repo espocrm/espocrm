@@ -29,21 +29,38 @@
 const fs = require('fs');
 
 function rmDir(path) {
+    if (!fs.existsSync(path)) {
+        return;
+    }
+
+
     if (fs.rm) {
         fs.rmSync(path, {recursive: true});
 
         return;
     }
 
+
     fs.rmdirSync(path, {recursive: true});
 }
+
+function rmFile(path) {
+    if (!fs.existsSync(path)) {
+        return;
+    }
+
+
+    fs.unlinkSync(path);
+}
+
 
 // Can't be ignored by IntelliJ IDE, resort to removing.
 rmDir('./node_modules/vis/examples');
 rmDir('./node_modules/vis/lib');
 rmDir('./node_modules/vis/docs');
-fs.unlinkSync('./node_modules/vis/gulpfile.js');
-fs.unlinkSync('./node_modules/vis/index.js');
-fs.unlinkSync('./node_modules/vis/index-graph3d.js');
-fs.unlinkSync('./node_modules/vis/index-network.js');
-fs.unlinkSync('./node_modules/vis/index-timeline-graph2d.js');
+
+rmFile('./node_modules/vis/gulpfile.js');
+rmFile('./node_modules/vis/index.js');
+rmFile('./node_modules/vis/index-graph3d.js');
+rmFile('./node_modules/vis/index-network.js');
+rmFile('./node_modules/vis/index-timeline-graph2d.js');

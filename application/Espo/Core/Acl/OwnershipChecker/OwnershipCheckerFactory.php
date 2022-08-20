@@ -80,7 +80,7 @@ class OwnershipCheckerFactory
      */
     private function getClassName(string $scope): string
     {
-        /** @var ?class-string<OwnershipChecker> */
+        /** @var ?class-string<OwnershipChecker> $className */
         $className = $this->metadata->get(['aclDefs', $scope, 'ownershipCheckerClassName']);
 
         if ($className) {

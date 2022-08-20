@@ -68,6 +68,7 @@ define('views/main', ['view'], function (Dep) {
          * @property {string} [title] A title.
          * @property {string} [iconHtml] An icon HTML.
          * @property {string} [html] An HTML.
+         * @property {string} [text] A text.
          * @property {string} [className] An additional class name. Only for buttons.
          */
 
@@ -89,6 +90,14 @@ define('views/main', ['view'], function (Dep) {
          * @type {JQuery|null}
          */
         $headerActionsContainer: null,
+
+        /**
+         * A shortcut-key => action map.
+         *
+         * @protected
+         * @type {?Object.<string,string|function (JQueryKeyEventObject): void>}
+         */
+        shortcutKeys: null,
 
         /**
          * @inheritDoc
@@ -161,7 +170,42 @@ define('views/main', ['view'], function (Dep) {
                 this.$headerActionsContainer = this.$el.find('.page-header .header-buttons');
             });
 
+            this.on('header-rendered', () => {
+                this.$headerActionsContainer = this.$el.find('.page-header .header-buttons');
+            });
+
             this.on('after:render', () => this.adjustButtons());
+
+            if (this.shortcutKeys) {
+                this.shortcutKeys = Espo.Utils.cloneDeep(this.shortcutKeys);
+            }
+        },
+
+        setupFinal: function () {
+            if (this.shortcutKeys) {
+                this.events['keydown.main'] = e => {
+                    let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                    if (typeof this.shortcutKeys[key] === 'function') {
+                        this.shortcutKeys[key].call(this, e);
+
+                        return;
+                    }
+
+                    let actionName = this.shortcutKeys[key];
+
+                    if (!actionName) {
+                        return;
+                    }
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
+
+                    this[methodName]();
+                };
+            }
         },
 
         /**
@@ -189,6 +233,12 @@ define('views/main', ['view'], function (Dep) {
             if (this.menu) {
                 this.headerActionItemTypeList.forEach(type => {
                     (this.menu[type] || []).forEach(item => {
+                        if (item === false) {
+                            menu[type].push(false);
+
+                            return;
+                        }
+
                         item = Espo.Utils.clone(item);
 
                         menu[type] = menu[type] || [];
@@ -353,14 +403,14 @@ define('views/main', ['view'], function (Dep) {
             this.menu[type][method](item);
 
             if (!doNotReRender && this.isRendered()) {
-                this.getView('header').reRender();
+                this.getHeaderView().reRender();
 
                 return;
             }
 
             if (!doNotReRender && this.isBeingRendered()) {
                 this.once('after:render', () => {
-                    this.getView('header').reRender();
+                    this.getHeaderView().reRender();
                 });
             }
         },
@@ -369,7 +419,7 @@ define('views/main', ['view'], function (Dep) {
          * Remove a menu item.
          *
          * @param {string} name An item name.
-         * @param {boolean} doNotReRender Skip re-render.
+         * @param {boolean} [doNotReRender] Skip re-render.
          */
         removeMenuItem: function (name, doNotReRender) {
             var index = -1;
@@ -391,14 +441,14 @@ define('views/main', ['view'], function (Dep) {
             }
 
             if (!doNotReRender && this.isRendered()) {
-                this.getView('header').reRender();
+                this.getHeaderView().reRender();
 
                 return;
             }
 
             if (!doNotReRender && this.isBeingRendered()) {
                 this.once('after:render', () => {
-                    this.getView('header').reRender();
+                    this.getHeaderView().reRender();
                 });
 
                 return;

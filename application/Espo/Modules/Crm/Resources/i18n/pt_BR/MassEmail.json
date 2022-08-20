@@ -1,25 +1,57 @@
 {
   "fields": {
     "name": "Nome",
+    "storeSentEmails": "Armazenar emails enviados",
+    "startAt": "Data de Início",
+    "fromAddress": "Do Endereço",
     "fromName": "De Nome",
+    "replyToAddress": "Endereço de Resposta",
     "replyToName": "Responder para Nome",
     "campaign": "Campanha",
-    "emailTemplate": "Template de email"
+    "emailTemplate": "Template de email",
+    "inboundEmail": "Conta de Email",
+    "targetLists": "Listas de Alvo",
+    "excludingTargetLists": "Excluindo Listas de Alvo",
+    "optOutEntirely": "Cancelado Completamente",
+    "smtpAccount": "Conta SMTP"
   },
   "links": {
-    "campaign": "Campanha"
+    "targetLists": "Listas de Alvo",
+    "excludingTargetLists": "Excluindo Listas de Alvos",
+    "queueItems": "Itens da Fila",
+    "campaign": "Campanha",
+    "emailTemplate": "Modelo de Email",
+    "inboundEmail": "Conta de Email"
   },
   "options": {
     "status": {
       "Draft": "Rascunho",
       "Pending": "Pendente",
       "In Process": "Em processo",
-      "Canceled": "Cancelado"
+      "Complete": "Completo",
+      "Canceled": "Cancelado",
+      "Failed": "Falhou"
     }
   },
   "labels": {
     "Create MassEmail": "Criar email em massa",
+    "Send Test": "Enviar Teste",
+    "System SMTP": "SMTP do sistema",
     "system": "sistema",
     "group": "grupo"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Selecione pelo menos um destino.",
+    "testSent": "Email(s) de teste que devem ser enviados"
+  },
+  "tooltips": {
+    "optOutEntirely": "Os endereços de e-mail de destinatários que cancelaram a assinatura serão marcados como desativados e não receberão mais e-mails em massa.",
+    "targetLists": "Destinos que devem receber mensagens.",
+    "excludingTargetLists": "Destinos que não devem receber mensagens.",
+    "storeSentEmails": "Os emails serão armazenados no CRM."
+  },
+  "presetFilters": {
+    "actual": "Real",
+    "complete": "Completo"
   }
 }

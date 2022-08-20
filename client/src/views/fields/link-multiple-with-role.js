@@ -276,7 +276,8 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
                 .addClass('link-' + id);
 
             let $remove = $('<a>')
-                .attr('href', 'javascript:')
+                .attr('role', 'button')
+                .attr('tabindex', '0')
                 .attr('data-id', id)
                 .attr('data-action', 'clearLink')
                 .addClass('pull-right')

@@ -63,7 +63,7 @@ define('views/outbound-email/fields/test-send', 'views/fields/base', function (D
         },
 
         getSmtpData: function () {
-            var data = {
+            return {
                 'server': this.model.get('smtpServer'),
                 'port': this.model.get('smtpPort'),
                 'auth': this.model.get('smtpAuth'),
@@ -74,10 +74,7 @@ define('views/outbound-email/fields/test-send', 'views/fields/base', function (D
                 'fromAddress': this.model.get('outboundEmailFromAddress'),
                 'type': 'outboundEmail',
             };
-
-            return data;
         },
-
 
         send: function () {
             var data = this.getSmtpData();

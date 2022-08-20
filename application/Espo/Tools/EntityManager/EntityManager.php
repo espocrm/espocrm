@@ -254,7 +254,7 @@ class EntityManager
                 continue;
             }
 
-            /** @var string */
+            /** @var string $languageContents */
             $languageContents = $this->fileManager->getContents($filePath);
 
             $languageContents = str_replace('{entityType}', $name, $languageContents);
@@ -376,7 +376,7 @@ class EntityManager
             return;
         }
 
-        /** @var string */
+        /** @var string $contents */
         $contents = $this->fileManager->getContents($path);
 
         $data = Json::decode($contents, true);
@@ -392,7 +392,7 @@ class EntityManager
             return;
         }
 
-        /** @var string */
+        /** @var string $contents */
         $contents = $this->fileManager->getContents($path);
 
         $data = Json::decode($contents, true);
@@ -1672,7 +1672,7 @@ class EntityManager
             $toCreateList[] = $foreignEntityType;
         }
 
-        /** @var string[] */
+        /** @var string[] $entityTypeList */
         $entityTypeList = array_keys($this->metadata->get('entityDefs') ?? []);
 
         foreach ($entityTypeList as $itemEntityType) {

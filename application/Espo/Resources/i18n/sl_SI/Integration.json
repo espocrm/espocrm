@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "enabled": "Omogočeno",
+    "clientId": "ID stranke",
+    "clientSecret": "Skrivnost stranke",
+    "redirectUri": "URI preusmeritve",
+    "apiKey": "API ključ"
+  },
+  "messages": {
+    "selectIntegration": "V meniju izberite integracijo.",
+    "noIntegrations": "Integracije niso na voljo."
+  },
+  "titles": {
+    "GoogleMaps": "Google zemljevidi"
+  },
+  "help": {
+    "Google": "**Pridobite poverilnice OAuth 2.0 v konzoli Google Developers Console.** Obiščite [Konzolo Google Developers Console](https://console.developers.google.com/project), da pridobite poverilnice OAuth 2.0, kot sta ID odjemalca in skrivnost odjemalca, ki sta pozna tako Google kot aplikacija EspoCRM.",
+    "GoogleMaps": "Pridobite ključ API [tukaj](https://developers.google.com/maps/documentation/javascript/get-api-key)."
+  }
+}

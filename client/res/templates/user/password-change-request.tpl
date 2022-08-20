@@ -1,5 +1,5 @@
 <div class="container content">
-    <div class="col-md-8 col-md-offset-1 col-sm-12 col-sm-offset-0">
+    <div class="block-center">
         <div class="panel panel-default password-change">
             <div class="panel-heading">
                 <h4 class="panel-title">{{translate 'Change Password' scope='User'}}</h4>

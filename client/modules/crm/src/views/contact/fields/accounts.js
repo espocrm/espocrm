@@ -190,7 +190,8 @@ define('crm:views/contact/fields/accounts', ['views/fields/link-multiple-with-co
             let isPrimary = id === this.primaryId;
 
             let $a = $('<a>')
-                .attr('href', 'javascript:')
+                .attr('role', 'button')
+                .attr('tabindex', '0')
                 .attr('data-action', 'setPrimary')
                 .attr('data-id', id)
                 .text(this.translate('Set Primary', 'labels', 'Account'));

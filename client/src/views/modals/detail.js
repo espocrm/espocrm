@@ -66,6 +66,42 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
 
         duplicateAction: false,
 
+        shortcutKeys: {
+            'Control+Space': function (e) {
+                if (this.editDisabled) {
+                    return;
+                }
+
+                if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+                    return;
+                }
+
+                if (this.buttonList.findIndex(item => item.name === 'edit') === -1) {
+                    return;
+                }
+
+                e.stopPropagation();
+                e.preventDefault();
+
+                this.actionEdit()
+                    .then(view => {
+                        view.$el
+                            .find('.middle-tabs > button.active, .form-control, .form-control:not([disabled])')
+                            .first()
+                            .focus();
+                    });
+            },
+            'Control+Backslash': function (e) {
+                this.getRecordView().handleShortcutKeyControlBackslash(e);
+            },
+            'Control+ArrowLeft': function (e) {
+                this.handleShortcutKeyControlArrowLeft(e);
+            },
+            'Control+ArrowRight': function (e) {
+                this.handleShortcutKeyControlArrowRight(e);
+            },
+        },
+
         setup: function () {
             this.scope = this.scope || this.options.scope;
             this.id = this.options.id;
@@ -105,6 +141,7 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
             this.buttonList.push({
                 name: 'cancel',
                 label: 'Close',
+                title: 'Esc',
             });
 
             if (this.model && this.model.collection && !this.navigateButtonsDisabled) {
@@ -252,6 +289,7 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
             this.addButton({
                 name: 'edit',
                 label: 'Edit',
+                title: 'Ctrl+Space',
             }, true);
         },
 
@@ -279,22 +317,37 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
             var scope = this.getScope();
 
             this.headerHtml = '';
-            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 
-            this.headerHtml += this.getLanguage().translate(scope, 'scopeNames');
+            this.headerHtml += $('<span>')
+                .text(this.getLanguage().translate(scope, 'scopeNames'))
+                .get(0).outerHTML;
 
             if (model.get('name')) {
-                this.headerHtml += ' <span class="chevron-right"></span> ' +
-                    Handlebars.Utils.escapeExpression(model.get('name'));
+                this.headerHtml += ' ' +
+                    $('<span>')
+                        .addClass('chevron-right')
+                        .get(0).outerHTML;
+
+                this.headerHtml += ' ' +
+                    $('<span>')
+                        .text(model.get('name'))
+                        .get(0).outerHTML;
             }
 
             if (!this.fullFormDisabled) {
-                this.headerHtml = '<a href="#' + scope + '/view/' +
-                    this.id+'" class="action font-size-flexible" '+
-                    'title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.headerHtml + '</a>';
+                let url = '#' + scope + '/view/' + this.id;
+
+                this.headerHtml =
+                    $('<a>')
+                        .attr('href', url)
+                        .addClass('action font-size-flexible')
+                        .attr('title', this.translate('Full Form'))
+                        .attr('data-action', 'fullForm')
+                        .append(this.headerHtml)
+                        .get(0).outerHTML;
             }
 
-            this.headerHtml = iconHtml + this.headerHtml;
+            this.headerHtml = this.getHelper().getScopeColorIconHtml(this.scope) + this.headerHtml;
 
             if (!this.editDisabled) {
                 var editAccess = this.getAcl().check(model, 'edit', true);
@@ -340,7 +393,7 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                 this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'detailQuick']) ||
                 'views/record/detail-small';
 
-            var options = {
+            let options = {
                 model: model,
                 el: this.containerSelector + ' .record-container',
                 type: 'detailSmall',
@@ -353,6 +406,13 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
             };
 
             this.createView('record', viewName, options, callback);
+        },
+
+        /**
+         * @return {module:views/record/detail.Class}
+         */
+        getRecordView: function () {
+            return this.getView('record');
         },
 
         afterRender: function () {
@@ -504,9 +564,12 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                 });
         },
 
+        /**
+         * @return {Promise}
+         */
         actionEdit: function () {
             if (this.options.quickEditDisabled) {
-                var options = {
+                let options = {
                     id: this.id,
                     model: this.model,
                     returnUrl: this.getRouter().getCurrentUrl(),
@@ -519,41 +582,46 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                 this.getRouter().navigate('#' + this.scope + '/edit/' + this.id, {trigger: false});
                 this.getRouter().dispatch(this.scope, 'edit', options);
 
-                return;
+                return Promise.reject();
             }
 
-            var viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
+            let viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
                 'views/modals/edit';
 
-            this.createView('quickEdit', viewName, {
-                scope: this.scope,
-                entityType: this.model.entityType,
-                id: this.id,
-                fullFormDisabled: this.fullFormDisabled
-            }, (view) => {
-                view.once('after:render', () => {
-                    Espo.Ui.notify(false);
-                    this.dialog.hide();
+            Espo.Ui.notify(this.translate('loading', 'messages'));
+
+            return new Promise(resolve => {
+                this.createView('quickEdit', viewName, {
+                    scope: this.scope,
+                    entityType: this.model.entityType,
+                    id: this.id,
+                    fullFormDisabled: this.fullFormDisabled
+                }, view => {
+                    this.listenToOnce(view, 'remove', () => {
+                        this.dialog.show();
+                    });
+
+                    this.listenToOnce(view, 'leave', () => {
+                        this.remove();
+                    });
+
+                    this.listenTo(view, 'after:save', (model, o) => {
+                        this.model.set(model.getClonedAttributes());
+
+                        this.trigger('after:save', model, o);
+                        this.controlRecordButtonsVisibility();
+
+                        this.trigger('model-sync');
+                    });
+
+                    view.render()
+                        .then(() => {
+                            Espo.Ui.notify(false);
+                            this.dialog.hide();
+
+                            resolve(view);
+                        });
                 });
-
-                this.listenToOnce(view, 'remove', () => {
-                    this.dialog.show();
-                });
-
-                this.listenToOnce(view, 'leave', () => {
-                    this.remove();
-                });
-
-                this.listenToOnce(view, 'after:save', (model) => {
-                    this.model.set(model.getClonedAttributes());
-
-                    this.trigger('after:save', model);
-                    this.controlRecordButtonsVisibility();
-
-                    this.trigger('model-sync');
-                });
-
-                view.render();
             });
         },
 
@@ -632,6 +700,44 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
 
                     this.getRouter().navigate(url, {trigger: false});
                 });
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyControlArrowLeft: function (e) {
+            if (!this.model.collection) {
+                return;
+            }
+
+            if (this.buttonList.findIndex(item => item.name === 'previous' && !item.disabled) === -1) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionPrevious();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyControlArrowRight: function (e) {
+            if (!this.model.collection) {
+                return;
+            }
+
+            if (this.buttonList.findIndex(item => item.name === 'next' && !item.disabled) === -1) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionNext();
         },
     });
 });

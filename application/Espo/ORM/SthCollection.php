@@ -218,7 +218,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
      */
     public static function fromQuery(SelectQuery $query, EntityManager $entityManager): self
     {
-        /** @var self<Entity> */
+        /** @var self<Entity> $obj */
         $obj = new self($entityManager);
 
         $entityType = $query->getFrom();
@@ -238,7 +238,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
      */
     public static function fromSql(string $entityType, string $sql, EntityManager $entityManager): self
     {
-        /** @var self<Entity> */
+        /** @var self<Entity> $obj */
         $obj = new self($entityManager);
 
         $obj->entityType = $entityType;

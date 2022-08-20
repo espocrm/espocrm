@@ -8,7 +8,8 @@
     "priority": "Prioridade",
     "type": "Tipo",
     "description": "Descrição",
-    "attachments": "Anexos"
+    "attachments": "Anexos",
+    "inboundEmail": "Conta de email do grupo"
   },
   "links": {
     "account": "Conta",
@@ -17,7 +18,9 @@
     "meetings": "Reuniões",
     "calls": "Ligações",
     "tasks": "Tarefas",
-    "attachments": "Anexos"
+    "articles": "Artigos da Base de Conhecimento",
+    "attachments": "Anexos",
+    "inboundEmail": "Conta de email do grupo"
   },
   "options": {
     "status": {

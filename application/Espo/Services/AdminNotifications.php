@@ -197,7 +197,7 @@ class AdminNotifications implements
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
 
-        /** @var string|false */
+        /** @var string|false $result */
         $result = curl_exec($ch);
 
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);

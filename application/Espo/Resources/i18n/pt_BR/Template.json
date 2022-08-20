@@ -8,9 +8,38 @@
     "leftMargin": "Margem Esquerda",
     "topMargin": "Margem Superior",
     "rightMargin": "Margem Direita",
-    "bottomMargin": "Margem Inferior"
+    "bottomMargin": "Margem Inferior",
+    "printFooter": "Imprimir Rodapé",
+    "footerPosition": "Posição do Rodapé",
+    "variables": "Espaços Reservados Disponíveis",
+    "pageOrientation": "Orientação de Página",
+    "pageFormat": "Formato do Papél",
+    "fontFace": "Fonte",
+    "pageWidth": "Larg. da página (mm)",
+    "pageHeight": "Altura da Página (mm)",
+    "headerPosition": "Posição do Cabeçalho",
+    "printHeader": "Cabeçalho de Impressão",
+    "title": "Título"
   },
   "labels": {
     "Create Template": "Criar template"
+  },
+  "tooltips": {
+    "footer": "Use {pageNumber} para imprimir o número da página.",
+    "variables": "Necessário espaço reservado no Cabeçalho, Corpo ou Rodapé para copiar e colar."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Retrato",
+      "Landscape": "Paisagem"
+    },
+    "placeholders": {
+      "today": "Hoje (data)",
+      "now": "Agora (Data e Hora)",
+      "pagebreak": "Quebra de página"
+    },
+    "pageFormat": {
+      "Custom": "Personalizado"
+    }
   }
 }

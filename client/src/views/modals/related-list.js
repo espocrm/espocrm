@@ -54,6 +54,24 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
 
         mandatorySelectAttributeList: null,
 
+        /**
+         * @inheritDoc
+         */
+        shortcutKeys: {
+            'Control+Space': function (e) {
+                this.handleShortcutKeyCtrlSpace(e);
+            },
+            'Control+Slash': function (e) {
+                this.handleShortcutKeyCtrlSlash(e);
+            },
+            'Control+Comma': function (e) {
+                this.handleShortcutKeyCtrlComma(e);
+            },
+            'Control+Period': function (e) {
+                this.handleShortcutKeyCtrlPeriod(e);
+            },
+        },
+
         events: {
             'click button[data-action="createRelated"]': function () {
                 this.actionCreateRelated();
@@ -208,31 +226,40 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 });
             }
 
-            this.headerHtml = '';
+            this.$header = $('<span>');
 
-            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+            let iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 
             if (this.model) {
-                this.headerHtml += Handlebars.Utils.escapeExpression(this.model.get('name'));
-
-                if (this.headerHtml) {
-                    this.headerHtml += ' <span class="chevron-right"></span> ';
+                if (this.model.get('name')) {
+                    this.$header.append(
+                        $('<span>').text(this.model.get('name')),
+                        ' <span class="chevron-right"></span> '
+                    );
                 }
             }
 
-            var title = this.options.title;
-            if (title) {
-                title = Handlebars.Utils.escapeExpression(this.options.title);
+            let title = this.options.title;
 
-                title = title.replace(/@right/, '<span class="chevron-right"></span>');
+            if (title) {
+                title = this.getHelper().escapeString(this.options.title)
+                    .replace(/@right/, '<span class="chevron-right"></span>');
             }
-            this.headerHtml += title || this.getLanguage().translate(this.link, 'links', this.model.name);
+
+            this.$header.append(
+                title ||
+                $('<span>').text(
+                    this.getLanguage().translate(this.link, 'links', this.model.name)
+                )
+            );
 
             if (this.options.listViewUrl) {
-                this.headerHtml = '<a href="'+this.options.listViewUrl+'">' + this.headerHtml + '</a>';
+                this.$header = $('<a>')
+                    .attr('href', this.options.listViewUrl)
+                    .append(this.$header);
             }
 
-            this.headerHtml = iconHtml + this.headerHtml;
+            this.$header.prepend(iconHtml);
 
             this.waitForView('list');
 
@@ -268,6 +295,14 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
 
         setFilter: function (filter) {
             this.searchManager.setPrimary(filter);
+        },
+
+        /**
+         * @protected
+         * @return {?module:views/record/search.Class}
+         */
+        getSearchView: function () {
+            return this.getView('search');
         },
 
         loadSearch: function () {
@@ -474,6 +509,70 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 boolFilterList: this.defs.selectBoolFilterList,
                 massSelect: this.defs.massSelect,
             });
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlSlash: function (e) {
+            if (!this.searchPanel) {
+                return;
+            }
+
+            let $search = this.$el.find('input.text-filter').first();
+
+            if (!$search.length) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            $search.focus();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlSpace: function (e) {
+            if (this.createDisabled) {
+                return;
+            }
+
+            if (this.buttonList.findIndex(item => item.name === 'createRelated' && !item.hidden) === -1) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionCreateRelated();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlComma: function (e) {
+            if (!this.getSearchView()) {
+                return;
+            }
+
+            this.getSearchView().selectPreviousPreset();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlPeriod: function (e) {
+            if (!this.getSearchView()) {
+                return;
+            }
+
+            this.getSearchView().selectNextPreset();
         },
     });
 });

@@ -622,7 +622,8 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
             $el.prepend(
                 $('<a>')
                     .addClass('pull-right')
-                    .attr('href', 'javascript:')
+                    .attr('role', 'button')
+                    .attr('tabindex', '0')
                     .attr('data-id', id)
                     .attr('data-action', 'clearLink')
                     .append(

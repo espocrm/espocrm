@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/modals/acceptance-status', 'views/modal', function (Dep) {
+define('crm:views/meeting/modals/acceptance-status', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -39,7 +39,12 @@ define('crm:views/meeting/modals/acceptance-status', 'views/modal', function (De
             {{#each viewObject.statusDataList}}
             <div class="margin-bottom">
                 <div>
-                    <button class="action btn btn-{{style}} btn-x-wide" type="button" data-action="setStatus" data-status="{{name}}">
+                    <button
+                        class="action btn btn-{{style}} btn-x-wide"
+                        type="button"
+                        data-action="setStatus"
+                        data-status="{{name}}"
+                    >
                     {{label}}
                     </button>
                     {{#if selected}}<span class="check-icon fas fa-check" style="vertical-align: middle; margin: 0 10px;"></span>{{/if}}
@@ -51,24 +56,31 @@ define('crm:views/meeting/modals/acceptance-status', 'views/modal', function (De
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.headerHtml = this.escapeString(this.translate(this.model.entityType, 'scopeNames')) +
-                ' <span class="chevron-right"></span> ' +
-                this.escapeString(this.model.get('name')) +
-                ' <span class="chevron-right"></span> ' + this.translate('Acceptance', 'labels', 'Meeting');
+            this.$header = $('<span>').append(
+                this.translate(this.model.entityType, 'scopeNames'),
+                ' <span class="chevron-right"></span> ',
+                this.model.get('name'),
+                ' <span class="chevron-right"></span> ',
+                this.translate('Acceptance', 'labels', 'Meeting')
+            );
 
-            var statusList = this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'options']) || [];
+            let statusList = this.getMetadata()
+                .get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'options']) || [];
 
             this.statusDataList = [];
-            statusList.forEach(function (item) {
-                var o = {
+
+            statusList.forEach(item => {
+                let o = {
                     name: item,
-                    style: this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'style', item]) || 'default',
+                    style: this.getMetadata()
+                        .get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'style', item]) ||
+                        'default',
                     label: this.getLanguage().translateOption(item, 'acceptanceStatus', this.model.entityType),
                     selected: this.model.getLinkMultipleColumn('users', 'status', this.getUser().id) === item,
                 };
 
                 this.statusDataList.push(o);
-            }, this);
+            });
 
             this.message = this.translate('selectAcceptanceStatus', 'messages', 'Meeting')
         },

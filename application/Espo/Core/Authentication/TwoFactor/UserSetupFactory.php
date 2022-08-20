@@ -48,7 +48,7 @@ class UserSetupFactory
 
     public function create(string $method): UserSetup
     {
-        /** @var ?class-string<UserSetup> */
+        /** @var ?class-string<UserSetup> $className */
         $className = $this->metadata->get(['app', 'authentication2FAMethods', $method, 'userSetupClassName']);
 
         if (!$className) {

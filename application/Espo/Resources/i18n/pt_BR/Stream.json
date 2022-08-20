@@ -1,1 +1,12 @@
-{}
+{
+  "messages": {
+    "infoMention": "Digite **@username** para mencionar o usuário na postagem.",
+    "infoSyntax": "Sintaxe de markdown disponível",
+    "couldNotAddFollowerUserHasNoAccessToStream": "Não foi possível adicionar o usuário '{userName}' aos seguidores. O usuário não tem acesso 'stream' ao registro"
+  },
+  "syntaxItems": {
+    "code": "código",
+    "multilineCode": "código de várias linhas",
+    "deletedText": "Texto excluído"
+  }
+}

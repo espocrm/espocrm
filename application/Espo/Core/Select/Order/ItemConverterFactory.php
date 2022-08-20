@@ -81,7 +81,7 @@ class ItemConverterFactory
      */
     private function getClassName(string $entityType, string $field): ?string
     {
-        /** @var ?class-string<ItemConverter> */
+        /** @var ?class-string<ItemConverter> $className1 */
         $className1 = $this->metadata->get([
             'selectDefs', $entityType, 'orderItemConverterClassNameMap', $field
         ]);
@@ -98,7 +98,7 @@ class ItemConverterFactory
             return null;
         }
 
-        /** @var ?class-string<ItemConverter> */
+        /** @var ?class-string<ItemConverter> $className2 */
         $className2 = $this->metadata->get([
             'app', 'select', 'orderItemConverterClassNameMap', $type
         ]);

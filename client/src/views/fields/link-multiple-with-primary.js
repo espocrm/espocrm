@@ -200,7 +200,8 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
             let $name = $('<div>').text(name).append('&nbsp;');
 
             let $remove = $('<a>')
-                .attr('href', 'javascript:')
+                .attr('role', 'button')
+                .attr('tabindex', '0')
                 .attr('data-id', id)
                 .attr('data-action', 'clearLink')
                 .addClass('pull-right')

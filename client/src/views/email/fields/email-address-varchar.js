@@ -26,10 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'views/email/fields/email-address-varchar',
-    ['views/fields/base', 'views/email/fields/from-address-varchar', 'views/email/fields/email-address'],
-    function (Dep, From, EmailAddress) {
+define('views/email/fields/email-address-varchar',
+['views/fields/base', 'views/email/fields/from-address-varchar', 'views/email/fields/email-address'],
+function (Dep, From, EmailAddress) {
 
     return Dep.extend({
 
@@ -40,7 +39,7 @@ define(
         emailAddressRegExp: /[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/gi,
 
         data: function () {
-            var data = Dep.prototype.data.call(this);
+            let data = Dep.prototype.data.call(this);
 
             data.valueIsSet = this.model.has(this.name);
 
@@ -49,59 +48,73 @@ define(
 
         events: {
             'click a[data-action="clearAddress"]': function (e) {
-                var address = $(e.currentTarget).data('address').toString();
+                let address = $(e.currentTarget).data('address').toString();
 
                 this.deleteAddress(address);
             },
             'keyup input': function (e) {
-                if (this.mode === 'search') {
+                if (!this.isEditMode()) {
                     return;
                 }
 
-                if (e.keyCode === 188 || e.keyCode === 186 || e.keyCode === 13) {
-                    var $input = $(e.currentTarget);
-                    var address = $input.val().replace(',', '').replace(';', '').trim();
+                let key = Espo.Utils.getKeyFromKeyEvent(e);
 
-                    if (~address.indexOf('@')) {
-                        if (this.checkEmailAddressInString(address)) {
-                            this.addAddress(address, '');
-                            $input.val('');
-                        }
+                if (
+                    key === 'Comma' ||
+                    key === 'Semicolon' ||
+                    key === 'Enter'
+                ) {
+                    let $input = $(e.currentTarget);
+                    let address = $input.val().replace(',', '').replace(';', '').trim();
+
+                    if (address.indexOf('@') === -1) {
+                        return;
                     }
-                }
-            },
-            'change input': function (e) {
-                if (this.mode === 'search') {
-                    return;
-                }
 
-                var $input = $(e.currentTarget);
-                var address = $input.val().replace(',','').replace(';','').trim();
-
-                if (~address.indexOf('@')) {
                     if (this.checkEmailAddressInString(address)) {
                         this.addAddress(address, '');
-
                         $input.val('');
                     }
                 }
             },
+            'change input': function (e) {
+                if (!this.isEditMode()) {
+                    return;
+                }
+
+                let $input = $(e.currentTarget);
+                let address = $input.val().replace(',','').replace(';','').trim();
+
+                if (address.indexOf('@') === -1) {
+                    return;
+                }
+
+                if (this.checkEmailAddressInString(address)) {
+                    this.addAddress(address, '');
+
+                    $input.val('');
+                }
+            },
             'click [data-action="createContact"]': function (e) {
-                var address = $(e.currentTarget).data('address');
+                let address = $(e.currentTarget).data('address');
+
                 From.prototype.createPerson.call(this, 'Contact', address);
             },
             'click [data-action="createLead"]': function (e) {
-                var address = $(e.currentTarget).data('address');
+                let address = $(e.currentTarget).data('address');
+
                 From.prototype.createPerson.call(this, 'Lead', address);
             },
             'click [data-action="addToContact"]': function (e) {
-                var address = $(e.currentTarget).data('address');
+                let address = $(e.currentTarget).data('address');
+
                 From.prototype.addToPerson.call(this, 'Contact', address);
             },
             'click [data-action="addToLead"]': function (e) {
-                var address = $(e.currentTarget).data('address');
+                let address = $(e.currentTarget).data('address');
+
                 From.prototype.addToPerson.call(this, 'Lead', address);
-            }
+            },
         },
 
         getAutocompleteMaxCount: function () {
@@ -132,9 +145,9 @@ define(
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.on('render', function () {
+            this.on('render', () => {
                 this.initAddressList();
-            }, this);
+            });
         },
 
         initAddressList: function () {
@@ -143,8 +156,9 @@ define(
             this.addressList = (this.model.get(this.name) || '')
                 .split(';')
                 .filter((item) => {
-                    return item != '';
-                }).map((item) =>{
+                    return item !== '';
+                })
+                .map(item => {
                     return item.trim();
                 });
 
@@ -164,10 +178,10 @@ define(
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'edit') {
+            if (this.isEditMode()) {
                 this.$input = this.$element = this.$el.find('input');
 
-                this.addressList.forEach((item) => {
+                this.addressList.forEach(item => {
                     this.addAddressHtml(item, this.nameHash[item] || '');
                 });
 
@@ -186,7 +200,7 @@ define(
                             this.getHelper().escapeString(suggestion.id) + '&#62;';
                     },
                     transformResult: (response) => {
-                        var response = JSON.parse(response);
+                        response = JSON.parse(response);
                         var list = [];
 
                         response.forEach((item) => {
@@ -198,7 +212,7 @@ define(
                                 entityName: item.entityName,
                                 entityType: item.entityType,
                                 data: item.emailAddress,
-                                value: item.emailAddress
+                                value: item.emailAddress,
                             });
                         });
 
@@ -284,25 +298,40 @@ define(
         },
 
         addAddressHtml: function (address, name) {
+            let $container = this.$el.find('.link-container');
+
+            let $text = $('<span>');
+
             if (name) {
-                name = this.getHelper().escapeString(name);
+                $text.append(
+                    $('<span>').text(name),
+                    ' ',
+                    $('<span>').addClass('text-muted chevron-right'),
+                    ' '
+                );
             }
 
-            if (address) {
-                address = this.getHelper().escapeString(address);
-            }
+            $text.append(
+                $('<span>').text(address)
+            );
 
-            var container = this.$el.find('.link-container');
+            let $div = $('<div>')
+                .attr('data-address', address)
+                .addClass('list-group-item')
+                .append(
+                    $('<a>')
+                        .attr('data-address', address)
+                        .attr('role', 'button')
+                        .attr('tabindex', '0')
+                        .attr('data-action', 'clearAddress')
+                        .addClass('pull-right')
+                        .append(
+                            $('<span>').addClass('fas fa-times')
+                        ),
+                    $text
+                );
 
-            var html =
-            '<div data-address="'+address+'" class="list-group-item">' +
-                '<a href="javascript:" class="pull-right" data-address="' + address + '" ' +
-                'data-action="clearAddress"><span class="fas fa-times"></a>' +
-                '<span>'+ ((name) ? (name + ' <span class="text-muted chevron-right"></span> ') : '') +
-                '<span>'+address+'</span>'+'</span>' +
-            '</div>';
-
-            container.append(html);
+            $container.append($div);
         },
 
         deleteAddress: function (address) {
@@ -324,7 +353,7 @@ define(
         },
 
         fetch: function () {
-            var data = {};
+            let data = {};
 
             data[this.name] = this.addressList.join(';');
 
@@ -332,23 +361,21 @@ define(
         },
 
         fetchSearch: function () {
-            var value = this.$element.val().trim();
+            let value = this.$element.val().trim();
 
             if (value) {
-                var data = {
+                return {
                     type: 'equals',
                     value: value,
                 };
-
-                return data;
             }
 
             return false;
         },
 
         getValueForDisplay: function () {
-            if (this.mode === 'detail') {
-                var names = [];
+            if (this.isDetailMode()) {
+                let names = [];
 
                 this.addressList.forEach((address) => {
                     names.push(this.getDetailAddressHtml(address));
@@ -363,42 +390,50 @@ define(
                 return '';
             }
 
-            var name = this.nameHash[address] || null;
-            var entityType = this.typeHash[address] || null;
-            var id = this.idHash[address] || null;
-
-            var addressHtml = this.getHelper().escapeString(address);
-
-            if (name) {
-                name = this.getHelper().escapeString(name);
-            }
-
-            var lineHtml;
+            let name = this.nameHash[address] || null;
+            let entityType = this.typeHash[address] || null;
+            let id = this.idHash[address] || null;
 
             if (id) {
-                lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' +
-                    name + '</a> <span class="text-muted chevron-right"></span> ' + addressHtml + '</div>';
+                return $('<div>')
+                    .append(
+                        $('<a>')
+                            .attr('href', '#' + entityType + '/view/' + id)
+                            .text(name),
+                        ' <span class="text-muted chevron-right"></span> ',
+                        $('<span>').text(address)
+                    )
+                    .get(0).outerHTML;
+            }
+
+            let $div = $('<div>');
+
+            if (name) {
+                $div.append(
+                    $('<span>')
+                        .addClass('email-address-line')
+                        .text(name)
+                        .append(' <span class="text-muted chevron-right"></span> ')
+                        .append(
+                            $('<span>').text(address)
+                        )
+                );
             }
             else {
-                if (name) {
-                    lineHtml = '<span class="email-address-line">' + name +
-                        ' <span class="text-muted chevron-right"></span> <span>' +
-                        addressHtml + '</span></span>';
-                }
-                else {
-                    lineHtml = '<span class="email-address-line">' + addressHtml + '</span>';
-                }
+                $div.append(
+                    $('<span>')
+                        .addClass('email-address-line')
+                        .text(address)
+                );
             }
 
-            if (!id) {
-                if (this.getAcl().check('Contact', 'edit')) {
-                    lineHtml = From.prototype.getCreateHtml.call(this, address) + lineHtml;
-                }
+            if (this.getAcl().check('Contact', 'create') || this.getAcl().check('Lead', 'create')) {
+                $div.prepend(
+                    From.prototype.getCreateHtml.call(this, address)
+                );
             }
 
-            lineHtml = '<div>' + lineHtml + '</div>';
-
-            return lineHtml;
+            return $div.get(0).outerHTML;
         },
 
         validateRequired: function () {
@@ -408,6 +443,5 @@ define(
 
             return Dep.prototype.validateRequired.call(this);
         },
-
     });
 });

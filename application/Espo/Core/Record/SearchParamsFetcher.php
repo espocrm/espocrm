@@ -182,7 +182,7 @@ class SearchParamsFetcher
             throw new BadRequest('maxSize must be integer.');
         }
 
-        /** @var ?string */
+        /** @var ?string $q */
         $q = $params['q'] ?? null;
 
         if (

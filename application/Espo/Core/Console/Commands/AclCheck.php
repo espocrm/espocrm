@@ -73,7 +73,7 @@ class AclCheck implements Command
 
         $container = $this->container;
 
-        /** @var \Espo\ORM\EntityManager */
+        /** @var \Espo\ORM\EntityManager $entityManager */
         $entityManager = $container->get('entityManager');
 
         $user = $entityManager->getEntity('User', $userId);
@@ -83,7 +83,7 @@ class AclCheck implements Command
         }
 
         if ($user->isPortal()) {
-            /** @var string[] */
+            /** @var string[] $portalIdList */
             $portalIdList = $user->getLinkMultipleIdList('portals');
 
             foreach ($portalIdList as $portalId) {
@@ -91,7 +91,7 @@ class AclCheck implements Command
 
                 $containerPortal = $application->getContainer();
 
-                /** @var \Espo\ORM\EntityManager */
+                /** @var \Espo\ORM\EntityManager $entityManager */
                 $entityManager = $containerPortal->get('entityManager');
 
                 $user = $entityManager->getEntity('User', $userId);

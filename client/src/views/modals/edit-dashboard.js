@@ -37,9 +37,7 @@ define('views/modals/edit-dashboard', ['views/modal', 'model'], function (Dep, M
         template: 'modals/edit-dashboard',
 
         data: function () {
-            return {
-
-            };
+            return {};
         },
 
         events: {
@@ -50,27 +48,34 @@ define('views/modals/edit-dashboard', ['views/modal', 'model'], function (Dep, M
             },
         },
 
+        shortcutKeys: {
+            'Control+Enter': 'save',
+        },
+
         setup: function () {
             this.buttonList = [
                 {
                     name: 'save',
                     label: 'Save',
-                    style: 'primary'
+                    style: 'primary',
+                    title: 'Ctrl+Enter',
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel'
+                    label: 'Cancel',
+                    title: 'Esc',
                 }
             ];
 
             var dashboardLayout = this.options.dashboardLayout || [];
 
             var dashboardTabList = [];
-            dashboardLayout.forEach(function (item) {
+
+            dashboardLayout.forEach((item) => {
                 if (item.name) {
                     dashboardTabList.push(item.name);
                 }
-            }, this);
+            });
 
             var model = new Model();
             model.name = 'Preferences';
@@ -82,32 +87,36 @@ define('views/modals/edit-dashboard', ['views/modal', 'model'], function (Dep, M
                     name: 'dashboardTabList',
                     params: {
                         required: true,
-                        noEmptyString: true
+                        noEmptyString: true,
                     }
                 },
                 mode: 'edit',
-                model: model
+                model: model,
             });
 
-            this.headerHtml = this.translate('Edit Dashboard');
+            this.headerText = this.translate('Edit Dashboard');
 
             this.dashboardLayout = this.options.dashboardLayout;
         },
 
         actionSave: function () {
             var dashboardTabListView = this.getView('dashboardTabList');
+
             dashboardTabListView.fetchToModel();
+
             if (dashboardTabListView.validate()) {
                 return;
             }
 
             var attributes = {};
+
             attributes.dashboardTabList = dashboardTabListView.model.get('dashboardTabList');
 
             var names = dashboardTabListView.model.get('translatedOptions');
 
             var renameMap = {};
-            for (var name in names) {
+
+            for (let name in names) {
                 if (name !== names[name]) {
                     renameMap[name] = names[name];
                 }
@@ -121,5 +130,3 @@ define('views/modals/edit-dashboard', ['views/modal', 'model'], function (Dep, M
         },
     });
 });
-
-

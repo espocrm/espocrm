@@ -26,26 +26,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/document/fields/file', 'views/fields/file', function (Dep) {
+define('crm:views/document/fields/file', ['views/fields/file'], function (Dep) {
 
     return Dep.extend({
 
         getValueForDisplay: function () {
-            if (this.mode == 'list') {
-                var name = this.model.get(this.nameName);
-                var type = this.model.get(this.typeName) || this.defaultType;
-                var id = this.model.get(this.idName);
+            if (this.isListMode()) {
+                let name = this.model.get(this.nameName);
+                let id = this.model.get(this.idName);
 
                 if (!id) {
-                    return false;
+                    return '';
                 }
 
-                return '<a title="'+this.getHelper().escapeString(name)+'" href="'+this.getBasePath()+'?entryPoint=download&id=' + id + '" target="_BLANK"><span class="fas fa-paperclip small"></span></a>';
-            } else {
-                return Dep.prototype.getValueForDisplay.call(this);
+                return $('<a>')
+                    .attr('title', name)
+                    .attr('href', this.getBasePath() + '?entryPoint=download&id=' + id)
+                    .attr('target', '_BLANK')
+                    .append(
+                        $('<span>').addClass('fas fa-paperclip small')
+                    )
+                    .get(0).outerHTML;
             }
+
+            return Dep.prototype.getValueForDisplay.call(this);
         },
-
     });
-
 });

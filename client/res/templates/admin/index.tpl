@@ -26,7 +26,8 @@
                                 <span class="icon {{iconClass}}"></span>
                                 {{/if}}
                                 <a
-                                    href="{{#if url}}{{url}}{{else}}javascript:{{/if}}"
+                                    {{#if url}}href="{{url}}"{{else}}role="button"{{/if}}
+                                    tabindex="0"
                                     {{#if action}} data-action="{{action}}"{{/if}}
                                 >{{label}}</a>
                                 </div>

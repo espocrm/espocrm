@@ -117,7 +117,6 @@ class Language
         return $language;
     }
 
-
     public function setLanguage(string $language): void
     {
         $this->currentLanguage = $language;
@@ -186,7 +185,6 @@ class Language
         }
 
         if (is_array($translated) && isset($requiredOptions)) {
-
             $translated = array_intersect_key($translated, array_flip($requiredOptions));
 
             $optionKeys = array_keys($translated);
@@ -264,7 +262,6 @@ class Language
                 }
 
                 $result &= $this->fileManager->mergeJsonContents($path . "/{$scope}.json", $data);
-
             }
         }
 
@@ -415,11 +412,8 @@ class Language
 
             $data = $this->resourceReader->readAsArray($path, $readerParams);
 
-            if (is_array($data)) {
-                $this->sanitizeData($data);
-            }
-
             if ($language != $this->defaultLanguage) {
+                /** @var array<string, array<string, mixed>> $data */
                 $data = Util::merge($this->getDefaultLanguageData($reload), $data);
             }
 
@@ -431,28 +425,12 @@ class Language
         }
 
         if ($this->useCache) {
-            /** @var array<string, mixed> */
+            /** @var array<string, mixed> $cachedData */
             $cachedData = $this->dataCache->get($cacheKey);
 
             $this->data[$language] = $cachedData;
         }
 
         return $this->data[$language] ?? [];
-    }
-
-    /**
-     * @param array<string,mixed> $data
-     */
-    private function sanitizeData(array &$data): void
-    {
-        foreach ($data as &$subData) {
-            if (is_array($subData)) {
-                $this->sanitizeData($subData);
-            }
-            else if (is_string($subData)) {
-                $subData = str_replace('<', '&lt;', $subData);
-                $subData = str_replace('>', '&gt;', $subData);
-            }
-        }
     }
 }

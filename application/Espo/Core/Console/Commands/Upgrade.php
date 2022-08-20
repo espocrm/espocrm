@@ -289,7 +289,7 @@ class Upgrade implements Command
     private function upload(string $filePath): string
     {
         try {
-            /** @var string */
+            /** @var string $fileData */
             $fileData = file_get_contents($filePath);
             $fileData = 'data:application/zip;base64,' . base64_encode($fileData);
 
@@ -366,7 +366,7 @@ class Upgrade implements Command
             $command = $phpExecutablePath . " command.php upgrade-step --step=". ucfirst($stepName) .
                 " --id=" . $upgradeId;
 
-            /** @var string */
+            /** @var string $shellResult */
             $shellResult = shell_exec($command);
 
             if ($shellResult !== 'true') {
@@ -389,7 +389,7 @@ class Upgrade implements Command
 
     private function confirm(): bool
     {
-        /** @var resource */
+        /** @var resource $fh */
         $fh = fopen('php://stdin', 'r');
 
         $inputLine = trim(fgets($fh)); /** @phpstan-ignore-line */

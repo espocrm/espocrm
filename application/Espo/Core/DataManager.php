@@ -31,21 +31,18 @@ namespace Espo\Core;
 
 use Espo\Core\Utils\Config\MissingDefaultParamsSaver as ConfigMissingDefaultParamsSaver;
 
-use Espo\Core\{
-    Exceptions\Error,
-    ORM\EntityManager,
-    Utils\Metadata,
-    Utils\Util,
-    Utils\Config,
-    Utils\Config\ConfigWriter,
-    Utils\File\Manager as FileManager,
-    Utils\Metadata\OrmMetadataData,
-    HookManager,
-    Utils\Database\Schema\SchemaProxy,
-    Utils\Log,
-    Utils\Module,
-    Rebuild\RebuildActionProcessor,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\ORM\EntityManagerProxy;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Util;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\Metadata\OrmMetadataData;
+use Espo\Core\Utils\Database\Schema\SchemaProxy;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Module;
+use Espo\Core\Rebuild\RebuildActionProcessor;
 
 use Throwable;
 
@@ -54,37 +51,25 @@ use Throwable;
  */
 class DataManager
 {
-    private $config;
-
-    private $configWriter;
-
-    private $entityManager;
-
-    private $fileManager;
-
-    private $metadata;
-
-    private $ormMetadataData;
-
-    private $hookManager;
-
-    private $schemaProxy;
-
-    private $log;
-
-    private $module;
-
-    private $rebuildActionProcessor;
-
+    private Config $config;
+    private ConfigWriter $configWriter;
+    private EntityManagerProxy $entityManager;
+    private Metadata $metadata;
+    private OrmMetadataData $ormMetadataData;
+    private HookManager $hookManager;
+    private SchemaProxy $schemaProxy;
+    private Log $log;
+    private Module $module;
+    private RebuildActionProcessor $rebuildActionProcessor;
     private ConfigMissingDefaultParamsSaver $configMissingDefaultParamsSaver;
+    private FileManager $fileManager;
 
     private string $cachePath = 'data/cache';
 
     public function __construct(
-        EntityManager $entityManager,
+        EntityManagerProxy $entityManager,
         Config $config,
         ConfigWriter $configWriter,
-        FileManager $fileManager,
         Metadata $metadata,
         OrmMetadataData $ormMetadataData,
         HookManager $hookManager,
@@ -92,12 +77,12 @@ class DataManager
         Log $log,
         Module $module,
         RebuildActionProcessor $rebuildActionProcessor,
-        ConfigMissingDefaultParamsSaver $configMissingDefaultParamsSaver
+        ConfigMissingDefaultParamsSaver $configMissingDefaultParamsSaver,
+        FileManager $fileManager
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
         $this->configWriter = $configWriter;
-        $this->fileManager = $fileManager;
         $this->metadata = $metadata;
         $this->ormMetadataData = $ormMetadataData;
         $this->hookManager = $hookManager;
@@ -106,6 +91,7 @@ class DataManager
         $this->module = $module;
         $this->rebuildActionProcessor = $rebuildActionProcessor;
         $this->configMissingDefaultParamsSaver = $configMissingDefaultParamsSaver;
+        $this->fileManager = $fileManager;
     }
 
     /**
@@ -117,22 +103,18 @@ class DataManager
     public function rebuild(?array $entityList = null): void
     {
         $this->clearCache();
-
         $this->disableHooks();
-
         $this->checkModules();
-        $this->populateConfigParameters();
         $this->rebuildMetadata();
+        $this->populateConfigParameters();
         $this->rebuildDatabase($entityList);
-
         $this->rebuildActionProcessor->process();
         $this->configMissingDefaultParamsSaver->process();
-
         $this->enableHooks();
     }
 
     /**
-     * Clear a cache.
+     * Clear cache.
      *
      * @throws Error
      */
@@ -282,6 +264,9 @@ class DataManager
         $this->hookManager->enable();
     }
 
+    /**
+     * @throws Error
+     */
     private function checkModules(): void
     {
         $moduleNameList = $this->module->getList();

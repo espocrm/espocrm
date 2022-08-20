@@ -36,11 +36,12 @@
         "list":{
             "buttons":[
                 {
-                    "label":"Compose",
-                    "action":"composeEmail",
-                    "style":"danger",
-                    "acl":"create",
-                    "className": "btn-s-wide"
+                    "label": "Compose",
+                    "action": "composeEmail",
+                    "style": "danger",
+                    "acl": "create",
+                    "className": "btn-s-wide",
+                    "title": "Ctrl+Space"
                 }
             ],
             "dropdown":[

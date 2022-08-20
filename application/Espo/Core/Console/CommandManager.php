@@ -129,7 +129,7 @@ class CommandManager
      */
     private function getClassName(string $command): string
     {
-        /** @var ?class-string<Command> */
+        /** @var ?class-string<Command> $className */
         $className =
             $this->metadata->get(['app', 'consoleCommands', lcfirst($command), 'className']);
 

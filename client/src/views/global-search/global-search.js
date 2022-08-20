@@ -33,9 +33,17 @@ define('views/global-search/global-search', ['view'], function (Dep) {
         template: 'global-search/global-search',
 
         events: {
-            'keypress input.global-search-input': function (e) {
-                if (e.keyCode === 13) {
+            'keydown input.global-search-input': function (e) {
+                let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                if (e.code === 'Enter') {
                     this.runSearch();
+
+                    return;
+                }
+
+                if (key === 'Escape') {
+                    this.closePanel();
                 }
             },
             'click [data-action="search"]': function () {

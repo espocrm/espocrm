@@ -37,7 +37,7 @@ define('views/settings/modals/edit-tab-group', ['views/modal', 'model'], functio
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.headerHtml = this.translate('Group Tab', 'labels', 'Settings');
+            this.headerText = this.translate('Group Tab', 'labels', 'Settings');
 
             this.buttonList.push({
                 name: 'apply',

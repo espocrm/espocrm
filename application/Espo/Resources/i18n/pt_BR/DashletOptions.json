@@ -4,11 +4,18 @@
     "dateFrom": "Desde",
     "dateTo": "Até a data",
     "autorefreshInterval": "Intervalo para auto-atualização",
-    "displayRecords": "Exibir registros",
+    "displayRecords": "Exibir Registros",
     "isDoubleHeight": "Altura 2x",
     "mode": "Modo",
     "enabledScopeList": "O que exibir",
-    "users": "Usuários"
+    "users": "Usuários",
+    "entityType": "Tipo da Entidade",
+    "primaryFilter": "Filtro Primário",
+    "boolFilterList": "Filtros Adicionais",
+    "sortBy": "Ordem (campo)",
+    "sortDirection": "Ordem (direção)",
+    "dateFilter": "Filtro por Data",
+    "skipOwn": "Não mostrar os próprios registros"
   },
   "options": {
     "mode": {
@@ -19,5 +26,11 @@
       "agendaDay": "Dia (agenda)",
       "timeline": "Linha do Tempo"
     }
+  },
+  "messages": {
+    "selectEntityType": "Selecione Tipo de Entidade nas opções do painel."
+  },
+  "tooltips": {
+    "skipOwn": "As ações feitas pela sua conta de usuário não serão exibidas."
   }
 }

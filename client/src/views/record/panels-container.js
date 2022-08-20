@@ -72,6 +72,7 @@ define('views/record/panels-container', ['view'], function (Dep) {
          * @property {boolean} [hidden] Hidden.
          * @property {string} [label] A label. Translatable.
          * @property {string} [html] A HTML.
+         * @property {string} [text] A text.
          * @property {string} [title] A title (on hover). Translatable.
          * @property {Object.<string,(string|number|boolean)>} [data] Data attributes.
          */
@@ -86,6 +87,7 @@ define('views/record/panels-container', ['view'], function (Dep) {
          * @property {boolean} [hidden] Hidden.
          * @property {string} [label] A label. Translatable.
          * @property {string} [html] A HTML.
+         * @property {string} [text] A text.
          * @property {Object.<string,(string|number|boolean)>} [data] Data attributes.
          */
 

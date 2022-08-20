@@ -245,7 +245,8 @@
             "fieldManagerParamList": [
                 "default",
                 "tooltipText"
-            ]
+            ],
+            "inlineEditDisabled": true
         },
         "status": {
             "type": "enum",

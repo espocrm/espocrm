@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/detail', 'views/detail', function (Dep) {
+define('crm:views/meeting/detail', ['views/detail'], function (Dep) {
 
     return Dep.extend({
 
@@ -66,26 +66,26 @@ define('crm:views/meeting/detail', 'views/detail', function (Dep) {
                 return;
             }
 
-            var acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
+            let acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
 
-            var html;
-            var style = 'default';
+            let text;
+            let style = 'default';
 
             if (acceptanceStatus && acceptanceStatus !== 'None') {
-                html = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
+                text = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
 
                 style = this.getMetadata()
                     .get(['entityDefs', this.model.entityType, 'fields',
                         'acceptanceStatus', 'style', acceptanceStatus]);
             }
             else {
-                html = this.translate('Acceptance', 'labels', 'Meeting');
+                text = this.translate('Acceptance', 'labels', 'Meeting');
             }
 
             this.removeMenuItem('setAcceptanceStatus');
 
             this.addMenuItem('buttons', {
-                html: html,
+                text: text,
                 action: 'setAcceptanceStatus',
                 style: style,
             });
@@ -126,7 +126,7 @@ define('crm:views/meeting/detail', 'views/detail', function (Dep) {
 
             if (show) {
                 this.addMenuItem('buttons', {
-                    html: this.translate('Send Invitations', 'labels', 'Meeting'),
+                    text: this.translate('Send Invitations', 'labels', 'Meeting'),
                     action: 'sendInvitations',
                     acl: 'edit',
                 });
@@ -136,27 +136,30 @@ define('crm:views/meeting/detail', 'views/detail', function (Dep) {
         },
 
         actionSendInvitations: function () {
-            this.confirm(this.translate('confirmation', 'messages'), () => {
-                this.disableMenuItem('sendInvitations');
-                this.notify('Sending...');
+            this.confirm({
+                    message: this.translate('sendInvitationsConfirmation', 'messages', 'Meeting'),
+                })
+                .then(() => {
+                    this.disableMenuItem('sendInvitations');
+                    this.notify('Sending...');
 
-                Espo.Ajax
-                    .postRequest(this.model.entityType + '/action/sendInvitations', {
-                        id: this.model.id,
-                    })
-                    .then(result => {
-                        if (result) {
-                            this.notify('Sent', 'success');
-                        } else {
-                            Espo.Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
-                        }
+                    Espo.Ajax
+                        .postRequest(this.model.entityType + '/action/sendInvitations', {
+                            id: this.model.id,
+                        })
+                        .then(result => {
+                            if (result) {
+                                this.notify('Sent', 'success');
+                            } else {
+                                Espo.Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
+                            }
 
-                        this.enableMenuItem('sendInvitations');
-                    })
-                    .catch(() => {
-                        this.enableMenuItem('sendInvitations');
-                    });
-            });
+                            this.enableMenuItem('sendInvitations');
+                        })
+                        .catch(() => {
+                            this.enableMenuItem('sendInvitations');
+                        });
+                });
         },
 
         actionSetAcceptanceStatus: function () {

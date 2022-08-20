@@ -426,7 +426,7 @@ class Campaign extends Record implements
         $metTargetHash = [];
         $targetEntityList = [];
 
-        /** @var iterable<\Espo\Modules\Crm\Entities\TargetList> */
+        /** @var iterable<\Espo\Modules\Crm\Entities\TargetList> $excludingTargetListList */
         $excludingTargetListList = $this->entityManager
             ->getRDBRepository('Campaign')
             ->getRelation($campaign, 'excludingTargetLists')
@@ -446,7 +446,7 @@ class Campaign extends Record implements
 
         $addressFieldList = $this->entityTypeAddressFieldListMap[$targetEntityType];
 
-        /** @var iterable<\Espo\Modules\Crm\Entities\TargetList> */
+        /** @var iterable<\Espo\Modules\Crm\Entities\TargetList> $targetListCollection */
         $targetListCollection = $this->entityManager
             ->getRDBRepository('Campaign')
             ->getRelation($campaign, 'targetLists')

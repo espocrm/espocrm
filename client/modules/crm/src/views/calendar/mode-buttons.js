@@ -35,17 +35,20 @@ define('crm:views/calendar/mode-buttons', 'view', function (Dep) {
         visibleModeListCount: 3,
 
         data: function () {
-            var scopeFilterList = Espo.Utils.clone(this.scopeList);
+            let scopeFilterList = Espo.Utils.clone(this.scopeList);
             scopeFilterList.unshift('all');
 
             var scopeFilterDataList = [];
-            this.scopeList.forEach(function (scope) {
-                var o = {scope: scope};
+
+            this.scopeList.forEach(scope => {
+                let o = {scope: scope};
+
                 if (!~this.getParentView().enabledScopeList.indexOf(scope)) {
                     o.disabled = true;
                 }
+
                 scopeFilterDataList.push(o);
-            }, this);
+            });
 
             return {
                 mode: this.mode,
@@ -53,7 +56,6 @@ define('crm:views/calendar/mode-buttons', 'view', function (Dep) {
                 hiddenModeDataList: this.getHiddenModeDataList(),
                 scopeFilterDataList: scopeFilterDataList,
                 isCustomViewAvailable: this.isCustomViewAvailable,
-                mode: this.mode,
             };
         },
 
@@ -64,37 +66,49 @@ define('crm:views/calendar/mode-buttons', 'view', function (Dep) {
             this.mode = this.options.mode;
         },
 
-        getModeDataList: function () {
+        /**
+         * @param {boolean} originalOrder
+         * @return {Object.<string, *>[]}
+         */
+        getModeDataList: function (originalOrder) {
             var list = [];
 
-            this.modeList.forEach(function (name, i) {
+            this.modeList.forEach(name => {
                 var o = {
                     mode: name,
                     label: this.translate(name, 'modes', 'Calendar'),
                     labelShort: this.translate(name, 'modes', 'Calendar').substr(0, 2),
                 };
+
                 list.push(o);
-            }, this);
+            });
 
             if (this.isCustomViewAvailable) {
-                (this.getPreferences().get('calendarViewDataList') || []).forEach(function (item) {
-                    var item = Espo.Utils.clone(item);
+                (this.getPreferences().get('calendarViewDataList') || []).forEach(item => {
+                    item = Espo.Utils.clone(item);
+
                     item.mode = 'view-' + item.id;
                     item.label = item.name;
                     item.labelShort = (item.name || '').substr(0, 2);
                     list.push(item);
-                }, this);
+                });
             }
 
-            var currentIndex = -1;
-            list.forEach(function (item, i) {
+            if (originalOrder) {
+                return list;
+            }
+
+            let currentIndex = -1;
+
+            list.forEach((item, i) => {
                 if (item.mode === this.mode) {
                     currentIndex = i;
                 }
-            }, this);
+            });
 
             if (currentIndex >= this.visibleModeListCount) {
-                var tmp = list[this.visibleModeListCount - 1];
+                let tmp = list[this.visibleModeListCount - 1];
+
                 list[this.visibleModeListCount - 1] = list[currentIndex];
                 list[currentIndex] = tmp;
             }
@@ -106,10 +120,14 @@ define('crm:views/calendar/mode-buttons', 'view', function (Dep) {
             var fullList =  this.getModeDataList();
 
             var list = [];
-            fullList.forEach(function (o, i) {
-                if (i >= this.visibleModeListCount) return;
+
+            fullList.forEach((o, i) => {
+                if (i >= this.visibleModeListCount) {
+                    return;
+                }
+
                 list.push(o);
-            }, this);
+            });
 
             return list;
         },
@@ -118,13 +136,16 @@ define('crm:views/calendar/mode-buttons', 'view', function (Dep) {
             var fullList =  this.getModeDataList();
 
             var list = [];
-            fullList.forEach(function (o, i) {
-                if (i < this.visibleModeListCount) return;
+
+            fullList.forEach((o, i) => {
+                if (i < this.visibleModeListCount) {
+                    return;
+                }
+
                 list.push(o);
-            }, this);
+            });
 
             return list;
         },
-
     });
 });

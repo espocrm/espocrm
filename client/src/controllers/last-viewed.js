@@ -30,7 +30,10 @@ define('controllers/last-viewed', ['controllers/record'], function (Dep) {
 
     return Dep.extend({
 
-        entityType: 'ActionHistoryRecord'
+        entityType: 'ActionHistoryRecord',
 
+        checkAccess: function (action) {
+            return this.getAcl().check(this.entityType, action);
+        },
     });
 });

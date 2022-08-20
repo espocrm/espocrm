@@ -225,6 +225,8 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
             if (!this.isExpanded && !this.hasView('nestedCategories')) {
                 this.loadNestedCategories();
             }
+
+            this.$el.focus();
         },
 
         actionExpand: function () {

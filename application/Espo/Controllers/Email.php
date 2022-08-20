@@ -29,22 +29,28 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 
 use Espo\Core\Controllers\Record;
 use Espo\Core\Api\Request;
 
+use Espo\Entities\Email as EmailEntity;
 use Espo\Services\Email as Service;
 use Espo\Services\EmailTemplate as EmailTemplateService;
-
-use Espo\Core\Utils\Crypt;
 
 use stdClass;
 
 class Email extends Record
 {
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function postActionGetCopiedAttachments(Request $request): stdClass
     {
         $data = $request->getParsedBody();
@@ -61,89 +67,73 @@ class Email extends Record
     }
 
     /**
-     * @todo Move to service.
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws Error
+     * @throws BadRequest
      */
     public function postActionSendTestEmail(Request $request): bool
     {
-        $data = $request->getParsedBody();
-
-        if (!$this->acl->checkScope('Email')) {
+        if (!$this->acl->checkScope(EmailEntity::ENTITY_TYPE)) {
             throw new Forbidden();
         }
 
-        if (is_null($data->password)) {
-            if ($data->type == 'preferences') {
-                if (!$this->user->isAdmin() && $data->id !== $this->user->id) {
-                    throw new Forbidden();
-                }
+        $data = get_object_vars($request->getParsedBody());
 
-                $preferences = $this->getEntityManager()->getEntity('Preferences', $data->id);
+        $allowedParamList = [
+            'type',
+            'id',
+            'username',
+            'password',
+            'auth',
+            'authMechanism',
+            'userId',
+            'fromAddress',
+            'fromName',
+            'server',
+            'port',
+            'security',
+            'emailAddress',
+        ];
 
-                if (!$preferences) {
-                    throw new NotFound();
-                }
-
-                if (is_null($data->password)) {
-                    $data->password = $this->getCrypt()->decrypt($preferences->get('smtpPassword'));
-                }
-            }
-            else if ($data->type == 'emailAccount') {
-                if (!$this->acl->checkScope('EmailAccount')) {
-                    throw new Forbidden();
-                }
-
-                if (!empty($data->id)) {
-                    $emailAccount = $this->getEntityManager()
-                        ->getEntity('EmailAccount', $data->id);
-
-                    if (!$emailAccount) {
-                        throw new NotFound();
-                    }
-
-                    if (!$this->user->isAdmin()) {
-                        if ($emailAccount->get('assignedUserId') !== $this->user->id) {
-                            throw new Forbidden();
-                        }
-                    }
-
-                    if (is_null($data->password)) {
-                        $data->password = $this->getCrypt()->decrypt($emailAccount->get('smtpPassword'));
-                    }
-                }
-            }
-            else if ($data->type == 'inboundEmail') {
-                if (!$this->user->isAdmin()) {
-                    throw new Forbidden();
-                }
-
-                if (!empty($data->id)) {
-                    $emailAccount = $this->getEntityManager()->getEntity('InboundEmail', $data->id);
-
-                    if (!$emailAccount) {
-                        throw new NotFound();
-                    }
-
-                    if (is_null($data->password)) {
-                        $data->password = $this->getCrypt()->decrypt($emailAccount->get('smtpPassword'));
-                    }
-                }
-            }
-            else {
-                if (!$this->user->isAdmin()) {
-                    throw new Forbidden();
-                }
-
-                if (is_null($data->password)) {
-                    $data->password = $this->getConfig()->get('smtpPassword');
-                }
+        foreach (array_keys($data) as $key) {
+            if (!in_array($key, $allowedParamList)) {
+                throw new BadRequest("Not allowed parameter `{$key}`.");
             }
         }
 
-        $this->getEmailService()->sendTestEmail(get_object_vars($data));
+        $emailAddress = $data['emailAddress'] ?? null;
+
+        if (!is_string($emailAddress)) {
+            throw new BadRequest("No email address.");
+        }
+
+        /**
+         * @var array{
+         *     type?: ?string,
+         *     id?: ?string,
+         *     username?: ?string,
+         *     password?: ?string,
+         *     auth?: bool,
+         *     authMechanism?: ?string,
+         *     userId?: ?string,
+         *     fromAddress?: ?string,
+         *     fromName?: ?string,
+         *     server: string,
+         *     port: int,
+         *     security: string,
+         *     emailAddress: string,
+         * } $data
+         */
+
+        $this->getEmailService()->sendTestEmail($data);
 
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionMarkAsRead(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -165,6 +155,9 @@ class Email extends Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionMarkAsNotRead(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -193,6 +186,9 @@ class Email extends Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionMarkAsImportant(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -214,6 +210,9 @@ class Email extends Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionMarkAsNotImportant(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -235,6 +234,9 @@ class Email extends Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionMoveToTrash(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -256,6 +258,9 @@ class Email extends Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionRetrieveFromTrash(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -282,6 +287,9 @@ class Email extends Record
         return $this->getEmailService()->getFoldersNotReadCounts();
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionMoveToFolder(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -305,9 +313,12 @@ class Email extends Record
         return true;
     }
 
+    /**
+     * @throws Forbidden
+     */
     public function getActionGetInsertFieldData(Request $request): stdClass
     {
-        if (!$this->acl->checkScope('Email', 'create')) {
+        if (!$this->acl->checkScope(EmailEntity::ENTITY_TYPE, Table::ACTION_CREATE)) {
             throw new Forbidden();
         }
 
@@ -328,11 +339,5 @@ class Email extends Record
     {
         /** @var EmailTemplateService */
         return $this->getServiceFactory()->create('EmailTemplate');
-    }
-
-    private function getCrypt(): Crypt
-    {
-        /** @var Crypt */
-        return $this->getContainer()->get('crypt');
     }
 }

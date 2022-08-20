@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "name": "Ime",
+    "roles": "Vloge",
+    "positionList": "Seznam položajev",
+    "layoutSet": "Nabor postavitve"
+  },
+  "links": {
+    "users": "Uporabniki",
+    "notes": "Opombe",
+    "roles": "Vloge",
+    "inboundEmails": "Skupinski e-poštni računi",
+    "layoutSet": "Nabor postavitve"
+  },
+  "tooltips": {
+    "roles": "Vloge za dostop. Uporabniki te ekipe pridobijo raven nadzora dostopa od izbranih vlog.",
+    "positionList": "Razpoložljiva mesta v tej ekipi. Npr. prodajalec, vodja.",
+    "layoutSet": "Zagotavlja možnost postavitev, ki se razlikujejo od standardnih. Nabor postavitve bo uporabljen za uporabnike, ki imajo to ekipo nastavljeno kot privzeto ekipo."
+  },
+  "labels": {
+    "Create Team": "Ustvari ekipo"
+  }
+}

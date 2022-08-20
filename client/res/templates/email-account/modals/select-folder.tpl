@@ -4,7 +4,7 @@
 <ul class="list-group no-side-margin array-add-list-group">
 {{#each folders}}
     <li class="list-group-item">
-        <a href="javascript:" data-value="{{./this}}" data-action="select" class="text-bold">
+        <a role="button" data-value="{{./this}}" data-action="select" class="text-bold">
         {{./this}}
         </a>
     </li>

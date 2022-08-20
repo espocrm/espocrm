@@ -77,7 +77,8 @@ define('views/settings/fields/theme', ['views/fields/enum', 'theme-manager'], fu
                 this.initThemeManager()
 
                 if (o.ui) {
-                    this.reRender();
+                    this.reRender()
+                        .then(() => this.$element.get(0).focus({preventScroll: true}));
                 }
             })
         },

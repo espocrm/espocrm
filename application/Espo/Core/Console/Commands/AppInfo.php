@@ -53,7 +53,7 @@ class AppInfo implements Command
 
     public function run(Params $params, IO $io): void
     {
-        /** @var string[] */
+        /** @var string[] $fileList */
         $fileList = $this->fileManager->getFileList('application/Espo/Classes/AppInfo');
 
         $typeList = array_map(
@@ -90,7 +90,7 @@ class AppInfo implements Command
 
     protected function processType(IO $io, string $type, Params $params): void
     {
-        /** @var class-string */
+        /** @var class-string $className */
         $className = 'Espo\\Classes\\AppInfo\\' . ucfirst($type);
 
         $obj = $this->injectableFactory->create($className);

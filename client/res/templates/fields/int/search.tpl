@@ -3,7 +3,7 @@
 </select>
 <input
     type="text"
-    class="form-control input-sm hidden search-input"
+    class="form-control input-sm hidden"
     data-name="{{name}}"
     value="{{value}}"
     pattern="[\-]?[0-9]*"
@@ -14,7 +14,7 @@
 >
 <input
     type="text"
-    class="form-control{{#ifNotEqual searchType 'between'}} hidden{{/ifNotEqual}} additional input-sm search-input"
+    class="form-control{{#ifNotEqual searchType 'between'}} hidden{{/ifNotEqual}} additional input-sm"
     data-name="{{name}}-additional"
     value="{{value2}}"
     pattern="[\-]?[0-9]*"

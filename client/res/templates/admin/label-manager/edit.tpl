@@ -18,13 +18,15 @@
     <div class="panel-heading clearfix">
         <div class="pull-left" style="margin-right: 10px;">
             <a
-                href="javascript:"
+                role="button"
+                tabindex="0"
                 data-action="showCategory"
                 data-name="{{./this}}"
                 class="action"
             ><span class="fas fa-chevron-down"></span></a>
             <a
-                href="javascript:"
+                role="button"
+                tabindex="0"
                 data-action="hideCategory"
                 data-name="{{./this}}"
                 class="hidden action"

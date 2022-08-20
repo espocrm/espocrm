@@ -65,7 +65,7 @@ define('views/modals/resolve-save-conflict', ['views/modal'], function (Dep) {
         },
 
         setup: function () {
-            this.headerHtml = this.getHelper().sanitizeHtml(this.translate('Resolve Conflict'));
+            this.headerText = this.translate('Resolve Conflict');
 
             this.buttonList = [
                 {

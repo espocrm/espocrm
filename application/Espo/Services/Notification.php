@@ -147,7 +147,7 @@ class Notification extends \Espo\Services\Record
 
         $query = $queryBuilder->build();
 
-        /** @var \Espo\ORM\Collection<\Espo\Entities\Notification>> */
+        /** @var \Espo\ORM\Collection<\Espo\Entities\Notification> $collection > */
         $collection = $this->entityManager
             ->getRDBRepository('Notification')
             ->clone($query)

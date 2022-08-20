@@ -64,6 +64,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
         events: {
             'click a.link': function (e) {
+                if (e.ctrlKey || e.metaKey || e.shiftKey) {
+                    return;
+                }
+
                 e.stopPropagation();
 
                 if (!this.scope || this.selectable) {
@@ -336,7 +340,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             var $window = $(window);
 
             var $block = $('<div>')
-                .addClass('.kanban-head-paceholder')
+                .addClass('kanban-head-placeholder')
                 .html('&nbsp;')
                 .hide()
                 .insertAfter($container);
@@ -375,7 +379,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                 if (scrollTop < edge) {
                     if (scrollTop > stickTop) {
-                        let containerWidth = this.$container.width();
+                        let containerWidth = this.$container.width() - 3;
 
                         $container.children().css('width', width);
 
@@ -424,7 +428,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             $list.sortable({
                 connectWith: '.group-column-list',
-                cancel: '.dropdown-menu *',
+                cancel: '.btn-group *',
                 containment: this.getSelector(),
                 scroll: false,
                 over: function (e, ui) {
@@ -672,14 +676,22 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.groupDataList = [];
 
-            var count = 0;
-            var loadedCount = 0;
+            let count = 0;
+            let loadedCount = 0;
 
             this.getListLayout((listLayout) => {
                 this.listLayout = listLayout;
 
                 groupList.forEach((item, i) => {
-                    var collection = this.seedCollection.clone();
+                    let collection = this.seedCollection.clone();
+
+                    this.listenTo(collection, 'destroy', (model, attributes, o) => {
+                        if (o.fromList) {
+                            return;
+                        }
+
+                        this.removeRecordFromList(model.id);
+                    });
 
                     collection.total = item.total;
 
@@ -706,9 +718,9 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                     this.collection.add(collection.models);
 
-                    var itemDataList = [];
+                    let itemDataList = [];
 
-                    collection.models.forEach((model) => {
+                    collection.models.forEach(model => {
                         count ++;
 
                         itemDataList.push({
@@ -717,21 +729,21 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                         });
                     });
 
-                    var nextStyle = null;
+                    let nextStyle = null;
 
                     if (i < groupList.length - 1) {
-                        nextStyle = this.getMetadata().get(
-                            ['entityDefs', this.scope, 'fields', this.statusField, 'style', groupList[i + 1].name]
-                        );
+                        nextStyle = this.getMetadata()
+                            .get(['entityDefs', this.scope, 'fields', this.statusField,
+                                'style', groupList[i + 1].name]);
                     }
 
-                    var o = {
+                    let o = {
                         name: item.name,
                         label: this.getLanguage().translateOption(item.name, this.statusField, this.scope),
                         dataList: itemDataList,
                         collection: collection,
                         isLast: i === groupList.length - 1,
-                        hasShowMore: collection.total > collection.length || collection.total == -1,
+                        hasShowMore: collection.total > collection.length || collection.total === -1,
                         style: this.getMetadata().get(
                             ['entityDefs', this.scope, 'fields', this.statusField, 'style', item.name]
                         ),
@@ -747,30 +759,32 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     if (callback) {
                         callback();
                     }
-                } else {
-                    this.groupDataList.forEach((groupItem) => {
-                        groupItem.dataList.forEach((item, j) => {
-                            var model = groupItem.collection.get(item.id);
 
-                            this.buildRow(j, model, (view) => {
-                                loadedCount++;
+                    return;
+                }
 
-                                if (loadedCount === count) {
-                                    this.wait(false);
+                this.groupDataList.forEach(groupItem => {
+                    groupItem.dataList.forEach((item, j) => {
+                        let model = groupItem.collection.get(item.id);
 
-                                    if (callback) {
-                                        callback();
-                                    }
+                        this.buildRow(j, model, () => {
+                            loadedCount++;
+
+                            if (loadedCount === count) {
+                                this.wait(false);
+
+                                if (callback) {
+                                    callback();
                                 }
-                            });
+                            }
                         });
                     });
-                }
+                });
             });
         },
 
         buildRow: function (i, model, callback) {
-            var key = model.id;
+            let key = model.id;
 
             this.createView(key, this.itemViewName, {
                 model: model,
@@ -798,30 +812,30 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.$el.find('.item[data-id="'+id+'"]').remove();
 
-            this.collection.subCollectionList.forEach((collection) => {
+            this.collection.subCollectionList.forEach(collection => {
                 if (collection.get(id)) {
                     collection.remove(id);
                 }
             });
 
-            for (var i in this.groupDataList) {
-                var groupItem = this.groupDataList[i];
+            for (let groupItem of this.groupDataList) {
+                for (let j = 0; j < groupItem.dataList.length; j++) {
+                    let item = groupItem.dataList[j];
 
-                for (var j in groupItem.dataList) {
-                    var item = groupItem.dataList[j];
-
-                    if (item.id === id) {
-                        groupItem.dataList.splice(j, 1);
-
-                        if (groupItem.collection.total > 0) {
-                            groupItem.collection.total--;
-                        }
-
-                        groupItem.hasShowMore = groupItem.collection.total > groupItem.collection.length ||
-                            groupItem.collection.total == -1;
-
-                        break;
+                    if (item.id !== id) {
+                        continue;
                     }
+
+                    groupItem.dataList.splice(j, 1);
+
+                    if (groupItem.collection.total > 0) {
+                        groupItem.collection.total--;
+                    }
+
+                    groupItem.hasShowMore = groupItem.collection.total > groupItem.collection.length ||
+                        groupItem.collection.total === -1;
+
+                    break;
                 }
             }
         },
@@ -840,13 +854,11 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 }
             });
 
-            var dataItem;
+            let dataItem;
 
-            for (var i in this.groupDataList) {
-                var groupItem = this.groupDataList[i];
-
-                for (var j in groupItem.dataList) {
-                    var item = groupItem.dataList[j];
+            for (let groupItem of this.groupDataList) {
+                for (let j = 0; j < groupItem.dataList.length; j++) {
+                    let item = groupItem.dataList[j];
 
                     if (item.id === id) {
                         dataItem = item;
@@ -865,9 +877,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 return;
             }
 
-            for (var i in this.groupDataList) {
-                var groupItem = this.groupDataList[i];
-
+            for (let groupItem of this.groupDataList) {
                 if (groupItem.name !== group) {
                     continue;
                 }
@@ -883,8 +893,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 }
             }
 
-            var $item = this.$el.find('.item[data-id="'+id+'"]');
-            var $column = this.$el.find('.group-column[data-name="'+group+'"] .group-column-list');
+            let $item = this.$el.find('.item[data-id="' + id + '"]');
+            let $column = this.$el.find('.group-column[data-name="' + group + '"] .group-column-list');
 
             if ($column.length) {
                 $column.prepend($item);

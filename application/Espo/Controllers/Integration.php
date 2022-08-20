@@ -56,7 +56,7 @@ class Integration
 
     public function getActionRead(Request $request): stdClass
     {
-        /** @var string */
+        /** @var string $id */
         $id = $request->getRouteParam('id');
 
         $entity = $this->service->read($id);
@@ -66,7 +66,7 @@ class Integration
 
     public function putActionUpdate(Request $request): stdClass
     {
-        /** @var string */
+        /** @var string $id */
         $id = $request->getRouteParam('id');
         $data = $request->getParsedBody();
 

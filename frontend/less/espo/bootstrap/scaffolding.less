@@ -49,15 +49,16 @@ a {
   color: @link-color;
   text-decoration: none;
 
-  &:hover,
-  &:focus {
+  // Espo-fix
+  &:hover/*,
+  &:focus */{
     color: @link-hover-color;
     text-decoration: @link-hover-decoration;
   }
 
-  &:focus {
+  /*&:focus {
     .tab-focus();
-  }
+  }*/
 }
 
 

@@ -224,6 +224,14 @@ define('views/fields/base', ['view'], function (Dep) {
         validateCallback: null,
 
         /**
+         * An element selector to point validation popovers to.
+         *
+         * @type {?string}
+         * @protected
+         */
+        validationElementSelector: null,
+
+        /**
          * A view-record helper.
          *
          * @type {module:view-record-helper.Class|null}
@@ -263,6 +271,13 @@ define('views/fields/base', ['view'], function (Dep) {
         entityType: null,
 
         /**
+         * A last validation message;
+         *
+         * @type {?string}
+         */
+        lastValidationMessage: null,
+
+        /**
          * Is the field required.
          *
          * @returns {boolean}
@@ -276,8 +291,18 @@ define('views/fields/base', ['view'], function (Dep) {
          *
          * @returns {JQuery}
          */
-        getCellElement: function () {
+        get$cell: function () {
             return this.$el.parent();
+        },
+
+        /**
+         * Get a cell element. Available only after the view is  rendered.
+         *
+         * @deprecated Use `get$cell`.
+         * @returns {JQuery}
+         */
+        getCellElement: function () {
+            return this.get$cell();
         },
 
         /**
@@ -336,7 +361,7 @@ define('views/fields/base', ['view'], function (Dep) {
          */
         setNotRequired: function () {
             this.params.required = false;
-            this.getCellElement().removeClass('has-error');
+            this.get$cell().removeClass('has-error');
 
             if (this.isEditMode()) {
                 if (this.isRendered()) {
@@ -408,7 +433,7 @@ define('views/fields/base', ['view'], function (Dep) {
          */
         hide: function () {
             this.$el.addClass('hidden');
-            let $cell = this.getCellElement();
+            let $cell = this.get$cell();
 
             $cell.children('label').addClass('hidden');
             $cell.addClass('hidden-cell');
@@ -420,7 +445,7 @@ define('views/fields/base', ['view'], function (Dep) {
         show: function () {
             this.$el.removeClass('hidden');
 
-            let $cell = this.getCellElement();
+            let $cell = this.get$cell();
 
             $cell.children('label').removeClass('hidden');
             $cell.removeClass('hidden-cell');
@@ -693,15 +718,15 @@ define('views/fields/base', ['view'], function (Dep) {
                 this.searchData = {};
                 this.setupSearch();
 
-                this.events['keydown input.search-input'] = e => {
-                    if ('keyCode' in e && e.keyCode === 13) {
+                this.events['keydown.' + this.cid] = e => {
+                    if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
                         this.trigger('search');
                     }
                 };
             }
 
             this.on('highlight', () => {
-                var $cell = this.getCellElement();
+                var $cell = this.get$cell();
 
                 $cell.addClass('highlighted');
                 $cell.addClass('transition');
@@ -716,7 +741,7 @@ define('views/fields/base', ['view'], function (Dep) {
             });
 
             this.on('invalid', () => {
-                var $cell = this.getCellElement();
+                var $cell = this.get$cell();
 
                 $cell.addClass('has-error');
 
@@ -766,19 +791,23 @@ define('views/fields/base', ['view'], function (Dep) {
                             return;
                         }
 
-                        var changed = false;
+                        let changed = false;
 
-                        this.getAttributeList().forEach((attribute) => {
+                        this.getAttributeList().forEach(attribute => {
                             if (model.hasChanged(attribute)) {
                                 changed = true;
                             }
                         });
 
-                        if (changed && !options.skipReRender) {
+                        if (!changed) {
+                            return;
+                        }
+
+                        if (!options.skipReRender) {
                             this.reRender();
                         }
 
-                        if (changed && options.highlight) {
+                        if (options.highlight) {
                             this.trigger('highlight');
                         }
                     }
@@ -810,7 +839,8 @@ define('views/fields/base', ['view'], function (Dep) {
 
             this.once('after:render', () => {
                 $a = $('<a>')
-                    .attr('href', 'javascript:')
+                    .attr('role', 'button')
+                    .attr('tabindex', '-1')
                     .addClass('text-muted field-info')
                     .append(
                         $('<span>').addClass('fas fa-info-circle')
@@ -832,51 +862,11 @@ define('views/fields/base', ['view'], function (Dep) {
                 tooltipText = this.getHelper()
                     .transformMarkdownText(tooltipText, {linksInNewTab: true}).toString();
 
-                let hidePopover = () => {
-                    $('body').off('click.popover-' + this.cid);
-
-                    this.stopListening(this, 'mode-changed', hidePopover);
-
-                    $a.popover('hide');
-                };
-
-                $a.popover({
+                Espo.Ui.popover($a, {
                     placement: 'bottom',
-                    container: 'body',
-                    html: true,
                     content: tooltipText,
-                })
-                .on('shown.bs.popover', () => {
-                    $('body').off('click.popover-' + this.cid);
-
-                    this.stopListening(this, 'mode-changed', hidePopover);
-
-                    $('body').on('click.popover-' + this.cid , (e) => {
-                        if ($(e.target).closest('.popover-content').get(0)) {
-                            return;
-                        }
-
-                        if ($.contains($a.get(0), e.target)) {
-                            return;
-                        }
-
-                        hidePopover();
-                    });
-
-                    this.listenToOnce(this, 'mode-changed', hidePopover);
-                });
-
-                $a.on('click', function () {
-                    $(this).popover('toggle');
-                });
-            });
-
-            this.on('remove', () => {
-                if ($a) {
-                    $a.popover('destroy');
-                }
-
-                $('body').off('click.popover-' + this.cid);
+                    preventDestroyOnRender: true,
+                }, this);
             });
         },
 
@@ -956,12 +946,14 @@ define('views/fields/base', ['view'], function (Dep) {
          * @internal
          */
         initInlineEdit: function () {
-            let $cell = this.getCellElement();
+            let $cell = this.get$cell();
 
-            let $editLink = $(
-                '<a href="javascript:" class="pull-right inline-edit-link hidden">' +
-                '<span class="fas fa-pencil-alt fa-sm"></span></a>'
-            );
+            let $editLink = $('<a>')
+                .attr('role', 'button')
+                .addClass('pull-right inline-edit-link hidden')
+                .append(
+                    $('<span>').addClass('fas fa-pencil-alt fa-sm')
+                );
 
             if ($cell.length === 0) {
                 this.listenToOnce(this, 'after:render', () => this.initInlineEdit());
@@ -971,9 +963,7 @@ define('views/fields/base', ['view'], function (Dep) {
 
             $cell.prepend($editLink);
 
-            $editLink.on('click', () => {
-                this.inlineEdit();
-            });
+            $editLink.on('click', () => this.inlineEdit());
 
             $cell
                 .on('mouseenter', (e) => {
@@ -994,6 +984,12 @@ define('views/fields/base', ['view'], function (Dep) {
                         $editLink.addClass('hidden');
                     }
                 });
+
+            this.on('after:render', () => {
+                if (!this.isDetailMode()) {
+                    $editLink.addClass('hidden');
+                }
+            });
         },
 
         /**
@@ -1107,25 +1103,31 @@ define('views/fields/base', ['view'], function (Dep) {
 
         /**
          * Invoke inline-edit saving.
+         *
+         * @param {{[bypassClose]: boolean}} [options]
          */
-        inlineEditSave: function () {
+        inlineEditSave: function (options) {
+            options = options || {}
+
             if (this.recordHelper) {
-                this.recordHelper.trigger('inline-edit-save', this.name);
+                this.recordHelper.trigger('inline-edit-save', this.name, options);
 
                 return;
             }
 
-            var data = this.fetch();
+            // Code below supposed not to be executed.
 
-            var model = this.model;
-            var prev = this.initialAttributes;
+            let data = this.fetch();
+
+            let model = this.model;
+            let prev = this.initialAttributes;
 
             model.set(data, {silent: true});
             data = model.attributes;
 
-            var attrs = false;
+            let attrs = false;
 
-            for (var attr in data) {
+            for (let attr in data) {
                 if (_.isEqual(prev[attr], data[attr])) {
                     continue;
                 }
@@ -1135,8 +1137,6 @@ define('views/fields/base', ['view'], function (Dep) {
 
             if (!attrs) {
                 this.inlineEditClose();
-
-                return;
             }
 
             let isInvalid = this.validateCallback ? this.validateCallback() : this.validate();
@@ -1166,17 +1166,19 @@ define('views/fields/base', ['view'], function (Dep) {
 
                     model.set(prev, {silent: true});
 
-                    this.render();
+                    this.reRender();
                 });
 
-            this.inlineEditClose(true);
+            if (!options.bypassClose) {
+                this.inlineEditClose(true);
+            }
         },
 
         /**
          * @private
          */
         removeInlineEditLinks: function () {
-            var $cell = this.getCellElement();
+            var $cell = this.get$cell();
 
             $cell.find('.inline-save-link').remove();
             $cell.find('.inline-cancel-link').remove();
@@ -1187,17 +1189,21 @@ define('views/fields/base', ['view'], function (Dep) {
          * @private
          */
         addInlineEditLinks: function () {
-            var $cell = this.getCellElement();
+            let $cell = this.get$cell();
 
-            var $saveLink = $(
-                '<a href="javascript:" class="pull-right inline-save-link">' +
-                this.translate('Update') + '</a>'
-            );
+            let $saveLink = $('<a>')
+                .attr('role', 'button')
+                .attr('tabindex', '-1')
+                .addClass('pull-right inline-save-link')
+                .attr('title', 'Ctrl+Enter')
+                .text(this.translate('Update'));
 
-            var $cancelLink = $(
-                '<a href="javascript:" class="pull-right inline-cancel-link">' +
-                this.translate('Cancel') + '</a>'
-            );
+            let $cancelLink = $('<a>')
+                .attr('role', 'button')
+                .attr('tabindex', '-1')
+                .addClass('pull-right inline-cancel-link')
+                .attr('title', 'Esc')
+                .text(this.translate('Cancel'));
 
             $cell.prepend($saveLink);
             $cell.prepend($cancelLink);
@@ -1223,15 +1229,18 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * Exist inline-edit mode.
          *
+         * @param {boolean} [noReset]
          * @return {Promise}
          */
         inlineEditClose: function (noReset) {
             this.trigger('inline-edit-off', {noReset: noReset});
 
+            this.$el.off('keydown.inline-edit');
+
             this._isInlineEditMode = false;
 
             if (!this.isEditMode()) {
-                return;
+                return Promise.resolve();
             }
 
             let promise = this.setDetailMode()
@@ -1261,11 +1270,63 @@ define('views/fields/base', ['view'], function (Dep) {
 
             let promise = this.setEditMode()
                 .then(() => this.reRender(true))
-                .then(() => this.addInlineEditLinks());
+                .then(() => this.addInlineEditLinks())
+                .then(() => {
+                    this.$el.on('keydown.inline-edit', e => {
+                        let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                        if (key === 'Control+Enter') {
+                            e.stopPropagation();
+
+                            this.inlineEditSave();
+
+                            setTimeout(() => {
+                                this.get$cell().focus();
+                            }, 100);
+
+                            return;
+                        }
+
+                        if (key === 'Escape') {
+                            e.stopPropagation();
+
+                            this.inlineEditClose()
+                                .then(() => {
+                                    this.get$cell().focus();
+                                });
+
+                            return;
+                        }
+
+                        if (key === 'Control+KeyS') {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            this.inlineEditSave({bypassClose: true});
+                        }
+                    });
+
+                    setTimeout(() => this.focusOnInlineEdit(), 10);
+                });
 
             this.trigger('inline-edit-on');
 
             return promise;
+        },
+
+        /**
+         * @protected
+         */
+        focusOnInlineEdit: function () {
+            let $element = this.$element && this.$element.length ?
+                this.$element :
+                this.$el.find('.form-control').first();
+
+            if (!$element) {
+                return;
+            }
+
+            $element.first().focus();
         },
 
         /**
@@ -1305,10 +1366,18 @@ define('views/fields/base', ['view'], function (Dep) {
                 $el = this.$element;
             }
 
-            let rect = $el.get(0).getBoundingClientRect();
+            if (!$el.length) {
+                $el = this.$el;
+            }
 
-            if (rect.top === 0 && rect.bottom === 0 && rect.left === 0) {
-                return;
+            if ($el.length) {
+                let rect = $el.get(0).getBoundingClientRect();
+
+                this.lastValidationMessage = message;
+
+                if (rect.top === 0 && rect.bottom === 0 && rect.left === 0) {
+                    return;
+                }
             }
 
             $el
@@ -1364,8 +1433,10 @@ define('views/fields/base', ['view'], function (Dep) {
          * @return {boolean} True if not valid.
          */
         validate: function () {
-            for (var i in this.validations) {
-                var method = 'validate' + Espo.Utils.upperCaseFirst(this.validations[i]);
+            this.lastValidationMessage = null;
+
+            for (let i in this.validations) {
+                let method = 'validate' + Espo.Utils.upperCaseFirst(this.validations[i]);
 
                 if (this[method].call(this)) {
                     this.trigger('invalid');

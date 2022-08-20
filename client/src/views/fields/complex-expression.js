@@ -244,7 +244,7 @@ define('views/fields/complex-expression', ['views/fields/text'], function (Dep) 
                 }
             };
 
-            languageTools.setCompleters([completer]);
+            this.editor.completers = [completer];
         },
 
         getAttributeList: function () {

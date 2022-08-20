@@ -3,11 +3,13 @@
     "post": "Postagem",
     "attachments": "Anexos",
     "targetType": "Alvo",
-    "teams": "Equipes",
+    "teams": "Times",
     "users": "Usuários",
     "portals": "Portais",
+    "type": "Tipo",
     "isGlobal": "É Global",
     "isInternal": "É interno (para usuários internos)",
+    "related": "Relacionado",
     "createdByGender": "Criado por Gênero",
     "data": "Dado",
     "number": "Número"
@@ -18,5 +20,20 @@
   },
   "messages": {
     "writeMessage": "Escreva sua mensagem aqui"
+  },
+  "options": {
+    "targetType": {
+      "self": "para mim",
+      "users": "para determinado(s) usuário(s)",
+      "teams": "para determinado(s) time(s)",
+      "all": "para todos os usuários internos",
+      "portals": "para usuários do portal"
+    },
+    "type": {
+      "Post": "Postagem"
+    }
+  },
+  "links": {
+    "related": "Relacionado"
   }
 }

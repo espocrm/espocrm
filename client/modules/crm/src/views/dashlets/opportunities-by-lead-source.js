@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashlets/abstract/chart', function (Dep) {
+define('crm:views/dashlets/opportunities-by-lead-source', ['crm:views/dashlets/abstract/chart'], function (Dep) {
 
     return Dep.extend({
 
@@ -38,18 +38,22 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
             if (this.getDateFilter() === 'between') {
                 url += '&dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
             }
+
             return url;
         },
 
         prepareData: function (response) {
             var data = [];
+
             for (var label in response) {
                 var value = response[label];
+
                 data.push({
                     label: this.getLanguage().translateOption(label, 'source', 'Lead'),
                     data: [[0, value]]
                 });
             }
+
             return data;
         },
 
@@ -68,7 +72,6 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
         },
 
         draw: function () {
-            var self = this;
             this.flotr.draw(this.$container.get(0), this.chartData, {
                 colors: this.colorList,
                 shadowSize: false,
@@ -78,54 +81,58 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
                     lineWidth: 1,
                     fillOpacity: 1,
                     sizeRatio: 0.8,
-                    labelFormatter: function (total, value) {
+                    labelFormatter: (total, value) => {
                         var percentage = (100 * value / total).toFixed(2);
-                        if (percentage < 7) return '';
-                        return '<span class="small" style="font-size: 0.8em;color:'+this.textColor+'">'+ percentage.toString() +'%' + '</span>';
-                    }
+
+                        if (percentage < 7) {
+                            return '';
+                        }
+
+                        return '<span class="small" style="font-size: 0.8em;color:'+this.textColor+'">' +
+                            percentage.toString() +'%' + '</span>';
+                    },
                 },
                 grid: {
                     horizontalLines: false,
                     verticalLines: false,
                     outline: '',
-                    tickColor: this.tickColor
+                    tickColor: this.tickColor,
                 },
                 yaxis: {
                     showLabels: false,
-                    color: this.textColor
+                    color: this.textColor,
                 },
                 xaxis: {
                     showLabels: false,
-                    color: this.textColor
-                },
-                legend: {
-                    show: false,
+                    color: this.textColor,
                 },
                 mouse: {
                     track: true,
                     relative: true,
                     lineColor: this.hoverColor,
-                    trackFormatter: function (obj) {
-                        var value = self.currencySymbol + self.formatNumber(obj.y, true);
+                    trackFormatter: (obj) => {
+                        var value = this.currencySymbol + this.formatNumber(obj.y, true);
 
                         var fraction = obj.fraction || 0;
                         var percentage = (100 * fraction).toFixed(2).toString();
 
-                        return (obj.series.label || self.translate('None')) + '<br>' + value + ' / ' + percentage + '%';
-                    }
+                        let label = this.getHelper().escapeString(obj.series.label || this.translate('None'));
+
+                        return label + '<br>' +  value + ' / ' + percentage + '%';
+                    },
                 },
                 legend: {
                     show: true,
                     noColumns: this.getLegendColumnNumber(),
                     container: this.$el.find('.legend-container'),
                     labelBoxMargin: 0,
-                    labelFormatter: self.labelFormatter.bind(self),
+                    labelFormatter: this.labelFormatter.bind(this),
                     labelBoxBorderColor: 'transparent',
-                    backgroundOpacity: 0
-                }
+                    backgroundOpacity: 0,
+                },
             });
 
             this.adjustLegend();
-        }
+        },
     });
 });

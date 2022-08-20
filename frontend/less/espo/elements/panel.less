@@ -2,7 +2,7 @@
 .well {
     border-radius: var(--panel-border-radius);
     border-width: var(--panel-border-width);
-    border-color: var(--panel-border);
+    border-color: var(--panel-default-border);
 }
 
 .panel-body {
@@ -70,12 +70,46 @@
             border-left: 0;
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
+
+            &.first::before {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+            &.last::before {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+
+            @media screen and (max-width: (@screen-sm-min - 1px)) {
+                &,
+                &.first::before,
+                &.last::before {
+                    border-radius: 0;
+                }
+            }
         }
 
         .side > .panel {
             border-right: 0;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
+
+            &.first::before {
+                border-top-right-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+            &.last::before {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            @media screen and (max-width: (@screen-sm-min - 1px)) {
+                &,
+                &.first::before,
+                &.last::before {
+                    border-radius: 0;
+                }
+            }
         }
     }
 
@@ -85,6 +119,13 @@
             border-right: 0;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
+
+            &.first::before {
+                border-top-right-radius: 0;
+            }
+            &.last::before {
+                border-bottom-right-radius: 0;
+            }
         }
     }
 }
@@ -197,6 +238,42 @@
 }
 
 body {
+    .panel {
+        > .panel-heading {
+            .btn-group.open {
+                > .btn[aria-expanded="true"] {
+                    box-shadow: none;
+                }
+            }
+            .btn {
+                &:hover:active {
+                    box-shadow: none;
+                }
+            }
+        }
+    }
+
+    .panel-danger,
+    .panel-success,
+    .panel-primary,
+    .panel-warning,
+    .panel-info {
+        > .panel-heading {
+            .btn-group.open {
+                > .btn[aria-expanded="true"] {
+                    &,
+                    &:active,
+                    &:focus {
+                        > .fas,
+                        > .far {
+                            color: var(--btn-text-color);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     .panel-default {
         &.headered {
             background: linear-gradient(
@@ -213,14 +290,31 @@ body {
             color: var(--panel-default-text);
             background-color: var(--panel-default-bg);
             border-color: transparent;
+            .btn,
+            .btn-default,
+            .btn.dropdown-toggle {
+                &:focus:not(:hover),
+                &:active:not(:hover) {
+                    color: var(--gray-soft);
+                    background-color: transparent;
+                    border-color: transparent;
+                    > .fas,
+                    > .far {
+                        color: inherit;
+                    }
+                }
+                &:active:hover {
+                    background-color: transparent;
+                    border-color: transparent;
+                }
+            }
+
             .btn-group,
             .btn-group.open {
-                .dropdown-toggle.btn {
-                    &:focus {
-                        color: var(--panel-default-text);
-                        background-color: transparent;
-                        border-color: transparent;
-                    }
+                > .dropdown-toggle.btn {
+                    color: var(--panel-default-text);
+                    background-color: transparent;
+                    border-color: transparent;
                 }
             }
         }
@@ -237,16 +331,24 @@ body {
             );
         }
 
-        border-color: var(--panel-warning-bg);
+        border-color: var(--panel-warning-border);
         > .panel-heading {
             color: var(--panel-warning-text);
             background-color: var(--panel-warning-bg);
             border-color: transparent;
             .btn,
             .btn-warning {
-                color: var(--panel-warning-text);
-                background-color: transparent;
-                border-color: transparent;
+                &,
+                &:focus:not(:hover),
+                &:active:not(:hover) {
+                    color: var(--panel-warning-text);
+                    background-color: transparent;
+                    border-color: transparent;
+                    > .fas,
+                    > .far {
+                        color: inherit;
+                    }
+                }
             }
             .btn-group,
             .btn-group.open {
@@ -272,16 +374,24 @@ body {
             );
         }
 
-        border-color: var(--panel-danger-bg);
+        border-color: var(--panel-danger-border);
         > .panel-heading {
             color: var(--panel-danger-text);
             background-color: var(--panel-danger-bg);
             border-color: transparent;
             .btn,
             .btn-danger {
-                color: var(--panel-danger-text);
-                background-color: transparent;
-                border-color: transparent;
+                &,
+                &:focus:not(:hover),
+                &:active:not(:hover) {
+                    color: var(--panel-danger-text);
+                    background-color: transparent;
+                    border-color: transparent;
+                    > .fas,
+                    > .far {
+                        color: inherit;
+                    }
+                }
             }
             .btn-group,
             .btn-group.open {
@@ -307,16 +417,24 @@ body {
             );
         }
 
-        border-color: var(--state-info-bg);
+        border-color: var(--state-info-border);
         > .panel-heading {
             color: var(--panel-info-text);
             background-color: var(--state-info-bg);
             border-color: transparent;
             .btn,
             .btn-info {
-                color: var(--panel-info-text);
-                background-color: transparent;
-                border-color: transparent;
+                &,
+                &:focus:not(:hover),
+                &:active:not(:hover) {
+                    color: var(--panel-info-text);
+                    background-color: transparent;
+                    border-color: transparent;
+                    > .fas,
+                    > .far {
+                        color: inherit;
+                    }
+                }
             }
             .btn-group.open {
                 .dropdown-toggle.btn {
@@ -341,16 +459,24 @@ body {
             );
         }
 
-        border-color: var(--panel-success-bg);
+        border-color: var(--panel-success-border);
         > .panel-heading {
             color: var(--panel-success-text);
             background-color: var(--panel-success-bg);
             border-color: transparent;
             .btn,
             .btn-success {
-                color: var(--panel-success-text);
-                background-color: transparent;
-                border-color: transparent;
+                &,
+                &:focus:not(:hover),
+                &:active:not(:hover) {
+                    color: var(--panel-success-text);
+                    background-color: transparent;
+                    border-color: transparent;
+                    > .fas,
+                    > .far {
+                        color: inherit;
+                    }
+                }
             }
             .btn-group.open {
                 .dropdown-toggle.btn {
@@ -375,15 +501,23 @@ body {
             );
         }
 
-        border-color: var(--panel-primary-bg);
+        border-color: var(--panel-primary-border);
         > .panel-heading {
             background-color: var(--panel-primary-bg);
             border-color: transparent;
             .btn,
             .btn-primary {
-                color: var(--panel-primary-text);
-                background-color: transparent;
-                border-color: transparent;
+                &,
+                &:focus:not(:hover),
+                &:active:not(:hover) {
+                    color: var(--panel-primary-text);
+                    background-color: transparent;
+                    border-color: transparent;
+                    > .fas,
+                    > .far {
+                        color: inherit;
+                    }
+                }
             }
             .btn-group.open {
                 .dropdown-toggle.btn {
@@ -415,7 +549,7 @@ body {
 
 .panel.sticked {
     margin-top: ~"calc(-1 * var(--vertical-gap))";
-    border-top-width: max(var(--panel-border-width), 1px);
+    border-top-width: ~"max(var(--panel-border-width), 1px)";
 }
 
 .panel {
@@ -449,6 +583,54 @@ body {
         > .show-more > a {
             border-bottom-left-radius: var(--panel-border-radius);
             border-bottom-right-radius: var(--panel-border-radius);
+        }
+    }
+}
+
+
+// Preventing a shadow being casted on an adjacent panel.
+.panel {
+    &.first,
+    &.in-middle,
+    &.last {
+        position: relative;
+        box-shadow: none;
+
+        &::before {
+            box-shadow: var(--default-box-shadow);
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: -1;
+        }
+    }
+
+    &.first {
+        &::before {
+            border-top-left-radius: var(--panel-border-radius);
+            border-top-right-radius: var(--panel-border-radius);
+        }
+    }
+    &.in-middle::before {
+        border-radius: 0;
+    }
+    &.last {
+        &::before {
+            border-bottom-left-radius: var(--panel-border-radius);
+            border-bottom-right-radius: var(--panel-border-radius);
+        }
+    }
+}
+
+.modal-content {
+    .panel {
+        &.first,
+        &.in-middle,
+        &.last {
+            z-index: 2;
         }
     }
 }

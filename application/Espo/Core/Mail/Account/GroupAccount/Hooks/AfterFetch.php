@@ -446,7 +446,7 @@ class AfterFetch implements AfterFetchInterface
         $userIdList = [];
 
         if ($case->hasLinkMultipleField('assignedUsers')) {
-            /** @var string[] */
+            /** @var string[] $userIdList */
             $userIdList = $case->getLinkMultipleIdList('assignedUsers');
         }
         else {
@@ -461,7 +461,7 @@ class AfterFetch implements AfterFetchInterface
             $email->addLinkMultipleId('users', $userId);
         }
 
-        /** @var string[] */
+        /** @var string[] $teamIdList */
         $teamIdList = $case->getLinkMultipleIdList('teams');
 
         foreach ($teamIdList as $teamId) {
@@ -488,7 +488,7 @@ class AfterFetch implements AfterFetchInterface
 
         $bodyPlain = $email->getBodyPlain() ?? '';
 
-        /** @var string */
+        /** @var string $replacedBodyPlain */
         $replacedBodyPlain = preg_replace('/\s+/', '', $bodyPlain);
 
         if (trim($replacedBodyPlain) === '') {
@@ -499,7 +499,7 @@ class AfterFetch implements AfterFetchInterface
             $case->set('description', $bodyPlain);
         }
 
-        /** @var string[] */
+        /** @var string[] $attachmentIdList */
         $attachmentIdList = $email->getLinkMultipleIdList('attachments');
 
         $copiedAttachmentIdList = [];

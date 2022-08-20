@@ -15,7 +15,8 @@
         },
         "isHtml": {
             "type": "bool",
-            "default": true
+            "default": true,
+            "inlineEditDisabled": true
         },
         "oneOff": {
             "type": "bool",

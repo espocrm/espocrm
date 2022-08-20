@@ -75,7 +75,7 @@ class ImportError extends Entity
      */
     public function getRow(): array
     {
-        /** @var ?string[] */
+        /** @var ?string[] $value */
         $value = $this->get('row');
 
         if ($value === null) {
@@ -87,7 +87,7 @@ class ImportError extends Entity
 
     public function getImportLink(): Link
     {
-        /** @var ?Link */
+        /** @var ?Link $link */
         $link = $this->getValueObject('import');
 
         if ($link === null) {

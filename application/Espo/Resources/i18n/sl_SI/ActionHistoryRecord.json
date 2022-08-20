@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "user": "Uporabnik",
+    "action": "Akcija",
+    "createdAt": "Datum",
+    "target": "Tarča",
+    "targetType": "Ciljna vrsta",
+    "ipAddress": "IP naslov",
+    "authLogRecord": "Zapis dnevnika avtorizacije",
+    "userType": "Vrsta uporabnika"
+  },
+  "links": {
+    "user": "Uporabnik",
+    "target": "Tarča",
+    "authLogRecord": "Zapis dnevnika avtorizacije"
+  },
+  "presetFilters": {
+    "onlyMy": "Samo moj"
+  },
+  "options": {
+    "action": {
+      "read": "Preberi",
+      "update": "Nadgradnja",
+      "delete": "Izbriši",
+      "create": "Ustvari"
+    }
+  }
+}

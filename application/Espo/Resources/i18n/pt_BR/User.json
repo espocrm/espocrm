@@ -17,10 +17,26 @@
     "newPassword": "Nova senha",
     "newPasswordConfirm": "Confirme a nova senha",
     "isActive": "Está ativo",
-    "isPortalUser": "É Portal de Usuário",
+    "isPortalUser": "É Usuário do Portal",
     "contact": "Contato",
     "accounts": "Contas",
-    "ipAddress": "Endereço IP"
+    "account": "Conta (Primária)",
+    "sendAccessInfo": "Enviar e-mail com informações de acesso ao usuário",
+    "gender": "Gênero",
+    "position": "Posição no Time",
+    "ipAddress": "Endereço IP",
+    "passwordPreview": "Pré-visualização de senha",
+    "isSuperAdmin": "É Super Admin",
+    "lastAccess": "Último Acesso",
+    "type": "Tipo",
+    "apiKey": "Chave de API",
+    "secretKey": "Chave Secreta",
+    "authMethod": "Método de autenticação",
+    "yourPassword": "Sua senha atual",
+    "dashboardTemplate": "Modelo de Dashboard",
+    "auth2FAEnable": "Ativar Autenticação de 2 Fatores",
+    "auth2FAMethod": "Método 2FA",
+    "auth2FATotpSecret": "Segredo 2FA TOTP"
   },
   "links": {
     "teams": "Times",
@@ -30,7 +46,11 @@
     "portalRoles": "Regras de Portal",
     "contact": "Contato",
     "accounts": "Contas",
-    "tasks": "Tarefas"
+    "account": "Conta (Primária)",
+    "tasks": "Tarefas",
+    "defaultTeam": "Time Padrão",
+    "dashboardTemplate": "Modelo de Dashboard",
+    "userData": "Dados do Usuário"
   },
   "labels": {
     "Create User": "Criar Usuário",
@@ -44,7 +64,18 @@
     "Email Address": "Endereço de e-mail",
     "External Accounts": "Contas externas",
     "Email Accounts": "Contas de e-mail",
-    "Create Portal User": "Criar Usuário de Portal"
+    "Create Portal User": "Criar Usuário de Portal",
+    "Proceed w/o Contact": "Prossiga sem Contato",
+    "Generate New API Key": "Gerar Nova Chave de API",
+    "Generate New Password": "Gerar Nova Senha",
+    "Code": "Código",
+    "Back to login form": "Voltar ao formulário de login",
+    "Requirements": "Requisitos",
+    "Security": "Segurança",
+    "Reset 2FA": "Reiniciar 2FA",
+    "Secret": "Segredo",
+    "Send Password Change Link": "Enviar link de alteração de senha",
+    "Send Code": "Enviar código"
   },
   "tooltips": {
     "defaultTeam": "Todos os registros criados por este usuário serão relacionados e este time por padrão.",
@@ -52,7 +83,9 @@
     "isAdmin": "Usuário Admin pode acessar tudo.",
     "isActive": "Se desmarcado, o usuário não conseguirá logar.",
     "teams": "Times aos quais este usuário pertence. O controle de acesso é herdado das regras do time.",
-    "roles": "Regras de acesso adicionais. Use se o usuário não pertence a nenhum time ou se for necessário extender o controle de acesso deste usuário."
+    "roles": "Regras de acesso adicionais. Use se o usuário não pertence a nenhum time ou se for necessário extender o controle de acesso deste usuário.",
+    "portalRoles": "Regras adicionais do portal. Use-o para estender o nível de controle de acesso exclusivamente para este usuário.",
+    "portals": "Portais aos quais este usuário tem acesso."
   },
   "messages": {
     "passwordWillBeSent": "A senha será enviada para o email do usuário.",
@@ -64,13 +97,52 @@
     "forbidden": "Proibido, por favor tente mais tarde",
     "uniqueLinkHasBeenSent": "Um link único foi enviado para o endereço de e-mail informado.",
     "passwordChangedByRequest": "A senha foi atualizada.",
-    "userNameExists": "Nome de Usuário"
+    "userNameExists": "Nome de Usuário",
+    "setupSmtpBefore": "Você precisa configurar [configurações SMTP]({url}) para que o sistema possa enviar a senha por e-mail.",
+    "passwordStrengthLength": "Deve ter pelo menos {length} caracteres.",
+    "passwordStrengthLetterCount": "Deve conter pelo menos {count} letra(s).",
+    "passwordStrengthNumberCount": "Deve conter pelo menos {count} dígito(s).",
+    "passwordStrengthBothCases": "Deve conter letras maiúsculas e minúsculas.",
+    "wrongCode": "Código Errado",
+    "codeIsRequired": "Código é obrigatório",
+    "enterTotpCode": "Entre com o código de seu app autenticador.",
+    "verifyTotpCode": "Digitalize o código QR com seu aplicativo autenticador móvel. Se você tiver problemas com a digitalização, poderá inserir o segredo manualmente. Depois disso, você verá um código de 6 dígitos em seu aplicativo. Digite este código no campo abaixo.",
+    "generateAndSendNewPassword": "Uma nova senha será gerada e enviada para o endereço de email do usuário.",
+    "security2FaResetConfimation": "Tem certeza de que deseja redefinir as configurações atuais de 2FA?",
+    "ldapUserInEspoNotFound": "O usuário não foi encontrado no EspoCRM. Entre em contato com o administrador para criar o usuário.",
+    "passwordRecoverySentIfMatched": "Supondo que os dados inseridos correspondam a qualquer conta de usuário.",
+    "auth2FARequiredHeader": "Autenticação de 2 fatores necessária",
+    "auth2FARequired": "Você precisa configurar a autenticação de 2 fatores. Use um aplicativo autenticador em seu celular (ex: Google Authenticator).",
+    "sendPasswordChangeLinkConfirmation": "Um e-mail com um link exclusivo será enviado ao usuário permitindo que ele altere sua senha. O link expirará após um determinado período de tempo.",
+    "yourAuthenticationCode": "Seu código de autenticação: {code}.",
+    "choose2FaSmsPhoneNumber": "Selecione um número de telefone que será usado para 2FA.",
+    "choose2FaEmailAddress": "Selecione um endereço de e-mail que será usado para 2FA. É altamente recomendável usar um endereço de e-mail não principal.",
+    "enterCodeSentInEmail": "Digite o código enviado para o seu endereço de e-mail.",
+    "enterCodeSentBySms": "Digite o código enviado por SMS para o seu número de telefone.",
+    "passwordChangeRequestNotFound": "A solicitação de alteração de senha não foi encontrada. Pode estar expirada. Tente iniciar uma nova recuperação de senha a partir do [login page]({url})."
   },
   "boolFilters": {
-    "onlyMyTeam": "Apenas meus time"
+    "onlyMyTeam": "Apenas meu time"
   },
   "presetFilters": {
     "active": "Ativo",
-    "activePortal": "Portal Ativo"
+    "activePortal": "Portal Ativo",
+    "activeApi": "API Ativa"
+  },
+  "options": {
+    "gender": {
+      "": "Não Informado",
+      "Male": "Masculino",
+      "Female": "Feminino",
+      "Neutral": "Neutro"
+    },
+    "type": {
+      "admin": "Administrador",
+      "system": "Sistema",
+      "super-admin": "Super Admin"
+    },
+    "authMethod": {
+      "ApiKey": "Chave de API"
+    }
   }
 }

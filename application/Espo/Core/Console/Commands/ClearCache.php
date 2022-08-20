@@ -30,21 +30,25 @@
 namespace Espo\Core\Console\Commands;
 
 use Espo\Core\{
-    DataManager,
     Console\Command,
     Console\Command\Params,
     Console\IO,
+    Exceptions\Error,
+    DataManager,
 };
 
 class ClearCache implements Command
 {
-    private $dataManager;
+    private DataManager $dataManager;
 
     public function __construct(DataManager $dataManager)
     {
         $this->dataManager = $dataManager;
     }
 
+    /**
+     * @throws Error
+     */
     public function run(Params $params, IO $io): void
     {
         $this->dataManager->clearCache();

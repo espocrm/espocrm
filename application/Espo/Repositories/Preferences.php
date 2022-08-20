@@ -147,7 +147,7 @@ class Preferences implements Repository,
             return;
         }
 
-        /** @var array<string,array<string,mixed>> */
+        /** @var array<string,array<string,mixed>> $fields */
         $fields = $this->metadata->get('entityDefs.Preferences.fields');
 
         $defaults = [];

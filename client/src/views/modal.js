@@ -250,6 +250,14 @@ define('views/modal', ['view'], function (Dep) {
         footerAtTheTop: null,
 
         /**
+         * A shortcut-key => action map.
+         *
+         * @protected
+         * @type {?Object.<string,string|function (JQueryKeyEventObject): void>}
+         */
+        shortcutKeys: null,
+
+        /**
          * @inheritDoc
          */
         init: function () {
@@ -274,6 +282,10 @@ define('views/modal', ['view'], function (Dep) {
 
             // @todo Remove it as deprecated.
             this.buttons = Espo.Utils.cloneDeep(this.buttons);
+
+            if (this.shortcutKeys) {
+                this.shortcutKeys = Espo.Utils.cloneDeep(this.shortcutKeys);
+            }
 
             this.on('render', () => {
                 if (this.dialog) {
@@ -331,9 +343,8 @@ define('views/modal', ['view'], function (Dep) {
                     fixedHeaderHeight: this.fixedHeaderHeight,
                     closeButton: !this.noCloseButton,
                     collapseButton: this.isCollapsable,
-                    onRemove: () => {
-                        this.onDialogClose();
-                    },
+                    onRemove: () => this.onDialogClose(),
+                    onBackdropClick: () => this.onBackdropClick(),
                 });
 
                 this.setElement(containerSelector + ' .body');
@@ -349,6 +360,10 @@ define('views/modal', ['view'], function (Dep) {
                 }
 
                 this.adjustButtons();
+
+                if (!this.noFullHeight) {
+                    this.initBodyScrollListener();
+                }
             });
 
             this.once('remove', () => {
@@ -358,6 +373,33 @@ define('views/modal', ['view'], function (Dep) {
 
                 $(containerSelector).remove();
             });
+        },
+
+        setupFinal: function () {
+            if (this.shortcutKeys) {
+                this.events['keydown.modal-base'] = e => {
+                    let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                    if (typeof this.shortcutKeys[key] === 'function') {
+                        this.shortcutKeys[key].call(this, e);
+
+                        return;
+                    }
+
+                    let actionName = this.shortcutKeys[key];
+
+                    if (!actionName) {
+                        return;
+                    }
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
+
+                    this[methodName]();
+                };
+            }
         },
 
         /**
@@ -472,6 +514,11 @@ define('views/modal', ['view'], function (Dep) {
                 this.remove();
             }
         },
+
+        /**
+         * @protected
+         */
+        onBackdropClick: function () {},
 
         /**
          * A `cancel` action.
@@ -598,7 +645,7 @@ define('views/modal', ['view'], function (Dep) {
          * @param {boolean} [doNotReRender=false] Do not re-render.
          */
         addDropdownItem: function (o, toBeginning, doNotReRender) {
-            var method = toBeginning ? 'unshift' : 'push';
+            let method = toBeginning ? 'unshift' : 'push';
 
             if (!o) {
                 this.dropdownItemList[method](false);
@@ -606,14 +653,14 @@ define('views/modal', ['view'], function (Dep) {
                 return;
             }
 
-            var name = o.name;
+            let name = o.name;
 
             if (!name) {
                 return;
             }
 
-            for (var i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name === name) {
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
                     return;
                 }
             }
@@ -635,7 +682,7 @@ define('views/modal', ['view'], function (Dep) {
 
             this.updateDialog();
 
-            var html = this.dialog.getFooterHtml();
+            let html = this.dialog.getFooterHtml();
 
             this.$el.find('footer.modal-footer').html(html);
 
@@ -649,20 +696,22 @@ define('views/modal', ['view'], function (Dep) {
          * @param {boolean} [doNotReRender=false] Do not re-render.
          */
         removeButton: function (name, doNotReRender) {
-            var index = -1;
+            let index = -1;
 
-            this.buttonList.forEach((item, i) => {
+            for (const [i, item] of this.buttonList.entries()) {
                 if (item.name === name) {
                     index = i;
+
+                    break;
                 }
-            });
+            }
 
             if (~index) {
                 this.buttonList.splice(index, 1);
             }
 
-            for (var i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name === name) {
+            for (const [i, item] of this.dropdownItemList.entries()) {
+                if (item.name === name) {
                     this.dropdownItemList.splice(i, 1);
 
                     break;
@@ -685,13 +734,13 @@ define('views/modal', ['view'], function (Dep) {
          * @param {string} name
          */
         showButton: function (name) {
-            this.buttonList.forEach((d) => {
-                if (d.name !== name) {
-                    return;
-                }
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.hidden = false;
 
-                d.hidden = false;
-            });
+                    break;
+                }
+            }
 
             if (!this.isRendered()) {
                 return;
@@ -707,13 +756,13 @@ define('views/modal', ['view'], function (Dep) {
          * @param {string} name
          */
         hideButton: function (name) {
-            this.buttonList.forEach((d) => {
-                if (d.name !== name) {
-                    return;
-                }
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.hidden = true;
 
-                d.hidden = true;
-            });
+                    break;
+                }
+            }
 
             if (!this.isRendered()) {
                 return;
@@ -730,21 +779,21 @@ define('views/modal', ['view'], function (Dep) {
          * @param {string} name A name.
          */
         showActionItem: function (name) {
-            this.buttonList.forEach(d => {
-                if (d.name !== name) {
-                    return;
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.hidden = false;
+
+                    break;
                 }
+            }
 
-                d.hidden = false;
-            });
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
+                    item.hidden = false;
 
-            this.dropdownItemList.forEach(d => {
-                if (d.name !== name) {
-                    return;
+                    break;
                 }
-
-                d.hidden = false;
-            });
+            }
 
             if (!this.isRendered()) {
                 return;
@@ -769,21 +818,21 @@ define('views/modal', ['view'], function (Dep) {
          * @param {string} name A name.
          */
         hideActionItem: function (name) {
-            this.buttonList.forEach(d => {
-                if (d.name !== name) {
-                    return;
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.hidden = true;
+
+                    break;
                 }
+            }
 
-                d.hidden = true;
-            });
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
+                    item.hidden = true;
 
-            this.dropdownItemList.forEach(d => {
-                if (d.name !== name) {
-                    return;
+                    break;
                 }
-
-                d.hidden = true;
-            });
+            }
 
             if (!this.isRendered()) {
                 return;
@@ -798,6 +847,23 @@ define('views/modal', ['view'], function (Dep) {
                 $dropdownGroup.addClass('hidden');
                 $dropdownGroup.find('> button').addClass('hidden');
             }
+        },
+
+        /**
+         * Whether an action item is visible and not disabled.
+         *
+         * @param {string} name An action item name.
+         */
+        hasAvailableActionItem: function (name) {
+            let hasButton = this.buttonList
+                .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
+
+            if (hasButton) {
+                return true;
+            }
+
+            return this.dropdownItemList
+                .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
         },
 
         /**
@@ -854,7 +920,7 @@ define('views/modal', ['view'], function (Dep) {
                     return;
                 }
 
-                var fontSizePercentage = this.fontSizePercentage -= 4;
+                this.fontSizePercentage -= 4;
 
                 this.$el.find('.modal-title .font-size-flexible')
                     .css('font-size', this.fontSizePercentage + '%');
@@ -946,6 +1012,30 @@ define('views/modal', ['view'], function (Dep) {
 
             $buttonsVisible.first().addClass('radius-left');
             $buttonsVisible.last().addClass('radius-right');
+        },
+
+        /**
+         * @protected
+         */
+        initBodyScrollListener: function () {
+            let $body = this.$el.find('> .dialog > .modal-dialog > .modal-content > .modal-body');
+            let $footer = $body.parent().find('> .modal-footer');
+
+            if (!$footer.length) {
+                return;
+            }
+
+            $body.off('scroll.footer-shadow');
+
+            $body.on('scroll.footer-shadow', () => {
+                if ($body.scrollTop()) {
+                    $footer.addClass('shadowed');
+
+                    return;
+                }
+
+                $footer.removeClass('shadowed');
+            });
         },
     });
 });

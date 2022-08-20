@@ -1,0 +1,41 @@
+{
+  "labels": {
+    "Create Document": "Ustvari dokument",
+    "Details": "Podrobnosti"
+  },
+  "fields": {
+    "name": "Ime",
+    "status": "Stanje",
+    "file": "mapa",
+    "type": "Vrsta",
+    "publishDate": "Datum objave",
+    "expirationDate": "Rok trajanja",
+    "description": "Opis",
+    "accounts": "Računi",
+    "folder": "Mapa"
+  },
+  "links": {
+    "accounts": "Računi",
+    "opportunities": "Priložnosti",
+    "folder": "Mapa",
+    "leads": "vodi",
+    "contacts": "Kontakti"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktiven",
+      "Draft": "Osnutek",
+      "Expired": "potekel",
+      "Canceled": "Prekinjeno"
+    },
+    "type": {
+      "": "Noben",
+      "Contract": "Pogodba",
+      "License Agreement": "Licenčna pogodba"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktiven",
+    "draft": "Osnutek"
+  }
+}

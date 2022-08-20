@@ -1,0 +1,214 @@
+body[data-navbar="side"].minimized.side-menu-opened {
+    #navbar > .navbar {
+        border-right: 1px solid var(--panel-default-border);
+
+        .navbar-body {
+            background-color: var(--navbar-inverse-bg);
+        }
+    }
+
+    > .side-menu-backdrop {
+        margin-left: 0;
+    }
+}
+
+@backdrop-filter: blur(2px);
+@body-bg-2nd: #3d575e;
+@body-bg-3rd: #978e4f26;
+
+body {
+    background:
+        radial-gradient(circle at 50px 600px, @body-bg-3rd, transparent 800px),
+        repeating-linear-gradient(
+            354deg,
+                var(--body-bg) -1000px,
+            @body-bg-2nd 1000px,
+            var(--body-bg) 3000px
+        );
+    background-size: 100% 20000px;
+    background-position: top;
+    background-color: var(--body-bg);
+
+    .list-container-panel {
+        > .list {
+            .table,
+            .table tr,
+            .table tr td,
+            .list-group-item {
+                background-color: transparent;
+            }
+        }
+    }
+
+    .panel {
+        &.panel-default > .panel-heading {
+            background-color: transparent;
+        }
+
+        &.headered {
+            background: var(--panel-bg);
+        }
+
+        .list-container > .list {
+            background-color: transparent;
+            .table,
+            .table tr,
+            .table tr td,
+            .list-group-item {
+                background-color: transparent;
+            }
+
+            .list-group-item.active {
+                background-color: var(--default-heading-bg-color);
+            }
+        }
+
+        &.panel-danger {
+            background-color: var(--panel-danger-bg);
+            > .panel-heading {
+                background-color: transparent;
+            }
+        }
+        &.panel-warning {
+            background-color: var(--panel-warning-bg);
+            > .panel-heading {
+                background-color: transparent;
+            }
+        }
+        &.panel-success {
+            background-color: var(--panel-success-bg);
+            > .panel-heading {
+                background-color: transparent;
+            }
+        }
+
+        .panel-body .field > .link-container .list-group-item {
+            background-color: transparent;
+        }
+    }
+
+    #navbar {
+        .navbar-right {
+            backdrop-filter: @backdrop-filter !important;
+        }
+    }
+
+    .stick-sub,
+    .sticked-bar{
+        backdrop-filter: @backdrop-filter !important;
+        border-bottom: 1px solid var(--panel-default-border);
+    }
+
+    .list {
+        > .table {
+            background-color: transparent;
+        }
+    }
+
+    #notifications-panel,
+    #global-search-panel {
+        > .panel {
+            backdrop-filter: @backdrop-filter;
+            > .panel-heading {
+                background-color: transparent;
+            }
+            > .panel-body {
+                background-color: transparent;
+                .list,
+                ul > li.list-group-item {
+                    background-color: transparent;
+                }
+            }
+            background-color: var(--dropdown-bg);
+        }
+    }
+
+    .alert {
+        border-color: var(--panel-default-border) !important;
+        border-top: 0;
+    }
+
+    .modal-dialog > .modal-content {
+        backdrop-filter: @backdrop-filter;
+    }
+}
+
+.field .list-group {
+    background-color: transparent;
+}
+
+.complex-text-container.cut > .complex-text::before {
+    height: 20px;
+    background: none;
+    backdrop-filter: blur(1px);
+}
+
+select.form-control > option {
+    background-color: var(--dropdown-bg);
+}
+
+#login.panel > .panel-heading {
+    background-color: transparent;
+}
+
+.ui-timepicker-wrapper {
+    scrollbar-color: var(--input-bg) var(--scroll-bg);
+
+    &::-webkit-scrollbar-track {
+        background: var(--input-bg);
+    }
+}
+
+.calendar {
+    td.fc-day-top.fc-today {
+        background-color: transparent !important;
+    }
+}
+
+.popup-notification {
+    border-width: 1px;
+}
+
+.popup-notification-danger {
+    background-color: var(--brand-danger);
+    h4 {
+        color: var(--text-color);
+    }
+}
+
+.popup-notification-warning {
+    background-color: var(--brand-warning);
+    h4 {
+        color: var(--text-color);
+    }
+}
+
+.popup-notification-primary {
+    background-color: var(--brand-primary);
+    h4 {
+        color: var(--text-color);
+    }
+}
+
+.popup-notification-success {
+    background-color: var(--brand-success);
+    h4 {
+        color: var(--text-color);
+    }
+}
+
+.popup-notification-info {
+    background-color: var(--brand-info);
+
+    h4 {
+        color: var(--text-color);
+    }
+}
+
+.panel .panel.note-editor {
+    background-color: transparent;
+
+    &.fullscreen {
+        background-color: var(--body-bg);
+    }
+}

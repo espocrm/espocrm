@@ -56,8 +56,6 @@ define('views/user-security/modals/two-factor-email',
                 }
             ];
 
-            this.headerHtml = false;
-
             let codeLength = this.getConfig().get('auth2FAEmailCodeLength') || 7;
 
             let model = new Model();

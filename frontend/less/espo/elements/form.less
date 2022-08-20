@@ -20,9 +20,29 @@
     border-radius: var(--border-radius);
     box-shadow: var(--input-box-shadow);
 
+    &.focus {
+        border-color: var(--input-border-focus);
+    }
+
+    .form-control-focus-espo();
+
     &.dropdown-active {
-        border-color: var(--input-border-focus-rgba);
+        border-color: var(--input-border-focus);
         border-radius: var(--border-radius);
+    }
+
+    .transition(~"border-color ease-in-out .15s, box-shadow ease-in-out .15s");
+}
+
+.note-editor.note-frame {
+    border: var(--input-border-width) solid var(--input-border);
+    border-width: var(--input-border-width);
+    border-radius: var(--border-radius);
+
+    &.in-focus {
+        border-color: var(--input-border-focus);
+        outline: 0;
+        .box-shadow(~"inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px var(--input-border-focus-rgba)");
     }
 
     .transition(~"border-color ease-in-out .15s, box-shadow ease-in-out .15s");
@@ -46,6 +66,11 @@
         border-top-left-radius: 0 !important;
         border-top-right-radius: 0 !important;
     }
+}
+
+.list-group:not(:empty) + .form-control {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
 }
 
 .input-group > .input-group-btn:first-child > select.form-control:first-child {
@@ -162,6 +187,25 @@
     max-width: 180px;
 }
 
+.list-group + .form-control {
+    position: relative;
+}
+
 select[multiple].input-sm {
     height: 90px !important;
+}
+
+.form-control[disabled],
+.form-control[readonly],
+fieldset[disabled] .form-control {
+    color: var(--input-color-disabled);
+}
+
+
+.form-inline .form-control {
+    @media screen and (max-width: (@screen-sm-min - 1px)) {
+        display: inline-block;
+        width: auto;
+        vertical-align: middle;
+    }
 }

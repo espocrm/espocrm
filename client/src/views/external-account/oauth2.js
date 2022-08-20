@@ -195,6 +195,7 @@ Espo.define('views/external-account/oauth2', ['view', 'model'], function (Dep, M
 
             var arr = [];
             var params = (options.params || {});
+
             for (var name in params) {
                 if (params[name]) {
                     arr.push(name + '=' + encodeURI(params[name]));
@@ -207,35 +208,42 @@ Espo.define('views/external-account/oauth2', ['view', 'model'], function (Dep, M
                 var error = null;
 
                 str = str.substr(str.indexOf('?') + 1, str.length);
-                str.split('&').forEach(function (part) {
+
+                str.split('&').forEach((part) => {
                     var arr = part.split('=');
                     var name = decodeURI(arr[0]);
                     var value = decodeURI(arr[1] || '');
 
-                    if (name == 'code') {
+                    if (name === 'code') {
                         code = value;
                     }
-                    if (name == 'error') {
+
+                    if (name === 'error') {
                         error = value;
                     }
-                }, this);
+                });
+
                 if (code) {
                     return {
                         code: code,
-                    }
+                    };
                 } else if (error) {
                     return {
                         error: error,
-                    }
+                    };
                 }
             }
 
-            popup = window.open(path, options.windowName, options.windowOptions);
-            interval = window.setInterval(function () {
+            let popup = window.open(path, options.windowName, options.windowOptions);
+
+            let interval;
+
+            interval = window.setInterval(() => {
                 if (popup.closed) {
                     window.clearInterval(interval);
                 } else {
                     var res = parseUrl(popup.location.href.toString());
+
                     if (res) {
                         callback.call(self, res);
                         popup.close();

@@ -67,7 +67,7 @@ define('views/dashlets/stream', 'views/dashlets/abstract/base', function (Dep) {
         setupActionList: function () {
             this.actionList.unshift({
                 name: 'viewList',
-                html: this.translate('View'),
+                text: this.translate('View'),
                 iconHtml: '<span class="fas fa-align-justify"></span>',
                 url: '#Stream',
             });
@@ -75,7 +75,7 @@ define('views/dashlets/stream', 'views/dashlets/abstract/base', function (Dep) {
             if (!this.getUser().isPortal()) {
                 this.actionList.unshift({
                     name: 'create',
-                    html: this.translate('Create Post', 'labels'),
+                    text: this.translate('Create Post', 'labels'),
                     iconHtml: '<span class="fas fa-plus"></span>',
                 });
             }
@@ -96,6 +96,5 @@ define('views/dashlets/stream', 'views/dashlets/abstract/base', function (Dep) {
         actionViewList: function () {
             this.getRouter().navigate('#Stream', {trigger: true});
         },
-
     });
 });

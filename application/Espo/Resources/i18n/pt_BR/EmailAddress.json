@@ -3,5 +3,12 @@
     "Primary": "Primário",
     "Opted Out": "Cancelou (opt-out)",
     "Invalid": "Inválido"
+  },
+  "fields": {
+    "optOut": "Cancelado",
+    "invalid": "Inválido"
+  },
+  "presetFilters": {
+    "orphan": "Órfão"
   }
 }

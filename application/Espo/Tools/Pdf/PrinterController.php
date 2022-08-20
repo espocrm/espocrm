@@ -88,7 +88,7 @@ class PrinterController
      */
     private function createEntityPrinter(): EntityPrinter
     {
-        /** @var ?class-string<EntityPrinter> */
+        /** @var ?class-string<EntityPrinter> $className */
         $className = $this->metadata
             ->get(['app', 'pdfEngines', $this->engine, 'implementationClassNameMap', 'entity']) ?? null;
 
@@ -104,7 +104,7 @@ class PrinterController
      */
     private function createCollectionPrinter(): CollectionPrinter
     {
-        /** @var ?class-string<CollectionPrinter> */
+        /** @var ?class-string<CollectionPrinter> $className */
         $className = $this->metadata
             ->get(['app', 'pdfEngines', $this->engine, 'implementationClassNameMap', 'collection']) ?? null;
 

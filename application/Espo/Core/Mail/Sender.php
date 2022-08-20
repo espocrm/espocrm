@@ -496,13 +496,13 @@ class Sender
 
         $attachmentPartList = [];
 
-        /** @var \Espo\ORM\EntityCollection<\Espo\Entities\Attachment> */
+        /** @var \Espo\ORM\EntityCollection<\Espo\Entities\Attachment> $attachmentCollection */
         $attachmentCollection = $this->entityManager
             ->getCollectionFactory()
             ->create(Attachment::ENTITY_TYPE);
 
         if (!$email->isNew()) {
-            /** @var \Espo\ORM\Collection<\Espo\Entities\Attachment> */
+            /** @var \Espo\ORM\Collection<\Espo\Entities\Attachment> $relatedAttachmentCollection */
             $relatedAttachmentCollection = $this->entityManager
                 ->getRDBRepository('Email')
                 ->getRelation($email, 'attachments')

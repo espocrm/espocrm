@@ -31,11 +31,10 @@ namespace Espo\Core\Authentication;
 
 class AuthenticationData
 {
-    private $username;
-
-    private $password;
-
-    private $method;
+    private ?string $username;
+    private ?string $password;
+    private ?string $method;
+    private bool $byTokenOnly = false;
 
     public function __construct(
         ?string $username = null,
@@ -52,19 +51,36 @@ class AuthenticationData
         return new self();
     }
 
+    /**
+     * A username.
+     */
     public function getUsername(): ?string
     {
         return $this->username;
     }
 
+    /**
+     * A password or auth-token.
+     */
     public function getPassword(): ?string
     {
         return $this->password;
     }
 
+    /**
+     * A method.
+     */
     public function getMethod(): ?string
     {
         return $this->method;
+    }
+
+    /**
+     * Authenticate by auth-token only. No username check.
+     */
+    public function byTokenOnly(): bool
+    {
+        return $this->byTokenOnly;
     }
 
     public function withUsername(?string $username): self
@@ -87,6 +103,14 @@ class AuthenticationData
     {
         $obj = clone $this;
         $obj->method = $method;
+
+        return $obj;
+    }
+
+    public function withByTokenOnly(bool $byTokenOnly): self
+    {
+        $obj = clone $this;
+        $obj->byTokenOnly = $byTokenOnly;
 
         return $obj;
     }

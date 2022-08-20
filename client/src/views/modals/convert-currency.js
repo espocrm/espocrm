@@ -26,7 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
 define('views/modals/convert-currency', ['views/modals/mass-convert-currency'], function (Dep) {
 
     return Dep.extend({
@@ -34,7 +33,7 @@ define('views/modals/convert-currency', ['views/modals/mass-convert-currency'], 
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.headerHtml = this.translate('convertCurrency', 'massActions');
+            this.headerText = this.translate('convertCurrency', 'massActions');
         },
 
         actionConvert: function () {

@@ -170,7 +170,7 @@ class Helper
             throw new RuntimeException('Unknown database driver.');
         }
 
-        /** @var class-string<\Doctrine\DBAL\VersionAwarePlatformDriver> */
+        /** @var class-string<\Doctrine\DBAL\VersionAwarePlatformDriver> $driverClass */
         $driverClass = $this->dbalDrivers[$driverName];
 
         if (!class_exists($driverClass)) {
@@ -193,7 +193,7 @@ class Helper
         $platformClass = $reflect->getShortName();
 
         if (isset($this->dbalPlatforms[$platformClass])) {
-            /** @var class-string<\Doctrine\DBAL\Platforms\AbstractPlatform> */
+            /** @var class-string<\Doctrine\DBAL\Platforms\AbstractPlatform> $className */
             $className = $this->dbalPlatforms[$platformClass];
 
             return new $className();
@@ -363,7 +363,7 @@ class Helper
 
         $sth->execute();
 
-        /** @var string|null|false */
+        /** @var string|null|false $result */
         $result = $sth->fetchColumn();
 
         if ($result === false || $result === null) {

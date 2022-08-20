@@ -49,15 +49,15 @@ define('views/modals/last-viewed', ['views/modal', 'search-manager'], function (
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.headerHtml = this.getLanguage().translate('LastViewed', 'scopeNamesPlural');
-
-            this.headerHtml =
-                '<a href="#LastViewed" class="action" data-action="listView">' +
-                this.headerHtml + '</a>';
+            this.$header = $('<a>')
+                .attr('href', '#LastViewed')
+                .attr('data-action', 'listView')
+                .addClass('action')
+                .text(this.getLanguage().translate('LastViewed', 'scopeNamesPlural'));
 
             this.waitForView('list');
 
-            this.getCollectionFactory().create(this.scope, function (collection) {
+            this.getCollectionFactory().create(this.scope, (collection) => {
                 collection.maxSize = this.getConfig().get('recordsPerPage');
                 this.collection = collection;
 
@@ -65,8 +65,7 @@ define('views/modals/last-viewed', ['views/modal', 'search-manager'], function (
 
                 this.loadList();
                 collection.fetch();
-            }, this);
-
+            });
         },
 
         actionListView: function () {

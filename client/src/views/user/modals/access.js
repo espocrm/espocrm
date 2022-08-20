@@ -36,8 +36,6 @@ define('views/user/modals/access', ['views/modal'], function (Dep) {
 
         template: 'user/modals/access',
 
-        header: false,
-
         backdrop: true,
 
         data: function () {
@@ -99,7 +97,7 @@ define('views/user/modals/access', ['views/modal'], function (Dep) {
                 final: true
             });
 
-            this.headerHtml = this.translate('Access');
+            this.headerText = this.translate('Access');
         },
     });
 });

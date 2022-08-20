@@ -5,6 +5,7 @@
     data-phone-number="{{valueForLink}}"
     data-action="dial"
     title="{{value}}"
+    class="selectable"
 >
 {{/unless}}{{value}}
 {{#unless isErased}}</a>{{/unless}}

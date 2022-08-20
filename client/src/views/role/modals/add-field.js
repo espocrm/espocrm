@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/role/modals/add-field', 'views/modal', function (Dep) {
+define('views/role/modals/add-field', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -40,13 +40,14 @@ Espo.define('views/role/modals/add-field', 'views/modal', function (Dep) {
 
         data: function () {
             var dataList = [];
-            var d = [];
-            this.fieldList.forEach(function (field, i) {
+
+            this.fieldList.forEach((field, i) => {
                 if (i % 4 === 0) {
                     dataList.push([]);
                 }
+
                 dataList[dataList.length -1].push(field);
-            }, this);
+            });
 
             return {
                 dataList: dataList,
@@ -55,27 +56,34 @@ Espo.define('views/role/modals/add-field', 'views/modal', function (Dep) {
         },
 
         setup: function () {
-            this.headerHtml = this.translate('Add Field');
+            this.headerText = this.translate('Add Field');
 
             var scope = this.scope = this.options.scope;
-
             var fields = this.getMetadata().get('entityDefs.' + scope + '.fields') || {};
-
             var fieldList = [];
 
-            Object.keys(fields).forEach(function (field) {
+            Object.keys(fields).forEach(field => {
                 var d = fields[field];
-                if (field in this.options.ignoreFieldList) return;
-                if (d.disabled) return;
-                if (this.getMetadata().get(['app', this.options.type, 'mandatory', 'scopeFieldLevel', this.scope, field]) !== null) {
+
+                if (field in this.options.ignoreFieldList) {
                     return;
                 }
+
+                if (d.disabled) {
+                    return;
+                }
+
+                if (
+                    this.getMetadata()
+                        .get(['app', this.options.type, 'mandatory', 'scopeFieldLevel', this.scope, field]) !== null
+                ) {
+                    return;
+                }
+
                 fieldList.push(field);
-            }, this);
+            });
 
             this.fieldList = this.getLanguage().sortFieldList(scope, fieldList);
-        }
-
+        },
     });
 });
-

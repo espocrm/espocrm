@@ -28,7 +28,8 @@
                         <span class="kanban-group-label">{{label}}</span>
                         {{#if ../isCreatable}}
                         <a
-                            href="javascript:"
+                            role="button"
+                            tabindex="0"
                             title="{{translate 'Create'}}"
                             class="create-button hidden"
                             data-action="createInGroup"

@@ -1,0 +1,45 @@
+{
+  "fields": {
+    "width": "Premer (%)",
+    "link": "Povezava",
+    "notSortable": "Ni mogoče razvrstiti",
+    "align": "Poravnaj",
+    "panelName": "Ime plošče",
+    "style": "Slog",
+    "sticked": "Prilepljen",
+    "isLarge": "Velika velikost pisave",
+    "dynamicLogicVisible": "Pogoji, zaradi katerih je plošča vidna",
+    "hidden": "Skrito",
+    "dynamicLogicStyled": "Pogoji, zaradi katerih je uporabljen slog"
+  },
+  "options": {
+    "align": {
+      "left": "levo",
+      "right": "Prav"
+    },
+    "style": {
+      "default": "Privzeto",
+      "success": "Uspeh",
+      "danger": "Nevarnost",
+      "info": "Informacije",
+      "warning": "Opozorilo",
+      "primary": "Primarni"
+    }
+  },
+  "labels": {
+    "New panel": "Nova plošča",
+    "Layout": "Postavitev"
+  },
+  "tooltips": {
+    "link": "Če je označeno, bo vrednost polja prikazana kot povezava, ki kaže na podroben pogled zapisa. Običajno se uporablja za polja *Ime*.",
+    "hiddenPanel": "Za ogled plošče morate klikniti 'pokaži več'.",
+    "sticked": "Plošča bo prilepljena na zgornjo ploščo. Brez vrzeli med ploščami.",
+    "panelStyle": "Barva plošče.",
+    "dynamicLogicVisible": "Če je nastavljeno, bo plošča skrita, razen če je pogoj izpolnjen.",
+    "dynamicLogicStyled": "Barva bo uporabljena, če je izpolnjen določen pogoj. Barva je definirana s parametrom *Slog*."
+  },
+  "messages": {
+    "cantBeEmpty": "Postavitev ne sme biti prazna.",
+    "fieldsIncompatible": "Polja ne morejo biti skupaj na postavitvi: {fields}."
+  }
+}

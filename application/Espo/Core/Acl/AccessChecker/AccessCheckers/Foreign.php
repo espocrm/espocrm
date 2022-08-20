@@ -97,7 +97,7 @@ class Foreign implements
                 ->getRelation($link)
                 ->getForeignEntityType();
 
-            /** @var ?string */
+            /** @var ?string $id */
             $id = $entity->get($link . 'Id');
 
             if (!$id) {

@@ -123,7 +123,7 @@ class LeadCapture
      */
     public function capture(string $apiKey, stdClass $data): void
     {
-        /** @var ?LeadCaptureEntity */
+        /** @var ?LeadCaptureEntity $leadCapture */
         $leadCapture = $this->entityManager
             ->getRDBRepository(LeadCaptureEntity::ENTITY_TYPE)
             ->where([
@@ -206,7 +206,7 @@ class LeadCapture
 
         $terminateAt = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
-        /** @var UniqueId */
+        /** @var UniqueId $uniqueId */
         $uniqueId = $this->entityManager->getNewEntity(UniqueId::ENTITY_TYPE);
 
         $uniqueId->set([
@@ -244,7 +244,7 @@ class LeadCapture
     ): void {
 
         if ($leadId) {
-            /** @var ?Lead */
+            /** @var ?Lead $lead */
             $lead = $this->entityManager->getEntityById(Lead::ENTITY_TYPE, $leadId);
 
             if (!$lead) {
@@ -257,7 +257,7 @@ class LeadCapture
 
         $campaign = null;
 
-        /** @var ?string */
+        /** @var ?string $campaignId */
         $campaignId = $leadCapture->getCampaignId();
 
         if ($campaignId) {
@@ -440,7 +440,7 @@ class LeadCapture
      */
     public function confirmOptIn(string $id): array
     {
-        /** @var ?UniqueId */
+        /** @var ?UniqueId $uniqueId */
         $uniqueId = $this->entityManager
             ->getRDBRepository(UniqueId::ENTITY_TYPE)
             ->where(['name' => $id])
@@ -475,7 +475,7 @@ class LeadCapture
             ];
         }
 
-        /** @var ?LeadCaptureEntity */
+        /** @var ?LeadCaptureEntity $leadCapture */
         $leadCapture = $this->entityManager->getEntityById(LeadCaptureEntity::ENTITY_TYPE, $leadCaptureId);
 
         if (!$leadCapture) {
@@ -508,7 +508,7 @@ class LeadCapture
      */
     public function sendOptInConfirmation(string $id): void
     {
-        /** @var ?UniqueId */
+        /** @var ?UniqueId $uniqueId */
         $uniqueId = $this->entityManager
             ->getRDBRepository(UniqueId::ENTITY_TYPE)
             ->where([
@@ -540,7 +540,7 @@ class LeadCapture
             throw new Error("LeadCapture: Opt-in confirmation expired.");
         }
 
-        /** @var ?LeadCaptureEntity */
+        /** @var ?LeadCaptureEntity $leadCapture */
         $leadCapture = $this->entityManager->getEntity(LeadCaptureEntity::ENTITY_TYPE, $leadCaptureId);
 
         if (!$leadCapture) {
@@ -553,7 +553,7 @@ class LeadCapture
             throw new Error("LeadCapture: No optInConfirmationEmailTemplateId.");
         }
 
-        /** @var ?EmailTemplate */
+        /** @var ?EmailTemplate $emailTemplate */
         $emailTemplate = $this->entityManager
             ->getEntityById(EmailTemplate::ENTITY_TYPE, $optInConfirmationEmailTemplateId);
 
@@ -562,7 +562,7 @@ class LeadCapture
         }
 
         if ($leadId) {
-            /** @var ?Lead */
+            /** @var ?Lead $lead */
             $lead = $this->entityManager->getEntityById(Lead::ENTITY_TYPE, $leadId);
         }
         else {
@@ -621,7 +621,7 @@ class LeadCapture
             $body = str_replace('{optInDateTime}', $dateTimeString, $body);
         }
 
-        /** @var Email */
+        /** @var Email $email */
         $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
         $email->set([
@@ -636,7 +636,7 @@ class LeadCapture
         $inboundEmailId = $leadCapture->getInboundEmailId();
 
         if ($inboundEmailId) {
-            /** @var ?InboundEmail */
+            /** @var ?InboundEmail $inboundEmail */
             $inboundEmail = $this->entityManager->getEntityById(InboundEmail::ENTITY_TYPE, $inboundEmailId);
 
             if (!$inboundEmail) {
@@ -669,7 +669,7 @@ class LeadCapture
      */
     protected function getLeadWithPopulatedData(LeadCaptureEntity $leadCapture, stdClass $data): Lead
     {
-        /** @var Lead */
+        /** @var Lead $lead */
         $lead = $this->entityManager->getNewEntity(Lead::ENTITY_TYPE);
 
         $fieldList = $leadCapture->getFieldList();

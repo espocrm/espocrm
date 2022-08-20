@@ -58,6 +58,63 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
 
         bottomDisabled: false,
 
+        shortcutKeys: {
+            'Control+Enter': function (e) {
+                if (this.saveDisabled) {
+                    return;
+                }
+
+                if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden) === -1) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.actionSave();
+            },
+            'Control+KeyS': function (e) {
+                if (this.saveDisabled) {
+                    return;
+                }
+
+                if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden) === -1) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.actionSaveAndContinueEditing();
+            },
+            'Escape': function (e) {
+                if (this.saveDisabled) {
+                    return;
+                }
+
+                e.stopPropagation();
+                e.preventDefault();
+
+                let focusedFieldView = this.getRecordView().getFocusedFieldView();
+
+                if (focusedFieldView) {
+                    this.model.set(focusedFieldView.fetch());
+                }
+
+                if (this.getRecordView().isChanged) {
+                    this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
+                        .then(() => this.actionClose());
+
+                    return;
+                }
+
+                this.actionClose();
+            },
+            'Control+Backslash': function (e) {
+                this.getRecordView().handleShortcutKeyControlBackslash(e);
+            },
+        },
+
         setup: function () {
             this.buttonList = [];
 
@@ -70,6 +127,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                     name: 'save',
                     label: 'Save',
                     style: 'primary',
+                    title: 'Ctrl+Enter',
                 });
             }
 
@@ -87,6 +145,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
             this.buttonList.push({
                 name: 'cancel',
                 label: 'Cancel',
+                title: 'Esc',
             });
 
             this.scope = this.scope || this.options.scope;
@@ -95,31 +154,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
 
             this.id = this.options.id;
 
-            if (!this.id) {
-                this.headerHtml = this.getLanguage().translate('Create ' + this.scope, 'labels', this.scope);
-            }
-            else {
-                this.headerHtml = this.getLanguage().translate('Edit');
-                this.headerHtml += ': ' + this.getLanguage().translate(this.scope, 'scopeNames');
-            }
-
-            if (!this.fullFormDisabled) {
-                if (!this.id) {
-                    this.headerHtml =
-                        '<a href="#' + this.scope +
-                        '/create" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' +
-                        this.headerHtml + '</a>';
-                }
-                else {
-                    this.headerHtml =
-                        '<a href="#' + this.scope + '/edit/' + this.id+'" class="action" title="' +
-                        this.translate('Full Form')+'" data-action="fullForm">' + this.headerHtml + '</a>';
-                }
-            }
-
-            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
-
-            this.headerHtml = iconHtml + this.headerHtml;
+            this.headerHtml = this.composeHeaderHtml();
 
             this.sourceModel = this.model;
 
@@ -167,7 +202,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                 this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editQuick']) ||
                 'views/record/edit-small';
 
-            var options = {
+            let options = {
                 model: model,
                 el: this.containerSelector + ' .edit-container',
                 type: 'editSmall',
@@ -175,43 +210,116 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                 buttonsDisabled: true,
                 sideDisabled: this.sideDisabled,
                 bottomDisabled: this.bottomDisabled,
+                focusForCreate: this.options.focusForCreate,
                 exit: function () {},
             };
 
             this.handleRecordViewOptions(options);
 
-            this.createView('edit', viewName, options, callback);
+            this.createView('edit', viewName, options, callback)
+                .then(view => {
+                    this.listenTo(view, 'before:save', () => this.trigger('before:save', model));
+                });
         },
 
         handleRecordViewOptions: function (options) {},
 
+        /**
+         * @return {module:views/record/edit.Class}
+         */
         getRecordView: function () {
             return this.getView('edit');
         },
 
-        actionSave: function () {
-            var editView = this.getView('edit');
+        onBackdropClick: function () {
+            if (this.getRecordView().isChanged) {
+                return;
+            }
 
-            var model = editView.model;
+            this.close();
+        },
 
-            editView.once('after:save', () => {
-                this.trigger('after:save', model);
-                this.dialog.close();
-            });
+        /**
+         * @protected
+         * @return {string}
+         */
+        composeHeaderHtml: function () {
+            let html;
 
-            editView.once('before:save', () => {
-                this.trigger('before:save', model);
-            });
+            if (!this.id) {
+                html = $('<span>')
+                    .text(this.getLanguage().translate('Create ' + this.scope, 'labels', this.scope))
+                    .get(0).outerHTML;
+            }
+            else {
+                let text = this.getLanguage().translate('Edit') + ': ' +
+                    this.getLanguage().translate(this.scope, 'scopeNames');
 
-            var $buttons = this.dialog.$el.find('.modal-footer button');
+                html = $('<span>')
+                    .text(text)
+                    .get(0).outerHTML;
+            }
+
+            if (!this.fullFormDisabled) {
+                let url = this.id ?
+                    '#' + this.scope + '/edit/' + this.id :
+                    '#' + this.scope + '/create';
+
+                html =
+                    $('<a>')
+                        .attr('href', url)
+                        .addClass('action')
+                        .attr('title', this.translate('Full Form'))
+                        .attr('data-action', 'fullForm')
+                        .append(html)
+                        .get(0).outerHTML;
+            }
+
+            html = this.getHelper().getScopeColorIconHtml(this.scope) + html;
+
+            return html;
+        },
+
+        actionSave: function (data) {
+            data = data || {};
+
+            let editView = this.getRecordView();
+
+            let model = editView.model;
+
+            let $buttons = this.dialog.$el.find('.modal-footer button');
 
             $buttons.addClass('disabled').attr('disabled', 'disabled');
 
-            editView.once('cancel:save', () => {
-                $buttons.removeClass('disabled').removeAttr('disabled');
-            });
+            editView
+                .save()
+                .then(() => {
+                    let wasNew = !this.id;
 
-            editView.save();
+                    if (wasNew) {
+                        this.id = model.id;
+                    }
+
+                    this.trigger('after:save', model, {bypassClose: data.bypassClose});
+
+                    if (!data.bypassClose) {
+                        this.dialog.close();
+
+                        return;
+                    }
+
+                    this.$el.find('.modal-header .modal-title-text')
+                        .html(this.composeHeaderHtml());
+
+                    $buttons.removeClass('disabled').removeAttr('disabled');
+                })
+                .catch(() => {
+                    $buttons.removeClass('disabled').removeAttr('disabled');
+                })
+        },
+
+        actionSaveAndContinueEditing: function () {
+            this.actionSave({bypassClose: true});
         },
 
         actionFullForm: function (dialog) {

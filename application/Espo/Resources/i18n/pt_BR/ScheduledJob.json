@@ -5,18 +5,23 @@
     "scheduling": "Agendando (notação do crontab)"
   },
   "labels": {
-    "Create ScheduledJob": "Agendar Tarefa"
+    "Create ScheduledJob": "Agendar Tarefa",
+    "As often as possible": "O mais frequente possível"
   },
   "options": {
     "job": {
       "Cleanup": "Limpar",
       "CheckInboundEmails": "Verificar e-mails recebidos",
       "CheckEmailAccounts": "Verificar contas de e-mail pessoais",
-      "SendEmailReminders": "Enviar lembretes por e-mail"
+      "SendEmailReminders": "Enviar lembretes por e-mail",
+      "AuthTokenControl": "Controle de token de autenticação",
+      "SendEmailNotifications": "Enviar notificações por email",
+      "CheckNewVersion": "Verifique se há Nova Versão",
+      "ProcessWebhookQueue": "Processar Fila de Webhook"
     },
     "cronSetup": {
-      "linux": "Nota: Adicione esta linha ao arquivo de crontab para executar as tarefas agendadas do EspoCRM:",
-      "mac": "Nota: Adicione esta linha ao arquivo de crontab para executar as tarefas agendadas do EspoCRM:",
+      "linux": "Nota: Adicione esta linha ao arquivo de crontab para executar as tarefas agendadas do Espo:",
+      "mac": "Nota: Adicione esta linha ao arquivo de crontab para executar as tarefas agendadas do Espo:",
       "windows": "Nota: Crie um arquivo em lote com os seguintes comandos para executar as tarefas agendadas do EspoCRM no agendador de tarefas do Windows:",
       "default": "Nota: Adicione este comando Cron Job (Tarefa agendada):"
     },
@@ -24,5 +29,8 @@
       "Active": "Ativo",
       "Inactive": "Inativo"
     }
+  },
+  "tooltips": {
+    "scheduling": "Notação crontab. Define a frequência de execuções de trabalhos.\n\n`*/5 * * * *` - a cada 5 minutos\n\n`0 */2 * * *` - a cada 2 horas\n\n`30 1 * * *` - às 01:30 uma vez por dia\n\n`0 0 1 * *` - no primeiro dia do mês"
   }
 }

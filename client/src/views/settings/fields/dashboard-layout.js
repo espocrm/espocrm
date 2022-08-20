@@ -385,7 +385,8 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                         .outerHTML;
 
                 actions2Html += $('<a>')
-                    .attr('href', 'javascript:')
+                    .attr('role', 'button')
+                    .attr('tabindex', '0')
                     .addClass('pull-right')
                     .attr('data-action', 'editDashlet')
                     .attr('data-id', id)

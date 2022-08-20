@@ -9,13 +9,13 @@
             {{#each buttonList}}
             <button
               type="button"
-              class="btn btn-{{#if ../style}}{{../style}}{{else}}link{{/if}} btn-sm action{{#if hidden}} hidden{{/if}}"
+              class="btn btn-{{#if ../style}}{{../style}}{{else}}default{{/if}} btn-sm action{{#if hidden}} hidden{{/if}}"
               data-action="{{name}}"
               title="{{#if title}}{{translate title}}{{/if}}"
             >{{#if html}}{{{html}}}{{else}}{{translate label}}{{/if}}</button>
             {{/each}}
             <button
-              class="dropdown-toggle btn btn-link btn-sm menu-button"
+              class="dropdown-toggle btn btn-{{#if ../style}}{{../style}}{{else}}default{{/if}} btn-sm menu-button"
               data-toggle="dropdown"
             ><span class="fas fa-ellipsis-h"></span></button>
             <ul class="dropdown-menu dropdown-menu-with-icons" role="menu">
@@ -24,14 +24,15 @@
                     <a
                       data-action="{{name}}"
                       class="action"
-                      href="{{#if url}}{{url}}{{else}}javascript:{{/if}}"
+                      {{#if url}}href="{{url}}"{{else}}role="button"{{/if}}
+                      tabindex="0"
                       {{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}
                     >
                         {{#if iconHtml}}{{{iconHtml}}}
                         {{else}}
                         <span class="empty-icon">&nbsp;</span>
                         {{/if}}
-                        <span class="item-text">{{#if html}}{{{html}}}{{else}}{{translate label}}{{/if}}</span>
+                        <span class="item-text">{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label}}{{/if}}{{/if}}</span>
                     </a>
                 </li>
               {{/each}}
@@ -42,7 +43,6 @@
                 data-action="refresh"
                 class="action"
                 title="{{translate 'Refresh'}}"
-                style="cursor: pointer;"
             >{{#if title}}{{title}}{{else}}&nbsp;{{/if}}</span>
         </h4>
     </div>

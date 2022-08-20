@@ -520,6 +520,16 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                 var $elementName = this.$elementName;
 
                 if (!this.autocompleteDisabled) {
+                    let isEmptyQueryResult = false;
+
+                    if (this.getEmptyAutocompleteResult) {
+                        this.$elementName.on('keydown', e => {
+                            if (e.code === 'Tab' && isEmptyQueryResult) {
+                                e.stopImmediatePropagation();
+                            }
+                        });
+                    }
+
                     this.$elementName.autocomplete({
                         beforeRender: $c => {
                             if (this.$elementName.hasClass('input-sm')) {
@@ -531,6 +541,8 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                         },
                         lookup: (q, callback) => {
                             if (q.length === 0) {
+                                isEmptyQueryResult = true;
+
                                 if (this.getEmptyAutocompleteResult) {
                                     callback(
                                         this._transformAutocompleteResult(this.getEmptyAutocompleteResult())
@@ -539,6 +551,8 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
 
                                 return;
                             }
+
+                            isEmptyQueryResult = false;
 
                             Espo.Ajax
                                 .getRequest(this.getAutocompleteUrl(q), {q: q})
@@ -585,7 +599,7 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                     });
 
                     if (this.isSearchMode()) {
-                        var $elementOneOf = this.$el.find('input.element-one-of');
+                        let $elementOneOf = this.$el.find('input.element-one-of');
 
                         $elementOneOf.autocomplete({
                             serviceUrl: q => {
@@ -598,9 +612,7 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                                 return this.getHelper().escapeString(suggestion.name);
                             },
                             transformResult: response => {
-                                var response = JSON.parse(response);
-
-                                return this._transformAutocompleteResult(response);
+                                return this._transformAutocompleteResult(JSON.parse(response));
                             },
                             onSelect: s => {
                                 this.addLinkOneOf(s.id, s.name);
@@ -626,7 +638,7 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                 }
 
                 $elementName.on('change', () => {
-                    if (this.mode !== 'search' && !this.model.get(this.idName)) {
+                    if (!this.isSearchMode() && !this.model.get(this.idName)) {
                         $elementName.val(this.model.get(this.nameName));
                     }
                 });
@@ -748,7 +760,7 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             $el.html(name + '&nbsp');
 
             $el.prepend(
-                '<a href="javascript:" class="pull-right" data-id="' + id + '" ' +
+                '<a role="button" class="pull-right" data-id="' + id + '" ' +
                 'data-action="clearLinkOneOf"><span class="fas fa-times"></a>'
             );
 

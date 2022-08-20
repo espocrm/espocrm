@@ -26,8 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-Espo.define('views/email-folder/modals/select-folder', 'views/modal', function (Dep) {
+define('views/email-folder/modals/select-folder', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -45,12 +44,14 @@ Espo.define('views/email-folder/modals/select-folder', 'views/modal', function (
 
         events: {
             'click a[data-action="selectFolder"]': function (e) {
-                var id = $(e.currentTarget).data('id');
-                var model = this.collection.get(id);
-                var name = this.translate('inbox', 'presetFilters', 'Email');
+                let id = $(e.currentTarget).data('id');
+                let model = this.collection.get(id);
+                let name = this.translate('inbox', 'presetFilters', 'Email');
+
                 if (model) {
                     name = model.get('name');
                 }
+
                 this.trigger('select', id, name);
                 this.close();
             },
@@ -59,23 +60,27 @@ Espo.define('views/email-folder/modals/select-folder', 'views/modal', function (
         buttonList: [
             {
                 name: 'cancel',
-                label: 'Cancel'
+                label: 'Cancel',
             }
         ],
 
         setup: function () {
-            this.headerHtml = '';
+            this.headerText = '';
+
             this.wait(true);
 
-            this.getCollectionFactory().create('EmailFolder', function (collection) {
+            this.getCollectionFactory().create('EmailFolder', (collection) => {
                 this.collection = collection;
+
                 collection.maxSize = this.getConfig().get('emailFolderMaxCount') || 100;
                 collection.data.boolFilterList = ['onlyMy'];
-                collection.fetch().then(function () {
-                    this.wait(false);
-                }.bind(this));
 
-            }, this);
+                collection
+                    .fetch()
+                    .then(() => {
+                        this.wait(false);
+                    });
+            });
         },
     });
 });

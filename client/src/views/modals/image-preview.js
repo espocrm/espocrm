@@ -50,20 +50,14 @@ define('views/modals/image-preview', ['views/modal', 'lib!exif'], function (Dep)
 
         events: {
             'keydown': function (e) {
-                let keyCode = e.originalEvent.keyCode;
-
-                if (keyCode === 37) {
-                    // arrow-left
+                if (e.code === 'ArrowLeft') {
                     this.switchToPrevious(true);
 
                     return;
                 }
 
-                if (keyCode === 39) {
-                    // arrow-right
+                if (e.code === 'ArrowRight') {
                     this.switchToNext(true);
-
-                    return;
                 }
             },
         },

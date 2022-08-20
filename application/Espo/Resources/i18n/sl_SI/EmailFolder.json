@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": "Preskoči obvestila"
+  },
+  "labels": {
+    "Create EmailFolder": "Ustvari mapo",
+    "Manage Folders": "Upravljanje map",
+    "Emails": "E-poštna sporočila"
+  }
+}

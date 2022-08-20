@@ -91,7 +91,7 @@ class Container implements ContainerInterface
 
         $this->bindingContainer = $bindingContainer;
 
-        /** @var InjectableFactory */
+        /** @var InjectableFactory $injectableFactory */
         $injectableFactory = $this->get('injectableFactory');
 
         $this->injectableFactory = $injectableFactory;
@@ -217,7 +217,7 @@ class Container implements ContainerInterface
             throw new RuntimeException("Loader method for service '{$name}' does not have a named return type.");
         }
 
-        /** @var class-string */
+        /** @var class-string $className */
         $className = $returnType->getName();
 
         $this->classCache[$name] = new ReflectionClass($className);
@@ -282,7 +282,7 @@ class Container implements ContainerInterface
      * @return ?class-string<Loader>
      */
     private function getLoaderClassName(string $name): ?string
-    {       
+    {
         $loader = $this->loaderClassNames[$name] ?? null;
 
         if ($loader) {

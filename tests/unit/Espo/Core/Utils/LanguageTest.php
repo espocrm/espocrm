@@ -159,7 +159,6 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
                       'en_US' => 'English (United States)',
                     ]
                 ],
-                'testHtml' => '&lt;a href="javascript: alert(1)"&gt;test&lt;/a&gt;',
             ],
         ];
 

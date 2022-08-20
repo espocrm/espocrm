@@ -51,7 +51,7 @@
         },
         "authMethod": {
             "type": "enum",
-            "options": ["ApiKey", "Hmac"],
+            "options": ["", "ApiKey", "Hmac"],
             "maxLength": 24,
             "layoutMassUpdateDisabled": true,
             "layoutDetailDisabled": true,

@@ -1,0 +1,86 @@
+{
+  "fields": {
+    "name": "Ime",
+    "emailAddress": "Email naslov",
+    "status": "Stanje",
+    "assignToUser": "Dodeli uporabniku",
+    "host": "Gostitelj",
+    "username": "Uporabniško ime",
+    "password": "Geslo",
+    "port": "Pristanišče",
+    "monitoredFolders": "Nadzorovane mape",
+    "trashFolder": "Mapa za smeti",
+    "createCase": "Ustvari primer",
+    "reply": "Samodejni odgovor",
+    "caseDistribution": "Distribucija primerov",
+    "replyEmailTemplate": "Predloga za odgovor na e-pošto",
+    "replyFromAddress": "Odgovor z naslova",
+    "replyToAddress": "Naslov za odgovor",
+    "replyFromName": "Odgovori od imena",
+    "targetUserPosition": "Ciljni položaj uporabnika",
+    "fetchSince": "Pridobi od",
+    "addAllTeamUsers": "Za vse uporabnike ekipe",
+    "team": "Ciljna ekipa",
+    "teams": "Ekipe",
+    "sentFolder": "Poslana mapa",
+    "storeSentEmails": "Shranjujte poslana e-poštna sporočila",
+    "useSmtp": "Uporabi SMTP",
+    "smtpHost": "Gostitelj SMTP",
+    "smtpPort": "Vrata SMTP",
+    "smtpSecurity": "Varnost SMTP",
+    "smtpUsername": "Uporabniško ime SMTP",
+    "smtpPassword": "Geslo SMTP",
+    "fromName": "Od imena",
+    "smtpIsShared": "SMTP je v skupni rabi",
+    "smtpIsForMassEmail": "SMTP je namenjen množični e-pošti",
+    "useImap": "Pridobi e-pošto",
+    "keepFetchedEmailsUnread": "Ohranite pridobljena e-poštna sporočila neprebrana",
+    "smtpAuthMechanism": "Avtoristični mehanizem SMTP",
+    "security": "Varnost"
+  },
+  "tooltips": {
+    "reply": "Obvesti pošiljatelje e-pošte, da je njihova e-pošta prejeta. Določenemu prejemniku bo v določenem časovnem obdobju poslano samo eno e-poštno sporočilo, da se prepreči zankanje.",
+    "createCase": "Samodejno ustvari primer iz dohodnih e-poštnih sporočil.",
+    "replyToAddress": "Določite e-poštni naslov tega nabiralnika, da bodo odgovori prihajali sem.",
+    "caseDistribution": "Kako bodo primeri dodeljeni. Dodeljeno neposredno uporabniku ali ekipi.",
+    "assignToUser": "Uporabniški primeri bodo dodeljeni.",
+    "team": "Primeri ekipe bodo dodeljeni.",
+    "teams": "E-poštni naslovi ekip bodo dodeljeni.",
+    "addAllTeamUsers": "E-poštna sporočila bodo prikazana v mapi »Prejeto« vseh uporabnikov določenih ekip.",
+    "targetUserPosition": "Uporabnikom z določenim položajem bodo razdeljeni kovčki.",
+    "monitoredFolders": "Več map je treba ločiti z vejico.",
+    "smtpIsShared": "Če je označeno, bodo uporabniki lahko pošiljali e-pošto s tem SMTP. Razpoložljivost nadzirajo vloge prek dovoljenja za skupinski e-poštni račun.",
+    "smtpIsForMassEmail": "Če je označeno, bo SMTP na voljo za množično e-pošto.",
+    "storeSentEmails": "Poslana e-pošta bo shranjena na strežniku IMAP.",
+    "useSmtp": "Možnost pošiljanja e-pošte."
+  },
+  "links": {
+    "filters": "Filtri",
+    "emails": "E-poštna sporočila",
+    "assignToUser": "Dodeli uporabniku"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktiven",
+      "Inactive": "Neaktiven"
+    },
+    "caseDistribution": {
+      "": "Noben",
+      "Direct-Assignment": "Neposredna dodelitev",
+      "Round-Robin": "Robin-Robin",
+      "Least-Busy": "Najmanj zaseden"
+    },
+    "smtpAuthMechanism": {
+      "plain": "NAVADNO",
+      "login": "VPIŠI SE"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "Ustvari e-poštni račun",
+    "Actions": "Dejanja",
+    "Main": "Glavni"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Ni bilo mogoče vzpostaviti povezave s strežnikom IMAP"
+  }
+}

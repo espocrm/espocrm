@@ -29,6 +29,6 @@
         <div class="create-post-container">
             {{{createPost}}}
         </div>
-        <div class="list-container">{{{list}}}</div>
+        <div class="list-container list-container-panel">{{{list}}}</div>
     </div>
 </div>

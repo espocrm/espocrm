@@ -106,7 +106,8 @@
                         {{/each}}
                         <td colspan="2">
                             <a
-                                href="javascript:"
+                                role="button"
+                                tabindex="0"
                                 class="btn btn-link action"
                                 title="{{translate 'Remove'}}"
                                 data-action="removeField"

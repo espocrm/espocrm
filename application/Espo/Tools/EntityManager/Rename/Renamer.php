@@ -422,11 +422,11 @@ class Renamer
 
     private function renameInConfig(string $entityType, string $newName): void
     {
-        /** @var string[] */
+        /** @var string[] $entityTypeListParamList */
         $entityTypeListParamList = $this->metadata->get(['app', 'config', 'entityTypeListParamList']) ?? [];
 
         foreach ($entityTypeListParamList as $param) {
-            /** @var ?string[] */
+            /** @var ?string[] $list */
             $list = $this->config->get($param);
 
             if ($list === null) {
@@ -449,7 +449,7 @@ class Renamer
 
     private function renameInRelationships(string $entityType, string $newName): void
     {
-        /** @var string[] */
+        /** @var string[] $entityTypeList */
         $entityTypeList = array_keys($this->metadata->get(['entityDefs']) ?? []);
 
         foreach ($entityTypeList as $itemEntityType) {
@@ -461,7 +461,7 @@ class Renamer
 
     private function renameInRelationshipsEntity(string $entityType, string $fromEntityType, string $toEntityType): void
     {
-        /** @var array<string,array<string,mixed>> */
+        /** @var array<string,array<string,mixed>> $linkDefs */
         $linkDefs = $this->metadata->get(['entityDefs', $entityType, 'links']) ?? [];
 
         foreach ($linkDefs as $link => $defs) {
@@ -512,7 +512,7 @@ class Renamer
 
     private function renameInLinkParentField(string $entityType, string $field, string $from, string $to): void
     {
-        /** @var string[] */
+        /** @var string[] $list */
         $list = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'entityList']) ?? [];
 
         $index = array_search($from, $list, true);
@@ -627,9 +627,9 @@ class Renamer
             ->find();
 
         foreach ($roleList as $role) {
-            /** @var \stdClass */
+            /** @var \stdClass $data */
             $data = $role->get('data');
-            /** @var \stdClass */
+            /** @var \stdClass $fieldData */
             $fieldData = $role->get('fieldData');
 
             if (isset($data->$from)) {
@@ -652,9 +652,9 @@ class Renamer
             ->find();
 
         foreach ($portalRoleList as $role) {
-            /** @var \stdClass */
+            /** @var \stdClass $data */
             $data = $role->get('data');
-            /** @var \stdClass */
+            /** @var \stdClass $fieldData */
             $fieldData = $role->get('fieldData');
 
             if (isset($data->$from)) {

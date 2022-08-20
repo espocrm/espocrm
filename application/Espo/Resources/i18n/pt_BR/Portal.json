@@ -8,16 +8,25 @@
     "quickCreateList": "Criar Lista Rápida",
     "theme": "Tema",
     "language": "Linguagem",
+    "dashboardLayout": "Layout do Dashboard",
     "dateFormat": "Formato de data",
     "timeFormat": "Formato de hora",
+    "timeZone": "Fuso Horário",
     "weekStart": "Primeiro Dia da Semana",
     "defaultCurrency": "Moeda Padrão",
-    "customUrl": "URL Personalizada"
+    "customUrl": "URL Personalizada",
+    "customId": "ID Personalizada",
+    "layoutSet": "Conjunto de Layout"
   },
   "links": {
     "users": "Usuários",
     "portalRoles": "Regras",
-    "notes": "Notas"
+    "notes": "Notas",
+    "layoutSet": "Conjunto de Layout"
+  },
+  "tooltips": {
+    "portalRoles": "As Regras de Portal especificadas serão aplicadas a todos os usuários deste portal.",
+    "layoutSet": "Fornece a capacidade de ter layouts que diferem dos padrões."
   },
   "labels": {
     "Create Portal": "Criar portal",

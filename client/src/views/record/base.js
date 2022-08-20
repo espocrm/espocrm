@@ -106,6 +106,26 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
         recordHelper: null,
 
         /**
+         * @const
+         */
+        MODE_DETAIL: 'detail',
+
+        /**
+         * @const
+         */
+        MODE_EDIT: 'edit',
+
+        /**
+         * @const
+         */
+        TYPE_DETAIL: 'detail',
+
+        /**
+         * @const
+         */
+        TYPE_EDIT: 'edit',
+
+        /**
          * Hide a field.
          *
          * @param {string} name A field name.
@@ -245,7 +265,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                 if (view.readOnly) {
                     view.setNotReadOnly();
 
-                    if (this.mode === 'edit') {
+                    if (this.mode === this.MODE_EDIT) {
                         if (!view.readOnlyLocked && view.isDetailMode()) {
                             view.setEditMode()
                                 .then(() => view.reRender());
@@ -621,7 +641,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                     return;
                 }
 
-                if (this.mode === 'edit') {
+                if (this.mode === this.MODE_EDIT) {
                     this.setIsChanged();
                 }
             });
@@ -831,6 +851,27 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
             }
 
             if (notValid) {
+                if (fieldView.$el) {
+                    let rect = fieldView.$el.get(0).getBoundingClientRect();
+
+                    if (
+                        rect.top === 0 &&
+                        rect.bottom === 0 &&
+                        rect.left === 0 &&
+                        fieldView.$el.closest('.panel.hidden').length
+                    ) {
+                        setTimeout(() => {
+                            let msg = this.translate('Not valid') + ': ' +
+                                (
+                                    fieldView.lastValidationMessage ||
+                                    this.translate(field, 'fields', this.entityType)
+                                );
+
+                            Espo.Ui.error(msg, true);
+                        }, 10);
+                    }
+                }
+
                 return true;
             }
 
@@ -919,6 +960,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * @property {Object.<string,string>} [headers] HTTP headers.
          * @property {boolean} [skipNotModifiedWarning] Don't show a not-modified warning.
          * @property {function():void} [afterValidate] A callback called after validate.
+         * @property {boolean} [bypassClose] Bypass closing. Only for inline-edit.
          */
 
         /**
@@ -1148,16 +1190,18 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * @return {Object.<string,*>}
          */
         fetch: function () {
-            var data = {};
-            var fieldViews = this.getFieldViews();
+            let data = {};
+            let fieldViews = this.getFieldViews();
 
-            for (var i in fieldViews) {
-                var view = fieldViews[i];
+            for (let i in fieldViews) {
+                let view = fieldViews[i];
 
-                if (view.isEditMode()) {
-                    if (!view.disabled && !view.readOnly && view.isFullyRendered()) {
-                        _.extend(data, view.fetch());
-                    }
+                if (!view.isEditMode()) {
+                    continue;
+                }
+
+                if (!view.disabled && !view.readOnly && view.isFullyRendered()) {
+                    _.extend(data, view.fetch());
                 }
             }
 
@@ -1487,6 +1531,33 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
             if (!~this.fieldList.indexOf(name)) {
                 this.fieldList.push(name);
             }
+        },
+
+        /**
+         * Get a currently focused field view.
+         *
+         * @return {?module:views/fields/base.Class}
+         */
+        getFocusedFieldView: function () {
+            let $active = $(window.document.activeElement);
+
+            if (!$active.length) {
+                return null;
+            }
+
+            let $field = $active.closest('.field');
+
+            if (!$field.length) {
+                return null;
+            }
+
+            let name = $field.attr('data-name');
+
+            if (!name) {
+                return null;
+            }
+
+            return this.getFieldView(name);
         },
 
         /**

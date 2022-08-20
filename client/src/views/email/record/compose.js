@@ -41,7 +41,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
             this.initialIsHtml = null;
 
             if (!this.model.get('isHtml') && this.getPreferences().get('emailReplyForceHtml')) {
-                var body = (this.model.get('body') || '').replace(/\n/g, '<br>');
+                let body = (this.model.get('body') || '').replace(/\n/g, '<br>');
 
                 this.model.set('body', body);
                 this.model.set('isHtml', true);
@@ -53,13 +53,13 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
             }
 
             if (!this.options.signatureDisabled && this.hasSignature()) {
-                var addSignatureMethod = 'prependSignature';
+                let addSignatureMethod = 'prependSignature';
 
                 if (this.options.appendSignature) {
                     addSignatureMethod = 'appendSignature';
                 }
 
-                var body = this[addSignatureMethod](this.model.get('body') || '', this.model.get('isHtml'));
+                let body = this[addSignatureMethod](this.model.get('body') || '', this.model.get('isHtml'));
 
                 this.model.set('body', body);
             }
@@ -75,49 +75,50 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
                 this.initialAttachmentsNames = this.model.get('attachmentsNames') || {};
             }
 
-            this.listenTo(this.model, 'insert-template', (data) => {
-                var body = this.model.get('body') || '';
-
-                var bodyPlain = body.replace(/<br\s*\/?>/mg, '');
-
-                bodyPlain = bodyPlain.replace(/<\/p\s*\/?>/mg, '');
-                bodyPlain = bodyPlain.replace(/ /g, '');
-                bodyPlain = bodyPlain.replace(/\n/g, '');
-
-                var $div = $('<div>').html(bodyPlain);
-                bodyPlain = $div.text();
-
-                if (
-                    bodyPlain !== '' &&
-                    this.isBodyChanged
-                ) {
-                    this.confirm({
-                        message: this.translate('confirmInsertTemplate', 'messages', 'Email'),
-                        confirmText: this.translate('Yes')
-                    }, function () {
-                        this.insertTemplate(data);
-                    }, this);
-                }
-                else {
-                    this.insertTemplate(data);
-                }
-
-            });
+            this.initInsertTemplate();
 
             if (this.options.selectTemplateDisabled) {
                 this.hideField('selectTemplate');
             }
         },
 
+        initInsertTemplate: function () {
+            this.listenTo(this.model, 'insert-template', data => {
+                let body = this.model.get('body') || '';
+
+                let bodyPlain = body.replace(/<br\s*\/?>/mg, '');
+
+                bodyPlain = bodyPlain.replace(/<\/p\s*\/?>/mg, '');
+                bodyPlain = bodyPlain.replace(/ /g, '');
+                bodyPlain = bodyPlain.replace(/\n/g, '');
+
+                let $div = $('<div>').html(bodyPlain);
+
+                bodyPlain = $div.text();
+
+                if (bodyPlain !== '' && this.isBodyChanged) {
+                    this.confirm({
+                            message: this.translate('confirmInsertTemplate', 'messages', 'Email'),
+                            confirmText: this.translate('Yes')
+                        })
+                        .then(() => this.insertTemplate(data));
+
+                    return;
+                }
+
+                this.insertTemplate(data);
+            });
+        },
+
         insertTemplate: function (data) {
-            var body = data.body;
+            let body = data.body;
 
             if (this.hasSignature()) {
                 body = this.appendSignature(body || '', data.isHtml);
             }
 
             if (this.initialBody && !this.isBodyChanged) {
-                var initialBody = this.initialBody;
+                let initialBody = this.initialBody;
 
                 if (data.isHtml !== this.initialIsHtml) {
                     if (data.isHtml) {
@@ -161,7 +162,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
 
         prependSignature: function (body, isHtml) {
             if (isHtml) {
-                var signature = this.getSignature();
+                let signature = this.getSignature();
 
                 if (body) {
                     signature += '';
@@ -170,7 +171,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
                 return'<p><br></p>' + signature + body;
             }
 
-            var signature = this.getPlainTextSignature();
+            let signature = this.getPlainTextSignature();
 
             if (body) {
                 signature += '\n';
@@ -181,12 +182,12 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
 
         appendSignature: function (body, isHtml) {
             if (isHtml) {
-                var signature = this.getSignature();
+                let signature = this.getSignature();
 
                 return  body + '' + signature;
             }
 
-            var signature = this.getPlainTextSignature();
+            let signature = this.getPlainTextSignature();
 
             return body + '\n\n' + signature;
         },
@@ -220,7 +221,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
         },
 
         saveDraft: function (options) {
-            var model = this.model;
+            let model = this.model;
 
             model.set('status', 'Draft');
 
@@ -228,6 +229,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
 
             if (subjectView) {
                 subjectView.fetchToModel();
+
                 if (!model.get('name')) {
                     model.set('name', this.translate('No Subject', 'labels', 'Email'));
                 }
@@ -256,9 +258,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
         plainToHtml: function (html) {
             html = html || '';
 
-            var value = html.replace(/\n/g, '<br>');
-
-            return value;
+            return html.replace(/\n/g, '<br>');
         },
 
         errorHandlerSendingFail: function (data) {

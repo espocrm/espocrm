@@ -1,0 +1,16 @@
+{
+  "labels": {
+    "Create Webhook": "Ustvari Webhook"
+  },
+  "fields": {
+    "event": "Dogodek",
+    "isActive": "Je aktiven",
+    "user": "Uporabnik API-ja",
+    "entityType": "Vrsta entitete",
+    "field": "Polje",
+    "secretKey": "Skrivni ključ"
+  },
+  "links": {
+    "user": "Uporabnik"
+  }
+}

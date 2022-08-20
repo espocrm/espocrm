@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "name": "Ime",
+    "roles": "Vloge",
+    "assignmentPermission": "Dovoljenje za dodelitev",
+    "userPermission": "Uporabniško dovoljenje",
+    "portalPermission": "Dovoljenje za portal",
+    "groupEmailAccountPermission": "Dovoljenje za skupinski e-poštni račun",
+    "exportPermission": "Izvozno dovoljenje",
+    "dataPrivacyPermission": "Dovoljenje za zasebnost podatkov",
+    "massUpdatePermission": "Dovoljenje za množično posodabljanje",
+    "followerManagementPermission": "Dovoljenje za upravljanje sledilcev"
+  },
+  "links": {
+    "users": "Uporabniki",
+    "teams": "Ekipe"
+  },
+  "tooltips": {
+    "assignmentPermission": "Omogoča omejitev zmožnosti dodeljevanja zapisov in objavljanja sporočil drugim uporabnikom. vse – brez omejitev ekipa – lahko dodeljuje in objavlja samo soigralcem ne – lahko dodeljuje in objavlja samo sebi",
+    "userPermission": "Omogoča omejitev zmožnosti uporabnikov za ogled dejavnosti, koledarja in toka drugih uporabnikov. vse – lahko si ogleda vso ekipo – lahko si ogleda le dejavnosti soigralcev ne – ne more si ogledati",
+    "portalPermission": "Določa dostop do informacij portala, možnost objavljanja sporočil uporabnikom portala.",
+    "groupEmailAccountPermission": "Določa dostop do skupinskih e-poštnih računov, možnost pošiljanja e-pošte iz skupine SMTP.",
+    "dataPrivacyPermission": "Omogoča ogled in brisanje osebnih podatkov.",
+    "exportPermission": "Določa, ali imajo uporabniki možnost izvoza zapisov.",
+    "massUpdatePermission": "Določa, ali imajo uporabniki možnost množičnega posodabljanja zapisov.",
+    "followerManagementPermission": "Omogoča upravljanje sledilcev določenih zapisov."
+  },
+  "labels": {
+    "Access": "Dostop",
+    "Create Role": "Ustvari vlogo",
+    "Scope Level": "Raven obsega",
+    "Field Level": "Raven polja"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "ni nastavljeno",
+      "enabled": "omogočeno",
+      "disabled": "onemogočeno"
+    },
+    "levelList": {
+      "all": "vse",
+      "team": "ekipa",
+      "account": "račun",
+      "contact": "stik",
+      "own": "lasten",
+      "no": "št",
+      "yes": "ja",
+      "not-set": "ni nastavljeno"
+    }
+  },
+  "actions": {
+    "read": "Preberi",
+    "edit": "Uredi",
+    "delete": "Izbriši",
+    "stream": "Tok",
+    "create": "Ustvari"
+  },
+  "messages": {
+    "changesAfterClearCache": "Vse spremembe v nadzoru dostopa bodo uporabljene po čiščenju predpomnilnika."
+  }
+}

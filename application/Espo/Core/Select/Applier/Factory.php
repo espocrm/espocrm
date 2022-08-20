@@ -98,7 +98,7 @@ class Factory
 
     private function create(string $entityType, User $user, string $type): object
     {
-        /** @var class-string */
+        /** @var class-string $className */
         $className = $this->metadata->get(
             [
                 'selectDefs',

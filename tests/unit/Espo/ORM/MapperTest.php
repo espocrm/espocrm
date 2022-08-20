@@ -30,6 +30,7 @@
 namespace tests\unit\Espo\ORM;
 
 use Espo\ORM\{
+    Mapper\BaseMapper,
     Metadata,
     EntityManager,
     EntityFactory,
@@ -38,10 +39,8 @@ use Espo\ORM\{
     SthCollection,
     SqlExecutor,
     QueryComposer\MysqlQueryComposer as QueryComposer,
-    Mapper\MysqlMapper,
     Query\Select,
-    MetadataDataProvider,
-};
+    MetadataDataProvider};
 
 use tests\unit\testData\DB\{
     Post,
@@ -124,9 +123,13 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         $this->query = new QueryComposer($this->pdo, $this->entityFactory, $this->metadata);
 
-        $this->db = new MysqlMapper(
-            $this->pdo, $this->entityFactory, $this->collectionFactory,
-            $this->query, $this->metadata, $this->sqlExecutor
+        $this->db = new BaseMapper(
+            $this->pdo,
+            $this->entityFactory,
+            $this->collectionFactory,
+            $this->query,
+            $this->metadata,
+            $this->sqlExecutor
         );
 
         $this->post = $entityFactory->create('Post');

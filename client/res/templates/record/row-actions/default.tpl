@@ -9,15 +9,14 @@
     {{#each actionList}}
         <li>
             <a
-                href="{{#if link}}{{link}}{{else}}javascript:{{/if}}"
+                {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                tabindex="0"
                 class="action"
-                {{#if action}}
-                    data-action="{{action}}"
-                {{/if}}
+                {{#if action}}data-action="{{action}}"{{/if}}
                 {{#each data}}
-                    data-{{@key}}="{{./this}}"
+                data-{{@key}}="{{./this}}"
                 {{/each}}
-            >{{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}
+            >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}
             </a>
         </li>
     {{/each}}

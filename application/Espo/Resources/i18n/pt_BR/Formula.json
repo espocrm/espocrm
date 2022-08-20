@@ -1,0 +1,22 @@
+{
+  "labels": {
+    "Check Syntax": "Verificar Sintaxe",
+    "Run": "Execute"
+  },
+  "fields": {
+    "target": "Alvo",
+    "targetType": "Tipo do Alvo ",
+    "output": "Saída",
+    "error": "Erro"
+  },
+  "messages": {
+    "runSuccess": "Executado com sucesso.",
+    "runError": "Erro.",
+    "checkSyntaxSuccess": "Sintaxe está correta.",
+    "checkSyntaxError": "Erro de sintaxe.",
+    "emptyScript": "Script está vazio."
+  },
+  "tooltips": {
+    "output": "Imprima valores com a função `output\\printLine`."
+  }
+}

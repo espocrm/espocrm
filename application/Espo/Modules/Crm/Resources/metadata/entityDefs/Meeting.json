@@ -30,7 +30,6 @@
         },
         "isAllDay": {
             "type": "bool",
-            "readOnly": true,
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true

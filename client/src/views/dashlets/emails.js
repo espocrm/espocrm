@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/dashlets/emails', 'views/dashlets/abstract/record-list', function (Dep) {
+define('views/dashlets/emails', ['views/dashlets/abstract/record-list'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,7 +42,7 @@ Espo.define('views/dashlets/emails', 'views/dashlets/abstract/record-list', func
             if (this.getAcl().checkScope(this.scope, 'create')) {
                 this.actionList.unshift({
                     name: 'compose',
-                    html: this.translate('Compose Email', 'labels', this.scope),
+                    text: this.translate('Compose Email', 'labels', this.scope),
                     iconHtml: '<span class="fas fa-plus"></span>'
                 });
             }
@@ -52,19 +52,20 @@ Espo.define('views/dashlets/emails', 'views/dashlets/abstract/record-list', func
             var attributes = this.getCreateAttributes() || {};
 
             this.notify('Loading...');
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') || 'views/modals/compose-email';
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') ||
+                'views/modals/compose-email';
+
             this.createView('modal', viewName, {
                 scope: this.scope,
                 attributes: attributes,
-            }, function (view) {
+            }, (view) => {
                 view.render();
                 view.notify(false);
-                this.listenToOnce(view, 'after:save', function () {
-                    this.actionRefresh();
-                }, this);
-            }, this);
-        }
 
+                this.listenToOnce(view, 'after:save', () => {
+                    this.actionRefresh();
+                });
+            });
+        },
     });
 });
-

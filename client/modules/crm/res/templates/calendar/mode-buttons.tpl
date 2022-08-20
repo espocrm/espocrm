@@ -6,7 +6,13 @@
     <ul class="dropdown-menu pull-right">
         {{#each hiddenModeDataList}}
             <li>
-                <a href="javascript:" class="{{#ifEqual mode ../mode}} active{{/ifEqual}}" data-action="mode" data-mode="{{mode}}">{{label}}</a>
+                <a
+                    role="button"
+                    tabindex="0"
+                    class="{{#ifEqual mode ../mode}} active{{/ifEqual}}"
+                    data-action="mode"
+                    data-mode="{{mode}}"
+                >{{label}}</a>
             </li>
         {{/each}}
         {{#if hiddenModeDataList.length}}
@@ -14,15 +20,25 @@
         {{/if}}
         {{#each scopeFilterDataList}}
             <li>
-                <a href="javascript:" data-action="toggleScopeFilter" data-name="{{scope}}">
-                    <span class="fas fa-check filter-check-icon pull-right{{#if disabled}} hidden{{/if}}"></span> {{translate scope category='scopeNamesPlural'}}
+                <a
+                    role="button"
+                    tabindex="0"
+                    data-action="toggleScopeFilter"
+                    data-name="{{scope}}"
+                >
+                    <span class="fas fa-check filter-check-icon pull-right{{#if disabled}} hidden{{/if}}"></span>
+                    {{translate scope category='scopeNamesPlural'}}
                 </a>
             </li>
         {{/each}}
         {{#if isCustomViewAvailable}}
             <li class="divider"></li>
             <li>
-                <a href="javascript:" data-action="createCustomView">{{translate 'Create Shared View' scope='Calendar'}}</a>
+                <a
+                    role="button"
+                    tabindex="0"
+                    data-action="createCustomView"
+                >{{translate 'Create Shared View' scope='Calendar'}}</a>
             </li>
         {{/if}}
     </ul>

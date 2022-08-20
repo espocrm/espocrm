@@ -12,13 +12,30 @@
     "opportunityRole": "Regra de Oportunidade",
     "description": "Descrição",
     "campaign": "Campanha",
-    "accountIsInactive": "Conta Inativa"
+    "targetLists": "Listas de Alvo",
+    "targetList": "Lista de Alvo",
+    "portalUser": "Usuário do Portal",
+    "originalLead": "Lead Original",
+    "acceptanceStatus": "Status de Aceitação",
+    "accountIsInactive": "Conta Inativa",
+    "acceptanceStatusCalls": "Status de Aceitação (Ligações)",
+    "title": "Titulo da Conta",
+    "hasPortalUser": "Tem Usuário do Portal"
   },
   "links": {
     "opportunities": "Oportunidades",
     "cases": "Atendimento",
-    "targetLists": "Lista de Alvos",
-    "campaignLogRecords": "Log das Campanhas"
+    "targetLists": "Listas de Alvos",
+    "campaignLogRecords": "Log das Campanhas",
+    "campaign": "Campanha",
+    "account": "Conta (Primária)",
+    "accounts": "Contas",
+    "casesPrimary": "Casos (Primários)",
+    "portalUser": "Usuário do Portal",
+    "originalLead": "Lead Original",
+    "documents": "Documentos",
+    "tasksPrimary": "Tarefas (expandido)",
+    "opportunitiesPrimary": "Oportunidades (Primárias)"
   },
   "labels": {
     "Create Contact": "Criar Contato"
@@ -31,6 +48,8 @@
     }
   },
   "presetFilters": {
+    "portalUsers": "Usuários do Portal",
+    "notPortalUsers": "Não Usuários do Portal",
     "accountActive": "Ativo"
   }
 }

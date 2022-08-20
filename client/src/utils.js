@@ -31,6 +31,8 @@
  */
 define('utils', [], function () {
 
+    const IS_MAC = /Mac/.test(navigator.userAgent);
+
     /**
      * Utility functions.
      */
@@ -40,21 +42,32 @@ define('utils', [], function () {
          * Process a view event action.
          *
          * @param {module:view.Class} viewObject A view.
-         * @param {Event} e An event.
+         * @param {JQueryKeyEventObject} e An event.
          * @param {string} [action] An action. If not specified, will be fetched from a target element.
          * @param {string} [handler] A handler name.
          */
         handleAction: function (viewObject, e, action, handler) {
             let $target = $(e.currentTarget);
+
             action = action || $target.data('action');
+
             let fired = false;
 
             if (!action) {
                 return;
             }
 
+            if (e.ctrlKey || e.metaKey || e.shiftKey) {
+                let href = $target.attr('href');
+
+                if (href && href !== 'javascript:') {
+                    return;
+                }
+            }
+
             let data = $target.data();
             let method = 'action' + Espo.Utils.upperCaseFirst(action);
+
             handler = handler || data.handler;
 
             if (typeof viewObject[method] === 'function') {
@@ -575,6 +588,30 @@ define('utils', [], function () {
             }
 
             return options;
+        },
+
+        /**
+         * Key a key from a key-event.
+         *
+         * @param {JQueryKeyEventObject} e A key event.
+         * @return {string}
+         */
+        getKeyFromKeyEvent: function (e) {
+            let key = e.code;
+
+            if (e.shiftKey) {
+                key = 'Shift+' + key;
+            }
+
+            if (e.altKey) {
+                key = 'Alt+' + key;
+            }
+
+            if (IS_MAC ? e.metaKey : e.ctrlKey) {
+                key = 'Control+' + key;
+            }
+
+            return key;
         },
     };
 

@@ -238,6 +238,8 @@ define('views/fields/text', ['views/fields/base'], function (Dep) {
                         setTimeout(this.controlSeeMore.bind(this), 50);
                     }
 
+                    this.listenTo(this.recordHelper, 'panel-show', () => this.controlSeeMore());
+
                     $(window).on('resize.see-more-' + this.cid, () => {
                         this.controlSeeMore();
                     });

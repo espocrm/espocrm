@@ -94,7 +94,7 @@ define('views/preferences/record/edit', ['views/record/edit'], function (Dep) {
 
             this.addDropdownItem({
                 name: 'reset',
-                html: this.getLanguage().translate('Reset to Default', 'labels', 'Admin'),
+                text: this.getLanguage().translate('Reset to Default', 'labels', 'Admin'),
                 style: 'danger'
             });
 
@@ -103,7 +103,7 @@ define('views/preferences/record/edit', ['views/record/edit'], function (Dep) {
             if (!~forbiddenEditFieldList.indexOf('dashboardLayout') && !this.model.isPortal()) {
                 this.addDropdownItem({
                     name: 'resetDashboard',
-                    html: this.getLanguage().translate('Reset Dashboard to Default', 'labels', 'Preferences')
+                    text: this.getLanguage().translate('Reset Dashboard to Default', 'labels', 'Preferences')
                 });
             }
 
@@ -219,7 +219,7 @@ define('views/preferences/record/edit', ['views/record/edit'], function (Dep) {
                 }
             });
 
-            if (this.getAcl().checkScope('EmailAccount') && !this.model.get('smtpServer')) {
+            if (/*this.getAcl().checkScope('EmailAccountScope') && */!this.model.get('smtpServer')) {
                 this.hideField('smtpServer');
                 this.hideField('smtpPort');
                 this.hideField('smtpSecurity');

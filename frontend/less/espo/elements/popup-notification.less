@@ -1,0 +1,91 @@
+#popup-notifications-container {
+    overflow-y: auto;
+    overflow-x: hidden;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    height: auto;
+    z-index: 1000;
+    float: right;
+}
+
+.popup-notification {
+    width: 400px;
+    padding: @panel-padding;
+    background-color: @panel-bg;
+    border: 2px solid @main-gray;
+    margin-top: 10px;
+    margin-right: 5px;
+    border-radius: var(--panel-border-radius);
+
+    &:last-child {
+        margin-bottom: 5px;
+    }
+
+    .cell {
+        margin-bottom: 5px;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    h4 {
+        margin-top: 0;
+    }
+
+    a.close {
+        margin-top: -8px;
+        margin-right: -3px;
+    }
+}
+
+.popup-notification-default {
+    border-color: @gray-light;
+    h4 {
+        color: @gray-light;
+    }
+}
+
+.popup-notification-danger {
+    border-color: @brand-danger;
+    h4 {
+        color: @brand-danger;
+    }
+}
+
+.popup-notification-warning {
+    border-color: @brand-warning;
+    h4 {
+        color: @brand-warning;
+    }
+}
+
+.popup-notification-primary {
+    border-color: @brand-primary;
+    h4 {
+        color: @brand-primary;
+    }
+}
+
+.popup-notification-success {
+    border-color: @brand-success;
+    h4 {
+        color: @brand-success;
+    }
+}
+
+.popup-notification-info {
+    border-color: @brand-info;
+    h4 {
+        color: @brand-info;
+    }
+}
+
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    #popup-notifications-container {
+        width: 100%;
+    }
+    .popup-notification {
+        width: auto;
+    }
+}

@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "name": "Ime",
+    "version": "Različica",
+    "description": "Opis",
+    "isInstalled": "Nameščeno",
+    "checkVersionUrl": "URL za preverjanje novih različic"
+  },
+  "labels": {
+    "Uninstall": "Odstrani",
+    "Install": "Namestite"
+  },
+  "messages": {
+    "uninstalled": "Razširitev {name} je bila odstranjena"
+  }
+}

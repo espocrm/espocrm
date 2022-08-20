@@ -26,9 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'crm:views/record/panels/activities',
-    ['views/record/panels/relationship', 'multi-collection'], function (Dep, MultiCollection) {
+define('crm:views/record/panels/activities',
+['views/record/panels/relationship', 'multi-collection'], function (Dep, MultiCollection) {
 
     return Dep.extend({
 
@@ -49,8 +48,8 @@ define(
                 action: 'composeEmail',
                 label: 'Compose Email',
                 acl: 'create',
-                aclScope: 'Email'
-            }
+                aclScope: 'Email',
+            },
         ],
 
         listLayout: {},
@@ -59,20 +58,29 @@ define(
             rows: [
                 [
                     {name: 'ico', view: 'crm:views/fields/ico'},
-                    {name: 'name', link: true, view: 'views/event/fields/name-for-history'}
+                    {name: 'name', link: true, view: 'views/event/fields/name-for-history'},
                 ],
                 [
                     {name: 'assignedUser'},
-                    {name: 'dateStart'}
-                ]
+                    {name: 'dateStart'},
+                ],
             ]
         },
+
+        buttonMaxCount: null,
+
+        BUTTON_MAX_COUNT: 3,
 
         setup: function () {
             this.scopeList = this.getConfig().get(this.name + 'EntityList') || [];
 
+            this.buttonMaxCount = this.getConfig().get('activitiesCreateButtonMaxCount');
+
+            if (typeof this.buttonMaxCount === 'undefined') {
+                this.buttonMaxCount = this.BUTTON_MAX_COUNT;
+            }
+
             this.listLayout = Espo.Utils.cloneDeep(this.listLayout);
-            this.actionList = Espo.Utils.cloneDeep(this.actionList);
 
             this.defs.create = true;
 
@@ -82,28 +90,13 @@ define(
 
             this.setupActionList();
             this.setupFinalActionList();
-
             this.setupSorting();
 
-            var actionList = [];
-
-            this.actionList.forEach(function (o) {
-                if (o.aclScope) {
-                    if (this.getMetadata().get(['scopes', o.aclScope, 'disabled'])) {
-                        return;
-                    }
-                }
-
-                actionList.push(o);
-            }, this);
-
-            this.actionList = actionList;
-
-            this.scopeList.forEach(function (item) {
+            this.scopeList.forEach(item => {
                 if (!(item in this.listLayout)) {
                     this.listLayout[item] = this.defaultListLayout;
                 }
-            }, this);
+            });
 
             this.url = this.serviceName + '/' + this.model.name + '/' + this.model.id + '/' + this.name;
 
@@ -111,27 +104,27 @@ define(
 
             this.wait(true);
 
-            var i = 0;
+            let i = 0;
 
-            this.scopeList.forEach(function (scope) {
-                this.getModelFactory().getSeed(scope, function (seed) {
+            this.scopeList.forEach(scope => {
+                this.getModelFactory().getSeed(scope, seed => {
                     this.seeds[scope] = seed;
 
                     i++;
 
-                    if (i == this.scopeList.length) {
+                    if (i === this.scopeList.length) {
                         this.wait(false);
                     }
-                }.bind(this));
-            }.bind(this));
+                });
+            });
 
-            if (this.scopeList.length == 0) {
+            if (this.scopeList.length === 0) {
                 this.wait(false);
             }
 
             this.filterList = [];
 
-            this.scopeList.forEach(function (item) {
+            this.scopeList.forEach(item => {
                 if (!this.getAcl().check(item)) {
                     return;
                 }
@@ -145,7 +138,7 @@ define(
                 }
 
                 this.filterList.push(item);
-            }, this);
+            });
 
             if (this.filterList.length) {
                 this.filterList.unshift('all');
@@ -168,11 +161,11 @@ define(
 
             this.setFilter(this.filter);
 
-            this.once('show', function () {
+            this.once('show', () => {
                 if (!this.isRendered() && !this.isBeingRendered()) {
                     this.collection.fetch();
                 }
-            }, this);
+            });
         },
 
         translateFilter: function (name) {
@@ -188,7 +181,19 @@ define(
         },
 
         setupActionList: function () {
-            this.scopeList.forEach(function (scope) {
+            if (this.name === 'activities' && this.buttonMaxCount) {
+                this.buttonList.push({
+                    action: 'composeEmail',
+                    title: 'Compose Email',
+                    acl: 'create',
+                    aclScope: 'Email',
+                    html: $('<span>')
+                        .addClass(this.getMetadata().get(['clientDefs', 'Email', 'iconClass']))
+                        .get(0).outerHTML,
+                });
+            }
+
+            this.scopeList.forEach(scope => {
                 if (!this.getMetadata().get(['clientDefs', scope, 'activityDefs', this.name + 'Create'])) {
                     return;
                 }
@@ -197,15 +202,17 @@ define(
                     return;
                 }
 
-                var o = {
+                let label = (this.name === 'history' ? 'Log' : 'Schedule') + ' ' + scope;
+
+                let o = {
                     action: 'createActivity',
-                    html: this.translate((this.name === 'history' ? 'Log' : 'Schedule') + ' ' + scope, 'labels', scope),
+                    text: this.translate(label, 'labels', scope),
                     data: {},
                     acl: 'create',
                     aclScope: scope,
                 };
 
-                var link = this.getMetadata().get(['clientDefs', scope, 'activityDefs', 'link'])
+                let link = this.getMetadata().get(['clientDefs', scope, 'activityDefs', 'link'])
 
                 if (link) {
                     o.data.link = link;
@@ -215,12 +222,11 @@ define(
                     if (!this.model.hasLink(link)) {
                         return;
                     }
-
                 } else {
                     o.data.scope = scope;
+
                     if (
-                        this.model.name !== 'User'
-                        &&
+                        this.model.name !== 'User' &&
                         !this.checkParentTypeAvailability(scope, this.model.name)
                     ) {
                         return;
@@ -230,20 +236,38 @@ define(
                 this.createAvailabilityHash[scope] = true;
 
                 o.data = o.data || {};
+
                 if (!o.data.status) {
-                    var statusList = this.getMetadata().get(['scopes', scope, this.name + 'StatusList']);
+                    let statusList = this.getMetadata().get(['scopes', scope, this.name + 'StatusList']);
+
                     if (statusList && statusList.length) {
                         o.data.status = statusList[0];
                     }
                 }
+
                 this.createEntityTypeStatusMap[scope] = o.data.status;
                 this.actionList.push(o);
-            }, this);
 
+                if (
+                    this.name === 'activities' &&
+                    this.buttonList.length < this.buttonMaxCount
+                ) {
+                    let ob = Espo.Utils.cloneDeep(o);
+
+                    let iconClass = this.getMetadata().get(['clientDefs', scope, 'iconClass']);
+
+                    if (iconClass) {
+                        ob.title = label;
+                        ob.html = $('<span>').addClass(iconClass).get(0).outerHTML;
+
+                        this.buttonList.push(ob);
+                    }
+                }
+            });
         },
 
         setupFinalActionList: function () {
-            this.scopeList.forEach(function (scope, i) {
+            this.scopeList.forEach((scope, i) => {
                 if (i === 0 && this.actionList.length) {
                     this.actionList.push(false);
                 }
@@ -252,18 +276,24 @@ define(
                     return;
                 }
 
-                var o = {
+                let o = {
                     action: 'viewRelatedList',
-                    html: this.translate('View List') + ' &middot; ' + this.translate(scope, 'scopeNamesPlural') + '',
+                    html: $('<span>')
+                        .append(
+                            $('<span>').text(this.translate('View List')),
+                            ' &middot; ',
+                            $('<span>').text(this.translate(scope, 'scopeNamesPlural')),
+                        )
+                        .get(0).innerHTML,
                     data: {
-                        scope: scope
+                        scope: scope,
                     },
                     acl: 'read',
                     aclScope: scope,
                 };
 
                 this.actionList.push(o);
-            }, this);
+            });
         },
 
         setFilter: function (filter) {
@@ -277,7 +307,7 @@ define(
         },
 
         afterRender: function () {
-            this.listenToOnce(this.collection, 'sync', function () {
+            let afterFetch = () => {
                 this.createView('list', 'views/record/list-expanded', {
                     el: this.getSelector() + ' > .list-container',
                     pagination: false,
@@ -285,33 +315,37 @@ define(
                     rowActionsView: this.rowActionsView,
                     checkboxes: false,
                     collection: this.collection,
-                    listLayout: this.listLayout
-                }, function (view) {
+                    listLayout: this.listLayout,
+                }, (view) => {
                     view.render();
 
-                    this.listenTo(view, 'after:save', function (m) {
+                    this.listenTo(view, 'after:save', () => {
                         this.fetchActivities();
                         this.fetchHistory();
-                    }, this);
-                }, this);
-            }, this);
+                    });
+                });
+            };
 
             if (!this.disabled) {
-                this.collection.fetch();
+                this.collection
+                    .fetch()
+                    .then(() => afterFetch());
             }
             else {
-                this.once('show', function () {
-                    this.collection.fetch();
-                }, this);
+                this.once('show', () => {
+                    this.collection
+                        .fetch()
+                        .then(() => afterFetch())
+                });
             }
         },
 
         fetchHistory: function () {
-            var parentView = this.getParentView();
+            let parentView = this.getParentView();
 
             if (parentView) {
                 if (parentView.hasView('history')) {
-                    var collection = parentView.getView('history').collection;
+                    let collection = parentView.getView('history').collection;
 
                     if (collection) {
                         collection.fetch();
@@ -344,7 +378,7 @@ define(
                 status: data.status,
             };
 
-            if (this.model.name == 'User') {
+            if (this.model.name === 'User') {
                 if (this.model.isPortal()) {
                     attributes.usersIds = [this.model.id];
 
@@ -358,9 +392,9 @@ define(
                 }
             }
             else {
-                if (this.model.name == 'Contact') {
+                if (this.model.name === 'Contact') {
                     if (this.model.get('accountId') && !this.getConfig().get('b2cMode')) {
-                        attributes.parentType = 'Account',
+                        attributes.parentType = 'Account';
                         attributes.parentId = this.model.get('accountId');
                         attributes.parentName = this.model.get('accountName');
                         if (
@@ -374,13 +408,13 @@ define(
                         }
                     }
                 }
-                else if (this.model.name == 'Lead') {
-                    attributes.parentType = 'Lead',
+                else if (this.model.name === 'Lead') {
+                    attributes.parentType = 'Lead';
                     attributes.parentId = this.model.id;
                     attributes.parentName = this.model.get('name');
                 }
 
-                if (this.model.name != 'Account' && this.model.has('contactsIds')) {
+                if (this.model.name !== 'Account' && this.model.has('contactsIds')) {
                     attributes.contactsIds = this.model.get('contactsIds');
                     attributes.contactsNames = this.model.get('contactsNames');
                 }
@@ -418,17 +452,18 @@ define(
             if (this.createEntityTypeStatusMap[data.scope]) {
                 data.status = this.createEntityTypeStatusMap[data.scope];
             }
+
             this.actionCreateActivity(data);
         },
 
         actionCreateActivity: function (data) {
-            var link = data.link;
-            var foreignLink;
-            var scope;
+            let link = data.link;
+            let foreignLink;
+            let scope;
 
             if (link) {
-                var scope = this.model.getLinkParam(link, 'entity');
-                var foreignLink = this.model.getLinkParam(link, 'foreign');
+                scope = this.model.getLinkParam(link, 'entity');
+                foreignLink = this.model.getLinkParam(link, 'foreign');
             }
             else {
                 scope = data.scope;
@@ -450,30 +485,31 @@ define(
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
                 'views/modals/edit';
 
-            this.getCreateActivityAttributes(scope, data, function (attributes) {
+            this.getCreateActivityAttributes(scope, data, attributes => {
                 o.attributes = attributes;
 
-                this.createView('quickCreate', viewName, o , function (view) {
+                this.createView('quickCreate', viewName, o, (view) => {
                     view.render();
                     view.notify(false);
-                    this.listenToOnce(view, 'after:save', function () {
+
+                    this.listenToOnce(view, 'after:save', () => {
                         this.model.trigger('after:relate');
                         this.collection.fetch();
                         this.fetchHistory();
-                    }, this);
-                }, this);
+                    });
+                });
             });
-
         },
 
         getComposeEmailAttributes: function (scope, data, callback) {
             data = data || {};
-            var attributes = {
+
+            let attributes = {
                 status: 'Draft',
                 to: this.model.get('emailAddress')
             };
 
-            if (this.model.name == 'Contact') {
+            if (this.model.name === 'Contact') {
                 if (this.getConfig().get('b2cMode')) {
                     attributes.parentType = 'Contact';
                     attributes.parentName = this.model.get('name');
@@ -487,7 +523,7 @@ define(
                     }
                 }
             }
-            else if (this.model.name == 'Lead') {
+            else if (this.model.name === 'Lead') {
                 attributes.parentType = 'Lead',
                 attributes.parentId = this.model.id
                 attributes.parentName = this.model.get('name');
@@ -515,39 +551,41 @@ define(
                 }
             }
 
-            var emailKeepParentTeamsEntityList = this.getConfig().get('emailKeepParentTeamsEntityList') || [];
+            let emailKeepParentTeamsEntityList = this.getConfig().get('emailKeepParentTeamsEntityList') || [];
 
             if (
-                attributes.parentType
-                &&
-                attributes.parentType === this.model.name
-                &&
-                ~emailKeepParentTeamsEntityList.indexOf(attributes.parentType)
-                && this.model.get('teamsIds') && this.model.get('teamsIds').length
+                attributes.parentType &&
+                attributes.parentType === this.model.name &&
+                ~emailKeepParentTeamsEntityList.indexOf(attributes.parentType) &&
+                this.model.get('teamsIds') &&
+                this.model.get('teamsIds').length
             ) {
                 attributes.teamsIds = Espo.Utils.clone(this.model.get('teamsIds'));
                 attributes.teamsNames = Espo.Utils.clone(this.model.get('teamsNames') || {});
 
-                var defaultTeamId = this.getUser().get('defaultTeamId');
+                let defaultTeamId = this.getUser().get('defaultTeamId');
 
                 if (defaultTeamId && !~attributes.teamsIds.indexOf(defaultTeamId)) {
                     attributes.teamsIds.push(defaultTeamId);
                     attributes.teamsNames[defaultTeamId] = this.getUser().get('defaultTeamName');
                 }
 
-                attributes.teamsIds = attributes.teamsIds.filter(function (teamId) {
-                    return this.getAcl().checkTeamAssignmentPermission(teamId);
-                }, this);
+                attributes.teamsIds = attributes.teamsIds
+                    .filter(teamId => {
+                        return this.getAcl().checkTeamAssignmentPermission(teamId);
+                    });
             }
+
             callback.call(this, attributes);
         },
 
         actionComposeEmail: function (data) {
-            var self = this;
-            var link = 'emails';
-            var scope = 'Email';
+            let self = this;
+            let link = 'emails';
+            let scope = 'Email';
 
-            var relate = null;
+            let relate = null;
+
             if ('emails' in this.model.defs['links']) {
                 relate = {
                     model: this.model,
@@ -557,21 +595,21 @@ define(
 
             this.notify('Loading...');
 
-            this.getComposeEmailAttributes(scope, data, function (attributes) {
+            this.getComposeEmailAttributes(scope, data, attributes => {
                 this.createView('quickCreate', 'views/modals/compose-email', {
                     relate: relate,
-                    attributes: attributes
-                }, function (view) {
+                    attributes: attributes,
+                }, (view) => {
                     view.render();
                     view.notify(false);
-                    this.listenToOnce(view, 'after:save', function () {
+
+                    this.listenToOnce(view, 'after:save', () => {
                         this.collection.fetch();
                         this.model.trigger('after:relate');
                         this.fetchHistory();
-                    }, this);
-                }, this);
+                    });
+                });
             });
-
         },
 
         actionRefresh: function () {
@@ -579,42 +617,38 @@ define(
         },
 
         actionSetHeld: function (data) {
-            var id = data.id;
+            let id = data.id;
 
             if (!id) {
                 return;
             }
 
-            var model = this.collection.get(id);
+            let model = this.collection.get(id);
 
-            model.save({
-                status: 'Held'
-            }, {
+            model.save({status: 'Held'}, {
                 patch: true,
-                success: function () {
+                success: () => {
                     this.collection.fetch();
                     this.fetchHistory();
-                }.bind(this)
+                },
             });
         },
 
         actionSetNotHeld: function (data) {
-            var id = data.id;
+            let id = data.id;
 
             if (!id) {
                 return;
             }
 
-            var model = this.collection.get(id);
+            let model = this.collection.get(id);
 
-            model.save({
-                status: 'Not Held'
-            }, {
+            model.save({status: 'Not Held'}, {
                 patch: true,
-                success: function () {
+                success: () => {
                     this.collection.fetch();
                     this.fetchHistory();
-                }.bind(this)
+                },
             });
         },
 
@@ -623,12 +657,12 @@ define(
                 this.model.id + '/' + this.name + '/list/' + data.scope;
 
             data.title = this.translate(this.defs.label) +
-            ' @right ' + this.translate(data.scope, 'scopeNamesPlural');
+                ' @right ' + this.translate(data.scope, 'scopeNamesPlural');
 
             data.viewOptions = data.viewOptions || {};
             data.viewOptions.massUnlinkDisabled = true;
 
             Dep.prototype.actionViewRelatedList.call(this, data);
-        }
+        },
     });
 });

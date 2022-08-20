@@ -46,8 +46,9 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
      * @property {number|null} [width] A width.
      * @property {boolean} [removeOnClose=true] To remove on close.
      * @property {boolean} [draggable=false] Is draggable.
-     * @property {Function} [onRemove] An on-remove callback.
-     * @property {Function} [onClose] An on-close callback.
+     * @property {function (): void} [onRemove] An on-remove callback.
+     * @property {function (): void} [onClose] An on-close callback.
+     * @property {function (): void} [onBackdropClick] An on-backdrop-click callback.
      * @property {string} [container='body'] A container selector.
      * @property {boolean} [keyboard=false] Enable a keyboard control. The `Esc` key closes a dialog.
      * @property {boolean} [footerAtTheTop=false] To display a footer at the top.
@@ -63,7 +64,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
      * @property {string} name A name.
      * @property {boolean} [pullLeft=false] To put the button to the other side.
      * @property {string} [html] HTML.
-     * @property {string} [text] A title.
+     * @property {string} [text] A text.
      * @property {boolean} [disabled=false] Disabled.
      * @property {boolean} [hidden=false] Hidden.
      * @property {'default'|'danger'|'success'|'warning'} [style='default'] A style.
@@ -117,6 +118,10 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         this.onClose = function () {};
         /** @private */
         this.options = options;
+        /** @private */
+        this.onBackdropClick = function () {};
+
+        this.activeElement = document.activeElement;
 
         let params = [
             'className',
@@ -137,6 +142,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
             'container',
             'onRemove',
             'onClose',
+            'onBackdropClick',
         ];
 
         params.forEach(param => {
@@ -360,9 +366,10 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
         if (this.collapseButton) {
             $header.prepend(
-                $('<a />')
+                $('<a>')
                     .addClass('collapse-button')
-                    .attr('href', 'javascript:')
+                    .attr('role', 'button')
+                    .attr('tabindex', '-1')
                     .attr('data-action', 'collapseModal')
                     .append(
                         $('<span />')
@@ -373,10 +380,11 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
         if (this.closeButton) {
             $header.prepend(
-                $('<a />')
+                $('<a>')
                     .addClass('close')
                     .attr('data-dismiss', 'modal')
-                    .attr('href', 'javascript:')
+                    .attr('role', 'button')
+                    .attr('tabindex', '-1')
                     .append(
                         $('<span />')
                             .attr('aria-hidden', 'true')
@@ -470,11 +478,16 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
         this.dropdownItemList.forEach(/** module:ui.Dialog~Button */o => {
             let $a = $('<a>')
-                .attr('href', 'javascript')
+                .attr('role', 'button')
+                .attr('tabindex', '0')
                 .attr('data-name', o.name);
 
             if (o.text) {
                 $a.text(o.text);
+            }
+
+            if (o.title) {
+                $a.attr('title', o.title);
             }
 
             if (o.html) {
@@ -545,14 +558,16 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                 return;
             }
 
-            if (this.backdrop === 'static') {
-                return;
-            }
-
             if (
                 this.$mouseDownTarget &&
                 this.$mouseDownTarget.closest('.modal-content').length
             ) {
+                return;
+            }
+
+            this.onBackdropClick();
+
+            if (this.backdrop === 'static') {
                 return;
             }
 
@@ -612,6 +627,12 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         if (!this.onCloseIsCalled) {
             this.onClose();
             this.onCloseIsCalled = true;
+
+            if (this.activeElement) {
+                setTimeout(() => {
+                    this.activeElement.focus({preventScroll: true});
+                }, 50);
+            }
         }
 
         this._close();
@@ -755,70 +776,122 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
             return new Dialog(options);
         },
 
+
+        /**
+         * Popover options.
+         *
+         * @typedef {Object} Espo.Ui~PopoverOptions
+         *
+         * @property {'bottom'|'top'} [placement='bottom'] A placement.
+         * @property {string|JQuery} [container] A container selector.
+         * @property {string} [content] An HTML content.
+         * @property {string} [text] A text.
+         * @property {'manual'|'click'|'hover'|'focus'} [trigger='manual'] A trigger type.
+         * @property {boolean} [noToggleInit=false] Skip init toggle on click.
+         * @property {boolean} [preventDestroyOnRender=false] Don't destroy on re-render.
+         * @property {function(): void} [onShow] On-show callback.
+         * @property {function(): void} [onHide] On-hide callback.
+         */
+
         /**
          * Init a popover.
          *
          * @param {JQuery} $el An element.
-         * @param {{
-         *     placement: 'bottom'|'top',
-         *     container: string,
-         *     content: string,
-         *     trigger: 'manual'|'click'|'hover'|'focus',
-         *     noToggleInit: boolean,
-         * }} o Options.
+         * @param {Espo.Ui~PopoverOptions} o Options.
          * @param {module:view} [view] A view.
          */
         popover: function ($el, o, view) {
-            $el.popover({
-                placement: o.placement || 'bottom',
-                container: o.container || 'body',
-                html: true,
-                content: o.content || o.text,
-                trigger: o.trigger || 'manual',
-            }).on('shown.bs.popover', () => {
-                if (!view) {
-                    return;
-                }
+            let $body = $('body')
+            let content = o.content || Handlebars.Utils.escapeExpression(o.text || '');
+            let isShown = false;
 
-                let $body = $('body')
+            let container = o.container;
 
-                $body.off('click.popover-' + view.cid);
+            if (!container) {
+                let $modalBody = $el.closest('.modal-body');
 
-                $body.on('click.popover-' + view.cid, e => {
-                    if ($(e.target).closest('.popover-content').get(0)) {
+                container = $modalBody.length ? $modalBody : 'body';
+            }
+
+            $el
+                .popover({
+                    placement: o.placement || 'bottom',
+                    container: container,
+                    html: true,
+                    content: content,
+                    trigger: o.trigger || 'manual',
+                })
+                .on('shown.bs.popover', () => {
+                    isShown = true;
+
+                    if (!view) {
                         return;
                     }
 
-                    if ($.contains($el.get(0), e.target)) {
-                        return;
+                    $body.off('click.popover-' + view.cid);
+
+                    $body.on('click.popover-' + view.cid, e => {
+                        if ($(e.target).closest('.popover-content').get(0)) {
+                            return;
+                        }
+
+                        if ($.contains($el.get(0), e.target)) {
+                            return;
+                        }
+
+                        if ($el.get(0) === e.target) {
+                            return;
+                        }
+
+                        $body.off('click.popover-' + view.cid);
+                        $el.popover('hide');
+                    });
+
+                    if (o.onShow) {
+                        o.onShow();
                     }
+                })
+                .on('hidden.bs.popover', () => {
+                    isShown = false;
 
-                    if ($el.get(0) === e.target) {
-                        return;
+                    if (o.onHide) {
+                        o.onHide();
                     }
-
-                    $('body').off('click.popover-' + view.cid);
-
-                    $el.popover('hide');
                 });
-            });
 
             if (!o.noToggleInit) {
-                $el.on('click', function () {
-                    $(this).popover('toggle');
+                $el.on('click', () => {
+                    $el.popover('toggle');
                 });
             }
 
             if (view) {
-                view.on('remove', () => {
-                    $el.popover('destroy');
-                    $('body').off('click.popover-' + view.cid);
-                });
+                let hide = () => {
+                    if (!isShown) {
+                        return;
+                    }
 
-                view.on('render', () => {
+                    $el.popover('hide');
+                };
+
+                let destroy = () => {
                     $el.popover('destroy');
-                    $('body').off('click.popover-' + view.cid);
-                });
+                    $body.off('click.popover-' + view.cid);
+
+                    view.off('remove', destroy);
+                    view.off('render', destroy);
+                    view.off('render', hide);
+                };
+
+                view.once('remove', destroy);
+
+                if (!o.preventDestroyOnRender) {
+                    view.once('render', destroy);
+                }
+
+                if (o.preventDestroyOnRender) {
+                    view.on('render', hide);
+                }
             }
         },
 

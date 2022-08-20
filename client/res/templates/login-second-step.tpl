@@ -1,10 +1,10 @@
 <div class="container content">
-    <div class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2">
-    <div id="login" class="panel panel-default">
+    <div class="container-centering">
+    <div id="login" class="panel panel-default block-center-sm">
         <div class="panel-body">
             <di>
                 <p>{{message}}</p>
-                <form id="login-form" onsubmit="return false;">
+                <form id="login-form">
                     <div class="form-group">
                         <label for="field-code" >{{translate 'Code' scope='User'}}</label>
                         <input
@@ -20,7 +20,7 @@
                     </div>
                     <div class="margin-top-2x">
                         <a
-                            href="javascript:"
+                            role="button"
                             class="btn btn-link pull-right"
                             data-action="backToLogin"
                             tabindex="4"

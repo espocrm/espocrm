@@ -110,7 +110,8 @@ function (Dep) {
                 let $li = $('<li>')
                     .append(
                         $('<a>')
-                            .attr('href', 'javascript:')
+                            .attr('role', 'button')
+                            .attr('tabindex', '0')
                             .attr('data-action', 'selectOptionItemStyle')
                             .attr('data-style', item)
                             .attr('data-value', value)

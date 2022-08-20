@@ -84,7 +84,7 @@ class AccessCheckerFactory
      */
     private function getClassName(string $scope): string
     {
-        /** @var ?class-string<AccessChecker> */
+        /** @var ?class-string<AccessChecker> $className1 */
         $className1 = $this->metadata->get(['aclDefs', $scope, 'portalAccessCheckerClassName']);
 
         if ($className1) {
@@ -96,7 +96,7 @@ class AccessCheckerFactory
         }
 
         // For backward compatibility.
-        /** @var ?class-string<AccessChecker> */
+        /** @var ?class-string<AccessChecker> $className2 */
         $className2 = $this->classFinder->find('AclPortal', $scope);
 
         if ($className2) {

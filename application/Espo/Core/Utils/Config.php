@@ -324,7 +324,7 @@ class Config
         $internalData = $this->fileManager->isFile($this->internalConfigPath) ?
             $this->fileManager->getPhpContents($this->internalConfigPath) : [];
 
-        /** @var array<string,mixed> */
+        /** @var array<string,mixed> $mergedData */
         $mergedData = Util::merge(
             Util::merge($systemData, $data),
             $internalData

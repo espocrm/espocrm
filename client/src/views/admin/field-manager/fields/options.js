@@ -81,7 +81,8 @@ define('views/admin/field-manager/fields/options', ['views/fields/array'], funct
                         .css('vertical-align', 'top')
                         .append(
                             $('<a>')
-                                .attr('href', 'javascript:')
+                                .attr('role', 'button')
+                                .attr('tabindex', '0')
                                 .addClass('pull-right')
                                 .attr('data-value', value)
                                 .attr('data-action', 'removeValue')

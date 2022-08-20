@@ -340,7 +340,7 @@ define('email-helper', [], function () {
             }
 
             if (model.get('dateSent')) {
-                line = this.getLanguage().translate('dateSent', 'fields', 'Email') + ': ';
+                let line = this.getLanguage().translate('dateSent', 'fields', 'Email') + ': ';
                 line += this.getDateTime().toDisplayDateTime(model.get('dateSent'));
 
                 list.push(line);

@@ -471,7 +471,7 @@ define('views/site/navbar', ['view'], function (Dep) {
             }
         },
 
-        adjustHorizontal: function () {
+        adjustTop: function () {
             var smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
             var navbarHeight = this.getNavbarHeight();
 
@@ -555,7 +555,7 @@ define('views/site/navbar', ['view'], function (Dep) {
 
             var navbarNeededHeight = navbarHeight + 1;
 
-            this.adjustBodyMinHeightMethodName = 'adjustBodyMinHeightHorizontal';
+            this.adjustBodyMinHeightMethodName = 'adjustBodyMinHeightTop';
 
             let $moreDd = $('#nav-more-tabs-dropdown');
             let $moreLi = $moreDd.closest('li');
@@ -627,22 +627,25 @@ define('views/site/navbar', ['view'], function (Dep) {
             processUpdateWidth();
         },
 
-        adjustVertical: function () {
-            var smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
-            var navbarStaticItemsHeight = this.getStaticItemsHeight();
+        adjustSide: function () {
+            let smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
+            let navbarStaticItemsHeight = this.getStaticItemsHeight();
 
-            var $window = $(window);
+            let $window = $(window);
+            let $tabs = this.$tabs;
+            let $more = this.$more;
 
-            var $tabs = this.$tabs;
-            var $more = this.$more;
-
-            this.adjustBodyMinHeightMethodName = 'adjustBodyMinHeightVertical';
+            this.adjustBodyMinHeightMethodName = 'adjustBodyMinHeightSide';
 
             if ($more.children().length === 0) {
                 $more.parent().addClass('hidden');
             }
 
             $window.on('scroll.navbar', () => {
+                $window.scrollTop() ?
+                    this.$navbarRight.addClass('shadowed') :
+                    this.$navbarRight.removeClass('shadowed');
+
                 $tabs.scrollTop($window.scrollTop());
 
                 if (!this.isMoreDropdownShown) {
@@ -660,7 +663,7 @@ define('views/site/navbar', ['view'], function (Dep) {
                 $more.scrollTop($window.scrollTop());
             });
 
-            var updateSizeForVertical = () => {
+            let updateSizeForSide = () => {
                 var windowHeight = window.innerHeight;
                 var windowWidth = window.innerWidth;
 
@@ -678,10 +681,10 @@ define('views/site/navbar', ['view'], function (Dep) {
             };
 
             $(window).on('resize.navbar', () => {
-                updateSizeForVertical();
+                updateSizeForSide();
             });
 
-            updateSizeForVertical();
+            updateSizeForSide();
 
             this.adjustBodyMinHeight();
         },
@@ -706,7 +709,7 @@ define('views/site/navbar', ['view'], function (Dep) {
             this[this.adjustBodyMinHeightMethodName]();
         },
 
-        adjustBodyMinHeightVertical: function () {
+        adjustBodyMinHeightSide: function () {
             var minHeight = this.$tabs.get(0).scrollHeight + this.getStaticItemsHeight();
 
             var moreHeight = 0;
@@ -744,7 +747,7 @@ define('views/site/navbar', ['view'], function (Dep) {
             this.$body.css('minHeight', minHeight + 'px');
         },
 
-        adjustBodyMinHeightHorizontal: function () {
+        adjustBodyMinHeightTop: function () {
             var minHeight = this.getNavbarHeight();
 
             this.$more.find('> li').each((i, el) => {
@@ -830,6 +833,7 @@ define('views/site/navbar', ['view'], function (Dep) {
 
             this.$navbar = this.$el.find('> .navbar');
             this.$navbarRightContainer = this.$navbar.find('> .navbar-body > .navbar-right-container');
+            this.$navbarRight = this.$navbarRightContainer.children();
 
             let handlerClassName = this.getThemeManager().getParam('navbarAdjustmentHandler');
 
@@ -862,12 +866,12 @@ define('views/site/navbar', ['view'], function (Dep) {
                     }
 
                     if (this.getThemeManager().isUserTheme()) {
-                        setTimeout(() => this.adjustVertical(), 10);
+                        setTimeout(() => this.adjustSide(), 10);
 
                         return;
                     }
 
-                    this.adjustVertical();
+                    this.adjustSide();
                 };
 
                 process();
@@ -883,12 +887,12 @@ define('views/site/navbar', ['view'], function (Dep) {
                 }
 
                 if (this.getThemeManager().isUserTheme()) {
-                    setTimeout(() => this.adjustHorizontal(), 10);
+                    setTimeout(() => this.adjustTop(), 10);
 
                     return;
                 }
 
-                this.adjustHorizontal();
+                this.adjustTop();
             };
 
             process();
@@ -963,7 +967,6 @@ define('views/site/navbar', ['view'], function (Dep) {
 
                         tabDefsList.push({
                             name: 'show-more',
-                            link: 'javascript:',
                             isInMore: true,
                             className: 'show-more',
                             html: '<span class="fas fa-ellipsis-h more-icon"></span>',
@@ -982,18 +985,14 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         prepareTabItemDefs: function (params, tab, i, vars) {
-            var label;
-            var link;
+            let label;
+            let link;
 
-            var iconClass = null;
-
-            var color = null;
-
-            var isGroup = false;
-
-            var name = tab;
-
-            var aClassName = 'nav-link';
+            let iconClass = null;
+            let color = null;
+            let isGroup = false;
+            let name = tab;
+            let aClassName = 'nav-link';
 
             if (tab === 'Home') {
                 label = this.getLanguage().translate(tab);
@@ -1008,7 +1007,7 @@ define('views/site/navbar', ['view'], function (Dep) {
 
                 name = 'group-' + i;
 
-                link = 'javascript:';
+                link = null;
 
                 aClassName = 'nav-link-group';
 
@@ -1023,7 +1022,7 @@ define('views/site/navbar', ['view'], function (Dep) {
 
             label = label || '';
 
-            var shortLabel = label.substring(0, 2);
+            let shortLabel = label.substring(0, 2);
 
             if (!params.colorsDisabled && !isGroup) {
                 color = this.getMetadata().get(['clientDefs', tab, 'color']);
@@ -1033,7 +1032,7 @@ define('views/site/navbar', ['view'], function (Dep) {
                 iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass'])
             }
 
-            var o = {
+            let o = {
                 link: link,
                 label: label,
                 shortLabel: shortLabel,
@@ -1135,10 +1134,14 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         actionShowLastViewed: function () {
+            Espo.Ui.notify(this.translate('loading', 'messages'));
+
             this.createView('dialog', 'views/modals/last-viewed', {}, (view) => {
                 view.render();
 
-                this.listenTo(view, 'close', () => {
+                Espo.Ui.notify(false);
+
+                this.listenToOnce(view, 'close', () => {
                     this.clearView('dialog');
                 });
             });

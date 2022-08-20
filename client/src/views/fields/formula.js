@@ -339,7 +339,7 @@ define('views/fields/formula', ['views/fields/text'], function (Dep) {
                 }
             };
 
-            languageTools.setCompleters([completer]);
+            this.editor.completers = [completer];
         },
 
         getAttributeList: function () {

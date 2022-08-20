@@ -56,6 +56,27 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
 
         className: 'dialog dialog-record',
 
+        /**
+         * @inheritDoc
+         */
+        shortcutKeys: {
+            'Control+Enter': function (e) {
+                this.handleShortcutKeyCtrlEnter(e);
+            },
+            'Control+Space': function (e) {
+                this.handleShortcutKeyCtrlSpace(e);
+            },
+            'Control+Slash': function (e) {
+                this.handleShortcutKeyCtrlSlash(e);
+            },
+            'Control+Comma': function (e) {
+                this.handleShortcutKeyCtrlComma(e);
+            },
+            'Control+Period': function (e) {
+                this.handleShortcutKeyCtrlPeriod(e);
+            },
+        },
+
         data: function () {
             return {
                 createButton: this.createButton,
@@ -101,26 +122,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                     style: 'danger',
                     label: 'Select',
                     disabled: true,
-                    onClick: (dialog) => {
-                        var listView = this.getView('list');
-
-                        if (listView.allResultIsChecked) {
-                            this.trigger('select', {
-                                massRelate: true,
-                                where: this.collection.getWhere(),
-                                searchParams: this.collection.data,
-                            });
-                        }
-                        else {
-                            var list = listView.getSelected();
-
-                            if (list.length) {
-                                this.trigger('select', list);
-                            }
-                        }
-
-                        dialog.close();
-                    }
+                    title: 'Ctrl+Enter',
                 });
             }
 
@@ -147,13 +149,18 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 }
             }
 
-            this.headerHtml = '';
+            this.$header = $('<span>');
 
-            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+            this.$header.append(
+                $('<span>').text(
+                    this.translate('Select') + ': ' +
+                    this.getLanguage().translate(this.scope, 'scopeNamesPlural')
+                )
+            );
 
-            this.headerHtml += this.translate('Select') + ': ';
-            this.headerHtml += this.getLanguage().translate(this.scope, 'scopeNamesPlural');
-            this.headerHtml = iconHtml + this.headerHtml;
+            this.$header.prepend(
+                this.getHelper().getScopeColorIconHtml(this.scope)
+            );
 
             this.waitForView('list');
 
@@ -171,9 +178,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 }
 
                 this.loadSearch();
-
                 this.wait(true);
-
                 this.loadList();
             });
         },
@@ -333,6 +338,121 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                     }, 10);
                 });
             });
+        },
+
+        actionSelect: function () {
+            if (!this.multiple) {
+                return;
+            }
+
+            let listView = this.getView('list');
+
+            if (listView.allResultIsChecked) {
+                this.trigger('select', {
+                    massRelate: true,
+                    where: this.collection.getWhere(),
+                    searchParams: this.collection.data,
+                });
+
+                this.close();
+
+                return;
+            }
+
+            let list = listView.getSelected();
+
+            if (list.length) {
+                this.trigger('select', list);
+            }
+
+            this.close();
+        },
+
+        /**
+         * @protected
+         * @return {?module:views/record/search.Class}
+         */
+        getSearchView: function () {
+            return this.getView('search');
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlSlash: function (e) {
+            if (!this.searchPanel) {
+                return;
+            }
+
+            let $search = this.$el.find('input.text-filter').first();
+
+            if (!$search.length) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            $search.focus();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlEnter: function (e) {
+            if (!this.multiple) {
+                return;
+            }
+
+            if (!this.hasAvailableActionItem('select')) {
+                return;
+            }
+
+            e.stopPropagation();
+            e.preventDefault();
+
+            this.actionSelect();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlSpace: function (e) {
+            if (!this.createButton) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.create();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlComma: function (e) {
+            if (!this.getSearchView()) {
+                return;
+            }
+
+            this.getSearchView().selectPreviousPreset();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlPeriod: function (e) {
+            if (!this.getSearchView()) {
+                return;
+            }
+
+            this.getSearchView().selectNextPreset();
         },
     });
 });

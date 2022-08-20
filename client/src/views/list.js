@@ -156,6 +156,34 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
         defaultViewMode: 'list',
 
         /**
+         * @const
+         */
+        MODE_LIST: 'list',
+
+        /**
+         * @const
+         */
+        MODE_KANBAN: 'kanban',
+
+        /**
+         * @inheritDoc
+         */
+        shortcutKeys: {
+            'Control+Space': function (e) {
+                this.handleShortcutKeyCtrlSpace(e);
+            },
+            'Control+Slash': function (e) {
+                this.handleShortcutKeyCtrlSlash(e);
+            },
+            'Control+Comma': function (e) {
+                this.handleShortcutKeyCtrlComma(e);
+            },
+            'Control+Period': function (e) {
+                this.handleShortcutKeyCtrlPeriod(e);
+            },
+        },
+
+        /**
          * @inheritDoc
          */
         setup: function () {
@@ -233,11 +261,11 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                 this.viewModeList = viewModeList;
             }
             else {
-                this.viewModeList = ['list'];
+                this.viewModeList = [this.MODE_LIST];
 
                 if (this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode'])) {
-                    if (!~this.viewModeList.indexOf('kanban')) {
-                        this.viewModeList.push('kanban');
+                    if (!~this.viewModeList.indexOf(this.MODE_KANBAN)) {
+                        this.viewModeList.push(this.MODE_KANBAN);
                     }
                 }
             }
@@ -281,11 +309,12 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
             if (this.quickCreate) {
                 this.menu.buttons.unshift({
                     action: 'quickCreate',
-                    html: '<span class="fas fa-plus fa-sm"></span> ' +
-                        this.translate('Create ' +  this.scope, 'labels', this.scope),
+                    iconHtml: '<span class="fas fa-plus fa-sm"></span>',
+                    text: this.translate('Create ' +  this.scope, 'labels', this.scope),
                     style: 'default',
                     acl: 'create',
                     aclScope: this.entityType || this.scope,
+                    title: 'Ctrl+Space',
                 });
 
                 return;
@@ -294,13 +323,13 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
             this.menu.buttons.unshift({
                 link: '#' + this.scope + '/create',
                 action: 'create',
-                html: '<span class="fas fa-plus fa-sm"></span> ' +
-                    this.translate('Create ' +  this.scope,  'labels', this.scope),
+                iconHtml: '<span class="fas fa-plus fa-sm"></span>',
+                text: this.translate('Create ' +  this.scope,  'labels', this.scope),
                 style: 'default',
                 acl: 'create',
                 aclScope: this.entityType || this.scope,
+                title: 'Ctrl+Space',
             });
-
         },
 
         /**
@@ -443,13 +472,29 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
         },
 
         /**
+         * @protected
+         * @return {?module:views/record/search.Class}
+         */
+        getSearchView: function () {
+            return this.getView('search');
+        },
+
+        /**
+         * @protected
+         * @return {?module:view}
+         */
+        getRecordView: function () {
+            return this.getView('list');
+        },
+
+        /**
          * Get a record view name.
          *
          * @returns {string}
          */
         getRecordViewName: function () {
-            if (this.viewMode === 'list') {
-                return this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
+            if (this.viewMode === this.MODE_LIST) {
+                return this.getMetadata().get(['clientDefs', this.scope, 'recordViews', this.MODE_LIST]) ||
                     this.recordView;
             }
 
@@ -463,9 +508,13 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
          * @inheritDoc
          */
         afterRender: function () {
+            Espo.Ui.notify(false);
+
             if (!this.hasView('list')) {
                 this.loadList();
             }
+
+            this.$el.get(0).focus({preventScroll: true});
         },
 
         /**
@@ -504,11 +553,12 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
          * @param {boolean} [fetch=false] To fetch after creation.
          */
         createListRecordView: function (fetch) {
-            var o = {
+            let o = {
                 collection: this.collection,
                 el: this.options.el + ' .list-container',
                 scope: this.scope,
                 skipBuildRows: true,
+                shortcutKeysEnabled: true,
             };
 
             this.optionsToPass.forEach(option => {
@@ -545,7 +595,9 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                     }
                 });
 
-                view.notify(false);
+                if (!fetch) {
+                    Espo.Ui.notify(false);
+                }
 
                 if (this.searchPanel) {
                     this.listenTo(view, 'sort', obj => {
@@ -555,11 +607,19 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
 
                 if (fetch) {
                     view.getSelectAttributeList(selectAttributeList => {
+                        if (this.options.mediator && this.options.mediator.abort) {
+                            return;
+                        }
+
                         if (selectAttributeList) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
 
-                        this.collection.fetch();
+                        Espo.Ui.notify(this.translate('loading', 'messages'));
+
+                        this.collection.fetch()
+                            .then(() => Espo.Ui.notify(false));
+
                     });
 
                     return;
@@ -627,17 +687,20 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
         /**
          * Action `quickCreate`.
          *
+         * @param {Object.<string,*>} [data]
          * @returns {Promise<module:views/modals/edit.Class>}
          */
-        actionQuickCreate: function () {
-            var attributes = this.getCreateAttributes() || {};
+        actionQuickCreate: function (data) {
+            data = data || {};
+
+            let attributes = this.getCreateAttributes() || {};
 
             this.notify('Loading...');
 
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
+            let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
                 'views/modals/edit';
 
-            var options = {
+            let options = {
                 scope: this.scope,
                 attributes: attributes,
             };
@@ -646,12 +709,14 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                 options.rootUrl = this.getRouter().getCurrentUrl();
             }
 
-            var returnDispatchParams = {
+            if (data.focusForCreate) {
+                options.focusForCreate = true;
+            }
+
+            let returnDispatchParams = {
                 controller: this.scope,
                 action: null,
-                options: {
-                    isReturn: true,
-                },
+                options: {isReturn: true},
             };
 
             this.prepareCreateReturnDispatchParams(returnDispatchParams);
@@ -673,27 +738,31 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
 
         /**
          * Action `create'.
+         *
+         * @param {Object.<string,*>} [data]
          */
-        actionCreate: function () {
-            var router = this.getRouter();
+        actionCreate: function (data) {
+            data = data || {};
 
-            var url = '#' + this.scope + '/create';
-            var attributes = this.getCreateAttributes() || {};
+            let router = this.getRouter();
 
-            var options = {
-                attributes: attributes
-            };
+            let url = '#' + this.scope + '/create';
+            let attributes = this.getCreateAttributes() || {};
+
+            let options = {attributes: attributes};
 
             if (this.keepCurrentRootUrl) {
                 options.rootUrl = this.getRouter().getCurrentUrl();
             }
 
-            var returnDispatchParams = {
+            if (data.focusForCreate) {
+                options.focusForCreate = true;
+            }
+
+            let returnDispatchParams = {
                 controller: this.scope,
                 action: null,
-                options: {
-                    isReturn: true
-                }
+                options: {isReturn: true},
             };
 
             this.prepareCreateReturnDispatchParams(returnDispatchParams);
@@ -714,6 +783,80 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
          */
         isActualForReuse: function () {
             return this.collection.isFetched;
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlSpace: function (e) {
+            if (!this.createButton) {
+                return;
+            }
+
+            /*if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+                return;
+            }*/
+
+            if (!this.getAcl().checkScope(this.scope, 'create')) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (this.quickCreate) {
+                this.actionQuickCreate({focusForCreate: true});
+
+                return;
+            }
+
+            this.actionCreate({focusForCreate: true});
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlSlash: function (e) {
+            if (!this.searchPanel) {
+                return;
+            }
+
+            let $search = this.$el.find('input.text-filter').first();
+
+            if (!$search.length) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            $search.focus();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlComma: function (e) {
+            if (!this.getSearchView()) {
+                return;
+            }
+
+            this.getSearchView().selectPreviousPreset();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlPeriod: function (e) {
+            if (!this.getSearchView()) {
+                return;
+            }
+
+            this.getSearchView().selectNextPreset();
         },
     });
 });

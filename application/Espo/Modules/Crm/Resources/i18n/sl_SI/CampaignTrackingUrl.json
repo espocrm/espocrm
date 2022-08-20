@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "urlToUse": "Koda za vstavljanje namesto URL-ja",
+    "campaign": "Kampanja",
+    "action": "Akcija",
+    "message": "Sporočilo"
+  },
+  "links": {
+    "campaign": "Kampanja"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "Ustvari URL za sledenje"
+  },
+  "options": {
+    "action": {
+      "Redirect": "Preusmeri",
+      "Show Message": "Pokaži sporočilo"
+    }
+  },
+  "tooltips": {
+    "url": "Prejemnik bo preusmerjen na to lokacijo, ko sledi povezavi.",
+    "message": "Sporočilo bo prikazano prejemniku, ko sledi povezavi. Markdown je podprt."
+  }
+}

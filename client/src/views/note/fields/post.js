@@ -36,12 +36,14 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
                     return;
                 }
 
-                var text = e.originalEvent.clipboardData.getData('text/plain');
+                let text = e.originalEvent.clipboardData.getData('text/plain');
+
                 if (!text) {
                     return;
                 }
 
                 text = text.trim();
+
                 if (!text) {
                     return;
                 }
@@ -56,22 +58,22 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
             this.insertedImagesData = {};
         },
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            var placeholderText = this.options.placeholderText || this.translate('writeMessage', 'messages', 'Note');
+        afterRenderEdit: function () {
+            let placeholderText = this.options.placeholderText ||
+                this.translate('writeMessage', 'messages', 'Note');
 
             this.$element.attr('placeholder', placeholderText);
 
             this.$textarea = this.$element;
-            var $textarea = this.$textarea;
+
+            let $textarea = this.$textarea;
 
             $textarea.off('drop');
             $textarea.off('dragover');
             $textarea.off('dragleave');
             $textarea.off('paste');
 
-            $textarea.on('paste', function (e) {
+            $textarea.on('paste', (e) => {
                 var items = e.originalEvent.clipboardData.items;
 
                 if (items) {
@@ -85,76 +87,80 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
                         this.trigger('add-files', [blob]);
                     }
                 }
-            }.bind(this));
+            });
 
-            this.$textarea.on('drop', function (e) {
+            this.$textarea.on('drop', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
 
-                var e = e.originalEvent;
+                e = e.originalEvent;
 
                 if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
                     this.trigger('add-files', e.dataTransfer.files);
                 }
 
                 this.$textarea.attr('placeholder', originalPlaceholderText);
-            }.bind(this));
+            });
 
-            var originalPlaceholderText = this.$textarea.attr('placeholder');
+            let originalPlaceholderText = this.$textarea.attr('placeholder');
 
-            this.$textarea.on('dragover', function (e) {
+            this.$textarea.on('dragover', e => {
                 e.preventDefault();
 
                 this.$textarea.attr('placeholder', this.translate('dropToAttach', 'messages'));
-            }.bind(this));
-            
-            this.$textarea.on('dragleave', function (e) {
+            });
+
+            this.$textarea.on('dragleave', e => {
                 e.preventDefault();
 
                 this.$textarea.attr('placeholder', originalPlaceholderText);
-            }.bind(this));
+            });
 
-            var assignmentPermission = this.getAcl().get('assignmentPermission');
+            let assignmentPermission = this.getAcl().get('assignmentPermission');
 
-            var buildUserListUrl = function (term) {
-                var url = 'User?q=' + term + '&' + $.param({'primaryFilter': 'active'}) +
+            var buildUserListUrl = term => {
+                let url = 'User?q=' + term + '&' + $.param({'primaryFilter': 'active'}) +
                     '&orderBy=name&maxSize=' + this.getConfig().get('recordsPerPage') +
                     '&select=id,name,userName';
 
                 if (assignmentPermission === 'team') {
                     url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
                 }
+
                 return url;
-            }.bind(this);
+            };
 
             if (assignmentPermission !== 'no' && this.model.isNew()) {
                 this.$element.textcomplete([{
                     match: /(^|\s)@(\w*)$/,
-                    search: function (term, callback) {
-                        if (term.length == 0) {
+                    search: (term, callback) => {
+                        if (term.length === 0) {
                             callback([]);
+
                             return;
                         }
-                        Espo.Ajax.getRequest(buildUserListUrl(term)).then(function (data) {
-                            callback(data.list)
-                        });
-                    },
-                    template: function (mention) {
-                        return this.getHelper().escapeString(mention.name) +
-                            ' <span class="text-muted">@' + this.getHelper().escapeString(mention.userName) + '</span>';
-                    }.bind(this),
-                    replace: function (o) {
-                        return '$1@' + o.userName + '';
-                    }
-                }],{
-                    zIndex: 1100
-                });
 
-                this.once('remove', function () {
+                        Espo.Ajax
+                            .getRequest(buildUserListUrl(term))
+                            .then(data => {
+                                callback(data.list)
+                            });
+                    },
+                    template: mention => {
+                        return this.getHelper().escapeString(mention.name) +
+                            ' <span class="text-muted">@' +
+                            this.getHelper().escapeString(mention.userName) + '</span>';
+                    },
+                    replace: o => {
+                        return '$1@' + o.userName + '';
+                    },
+                }],{zIndex: 1100});
+
+                this.once('remove', () => {
                     if (this.$element.length) {
                         this.$element.textcomplete('destroy');
                     }
-                }, this);
+                });
             }
         },
 
@@ -169,30 +175,37 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
         },
 
         handlePastedText: function (text, event) {
-            if (/^http(s){0,1}\:\/\//.test(text)) {
-                var imageExtensionList = ['jpg', 'jpeg', 'png', 'gif'];
-                var regExpString = '.+\\.(' + imageExtensionList.join('|') + ')(/?.*){0,1}$';
-                var regExp = new RegExp(regExpString, 'i');
-                var url = text;
-                var siteUrl = this.getConfig().get('siteUrl').replace(/\/$/, '');
+            if (!(/^http(s){0,1}\:\/\//.test(text))) {
+                return;
+            }
 
-                var attachmentIdList = this.model.get('attachmentsIds') || [];
+            let imageExtensionList = ['jpg', 'jpeg', 'png', 'gif'];
+            let regExpString = '.+\\.(' + imageExtensionList.join('|') + ')(/?.*){0,1}$';
+            let regExp = new RegExp(regExpString, 'i');
+            let url = text;
+            let siteUrl = this.getConfig().get('siteUrl').replace(/\/$/, '');
 
-                if (regExp.test(text)) {
-                    var insertedId = this.insertedImagesData[url];
+            let attachmentIdList = this.model.get('attachmentsIds') || [];
 
-                    if (insertedId) {
-                        if (~attachmentIdList.indexOf(insertedId)) return;
+            if (regExp.test(text)) {
+                let insertedId = this.insertedImagesData[url];
+
+                if (insertedId) {
+                    if (~attachmentIdList.indexOf(insertedId)) {
+                        return;
                     }
+                }
 
-                    this.ajaxPostRequest('Attachment/action/getAttachmentFromImageUrl', {
+                Espo.Ajax
+                    .postRequest('Attachment/action/getAttachmentFromImageUrl', {
                         url: url,
                         parentType: 'Note',
-                        field: 'attachments'
-                    }).then(function (attachment) {
-                        var attachmentIdList = Espo.Utils.clone(this.model.get('attachmentsIds') || []);
-                        var attachmentNames = Espo.Utils.clone(this.model.get('attachmentsNames') || {});
-                        var attachmentTypes = Espo.Utils.clone(this.model.get('attachmentsTypes') || {});
+                        field: 'attachments',
+                    })
+                    .then(attachment => {
+                        let attachmentIdList = Espo.Utils.clone(this.model.get('attachmentsIds') || []);
+                        let attachmentNames = Espo.Utils.clone(this.model.get('attachmentsNames') || {});
+                        let attachmentTypes = Espo.Utils.clone(this.model.get('attachmentsTypes') || {});
 
                         attachmentIdList.push(attachment.id);
                         attachmentNames[attachment.id] = attachment.name;
@@ -203,51 +216,66 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
                         this.model.set({
                             attachmentsIds: attachmentIdList,
                             attachmentsNames: attachmentNames,
-                            attachmentsTypes: attachmentTypes
+                            attachmentsTypes: attachmentTypes,
                         });
-                    }.bind(this)).fail(function (xhr) {
+                    })
+                    .catch(xhr => {
                         xhr.errorIsHandled = true;
                     });
 
-                } else if (/\?entryPoint\=image\&/.test(text) && text.indexOf(siteUrl) === 0) {
-                    url = text.replace(/[\&]{0,1}size\=[a-z\-]*/, '');
+                return;
+            }
 
-                    var match = /\&{0,1}id\=([a-z0-9A-Z]*)/g.exec(text)
-                    if (match.length === 2) {
-                        var id = match[1];
-                        if (~attachmentIdList.indexOf(id)) return;
-                        var insertedId = this.insertedImagesData[id];
-                        if (insertedId) {
-                            if (~attachmentIdList.indexOf(insertedId)) return;
-                        }
+            if (/\?entryPoint\=image\&/.test(text) && text.indexOf(siteUrl) === 0) {
+                url = text.replace(/[\&]{0,1}size\=[a-z\-]*/, '');
 
-                        this.ajaxPostRequest('Attachment/action/getCopiedAttachment', {
-                            id: id,
-                            parentType: 'Note',
-                            field: 'attachments'
-                        }).then(function (attachment) {
-                            var attachmentIdList = Espo.Utils.clone(this.model.get('attachmentsIds') || []);
-                            var attachmentNames = Espo.Utils.clone(this.model.get('attachmentsNames') || {});
-                            var attachmentTypes = Espo.Utils.clone(this.model.get('attachmentsTypes') || {});
+                let match = /\&{0,1}id\=([a-z0-9A-Z]*)/g.exec(text)
 
-                            attachmentIdList.push(attachment.id);
-                            attachmentNames[attachment.id] = attachment.name;
-                            attachmentTypes[attachment.id] = attachment.type;
+                if (match.length !== 2) {
+                    return;
+                }
 
-                            this.insertedImagesData[id] = attachment.id;
+                let id = match[1];
 
-                            this.model.set({
-                                attachmentsIds: attachmentIdList,
-                                attachmentsNames: attachmentNames,
-                                attachmentsTypes: attachmentTypes
-                            });
-                        }.bind(this)).fail(function (xhr) {
-                            xhr.errorIsHandled = true;
-                        });
+                if (~attachmentIdList.indexOf(id)) {
+                    return;
+                }
+
+                let insertedId = this.insertedImagesData[id];
+
+                if (insertedId) {
+                    if (~attachmentIdList.indexOf(insertedId)) {
+                        return;
                     }
                 }
-            }
-        }
 
+                Espo.Ajax
+                    .postRequest('Attachment/action/getCopiedAttachment', {
+                        id: id,
+                        parentType: 'Note',
+                        field: 'attachments',
+                    })
+                    .then(attachment => {
+                        let attachmentIdList = Espo.Utils.clone(this.model.get('attachmentsIds') || []);
+                        let attachmentNames = Espo.Utils.clone(this.model.get('attachmentsNames') || {});
+                        let attachmentTypes = Espo.Utils.clone(this.model.get('attachmentsTypes') || {});
+
+                        attachmentIdList.push(attachment.id);
+                        attachmentNames[attachment.id] = attachment.name;
+                        attachmentTypes[attachment.id] = attachment.type;
+
+                        this.insertedImagesData[id] = attachment.id;
+
+                        this.model.set({
+                            attachmentsIds: attachmentIdList,
+                            attachmentsNames: attachmentNames,
+                            attachmentsTypes: attachmentTypes,
+                        });
+                    })
+                    .catch(xhr => {
+                        xhr.errorIsHandled = true;
+                    });
+            }
+        },
     });
 });

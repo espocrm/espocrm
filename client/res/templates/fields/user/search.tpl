@@ -4,7 +4,7 @@
 <div class="primary">
 	<div class="input-group">
 	    <input
-            class="form-control input-sm search-input"
+            class="form-control input-sm"
             type="text"
             data-name="{{nameName}}"
             value="{{searchData.nameValue}}"
@@ -32,12 +32,11 @@
 </div>
 
 <div class="one-of-container hidden">
-    <div class="link-one-of-container link-container list-group">
-    </div>
+    <div class="link-one-of-container link-container list-group"></div>
 
     <div class="input-group add-team">
         <input
-            class="form-control input-sm element-one-of search-input"
+            class="form-control input-sm element-one-of"
             type="text"
             value=""
             autocomplete="espo-{{name}}"
@@ -57,11 +56,10 @@
 </div>
 
 <div class="teams-container hidden">
-    <div class="link-teams-container link-container list-group">
-    </div>
+    <div class="link-teams-container link-container list-group"></div>
     <div class="input-group add-team">
         <input
-            class="form-control input-sm element-teams search-input"
+            class="form-control input-sm element-teams"
             type="text"
             value=""
             autocomplete="espo-{{name}}"

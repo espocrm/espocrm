@@ -35,7 +35,8 @@
                 {{#if this}}
                 <li class="{{#if hidden}}hidden{{/if}}">
                 <a
-                    href="javascript:"
+                    role="button"
+                    tabindex="0"
                     class="action"
                     data-action="{{name}}"
                 >{{#if html}}{{{html}}}{{else}}{{translate label scope=../entityType}}{{/if}}</a></li>
@@ -57,7 +58,8 @@
             {{#if this}}
             <li>
                 <a
-                    href="javascript:"
+                    role="button"
+                    tabindex="0"
                     data-action="{{./this}}"
                     class='mass-action'
                 >{{translate this category="massActions" scope=../scope}}</a></li>
@@ -86,7 +88,8 @@
                 {{#if this}}
                 <li>
                     <a
-                        href="javascript:"
+                        role="button"
+                        tabindex="0"
                         data-action="{{./this}}"
                         class='mass-action'
                     >{{translate this category="massActions" scope=../scope}}</a>
@@ -122,13 +125,19 @@
                     <span class="select-all-container"><input type="checkbox" class="select-all"></span>
                     {{#unless checkAllResultDisabled}}
                     <div class="btn-group checkbox-dropdown">
-                        <a class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
+                        <a
+                            class="btn btn-link btn-sm dropdown-toggle"
+                            data-toggle="dropdown"
+                            tabindex="0"
+                            role="button"
+                        >
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a
-                                    href="javascript:"
+                                    role="button"
+                                    tabindex="0"
                                     data-action="selectAllResult"
                                 >{{translate 'Select All Results'}}</a>
                             </li>
@@ -146,7 +155,8 @@
                 >
                     {{#if this.isSortable}}
                         <a
-                            href="javascript:"
+                            role="button"
+                            tabindex="0"
                             class="sort"
                             data-name="{{this.name}}"
                             title="{{translate 'Sort'}}"
@@ -183,7 +193,8 @@
     <div class="show-more{{#unless showMoreActive}} hidden{{/unless}}">
         <a
             type="button"
-            href="javascript:"
+            role="button"
+            tabindex="0"
             class="btn btn-default btn-block"
             data-action="showMore"
             {{#if showCount}}title="{{translate 'Total'}}: {{totalCountFormatted}}"{{/if}}

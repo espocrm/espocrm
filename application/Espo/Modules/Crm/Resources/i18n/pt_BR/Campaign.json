@@ -5,7 +5,8 @@
     "type": "Tipo",
     "startDate": "Data de início",
     "endDate": "Data de fim",
-    "targetLists": "Lista de alvos",
+    "targetLists": "Lista de Alvos",
+    "excludingTargetLists": "Excluindo Lista de Alvos",
     "sentCount": "Enviar",
     "openedCount": "Abertos",
     "clickedCount": "Clicados",
@@ -15,13 +16,28 @@
     "softBouncedCount": "Soft Bounce",
     "leadCreatedCount": "Leads Criados",
     "revenue": "Receita",
-    "budget": "Orçamento"
+    "revenueConverted": "Revenda (convertida)",
+    "budget": "Orçamento",
+    "budgetConverted": "Orçamento (convertido)",
+    "contactsTemplate": "Modelo de Contatos",
+    "leadsTemplate": "Modelo de Leads",
+    "accountsTemplate": "Modelo de Contas",
+    "usersTemplate": "Modelo de Usuários",
+    "mailMergeOnlyWithAddress": "Pular registros sem endereço preenchido",
+    "budgetCurrency": "Moeda do Budget"
   },
   "links": {
     "targetLists": "Lista de alvos",
+    "excludingTargetLists": "Excluindo Lista de Alvos",
     "accounts": "Contas",
     "contacts": "Contatos",
-    "opportunities": "Oportunidades"
+    "opportunities": "Oportunidades",
+    "massEmails": "Email em Massa",
+    "trackingUrls": "URLs de Rastreio",
+    "contactsTemplate": "Modelo de Contatos",
+    "leadsTemplate": "Modelo de Leads",
+    "accountsTemplate": "Modelo de Contas",
+    "usersTemplate": "Modelo de Usuários"
   },
   "options": {
     "type": {
@@ -39,11 +55,26 @@
   },
   "labels": {
     "Create Campaign": "Criar Campanha",
-    "Target Lists": "Lista de alvos",
+    "Target Lists": "Lista de Alvos",
     "Statistics": "Estatísticas",
-    "Email Templates": "Templates de email"
+    "Unsubscribe": "Cancelar Subscrição",
+    "Mass Emails": "Emails em Massa",
+    "Email Templates": "Templates de email",
+    "Unsubscribe again": "Cancelar inscrição novamente",
+    "Subscribe again": "Inscreva-se novamente",
+    "Create Target List": "Criar Lista de Alvo",
+    "Mail Merge": "Mala Direta",
+    "Generate Mail Merge PDF": "Gerar PDF de mala direta"
   },
   "presetFilters": {
     "active": "Ativa"
+  },
+  "messages": {
+    "unsubscribed": "Você foi descadastrado de nossa lista de emails.",
+    "subscribedAgain": "Você está inscrito novamente."
+  },
+  "tooltips": {
+    "targetLists": "Alvos que devem receber mensagens.",
+    "excludingTargetLists": "Alvos que não devem receber mensagens."
   }
 }

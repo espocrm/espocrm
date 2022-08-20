@@ -250,12 +250,18 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                 }
             });
 
-            Handlebars.registerHelper('var', (name, context) => {
+            Handlebars.registerHelper('var', (name, context, options) => {
                 if (typeof context === 'undefined') {
                     return null;
                 }
 
-                return new Handlebars.SafeString(context[name]);
+                let contents = context[name];
+
+                if (options.hash.trim) {
+                    contents = contents.trim();
+                }
+
+                return new Handlebars.SafeString(contents);
             });
 
             Handlebars.registerHelper('concat', function (left, right) {
@@ -339,17 +345,29 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                     options.hash.text ||
                     this.language.translate(label, 'labels', scope);
 
-                let className = options.hash.className || '';
-
-                if (className) {
-                    className = ' ' + className;
+                if (!options.hash.html) {
+                    html = this.escapeString(html);
                 }
 
-                return new Handlebars.SafeString(
-                    '<button class="btn btn-' + style + ' action' + className +
-                    (options.hash.hidden ? ' hidden' : '') + '" data-action="' + name +
-                    '" type="button">'+html+'</button>'
-                );
+                let $button = $('<button>')
+                    .attr('type', 'button')
+                    .addClass('btn action')
+                    .addClass(options.hash.className || '')
+                    .addClass(options.hash.hidden ? 'hidden' : '')
+                    .addClass(options.hash.disabled ? 'disabled' : '')
+                    .attr('data-action', name)
+                    .addClass('btn-' + style)
+                    .html(html);
+
+                if (options.hash.disabled) {
+                    $button.attr('disabled', 'disabled');
+                }
+
+                if (options.hash.title) {
+                    $button.attr('title', options.hash.title);
+                }
+
+                return new Handlebars.SafeString($button.get(0).outerHTML);
             });
 
             Handlebars.registerHelper('hyphen', (string) => {
@@ -593,7 +611,7 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
 
             text = text.replace(
                 /<a href="mailto:(.*)"/gm,
-                '<a href="javascript:" data-email-address="$1" data-action="mailTo"'
+                '<a type="button" class="selectable" data-email-address="$1" data-action="mailTo"'
             );
 
             return new Handlebars.SafeString(text);
@@ -828,7 +846,7 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
          * @internal Used in extensions.
          */
         transfromMarkdownText: function (text, options) {
-            this.transformMarkdownText(text, options);
+            return this.transformMarkdownText(text, options);
         },
 
         /**

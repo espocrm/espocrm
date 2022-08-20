@@ -1,5 +1,5 @@
 {{#if fieldDataList.length}}
-<table class="table table-bordered">
+<table class="table table-bordered-inside">
     {{#if editAccess}}
     <tr>
         <th width="20"><input type="checkbox" class="checkbox-all"></th>

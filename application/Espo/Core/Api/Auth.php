@@ -33,8 +33,6 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ServiceUnavailable;
 use Espo\Core\Exceptions\Forbidden;
 
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
 use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Authentication\Result;
@@ -69,6 +67,10 @@ class Auth
         $this->isEntryPoint = $isEntryPoint;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Exception
+     */
     public function process(Request $request, Response $response): AuthResult
     {
         $username = null;
@@ -86,6 +88,18 @@ class Auth
             ->withMethod($authenticationMethod);
 
         $hasAuthData = (bool) ($username || $authenticationMethod);
+
+        if (!$hasAuthData && $this->isEntryPoint) {
+            $password = $this->obtainTokenFromCookies($request);
+
+            if ($password) {
+                $authenticationData = AuthenticationData::create()
+                    ->withPassword($password)
+                    ->withByTokenOnly(true);
+
+                $hasAuthData = true;
+            }
+        }
 
         if (!$this->authRequired && !$this->isEntryPoint && $hasAuthData) {
             $authResult = $this->processAuthNotRequired(
@@ -118,6 +132,9 @@ class Auth
         return AuthResult::createNotResolved();
     }
 
+    /**
+     * @throws Exception
+     */
     private function processAuthNotRequired(
         AuthenticationData $data,
         Request $request,
@@ -140,6 +157,9 @@ class Auth
         return null;
     }
 
+    /**
+     * @throws Exception
+     */
     private function processWithAuthData(
         AuthenticationData $data,
         Request $request,
@@ -178,7 +198,7 @@ class Auth
      */
     protected function decodeAuthorizationString(string $string): array
     {
-        /** @var string */
+        /** @var string $stringDecoded */
         $stringDecoded = base64_decode($string);
 
         if (strpos($stringDecoded, ':') === false) {
@@ -205,6 +225,9 @@ class Auth
         $response->writeBody(Json::encode($bodyData));
     }
 
+    /**
+     * @throws Exception
+     */
     protected function handleException(Response $response, Exception $e): void
     {
         if (
@@ -291,17 +314,6 @@ class Auth
             return [$username, $password];
         }
 
-        if (
-            $request->getCookieParam('auth-username') &&
-            $request->getCookieParam('auth-token')
-        ) {
-
-            $username = $request->getCookieParam('auth-username');
-            $password = $request->getCookieParam('auth-token');
-
-            return [$username, $password];
-        }
-
         $cgiAuthString = $request->getHeader('Http-Espo-Cgi-Auth') ??
             $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
 
@@ -312,5 +324,10 @@ class Auth
         }
 
         return [null, null];
+    }
+
+    private function obtainTokenFromCookies(Request $request): ?string
+    {
+        return $request->getCookieParam('auth-token');
     }
 }

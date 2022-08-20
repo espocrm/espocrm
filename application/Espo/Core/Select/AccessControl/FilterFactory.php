@@ -105,7 +105,7 @@ class FilterFactory
             throw new RuntimeException("Empty access control filter name.");
         }
 
-        /** @var ?class-string<Filter> */
+        /** @var ?class-string<Filter> $className */
         $className = $this->metadata->get(
             [
                 'selectDefs',

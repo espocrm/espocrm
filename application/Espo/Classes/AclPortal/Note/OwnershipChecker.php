@@ -29,22 +29,24 @@
 
 namespace Espo\Classes\AclPortal\Note;
 
+use Espo\Entities\Note;
 use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    Acl\OwnershipOwnChecker,
-};
+use Espo\Core\Acl\OwnershipOwnChecker;
 
 /**
  * @implements OwnershipOwnChecker<\Espo\Entities\Note>
  */
 class OwnershipChecker implements OwnershipOwnChecker
 {
+    /**
+     * @param Note $entity
+     */
     public function checkOwn(User $user, Entity $entity): bool
     {
-        if ($entity->get('type') === 'Post' && $user->getId() === $entity->get('createdById')) {
+        if ($entity->getType() === Note::TYPE_POST && $user->getId() === $entity->getCreatedById()) {
             return true;
         }
 

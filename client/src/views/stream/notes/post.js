@@ -153,6 +153,8 @@ define('views/stream/notes/post', ['views/stream/note'], function (Dep) {
 
             if (!this.model.has('usersIds') || !this.model.get('usersIds').length) {
                 this.createMessage();
+
+                return;
             }
 
             let userIdList = this.model.get('usersIds');

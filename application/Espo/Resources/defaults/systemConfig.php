@@ -98,6 +98,9 @@ return [
         'webSocketMessager',
         'actualDatabaseType',
         'actualDatabaseVersion',
+        'clientSecurityHeadersDisabled',
+        'clientCspDisabled',
+        'clientCspScriptSourceList',
     ],
     'adminItems' => [
         'devMode',

@@ -66,7 +66,7 @@ define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
             data.middleValue = this.model.get(this.middleField);
             data.salutationOptions = this.model.getFieldParam(this.salutationField, 'options');
 
-            if (this.mode === 'edit') {
+            if (this.isEditMode()) {
                 data.firstMaxLength = this.model.getFieldParam(this.firstField, 'maxLength');
                 data.lastMaxLength = this.model.getFieldParam(this.lastField, 'maxLength');
                 data.middleMaxLength = this.model.getFieldParam(this.middleField, 'maxLength');
@@ -74,17 +74,17 @@ define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
 
             data.valueIsSet = this.model.has(this.firstField) || this.model.has(this.lastField);
 
-            if (this.mode === 'detail') {
+            if (this.isDetailMode()) {
                 data.isNotEmpty = !!data.firstValue || !!data.lastValue ||
                     !!data.salutationValue || !!data.middleValue;
             }
-            else if (this.mode === 'list' || this.mode === 'listLink') {
+            else if (this.isListMode()) {
                 data.isNotEmpty = !!data.firstValue || !!data.lastValue || !!data.middleValue;
             }
 
             if (
-                data.isNotEmpty && this.mode == 'detail' ||
-                this.mode == 'list' || this.mode === 'listLink'
+                data.isNotEmpty && this.isDetailMode() ||
+                this.isListMode()
             ) {
                 data.formattedValue = this.getFormattedValue();
             }
@@ -105,7 +105,7 @@ define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode == 'edit') {
+            if (this.isEditMode()) {
                 this.$salutation = this.$el.find('[data-name="' + this.salutationField + '"]');
                 this.$first = this.$el.find('[data-name="' + this.firstField + '"]');
                 this.$last = this.$el.find('[data-name="' + this.lastField + '"]');
@@ -129,104 +129,27 @@ define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
         },
 
         getFormattedValue: function () {
-            var salutation = this.model.get(this.salutationField);
-            var first = this.model.get(this.firstField);
-            var last = this.model.get(this.lastField);
-            var middle = this.model.get(this.middleField);
+            let salutation = this.model.get(this.salutationField);
+            let first = this.model.get(this.firstField);
+            let last = this.model.get(this.lastField);
+            let middle = this.model.get(this.middleField);
 
             if (salutation) {
                 salutation = this.getLanguage()
                     .translateOption(salutation, 'salutationName', this.model.entityType);
             }
 
-            var value = '';
-
-            var format = this.getFormat();
-
-            switch (format) {
-                case 'lastFirst':
-                    if (salutation) {
-                        value += salutation;
-                    }
-
-                    if (last) {
-                        value += ' ' + last;
-                    }
-
-                    if (first) {
-                        value += ' ' + first;
-                    }
-
-                    break;
-
-                case 'lastFirstMiddle':
-                    var arr = [];
-
-                    if (salutation) {
-                        arr.push(salutation);
-                    }
-
-                    if (last) {
-                        arr.push(last);
-                    }
-
-                    if (first) {
-                        arr.push(first);
-                    }
-
-                    if (middle) {
-                        arr.push(middle);
-                    }
-
-                    value = arr.join(' ');
-
-                    break;
-
-                case 'firstMiddleLast':
-                    var arr = [];
-
-                    if (salutation) {
-                        arr.push(salutation);
-                    }
-
-                    if (first) {
-                        arr.push(first);
-                    }
-
-                    if (middle) {
-                        arr.push(middle);
-                    }
-
-                    if (last) {
-                        arr.push(last);
-                    }
-
-                    value = arr.join(' ');
-
-                    break;
-
-                default:
-                    if (salutation) {
-                        value += salutation;
-                    }
-
-                    if (first) {
-                        value += ' ' + first;
-                    }
-
-                    if (last) {
-                        value += ' ' + last;
-                    }
-            }
-
-            value = value.trim();
-
-            return value;
+            return this.formatName({
+                salutation: salutation,
+                first: first,
+                middle: middle,
+                last: last,
+            });
         },
 
         _getTemplateName: function () {
-            if (this.mode == 'edit') {
-                var prop = 'editTemplate' + Espo.Utils.upperCaseFirst(this.getFormat().toString());
+            if (this.isEditMode()) {
+                let prop = 'editTemplate' + Espo.Utils.upperCaseFirst(this.getFormat().toString());
 
                 if (prop in this) {
                     return this[prop];
@@ -243,18 +166,18 @@ define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
         },
 
         formatHasMiddle: function () {
-            var format = this.getFormat();
+            let format = this.getFormat();
 
             return format === 'firstMiddleLast' || format === 'lastFirstMiddle';
         },
 
         validateRequired: function () {
-            var isRequired = this.isRequired();
+            let isRequired = this.isRequired();
 
-            var validate = (name) => {
+            let validate = (name) => {
                 if (this.model.isRequired(name)) {
                     if (!this.model.get(name)) {
-                        var msg = this.translate('fieldIsRequired', 'messages')
+                        let msg = this.translate('fieldIsRequired', 'messages')
                             .replace('{field}', this.translate(name, 'fields', this.model.name));
                         this.showValidationMessage(msg, '[data-name="'+name+'"]');
 
@@ -265,7 +188,7 @@ define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
 
             if (isRequired) {
                 if (!this.model.get(this.firstField) && !this.model.get(this.lastField)) {
-                    var msg = this.translate('fieldIsRequired', 'messages')
+                    let msg = this.translate('fieldIsRequired', 'messages')
                         .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg, '[data-name="'+this.lastField+'"]');
@@ -274,7 +197,7 @@ define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
                 }
             }
 
-            var result = false;
+            let result = false;
 
             result = validate(this.salutationField) || result;
             result = validate(this.firstField) || result;
@@ -306,7 +229,7 @@ define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
         },
 
         fetch: function () {
-            var data = {};
+            let data = {};
 
             data[this.salutationField] = this.$salutation.val() || null;
             data[this.firstField] = this.$first.val().trim() || null;
@@ -316,7 +239,56 @@ define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
                 data[this.middleField] = this.$middle.val().trim() || null;
             }
 
+            data[this.name] = this.formatName({
+                first: data[this.firstField],
+                last: data[this.lastField],
+                middle: data[this.middleField],
+            });
+
             return data;
+        },
+
+        /**
+         * @param {{first?: string, last?: string, middle?: string, salutation?: string}}data
+         * @return {?string}
+         */
+        formatName: function (data) {
+            let name = '';
+            let format = this.getFormat();
+            let arr = [];
+
+            arr.push(data.salutation);
+
+            if (format === 'firstLast') {
+                arr.push(data.first);
+                arr.push(data.last);
+            }
+            else if (format === 'lastFirst') {
+                arr.push(data.last);
+                arr.push(data.first);
+            }
+            else if (format === 'firstMiddleLast') {
+                arr.push(data.first);
+                arr.push(data.middle);
+                arr.push(data.last);
+            }
+            else if (format === 'lastFirstMiddle') {
+                arr.push(data.last);
+                arr.push(data.first);
+                arr.push(data.middle);
+            }
+            else {
+                arr.push(data.first);
+                arr.push(data.last);
+            }
+
+            name = arr.filter(item => !!item).join(' ').trim();
+
+            if (name === '') {
+                name = null;
+            }
+
+            return name;
         },
     });
 });

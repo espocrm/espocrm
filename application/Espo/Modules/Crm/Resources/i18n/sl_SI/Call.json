@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Ime",
+    "parent": "starš",
+    "status": "Stanje",
+    "dateStart": "Začetek datuma",
+    "dateEnd": "Konec datuma",
+    "direction": "Smer",
+    "duration": "Trajanje",
+    "description": "Opis",
+    "users": "Uporabniki",
+    "contacts": "Kontakti",
+    "leads": "vodi",
+    "reminders": "Opomniki",
+    "account": "račun",
+    "acceptanceStatus": "Status sprejema"
+  },
+  "options": {
+    "status": {
+      "Planned": "Načrtovano",
+      "Held": "Zadržano",
+      "Not Held": "Ni zadržano"
+    },
+    "direction": {
+      "Outbound": "Odhodni",
+      "Inbound": "Dohodni"
+    },
+    "acceptanceStatus": {
+      "None": "Noben",
+      "Accepted": "Sprejeto",
+      "Declined": "Zavrnjeno",
+      "Tentative": "Pogojno"
+    }
+  },
+  "massActions": {
+    "setHeld": "Nastavitev Zadržano",
+    "setNotHeld": "Set ni zadržan"
+  },
+  "labels": {
+    "Create Call": "Ustvari klic",
+    "Set Held": "Nastavitev Zadržano",
+    "Set Not Held": "Set ni zadržan",
+    "Send Invitations": "Pošljite vabila"
+  },
+  "presetFilters": {
+    "planned": "Načrtovano",
+    "held": "Zadržano",
+    "todays": "Današnji"
+  }
+}

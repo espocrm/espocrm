@@ -127,7 +127,7 @@ define(
                 if (this.getAcl().checkScope(scope, 'create')) {
                     this.actionList.unshift({
                         name: 'createActivity',
-                        html: this.translate('Create ' + scope, 'labels', scope),
+                        text: this.translate('Create ' + scope, 'labels', scope),
                         iconHtml: '<span class="fas fa-plus"></span>',
                         url: '#' + scope + '/create',
                         data: {

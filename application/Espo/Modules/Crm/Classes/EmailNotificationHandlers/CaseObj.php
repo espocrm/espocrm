@@ -56,7 +56,7 @@ class CaseObj implements EmailNotificationHandler
 
     public function getSenderParams(Entity $entity, User $user): ?SenderParams
     {
-        /** @var ?string */
+        /** @var ?string $inboundEmailId */
         $inboundEmailId = $entity->get('inboundEmailId');
 
         if (!$inboundEmailId) {

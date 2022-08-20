@@ -53,7 +53,7 @@ class DefaultRoleListProvider implements RoleListProvider
     {
         $roleList = [];
 
-        /** @var iterable<RoleEntity> */
+        /** @var iterable<RoleEntity> $userRoleList */
         $userRoleList = $this->entityManager
             ->getRDBRepository('User')
             ->getRelation($this->user, 'roles')
@@ -63,14 +63,14 @@ class DefaultRoleListProvider implements RoleListProvider
             $roleList[] = $role;
         }
 
-        /** @var iterable<\Espo\Entities\Team> */
+        /** @var iterable<\Espo\Entities\Team> $teamList */
         $teamList = $this->entityManager
             ->getRDBRepository('User')
             ->getRelation($this->user, 'teams')
             ->find();
 
         foreach ($teamList as $team) {
-            /** @var iterable<RoleEntity> */
+            /** @var iterable<RoleEntity> $teamRoleList */
             $teamRoleList = $this->entityManager
                 ->getRDBRepository('Team')
                 ->getRelation($team, 'roles')

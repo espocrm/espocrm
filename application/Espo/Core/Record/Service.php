@@ -1696,7 +1696,7 @@ class Service implements Crud,
             return;
         }
 
-        /** @var ?TEntity */
+        /** @var ?TEntity $duplicatingEntity */
         $duplicatingEntity = $this->entityManager->getEntityById($entity->getEntityType(), $duplicatingEntityId);
 
         if (!$duplicatingEntity) {

@@ -47,7 +47,7 @@ class Call extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
-        /** @var \Espo\Modules\Crm\Entities\Call|null */
+        /** @var \Espo\Modules\Crm\Entities\Call|null $entity */
         $entity = $this->getCallService()->getEntity($data->id);
 
         if (!$entity) {

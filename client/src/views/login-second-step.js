@@ -41,10 +41,19 @@ define('views/login-second-step', ['view'], function (Dep) {
 
         events: {
             'submit #login-form': function (e) {
+                e.preventDefault();
+
                 this.send();
             },
             'click [data-action="backToLogin"]': function () {
                 this.trigger('back');
+            },
+            'keydown': function (e) {
+                if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
+                    e.preventDefault();
+
+                    this.send();
+                }
             },
         },
 

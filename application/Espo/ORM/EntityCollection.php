@@ -251,7 +251,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
         assert($this->entityType !== null);
 
-        /** @var TEntity */
+        /** @var TEntity $entity */
         $entity = $this->entityFactory->create($this->entityType);
 
         $entity->set($dataArray);
@@ -418,7 +418,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
             $entityList[] = $entity;
         }
 
-        /** @var self<TEntity> */
+        /** @var self<TEntity> $obj */
         $obj = new EntityCollection($entityList, $sthCollection->getEntityType());
 
         $obj->setAsFetched();

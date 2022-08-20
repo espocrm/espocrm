@@ -3,8 +3,12 @@
         <button type="button" class="navbar-toggle" data-action="toggleCollapsable">
             <span class="fas fa-bars"></span>
         </button>
-        <div class="navbar-logo-container"><a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"></span></a></div>
-        <a href="javascript:" class="side-menu-button"><span class="fas fa-bars"></span></a>
+        <div class="navbar-logo-container"
+            ><a
+                class="navbar-brand nav-link"
+                href="#"
+            ><img src="{{logoSrc}}" class="logo"></span></a></div>
+        <a role="button" class="side-menu-button"><span class="fas fa-bars"></span></a>
     </div>
 
     <div class="navbar-collapse navbar-body">
@@ -12,11 +16,9 @@
             {{#each tabDefsList1}}
             <li data-name="{{name}}" class="not-in-more tab{{#if isGroup}} tab-group dropdown{{/if}}">
                 <a
-                    href="{{link}}"
+                    {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
                     class="{{aClassName}}"
-                    {{#if color}}
-                        style="border-color: {{color}}"
-                    {{/if}}
+                    {{#if color}}style="border-color: {{color}}"{{/if}}
                     {{#if isGroup}}
                         id="nav-tab-group-{{name}}"
                         data-toggle="dropdown"
@@ -46,7 +48,7 @@
                     {{#each itemList}}
                     <li data-name="{{name}}" class="in-group tab">
                         <a
-                            href="{{link}}"
+                            {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
                             class="{{aClassName}}"
                             {{#if color}}
                                 style="border-color: {{color}}"
@@ -79,7 +81,8 @@
                     id="nav-more-tabs-dropdown"
                     class="dropdown-toggle"
                     data-toggle="dropdown"
-                    href="#"
+                    role="button"
+                    tabindex="0"
                 ><span class="fas fa-ellipsis-h more-icon"></span></a>
                 <ul class="dropdown-menu more-dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown">
                 {{#each tabDefsList2}}
@@ -88,7 +91,8 @@
                         class="in-more tab{{#if className}} {{className}}{{/if}}{{#if isGroup}} dropdown tab-group{{/if}}"
                     >
                         <a
-                            href="{{link}}"
+                            {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                            tabindex="0"
                             class="{{aClassName}}"
                             {{#if color}} style="border-color: {{color}}"{{/if}}
                             {{#if isGroup}}
@@ -120,7 +124,8 @@
                             {{#each itemList}}
                             <li data-name="{{name}}" class="in-group tab">
                                 <a
-                                    href="{{link}}"
+                                    {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                                    tabindex="0"
                                     class="{{aClassName}}"
                                     {{#if color}}
                                         style="border-color: {{color}}"
@@ -162,7 +167,8 @@
                     id="nav-quick-create-dropdown"
                     class="dropdown-toggle"
                     data-toggle="dropdown"
-                    href="#"
+                    role="button"
+                    tabindex="0"
                     title="{{translate 'Create'}}"
                 ><i class="fas fa-plus"></i></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-quick-create-dropdown">
@@ -185,14 +191,16 @@
                     id="nav-menu-dropdown"
                     class="dropdown-toggle"
                     data-toggle="dropdown"
-                    href="#"
+                    role="button"
+                    tabindex="0"
                     title="{{translate 'Menu'}}"
                 ><span class="fas fa-ellipsis-v"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                         {{#unless divider}}
                             <li><a
-                                    href="{{#if link}}{{link}}{{else}}javascript:{{/if}}"
+                                    {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                                    tabindex="0"
                                     class="nav-link{{#if action}} action{{/if}}"{{#if action}}
                                     data-action="{{action}}"{{/if}}
                                 >{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</a></li>
@@ -204,7 +212,7 @@
             </li>
         </ul>
         </div>
-        <a class="minimizer hidden" href="javascript:">
+        <a class="minimizer hidden" role="button" tabindex="0">
             <span class="fas fa-chevron-right right"></span>
             <span class="fas fa-chevron-left left"></span>
         </a>

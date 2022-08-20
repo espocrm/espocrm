@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "fieldList": "Seznam polj",
+    "exportAllFields": "Izvozi vsa polja",
+    "format": "Oblika",
+    "status": "Stanje"
+  },
+  "options": {
+    "status": {
+      "Pending": "V teku",
+      "Running": "tek",
+      "Success": "Uspeh",
+      "Failed": "Ni uspelo"
+    }
+  },
+  "messages": {
+    "exportProcessed": "Izvoz je bil obdelan. Prenesite [datoteko]({url}).",
+    "infoText": "Izvoz v mirovanju obdeluje cron. Za dokončanje lahko traja nekaj časa. Zapiranje tega modalnega pogovornega okna ne bo vplivalo na postopek izvajanja."
+  }
+}

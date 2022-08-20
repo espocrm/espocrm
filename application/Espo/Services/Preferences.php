@@ -141,10 +141,10 @@ class Preferences
             unset($data->$attribute);
         }
 
-        /** @var ?User */
+        /** @var ?User $user */
         $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
-        /** @var ?PreferencesEntity */
+        /** @var ?PreferencesEntity $entity */
         $entity = $this->entityManager->getEntityById(PreferencesEntity::ENTITY_TYPE, $userId);
 
         if (!$entity || !$user) {

@@ -1,0 +1,10 @@
+{
+  "links": {
+    "targetLists": "Seznami ciljev"
+  },
+  "fields": {
+    "acceptanceStatus": "Status sprejema",
+    "acceptanceStatusMeetings": "Status sprejema (sestanki)",
+    "acceptanceStatusCalls": "Stanje sprejema (klici)"
+  }
+}

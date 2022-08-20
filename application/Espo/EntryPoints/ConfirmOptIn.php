@@ -36,23 +36,21 @@ use Espo\Core\{
     Exceptions\Error,
     EntryPoint\EntryPoint,
     EntryPoint\Traits\NoAuth,
-    Utils\ClientManager,
+    Utils\Client\ActionRenderer,
     Api\Request,
-    Api\Response,
-};
+    Api\Response};
 
 class ConfirmOptIn implements EntryPoint
 {
     use NoAuth;
 
-    private $clientManager;
+    private Service $service;
+    private ActionRenderer $actionRenderer;
 
-    private $service;
-
-    public function __construct(ClientManager $clientManager, Service $service)
+    public function __construct(Service $service, ActionRenderer $actionRenderer)
     {
-        $this->clientManager = $clientManager;
         $this->service = $service;
+        $this->actionRenderer = $actionRenderer;
     }
 
     /**
@@ -76,14 +74,8 @@ class ConfirmOptIn implements EntryPoint
             $action = 'optInConfirmationSuccess';
         }
 
-        $runScript = "
-            require('controllers/lead-capture-opt-in-confirmation', Controller => {
-                var controller = new Controller(app.baseController.params, app.getControllerInjection());
-                controller.masterView = app.masterView;
-                controller.doAction('{$action}', " . json_encode($data) . ");
-            });
-        ";
+        $params = new ActionRenderer\Params('controllers/lead-capture-opt-in-confirmation', $action, $data);
 
-        $this->clientManager->display($runScript);
+        $this->actionRenderer->write($response, $params);
     }
 }

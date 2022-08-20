@@ -40,12 +40,21 @@ define('views/login', ['view'], function (Dep) {
         },
 
         events: {
-            'submit #login-form': function () {
+            'submit #login-form': function (e) {
+                e.preventDefault();
+
                 this.login();
             },
             'click a[data-action="passwordChangeRequest"]': function () {
                 this.showPasswordChangeRequest();
-            }
+            },
+            'keydown': function (e) {
+                if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
+                    e.preventDefault();
+
+                    this.login();
+                }
+            },
         },
 
         data: function () {

@@ -178,7 +178,7 @@ class ActionProcessor
             return false;
         }
 
-        /** @var class-string */
+        /** @var class-string $className */
         $className = $type->getName();
 
         $firstParamClass = new ReflectionClass($className);

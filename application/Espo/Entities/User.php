@@ -226,15 +226,23 @@ class User extends Person
 
     public function getContact(): ?Link
     {
-        /** @var ?Link */
+        /** @var ?Link $value */
         $value = $this->getValueObject('contact');
 
         return $value;
     }
 
+    /**
+     * Get a portal ID of the currently logged user.
+     */
+    public function getPortalId(): ?string
+    {
+        return $this->get('portalId');
+    }
+
     public function getAccounts(): LinkMultiple
     {
-        /** @var LinkMultiple */
+        /** @var LinkMultiple $value */
         $value = $this->getValueObject('accounts');
 
         return $value;

@@ -1,4 +1,5 @@
 {
+    "controller": "controllers/note",
     "collection": "collections/note",
     "recordViews": {
         "edit": "views/note/record/edit",

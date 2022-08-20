@@ -26,8 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/enum', ['views/fields/base', 'lib!Selectize', 'lib!underscore'],
-function (Dep, Selectize, _) {
+define('views/fields/enum', ['views/fields/base', 'ui/multi-select'],
+function (Dep, /** module:ui/multi-select*/MultiSelect) {
 
     /**
      * An enum field (select-box).
@@ -292,7 +292,7 @@ function (Dep, Selectize, _) {
 
                 this.$element.val(valueList.join(':,:'));
 
-                let data = [];
+                let items = [];
 
                 (this.params.options || []).forEach(value => {
                     let label = this.getLanguage().translateOption(value, this.name, this.scope);
@@ -307,46 +307,23 @@ function (Dep, Selectize, _) {
                         return;
                     }
 
-                    data.push({
+                    items.push({
                         value: value,
                         label: label,
                     });
                 });
 
-                this.$element.selectize({
-                    options: data,
+                /** @type {module:ui/multi-select~Options} */
+                let multiSelectOptions = {
+                    items: items,
                     delimiter: ':,:',
-                    labelField: 'label',
-                    valueField: 'value',
-                    highlight: false,
-                    searchField: ['label'],
-                    plugins: ['remove_button'],
-                    selectOnTab: false,
-                    score: function (search) {
-                        // Method of selectize.
-                        let score = this.getScoreFunction(search);
+                };
 
-                        search = search.toLowerCase();
-
-                        return function (item) {
-                            if (item.label.toLowerCase().indexOf(search) === 0) {
-                                return score(item);
-                            }
-
-                            return 0;
-                        };
-                    },
-                });
+                MultiSelect.init(this.$element, multiSelectOptions);
 
                 this.$el.find('.selectize-dropdown-content').addClass('small');
-
-                this.$el.find('select.search-type').on('change', () => {
-                    this.trigger('change');
-                });
-
-                this.$element.on('change', () => {
-                    this.trigger('change');
-                });
+                this.$el.find('select.search-type').on('change', () => this.trigger('change'));
+                this.$element.on('change', () => this.trigger('change'));
             }
         },
 

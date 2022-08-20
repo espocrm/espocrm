@@ -72,7 +72,7 @@ class ArrayType
 
     public function checkArrayOfString(Entity $entity, string $field): bool
     {
-        /** @var ?mixed[] */
+        /** @var ?mixed[] $list */
         $list = $entity->get($field);
 
         if ($list === null) {
@@ -94,7 +94,7 @@ class ArrayType
             return true;
         }
 
-        /** @var ?string[] */
+        /** @var ?string[] $value */
         $value = $entity->get($field);
 
         if ($value === null || $value === []) {
@@ -133,10 +133,10 @@ class ArrayType
             ->getEntity($entityType)
             ->getField($field);
 
-        /** @var ?string */
+        /** @var ?string $path */
         $path = $fieldDefs->getParam('optionsPath');
 
-        /** @var string[]|null|false */
+        /** @var string[]|null|false $optionList */
         $optionList = $path ?
             $this->metadata->get($path) :
             $fieldDefs->getParam('options');
@@ -185,7 +185,7 @@ class ArrayType
     {
         $maxLength = $validationValue ?? self::DEFAULT_MAX_LENGTH;
 
-        /** @var string[] */
+        /** @var string[] $value */
         $value = $entity->get($field) ?? [];
 
         foreach ($value as $item) {
@@ -214,7 +214,7 @@ class ArrayType
 
         $preparedPattern = '/^' . $pattern . '$/';
 
-        /** @var string[] */
+        /** @var string[] $value */
         $value = $entity->get($field) ?? [];
 
         foreach ($value as $item) {
@@ -236,7 +236,7 @@ class ArrayType
             return true;
         }
 
-        /** @var string[] */
+        /** @var string[] $value */
         $value = $entity->get($field) ?? [];
 
         $optionList = $this->getOptionList($entity->getEntityType(), $field) ?? [];

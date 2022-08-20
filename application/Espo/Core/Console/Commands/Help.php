@@ -47,7 +47,7 @@ class Help implements Command
 
     public function run(Params $params, IO $io): void
     {
-        /** @var string[] */
+        /** @var string[] $fullCommandList */
         $fullCommandList = array_keys($this->metadata->get(['app', 'consoleCommands']) ?? []);
 
         $commandList = array_filter(

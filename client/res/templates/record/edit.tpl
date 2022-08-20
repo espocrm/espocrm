@@ -1,9 +1,20 @@
-<div class="edit" id="{{id}}" data-scope="{{scope}}">
+<div class="edit" id="{{id}}" data-scope="{{scope}}" tabindex="-1">
     {{#unless buttonsDisabled}}
     <div class="detail-button-container button-container record-buttons clearfix">
         <div class="btn-group actions-btn-group" role="group">
         {{#each buttonList}}
-            {{button name scope=../entityType label=label style=style html=html hidden=hidden className='btn-xs-wide'}}
+            {{button
+                name
+                scope=../entityType
+                label=label
+                style=style
+                html=html
+                hidden=hidden
+                title=title
+                text=text
+                className='btn-xs-wide'
+                disabled=disabled
+            }}
         {{/each}}
         {{#if dropdownItemList}}
         <button
@@ -16,13 +27,15 @@
             {{#each dropdownItemList}}
             {{#if this}}
             <li
-                class="{{#if hidden}}hidden{{/if}}"
+                class="{{#if hidden}}hidden{{/if}}{{#if disabled}} disabled{{/if}}"
             >
                 <a
-                    href="javascript:"
+                    role="button"
+                    tabindex="0"
                     class="action"
                     data-action="{{name}}"
-                >{{#if html}}{{{html}}}{{else}}{{translate label scope=../entityType}}{{/if}}</a>
+                    {{#if title}}title="{{title}}"{{/if}}
+                >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../entityType}}{{/if}}{{/if}}</a></li>
             </li>
             {{else}}
                 {{#unless @first}}

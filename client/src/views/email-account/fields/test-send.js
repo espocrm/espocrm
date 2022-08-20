@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-account/fields/test-send', 'views/outbound-email/fields/test-send', function (Dep) {
+define('views/email-account/fields/test-send', ['views/outbound-email/fields/test-send'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,13 +42,14 @@ define('views/email-account/fields/test-send', 'views/outbound-email/fields/test
             this.checkAvailability();
 
             this.stopListening(this.model, 'change:smtpHost');
-            this.listenTo(this.model, 'change:smtpHost', function () {
+
+            this.listenTo(this.model, 'change:smtpHost', () => {
                 this.checkAvailability();
-            }, this);
+            });
         },
 
         getSmtpData: function () {
-            var data = {
+            return {
                 'server': this.model.get('smtpHost'),
                 'port': this.model.get('smtpPort'),
                 'auth': this.model.get('smtpAuth'),
@@ -62,8 +63,6 @@ define('views/email-account/fields/test-send', 'views/outbound-email/fields/test
                 'id': this.model.id,
                 'userId': this.model.get('assignedUserId'),
             };
-            return data;
         },
-
     });
 });

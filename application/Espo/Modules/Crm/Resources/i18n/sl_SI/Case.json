@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "name": "Ime",
+    "number": "številka",
+    "status": "Stanje",
+    "account": "račun",
+    "contact": "Kontakt",
+    "contacts": "Kontakti",
+    "priority": "Prioriteta",
+    "type": "Vrsta",
+    "description": "Opis",
+    "lead": "Svinec",
+    "attachments": "priloge",
+    "inboundEmail": "E-poštni račun skupine"
+  },
+  "links": {
+    "account": "račun",
+    "contact": "Kontakt (glavni)",
+    "Contacts": "Kontakti",
+    "meetings": "Srečanja",
+    "calls": "Klici",
+    "tasks": "Naloge",
+    "emails": "E-poštna sporočila",
+    "articles": "Članki iz zbirke znanja",
+    "lead": "Svinec",
+    "attachments": "priloge",
+    "inboundEmail": "E-poštni račun skupine"
+  },
+  "options": {
+    "status": {
+      "New": "Novo",
+      "Assigned": "Dodeljeno",
+      "Pending": "V teku",
+      "Closed": "Zaprto",
+      "Rejected": "Zavrnjeno",
+      "Duplicate": "Dvojnik"
+    },
+    "priority": {
+      "Low": "Nizka",
+      "Normal": "normalno",
+      "High": "visoko",
+      "Urgent": "Nujno"
+    },
+    "type": {
+      "Question": "vprašanje",
+      "Incident": "Nezgoda",
+      "Problem": "Težava"
+    }
+  },
+  "labels": {
+    "Create Case": "Ustvari primer",
+    "Close": "Zapri",
+    "Reject": "Zavrni",
+    "Closed": "Zaprto",
+    "Rejected": "Zavrnjeno"
+  },
+  "presetFilters": {
+    "open": "Odprto",
+    "closed": "Zaprto"
+  }
+}

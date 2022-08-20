@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "dateFormat": "Format datuma",
+    "timeFormat": "Format časa",
+    "timeZone": "Časovni pas",
+    "weekStart": "Prvi dan v tednu",
+    "thousandSeparator": "Ločilo tisoč",
+    "decimalMark": "Decimalna oznaka",
+    "defaultCurrency": "Privzeta valuta",
+    "currencyList": "Seznam valut",
+    "language": "Jezik",
+    "smtpServer": "Strežnik",
+    "smtpPort": "Pristanišče",
+    "smtpSecurity": "Varnost",
+    "smtpUsername": "Uporabniško ime",
+    "emailAddress": "E-naslov",
+    "smtpPassword": "Geslo",
+    "smtpEmailAddress": "Email naslov",
+    "exportDelimiter": "Izvozno ločilo",
+    "signature": "E-poštni podpis",
+    "dashboardTabList": "Seznam zavihkov",
+    "tabList": "Seznam zavihkov",
+    "defaultReminders": "Privzeti opomniki",
+    "theme": "Tema",
+    "useCustomTabList": "Seznam zavihkov po meri",
+    "receiveAssignmentEmailNotifications": "E-poštna obvestila ob dodelitvi",
+    "receiveMentionEmailNotifications": "E-poštna obvestila o omembah v objavah",
+    "receiveStreamEmailNotifications": "E-poštna obvestila o objavah in posodobitvah stanja",
+    "dashboardLayout": "Postavitev armaturne plošče",
+    "emailReplyForceHtml": "Odgovor po e-pošti v HTML",
+    "autoFollowEntityTypeList": "Globalno samodejno sledenje",
+    "emailReplyToAllByDefault": "E-pošta Privzeto odgovori vsem",
+    "doNotFillAssignedUserIfNotRequired": "Pri ustvarjanju zapisa ne vnesite vnaprej dodeljenega uporabnika",
+    "followEntityOnStreamPost": "Samodejno sledenje zapisu po objavi v Streamu",
+    "followCreatedEntities": "Samodejno sledi ustvarjenim zapisom",
+    "followCreatedEntityTypeList": "Samodejno sledenje ustvarjenim zapisom določenih vrst entitet",
+    "emailUseExternalClient": "Uporabite zunanji e-poštni odjemalec",
+    "scopeColorsDisabled": "Onemogoči barve obsega",
+    "tabColorsDisabled": "Onemogoči barve zavihkov",
+    "assignmentNotificationsIgnoreEntityTypeList": "Obvestila o dodelitvah v aplikaciji",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "E-poštna obvestila o dodelitvah"
+  },
+  "options": {
+    "weekStart": {
+      "0": "nedelja",
+      "1": "ponedeljek"
+    }
+  },
+  "labels": {
+    "Notifications": "Obvestila",
+    "User Interface": "Uporabniški vmesnik",
+    "Misc": "razno",
+    "Reset Dashboard to Default": "Ponastavite nadzorno ploščo na privzeto"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Samodejno sledi VSEM novim zapisom (ki jih ustvari kateri koli uporabnik) izbranih vrst entitet. Da lahko vidite informacije v toku in prejemate obvestila o vseh zapisih v sistemu.",
+    "doNotFillAssignedUserIfNotRequired": "Pri ustvarjanju zapisa dodeljeni uporabnik ne bo izpolnjen z lastnim uporabnikom, razen če je polje obvezno.",
+    "followCreatedEntities": "Ko ustvarite nove zapise, bodo samodejno sledili, tudi če so dodeljeni drugemu uporabniku.",
+    "followCreatedEntityTypeList": "Ko ustvarite nove zapise izbranih tipov entitet, bodo samodejno sledili, tudi če so dodeljeni drugemu uporabniku."
+  }
+}

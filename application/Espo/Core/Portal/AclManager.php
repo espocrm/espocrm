@@ -123,7 +123,7 @@ class AclManager extends InternalAclManager
         $key = $user->hasId() ? $user->getId() : spl_object_hash($user);
 
         if (!array_key_exists($key, $this->mapHashMap)) {
-            /** @var Table */
+            /** @var Table $table */
             $table = $this->getTable($user);
 
             $this->mapHashMap[$key] = $this->portalMapFactory->create($user, $table, $this->getPortal());

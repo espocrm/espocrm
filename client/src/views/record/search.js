@@ -112,13 +112,17 @@ define('views/record/search', ['view'], function (Dep) {
             });
 
             this.boolFilterList = Espo.Utils
-                .clone(this.getMetadata().get('clientDefs.' + this.scope + '.boolFilterList') || [])
+                .clone(this.getMetadata().get(['clientDefs', this.scope, 'boolFilterList']) || [])
                 .filter(item => {
                     if (typeof item === 'string') {
                         return true;
                     }
 
                     item = item || {};
+
+                    if (item.aux) {
+                        return false;
+                    }
 
                     if (item.inPortalDisabled && this.getUser().isPortal()) {
                         return false;
@@ -171,6 +175,10 @@ define('views/record/search', ['view'], function (Dep) {
                 }
 
                 item = item || {};
+
+                if (item.aux) {
+                    return false;
+                }
 
                 if (item.inPortalDisabled && this.getUser().isPortal()) {
                     return false;
@@ -317,8 +325,8 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         events: {
-            'keypress input[data-name="textFilter"]': function (e) {
-                if (e.keyCode === 13) {
+            'keydown input[data-name="textFilter"]': function (e) {
+                if (e.code === 'Enter') {
                     this.search();
 
                     this.hideApplyFiltersButton();
@@ -332,6 +340,8 @@ define('views/record/search', ['view'], function (Dep) {
             'click .advanced-filters-apply-container a[data-action="applyFilters"]': function (e) {
                 this.search();
                 this.hideApplyFiltersButton();
+
+                this.$el.find('button.search').focus();
             },
 
             'click button[data-action="search"]': function (e) {
@@ -365,7 +375,9 @@ define('views/record/search', ['view'], function (Dep) {
             },
 
             'click a[data-action="selectPreset"]': function (e) {
-                let presetName = $(e.currentTarget).data('name') || null;
+                let $target = $(e.currentTarget);
+
+                let presetName = $target.data('name') || null;
 
                 this.selectPreset(presetName);
             },
@@ -436,11 +448,16 @@ define('views/record/search', ['view'], function (Dep) {
 
             if (this.isSearchedWithAdvancedFilter) {
                 this.showResetFiltersButton();
+
+                console.log(this.$applyFilters.get(0));
+
+                this.$applyFilters.focus();
+
+                return;
             }
-            else {
-                if (!this.hasAdvancedFilter()) {
-                    this.hideApplyFiltersButton();
-                }
+
+            if (!this.hasAdvancedFilter()) {
+                this.hideApplyFiltersButton();
             }
         },
 
@@ -497,7 +514,11 @@ define('views/record/search', ['view'], function (Dep) {
             this.manageLabels();
 
             this.createFilters(() => {
-                this.render();
+                this.reRender()
+                    .then(() => {
+                        this.$el.find('.filters-button')
+                            .get(0).focus({preventScroll: true});
+                    })
             });
 
             this.updateCollection();
@@ -613,6 +634,7 @@ define('views/record/search', ['view'], function (Dep) {
             this.$leftDropdown = this.$el.find('div.search-row div.left-dropdown');
             this.$resetButton = this.$el.find('[data-action="reset"]');
             this.$applyFiltersContainer = this.$el.find('.advanced-filters-apply-container');
+            this.$applyFilters = this.$applyFiltersContainer.find('[data-action="applyFilters"]');
 
             this.updateAddFilterButton();
 
@@ -1013,6 +1035,46 @@ define('views/record/search', ['view'], function (Dep) {
             this.toShowResetFiltersText = false;
 
             this.$applyFiltersContainer.addClass('hidden');
+        },
+
+        selectPreviousPreset: function () {
+            let list = Espo.Utils.clone(this.getPresetFilterList());
+
+            list.unshift({name: null});
+
+            if (list.length === 1) {
+                return;
+            }
+
+            let index = list.findIndex(item => item.name === this.presetName) - 1;
+
+            if (index < 0) {
+                return;
+            }
+
+            let preset = list[index];
+
+            this.selectPreset(preset.name);
+        },
+
+        selectNextPreset: function () {
+            let list = Espo.Utils.clone(this.getPresetFilterList());
+
+            list.unshift({name: null});
+
+            if (list.length === 1) {
+                return;
+            }
+
+            let index = list.findIndex(item => item.name === this.presetName) + 1;
+
+            if (index >= list.length) {
+                return;
+            }
+
+            let preset = list[index];
+
+            this.selectPreset(preset.name);
         },
     });
 });

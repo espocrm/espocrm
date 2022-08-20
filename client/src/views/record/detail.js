@@ -119,8 +119,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @property {string} name A name.
          * @property {string} [label] A label.
          * @property {string} [html] An HTML.
+         * @property {string} [text] A text.
          * @property {'default'|'danger'|'success'|'warning'} [style] A style.
          * @property {boolean} [hidden] Hidden.
+         * @property {string} [title] A title (not translatable).
+         * @property {boolean} [disabled] Disabled.
          */
 
         /**
@@ -131,8 +134,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @property {string} name A name.
          * @property {string} [label] A label.
          * @property {string} [html] An HTML.
+         * @property {string} [text] A text.
          * @property {boolean} [hidden] Hidden.
          * @property {Object.<string,string>} [data] Data attributes.
+         * @property {string} [title] A title (not translatable).
+         * @property {boolean} [disabled] Disabled.
          */
 
         /**
@@ -145,6 +151,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             {
                 name: 'edit',
                 label: 'Edit',
+                title: 'Ctrl+Space',
             },
         ],
 
@@ -173,11 +180,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 label: 'Save',
                 style: 'primary',
                 edit: true,
+                title: 'Ctrl+Enter',
             },
             {
                 name: 'cancelEdit',
                 label: 'Cancel',
                 edit: true,
+                title: 'Esc',
             },
         ],
 
@@ -188,6 +197,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @type {module:views/record/detail~dropdownItem[]}
          */
         dropdownEditItemList: [],
+
+        /**
+         * All action items disabled;
+         *
+         * @protected
+         */
+        allActionItemsDisabled: false,
 
         /**
          * An DOM element ID. Only for reading.
@@ -403,6 +419,47 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         $detailButtonContainer: null,
 
         /**
+         * A Ctrl+Enter shortcut action.
+         *
+         * @protected
+         * @type {?string}
+         */
+        shortcutKeyCtrlEnterAction: 'save',
+
+        /**
+         * A shortcut-key => action map.
+         *
+         * @protected
+         * @type {?Object.<string,string|function (JQueryKeyEventObject): void>}
+         */
+        shortcutKeys: {
+            'Control+Enter': function (e) {
+                this.handleShortcutKeyCtrlEnter(e);
+            },
+            'Control+Alt+Enter': function (e) {
+                this.handleShortcutKeyCtrlAltEnter(e);
+            },
+            'Control+KeyS': function (e) {
+                this.handleShortcutKeyCtrlS(e);
+            },
+            'Control+Space': function (e) {
+                this.handleShortcutKeyCtrlSpace(e);
+            },
+            'Escape': function (e) {
+                this.handleShortcutKeyEscape(e);
+            },
+            'Control+Backslash': function (e) {
+                this.handleShortcutKeyControlBackslash(e);
+            },
+            'Control+ArrowLeft': function (e) {
+                this.handleShortcutKeyControlArrowLeft(e);
+            },
+            'Control+ArrowRight': function (e) {
+                this.handleShortcutKeyControlArrowRight(e);
+            },
+        },
+
+        /**
          * @inheritDoc
          */
         events: {
@@ -428,6 +485,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             if (!this.editModeDisabled) {
                 this.setEditMode();
 
+                this.focusOnFirstDiv();
                 $(window).scrollTop(0);
 
                 return;
@@ -470,6 +528,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             if (!this.lastSaveCancelReason || this.lastSaveCancelReason === 'notModified') {
                 this.setDetailMode();
 
+                this.focusOnFirstDiv();
                 $(window).scrollTop(0);
             }
         },
@@ -477,7 +536,16 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         actionCancelEdit: function () {
             this.cancelEdit();
 
+            this.focusOnFirstDiv();
             $(window).scrollTop(0);
+        },
+
+        focusOnFirstDiv: function () {
+            let element = this.$el.find('> div').get(0);
+
+            if (element) {
+                element.focus({preventScroll: true});
+            }
         },
 
         /**
@@ -503,7 +571,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 var attributesAdditional = this.getSelfAssignAttributes();
 
                 if (attributesAdditional) {
-                    for (var i in attributesAdditional) {
+                    for (let i in attributesAdditional) {
                         attributes[i] = attributesAdditional[i];
                     }
                 }
@@ -529,7 +597,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this.listenToOnce(view, 'after:update', attributes => {
                     var isChanged = false;
 
-                    for (var a in attributes) {
+                    for (let a in attributes) {
                         if (attributes[a] !== this.model.get(a)) {
                             isChanged = true;
 
@@ -614,7 +682,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            if (this.type === 'detail' && this.printPdfAction) {
+            if (this.type === this.TYPE_DETAIL && this.printPdfAction) {
                 var printPdfAction = true;
 
                 if (
@@ -632,7 +700,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            if (this.type === 'detail' && this.convertCurrencyAction) {
+            if (this.type === this.TYPE_DETAIL && this.convertCurrencyAction) {
                 if (
                     this.getAcl().check(this.entityType, 'edit') &&
                     !this.getMetadata().get(['clientDefs', this.scope, 'convertCurrencyDisabled'])
@@ -653,7 +721,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             if (
-                this.type === 'detail' &&
+                this.type === this.TYPE_DETAIL &&
                 this.getMetadata().get(['scopes', this.scope, 'hasPersonalData'])
             ) {
                 if (this.getAcl().get('dataPrivacyPermission') === 'yes') {
@@ -693,6 +761,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     this.dropdownEditItemList.push({
                         name: 'saveAndContinueEditing',
                         label: 'Save & Continue Editing',
+                        title: 'Ctrl+S',
                     });
                 }
             }
@@ -718,33 +787,33 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {string} name A name.
          */
         hideActionItem: function (name) {
-            for (let i in this.buttonList) {
-                if (this.buttonList[i].name === name) {
-                    this.buttonList[i].hidden = true;
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.hidden = true;
 
                     break;
                 }
             }
 
-            for (let i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name === name) {
-                    this.dropdownItemList[i].hidden = true;
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
+                    item.hidden = true;
 
                     break;
                 }
             }
 
-            for (let i in this.dropdownEditItemList) {
-                if (this.dropdownEditItemList[i].name === name) {
-                    this.dropdownEditItemList[i].hidden = true;
+            for (let item of this.dropdownEditItemList) {
+                if (item.name === name) {
+                    item.hidden = true;
 
                     break;
                 }
             }
 
-            for (let i in this.buttonEditList) {
-                if (this.buttonEditList[i].name === name) {
-                    this.buttonEditList[i].hidden = true;
+            for (let item of this.buttonEditList) {
+                if (item.name === name) {
+                    item.hidden = true;
 
                     break;
                 }
@@ -778,33 +847,33 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {string} name A name.
          */
         showActionItem: function (name) {
-            for (let i in this.buttonList) {
-                if (this.buttonList[i].name === name) {
-                    this.buttonList[i].hidden = false;
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.hidden = false;
 
                     break;
                 }
             }
 
-            for (let i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name === name) {
-                    this.dropdownItemList[i].hidden = false;
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
+                    item.hidden = false;
 
                     break;
                 }
             }
 
-            for (let i in this.dropdownEditItemList) {
-                if (this.dropdownEditItemList[i].name === name) {
-                    this.dropdownEditItemList[i].hidden = false;
+            for (let item of this.dropdownEditItemList) {
+                if (item.name === name) {
+                    item.hidden = false;
 
                     break;
                 }
             }
 
-            for (let i in this.buttonEditList) {
-                if (this.buttonEditList[i].name === name) {
-                    this.buttonEditList[i].hidden = false;
+            for (let item of this.buttonEditList) {
+                if (item.name === name) {
+                    item.hidden = false;
 
                     break;
                 }
@@ -833,6 +902,143 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         /**
+         * Disable a button or dropdown action item.
+         *
+         * @param {string} name A name.
+         */
+        disableActionItem: function (name) {
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.disabled = true;
+
+                    break;
+                }
+            }
+
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
+                    item.disabled = true;
+
+                    break;
+                }
+            }
+
+            for (let item of this.dropdownEditItemList) {
+                if (item.name === name) {
+                    item.disabled = true;
+
+                    break;
+                }
+            }
+
+            for (let item of this.buttonEditList) {
+                if (item.name === name) {
+                    item.disabled = true;
+
+                    break;
+                }
+            }
+
+            if (this.isRendered()) {
+                this.$detailButtonContainer
+                    .find('li > .action[data-action="'+name+'"]')
+                    .parent()
+                    .addClass('disabled')
+                    .attr('disabled', 'disabled');
+
+                this.$detailButtonContainer
+                    .find('button.action[data-action="'+name+'"]')
+                    .addClass('disabled')
+                    .attr('disabled', 'disabled');
+            }
+        },
+
+        /**
+         * Enable a button or dropdown action item.
+         *
+         * @param {string} name A name.
+         */
+        enableActionItem: function (name) {
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.disabled = false;
+
+                    break;
+                }
+            }
+
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
+                    item.disabled = false;
+
+                    break;
+                }
+            }
+
+            for (let item of this.dropdownEditItemList) {
+                if (item.name === name) {
+                    item.disabled = false;
+
+                    break;
+                }
+            }
+
+            for (let item of this.buttonEditList) {
+                if (item.name === name) {
+                    item.disabled = false;
+
+                    break;
+                }
+            }
+
+            if (this.isRendered()) {
+                this.$detailButtonContainer
+                    .find('li > .action[data-action="'+name+'"]')
+                    .parent()
+                    .removeClass('disabled')
+                    .removeAttr('disabled');
+
+                this.$detailButtonContainer
+                    .find('button.action[data-action="'+name+'"]')
+                    .removeClass('disabled')
+                    .removeAttr('disabled');
+            }
+        },
+
+        /**
+         * Whether an action item is visible and not disabled.
+         *
+         * @param {string} name An action item name.
+         */
+        hasAvailableActionItem: function (name) {
+            if (this.allActionItemsDisabled) {
+                return false;
+            }
+
+            if (this.type === this.TYPE_DETAIL && this.mode === this.MODE_EDIT) {
+                let hasButton = this.buttonEditList
+                    .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
+
+                if (hasButton) {
+                    return true;
+                }
+
+                return this.dropdownEditItemList
+                    .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
+            }
+
+            let hasButton = this.buttonList
+                .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
+
+            if (hasButton) {
+                return true;
+            }
+
+            return this.dropdownItemList
+                .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
+        },
+
+        /**
          * Show a panel.
          *
          * @param {string} name A panel name.
@@ -856,14 +1062,14 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            for (var i = 0; i < this.panelSoftLockedTypeList.length; i++) {
+            for (let i = 0; i < this.panelSoftLockedTypeList.length; i++) {
                 var iType = this.panelSoftLockedTypeList[i];
 
                 if (iType === softLockedType) {
                     continue;
                 }
 
-                var iParam = 'hidden' +  Espo.Utils.upperCaseFirst(iType) + 'Locked';
+                let iParam = 'hidden' +  Espo.Utils.upperCaseFirst(iType) + 'Locked';
 
                 if (this.recordHelper.getPanelStateParam(name, iParam)) {
                     return;
@@ -917,6 +1123,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                 this.adjustMiddlePanels();
             }
+
+            this.recordHelper.trigger('panel-show');
         },
 
         /**
@@ -1094,6 +1302,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             let $middle = this.getView('middle').$el;
             let $window = $(window);
+            let $navbarRight = $('#navbar .navbar-right');
 
             if (this.stickButtonsFormBottomSelector) {
                 var $bottom = this.$el.find(this.stickButtonsFormBottomSelector);
@@ -1111,6 +1320,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                 if (scrollTop >= edge && !this.stickButtonsContainerAllTheWay) {
                     $containers.hide();
+                    $navbarRight.removeClass('has-sticked-bar');
                     $block.show();
 
                     return;
@@ -1125,11 +1335,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                         $containers.addClass('stick-sub');
                         $block.show();
 
-                        $('.popover').each((i, el) => {
+                        /*$('.popover').each((i, el) => {
                             let $el = $(el);
                             $el.css('top', ($el.position().top - blockHeight) + 'px');
-                        });
+                        });*/
                     }
+
+                    $navbarRight.addClass('has-sticked-bar');
 
                     $containers.show();
 
@@ -1138,12 +1350,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                 if ($containers.hasClass('stick-sub')) {
                     $containers.removeClass('stick-sub');
+                    $navbarRight.removeClass('has-sticked-bar');
                     $block.hide();
 
-                    $('.popover').each((i, el) => {
+                    /*$('.popover').each((i, el) => {
                         let $el = $(el);
                         $el.css('top', ($el.position().top + blockHeight) + 'px');
-                    });
+                    });*/
                 }
 
                 $containers.show();
@@ -1207,9 +1420,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     );
                 }
 
-                this.mode = 'edit';
+                this.mode = this.MODE_EDIT;
 
                 this.trigger('after:set-edit-mode');
+                this.trigger('after:mode-change');
 
                 Promise.all(promiseList).then(() => resolve());
             });
@@ -1246,8 +1460,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     }
                 }
 
-                this.mode = 'detail';
+                this.mode = this.MODE_DETAIL;
+
                 this.trigger('after:set-detail-mode');
+                this.trigger('after:mode-change');
 
                 Promise.all(promiseList).then(() => resolve());
             });
@@ -1272,7 +1488,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             var attributes = this.model.attributes;
 
-            for (var attr in attributes) {
+            for (let attr in attributes) {
                 if (!(attr in this.attributes)) {
                     this.model.unset(attr);
                 }
@@ -1446,7 +1662,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             this.exit = this.options.exit || this.exit;
 
-            Bull.View.prototype.init.call(this);
+            if (this.shortcutKeys) {
+                this.shortcutKeys = Espo.Utils.cloneDeep(this.shortcutKeys);
+            }
         },
 
         isDropdownItemListEmpty: function () {
@@ -1541,10 +1759,6 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 Espo.Utils.toDom(this.type) + '-' + this.numId;
 
             this.isNew = this.model.isNew();
-
-            if (_.isUndefined(this.events)) {
-                this.events = {};
-            }
 
             if (!this.editModeDisabled) {
                 if ('editModeDisabled' in this.options) {
@@ -1688,11 +1902,15 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         _initInlineEditSave: function () {
-            this.listenTo(this.recordHelper, 'inline-edit-save', field => {
-                this.inlineEditSave(field);
+            this.listenTo(this.recordHelper, 'inline-edit-save', (field, o) => {
+                this.inlineEditSave(field, o);
             });
         },
 
+        /**
+         * @param {string} field
+         * @param {module:views/record/base~saveOptions} [options]
+         */
         inlineEditSave: function (field, options) {
             let view = this.getFieldView(field);
 
@@ -1703,22 +1921,41 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             options = _.extend({
                 inline: true,
                 field: field,
-                afterValidate: () => view.inlineEditClose(true),
+                afterValidate: () => {
+                    if (options.bypassClose) {
+                        return;
+                    }
+
+                    view.inlineEditClose(true)
+                },
             }, options || {});
 
             this.save(options)
                 .then(() => {
                     view.trigger('after:inline-save');
                     view.trigger('after:save');
+
+
+                    if (options.bypassClose) {
+                        view.initialAttributes = this.model.getClonedAttributes();
+                    }
                 })
                 .catch(reason => {
                     if (reason === 'notModified') {
+                        if (options.bypassClose) {
+                            return;
+                        }
+
                         view.inlineEditClose(true);
 
                         return;
                     }
 
                     if (reason === 'error') {
+                        if (options.bypassClose) {
+                            return;
+                        }
+
                         view.inlineEdit();
                     }
                 });
@@ -1780,7 +2017,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                     var changedAttributes = model.changedAttributes();
 
-                    for (var attribute in changedAttributes) {
+                    for (let attribute in changedAttributes) {
                         var methodName = 'onChange' + Espo.Utils.upperCaseFirst(attribute);
 
                         if (methodName in dynamicHandler) {
@@ -1838,6 +2075,35 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
         setupFinal: function () {
             this.build();
+
+            if (this.shortcutKeys && this.options.shortcutKeysEnabled) {
+                this.events['keydown.record-detail'] = e => {
+                    let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                    if (typeof this.shortcutKeys[key] === 'function') {
+                        this.shortcutKeys[key].call(this, e);
+
+                        return;
+                    }
+
+                    let actionName = this.shortcutKeys[key];
+
+                    if (!actionName) {
+                        return;
+                    }
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
+
+                    this[methodName]();
+                };
+            }
+
+            if (!this.options.focusForCreate) {
+                this.once('after:render', () => this.focusOnFirstDiv());
+            }
         },
 
         setIsChanged: function () {
@@ -2011,7 +2277,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             };
 
             if (data.viewOptions) {
-                for (var item in data.viewOptions) {
+                for (let item in data.viewOptions) {
                     options[item] = data.viewOptions[item];
                 }
             }
@@ -2363,16 +2629,16 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         addButton: function (o, toBeginning) {
-            var method = toBeginning ? 'unshift' : 'push';
+            let method = toBeginning ? 'unshift' : 'push';
 
-            var name = o.name;
+            let name = o.name;
 
             if (!name) {
                 return;
             }
 
-            for (var i in this.buttonList) {
-                if (this.buttonList[i].name === name) {
+            for (let item of this.buttonList) {
+                if (item.name === name) {
                     return;
                 }
             }
@@ -2381,38 +2647,40 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         addDropdownItem: function (o, toBeginning) {
-            var method = toBeginning ? 'unshift' : 'push';
+            let method = toBeginning ? 'unshift' : 'push';
 
             if (!o) {
                 this.dropdownItemList[method](false);
 
                 return;
             }
-            var name = o.name;
+
+            let name = o.name;
 
             if (!name) {
                 return;
             }
 
-            for (var i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name === name) {
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
                     return;
                 }
             }
+
             this.dropdownItemList[method](o);
         },
 
         addButtonEdit: function (o, toBeginning) {
-            var method = toBeginning ? 'unshift' : 'push';
+            let method = toBeginning ? 'unshift' : 'push';
 
-            var name = o.name;
+            let name = o.name;
 
             if (!name) {
                 return;
             }
 
-            for (var i in this.buttonEditList) {
-                if (this.buttonEditList[i].name === name) {
+            for (let item of this.buttonEditList) {
+                if (item.name === name) {
                     return;
                 }
             }
@@ -2424,6 +2692,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @deprecated Use `enableActionItems`.
          */
         enableButtons: function () {
+            this.allActionItemsDisabled = false;
+
             this.$el.find(".button-container .actions-btn-group .action")
                 .removeAttr('disabled')
                 .removeClass('disabled');
@@ -2431,12 +2701,52 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             this.$el.find(".button-container .actions-btn-group .dropdown-toggle")
                 .removeAttr('disabled')
                 .removeClass('disabled');
+
+            this.buttonList
+                .filter(item => item.disabled)
+                .forEach(item => {
+                    this.$detailButtonContainer
+                        .find(`button.action[data-action="${item.name}"]`)
+                        .addClass('disabled')
+                        .attr('disabled', 'disabled');
+                });
+
+            this.buttonEditList
+                .filter(item => item.disabled)
+                .forEach(item => {
+                    this.$detailButtonContainer
+                        .find(`button.action[data-action="${item.name}"]`)
+                        .addClass('disabled')
+                        .attr('disabled', 'disabled');
+                });
+
+            this.dropdownItemList
+                .filter(item => item.disabled)
+                .forEach(item => {
+                    this.$detailButtonContainer
+                        .find(`li > .action[data-action="${item.name}"]`)
+                        .parent()
+                        .addClass('disabled')
+                        .attr('disabled', 'disabled');
+                });
+
+            this.dropdownEditItemList
+                .filter(item => item.disabled)
+                .forEach(item => {
+                    this.$detailButtonContainer
+                        .find(`li > .action[data-action="${item.name}"]`)
+                        .parent()
+                        .addClass('disabled')
+                        .attr('disabled', 'disabled');
+                });
         },
 
         /**
          * @deprecated Use `disableActionItems`.
          */
         disableButtons: function () {
+            this.allActionItemsDisabled = true;
+
             this.$el.find(".button-container .actions-btn-group .action")
                 .attr('disabled', 'disabled')
                 .addClass('disabled');
@@ -2461,16 +2771,16 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {string} name A name.
          */
         removeButton: function (name) {
-            for (var i in this.buttonList) {
-                if (this.buttonList[i].name === name) {
+            for (const [i, item] of this.buttonList.entries()) {
+                if (item.name === name) {
                     this.buttonList.splice(i, 1);
 
                     break;
                 }
             }
 
-            for (var i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name === name) {
+            for (const [i, item] of this.dropdownItemList.entries()) {
+                if (item.name === name) {
                     this.dropdownItemList.splice(i, 1);
 
                     break;
@@ -2568,12 +2878,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     this.panelFieldListMap[panel.name] = [];
                 }
 
-                for (let i in item[lType]) {
+                for (const [i, itemI] of item[lType].entries()) {
                     let row = [];
 
-                    for (let j in item[lType][i]) {
-                        var cellDefs = item[lType][i][j];
-
+                    for (const cellDefs of itemI) {
                         if (cellDefs === false) {
                             row.push(false);
 
@@ -3076,6 +3384,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                             this.translate('Overview') :
                             (i + 1).toString();
                     }
+                    else if (label.substring(0, 7) === '$label:') {
+                        label = this.translate(label.substring(7), 'labels', this.scope);
+                    }
                     else if (label[0] === '$') {
                         label = this.translate(label.substring(1), 'tabs', this.scope);
                     }
@@ -3097,13 +3408,15 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         selectMiddleTab: function (tab) {
             this.currentMiddleTab = tab;
 
-            $('body > .popover').remove();
+            $('.popover.in').removeClass('in');
 
             this.$el.find('.middle-tabs > button').removeClass('active');
             this.$el.find(`.middle-tabs > button[data-tab="${tab}"]`).addClass('active');
 
             this.$el.find('.middle > .panel[data-tab]').addClass('tab-hidden');
             this.$el.find(`.middle > .panel[data-tab="${tab}"]`).removeClass('tab-hidden');
+
+            this.recordHelper.trigger('panel-show');
 
             this.adjustMiddlePanels();
         },
@@ -3308,6 +3621,254 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             this.$dropdownEditItemListButton = this.$detailButtonContainer
                 .find('.dropdown-edit-item-list-button');
+        },
+
+        /**
+         * @protected
+         */
+        focusForEdit: function () {
+            this.$el
+                .find('.field:not(.hidden) .form-control:not([disabled])')
+                .first()
+                .focus();
+        },
+
+        /**
+         * @protected
+         */
+        focusForCreate: function () {
+            this.$el
+                .find('.form-control:not([disabled])')
+                .first()
+                .focus();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlEnter: function (e) {
+            let action = this.shortcutKeyCtrlEnterAction;
+
+            if (this.inlineEditModeIsOn || this.buttonsDisabled || !action) {
+                return;
+            }
+
+            if (this.mode !== this.MODE_EDIT) {
+                return;
+            }
+
+            if (!this.hasAvailableActionItem(action)) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            let methodName = 'action' + Espo.Utils.upperCaseFirst(action);
+
+            this[methodName]();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlS: function (e) {
+            if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (this.mode !== this.MODE_EDIT) {
+                return;
+            }
+
+            if (!this.saveAndContinueEditingAction) {
+                return;
+            }
+
+            if (!this.hasAvailableActionItem('saveAndContinueEditing')) {
+                return;
+            }
+
+            this.actionSaveAndContinueEditing();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlSpace: function (e) {
+            if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+                return;
+            }
+
+            if (this.type !== this.TYPE_DETAIL || this.mode !== this.MODE_DETAIL) {
+                return;
+            }
+
+            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+                return;
+            }
+
+            if (!this.hasAvailableActionItem('edit')) {
+                return;
+            }
+
+            $(e.currentTarget)
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionEdit();
+
+            if (!this.editModeDisabled) {
+                setTimeout(() => this.focusForEdit(), 200);
+            }
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyEscape: function (e) {
+            if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+                return;
+            }
+
+            if (this.type !== this.TYPE_DETAIL || this.mode !== this.MODE_EDIT) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Fetching a currently edited form element.
+            this.model.set(this.fetch());
+
+            if (this.isChanged) {
+                this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
+                    .then(() => this.actionCancelEdit());
+
+                return;
+            }
+
+            this.actionCancelEdit();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlAltEnter: function (e) {},
+
+        /**
+         * @public
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyControlBackslash: function (e) {
+            if (!this.hasMiddleTabs()) {
+                return;
+            }
+
+            let $buttons = this.$el.find('.middle-tabs > button:not(.hidden)');
+
+            if ($buttons.length === 1) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            let index = $buttons.toArray().findIndex(el => $(el).hasClass('active'));
+
+            index++;
+
+            if (index >= $buttons.length) {
+                index = 0;
+            }
+
+            let $tab = $($buttons.get(index));
+
+            let tab = parseInt($tab.attr('data-tab'));
+
+            this.selectMiddleTab(tab);
+
+            if (this.mode === this.MODE_EDIT) {
+                setTimeout(() => {
+                    this.$middle
+                        .find(`.panel[data-tab="${tab}"] .cell:not(.hidden)`)
+                        .first()
+                        .focus();
+                }, 50);
+
+                return;
+            }
+
+            this.$el
+                .find(`.middle-tabs button[data-tab="${tab}"]`)
+                .focus();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyControlArrowLeft: function (e) {
+            if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+                return;
+            }
+
+            if (this.navigateButtonsDisabled) {
+                return;
+            }
+
+            if (this.type !== this.TYPE_DETAIL || this.mode !== this.MODE_DETAIL) {
+                return;
+            }
+
+            let $button = this.$el.find('button[data-action="previous"]');
+
+            if (!$button.length || $button.hasClass('disabled')) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionPrevious();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyControlArrowRight: function (e) {
+            if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+                return;
+            }
+
+            if (this.navigateButtonsDisabled) {
+                return;
+            }
+
+            if (this.type !== this.TYPE_DETAIL || this.mode !== this.MODE_DETAIL) {
+                return;
+            }
+
+            let $button = this.$el.find('button[data-action="next"]');
+
+            if (!$button.length || $button.hasClass('disabled')) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionNext();
         },
     });
 });

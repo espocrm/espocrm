@@ -3,7 +3,7 @@
 
     <div class="clearfix">
         <div class="btn-group pull-right">
-            <a href="javascript:" class="dropdown-toggle btn btn-text" data-toggle="dropdown">
+            <a role="button" tabindex="0" class="dropdown-toggle btn btn-text" data-toggle="dropdown">
                 <span class="fas fa-ellipsis-h"></span>
             </a>
 
@@ -22,7 +22,8 @@
                 {{#if hasExpandedToggler}}
                 <li class="{{#if isExpanded}}hidden{{/if}}">
                     <a
-                        href="javascript:"
+                        role="button"
+                        tabindex="0"
                         class="category-expanded-toggle-link action"
                         data-action="expand"
                     >{{translate 'Expand'}}</a>
@@ -31,7 +32,8 @@
 
                 <li>
                     <a
-                        href="javascript:"
+                        role="button"
+                        tabindex="0"
                         class="navigation-toggle-link action"
                         data-action="toggleNavigationPanel"
                     >
@@ -79,7 +81,8 @@
             <div class="category-item show-more">
                 <span class="category-item-name">
                     <a
-                        href="javascript:"
+                        role="button"
+                        tabindex="0"
                         class="action"
                         data-action="showMore"
                         title="{{translate 'Show more'}}"

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/select-category-tree-records', 'views/modals/select-records', function (Dep) {
+define('views/modals/select-category-tree-records', ['views/modals/select-records'], function (Dep) {
 
     return Dep.extend({
 
@@ -78,13 +78,18 @@ define('views/modals/select-category-tree-records', 'views/modals/select-records
 
             this.scope = this.options.scope;
 
-            this.headerHtml = '';
+            this.$header = $('<span>');
 
-            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+            this.$header.append(
+                $('<span>').text(
+                    this.translate('Select') + ': ' +
+                    this.getLanguage().translate(this.scope, 'scopeNamesPlural')
+                )
+            );
 
-            this.headerHtml += this.translate('Select') + ': ';
-            this.headerHtml += this.getLanguage().translate(this.scope, 'scopeNamesPlural');
-            this.headerHtml = iconHtml + this.headerHtml;
+            this.$header.prepend(
+                this.getHelper().getScopeColorIconHtml(this.scope)
+            );
 
             this.waitForView('list');
 
@@ -140,6 +145,5 @@ define('views/modals/select-category-tree-records', 'views/modals/select-records
                 });
             });
         },
-
     });
 });

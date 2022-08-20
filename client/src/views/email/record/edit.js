@@ -30,9 +30,10 @@ define('views/email/record/edit', ['views/record/edit', 'views/email/record/deta
 
     return Dep.extend({
 
+        shortcutKeyCtrlEnterAction: 'send',
+
         init: function () {
             Dep.prototype.init.call(this);
-
             Detail.prototype.layoutNameConfigure.call(this);
         },
 
@@ -43,17 +44,22 @@ define('views/email/record/edit', ['views/record/edit', 'views/email/record/deta
                 name: 'send',
                 label: 'Send',
                 style: 'primary',
+                title: 'Ctrl+Enter',
             }, true);
 
             this.addButton({
                 name: 'saveDraft',
-                 label: 'Save Draft',
+                label: 'Save Draft',
+                title: 'Ctrl+S',
             }, true);
 
             this.controlSendButton();
 
             if (this.model.get('status') === 'Draft') {
                 this.setFieldReadOnly('dateSent');
+
+                // Not implemented for detail view yet.
+                this.hideField('selectTemplate');
             }
 
             this.handleAttachmentField();
@@ -74,11 +80,17 @@ define('views/email/record/edit', ['views/record/edit', 'views/email/record/deta
         },
 
         handleAttachmentField: function () {
-            if ((this.model.get('attachmentsIds') || []).length === 0 && !this.isNew) {
+            if (
+                (this.model.get('attachmentsIds') || []).length === 0 &&
+                !this.isNew &&
+                this.model.get('status') !== 'Draft'
+            ) {
                 this.hideField('attachments');
-            } else {
-                this.showField('attachments');
+
+                return;
             }
+
+            this.showField('attachments');
         },
 
         handleCcField: function () {

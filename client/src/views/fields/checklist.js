@@ -126,7 +126,7 @@ define('views/fields/checklist', ['views/fields/array'], function (Dep) {
             if (this.isRequired()) {
                 var value = this.model.get(this.name);
 
-                if (!value || value.length == 0) {
+                if (!value || value.length === 0) {
                     var msg = this.translate('fieldIsRequired', 'messages')
                         .replace('{field}', this.getLabelText());
 

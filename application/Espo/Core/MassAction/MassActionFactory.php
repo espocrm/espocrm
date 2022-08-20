@@ -108,7 +108,7 @@ class MassActionFactory
      */
     private function getClassName(string $action, string $entityType): ?string
     {
-        /** @var ?class-string<MassAction> */
+        /** @var ?class-string<MassAction> $className */
         $className = $this->getEntityTypeClassName($action, $entityType);
 
         if ($className) {

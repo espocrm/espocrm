@@ -426,10 +426,14 @@ function (Dep, MassActionHelper, ExportHelper) {
          */
         events: {
             /**
-             * @param {Event} e
+             * @param {JQueryKeyEventObject} e
              * @this module:views/record/list.Class
              */
             'click a.link': function (e) {
+                if (e.ctrlKey || e.metaKey || e.shiftKey) {
+                    return;
+                }
+
                 e.stopPropagation();
 
                 if (!this.scope || this.selectable) {
@@ -438,11 +442,11 @@ function (Dep, MassActionHelper, ExportHelper) {
 
                 e.preventDefault();
 
-                var id = $(e.currentTarget).attr('data-id');
-                var model = this.collection.get(id);
-                var scope = this.getModelScope(id);
+                let id = $(e.currentTarget).attr('data-id');
+                let model = this.collection.get(id);
+                let scope = this.getModelScope(id);
 
-                var options = {
+                let options = {
                     id: id,
                     model: model,
                 };
@@ -461,20 +465,20 @@ function (Dep, MassActionHelper, ExportHelper) {
                 this.showMoreRecords();
             },
             /**
-             * @param {Event} e
+             * @param {JQueryKeyEventObject} e
              * @this module:views/record/list.Class
              */
             'click a.sort': function (e) {
-                var field = $(e.currentTarget).data('name');
+                let field = $(e.currentTarget).data('name');
 
                 this.toggleSort(field);
             },
             /**
-             * @param {Event} e
+             * @param {JQueryKeyEventObject} e
              * @this module:views/record/list.Class
              */
             'click .pagination a': function (e) {
-                var page = $(e.currentTarget).data('page');
+                let page = $(e.currentTarget).data('page');
 
                 if ($(e.currentTarget).parent().hasClass('disabled')) {
                     return;
@@ -483,7 +487,7 @@ function (Dep, MassActionHelper, ExportHelper) {
                 Espo.Ui.notify(this.translate('loading', 'messages'));
 
                 this.collection.once('sync', () => {
-                    this.notify(false);
+                    Espo.Ui.notify(false);
                 });
 
                 if (page === 'current') {
@@ -497,13 +501,13 @@ function (Dep, MassActionHelper, ExportHelper) {
                 this.deactivate();
             },
             /**
-             * @param {Event} e
+             * @param {JQueryKeyEventObject} e
              * @this module:views/record/list.Class
              */
             'click .record-checkbox': function (e) {
-                var $target = $(e.currentTarget);
+                let $target = $(e.currentTarget);
 
-                var id = $target.attr('data-id');
+                let id = $target.attr('data-id');
 
                 if (e.currentTarget.checked) {
                     this.checkRecord(id, $target);
@@ -512,14 +516,14 @@ function (Dep, MassActionHelper, ExportHelper) {
                 }
             },
             /**
-             * @param {Event} e
+             * @param {JQueryKeyEventObject} e
              * @this module:views/record/list.Class
              */
             'click .select-all': function (e) {
                 this.selectAllHandler(e.currentTarget.checked);
             },
             /**
-             * @param {Event} e
+             * @param {JQueryKeyEventObject} e
              * @this module:views/record/list.Class
              */
             'click .action': function (e) {
@@ -532,27 +536,28 @@ function (Dep, MassActionHelper, ExportHelper) {
                 this.selectAllResult();
             },
             /**
-             * @param {Event} e
+             * @param {JQueryKeyEventObject} e
              * @this module:views/record/list.Class
              */
             'click .actions-menu a.mass-action': function (e) {
                 let $el = $(e.currentTarget);
 
-                var action = $el.data('action');
-                var method = 'massAction' + Espo.Utils.upperCaseFirst(action);
+                let action = $el.data('action');
+                let method = 'massAction' + Espo.Utils.upperCaseFirst(action);
 
                 if (method in this) {
                     this[method]();
-                } else {
-                    this.massAction(action);
+
+                    return;
                 }
+
+                this.massAction(action);
             },
             /**
              * @this module:views/record/list.Class
              */
             'click a.reset-custom-order': function () {
                 this.resetCustomOrder();
-
             },
         },
 
@@ -613,6 +618,7 @@ function (Dep, MassActionHelper, ExportHelper) {
 
             let $window = $(window);
             let $scrollable = $window;
+            let $navbarRight = $('#navbar .navbar-right');
 
             this.on('render', () => {
                 this.$stickedBar = null;
@@ -649,8 +655,9 @@ function (Dep, MassActionHelper, ExportHelper) {
                 return offsetTop;
             };
 
-            if (this.$el.closest('.modal-body').length) {
+            if (isModal) {
                 $scrollable = this.$el.closest('.modal-body');
+                $navbarRight = $scrollable.parent().find('.modal-footer');
             }
 
             let middleTop = getOffsetTop($middle.get(0));
@@ -691,17 +698,20 @@ function (Dep, MassActionHelper, ExportHelper) {
 
                 if (scrollTop >= edge) {
                     $stickedBar.removeClass('hidden');
+                    $navbarRight.addClass('has-sticked-bar');
 
                     return;
                 }
 
                 if (scrollTop > stickTop) {
                     $stickedBar.removeClass('hidden');
+                    $navbarRight.addClass('has-sticked-bar');
 
                     return;
                 }
 
                 $stickedBar.addClass('hidden');
+                $navbarRight.removeClass('has-sticked-bar');
             };
         },
 
@@ -1551,7 +1561,7 @@ function (Dep, MassActionHelper, ExportHelper) {
 
                     view.close();
 
-                    count = o.count;
+                    let count = o.count;
 
                     this.collection
                         .fetch()
@@ -2235,7 +2245,8 @@ function (Dep, MassActionHelper, ExportHelper) {
                 if (isCustomSorted) {
                     html =
                         $('<a>')
-                            .attr('href', 'javascript:')
+                            .attr('role', 'button')
+                            .attr('tabindex', '0')
                             .addClass('reset-custom-order')
                             .attr('title', this.translate('Reset'))
                             .append(
@@ -2940,7 +2951,7 @@ function (Dep, MassActionHelper, ExportHelper) {
 
                 this.notify('Removing...');
 
-                model.destroy({wait: true})
+                model.destroy({wait: true, fromList: true})
                     .then(() => {
                         this.notify('Removed', 'success');
 
@@ -2965,7 +2976,7 @@ function (Dep, MassActionHelper, ExportHelper) {
 
             this.$el.find('.total-count-span').text(this.collection.total.toString());
 
-            var index = this.checkedList.indexOf(id);
+            let index = this.checkedList.indexOf(id);
 
             if (index !== -1) {
                 this.checkedList.splice(index, 1);
@@ -2973,11 +2984,11 @@ function (Dep, MassActionHelper, ExportHelper) {
 
             this.removeRowHtml(id);
 
-            var key = id;
+            let key = id;
 
             this.clearView(key);
 
-            var index = this.rowList.indexOf(key);
+            index = this.rowList.indexOf(key);
 
             if (~index) {
                 this.rowList.splice(index, 1);

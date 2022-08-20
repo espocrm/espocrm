@@ -21,13 +21,40 @@
     "isRead": "Está lido",
     "isNotRead": "Não está lido",
     "isImportant": "É importante",
+    "isUsers": "É usuário",
     "inTrash": "Na Lixeira",
     "name": "Assunto",
-    "sentBy": "Enviado Por"
+    "isReplied": "Foi Respondido",
+    "isNotReplied": "Não Foi Respondido",
+    "folder": "Pasta",
+    "inboundEmails": "Contas de Grupo",
+    "emailAccounts": "Contas Pessoais",
+    "hasAttachment": "Tem anexo",
+    "sentBy": "Enviado Por",
+    "assignedUsers": "Usuários Designados",
+    "bodyPlain": "Corpo (Plano)",
+    "ccEmailAddresses": "Endereços de email CC",
+    "messageId": "Id da Mensagem",
+    "messageIdInternal": "Id da Mensagem (Interno)",
+    "folderId": "Id da Pasta",
+    "fromName": "Do Nome",
+    "fromString": "Do String",
+    "isSystem": "É Sistema",
+    "personStringData": "Dados do String da Pessoa",
+    "fromEmailAddress": "Do Endereço (link)",
+    "createdEvent": "Evento criado",
+    "event": "Evento",
+    "icsEventDateStart": "Data de Início do Evento ICS"
   },
   "links": {
     "replied": "Respondido",
-    "replies": "Respostas"
+    "replies": "Respostas",
+    "inboundEmails": "Contas de Grupo",
+    "emailAccounts": "Contas Pessoais",
+    "assignedUsers": "Usuários Designados",
+    "sentBy": "Enviado Por",
+    "attachments": "Anexos",
+    "fromEmailAddress": "Do Endereço de Email"
   },
   "options": {
     "status": {
@@ -49,6 +76,7 @@
     "Original message": "Mensagem original",
     "Forwarded message": "Mensagem encaminhada",
     "Email Accounts": "Contas de e-mail",
+    "Inbound Emails": "Agrupar contas de e-mail",
     "Email Templates": "Templates de email",
     "Send Test Email": "Enviar e-mail de teste",
     "Send": "Enviar",
@@ -62,14 +90,23 @@
     "Unmark Importance": "Desmarcar Importância",
     "Move to Trash": "Mover para a Lixeira",
     "Retrieve from Trash": "Recuperar da lixeira",
+    "Move to Folder": "Mover para Pasta",
     "Filters": "Filtros",
-    "Folders": "Pastas"
+    "Folders": "Pastas",
+    "View Users": "Visualizar Usuários",
+    "No Subject": "Sem Assunto",
+    "Insert Field": "Inserir Campo",
+    "Event": "Evento"
   },
   "messages": {
-    "noSmtpSetup": "Nenhuma configuração SMTP. {link}.",
     "testEmailSent": "O e-mail de teste enviado",
     "emailSent": "O e-mail foi enviado",
-    "savedAsDraft": "Salvar como rascunho"
+    "savedAsDraft": "Salvar como rascunho",
+    "confirmInsertTemplate": "O corpo do e-mail será perdido. Tem certeza de que deseja inserir o modelo?",
+    "noSmtpSetup": "SMTP não está configurado: {link}",
+    "sendConfirm": "Enviar o e-mail?",
+    "removeSelectedRecordsConfirmation": "Tem certeza de que deseja remover os emails selecionados?\n\nEles serão removidos para outros usuários também.",
+    "removeRecordConfirmation": "Tem certeza de que deseja remover o email?\n\nEle será removido para outros usuários também."
   },
   "presetFilters": {
     "sent": "Enviado",
@@ -83,6 +120,12 @@
     "markAsRead": "Marcar como lido",
     "markAsNotRead": "Marcar como não lido",
     "markAsImportant": "Marcar como importante",
-    "moveToTrash": "Mover para lixeira"
+    "markAsNotImportant": "Desmarcar destaque",
+    "moveToTrash": "Mover para lixeira",
+    "moveToFolder": "Mover para Pasta",
+    "retrieveFromTrash": "Recuperar da Lixeira"
+  },
+  "strings": {
+    "sendingFailed": "Falha no envio de email"
   }
 }

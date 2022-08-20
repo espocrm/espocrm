@@ -371,7 +371,8 @@ define('views/fields/varchar', ['views/fields/base', 'helpers/reg-exp-pattern'],
             let value = this.$element.val().toString().trim();
 
             if (!value) {
-                return null;
+                // @todo Change to `null` in v7.4 (and for all other fields).
+                return false;
             }
 
             return {

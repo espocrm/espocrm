@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "action": "Akcija",
+    "actionDate": "Datum",
+    "data": "podatki",
+    "campaign": "Kampanja",
+    "parent": "Tarča",
+    "object": "Objekt",
+    "application": "Aplikacija",
+    "queueItem": "Postavka čakalne vrste",
+    "stringData": "Podatki o nizu",
+    "stringAdditionalData": "Dodatni podatki niza",
+    "isTest": "Je Test"
+  },
+  "links": {
+    "queueItem": "Postavka čakalne vrste",
+    "parent": "starš",
+    "object": "Objekt",
+    "campaign": "Kampanja"
+  },
+  "options": {
+    "action": {
+      "Sent": "Poslano",
+      "Opened": "Odprto",
+      "Opted Out": "Izključeno",
+      "Bounced": "Odbito",
+      "Clicked": "Kliknil",
+      "Lead Created": "Potencialna stranka ustvarjena",
+      "Opted In": "Prijavljeno"
+    }
+  },
+  "labels": {
+    "All": "Vse"
+  },
+  "presetFilters": {
+    "sent": "Poslano",
+    "opened": "Odprto",
+    "optedOut": "Izključeno",
+    "bounced": "Odbito",
+    "clicked": "Kliknil",
+    "leadCreated": "Potencialna stranka ustvarjena",
+    "optedIn": "Prijavljeno"
+  }
+}

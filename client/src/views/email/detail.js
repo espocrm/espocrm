@@ -95,7 +95,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                         this.model.getLinkMultipleIdList('attachments').length
                     ) {
                         this.addMenuItem('dropdown', {
-                            html: this.translate('Create Document', 'labels', 'Document'),
+                            text: this.translate('Create Document', 'labels', 'Document'),
                             action: 'createDocument',
                             acl: 'create',
                             aclScope: 'Document',
@@ -402,28 +402,6 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             });
         },
 
-        actionSend: function () {
-            let recordView = this.getView('record');
-
-            recordView
-                .send()
-                .then(() => {
-                    this.model.set('status', 'Sent');
-
-                    if (recordView.mode !== 'detail') {
-                        recordView.setDetailMode();
-                        recordView.setFieldReadOnly('dateSent');
-                        recordView.setFieldReadOnly('name');
-                        recordView.setFieldReadOnly('attachments');
-                        recordView.setFieldReadOnly('isHtml');
-                        recordView.setFieldReadOnly('from');
-                        recordView.setFieldReadOnly('to');
-                        recordView.setFieldReadOnly('cc');
-                        recordView.setFieldReadOnly('bcc');
-                    }
-                });
-        },
-
         actionReply: function (data, e, cc) {
             var emailHelper = new EmailHelper(
                 this.getLanguage(),
@@ -471,7 +449,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                     id: this.model.id,
                 })
                 .then(duplicateAttributes => {
-                    model = this.model.clone();
+                    let model = this.model.clone();
 
                     model.set('body', duplicateAttributes.body);
 

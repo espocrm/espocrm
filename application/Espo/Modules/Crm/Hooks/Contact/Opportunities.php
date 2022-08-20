@@ -48,7 +48,7 @@ class Opportunities
     public function afterRelate(Entity $entity, array $options = [], array $data = []): void
     {
         $relationName = $data['relationName'] ?? null;
-        /** @var ?Entity */
+        /** @var ?Entity $foreignEntity */
         $foreignEntity = $data['foreignEntity'] ?? null;
 
         if ($relationName === 'opportunities' && $foreignEntity) {
@@ -67,7 +67,7 @@ class Opportunities
     public function afterUnrelate(Entity $entity, array $options = [], array $data = []): void
     {
         $relationName = $data['relationName'] ?? null;
-        /** @var ?Entity */
+        /** @var ?Entity $foreignEntity */
         $foreignEntity = $data['foreignEntity'] ?? null;
 
         if ($relationName === 'opportunities' && $foreignEntity) {

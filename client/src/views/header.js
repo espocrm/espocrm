@@ -76,12 +76,20 @@ define('views/header', ['view'], function (Dep) {
                     }
                 });
             }
+
+            this.wasRendered = false;
         },
 
         afterRender: function () {
             if (this.options.fontSizeFlexible) {
                 this.adjustFontSize();
             }
+
+            if (this.wasRendered) {
+                this.getParentView().trigger('header-rendered');
+            }
+
+            this.wasRendered = true;
         },
 
         adjustFontSize: function (step) {

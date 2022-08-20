@@ -21,7 +21,8 @@
         ><span class="fas fa-pencil-alt fa-sm"></span></button>
     </div>
 
-    <div class="date-title col-sm-4 col-xs-7"><h4><span style="cursor: pointer;" data-action="refresh" title="{{translate 'Refresh'}}"></span></h4></div>
+    <div class="date-title col-sm-4 col-xs-7">
+    <h4><span style="cursor: pointer;" data-action="refresh" title="{{translate 'Refresh'}}"></span></h4></div>
 
     <div class="col-sm-4 col-xs-12">
         <div class="btn-group pull-right mode-buttons">

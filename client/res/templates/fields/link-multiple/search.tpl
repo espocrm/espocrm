@@ -4,12 +4,11 @@
 
 <div class="link-group-container hidden">
 
-    <div class="link-container list-group">
-    </div>
+    <div class="link-container list-group"></div>
 
     <div class="input-group add-team">
         <input
-            class="main-element form-control input-sm search-input"
+            class="main-element form-control input-sm"
             type="text"
             value=""
             autocomplete="espo-{{name}}"

@@ -61,7 +61,7 @@ function (Dep, styleCss) {
 
         emptyCellTemplate:
             '<li class="empty disabled cell">' +
-            '<a href="javascript:" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>' +
+            '<a role="button" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>' +
             '</li>',
 
         events: _.extend({
@@ -305,7 +305,9 @@ function (Dep, styleCss) {
 
         cancel: function () {
             this.loadLayout(() => {
-                var countLoaded = 0;
+                let countLoaded = 0;
+
+                this.setIsNotChanged();
 
                 this.setupPanels(() => {
                     countLoaded ++;

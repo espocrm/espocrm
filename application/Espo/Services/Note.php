@@ -234,11 +234,11 @@ class Note extends Record
 
         $userTeamIdList = $this->user->getTeamIdList();
 
-        /** @var string[] */
+        /** @var string[] $userIdList */
         $userIdList = $entity->getLinkMultipleIdList('users');
-        /** @var string[] */
+        /** @var string[] $portalIdList */
         $portalIdList = $entity->getLinkMultipleIdList('portals');
-        /** @var string[] */
+        /** @var string[] $teamIdList */
         $teamIdList = $entity->getLinkMultipleIdList('teams');
 
         /** @var iterable<UserEntity> $targetUserList */
@@ -381,6 +381,17 @@ class Note extends Record
         }
 
         parent::unlink($id, $link, $foreignId);
+    }
+
+    /**
+     * @param NoteEntity $entity
+     * @return void
+     */
+    public function loadAdditionalFields(Entity $entity)
+    {
+        parent::loadAdditionalFields($entity);
+
+        $entity->loadAdditionalFields();
     }
 
     private function getUserRepository(): UserRepository

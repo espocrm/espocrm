@@ -32,14 +32,19 @@ define('views/stream/modals/create-post', ['views/modal'], function (Dep) {
 
         templateContent: '<div class="record">{{{record}}}</div>',
 
+        shortcutKeys: {
+            'Control+Enter': 'post',
+        },
+
         setup: function () {
-            this.headerHtml = this.translate('Create Post');
+            this.headerText = this.translate('Create Post');
 
             this.buttonList = [
                 {
                     name: 'post',
                     label: 'Post',
                     style: 'primary',
+                    title: 'Ctrl+Enter',
                 },
                 {
                     name: 'cancel',
@@ -47,6 +52,7 @@ define('views/stream/modals/create-post', ['views/modal'], function (Dep) {
                     onClick: function (dialog) {
                         dialog.close();
                     },
+                    title: 'Esc',
                 }
             ];
 
