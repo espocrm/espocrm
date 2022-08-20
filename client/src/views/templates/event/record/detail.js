@@ -26,52 +26,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/templates/event/record/detail', 'views/record/detail', function (Dep) {
+define('views/templates/event/record/detail', ['views/record/detail'], function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             if (this.getAcl().checkModel(this.model, 'edit')) {
-                if (['Held', 'Not Held'].indexOf(this.model.get('status')) == -1) {
+                if (['Held', 'Not Held'].indexOf(this.model.get('status')) === -1) {
                     this.dropdownItemList.push({
                         'html': this.translate('Set Held', 'labels', this.scope),
-                        'name': 'setHeld'
+                        'name': 'setHeld',
                     });
+
                     this.dropdownItemList.push({
                         'html': this.translate('Set Not Held', 'labels', this.scope),
-                        'name': 'setNotHeld'
+                        'name': 'setNotHeld',
                     });
                 }
             }
         },
 
         actionSetHeld: function () {
-                this.model.save({
-                    status: 'Held'
-                }, {
-                    patch: true,
-                    success: function () {
-                        Espo.Ui.success(this.translate('Saved', 'labels', 'Meeting'));
-                        this.removeButton('setHeld');
-                        this.removeButton('setNotHeld');
-                    }.bind(this),
+            this.model
+                .save({status: 'Held'}, {patch: true})
+                .then(() => {
+                    Espo.Ui.success(this.translate('Saved', 'labels', 'Meeting'));
+
+                    this.removeButton('setHeld');
+                    this.removeButton('setNotHeld');
                 });
         },
 
         actionSetNotHeld: function () {
-                this.model.save({
-                    status: 'Not Held'
-                }, {
-                    patch: true,
-                    success: function () {
-                        Espo.Ui.success(this.translate('Saved', 'labels', 'Meeting'));
-                        this.removeButton('setHeld');
-                        this.removeButton('setNotHeld');
-                    }.bind(this),
+            this.model
+                .save({status: 'Not Held'}, {patch: true})
+                .then(() => {
+                    Espo.Ui.success(this.translate('Saved', 'labels', 'Meeting'));
+
+                    this.removeButton('setHeld');
+                    this.removeButton('setNotHeld');
                 });
         },
-
     });
 });
-
