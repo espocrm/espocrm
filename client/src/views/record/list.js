@@ -430,6 +430,7 @@ function (Dep, MassActionHelper, ExportHelper) {
              * @this module:views/record/list.Class
              */
             'click a.link': function (e) {
+                console.log(e);
                 if (e.ctrlKey || e.metaKey || e.shiftKey) {
                     return;
                 }
@@ -457,6 +458,37 @@ function (Dep, MassActionHelper, ExportHelper) {
 
                 this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
                 this.getRouter().dispatch(scope, 'view', options);
+            },
+            /**
+             * @param {JQueryMouseEventObject} e
+             * @this module:views/record/list.Class
+             */
+            'auxclick a.link': function (e) {
+                let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+
+                if (!isCombination) {
+                    return;
+                }
+
+                let $target = $(e.currentTarget);
+
+                let id = $target.attr('data-id');
+
+                if (!id) {
+                    return;
+                }
+
+                let $quickView = $target.parent().closest(`[data-id="${id}"]`)
+                    .find(`ul.list-row-dropdown-menu[data-id="${id}"] a[data-action="quickView"]`);
+
+                if (!$quickView.length) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.actionQuickView({id: id});
             },
             /**
              * @this module:views/record/list.Class

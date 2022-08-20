@@ -5,7 +5,7 @@
         class="btn btn-link btn-sm dropdown-toggle"
         data-toggle="dropdown"
     ><span class="caret"></span></button>
-    <ul class="dropdown-menu pull-right">
+    <ul class="dropdown-menu pull-right list-row-dropdown-menu" data-id="{{model.id}}">
     {{#each actionList}}
         <li>
             <a
