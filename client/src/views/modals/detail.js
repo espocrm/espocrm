@@ -86,7 +86,7 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                 this.actionEdit()
                     .then(view => {
                         view.$el
-                            .find('.middle-tabs > button.active, .form-control, .form-control:not([disabled])')
+                            .find('.form-control:not([disabled])')
                             .first()
                             .focus();
                     });
