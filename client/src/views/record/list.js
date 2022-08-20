@@ -424,7 +424,7 @@ function (Dep, MassActionHelper, ExportHelper) {
         /**
          * @private
          */
-        _lastChecked: null,
+        _$focusedCheckbox: null,
 
         /**
          * @inheritDoc
@@ -541,26 +541,45 @@ function (Dep, MassActionHelper, ExportHelper) {
              * @param {JQueryKeyEventObject} e
              * @this module:views/record/list.Class
              */
-            'click .record-checkbox': function (e) {
-                const $target = $(e.currentTarget);
+            'mousedown input.record-checkbox': function (e) {
+                let $focused = $(document.activeElement);
 
-                if (e.shiftKey && this._lastChecked) {
-                    const $checkboxes = this.$el.find('input.record-checkbox');
-                    const start = $checkboxes.index($target);
-                    const end = $checkboxes.index(this._lastChecked);
-                    const checked = this._lastChecked.prop('checked');
+                this._$focusedCheckbox = null;
+
+                if (
+                    $focused.length &&
+                    $focused.get(0).tagName === 'INPUT' &&
+                    $focused.hasClass('record-checkbox')
+                ) {
+                    this._$focusedCheckbox = $focused;
+                }
+            },
+            /**
+             * @param {JQueryKeyEventObject} e
+             * @this module:views/record/list.Class
+             */
+            'click input.record-checkbox': function (e) {
+                let $target = $(e.currentTarget);
+
+                let $from = this._$focusedCheckbox;
+
+                if (e.shiftKey && $from) {
+                    let $checkboxes = this.$el.find('input.record-checkbox');
+                    let start = $checkboxes.index($target);
+                    let end = $checkboxes.index($from);
+                    let checked = $from.prop('checked');
 
                     $checkboxes.slice(Math.min(start, end), Math.max(start, end) + 1).each((i, el) => {
-                        const $el = $(el);
+                        let $el = $(el);
 
                         $el.prop('checked', checked);
                         this.checkboxClick($el, checked);
                     });
-                } else {
-                    this.checkboxClick($target, $target.is(':checked'));
+
+                    return;
                 }
 
-                this._lastChecked = $target;
+                this.checkboxClick($target, $target.is(':checked'));
             },
             /**
              * @param {JQueryKeyEventObject} e
@@ -609,20 +628,20 @@ function (Dep, MassActionHelper, ExportHelper) {
         },
 
         /**
-         * 
-         * @param {JQuery} $checkbox 
-         * @param {boolean} checked 
-         * 
+         * @param {JQuery} $checkbox
+         * @param {boolean} checked
          * @private
          */
         checkboxClick: function ($checkbox, checked) {
-            const id = $checkbox.attr('data-id');
+            let id = $checkbox.attr('data-id');
 
             if (checked) {
                 this.checkRecord(id, $checkbox);
-            } else {
-                this.uncheckRecord(id, $checkbox);
+
+                return;
             }
+
+            this.uncheckRecord(id, $checkbox);
         },
 
         resetCustomOrder: function () {
