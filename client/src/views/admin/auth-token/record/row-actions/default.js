@@ -26,29 +26,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/auth-token/record/row-actions/default', 'views/record/row-actions/default', function (Dep) {
+define('views/admin/auth-token/record/row-actions/default', ['views/record/row-actions/default'], function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.listenTo(this.model, 'change:isActive', function () {
-                setTimeout(function () {
+
+            this.listenTo(this.model, 'change:isActive', () => {
+                setTimeout(() => {
                     this.reRender();
-                }.bind(this), 10);
-            }, this);
+                }, 10);
+            });
         },
 
         getActionList: function () {
             var list = [];
 
-                list.push({
-                    action: 'quickView',
-                    label: 'View',
-                    data: {
-                        id: this.model.id
-                    }
-                });
+            list.push({
+                action: 'quickView',
+                label: 'View',
+                data: {
+                    id: this.model.id
+                }
+            });
 
             if (this.model.get('isActive')) {
                 list.push({
@@ -59,6 +60,7 @@ Espo.define('views/admin/auth-token/record/row-actions/default', 'views/record/r
                     }
                 });
             }
+
             list.push({
                 action: 'quickRemove',
                 label: 'Remove',
@@ -66,10 +68,8 @@ Espo.define('views/admin/auth-token/record/row-actions/default', 'views/record/r
                     id: this.model.id
                 }
             });
+
             return list;
-        }
+        },
     });
-
 });
-
-

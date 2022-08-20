@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/auth-token/record/list', 'views/record/list', function (Dep) {
+define('views/admin/auth-token/record/list', ['views/record/list'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,45 +37,47 @@ define('views/admin/auth-token/record/list', 'views/record/list', function (Dep)
         checkAllResultMassActionList: ['remove', 'setInactive'],
 
         massActionSetInactive: function () {
-            var ids = false;
-            var allResultIsChecked = this.allResultIsChecked;
+            let ids = null;
+            let allResultIsChecked = this.allResultIsChecked;
 
             if (!allResultIsChecked) {
                 ids = this.checkedList;
             }
 
-            var attributes = {
-                isActive: false
+            let attributes = {
+                isActive: false,
             };
 
-            var ids = false;
+            Espo.Ajax
+                .postRequest('MassAction', {
+                    action: 'update',
+                    entityType: this.entityType,
+                    params: {
+                        ids: ids || null,
+                        where: (!ids || ids.length === 0) ? this.collection.getWhere() : null,
+                        searchParams: (!ids || ids.length === 0) ? this.collection.data : null,
+                    },
+                    data: attributes,
+                })
+                .then(() => {
+                    this.collection
+                        .fetch()
+                        .then(() => {
+                            Espo.Ui.success(this.translate('Done'));
 
-            var allResultIsChecked = this.allResultIsChecked;
-
-            if (!allResultIsChecked) {
-                ids = this.checkedList;
-            }
-
-            Espo.Ajax.postRequest('MassAction', {
-                action: 'update',
-                entityType: this.entityType,
-                params: {
-                    ids: ids || null,
-                    where: (!ids || ids.length === 0) ? this.collection.getWhere() : null,
-                    searchParams: (!ids || ids.length === 0) ? this.collection.data : null,
-                },
-                data: attributes,
-            }).then(() => {
-                var result = result || {};
-
-                this.collection.fetch();
-            });
+                            if (ids) {
+                                ids.forEach(id => {
+                                    this.checkRecord(id);
+                                });
+                            }
+                        });
+                });
         },
 
         actionSetInactive: function (data) {
             if (!data.id) {
                 return;
-            };
+            }
 
             var model = this.collection.get(data.id);
 
@@ -86,14 +88,10 @@ define('views/admin/auth-token/record/list', 'views/record/list', function (Dep)
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
             model
-                .save({
-                    'isActive': false
-                }, {patch: true})
+                .save({'isActive': false}, {patch: true})
                 .then(() => {
                     Espo.Ui.notify(false);
                 });
-        }
-
+        },
     });
 });
-

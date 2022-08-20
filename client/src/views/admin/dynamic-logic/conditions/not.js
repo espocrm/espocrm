@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/conditions/not', 'views/admin/dynamic-logic/conditions/group-base', function (Dep) {
+define('views/admin/dynamic-logic/conditions/not', ['views/admin/dynamic-logic/conditions/group-base'], function (Dep) {
 
     return Dep.extend({
 
@@ -40,7 +40,7 @@ Espo.define('views/admin/dynamic-logic/conditions/not', 'views/admin/dynamic-log
                 operator: this.operator,
                 hasItem: this.hasView(this.viewKey),
                 level: this.level,
-                groupOperator: this.getGroupOperator()
+                groupOperator: this.getGroupOperator(),
             };
         },
 
@@ -68,6 +68,7 @@ Espo.define('views/admin/dynamic-logic/conditions/not', 'views/admin/dynamic-log
 
         getKey: function () {
             var i = 0;
+
             return 'view-' + this.level.toString() + '-' + this.number.toString() + '-' + i.toString();
         },
 
@@ -75,26 +76,25 @@ Espo.define('views/admin/dynamic-logic/conditions/not', 'views/admin/dynamic-log
             return 0;
         },
 
-        addItemContainer: function () {
-        },
+        addItemContainer: function () {},
 
-        addViewDataListItem: function () {
-        },
+        addViewDataListItem: function () {},
 
         fetch: function () {
             var view = this.getView(this.viewKey);
-            if (!view) return {
-                type: 'and',
-                value: []
-            };
+
+            if (!view) {
+                return {
+                    type: 'and',
+                    value: [],
+                };
+            }
 
             var value = view.fetch();
 
-            console.log(value);
-
             return {
                 type: this.operator,
-                value: value
+                value: value,
             };
         },
 
@@ -104,9 +104,6 @@ Espo.define('views/admin/dynamic-logic/conditions/not', 'views/admin/dynamic-log
             } else {
                 this.$el.find(' > .group-bottom').removeClass('hidden');
             }
-        }
-
+        },
     });
-
 });
-

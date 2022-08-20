@@ -26,12 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/conditions/field-types/date', 'views/admin/dynamic-logic/conditions/field-types/base', function (Dep) {
+define('views/admin/dynamic-logic/conditions/field-types/date',
+['views/admin/dynamic-logic/conditions/field-types/base'], function (Dep) {
 
     return Dep.extend({
 
-
     });
-
 });
-

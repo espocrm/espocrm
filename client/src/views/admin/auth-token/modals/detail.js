@@ -26,13 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/auth-token/modals/detail', ['views/modals/detail'], function (Dep) {
+define('views/admin/auth-token/modals/detail', ['views/modals/detail'], function (Dep) {
 
     return Dep.extend({
 
         sideDisabled: true,
 
-        editDisabled: true
-
+        editDisabled: true,
     });
 });

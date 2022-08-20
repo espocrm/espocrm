@@ -26,13 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/conditions/or', 'views/admin/dynamic-logic/conditions/group-base', function (Dep) {
+define('views/admin/dynamic-logic/conditions/or', ['views/admin/dynamic-logic/conditions/group-base'], function (Dep) {
 
     return Dep.extend({
 
-        operator: 'or'
-
+        operator: 'or',
     });
-
 });
-

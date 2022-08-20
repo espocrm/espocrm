@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/conditions/field-types/enum', 'views/admin/dynamic-logic/conditions/field-types/base', function (Dep) {
+define('views/admin/dynamic-logic/conditions/field-types/enum',
+['views/admin/dynamic-logic/conditions/field-types/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -35,7 +36,7 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/enum', 'views/admi
 
             var item = {
                 type: this.type,
-                attribute: this.field
+                attribute: this.field,
             };
 
             if (valueView) {
@@ -55,8 +56,5 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/enum', 'views/admi
 
             return viewName;
         },
-
     });
-
 });
-

@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/conditions/field-types/link-parent', 'views/admin/dynamic-logic/conditions/field-types/base', function (Dep) {
+define('views/admin/dynamic-logic/conditions/field-types/link-parent',
+['views/admin/dynamic-logic/conditions/field-types/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -41,6 +42,7 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/link-parent', 'vie
 
             if (this.type === 'equals' || this.type === 'notEquals') {
                 var values = {};
+
                 values[this.field + 'Id'] = valueView.model.get(this.field + 'Id');
                 values[this.field + 'Name'] = valueView.model.get(this.field + 'Name');
                 values[this.field + 'Type'] = valueView.model.get(this.field + 'Type');
@@ -99,9 +101,6 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/link-parent', 'vie
             }
 
             return item;
-        }
-
+        },
     });
-
 });
-
