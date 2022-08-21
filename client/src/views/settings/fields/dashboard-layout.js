@@ -110,7 +110,12 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
             this.setupCurrentTabLayout();
 
             if (this.isRendered()) {
-                this.reRender();
+                this.reRender()
+                    .then(() => {
+                        this.$el
+                            .find(`[data-action="selectTab"][data-tab="${tab}"]`)
+                            .focus();
+                    })
             }
         },
 
