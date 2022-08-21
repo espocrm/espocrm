@@ -131,7 +131,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
             this.currentTabLayout = tabLayout;
         },
 
-        addDashetHtml: function (id, name) {
+        addDashletHtml: function (id, name) {
             var $item = this.prepareGridstackItem(id, name);
 
             this.grid.addWidget(
@@ -164,7 +164,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
 
                 this.once('after:render', () => {
                     setTimeout(() => {
-                        this.addDashetHtml(id, name);
+                        this.addDashletHtml(id, name);
                         this.fetchLayout();
                     }, 50);
                 });
@@ -172,7 +172,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                 this.reRender();
             }
             else {
-                this.addDashetHtml(id, name);
+                this.addDashletHtml(id, name);
                 this.fetchLayout();
             }
         },
