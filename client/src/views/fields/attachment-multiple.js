@@ -429,7 +429,7 @@ function (Dep, FileUpload) {
 
                 $att.find('.preview').html(previewHtml);
 
-                if ($att.find('.preview').children().get(0).tagName === 'IMG') {
+                if ($att.find('.preview').find('img').length) {
                     $loading.remove();
                 }
             });

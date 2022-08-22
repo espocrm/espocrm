@@ -684,7 +684,7 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
 
                 $loading.html(this.translate('Ready'));
 
-                if ($att.find('.preview').children().get(0).tagName === 'IMG') {
+                if ($att.find('.preview').find('img').length) {
                     $loading.remove();
                 }
             });
