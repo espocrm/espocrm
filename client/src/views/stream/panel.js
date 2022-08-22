@@ -550,7 +550,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     return;
                 }
 
-                if (message === '' && (this.seed.get('attachmentsIds') || []).length === 0) {
+                if (message.trim() === '' && (this.seed.get('attachmentsIds') || []).length === 0) {
                     this.notify('Post cannot be empty', 'error');
                     this.$textarea.prop('disabled', false);
                     this.controlPostButtonAvailability();

@@ -255,7 +255,9 @@ define('views/stream/record/edit', ['views/record/base'], function (Dep) {
         validate: function () {
             var notValid = Dep.prototype.validate.call(this);
 
-            if (this.model.get('post') === '' && !(this.model.get('attachmentsIds') || []).length) {
+            let message = this.model.get('post') || '';
+
+            if (message.trim() === '' && !(this.model.get('attachmentsIds') || []).length) {
                 notValid = true;
             }
 
