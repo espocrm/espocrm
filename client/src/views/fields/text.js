@@ -277,9 +277,15 @@ define('views/fields/text', ['views/fields/base'], function (Dep) {
         },
 
         fetch: function () {
-            var data = {};
+            let data = {};
 
-            data[this.name] = this.$element.val() || null;
+            let value = this.$element.val() || null;
+
+            if (value && value.trim() === '') {
+                value = '';
+            }
+
+            data[this.name] = value
 
             return data;
         },
