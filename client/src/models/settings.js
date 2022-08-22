@@ -43,6 +43,8 @@ define('models/settings', ['model'], function (Dep) {
          */
         name: 'Settings',
 
+        entityType: 'Settings',
+
         /**
          * Load.
          *

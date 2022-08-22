@@ -57,7 +57,9 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                 this.editTabs();
             },
             'click button[data-action="addDashlet"]': function () {
-                this.createView('addDashlet', 'views/modals/add-dashlet', {}, (view) => {
+                this.createView('addDashlet', 'views/modals/add-dashlet', {
+                    parentType: this.model.entityType,
+                }, view => {
                     view.render();
 
                     this.listenToOnce(view, 'add', (name) => {

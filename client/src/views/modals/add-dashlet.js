@@ -55,23 +55,32 @@ define('views/modals/add-dashlet', ['views/modal'], function (Dep) {
         setup: function () {
             this.headerText = this.translate('Add Dashlet');
 
-            var dashletList = Object.keys(this.getMetadata().get('dashlets') || {})
+            let dashletList = Object.keys(this.getMetadata().get('dashlets') || {})
                 .sort((v1, v2) => {
                     return this.translate(v1, 'dashlets').localeCompare(this.translate(v2, 'dashlets'));
                 });
 
-            this.dashletList = [];
+            this.dashletList = dashletList.filter(item => {
+                let aclScope = this.getMetadata().get(['dashlets', item, 'aclScope']) || null;
+                let accessDataList = this.getMetadata().get(['dashlets', item, 'accessDataList']) || null;
 
-            dashletList.forEach(item => {
-                var aclScope = this.getMetadata().get('dashlets.' + item + '.aclScope') || null;
+                if (this.options.parentType === 'Settings') {
+                    return true;
+                }
+
+                if (this.options.parentType === 'Portal') {
+                    if (accessDataList && accessDataList.find(item => item.inPortalDisabled)) {
+                        return false;
+                    }
+
+                    return true;
+                }
 
                 if (aclScope) {
                     if (!this.getAcl().check(aclScope)) {
-                        return;
+                        return false;
                     }
                 }
-
-                var accessDataList = this.getMetadata().get(['dashlets', item, 'accessDataList']) || null;
 
                 if (accessDataList) {
                     if (!Espo.Utils.checkAccessDataList(accessDataList, this.getAcl(), this.getUser())) {
@@ -79,7 +88,7 @@ define('views/modals/add-dashlet', ['views/modal'], function (Dep) {
                     }
                 }
 
-                this.dashletList.push(item);
+                return true;
             });
         },
     });

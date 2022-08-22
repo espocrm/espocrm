@@ -44,6 +44,8 @@ define('models/preferences', ['model'], function (Dep) {
          */
         name: 'Preferences',
 
+        entityType: 'Preferences',
+
         /**
          * Get dashlet options.
          *

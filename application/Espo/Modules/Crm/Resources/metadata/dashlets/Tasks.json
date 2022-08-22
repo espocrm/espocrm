@@ -66,5 +66,10 @@
                 ]
             }
         ]
-    }
+    },
+    "accessDataList": [
+        {
+            "inPortalDisabled": true
+        }
+    ]
 }
