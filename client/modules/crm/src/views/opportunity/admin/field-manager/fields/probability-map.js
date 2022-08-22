@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/opportunity/admin/field-manager/fields/probability-map', 'views/fields/base', function (Dep) {
+define('crm:views/opportunity/admin/field-manager/fields/probability-map', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -36,45 +36,49 @@ Espo.define('crm:views/opportunity/admin/field-manager/fields/probability-map', 
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'change:options', function (m, v, o) {
-                var probabilityMap = this.model.get('probabilityMap') || {}
+                let probabilityMap = this.model.get('probabilityMap') || {}
+
                 if (o.ui) {
-                    (this.model.get('options') || []).forEach(function (item) {
+                    (this.model.get('options') || []).forEach(item => {
                         if (!(item in probabilityMap)) {
                             probabilityMap[item] = 50;
                         }
-                    }, this);
+                    });
+
                     this.model.set('probabilityMap', probabilityMap);
                 }
+
                 this.reRender();
-            }, this);
+            });
         },
 
         data: function () {
-            var data = {};
-            var values = this.model.get('probabilityMap') || {};
+            let data = {};
+
+            let values = this.model.get('probabilityMap') || {};
+
             data.stageList = this.model.get('options') || [];
             data.values = values;
+
             return data;
         },
 
         fetch: function () {
-            var data = {
-                probabilityMap: {}
+            let data = {
+                probabilityMap: {},
             };
 
-            (this.model.get('options') || []).forEach(function (item) {
+            (this.model.get('options') || []).forEach(item => {
                 data.probabilityMap[item] = parseInt(this.$el.find('input[data-name="'+item+'"]').val());
-            }, this);
+            });
 
             return data;
         },
 
         afterRender: function () {
-            this.$el.find('input').on('change', function () {
+            this.$el.find('input').on('change', () => {
                 this.trigger('change')
-            }.bind(this));
-        }
-
+            });
+        },
     });
-
 });
