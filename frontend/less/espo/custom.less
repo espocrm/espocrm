@@ -952,7 +952,23 @@ input.global-search-input {
         border-top-left-radius: var(--border-radius);
         border-top-right-radius: var(--border-radius);
     }
+
+    > .list-group-item:last-child {
+        border-bottom-width: 0;
+    }
+
+    &.no-input {
+        border-bottom-left-radius: var(--border-radius);
+        border-bottom-right-radius: var(--border-radius);
+
+        > .list-group-item:last-child {
+            border-bottom-left-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+            border-bottom-width: 1px;
+        }
+    }
 }
+
 
 .list-group-item {
     margin-bottom: 0;
@@ -994,10 +1010,6 @@ input.global-search-input {
     &.active {
         background-color: @list-group-hover-bg;
     }
-}
-
-.field .link-container .list-group-item:last-child {
-    border-bottom-width: 0;
 }
 
 .field .link-container .list-group-item > div {
