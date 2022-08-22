@@ -41,38 +41,25 @@ use Espo\Core\{
     Api\Request,
     Api\Response,
     FileStorage\Manager as FileStorageManager,
-};
+    Utils\Metadata};
 
 class Download implements EntryPoint
 {
-    /**
-     * @var string[]
-     */
-    protected $fileTypesToShowInline = [
-        'application/pdf',
-        'application/vnd.ms-word',
-        'application/vnd.ms-excel',
-        'application/vnd.oasis.opendocument.text',
-        'application/vnd.oasis.opendocument.spreadsheet',
-        'text/plain',
-        'application/msword',
-        'application/msexcel',
-    ];
+    protected FileStorageManager $fileStorageManager;
+    protected Acl $acl;
+    protected EntityManager $entityManager;
+    private Metadata $metadata;
 
-    /** @var FileStorageManager */
-    protected $fileStorageManager;
-
-    /** @var Acl */
-    protected $acl;
-
-    /** @var EntityManager */
-    protected $entityManager;
-
-    public function __construct(FileStorageManager $fileStorageManager, Acl $acl, EntityManager $entityManager)
-    {
+    public function __construct(
+        FileStorageManager $fileStorageManager,
+        Acl $acl,
+        EntityManager $entityManager,
+        Metadata $metadata
+    ) {
         $this->fileStorageManager = $fileStorageManager;
         $this->acl = $acl;
         $this->entityManager = $entityManager;
+        $this->metadata = $metadata;
     }
 
     public function run(Request $request, Response $response): void
@@ -106,7 +93,10 @@ class Download implements EntryPoint
 
         $disposition = 'attachment';
 
-        if (in_array($type, $this->fileTypesToShowInline)) {
+        /** @var {string[]} $inlineMimeTypeList */
+        $inlineMimeTypeList = $this->metadata->get(['app', 'file', 'inlineMimeTypeList']) ?? [];
+
+        if (in_array($type, $inlineMimeTypeList)) {
             $disposition = 'inline';
         }
 

@@ -77,7 +77,18 @@
         "3gp": ["video/3gpp", "audio/3gpp"],
         "3g2": ["video/3gpp2", "audio/3gpp2"],
         "7z": ["application/x-7z-compressed"],
-
         "md": "text/markdown"
-    }
+    },
+    "inlineMimeTypeList": [
+        "application/pdf",
+        "text/plain",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.ms-word",
+        "application/vnd.ms-excel",
+        "application/vnd.oasis.opendocument.text",
+        "application/vnd.oasis.opendocument.spreadsheet",
+        "application/msword",
+        "application/msexcel"
+    ]
 }
