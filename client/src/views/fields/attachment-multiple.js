@@ -571,7 +571,7 @@ function (Dep, FileUpload) {
                             }
                         })
                         .catch(() => {
-                            if (mediator.isCenceled) {
+                            if (mediator.isCanceled) {
                                 return;
                             }
 
