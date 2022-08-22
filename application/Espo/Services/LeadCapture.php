@@ -74,13 +74,11 @@ class LeadCapture extends Record
 
         $apiKey = $entity->getApiKey();
 
-        if (!$apiKey) {
-            throw new Error("No api key.");
+        if ($apiKey) {
+            $requestUrl = $this->config->getSiteUrl() . '/api/v1/LeadCapture/' . $apiKey;
+
+            $entity->set('exampleRequestUrl', $requestUrl);
         }
-
-        $requestUrl = $this->config->getSiteUrl() . '/api/v1/LeadCapture/' . $apiKey;
-
-        $entity->set('exampleRequestUrl', $requestUrl);
 
         $fieldUtil = $this->fieldUtil;
 
