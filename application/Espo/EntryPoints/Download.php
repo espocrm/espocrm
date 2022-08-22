@@ -93,11 +93,13 @@ class Download implements EntryPoint
 
         $disposition = 'attachment';
 
-        /** @var {string[]} $inlineMimeTypeList */
+        /** @var string[] $inlineMimeTypeList */
         $inlineMimeTypeList = $this->metadata->get(['app', 'file', 'inlineMimeTypeList']) ?? [];
 
         if (in_array($type, $inlineMimeTypeList)) {
             $disposition = 'inline';
+
+            $response->setHeader('Content-Security-Policy', "default-src 'self'");
         }
 
         $response->setHeader('Content-Description', 'File Transfer');
