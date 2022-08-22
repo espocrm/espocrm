@@ -80,10 +80,12 @@ function (Dep, FileUpload) {
                 this.$el.find('input.file').val(null);
             },
             'change input.file': function (e) {
-                var $file = $(e.currentTarget);
-                var files = e.currentTarget.files;
+                let $file = $(e.currentTarget);
+                let files = e.currentTarget.files;
 
                 this.uploadFiles(files);
+
+                e.target.value = null;
 
                 $file.replaceWith($file.clone(true));
             },

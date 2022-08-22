@@ -73,15 +73,18 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                 this.$el.find('input.file').val(null);
             },
             'change input.file': function (e) {
-                var $file = $(e.currentTarget);
+                let $file = $(e.currentTarget);
+                let files = e.currentTarget.files;
 
-                var files = e.currentTarget.files;
-
-                if (files.length) {
-                    this.uploadFile(files[0]);
-
-                    $file.replaceWith($file.clone(true));
+                if (!files.length) {
+                    return;
                 }
+
+                this.uploadFile(files[0]);
+
+                e.target.value = null;
+
+                $file.replaceWith($file.clone(true));
             },
             'click a[data-action="showImagePreview"]': function (e) {
                 e.preventDefault();
