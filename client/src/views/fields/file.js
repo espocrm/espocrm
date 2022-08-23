@@ -657,10 +657,11 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
             let previewHtml = this.getBoxPreviewHtml(name, type, id);
 
             let $att = $('<div>')
+                .addClass('gray-box')
                 .append($remove)
                 .append(
                     $('<span>')
-                        .addClass('preview gray-box')
+                        .addClass('preview')
                         .append(previewHtml)
                 );
 

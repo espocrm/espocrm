@@ -1844,12 +1844,14 @@ label.attach-file-label {
     }
 }
 
-.attachment-upload > .attachment-control > .dropdown > .btn {
-    margin-bottom: 0;
-}
+.attachment-upload {
+    > .attachment-control > .dropdown > .btn {
+        margin-bottom: 0;
+    }
 
-.attachment-upload > .attachments > div:first-child {
-    margin-top: 2px;
+    > .attachments > div:first-child {
+        margin-top: 2px;
+    }
 }
 
 .gray-box {
@@ -1868,6 +1870,14 @@ label.attach-file-label {
     }
 
     border-radius: var(--border-radius);
+
+    a.remove-attachment {
+        > .fas {
+            position: relative;
+            top: 1px;
+            padding-right: 1px;
+        }
+    }
 }
 
 .gray-box .preview {
