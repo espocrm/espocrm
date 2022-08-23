@@ -16,7 +16,13 @@
 {{#each categoryList}}
 <div class="panel panel-default" data-name="{{./this}}">
     <div class="panel-heading clearfix">
-        <div class="pull-left" style="margin-right: 10px;">
+        <div
+            class="pull-left"
+            style="
+                margin-right: 10px;
+                padding-top: calc((var(--panel-heading-height) - var(--panel-heading-font-size)) / 2 - 1px);
+            "
+        >
             <a
                 role="button"
                 tabindex="0"
