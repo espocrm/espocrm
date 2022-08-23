@@ -376,6 +376,8 @@ class Service implements Crud,
 
     /**
      * @param Entity $entity
+     * @todo Make private.
+     * @note Not to be extended.
      */
     protected function loadListAdditionalFields(Entity $entity, ?SearchParams $searchParams = null): void
     {
