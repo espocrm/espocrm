@@ -1036,7 +1036,7 @@ class Service implements Crud,
             ->find();
 
         foreach ($collection as $itemEntity) {
-            $this->loadListAdditionalFields($itemEntity, $preparedSearchParams);
+            $recordService->loadListAdditionalFields($itemEntity, $preparedSearchParams);
 
             $recordService->prepareEntityForOutput($itemEntity);
         }
