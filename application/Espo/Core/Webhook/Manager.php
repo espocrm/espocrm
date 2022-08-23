@@ -99,10 +99,10 @@ class Manager
 
         if (is_null($this->data)) {
             $this->data = $this->buildData();
-        }
 
-        if ($this->config->get('useCache')) {
-            $this->storeDataToCache();
+            if ($this->config->get('useCache')) {
+                $this->storeDataToCache();
+            }
         }
     }
 
