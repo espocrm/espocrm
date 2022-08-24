@@ -30,8 +30,20 @@ define('crm:views/contact/fields/accounts', ['views/fields/link-multiple-with-co
 
     return Dep.extend({
 
-        events: {
-            'click [data-action="switchPrimary"]': function (e) {
+        getAttributeList: function () {
+            var list = Dep.prototype.getAttributeList.call(this);
+
+            list.push('accountId');
+            list.push('accountName');
+            list.push('title');
+
+            return list;
+        },
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.events['click [data-action="switchPrimary"]'] = e => {
                 let $target = $(e.currentTarget);
                 let id = $target.data('id');
 
@@ -47,21 +59,7 @@ define('crm:views/contact/fields/accounts', ['views/fields/link-multiple-with-co
 
                     this.setPrimaryId(id);
                 }
-            }
-        },
-
-        getAttributeList: function () {
-            var list = Dep.prototype.getAttributeList.call(this);
-
-            list.push('accountId');
-            list.push('accountName');
-            list.push('title');
-
-            return list;
-        },
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
+            };
 
             this.primaryIdFieldName = 'accountId';
             this.primaryNameFieldName = 'accountName';

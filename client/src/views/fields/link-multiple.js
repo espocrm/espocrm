@@ -192,6 +192,38 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
         /**
          * @inheritDoc
          */
+        events: {
+            /**
+             * @param {JQueryMouseEventObject} e
+             * @this module:views/fields/link-multiple.Class
+             */
+            'auxclick a[href]:not([role="button"])': function (e) {
+                if (!this.isReadMode()) {
+                    return;
+                }
+
+                let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+
+                if (!isCombination) {
+                    return;
+                }
+
+                let id = $(e.currentTarget).attr('data-id');
+
+                if (!id) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.quickView(id);
+            },
+        },
+
+        /**
+         * @inheritDoc
+         */
         data: function () {
             let ids = this.model.get(this.idsName);
 
@@ -664,6 +696,7 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
 
             let $a = $('<a>')
                 .attr('href', this.getUrl(id))
+                .attr('data-id', id)
                 .text(name);
 
             if (iconHtml) {
@@ -852,6 +885,40 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
             return this.getSearchParamsData().type ||
                 this.searchParams.typeFront ||
                 this.searchParams.type || 'anyOf';
+        },
+
+        /**
+         * @protected
+         * @param {string} id
+         */
+        quickView: function (id) {
+            let entityType = this.foreignScope;
+
+            if (!this.getAcl().checkScope(entityType, 'read')) {
+                return;
+            }
+
+            let viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'detail']) ||
+                'views/modals/detail';
+
+            Espo.Ui.notify(this.translate('loading', 'messages'));
+
+            let options = {
+                scope: entityType,
+                id: id,
+            };
+
+            this.createView('dialog', viewName, options, view => {
+                this.listenToOnce(view, 'after:render', () => {
+                    Espo.Ui.notify(false);
+                });
+
+                view.render();
+
+                this.listenToOnce(view, 'remove', () => {
+                    this.clearView('dialog');
+                });
+            });
         },
     });
 });

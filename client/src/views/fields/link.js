@@ -172,6 +172,32 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
         /**
          * @inheritDoc
          */
+        events: {
+            /**
+             * @param {JQueryMouseEventObject} e
+             * @this module:views/fields/link.Class
+             */
+            'auxclick a[href]:not([role="button"])': function (e) {
+                if (!this.isReadMode()) {
+                    return;
+                }
+
+                let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+
+                if (!isCombination) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.quickView();
+            },
+        },
+
+        /**
+         * @inheritDoc
+         */
         data: function () {
             var nameValue = this.model.has(this.nameName) ?
                 this.model.get(this.nameName) :
@@ -938,6 +964,45 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             return this.getSearchParamsData().type ||
                 this.searchParams.typeFront ||
                 this.searchParams.type;
+        },
+
+        /**
+         * @protected
+         */
+        quickView: function () {
+            let id = this.model.get(this.idName);
+
+            if (!id) {
+                return;
+            }
+
+            let entityType = this.foreignScope;
+
+            if (!this.getAcl().checkScope(entityType, 'read')) {
+                return;
+            }
+
+            let viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'detail']) ||
+                'views/modals/detail';
+
+            Espo.Ui.notify(this.translate('loading', 'messages'));
+
+            let options = {
+                scope: entityType,
+                id: id,
+            };
+
+            this.createView('dialog', viewName, options, view => {
+                this.listenToOnce(view, 'after:render', () => {
+                    Espo.Ui.notify(false);
+                });
+
+                view.render();
+
+                this.listenToOnce(view, 'remove', () => {
+                    this.clearView('dialog');
+                });
+            });
         },
     });
 });

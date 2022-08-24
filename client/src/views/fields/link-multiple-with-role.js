@@ -127,6 +127,7 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
                 .append(
                     $('<a>')
                         .attr('href', '#' + this.foreignScope + '/view/' + id)
+                        .attr('data-id', id)
                         .text(name)
                 );
 

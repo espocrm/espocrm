@@ -104,6 +104,7 @@ define('views/user/fields/teams', ['views/fields/link-multiple-with-role'], func
                 .append(
                     $('<a>')
                         .attr('href', '#' + this.foreignScope + '/view/' + id)
+                        .attr('data-id', id)
                         .text(name)
                 );
 

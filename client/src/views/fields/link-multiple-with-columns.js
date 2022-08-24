@@ -173,6 +173,7 @@ function (Dep, RegExpPattern) {
                 .append(
                     $('<a>')
                         .attr('href', '#' + this.foreignScope + '/view/' + id)
+                        .attr('data-id', id)
                         .text(name)
                 );
 

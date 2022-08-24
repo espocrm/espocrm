@@ -174,6 +174,32 @@ define('views/fields/link-parent', ['views/fields/base'], function (Dep) {
          */
         initialSearchIsNotIdle: true,
 
+        /**
+         * @inheritDoc
+         */
+        events: {
+            /**
+             * @param {JQueryMouseEventObject} e
+             * @this module:views/fields/link-parent.Class
+             */
+            'auxclick a[href]:not([role="button"])': function (e) {
+                if (!this.isReadMode()) {
+                    return;
+                }
+
+                let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+
+                if (!isCombination) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.quickView();
+            },
+        },
+
         data: function () {
             var nameValue = this.model.get(this.nameName);
 
@@ -683,6 +709,44 @@ define('views/fields/link-parent', ['views/fields/base'], function (Dep) {
          */
         getSearchType: function () {
             return this.getSearchParamsData().type || this.searchParams.typeFront;
+        },
+
+        /**
+         * @protected
+         */
+        quickView: function () {
+            let id = this.model.get(this.idName);
+            let entityType = this.model.get(this.typeName);
+
+            if (!id || !entityType) {
+                return;
+            }
+
+            if (!this.getAcl().checkScope(entityType, 'read')) {
+                return;
+            }
+
+            let viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'detail']) ||
+                'views/modals/detail';
+
+            Espo.Ui.notify(this.translate('loading', 'messages'));
+
+            let options = {
+                scope: entityType,
+                id: id,
+            };
+
+            this.createView('dialog', viewName, options, view => {
+                this.listenToOnce(view, 'after:render', () => {
+                    Espo.Ui.notify(false);
+                });
+
+                view.render();
+
+                this.listenToOnce(view, 'remove', () => {
+                    this.clearView('dialog');
+                });
+            });
         },
     });
 });
