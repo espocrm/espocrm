@@ -28,8 +28,8 @@
 
 define(
     'views/email/fields/from-address-varchar',
-    ['views/fields/base', 'views/email/fields/email-address'],
-    function (Dep, EmailAddress) {
+    ['views/fields/base', 'views/email/fields/email-address', 'helpers/record-modal'],
+    function (Dep, EmailAddress, RecordModal) {
 
     return Dep.extend({
 
@@ -515,43 +515,11 @@ define(
         },
 
         quickView: function (data) {
-            data = data || {};
+            let helper = new RecordModal(this.getMetadata(), this.getAcl());
 
-            let id = data.id;
-            let scope = data.scope;
-
-            if (!id) {
-                console.error("No id.");
-
-                return;
-            }
-
-            if (!scope) {
-                console.error("No scope.");
-
-                return;
-            }
-
-            let viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'detail']) ||
-                'views/modals/detail';
-
-            Espo.Ui.notify(this.translate('loading', 'messages'));
-
-            let options = {
-                scope: scope,
-                id: id,
-            };
-
-            this.createView('modal', viewName, options, view => {
-                this.listenToOnce(view, 'after:render', () => {
-                    Espo.Ui.notify(false);
-                });
-
-                view.render();
-
-                this.listenToOnce(view, 'remove', () => {
-                    this.clearView('modal');
-                });
+            helper.showDetail(this, {
+                id: data.id,
+                scope: data.scope,
             });
         },
     });

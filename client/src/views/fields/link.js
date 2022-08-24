@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/link', ['views/fields/base'], function (Dep) {
+define('views/fields/link', ['views/fields/base', 'helpers/record-modal'], function (Dep, RecordModal) {
 
     /**
      * A link field (belongs-to relation).
@@ -978,30 +978,11 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
 
             let entityType = this.foreignScope;
 
-            if (!this.getAcl().checkScope(entityType, 'read')) {
-                return;
-            }
+            let helper = new RecordModal(this.getMetadata(), this.getAcl());
 
-            let viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'detail']) ||
-                'views/modals/detail';
-
-            Espo.Ui.notify(this.translate('loading', 'messages'));
-
-            let options = {
-                scope: entityType,
+            helper.showDetail(this, {
                 id: id,
-            };
-
-            this.createView('dialog', viewName, options, view => {
-                this.listenToOnce(view, 'after:render', () => {
-                    Espo.Ui.notify(false);
-                });
-
-                view.render();
-
-                this.listenToOnce(view, 'remove', () => {
-                    this.clearView('dialog');
-                });
+                scope: entityType,
             });
         },
     });

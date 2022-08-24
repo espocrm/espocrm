@@ -26,8 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/list', ['view', 'helpers/mass-action', 'helpers/export'],
-function (Dep, MassActionHelper, ExportHelper) {
+define('views/record/list', ['view', 'helpers/mass-action', 'helpers/export', 'helpers/record-modal'],
+function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
     /**
      * A record-list view. Renders and processes list items, actions.
@@ -2879,51 +2879,32 @@ function (Dep, MassActionHelper, ExportHelper) {
                 return;
             }
 
-            let viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'detail']) ||
-                'views/modals/detail';
-
-            if (!this.quickDetailDisabled) {
-                Espo.Ui.notify(this.translate('loading', 'messages'));
-
-                let options = {
-                    scope: scope,
-                    model: model,
-                    id: id,
-                    quickEditDisabled: this.quickEditDisabled,
-                };
-
-                if (this.options.keepCurrentRootUrl) {
-                    options.rootUrl = this.getRouter().getCurrentUrl();
-                }
-
-                this.createView('modal', viewName, options, view => {
-                    this.listenToOnce(view, 'after:render', () => {
-                        Espo.Ui.notify(false);
-                    });
-
-                    view.render();
-
-                    this.listenToOnce(view, 'remove', () => {
-                        this.clearView('modal');
-                    });
-
-                    if (!model) {
-                        return;
-                    }
-
-                    /*this.listenToOnce(view, 'after:edit-cancel', () => {
-                        this.actionQuickView({id: view.model.id, scope: view.model.name});
-                    });*/
-
-                    this.listenToOnce(view, 'after:save', (model) => {
-                        this.trigger('after:save', model);
-                    });
-                });
+            if (this.quickDetailDisabled) {
+                this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: true});
 
                 return;
             }
 
-            this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: true});
+            let helper = new RecordModal(this.getMetadata(), this.getAcl());
+
+            helper
+                .showDetail(this, {
+                    id: id,
+                    scope: scope,
+                    model: model,
+                    rootUrl: this.options.keepCurrentRootUrl ?
+                        this.getRouter().getCurrentUrl() : null,
+                    editDisabled: this.quickEditDisabled,
+                })
+                .then(view => {
+                    if (!model) {
+                        return;
+                    }
+
+                    this.listenTo(view, 'after:save', model => {
+                        this.trigger('after:save', model);
+                    });
+                });
         },
 
         actionQuickEdit: function (data) {
