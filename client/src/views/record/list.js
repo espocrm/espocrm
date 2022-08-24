@@ -2907,9 +2907,13 @@ function (Dep, MassActionHelper, ExportHelper) {
                         this.clearView('modal');
                     });
 
-                    this.listenToOnce(view, 'after:edit-cancel', () => {
+                    if (!model) {
+                        return;
+                    }
+
+                    /*this.listenToOnce(view, 'after:edit-cancel', () => {
                         this.actionQuickView({id: view.model.id, scope: view.model.name});
-                    });
+                    });*/
 
                     this.listenToOnce(view, 'after:save', (model) => {
                         this.trigger('after:save', model);

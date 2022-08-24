@@ -115,6 +115,26 @@ function (Dep, From, EmailAddress) {
 
                 From.prototype.addToPerson.call(this, 'Lead', address);
             },
+            'auxclick a[href][data-scope][data-id]': function (e) {
+                let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+
+                if (!isCombination) {
+                    return;
+                }
+
+                let $target = $(e.currentTarget);
+
+                let id = $target.attr('data-id');
+                let scope = $target.attr('data-scope');
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                From.prototype.quickView.call(this, {
+                    id: id,
+                    scope: scope,
+                });
+            },
         },
 
         getAutocompleteMaxCount: function () {
@@ -399,6 +419,8 @@ function (Dep, From, EmailAddress) {
                     .append(
                         $('<a>')
                             .attr('href', '#' + entityType + '/view/' + id)
+                            .attr('data-scope', entityType)
+                            .attr('data-id', id)
                             .text(name),
                         ' <span class="text-muted chevron-right"></span> ',
                         $('<span>').text(address)

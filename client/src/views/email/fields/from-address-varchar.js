@@ -67,7 +67,27 @@ define(
             'click [data-action="addToLead"]': function (e) {
                 var address = $(e.currentTarget).data('address');
                 this.addToPerson('Lead', address);
-            }
+            },
+            'auxclick a[href][data-scope][data-id]': function (e) {
+                let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+
+                if (!isCombination) {
+                    return;
+                }
+
+                let $target = $(e.currentTarget);
+
+                let id = $target.attr('data-id');
+                let scope = $target.attr('data-scope');
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.quickView({
+                    id: id,
+                    scope: scope,
+                });
+            },
         },
 
         data: function () {
@@ -152,6 +172,8 @@ define(
                     .append(
                         $('<a>')
                             .attr('href', `#${entityType}/view/${id}`)
+                            .attr('data-scope', entityType)
+                            .attr('data-id', id)
                             .text(name),
                         ' ',
                         $('<span>').addClass('text-muted chevron-right'),
@@ -490,6 +512,47 @@ define(
 
                 return true;
             }
+        },
+
+        quickView: function (data) {
+            data = data || {};
+
+            let id = data.id;
+            let scope = data.scope;
+
+            if (!id) {
+                console.error("No id.");
+
+                return;
+            }
+
+            if (!scope) {
+                console.error("No scope.");
+
+                return;
+            }
+
+            let viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'detail']) ||
+                'views/modals/detail';
+
+            Espo.Ui.notify(this.translate('loading', 'messages'));
+
+            let options = {
+                scope: scope,
+                id: id,
+            };
+
+            this.createView('modal', viewName, options, view => {
+                this.listenToOnce(view, 'after:render', () => {
+                    Espo.Ui.notify(false);
+                });
+
+                view.render();
+
+                this.listenToOnce(view, 'remove', () => {
+                    this.clearView('modal');
+                });
+            });
         },
     });
 });
