@@ -20,6 +20,9 @@
         "edit": "views/team/record/edit",
         "list": "views/team/record/list"
     },
+    "modalViews": {
+        "detail": "views/team/modals/detail"
+    },
     "boolFilterList": ["onlyMy"],
     "iconClass": "fas fa-users"
 }

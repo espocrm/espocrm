@@ -26,18 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/modals/detail', ['views/modals/detail'], function (Dep) {
+define('views/team/modals/detail', ['views/modals/detail'], function (Dep) {
 
     return Dep.extend({
 
         editDisabled: true,
 
-        getScope: function () {
-            if (this.model.isPortal()) {
-                return 'PortalUser';
-            }
-
-            return 'User';
-        },
     });
 });
