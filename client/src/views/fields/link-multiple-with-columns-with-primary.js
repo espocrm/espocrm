@@ -47,15 +47,6 @@ define(
          */
         primaryLink: null,
 
-        events: {
-            'click [data-action="switchPrimary"]': function (e) {
-                let $target = $(e.currentTarget);
-                let id = $target.data('id');
-
-                LinkMultipleWithPrimary.prototype.switchPrimary.call(this, id);
-            }
-        },
-
         getAttributeList: function () {
             let list = Dep.prototype.getAttributeList.call(this);
 
@@ -72,6 +63,13 @@ define(
             this.primaryNameAttribute = this.primaryLink + 'Name';
 
             Dep.prototype.setup.call(this);
+
+            this.events['click [data-action="switchPrimary"]'] = e => {
+                let $target = $(e.currentTarget);
+                let id = $target.data('id');
+
+                LinkMultipleWithPrimary.prototype.switchPrimary.call(this, id);
+            };
 
             this.primaryId = this.model.get(this.primaryIdAttribute);
             this.primaryName = this.model.get(this.primaryNameAttribute);
