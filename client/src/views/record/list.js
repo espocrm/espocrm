@@ -2846,31 +2846,43 @@ function (Dep, MassActionHelper, ExportHelper) {
         actionQuickView: function (data) {
             data = data || {};
 
-            var id = data.id;
+            let id = data.id;
 
             if (!id) {
+                console.error("No id.");
+
                 return;
             }
 
-            var model = null;
+            let model = null;
 
             if (this.collection) {
                 model = this.collection.get(id);
             }
 
-            if (!data.scope && !model) {
+            let scope = data.scope;
+
+            if (!scope && model) {
+                scope = model.name;
+            }
+
+            if (!scope) {
+                scope = this.scope;
+            }
+
+            if (!scope) {
+                console.error("No scope.");
+
                 return;
             }
 
-            var scope = data.scope || model.name || this.scope;
-
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') ||
+            let viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'detail']) ||
                 'views/modals/detail';
 
             if (!this.quickDetailDisabled) {
                 Espo.Ui.notify(this.translate('loading', 'messages'));
 
-                var options = {
+                let options = {
                     scope: scope,
                     model: model,
                     id: id,
@@ -2881,7 +2893,7 @@ function (Dep, MassActionHelper, ExportHelper) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
                 }
 
-                this.createView('modal', viewName, options, (view) => {
+                this.createView('modal', viewName, options, view => {
                     this.listenToOnce(view, 'after:render', () => {
                         Espo.Ui.notify(false);
                     });
@@ -2900,40 +2912,53 @@ function (Dep, MassActionHelper, ExportHelper) {
                         this.trigger('after:save', model);
                     });
                 });
+
+                return;
             }
-            else {
-                this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: true});
-            }
+
+            this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: true});
         },
 
         actionQuickEdit: function (data) {
             data = data || {};
 
-            var id = data.id;
+            let id = data.id;
 
             if (!id) {
+                console.error("No id.");
+
                 return;
             }
 
-            var model = null;
+            let model = null;
 
             if (this.collection) {
                 model = this.collection.get(id);
             }
 
-            if (!data.scope && !model) {
+            let scope = data.scope;
+
+            if (!scope && model) {
+                scope = model.name;
+            }
+
+            if (!scope) {
+                scope = this.scope;
+            }
+
+            if (!scope) {
+                console.error("No scope.");
+
                 return;
             }
 
-            var scope = data.scope || model.name || this.scope;
-
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
+            let viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'edit']) ||
                 'views/modals/edit';
 
             if (!this.quickEditDisabled) {
                 Espo.Ui.notify(this.translate('loading', 'messages'));
 
-                var options = {
+                let options = {
                     scope: scope,
                     id: id,
                     model: model,
@@ -2947,6 +2972,7 @@ function (Dep, MassActionHelper, ExportHelper) {
                         },
                     },
                 };
+
                 if (this.options.keepCurrentRootUrl) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
                 }
@@ -2972,29 +2998,29 @@ function (Dep, MassActionHelper, ExportHelper) {
                         this.trigger('after:save', m);
                     });
                 });
+
+                return;
             }
-            else {
-                var options = {
-                    id: id,
-                    model: this.collection.get(id),
-                    returnUrl: this.getRouter().getCurrentUrl(),
-                    returnDispatchParams: {
-                        controller: scope,
-                        action: null,
-                        options: {
-                            isReturn: true,
-                        }
-                    },
-                };
 
-                if (this.options.keepCurrentRootUrl) {
-                    options.rootUrl = this.getRouter().getCurrentUrl();
-                }
+            let options = {
+                id: id,
+                model: this.collection.get(id),
+                returnUrl: this.getRouter().getCurrentUrl(),
+                returnDispatchParams: {
+                    controller: scope,
+                    action: null,
+                    options: {
+                        isReturn: true,
+                    }
+                },
+            };
 
-                this.getRouter().navigate('#' + scope + '/edit/' + id, {trigger: false});
-
-                this.getRouter().dispatch(scope, 'edit', options);
+            if (this.options.keepCurrentRootUrl) {
+                options.rootUrl = this.getRouter().getCurrentUrl();
             }
+
+            this.getRouter().navigate('#' + scope + '/edit/' + id, {trigger: false});
+            this.getRouter().dispatch(scope, 'edit', options);
         },
 
         /**
