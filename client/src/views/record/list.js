@@ -1773,13 +1773,13 @@ function (Dep, MassActionHelper, ExportHelper) {
         },
 
         removeMassAction: function (item) {
-            var index = this.massActionList.indexOf(item);
+            let index = this.massActionList.indexOf(item);
 
             if (~index) {
                 this.massActionList.splice(index, 1);
             }
 
-            var index = this.checkAllResultMassActionList.indexOf(item);
+            index = this.checkAllResultMassActionList.indexOf(item);
 
             if (~index) {
                 this.checkAllResultMassActionList.splice(index, 1);
@@ -1787,7 +1787,7 @@ function (Dep, MassActionHelper, ExportHelper) {
         },
 
         addMassAction: function (item, allResult, toBeginning) {
-            var method = toBeginning ? 'unshift' : 'push';
+            let method = toBeginning ? 'unshift' : 'push';
 
             this.massActionList[method](item);
 
@@ -1801,7 +1801,7 @@ function (Dep, MassActionHelper, ExportHelper) {
         },
 
         removeAllResultMassAction: function (item) {
-            var index = this.checkAllResultMassActionList.indexOf(item);
+            let index = this.checkAllResultMassActionList.indexOf(item);
 
             if (~index) {
                 this.checkAllResultMassActionList.splice(index, 1);
@@ -1853,13 +1853,13 @@ function (Dep, MassActionHelper, ExportHelper) {
                 this.removeMassAction('merge');
             }
 
-            var metadataMassActionList = (
+            let metadataMassActionList = (
                     this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []
                 ).concat(
                     this.getMetadata().get(['clientDefs', 'Global', 'massActionList']) || []
                 );
 
-            metadataMassActionList.forEach(function (item) {
+            metadataMassActionList.forEach(item => {
                 var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
 
                 if (!Espo.Utils.checkActionAvailability(this.getHelper(), defs)) {
@@ -1871,31 +1871,31 @@ function (Dep, MassActionHelper, ExportHelper) {
                 }
 
                 this.massActionList.push(item);
-            }, this);
+            });
 
-            var checkAllResultMassActionList = [];
+            let checkAllResultMassActionList = [];
 
-            this.checkAllResultMassActionList.forEach(function (item) {
+            this.checkAllResultMassActionList.forEach(item => {
                 if (~this.massActionList.indexOf(item)) {
                     checkAllResultMassActionList.push(item);
                 }
-            }, this);
+            });
 
             this.checkAllResultMassActionList = checkAllResultMassActionList;
 
-            var metadataCheckkAllMassActionList = (
+            let metadataCheckkAllMassActionList = (
                     this.getMetadata().get(['clientDefs', this.scope, 'checkAllResultMassActionList']) || []
                 ).concat(
                     this.getMetadata().get(['clientDefs', 'Global', 'checkAllResultMassActionList']) || []
                 );
 
-            metadataCheckkAllMassActionList.forEach(function (item) {
+            metadataCheckkAllMassActionList.forEach(item => {
                 if (this.collection.url !== this.entityType) {
                     return;
                 }
 
                 if (~this.massActionList.indexOf(item)) {
-                    var defs = this.getMetadata()
+                    let defs = this.getMetadata()
                         .get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
 
                     if (!Espo.Utils.checkActionAvailability(this.getHelper(), defs)) {
@@ -1908,12 +1908,12 @@ function (Dep, MassActionHelper, ExportHelper) {
 
                     this.checkAllResultMassActionList.push(item);
                 }
-            }, this);
+            });
 
             metadataMassActionList
                 .concat(metadataCheckkAllMassActionList)
-                .forEach((action) => {
-                       var defs = this.getMetadata()
+                .forEach(action => {
+                    let defs = this.getMetadata()
                            .get(['clientDefs', this.scope, 'massActionDefs', action]) || {};
 
                     if (!defs.initFunction || !defs.handler) {
@@ -1981,7 +1981,7 @@ function (Dep, MassActionHelper, ExportHelper) {
                 this.getAcl().checkScope(this.scope, 'edit') &&
                 this.getAcl().get('massUpdatePermission') === 'yes'
             ) {
-                var currencyFieldList = this.getFieldManager().getEntityTypeFieldList(this.entityType, {
+                let currencyFieldList = this.getFieldManager().getEntityTypeFieldList(this.entityType, {
                     type: 'currency',
                     acl: 'edit',
                 });
@@ -2021,7 +2021,7 @@ function (Dep, MassActionHelper, ExportHelper) {
             });
 
             if (this.selectable) {
-                this.events['click .list a.link'] = function (e) {
+                this.events['click .list a.link'] = (e) => {
                     e.preventDefault();
 
                     var id = $(e.target).attr('data-id');
