@@ -225,8 +225,6 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.entityType = this.collection.name || null;
             this.scope = this.options.scope || this.entityType;
 
-            this.events = Espo.Utils.clone(this.events);
-
             this.buttonList = Espo.Utils.clone(this.buttonList);
 
             if ('showCount' in this.options) {

@@ -1821,7 +1821,6 @@ function (Dep, MassActionHelper, ExportHelper) {
             this.entityType = this.collection.name || null;
             this.scope = this.options.scope || this.entityType;
 
-            this.events = Espo.Utils.clone(this.events);
             this.massActionList = Espo.Utils.clone(this.massActionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
 
