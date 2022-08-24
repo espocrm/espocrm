@@ -25,7 +25,11 @@
 </div>
 
 <div class="stream-subject-container">
-    <span class="cell cell-name"><a href="#Email/view/{{emailId}}">{{emailName}}</a></span>
+    <span class="cell cell-name"><a
+        href="#Email/view/{{emailId}}"
+        data-id="{{emailId}}"
+        data-scope="Email"
+    >{{emailName}}</a></span>
 </div>
 
 {{#if hasPost}}

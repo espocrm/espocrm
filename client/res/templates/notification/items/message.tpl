@@ -3,7 +3,7 @@
         {{{avatar}}}
     </div>
     <div class="stream-head-text-container">
-        <span class="{{style}}">
+        <span class="{{style}} message">
             {{{message}}}
         </span>
     </div>

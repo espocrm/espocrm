@@ -53,6 +53,8 @@ define('views/notification/items/email-received', ['views/notification/items/bas
                 this.messageData['from'] =
                     $('<a>')
                         .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
+                        .attr('data-id', data.personEntityId)
+                        .attr('data-scope', data.personEntityType)
                         .text(data.personEntityName);
             }
             else {

@@ -201,6 +201,8 @@ define('views/stream/notes/post', ['views/stream/note'], function (Dep) {
                 userHtmlList.push(
                     $('<a>')
                         .attr('href', '#User/view/' + userId)
+                        .attr('data-scope', 'User')
+                        .attr('data-id', userId)
                         .text(userName)
                         .get(0).outerHTML
                 );

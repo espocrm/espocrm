@@ -2,7 +2,7 @@
     <div class="pull-left">
         {{{avatar}}}
     </div>
-	<div class="stream-head-text-container text-muted">
+	<div class="stream-head-text-container text-muted message">
 		{{{message}}}
 	</div>
 </div>

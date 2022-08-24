@@ -102,6 +102,27 @@ define('views/stream/record/list', ['views/record/list-expanded'], function (Dep
                     });
                 }
             });
+
+            this.events['auxclick a[href][data-scope][data-id]'] = e => {
+                let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+
+                if (!isCombination) {
+                    return;
+                }
+
+                let $target = $(e.currentTarget);
+
+                let id = $target.attr('data-id');
+                let scope = $target.attr('data-scope');
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.actionQuickView({
+                    id: id,
+                    scope: scope,
+                });
+            };
         },
 
         buildRow: function (i, model, callback) {

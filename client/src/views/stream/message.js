@@ -72,7 +72,13 @@ define('views/stream/message', ['view'], function (Dep) {
                 if (value.indexOf('field:') === 0) {
                     let field = value.substring(6);
                     this.createField(key, field);
-                    template = template.replace('{' + key + '}', '{{{' + key + '}}}');
+
+                    let keyEscaped = this.getHelper().escapeString(key);
+
+                    template = template.replace(
+                        '{' + key + '}',
+                        `<span data-key="${keyEscaped}">\{\{\{${key}\}\}\}</span>`
+                    );
 
                     continue;
                 }
@@ -95,6 +101,7 @@ define('views/stream/message', ['view'], function (Dep) {
                 },
                 mode: 'detail',
                 readOnly: true,
+                selector: `[data-key="${key}"]`,
             });
         },
     });
