@@ -482,6 +482,10 @@ function (Dep, MassActionHelper, ExportHelper) {
                     return;
                 }
 
+                if (this.quickDetailDisabled) {
+                    return;
+                }
+
                 let $quickView = $target.parent().closest(`[data-id="${id}"]`)
                     .find(`ul.list-row-dropdown-menu[data-id="${id}"] a[data-action="quickView"]`);
 
