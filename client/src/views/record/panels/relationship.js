@@ -26,8 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/panels/relationship', ['views/record/panels/bottom', 'search-manager'],
-function (Dep, SearchManager) {
+define('views/record/panels/relationship',
+['views/record/panels/bottom', 'search-manager', 'helpers/record-modal'],
+function (Dep, SearchManager, RecordModal) {
 
     /**
      * A relationship panel.
@@ -622,29 +623,28 @@ function (Dep, SearchManager) {
          * @protected
          */
         actionViewRelated: function (data) {
-            var id = data.id;
-            var scope = this.collection.get(id).name;
+            let id = data.id;
+            let model = this.collection.get(id);
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') ||
-                'views/modals/detail';
+            if (!model) {
+                return;
+            }
 
-            this.notify('Loading...');
+            let scope = model.entityType;
 
-            this.createView('quickDetail', viewName, {
-                scope: scope,
-                id: id,
-                model: this.collection.get(id),
-            }, (view) => {
-                view.once('after:render', () => {
-                    Espo.Ui.notify(false);
+            let helper = new RecordModal(this.getMetadata(), this.getAcl());
+
+            helper
+                .showDetail(this, {
+                    scope: scope,
+                    id: id,
+                    model: model,
+                })
+                .then(view => {
+                    this.listenTo(view, 'after:save', () => {
+                        this.collection.fetch();
+                    });
                 });
-
-                view.render();
-
-                view.once('after:save', () => {
-                    this.collection.fetch();
-                });
-            });
         },
 
         /**
