@@ -125,6 +125,37 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                 this.initBackDrag(e.originalEvent);
             },
+            /**
+             * @param {JQueryMouseEventObject} e
+             * @this module:views/record/kanban.Class
+             */
+            'auxclick a.link': function (e) {
+                let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+
+                if (!isCombination) {
+                    return;
+                }
+
+                let $target = $(e.currentTarget);
+
+                let id = $target.attr('data-id');
+
+                if (!id) {
+                    return;
+                }
+
+                let $quickView = $target.parent().closest(`[data-id="${id}"]`)
+                    .find(`ul.list-row-dropdown-menu[data-id="${id}"] a[data-action="quickView"]`);
+
+                if (!$quickView.length) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.actionQuickView({id: id});
+            },
         },
 
         showMore: true,
