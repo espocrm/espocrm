@@ -212,6 +212,7 @@ return [
     'userItems' => [],
     'globalItems' => [
         'cacheTimestamp',
+        'appTimestamp',
         'language',
         'isDeveloperMode',
         'theme',

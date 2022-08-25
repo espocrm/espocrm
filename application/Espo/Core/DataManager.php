@@ -210,10 +210,23 @@ class DataManager
         $this->configWriter->save();
     }
 
+    /**
+     * Update app timestamp.
+     */
+    public function updateAppTimestamp(): void
+    {
+        $this->configWriter->set('appTimestamp', time());
+        $this->configWriter->save();
+    }
+
     private function populateConfigParameters(): void
     {
         $this->setFullTextConfigParameters();
         $this->setCryptKeyConfigParameter();
+
+        if (!$this->config->get('appTimestamp')) {
+            $this->updateAppTimestamp();
+        }
 
         $this->configWriter->save();
     }

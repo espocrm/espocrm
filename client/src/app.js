@@ -337,6 +337,12 @@ function (
 
         /**
          * @private
+         * @type {?int}
+         */
+        appTimestamp: null,
+
+        /**
+         * @private
          */
         initCache: function (options) {
             let cacheTimestamp = options.cacheTimestamp || null;
@@ -437,6 +443,8 @@ function (
                 this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
                 this.modelFactory = new ModelFactory(this.metadata, this.user);
                 this.collectionFactory = new CollectionFactory(this.modelFactory, this.settings);
+
+                this.appTimestamp = this.settings.get('appTimestamp') || null;
 
                 if (this.settings.get('useWebSocket')) {
                     this.webSocketManager = new WebSocketManager(this.settings);
@@ -1058,6 +1066,38 @@ function (
                 contentType: 'application/json',
             });
 
+            let appTimestampChangeProcessed = false;
+
+            $(document).ajaxSuccess((e, xhr) => {
+                let appTimestampHeader = xhr.getResponseHeader('X-App-Timestamp');
+
+                if (appTimestampHeader && !appTimestampChangeProcessed) {
+                    let appTimestamp = parseInt(appTimestampHeader);
+
+                    if (this.appTimestamp && appTimestamp !== this.appTimestamp) {
+                        appTimestampChangeProcessed = true;
+
+                        Ui
+                            .confirm(
+                                this.language.translate('confirmAppRefresh', 'messages'),
+                                {
+                                    confirmText: this.language.translate('Refresh'),
+                                    cancelText: this.language.translate('Cancel'),
+                                    backdrop: 'static',
+                                    confirmStyle: 'success',
+                                }
+                            )
+                            .then(() => {
+                                window.location.reload();
+
+                                if (this.broadcastChannel) {
+                                    this.broadcastChannel.postMessage('reload');
+                                }
+                            });
+                    }
+                }
+            });
+
             $(document).ajaxError((e, xhr, options) => {
                 if (xhr.errorIsHandled) {
                     return;
@@ -1221,6 +1261,10 @@ function (
 
                 if (event.data === 'update:layout') {
                     this.viewHelper.layoutManager.clearLoadedData();
+                }
+
+                if (event.data === 'reload') {
+                    window.location.reload();
                 }
             });
 

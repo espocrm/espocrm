@@ -179,6 +179,7 @@ class RequestProcessor
     private function afterProceed(Response $response): void
     {
         $response
+            ->setHeader('X-App-Timestamp', (string) ($this->config->get('appTimestamp') ?? '0'))
             ->setHeader('Expires', '0')
             ->setHeader('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT')
             ->setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')

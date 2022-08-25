@@ -1031,6 +1031,7 @@ abstract class Base
             $dataManager = $this->getContainer()->get('dataManager');
 
             $dataManager->rebuild();
+            $dataManager->updateAppTimestamp();
 
             return true;
         }
