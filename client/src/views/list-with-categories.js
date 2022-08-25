@@ -64,8 +64,6 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
 
         hasNavigationPanel: false,
 
-        currentCatetgoryId: null,
-
         data: function () {
             var data = {};
 
@@ -625,7 +623,7 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
                 return this.nestedCategoriesCollection.categoryData.name;
             }
 
-            return this.currentCatetgoryId;
+            return this.currentCategoryId;
         },
 
         actionManageCategories: function () {
