@@ -2231,10 +2231,10 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             this._loadListLayout((listLayout) => {
                 this.listLayout = listLayout;
 
-                var attributeList = this.fetchAttributeListFromLayout();
+                let attributeList = this.fetchAttributeListFromLayout();
 
                 if (this.mandatorySelectAttributeList) {
-                    attributeList = attributeList.concat(attributeList);
+                    attributeList = attributeList.concat(this.mandatorySelectAttributeList);
                 }
 
                 callback(attributeList);

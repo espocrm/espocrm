@@ -687,14 +687,14 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         getSelectAttributeList: function (callback) {
-            Dep.prototype.getSelectAttributeList.call(this, (attrubuteList) => {
-                if (attrubuteList) {
-                    if (!~attrubuteList.indexOf(this.statusField)) {
-                        attrubuteList.push(this.statusField);
+            Dep.prototype.getSelectAttributeList.call(this, (attributeList) => {
+                if (attributeList) {
+                    if (!~attributeList.indexOf(this.statusField)) {
+                        attributeList.push(this.statusField);
                     }
                 }
 
-                callback(attrubuteList);
+                callback(attributeList);
             });
         },
 
