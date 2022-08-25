@@ -208,6 +208,10 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
             this.$listContainer = this.$el.find('.list-container');
 
             if (!this.hasView('list')) {
+                if (!this.isExpanded) {
+                    this.hideListContainer();
+                }
+
                 this.loadList();
             }
             else {
