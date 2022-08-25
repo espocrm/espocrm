@@ -173,7 +173,7 @@ class Converter
         $ormMeta = Util::merge($ormMeta, $this->getCustomTables($ormMeta));
 
         if (isset($ormMeta['unsetIgnore'])) {
-            $protectedOrmMeta = array();
+            $protectedOrmMeta = [];
 
             foreach ($ormMeta['unsetIgnore'] as $protectedKey) {
                 $protectedOrmMeta = Util::merge(
@@ -204,9 +204,9 @@ class Converter
             $dependentEntities = $this->getDependentEntities($entityList, $ormMeta);
 
             $this->log->debug(
-                'Rebuild Database for entities: ['.
-                implode(', ', $entityList).'] with dependent entities: ['.
-                implode(', ', $dependentEntities).']'
+                'Rebuild Database for entities: [' .
+                implode(', ', $entityList).'] with dependent entities: [' .
+                implode(', ', $dependentEntities) . ']'
             );
 
             $ormMeta = array_intersect_key($ormMeta, array_flip($dependentEntities));
@@ -243,10 +243,9 @@ class Converter
                 }
             }
 
-            $primaryColumns = array();
+            $primaryColumns = [];
 
             foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
-
                 if (
                     (isset($fieldParams['notStorable']) && $fieldParams['notStorable']) ||
                     in_array($fieldParams['type'], $this->notStorableTypes)
@@ -261,14 +260,14 @@ class Converter
                         break;
                 }
 
-                $fieldType = isset($fieldParams['dbType']) ? $fieldParams['dbType'] : $fieldParams['type'];
+                $fieldType = $fieldParams['dbType'] ?? $fieldParams['type'];
 
-                /** doctrine uses strtolower for all field types */
+                /** Doctrine uses 'strtolower' for all field types. */
                 $fieldType = strtolower($fieldType);
 
                 if (!in_array($fieldType, $this->typeList)) {
                     $this->log->debug(
-                        'Converters\Schema::process(): Field type ['.$fieldType.'] does not exist '.
+                        'Converters\Schema::process(): Field type [' . $fieldType . '] does not exist '.
                         $entityName.':'.$fieldName
                     );
 
@@ -289,20 +288,20 @@ class Converter
             }
         }
 
-        // check and create columns/tables for relations
+        // Check and create columns/tables for relations.
         foreach ($ormMeta as $entityName => $entityParams) {
             if (!isset($entityParams['relations'])) {
                 continue;
             }
 
             foreach ($entityParams['relations'] as $relationName => $relationParams) {
-
                  switch ($relationParams['type']) {
                     case 'manyMany':
                         $tableName = $relationParams['relationName'];
 
-                        // check for duplicate tables
-                        if (!isset($tables[$tableName])) { // no needs to create the table if it already exists
+                        // Check for duplicate tables.
+                        if (!isset($tables[$tableName])) {
+                            // No needs to create a table if it already exists.
                             $tables[$tableName] = $this->prepareManyMany($entityName, $relationParams);
                         }
 
@@ -347,7 +346,7 @@ class Converter
 
         $table->addColumn('id', 'bigint', $idColumnOptions);
 
-        // add midKeys to a schema
+        // Add midKeys to the schema.
         $uniqueIndex = [];
 
         if (empty($relationParams['midKeys'])) {
@@ -375,7 +374,6 @@ class Converter
             }
         }
 
-        // add additionalColumns
         if (!empty($relationParams['additionalColumns'])) {
             foreach($relationParams['additionalColumns'] as $fieldName => $fieldParams) {
                 if (!isset($fieldParams['type'])) {
@@ -404,7 +402,7 @@ class Converter
 
         $table->setPrimaryKey(['id']);
 
-        // add defined indexes
+        // Add defined indexes.
         if (!empty($relationParams['indexes'])) {
             $normalizedIndexes = SchemaUtils::getIndexes([
                 $entityName => [
@@ -416,7 +414,7 @@ class Converter
             $this->addIndexes($table, $normalizedIndexes[$entityName]);
         }
 
-        // add unique indexes
+        // Add unique indexes.
         if (!empty($relationParams['conditions'])) {
             foreach ($relationParams['conditions'] as $fieldName => $fieldParams) {
                 $uniqueIndex[] = Util::toUnderScore($fieldName);
@@ -474,7 +472,7 @@ class Converter
             'notnull' => false,
         ];
 
-        foreach($this->allowedDbFieldParams as $espoName => $dbalName) {
+        foreach ($this->allowedDbFieldParams as $espoName => $dbalName) {
             if (isset($fieldParams[$espoName])) {
                 $dbFieldParams[$dbalName] = $fieldParams[$espoName];
             }

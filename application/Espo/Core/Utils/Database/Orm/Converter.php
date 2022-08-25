@@ -572,44 +572,45 @@ class Converter
     }
 
     /**
-     * @param array<string,mixed> $attributeParams
+     * @param array<string,mixed> $fieldParams
      * @param ?array<string,mixed> $fieldTypeMetadata
      * @return array<string,mixed>|false
      */
     protected function convertField(
         string $entityType,
-        string $attribute,
-        array $attributeParams,
+        string $field,
+        array $fieldParams,
         ?array $fieldTypeMetadata = null
     ) {
-
         if (!isset($fieldTypeMetadata)) {
-            $fieldTypeMetadata = $this->getMetadataHelper()->getFieldDefsByType($attributeParams);
+            $fieldTypeMetadata = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
         }
+
+        $this->prepareFieldParamsBeforeConvert($fieldParams);
 
         if (isset($fieldTypeMetadata['fieldDefs'])) {
-            /** @var array<string,mixed> $attributeParams */
-            $attributeParams = Util::merge($attributeParams, $fieldTypeMetadata['fieldDefs']);
+            /** @var array<string,mixed> $fieldParams */
+            $fieldParams = Util::merge($fieldParams, $fieldTypeMetadata['fieldDefs']);
         }
 
-        if ($attributeParams['type'] == 'base' && isset($attributeParams['dbType'])) {
-            $attributeParams['notStorable'] = false;
+        if ($fieldParams['type'] == 'base' && isset($fieldParams['dbType'])) {
+            $fieldParams['notStorable'] = false;
         }
 
-        if (!empty($fieldTypeMetadata['skipOrmDefs']) || !empty($attributeParams['skipOrmDefs'])) {
+        if (!empty($fieldTypeMetadata['skipOrmDefs']) || !empty($fieldParams['skipOrmDefs'])) {
             return false;
         }
 
         if (
-            isset($attributeParams['notNull']) && !$attributeParams['notNull'] &&
-            isset($attributeParams['required']) && $attributeParams['required']
+            isset($fieldParams['notNull']) && !$fieldParams['notNull'] &&
+            isset($fieldParams['required']) && $fieldParams['required']
         ) {
-            unset($attributeParams['notNull']);
+            unset($fieldParams['notNull']);
         }
 
-        $fieldDefs = $this->getInitValues($attributeParams);
+        $fieldDefs = $this->getInitValues($fieldParams);
 
-        if (isset($attributeParams['db']) && $attributeParams['db'] === false) {
+        if (isset($fieldParams['db']) && $fieldParams['db'] === false) {
             $fieldDefs['notStorable'] = true;
         }
 
@@ -621,6 +622,20 @@ class Converter
         }
 
         return $fieldDefs;
+    }
+
+    /**
+     * @param array<string,mixed> $fieldParams
+     */
+    private function prepareFieldParamsBeforeConvert(array &$fieldParams): void
+    {
+        $type = $fieldParams['type'] ?? null;
+
+        if ($type === 'enum') {
+            if (($fieldParams['default'] ?? null) === '') {
+                $fieldParams['default'] = null;
+            }
+        }
     }
 
     /**
@@ -660,7 +675,7 @@ class Converter
     {
         $values = [];
 
-        foreach($this->fieldAccordances as $espoType => $ormType) {
+        foreach ($this->fieldAccordances as $espoType => $ormType) {
             if (!array_key_exists($espoType, $attributeParams)) {
                 continue;
             }
