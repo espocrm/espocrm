@@ -67,7 +67,7 @@ define('views/admin/extensions/index', ['view'], function (Dep) {
                     Espo.Ui.notify(this.translate('Uninstalling...', 'labels', 'Admin'));
 
                     Espo.Ajax
-                        .postRequest('Extension/action/uninstall', {id: id}, {timeout: 0})
+                        .postRequest('Extension/action/uninstall', {id: id}, {timeout: 0, bypassAppReload: true})
                         .then(() => {
                             window.location.reload();
                         })
@@ -192,7 +192,7 @@ define('views/admin/extensions/index', ['view'], function (Dep) {
             this.showErrorNotification(false);
 
             Espo.Ajax
-                .postRequest('Extension/action/install', {id: id}, {timeout: 0})
+                .postRequest('Extension/action/install', {id: id}, {timeout: 0, bypassAppReload: true})
                 .then(() => {
                     let cache = this.getCache();
 

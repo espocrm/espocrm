@@ -1068,13 +1068,17 @@ function (
 
             let appTimestampChangeProcessed = false;
 
-            $(document).ajaxSuccess((e, xhr) => {
+            $(document).ajaxSuccess((e, xhr, options) => {
                 let appTimestampHeader = xhr.getResponseHeader('X-App-Timestamp');
 
                 if (appTimestampHeader && !appTimestampChangeProcessed) {
                     let appTimestamp = parseInt(appTimestampHeader);
 
-                    if (this.appTimestamp && appTimestamp !== this.appTimestamp) {
+                    if (
+                        this.appTimestamp &&
+                        appTimestamp !== this.appTimestamp &&
+                        !options.bypassAppReload
+                    ) {
                         appTimestampChangeProcessed = true;
 
                         Ui
