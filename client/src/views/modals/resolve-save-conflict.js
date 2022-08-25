@@ -47,7 +47,7 @@ define('views/modals/resolve-save-conflict', ['views/modal'], function (Dep) {
         data: function () {
             var dataList = [];
 
-            this.fieldList.forEach(function (item) {
+            this.fieldList.forEach(item => {
                 var o = {
                     field: item,
                     viewKey: item + 'Field',
@@ -91,44 +91,44 @@ define('views/modals/resolve-save-conflict', ['views/modal'], function (Dep) {
 
             var fieldList = [];
 
-            this.getFieldManager().getEntityTypeFieldList(this.entityType).forEach(function (field) {
-                var fieldAttributeList = this.getFieldManager()
-                    .getEntityTypeFieldAttributeList(this.entityType, field);
+            this.getFieldManager()
+                .getEntityTypeFieldList(this.entityType)
+                .forEach(field => {
+                    var fieldAttributeList = this.getFieldManager()
+                        .getEntityTypeFieldAttributeList(this.entityType, field);
 
-                var intersect = attributeList.filter(value => fieldAttributeList.includes(value));
+                    var intersect = attributeList.filter(value => fieldAttributeList.includes(value));
 
-                if (intersect.length) {
-                    fieldList.push(field);
-                }
-            }, this);
+                    if (intersect.length) {
+                        fieldList.push(field);
+                    }
+                });
 
             this.fieldList = fieldList;
 
             this.wait(
                 this.getModelFactory().create(this.entityType)
-                    .then(
-                        function (model) {
-                            this.model = model;
+                    .then(model => {
+                        this.model = model;
 
-                            this.fieldList.forEach(function (field) {
-                                this.setResolution(field, this.defaultResolution);
-                            }, this);
+                        this.fieldList.forEach(field => {
+                            this.setResolution(field, this.defaultResolution);
+                        });
 
-                            this.fieldList.forEach(function (field) {
-                                this.createField(field);
-                            }, this);
-                        }.bind(this)
-                    )
+                        this.fieldList.forEach(field => {
+                            this.createField(field);
+                        });
+                    })
             );
         },
 
         setResolution: function (field, resolution) {
-            var attributeList = this.getFieldManager()
+            let attributeList = this.getFieldManager()
                 .getEntityTypeFieldAttributeList(this.entityType, field);
 
-            var values = {};
+            let values = {};
 
-            var source = this.currentAttributes;
+            let source = this.currentAttributes;
 
             if (resolution === 'actual') {
                 source = this.actualAttributes;
@@ -145,9 +145,9 @@ define('views/modals/resolve-save-conflict', ['views/modal'], function (Dep) {
         },
 
         createField: function (field) {
-            var type = this.model.getFieldType(field);
+            let type = this.model.getFieldType(field);
 
-            var viewName =
+            let viewName =
                 this.model.getFieldParam(field, 'view') ||
                 this.getFieldManager().getViewName(type);
 
@@ -161,23 +161,22 @@ define('views/modals/resolve-save-conflict', ['views/modal'], function (Dep) {
         },
 
         afterRender: function () {
-            this.$el.find('[data-name="resolution"]').on('change', function (e) {
-                var $el = $(e.currentTarget);
+            this.$el.find('[data-name="resolution"]').on('change', e => {
+                let $el = $(e.currentTarget);
 
-                var field = $el.attr('data-field');
-                var resolution = $el.val();
+                let field = $el.attr('data-field');
+                let resolution = $el.val();
 
                 this.setResolution(field, resolution);
-            }.bind(this));
+            });
         },
 
         actionApply: function () {
-            var attributes = this.model.attributes;
+            let attributes = this.model.attributes;
 
             this.originalModel.set(attributes);
 
             this.trigger('resolve');
-
             this.close();
         },
     });
