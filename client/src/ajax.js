@@ -44,7 +44,8 @@ define('ajax', [], function () {
          * @property {Number} [timeout] A timeout.
          * @property {Object.<string,string>} [headers] A request headers.
          * @property {'xml'|'json'|'text'} [dataType] A data type.
-         * @property {boolean} local If true, the API URL won't be prepended.
+         * @property {boolean} [local] If true, the API URL won't be prepended.
+         * @property {string} [contentType] A content type.
          */
 
         /**
