@@ -204,7 +204,7 @@ define('views/admin/extensions/index', ['view'], function (Dep) {
                         version: version,
                         name: name,
                     }, view => {
-                        this.collection.fetch();
+                        this.collection.fetch({bypassAppReload: true});
 
                         this.$el.find('.list-container').removeClass('hidden');
                         this.$el.find('.panel.upload').removeClass('hidden');
