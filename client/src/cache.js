@@ -196,8 +196,8 @@ define('cache', [], function () {
         /**
          * Clear a stored value.
          *
-         * @param {string} type A type/category.
-         * @param {string} name A name.
+         * @param {string} [type] A type/category.
+         * @param {string} [name] A name.
          */
         clear: function (type, name) {
             let reText;
