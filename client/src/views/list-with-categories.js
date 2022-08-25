@@ -64,6 +64,11 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
 
         hasNavigationPanel: false,
 
+        /**
+         * @private
+         */
+        nestedCollectionIsBeingFetched: false,
+
         data: function () {
             var data = {};
 
@@ -362,6 +367,10 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
                 return;
             }
 
+            if (this.nestedCollectionIsBeingFetched) {
+                return;
+            }
+
             if (
                 !this.collection.models.length &&
                 this.nestedCategoriesCollection &&
@@ -430,14 +439,20 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
 
                 this.applyCategoryToNestedCategoriesCollection();
 
-                collection.fetch().then(() => {
-                    this.controlNestedCategoriesVisibility();
-                    this.controlListVisibility();
+                this.nestedCollectionIsBeingFetched = true;
 
-                    this.updateHeader();
+                collection
+                    .fetch()
+                    .then(() => {
+                        this.nestedCollectionIsBeingFetched = false;
 
-                    callback.call(this, collection);
-                });
+                        this.controlNestedCategoriesVisibility();
+                        this.controlListVisibility();
+
+                        this.updateHeader();
+
+                        callback.call(this, collection);
+                    });
             });
         },
 
