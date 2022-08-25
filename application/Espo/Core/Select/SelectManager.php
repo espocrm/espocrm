@@ -2968,7 +2968,14 @@ class SelectManager
             }
         }
 
-        foreach ($this->selectAttributesDependancyMap as $attribute => $dependantAttributeList) {
+        $map = $this->selectAttributesDependancyMap;
+
+        $map = array_merge(
+            $map,
+            $this->metadata->get(['selectDefs', $this->entityType, 'selectAttributesDependencyMap']) ?? []
+        );
+
+        foreach ($map as $attribute => $dependantAttributeList) {
             if (in_array($attribute, $attributeList)) {
                 foreach ($dependantAttributeList as $dependantAttribute) {
                     if (!in_array($dependantAttribute, $attributeList)) {
