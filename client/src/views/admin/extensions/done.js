@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/extensions/done', 'views/modal', function (Dep) {
+define('views/admin/extensions/done', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,26 +42,25 @@ Espo.define('views/admin/extensions/done', 'views/modal', function (Dep) {
             return {
                 version: this.options.version,
                 name: this.options.name,
-                text: this.translate('extensionInstalled', 'messages', 'Admin').replace('{version}', this.options.version)
-                                                                               .replace('{name}', this.options.name)
+                text: this.translate('extensionInstalled', 'messages', 'Admin')
+                    .replace('{version}', this.options.version)
+                    .replace('{name}', this.options.name)
             };
         },
 
         setup: function () {
-            this.on('remove', function () {
+            this.on('remove', () => {
                 window.location.reload();
             });
 
             this.buttonList = [
                 {
                     name: 'close',
-                    label: 'Close'
+                    label: 'Close',
                 }
             ];
 
             this.header = this.getLanguage().translate('Installed successfully', 'labels', 'Admin');
-        }
-
+        },
     });
 });
-

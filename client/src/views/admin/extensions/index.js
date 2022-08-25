@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/extensions/index', 'view', function (Dep) {
+define('views/admin/extensions/index', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -36,9 +36,14 @@ Espo.define('views/admin/extensions/index', 'view', function (Dep) {
 
         events: {
             'change input[name="package"]': function (e) {
-                this.$el.find('button[data-action="upload"]').addClass('disabled').attr('disabled', 'disabled');
+                this.$el.find('button[data-action="upload"]')
+                    .addClass('disabled')
+                    .attr('disabled', 'disabled');
+
                 this.$el.find('.message-container').html('');
-                var files = e.currentTarget.files;
+
+                let files = e.currentTarget.files;
+
                 if (files.length) {
                     this.selectFile(files[0]);
                 }
@@ -47,165 +52,175 @@ Espo.define('views/admin/extensions/index', 'view', function (Dep) {
                 this.upload();
             },
             'click [data-action="install"]': function (e) {
-                var id = $(e.currentTarget).data('id');
+                let id = $(e.currentTarget).data('id');
 
-                var name = this.collection.get(id).get('name');
-                var version = this.collection.get(id).get('version');
+                let name = this.collection.get(id).get('name');
+                let version = this.collection.get(id).get('version');
 
                 this.run(id, name, version);
 
             },
             'click [data-action="uninstall"]': function (e) {
-                var id = $(e.currentTarget).data('id');
+                let id = $(e.currentTarget).data('id');
 
-                var name = this.collection.get(id).get('name');
-
-                var self = this;
-                this.confirm(this.translate('uninstallConfirmation', 'messages', 'Admin'), function () {
+                this.confirm(this.translate('uninstallConfirmation', 'messages', 'Admin'), () => {
                     Espo.Ui.notify(this.translate('Uninstalling...', 'labels', 'Admin'));
 
-                    $.ajax({
-                        url: 'Extension/action/uninstall',
-                        type: 'POST',
-                        data: JSON.stringify({
-                            id: id
-                        }),
-                        timeout: 0,
-                        error: function (xhr) {
-                            var msg = xhr.getResponseHeader('X-Status-Reason');
-                            this.showErrorNotification(this.translate('Error') + ': ' + msg);
-                        }.bind(this)
-                    }).done(function () {
-                        window.location.reload();
+                    Espo.Ajax
+                        .postRequest('Extension/action/uninstall', {id: id}, {timeout: 0})
+                        .then(() => {
+                            window.location.reload();
+                        })
+                        .catch(xhr => {
+                            let msg = xhr.getResponseHeader('X-Status-Reason');
 
-                    }.bind(this));
-                }, this);
+                            this.showErrorNotification(this.translate('Error') + ': ' + msg);
+                        });
+                });
             }
         },
 
         setup: function () {
-            this.getCollectionFactory().create('Extension', function (collection) {
+            this.getCollectionFactory().create('Extension', collection => {
                 this.collection = collection;
 
                 collection.maxSize = this.getConfig().get('recordsPerPage');
 
                 this.wait(true);
-                this.listenToOnce(collection, 'sync', function () {
-                    this.createView('list', 'views/extension/record/list', {
-                        collection: collection,
-                        el: this.options.el + ' > .list-container',
+
+                collection
+                    .fetch()
+                    .then(() => {
+                        this.createView('list', 'views/extension/record/list', {
+                            collection: collection,
+                            el: this.options.el + ' > .list-container',
+                        });
+
+                        if (collection.length === 0) {
+                            this.once('after:render', () => {
+                                this.$el.find('.list-container').addClass('hidden');
+                            });
+                        }
+
+                        this.wait(false);
                     });
-                    if (collection.length == 0) {
-                        this.once('after:render', function () {
-                            this.$el.find('.list-container').addClass('hidden');
-                        }.bind(this));
-                    }
-                    this.wait(false);
-                });
-
-                collection.fetch();
-
-            }, this);
+            });
         },
 
         selectFile: function (file) {
             var fileReader = new FileReader();
-            fileReader.onload = function (e) {
+
+            fileReader.onload = (e) => {
                 this.packageContents = e.target.result;
-                this.$el.find('button[data-action="upload"]').removeClass('disabled').removeAttr('disabled');
-            }.bind(this);
+
+                this.$el.find('button[data-action="upload"]')
+                    .removeClass('disabled')
+                    .removeAttr('disabled');
+            };
+
             fileReader.readAsDataURL(file);
         },
 
         showError: function (msg) {
             msg = this.translate(msg, 'errors', 'Admin');
+
             this.$el.find('.message-container').html(msg);
         },
 
         showErrorNotification: function (msg) {
             if (!msg) {
                 this.$el.find('.notify-text').addClass('hidden');
-            } else {
-                msg = this.translate(msg, 'errors', 'Admin');
-                this.$el.find('.notify-text').html(msg);
-                this.$el.find('.notify-text').removeClass('hidden');
+
+                return;
             }
+
+            msg = this.translate(msg, 'errors', 'Admin');
+
+            this.$el.find('.notify-text').html(msg);
+            this.$el.find('.notify-text').removeClass('hidden');
         },
 
         upload: function () {
             this.$el.find('button[data-action="upload"]').addClass('disabled').attr('disabled', 'disabled');
-            this.notify('Uploading...');
-            $.ajax({
-                url: 'Extension/action/upload',
-                type: 'POST',
-                contentType: 'application/zip',
-                timeout: 0,
-                data: this.packageContents,
-                error: function (xhr, t, e) {
-                    this.showError(xhr.getResponseHeader('X-Status-Reason'));
-                    this.notify(false);
-                }.bind(this)
-            }).done(function (data) {
-                if (!data.id) {
-                    this.showError(this.translate('Error occurred'));
-                    return;
-                }
-                this.notify(false);
-                this.createView('popup', 'views/admin/extensions/ready', {
-                    upgradeData: data
-                }, function (view) {
-                    view.render();
-                    this.$el.find('button[data-action="upload"]').removeClass('disabled').removeAttr('disabled');
 
-                    view.once('run', function () {
-                        view.close();
-                        this.$el.find('.panel.upload').addClass('hidden');
-                        this.run(data.id, data.version, data.name);
-                    }, this);
-                }.bind(this));
-            }.bind(this)).error;
+            this.notify('Uploading...');
+
+            Espo.Ajax
+                .postRequest('Extension/action/upload', this.packageContents, {
+                    timeout: 0,
+                    contentType: 'application/zip',
+                })
+                .then(data => {
+                    if (!data.id) {
+                        this.showError(this.translate('Error occurred'));
+
+                        return;
+                    }
+
+                    Espo.Ui.notify(false);
+
+                    this.createView('popup', 'views/admin/extensions/ready', {
+                        upgradeData: data,
+                    }, view => {
+                        view.render();
+
+                        this.$el.find('button[data-action="upload"]')
+                            .removeClass('disabled')
+                            .removeAttr('disabled');
+
+                        view.once('run', () => {
+                            view.close();
+
+                            this.$el.find('.panel.upload').addClass('hidden');
+
+                            this.run(data.id, data.version, data.name);
+                        });
+                    });
+                })
+                .catch(xhr => {
+                    this.showError(xhr.getResponseHeader('X-Status-Reason'));
+
+                    Espo.Ui.notify(false);
+                });
         },
 
         run: function (id, version, name) {
-            var msg = this.translate('Installing...', 'labels', 'Admin');
+            //var msg = this.translate('Installing...', 'labels', 'Admin');
             this.notify('Please wait...');
 
             this.showError(false);
             this.showErrorNotification(false);
 
-            Espo.Ajax.postRequest(
-                'Extension/action/install',
-                {
-                    id: id
-                },
-                {
-                    timeout: 0,
-                }
-            ).then(
-                function () {
-                    var cache = this.getCache();
+            Espo.Ajax
+                .postRequest('Extension/action/install', {id: id}, {timeout: 0})
+                .then(() => {
+                    let cache = this.getCache();
+
                     if (cache) {
                         cache.clear();
                     }
+
                     this.createView('popup', 'views/admin/extensions/done', {
                         version: version,
                         name: name,
-                    }, function (view) {
+                    }, view => {
                         this.collection.fetch();
+
                         this.$el.find('.list-container').removeClass('hidden');
                         this.$el.find('.panel.upload').removeClass('hidden');
+
                         this.notify(false);
+
                         view.render();
                     });
-                }.bind(this)
-            ).fail(
-                function (xhr) {
+                })
+                .catch(xhr => {
                     this.$el.find('.panel.upload').removeClass('hidden');
-                    var msg = xhr.getResponseHeader('X-Status-Reason');
-                    this.showErrorNotification(this.translate('Error') + ': ' + msg);
-                }.bind(this)
-            );
-        },
 
+                    let msg = xhr.getResponseHeader('X-Status-Reason');
+
+                    this.showErrorNotification(this.translate('Error') + ': ' + msg);
+                });
+        },
     });
 });
