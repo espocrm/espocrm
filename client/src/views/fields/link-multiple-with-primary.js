@@ -44,15 +44,6 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
          */
         primaryLink: null,
 
-        events: {
-            'click [data-action="switchPrimary"]': function (e) {
-                let $target = $(e.currentTarget);
-                let id = $target.data('id');
-
-                this.switchPrimary(id);
-            },
-        },
-
         switchPrimary: function (id) {
             let $switch = this.$el.find(`[data-id="${id}"][data-action="switchPrimary"]`);
 
@@ -96,6 +87,13 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
                 this.primaryId = this.model.get(this.primaryIdAttribute);
                 this.primaryName = this.model.get(this.primaryNameAttribute);
             });
+
+            this.events['click [data-action="switchPrimary"]'] = e => {
+                let $target = $(e.currentTarget);
+                let id = $target.data('id');
+
+                this.switchPrimary(id);
+            };
         },
 
         /**
