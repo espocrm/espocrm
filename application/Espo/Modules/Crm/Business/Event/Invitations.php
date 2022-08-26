@@ -196,7 +196,7 @@ class Invitations
         $attachment->set([
             'name' => $attachmentName,
             'type' => 'text/calendar',
-            'contents' => $this->getIscContents($entity),
+            'contents' => $this->getIcsContents($entity),
         ]);
 
         $message = new Message();
@@ -213,7 +213,7 @@ class Invitations
             ->send($email);
     }
 
-    protected function getIscContents(Entity $entity): string
+    protected function getIcsContents(Entity $entity): string
     {
         $user = $this->entityManager
             ->getRDBRepository($entity->getEntityType())
