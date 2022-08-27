@@ -486,10 +486,12 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                     return;
                 }
 
-                let $quickView = $target.parent().closest(`[data-id="${id}"]`)
-                    .find(`ul.list-row-dropdown-menu[data-id="${id}"] a[data-action="quickView"]`);
+                let $menu = $target.parent().closest(`[data-id="${id}"]`)
+                    .find(`ul.list-row-dropdown-menu[data-id="${id}"]`);
 
-                if (!$quickView.length) {
+                let $quickView = $menu.find(`a[data-action="quickView"]`);
+
+                if ($menu.length && !$quickView.length) {
                     return;
                 }
 
