@@ -143,11 +143,11 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             var fromString = this.model.get('fromString') || this.model.get('fromName');
 
             if (fromString) {
-                var fromName = emailHelper.parseNameFromStringAddress(fromString);
+                let fromName = emailHelper.parseNameFromStringAddress(fromString);
 
                 if (fromName) {
-                    var firstName = fromName.split(' ').slice(0, -1).join(' ');
-                    var lastName = fromName.split(' ').slice(-1).join(' ');
+                    let firstName = fromName.split(' ').slice(0, -1).join(' ');
+                    let lastName = fromName.split(' ').slice(-1).join(' ');
 
                     attributes.firstName = firstName;
                     attributes.lastName = lastName;
@@ -160,11 +160,11 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
                 attributes.emailAddress = emailHelper.parseAddressFromStringAddress(p);
 
-                var fromName = emailHelper.parseNameFromStringAddress(p);
+                let fromName = emailHelper.parseNameFromStringAddress(p);
 
                 if (fromName) {
-                    var firstName = fromName.split(' ').slice(0, -1).join(' ');
-                    var lastName = fromName.split(' ').slice(-1).join(' ');
+                    let firstName = fromName.split(' ').slice(0, -1).join(' ');
+                    let lastName = fromName.split(' ').slice(-1).join(' ');
 
                     attributes.firstName = firstName;
                     attributes.lastName = lastName;
@@ -342,11 +342,11 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             var fromString = this.model.get('fromString') || this.model.get('fromName');
 
             if (fromString) {
-                var fromName = emailHelper.parseNameFromStringAddress(fromString);
+                let fromName = emailHelper.parseNameFromStringAddress(fromString);
 
                 if (fromName) {
-                    var firstName = fromName.split(' ').slice(0, -1).join(' ');
-                    var lastName = fromName.split(' ').slice(-1).join(' ');
+                    let firstName = fromName.split(' ').slice(0, -1).join(' ');
+                    let lastName = fromName.split(' ').slice(-1).join(' ');
 
                     attributes.firstName = firstName;
                     attributes.lastName = lastName;
@@ -359,11 +359,11 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
                 attributes.emailAddress = emailHelper.parseAddressFromStringAddress(p);
 
-                var fromName = emailHelper.parseNameFromStringAddress(p);
+                let fromName = emailHelper.parseNameFromStringAddress(p);
 
                 if (fromName) {
-                    var firstName = fromName.split(' ').slice(0, -1).join(' ');
-                    var lastName = fromName.split(' ').slice(-1).join(' ');
+                    let firstName = fromName.split(' ').slice(0, -1).join(' ');
+                    let lastName = fromName.split(' ').slice(-1).join(' ');
 
                     attributes.firstName = firstName;
                     attributes.lastName = lastName;
@@ -474,29 +474,36 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
         },
 
         getHeader: function () {
-            var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
-            var nameHtml = '<span class="font-size-flexible title">' + name + '</span>';
+            let name = this.model.get('name');
 
-            var classPart = '';
+            let isImportant = this.model.get('isImportant');
+            let inTrash = this.model.get('inTrash');
 
-            if (this.model.get('isImportant')) {
-                classPart += ' text-warning';
+            let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+
+            let headerIconHtml = this.getHeaderIconHtml();
+
+            let $root = $('<a>')
+                .attr('href', rootUrl)
+                .attr('data-action', 'navigateToRoot')
+                .addClass('action')
+                .text(
+                    this.getLanguage().translate(this.model.name, 'scopeNamesPlural')
+                );
+
+            if (headerIconHtml) {
+                $root = $('<span>')
+                    .append(headerIconHtml, $root)
+                    .get(0).innerHTML;
             }
-
-            if (this.model.get('inTrash')) {
-                classPart += ' text-muted';
-            }
-
-            nameHtml = '<span class="font-size-flexible title'+classPart+'">' + name + '</span>';
-
-            var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
-
-            var headerIconHtml = this.getHeaderIconHtml();
 
             return this.buildHeaderHtml([
-                headerIconHtml + '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' +
-                    this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>',
-                nameHtml
+                $root,
+                $('<span>')
+                    .addClass('font-size-flexible title')
+                    .addClass(isImportant ? 'text-warning' : '')
+                    .addClass(inTrash ? 'text-muted' : '')
+                    .text(name),
             ]);
         },
 
@@ -512,7 +519,6 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                 };
 
                 this.getRouter().navigate(rootUrl, {trigger: false});
-
                 this.getRouter().dispatch(this.scope, null, options);
             });
         },
@@ -528,9 +534,6 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             var types = this.model.get('attachmentsTypes') || {};
 
             var proceed = (id) => {
-                var name = names[id] || id;
-                var type = types[id];
-
                 var attributes = {};
 
                 if (this.model.get('accountId')) {
