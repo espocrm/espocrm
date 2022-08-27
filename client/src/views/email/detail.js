@@ -424,8 +424,8 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
                 view.notify(false);
 
-                this.listenToOnce(view, 'after:save', () => {
-                    this.model.trigger('reply');
+                this.listenTo(view, 'after:save', () => {
+                    this.model.fetch();
                 });
             });
         },

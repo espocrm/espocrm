@@ -183,11 +183,6 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
             this.handleTasksField();
             this.listenTo(this.model, 'change:tasksIds', () => this.handleTasksField());
 
-            this.listenTo(this.model, 'reply', () => {
-                this.showField('replies');
-                this.model.fetch();
-            });
-
             if (this.getUser().isAdmin()) {
                 this.addDropdownItem({
                     label: 'View Users',

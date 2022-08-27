@@ -30,6 +30,14 @@ define('views/email/fields/replies', ['views/fields/link-multiple'], function (D
 
     return Dep.extend({
 
+        getAttributeList: function () {
+            let attributeList = Dep.prototype.getAttributeList.call(this);
+
+            attributeList.push(this.name + 'Columns');
+
+            return attributeList;
+        },
+
         getDetailLinkHtml: function (id) {
             let html = Dep.prototype.getDetailLinkHtml.call(this, id);
 
@@ -46,6 +54,5 @@ define('views/email/fields/replies', ['views/fields/link-multiple'], function (D
                 .append(html)
                 .html();
         },
-
     });
 });
