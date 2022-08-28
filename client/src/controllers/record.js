@@ -112,6 +112,7 @@ define('controllers/record', ['controller'], function (Dep) {
                 let abort = () => {
                     collection.abortLastFetch();
                     mediator.abort = true;
+                    Espo.Ui.notify(false);
                 };
 
                 this.listenToOnce(this.baseController, 'action', abort);
