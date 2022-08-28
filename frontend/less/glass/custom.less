@@ -1,6 +1,13 @@
+@backdrop-filter: blur(2px);
+@backdrop-filter-2: blur(4px);
+
+@body-bg-2nd: #254148;
+@body-bg-3rd: #1bb0b726;
+
 body[data-navbar="side"].minimized.side-menu-opened {
     #navbar > .navbar {
         border-right: 1px solid var(--panel-default-border);
+        backdrop-filter: @backdrop-filter-2;
 
         .navbar-body {
             background-color: var(--navbar-inverse-bg);
@@ -12,9 +19,15 @@ body[data-navbar="side"].minimized.side-menu-opened {
     }
 }
 
-@backdrop-filter: blur(2px);
-@body-bg-2nd: #254148;
-@body-bg-3rd: #1bb0b726;
+body[data-navbar="top"] {
+    #navbar > .navbar {
+        backdrop-filter: @backdrop-filter-2;
+    }
+}
+
+.alert {
+    backdrop-filter: @backdrop-filter;
+}
 
 body {
     background:
