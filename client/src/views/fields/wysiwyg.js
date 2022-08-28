@@ -307,6 +307,10 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             let useFallbackStylesheet = this.getThemeManager().getParam('isDark') && this.htmlHasColors(body);
 
+            useFallbackStylesheet ?
+                $iframe.addClass('fallback') :
+                $iframe.removeClass('fallback');
+
             var linkElement = iframeElement.contentWindow.document.createElement('link');
 
             linkElement.type = 'text/css';
