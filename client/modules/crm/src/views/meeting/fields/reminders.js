@@ -72,8 +72,11 @@ define('crm:views/meeting/fields/reminders', ['views/fields/base'], function (De
                 this.reminderList = this.model.get(this.name) || [];
             }
 
+            this.reminderList = Espo.Utils.cloneDeep(this.reminderList);
+
             this.listenTo(this.model, 'change:' + this.name, () => {
-                this.reminderList = this.model.get(this.name) || [];
+                this.reminderList = Espo.Utils
+                    .cloneDeep(this.model.get(this.name) || []);
             });
 
             this.typeList = this.getMetadata().get('entityDefs.Reminder.fields.type.options') || [];
@@ -146,9 +149,10 @@ define('crm:views/meeting/fields/reminders', ['views/fields/base'], function (De
                 .attr('data-action', 'removeReminder')
                 .html('<span class="fas fa-times"></span>');
 
-            $item.append($('<div class="input-group-btn">').append($type))
-                 .append($seconds)
-                 .append($('<div class="input-group-btn">').append($remove));
+            $item
+                .append($('<div class="input-group-btn">').append($type))
+                .append($seconds)
+                .append($('<div class="input-group-btn">').append($remove));
 
             this.$container.append($item);
         },
@@ -191,10 +195,13 @@ define('crm:views/meeting/fields/reminders', ['views/fields/base'], function (De
         },
 
         getDetailItemHtml: function (item) {
-            let body = this.getLanguage().translateOption(item.type, 'reminderTypes') + ' ' +
-                this.stringifySeconds(item.seconds);
-
-            return '<div>' + body +'</div>';
+            return $('<div>')
+                .append(
+                    $('<span>').text(this.getLanguage().translateOption(item.type, 'reminderTypes')),
+                    ' ',
+                    $('<span>').text(this.stringifySeconds(item.seconds))
+                )
+                .get(0).outerHTML;
         },
 
         getValueForDisplay: function () {
@@ -213,7 +220,8 @@ define('crm:views/meeting/fields/reminders', ['views/fields/base'], function (De
             let data = {};
 
             data[this.name] = Espo.Utils.cloneDeep(this.reminderList);
-        },
 
+            return data;
+        },
     });
 });
