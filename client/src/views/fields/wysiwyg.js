@@ -50,6 +50,10 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
         rowsDefault: 10000,
 
+        fallbackBodySideMargin: 5,
+
+        fallbackBodyTopMargin: 4,
+
         seeMoreDisabled: true,
 
         fetchEmptyValueAsNull: false,
@@ -307,9 +311,11 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             let useFallbackStylesheet = this.getThemeManager().getParam('isDark') && this.htmlHasColors(body);
 
+            let $iframeContainer = $iframe.parent();
+
             useFallbackStylesheet ?
-                $iframe.addClass('fallback') :
-                $iframe.removeClass('fallback');
+                $iframeContainer.addClass('fallback') :
+                $iframeContainer.removeClass('fallback');
 
             var linkElement = iframeElement.contentWindow.document.createElement('link');
 
@@ -338,6 +344,14 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                     }
                 }
             };
+
+            if (useFallbackStylesheet) {
+                $iframeContainer.css({
+                    paddingLeft: this.fallbackBodySideMargin + 'px',
+                    paddingRight: this.fallbackBodySideMargin + 'px',
+                    paddingTop: this.fallbackBodyTopMargin + 'px',
+                });
+            }
 
             var increaseHeightStep = 10;
 
@@ -372,6 +386,14 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 else {
                     processWidth();
                 }
+            };
+
+            let processBg = () => {
+                let color = iframeElement.contentWindow.getComputedStyle($body.get(0)).backgroundColor;
+
+                $iframeContainer.css({
+                    backgroundColor: color,
+                });
             };
 
             var processHeight = function (isOnLoad) {
@@ -421,6 +443,10 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
                 $iframe.on('load', () => {
                     processHeight(true);
+
+                    if (useFallbackStylesheet) {
+                        processBg();
+                    }
                 });
             }, 40);
 
