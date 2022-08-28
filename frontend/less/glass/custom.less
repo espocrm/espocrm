@@ -180,10 +180,13 @@ select.form-control > option {
 
 .popup-notification {
     border-width: 1px;
+    backdrop-filter: @backdrop-filter;
 }
 
 .popup-notification-danger {
     background-color: var(--brand-danger);
+    border-color: var(--panel-default-border);
+
     h4 {
         color: var(--text-color);
     }
@@ -191,6 +194,8 @@ select.form-control > option {
 
 .popup-notification-warning {
     background-color: var(--brand-warning);
+    border-color: var(--panel-default-border);
+
     h4 {
         color: var(--text-color);
     }
@@ -198,6 +203,8 @@ select.form-control > option {
 
 .popup-notification-primary {
     background-color: var(--brand-primary);
+    border-color: var(--panel-default-border);
+
     h4 {
         color: var(--text-color);
     }
@@ -205,6 +212,8 @@ select.form-control > option {
 
 .popup-notification-success {
     background-color: var(--brand-success);
+    border-color: var(--panel-default-border);
+
     h4 {
         color: var(--text-color);
     }
@@ -212,6 +221,7 @@ select.form-control > option {
 
 .popup-notification-info {
     background-color: var(--brand-info);
+    border-color: var(--panel-default-border);
 
     h4 {
         color: var(--text-color);
