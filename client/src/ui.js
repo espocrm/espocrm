@@ -50,7 +50,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
      * @property {function (): void} [onClose] An on-close callback.
      * @property {function (): void} [onBackdropClick] An on-backdrop-click callback.
      * @property {string} [container='body'] A container selector.
-     * @property {boolean} [keyboard=false] Enable a keyboard control. The `Esc` key closes a dialog.
+     * @property {boolean} [keyboard=true] Enable a keyboard control. The `Esc` key closes a dialog.
      * @property {boolean} [footerAtTheTop=false] To display a footer at the top.
      * @property {module:ui.Dialog~Button[]} [buttonList] Buttons.
      * @property {module:ui.Dialog~Button[]} [dropdownItemList] Dropdown action items.
@@ -120,6 +120,8 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         this.options = options;
         /** @private */
         this.onBackdropClick = function () {};
+        /** @private */
+        this.keyboard = true;
 
         this.activeElement = document.activeElement;
 
@@ -520,7 +522,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
     Dialog.prototype.show = function () {
         this.$el.modal({
              backdrop: this.backdrop,
-             keyboard: this.keyboard
+             keyboard: this.keyboard,
         });
 
         this.$el.find('.modal-content').removeClass('hidden');
@@ -593,9 +595,9 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         $modalBackdrop.last().addClass('hidden');
         $($modalBackdrop.get($modalBackdrop.length - 2)).removeClass('hidden');
 
-        let $modalConainer = $('.modal-container');
+        let $modalContainer = $('.modal-container');
 
-        $($modalConainer.get($modalConainer.length - 2)).removeClass('overlaid');
+        $($modalContainer.get($modalContainer.length - 2)).removeClass('overlaid');
 
         this.skipRemove = true;
 
