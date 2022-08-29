@@ -49,6 +49,10 @@ define('views/import-error/fields/line-number', ['views/fields/int'], (Dep) => {
                 'rowIndex';
         },
 
+        getAttributeList: function () {
+            return [this.sourceName];
+        },
+
         getValueForDisplay: function () {
             let value = this.model.get(this.sourceName);
 
