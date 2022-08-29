@@ -156,6 +156,19 @@ body {
     backdrop-filter: blur(1px);
 }
 
+.page-header {
+    .page-header-column-1 {
+        &.no-break-words {
+            .header-breadcrumbs.overlapped {
+                &:after {
+                    background: none;
+                    backdrop-filter: blur(1px);
+                }
+            }
+        }
+    }
+}
+
 select.form-control > option {
     background-color: var(--dropdown-bg);
 }
