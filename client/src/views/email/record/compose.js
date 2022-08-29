@@ -34,9 +34,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
 
         sideView: false,
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
+        setupBeforeFinal: function () {
             this.initialBody = null;
             this.initialIsHtml = null;
 
@@ -63,6 +61,12 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
 
                 this.model.set('body', body);
             }
+
+            Dep.prototype.setupBeforeFinal.call(this);
+        },
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
             this.isBodyChanged = false;
 

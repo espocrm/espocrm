@@ -1878,8 +1878,6 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 if (this.mode === 'edit' || this.inlineEditModeIsOn) {
                     this.setIsChanged();
                 }
-
-
             });
 
             var dependencyDefs = Espo.Utils.clone(
