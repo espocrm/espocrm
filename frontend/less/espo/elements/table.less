@@ -89,6 +89,18 @@ table.table-panel {
     thead > tr > th {
         border-bottom: 0;
     }
+
+    &.table-striped {
+        tbody > tr:last-child {
+            > td:first-child {
+                border-bottom-left-radius: var(--panel-border-radius);
+            }
+
+            > td:last-child {
+                border-bottom-right-radius: var(--panel-border-radius);
+            }
+        }
+    }
 }
 
 table td.cell-nowrap,
