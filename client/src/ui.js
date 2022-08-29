@@ -245,6 +245,9 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         if (this.removeOnClose) {
             this.$el.on('hidden.bs.modal', e => {
                 if (this.$el.get(0) === e.target) {
+                    if (!this.onCloseIsCalled) {
+                        this.close();
+                    }
 
                     if (this.skipRemove) {
                         return;
