@@ -477,6 +477,7 @@ define('view', [], function () {
                 cancelText: cancelText,
                 confirmStyle: confirmStyle,
                 backdrop: ('backdrop' in o) ? o.backdrop : true,
+                isHtml: true,
             }, callback, context);
         },
     });

@@ -671,6 +671,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
          *   A confirm-button style.
          * @property {'static'|boolean} [backdrop=false] A backdrop.
          * @property {function():void} [cancelCallback] A cancel-callback.
+         * @property {boolean} [isHtml=false] Whether the message is HTML.
          */
 
         /**
@@ -709,6 +710,10 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
                 o.cancelCallback();
             };
+
+            if (!o.isHtml) {
+                message = Handlebars.Utils.escapeExpression(message);
+            }
 
             return new Promise(resolve => {
                 let dialog = new Dialog({
