@@ -33,7 +33,8 @@
                 "",
                 "Validation",
                 "Access",
-                "Not-Found"
+                "Not-Found",
+                "Integrity-Constraint-Violation"
             ],
             "readOnly": true
         },

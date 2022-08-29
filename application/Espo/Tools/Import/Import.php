@@ -52,7 +52,8 @@ use Espo\Core\{
     FileStorage\Manager as FileStorageManager,
     Record\ServiceContainer as RecordServiceContainer,
     Utils\DateTime as DateTimeUtil,
-    Utils\Log};
+    Utils\Log,
+};
 
 use Espo\ORM\EntityManager;
 
@@ -65,6 +66,7 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use LogicException;
+use PDOException;
 
 class Import
 {
@@ -653,8 +655,14 @@ class Import
         catch (Exception $e) {
             $this->log->error("Import: " . $e->getMessage());
 
+            $errorType = null;
+
+            if ((int) $e->getCode() === 23000 && $e instanceof PDOException) {
+                $errorType = ImportError::TYPE_INTEGRITY_CONSTRAINT_VIOLATION;
+            }
+
             $this->createError(
-                null,
+                $errorType,
                 $index,
                 $row,
                 $import,
