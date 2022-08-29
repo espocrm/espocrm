@@ -626,6 +626,39 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
     };
 
     /**
+     * @private
+     * @param {Element} element
+     * @return {Element|null}
+     */
+    Dialog.prototype._findClosestFocusableElement = function (element) {
+        let isVisible = !!(
+            element.offsetWidth ||
+            element.offsetHeight ||
+            element.getClientRects().length
+        );
+
+        if (isVisible) {
+            element.focus({preventScroll: true});
+
+            return element;
+        }
+
+        let $element = $(element);
+
+        if ($element.closest('.dropdown-menu').length) {
+            let $button = $element.closest('.btn-group').find(`[data-toggle="dropdown"]`);
+
+            if ($button.length) {
+                $button.get(0).focus({preventScroll: true});
+
+                return $button.get(0);
+            }
+        }
+
+        return null;
+    };
+
+    /**
      * Close.
      */
     Dialog.prototype.close = function () {
@@ -635,7 +668,11 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
             if (this.activeElement) {
                 setTimeout(() => {
-                    this.activeElement.focus({preventScroll: true});
+                    let element = this._findClosestFocusableElement(this.activeElement);
+
+                    if (element) {
+                        element.focus({preventScroll: true});
+                    }
                 }, 50);
             }
         }
