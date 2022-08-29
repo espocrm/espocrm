@@ -98,7 +98,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                 let focusedFieldView = this.getRecordView().getFocusedFieldView();
 
                 if (focusedFieldView) {
-                    this.model.set(focusedFieldView.fetch());
+                    this.model.set(focusedFieldView.fetch(), {skipReRender: true});
                 }
 
                 if (this.getRecordView().isChanged) {
