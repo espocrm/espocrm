@@ -159,7 +159,9 @@ define('crm:views/meeting/modals/detail', ['views/modals/detail'], function (Dep
                     .get(['entityDefs', this.model.entityType,
                         'fields', 'acceptanceStatus', 'style', acceptanceStatus]);
             } else {
-                text = this.translate('Acceptance', 'labels', 'Meeting');
+                text = typeof acceptanceStatus !== 'undefined' ?
+                    this.translate('Acceptance', 'labels', 'Meeting') :
+                    ' ';
             }
 
             return {
