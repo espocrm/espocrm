@@ -242,7 +242,12 @@ define('crm:views/meeting/modals/detail', ['views/modals/detail'], function (Dep
                         id: this.model.id,
                         status: status,
                     }).then(() => {
-                        this.model.fetch();
+                        this.model.fetch()
+                            .then(() => {
+                                setTimeout(() => {
+                                    this.$el.find(`button[data-name="setAcceptanceStatus"]`).focus();
+                                }, 50)
+                            });
                     });
                 });
             });
