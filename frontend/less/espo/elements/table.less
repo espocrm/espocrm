@@ -81,6 +81,16 @@ table.no-margin {
     margin-bottom: 0;
 }
 
+table.table-panel {
+    border-collapse: separate;
+    border-radius: var(--panel-border-radius);
+    border: var(--panel-border-width) solid var(--panel-default-border);
+
+    thead > tr > th {
+        border-bottom: 0;
+    }
+}
+
 table td.cell-nowrap,
 table th.cell-nowrap {
     white-space: nowrap;

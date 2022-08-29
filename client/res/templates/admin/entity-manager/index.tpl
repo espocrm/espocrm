@@ -22,7 +22,7 @@
         spellcheck="false"
     >
 </div>
-<table class="table table-hover scopes-table">
+<table class="table table-hover table-panel scopes-table">
     <thead>
         <tr>
             <th>{{translate 'name' scope='EntityManager' category='fields'}}</th>

@@ -30,7 +30,7 @@
 </div>
 {{/if}}
 
-<table class="table">
+<table class="table table-panel table-hover">
     {{#unless linkDataList.length}}
     <tr>
         <td>

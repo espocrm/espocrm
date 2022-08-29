@@ -21,7 +21,7 @@
     >
 </div>
 
-<table class="table fields-table">
+<table class="table fields-table table-panel table-hover">
     <thead>
         <th width="35%">{{translate 'Name' scope='FieldManager'}}</th>
         <th width="35%">{{translate 'Label' scope='FieldManager'}}</th>
