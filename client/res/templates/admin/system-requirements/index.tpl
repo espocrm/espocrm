@@ -3,7 +3,7 @@
 {{translate 'System Requirements' scope='Admin'}}</h3></div>
 
 <div class="panel panel-default">
-    <table class="table table-striped table-no-overflow table-fixed">
+    <table class="table table-striped table-no-overflow table-fixed table-panel">
         <thead>
             <tr>
                 <th><h5>{{translate 'PHP Settings' scope='Admin'}}</h5></th>
@@ -33,7 +33,7 @@
 </div>
 
 <div class="panel panel-default">
-    <table class="table table-striped table-no-overflow table-fixed">
+    <table class="table table-striped table-no-overflow table-fixed table-panel">
         <thead>
             <tr>
                 <th><h5>{{translate 'Database Settings' scope='Admin'}}</h5></th>
@@ -64,7 +64,7 @@
 </div>
 
 <div class="panel panel-default">
-    <table class="table table-striped table-no-overflow table-fixed">
+    <table class="table table-striped table-no-overflow table-fixed table-panel">
         <thead>
             <tr>
                 <th><h5>{{translate 'Permissions' scope='Admin'}}</h5></th>
