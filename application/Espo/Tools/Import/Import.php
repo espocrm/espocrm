@@ -502,7 +502,7 @@ class Import
                 !$this->aclManager->checkEntityEdit($this->user, $entity)
             ) {
                 $this->createError(
-                    ImportError::TYPE_ACCESS,
+                    ImportError::TYPE_NO_ACCESS,
                     $index,
                     $row,
                     $import,

@@ -39,7 +39,7 @@ class ImportError extends Entity
     public const ENTITY_TYPE = 'ImportError';
 
     public const TYPE_VALIDATION = 'Validation';
-    public const TYPE_ACCESS = 'Access';
+    public const TYPE_NO_ACCESS = 'No-Access';
     public const TYPE_NOT_FOUND = 'Not-Found';
     public const TYPE_INTEGRITY_CONSTRAINT_VIOLATION = 'Integrity-Constraint-Violation';
 
