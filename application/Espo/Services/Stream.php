@@ -512,6 +512,8 @@ class Stream
 
         $subscriptionBuilder = clone $baseBuilder;
 
+        $subscriptionIgnoreWhereClause = $this->getUserStreamSubscriptionIgnoreWhereClause($user);
+
         $subscriptionBuilder
             ->leftJoin('createdBy')
             ->join(
@@ -523,7 +525,7 @@ class Stream
                     'subscription.userId' => $user->getId(),
                 ]
             )
-            ->useIndex('number');
+            ->where($subscriptionIgnoreWhereClause);
 
         if ($user->isPortal()) {
             $subscriptionBuilder->where([
@@ -675,7 +677,7 @@ class Stream
                 ],
                 'subscriptionExclude.id' => null,
             ])
-            ->useIndex('number');
+            ->where($subscriptionIgnoreWhereClause);
 
         if (!$user->isPortal()) {
             $subscriptionSuperRestBuilder = clone $subscriptionSuperBuilder;
@@ -890,6 +892,45 @@ class Stream
     }
 
     /**
+     * @return array<mixed,mixed>
+     */
+    private function getUserStreamSubscriptionIgnoreWhereClause(User $user): array
+    {
+        $ignoreScopeList = $this->getIgnoreScopeList($user);
+
+        if (empty($ignoreScopeList)) {
+            return [];
+        }
+
+        $whereClause = [];
+
+        $whereClause[] = [
+            'OR' => [
+                'relatedType' => null,
+                'relatedType!=' => $ignoreScopeList,
+            ]
+        ];
+
+        $whereClause[] = [
+            'OR' => [
+                'parentType' => null,
+                'parentType!=' => $ignoreScopeList,
+            ]
+        ];
+
+        if (in_array(Email::ENTITY_TYPE, $ignoreScopeList)) {
+            $whereClause[] = [
+                'type!=' => [
+                    NoteEntity::TYPE_EMAIL_RECEIVED,
+                    NoteEntity::TYPE_EMAIL_SENT,
+                ],
+            ];
+        }
+
+        return $whereClause;
+    }
+
+    /**
      * @param array{
      *   offset?: int|null,
      *   maxSize: int|null,
@@ -922,33 +963,6 @@ class Stream
                     ];
 
                     break;
-            }
-        }
-
-        $ignoreScopeList = $this->getIgnoreScopeList($user);
-
-        if (!empty($ignoreScopeList)) {
-            $whereClause[] = [
-                'OR' => [
-                    'relatedType' => null,
-                    'relatedType!=' => $ignoreScopeList,
-                ]
-            ];
-
-            $whereClause[] = [
-                'OR' => [
-                    'parentType' => null,
-                    'parentType!=' => $ignoreScopeList,
-                ]
-            ];
-
-            if (in_array(Email::ENTITY_TYPE, $ignoreScopeList)) {
-                $whereClause[] = [
-                    'type!=' => [
-                        NoteEntity::TYPE_EMAIL_RECEIVED,
-                        NoteEntity::TYPE_EMAIL_SENT,
-                    ],
-                ];
             }
         }
 
