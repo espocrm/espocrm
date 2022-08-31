@@ -653,7 +653,7 @@ define('views/record/search', ['view'], function (Dep) {
             this.managePresetFilters();
             this.manageBoolFilters();
 
-            this.$filtersLabel.html(this.currentFilterLabelList.join(', '));
+            this.$filtersLabel.html(this.currentFilterLabelList.join(' &middot; '));
         },
 
         /**
