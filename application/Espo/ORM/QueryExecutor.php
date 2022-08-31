@@ -29,16 +29,9 @@
 
 namespace Espo\ORM;
 
-use Espo\ORM\QueryComposer\QueryComposer;
 use Espo\ORM\Query\Query;
-use Espo\ORM\Query\Delete as DeleteQuery;
-use Espo\ORM\Query\Insert as InsertQuery;
-use Espo\ORM\Query\LockTable as LockTableQuery;
-use Espo\ORM\Query\Select as SelectQuery;
-use Espo\ORM\Query\Union as UnionQuery;
-use Espo\ORM\Query\Update as UpdateQuery;
+use Espo\ORM\QueryComposer\QueryComposerWrapper;
 
-use RuntimeException;
 use PDOStatement;
 
 /**
@@ -47,9 +40,9 @@ use PDOStatement;
 class QueryExecutor
 {
     private SqlExecutor $sqlExecutor;
-    private QueryComposer $queryComposer;
+    private QueryComposerWrapper $queryComposer;
 
-    public function __construct(SqlExecutor $sqlExecutor, QueryComposer $queryComposer)
+    public function __construct(SqlExecutor $sqlExecutor, QueryComposerWrapper $queryComposer)
     {
         $this->sqlExecutor = $sqlExecutor;
         $this->queryComposer = $queryComposer;
@@ -60,37 +53,8 @@ class QueryExecutor
      */
     public function execute(Query $query): PDOStatement
     {
-        $sql = $this->compose($query);
+        $sql = $this->queryComposer->compose($query);
 
         return $this->sqlExecutor->execute($sql, true);
-    }
-
-    private function compose(Query $query): string
-    {
-        if ($query instanceof SelectQuery) {
-            return $this->queryComposer->composeSelect($query);
-        }
-
-        if ($query instanceof UpdateQuery) {
-            return $this->queryComposer->composeUpdate($query);
-        }
-
-        if ($query instanceof InsertQuery) {
-            return $this->queryComposer->composeInsert($query);
-        }
-
-        if ($query instanceof DeleteQuery) {
-            return $this->queryComposer->composeDelete($query);
-        }
-
-        if ($query instanceof UnionQuery) {
-            return $this->queryComposer->composeUnion($query);
-        }
-
-        if ($query instanceof LockTableQuery) {
-            return $this->queryComposer->composeLockTable($query);
-        }
-
-        throw new RuntimeException("ORM Query: Unknown query type passed.");
     }
 }

@@ -125,7 +125,7 @@ class EntityManager
         $this->initQueryComposer();
 
         $this->sqlExecutor = new SqlExecutor($this->pdoProvider->get());
-        $this->queryExecutor = new QueryExecutor($this->sqlExecutor, $this->queryComposer);
+        $this->queryExecutor = new QueryExecutor($this->sqlExecutor, $this->getQueryComposer());
         $this->queryBuilder = new QueryBuilder();
         $this->collectionFactory = new CollectionFactory($this);
         $this->transactionManager = new TransactionManager($this->pdoProvider->get(), $this->queryComposer);

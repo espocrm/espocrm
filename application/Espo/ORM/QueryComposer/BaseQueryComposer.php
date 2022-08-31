@@ -41,7 +41,6 @@ use Espo\ORM\Query\Update as UpdateQuery;
 use Espo\ORM\Query\Insert as InsertQuery;
 use Espo\ORM\Query\Delete as DeleteQuery;
 use Espo\ORM\Query\Union as UnionQuery;
-use Espo\ORM\Query\LockTable as LockTableQuery;
 use Espo\ORM\QueryComposer\Part\FunctionConverterFactory;
 
 use PDO;
@@ -219,31 +218,9 @@ abstract class BaseQueryComposer implements QueryComposer
      */
     public function compose(Query $query): string
     {
-        if ($query instanceof SelectQuery) {
-            return $this->composeSelect($query);
-        }
+        $wrapper = new QueryComposerWrapper($this);
 
-        if ($query instanceof UpdateQuery) {
-            return $this->composeUpdate($query);
-        }
-
-        if ($query instanceof InsertQuery) {
-            return $this->composeInsert($query);
-        }
-
-        if ($query instanceof DeleteQuery) {
-            return $this->composeDelete($query);
-        }
-
-        if ($query instanceof UnionQuery) {
-            return $this->composeUnion($query);
-        }
-
-        if ($query instanceof LockTableQuery) {
-            return $this->composeLockTable($query);
-        }
-
-        throw new RuntimeException("ORM Query: Unknown query type passed.");
+        return $wrapper->compose($query);
     }
 
     public function composeCreateSavepoint(string $savepointName): string
