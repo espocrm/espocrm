@@ -197,7 +197,9 @@
             }
 
             li.tab-group {
-                background-color: @navbar-inverse-bg;
+                @media screen and (min-width: @screen-md-min) {
+                    background-color: @navbar-inverse-bg;
+                }
 
                 > a > .full-label {
                     padding-right: 8px;
@@ -259,7 +261,7 @@
         .navbar-right-container {
             li.notifications-badge-container {
                 position: absolute;
-                top: -1px;
+                top: 0;
                 right: 0;
             }
         }
