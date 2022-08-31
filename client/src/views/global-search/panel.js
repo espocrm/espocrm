@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/global-search/panel', 'view', function (Dep) {
+define('views/global-search/panel', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -44,17 +44,19 @@ define('views/global-search/panel', 'view', function (Dep) {
             this.navbarPanelHeightSpace = this.getThemeManager().getParam('navbarPanelHeightSpace') || 100;
             this.navbarPanelBodyMaxHeight = this.getThemeManager().getParam('navbarPanelBodyMaxHeight') || 600;
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 $(window).off('resize.global-search-height');
+
                 if (this.overflowWasHidden) {
                     $('body').css('overflow', 'unset');
+
                     this.overflowWasHidden = false;
                 }
-            }, this);
+            });
         },
 
         afterRender: function () {
-            this.listenToOnce(this.collection, 'sync', function () {
+            this.listenToOnce(this.collection, 'sync', () => {
                 this.createView('list', 'views/record/list-expanded', {
                     el: this.options.el + ' .list-container',
                     collection: this.collection,
@@ -76,18 +78,20 @@ define('views/global-search/panel', 'view', function (Dep) {
                             width: '80px'
                         }
                     }
-                }, function (view) {
+                }, (view) => {
                     view.render();
                 });
-            }, this);
+            });
 
             this.collection.reset();
             this.collection.maxSize = this.maxSize;
             this.collection.fetch();
 
             var $window = $(window);
+
             $window.off('resize.global-search-height');
             $window.on('resize.global-search-height', this.processSizing.bind(this));
+
             this.processSizing();
         },
 
@@ -106,18 +110,19 @@ define('views/global-search/panel', 'view', function (Dep) {
 
                 $('body').css('overflow', 'hidden');
                 this.overflowWasHidden = true;
-
             } else {
                 cssParams.height = 'unset';
                 cssParams.overflow = 'none';
 
                 if (this.overflowWasHidden) {
                     $('body').css('overflow', 'unset');
+
                     this.overflowWasHidden = false;
                 }
 
                 if (windowHeight - this.navbarPanelBodyMaxHeight < this.navbarPanelHeightSpace) {
                     var maxHeight = windowHeight - this.navbarPanelHeightSpace;
+
                     cssParams.maxHeight = maxHeight + 'px';
                 }
             }
@@ -128,6 +133,5 @@ define('views/global-search/panel', 'view', function (Dep) {
         close: function () {
             this.trigger('close');
         },
-
     });
 });
