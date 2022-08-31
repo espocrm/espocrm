@@ -110,19 +110,25 @@ class LinkMultipleType
             return true;
         }
 
+        $entityDefs = $this->defs->getEntity($entity->getEntityType());
+        $fieldDefs = $entityDefs->getField($field);
+
+        if ($fieldDefs->isNotStorable()) {
+            return true;
+        }
+
         /** @var ?array<string,string> $columnsMap */
-        $columnsMap = $this->defs
-            ->getEntity($entity->getEntityType())
-            ->getField($field)
-            ->getParam('columns');
+        $columnsMap = $fieldDefs->getParam('columns');
 
         if ($columnsMap === null || $columnsMap === []) {
             return true;
         }
 
-        $relationDefs = $this->defs
-            ->getEntity($entity->getEntityType())
-            ->getRelation($field);
+        if (!$entityDefs->hasRelation($field)) {
+            return true;
+        }
+
+        $relationDefs = $entityDefs->getRelation($field);
 
         if (!$relationDefs->hasForeignEntityType()) {
             return true;
@@ -206,7 +212,7 @@ class LinkMultipleType
                 $patternName = substr($pattern, 1);
 
                 $pattern = $this->metadata
-                        ->get(['app', 'regExpPatterns', $patternName, 'pattern']) ??
+                    ->get(['app', 'regExpPatterns', $patternName, 'pattern']) ??
                     $pattern;
             }
 
