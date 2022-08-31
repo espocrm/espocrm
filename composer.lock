@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e703473276c8dc1f630d38a0bf3c9ac9",
+    "content-hash": "eeb8a42a7e5e88311097944d4662e2b0",
     "packages": [
         {
             "name": "async-aws/core",
@@ -5307,33 +5307,35 @@
         },
         {
             "name": "yzalis/identicon",
-            "version": "1.1.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yzalis/Identicon.git",
-                "reference": "a99fc2a3d018512f7914bc6f972952536c0f309b"
+                "reference": "ff5ed090129cab9bfa2a322857d4a01d107aa0ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yzalis/Identicon/zipball/a99fc2a3d018512f7914bc6f972952536c0f309b",
-                "reference": "a99fc2a3d018512f7914bc6f972952536c0f309b",
+                "url": "https://api.github.com/repos/yzalis/Identicon/zipball/ff5ed090129cab9bfa2a322857d4a01d107aa0ae",
+                "reference": "ff5ed090129cab9bfa2a322857d4a01d107aa0ae",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=5.5.0"
             },
             "require-dev": {
-                "fzaninotto/faker": "1.2.*@dev"
+                "ext-imagick": "*",
+                "fzaninotto/faker": "^1.2.0",
+                "phpunit/phpunit": "^4.0 || ^5.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev"
+                    "dev-master": "1.2-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Identicon": "src/"
+                "psr-4": {
+                    "Identicon\\": "src/Identicon/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -5358,7 +5360,7 @@
                 "source": "https://github.com/yzalis/Identicon/tree/master"
             },
             "abandoned": true,
-            "time": "2014-07-13T09:19:12+00:00"
+            "time": "2019-10-14T09:30:57+00:00"
         },
         {
             "name": "zbateson/mail-mime-parser",
@@ -7637,7 +7639,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.4.0",
+        "php": ">=7.4.0 <8.2.0",
         "ext-pdo_mysql": "*",
         "ext-openssl": "*",
         "ext-json": "*",
@@ -7646,8 +7648,9 @@
         "ext-mbstring": "*",
         "ext-xml": "*",
         "ext-curl": "*",
-        "ext-exif": "*"
+        "ext-exif": "*",
+        "ext-pdo": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.0.0"
 }
