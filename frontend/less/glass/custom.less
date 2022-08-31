@@ -21,7 +21,9 @@ body[data-navbar="side"].minimized.side-menu-opened {
 
 body[data-navbar="top"] {
     #navbar > .navbar {
-        backdrop-filter: @backdrop-filter-2;
+        @media screen and (min-width: @screen-sm-min) {
+            backdrop-filter: @backdrop-filter-2;
+        }
     }
 }
 
@@ -102,7 +104,9 @@ body {
 
     #navbar {
         .navbar-right {
-            backdrop-filter: @backdrop-filter !important;
+            @media screen and (min-width: @screen-sm-min) {
+                backdrop-filter: @backdrop-filter !important;
+            }
         }
     }
 
