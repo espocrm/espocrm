@@ -62,7 +62,7 @@
     "jsbarcode": "^3.11.4",
     "marked": "^4.0.10",
     "moment": "^2.29.4",
-    "moment-timezone": "^0.5.33",
+    "moment-timezone": "^0.5.35",
     "moment-timezone-data-build": "github:yurikuzn/moment-timezone-data-build#0.1.0",
     "qrcodejs": "^1.0.0",
     "selectize": "github:selectize/selectize.js#v0.13.6",
