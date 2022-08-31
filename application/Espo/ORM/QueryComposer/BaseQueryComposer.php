@@ -215,7 +215,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * {@inheritdoc}
+     * @deprecated Use wrapper or methods directly.
      */
     public function compose(Query $query): string
     {
@@ -261,42 +261,50 @@ abstract class BaseQueryComposer implements QueryComposer
         return 'ROLLBACK TO SAVEPOINT ' . $this->sanitize($savepointName);
     }
 
-    protected function composeSelecting(SelectingQuery $queryParams): string
+    protected function composeSelecting(SelectingQuery $query): string
     {
-        return $this->compose($queryParams);
+        if ($query instanceof SelectQuery) {
+            return $this->composeSelect($query);
+        }
+
+        if ($query instanceof UnionQuery) {
+            return $this->composeUnion($query);
+        }
+
+        throw new RuntimeException("Unknown query type.");
     }
 
-    public function composeSelect(SelectQuery $queryParams): string
+    public function composeSelect(SelectQuery $query): string
     {
-        $params = $queryParams->getRaw();
+        $params = $query->getRaw();
 
         return $this->createSelectQueryInternal($params);
     }
 
-    public function composeUpdate(UpdateQuery $queryParams): string
+    public function composeUpdate(UpdateQuery $query): string
     {
-        $params = $queryParams->getRaw();
+        $params = $query->getRaw();
 
         return $this->createUpdateQuery($params);
     }
 
-    public function composeDelete(DeleteQuery $queryParams): string
+    public function composeDelete(DeleteQuery $query): string
     {
-        $params = $queryParams->getRaw();
+        $params = $query->getRaw();
 
         return $this->createDeleteQuery($params);
     }
 
-    public function composeInsert(InsertQuery $queryParams): string
+    public function composeInsert(InsertQuery $query): string
     {
-        $params = $queryParams->getRaw();
+        $params = $query->getRaw();
 
         return $this->createInsertQuery($params);
     }
 
-    public function composeUnion(UnionQuery $queryParams): string
+    public function composeUnion(UnionQuery $query): string
     {
-        $params = $queryParams->getRaw();
+        $params = $query->getRaw();
 
         return $this->createUnionQuery($params);
     }
@@ -312,7 +320,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $params['from'] = $entityType;
 
-        return $this->compose(SelectQuery::fromRaw($params));
+        return $this->composeSelect(SelectQuery::fromRaw($params));
     }
 
     /**

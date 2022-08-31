@@ -94,7 +94,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
     private function getSql(): string
     {
         if (!$this->sql) {
-            $this->sql = $this->getQueryComposer()->compose($this->getQuery());
+            $this->sql = $this->getQueryComposer()->composeSelect($this->getQuery());
         }
 
         return $this->sql;

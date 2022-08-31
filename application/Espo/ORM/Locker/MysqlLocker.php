@@ -82,7 +82,7 @@ class MysqlLocker implements Locker
             ->inExclusiveMode()
             ->build();
 
-        $sql = $this->queryComposer->compose($query);
+        $sql = $this->queryComposer->composeLockTable($query);
 
         $this->pdo->exec($sql);
     }
@@ -99,7 +99,7 @@ class MysqlLocker implements Locker
             ->inShareMode()
             ->build();
 
-        $sql = $this->queryComposer->compose($query);
+        $sql = $this->queryComposer->composeLockTable($query);
 
         $this->pdo->exec($sql);
     }

@@ -103,7 +103,7 @@ class BaseMapper implements RDBMapper
 
         $entity = $this->entityFactory->create($entityType);
 
-        $sql = $this->queryComposer->compose($select);
+        $sql = $this->queryComposer->composeSelect($select);
 
         $sth = $this->executeSql($sql);
 
@@ -191,7 +191,7 @@ class BaseMapper implements RDBMapper
             throw new RuntimeException("No entity type.");
         }
 
-        $sql = $this->queryComposer->compose($select);
+        $sql = $this->queryComposer->composeSelect($select);
 
         return $this->selectBySqlInternal($entityType, $sql);
     }
@@ -238,7 +238,7 @@ class BaseMapper implements RDBMapper
 
         $select = Select::fromRaw($params);
 
-        $sql = $this->queryComposer->compose($select);
+        $sql = $this->queryComposer->composeSelect($select);
 
         $sth = $this->executeSql($sql);
 
@@ -322,7 +322,7 @@ class BaseMapper implements RDBMapper
                 $params['limit'] = 1;
                 $params['from'] = $relEntity->getEntityType();
 
-                $sql = $this->queryComposer->compose(Select::fromRaw($params));
+                $sql = $this->queryComposer->composeSelect(Select::fromRaw($params));
 
                 $sth = $this->executeSql($sql);
 
@@ -377,7 +377,7 @@ class BaseMapper implements RDBMapper
 
                 $params['from'] = $relEntity->getEntityType();
 
-                $sql = $this->queryComposer->compose(Select::fromRaw($params));
+                $sql = $this->queryComposer->composeSelect(Select::fromRaw($params));
 
                 if ($returnTotalCount) {
                     $sth = $this->executeSql($sql);
@@ -421,7 +421,7 @@ class BaseMapper implements RDBMapper
 
                 $params['from'] = $relEntity->getEntityType();
 
-                $sql = $this->queryComposer->compose(Select::fromRaw($params));
+                $sql = $this->queryComposer->composeSelect(Select::fromRaw($params));
 
                 if ($returnTotalCount) {
                     $sth = $this->executeSql($sql);
@@ -457,7 +457,7 @@ class BaseMapper implements RDBMapper
 
                 $params['from'] = $foreignEntityType;
 
-                $sql = $this->queryComposer->compose(Select::fromRaw($params));
+                $sql = $this->queryComposer->composeSelect(Select::fromRaw($params));
 
                 $sth = $this->executeSql($sql);
 
@@ -598,7 +598,7 @@ class BaseMapper implements RDBMapper
                     $where[$k] = $value;
                 }
 
-                $sql = $this->queryComposer->compose(
+                $sql = $this->queryComposer->composeUpdate(
                     Update::fromRaw([
                         'from' => $middleName,
                         'whereClause' => $where,
@@ -662,7 +662,7 @@ class BaseMapper implements RDBMapper
             $where[$k] = $value;
         }
 
-        $sql = $this->queryComposer->compose(
+        $sql = $this->queryComposer->composeSelect(
             Select::fromRaw([
                 'from' => $middleName,
                 'select' => [[$column, 'value']],
@@ -760,7 +760,7 @@ class BaseMapper implements RDBMapper
 
                 $params['from'] = $foreignEntityType;
 
-                $sql = $this->queryComposer->compose(
+                $sql = $this->queryComposer->composeInsert(
                     Insert::fromRaw([
                         'into' => $middleName,
                         'columns' => $columns,
@@ -841,7 +841,7 @@ class BaseMapper implements RDBMapper
                     $foreignRelationName &&
                     $this->getRelationParam($relEntity, $foreignRelationName, 'type') === Entity::HAS_ONE
                 ) {
-                    $sql = $this->queryComposer->compose(
+                    $sql = $this->queryComposer->composeUpdate(
                         Update::fromRaw([
                             'from' => $entityType,
                             'whereClause' => [
@@ -861,7 +861,7 @@ class BaseMapper implements RDBMapper
                 $entity->set($key, $relEntity->getId());
                 $entity->setFetched($key, $relEntity->getId());
 
-                $sql = $this->queryComposer->compose(
+                $sql = $this->queryComposer->composeUpdate(
                     Update::fromRaw([
                         'from' => $entityType,
                         'whereClause' => [
@@ -887,7 +887,7 @@ class BaseMapper implements RDBMapper
                 $entity->setFetched($key, $relEntity->getId());
                 $entity->setFetched($typeKey, $relEntity->getEntityType());
 
-                $sql = $this->queryComposer->compose(
+                $sql = $this->queryComposer->composeUpdate(
                     Update::fromRaw([
                         'from' => $entityType,
                         'whereClause' => [
@@ -917,7 +917,7 @@ class BaseMapper implements RDBMapper
                     return false;
                 }
 
-                $sql = $this->queryComposer->compose(
+                $sql = $this->queryComposer->composeUpdate(
                     Update::fromRaw([
                         'from' => $relEntity->getEntityType(),
                         'whereClause' => [
@@ -932,7 +932,7 @@ class BaseMapper implements RDBMapper
 
                 $this->executeSql($sql, true);
 
-                $sql = $this->queryComposer->compose(
+                $sql = $this->queryComposer->composeUpdate(
                     Update::fromRaw([
                         'from' => $relEntity->getEntityType(),
                         'whereClause' => [
@@ -977,7 +977,7 @@ class BaseMapper implements RDBMapper
                     $set[$foreignType] = $entity->getEntityType();
                 }
 
-                $sql = $this->queryComposer->compose(
+                $sql = $this->queryComposer->composeUpdate(
                     Update::fromRaw([
                         'from' => $relEntity->getEntityType(),
                         'whereClause' => [
@@ -1028,7 +1028,7 @@ class BaseMapper implements RDBMapper
                     $where[$f] = $v;
                 }
 
-                $sql = $this->queryComposer->compose(
+                $sql = $this->queryComposer->composeSelect(
                     Select::fromRaw([
                         'from' => $middleName,
                         'select' => ['id'],
@@ -1056,7 +1056,7 @@ class BaseMapper implements RDBMapper
                         $update[$column] = $value;
                     }
 
-                    $sql = $this->queryComposer->compose(
+                    $sql = $this->queryComposer->composeInsert(
                         Insert::fromRaw([
                             'into' => $middleName,
                             'columns' => $columns,
@@ -1078,7 +1078,7 @@ class BaseMapper implements RDBMapper
                     $update[$column] = $value;
                 }
 
-                $sql = $this->queryComposer->compose(
+                $sql = $this->queryComposer->composeUpdate(
                     Update::fromRaw([
                         'from' => $middleName,
                         'whereClause' => $where,
@@ -1178,7 +1178,7 @@ class BaseMapper implements RDBMapper
 
                 $where[static::ATTRIBUTE_DELETED] = false;
 
-                $sql = $this->queryComposer->compose(
+                $sql = $this->queryComposer->composeUpdate(
                     Update::fromRaw([
                         'from' => $entityType,
                         'whereClause' => $where,
@@ -1222,7 +1222,7 @@ class BaseMapper implements RDBMapper
 
                 /** @var Entity $relEntity */
 
-                $sql = $this->queryComposer->compose(
+                $sql = $this->queryComposer->composeUpdate(
                     Update::fromRaw([
                         'from' => $relEntity->getEntityType(),
                         'whereClause' => $where,
@@ -1262,7 +1262,7 @@ class BaseMapper implements RDBMapper
                     $where[$f] = $v;
                 }
 
-                $sql = $this->queryComposer->compose(
+                $sql = $this->queryComposer->composeUpdate(
                     Update::fromRaw([
                         'from' => $middleName,
                         'whereClause' => $where,
@@ -1309,7 +1309,7 @@ class BaseMapper implements RDBMapper
             $update = $onDuplicateSetMap = $this->getInsertOnDuplicateSetMap($entity, $onDuplicateUpdateAttributeList);
         }
 
-        $sql = $this->queryComposer->compose(
+        $sql = $this->queryComposer->composeInsert(
             Insert::fromRaw([
                 'into' => $entity->getEntityType(),
                 'columns' => $this->getInsertColumnList($entity),
@@ -1370,7 +1370,7 @@ class BaseMapper implements RDBMapper
 
         /** @var Entity $firstEntity */
 
-        $sql = $this->queryComposer->compose(
+        $sql = $this->queryComposer->composeInsert(
             Insert::fromRaw([
                 'into' => $entityType,
                 'columns' => $this->getInsertColumnList($firstEntity),
@@ -1469,7 +1469,7 @@ class BaseMapper implements RDBMapper
             return;
         }
 
-        $sql = $this->queryComposer->compose(
+        $sql = $this->queryComposer->composeUpdate(
             Update::fromRaw([
                 'from' => $entity->getEntityType(),
                 'whereClause' => [
@@ -1522,7 +1522,7 @@ class BaseMapper implements RDBMapper
             $whereClause[static::ATTRIBUTE_DELETED] = true;
         }
 
-        $sql = $this->queryComposer->compose(Delete::fromRaw([
+        $sql = $this->queryComposer->composeDelete(Delete::fromRaw([
             'from' => $entityType,
             'whereClause' => $whereClause,
         ]));
@@ -1543,7 +1543,7 @@ class BaseMapper implements RDBMapper
             'id' => $id,
         ];
 
-        $sql = $this->queryComposer->compose(
+        $sql = $this->queryComposer->composeUpdate(
             Update::fromRaw([
                 'from' => $entityType,
                 'whereClause' => $whereClause,

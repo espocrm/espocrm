@@ -77,7 +77,7 @@ class BaseLocker implements Locker
             ->inExclusiveMode()
             ->build();
 
-        $sql = $this->queryComposer->compose($query);
+        $sql = $this->queryComposer->composeLockTable($query);
 
         $this->pdo->exec($sql);
     }
@@ -96,7 +96,7 @@ class BaseLocker implements Locker
             ->inShareMode()
             ->build();
 
-        $sql = $this->queryComposer->compose($query);
+        $sql = $this->queryComposer->composeLockTable($query);
 
         $this->pdo->exec($sql);
     }

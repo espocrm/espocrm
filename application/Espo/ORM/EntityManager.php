@@ -35,6 +35,7 @@ use Espo\ORM\Defs\Defs;
 use Espo\ORM\Locker\MysqlLocker;
 use Espo\ORM\Mapper\BaseMapper;
 use Espo\ORM\QueryComposer\QueryComposer;
+use Espo\ORM\QueryComposer\QueryComposerWrapper;
 
 use Espo\ORM\Mapper\Mapper;
 use Espo\ORM\Mapper\MapperFactory;
@@ -163,9 +164,9 @@ class EntityManager
         return $this->queryComposer;
     }
 
-    public function getQueryComposer(): QueryComposer
+    public function getQueryComposer(): QueryComposerWrapper
     {
-        return $this->queryComposer;
+        return new QueryComposerWrapper($this->queryComposer);
     }
 
     public function getTransactionManager(): TransactionManager
@@ -197,7 +198,7 @@ class EntityManager
                 $this->pdoProvider->get(),
                 $this->entityFactory,
                 $this->collectionFactory,
-                $this->getQueryComposer(),
+                $this->queryComposer,
                 $this->metadata,
                 $this->sqlExecutor
             );
