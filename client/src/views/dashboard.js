@@ -44,7 +44,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
                 this.selectTab(tab);
             },
-            'click button[data-action="addDashlet"]': function () {
+            'click .dashboard-buttons [data-action="addDashlet"]': function () {
                 this.createView('addDashlet', 'views/modals/add-dashlet', {}, view => {
                     view.render();
 
@@ -53,7 +53,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                     });
                 });
             },
-            'click button[data-action="editTabs"]': function () {
+            'click .dashboard-buttons [data-action="editTabs"]': function () {
                 this.createView('editTabs', 'views/modals/edit-dashboard', {
                     dashboardLayout: this.dashboardLayout,
                 }, view => {
