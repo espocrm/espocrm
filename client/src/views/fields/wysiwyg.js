@@ -1039,6 +1039,10 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 return true;
             }
 
+            if (~string.indexOf('<font color="')) {
+                return true;
+            }
+
             return false;
         },
     });
