@@ -208,7 +208,7 @@ define('views/detail', ['views/main'], function (Dep) {
         },
 
         /**
-         * Control follow/unfollow buttons visibility..
+         * Control follow/unfollow buttons visibility.
          */
         handleFollowButton: function () {
             if (this.model.get('isFollowed')) {
@@ -376,7 +376,7 @@ define('views/detail', ['views/main'], function (Dep) {
          *                 attribute: 'field1',
          *                 type: 'equals',
          *                 value: this.model.get('someField'),
-         *                 data: {},// Additional filter data specific for a field type.
+         *                 data: {}, // Additional filter data specific for a field type.
          *             };
          *         },
          *     },
