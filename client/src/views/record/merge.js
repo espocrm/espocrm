@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/merge', 'view', function (Dep) {
+define('views/record/merge', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -35,10 +35,10 @@ define('views/record/merge', 'view', function (Dep) {
         scope: null,
 
         data: function () {
-            var rows = [];
+            let rows = [];
 
-            this.fields.forEach((field) => {
-                var o = {
+            this.fields.forEach(field => {
+                let o = {
                     name: field,
                     scope: this.scope,
                 };
@@ -70,7 +70,7 @@ define('views/record/merge', 'view', function (Dep) {
             'change input[type="radio"][name="check-all"]': function (e) {
                 e.stopPropagation();
 
-                var id = e.currentTarget.value;
+                let id = e.currentTarget.value;
 
                 $('input[data-id="'+id+'"]').prop('checked', true);
             },
@@ -80,9 +80,9 @@ define('views/record/merge', 'view', function (Dep) {
             },
 
             'click button[data-action="merge"]': function () {
-                var id = $('input[type="radio"][name="check-all"]:checked').val();
+                let id = $('input[type="radio"][name="check-all"]:checked').val();
 
-                var model;
+                let model;
 
                 this.models.forEach(m => {
                     if (m.id === id) {
@@ -93,23 +93,21 @@ define('views/record/merge', 'view', function (Dep) {
                 var attributes = {};
 
                 $('input.field-radio:checked').each((i, el) => {
-                    var field = el.name;
-                    var id = $(el).attr('data-id');
+                    let field = el.name;
+                    let id = $(el).attr('data-id');
 
                     if (model.id === id) {
                         return;
                     }
 
-                    var fieldType = model.getFieldParam(field, 'type');
-                    var fields = this.getFieldManager().getActualAttributeList(fieldType, field);
+                    let fieldType = model.getFieldParam(field, 'type');
+                    let fields = this.getFieldManager().getActualAttributeList(fieldType, field);
 
-                    var modelFrom;
+                    let modelFrom;
 
                     this.models.forEach(m => {
                         if (m.id === id) {
                             modelFrom = m;
-
-                            return;
                         }
                     });
 
@@ -120,7 +118,7 @@ define('views/record/merge', 'view', function (Dep) {
 
                 this.notify('Merging...');
 
-                var sourceIdList =
+                let sourceIdList =
                     this.models
                         .filter(m => {
                             if (m.id !== model.id) {
@@ -164,15 +162,15 @@ define('views/record/merge', 'view', function (Dep) {
             this.scope = this.options.models[0].name;
             this.models = this.options.models;
 
-            var fieldManager = this.getFieldManager();
+            let fieldManager = this.getFieldManager();
 
-            var differentFieldList = [];
-            var fieldsDefs = this.models[0].defs.fields;
+            let differentFieldList = [];
+            let fieldsDefs = this.models[0].defs.fields;
 
             this.readOnlyFields = {};
 
-            for (var field in fieldsDefs) {
-                var type = fieldsDefs[field].type;
+            for (let field in fieldsDefs) {
+                let type = fieldsDefs[field].type;
 
                 if (type === 'linkMultiple') {
                     continue;
@@ -191,20 +189,20 @@ define('views/record/merge', 'view', function (Dep) {
                 }
 
                 if (fieldManager.isMergeable(type)) {
-                    var actualAttributeList = fieldManager.getActualAttributeList(type, field);
+                    let actualAttributeList = fieldManager.getActualAttributeList(type, field);
 
-                    var differs = false;
+                    let differs = false;
 
-                    actualAttributeList.forEach((field) => {
-                        var values = [];
+                    actualAttributeList.forEach(field => {
+                        let values = [];
 
-                        this.models.forEach((model) => {
+                        this.models.forEach(model => {
                             values.push(model.get(field));
                         });
 
-                        var firstValue = values[0];
+                        let firstValue = values[0];
 
-                        values.forEach((value) => {
+                        values.forEach(value => {
                             if (!_.isEqual(firstValue, value)) {
                                 differs = true;
                             }
@@ -236,11 +234,11 @@ define('views/record/merge', 'view', function (Dep) {
 
             this.fields = differentFieldList;
 
-            this.fields.forEach((field) => {
-                var type = this.models[0].getFieldParam(field, 'type');
+            this.fields.forEach(field => {
+                let type = this.models[0].getFieldParam(field, 'type');
 
                 this.models.forEach((model) => {
-                    var viewName = model.getFieldParam(field, 'view') ||
+                    let viewName = model.getFieldParam(field, 'view') ||
                         this.getFieldManager().getViewName(type);
 
                     this.createView(model.id + '-' + field, viewName, {
@@ -258,7 +256,7 @@ define('views/record/merge', 'view', function (Dep) {
             this.hasCreatedAt = this.getMetadata().get(['entityDefs', this.scope, 'fields', 'createdAt']);
 
             if (this.hasCreatedAt) {
-                this.models.forEach((model) => {
+                this.models.forEach(model => {
                     this.createView(model.id + '-' + 'createdAt', 'views/fields/datetime', {
                         model: model,
                         el: '.merge [data-id="'+model.id+'"] .field[data-name="createdAt"]',
@@ -273,13 +271,13 @@ define('views/record/merge', 'view', function (Dep) {
         },
 
         getDataList: function () {
-            var dataList = [];
+            let dataList = [];
 
-            this.models.forEach((model, i) => {
+            this.models.forEach(model => {
                 var o = {};
 
                 o.id = model.id;
-                o.name = Handlebars.Utils.escapeExpression(model.get('name'));
+                o.name = model.get('name');
                 o.createdAtViewName = model.id + '-' + 'createdAt';
 
                 dataList.push(o);

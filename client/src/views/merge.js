@@ -65,12 +65,13 @@ define('views/merge', ['views/main'], function (Dep) {
         },
 
         getHeader: function () {
-            var html = '<a href="#' + this.models[0].name + '">' +
-            this.getLanguage().translate(this.models[0].name, 'scopeNamesPlural') + '</a>';
-            html += ' <span class="chevron-right"></span> ';
-            html += this.getLanguage().translate('merge');
-
-            return html;
+            return this.buildHeaderHtml([
+                $('<a>')
+                    .attr('href', '#' + this.models[0].entityType)
+                    .text(this.getLanguage().translate(this.models[0].name, 'scopeNamesPlural')),
+                $('<span>')
+                    .text(this.getLanguage().translate('Merge'))
+            ]);
         },
 
         updatePageTitle: function () {
