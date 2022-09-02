@@ -59,7 +59,8 @@ define('views/modal', ['view'], function (Dep) {
          *   (with a scope defined in the `scope` class property).
          * @property {string} [text] A text (not translated).
          * @property {string} [html] HTML.
-         * @property {boolean} [pullLeft=false] To put the button to the other side.
+         * @property {boolean} [pullLeft=false] Deprecated. Use the `position` property.
+         * @property {'left'|'right'} [position='left'] A position.
          * @property {'default'|'danger'|'success'|'warning'} [style='default'] A style.
          * @property {boolean} [hidden=false] Is hidden.
          * @property {boolean} [disabled=false] Disabled.
@@ -592,7 +593,7 @@ define('views/modal', ['view'], function (Dep) {
         /**
          * Add a button.
          *
-         * @param {module:ui.Dialog~Button} o Button definitions.
+         * @param {module:views/modal.Class~Button} o Button definitions.
          * @param {boolean|string} [position=false] True prepends, false appends. If a string,
          *   then will be added after a button with a corresponding name.
          * @param {boolean} [doNotReRender=false] Do not re-render.
@@ -640,7 +641,7 @@ define('views/modal', ['view'], function (Dep) {
         /**
          * Add a dropdown item.
          *
-         * @param {module:ui.Dialog~Button} o Button definitions.
+         * @param {module:views/modal.Class~Button} o Button definitions.
          * @param {boolean} [toBeginning=false] To prepend.
          * @param {boolean} [doNotReRender=false] Do not re-render.
          */
@@ -1002,6 +1003,14 @@ define('views/modal', ['view'], function (Dep) {
          * @private
          */
         adjustButtons: function () {
+            this.adjustLeftButtons();
+            this.adjustRightButtons();
+        },
+
+        /**
+         * @private
+         */
+        adjustLeftButtons: function () {
             let $buttons = this.$el.find('footer.modal-footer > .main-btn-group button.btn');
 
             $buttons
@@ -1012,6 +1021,27 @@ define('views/modal', ['view'], function (Dep) {
 
             $buttonsVisible.first().addClass('radius-left');
             $buttonsVisible.last().addClass('radius-right');
+        },
+
+        /**
+         * @private
+         */
+        adjustRightButtons: function () {
+            let $buttons = this.$el.find('footer.modal-footer > .additional-btn-group button.btn:not(.btn-text)');
+
+            $buttons
+                .removeClass('radius-left')
+                .removeClass('radius-right')
+                .removeClass('margin-right');
+
+            let $buttonsVisible = $buttons.filter('button:not(.hidden)');
+
+            $buttonsVisible.first().addClass('radius-left');
+            $buttonsVisible.last().addClass('radius-right');
+
+            if ($buttonsVisible.last().next().hasClass('btn-text')) {
+                $buttonsVisible.last().addClass('margin-right');
+            }
         },
 
         /**

@@ -357,40 +357,50 @@ table.table-admin-panel tr > td:first-child > div > a {
 }
 
 .btn {
- &.radius-right {
-     border-top-left-radius: var(--border-radius) !important;
-     border-bottom-left-radius: var(--border-radius) !important;
- }
+    &.radius-right {
+        border-top-left-radius: var(--border-radius) !important;
+        border-bottom-left-radius: var(--border-radius) !important;
+    }
 
- &.radius-left {
-     border-top-right-radius: var(--border-radius) !important;
-     border-bottom-right-radius: var(--border-radius) !important;
- }
+    &.radius-left {
+        border-top-right-radius: var(--border-radius) !important;
+        border-bottom-right-radius: var(--border-radius) !important;
+    }
+
+    &.margin-right {
+        margin-left: @padding-base-horizontal;
+        margin-right: 0;
+    }
+
+    &.margin-left {
+        margin-right: @padding-base-horizontal;
+        margin-left: 0;
+    }
 }
 
 .table {
- > thead,
- > tbody {
-     > tr {
-         > th:first-child,
-         > td:first-child {
-             padding-right: @padding-base-horizontal;
+    > thead,
+    > tbody {
+        > tr {
+        > th:first-child,
+        > td:first-child {
+            padding-right: @padding-base-horizontal;
 
-             @media screen and (max-width: (@screen-sm-min - 1px)) {
-                 padding-right: @table-cell-padding;
-             }
-         }
+            @media screen and (max-width: (@screen-sm-min - 1px)) {
+                padding-right: @table-cell-padding;
+            }
+        }
 
-         > th:last-child,
-         > td:last-child {
-             padding-left: @padding-base-horizontal;
+        > th:last-child,
+        > td:last-child {
+            padding-left: @padding-base-horizontal;
 
-             @media screen and (max-width: (@screen-sm-min - 1px)) {
-                 padding-left: @table-cell-padding;
-             }
-         }
-     }
- }
+                @media screen and (max-width: (@screen-sm-min - 1px)) {
+                    padding-left: @table-cell-padding;
+                }
+            }
+        }
+    }
 }
 
 @media screen and (min-width: @screen-sm-min) {

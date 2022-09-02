@@ -62,7 +62,8 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
      * @typedef {Object} module:ui.Dialog~Button
      *
      * @property {string} name A name.
-     * @property {boolean} [pullLeft=false] To put the button to the other side.
+     * @property {boolean} [pullLeft=false] Deprecated. Use the `position` property.
+     * @property {'left'|'right'} [position='left'] A position.
      * @property {string} [html] HTML.
      * @property {string} [text] A text.
      * @property {boolean} [disabled=false] Disabled.
@@ -452,7 +453,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                 $button.html(o.html);
             }
 
-            if (o.pullLeft) {
+            if (o.pullLeft || o.position === 'right') {
                 $additional.append($button);
 
                 return;
@@ -784,7 +785,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                                 dialog.close();
                             },
                             style: confirmStyle,
-                            pullLeft: true,
+                            position: 'right',
                         },
                         {
                             text: cancelText,
@@ -796,7 +797,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                                 dialog.close();
                                 processCancel();
                             },
-                            pullRight: true,
+                            position: 'left',
                         }
                     ],
                     onClose: () => {

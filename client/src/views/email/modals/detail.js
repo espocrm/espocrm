@@ -33,12 +33,13 @@ define('views/email/modals/detail', ['views/modals/detail', 'views/email/detail'
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.buttonList.unshift({
-                'name': 'reply',
-                'label': 'Reply',
-                'hidden': this.model && this.model.get('status') === 'Draft',
+            this.addButton({
+                name: 'reply',
+                label: 'Reply',
+                hidden: this.model && this.model.get('status') === 'Draft',
                 style: 'danger',
-            });
+                position: 'right',
+            }, true)
 
             if (this.model) {
                 this.listenToOnce(this.model, 'sync', () => {
