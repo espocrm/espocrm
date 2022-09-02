@@ -37,31 +37,32 @@ define('views/email/modals/detail', ['views/modals/detail', 'views/email/detail'
                 'name': 'reply',
                 'label': 'Reply',
                 'hidden': this.model && this.model.get('status') === 'Draft',
+                style: 'danger',
             });
 
             if (this.model) {
-                this.listenToOnce(this.model, 'sync', function () {
-                    setTimeout(function () {
+                this.listenToOnce(this.model, 'sync', () => {
+                    setTimeout(() => {
                         this.model.set('isRead', true);
-                    }.bind(this), 50);
-                }, this);
+                    }, 50);
+                });
             }
-
         },
 
         controlRecordButtonsVisibility: function () {
             Dep.prototype.controlRecordButtonsVisibility.call(this);
 
             if (this.model.get('status') === 'Draft' || !this.getAcl().check('Email', 'create')) {
-                this.hideButton('reply');
-            } else {
-                this.showButton('reply');
+                this.hideActionItem('reply');
+
+                return;
             }
+
+            this.showActionItem('reply');
         },
 
         actionReply: function (data, e) {
             Detail.prototype.actionReply.call(this, {}, e, this.getPreferences().get('emailReplyToAllByDefault'));
         },
-
     });
 });
