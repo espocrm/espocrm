@@ -1,9 +1,9 @@
- .dropdown-menu {
+.dropdown-menu {
     left:  auto;
     right: 0;
 }
 
- .dropdown-menu-right {
+.dropdown-menu-right {
     left: 0;
     right: auto;
 }
@@ -332,38 +332,89 @@ div.list-kanban > div > table {
     padding: 5px 12px 5px 0;
 }
 
- .list > table th.action-cell {
-     a {
-         left: 11px;
+.list > table th.action-cell {
+    a {
+     left: 11px;
+     right: auto;
+    }
+}
+
+#main > .list-container > .list > table th.action-cell {
+    a {
+     left: 9px;
+     right: auto;
+
+     @media screen and (max-width: (@screen-sm-min - 1px)) {
          right: auto;
+         left: 5px;
      }
+    }
+}
+
+table.table-admin-panel tr > td:first-child > div > a {
+    padding-right: 28px;
+    padding-left: 10px;
+}
+
+.btn {
+ &.radius-right {
+     border-top-left-radius: var(--border-radius) !important;
+     border-bottom-left-radius: var(--border-radius) !important;
  }
 
- #main > .list-container > .list > table th.action-cell {
-     a {
-         left: 9px;
-         right: auto;
+ &.radius-left {
+     border-top-right-radius: var(--border-radius) !important;
+     border-bottom-right-radius: var(--border-radius) !important;
+ }
+}
 
-         @media screen and (max-width: (@screen-sm-min - 1px)) {
-             right: auto;
-             left: 5px;
+.table {
+ > thead,
+ > tbody {
+     > tr {
+         > th:first-child,
+         > td:first-child {
+             padding-right: @padding-base-horizontal;
+
+             @media screen and (max-width: (@screen-sm-min - 1px)) {
+                 padding-right: @table-cell-padding;
+             }
+         }
+
+         > th:last-child,
+         > td:last-child {
+             padding-left: @padding-base-horizontal;
+
+             @media screen and (max-width: (@screen-sm-min - 1px)) {
+                 padding-left: @table-cell-padding;
+             }
          }
      }
  }
+}
 
- table.table-admin-panel tr > td:first-child > div > a {
-     padding-right: 28px;
-     padding-left: 10px;
- }
+@media screen and (min-width: @screen-sm-min) {
+    .modal-body .categories-container + .list-container,
+    .list-categories-column + .list-main-column .list-container,
+    .folders-container + .list-container {
+        .list {
+            > table {
+                td:last-child, th:last-child {
+                    padding-right: 10px;
+                }
 
- .btn {
-     &.radius-right {
-         border-top-left-radius: var(--border-radius) !important;
-         border-bottom-left-radius: var(--border-radius) !important;
-     }
+                td.cell[data-name="buttons"] > .btn-group {
+                    margin-right: -17px;
+                }
+            }
+        }
+    }
+}
 
-     &.radius-left {
-         border-top-right-radius: var(--border-radius) !important;
-         border-bottom-right-radius: var(--border-radius) !important;
-     }
- }
+.list > table th[data-name="r-checkbox"] .select-all-container {
+    float: right;
+}
+
+.list .checkbox-dropdown {
+    right: 4px;
+}

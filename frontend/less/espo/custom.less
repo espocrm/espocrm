@@ -1336,7 +1336,7 @@ section {
         }
     }
 
-    .nested-categories-container + .list-container {
+    .list-main-column:first-child > .nested-categories-container:not(.hidden) + .list-container {
         .list {
             margin-right: -@container-padding;
             margin-left: -@container-padding;
@@ -2816,7 +2816,7 @@ table.table-admin-panel {
             > .icon {
                 position: absolute;
                 color: var(--text-muted-color);
-                top: 1px;
+                top: 2px;
             }
             > a {
                 padding-left: 28px;

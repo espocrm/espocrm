@@ -7,6 +7,29 @@ table.table,
 
 .table {
     margin-bottom: 10px;
+
+    > thead,
+    > tbody {
+        > tr {
+            > th:first-child,
+            > td:first-child {
+                padding-left: @padding-base-horizontal;
+
+                @media screen and (max-width: (@screen-sm-min - 1px)) {
+                    padding-left: @table-cell-padding;
+                }
+            }
+
+            > th:last-child,
+            > td:last-child {
+                padding-right: @padding-base-horizontal;
+
+                @media screen and (max-width: (@screen-sm-min - 1px)) {
+                    padding-right: @table-cell-padding;
+                }
+            }
+        }
+    }
 }
 
 table.table > thead th > a {
