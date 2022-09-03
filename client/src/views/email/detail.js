@@ -419,6 +419,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
             this.createView('quickCreate', viewName, {
                 attributes: attributes,
+                focusForCreate: true,
             }, (view) => {
                 view.render();
 

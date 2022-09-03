@@ -186,7 +186,10 @@ define('crm:views/record/panels/history', ['crm:views/record/panels/activities']
                                 let viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
                                     'views/modals/compose-email';
 
-                                return this.createView('quickCreate', viewName, {attributes: attributes});
+                                return this.createView('quickCreate', viewName, {
+                                    attributes: attributes,
+                                    focusForCreate: true,
+                                });
                             })
                             .then(view => {
                                 view.render();

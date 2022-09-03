@@ -268,5 +268,47 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
         errorHandlerSendingFail: function (data) {
             Detail.prototype.errorHandlerSendingFail.call(this, data);
         },
+
+        focusForCreate: function () {
+            if (!this.model.get('to')) {
+                this.$el
+                    .find('.field[data-name="to"] input')
+                    .focus();
+
+                return;
+            }
+
+            if (!this.model.get('subject')) {
+                this.$el
+                    .find('.field[data-name="subject"] input')
+                    .focus();
+
+                return;
+            }
+
+            if (this.model.get('isHtml')) {
+                let $div = this.$el.find('.field[data-name="body"] .note-editable');
+
+                if (!$div.length) {
+                    return;
+                }
+
+                $div.focus();
+
+                /*if (this.model.get('body')) {
+                    this.$el
+                        .find('.field[data-name="body"] .note-editable')
+                }*/
+
+                return;
+            }
+
+            this.$el
+                .find('.field[data-name="body"] textarea')
+                .prop('selectionEnd', 0)
+                .focus();
+
+
+        },
     });
 });
