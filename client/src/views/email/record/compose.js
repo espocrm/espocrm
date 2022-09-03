@@ -295,11 +295,6 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
 
                 $div.focus();
 
-                /*if (this.model.get('body')) {
-                    this.$el
-                        .find('.field[data-name="body"] .note-editable')
-                }*/
-
                 return;
             }
 
@@ -307,8 +302,6 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
                 .find('.field[data-name="body"] textarea')
                 .prop('selectionEnd', 0)
                 .focus();
-
-
         },
     });
 });
