@@ -35,14 +35,16 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
         sideView: false,
 
         setupBeforeFinal: function () {
+            Dep.prototype.setupBeforeFinal.call(this);
+
             this.initialBody = null;
             this.initialIsHtml = null;
 
             if (!this.model.get('isHtml') && this.getPreferences().get('emailReplyForceHtml')) {
                 let body = (this.model.get('body') || '').replace(/\n/g, '<br>');
 
-                this.model.set('body', body);
-                this.model.set('isHtml', true);
+                this.model.set('body', body, {silent: true});
+                this.model.set('isHtml', true, {silent: true});
             }
 
             if (this.model.get('body')) {
@@ -59,10 +61,8 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
 
                 let body = this[addSignatureMethod](this.model.get('body') || '', this.model.get('isHtml'));
 
-                this.model.set('body', body);
+                this.model.set('body', body, {silent: true});
             }
-
-            Dep.prototype.setupBeforeFinal.call(this);
         },
 
         setup: function () {
