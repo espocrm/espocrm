@@ -67,6 +67,18 @@
         "roles": {
             "onlyAdmin": true
         },
+        "portalRoles": {
+            "onlyAdmin": true
+        },
+        "accounts": {
+            "onlyAdmin": true
+        },
+        "defaultTeam": {
+            "onlyAdmin": true
+        },
+        "dashboardTemplate": {
+            "onlyAdmin": true
+        },
         "preferences": {
             "onlyAdmin": true
         },
