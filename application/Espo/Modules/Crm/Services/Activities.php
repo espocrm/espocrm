@@ -780,7 +780,7 @@ class Activities implements
      * @throws NotFound
      * @throws Error
      */
-    public function findActivitiyEntityType(
+    public function findActivitiesEntityType(
         string $scope,
         string $id,
         string $entityType,

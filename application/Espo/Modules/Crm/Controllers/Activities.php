@@ -322,7 +322,7 @@ class Activities
 
         $searchParams = $this->searchParamsFetcher->fetch($request);
 
-        $result = $this->service->findActivitiyEntityType(
+        $result = $this->service->findActivitiesEntityType(
             $scope,
             $id,
             $entityType,
