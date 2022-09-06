@@ -3026,18 +3026,18 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         actionQuickRemove: function (data) {
             data = data || {};
 
-            var id = data.id;
+            let id = data.id;
 
             if (!id) {
                 return;
             }
 
-            var model = this.collection.get(id);
+            let model = this.collection.get(id);
 
             if (!this.getAcl().checkModel(model, 'delete')) {
-                this.notify('Access denied', 'error');
+                Espo.Ui.error(this.translate('Access denied'));
 
-                return false;
+                return;
             }
 
             this.confirm({
@@ -3049,9 +3049,10 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
                 this.notify('Removing...');
 
-                model.destroy({wait: true, fromList: true})
+                model
+                    .destroy({wait: true, fromList: true})
                     .then(() => {
-                        this.notify('Removed', 'success');
+                        Espo.Ui.success(this.translate('Removed'));
 
                         this.removeRecordFromList(id);
                     })
