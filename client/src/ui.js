@@ -865,6 +865,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                 .popover({
                     placement: o.placement || 'bottom',
                     container: container,
+                    viewport: container,
                     html: true,
                     content: content,
                     trigger: o.trigger || 'manual',
