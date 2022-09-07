@@ -415,6 +415,13 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         exportDisabled: false,
 
         /**
+         * Disable merge.
+         *
+         * @protected
+         */
+        mergeDisabled: false,
+
+        /**
          * Disable a no-data label (when no result).
          *
          * @protected
@@ -1854,7 +1861,10 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 this.removeMassAction('merge');
             }
 
-            if (this.getMetadata().get(['clientDefs', this.scope, 'mergeDisabled'])) {
+            if (
+                this.getMetadata().get(['clientDefs', this.scope, 'mergeDisabled']) ||
+                this.mergeDisabled
+            ) {
                 this.removeMassAction('merge');
             }
 

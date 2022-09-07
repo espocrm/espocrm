@@ -38,6 +38,8 @@ define('views/email-folder/record/list', ['views/record/list'], function (Dep) {
 
         exportDisabled: true,
 
+        removeDisabled: true,
+
         rowActionsView: 'views/email-folder/record/row-actions/default',
 
         actionMoveUp: function (data) {
