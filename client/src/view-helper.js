@@ -223,6 +223,13 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
         pageTitle: null,
 
         /**
+         * A broadcast channel.
+         *
+         * @type {?module:broadcast-channel.Class}
+         */
+        broadcastChannel: null,
+
+        /**
          * A base path.
          *
          * @type {string}
