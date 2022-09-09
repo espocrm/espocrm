@@ -1,1 +1,12 @@
-{}
+{
+  "fields": {
+    "status": "Stato"
+  },
+  "options": {
+    "status": {
+      "Pending": "In corso",
+      "Running": "In esecuzione",
+      "Failed": "Fallito"
+    }
+  }
+}

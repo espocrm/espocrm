@@ -49,7 +49,7 @@
     "Edit Link": "Modifica Link",
     "Notifications": "Notifiche",
     "Jobs": "Compiti",
-    "Reset to Default": "Ripristina alle condizioni di default",
+    "Reset to Default": "Ripristina ai valori di default",
     "Email Filters": "Filtri email",
     "Portal Users": "Utenti portale",
     "Action History": "Storico azioni",
@@ -69,7 +69,9 @@
     "PDF Templates": "Modelli PDF",
     "Webhooks": "Webhooks\n",
     "Email Addresses": "Indirizzi Email",
-    "Phone Numbers": "Telefono"
+    "Phone Numbers": "Telefono",
+    "Messaging": "Messaggistica",
+    "Misc": "Varie"
   },
   "layouts": {
     "list": "Elenco",

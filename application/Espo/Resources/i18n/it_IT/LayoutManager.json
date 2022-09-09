@@ -27,6 +27,7 @@
     "Layout": "Struttura"
   },
   "tooltips": {
-    "link": "Se selezionato, verrà visualizzato un valore di campo come collegamento che punta alla vista di dettaglio del record. Di solito è usato per i campi *Nome*."
+    "link": "Se selezionato, verrà visualizzato un valore di campo come collegamento che punta alla vista di dettaglio del record. Di solito è usato per i campi *Nome*.",
+    "panelStyle": "Un colore per il pannello"
   }
 }

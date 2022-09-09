@@ -45,5 +45,8 @@
     "todays": "Di oggi",
     "overdue": "In ritardo",
     "deferred": "Prorogato"
+  },
+  "nameOptions": {
+    "replyToEmail": "Rispondi all'email"
   }
 }

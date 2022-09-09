@@ -16,7 +16,9 @@
     "pageFormat": "Formato carta",
     "pageWidth": "Larghezza pagina",
     "pageHeight": "Altezza della pagina",
-    "headerPosition": "Posizione Intestazione"
+    "headerPosition": "Posizione Intestazione",
+    "printHeader": "Stampa Intestazione",
+    "title": "Titolo"
   },
   "labels": {
     "Create Template": "Crea Modello"

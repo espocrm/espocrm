@@ -15,7 +15,8 @@
     "targetId": "ID target",
     "number": "Numero",
     "queue": "Coda",
-    "job": "Lavoro"
+    "job": "Lavoro",
+    "group": "Gruppo"
   },
   "options": {
     "status": {

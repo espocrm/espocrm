@@ -1,1 +1,14 @@
-{}
+{
+  "labels": {
+    "Run": "Avvia"
+  },
+  "fields": {
+    "target": "Destinatario",
+    "error": "Errore"
+  },
+  "messages": {
+    "runError": "Errore",
+    "checkSyntaxSuccess": "La Sintassi è corretta",
+    "checkSyntaxError": "Errore di Sintassi"
+  }
+}

@@ -66,7 +66,8 @@
     "Requirements": "Requisiti",
     "Security": "Sicurezza",
     "Reset 2FA": "Ripristina 2FA",
-    "Secret": "Segreto"
+    "Secret": "Segreto",
+    "Send Code": "Invia Codice"
   },
   "tooltips": {
     "defaultTeam": "Tutti i record creati da questo utente saranno inseriti di default in questo Team.",

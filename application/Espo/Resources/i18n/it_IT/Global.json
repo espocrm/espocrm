@@ -46,7 +46,8 @@
     "ApiUser": "Utente API",
     "DashboardTemplate": "Modello di dashboard",
     "Currency": "Divisa",
-    "LayoutSet": "Layout"
+    "LayoutSet": "Layout",
+    "Mass Action": "Azione Massiva"
   },
   "scopeNamesPlural": {
     "Email": "Email",
@@ -225,13 +226,17 @@
     "View Personal Data": "Visualizza i dati personali",
     "Personal Data": "Dati personali",
     "Erase": "Cancella",
-    "Move Over": "Spostarsi",
+    "Move Over": "Sposta",
     "Restore": "Ripristina",
     "View Followers": "Visualizza follower",
     "Convert Currency": "Converti valuta",
     "View on Map": "Vedi su Mappa",
     "Attached": "Allegato",
-    "Preview": "Anteprima"
+    "Preview": "Anteprima",
+    "Save & Continue Editing": "Salva e continua a modificare",
+    "Save & New": "Salva & Nuovo",
+    "Field": "Campo",
+    "Resolution": "Risoluzione"
   },
   "messages": {
     "pleaseWait": "Attendere...",
@@ -243,7 +248,7 @@
     "fieldShouldBefore": "{field} Deve essere prima {otherField}",
     "fieldShouldBeBetween": "{field} Deve essere compreso tra {min} e {max}",
     "fieldBadPasswordConfirm": "{field} Non confermato correttamente",
-    "resetPreferencesDone": "Le preferenze sono state ripristinate alle impostazioni predefinite",
+    "resetPreferencesDone": "Le preferenze sono state ripristinate ai valori predefiniti",
     "confirmation": "Sei sicuro?",
     "unlinkAllConfirmation": "Sei sicuro di scollegare tutti i record correlati?",
     "resetPreferencesConfirmation": "Sei sicuro di voler ripristinare le preferenze ai valori predefiniti?",
@@ -315,7 +320,8 @@
     "unfollow": "Non seguire",
     "convertCurrency": "Converti valuta",
     "printPdf": "Stampa in PDF",
-    "recalculateFormula": "Ricalcola formula"
+    "recalculateFormula": "Ricalcola formula",
+    "update": "Aggiorna"
   },
   "fields": {
     "name": "Nome",
@@ -559,8 +565,8 @@
       "Home": "Casa",
       "Other": "Altro"
     },
-    "language": {
-      "es_MX": "Spagnolo (Messico)"
+    "saveConflictResolution": {
+      "original": "Originale"
     }
   },
   "sets": {

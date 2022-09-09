@@ -32,7 +32,8 @@
     "iconClass": "Icona",
     "fullTextSearch": "Ricerca tutto il testo",
     "countDisabled": "Disabilita il conteggio dei record",
-    "parentEntityTypeList": "Tipo genitore entità"
+    "parentEntityTypeList": "Tipo genitore entità",
+    "entity": "Entità"
   },
   "options": {
     "type": {

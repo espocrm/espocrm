@@ -121,7 +121,8 @@
     "auth2FA": "Abilita autenticazione a 2 fattori",
     "auth2FAMethodList": "Metodi 2FA disponibili\n",
     "personNameFormat": "Formato nome persona",
-    "massEmailVerp": "Usa VERP"
+    "massEmailVerp": "Usa VERP",
+    "smsProvider": "Provider SMS"
   },
   "tooltips": {
     "recordsPerPage": "Numero di records inizialmente mostrati in vista elenco .",
