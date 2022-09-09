@@ -185,7 +185,6 @@ define('views/admin/extensions/index', ['view'], function (Dep) {
         },
 
         run: function (id, version, name) {
-            //var msg = this.translate('Installing...', 'labels', 'Admin');
             this.notify('Please wait...');
 
             this.showError(false);
@@ -204,7 +203,9 @@ define('views/admin/extensions/index', ['view'], function (Dep) {
                         version: version,
                         name: name,
                     }, view => {
-                        this.collection.fetch({bypassAppReload: true});
+                        if (this.collection.length) {
+                            this.collection.fetch({bypassAppReload: true});
+                        }
 
                         this.$el.find('.list-container').removeClass('hidden');
                         this.$el.find('.panel.upload').removeClass('hidden');
