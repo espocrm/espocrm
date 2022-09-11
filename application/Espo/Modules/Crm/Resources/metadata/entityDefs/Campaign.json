@@ -17,10 +17,16 @@
             "default": "Email"
         },
         "startDate": {
-            "type": "date"
+            "type": "date",
+            "validatorClassNameList": [
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Campaign\\StartDate\\BeforeEndDate"
+            ]
         },
         "endDate": {
-            "type": "date"
+            "type": "date",
+            "validatorClassNameList": [
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Campaign\\EndDate\\AfterStartDate"
+            ]
         },
         "description": {
             "type": "text"

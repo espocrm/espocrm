@@ -27,23 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Entities;
+namespace Espo\Core\FieldValidation\Validator;
 
-use Espo\Core\Field\Date;
+use Espo\Core\Utils\ObjectUtil;
+use stdClass;
 
-class Campaign extends \Espo\Core\ORM\Entity
+class Data
 {
-    public const ENTITY_TYPE = 'Campaign';
+    private stdClass $data;
 
-    public function getStartDate(): ?Date
+    public function __construct(stdClass $data)
     {
-        /** @var ?Date */
-        return $this->getValueObject('startDate');
+        $this->data = $data;
     }
 
-    public function getEndDate(): ?Date
+    public function has(string $name): bool
     {
-        /** @var ?Date */
-        return $this->getValueObject('endDate');
+        return property_exists($this->data, $name);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get(string $name)
+    {
+        return $this->getClonedData()->$name ?? null;
+    }
+
+    private function getClonedData(): stdClass
+    {
+        return ObjectUtil::clone($this->data);
     }
 }

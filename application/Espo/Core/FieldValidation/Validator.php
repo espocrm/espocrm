@@ -27,23 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Entities;
+namespace Espo\Core\FieldValidation;
 
-use Espo\Core\Field\Date;
+use Espo\ORM\Entity;
+use Espo\Core\FieldValidation\Validator\Data;
+use Espo\Core\FieldValidation\Validator\Failure;
 
-class Campaign extends \Espo\Core\ORM\Entity
+/**
+ * A field validator. Checks whether field values are valid. Raw payload values are available in the `data`.
+ * Values that managed to be set to the Entity can be obtained from the `entity`.
+ *
+ * Note: Validators are not supposed to perform any access control checks.
+ *
+ * @template TEntity of Entity
+ */
+interface Validator
 {
-    public const ENTITY_TYPE = 'Campaign';
-
-    public function getStartDate(): ?Date
-    {
-        /** @var ?Date */
-        return $this->getValueObject('startDate');
-    }
-
-    public function getEndDate(): ?Date
-    {
-        /** @var ?Date */
-        return $this->getValueObject('endDate');
-    }
+    /**
+     * @param TEntity $entity
+     */
+    public function validate(Entity $entity, string $field, Data $data): ?Failure;
 }

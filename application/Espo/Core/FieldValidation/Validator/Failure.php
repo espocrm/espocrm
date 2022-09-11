@@ -27,23 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Entities;
+namespace Espo\Core\FieldValidation\Validator;
 
-use Espo\Core\Field\Date;
-
-class Campaign extends \Espo\Core\ORM\Entity
+class Failure
 {
-    public const ENTITY_TYPE = 'Campaign';
-
-    public function getStartDate(): ?Date
+    private function __construct()
     {
-        /** @var ?Date */
-        return $this->getValueObject('startDate');
     }
 
-    public function getEndDate(): ?Date
+    public static function create(): self
     {
-        /** @var ?Date */
-        return $this->getValueObject('endDate');
+        return new self();
     }
 }

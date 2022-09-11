@@ -31,14 +31,14 @@ namespace Espo\Core\FieldValidation;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    FieldValidation\Exceptions\ValidationError,
-    Utils\Metadata,
-    Utils\FieldUtil,
-};
+use Espo\Core\FieldValidation\Exceptions\ValidationError;
+use Espo\Core\FieldValidation\Validator\Data;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\FieldUtil;
 
 use LogicException;
 use stdClass;
+use ReflectionClass;
 
 /**
  * A field validation manager.
@@ -47,16 +47,24 @@ class FieldValidationManager
 {
     /** @var array<string,?object> */
     private $checkerCache = [];
+    /** @var array<string,?Validator<Entity>> */
+    private $validatorCache = [];
 
     private Metadata $metadata;
     private FieldUtil $fieldUtil;
-    private ValidatorFactory $factory;
+    private CheckerFactory $checkerFactory;
+    private ValidatorFactory $validatorFactory;
 
-    public function __construct(Metadata $metadata, FieldUtil $fieldUtil, ValidatorFactory $factory)
-    {
+    public function __construct(
+        Metadata $metadata,
+        FieldUtil $fieldUtil,
+        CheckerFactory $factory,
+        ValidatorFactory $validatorFactory
+    ) {
         $this->metadata = $metadata;
         $this->fieldUtil = $fieldUtil;
-        $this->factory = $factory;
+        $this->checkerFactory = $factory;
+        $this->validatorFactory = $validatorFactory;
     }
 
     /**
@@ -161,15 +169,38 @@ class FieldValidationManager
             }
         }
 
-        $result = $this->processFieldCheck($entityType, $type, $entity, $field, $validationValue);
+        $result1 = $this->processFieldCheck($entityType, $type, $entity, $field, $validationValue);
 
-        if (!$result) {
+        if (!$result1) {
             return false;
         }
 
-        $resultRaw = $this->processFieldRawCheck($entityType, $type, $data, $field, $validationValue);
+        $result2 = $this->processFieldRawCheck($entityType, $type, $data, $field, $validationValue);
 
-        if (!$resultRaw) {
+        if (!$result2) {
+            return false;
+        }
+
+        $result3 = $this->processValidator($entity, $field, $type, new Data($data));
+
+        if (!$result3) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function processValidator(Entity $entity, string $field, string $type, Data $data): bool
+    {
+        $validator = $this->getValidator($entity->getEntityType(), $field, $type);
+
+        if (!$validator) {
+            return true;
+        }
+
+        $failure = $validator->validate($entity, $field, $data);
+
+        if ($failure) {
             return false;
         }
 
@@ -177,8 +208,32 @@ class FieldValidationManager
     }
 
     /**
+     * @return ?Validator<Entity>
+     */
+    private function getValidator(string $entityType, string $field, string $type): ?Validator
+    {
+        $key = $entityType . '_' . $field . '_' . $type;
+
+        if (array_key_exists($key, $this->validatorCache)) {
+            return $this->validatorCache[$key];
+        }
+
+        if (!$this->validatorFactory->isCreatable($entityType, $field, $type)) {
+            $this->validatorCache[$key] = null;
+
+            return null;
+        }
+
+        $validator = $this->validatorFactory->create($entityType, $field, $type);
+
+        $this->validatorCache[$key] = $validator;
+
+        return $validator;
+    }
+
+    /**
      * @return Failure[]
-     *@throws ValidationError
+     * @throws ValidationError
      */
     private function processField(
         Entity $entity,
@@ -199,6 +254,8 @@ class FieldValidationManager
         $mandatoryValidationList =
             $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'mandatoryValidationList']) ??
             $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList']) ?? [];
+
+        $validationList = array_unique(array_merge($validationList, $mandatoryValidationList));
 
         $failureList = [];
 
@@ -228,7 +285,13 @@ class FieldValidationManager
             }
         }
 
-        return $failureList;
+        $additionalFailureList = $this->checkAdditional($entity, $field, new Data($data));
+
+        if ($throw && $additionalFailureList !== []) {
+            throw ValidationError::create($additionalFailureList[0]);
+        }
+
+        return array_merge($failureList, $additionalFailureList);
     }
 
     /**
@@ -298,13 +361,13 @@ class FieldValidationManager
     {
         $key = $entityType . '_' . $field;
 
-        if (!$this->factory->isCreatable($entityType, $field)) {
+        if (!$this->checkerFactory->isCreatable($entityType, $field)) {
             $this->checkerCache[$key] = null;
 
             return;
         }
 
-        $this->checkerCache[$key] = $this->factory->create($entityType, $field);
+        $this->checkerCache[$key] = $this->checkerFactory->create($entityType, $field);
     }
 
     private function isFieldSetInData(string $entityType, string $field, stdClass $data): bool
@@ -322,5 +385,29 @@ class FieldValidationManager
         }
 
         return $isSet;
+    }
+
+    /**
+     * @return Failure[]
+     */
+    private function checkAdditional(Entity $entity, string $field, Data $data): array
+    {
+        $validatorList = $this->validatorFactory->createAdditionalList($entity->getEntityType(), $field);
+
+        $failureList = [];
+
+        foreach ($validatorList as $validator) {
+            $itemFailure = $validator->validate($entity, $field, $data);
+
+            if (!$itemFailure) {
+                continue;
+            }
+
+            $type = lcfirst((new ReflectionClass($validator))->getShortName());
+
+            $failureList[] = new Failure($entity->getEntityType(), $field, $type);
+        }
+
+        return $failureList;
     }
 }

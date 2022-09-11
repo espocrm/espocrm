@@ -27,23 +27,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Entities;
+namespace Espo\Modules\Crm\Classes\FieldValidators\Campaign\StartDate;
 
-use Espo\Core\Field\Date;
+use Espo\Core\FieldValidation\Validator;
+use Espo\Core\FieldValidation\Validator\Data;
+use Espo\Core\FieldValidation\Validator\Failure;
 
-class Campaign extends \Espo\Core\ORM\Entity
+use Espo\Modules\Crm\Entities\Campaign;
+use Espo\ORM\Entity;
+
+/**
+ * @implements Validator<Campaign>
+ */
+class BeforeEndDate implements Validator
 {
-    public const ENTITY_TYPE = 'Campaign';
-
-    public function getStartDate(): ?Date
+    /**
+     * @param Campaign $entity
+     */
+    public function validate(Entity $entity, string $field, Data $data): ?Failure
     {
-        /** @var ?Date */
-        return $this->getValueObject('startDate');
-    }
+        $startDate = $entity->getStartDate();
+        $endDate = $entity->getEndDate();
 
-    public function getEndDate(): ?Date
-    {
-        /** @var ?Date */
-        return $this->getValueObject('endDate');
+        if (!$startDate || !$endDate) {
+            return null;
+        }
+
+        if ($endDate->isLessThan($startDate)) {
+            return Failure::create();
+
+        }
+
+        return null;
     }
 }

@@ -29,96 +29,65 @@
 
 namespace Espo\Core\FieldValidation;
 
-use Espo\Core\{
-    Utils\Metadata,
-    InjectableFactory,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 
+use Espo\ORM\Entity;
 use RuntimeException;
 
 class ValidatorFactory
 {
-    /**
-     * @var array<string,?class-string>
-     */
-    private $classNameCache = [];
-
+    private InjectableFactory $injectableFactory;
     private Metadata $metadata;
 
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
+    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
+        $this->injectableFactory = $injectableFactory;
         $this->metadata = $metadata;
-        $this->injectableFactory= $injectableFactory;
+    }
+
+    public function isCreatable(string $entityType, string $field, string $type): bool
+    {
+        return $this->getClassName($entityType, $field, $type) !== null;
     }
 
     /**
-     * Whether can be created.
+     * @return Validator<Entity>
      */
-    public function isCreatable(string $entityType, string $field): bool
+    public function create(string $entityType, string $field, string $type): Validator
     {
-        return (bool) $this->getClassName($entityType, $field);
-    }
-
-    /**
-     * Create a validator (checker).
-     *
-     * @throws RuntimeException
-     */
-    public function create(string $entityType, string $field): object
-    {
-        $className = $this->getClassName($entityType, $field);
+        $className = $this->getClassName($entityType, $field, $type);
 
         if (!$className) {
-            throw new RuntimeException("Validator for '{$entityType}.{$field}' does not exist.");
+            throw new RuntimeException("No validator.");
         }
 
         return $this->injectableFactory->create($className);
     }
 
     /**
-     * @return ?class-string
+     * @return ?class-string<Validator<Entity>>
      */
-    private function getClassName(string $entityType, string $field): ?string
+    private function getClassName(string $entityType, string $field, string $type): ?string
     {
-        $key = $entityType . '_' . $field;
-
-        if (!array_key_exists($key, $this->classNameCache)) {
-            $this->classNameCache[$key] = $this->getClassNameNoCache($entityType, $field);
-        }
-
-        return $this->classNameCache[$key];
+        return $this->metadata->get(['fields', $field, 'validatorClassNameMap', $type]);
     }
 
     /**
-     * @return ?class-string
+     * @return Validator<Entity>[]
      */
-    private function getClassNameNoCache(string $entityType, string $field): ?string
+    public function createAdditionalList(string $entityType, string $field): array
     {
-        $className1 = $this->metadata
-            ->get(['entityDefs', $entityType, 'fields', $field, 'validatorClassName']);
+        /** @var class-string<Validator<Entity>>[] $classNameList */
+        $classNameList = $this->metadata
+            ->get(['entityDefs', $entityType, 'fields', $field, 'validatorClassNameList']) ?? [];
 
-        if ($className1) {
-            return $className1;
+        $list = [];
+
+        foreach ($classNameList as $className) {
+            $list[] = $this->injectableFactory->create($className);
         }
 
-        $fieldType = $this->metadata
-            ->get(['entityDefs', $entityType, 'fields', $field, 'type']);
-
-        $className2 = $this->metadata
-            ->get(['fields', $fieldType, 'validatorClassName']);
-
-        if ($className2) {
-            return $className2;
-        }
-
-        $className3 = 'Espo\\Classes\\FieldValidators\\' . ucfirst($fieldType) . 'Type';
-
-        if (class_exists($className3)) {
-            return $className3;
-        }
-
-        return null;
+        return $list;
     }
 }
