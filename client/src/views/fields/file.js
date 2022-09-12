@@ -627,11 +627,9 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
             if (this.showPreview) {
                 let html = this.getEditPreview(name, type, id);
 
-                if (!html) {
-                    return $text.get(0).outerHTML;
+                if (html) {
+                    return html;
                 }
-
-                return html;
             }
 
             let url = this.getBasePath() + '?entryPoint=download&id=' + id;
