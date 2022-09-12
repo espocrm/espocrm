@@ -381,7 +381,7 @@ module.exports = grunt => {
     });
 
     grunt.registerTask('upgrade', () => {
-        cp.execSync("node diff --all --vendor", {stdio: 'inherit'});
+        cp.execSync("node diff --closest", {stdio: 'inherit'});
     });
 
     grunt.registerTask('unit-tests-run', () => {
