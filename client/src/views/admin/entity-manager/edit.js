@@ -739,7 +739,7 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
 
                         if (
                             this.getMetadata()
-                                .get(['entityDefs', foreignEntityType, 'fields', item, 'foreingAccessDisabled'])
+                                .get(['entityDefs', foreignEntityType, 'fields', item, 'foreignAccessDisabled'])
                         ) {
                             return false;
                         }
