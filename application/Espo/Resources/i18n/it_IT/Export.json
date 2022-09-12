@@ -4,5 +4,9 @@
     "exportAllFields": "Esporta tutti i campi",
     "format": "Formato",
     "status": "Stato"
+  },
+  "messages": {
+    "exportProcessed": "L'esportazione è stata elaborata. Scarica il [file]({url}).",
+    "infoText": "L'esportazione è in fase di elaborazione in idle da parte di cron. Può richiedere un po' di tempo per essere completata. La chiusura di questa finestra di dialogo non influirà sul processo di esecuzione."
   }
 }

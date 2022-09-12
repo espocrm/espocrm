@@ -22,8 +22,8 @@
   },
   "labels": {
     "Create {entityType}": "Crea {entityTypeTranslated}",
-    "Schedule {entityType}": "Pianificazione {entityTypeTranslated}",
-    "Log {entityType}": "Registro {entityTypeTranslated}",
+    "Schedule {entityType}": "Pianifica {entityTypeTranslated}",
+    "Log {entityType}": "Registra {entityTypeTranslated}",
     "Set Held": "Effettuata",
     "Set Not Held": "Non Effettuata"
   },

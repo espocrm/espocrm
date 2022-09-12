@@ -1,5 +1,9 @@
 {
   "fields": {
     "layoutList": "Layout"
+  },
+  "labels": {
+    "Create LayoutSet": "Crea gruppo di layout",
+    "Edit Layouts": "Modifica i layout"
   }
 }

@@ -50,6 +50,7 @@
   },
   "messages": {
     "nothingHasBeenSent": "Nulla è stato inviato",
-    "selectAcceptanceStatus": "Imposta il tuo stato di accettazione."
+    "selectAcceptanceStatus": "Imposta il tuo stato di accettazione.",
+    "sendInvitationsConfirmation": "Invia email di invito ai partecipanti?"
   }
 }
