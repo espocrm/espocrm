@@ -396,7 +396,7 @@ module.exports = grunt => {
         cp.execSync("composer run-script setConfigParams", {stdio: 'ignore'});
     });
 
-    grunt.registerTask('zip', () => {
+    grunt.registerTask('zip', function () { // Don't change to arrow-function.
         const archiver = require('archiver');
 
         let resolve = this.async();
@@ -425,8 +425,9 @@ module.exports = grunt => {
 
         archive
             .directory(currentPath + '/build/' + folder, folder)
-            .pipe(zipOutput)
-            .finalize();
+            .pipe(zipOutput);
+
+        archive.finalize();
     });
 
     grunt.registerTask('npm-install', () => {
