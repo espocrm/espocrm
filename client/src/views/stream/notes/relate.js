@@ -37,6 +37,7 @@ define('views/stream/notes/relate', ['views/stream/note'], function (Dep) {
         data: function () {
             return _.extend({
                 relatedTypeString: this.translateEntityType(this.entityType),
+                iconHtml: this.getIconHtml(this.entityType, this.entityId),
             }, Dep.prototype.data.call(this));
         },
 
