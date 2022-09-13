@@ -430,7 +430,9 @@ define('views/record/panels-container', ['view'], function (Dep) {
                     d.hidden = false;
                     isFound = true;
 
-                    this.controlTabVisibilityShow(d.tabNumber);
+                    if (typeof d.tabNumber !== 'undefined') {
+                        this.controlTabVisibilityShow(d.tabNumber);
+                    }
                 }
             });
 
