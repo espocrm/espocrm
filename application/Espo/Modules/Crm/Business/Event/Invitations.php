@@ -174,6 +174,7 @@ class Invitations
             $subjectTpl,
             'invitation-email-subject-' . $entity->getEntityType(),
             $data,
+            true,
             true
         );
 
@@ -182,7 +183,8 @@ class Invitations
             $bodyTpl,
             'invitation-email-body-' . $entity->getEntityType(),
             $data,
-            false
+            false,
+            true
         );
 
         $email->set('subject', $subject);
