@@ -306,7 +306,7 @@ class Attachment extends Record
             return;
         }
 
-        $extension = self::getFileExtension($attachment) ?? '';
+        $extension = strtolower(self::getFileExtension($attachment) ?? '');
 
         $mimeType = $this->getMimeTypeUtil()->getMimeTypeByExtension($extension) ??
             $attachment->getType();
