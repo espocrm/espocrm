@@ -326,9 +326,11 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
 
                 newLayout[name] = layout[name];
 
-                if (this.isTabName(name) && this.itemsData[name]) {
+                if (this.isTabName(name) && name !== this.TAB_BREAK_KEY /*&& this.itemsData[name]*/) {
+                    let data = this.itemsData[name] || {};
+
                     newLayout[name].tabBreak = true;
-                    newLayout[name].tabLabel = this.itemsData[name].tabLabel;
+                    newLayout[name].tabLabel = data.tabLabel;
                 }
                 else {
                    delete newLayout[name].tabBreak;
