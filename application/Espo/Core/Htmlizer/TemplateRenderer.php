@@ -39,25 +39,15 @@ use LogicException;
 
 class TemplateRenderer
 {
-    /**
-     * @var ?array<string,mixed>
-     */
+    /** @var ?array<string,mixed> */
     private $data = null;
-
     private ?User $user = null;
-
     private ?Entity $entity = null;
-
     private bool $skipRelations = false;
-
     private bool $applyAcl = false;
-
     private bool $useUserTimezone = false;
-
     private HtmlizerFactory $htmlizerFactory;
-
     private ApplicationState $applicationState;
-
     private ?string $template = null;
 
     public function __construct(HtmlizerFactory $htmlizerFactory, ApplicationState $applicationState)
