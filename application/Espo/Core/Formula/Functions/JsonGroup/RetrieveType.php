@@ -50,6 +50,10 @@ class RetrieveType extends BaseFunction
         $jsonString = $this->evaluate($args[0]);
         $path = $this->evaluate($args[1]);
 
+        if (is_object($jsonString)) {
+            $jsonString = json_encode($jsonString);
+        }
+
         if (!is_string($jsonString)) {
             $this->throwBadArgumentType(1, 'string');
         }
