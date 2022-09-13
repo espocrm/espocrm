@@ -158,7 +158,7 @@ class Attachment extends Record
         unset($data->parentId);
         unset($data->relatedId);
 
-        $isBeingUploaded = (bool) $data->isBeingUploaded;
+        $isBeingUploaded = (bool) ($data->isBeingUploaded ?? false);
 
         $contents = '';
 
