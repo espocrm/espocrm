@@ -394,54 +394,57 @@ define('views/record/panels-container', ['view'], function (Dep) {
             return data;
         },
 
-        showPanel: function (name, softLockedType, callback) {
-            if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) {
+        /**
+         * @param {string} name
+         * @return {boolean}
+         */
+        hasPanel: function (name) {
+            return !!this.panelList.find(item => item.name === name);
+        },
+
+        processShowPanel: function (name, callback, wasShown) {
+            if (this.recordHelper.getPanelStateParam(name, 'hidden')) {
                 return;
             }
 
-            if (softLockedType) {
-                this.recordHelper
-                    .setPanelStateParam(name, 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked',
-                        false);
+            if (!this.hasPanel(name)) {
+                return;
             }
 
-            for (var i = 0; i < this.panelSoftLockedTypeList.length; i++) {
-                var iType = this.panelSoftLockedTypeList[i];
+            this.panelList.filter(item => item.name === name).forEach(item => {
+                item.hidden = false;
 
-                if (iType === softLockedType) {
-                    continue;
-                }
-
-                var iParam = 'hidden' +  Espo.Utils.upperCaseFirst(iType) + 'Locked';
-
-                if (this.recordHelper.getPanelStateParam(name, iParam)) {
-                    return;
-                }
-            }
-
-            let wasShown = this.recordHelper.getPanelStateParam(name, 'hidden') === false;
-
-            this.recordHelper.setPanelStateParam(name, 'hidden', false);
-
-            var isFound = false;
-
-            this.panelList.forEach(d => {
-                if (d.name === name) {
-                    d.hidden = false;
-                    isFound = true;
-
-                    if (typeof d.tabNumber !== 'undefined') {
-                        this.controlTabVisibilityShow(d.tabNumber);
-                    }
+                if (typeof item.tabNumber !== 'undefined') {
+                    this.controlTabVisibilityShow(item.tabNumber);
                 }
             });
 
-            if (!isFound) {
+            this.showPanelFinalize(name, callback, wasShown);
+        },
+
+        processHidePanel: function (name, callback) {
+            if (!this.recordHelper.getPanelStateParam(name, 'hidden')) {
                 return;
             }
 
+            if (!this.hasPanel(name)) {
+                return;
+            }
+
+             this.panelList.filter(item => item.name === name).forEach(item => {
+                item.hidden = true;
+
+                if (typeof item.tabNumber !== 'undefined') {
+                    this.controlTabVisibilityHide(item.tabNumber);
+                }
+            });
+
+            this.hidePanelFinalize(name, callback);
+        },
+
+        showPanelFinalize: function (name, callback, wasShown) {
             if (this.isRendered()) {
-                var view = this.getView(name);
+                let view = this.getView(name);
 
                 if (view) {
                     view.$el.closest('.panel').removeClass('hidden');
@@ -450,7 +453,7 @@ define('views/record/panels-container', ['view'], function (Dep) {
                     view.trigger('show');
 
                     if (!wasShown && view.getFieldViews) {
-                        var fields = view.getFieldViews();
+                        let fields = view.getFieldViews();
 
                         if (fields) {
                             for (let i in fields) {
@@ -484,38 +487,9 @@ define('views/record/panels-container', ['view'], function (Dep) {
             });
         },
 
-        hidePanel: function (name, locked, softLockedType, callback) {
-            this.recordHelper.setPanelStateParam(name, 'hidden', true);
-
-            if (locked) {
-                this.recordHelper.setPanelStateParam(name, 'hiddenLocked', true);
-            }
-
-            if (softLockedType) {
-                this.recordHelper.setPanelStateParam(
-                     name,
-                     'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked',
-                     true
-                );
-            }
-
-            var isFound = false;
-
-            this.panelList.forEach(d => {
-                if (d.name === name) {
-                    d.hidden = true;
-                    isFound = true;
-
-                    this.controlTabVisibilityHide(d.tabNumber);
-                }
-            });
-
-            if (!isFound) {
-                return;
-            }
-
+        hidePanelFinalize: function (name, callback) {
             if (this.isRendered()) {
-                var view = this.getView(name);
+                let view = this.getView(name);
 
                 if (view) {
                     view.$el.closest('.panel').addClass('hidden');
@@ -537,6 +511,62 @@ define('views/record/panels-container', ['view'], function (Dep) {
                     callback.call(this);
                 });
             }
+        },
+
+        showPanel: function (name, softLockedType, callback) {
+            if (!this.hasPanel(name)) {
+                return;
+            }
+
+            if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) {
+                return;
+            }
+
+            if (softLockedType) {
+                let param = 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked';
+
+                this.recordHelper.setPanelStateParam(name, param, false);
+
+                for (let i = 0; i < this.panelSoftLockedTypeList.length; i++) {
+                    let iType = this.panelSoftLockedTypeList[i];
+
+                    if (iType === softLockedType) {
+                        continue;
+                    }
+
+                    let iParam = 'hidden' +  Espo.Utils.upperCaseFirst(iType) + 'Locked';
+
+                    if (this.recordHelper.getPanelStateParam(name, iParam)) {
+                        return;
+                    }
+                }
+            }
+
+            let wasShown = this.recordHelper.getPanelStateParam(name, 'hidden') === false;
+
+            this.recordHelper.setPanelStateParam(name, 'hidden', false);
+
+            this.processShowPanel(name, callback, wasShown);
+        },
+
+        hidePanel: function (name, locked, softLockedType, callback) {
+            if (!this.hasPanel(name)) {
+                return;
+            }
+
+            this.recordHelper.setPanelStateParam(name, 'hidden', true);
+
+            if (locked) {
+                this.recordHelper.setPanelStateParam(name, 'hiddenLocked', true);
+            }
+
+            if (softLockedType) {
+                let param = 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked';
+
+                this.recordHelper.setPanelStateParam(name, param, true);
+            }
+
+            this.processHidePanel(name, callback);
         },
 
         alterPanels: function (layoutData) {

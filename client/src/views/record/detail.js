@@ -1063,7 +1063,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             for (let i = 0; i < this.panelSoftLockedTypeList.length; i++) {
-                var iType = this.panelSoftLockedTypeList[i];
+                let iType = this.panelSoftLockedTypeList[i];
 
                 if (iType === softLockedType) {
                     continue;
@@ -1076,13 +1076,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            var middleView = this.getView('middle');
+            let middleView = this.getView('middle');
 
             if (middleView) {
                 middleView.showPanelInternal(name);
             }
 
-            var bottomView = this.getView('bottom');
+            let bottomView = this.getView('bottom');
 
             if (bottomView) {
                 if ('showPanel' in bottomView) {
@@ -1090,16 +1090,24 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
             else if (this.bottomView) {
-                this.once('after:render', () => {
-                    var bottomView = this.getView('bottom');
+                this.once('ready', () => {
+                    let view = this.getView('bottom');
 
-                    if (bottomView && 'showPanel' in bottomView) {
-                        bottomView.showPanel(name);
+                    if (view) {
+                        if ('processShowPanel' in view) {
+                            view.processShowPanel(name);
+
+                            return;
+                        }
+
+                        if ('showPanel' in view) {
+                            view.showPanel(name);
+                        }
                     }
                 });
             }
 
-            var sideView = this.getView('side');
+            let sideView = this.getView('side');
 
             if (sideView) {
                 if ('showPanel' in sideView) {
@@ -1107,11 +1115,19 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
             else if (this.sideView) {
-                this.once('after:render', () => {
-                    var sideView = this.getView('side');
+                this.once('ready', () => {
+                    let view = this.getView('side');
 
-                    if (sideView && 'showPanel' in sideView) {
-                        sideView.showPanel(name);
+                    if (view) {
+                        if ('processShowPanel' in view) {
+                            view.processShowPanel(name);
+
+                            return;
+                        }
+
+                        if ('showPanel' in view) {
+                            view.showPanel(name);
+                        }
                     }
                 });
             }
@@ -1154,13 +1170,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            var middleView = this.getView('middle');
+            let middleView = this.getView('middle');
 
             if (middleView) {
                 middleView.hidePanelInternal(name);
             }
 
-            var bottomView = this.getView('bottom');
+            let bottomView = this.getView('bottom');
 
             if (bottomView) {
                 if ('hidePanel' in bottomView) {
@@ -1169,15 +1185,23 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
             else if (this.bottomView) {
                 this.once('ready', () => {
-                    var bottomView = this.getView('bottom');
+                    let view = this.getView('bottom');
 
-                    if (bottomView && 'showPanel' in bottomView) {
-                        bottomView.hidePanel(name);
+                    if (view) {
+                        if ('processHidePanel' in view) {
+                            view.processHidePanel(name);
+
+                            return;
+                        }
+
+                        if ('hidePanel' in view) {
+                            view.hidePanel(name);
+                        }
                     }
                 });
             }
 
-            var sideView = this.getView('side');
+            let sideView = this.getView('side');
 
             if (sideView) {
                 if ('hidePanel' in sideView) {
@@ -1186,16 +1210,23 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
             else if (this.sideView) {
                 this.once('ready', () => {
-                    var sideView = this.getView('side');
+                    let view = this.getView('side');
 
-                    if (sideView && 'hidePanel' in sideView) {
-                        sideView.hidePanel(name);
+                    if (view) {
+                        if ('processHidePanel' in view) {
+                            view.processHidePanel(name);
+
+                            return;
+                        }
+
+                        if ('hidePanel' in view) {
+                            view.hidePanel(name);
+                        }
                     }
                 });
             }
 
             this.recordHelper.setPanelStateParam(name, 'hidden', true);
-
 
             if (this.middlePanelDefs[name]) {
                 this.controlMiddleTabVisibilityHide(this.middlePanelDefs[name].tabNumber);
