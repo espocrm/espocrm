@@ -749,6 +749,26 @@ define('views/record/panels-container', ['view'], function (Dep) {
             this.$el.find(`.panel[data-tab="${tab}"]`).removeClass('tab-hidden');
 
             this.adjustPanels();
+
+            this.panelList
+                .filter(item => item.tabNumber === tab && item.name)
+                .forEach(item => {
+                    let view = this.getView(item.name);
+
+                    if (view) {
+                        view.trigger('tab-show');
+                    }
+                });
+
+            this.panelList
+                .filter(item => item.tabNumber !== tab && item.name)
+                .forEach(item => {
+                    let view = this.getView(item.name);
+
+                    if (view) {
+                        view.trigger('tab-hide');
+                    }
+                });
         },
 
         /**

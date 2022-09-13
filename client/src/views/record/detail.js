@@ -1168,7 +1168,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
             else if (this.bottomView) {
-                this.once('after:render', () => {
+                this.once('ready', () => {
                     var bottomView = this.getView('bottom');
 
                     if (bottomView && 'showPanel' in bottomView) {
@@ -1185,7 +1185,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
             else if (this.sideView) {
-                this.once('after:render', () => {
+                this.once('ready', () => {
                     var sideView = this.getView('side');
 
                     if (sideView && 'hidePanel' in sideView) {
