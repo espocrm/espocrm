@@ -283,6 +283,18 @@ class Attachment extends Record
         }
     }
 
+    private function getFieldType(AttachmentEntity $attachment): ?string
+    {
+        $field = $attachment->getTargetField();
+        $entityType = $attachment->getParentType() ?? $attachment->getRelatedType();
+
+        if (!$field || !$entityType) {
+            return null;
+        }
+
+        return $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
+    }
+
     /**
      * @throws Forbidden
      */
@@ -295,10 +307,8 @@ class Attachment extends Record
             return;
         }
 
-        $fieldType = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
-
         if (
-            $fieldType === self::FIELD_TYPE_IMAGE ||
+            $this->getFieldType($attachment) === self::FIELD_TYPE_IMAGE ||
             $attachment->getRole() === AttachmentEntity::ROLE_INLINE_ATTACHMENT
         ) {
             $this->checkAttachmentTypeImage($attachment);
@@ -759,13 +769,15 @@ class Attachment extends Record
             return;
         }
 
-        try {
-            $this->checkAttachmentTypeImage($attachment, $filePath);
-        }
-        catch (Forbidden $e) {
-            $this->entityManager->removeEntity($attachment);
+        if ($this->getFieldType($attachment) === self::FIELD_TYPE_IMAGE) {
+            try {
+                $this->checkAttachmentTypeImage($attachment, $filePath);
+            }
+            catch (Forbidden $e) {
+                $this->entityManager->removeEntity($attachment);
 
-            throw new ForbiddenSilent($e->getMessage());
+                throw new ForbiddenSilent($e->getMessage());
+            }
         }
 
         $attachment->set('isBeingUploaded', false);
