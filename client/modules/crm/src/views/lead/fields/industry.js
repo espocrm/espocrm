@@ -26,17 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/lead/fields/industry', 'views/fields/enum', function (Dep) {
+define('crm:views/lead/fields/industry', ['views/fields/enum'], function (Dep) {
 
-    return Dep.extend({
-
-        setup: function () {
-            this.params.options = this.getMetadata().get('entityDefs.Account.fields.industry.options');
-            this.params.translation = 'Account.options.industry';
-
-            Dep.prototype.setup.call(this);
-        }
-
-    });
-
+    return Dep.extend({});
 });

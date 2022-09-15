@@ -3,6 +3,10 @@
         "entityDefs.Lead.fields.source.options": {
             "scope": "Opportunity",
             "field": "leadSource"
+        },
+        "entityDefs.Account.fields.industry.options": {
+            "scope": "Lead",
+            "field": "industry"
         }
     },
     "frontendHiddenPathList": [
