@@ -591,6 +591,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 timezone: this.getDateTime().timeZone,
                 longPressDelay: 300,
                 eventColor: this.colors[''],
+                nowIndicator: true,
                 windowResize: () => {
                     this.adjustSize();
                 },
