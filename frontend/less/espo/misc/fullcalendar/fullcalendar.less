@@ -100,21 +100,27 @@ body .fc-now-indicator-arrow {
 }
 
 body .fc-now-indicator {
-    border: 0 solid var(--brand-danger);
+    //border: 0 solid var(--brand-danger);
     opacity: 0.9;
 }
 
-body .fc-content-col > .fc-now-indicator {
+body .fc-content-col > .fc-now-indicator-line {
+    height: 2px;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    background-color: var(--brand-danger);
+    border-style: none;
+
     &:before {
         content: "";
         position: inherit;
         left: -3px;
         border-radius: 50%;
-        height: 5px;
-        width: 5px;
+        height: 6px;
+        width: 6px;
         background-color: var(--brand-danger);
         display: inline-block;
-        top: -3px;
+        top: -2px;
         opacity: 0.9;
     }
 }
