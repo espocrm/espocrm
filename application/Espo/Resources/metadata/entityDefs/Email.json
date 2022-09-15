@@ -3,7 +3,8 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "trim": true
+            "trim": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "subject": {
             "type": "varchar",
@@ -19,7 +20,8 @@
             "notStorable": true,
             "textFilterDisabled": true,
             "layoutFiltersDisabled": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "fromAddress": {
             "type": "varchar",
@@ -27,15 +29,18 @@
             "notStorable": true,
             "textFilterDisabled": true,
             "layoutFiltersDisabled": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "fromString": {
             "type": "varchar",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "replyToString": {
             "type": "varchar",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "replyToName": {
             "type": "varchar",
@@ -43,7 +48,8 @@
             "notStorable": true,
             "textFilterDisabled": true,
             "layoutFiltersDisabled": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "replyToAddress": {
             "type": "varchar",
@@ -51,7 +57,8 @@
             "notStorable": true,
             "textFilterDisabled": true,
             "layoutFiltersDisabled": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "addressNameMap": {
             "type": "jsonObject",
@@ -65,7 +72,8 @@
             "required": true,
             "view": "views/email/fields/from-address-varchar",
             "textFilterDisabled": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "to": {
             "type": "varchar",
@@ -74,28 +82,32 @@
             "view": "views/email/fields/email-address-varchar",
             "textFilterDisabled": true,
             "validatorClassName": "Espo\\Classes\\FieldValidators\\Email\\EmailAddresses",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "cc": {
             "type": "varchar",
             "notStorable": true,
             "view": "views/email/fields/email-address-varchar",
             "customizationDisabled": true,
-            "textFilterDisabled": true
+            "textFilterDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "bcc": {
             "type": "varchar",
             "notStorable": true,
             "view": "views/email/fields/email-address-varchar",
             "customizationDisabled": true,
-            "textFilterDisabled": true
+            "textFilterDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "replyTo": {
             "type": "varchar",
             "notStorable": true,
             "view": "views/email/fields/email-address-varchar",
             "textFilterDisabled": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "personStringData": {
             "type": "varchar",
@@ -151,7 +163,8 @@
             "notStorable": true,
             "default": null,
             "textFilterDisabled": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutAvailabilityList": []
         },
         "isUsers": {
             "type": "bool",
@@ -200,44 +213,52 @@
             "maxLength": 300,
             "readOnly": true,
             "textFilterDisabled": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutAvailabilityList": []
         },
         "emailAddress": {
             "type": "base",
             "notStorable": true,
             "view": "views/email/fields/email-address",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "fromEmailAddress": {
             "type": "link",
             "view": "views/email/fields/from-email-address",
             "textFilterDisabled": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutAvailabilityList": []
         },
         "toEmailAddresses": {
             "type": "linkMultiple",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutAvailabilityList": []
         },
         "ccEmailAddresses": {
             "type": "linkMultiple",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutAvailabilityList": []
         },
         "replyToEmailAddresses": {
             "type": "linkMultiple",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutAvailabilityList": []
         },
         "bodyPlain": {
             "type": "text",
             "seeMoreDisabled": true,
             "clientReadOnly": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "body": {
             "type": "wysiwyg",
             "view": "views/email/fields/body",
             "attachmentField": "attachments",
             "useIframe": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "isHtml": {
             "type": "bool",
@@ -262,12 +283,14 @@
         },
         "attachments": {
             "type": "attachmentMultiple",
-            "sourceList": ["Document"]
+            "sourceList": ["Document"],
+            "layoutDefaultSidePanelDisabled": true
         },
         "hasAttachment": {
             "type": "bool",
             "readOnly": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "parent": {
             "type": "linkParent",
@@ -280,7 +303,8 @@
         },
         "dateSent": {
             "type": "datetime",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "deliveryDate": {
             "type": "datetime",
@@ -412,33 +436,38 @@
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
             "dbType": "text",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutAvailabilityList": []
         },
         "icsEventData": {
             "type": "jsonObject",
             "readOnly": true,
             "directAccessDisabled": true,
             "notStorable": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutAvailabilityList": []
         },
         "icsEventUid": {
             "type": "varchar",
             "maxLength": 255,
             "index": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutAvailabilityList": []
         },
         "icsEventDateStart": {
             "type": "datetimeOptional",
             "readOnly": true,
             "notStorable": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutAvailabilityList": []
         },
         "createEvent": {
             "type": "base",
             "disabled": true,
             "notStorable": true,
             "view": "views/email/fields/create-event",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutAvailabilityList": []
         },
         "createdEvent": {
             "type": "linkParent",
@@ -446,7 +475,8 @@
             "view": "views/email/fields/created-event",
             "fieldManagerParamList": [
                 "tooltipText"
-            ]
+            ],
+            "layoutAvailabilityList": []
         }
     },
     "links": {
@@ -551,7 +581,8 @@
                     "type": "varchar",
                     "len": "4"
                 }
-            }
+            },
+            "layoutDefaultSidePanelDisabled": true
         },
         "bccEmailAddresses": {
             "type": "hasMany",
@@ -565,7 +596,8 @@
                     "type": "varchar",
                     "len": "4"
                 }
-            }
+            },
+            "layoutDefaultSidePanelDisabled": true
         },
         "replyToEmailAddresses": {
             "type": "hasMany",
