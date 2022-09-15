@@ -113,11 +113,10 @@ body .fc-now-indicator {
 }
 
 body .fc-content-col > .fc-now-indicator-line {
-    height: 2px;
-    border-top-width: 0;
+    height: 1px;
+    border-top: 1px solid var(--brand-danger);
     border-bottom-width: 0;
     background-color: var(--brand-danger);
-    border-style: none;
 
     &:before {
         content: "";
@@ -128,7 +127,7 @@ body .fc-content-col > .fc-now-indicator-line {
         width: 8px;
         background-color: var(--brand-danger);
         display: inline-block;
-        top: -3px;
+        top: -4px;
         opacity: 0.9;
     }
 }
