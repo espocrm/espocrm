@@ -132,8 +132,6 @@ class ErrorOutput
 
         $logLevel = 'error';
 
-        $messageLineFile = null;
-
         $messageLineFile =
             'line: ' . $exception->getLine() . ', ' .
             'file: ' . $exception->getFile();
