@@ -32,10 +32,11 @@ namespace Espo\Core\FieldValidation\Exceptions;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error\Body;
 
+use Espo\Core\Exceptions\HasLogMessage;
 use Espo\Core\FieldValidation\Failure;
 use LogicException;
 
-class ValidationError extends BadRequest
+class ValidationError extends BadRequest implements HasLogMessage
 {
     private ?Failure $failure = null;
 
@@ -74,5 +75,19 @@ class ValidationError extends BadRequest
         }
 
         return $this->failure;
+    }
+
+    public function getLogMessage(): string
+    {
+        if (!$this->failure) {
+            return "Field validation failure.";
+        }
+
+        $entityType = $this->failure->getEntityType();
+        $field = $this->failure->getField();
+        $type = $this->failure->getType();
+
+        return "Field validation failure; " .
+            "entityType: {$entityType}, field: {$field}, type: {$type}.";
     }
 }

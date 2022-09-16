@@ -34,6 +34,7 @@ use Espo\Core\Exceptions\HasBody;
 use Espo\Core\{
     Api\Request,
     Api\Response,
+    Exceptions\HasLogMessage,
     Utils\Log,
     Utils\Config,
 };
@@ -120,6 +121,10 @@ class ErrorOutput
 
         $message = $exception->getMessage();
         $statusCode = $exception->getCode();
+
+        if ($exception instanceof HasLogMessage) {
+            $message = $exception->getLogMessage();
+        }
 
         if ($route) {
             $this->processRoute($route, $request, $exception);
