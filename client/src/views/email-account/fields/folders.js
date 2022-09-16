@@ -32,6 +32,10 @@ define('views/email-account/fields/folders', ['views/fields/array'], function (D
 
         getFoldersUrl: 'EmailAccount/action/getFolders',
 
+        setupOptions: function () {
+            this.params.options = ['INBOX'];
+        },
+
         fetchFolders: function () {
             return new Promise(resolve => {
                 var data = {
