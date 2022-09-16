@@ -176,10 +176,10 @@ class ErrorOutput
         }
 
         if ($toPrintBody) {
-            $codeDesription = $this->getCodeDescription($statusCode);
+            $codeDescription = $this->getCodeDescription($statusCode);
 
-            $statusText = isset($codeDesription) ?
-                $statusCode . ' '. $codeDesription :
+            $statusText = isset($codeDescription) ?
+                $statusCode . ' '. $codeDescription :
                 'HTTP ' . $statusCode;
 
             if ($message) {
