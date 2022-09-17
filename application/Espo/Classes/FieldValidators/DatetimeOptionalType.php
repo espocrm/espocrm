@@ -56,7 +56,7 @@ class DatetimeOptionalType extends DatetimeType
 
     public function checkValid(Entity $entity, string $field): bool
     {
-        /** @var ?string $value */
+        /** @var ?string $dateValue */
         $dateValue = $entity->get($field  . 'Date');
 
         if ($dateValue !== null) {
