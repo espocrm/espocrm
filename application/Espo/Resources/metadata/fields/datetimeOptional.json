@@ -84,6 +84,9 @@
     "validationList": [
         "required"
     ],
+    "mandatoryValidationList": [
+        "valid"
+    ],
     "filter": true,
     "notCreatable": true,
     "fieldDefs": {

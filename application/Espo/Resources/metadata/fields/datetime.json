@@ -79,6 +79,9 @@
     "validationList": [
         "required"
     ],
+    "mandatoryValidationList": [
+        "valid"
+    ],
     "filter": true,
     "fieldDefs": {
         "notNull": false

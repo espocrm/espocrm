@@ -29,7 +29,10 @@
 
 namespace Espo\Classes\FieldValidators;
 
+use Espo\Core\Field\DateTime;
+use Espo\Core\Field\Date;
 use Espo\ORM\Entity;
+use Exception;
 
 class DatetimeOptionalType extends DatetimeType
 {
@@ -49,5 +52,34 @@ class DatetimeOptionalType extends DatetimeType
         }
 
         return false;
+    }
+
+    public function checkValid(Entity $entity, string $field): bool
+    {
+        /** @var ?string $value */
+        $dateValue = $entity->get($field  . 'Date');
+
+        if ($dateValue !== null) {
+            try {
+                Date::fromString($dateValue);
+            }
+            catch (Exception $e) {
+                return false;
+            }
+        }
+
+        /** @var ?string $value */
+        $value = $entity->get($field);
+
+        if ($value !== null) {
+            try {
+                DateTime::fromString($value);
+            }
+            catch (Exception $e) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
