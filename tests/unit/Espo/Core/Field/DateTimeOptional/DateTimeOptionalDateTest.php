@@ -169,4 +169,64 @@ class DateTimeOptionalDateTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(0, $value1->diff($value2)->invert);
     }
+
+    public function testAddDays(): void
+    {
+        $value = DateTimeOptional::fromString('2023-01-01');
+
+        $this->assertEquals(
+            DateTimeOptional::fromString('2023-01-02'),
+            $value->addDays(1)
+        );
+
+        $this->assertEquals(
+            DateTimeOptional::fromString('2023-01-03'),
+            $value->addDays(2)
+        );
+
+        $this->assertEquals(
+            DateTimeOptional::fromString('2022-12-31'),
+            $value->addDays(-1)
+        );
+    }
+
+    public function testAddMonths(): void
+    {
+        $value = DateTimeOptional::fromString('2023-01-01');
+
+        $this->assertEquals(
+            DateTimeOptional::fromString('2023-02-01'),
+            $value->addMonths(1)
+        );
+
+        $this->assertEquals(
+            DateTimeOptional::fromString('2023-03-01'),
+            $value->addMonths(2)
+        );
+
+        $this->assertEquals(
+            DateTimeOptional::fromString('2022-12-01'),
+            $value->addMonths(-1)
+        );
+    }
+
+    public function testAddYears(): void
+    {
+        $value = DateTimeOptional::fromString('2023-01-01');
+
+        $this->assertEquals(
+            DateTimeOptional::fromString('2024-01-01'),
+            $value->addYears(1)
+        );
+
+        $this->assertEquals(
+            DateTimeOptional::fromString('2025-01-01'),
+            $value->addYears(2)
+        );
+
+        $this->assertEquals(
+            DateTimeOptional::fromString('2022-01-01'),
+            $value->addYears(-1)
+        );
+    }
 }

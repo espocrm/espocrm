@@ -199,6 +199,66 @@ class DateTime implements DateTimeable
     }
 
     /**
+     * Add days.
+     */
+    public function addDays(int $days): self
+    {
+        $modifier = ($days >= 0 ? '+' : '-') . abs($days) . ' days';
+
+        return $this->modify($modifier);
+    }
+
+    /**
+     * Add months.
+     */
+    public function addMonths(int $months): self
+    {
+        $modifier = ($months >= 0 ? '+' : '-') . abs($months) . ' months';
+
+        return $this->modify($modifier);
+    }
+
+    /**
+     * Add years.
+     */
+    public function addYears(int $years): self
+    {
+        $modifier = ($years >= 0 ? '+' : '-') . abs($years) . ' years';
+
+        return $this->modify($modifier);
+    }
+
+    /**
+     * Add hours.
+     */
+    public function addHours(int $hours): self
+    {
+        $modifier = ($hours >= 0 ? '+' : '-') . abs($hours) . ' hours';
+
+        return $this->modify($modifier);
+    }
+
+    /**
+     * Add minutes.
+     */
+    public function addMinutes(int $minutes): self
+    {
+        $modifier = ($minutes >= 0 ? '+' : '-') . abs($minutes) . ' minutes';
+
+        return $this->modify($modifier);
+    }
+
+    /**
+     * Add seconds.
+     */
+    public function addSeconds(int $seconds): self
+    {
+        $modifier = ($seconds >= 0 ? '+' : '-') . abs($seconds) . ' seconds';
+
+        return $this->modify($modifier);
+    }
+
+    /**
      * A difference between another object (date or date-time) and self.
      */
     public function diff(DateTimeable $other): DateInterval

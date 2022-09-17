@@ -243,5 +243,125 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
             )
         );
     }
+
+    public function testAddDays(): void
+    {
+        $value = DateTime::fromString('2023-01-01 00:00:00');
+
+        $this->assertEquals(
+            DateTime::fromString('2023-01-02 00:00:00'),
+            $value->addDays(1)
+        );
+
+        $this->assertEquals(
+            DateTime::fromString('2023-01-03 00:00:00'),
+            $value->addDays(2)
+        );
+
+        $this->assertEquals(
+            DateTime::fromString('2022-12-31 00:00:00'),
+            $value->addDays(-1)
+        );
+    }
+
+    public function testAddMonths(): void
+    {
+        $value = DateTime::fromString('2023-01-01 00:00:00');
+
+        $this->assertEquals(
+            DateTime::fromString('2023-02-01 00:00:00'),
+            $value->addMonths(1)
+        );
+
+        $this->assertEquals(
+            DateTime::fromString('2023-03-01 00:00:00'),
+            $value->addMonths(2)
+        );
+
+        $this->assertEquals(
+            DateTime::fromString('2022-12-01 00:00:00'),
+            $value->addMonths(-1)
+        );
+    }
+
+    public function testAddYears(): void
+    {
+        $value = DateTime::fromString('2023-01-01 00:00:00');
+
+        $this->assertEquals(
+            DateTime::fromString('2024-01-01 00:00:00'),
+            $value->addYears(1)
+        );
+
+        $this->assertEquals(
+            DateTime::fromString('2025-01-01 00:00:00'),
+            $value->addYears(2)
+        );
+
+        $this->assertEquals(
+            DateTime::fromString('2022-01-01 00:00:00'),
+            $value->addYears(-1)
+        );
+    }
+
+    public function testAddHours(): void
+    {
+        $value = DateTime::fromString('2023-01-01 00:00:00');
+
+        $this->assertEquals(
+            DateTime::fromString('2023-01-01 01:00:00'),
+            $value->addHours(1)
+        );
+
+        $this->assertEquals(
+            DateTime::fromString('2022-12-31 23:00:00'),
+            $value->addHours(-1)
+        );
+
+        $this->assertEquals(
+            $value,
+            $value->addHours(0)
+        );
+    }
+
+    public function testAddMinutes(): void
+    {
+        $value = DateTime::fromString('2023-01-01 00:00:00');
+
+        $this->assertEquals(
+            DateTime::fromString('2023-01-01 00:01:00'),
+            $value->addMinutes(1)
+        );
+
+        $this->assertEquals(
+            DateTime::fromString('2022-12-31 23:59:00'),
+            $value->addMinutes(-1)
+        );
+
+        $this->assertEquals(
+            $value,
+            $value->addMinutes(0)
+        );
+    }
+
+    public function testAddSeconds(): void
+    {
+        $value = DateTime::fromString('2023-01-01 00:00:00');
+
+        $this->assertEquals(
+            DateTime::fromString('2023-01-01 00:00:01'),
+            $value->addSeconds(1)
+        );
+
+        $this->assertEquals(
+            DateTime::fromString('2022-12-31 23:59:59'),
+            $value->addSeconds(-1)
+        );
+
+        $this->assertEquals(
+            $value,
+            $value->addSeconds(0)
+        );
+    }
 }
 
