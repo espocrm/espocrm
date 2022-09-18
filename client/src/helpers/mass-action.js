@@ -54,7 +54,7 @@ define('helpers/mass-action', [], function () {
         /**
          * Check whether an action should be run in idle.
          *
-         * @param {number} totalCount A total record count.
+         * @param {number} [totalCount] A total record count.
          * @returns {boolean}
          */
         checkIsIdle(totalCount) {
@@ -66,6 +66,10 @@ define('helpers/mass-action', [], function () {
                 totalCount = this.view.options.totalCount;
             }
 
+            if (typeof totalCount === 'undefined' && this.view.collection) {
+                totalCount = this.view.collection.total;
+            }
+
             return totalCount === -1 || totalCount > this.config.get('massActionIdleCountThreshold');
         }
 
@@ -74,7 +78,7 @@ define('helpers/mass-action', [], function () {
          *
          * @param {string} id An ID.
          * @param {string} action An action.
-         * @returns {Promise<module:view.Class>}  Resolves with a dialog view.
+         * @returns {Promise<module:view.Class>} Resolves with a dialog view.
          *   The view emits the 'close:success' event.
          */
         process(id, action) {
@@ -85,6 +89,7 @@ define('helpers/mass-action', [], function () {
                     .createView('dialog', 'views/modals/mass-action', {
                         id: id,
                         action: action,
+                        scope: this.view.scope || this.view.entityType,
                     })
                     .then(view => {
                         view.render();

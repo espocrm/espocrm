@@ -9,5 +9,10 @@
     ],
     "selectApplierClassNameList": [
         "Espo\\Classes\\Select\\Email\\AdditionalAppliers\\Main"
-    ]
+    ],
+    "massActions": {
+        "moveToFolder": {
+            "implementationClassName": "Espo\\Classes\\MassAction\\Email\\MoveToFolder"
+        }
+    }
 }

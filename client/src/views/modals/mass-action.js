@@ -49,7 +49,7 @@ define('views/modals/mass-action', ['views/modal', 'model'], function (Dep, Mode
 
             this.headerText =
                 this.translate('Mass Action') + ': ' +
-                this.translate(this.action, 'massActions');
+                this.translate(this.action, 'massActions', this.options.scope);
 
             this.model = new Model();
             this.model.name = 'MassAction';

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/record/list', 'views/record/list', function (Dep) {
+define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], function (Dep, MassActionHelper) {
 
     return Dep.extend({
 
@@ -45,7 +45,7 @@ define('views/email/record/list', 'views/record/list', function (Dep) {
             Dep.prototype.setup.call(this);
 
             this.addMassAction('retrieveFromTrash', false, true);
-            this.addMassAction('moveToFolder', false, true);
+            this.addMassAction('moveToFolder', true, true);
             this.addMassAction('markAsNotImportant', false, true);
             this.addMassAction('markAsImportant', false, true);
             this.addMassAction('markAsNotRead', false, true);
@@ -222,12 +222,39 @@ define('views/email/record/list', 'views/record/list', function (Dep) {
                 this.listenToOnce(view, 'select', folderId => {
                     this.clearView('dialog');
 
+                    let params = this.getMassActionSelectionPostData();
+                    let helper = new MassActionHelper(this);
+                    let idle = !!params.searchParams && helper.checkIsIdle();
+
+                    Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
                     Espo.Ajax
-                        .postRequest('Email/action/moveToFolder', {
-                            ids: ids,
-                            folderId: folderId,
+                        .postRequest('MassAction', {
+                            entityType: this.entityType,
+                            action: 'moveToFolder',
+                            params: params,
+                            idle: idle,
+                            data: {
+                                folderId: folderId,
+                            },
                         })
-                        .then(() => {
+                        .then(result => {
+                            Espo.Ui.notify(false);
+
+                            if (result.id) {
+                                helper
+                                    .process(result.id, 'moveToFolder')
+                                    .then(view => {
+                                        this.listenToOnce(view, 'close:success', () => {
+                                            this.collection.fetch().then(() => {
+                                                Espo.Ui.success(this.translate('Done'));
+                                            });
+                                        });
+                                    });
+
+                                return;
+                            }
+
                             this.collection.fetch().then(() => {
                                 Espo.Ui.success(this.translate('Done'));
                             });
