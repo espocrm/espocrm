@@ -85,7 +85,7 @@ class MassUpdate implements MassAction
         Acl $acl,
         User $user,
         FileManager $fileManager,
-        DataManager $dataMaanger
+        DataManager $dataManager
     ) {
         $this->massUpdateOriginal = $massUpdateOriginal;
         $this->queryBuilder = $queryBuilder;
@@ -93,7 +93,7 @@ class MassUpdate implements MassAction
         $this->acl = $acl;
         $this->user = $user;
         $this->fileManager = $fileManager;
-        $this->dataManager = $dataMaanger;
+        $this->dataManager = $dataManager;
     }
 
     public function process(Params $params, Data $data): Result
