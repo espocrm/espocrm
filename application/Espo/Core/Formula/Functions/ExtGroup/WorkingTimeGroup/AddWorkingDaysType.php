@@ -32,6 +32,7 @@ namespace Espo\Core\Formula\Functions\ExtGroup\WorkingTimeGroup;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\DateTimeOptional;
 use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
 
 class AddWorkingDaysType extends Base
 {
@@ -67,7 +68,9 @@ class AddWorkingDaysType extends Base
 
         $dateTime = DateTimeOptional::fromString($stringValue);
 
-        if ($dateTime->isAllDay()) {
+        $isAllDay = $dateTime->isAllDay();
+
+        if ($isAllDay) {
             $dateTime = $dateTime->withTimezone($calendar->getTimezone());
         }
 
@@ -77,6 +80,10 @@ class AddWorkingDaysType extends Base
 
         if (!$result) {
             return null;
+        }
+
+        if ($isAllDay) {
+            return $result->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT);
         }
 
         return $result->getString();

@@ -458,33 +458,33 @@
             "returnType": "string"
         },
         {
-            "name": "ext\\workingCalendar\\addWorkingDays",
+            "name": "ext\\workingTime\\addWorkingDays",
             "insertText": "ext\\workingCalendar\\addWorkingDays(DATE, DAYS)",
             "returnType": "string|null"
         },
         {
-            "name": "ext\\workingCalendar\\findClosestWorkingTime",
-            "insertText": "ext\\workingCalendar\\findClosestWorkingTime(DATE)",
+            "name": "ext\\workingTime\\findClosestWorkingTime",
+            "insertText": "ext\\workingTime\\findClosestWorkingTime(DATE)",
             "returnType": "string|null"
         },
         {
-            "name": "ext\\workingCalendar\\getSummedWorkingHours",
-            "insertText": "ext\\workingCalendar\\getSummedWorkingHours(FROM, TO)",
+            "name": "ext\\workingTime\\getSummedWorkingHours",
+            "insertText": "ext\\workingTime\\getSummedWorkingHours(FROM, TO)",
             "returnType": "float"
         },
         {
-            "name": "ext\\workingCalendar\\getWorkingDays",
-            "insertText": "ext\\workingCalendar\\getWorkingDays(FROM, TO)",
+            "name": "ext\\workingTime\\getWorkingDays",
+            "insertText": "ext\\workingTime\\getWorkingDays(FROM, TO)",
             "returnType": "int"
         },
         {
-            "name": "ext\\workingCalendar\\hasWorkingTime",
-            "insertText": "ext\\workingCalendar\\hasWorkingTime(FROM, TO)",
+            "name": "ext\\workingTime\\hasWorkingTime",
+            "insertText": "ext\\workingTime\\hasWorkingTime(FROM, TO)",
             "returnType": "bool"
         },
         {
-            "name": "ext\\workingCalendar\\isWorkingDay",
-            "insertText": "ext\\workingCalendar\\isWorkingDay(DATE)",
+            "name": "ext\\workingTime\\isWorkingDay",
+            "insertText": "ext\\workingTime\\isWorkingDay(DATE)",
             "returnType": "bool"
         },
         {
