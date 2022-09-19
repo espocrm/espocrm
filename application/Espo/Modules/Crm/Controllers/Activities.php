@@ -29,53 +29,54 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
-use Espo\Core\Exceptions\{
-    Error,
-    Forbidden,
-    BadRequest,
-    NotFound,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
 
-use Espo\Core\{
-    Api\Request,
-    Acl,
-    Record\SearchParamsFetcher,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Acl;
+use Espo\Core\Field\DateTime;
+use Espo\Core\Record\SearchParamsFetcher;
 
+use Espo\Modules\Crm\Tools\Calendar\FetchParams;
 use Espo\Modules\Crm\Services\Activities as Service;
+use Espo\Modules\Crm\Tools\Calendar\Item as CalendarItem;
+use Espo\Modules\Crm\Tools\Calendar\Service as CalendarService;
 use Espo\Entities\User;
 
 use stdClass;
+use Exception;
 
 class Activities
 {
     private const MAX_CALENDAR_RANGE = 123;
 
     private User $user;
-
     private Acl $acl;
-
     private SearchParamsFetcher $searchParamsFetcher;
-
     private Service $service;
+    private CalendarService $calendarService;
 
     public function __construct(
         User $user,
         Acl $acl,
         SearchParamsFetcher $searchParamsFetcher,
-        Service $service
+        Service $service,
+        CalendarService $calendarService
     ) {
         $this->user = $user;
         $this->acl = $acl;
         $this->searchParamsFetcher = $searchParamsFetcher;
         $this->service = $service;
+        $this->calendarService = $calendarService;
     }
 
     /**
-     * @return array<int,array<string,mixed>>
+     * @return array<int,stdClass>
      * @throws Forbidden
      * @throws BadRequest
-     * @throws \Exception
+     * @throws Exception
      */
     public function getActionListCalendarEvents(Request $request): array
     {
@@ -85,6 +86,7 @@ class Activities
 
         $from = $request->getQueryParam('from');
         $to = $request->getQueryParam('to');
+        $isAgenda = $request->getQueryParam('agenda') === 'true';
 
         if (empty($from) || empty($to)) {
             throw new BadRequest();
@@ -104,29 +106,55 @@ class Activities
         $userIdList = $request->getQueryParam('userIdList');
         $teamIdList = $request->getQueryParam('teamIdList');
 
+        $fetchParams = FetchParams
+            ::create(
+                DateTime::fromString($from . ':00'),
+                DateTime::fromString($to . ':00')
+            )
+            ->withScopeList($scopeList);
+
         if ($teamIdList) {
             $teamIdList = explode(',', $teamIdList);
 
-            return $userResultList = $this->service->getTeamsEventList($teamIdList, $from, $to, $scopeList);
+            return self::itemListToRaw(
+                $this->calendarService->fetchForTeams($teamIdList, $fetchParams)
+            );
         }
 
         if ($userIdList) {
             $userIdList = explode(',', $userIdList);
 
-            return $this->service->getUsersEventList($userIdList, $from, $to, $scopeList);
-        }
-        else {
-            if (!$userId) {
-                $userId = $this->user->getId();
-            }
+            return self::itemListToRaw(
+                $this->calendarService->fetchForUsers($userIdList, $fetchParams)
+            );
         }
 
-        return $this->service->getEventList($userId, $from, $to, $scopeList);
+        if (!$userId) {
+            $userId = $this->user->getId();
+        }
+
+        $fetchParams = $fetchParams
+            ->withIsAgenda($isAgenda)
+            ->withWorkingTimeRanges();
+
+        return self::itemListToRaw(
+            $this->calendarService->fetch($userId, $fetchParams)
+        );
+    }
+
+    /**
+     * @param CalendarItem[] $itemList
+     * @return stdClass[]
+     */
+    private static function itemListToRaw(array $itemList): array
+    {
+        return array_map(fn (CalendarItem $item) => $item->getRaw(), $itemList);
     }
 
     /**
      * @throws BadRequest
      * @throws Forbidden
+     * @throws Exception
      */
     public function getActionGetTimeline(Request $request): stdClass
     {
@@ -165,7 +193,22 @@ class Activities
             $userIdList[] = $userId;
         }
 
-        return $this->service->getUsersTimeline($userIdList, $from, $to, $scopeList);
+        $fetchParams = FetchParams
+            ::create(
+                DateTime::fromString($from . ':00'),
+                DateTime::fromString($to . ':00')
+            )
+            ->withScopeList($scopeList);
+
+        $map = $this->calendarService->fetchTimelineForUsers($userIdList, $fetchParams);
+
+        $result = (object) [];
+
+        foreach ($map as $userId => $itemList) {
+            $result->$userId = self::itemListToRaw($itemList);
+        }
+
+        return $result;
     }
 
     /**
@@ -285,6 +328,12 @@ class Activities
         return (object) $this->service->getActivities($entityType, $id, $methodParams);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function getActionEntityTypeList(Request $request): stdClass
     {
         $params = $request->getRouteParams();
@@ -336,6 +385,11 @@ class Activities
         ];
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     */
     public function getActionBusyRanges(Request $request): stdClass
     {
         $from = $request->getQueryParam('from');
@@ -348,12 +402,20 @@ class Activities
 
         $userIdList = explode(',', $userIdListString);
 
-        return $this->service->getBusyRanges(
+        $map = $this->calendarService->fetchBusyRangesForUsers(
             $userIdList,
-            $from,
-            $to,
+            DateTime::fromString($from . ':00'),
+            DateTime::fromString($to . ':00'),
             $request->getQueryParam('entityType'),
             $request->getQueryParam('entityId')
         );
+
+        $result = (object) [];
+
+        foreach ($map as $userId => $itemList) {
+            $result->$userId = self::itemListToRaw($itemList);
+        }
+
+        return $result;
     }
 }

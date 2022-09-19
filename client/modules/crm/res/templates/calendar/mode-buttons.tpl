@@ -31,14 +31,21 @@
                 </a>
             </li>
         {{/each}}
-        {{#if isCustomViewAvailable}}
+        {{#if hasMoreItems}}
             <li class="divider"></li>
+        {{/if}}
+        {{#if isCustomViewAvailable}}
             <li>
                 <a
                     role="button"
                     tabindex="0"
                     data-action="createCustomView"
                 >{{translate 'Create Shared View' scope='Calendar'}}</a>
+            </li>
+        {{/if}}
+        {{#if hasWorkingTimeCalendarLink}}
+            <li>
+                <a href="#WorkingTimeCalendar">{{translate 'WorkingTimeCalendar' category='scopeNamesPlural'}}</a>
             </li>
         {{/if}}
     </ul>

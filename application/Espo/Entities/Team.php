@@ -29,7 +29,15 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Field\Link;
+
 class Team extends \Espo\Core\ORM\Entity
 {
     public const ENTITY_TYPE = 'Team';
+
+    public function getWorkingTimeCalendar(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('workingTimeCalendar');
+    }
 }

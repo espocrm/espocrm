@@ -24,6 +24,10 @@
             "type": "link",
             "tooltip": true
         },
+        "workingTimeCalendar": {
+            "type": "link",
+            "tooltip": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -60,6 +64,11 @@
         "layoutSet": {
             "type": "belongsTo",
             "entity": "LayoutSet",
+            "foreign": "teams"
+        },
+        "workingTimeCalendar": {
+            "type": "belongsTo",
+            "entity": "WorkingTimeCalendar",
             "foreign": "teams"
         }
     },

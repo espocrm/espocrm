@@ -1,0 +1,999 @@
+<?php
+/************************************************************************
+ * This file is part of EspoCRM.
+ *
+ * EspoCRM - Open Source CRM application.
+ * Copyright (C) 2014-2022 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Website: https://www.espocrm.com
+ *
+ * EspoCRM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * EspoCRM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
+
+namespace Espo\Modules\Crm\Tools\Calendar;
+
+use Espo\Core\Acl;
+use Espo\Core\Acl\Table;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Field\DateTime as DateTimeField;
+use Espo\Core\Select\SelectBuilderFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\Team;
+use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Call;
+use Espo\Modules\Crm\Entities\Meeting;
+use Espo\Modules\Crm\Entities\Task;
+use Espo\Modules\Crm\Tools\Calendar\Items\BusyRange;
+use Espo\Modules\Crm\Tools\Calendar\Items\Event;
+use Espo\Modules\Crm\Tools\Calendar\Items\NonWorkingRange;
+use Espo\Modules\Crm\Tools\Calendar\Items\WorkingRange;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Select;
+use Espo\Tools\WorkingTime\Calendar as WorkingCalendar;
+use Espo\Tools\WorkingTime\CalendarFactory as WorkingCalendarFactory;
+use Espo\Core\ServiceFactory;
+
+use Espo\Tools\WorkingTime\Extractor;
+use PDO;
+use Exception;
+use stdClass;
+use DateTime;
+
+class Service
+{
+    private const BUSY_RANGES_MAX_RANGE_DAYS = 10;
+
+    private EntityManager $entityManager;
+    private Config $config;
+    private WorkingCalendarFactory $workingCalendarFactory;
+    private Acl $acl;
+    private Metadata $metadata;
+    private ServiceFactory $serviceFactory;
+    private SelectBuilderFactory $selectBuilderFactory;
+    private User $user;
+
+    public function __construct(
+        EntityManager $entityManager,
+        Config $config,
+        WorkingCalendarFactory $workingCalendarFactory,
+        Acl $acl,
+        Metadata $metadata,
+        SelectBuilderFactory $selectBuilderFactory,
+        User $user,
+        ServiceFactory $serviceFactory
+    ) {
+
+        $this->entityManager = $entityManager;
+        $this->config = $config;
+        $this->workingCalendarFactory = $workingCalendarFactory;
+        $this->acl = $acl;
+        $this->metadata = $metadata;
+        $this->selectBuilderFactory = $selectBuilderFactory;
+        $this->user = $user;
+        $this->serviceFactory = $serviceFactory;
+    }
+
+    /**
+     * @todo Return array of objects.
+     *
+     * @return (Event|NonWorkingRange|WorkingRange)[]
+     * @throws NotFound
+     * @throws Forbidden
+     */
+    public function fetch(string $userId, FetchParams $fetchParams): array
+    {
+        $from = $fetchParams->getFrom()->getString();
+        $to = $fetchParams->getTo()->getString();
+        $scopeList = $fetchParams->getScopeList();
+        $skipAcl = $fetchParams->skipAcl();
+
+        /** @var ?User $user */
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+
+        if (!$user) {
+            throw new NotFound();
+        }
+
+        $this->accessCheck($user);
+
+        $calendarEntityList = $this->config->get('calendarEntityList', []);
+
+        if (is_null($scopeList)) {
+            $scopeList = $calendarEntityList;
+        }
+
+        $workingRangeItemList = [];
+
+        if ($fetchParams->workingTimeRanges() || $fetchParams->workingTimeRangesInverted()) {
+            $workingCalendar = $this->workingCalendarFactory->createForUser($user);
+
+            $workingRangeItemList = $workingCalendar->isAvailable() ?
+                $this->getWorkingRangeList($workingCalendar, $fetchParams) : [];
+        }
+
+        $queryList = [];
+
+        foreach ($scopeList as $scope) {
+            if (!in_array($scope, $calendarEntityList)) {
+                continue;
+            }
+
+            if (!$this->acl->checkScope($scope)) {
+                continue;
+            }
+
+            if (!$this->metadata->get(['scopes', $scope, 'calendar'])) {
+                continue;
+            }
+
+            $subItem = [
+                $this->getCalendarQuery($scope, $userId, $from, $to, $skipAcl)
+            ];
+
+            $queryList = array_merge($queryList, $subItem);
+        }
+
+        if ($queryList === []) {
+            return $workingRangeItemList;
+        }
+
+        $builder = $this->entityManager
+            ->getQueryBuilder()
+            ->union();
+
+        foreach ($queryList as $query) {
+            $builder->query($query);
+        }
+
+        $unionQuery = $builder->build();
+
+        $sth = $this->entityManager->getQueryExecutor()->execute($unionQuery);
+
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+        $eventList = [];
+
+        foreach ($rowList as $row) {
+            $eventList[] = new Event(
+                $row['dateStart'] ? DateTimeField::fromString($row['dateStart']) : null,
+                $row['dateEnd'] ? DateTimeField::fromString($row['dateEnd']) : null,
+                $row['scope'],
+                $row
+            );
+        }
+
+        return array_merge($eventList, $workingRangeItemList);
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function accessCheck(Entity $entity): void
+    {
+        if ($entity instanceof User) {
+            if (!$this->acl->checkUserPermission($entity, 'user')) {
+                throw new Forbidden();
+            }
+
+            return;
+        }
+
+        if (!$this->acl->check($entity, Table::ACTION_READ)) {
+            throw new Forbidden();
+        }
+    }
+
+    private function getCalendarQuery(
+        string $scope,
+        string $userId,
+        string $from,
+        string $to,
+        bool $skipAcl = false
+    ): Select {
+
+        if ($this->serviceFactory->checkExists($scope)) {
+            // For backward compatibility.
+            $service = $this->serviceFactory->create($scope);
+
+            if (method_exists($service, 'getCalenderQuery')) {
+                return $service->getCalenderQuery($userId, $from, $to, $skipAcl);
+            }
+        }
+
+        if ($scope === Meeting::ENTITY_TYPE) {
+            return $this->getCalendarMeetingQuery($userId, $from, $to, $skipAcl);
+        }
+
+        if ($scope === Call::ENTITY_TYPE) {
+            return $this->getCalendarCallQuery($userId, $from, $to, $skipAcl);
+        }
+
+        if ($scope === Task::ENTITY_TYPE) {
+            return $this->getCalendarTaskQuery($userId, $from, $to, $skipAcl);
+        }
+
+        return $this->getCalenderBaseQuery($scope, $userId, $from, $to, $skipAcl);
+    }
+
+    protected function getCalenderBaseQuery(
+        string $scope,
+        string $userId,
+        string $from,
+        string $to,
+        bool $skipAcl = false
+    ): Select {
+
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from($scope);
+
+        if (!$skipAcl) {
+            $builder->withStrictAccessControl();
+        }
+
+        $seed = $this->entityManager->getNewEntity($scope);
+
+        $select = [
+            ['"' . $scope . '"', 'scope'],
+            'id',
+            'name',
+            ['dateStart', 'dateStart'],
+            ['dateEnd', 'dateEnd'],
+            ($seed->hasAttribute('status') ? ['status', 'status'] : ['""', 'status']),
+            ($seed->hasAttribute('dateStartDate') ? ['dateStartDate', 'dateStartDate'] : ['""', 'dateStartDate']),
+            ($seed->hasAttribute('dateEndDate') ? ['dateEndDate', 'dateEndDate'] : ['""', 'dateEndDate']),
+            ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['""', 'parentType']),
+            ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['""', 'parentId']),
+            'createdAt',
+        ];
+
+        $additionalAttributeList = $this->metadata->get(
+            ['app', 'calendar', 'additionalAttributeList']
+        ) ?? [];
+
+        foreach ($additionalAttributeList as $attribute) {
+            $select[] = $seed->hasAttribute($attribute) ?
+                [$attribute, $attribute] :
+                ['""', $attribute];
+        }
+
+        $orGroup = [
+            'assignedUserId' => $userId,
+        ];
+
+        if ($seed->hasRelation('users')) {
+            $orGroup['usersMiddle.userId'] = $userId;
+        }
+
+        if ($seed->hasRelation('assignedUsers')) {
+            $orGroup['assignedUsersMiddle.userId'] = $userId;
+        }
+
+        $queryBuilder = $builder
+            ->buildQueryBuilder()
+            ->select($select)
+            ->where([
+                'OR' => $orGroup,
+                [
+                    'OR' => [
+                        [
+                            'dateEnd' => null,
+                            'dateStart>=' => $from,
+                            'dateStart<' => $to,
+                        ],
+                        [
+                            'dateStart>=' => $from,
+                            'dateStart<' => $to,
+                        ],
+                        [
+                            'dateEnd>=' => $from,
+                            'dateEnd<' => $to,
+                        ],
+                        [
+                            'dateStart<=' => $from,
+                            'dateEnd>=' => $to,
+                        ],
+                        [
+                            'dateEndDate!=' => null,
+                            'dateEndDate>=' => $from,
+                            'dateEndDate<' => $to,
+                        ],
+                    ],
+                ],
+            ]);
+
+        if ($seed->hasRelation('users')) {
+            $queryBuilder
+                ->distinct()
+                ->leftJoin('users');
+        }
+
+        if ($seed->hasRelation('assignedUsers')) {
+            $queryBuilder
+                ->distinct()
+                ->leftJoin('assignedUsers');
+        }
+
+        return $queryBuilder->build();
+    }
+
+    protected function getCalendarMeetingQuery(string $userId, string $from, string $to, bool $skipAcl): Select
+    {
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from(Meeting::ENTITY_TYPE);
+
+        if (!$skipAcl) {
+            $builder->withStrictAccessControl();
+        }
+
+        $select = [
+            ['"Meeting"', 'scope'],
+            'id',
+            'name',
+            ['dateStart', 'dateStart'],
+            ['dateEnd', 'dateEnd'],
+            'status',
+            ['dateStartDate', 'dateStartDate'],
+            ['dateEndDate', 'dateEndDate'],
+            'parentType',
+            'parentId',
+            'createdAt',
+        ];
+
+        $seed = $this->entityManager->getNewEntity(Meeting::ENTITY_TYPE);
+
+        $additionalAttributeList = $this->metadata->get(
+            ['app', 'calendar', 'additionalAttributeList']
+        ) ?? [];
+
+        foreach ($additionalAttributeList as $attribute) {
+            $select[] = $seed->hasAttribute($attribute) ?
+                [$attribute, $attribute] :
+                ['""', $attribute];
+        }
+
+        return $builder
+            ->buildQueryBuilder()
+            ->select($select)
+            ->leftJoin('users')
+            ->where([
+                'usersMiddle.userId' => $userId,
+                'usersMiddle.status!=' => 'Declined',
+                'OR' => [
+                    [
+                        'dateStart>=' => $from,
+                        'dateStart<' => $to,
+                    ],
+                    [
+                        'dateEnd>=' => $from,
+                        'dateEnd<' => $to,
+                    ],
+                    [
+                        'dateStart<=' => $from,
+                        'dateEnd>=' => $to,
+                    ],
+                ],
+            ])
+            ->build();
+    }
+
+    protected function getCalendarCallQuery(string $userId, string $from, string $to, bool $skipAcl): Select
+    {
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from(Call::ENTITY_TYPE);
+
+        if (!$skipAcl) {
+            $builder->withStrictAccessControl();
+        }
+
+        $select = [
+            ['"Call"', 'scope'],
+            'id',
+            'name',
+            ['dateStart', 'dateStart'],
+            ['dateEnd', 'dateEnd'],
+            'status',
+            ['""', 'dateStartDate'],
+            ['""', 'dateEndDate'],
+            'parentType',
+            'parentId',
+            'createdAt',
+        ];
+
+        $seed = $this->entityManager->getNewEntity(Call::ENTITY_TYPE);
+
+        $additionalAttributeList = $this->metadata->get(
+            ['app', 'calendar', 'additionalAttributeList']
+        ) ?? [];
+
+        foreach ($additionalAttributeList as $attribute) {
+            $select[] = $seed->hasAttribute($attribute) ?
+                [$attribute, $attribute] :
+                ['""', $attribute];
+        }
+
+        return $builder
+            ->buildQueryBuilder()
+            ->select($select)
+            ->leftJoin('users')
+            ->where([
+                'usersMiddle.userId' => $userId,
+                'usersMiddle.status!=' => 'Declined',
+                'OR' => [
+                    [
+                        'dateStart>=' => $from,
+                        'dateStart<' => $to,
+                    ],
+                    [
+                        'dateEnd>=' => $from,
+                        'dateEnd<' => $to,
+                    ],
+                    [
+                        'dateStart<=' => $from,
+                        'dateEnd>=' => $to,
+                    ],
+                ],
+            ])
+            ->build();
+    }
+
+    protected function getCalendarTaskQuery(string $userId, string $from, string $to, bool $skipAcl): Select
+    {
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from(Task::ENTITY_TYPE);
+
+        if (!$skipAcl) {
+            $builder->withStrictAccessControl();
+        }
+
+        $select = [
+            ['"Task"', 'scope'],
+            'id',
+            'name',
+            ['dateStart', 'dateStart'],
+            ['dateEnd', 'dateEnd'],
+            'status',
+            ['dateStartDate', 'dateStartDate'],
+            ['dateEndDate', 'dateEndDate'],
+            'parentType',
+            'parentId',
+            'createdAt',
+        ];
+
+        $seed = $this->entityManager->getNewEntity(Task::ENTITY_TYPE);
+
+        $additionalAttributeList = $this->metadata->get(
+            ['app', 'calendar', 'additionalAttributeList']
+        ) ?? [];
+
+        foreach ($additionalAttributeList as $attribute) {
+            $select[] = $seed->hasAttribute($attribute) ?
+                [$attribute, $attribute] :
+                ['""', $attribute];
+        }
+
+        $queryBuilder = $builder
+            ->buildQueryBuilder()
+            ->select($select)
+            ->where([
+                'OR' => [
+                    [
+                        'dateEnd' => null,
+                        'dateStart>=' => $from,
+                        'dateStart<' => $to,
+                    ],
+                    [
+                        'dateEnd>=' => $from,
+                        'dateEnd<' => $to,
+                    ],
+                    [
+                        'dateEndDate!=' => null,
+                        'dateEndDate>=' => $from,
+                        'dateEndDate<' => $to,
+                    ],
+                ],
+            ]);
+
+        if (
+            $this->metadata->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'type']) === 'linkMultiple' &&
+            !$this->metadata->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'disabled'])
+        ) {
+            $queryBuilder
+                ->distinct()
+                ->leftJoin('assignedUsers', 'assignedUsers')
+                ->where([
+                    'assignedUsers.id' => $userId,
+                ]);
+        }
+        else {
+            $queryBuilder->where([
+                'assignedUserId' => $userId,
+            ]);
+        }
+
+        return $queryBuilder->build();
+    }
+
+    /**
+     * @param string[] $userIdList
+     * @return array<string,Item[]>
+     * @throws Exception
+     */
+    public function fetchTimelineForUsers(array $userIdList, FetchParams $fetchParams): array
+    {
+        $scopeList = $fetchParams->getScopeList();
+
+        $brScopeList = $this->config->get('busyRangesEntityList') ?? [Meeting::ENTITY_TYPE, Call::ENTITY_TYPE];
+
+        if ($scopeList) {
+            foreach ($scopeList as $s) {
+                if (!in_array($s, $brScopeList)) {
+                    $brScopeList[] = $s;
+                }
+            }
+        }
+
+        $itemFetchParams = $fetchParams
+            ->withIsAgenda()
+            ->withWorkingTimeRangesInverted();
+
+        $resultData = [];
+
+        foreach ($userIdList as $userId) {
+            try {
+                $eventList = $this->fetch($userId, $itemFetchParams);
+
+                $busyRangeList = $this->fetchBusyRanges(
+                    $userId,
+                    $fetchParams->withScopeList($brScopeList),
+                    array_filter($eventList, fn (Item $item) => $item instanceof Event)
+                );
+            }
+            catch (Exception $e) {
+                if ($e instanceof Forbidden) {
+                    continue;
+                }
+
+                throw new Exception($e->getMessage(), $e->getCode(), $e);
+            }
+
+            $resultData[$userId] = array_merge($eventList, $busyRangeList);
+        }
+
+        return $resultData;
+    }
+
+    /**
+     * @param string[] $teamIdList
+     * @return Item[]
+     * @throws Forbidden
+     * @throws NotFound
+     */
+    public function fetchForTeams(array $teamIdList, FetchParams $fetchParams): array
+    {
+        if ($this->acl->getPermissionLevel('userPermission') === Table::LEVEL_NO) {
+            throw new Forbidden("User Permission not allowing to view calendars of other users.");
+        }
+
+        if ($this->acl->getPermissionLevel('userPermission') === Table::LEVEL_TEAM) {
+            $userTeamIdList = $this->user->getLinkMultipleIdList('teams') ?? [];
+
+            foreach ($teamIdList as $teamId) {
+                if (!in_array($teamId, $userTeamIdList)) {
+                    throw new Forbidden("User Permission not allowing to view calendars of other teams.");
+                }
+            }
+        }
+
+        $userIdList = [];
+
+        $userList = $this->entityManager
+            ->getRDBRepository(User::ENTITY_TYPE)
+            ->select(['id', 'name'])
+            ->leftJoin('teams')
+            ->where([
+                'isActive' => true,
+                'teamsMiddle.teamId' => $teamIdList,
+            ])
+            ->distinct()
+            ->find();
+
+        $userNames = [];
+
+        foreach ($userList as $user) {
+            $userIdList[] = $user->getId();
+            $userNames[$user->getId()] = $user->getName();
+        }
+
+        /** @var Event[] $eventList */
+        $eventList = [];
+
+        foreach ($userIdList as $userId) {
+            $userEventList = $this->fetch($userId, $fetchParams);
+
+            foreach ($userEventList as $event) {
+                if (!$event instanceof Event) {
+                    continue;
+                }
+
+                foreach ($eventList as $i => $e) {
+                    if (
+                        $e->getEntityType() === $event->getEntityType() &&
+                        $e->getId() === $event->getId()
+                    ) {
+                        $eventList[$i] = $e->withUserIdAdded($userId);
+
+                        continue 2;
+                    }
+                }
+
+                $eventList[] = $event->withUserIdAdded($userId);
+            }
+        }
+
+        foreach ($eventList as $i => $event) {
+            $eventUserNames = [];
+
+            foreach ($event->getUserIdList() as $userId) {
+                $name = $userNames[$userId] ?? null;
+
+                if ($name !== null) {
+                    $eventUserNames[$userId] = $name;
+                }
+            }
+
+            $eventList[$i] = $event->withUserNameMap($eventUserNames);
+        }
+
+        return array_merge(
+            $eventList,
+            $this->fetchWorkingRangeListForTeams($teamIdList, $fetchParams)
+        );
+    }
+
+    /**
+     * @param string[] $teamIdList
+     * @param FetchParams $fetchParams
+     * @return NonWorkingRange[]
+     */
+    private function fetchWorkingRangeListForTeams(array $teamIdList, FetchParams $fetchParams): array
+    {
+        $teamList = iterator_to_array(
+                $this->entityManager
+                ->getRDBRepositoryByClass(Team::class)
+                ->where(['id' => $teamIdList])
+                ->find()
+        );
+
+        if (!count($teamList)) {
+            return [];
+        }
+
+        $workingTimeCalendarIdList = [];
+
+        foreach ($teamList as $team) {
+            $workingTimeCalendarLink = $team->getWorkingTimeCalendar();
+
+            $workingTimeCalendarId = $workingTimeCalendarLink ? $workingTimeCalendarLink->getId() : null;
+
+            if ($workingTimeCalendarId) {
+                $workingTimeCalendarIdList[] = $workingTimeCalendarId;
+            }
+        }
+
+        if (
+            count($workingTimeCalendarIdList) !== count($teamList) ||
+            count(array_unique($workingTimeCalendarIdList)) !== 1
+        ) {
+            return [];
+        }
+
+        $workingCalendar = $this->workingCalendarFactory->createForTeam($teamList[0]);
+
+        if (!$workingCalendar->isAvailable()) {
+            return [];
+        }
+
+        /** @var NonWorkingRange[] */
+        return $this->getWorkingRangeList($workingCalendar, $fetchParams);
+    }
+
+    /**
+     * @param string[] $userIdList
+     * @return Item[]
+     * @throws Exception
+     */
+    public function fetchForUsers(array $userIdList, FetchParams $fetchParams): array
+    {
+        $itemList = [];
+
+        foreach ($userIdList as $userId) {
+            try {
+                $userItemList = $this->fetch($userId, $fetchParams);
+            }
+            catch (Exception $e) {
+                if ($e instanceof Forbidden) {
+                    continue;
+                }
+
+                throw new Exception($e->getMessage(), $e->getCode(), $e);
+            }
+
+            foreach ($userItemList as $event) {
+                if (!$event instanceof Event) {
+                    continue;
+                }
+
+                $itemList[] = $event->withAttribute('userId', $userId);
+            }
+        }
+
+        return $itemList;
+    }
+
+    /**
+    * @param Event[] $ignoreEventList
+    * @return BusyRange[]
+    * @throws NotFound
+    * @throws Forbidden
+    */
+    public function fetchBusyRanges(string $userId, FetchParams $fetchParams, array $ignoreEventList = []): array
+    {
+        $rangeList = [];
+
+        $eventList = $this->fetch($userId, $fetchParams->withSkipAcl(true));
+
+        $ignoreHash = (object) [];
+
+        foreach ($ignoreEventList as $event) {
+            $id = $event->getAttribute('id');
+
+            if ($id) {
+                $ignoreHash->$id = true;
+            }
+        }
+
+        $canceledStatusList = $this->metadata->get(['app', 'calendar', 'canceledStatusList']) ?? [];
+
+        foreach ($eventList as $event) {
+            if (!$event instanceof Event) {
+                continue;
+            }
+
+            $start = $event->getStart();
+            $end = $event->getEnd();
+            $status = $event->getAttribute('status');
+            $id = $event->getAttribute('id');
+
+            if (!$start || !$end) {
+                continue;
+            }
+
+            if (in_array($status, $canceledStatusList)) {
+                continue;
+            }
+
+            if (isset($ignoreHash->$id)) {
+                continue;
+            }
+
+            try {
+                foreach ($rangeList as &$range) {
+                    if (
+                        $start->getTimestamp() < $range->start->getTimestamp() &&
+                        $end->getTimestamp() > $range->end->getTimestamp()
+                    ) {
+                        $range->dateStart = $start->getString();
+                        $range->start = $start;
+                        $range->dateEnd = $end->getString();
+                        $range->end = $end;
+
+                        continue 2;
+                    }
+
+                    if (
+                        $start->getTimestamp() < $range->start->getTimestamp() &&
+                        $end->getTimestamp() > $range->start->getTimestamp()
+                    ) {
+                        $range->dateStart = $start->getString();
+                        $range->start = $start;
+
+                        if ($end->getTimestamp() > $range->end->getTimestamp()) {
+                            $range->dateEnd = $end->getString();
+                            $range->end = $end;
+                        }
+
+                        continue 2;
+                    }
+
+                    if (
+                        $start->getTimestamp() < $range->end->getTimestamp() &&
+                        $end->getTimestamp() > $range->end->getTimestamp()
+                    ) {
+                        $range->dateEnd = $end->getString();
+                        $range->end = $end;
+
+                        if ($start->getTimestamp() < $range->start->getTimestamp()) {
+                            $range->dateStart = $start->getString();
+                            $range->start = $start;
+                        }
+
+                        continue 2;
+                    }
+                }
+
+                $busyItem = (object) [
+                    'dateStart' => $start->getString(),
+                    'dateEnd' => $end->getString(),
+                    'start' => $start,
+                    'end' => $end,
+                ];
+
+                $rangeList[] = $busyItem;
+            }
+            catch (Exception $e) {}
+        }
+
+        return array_map(
+            function ($item) {
+                return new BusyRange(
+                    DateTimeField::fromString($item->dateStart),
+                    DateTimeField::fromString($item->dateEnd)
+                );
+            },
+            $rangeList
+        );
+    }
+
+    /**
+     * @return array<int,WorkingRange|NonWorkingRange>
+     */
+    private function getWorkingRangeList(WorkingCalendar $calendar, FetchParams $fetchParams): array
+    {
+        $from = $fetchParams->getFrom();
+        $to = $fetchParams->getTo();
+
+        $extractor = new Extractor();
+
+        $itemList = $fetchParams->workingTimeRangesInverted() ?
+            (
+            $fetchParams->isAgenda() ?
+                $extractor->extractInversion($calendar, $from, $to) :
+                $extractor->extractAllDayInversion($calendar, $from, $to)
+            ) :
+            (
+            $fetchParams->isAgenda() ?
+                $extractor->extract($calendar, $from, $to) :
+                $extractor->extractAllDay($calendar, $from, $to)
+            );
+
+        $list = [];
+
+        foreach ($itemList as $item) {
+            if ($fetchParams->workingTimeRangesInverted()) {
+                $list[] = new NonWorkingRange($item[0], $item[1]);
+
+                continue;
+            }
+
+            $list[] = new WorkingRange($item[0], $item[1]);
+        }
+
+        return $list;
+    }
+
+    /**
+     * @param string[] $userIdList
+     * @return array<string, (BusyRange|NonWorkingRange)[]>
+     * @throws Forbidden
+     * @throws Error
+     * @throws Exception
+     */
+    public function fetchBusyRangesForUsers(
+        array $userIdList,
+        DateTimeField $from,
+        DateTimeField $to,
+        ?string $entityType = null,
+        ?string $ignoreId = null
+    ): array {
+
+        $scopeList = $this->config->get('busyRangesEntityList') ?? [Meeting::ENTITY_TYPE, Call::ENTITY_TYPE];
+
+        if ($entityType) {
+            if (!$this->acl->check($entityType)) {
+                throw new Forbidden();
+            }
+
+            if (!in_array($entityType, $scopeList)) {
+                $scopeList[] = $entityType;
+            }
+        }
+
+        try {
+            $diff = $to->getDateTime()->diff($from->getDateTime(), true);
+
+            if ($diff->days > $this->config->get('busyRangesMaxRange', self::BUSY_RANGES_MAX_RANGE_DAYS)) {
+                return [];
+            }
+        }
+        catch (Exception $e) {
+            throw new Error("BusyRanges: Bad date range.");
+        }
+
+        $ignoreList = [];
+
+        if ($entityType && $ignoreId) {
+            $ignoreList[] = new Event(
+                DateTimeField::createNow(),
+                DateTimeField::createNow(),
+                $entityType,
+                ['id' => $ignoreId]
+            );
+        }
+
+        $result = [];
+
+        $fetchParams = FetchParams
+            ::create($from, $to)
+            ->withScopeList($scopeList);
+
+        foreach ($userIdList as $userId) {
+            $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+
+            if (!$user) {
+                continue;
+            }
+
+            $workingCalendar = $this->workingCalendarFactory->createForUser($user);
+
+            /** @var NonWorkingRange[] $workingRangeItemList */
+            $workingRangeItemList = $workingCalendar->isAvailable() ?
+                $this->getWorkingRangeList(
+                    $workingCalendar,
+                    $fetchParams
+                        ->withWorkingTimeRangesInverted()
+                        ->withIsAgenda()
+                ) :
+                [];
+
+            try {
+                $busyRangeList = $this->fetchBusyRanges($userId, $fetchParams, $ignoreList);
+            }
+            catch (Exception $e) {
+                if ($e instanceof Forbidden) {
+                    continue;
+                }
+
+                throw new Exception($e->getMessage(), $e->getCode(), $e);
+            }
+
+            $result[$userId] = array_merge($busyRangeList, $workingRangeItemList);
+        }
+
+        return $result;
+    }
+}

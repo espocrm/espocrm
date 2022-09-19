@@ -11,7 +11,7 @@
             ],
             [
                 {"name": "layoutSet"},
-                false
+                {"name": "workingTimeCalendar"}
             ]
         ]
     }

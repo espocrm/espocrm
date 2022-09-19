@@ -56,6 +56,8 @@ define('crm:views/calendar/mode-buttons', 'view', function (Dep) {
                 hiddenModeDataList: this.getHiddenModeDataList(),
                 scopeFilterDataList: scopeFilterDataList,
                 isCustomViewAvailable: this.isCustomViewAvailable,
+                hasMoreItems: this.isCustomViewAvailable,
+                hasWorkingTimeCalendarLink: this.getAcl().checkScope('WorkingTimeCalendar'),
             };
         },
 

@@ -38,7 +38,8 @@
         "label": "Activities",
         "rows": [
             [{"name": "calendarEntityList"}, {"name": "activitiesEntityList"}],
-            [{"name": "busyRangesEntityList"}, {"name": "historyEntityList"}]
+            [{"name": "busyRangesEntityList"}, {"name": "historyEntityList"}],
+            [{"name": "workingTimeCalendar"}, false]
         ]
     },
     {

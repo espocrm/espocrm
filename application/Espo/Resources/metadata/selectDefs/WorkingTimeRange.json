@@ -1,0 +1,6 @@
+{
+    "accessControlFilterResolverClassName": "Espo\\Core\\Select\\AccessControl\\FilterResolvers\\Boolean",
+    "primaryFilterClassNameMap": {
+        "actual": "Espo\\Classes\\Select\\WorkingTimeRange\\PrimaryFilters\\Actual"
+    }
+}

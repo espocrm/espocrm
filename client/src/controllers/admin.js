@@ -185,6 +185,10 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager, _) {
             this.getRouter().dispatch('LayoutSet', 'list', {fromAdmin: true});
         },
 
+        actionWorkingTimeCalendar: function () {
+            this.getRouter().dispatch('WorkingTimeCalendar', 'list', {fromAdmin: true});
+        },
+
         actionAttachments: function () {
             this.getRouter().dispatch('Attachment', 'list', {fromAdmin: true});
         },

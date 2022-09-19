@@ -1,0 +1,28 @@
+[
+    {
+        "rows": [
+            [{"name": "name"}, false]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "timeRanges"}, {"name": "timeZone"}]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "weekday1"}, {"name": "weekday1TimeRanges"}],
+            [{"name": "weekday2"}, {"name": "weekday2TimeRanges"}],
+            [{"name": "weekday3"}, {"name": "weekday3TimeRanges"}],
+            [{"name": "weekday4"}, {"name": "weekday4TimeRanges"}],
+            [{"name": "weekday5"}, {"name": "weekday5TimeRanges"}],
+            [{"name": "weekday6"}, {"name": "weekday6TimeRanges"}],
+            [{"name": "weekday0"}, {"name": "weekday0TimeRanges"}]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "description"}]
+        ]
+    }
+]

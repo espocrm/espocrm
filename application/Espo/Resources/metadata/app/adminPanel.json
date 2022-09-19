@@ -287,6 +287,12 @@
 
             },
             {
+                "url": "#Admin/workingTimeCalendar",
+                "label": "Working Time Calendars",
+                "iconClass": "far fa-calendar-alt",
+                "description": "workingTimeCalendars"
+            },
+            {
                 "url": "#Admin/attachments",
                 "label": "Attachments",
                 "iconClass": "fas fa-paperclip",

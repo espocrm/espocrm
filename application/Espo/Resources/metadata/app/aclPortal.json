@@ -89,6 +89,7 @@
             },
             "User": {
                 "dashboardTemplate": false,
+                "workingTimeCalendar": false,
                 "password": false,
                 "authMethod": false,
                 "apiKey": false,

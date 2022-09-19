@@ -35,6 +35,7 @@
         "apiKey": "API Key",
         "secretKey": "Secret Key",
         "dashboardTemplate": "Dashboard Template",
+        "workingTimeCalendar": "Working Time Calendar",
         "auth2FA": "2FA",
         "authMethod": "Authentication Method",
         "auth2FAEnable": "Enable 2-Factor Authentication",
@@ -53,7 +54,9 @@
         "account": "Account (Primary)",
         "tasks": "Tasks",
         "userData": "User Data",
-        "dashboardTemplate": "Dashboard Template"
+        "dashboardTemplate": "Dashboard Template",
+        "workingTimeCalendar": "Working Time Calendar",
+        "workingTimeRanges": "Working Time Ranges"
     },
     "labels": {
         "Create User": "Create User",

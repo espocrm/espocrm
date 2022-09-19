@@ -65,8 +65,8 @@
     }
 }
 
-.fc-unthemed td.fc-today {
-    background: var(--calendar-today-bg) !important;
+.fc-unthemed .fc-view-container td.fc-today {
+    background: var(--calendar-today-bg);
 }
 
 .fc-unthemed th,
@@ -93,6 +93,10 @@
     .fc-event:hover {
         color: var(--text-white-color);
     }
+}
+
+.fc-view-container .fc-bgevent {
+    opacity: 0.5;
 }
 
 .fc.fc-unthemed {

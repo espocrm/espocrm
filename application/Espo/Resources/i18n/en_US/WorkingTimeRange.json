@@ -1,0 +1,27 @@
+{
+    "labels": {
+        "Create WorkingTimeRange": "Create Range",
+        "Calendars": "Calendars"
+    },
+    "fields": {
+        "timeRanges": "Schedule",
+        "dateStart": "Date Start",
+        "dateEnd": "Date End",
+        "type": "Type",
+        "calendars": "Calendars",
+        "users": "Users"
+    },
+    "links": {
+        "calendars": "Calendars",
+        "users": "Users"
+    },
+    "options": {
+        "type": {
+            "Non-working": "Non-working",
+            "Working": "Working"
+        }
+    },
+    "presetFilters": {
+        "actual": "Actual"
+    }
+}

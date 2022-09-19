@@ -139,7 +139,8 @@
         "passwordStrengthBothCases": "Password must contain letters of both upper and lower case",
         "auth2FA": "Enable 2-Factor Authentication",
         "auth2FAForced": "Force regular users to set up 2FA",
-        "auth2FAMethodList": "Available 2FA methods"
+        "auth2FAMethodList": "Available 2FA methods",
+        "workingTimeCalendar": "Working Time Calendar"
     },
     "options": {
         "currencyFormat": {
@@ -165,6 +166,7 @@
         }
     },
     "tooltips": {
+        "workingTimeCalendar": "A working time calendar that will be applied to all users by default.",
         "displayListViewRecordCount": "A total number of records will be shown on the list view.",
         "currencyList": "What currencies will be available in the system.",
         "activitiesEntityList": "What records will be available in the Activities panel.",

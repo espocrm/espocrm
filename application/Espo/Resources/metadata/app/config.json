@@ -18,6 +18,9 @@
         },
         "smsProvider": {
             "level": "admin"
+        },
+        "workingTimeCalendar": {
+            "level": "admin"
         }
     }
 }

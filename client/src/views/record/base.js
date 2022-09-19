@@ -1285,7 +1285,11 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                 var defaultTeamId = this.getUser().get('defaultTeamId');
 
                 if (defaultTeamId) {
-                    if (this.model.hasField('teams') && !this.model.getFieldParam('teams', 'default')) {
+                    if (
+                        this.model.hasField('teams') &&
+                        !this.model.getFieldParam('teams', 'default') &&
+                        this.model.getLinkParam('teams', 'relationName') === 'entityTeam'
+                    ) {
                         defaultHash['teamsIds'] = [defaultTeamId];
                         defaultHash['teamsNames'] = {};
                         defaultHash['teamsNames'][defaultTeamId] = this.getUser().get('defaultTeamName');

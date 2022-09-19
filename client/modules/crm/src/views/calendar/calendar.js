@@ -67,6 +67,11 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
             day: 'dddd, MMMM D, YYYY',
         },
 
+        /**
+         * @private
+         */
+        fetching: false,
+
         data: function () {
             return {
                 mode: this.mode,
@@ -215,13 +220,16 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
             }
         },
 
+        isAgendaMode: function () {
+            return this.mode.indexOf('agenda') === 0;
+        },
+
         selectMode: function (mode) {
             if (~this.fullCalendarModeList.indexOf(mode) || mode.indexOf('view-') === 0) {
                 var previousMode = this.mode;
 
                 if (
-                    mode.indexOf('view-') === 0
-                    ||
+                    mode.indexOf('view-') === 0 ||
                     mode.indexOf('view-') !== 0 && previousMode.indexOf('view-') === 0
                 ) {
                     this.trigger('change:mode', mode, true);
@@ -243,6 +251,16 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 this.$el.find('[data-mode="' + mode + '"]').addClass('active');
 
                 this.$calendar.fullCalendar('changeView', this.viewMode);
+
+                let toAgenda = previousMode.indexOf('agenda') !== 0 && mode.indexOf('agenda') === 0;
+                let fromAgenda = previousMode.indexOf('agenda') === 0 && mode.indexOf('agenda') !== 0;
+
+                if (
+                    toAgenda && !this.fetching ||
+                    fromAgenda && !this.fetching
+                ) {
+                    this.$calendar.fullCalendar('refetchEvents')
+                }
 
                 this.updateDate();
 
@@ -347,6 +365,13 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 originalColor: o.color,
             };
 
+            if (o.isWorkingRange) {
+                event.rendering = 'inverse-background';
+                //event.display = 'inverse-background';
+
+                event.color = this.colors['bg'];
+            }
+
             if (this.teamIdList && o.userIdList) {
                 event.userIdList = o.userIdList;
                 event.userNameMap = o.userNameMap || {};
@@ -386,9 +411,15 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
             event.allDay = false;
 
-            this.handleAllDay(event);
-            this.fillColor(event);
-            this.handleStatus(event);
+            if (!o.isWorkingRange) {
+                this.handleAllDay(event);
+                this.fillColor(event);
+                this.handleStatus(event);
+            }
+
+            if (o.isWorkingRange && !this.isAgendaMode()) {
+                event.allDay = true;
+            }
 
             return event;
         },
@@ -590,6 +621,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 snapDuration: this.slotDuration * 60 * 1000,
                 timezone: this.getDateTime().timeZone,
                 longPressDelay: 300,
+                //eventBackgroundColor: '#333',
                 eventColor: this.colors[''],
                 nowIndicator: true,
                 windowResize: () => {
@@ -903,6 +935,10 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 url += '&teamIdList=' + encodeURIComponent(this.teamIdList.join(','));
             }
 
+            let agenda = this.mode === 'agendaWeek' || this.mode === 'agendaDay';
+
+            url += '&agenda=' + encodeURIComponent(agenda);
+
             Espo.Ajax.getRequest(url).then(data => {
                 let events = this.convertToFcEvents(data);
 
@@ -910,6 +946,10 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
                 Espo.Ui.notify(false);
             });
+
+            this.fetching = true;
+
+            setTimeout(() => this.fetching = false, 50)
         },
 
         addModel: function (model) {

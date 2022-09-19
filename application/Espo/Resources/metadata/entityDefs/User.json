@@ -359,6 +359,12 @@
             "layoutListDisabled": true,
             "customizationAuditedDisabled": true
         },
+        "workingTimeCalendar": {
+            "type": "link",
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "customizationAuditedDisabled": true
+        },
         "auth2FA": {
             "type": "foreign",
             "link": "userData",
@@ -428,6 +434,15 @@
         "dashboardTemplate": {
             "type": "belongsTo",
             "entity": "DashboardTemplate"
+        },
+        "workingTimeCalendar": {
+            "type": "belongsTo",
+            "entity": "WorkingTimeCalendar"
+        },
+        "workingTimeRanges": {
+            "type": "hasMany",
+            "foreign": "users",
+            "entity": "WorkingTimeRange"
         },
         "preferences": {
             "type": "hasOne",

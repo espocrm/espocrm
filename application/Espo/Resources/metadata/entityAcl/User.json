@@ -47,6 +47,9 @@
         "contact": {
             "nonAdminReadOnly": true
         },
+        "workingTimeCalendar": {
+            "onlyAdmin": true
+        },
         "accounts": {
             "nonAdminReadOnly": true
         },
@@ -66,6 +69,9 @@
         },
         "roles": {
             "onlyAdmin": true
+        },
+        "workingTimeRanges": {
+            "nonAdminReadOnly": true
         },
         "portalRoles": {
             "onlyAdmin": true

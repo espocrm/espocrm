@@ -1,0 +1,133 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true
+        },
+        "description": {
+            "type": "text"
+        },
+        "timeZone": {
+            "type": "enum",
+            "default": "",
+            "view": "views/preferences/fields/time-zone"
+        },
+        "timeRanges": {
+            "type": "jsonArray",
+            "default": [
+                ["9:00", "17:00"]
+            ],
+            "view": "views/working-time-calendar/fields/time-ranges",
+            "required": true
+        },
+        "weekday0": {
+            "type": "bool",
+            "default": false
+        },
+        "weekday1": {
+            "type": "bool",
+            "default": true
+        },
+        "weekday2": {
+            "type": "bool",
+            "default": true
+        },
+        "weekday3": {
+            "type": "bool",
+            "default": true
+        },
+        "weekday4": {
+            "type": "bool",
+            "default": true
+        },
+        "weekday5": {
+            "type": "bool",
+            "default": true
+        },
+        "weekday6": {
+            "type": "bool",
+            "default": false
+        },
+        "weekday0TimeRanges": {
+            "type": "jsonArray",
+            "default": null,
+            "view": "views/working-time-calendar/fields/time-ranges"
+        },
+        "weekday1TimeRanges": {
+            "type": "jsonArray",
+            "default": null,
+            "view": "views/working-time-calendar/fields/time-ranges"
+        },
+        "weekday2TimeRanges": {
+            "type": "jsonArray",
+            "default": null,
+            "view": "views/working-time-calendar/fields/time-ranges"
+        },
+        "weekday3TimeRanges": {
+            "type": "jsonArray",
+            "default": null,
+            "view": "views/working-time-calendar/fields/time-ranges"
+        },
+        "weekday4TimeRanges": {
+            "type": "jsonArray",
+            "default": null,
+            "view": "views/working-time-calendar/fields/time-ranges"
+        },
+        "weekday5TimeRanges": {
+            "type": "jsonArray",
+            "default": null,
+            "view": "views/working-time-calendar/fields/time-ranges"
+        },
+        "weekday6TimeRanges": {
+            "type": "jsonArray",
+            "default": null,
+            "view": "views/working-time-calendar/fields/time-ranges"
+        },
+        "teams": {
+            "type": "linkMultiple",
+            "readOnly": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "ranges": {
+            "type": "hasMany",
+            "foreign": "calendars",
+            "entity": "WorkingTimeRange"
+        },
+        "teams": {
+            "type": "hasMany",
+            "foreign": "workingTimeCalendar",
+            "entity": "Team",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    },
+    "collection": {
+        "orderBy": "name",
+        "order": "asc",
+        "textFilterFields": ["name"]
+    }
+}

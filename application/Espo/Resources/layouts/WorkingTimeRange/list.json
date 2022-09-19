@@ -1,0 +1,28 @@
+[
+    {
+        "name": "type",
+        "width": 16,
+        "link": true
+    },
+    {
+        "name": "dateStart",
+        "width": 14
+    },
+    {
+        "name": "dateEnd",
+        "width": 14
+    },
+    {
+        "name": "name"
+    },
+    {
+        "name": "calendars",
+        "notSortable": true,
+        "width": 14
+    },
+    {
+        "name": "users",
+        "notSortable": true,
+        "width": 14
+    }
+]

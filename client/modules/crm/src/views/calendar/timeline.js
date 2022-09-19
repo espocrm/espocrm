@@ -424,7 +424,24 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                     'date-end': o.dateEnd,
                     type: 'background'
                 };
-            } else {
+            } else if (o.isWorkingRange) {
+                event = {
+                    className: 'working',
+                    group: userId,
+                    'date-start': o.dateStart,
+                    'date-end': o.dateEnd,
+                    type: 'background',
+                };
+            } else if (o.isNonWorkingRange) {
+                event = {
+                    className: 'non-working',
+                    group: userId,
+                    'date-start': o.dateStart,
+                    'date-end': o.dateEnd,
+                    type: 'background',
+                };
+            }
+            else {
                 event = {
                     content: this.getHelper().escapeString(o.name),
                     title: this.getHelper().escapeString(o.name),
@@ -484,13 +501,22 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             }
 
             this.fillColor(event);
-            this.handleStatus(event);
+
+            if (!o.isNonWorkingRange) {
+                this.handleStatus(event);
+            }
 
             return event;
         },
 
         fillColor: function (event) {
-            var color = this.colors[event.scope];
+            let key = event.scope;
+
+            if (event.className === 'non-working') {
+                key = 'bg';
+            }
+
+            let color = this.colors[key];
 
             if (event.color) {
                 color = event.color;
@@ -500,11 +526,13 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 color = this.getColorFromScopeName(event.scope);
             }
 
-            /*if (color) {
-                color = this.shadeColor(color, 0.15);
-            }*/
-
-            if (~this.completedStatusList.indexOf(event.status) || ~this.canceledStatusList.indexOf(event.status)) {
+            if (
+                event.status &&
+                (
+                    ~this.completedStatusList.indexOf(event.status) ||
+                    ~this.canceledStatusList.indexOf(event.status)
+                )
+            ) {
             	color = this.shadeColor(color, 0.4);
             }
 
@@ -758,7 +786,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
         },
 
         runFetch: function () {
-            this.fetchEvents(this.start, this.end, (eventList) => {
+            this.fetchEvents(this.start, this.end, eventList => {
                 let itemsDataSet = new Vis.DataSet(eventList);
 
                 this.timeline.setItems(itemsDataSet);
@@ -1029,30 +1057,23 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
             url += '&scopeList=' + encodeURIComponent(this.enabledScopeList.join(','));
 
-            this.ajaxGetRequest(url).then((data) => {
+            this.ajaxGetRequest(url).then(data => {
                 this.fetchedStart = from.clone();
                 this.fetchedEnd = to.clone();
 
-                var eventList = [];
+                let eventList = [];
 
                 for (let userId in data) {
-                    var userEventList = data[userId].eventList;
+                    let userEventList = data[userId];
 
-                    userEventList.forEach((item) => {
+                    userEventList.forEach(item => {
                         item.userId = userId;
-                        eventList.push(item);
-                    });
 
-                    var userBusyRangeList = data[userId].busyRangeList;
-
-                    userBusyRangeList.forEach(item =>{
-                        item.userId = userId;
-                        item.isBusyRange = true;
                         eventList.push(item);
                     });
                 }
 
-                var convertedEventList = this.convertEventList(eventList);
+                let convertedEventList = this.convertEventList(eventList);
 
                 callback(convertedEventList);
 
@@ -1069,17 +1090,17 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
         actionShowSharedCalendarOptions: function () {
             this.createView('dialog', 'crm:views/calendar/modals/shared-options', {
                 userList: this.userList
-            }, function (view) {
+            }, view => {
                 view.render();
 
-                this.listenToOnce(view, 'save', function (data) {
+                this.listenToOnce(view, 'save', data => {
                     this.userList = data.userList;
                     this.storeUserList();
                     this.initGroupsDataSet();
                     this.timeline.setGroups(this.groupsDataSet);
                     this.runFetch();
-                }, this);
-            }, this);
+                });
+            });
         },
 
         actionAddUser: function () {
@@ -1098,12 +1119,12 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 scope: 'User',
                 createButton: false,
                 boolFilterList: boolFilterList,
-                multiple: true
-            }, (view) => {
+                multiple: true,
+            }, view => {
                 view.render();
                 this.notify(false);
 
-                this.listenToOnce(view, 'select', (modelList) => {
+                this.listenToOnce(view, 'select', modelList => {
                     modelList.forEach(model => {
                         this.addSharedCalenderUser(model.id, model.get('name'));
                     });
@@ -1135,7 +1156,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             var index = 0;
             var j = 0;
 
-            for (var i = 0; i < scopeList.length; i++) {
+            for (let i = 0; i < scopeList.length; i++) {
                 if (scopeList[i] in colors) {
                     continue;
                 }

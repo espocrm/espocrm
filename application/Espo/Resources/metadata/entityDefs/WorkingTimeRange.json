@@ -1,0 +1,89 @@
+{
+    "fields": {
+        "timeRanges": {
+            "type": "jsonArray",
+            "default": null,
+            "view": "views/working-time-calendar/fields/time-ranges"
+        },
+        "dateStart": {
+            "type": "date",
+            "required": true
+        },
+        "dateEnd": {
+            "type": "date",
+            "required": true,
+            "view": "views/working-time-range/fields/date-end"
+        },
+        "type": {
+            "type": "enum",
+            "options": [
+                "Non-working",
+                "Working"
+            ],
+            "default": "Non-working",
+            "index": true,
+            "maxLength": 11
+        },
+        "name": {
+            "type": "varchar"
+        },
+        "description": {
+            "type": "text"
+        },
+        "calendars": {
+            "type": "linkMultiple"
+        },
+        "users": {
+            "type": "linkMultiple",
+            "view": "views/working-time-range/fields/users"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "calendars": {
+            "type": "hasMany",
+            "foreign": "ranges",
+            "entity": "WorkingTimeCalendar"
+        },
+        "users": {
+            "type": "hasMany",
+            "foreign": "workingTimeRanges",
+            "entity": "User"
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    },
+    "collection": {
+        "orderBy": "dateStart",
+        "order": "asc"
+    },
+    "indexes": {
+        "typeRange": {
+            "columns": ["type", "dateStart", "dateEnd"]
+        },
+        "type": {
+            "columns": ["type"]
+        }
+    }
+}

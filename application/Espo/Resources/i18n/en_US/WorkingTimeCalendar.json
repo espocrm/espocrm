@@ -1,0 +1,27 @@
+{
+    "labels": {
+        "Create WorkingTimeCalendar": "Create Calendar",
+        "Ranges": "Ranges"
+    },
+    "fields": {
+        "timeZone": "Time Zone",
+        "timeRanges": "Workday Schedule",
+        "weekday0": "Sun",
+        "weekday1": "Mon",
+        "weekday2": "Tue",
+        "weekday3": "Wed",
+        "weekday4": "Thu",
+        "weekday5": "Fri",
+        "weekday6": "Sat",
+        "weekday0TimeRanges": "Sun Schedule",
+        "weekday1TimeRanges": "Mon Schedule",
+        "weekday2TimeRanges": "Tue Schedule",
+        "weekday3TimeRanges": "Wed Schedule",
+        "weekday4TimeRanges": "Thu Schedule",
+        "weekday5TimeRanges": "Fri Schedule",
+        "weekday6TimeRanges": "Sat Schedule"
+    },
+    "links": {
+        "ranges": "Ranges"
+    }
+}

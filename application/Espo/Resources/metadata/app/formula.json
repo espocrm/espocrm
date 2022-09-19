@@ -458,6 +458,36 @@
             "returnType": "string"
         },
         {
+            "name": "ext\\workingCalendar\\addWorkingDays",
+            "insertText": "ext\\workingCalendar\\addWorkingDays(DATE, DAYS)",
+            "returnType": "string|null"
+        },
+        {
+            "name": "ext\\workingCalendar\\findClosestWorkingTime",
+            "insertText": "ext\\workingCalendar\\findClosestWorkingTime(DATE)",
+            "returnType": "string|null"
+        },
+        {
+            "name": "ext\\workingCalendar\\getSummedWorkingHours",
+            "insertText": "ext\\workingCalendar\\getSummedWorkingHours(FROM, TO)",
+            "returnType": "float"
+        },
+        {
+            "name": "ext\\workingCalendar\\getWorkingDays",
+            "insertText": "ext\\workingCalendar\\getWorkingDays(FROM, TO)",
+            "returnType": "int"
+        },
+        {
+            "name": "ext\\workingCalendar\\hasWorkingTime",
+            "insertText": "ext\\workingCalendar\\hasWorkingTime(FROM, TO)",
+            "returnType": "bool"
+        },
+        {
+            "name": "ext\\workingCalendar\\isWorkingDay",
+            "insertText": "ext\\workingCalendar\\isWorkingDay(DATE)",
+            "returnType": "bool"
+        },
+        {
             "name": "ext\\user\\sendAccessInfo",
             "insertText": "ext\\user\\sendAccessInfo(USER_ID)"
         }

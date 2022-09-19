@@ -595,6 +595,16 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
+         * Called on mode change and on value change before re-rendering.
+         * To be used for additional initialization that depends on field
+         * values or mode.
+         *
+         * @protected
+         * @returns {Promise|undefined}
+         */
+        prepare: function () {},
+
+        /**
          * @private
          * @returns {Promise}
          */
@@ -618,30 +628,30 @@ define('views/fields/base', ['view'], function (Dep) {
          * Additional initialization for the detail mode.
          *
          * @protected
-         * @returns {Promise}
+         * @returns {Promise|undefined}
          */
         onDetailModeSet: function () {
-            return Promise.resolve();
+            return this.prepare();
         },
 
         /**
          * Additional initialization for the edit mode.
          *
          * @protected
-         * @returns {Promise}
+         * @returns {Promise|undefined}
          */
         onEditModeSet: function () {
-            return Promise.resolve();
+            return this.prepare();
         },
 
         /**
          * Additional initialization for the list mode.
          *
          * @protected
-         * @returns {Promise}
+         * @returns {Promise|undefined}
          */
         onListModeSet: function () {
-            return Promise.resolve();
+            return this.prepare();
         },
 
         /**
@@ -786,20 +796,26 @@ define('views/fields/base', ['view'], function (Dep) {
                 this.attributeList = this.getAttributeList(); // for backward compatibility, to be removed
 
                 this.listenTo(this.model, 'change', (model, options) => {
-                    if (this.isRendered() || this.isBeingRendered()) {
-                        if (options.ui) {
-                            return;
+                    if (options.ui) {
+                        return;
+                    }
+
+                    let changed = false;
+
+                    for (let attribute of this.getAttributeList()) {
+                        if (model.hasChanged(attribute)) {
+                            changed = true;
+
+                            break;
                         }
+                    }
 
-                        let changed = false;
+                    if (!changed) {
+                        return;
+                    }
 
-                        this.getAttributeList().forEach(attribute => {
-                            if (model.hasChanged(attribute)) {
-                                changed = true;
-                            }
-                        });
-
-                        if (!changed) {
+                    let reRender = () => {
+                        if (!this.isRendered() && !this.isBeingRendered()) {
                             return;
                         }
 
@@ -810,7 +826,17 @@ define('views/fields/base', ['view'], function (Dep) {
                         if (options.highlight) {
                             this.trigger('highlight');
                         }
+                    };
+
+                    let promise = this.prepare();
+
+                    if (promise) {
+                        promise.then(() => reRender());
+
+                        return;
                     }
+
+                    reRender();
                 });
 
                 this.listenTo(this, 'change', () => {

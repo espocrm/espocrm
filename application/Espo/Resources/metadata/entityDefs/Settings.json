@@ -750,6 +750,11 @@
         "smsProvider": {
             "type": "enum",
             "view": "views/settings/fields/sms-provider"
+        },
+        "workingTimeCalendar": {
+            "type": "link",
+            "tooltip": true,
+            "entity": "WorkingTimeCalendar"
         }
     }
 }

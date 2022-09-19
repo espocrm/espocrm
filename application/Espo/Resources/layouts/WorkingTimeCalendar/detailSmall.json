@@ -1,0 +1,17 @@
+[
+    {
+        "rows": [
+            [{"name": "name"}]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "timeRanges"}, {"name": "timeZone"}]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "description"}]
+        ]
+    }
+]

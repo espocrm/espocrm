@@ -55,7 +55,9 @@
         "Currency": "Currency",
         "LayoutSet": "Layout Set",
         "Webhook": "Webhook",
-        "Mass Action": "Mass Action"
+        "Mass Action": "Mass Action",
+        "WorkingTimeCalendar": "Working Time Calendar",
+        "WorkingTimeRange": "Working Time Range"
     },
     "scopeNamesPlural": {
         "Note": "Notes",
@@ -101,7 +103,9 @@
         "DashboardTemplate": "Dashboard Templates",
         "Currency": "Currency",
         "LayoutSet": "Layout Sets",
-        "Webhook": "Webhooks"
+        "Webhook": "Webhooks",
+        "WorkingTimeCalendar": "Working Time Calendars",
+        "WorkingTimeRange": "Working Time Ranges"
     },
     "labels": {
         "Sort": "Sort",

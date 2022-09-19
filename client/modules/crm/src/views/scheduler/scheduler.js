@@ -48,6 +48,14 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             this.endField = this.options.endField || 'dateEnd';
             this.assignedUserField = this.options.assignedUserField || 'assignedUser';
 
+            this.colors = Espo.Utils
+                .clone(this.getMetadata().get('clientDefs.Calendar.colors') || {});
+
+            this.colors = _.extend(
+                this.colors,
+                Espo.Utils.clone(this.getHelper().themeManager.getParam('calendarColors') || {}),
+            );
+
             var usersFieldDefault = 'users';
 
             if (!this.model.hasLink('users') && this.model.hasLink('assignedUsers')) {
@@ -134,7 +142,9 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
 
             this.$timeline.empty();
             this.$timeline.append(
-                '<div class="revert-margin">'+this.translate('No Data')+'</div>'
+                $('<div>')
+                    .addClass('revert-margin')
+                    .text(this.translate('No Data'))
             );
         },
 
@@ -168,14 +178,14 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                 $timeline.css('min-height', this.lastHeight + 'px');
             }
 
-            this.fetch(this.start, this.end, function (eventList) {
+            this.fetch(this.start, this.end, eventList => {
                 var itemsDataSet = new Vis.DataSet(eventList);
 
                 var timeline = this.timeline =new Vis.Timeline($timeline.get(0), itemsDataSet, this.groupsDataSet, {
                     dataAttributes: 'all',
                     start: this.start.toDate(),
                     end: this.end.toDate(),
-                    moment: function (date) {
+                    moment: date => {
                         var m = moment(date);
 
                         if (date && date.noTimeZone) {
@@ -183,7 +193,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                         }
 
                         return m.tz(this.getDateTime().getTimeZone());
-                    }.bind(this),
+                    },
                     format: this.getFormatObject(),
                     zoomable: false,
                     moveable: true,
@@ -213,7 +223,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
 
                 $timeline.css('min-height', '');
 
-                timeline.on('rangechanged', function (e) {
+                timeline.on('rangechanged', (e) => {
                     e.skipClick = true;
 
                     this.blockClick = true;
@@ -224,13 +234,12 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                     this.end = moment(e.end);
 
                     this.updateRange();
-                }.bind(this));
+                });
 
-                setTimeout(function () {
+                setTimeout(() => {
                     this.lastHeight = $timeline.height();
-                }.bind(this), 500);
-
-            }.bind(this));
+                }, 500);
+            });
         },
 
         updateEvent: function () {
@@ -246,8 +255,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
 
         updateRange: function () {
             if (
-                (this.start.unix() < this.fetchedStart.unix() + this.rangeMarginThreshold)
-                ||
+                (this.start.unix() < this.fetchedStart.unix() + this.rangeMarginThreshold) ||
                 (this.end.unix() > this.fetchedEnd.unix() - this.rangeMarginThreshold)
             ) {
                 this.runFetch();
@@ -274,7 +282,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                 this.eventStart = moment.tz(startS, this.getDateTime().getTimeZone());
                 this.eventEnd = moment.tz(endS, this.getDateTime().getTimeZone());
                 this.eventEnd.add(1, 'day');
-            }else {
+            } else {
                 this.eventStart = moment.utc(startS).tz(this.getDateTime().getTimeZone());
                 this.eventEnd = moment.utc(endS).tz(this.getDateTime().getTimeZone());
             }
@@ -305,11 +313,11 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
         },
 
         runFetch: function () {
-            this.fetch(this.start, this.end, function (eventList) {
+            this.fetch(this.start, this.end, eventList => {
                 var itemsDataSet = new this.Vis.DataSet(eventList);
 
                 this.timeline.setItems(itemsDataSet);
-            }.bind(this));
+            });
         },
 
         fetch: function (from, to, callback) {
@@ -328,42 +336,46 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                 url += '&entityId=' + this.model.id;
             }
 
-            this.ajaxGetRequest(url).then(function (data) {
+            this.ajaxGetRequest(url).then(data => {
                 this.fetchedStart = from.clone();
                 this.fetchedEnd = to.clone();
 
-                var eventList = [];
+                let eventList = [];
 
-                for (var userId in data) {
-                    data[userId].forEach(function (item) {
+                for (let userId in data) {
+                    let itemList = data[userId]
+                        .filter(item => !item.isBusyRange)
+                        .concat(
+                            data[userId].filter(item => item.isBusyRange)
+                        );
+
+                    itemList.forEach(item => {
                         item.userId = userId;
-                        item.isBusyRange = true;
+
                         eventList.push(item);
-                    }, this);
+                    });
                 }
 
                 this.busyEventList = Espo.Utils.cloneDeep(eventList);
 
-                var convertedEventList = this.convertEventList(eventList);
+                let convertedEventList = this.convertEventList(eventList);
 
                 this.addEvent(convertedEventList);
 
                 callback(convertedEventList);
-
-            }.bind(this));
+            });
         },
 
         addEvent: function (list) {
-            this.getCurrentItemList().forEach(function (item) {
+            this.getCurrentItemList().forEach(item => {
                 list.push(item);
-            }, this);
+            });
         },
 
         getCurrentItemList: function () {
             var list = [];
 
             var o = {
-                type: 'point',
                 start: this.eventStart.clone(),
                 end: this.eventEnd.clone(),
                 type: 'background',
@@ -375,16 +387,19 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
 
             if (color) {
                 o.style += '; border-color: ' + color;
+
                 var rgb = this.hexToRgb(color);
+
                 o.style += '; background-color: rgba('+rgb.r+', '+rgb.g+', '+rgb.b+', 0.05)';
             }
 
-            this.userIdList.forEach(function (id) {
+            this.userIdList.forEach(id => {
                 var c = Espo.Utils.clone(o);
                 c.group = id;
                 c.id = 'event-' + id;
+
                 list.push(c);
-            }, this);
+            });
 
             return list;
         },
@@ -392,7 +407,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
         convertEventList: function (list) {
             var resultList = [];
 
-            list.forEach(function (item) {
+            list.forEach(item => {
                 var event = this.convertEvent(item);
 
                 if (!event) {
@@ -400,7 +415,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                 }
 
                 resultList.push(event);
-            }, this);
+            });
 
             return resultList;
         },
@@ -416,6 +431,27 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                     'date-end': o.dateEnd,
                     type: 'background',
                 };
+            } else if (o.isWorkingRange) {
+                event = {
+                    className: 'working',
+                    group: o.userId,
+                    'date-start': o.dateStart,
+                    'date-end': o.dateEnd,
+                    type: 'background',
+                };
+            } else if (o.isNonWorkingRange) {
+                event = {
+                    className: 'non-working',
+                    group: o.userId,
+                    'date-start': o.dateStart,
+                    'date-end': o.dateEnd,
+                    type: 'background',
+                };
+
+                let color = this.colors['bg'];
+
+                event.style = 'background-color:' + color + ';';
+                event.style += 'border-color:' + color + ';';
             }
 
             if (o.dateStart) {
@@ -425,6 +461,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                     event.start = moment.tz(o.dateStartDate, this.getDateTime().getTimeZone());
                 }
             }
+
             if (o.dateEnd) {
                 if (!o.dateEndDate) {
                     event.end = this.getDateTime().toMoment(o.dateEnd);
@@ -433,7 +470,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                 }
             }
 
-            if (o.isBusyRange) {
+            if (o.isBusyRange || o.isNonWorkingRange) {
                 return event;
             }
         },
@@ -456,23 +493,22 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
 
             this.userIdList = userIdList;
 
-            userIdList.forEach(function (id, i) {
+            userIdList.forEach((id, i) => {
                 list.push({
                     id: id,
                     content: this.getGroupContent(id, names[id] || id),
                     order: i,
                 });
-            }, this);
+            });
 
             this.groupsDataSet = new this.Vis.DataSet(list);
         },
 
         getGroupContent: function (id, name) {
-            if (name) {
-                name = this.getHelper().escapeString(name);
-            }
             if (this.calendarType === 'single') {
-                return name;
+                return $('<span>')
+                    .text(name)
+                    .get(0).outerHTML;
             }
 
             var avatarHtml = this.getAvatarHtml(id);
@@ -481,9 +517,15 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                 avatarHtml += ' ';
             }
 
-            var html = avatarHtml + '<span data-id="'+id+'" class="group-title">' + name + '</span>';
-
-            return html;
+            return $('<span>')
+                .append(
+                    avatarHtml,
+                    $('<span>')
+                        .attr('data-id', id)
+                        .addClass('group-title')
+                        .text(name)
+                )
+                .get(0).innerHTML;
         },
 
         getAvatarHtml: function (id) {
@@ -492,7 +534,6 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             }
 
             var t;
-
             var cache = this.getCache();
 
             if (cache) {
@@ -501,12 +542,15 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                 t = Date.now();
             }
 
-            return '<img class="avatar avatar-link" width="14"'+
-                ' src="'+this.getBasePath()+'?entryPoint=avatar&size=small&id=' + id + '&t='+t+'">';
+            return $('<img>')
+                .addClass('avatar avatar-link')
+                .attr('width', '14')
+                .attr('src', this.getBasePath() + '?entryPoint=avatar&size=small&id=' + id + '&t=' + t)
+                .get(0).outerHTML;
         },
 
         getFormatObject: function () {
-            var format = {
+            return {
                 minorLabels: {
                     millisecond: 'SSS',
                     second: 's',
@@ -528,8 +572,6 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                     year: ''
                 }
             };
-
-            return format;
         },
 
         getColorFromScopeName: function (scope) {
@@ -548,6 +590,5 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                 b: parseInt(result[3], 16),
             } : null;
         },
-
     });
 });
