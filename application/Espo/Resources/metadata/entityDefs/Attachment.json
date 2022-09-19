@@ -22,7 +22,8 @@
         "related": {
             "type": "linkParent",
             "noLoad": true,
-            "view": "views/attachment/fields/parent"
+            "view": "views/attachment/fields/parent",
+            "validatorClassName": "Espo\\Classes\\FieldValidators\\Attachment\\Related"
         },
         "sourceId": {
             "type": "varchar",

@@ -8,5 +8,8 @@
       "Running": "In esecuzione",
       "Failed": "Fallito"
     }
+  },
+  "messages": {
+    "infoText": "L'azione di massa è in fase di elaborazione in idle da parte di cron. Può richiedere del tempo per essere completata. La chiusura di questa finestra di dialogo non influirà sul processo di esecuzione."
   }
 }

@@ -67,6 +67,7 @@
     "Security": "Sicurezza",
     "Reset 2FA": "Ripristina 2FA",
     "Secret": "Segreto",
+    "Send Password Change Link": "Invia Link per il Cambio Password",
     "Send Code": "Invia Codice"
   },
   "tooltips": {
@@ -102,7 +103,15 @@
     "generateAndSendNewPassword": "Una nuova password verrà generata e inviata all'indirizzo e-mail dell'utente.",
     "security2FaResetConfimation": "Sei sicuro di voler ripristinare le attuali impostazioni 2FA?",
     "ldapUserInEspoNotFound": "Utente non trovato in EspoCRM. Contatta l’amministratore di sistema per creare un utente.",
-    "auth2FARequiredHeader": "Autenticazione a 2 fattori richiesta"
+    "auth2FARequiredHeader": "Autenticazione a 2 fattori richiesta",
+    "auth2FARequired": "È necessario impostare l'autenticazione a due fattori. Usa un'applicazione di autenticazione sul tuo cellulare (ad esempio, Google Authenticator).",
+    "sendPasswordChangeLinkConfirmation": "Verrà inviata una mail con un link univoco che consentirà all'utente di modificare la propria password. Il link scadrà dopo un determinato periodo di tempo.",
+    "yourAuthenticationCode": "Codice di autenticazione: {code}.",
+    "choose2FaSmsPhoneNumber": "Seleziona un numero di telefono da utilizzare per la 2FA.",
+    "choose2FaEmailAddress": "Seleziona un indirizzo email che verrà utilizzato per la 2FA. Si consiglia di utilizzare un indirizzo email non principale.",
+    "enterCodeSentInEmail": "Inserisci il codice inviato al tuo indirizzo email.",
+    "enterCodeSentBySms": "Inserisci il codice inviato via SMS al tuo numero di telefono.",
+    "passwordChangeRequestNotFound": "La richiesta di modifica della password non è stata trovata. Potrebbe essere scaduta. Prova ad avviare un nuovo recupero della password dalla [Pagina di Login]({url})."
   },
   "boolFilters": {
     "onlyMyTeam": "Solo per il mio Team"

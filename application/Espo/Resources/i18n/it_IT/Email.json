@@ -47,7 +47,8 @@
     "replyToEmailAddresses": "Rispondi-a indirizzo email",
     "fromEmailAddress": "Dall'indirizzo (collegamento)",
     "replyToName": "Rispondi a Nome",
-    "replyToAddress": "Indirizzo di risposta"
+    "replyToAddress": "Indirizzo di risposta",
+    "event": "Evento"
   },
   "links": {
     "replied": "Risposto",
@@ -102,7 +103,8 @@
     "Folders": "Cartelle",
     "View Users": "Visualizza utenti",
     "No Subject": "Nessun Oggetto",
-    "Insert Field": "Inserisci Campo"
+    "Insert Field": "Inserisci Campo",
+    "Event": "Evento"
   },
   "messages": {
     "testEmailSent": "L'email di prova è stata inviata",

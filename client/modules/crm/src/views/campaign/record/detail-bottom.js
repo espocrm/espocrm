@@ -56,19 +56,24 @@ define('crm:views/campaign/record/detail-bottom', 'views/record/detail-bottom', 
                 index: -1,
             });
 
-            this.listenTo(this.model, 'change', function () {
+            this.listenTo(this.model, 'change', () => {
                 this.manageMassEmails();
-            }, this);
+            });
         },
 
         afterRender: function () {
-            Dep.prototype.setupPanels.call(this);
+            Dep.prototype.afterRender.call(this);
+
             this.manageMassEmails();
         },
 
         manageMassEmails: function () {
             var parentView = this.getParentView();
-            if (!parentView) return;
+
+            if (!parentView) {
+                return;
+            }
+
             if (~['Email', 'Newsletter'].indexOf(this.model.get('type'))) {
                 parentView.showPanel('massEmails');
                 parentView.showPanel('trackingUrls');

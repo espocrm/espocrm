@@ -26,14 +26,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-account/fields/folders', 'views/fields/array', function (Dep) {
+define('views/email-account/fields/folders', ['views/fields/array'], function (Dep) {
 
     return Dep.extend({
 
         getFoldersUrl: 'EmailAccount/action/getFolders',
 
+        setupOptions: function () {
+            this.params.options = ['INBOX'];
+        },
+
         fetchFolders: function () {
-            return new Promise(function (resolve) {
+            return new Promise(resolve => {
                 var data = {
                     host: this.model.get('host'),
                     port: this.model.get('port'),
@@ -52,54 +56,45 @@ define('views/email-account/fields/folders', 'views/fields/array', function (Dep
                 }
 
                 Espo.Ajax.postRequest(this.getFoldersUrl, data)
-                    .then(
-                        function (folders) {
-                            resolve(folders);
-                        }.bind(this)
-                    )
-                    .fail(
-                        function (xhr) {
-                            Espo.Ui.error(this.translate('couldNotConnectToImap', 'messages', 'EmailAccount'));
+                    .then(folders => {
+                        resolve(folders);
+                    })
+                    .catch(xhr =>{
+                        Espo.Ui.error(this.translate('couldNotConnectToImap', 'messages', 'EmailAccount'));
 
-                            xhr.errorIsHandled = true;
+                        xhr.errorIsHandled = true;
 
-                            resolve(["INBOX"]);
-                        }.bind(this)
-                    );
-            }.bind(this));
+                        resolve(["INBOX"]);
+                    });
+            });
         },
 
         actionAddItem: function () {
             Espo.Ui.notify(this.translate('loading', 'messages'));
 
             this.fetchFolders()
-                .then(
-                    function (options) {
-                        Espo.Ui.notify(false);
+                .then(options => {
+                    Espo.Ui.notify(false);
 
-                        this.createView( 'addModal', this.addItemModalView, {options: options})
-                            .then(
-                                function (view) {
-                                    view.render();
+                    this.createView( 'addModal', this.addItemModalView, {options: options})
+                        .then(view => {
+                            view.render();
 
-                                    view.once('add', function (item) {
-                                        this.addValue(item);
+                            view.once('add', item =>{
+                                this.addValue(item);
 
-                                        view.close();
-                                    }.bind(this));
+                                view.close();
+                            });
 
-                                    view.once('add-mass', function (items) {
-                                        items.forEach(function (item) {
-                                            this.addValue(item);
-                                        }.bind(this));
+                            view.once('add-mass', items => {
+                                items.forEach(item => {
+                                    this.addValue(item);
+                                });
 
-                                        view.close();
-                                    }.bind(this));
-                                }.bind(this)
-                        );
-                    }.bind(this)
-                );
-
+                                view.close();
+                            });
+                        });
+                });
         },
     });
 });

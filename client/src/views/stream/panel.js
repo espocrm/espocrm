@@ -76,7 +76,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     }
                 }*/
             },
-            'keyup textarea[data-name="post"]': function () {
+            'input textarea[data-name="post"]': function () {
                 this.controlPreviewButton();
                 this.controlPostButtonAvailability(this.$textarea.val());
             },

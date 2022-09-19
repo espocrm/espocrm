@@ -24,7 +24,8 @@
     "layoutSet": "Layout"
   },
   "tooltips": {
-    "portalRoles": "I Ruoli specificati verranno applicati a tutti gli utenti di questo portale ."
+    "portalRoles": "I Ruoli specificati verranno applicati a tutti gli utenti di questo portale .",
+    "layoutSet": "Fornisce la possibilità di avere layout diversi da quelli standard."
   },
   "labels": {
     "Create Portal": "Crea Portale",

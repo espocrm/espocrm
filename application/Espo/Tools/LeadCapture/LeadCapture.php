@@ -730,6 +730,12 @@ class LeadCapture
             $lead->set('campaignId', $leadCapture->getCampaignId());
         }
 
+        $teamId = $leadCapture->getTargetTeamId();
+
+        if ($teamId) {
+            $lead->addLinkMultipleId('teams', $teamId);
+        }
+
         // Skipping the 'required' validation.
         $validationParams = FieldValidationParams::create()->withTypeSkipFieldList('required', $fieldList);
 

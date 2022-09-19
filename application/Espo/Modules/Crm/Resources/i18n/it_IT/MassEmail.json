@@ -50,7 +50,7 @@
     "storeSentEmails": "Le email verranno salvate nel CRM"
   },
   "presetFilters": {
-    "actual": "Attuale",
+    "actual": "In Corso",
     "complete": "Completo"
   }
 }

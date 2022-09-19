@@ -121,8 +121,15 @@
     "auth2FA": "Abilita autenticazione a 2 fattori",
     "auth2FAMethodList": "Metodi 2FA disponibili\n",
     "personNameFormat": "Formato nome persona",
+    "newNotificationCountInTitle": "Visualizza il numero delle nuove notifiche nel titolo della pagina",
     "massEmailVerp": "Usa VERP",
-    "smsProvider": "Provider SMS"
+    "passwordRecoveryForInternalUsersDisabled": "Disabilita il recupero della password per gli utenti interni",
+    "passwordRecoveryNoExposure": "Evita l'esposizione dell'indirizzo email nel modulo di recupero della password",
+    "auth2FAForced": "Forza gli utenti normali a impostare la 2FA",
+    "smsProvider": "Provider SMS",
+    "outboundSmsFromNumber": "SMS Dal Numero",
+    "attachmentUploadMaxSize": "Dimensione Massima di Upload (Mb)",
+    "attachmentUploadChunkSize": "Dimensione del blocco di Upload (Mb)"
   },
   "tooltips": {
     "recordsPerPage": "Numero di records inizialmente mostrati in vista elenco .",
@@ -173,7 +180,25 @@
     "cronDisabled": "Cron non funzionerà.",
     "maintenanceMode": "Solo gli amministratori avranno accesso al sistema.",
     "ldapAccountCanonicalForm": "Il tipo di modulo canonico del tuo account. Ci sono 4 opzioni:\n\n- \"Dn\": il modulo nel formato \"CN = tester, OU = espocrm, DC = test, DC = lan\".\n\n- \"Nome utente\": il modulo \"tester\".\n\n- \"Barra rovesciata\": il modulo \"AZIENDA \\ tester\".\n\n- \"Principal\": il modulo \"tester@company.com\".",
-    "useWebSocket": "WebSocket permette una comunicazione interattiva bidirezionale tra un server e un browser. Richiede la configurazione del daemon WebSocket sul tuo server. Controlla la documentazione per maggiori informazioni."
+    "displayListViewRecordCount": "Il numero totale di record sarà visualizzato nella vista elenco.",
+    "currencyList": "Quali valute saranno disponibili nel sistema.",
+    "activitiesEntityList": "Quali record saranno disponibili nel pannello Attività.",
+    "historyEntityList": "Quali record saranno disponibili nel pannello Storico.",
+    "calendarEntityList": "Quali record saranno disponibili nel Calendario.",
+    "addressStateList": "Suggerimenti di Stato per i campi degli indirizzi.",
+    "addressCityList": "Suggerimenti per le città per i campi degli indirizzi.",
+    "addressCountryList": "Suggerimenti per i Paesi per i campi degli indirizzi.",
+    "exportDisabled": "Gli utenti non saranno in grado di esportare i record. Solo gli amministratori potranno farlo.",
+    "globalSearchEntityList": "Quali record si possono ricercare con la Ricerca globale.",
+    "siteUrl": "L'URL di quest'istanza di EspoCRM. È necessario cambiarlo nel caso in cui ci si sposti su un altro dominio.",
+    "useCache": "Non è consigliabile disabilitarlo, a meno che non sia per scopi di sviluppo.",
+    "useWebSocket": "WebSocket permette una comunicazione interattiva bidirezionale tra un server e un browser. Richiede la configurazione del daemon WebSocket sul tuo server. Controlla la documentazione per maggiori informazioni.",
+    "passwordRecoveryForInternalUsersDisabled": "Solo gli utenti dei portali potranno recuperare la password.",
+    "passwordRecoveryNoExposure": "Non sarà possibile determinare se uno specifico indirizzo email è registrato nel sistema.",
+    "emailAddressLookupEntityTypeList": "Per il riempimento automatico degli indirizzi e-mail.",
+    "emailNotificationsDelay": "Un messaggio può essere modificato entro l'intervallo di tempo specificato prima dell'invio della notifica.",
+    "busyRangesEntityList": "Cosa viene preso in considerazione quando vengono mostrati gli intervalli di tempo occupati nello scheduler e nella timeline.",
+    "recordsPerPageSelect": "Numero di record visualizzati inizialmente quando si selezionano i record."
   },
   "labels": {
     "System": "Sistema",
@@ -190,7 +215,8 @@
     "Search": "Ricerca",
     "Misc": "Varie",
     "2-Factor Authentication": "Autenticazione a 2 fattori",
-    "Group Tab": "Gruppo Schede"
+    "Group Tab": "Gruppo Schede",
+    "Attachments": "Allegati"
   },
   "messages": {
     "ldapTestConnection": "La connessione è stata stabilita con successo"

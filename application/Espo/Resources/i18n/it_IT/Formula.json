@@ -1,5 +1,6 @@
 {
   "labels": {
+    "Check Syntax": "Controlla Sintassi",
     "Run": "Avvia"
   },
   "fields": {
@@ -7,8 +8,13 @@
     "error": "Errore"
   },
   "messages": {
+    "runSuccess": "Eseguito con successo.",
     "runError": "Errore",
     "checkSyntaxSuccess": "La Sintassi è corretta",
-    "checkSyntaxError": "Errore di Sintassi"
+    "checkSyntaxError": "Errore di Sintassi",
+    "emptyScript": "Lo script è vuoto."
+  },
+  "tooltips": {
+    "output": "Mostra i risultati con la funzione `output\\printLine`."
   }
 }

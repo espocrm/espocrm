@@ -8,7 +8,8 @@
     "groupEmailAccountPermission": "Permesso account email di gruppo",
     "exportPermission": "Esporta permessi",
     "dataPrivacyPermission": "Autorizzazione privacy dati",
-    "massUpdatePermission": "Autorizzazione per l'aggiornamento di massa"
+    "massUpdatePermission": "Autorizzazione per l'aggiornamento di massa",
+    "followerManagementPermission": "Permessi di Gestione dei Seguaci"
   },
   "links": {
     "users": "Utenti"
@@ -20,7 +21,8 @@
     "groupEmailAccountPermission": "Definisce un accesso agli account di posta elettronica di gruppo, una possibilità di inviare e-mail dal gruppo SMTP.",
     "dataPrivacyPermission": "Consente di visualizzare e cancellare i dati personali.",
     "exportPermission": "Definisce se gli utenti hanno la possibilità di esportare record.",
-    "massUpdatePermission": "Definisce se gli utenti hanno la possibilità di eseguire aggiornamenti di massa dei record."
+    "massUpdatePermission": "Definisce se gli utenti hanno la possibilità di eseguire aggiornamenti di massa dei record.",
+    "followerManagementPermission": "Permette di gestire i seguaci dei record."
   },
   "labels": {
     "Access": "Accesso",

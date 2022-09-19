@@ -254,23 +254,35 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
         },
 
         onDrop: function () {
-            let tabBreakIndex = 0;
+            let tabBreakIndex = -1;
 
             let $tabBreak = null;
 
             this.$el.find('ul.enabled').children().each((i, li) => {
                 let $li = $(li);
-
                 let name = $li.attr('data-name');
 
                 if (this.isTabName(name)) {
-                    if (name === this.TAB_BREAK_KEY) {
-                        $tabBreak = $li.clone();
+                    if (name !== this.TAB_BREAK_KEY) {
+                        let itemIndex = parseInt(name.split('_')[2]);
 
-                        $li.attr('data-name', this.TAB_BREAK_KEY.slice(0, -3) + tabBreakIndex);
+                        if (itemIndex > tabBreakIndex) {
+                            tabBreakIndex = itemIndex;
+                        }
                     }
+                }
+            });
 
-                    tabBreakIndex++;
+            tabBreakIndex++;
+
+            this.$el.find('ul.enabled').children().each((i, li) => {
+                let $li = $(li);
+                let name = $li.attr('data-name');
+
+                if (this.isTabName(name) && name === this.TAB_BREAK_KEY) {
+                    $tabBreak = $li.clone();
+
+                    $li.attr('data-name', this.TAB_BREAK_KEY.slice(0, -3) + tabBreakIndex);
                 }
             });
 
@@ -326,9 +338,11 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
 
                 newLayout[name] = layout[name];
 
-                if (this.isTabName(name) && this.itemsData[name]) {
+                if (this.isTabName(name) && name !== this.TAB_BREAK_KEY /*&& this.itemsData[name]*/) {
+                    let data = this.itemsData[name] || {};
+
                     newLayout[name].tabBreak = true;
-                    newLayout[name].tabLabel = this.itemsData[name].tabLabel;
+                    newLayout[name].tabLabel = data.tabLabel;
                 }
                 else {
                    delete newLayout[name].tabBreak;

@@ -175,7 +175,9 @@
     "codeType": "Tipo Codice",
     "lastChar": "Ultimo Carattere",
     "listPreviewSize": "Dimensione Anteprima in Vista Elenco",
-    "onlyDefaultCurrency": "Solo valuta predefinita"
+    "onlyDefaultCurrency": "Solo valuta predefinita",
+    "conversionDisabled": "Disattiva la Conversione",
+    "decimalPlaces": "Posizioni Decimali"
   },
   "messages": {
     "selectEntityType": "Scegli il tipo di entità dal menu di sinistra.",
@@ -196,7 +198,8 @@
     "upgradeInfo": "Controlla la [documentazione]({url}) su come aggiornare l'istanza di EspoCRM.",
     "upgradeRecommendation": "Questo modo di aggiornamento non è raccomandato. È meglio eseguire l'aggiornamento dalla CLI.",
     "newVersionIsAvailable": "È disponibile la nuova versione di EspoCRM {latestVersion}. Seguire le [istruzioni](https://www.espocrm.com/documentation/administration/upgrading/) per aggiornare l'istanza.",
-    "formulaFunctions": "Più funzioni possono essere trovate nella [documentazione]({documentationUrl})."
+    "formulaFunctions": "Più funzioni possono essere trovate nella [documentazione]({documentationUrl}).",
+    "rebuildRequired": "È necessario eseguire la ricostruzione da CLI."
   },
   "descriptions": {
     "settings": "Impostazioni di sistema dell'applicazione.",
@@ -238,7 +241,11 @@
     "pdfTemplates": "Modelli per la stampa in PDF.",
     "webhooks": "Gestisci i webhook.",
     "dashboardTemplates": "Distribuire dashboard agli utenti.",
-    "phoneNumbers": "Tutti i numeri telefonici sono archiviati nel sistema."
+    "phoneNumbers": "Tutti i numeri telefonici sono archiviati nel sistema.",
+    "emailAddresses": "Tutti gli indirizzi email memorizzati nel sistema.",
+    "layoutSets": "Raccolte di layout che possono essere assegnati a team e portali.",
+    "sms": "Impostazioni SMS.",
+    "formulaSandbox": "Scrivi e testa gli script delle formule."
   },
   "logicalOperators": {
     "and": "And"
@@ -262,7 +269,8 @@
     "notePostNoParent": "Nota su post (nessun genitore)",
     "noteStatus": "Nota sull'aggiornamento dello stato",
     "passwordChangeLink": "Collegamento per la modifica della password",
-    "noteEmailReceived": "Nota sull'e-mail ricevuta"
+    "noteEmailReceived": "Nota sull'e-mail ricevuta",
+    "twoFactorCode": "Codice 2FA"
   },
   "strings": {
     "rebuildRequired": "E' richiesta la ricostruzione"
@@ -271,6 +279,8 @@
     "userInterface": "ui,tema,schede,logo,dashboard",
     "authLog": "storico log",
     "authTokens": "storico log di accesso",
-    "templateManager": "notifiche"
+    "entityManager": "campi,relazioni,rapporti",
+    "templateManager": "notifiche",
+    "authentication": "password,sicurezza,ldap"
   }
 }

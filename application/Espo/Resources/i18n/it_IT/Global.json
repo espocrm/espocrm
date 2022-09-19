@@ -19,7 +19,7 @@
     "Attachment": "Allegato",
     "EmailFolder": "Casella Email",
     "PortalUser": "Utente portale",
-    "ScheduledJobLogRecord": "Registro registro lavori pianificato",
+    "ScheduledJobLogRecord": "Registro lavoro pianificato",
     "PasswordChangeRequest": "Richiesta di cambio password",
     "ActionHistoryRecord": "Record di cronologia delle azioni",
     "AuthToken": "Token di autenticazione",
@@ -47,7 +47,9 @@
     "DashboardTemplate": "Modello di dashboard",
     "Currency": "Divisa",
     "LayoutSet": "Layout",
-    "Mass Action": "Azione Massiva"
+    "Mass Action": "Azione Massiva",
+    "Note": "Nota",
+    "ImportError": "Errore di importazione"
   },
   "scopeNamesPlural": {
     "Email": "Email",
@@ -69,14 +71,14 @@
     "Attachment": "Allegato",
     "EmailFolder": "Caselle Email",
     "PortalUser": "Utenti portale",
-    "ScheduledJobLogRecord": "Record registro lavori pianificati",
+    "ScheduledJobLogRecord": "Record registro lavoro pianificato",
     "PasswordChangeRequest": "Richiesta di cambio password",
     "ActionHistoryRecord": "Storico azioni",
     "AuthToken": "Tokens di autenticazione",
     "UniqueId": "ID univoci",
     "LastViewed": "Ultima visualizzazione",
     "AuthLogRecord": "Auth log",
-    "AuthFailLogRecord": "Registro fallito autent",
+    "AuthFailLogRecord": "Registro Autenticazioni Fallite",
     "EmailTemplateCategory": "Categorie Modeli Email",
     "Import": "Importa",
     "LeadCapture": "Cattura Lead",
@@ -87,7 +89,9 @@
     "EmailAddress": "Indirizzo Email",
     "PhoneNumber": "Telefono",
     "Currency": "Divisa",
-    "LayoutSet": "Layout Set"
+    "LayoutSet": "Layout Set",
+    "Note": "Note",
+    "ImportError": "Errori di importazione"
   },
   "labels": {
     "Misc": "Varie",
@@ -168,6 +172,7 @@
     "Active": "Attivo",
     "Inactive": "Inattivo",
     "Write your comment here": "Scrivi il tuo commento qui",
+    "Post": "Pubblica",
     "Stream": "Flusso attività",
     "Show more": "Mostra altro",
     "Dashlet Options": "Opzioni dashlet",
@@ -236,7 +241,8 @@
     "Save & Continue Editing": "Salva e continua a modificare",
     "Save & New": "Salva & Nuovo",
     "Field": "Campo",
-    "Resolution": "Risoluzione"
+    "Resolution": "Risoluzione",
+    "Resolve Conflict": "Risolvere i conflitti"
   },
   "messages": {
     "pleaseWait": "Attendere...",
@@ -300,7 +306,24 @@
     "fieldExceedsMaxCount": "Il conteggio supera il massimo consentito {maxCount}",
     "notUpdated": "Non aggiornato",
     "maintenanceMode": "L'applicazione è attualmente in modalità manutenzione. Solo gli utenti amministratori hanno accesso.\n\nLa modalità di manutenzione può essere disabilitata in Amministrazione → Impostazioni.",
-    "fieldInvalid": "{field} non è valido"
+    "fieldInvalid": "{field} non è valido",
+    "resolveSaveConflict": "Il record è stato modificato. È necessario risolvere il conflitto prima di poter salvare il record.",
+    "massActionProcessed": "L'azione di massa è stata elaborata.",
+    "fieldUrlExceedsMaxLength": "L'URL codificato supera la lunghezza massima di {maxLength}",
+    "fieldNotMatchingPattern": "{field} non corrisponde al pattern `{pattern}`",
+    "fieldNotMatchingPattern$noBadCharacters": "{field} contiene caratteri non ammessi",
+    "fieldNotMatchingPattern$noAsciiSpecialCharacters": "{field} non dovrebbe contenere caratteri speciali ASCII",
+    "fieldNotMatchingPattern$latinLetters": "{field} può contenere solo lettere latine",
+    "fieldNotMatchingPattern$latinLettersDigits": "{field} può contenere solo lettere latine e numeri.",
+    "fieldNotMatchingPattern$latinLettersDigitsWhitespace": "{field} può contenere solo lettere latine, numeri e spazi vuoti",
+    "fieldNotMatchingPattern$latinLettersWhitespace": "{field} può contenere solo lettere latine e spazi vuoti",
+    "fieldNotMatchingPattern$digits": "{field} può contenere solo numeri",
+    "fieldPhoneInvalidCharacters": "Sono consentite solo numeri, lettere latine e caratteri `-+_@:#().`.",
+    "arrayItemMaxLength": "L'elemento non dovrebbe essere più lungo di {max} caratteri",
+    "validationFailure": "Errore di convalida nel backend.\n\nCampo: `{field}`\nConvalida: `{type}`",
+    "confirmAppRefresh": "L'applicazione è stata aggiornata. Si consiglia di aggiornare la pagina per garantirne il corretto funzionamento.",
+    "error404": "L'url richiesto non può essere elaborato.",
+    "error403": "Non hai l'accesso a quest'area."
   },
   "boolFilters": {
     "onlyMy": "Solo il mio",
@@ -513,7 +536,7 @@
       "nextMonth": "Prossimo mese",
       "currentFiscalYear": "Anno fiscale corrente",
       "lastFiscalYear": "L'ultimo anno fiscale",
-      "currentFiscalQuarter": "Attuale trimestre fiscale",
+      "currentFiscalQuarter": "Trimestre fiscale In Corso",
       "lastFiscalQuarter": "Ultimo trimestre fiscale\n"
     },
     "searchRanges": {
@@ -671,5 +694,21 @@
   },
   "listViewModes": {
     "list": "Lista"
+  },
+  "themes": {
+    "Dark": "Scuro",
+    "Violet": "Violetto",
+    "Hazyblue": "Blu Nebuloso",
+    "Glass": "Vetro"
+  },
+  "themeNavbars": {
+    "side": "Navbar Verticale",
+    "top": "Navbar Orizzontale"
+  },
+  "fieldValidations": {
+    "required": "Richiesto",
+    "maxLength": "Lunghezza Massima",
+    "emailAddress": "Indirizzo Email Valido",
+    "phoneNumber": "Numero di Telefono Valido"
   }
 }

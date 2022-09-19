@@ -44,7 +44,6 @@
         "monitoredFolders": {
             "type": "array",
             "default": ["INBOX"],
-            "options": ["INBOX"],
             "view": "views/email-account/fields/folders",
             "displayAsList": true,
             "noEmptyString": true,

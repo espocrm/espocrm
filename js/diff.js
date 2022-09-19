@@ -27,14 +27,12 @@
  ************************************************************************/
 
 const fs = require('fs');
-const sys = require('util');
 const cp = require('child_process');
 const archiver = require('archiver');
 const process = require('process');
 const buildUtils = require('./build-utils');
 
 const exec = cp.exec;
-const execSync = cp.execSync;
 
 /**
  * Builds upgrade packages.
@@ -59,13 +57,19 @@ class Diff
         return tagList;
     }
 
+    buildClosestUpgradePackages() {
+        let versionFromList = this._getPreviousVersionList(true);
+
+        this.buildMultipleUpgradePackages(versionFromList);
+    }
+
     buildAllUpgradePackages() {
         let versionFromList = this._getPreviousVersionList();
 
         this.buildMultipleUpgradePackages(versionFromList);
     }
 
-    _getPreviousVersionList() {
+    _getPreviousVersionList(closest) {
         let dirInitial = process.cwd();
 
         let version = (require(this.espoPath + '/package.json') || {}).version;
@@ -105,14 +109,18 @@ class Diff
             for (let i = 0; i < tagList.length; i++) {
                 let tag = tagList[i];
 
+                let patchVersionNumberI = tag.split('.')[2];
+
+                if (closest && parseInt(patchVersionNumberI) !== parseInt(hotfixVersionNumber) - 1) {
+                    break;
+                }
+
                 if (tag === version) {
                     continue;
                 }
 
                 if (!~tag.indexOf('beta') && !~tag.indexOf('alpha')) {
                     versionFromList.push(tag);
-
-                    let patchVersionNumberI = tag.split('.')[2];
 
                     if (patchVersionNumberI === '0') {
                         break;
@@ -156,7 +164,7 @@ class Diff
         return new Promise(resolve => {
             let acceptedVersionName = params.acceptedVersionName || versionFrom;
             let isDev = params.isDev;
-            let withVendor = params.withVendor;
+            let withVendor = params.withVendor ?? true;
             let forceScripts = params.forceScripts;
 
             let version = (require(espoPath + '/package.json') || {}).version;

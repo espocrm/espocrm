@@ -14,7 +14,8 @@
   },
   "tooltips": {
     "roles": "Ruoli di accesso. Gli utenti di questo team hanno ottenuto il livello di controllo per i ruoli selezionati.",
-    "positionList": "Posizioni disponibili in questa squadra. E.g. Venditore, Manager."
+    "positionList": "Posizioni disponibili in questa squadra. E.g. Venditore, Manager.",
+    "layoutSet": "Fornisce la possibilità di avere layout diversi da quelli standard. Il set di layout verrà applicato agli utenti che hanno impostato questo team come Team Predefinito."
   },
   "labels": {
     "Create Team": "Crea Team"

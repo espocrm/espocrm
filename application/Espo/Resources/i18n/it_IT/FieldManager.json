@@ -60,6 +60,9 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 mesi",
       "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 mesi",
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 anno"
+    },
+    "globalRestrictions": {
+      "internal": "Interno"
     }
   },
   "tooltips": {
@@ -76,7 +79,16 @@
     "readOnly": "Il valore del campo non può essere specificato dall'utente. Ma può essere calcolato da una formula.",
     "maxFileSize": "Se vuoto o 0 allora nessun limite.",
     "fileAccept": "Quali tipi di file accettare. È possibile aggiungere elementi personalizzati.",
-    "barcodeLastChar": "Per tipo EAN-13."
+    "barcodeLastChar": "Per tipo EAN-13.",
+    "conversionDisabled": "L'azione di conversione della valuta non verrà applicata a questo campo.",
+    "cutHeight": "Un testo maggiore di un valore specificato verrà troncato e verrà visualizzato il pulsante 'Mostra altro'.",
+    "urlStrip": "Rimuove il protocollo e lo slash finale.",
+    "pattern": "Un'espressione regolare per verificare il valore di un campo. Definire un'espressione o selezionarne una predefinita.",
+    "options": "Un elenco di possibili valori e delle rispettive etichette.",
+    "optionsArray": "Un elenco di possibili valori e delle rispettive etichette. Se vuoto, il campo consente di inserire valori personalizzati.",
+    "maxCount": "Numero massimo di elementi selezionabili.",
+    "displayAsList": "Ogni elemento è inserito in una nuova riga.",
+    "optionsVarchar": "Un elenco di valori per il completamento automatico."
   },
   "fieldParts": {
     "address": {
@@ -102,8 +114,25 @@
   },
   "fieldInfo": {
     "varchar": "Una singola linea di testo.",
+    "enum": "Selectbox, si può selezionare un solo valore.",
+    "text": "Un testo multilinea con supporto markdown.",
     "date": "Data senza ora",
     "datetime": "Data e ora",
+    "currency": "Un importo in valuta. Un numero float con un codice di valuta.",
+    "int": "Un numero intero.",
+    "float": "Un numero con una parte decimale.",
+    "bool": "Un checkbox. Due valori possibili: true e false.",
+    "multiEnum": "Un elenco di valori; è possibile selezionare più valori. L'elenco è ordinato.",
+    "checklist": "Un elenco di checkbox.",
+    "array": "Un elenco di valori, simile al campo Multi-Enum.",
+    "address": "Un indirizzo con via, città, regione, codice postale e nazione.",
+    "url": "Per la memorizzazione dei link.",
+    "wysiwyg": "Un testo con supporto HTML.",
+    "attachmentMultiple": "Consente il caricamento di più file.",
+    "number": "Un numero autoincrementante di tipo stringa con un possibile prefisso e una lunghezza specifica.",
+    "autoincrement": "Un numero intero di sola lettura e autoincrementante.",
+    "barcode": "Un codice a barre. Può essere stampato in PDF.",
+    "foreign": "Campo di un record correlato. Di Sola Lettura.",
     "linkParent": "Un record collegato tramite una relazione Belongs-To-Parent. Puo' essere di tipi di entita' differenti."
   }
 }

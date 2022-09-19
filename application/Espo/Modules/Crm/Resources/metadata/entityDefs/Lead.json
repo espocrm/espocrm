@@ -66,6 +66,8 @@
             "type": "enum",
             "view": "crm:views/lead/fields/industry",
             "customizationOptionsDisabled": true,
+            "optionsPath": "entityDefs.Account.fields.industry.options",
+            "translation": "Account.options.industry",
             "default": "",
             "isSorted": true
         },

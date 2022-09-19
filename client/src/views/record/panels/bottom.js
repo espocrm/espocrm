@@ -344,5 +344,28 @@ define('views/record/panels/bottom', ['view'], function (Dep) {
 
             this.createView(viewKey, viewName, o);
         },
+
+        /**
+         * Is tab-hidden.
+         *
+         * @return {boolean}
+         */
+        isTabHidden: function () {
+            if (this.defs.tabNumber === -1 || typeof this.defs.tabNumber === 'undefined') {
+                return false;
+            }
+
+            let parentView = this.getParentView();
+
+            if (!parentView) {
+                return this.defs.tabNumber > 0;
+            }
+
+            if (parentView && parentView.hasTabs) {
+                return parentView.currentTab !== defs.tabNumber;
+            }
+
+            return false;
+        },
     });
 });

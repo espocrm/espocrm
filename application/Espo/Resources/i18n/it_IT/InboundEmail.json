@@ -48,7 +48,8 @@
     "monitoredFolders": "Se più cartelle, devono essere separate da virgola",
     "smtpIsShared": "Se selezionato, gli utenti saranno in grado di inviare e-mail utilizzando questo SMTP. La disponibilità è controllata dai ruoli tramite l'autorizzazione dell'account e-mail di gruppo.",
     "smtpIsForMassEmail": "Se selezionato, SMTP sarà disponibile per l'e-mail di massa.",
-    "storeSentEmails": "Le email inviate saranno memorizzate sul server IMAP"
+    "storeSentEmails": "Le email inviate saranno memorizzate sul server IMAP",
+    "useSmtp": "La possibilità di inviare email."
   },
   "links": {
     "filters": "Filtri",

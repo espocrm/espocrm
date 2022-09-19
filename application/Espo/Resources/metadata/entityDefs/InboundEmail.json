@@ -43,7 +43,6 @@
         "monitoredFolders": {
             "type": "array",
             "default": ["INBOX"],
-            "options": ["INBOX"],
             "view": "views/inbound-email/fields/folders",
             "displayAsList": true,
             "noEmptyString": true,

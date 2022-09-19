@@ -39,25 +39,16 @@ use LogicException;
 
 class TemplateRenderer
 {
-    /**
-     * @var ?array<string,mixed>
-     */
+    /** @var ?array<string,mixed> */
     private $data = null;
-
     private ?User $user = null;
-
     private ?Entity $entity = null;
-
     private bool $skipRelations = false;
-
+    private bool $skipInlineAttachmentHandling = false;
     private bool $applyAcl = false;
-
     private bool $useUserTimezone = false;
-
     private HtmlizerFactory $htmlizerFactory;
-
     private ApplicationState $applicationState;
-
     private ?string $template = null;
 
     public function __construct(HtmlizerFactory $htmlizerFactory, ApplicationState $applicationState)
@@ -107,6 +98,12 @@ class TemplateRenderer
         return $this;
     }
 
+    public function setSkipInlineAttachmentHandling(bool $skipInlineAttachmentHandling = true): self
+    {
+        $this->skipInlineAttachmentHandling = $skipInlineAttachmentHandling;
+
+        return $this;
+    }
     public function setApplyAcl(bool $applyAcl = true): self
     {
         $this->applyAcl = $applyAcl;
@@ -149,7 +146,8 @@ class TemplateRenderer
             $template,
             null,
             $this->data,
-            $this->skipRelations
+            $this->skipRelations,
+            $this->skipInlineAttachmentHandling
         );
     }
 

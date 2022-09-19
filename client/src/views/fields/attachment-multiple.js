@@ -343,7 +343,7 @@ function (Dep, FileUpload) {
 
         getEditPreview: function (name, type, id) {
             if (!~this.previewTypeList.indexOf(type)) {
-                return name;
+                return null;
             }
 
             return  $('<img>')
@@ -368,11 +368,9 @@ function (Dep, FileUpload) {
             if (this.showPreviews) {
                 let html = this.getEditPreview(name, type, id);
 
-                if (!html) {
-                    return $text.get(0).outerHTML;
+                if (html) {
+                    return html;
                 }
-
-                return html;
             }
 
             let url = this.getBasePath() + '?entryPoint=download&id=' + id;

@@ -47,6 +47,7 @@ let isDev = false;
 let isAll = false;
 let withVendor = true;
 let forceScripts = false;
+let isClosest = false;
 
 if (process.argv.length > 1) {
     for (let i in process.argv) {
@@ -67,6 +68,10 @@ if (process.argv.length > 1) {
             forceScripts = true;
         }
 
+        if (process.argv[i] === '--closest') {
+            isClosest = true;
+        }
+
         if (~process.argv[i].indexOf('--acceptedVersion=')) {
             acceptedVersionName = process.argv[i].substr(('--acceptedVersion=').length);
         }
@@ -75,22 +80,33 @@ if (process.argv.length > 1) {
 
 let espoPath = path.dirname(fs.realpathSync(__filename));
 
+if (isAll || isClosest) {
+    acceptedVersionName = null;
+}
+
 let diff = new Diff(espoPath, {
-    isAll: isAll,
     isDev: isDev,
     withVendor: withVendor,
     forceScripts: forceScripts,
-    acceptedVersionName: !isAll ? acceptedVersionName : null,
+    acceptedVersionName: acceptedVersionName,
 });
 
-if (isAll) {
-    diff.buildAllUpgradePackages();
-}
+(() => {
+    if (isAll) {
+        diff.buildAllUpgradePackages();
 
-if (!isAll) {
+        return;
+    }
+
+    if (isClosest) {
+        diff.buildClosestUpgradePackages();
+
+        return;
+    }
+
     if (!versionFrom) {
         throw new Error("No 'version' specified.");
     }
 
     diff.buildUpgradePackage(versionFrom);
-}
+})();

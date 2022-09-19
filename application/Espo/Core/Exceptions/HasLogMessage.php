@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,44 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/notes/relate', ['views/stream/note'], function (Dep) {
+namespace Espo\Core\Exceptions;
 
-    return Dep.extend({
-
-        template: 'stream/notes/create-related',
-
-        messageName: 'relate',
-
-        data: function () {
-            return _.extend({
-                relatedTypeString: this.translateEntityType(this.entityType),
-                iconHtml: this.getIconHtml(this.entityType, this.entityId),
-            }, Dep.prototype.data.call(this));
-        },
-
-        init: function () {
-            if (this.getUser().isAdmin()) {
-                this.isRemovable = true;
-            }
-
-            Dep.prototype.init.call(this);
-        },
-
-        setup: function () {
-            let data = this.model.get('data') || {};
-
-            this.entityType = this.model.get('relatedType') || data.entityType || null;
-            this.entityId = this.model.get('relatedId') || data.entityId || null;
-            this.entityName = this.model.get('relatedName') ||  data.entityName || null;
-
-            this.messageData['relatedEntityType'] = this.translateEntityType(this.entityType);
-
-            this.messageData['relatedEntity'] =
-                $('<a>')
-                    .attr('href', '#' + this.entityType + '/view/' + this.entityId)
-                    .text(this.entityName);
-
-            this.createMessage();
-        },
-    });
-});
+interface HasLogMessage
+{
+    public function getLogMessage(): string;
+}

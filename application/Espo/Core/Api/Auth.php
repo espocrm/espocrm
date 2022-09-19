@@ -89,7 +89,7 @@ class Auth
 
         $hasAuthData = (bool) ($username || $authenticationMethod);
 
-        if (!$hasAuthData && $this->isEntryPoint) {
+        if (!$hasAuthData) {
             $password = $this->obtainTokenFromCookies($request);
 
             if ($password) {

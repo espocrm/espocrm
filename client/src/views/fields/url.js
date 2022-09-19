@@ -103,7 +103,9 @@ define('views/fields/url', ['views/fields/varchar', 'lib!underscore'], function 
                 value = this.strip(value);
             }
 
-            value = encodeURI(value);
+            if (value === decodeURI(value)) {
+                value = encodeURI(value);
+            }
 
             return value;
         },

@@ -133,7 +133,8 @@ class Htmlizer
         string $template,
         ?string $cacheId = null,
         ?array $additionalData = null,
-        bool $skipLinks = false
+        bool $skipLinks = false,
+        bool $skipInlineAttachmentHandling = false
     ): string {
 
         $template = str_replace('<tcpdf ', '', $template);
@@ -188,9 +189,11 @@ class Htmlizer
 
         $html = $renderer($data);
 
-        $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
+        if (!$skipInlineAttachmentHandling) {
+            $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
+        }
 
-        if ($this->entityManager) {
+        if (!$skipInlineAttachmentHandling && $this->entityManager) {
             /** @var string $html */
             $html = preg_replace_callback(
                 '/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/',
