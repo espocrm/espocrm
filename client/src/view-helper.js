@@ -437,7 +437,7 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                         return value.indexOf(name) !== -1;
                     }
 
-                    return value === name;
+                    return value === name || !value && !name;
                 };
 
                 options.hash = options.hash || {};
