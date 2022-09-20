@@ -253,7 +253,7 @@ class Diff
 
             process.chdir(buildPath);
 
-            let fileList = [];
+            let fileList = upgradeData.mandatoryFiles || [];
 
             let stdout = cp.execSync('git diff --name-only ' + versionFrom).toString();
 
