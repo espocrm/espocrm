@@ -8,4 +8,9 @@
 *.tpl text eol=crlf
 *.html text eol=crlf
 
+bin/command text eol=lf
+
+.gitattributes text eol=crlf
+.gitignore text eol=crlf
+
 *.png binary
