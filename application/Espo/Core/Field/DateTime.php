@@ -54,11 +54,13 @@ class DateTime implements DateTimeable
             throw new RuntimeException("Empty value.");
         }
 
-        $this->value = $value;
+        $normValue = strlen($value) === 16 ? $value . ':00' : $value;
+
+        $this->value = $normValue;
 
         $parsedValue = DateTimeImmutable::createFromFormat(
             self::SYSTEM_FORMAT,
-            $value,
+            $normValue,
             new DateTimeZone('UTC')
         );
 

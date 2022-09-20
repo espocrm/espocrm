@@ -40,11 +40,20 @@ use DateInterval;
 
 class DateTimeOptionalTest extends \PHPUnit\Framework\TestCase
 {
-    public function testFromString()
+    public function testFromString1()
     {
         $value = DateTimeOptional::fromString('2021-05-01 10:20:30');
 
         $this->assertEquals('2021-05-01 10:20:30', $value->getString());
+
+        $this->assertFalse($value->isAllDay());
+    }
+
+    public function testFromString2()
+    {
+        $value = DateTimeOptional::fromString('2021-05-01 10:20');
+
+        $this->assertEquals('2021-05-01 10:20:00', $value->getString());
 
         $this->assertFalse($value->isAllDay());
     }

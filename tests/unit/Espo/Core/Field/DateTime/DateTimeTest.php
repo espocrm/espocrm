@@ -38,11 +38,18 @@ use DateInterval;
 
 class DateTimeTest extends \PHPUnit\Framework\TestCase
 {
-    public function testFromString()
+    public function testFromString1()
     {
         $value = DateTime::fromString('2021-05-01 10:20:30');
 
         $this->assertEquals('2021-05-01 10:20:30', $value->getString());
+    }
+
+    public function testFromString2()
+    {
+        $value = DateTime::fromString('2021-05-01 10:20');
+
+        $this->assertEquals('2021-05-01 10:20:00', $value->getString());
     }
 
     public function testFromDateTime1()
