@@ -35,7 +35,7 @@ use Espo\Entities\User;
 
 class UserFinder
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {

@@ -38,10 +38,7 @@ use RuntimeException;
 class EspoManager implements Manager
 {
     private EntityManager $entityManager;
-
-    /**
-     * @var RDBRepository<AuthTokenEntity>
-     */
+    /** @var RDBRepository<AuthTokenEntity> */
     private RDBRepository $repository;
 
     private const TOKEN_RANDOM_LENGTH = 16;

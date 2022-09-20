@@ -36,11 +36,9 @@ use Espo\Core\Authentication\AuthToken\AuthToken;
  */
 class Data
 {
-    private $username;
-
-    private $password;
-
-    private $authToken;
+    private ?string $username;
+    private ?string $password;
+    private ?AuthToken $authToken;
 
     public function __construct(?string $username, ?string $password, ?AuthToken $authToken = null)
     {

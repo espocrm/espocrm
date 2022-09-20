@@ -29,20 +29,16 @@
 
 namespace Espo\Core\Authentication;
 
-use Espo\Core\{
-    Utils\Config,
-    Utils\Metadata,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 
 class ConfigDataProvider
 {
     private const FAILED_ATTEMPTS_PERIOD =  '60 seconds';
-
     private const MAX_FAILED_ATTEMPT_NUMBER = 10;
 
-    private $config;
-
-    private $metadata;
+    private Config $config;
+    private Metadata $metadata;
 
     public function __construct(Config $config, Metadata $metadata)
     {

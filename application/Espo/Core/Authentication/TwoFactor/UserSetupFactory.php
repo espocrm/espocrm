@@ -37,7 +37,6 @@ use Espo\Core\Exceptions\Error;
 class UserSetupFactory
 {
     private InjectableFactory $injectableFactory;
-
     private Metadata $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)

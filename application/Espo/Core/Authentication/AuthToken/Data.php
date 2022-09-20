@@ -37,13 +37,9 @@ use RuntimeException;
 class Data
 {
     private string $userId;
-
     private ?string $portalId = null;
-
     private ?string $hash = null;
-
     private ?string $ipAddress = null;
-
     private bool $createSecret = false;
 
     private function __construct()

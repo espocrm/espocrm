@@ -39,7 +39,6 @@ use Espo\Core\Authentication\Result;
 class Manager
 {
     private Metadata $metadata;
-
     private InjectableFactory $injectableFactory;
 
     public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)

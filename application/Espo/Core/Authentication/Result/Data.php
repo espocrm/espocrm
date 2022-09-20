@@ -36,13 +36,9 @@ use stdClass;
 class Data
 {
     private ?string $message = null;
-
     private ?string $token = null;
-
     private ?string $view = null;
-
     private ?User $loggedUser = null;
-
     private ?string $failReason = null;
 
     /**

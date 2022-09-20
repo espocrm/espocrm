@@ -37,7 +37,6 @@ use LogicException;
 class LoginFactory
 {
     private InjectableFactory $injectableFactory;
-
     private Metadata $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)

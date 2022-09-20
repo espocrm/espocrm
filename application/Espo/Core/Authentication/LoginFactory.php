@@ -38,9 +38,7 @@ class LoginFactory
     private const DEFAULT_METHOD = 'Espo';
 
     private InjectableFactory $injectableFactory;
-
     private Metadata $metadata;
-
     private Config $config;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata, Config $config)

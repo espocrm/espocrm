@@ -29,36 +29,28 @@
 
 namespace Espo\Core\Authentication;
 
-use Espo\Core\Exceptions\ServiceUnavailable;
-
 use Espo\Repositories\UserData as UserDataRepository;
+use Espo\Entities\Portal;
+use Espo\Entities\User;
+use Espo\Entities\AuthLogRecord;
+use Espo\Entities\AuthToken as AuthTokenEntity;
+use Espo\Entities\UserData;
 
-use Espo\Entities\{
-    Portal,
-    User,
-    AuthLogRecord,
-    AuthToken as AuthTokenEntity,
-    UserData,
-};
+use Espo\Core\Authentication\Result\FailReason;
+use Espo\Core\Authentication\TwoFactor\LoginFactory as TwoFactorLoginFactory;
+use Espo\Core\Authentication\AuthToken\Manager as AuthTokenManager;
+use Espo\Core\Authentication\AuthToken\Data as AuthTokenData;
+use Espo\Core\Authentication\AuthToken\AuthToken;
+use Espo\Core\Authentication\Hook\Manager as HookManager;
+use Espo\Core\Authentication\Login\Data as LoginData;
 
-use Espo\Core\Authentication\{
-    Result\FailReason,
-    TwoFactor\LoginFactory as TwoFactorLoginFactory,
-    AuthToken\Manager as AuthTokenManager,
-    AuthToken\Data as AuthTokenData,
-    AuthToken\AuthToken,
-    Hook\Manager as HookManager,
-    Login\Data as LoginData,
-};
-
-use Espo\Core\{
-    ApplicationUser,
-    ApplicationState,
-    ORM\EntityManagerProxy,
-    Api\Request,
-    Api\Response,
-    Utils\Log,
-};
+use Espo\Core\ApplicationUser;
+use Espo\Core\ApplicationState;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Utils\Log;
+use Espo\Core\ORM\EntityManagerProxy;
+use Espo\Core\Exceptions\ServiceUnavailable;
 
 use RuntimeException;
 
@@ -70,25 +62,16 @@ class Authentication
     private const LOGOUT_USERNAME = '**logout';
 
     private bool $allowAnyAccess;
-
     private ?Portal $portal = null;
 
     private ApplicationUser $applicationUser;
-
     private ApplicationState $applicationState;
-
     private ConfigDataProvider $configDataProvider;
-
     private EntityManagerProxy $entityManager;
-
     private LoginFactory $loginFactory;
-
     private TwoFactorLoginFactory $twoFactorLoginFactory;
-
     private AuthTokenManager $authTokenManager;
-
     private HookManager $hookManager;
-
     private Log $log;
 
     public function __construct(
