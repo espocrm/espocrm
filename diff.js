@@ -31,8 +31,19 @@
  * From a specified version to the current version or all packages needed for a release.
 
  * Examples:
- * * `node diff 5.9.0` - builds  an upgrade from 5.9.0 to the current version;
+ * * `node diff 5.9.0` - builds an upgrade from 5.9.0 to the current version;
  * * `node diff --all` - builds all upgrades needed for a release.
+ *
+ * Data for upgrade packages is defined in `upgrades/{x.x|x.x.x-x.x.x}/data.json`.
+ *
+ * Parameters:
+ * * `mandatoryFiles` – {string[]} – mandatory files to include in upgrade
+ *   (even files that were not changed in version control);
+ * * `beforeUpgradeFiles` – {string[]} – files to copy in the beginning of the upgrade process;
+ * * `manifest` – {object} – upgrade manifest parameters.
+ *
+ * Manifest parameters:
+ * * `delete` – {string[]} – additional files to be deleted (usually those that are not in version control).
  */
 
 const Diff = require('./js/diff');
