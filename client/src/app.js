@@ -591,14 +591,22 @@ function (
         },
 
         /**
-         * @private
+         * Do an action.
+         *
+         * @public
+         * @param {{
+         *   controller?: string,
+         *   action: string,
+         *   options?: Object.<string,*>,
+         *   controllerClassName?: string,
+         * }} params
          */
         doAction: function (params) {
             this.trigger('action', params);
 
             this.baseController.trigger('action');
 
-            this.getController(params.controller, controller => {
+            let callback = controller => {
                 try {
                     controller.doAction(params.action, params.options);
 
@@ -622,7 +630,15 @@ function (
                             throw e;
                     }
                 }
-            });
+            };
+
+            if (params.controllerClassName) {
+                this.createController(params.controllerClassName, null, callback);
+
+                return;
+            }
+
+            this.getController(params.controller, callback);
         },
 
         /**
@@ -682,30 +698,38 @@ function (
                     className = Utils.composeClassName(module, name, 'controllers');
                 }
 
-                require(
-                    className,
-                    /** typeof module:controller.Class */
-                    controllerClass => {
-                        let injections = this.getControllerInjection();
-
-                        injections.baseController = this.baseController;
-
-                        let controller = new controllerClass(this.baseController.params, injections);
-
-                        controller.name = name;
-                        controller.masterView = this.masterView;
-
-                        this.controllers[name] = controller
-
-                        callback(controller);
-                    },
-                    this,
-                    () => this.baseController.error404()
-                );
+                this.createController(className, name, callback);
             }
             catch (e) {
                 this.baseController.error404();
             }
+        },
+
+        /**
+         * @private
+         * @return {module:controller.Class}
+         */
+        createController: function (className, name, callback) {
+            require(
+                className,
+                /** typeof module:controller.Class */
+                controllerClass => {
+                    let injections = this.getControllerInjection();
+
+                    injections.baseController = this.baseController;
+
+                    let controller = new controllerClass(this.baseController.params, injections);
+
+                    controller.name = name;
+                    controller.masterView = this.masterView;
+
+                    this.controllers[name] = controller
+
+                    callback(controller);
+                },
+                this,
+                () => this.baseController.error404()
+            );
         },
 
         /**

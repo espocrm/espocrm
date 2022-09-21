@@ -66,10 +66,10 @@ class ActionRenderer
         $encodedData = Json::encode($data);
 
         $script = "
-            require('{$controller}', Controller => {
-                let controller = new Controller(app.baseController.params, app.getControllerInjection());
-                controller.masterView = app.masterView;
-                controller.doAction('{$action}', {$encodedData});
+            app.doAction({
+                controllerClassName: '{$controller}',
+                action: '{$action}',
+                options: {$encodedData},
             });
         ";
 
