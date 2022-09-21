@@ -32,6 +32,7 @@ namespace Espo\Core\EntryPoint;
 use Espo\Core\Exceptions\NotFound;
 
 use Espo\Core\{
+    Exceptions\NotFoundSilent,
     InjectableFactory,
     Utils\ClassFinder,
     Api\Request,
@@ -44,7 +45,6 @@ use Espo\Core\{
 class EntryPointManager
 {
     private InjectableFactory $injectableFactory;
-
     private ClassFinder $classFinder;
 
     public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder)
@@ -53,12 +53,15 @@ class EntryPointManager
         $this->classFinder = $classFinder;
     }
 
+    /**
+     * @throws NotFound
+     */
     public function checkAuthRequired(string $name): bool
     {
         $className = $this->getClassName($name);
 
         if (!$className) {
-            throw new NotFound("Entry point '{$name}' not found.");
+            throw new NotFoundSilent("Entry point '{$name}' not found.");
         }
 
         $noAuth = false;
@@ -75,23 +78,29 @@ class EntryPointManager
         return $className::$authRequired ?? true;
     }
 
+    /**
+     * @throws NotFound
+     */
     public function checkNotStrictAuth(string $name): bool
     {
         $className = $this->getClassName($name);
 
         if (!$className) {
-            throw new NotFound("Entry point '{$name}' not found.");
+            throw new NotFoundSilent("Entry point '{$name}' not found.");
         }
 
         return $className::$notStrictAuth ?? false;
     }
 
+    /**
+     * @throws NotFound
+     */
     public function run(string $name, Request $request, Response $response): void
     {
         $className = $this->getClassName($name);
 
         if (!$className) {
-            throw new NotFound("Entry point '{$name}' not found.");
+            throw new NotFoundSilent("Entry point '{$name}' not found.");
         }
 
         $entryPoint = $this->injectableFactory->create($className);
