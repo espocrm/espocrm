@@ -1,4 +1,7 @@
 {
+    "mandatoryFiles": [
+        "bin/command"
+    ],
     "manifest": {
         "delete": [
             "client/css/espo/espo-vertical.css",

@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Application\Runner\Params as RunnerParams;
 use Espo\Core\EntryPoint\EntryPointManager;
 use Espo\Core\ApplicationUser;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Portal\Application as PortalApplication;
 use Espo\Core\Authentication\AuthenticationFactory;
 use Espo\Core\Authentication\AuthToken\Manager as AuthTokenManager;
@@ -89,7 +90,7 @@ class Starter
 
     /**
      * @throws BadRequest
-     * @throws \Espo\Core\Exceptions\NotFound
+     * @throws NotFound
      */
     public function start(?string $entryPoint = null, bool $final = false): void
     {
@@ -110,8 +111,19 @@ class Starter
             throw new BadRequest("No 'entryPoint' param.");
         }
 
-        $authRequired = $this->entryPointManager->checkAuthRequired($entryPoint);
-        $authNotStrict = $this->entryPointManager->checkNotStrictAuth($entryPoint);
+        $responseWrapped = new ResponseWrapper(new Response());
+
+        try {
+            $authRequired = $this->entryPointManager->checkAuthRequired($entryPoint);
+            $authNotStrict = $this->entryPointManager->checkNotStrictAuth($entryPoint);
+        }
+        catch (NotFound $exception) {
+            $this->errorOutput->processWithBodyPrinting($requestWrapped, $responseWrapped, $exception);
+
+            (new ResponseEmitter())->emit($responseWrapped->getResponse());
+
+            return;
+        }
 
         if ($authRequired && !$authNotStrict && !$final) {
             $portalId = $this->detectPortalId($requestWrapped);
@@ -122,8 +134,6 @@ class Starter
                 return;
             }
         }
-
-        $responseWrapped = new ResponseWrapper(new Response());
 
         $this->processRequest(
             $entryPoint,

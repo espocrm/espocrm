@@ -994,7 +994,7 @@ function (
                     resolve(options);
 
                     return;
-                };
+                }
 
                 this.requestUserData(data => {
                     options = data;

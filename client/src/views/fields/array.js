@@ -43,6 +43,8 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
 
         listTemplate: 'fields/array/list',
 
+        listLinkTemplate: 'fields/array/list-link',
+
         detailTemplate: 'fields/array/detail',
 
         editTemplate: 'fields/array/edit',

@@ -1,12 +1,4 @@
 {
-    "assignmentNotificatorClassName": "Espo\\Classes\\AssignmentNotificators\\Email",
-    "readLoaderClassNameList": [
-        "Espo\\Classes\\FieldProcessing\\Email\\AddressDataLoader",
-        "Espo\\Classes\\FieldProcessing\\Email\\UserColumnsLoader"
-    ],
-    "listLoaderClassNameList": [
-        "Espo\\Classes\\FieldProcessing\\Email\\StringDataLoader"
-    ],
     "massActions": {
         "update": {
             "allowed": true
