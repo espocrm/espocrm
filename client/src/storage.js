@@ -155,6 +155,12 @@ define('storage', [], function () {
         set: function (type, name, value) {
             this.checkType(type);
 
+            if (value === null) {
+                this.clear(type, name);
+
+                return;
+            }
+
             let key = this.composeKey(type, name);
 
             if (value instanceof Object || Array.isArray(value) || value === true || value === false) {

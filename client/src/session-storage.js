@@ -85,6 +85,12 @@ define('session-storage', ['storage'], function (Dep) {
          * @param {*} value A value.
          */
         set: function (name, value) {
+            if (value === null) {
+                this.clear(name);
+
+                return;
+            }
+
             if (value instanceof Object || Array.isArray(value) || value === true || value === false) {
                 value = '__JSON__:' + JSON.stringify(value);
             }
