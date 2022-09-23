@@ -29,6 +29,8 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 
 use Espo\Core\Authentication\LDAP\Utils as LDAPUtils;
@@ -41,17 +43,15 @@ use Espo\Services\Settings as Service;
 
 use Espo\Entities\User;
 
+use Laminas\Ldap\Exception\LdapException;
 use stdClass;
 
 class Settings
 {
-    private $metadata;
-
-    private $service;
-
-    private $user;
-
-    private $config;
+    private Metadata $metadata;
+    private Service $service;
+    private User $user;
+    private Config $config;
 
     public function __construct(
         Metadata $metadata,
@@ -70,6 +70,11 @@ class Settings
         return $this->getConfigData();
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     */
     public function putActionUpdate(Request $request): stdClass
     {
         if (!$this->user->isAdmin()) {
@@ -83,6 +88,10 @@ class Settings
         return $this->getConfigData();
     }
 
+    /**
+     * @throws Forbidden
+     * @throws LdapException
+     */
     public function postActionTestLdapConnection(Request $request): bool
     {
         if (!$this->user->isAdmin()) {
