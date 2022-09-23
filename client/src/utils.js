@@ -599,6 +599,8 @@ define('utils', [], function () {
         getKeyFromKeyEvent: function (e) {
             let key = e.code;
 
+            key = keyMap[key] || key;
+
             if (e.shiftKey) {
                 key = 'Shift+' + key;
             }
@@ -613,6 +615,10 @@ define('utils', [], function () {
 
             return key;
         },
+    };
+
+    const keyMap = {
+        'NumpadEnter': 'Enter',
     };
 
     /**

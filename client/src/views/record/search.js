@@ -326,7 +326,9 @@ define('views/record/search', ['view'], function (Dep) {
 
         events: {
             'keydown input[data-name="textFilter"]': function (e) {
-                if (e.code === 'Enter') {
+                let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                if (e.code === 'Enter' || key === 'Enter' || key === 'Control+Enter') {
                     this.search();
 
                     this.hideApplyFiltersButton();

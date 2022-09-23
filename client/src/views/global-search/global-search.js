@@ -36,7 +36,7 @@ define('views/global-search/global-search', ['view'], function (Dep) {
             'keydown input.global-search-input': function (e) {
                 let key = Espo.Utils.getKeyFromKeyEvent(e);
 
-                if (e.code === 'Enter') {
+                if (e.code === 'Enter' || key === 'Enter' || key === 'Control+Enter') {
                     this.runSearch();
 
                     return;
