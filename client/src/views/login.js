@@ -28,10 +28,18 @@
 
 define('views/login', ['view'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:view.Class
+     * @memberOf module:views/login
+     */
+    return Dep.extend(/** @lends module:views/login.Class# */{
 
+        /** @inheritDoc */
         template: 'login',
 
+        /** @inheritDoc */
         views: {
             footer: {
                 el: 'body > footer',
@@ -41,9 +49,14 @@ define('views/login', ['view'], function (Dep) {
 
         /**
          * @type {?string}
+         * @private
          */
         anotherUser: null,
 
+        /** @private */
+        isPopoverDestroyed: false,
+
+        /** @inheritDoc */
         events: {
             'submit #login-form': function (e) {
                 e.preventDefault();
@@ -62,6 +75,7 @@ define('views/login', ['view'], function (Dep) {
             },
         },
 
+        /** @inheritDoc */
         data: function () {
             return {
                 logoSrc: this.getLogoSrc(),
@@ -70,10 +84,15 @@ define('views/login', ['view'], function (Dep) {
             };
         },
 
+        /** @inheritDoc */
         setup: function () {
             this.anotherUser = this.options.anotherUser || null;
         },
 
+        /**
+         * @private
+         * @return {string}
+         */
         getLogoSrc: function () {
             var companyLogoId = this.getConfig().get('companyLogoId');
 
@@ -84,6 +103,7 @@ define('views/login', ['view'], function (Dep) {
             return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId;
         },
 
+        /** @inheritDoc */
         afterRender: function () {
             this.$submit = this.$el.find('#btn-login');
             this.$username = this.$el.find('#field-userName');
@@ -94,6 +114,9 @@ define('views/login', ['view'], function (Dep) {
             }
         },
 
+        /**
+         * @private
+         */
         login: function () {
             let userName = this.$username.val();
             let trimmedUserName = userName.trim();
@@ -202,20 +225,35 @@ define('views/login', ['view'], function (Dep) {
                 });
         },
 
+        /**
+         * @public
+         */
         disableForm: function () {
             this.$submit.addClass('disabled').attr('disabled', 'disabled');
         },
 
+        /**
+         * @public
+         */
         undisableForm: function () {
             this.$submit.removeClass('disabled').removeAttr('disabled');
         },
 
+        /**
+         * @private
+         * @param {string} userName
+         * @param {string} password
+         * @param {Object.<string, *>}data
+         */
         onSecondStepRequired: function (userName, password, data) {
             let view = data.view || 'views/login-second-step';
 
             this.trigger('redirect', view, userName, password, data);
         },
 
+        /**
+         * @private
+         */
         onWrongCredentials: function () {
             let $cell = $('#login .form-group');
 
@@ -228,12 +266,15 @@ define('views/login', ['view'], function (Dep) {
             Espo.Ui.error(this.translate('wrongUsernamePassword', 'messages', 'User'));
         },
 
+        /**
+         * @private
+         */
         showPasswordChangeRequest: function () {
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
             this.createView('passwordChangeRequest', 'views/modals/password-change-request', {
                 url: window.location.href,
-            }, (view) => {
+            }, view => {
                 view.render();
 
                 Espo.Ui.notify(false);
