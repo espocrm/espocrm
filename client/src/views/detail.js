@@ -305,11 +305,12 @@ define('views/detail', ['views/main'], function (Dep) {
          */
         updatePageTitle: function () {
             if (this.model.has('name')) {
-                this.setPageTitle(this.model.get('name'));
+                this.setPageTitle(this.model.get('name') || this.model.id);
+
+                return;
             }
-            else {
-                Dep.prototype.updatePageTitle.call(this);
-            }
+
+            Dep.prototype.updatePageTitle.call(this);
         },
 
         /**
