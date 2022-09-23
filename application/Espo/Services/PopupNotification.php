@@ -39,7 +39,7 @@ use Espo\{
     Entities\User,
 };
 
-use StdClass;
+use stdClass;
 use Throwable;
 
 class PopupNotification
@@ -60,7 +60,7 @@ class PopupNotification
         $this->log = $log;
     }
 
-    public function getGroupedList(): StdClass
+    public function getGroupedList(): stdClass
     {
         $data = $this->metadata->get(['app', 'popupNotifications']) ?? [];
 

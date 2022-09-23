@@ -37,11 +37,8 @@ use stdClass;
 class RunResult
 {
     private bool $isSuccess = false;
-
     private ?string $output = null;
-
     private ?string $message = null;
-
     private ?Error $exception = null;
 
     private function __construct(bool $isSuccess)

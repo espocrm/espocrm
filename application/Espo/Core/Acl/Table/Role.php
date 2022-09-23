@@ -29,13 +29,13 @@
 
 namespace Espo\Core\Acl\Table;
 
-use StdClass;
+use stdClass;
 
 interface Role
 {
-    public function getScopeTableData(): StdClass;
+    public function getScopeTableData(): stdClass;
 
-    public function getFieldTableData(): StdClass;
+    public function getFieldTableData(): stdClass;
 
     public function getPermissionLevel(string $permission): ?string;
 }

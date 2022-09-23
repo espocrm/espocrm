@@ -43,9 +43,7 @@ use Espo\Core\Binding\BindingContainerBuilder;
 class MassActionFactory
 {
     private Metadata $metadata;
-
     private InjectableFactory $injectableFactory;
-
     private AclManager $aclManager;
 
     public function __construct(Metadata $metadata, InjectableFactory $injectableFactory, AclManager $aclManager)

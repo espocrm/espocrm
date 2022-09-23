@@ -40,7 +40,7 @@ use Espo\Core\{
     Api\Request,
 };
 
-use StdClass;
+use stdClass;
 
 class TemplateManager
 {
@@ -64,7 +64,7 @@ class TemplateManager
         }
     }
 
-    public function getActionGetTemplate(Request $request): StdClass
+    public function getActionGetTemplate(Request $request): stdClass
     {
         $name = $request->getQueryParam('name');
 
@@ -118,7 +118,7 @@ class TemplateManager
         return true;
     }
 
-    public function postActionResetTemplate(Request $request): StdClass
+    public function postActionResetTemplate(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 

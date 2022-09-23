@@ -35,7 +35,7 @@ use Espo\Core\{
     Api\Request,
 };
 
-use StdClass;
+use stdClass;
 
 /**
  * Action framework.
@@ -49,7 +49,7 @@ class Action
         $this->service = $service;
     }
 
-    public function postActionProcess(Request $request): StdClass
+    public function postActionProcess(Request $request): stdClass
     {
         $body = $request->getParsedBody();
 

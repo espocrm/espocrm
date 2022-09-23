@@ -36,7 +36,7 @@ use Espo\Core\{
 
 use Espo\Services\Preferences as Service;
 
-use StdClass;
+use stdClass;
 
 class Preferences
 {
@@ -47,7 +47,7 @@ class Preferences
         $this->service = $service;
     }
 
-    public function getActionRead(Request $request): StdClass
+    public function getActionRead(Request $request): stdClass
     {
         $userId = $request->getRouteParam('id');
 
@@ -58,7 +58,7 @@ class Preferences
         return $this->service->read($userId)->getValueMap();
     }
 
-    public function deleteActionDelete(Request $request): StdClass
+    public function deleteActionDelete(Request $request): stdClass
     {
         $userId = $request->getRouteParam('id');
 
@@ -73,7 +73,7 @@ class Preferences
             ->getValueMap();
     }
 
-    public function putActionUpdate(Request $request): StdClass
+    public function putActionUpdate(Request $request): stdClass
     {
         $userId = $request->getRouteParam('id');
 
@@ -88,7 +88,7 @@ class Preferences
             ->getValueMap();
     }
 
-    public function postActionResetDashboard(Request $request): StdClass
+    public function postActionResetDashboard(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 

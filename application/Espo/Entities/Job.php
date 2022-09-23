@@ -31,7 +31,7 @@ namespace Espo\Entities;
 
 use Espo\Core\ORM\Entity;
 
-use StdClass;
+use stdClass;
 
 class Job extends Entity
 {
@@ -104,7 +104,7 @@ class Job extends Entity
     /**
      * Get data.
      */
-    public function getData(): StdClass
+    public function getData(): stdClass
     {
         return $this->get('data') ?? (object) [];
     }

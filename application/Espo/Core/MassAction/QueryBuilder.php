@@ -35,9 +35,8 @@ use Espo\Entities\User;
 
 class QueryBuilder
 {
-    private $selectBuilderFactory;
-
-    private $user;
+    private SelectBuilderFactory $selectBuilderFactory;
+    private User $user;
 
     public function __construct(SelectBuilderFactory $selectBuilderFactory, User $user)
     {

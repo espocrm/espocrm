@@ -36,7 +36,7 @@ use Espo\Core\{
 
 use Espo\Services\LastViewed as Service;
 
-use StdClass;
+use stdClass;
 
 class LastViewed
 {
@@ -50,7 +50,7 @@ class LastViewed
         $this->service = $service;
     }
 
-    public function getActionIndex(Request $request): StdClass
+    public function getActionIndex(Request $request): stdClass
     {
         $searchParams = $this->searchParamsFetcher->fetch($request);
 

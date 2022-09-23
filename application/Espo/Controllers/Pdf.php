@@ -41,7 +41,7 @@ use Espo\Core\{
 
 use Espo\Services\Pdf as Service;
 
-use StdClass;
+use stdClass;
 
 class Pdf
 {
@@ -55,7 +55,7 @@ class Pdf
         $this->acl = $acl;
     }
 
-    public function postActionMassPrint(Request $request): StdClass
+    public function postActionMassPrint(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 

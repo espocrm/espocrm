@@ -31,7 +31,7 @@ namespace Espo\Core\Acl\Table;
 
 use Espo\ORM\Entity;
 
-use StdClass;
+use stdClass;
 
 class RoleEntityWrapper implements Role
 {
@@ -42,12 +42,12 @@ class RoleEntityWrapper implements Role
         $this->entity = $entity;
     }
 
-    public function getScopeTableData(): StdClass
+    public function getScopeTableData(): stdClass
     {
         return $this->entity->get('data') ?? (object) [];
     }
 
-    public function getFieldTableData(): StdClass
+    public function getFieldTableData(): stdClass
     {
         return $this->entity->get('fieldData') ?? (object) [];
     }

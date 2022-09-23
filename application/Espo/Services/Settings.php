@@ -53,25 +53,16 @@ use stdClass;
 
 class Settings
 {
-    private $applicationState;
-
-    private $config;
-
-    private $configWriter;
-
-    private $metadata;
-
-    private $acl;
-
-    private $entityManager;
-
-    private $dataManager;
-
-    private $fieldValidationManager;
-
-    private $injectableFactory;
-
-    private $access;
+    private ApplicationState $applicationState;
+    private Config $config;
+    private ConfigWriter $configWriter;
+    private Metadata $metadata;
+    private Acl $acl;
+    private EntityManager $entityManager;
+    private DataManager $dataManager;
+    private FieldValidationManager $fieldValidationManager;
+    private InjectableFactory $injectableFactory;
+    private Access $access;
 
     public function __construct(
         ApplicationState $applicationState,

@@ -31,11 +31,11 @@ namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
 
-use StdClass;
+use stdClass;
 
 class JsonArrayType
 {
-    public function rawCheckArray(StdClass $data, string $field): bool
+    public function rawCheckArray(stdClass $data, string $field): bool
     {
         if (isset($data->$field) && !is_array($data->$field)) {
             return false;
