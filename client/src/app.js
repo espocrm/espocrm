@@ -253,6 +253,14 @@ function (
         auth: null,
 
         /**
+         * Another user to login as.
+         *
+         * @private
+         * @type {?string}
+         */
+        anotherUser: null,
+
+        /**
          * A base controller.
          *
          * @private
@@ -334,6 +342,12 @@ function (
          * @type {module:number.Class|null}
          */
         numberUtil: null,
+
+        /**
+         * @private
+         * @type {module:web-socket-manager.Class|null}
+         */
+        webSocketManager: null,
 
         /**
          * @private
@@ -470,14 +484,11 @@ function (
 
             if (!this.auth) {
                 this.baseController.login();
-            }
-            else {
-                this.initUserData(null, () => {
-                    this.onAuth.call(this);
-                });
+
+                return;
             }
 
-            this.on('auth', this.onAuth, this);
+            this.initUserData(null, () => this.onAuth.call(this));
         },
 
         /**
@@ -495,6 +506,11 @@ function (
 
                 if (this.themeManager.isUserTheme()) {
                     this.loadStylesheet();
+                }
+
+                if (this.anotherUser) {
+                    this.viewHelper.webSocketManager = null;
+                    this.webSocketManager = null;
                 }
 
                 if (this.webSocketManager) {
@@ -668,6 +684,7 @@ function (
                 metadata: this.metadata,
                 dateTime: this.dateTime,
                 broadcastChannel: this.broadcastChannel,
+                baseController: this.baseController,
             };
         },
 
@@ -715,8 +732,6 @@ function (
                 /** typeof module:controller.Class */
                 controllerClass => {
                     let injections = this.getControllerInjection();
-
-                    injections.baseController = this.baseController;
 
                     let controller = new controllerClass(this.baseController.params, injections);
 
@@ -871,17 +886,22 @@ function (
         },
 
         /**
-         * @private
+         * @public
          */
         initAuth: function () {
+            this.on('auth', this.onAuth, this);
+
             this.auth = this.storage.get('user', 'auth') || null;
+            this.anotherUser = this.storage.get('user', 'anotherUser') || null;
 
             this.baseController.on('login', data => {
                 let userId = data.user.id;
                 let userName = data.auth.userName;
                 let token = data.auth.token;
+                let anotherUser = data.auth.anotherUser || null;
 
                 this.auth = Base64.encode(userName  + ':' + token);
+                this.anotherUser = anotherUser;
 
                 let lastUserId = this.storage.get('user', 'lastUserId');
 
@@ -892,6 +912,7 @@ function (
 
                 this.storage.set('user', 'auth', this.auth);
                 this.storage.set('user', 'lastUserId', userId);
+                this.storage.set('user', 'anotherUser', this.anotherUser);
 
                 this.setCookieAuth(userName, token);
 
@@ -920,6 +941,7 @@ function (
             }
 
             this.auth = null;
+            this.anotherUser = null;
 
             this.user.clear();
             this.preferences.clear();
@@ -927,6 +949,7 @@ function (
             this.acl.clear();
 
             this.storage.clear('user', 'auth');
+            this.storage.clear('user', 'anotherUser');
 
             this.doAction({action: 'login'});
 
@@ -1084,6 +1107,9 @@ function (
                         xhr.setRequestHeader('Espo-Authorization-By-Token', 'true');
                     }
 
+                    if (this.anotherUser !== null) {
+                        xhr.setRequestHeader('X-Another-User', this.anotherUser);
+                    }
                 },
                 dataType: 'json',
                 timeout: this.ajaxTimeout,

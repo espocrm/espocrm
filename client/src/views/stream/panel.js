@@ -280,7 +280,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
         },
 
         subscribeToWebSocket: function () {
-            if (!this.getConfig().get('useWebSocket')) {
+            if (!this.getHelper().webSocketManager) {
                 return;
             }
 

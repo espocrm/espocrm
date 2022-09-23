@@ -119,4 +119,9 @@ class ConfigDataProvider
     {
         return (bool) $this->metadata->get(['authenticationMethods', $authenticationMethod, 'api']);
     }
+
+    public function isAnotherUserDisabled(): bool
+    {
+        return (bool) $this->config->get('authAnotherUserDisabled');
+    }
 }

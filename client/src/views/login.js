@@ -39,6 +39,11 @@ define('views/login', ['view'], function (Dep) {
             },
         },
 
+        /**
+         * @type {?string}
+         */
+        anotherUser: null,
+
         events: {
             'submit #login-form': function (e) {
                 e.preventDefault();
@@ -61,7 +66,12 @@ define('views/login', ['view'], function (Dep) {
             return {
                 logoSrc: this.getLogoSrc(),
                 showForgotPassword: this.getConfig().get('passwordRecoveryEnabled'),
+                anotherUser: this.anotherUser,
             };
+        },
+
+        setup: function () {
+            this.anotherUser = this.options.anotherUser || null;
         },
 
         getLogoSrc: function () {
@@ -76,19 +86,25 @@ define('views/login', ['view'], function (Dep) {
 
         afterRender: function () {
             this.$submit = this.$el.find('#btn-login');
+            this.$username = this.$el.find('#field-userName');
+            this.$password = this.$el.find('#field-password');
+
+            if (this.options.prefilledUsername) {
+                this.$username.val(this.options.prefilledUsername);
+            }
         },
 
         login: function () {
-            let userName = $('#field-userName').val();
+            let userName = this.$username.val();
             let trimmedUserName = userName.trim();
 
             if (trimmedUserName !== userName) {
-                $('#field-userName').val(trimmedUserName);
+                this.$username.val(trimmedUserName);
 
                 userName = trimmedUserName;
             }
 
-            let password = $('#field-password').val();
+            let password = this.$password.val();
 
             if (userName === '') {
                 this.isPopoverDestroyed = false;
@@ -140,18 +156,28 @@ define('views/login', ['view'], function (Dep) {
                 throw e;
             }
 
+            let headers = {
+                'Authorization': 'Basic ' + authString,
+                'Espo-Authorization': authString,
+                'Espo-Authorization-By-Token': false,
+                'Espo-Authorization-Create-Token-Secret': true,
+            };
+
+            if (this.anotherUser !== null) {
+                headers['X-Another-User'] = this.anotherUser;
+            }
+
             Espo.Ajax
                 .getRequest('App/user', null, {
                     login: true,
-                    headers: {
-                        'Authorization': 'Basic ' + authString,
-                        'Espo-Authorization': authString,
-                        'Espo-Authorization-By-Token': false,
-                        'Espo-Authorization-Create-Token-Secret': true,
-                    },
+                    headers: headers,
                 })
                 .then(data => {
                     this.notify(false);
+
+                    if (this.anotherUser) {
+                        data.anotherUser = this.anotherUser;
+                    }
 
                     this.trigger('login', userName, data);
                 })

@@ -101,6 +101,7 @@ return [
         'clientSecurityHeadersDisabled',
         'clientCspDisabled',
         'clientCspScriptSourceList',
+        'authAnotherUserDisabled',
     ],
     'adminItems' => [
         'devMode',

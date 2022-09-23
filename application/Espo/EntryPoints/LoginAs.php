@@ -27,18 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Client;
+namespace Espo\EntryPoints;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\EntryPoint\EntryPoint;
+use Espo\Core\EntryPoint\Traits\NoAuth;
+use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
-use Espo\Core\Utils\Client\ActionRenderer\Params;
-use Espo\Core\Utils\Json;
 use Espo\Core\Utils\ClientManager;
+use Espo\Core\Utils\Json;
 
-/**
- * Renders a font-end page that executes a controller action. Utilized by entry points.
- */
-class ActionRenderer
+class LoginAs implements EntryPoint
 {
+    use NoAuth;
+
     private ClientManager $clientManager;
 
     public function __construct(ClientManager $clientManager)
@@ -47,33 +49,34 @@ class ActionRenderer
     }
 
     /**
-     * Writes to a body.
+     * @throws BadRequest
      */
-    public function write(Response $response, Params $params): void
+    public function run(Request $request, Response $response): void
     {
-        $body = $this->render($params->getController(), $params->getAction(), $params->getData());
+        $anotherUser = $request->getQueryParam('anotherUser');
 
-        $this->clientManager->writeHeaders($response);
-        $response->writeBody($body);
-    }
+        if (!$anotherUser) {
+            throw new BadRequest("No anotherUser.");
+        }
 
-    /**
-     * @deprecated Use`write`.
-     * @param ?array<string,mixed> $data
-     */
-    public function render(string $controller, string $action, ?array $data = null): string
-    {
+        $data = [
+            'anotherUser' => $anotherUser,
+            'username' => $request->getQueryParam('username'),
+        ];
+
         $encodedData = Json::encode($data);
 
         $script =
             "
+                app.initAuth();
                 app.doAction({
-                    controllerClassName: '{$controller}',
-                    action: '{$action}',
+                    controllerClassName: 'controllers/login-as',
+                    action: 'login',
                     options: {$encodedData},
                 });
             ";
 
-        return $this->clientManager->render($script);
+        $this->clientManager->writeHeaders($response);
+        $response->writeBody($this->clientManager->render($script));        ;
     }
 }

@@ -35,6 +35,12 @@
                             maxlength="255"
                         >
                     </div>
+                    {{#if anotherUser}}
+                    <div class="form-group">
+                        <label>{{translate 'Log in as'}}</label>
+                        <div>{{anotherUser}}</div>
+                    </div>
+                    {{/if}}
                     <div class="margin-top-2x">
                         {{#if showForgotPassword}}
                         <a

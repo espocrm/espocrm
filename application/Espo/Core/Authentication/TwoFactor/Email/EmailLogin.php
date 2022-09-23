@@ -64,25 +64,19 @@ class EmailLogin implements Login
     {
         $code = $request->getHeader('Espo-Authorization-Code');
 
-        $loggedUser = $result->getLoggedUser();
+        $user = $result->getUser();
 
-        if (!$loggedUser) {
-            throw new RuntimeException("No logged-user.");
+        if (!$user) {
+            throw new RuntimeException("No user.");
         }
 
         if (!$code) {
-            $user = $result->getUser();
-
-            if (!$user) {
-                throw new RuntimeException("No user.");
-            }
-
-            $this->util->sendCode($loggedUser);
+            $this->util->sendCode($user);
 
             return Result::secondStepRequired($user, $this->getResultData());
         }
 
-        if ($this->verifyCode($loggedUser, $code)) {
+        if ($this->verifyCode($user, $code)) {
             return $result;
         }
 

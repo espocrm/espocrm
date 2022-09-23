@@ -39,6 +39,11 @@ define('views/login-second-step', ['view'], function (Dep) {
             },
         },
 
+        /**
+         * @type {?string}
+         */
+        anotherUser: null,
+
         events: {
             'submit #login-form': function (e) {
                 e.preventDefault();
@@ -65,6 +70,7 @@ define('views/login-second-step', ['view'], function (Dep) {
 
         setup: function () {
             this.message = this.translate(this.options.loginData.message, 'messages', 'User');
+            this.anotherUser = this.options.anotherUser || null;
         },
 
         send: function () {
@@ -117,18 +123,29 @@ define('views/login-second-step', ['view'], function (Dep) {
 
             let authString = Base64.encode(userName  + ':' + password);
 
+            let headers = {
+                'Authorization': 'Basic ' + authString,
+                'Espo-Authorization': authString,
+                'Espo-Authorization-Code': code,
+                'Espo-Authorization-Create-Token-Secret': true,
+            };
+
+            if (this.anotherUser !== null) {
+                headers['X-Another-User'] = this.anotherUser;
+            }
+
             Espo.Ajax
                 .getRequest('App/user', {code: code}, {
                     login: true,
-                    headers: {
-                        'Authorization': 'Basic ' + authString,
-                        'Espo-Authorization': authString,
-                        'Espo-Authorization-Code': code,
-                        'Espo-Authorization-Create-Token-Secret': true,
-                    },
+                    headers: headers,
                 })
                 .then(data => {
                     this.notify(false);
+
+                    if (this.anotherUser) {
+                        data.anotherUser = this.anotherUser;
+                    }
+
                     this.trigger('login', userName, data);
                 })
                 .catch(xhr => {

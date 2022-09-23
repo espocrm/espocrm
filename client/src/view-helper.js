@@ -202,9 +202,9 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
         themeManager: null,
 
         /**
-         * A web-socket manager
+         * A web-socket manager. Null if not enabled.
          *
-         * @type {module:web-socket-manager.Class}
+         * @type {?module:web-socket-manager.Class}
          */
         webSocketManager: null,
 

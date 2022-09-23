@@ -51,7 +51,7 @@ define('views/notification/badge', ['view'], function (Dep) {
 
             this.notificationSoundsDisabled = true;
 
-            this.useWebSocket = this.getConfig().get('useWebSocket');
+            this.useWebSocket = !!this.getHelper().webSocketManager;
 
             this.once('remove', () => {
                 if (this.timeout) {

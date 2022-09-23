@@ -42,4 +42,6 @@ class FailReason
     public const HASH_NOT_MATCHED = 'Hash not matched';
     public const METHOD_NOT_ALLOWED = 'Not allowed authentication method';
     public const DISCREPANT_DATA = 'Discrepant authentication data';
+    public const ANOTHER_USER_NOT_FOUND = 'Another user not found';
+    public const ANOTHER_USER_NOT_ALLOWED = 'Another user not allowed';
 }

@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,53 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Client;
+define('views/user/modals/login-as', ['views/modal'], function (Dep) {
 
-use Espo\Core\Api\Response;
-use Espo\Core\Utils\Client\ActionRenderer\Params;
-use Espo\Core\Utils\Json;
-use Espo\Core\Utils\ClientManager;
+    return Dep.extend({
 
-/**
- * Renders a font-end page that executes a controller action. Utilized by entry points.
- */
-class ActionRenderer
-{
-    private ClientManager $clientManager;
+        backdrop: true,
 
-    public function __construct(ClientManager $clientManager)
-    {
-        $this->clientManager = $clientManager;
-    }
+        templateContent: `
+            <div class="well">
+                {{translate 'loginAs' category='messages' scope='User'}}
+            </div>
+            <a href="{{viewObject.url}}" class="text-large">{{translate 'Login Link' scope='User'}}</a>
+        `,
 
-    /**
-     * Writes to a body.
-     */
-    public function write(Response $response, Params $params): void
-    {
-        $body = $this->render($params->getController(), $params->getAction(), $params->getData());
+        setup: function () {
+            this.$header = $('<span>')
+                .append(
+                    $('<span>').text(this.model.get('name')),
+                    ' ',
+                    $('<span>').addClass('chevron-right'),
+                    ' ',
+                    $('<span>').text(this.translate('Login')),
+                );
 
-        $this->clientManager->writeHeaders($response);
-        $response->writeBody($body);
-    }
-
-    /**
-     * @deprecated Use`write`.
-     * @param ?array<string,mixed> $data
-     */
-    public function render(string $controller, string $action, ?array $data = null): string
-    {
-        $encodedData = Json::encode($data);
-
-        $script =
-            "
-                app.doAction({
-                    controllerClassName: '{$controller}',
-                    action: '{$action}',
-                    options: {$encodedData},
-                });
-            ";
-
-        return $this->clientManager->render($script);
-    }
-}
+            this.url = `?entryPoint=loginAs` +
+                `&anotherUser=${this.options.anotherUser}&username=${this.options.username}`;
+        },
+    });
+});

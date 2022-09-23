@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,53 +26,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Client;
+define('controllers/login-as', ['controller'], function (Dep) {
 
-use Espo\Core\Api\Response;
-use Espo\Core\Utils\Client\ActionRenderer\Params;
-use Espo\Core\Utils\Json;
-use Espo\Core\Utils\ClientManager;
+    return Dep.extend({
 
-/**
- * Renders a font-end page that executes a controller action. Utilized by entry points.
- */
-class ActionRenderer
-{
-    private ClientManager $clientManager;
+        actionLogin: function (options) {
+            let anotherUser = options.anotherUser;
+            let username = options.username;
 
-    public function __construct(ClientManager $clientManager)
-    {
-        $this->clientManager = $clientManager;
-    }
+            if (!anotherUser) {
+                throw new Error("No anotherUser.");
+            }
 
-    /**
-     * Writes to a body.
-     */
-    public function write(Response $response, Params $params): void
-    {
-        $body = $this->render($params->getController(), $params->getAction(), $params->getData());
+            this.baseController.login({
+                anotherUser: anotherUser,
+                username: username,
+            });
 
-        $this->clientManager->writeHeaders($response);
-        $response->writeBody($body);
-    }
-
-    /**
-     * @deprecated Use`write`.
-     * @param ?array<string,mixed> $data
-     */
-    public function render(string $controller, string $action, ?array $data = null): string
-    {
-        $encodedData = Json::encode($data);
-
-        $script =
-            "
-                app.doAction({
-                    controllerClassName: '{$controller}',
-                    action: '{$action}',
-                    options: {$encodedData},
-                });
-            ";
-
-        return $this->clientManager->render($script);
-    }
-}
+            this.listenToOnce(this.baseController, 'login', () => {
+                this.baseController.once('router-set', () => {
+                    let url = window.location.href.split('?')[0];
+                    window.location.replace(url);
+                })
+            });
+        },
+    });
+});

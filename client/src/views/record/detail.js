@@ -1856,7 +1856,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             if (
                 !this.isNew &&
-                this.getConfig().get('useWebSocket') &&
+                !!this.getHelper().webSocketManager &&
                 this.getMetadata().get(['scopes', this.entityType, 'object'])
             ) {
                 this.subscribeToWebSocket();

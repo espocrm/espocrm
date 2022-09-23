@@ -49,7 +49,6 @@ class Result
     private ?string $message = null;
     private ?string $token = null;
     private ?string $view = null;
-    private ?User $loggedUser = null;
     private ?string $failReason = null;
     private ?Data $data = null;
 
@@ -64,7 +63,6 @@ class Result
             $this->message = $data->getMessage();
             $this->token = $data->getToken();
             $this->view = $data->getView();
-            $this->loggedUser = $data->getLoggedUser();
             $this->failReason = $data->getFailReason();
         }
     }
@@ -130,12 +128,11 @@ class Result
     }
 
     /**
-     * Get a logged user. Considered that an admin user can log in as another user.
-     * The logged user will be an admin user.
+     * @deprecated Use `getUser`.
      */
     public function getLoggedUser(): ?User
     {
-        return $this->loggedUser ?? $this->user;
+        return $this->user;
     }
 
     /**

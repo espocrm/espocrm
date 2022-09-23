@@ -259,7 +259,17 @@ class Authentication
 
         $user->set('ipAddress', $request->getServerParam('REMOTE_ADDR') ?? null);
 
-        $this->applicationUser->setUser($user);
+        [$loggedUser, $anotherUserFailReason] = $this->getLoggedUser($request, $user);
+
+        if (!$loggedUser) {
+            return $this->processFail(
+                Result::fail($anotherUserFailReason ?? FailReason::ANOTHER_USER_NOT_FOUND),
+                $data,
+                $request
+            );
+        }
+
+        $this->applicationUser->setUser($loggedUser);
 
         if (
             !$result->isSecondStepRequired() &&
@@ -291,8 +301,8 @@ class Authentication
                 $authTokenId = $authToken->id ?? null;
             }
 
-            $user->set('token', $authToken->getToken());
-            $user->set('authTokenId', $authTokenId);
+            $loggedUser->set('token', $authToken->getToken());
+            $loggedUser->set('authTokenId', $authTokenId);
 
             if ($authLogRecord) {
                 $authLogRecord->set('authTokenId', $authTokenId);
@@ -315,7 +325,7 @@ class Authentication
         }
 
         if ($authLogRecord) {
-            $user->set('authLogRecordId', $authLogRecord->getId());
+            $loggedUser->set('authLogRecordId', $authLogRecord->getId());
         }
 
         if ($result->isSuccess()) {
@@ -436,13 +446,13 @@ class Authentication
 
     private function processTwoFactor(Result $result, Request $request): Result
     {
-        $loggedUser = $result->getLoggedUser();
+        $user = $result->getUser();
 
-        if (!$loggedUser) {
-            throw new RuntimeException("No logged-user.");
+        if (!$user) {
+            throw new RuntimeException("No user.");
         }
 
-        $method = $this->getUser2FAMethod($loggedUser);
+        $method = $this->getUser2FAMethod($user);
 
         if (!$method) {
             return $result;
@@ -708,5 +718,44 @@ class Authentication
         }
 
         return $user->getUserName();
+    }
+
+    /**
+     * @return array{?User, (FailReason::*)|null}
+     */
+    private function getLoggedUser(Request $request, User $user): array
+    {
+        $username = $request->getHeader('X-Another-User');
+
+        if (!$username) {
+            return [$user, null];
+        }
+
+        if ($this->configDataProvider->isAnotherUserDisabled()) {
+            return [null, FailReason::ANOTHER_USER_NOT_ALLOWED];
+        }
+
+        // Important check.
+        if (!$user->isAdmin()) {
+            return [null, FailReason::ANOTHER_USER_NOT_ALLOWED];
+        }
+
+        /** @var ?User $loggedUser */
+        $loggedUser = $this->entityManager
+            ->getRDBRepository(User::ENTITY_TYPE)
+            ->where([
+                'userName' => $username,
+            ])
+            ->findOne();
+
+        if (!$loggedUser) {
+            return [null, FailReason::ANOTHER_USER_NOT_FOUND];
+        }
+
+        if (!$loggedUser->isRegular()) {
+            return [null, FailReason::ANOTHER_USER_NOT_ALLOWED];
+        }
+
+        return [$loggedUser, null];
     }
 }

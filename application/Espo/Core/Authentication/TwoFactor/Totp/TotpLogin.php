@@ -64,23 +64,17 @@ class TotpLogin implements Login
     {
         $code = $request->getHeader('Espo-Authorization-Code');
 
+        $user = $result->getUser();
+
+        if (!$user) {
+            throw new RuntimeException("No user.");
+        }
+
         if (!$code) {
-            $user = $result->getUser();
-
-            if (!$user) {
-                throw new RuntimeException("No user.");
-            }
-
             return Result::secondStepRequired($user, $this->getResultData());
         }
 
-        $loggedUser = $result->getLoggedUser();
-
-        if (!$loggedUser) {
-            throw new RuntimeException("No logged-user.");
-        }
-
-        if ($this->verifyCode($loggedUser, $code)) {
+        if ($this->verifyCode($user, $code)) {
             return $result;
         }
 

@@ -122,6 +122,14 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 });
             }
 
+            if (this.getUser().isAdmin() && this.model.isRegular()) {
+                this.addDropdownItem({
+                    label: 'Log in',
+                    name: 'login',
+                    action: 'login',
+                });
+            }
+
             this.setupFieldAppearance();
         },
 
@@ -416,5 +424,16 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
             });
         },
 
+        actionLogin: function () {
+            let anotherUser = this.model.get('userName');
+            let username = this.getUser().get('userName');
+
+            this.createView('dialog', 'views/user/modals/login-as', {
+                    model: this.model,
+                    anotherUser: anotherUser,
+                    username: username,
+                })
+                .then(view => view.render());
+        },
     });
 });

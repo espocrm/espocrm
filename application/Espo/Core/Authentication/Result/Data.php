@@ -38,7 +38,6 @@ class Data
     private ?string $message = null;
     private ?string $token = null;
     private ?string $view = null;
-    private ?User $loggedUser = null;
     private ?string $failReason = null;
 
     /**
@@ -50,14 +49,12 @@ class Data
         ?string $message = null,
         ?string $failReason = null,
         ?string $token = null,
-        ?string $view = null,
-        ?User $loggedUser = null
+        ?string $view = null
     ) {
         $this->message = $message;
         $this->failReason = $failReason;
         $this->token = $token;
         $this->view = $view;
-        $this->loggedUser = $loggedUser;
     }
 
     public static function create(): self
@@ -73,11 +70,6 @@ class Data
     public static function createWithMessage(string $message): self
     {
         return new self($message);
-    }
-
-    public function getLoggedUser(): ?User
-    {
-        return $this->loggedUser;
     }
 
     public function getView(): ?string
@@ -133,14 +125,6 @@ class Data
     {
         $obj = clone $this;
         $obj->view = $view;
-
-        return $obj;
-    }
-
-    public function withLoggedUser(?User $loggedUser): self
-    {
-        $obj = clone $this;
-        $obj->loggedUser = $loggedUser;
 
         return $obj;
     }

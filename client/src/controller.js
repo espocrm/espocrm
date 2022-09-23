@@ -136,6 +136,8 @@ define('controller', [], function () {
          */
         setRouter: function (router) {
             this._router = router;
+
+            this.trigger('router-set', router);
         },
 
         /**

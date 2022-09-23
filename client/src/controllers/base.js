@@ -41,10 +41,18 @@ define('controllers/base', ['controller'], function (Dep) {
         /**
          * Log in.
          */
-        login: function () {
-            var viewName = this.getConfig().get('loginView') || 'views/login';
+        login: function (options) {
+            let viewName = this.getConfig().get('loginView') || 'views/login';
 
-            this.entire(viewName, {}, loginView => {
+            let anotherUser = (options || {}).anotherUser;
+            let prefilledUsername = (options || {}).username;
+
+            let viewOptions = {
+                anotherUser: anotherUser,
+                prefilledUsername: prefilledUsername,
+            };
+
+            this.entire(viewName, viewOptions, loginView => {
                 loginView.render();
 
                 loginView.on('login', (userName, data) => {
@@ -58,6 +66,7 @@ define('controllers/base', ['controller'], function (Dep) {
                         loginData: data,
                         userName: userName,
                         password: password,
+                        anotherUser: anotherUser,
                     }, secondStepView => {
                         secondStepView.render();
 
@@ -83,6 +92,7 @@ define('controllers/base', ['controller'], function (Dep) {
                 auth: {
                     userName: userName,
                     token: data.token,
+                    anotherUser: data.anotherUser,
                 },
                 user: data.user,
                 preferences: data.preferences,
