@@ -74,7 +74,7 @@
     "passwordWillBeSent": "رمز عبور به آدرس ایمیل کاربر ارسال می شود.",
     "passwordChanged": "رمز عبور تغییر کرده است",
     "userCantBeEmpty": "نام کاربری نمیتواند خالی باشد",
-    "wrongUsernamePasword": "نام کاربری / کلمه عبور اشتباه است",
+    "wrongUsernamePassword": "نام کاربری / کلمه عبور اشتباه است",
     "emailAddressCantBeEmpty": "آدرس ایمیل نمی تواند خالی باشد",
     "userNameEmailAddressNotFound": "نام کاربری / آدرس ایمیل یافت نشد",
     "forbidden": "ممنوع است، لطفا بعدا امتحان کنید",

@@ -65,7 +65,7 @@
     "passwordWillBeSent": "Parola va fi trimisă în email-ul utilizatorului.",
     "passwordChanged": "Parola a fost schimbată",
     "userCantBeEmpty": "Numele de utilizator nu poate fi necompletat",
-    "wrongUsernamePasword": "Nume utilizator/parolă greșit(e).",
+    "wrongUsernamePassword": "Nume utilizator/parolă greșit(e).",
     "emailAddressCantBeEmpty": "Adresa de Email nu poate fi necompletată",
     "userNameEmailAddressNotFound": "Nume utilizator/Adresă de email nu a(u) fost găsi(e)",
     "forbidden": "Înterzis, încercați mai târziu",

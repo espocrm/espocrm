@@ -104,7 +104,7 @@
         "passwordWillBeSent": "Password will be sent to user's email address.",
         "passwordChanged": "Password has been changed",
         "userCantBeEmpty": "Username can not be empty",
-        "wrongUsernamePasword": "Wrong username/password",
+        "wrongUsernamePassword": "Wrong username/password",
         "emailAddressCantBeEmpty": "Email Address can not be empty",
         "userNameEmailAddressNotFound": "Username/Email Address not found",
         "forbidden": "Forbidden, please try later",

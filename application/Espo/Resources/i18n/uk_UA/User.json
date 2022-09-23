@@ -93,7 +93,7 @@
     "passwordWillBeSent": "Пароль буде вислано на поштову адресу користувача",
     "passwordChanged": "Пароль було змінено",
     "userCantBeEmpty": "Ім'я користувача не може бути порожнім",
-    "wrongUsernamePasword": "Хибне ім'я користувача / пароль",
+    "wrongUsernamePassword": "Хибне ім'я користувача / пароль",
     "emailAddressCantBeEmpty": "Адреса електронної пошти не може бути порожньою",
     "userNameEmailAddressNotFound": "Ім'я користувача / адресу електронної пошти не знайдено",
     "forbidden": "Недоступно, будь ласка, спробуйте пізніше",

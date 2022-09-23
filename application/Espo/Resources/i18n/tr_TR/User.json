@@ -64,7 +64,7 @@
   },
   "messages": {
     "userCantBeEmpty": "Kullanıcı adı boş olamaz.",
-    "wrongUsernamePasword": "Yanlış kullanıcı adı / şifre",
+    "wrongUsernamePassword": "Yanlış kullanıcı adı / şifre",
     "emailAddressCantBeEmpty": "E-posta Adresi boş olamaz",
     "userNameEmailAddressNotFound": "Kullanıcı adı / e-posta adresi bulunamadı",
     "forbidden": "Yasak, lütfen daha sonra deneyin",

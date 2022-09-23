@@ -83,7 +83,7 @@
     "passwordWillBeSent": "Hasło zostanie wysłane na adres e-mail użytkownika.",
     "passwordChanged": "Hasło zostało zmienione",
     "userCantBeEmpty": "Nazwa użytkownika nie może być pusta",
-    "wrongUsernamePasword": "Nieprawidłowa nazwa użytkownika/hasło",
+    "wrongUsernamePassword": "Nieprawidłowa nazwa użytkownika/hasło",
     "emailAddressCantBeEmpty": "Adres e-mail nie może być pusty",
     "userNameEmailAddressNotFound": "Użytkownik/email nie został odnaleziony",
     "forbidden": "Zabronione, proszę spróbować później",

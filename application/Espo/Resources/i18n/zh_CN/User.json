@@ -72,7 +72,7 @@
     "passwordWillBeSent": "密码将发送到用户的电子邮件地址。",
     "passwordChanged": "密码已被更改",
     "userCantBeEmpty": "用户名不能为空",
-    "wrongUsernamePasword": "用户名/密码错误",
+    "wrongUsernamePassword": "用户名/密码错误",
     "emailAddressCantBeEmpty": "电子邮件地址不能为空",
     "userNameEmailAddressNotFound": "用户名/电子邮件地址未找到",
     "forbidden": "禁止访问，请稍后再试",

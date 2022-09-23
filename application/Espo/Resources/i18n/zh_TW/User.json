@@ -91,7 +91,7 @@
     "passwordWillBeSent": "密碼會傳送到使用者的電子信箱。",
     "passwordChanged": "密碼已更改",
     "userCantBeEmpty": "使用者名稱不可空白",
-    "wrongUsernamePasword": "使用者/密碼錯誤",
+    "wrongUsernamePassword": "使用者/密碼錯誤",
     "emailAddressCantBeEmpty": "電子郵件地址不能為空",
     "userNameEmailAddressNotFound": "找不到使用者/電子郵件位址",
     "forbidden": "禁止，請稍後再試",

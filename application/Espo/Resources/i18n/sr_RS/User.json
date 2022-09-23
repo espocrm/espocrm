@@ -67,7 +67,7 @@
     "passwordWillBeSent": "Lozinka će biti poslata na adresu korisnika.",
     "passwordChanged": "Lozinka je promenjena",
     "userCantBeEmpty": "Korisničko ime ne može biti prazno",
-    "wrongUsernamePasword": "Pogrešno korisničko ime/lozinka",
+    "wrongUsernamePassword": "Pogrešno korisničko ime/lozinka",
     "emailAddressCantBeEmpty": "Adresa e-pošte ne može biti prazna",
     "userNameEmailAddressNotFound": "Korisničko ime/Adresa e-pošte nije pronađena",
     "forbidden": "Zabranjeno, pokušajte kasnije",

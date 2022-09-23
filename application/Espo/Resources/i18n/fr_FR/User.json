@@ -75,7 +75,7 @@
     "passwordWillBeSent": "Les identifiants (y compris le mot de passe) seront envoyés à l'adresse email de l'utilisateur.",
     "passwordChanged": "Le mot de passe a été modifié",
     "userCantBeEmpty": "Le nom d'utilisateur ne peut être laissé vide",
-    "wrongUsernamePasword": "Mauvaise combinaison nom d'utilisateur/mot de passe",
+    "wrongUsernamePassword": "Mauvaise combinaison nom d'utilisateur/mot de passe",
     "emailAddressCantBeEmpty": "L'adresse email ne peut être laissée vide",
     "userNameEmailAddressNotFound": "Cette combinaison utilisateur/adresse email n'a pas été retrouvée.",
     "forbidden": "Erreur, veuillez réessayer plus tard.",

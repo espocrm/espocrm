@@ -57,7 +57,7 @@
     "passwordWillBeSent": "Password akan dikirimkan ke alamat email pengguna.",
     "passwordChanged": "Sandi telah diubah",
     "userCantBeEmpty": "Username tidak boleh kosong",
-    "wrongUsernamePasword": "Salah username / password",
+    "wrongUsernamePassword": "Salah username / password",
     "emailAddressCantBeEmpty": "Alamat Email tidak boleh kosong",
     "userNameEmailAddressNotFound": "Username / Email Alamat tidak ditemukan",
     "forbidden": "Dilarang, coba nanti",

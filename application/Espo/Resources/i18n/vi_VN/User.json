@@ -68,7 +68,7 @@
     "passwordWillBeSent": "Mật khẩu sẽ được gửi tới email tài khoản",
     "passwordChanged": "Mật khẩu đã được đổi",
     "userCantBeEmpty": "Tên đăng nhập không thể bỏ trống",
-    "wrongUsernamePasword": "Sai tên đăng nhập hoặc mật khẩu",
+    "wrongUsernamePassword": "Sai tên đăng nhập hoặc mật khẩu",
     "userNameEmailAddressNotFound": "Tên đăng nhập hoặc email không tồn tại",
     "forbidden": "Từ chối truy cập, xin thử lại sau",
     "passwordChangedByRequest": "Mật khẩu đã được thay đổi",

@@ -70,7 +70,7 @@
     "passwordWillBeSent": "Heslo bude poslané na používateľov email.",
     "passwordChanged": "Heslo bolo zmenené",
     "userCantBeEmpty": "Používateľské meno nesmie byť prázdne",
-    "wrongUsernamePasword": "Nesprávne meno/heslo",
+    "wrongUsernamePassword": "Nesprávne meno/heslo",
     "emailAddressCantBeEmpty": "Emailová adresa nesmie byť prázdna",
     "userNameEmailAddressNotFound": "Používateľské meno/Emailová adresa sa nenašla",
     "forbidden": "Odmietnutý prístup, skúste neskôr",

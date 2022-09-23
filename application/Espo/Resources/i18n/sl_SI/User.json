@@ -90,7 +90,7 @@
     "passwordWillBeSent": "Geslo bo poslano na uporabnikov elektronski naslov.",
     "passwordChanged": "Geslo je spremenjeno",
     "userCantBeEmpty": "Uporabniško ime ne sme biti prazno",
-    "wrongUsernamePasword": "Napačno uporabniško ime/geslo",
+    "wrongUsernamePassword": "Napačno uporabniško ime/geslo",
     "emailAddressCantBeEmpty": "E-poštni naslov ne sme biti prazen",
     "userNameEmailAddressNotFound": "Uporabniško ime/e-poštni naslov ni bil najden",
     "forbidden": "Prepovedano, poskusite pozneje",

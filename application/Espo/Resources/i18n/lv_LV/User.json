@@ -92,7 +92,7 @@
     "passwordWillBeSent": "Parole tiks nosūtīta uz lietotāja e-pasta adresi.",
     "passwordChanged": "Parole ir nomainīta",
     "userCantBeEmpty": "Lietotājvārds nedrīkst būt tukšs",
-    "wrongUsernamePasword": "Nepareizs lietotājvārds/parole",
+    "wrongUsernamePassword": "Nepareizs lietotājvārds/parole",
     "emailAddressCantBeEmpty": "E-pasta adrese nedrīkst būt tukša",
     "userNameEmailAddressNotFound": "Lietotājvārds/e-pasta adrese nav atrasta",
     "forbidden": "Aizliegts, lūdzu, mēģiniet vēlāk",

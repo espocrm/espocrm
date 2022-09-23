@@ -84,7 +84,7 @@
     "passwordWillBeSent": "La password verrà inviata all'indirizzo email dell'utente.",
     "passwordChanged": "La password è stata modificata",
     "userCantBeEmpty": "Il nome utente non può essere vuoto",
-    "wrongUsernamePasword": "I dati forniti non sono corretti",
+    "wrongUsernamePassword": "I dati forniti non sono corretti",
     "emailAddressCantBeEmpty": "L'indirizzo Email non può essere vuoto",
     "userNameEmailAddressNotFound": "Username/Indirizzo Email non trovato",
     "forbidden": "Vietato, riprova piu tardi",

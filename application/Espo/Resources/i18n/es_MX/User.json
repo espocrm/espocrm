@@ -73,7 +73,7 @@
     "passwordWillBeSent": "La Contraseña será enviada al correo electrónico del usuario",
     "passwordChanged": "La Contraseña ha sido cambiada",
     "userCantBeEmpty": "El nombre de usuario no puede estar vacío",
-    "wrongUsernamePasword": "Nombre de usuario/contraseña incorrectos",
+    "wrongUsernamePassword": "Nombre de usuario/contraseña incorrectos",
     "emailAddressCantBeEmpty": "La dirección de correo no puede estar vacía",
     "userNameEmailAddressNotFound": "Nombre de Usuario/Correo no encontrado",
     "forbidden": "Prohibido, por favor intente después",

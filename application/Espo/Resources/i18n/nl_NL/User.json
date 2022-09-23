@@ -88,7 +88,7 @@
     "passwordWillBeSent": "Wachtwoord wordt naar het e-mailadres van de gebruiker verzonden.",
     "passwordChanged": "Het wachtwoord is gewijzigd",
     "userCantBeEmpty": "Gebruikersnaam kan niet leeg zijn",
-    "wrongUsernamePasword": "Onjuiste gebruikersnaam/wachtwoord",
+    "wrongUsernamePassword": "Onjuiste gebruikersnaam/wachtwoord",
     "emailAddressCantBeEmpty": "E-mailadres mag niet leeg zijn",
     "userNameEmailAddressNotFound": "Gebruikersnaam/E-mail adres niet gevonden",
     "forbidden": "Toegang niet juist, probeer later",

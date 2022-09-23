@@ -93,7 +93,7 @@
     "passwordWillBeSent": "Пароль будет выслан на адрес эл. почты пользователя.",
     "passwordChanged": "Пароль был изменен",
     "userCantBeEmpty": "Имя пользователя не может быть пустым",
-    "wrongUsernamePasword": "Неверное имя пользователя/пароль",
+    "wrongUsernamePassword": "Неверное имя пользователя/пароль",
     "emailAddressCantBeEmpty": "Адрес эл. почты не может быть пустым",
     "userNameEmailAddressNotFound": "Имя пользователя/Адрес эл. почты не найдены",
     "forbidden": "Запрещено, повторите попытку позже",

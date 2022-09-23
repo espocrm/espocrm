@@ -94,7 +94,7 @@
     "passwordWillBeSent": "سيتم إرسال كلمة مرور المستخدم إلى عنوان البريد الإلكتروني.",
     "passwordChanged": "تم تغيير كلمة السر",
     "userCantBeEmpty": "اسم المستخدم يجب الا يكون فارغا",
-    "wrongUsernamePasword": "اسم المستخدم/كلمة المرور خطأ",
+    "wrongUsernamePassword": "اسم المستخدم/كلمة المرور خطأ",
     "emailAddressCantBeEmpty": "لا يمكن أن يكون عنوان البريد الإلكتروني فارغًا",
     "userNameEmailAddressNotFound": "اسم المستخدم/البريد الالكتروني غير موجود",
     "forbidden": "ممنوع ، يرجى المحاولة لاحقًا",

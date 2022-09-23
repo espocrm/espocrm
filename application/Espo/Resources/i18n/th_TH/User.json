@@ -97,7 +97,7 @@
     "passwordWillBeSent": "รหัสผ่านจะถูกส่งไปยังที่อยู่อีเมลของผู้ใช้",
     "passwordChanged": "เปลี่ยนรหัสผ่านแล้ว",
     "userCantBeEmpty": "ชื่อผู้ใช้ต้องไม่ว่างเปล่า",
-    "wrongUsernamePasword": "ชื่อผู้ใช้ / รหัสผ่านไม่ถูกต้อง",
+    "wrongUsernamePassword": "ชื่อผู้ใช้ / รหัสผ่านไม่ถูกต้อง",
     "emailAddressCantBeEmpty": "ที่อยู่อีเมลต้องไม่ว่างเปล่า",
     "userNameEmailAddressNotFound": "ไม่พบชื่อผู้ใช้ / ที่อยู่อีเมล",
     "forbidden": "ห้ามโปรดลองในภายหลัง",

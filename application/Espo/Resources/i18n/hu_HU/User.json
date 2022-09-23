@@ -70,7 +70,7 @@
     "passwordWillBeSent": "A jelszó a felhasználó e-mail címére lesz elküldve.",
     "passwordChanged": "A jelszó megváltozott",
     "userCantBeEmpty": "A felhasználónév nem lehet üres",
-    "wrongUsernamePasword": "Helytelen felhasználónév / jelszó",
+    "wrongUsernamePassword": "Helytelen felhasználónév / jelszó",
     "emailAddressCantBeEmpty": "Az e-mail cím nem lehet üres",
     "userNameEmailAddressNotFound": "A felhasználónév / e-mail cím nem található",
     "forbidden": "Tilos, próbálkozzon később",

@@ -70,7 +70,7 @@
     "passwordWillBeSent": "Kodeord sendes til brugers emailadresse.",
     "passwordChanged": "Kodeordet er ændret",
     "userCantBeEmpty": "Brugernavn kan ikke være tomt.",
-    "wrongUsernamePasword": "Forkert brugernavn/kodeord",
+    "wrongUsernamePassword": "Forkert brugernavn/kodeord",
     "emailAddressCantBeEmpty": "Emailadresse kan ikke være tom",
     "userNameEmailAddressNotFound": "Brugernavn/Emailadresse ikke fundet.",
     "forbidden": "Forbudt. Prøv venligst senere.",

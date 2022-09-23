@@ -199,7 +199,7 @@ define('views/login', ['view'], function (Dep) {
                 $cell.removeClass('has-error');
             });
 
-            Espo.Ui.error(this.translate('wrongUsernamePasword', 'messages', 'User'));
+            Espo.Ui.error(this.translate('wrongUsernamePassword', 'messages', 'User'));
         },
 
         showPasswordChangeRequest: function () {

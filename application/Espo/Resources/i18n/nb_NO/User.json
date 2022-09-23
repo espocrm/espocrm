@@ -78,7 +78,7 @@
     "passwordWillBeSent": "Passordet vil sendes til brukerens epostadresse.",
     "passwordChanged": "Passordet er endret.",
     "userCantBeEmpty": "Brukernavn-feltet må fylles ut",
-    "wrongUsernamePasword": "Feil brukernavn og / eller passord",
+    "wrongUsernamePassword": "Feil brukernavn og / eller passord",
     "emailAddressCantBeEmpty": "Epostadresse-feltet må fylles ut",
     "userNameEmailAddressNotFound": "Brukernavn og / eller passordet finnes ikke",
     "forbidden": "Ikke tillat, prøv igjen senere",

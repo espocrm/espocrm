@@ -94,7 +94,7 @@
     "passwordWillBeSent": "Slaptažodis bus išsiųstas vartotojo el. pašto adresu.",
     "passwordChanged": "Slpatažodis buvo pakeistas",
     "userCantBeEmpty": "Vartotojo vardas negali būti tuščias",
-    "wrongUsernamePasword": "Neteisingas prisijungimo vardas/slaptažodis",
+    "wrongUsernamePassword": "Neteisingas prisijungimo vardas/slaptažodis",
     "emailAddressCantBeEmpty": "El. pašto adresas negali būti tuščias",
     "userNameEmailAddressNotFound": "Vartotojo vardas/el. pašto adresas nerastas",
     "forbidden": "Draudžiama, prašome pabandyti vėliau",

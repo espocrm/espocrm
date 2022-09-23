@@ -87,7 +87,7 @@
     "passwordWillBeSent": "Lösenordet kommer att skickas till användarens e-postadress.",
     "passwordChanged": "Lösenordet har ändrats.",
     "userCantBeEmpty": "Användarnamn är obligatoriskt",
-    "wrongUsernamePasword": "Fel användarnamn/lösenord",
+    "wrongUsernamePassword": "Fel användarnamn/lösenord",
     "emailAddressCantBeEmpty": "E-postadress är obligatoriskt",
     "userNameEmailAddressNotFound": "Användarnamn/E-post hittades inte",
     "forbidden": "Förbjudet, vänligen försök senare",
