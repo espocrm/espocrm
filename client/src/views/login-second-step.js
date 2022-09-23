@@ -137,11 +137,7 @@ define('views/login-second-step', ['view'], function (Dep) {
                 .then(data => {
                     Espo.Ui.notify(false);
 
-                    if (this.anotherUser) {
-                        data.anotherUser = this.anotherUser;
-                    }
-
-                    this.trigger('login', userName, data);
+                    this.triggerLogin(userName, data);
                 })
                 .catch(xhr => {
                     this.undisableForm();
@@ -150,6 +146,21 @@ define('views/login-second-step', ['view'], function (Dep) {
                         this.onWrongCredentials();
                     }
                 });
+        },
+
+        /**
+         * Trigger login to proceed to the application.
+         *
+         * @public
+         * @param {string} userName A username.
+         * @param {Object.<string, *>} data Data returned from the `App/user` request.
+         */
+        triggerLogin: function (userName, data) {
+            if (this.anotherUser) {
+                data.anotherUser = this.anotherUser;
+            }
+
+            this.trigger('login', userName, data);
         },
 
         /**
