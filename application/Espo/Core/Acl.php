@@ -45,7 +45,6 @@ use stdClass;
 class Acl
 {
     protected AclManager $aclManager;
-
     protected User $user;
 
     public function __construct(AclManager $aclManager, User $user)
@@ -64,6 +63,8 @@ class Acl
 
     /**
      * Get an access level for a specific scope and action.
+     *
+     * @param Table::ACTION_* $action
      */
     public function getLevel(string $scope, string $action): string
     {
@@ -216,7 +217,8 @@ class Acl
     /**
      * Get attributes forbidden for a user.
      *
-     * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.     *
+     * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
+     * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.
      * @return string[]
      */
     public function getScopeForbiddenAttributeList(
@@ -232,6 +234,7 @@ class Acl
     /**
      * Get fields forbidden for a user.
      *
+     * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
      * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.
      * @return string[]
      */
@@ -248,6 +251,7 @@ class Acl
     /**
      * Get links forbidden for a user.
      *
+     * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
      * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.
      * @return string[]
      */
@@ -261,7 +265,7 @@ class Acl
     }
 
     /**
-     * Whether a user has an access to another user over a specific permission.
+     * Whether a user has access to another user over a specific permission.
      *
      * @param User|string $target User entity or user ID.
      */

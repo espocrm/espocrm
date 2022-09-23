@@ -38,16 +38,10 @@ use RuntimeException;
  */
 class ScopeData
 {
-    /**
-     * @var stdClass|bool
-     */
+    /** @var stdClass|bool */
     private $raw;
-
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string,string> */
     private $actionData = [];
-
     private bool $isBoolean = false;
 
     private function __construct() {}

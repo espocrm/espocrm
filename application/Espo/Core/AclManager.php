@@ -70,36 +70,21 @@ use InvalidArgumentException;
  */
 class AclManager
 {
-    /**
-     * @var array<string,AccessChecker>
-     */
-    private $accessCheckerHashMap = [];
-
-    /**
-     * @var array<string,OwnershipChecker>
-     */
-    private $ownershipCheckerHashMap = [];
-
-    /**
-     * @var array<string,Table>
-     */
-    protected $tableHashMap = [];
-
-    /**
-     * @var array<string,Map>
-     */
-    protected $mapHashMap = [];
-
-    /**
-     * @var class-string
-     */
-    protected $userAclClassName = Acl::class;
-
     protected const PERMISSION_ASSIGNMENT = 'assignment';
 
-    /**
-     * @var array<string,class-string<AccessChecker>>
-     */
+    /** @var array<string,AccessChecker> */
+    private $accessCheckerHashMap = [];
+    /** @var array<string,OwnershipChecker> */
+    private $ownershipCheckerHashMap = [];
+    /** @var array<string,Table> */
+    protected $tableHashMap = [];
+    /** @var array<string,Map> */
+    protected $mapHashMap = [];
+
+    /** @var class-string */
+    protected $userAclClassName = Acl::class;
+
+    /** @var array<string,class-string<AccessChecker>> */
     private $entityActionInterfaceMap = [
         Table::ACTION_CREATE => AccessEntityCreateChecker::class,
         Table::ACTION_READ => AccessEntityReadChecker::class,
@@ -107,10 +92,7 @@ class AclManager
         Table::ACTION_DELETE => AccessEntityDeleteChecker::class,
         Table::ACTION_STREAM => AccessEntityStreamChecker::class,
     ];
-
-    /**
-     * @var array<string,class-string<AccessChecker>>
-     */
+    /** @var array<string,class-string<AccessChecker>> */
     private $actionInterfaceMap = [
         Table::ACTION_CREATE => AccessCreateChecker::class,
         Table::ACTION_READ => AccessReadChecker::class,
@@ -119,39 +101,19 @@ class AclManager
         Table::ACTION_STREAM => AccessStreamChecker::class,
     ];
 
-    /**
-     * @var AccessCheckerFactory|\Espo\Core\Portal\Acl\AccessChecker\AccessCheckerFactory
-     */
+    /** @var AccessCheckerFactory|\Espo\Core\Portal\Acl\AccessChecker\AccessCheckerFactory  */
     protected $accessCheckerFactory;
-
-    /**
-     * @var OwnershipCheckerFactory|\Espo\Core\Portal\Acl\OwnershipChecker\OwnershipCheckerFactory
-     */
+    /** @var OwnershipCheckerFactory|\Espo\Core\Portal\Acl\OwnershipChecker\OwnershipCheckerFactory */
     protected $ownershipCheckerFactory;
-
-    /**
-     * @var TableFactory
-     */
+    /** @var TableFactory */
     private $tableFactory;
-
-    /**
-     * @var MapFactory
-     */
+    /** @var MapFactory */
     private $mapFactory;
-
-    /**
-     * @var GlobalRestriction
-     */
+    /** @var GlobalRestriction */
     protected $globalRestriction;
-
-    /**
-     * @var OwnerUserFieldProvider
-     */
+    /** @var OwnerUserFieldProvider  */
     protected $ownerUserFieldProvider;
-
-    /**
-     * @var EntityManager
-     */
+    /** @var EntityManager  */
     protected $entityManager;
 
     public function __construct(
@@ -228,6 +190,8 @@ class AclManager
 
     /**
      * Get an access level for a specific scope and action.
+     *
+     * @param Table::ACTION_* $action
      */
     public function getLevel(User $user, string $scope, string $action): string
     {
@@ -517,6 +481,7 @@ class AclManager
     /**
      * Get attributes forbidden for a user.
      *
+     * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
      * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.
      * @return string[]
      */
@@ -545,6 +510,7 @@ class AclManager
     /**
      * Get fields forbidden for a user.
      *
+     * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
      * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.
      * @return string[]
      */
@@ -573,6 +539,7 @@ class AclManager
     /**
      * Get links forbidden for a user.
      *
+     * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
      * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.
      * @return string[]
      */
@@ -590,7 +557,7 @@ class AclManager
     }
 
     /**
-     * Whether a user has an access to another user over a specific permission.
+     * Whether a user has access to another user over a specific permission.
      *
      * @param User|string $target User entity or user ID.
      */
