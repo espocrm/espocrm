@@ -28,10 +28,18 @@
 
 define('views/login-second-step', ['view'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:view.Class
+     * @memberOf module:views/login-second-step
+     */
+    return Dep.extend(/** @lends module:views/login-second-step.Class# */{
 
+        /** @inheritDoc */
         template: 'login-second-step',
 
+        /** @inheritDoc */
         views: {
             footer: {
                 el: 'body > footer',
@@ -41,9 +49,14 @@ define('views/login-second-step', ['view'], function (Dep) {
 
         /**
          * @type {?string}
+         * @private
          */
         anotherUser: null,
 
+        /** @private */
+        isPopoverDestroyed: false,
+
+        /** @inheritDoc */
         events: {
             'submit #login-form': function (e) {
                 e.preventDefault();
@@ -62,62 +75,44 @@ define('views/login-second-step', ['view'], function (Dep) {
             },
         },
 
+        /** @inheritDoc */
         data: function () {
             return {
                 message: this.message,
             };
         },
 
+        /** @inheritDoc */
         setup: function () {
             this.message = this.translate(this.options.loginData.message, 'messages', 'User');
             this.anotherUser = this.options.anotherUser || null;
         },
 
+        /** @inheritDoc */
+        afterRender: function () {
+            this.$code = $('[data-name="field-code"]');
+            this.$submit = this.$el.find('#btn-send');
+        },
+
+        /**
+         * @private
+         */
         send: function () {
-            var code = $('[data-name="field-code"]')
+            let code = this.$code
                 .val()
                 .trim()
                 .replace(/\s/g, '');
 
-            var userName = this.options.userName;
-            var password = this.options.loginData.token || this.options.password;
-
-            var $submit = this.$el.find('#btn-send');
+            let userName = this.options.userName;
+            let password = this.options.loginData.token || this.options.password;
 
             if (code === '') {
-                this.isPopoverDestroyed = false;
-
-                var $el = $("#field-code");
-
-                var message = this.getLanguage().translate('codeIsRequired', 'messages', 'User');
-
-                $el.popover({
-                    placement: 'bottom',
-                    container: 'body',
-                    content: message,
-                    trigger: 'manual',
-                }).popover('show');
-
-                var $cell = $el.closest('.form-group');
-
-                $cell.addClass('has-error');
-
-                $el.one('mousedown click', () => {
-                    $cell.removeClass('has-error');
-
-                    if (this.isPopoverDestroyed) {
-                        return;
-                    }
-
-                    $el.popover('destroy');
-
-                    this.isPopoverDestroyed = true;
-                });
+                this.processEmptyCode();
 
                 return;
             }
 
-            $submit.addClass('disabled').attr('disabled', 'disabled');
+            this.disableForm();
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
@@ -127,7 +122,7 @@ define('views/login-second-step', ['view'], function (Dep) {
                 'Authorization': 'Basic ' + authString,
                 'Espo-Authorization': authString,
                 'Espo-Authorization-Code': code,
-                'Espo-Authorization-Create-Token-Secret': true,
+                'Espo-Authorization-Create-Token-Secret': 'true',
             };
 
             if (this.anotherUser !== null) {
@@ -140,7 +135,7 @@ define('views/login-second-step', ['view'], function (Dep) {
                     headers: headers,
                 })
                 .then(data => {
-                    this.notify(false);
+                    Espo.Ui.notify(false);
 
                     if (this.anotherUser) {
                         data.anotherUser = this.anotherUser;
@@ -149,7 +144,7 @@ define('views/login-second-step', ['view'], function (Dep) {
                     this.trigger('login', userName, data);
                 })
                 .catch(xhr => {
-                    $submit.removeClass('disabled').removeAttr('disabled');
+                    this.undisableForm();
 
                     if (xhr.status === 401) {
                         this.onWrongCredentials();
@@ -157,15 +152,69 @@ define('views/login-second-step', ['view'], function (Dep) {
                 });
         },
 
+        /**
+         * @private
+         */
+        processEmptyCode: function () {
+            this.isPopoverDestroyed = false;
+
+            let $el = this.$code;
+
+            let message = this.getLanguage().translate('codeIsRequired', 'messages', 'User');
+
+            $el
+                .popover({
+                    placement: 'bottom',
+                    container: 'body',
+                    content: message,
+                    trigger: 'manual',
+                })
+                .popover('show');
+
+            let $cell = $el.closest('.form-group');
+
+            $cell.addClass('has-error');
+
+            $el.one('mousedown click', () => {
+                $cell.removeClass('has-error');
+
+                if (this.isPopoverDestroyed) {
+                    return;
+                }
+
+                $el.popover('destroy');
+
+                this.isPopoverDestroyed = true;
+            });
+        },
+
+        /**
+         * @private
+         */
         onWrongCredentials: function () {
-            var cell = $('#login .form-group');
-            cell.addClass('has-error');
+            let $cell = $('#login .form-group');
+
+            $cell.addClass('has-error');
 
             this.$el.one('mousedown click', () => {
-                cell.removeClass('has-error');
+                $cell.removeClass('has-error');
             });
 
             Espo.Ui.error(this.translate('wrongCode', 'messages', 'User'));
+        },
+
+        /**
+         * @public
+         */
+        disableForm: function () {
+            this.$submit.addClass('disabled').attr('disabled', 'disabled');
+        },
+
+        /**
+         * @public
+         */
+        undisableForm: function () {
+            this.$submit.removeClass('disabled').removeAttr('disabled');
         },
     });
 });

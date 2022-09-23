@@ -118,7 +118,10 @@ define('views/login', ['view'], function (Dep) {
          * @private
          */
         login: function () {
+            let authString;
             let userName = this.$username.val();
+            let password = this.$password.val();
+
             let trimmedUserName = userName.trim();
 
             if (trimmedUserName !== userName) {
@@ -127,39 +130,8 @@ define('views/login', ['view'], function (Dep) {
                 userName = trimmedUserName;
             }
 
-            let password = this.$password.val();
-
             if (userName === '') {
-                this.isPopoverDestroyed = false;
-
-                let $el = $("#field-userName");
-
-                let message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
-
-                $el
-                    .popover({
-                        placement: 'bottom',
-                        container: 'body',
-                        content: message,
-                        trigger: 'manual',
-                    })
-                    .popover('show');
-
-                let $cell = $el.closest('.form-group');
-
-                $cell.addClass('has-error');
-
-                $el.one('mousedown click', () => {
-                    $cell.removeClass('has-error');
-
-                    if (this.isPopoverDestroyed) {
-                        return;
-                    }
-
-                    $el.popover('destroy');
-
-                    this.isPopoverDestroyed = true;
-                });
+                this.processEmptyUsername();
 
                 return;
             }
@@ -169,7 +141,7 @@ define('views/login', ['view'], function (Dep) {
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
             try {
-                var authString = Base64.encode(userName  + ':' + password);
+                authString = Base64.encode(userName  + ':' + password);
             }
             catch (e) {
                 Espo.Ui.error(this.translate('Error') + ': ' + e.message, true);
@@ -182,8 +154,8 @@ define('views/login', ['view'], function (Dep) {
             let headers = {
                 'Authorization': 'Basic ' + authString,
                 'Espo-Authorization': authString,
-                'Espo-Authorization-By-Token': false,
-                'Espo-Authorization-Create-Token-Secret': true,
+                'Espo-Authorization-By-Token': 'false',
+                'Espo-Authorization-Create-Token-Secret': 'true',
             };
 
             if (this.anotherUser !== null) {
@@ -196,7 +168,7 @@ define('views/login', ['view'], function (Dep) {
                     headers: headers,
                 })
                 .then(data => {
-                    this.notify(false);
+                    Espo.Ui.notify(false);
 
                     if (this.anotherUser) {
                         data.anotherUser = this.anotherUser;
@@ -209,12 +181,10 @@ define('views/login', ['view'], function (Dep) {
 
                     if (xhr.status === 401) {
                         let data = xhr.responseJSON || {};
-
                         let statusReason = xhr.getResponseHeader('X-Status-Reason');
 
                         if (statusReason === 'second-step-required') {
                             xhr.errorIsHandled = true;
-
                             this.onSecondStepRequired(userName, password, data);
 
                             return;
@@ -223,6 +193,42 @@ define('views/login', ['view'], function (Dep) {
                         this.onWrongCredentials();
                     }
                 });
+        },
+
+        /**
+         * @private
+         */
+        processEmptyUsername: function () {
+            this.isPopoverDestroyed = false;
+
+            let $el = this.$username;
+
+            let message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
+
+            $el
+                .popover({
+                    placement: 'bottom',
+                    container: 'body',
+                    content: message,
+                    trigger: 'manual',
+                })
+                .popover('show');
+
+            let $cell = $el.closest('.form-group');
+
+            $cell.addClass('has-error');
+
+            $el.one('mousedown click', () => {
+                $cell.removeClass('has-error');
+
+                if (this.isPopoverDestroyed) {
+                    return;
+                }
+
+                $el.popover('destroy');
+
+                this.isPopoverDestroyed = true;
+            });
         },
 
         /**
