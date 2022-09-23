@@ -30,6 +30,7 @@
 namespace Espo\Entities;
 
 use Espo\Core\Field\Date;
+use Espo\Core\Field\LinkMultiple;
 use Espo\Tools\WorkingTime\Calendar\Time;
 use Espo\Tools\WorkingTime\Calendar\TimeRange;
 use RuntimeException;
@@ -119,5 +120,11 @@ class WorkingTimeRange extends \Espo\Core\ORM\Entity
         $m = (int) explode(':', $time)[1];
 
         return new Time($h, $m);
+    }
+
+    public function getUsers(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('users');
     }
 }
