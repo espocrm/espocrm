@@ -766,7 +766,7 @@
             return new Promise((resolve, reject) => {
                 this.require(
                     subject,
-                    () => resolve(),
+                    (...args) => resolve(...args),
                     () => reject()
                 );
             });
