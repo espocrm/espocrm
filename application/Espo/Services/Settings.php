@@ -99,6 +99,23 @@ class Settings
         return $data;
     }
 
+    public function getMetadataConfigData(): stdClass
+    {
+        $data = (object) [];
+
+        $data->jsLibs = $this->metadata->get(['app', 'jsLibs']);
+
+        unset($data->loginView);
+
+        $loginView = $this->metadata->get(['clientDefs', 'App', 'loginView']);
+
+        if ($loginView) {
+            $data->loginView = $loginView;
+        }
+
+        return $data;
+    }
+
     /**
      * @throws \Espo\Core\Exceptions\BadRequest
      * @throws Forbidden
