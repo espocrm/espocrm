@@ -459,7 +459,7 @@
         },
         {
             "name": "ext\\workingTime\\addWorkingDays",
-            "insertText": "ext\\workingCalendar\\addWorkingDays(DATE, DAYS)",
+            "insertText": "ext\\workingTime\\addWorkingDays(DATE, DAYS)",
             "returnType": "string|null"
         },
         {
