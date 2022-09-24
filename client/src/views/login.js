@@ -56,6 +56,24 @@ define('views/login', ['view'], function (Dep) {
         /** @private */
         isPopoverDestroyed: false,
 
+        /**
+         * @type {module:handlers/login.Class}
+         * @private
+         */
+        handler: null,
+
+        /**
+         * @type {boolean}
+         * @private
+         */
+        fallback: false,
+
+        /**
+         * @type {?string}
+         * @private
+         */
+        method: null,
+
         /** @inheritDoc */
         events: {
             'submit #login-form': function (e) {
@@ -63,8 +81,14 @@ define('views/login', ['view'], function (Dep) {
 
                 this.login();
             },
+            'click #sign-in': function (e) {
+                this.signIn();
+            },
             'click a[data-action="passwordChangeRequest"]': function () {
                 this.showPasswordChangeRequest();
+            },
+            'click a[data-action="showFallback"]': function () {
+                this.showFallback();
             },
             'keydown': function (e) {
                 if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
@@ -81,12 +105,35 @@ define('views/login', ['view'], function (Dep) {
                 logoSrc: this.getLogoSrc(),
                 showForgotPassword: this.getConfig().get('passwordRecoveryEnabled'),
                 anotherUser: this.anotherUser,
+                hasSignIn: !!this.handler,
+                hasFallback: !!this.handler && this.fallback,
+                method: this.method,
+                signInText: this.signInText,
             };
         },
 
         /** @inheritDoc */
         setup: function () {
             this.anotherUser = this.options.anotherUser || null;
+
+            let loginData = this.getConfig().get('loginData') || {};
+
+            this.fallback = !!loginData.fallback;
+            this.method = loginData.method;
+
+            if (loginData.handler) {
+                this.wait(
+                    Espo.loader
+                        .requirePromise(loginData.handler)
+                        .then(Handler => {
+                            this.handler = new Handler(this, loginData.data || {});
+                        })
+                );
+
+                this.signInText = this.getLanguage().has(this.method, 'signInLabels', 'Global') ?
+                    this.translate(this.method, 'signInLabels') :
+                    this.translate('Sign in');
+            }
         },
 
         /**
@@ -94,24 +141,47 @@ define('views/login', ['view'], function (Dep) {
          * @return {string}
          */
         getLogoSrc: function () {
-            var companyLogoId = this.getConfig().get('companyLogoId');
+            let companyLogoId = this.getConfig().get('companyLogoId');
 
             if (!companyLogoId) {
                 return this.getBasePath() + ('client/img/logo.png');
             }
 
-            return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId;
+            return this.getBasePath() + '?entryPoint=LogoImage&id=' + companyLogoId;
         },
 
         /** @inheritDoc */
         afterRender: function () {
             this.$submit = this.$el.find('#btn-login');
+            this.$signIn = this.$el.find('#sign-in');
             this.$username = this.$el.find('#field-userName');
             this.$password = this.$el.find('#field-password');
 
             if (this.options.prefilledUsername) {
                 this.$username.val(this.options.prefilledUsername);
             }
+
+            if (this.handler) {
+                this.$username.closest('.cell').addClass('hidden');
+                this.$password.closest('.cell').addClass('hidden');
+                this.$submit.closest('.cell').addClass('hidden');
+            }
+        },
+
+        /**
+         * @private
+         */
+        signIn: function () {
+            this.disableForm();
+
+            this.handler
+                .process()
+                .then(headers => {
+                    this.proceed(headers);
+                })
+                .catch(() => {
+                    this.undisableForm();
+                })
         },
 
         /**
@@ -138,8 +208,6 @@ define('views/login', ['view'], function (Dep) {
 
             this.disableForm();
 
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-
             try {
                 authString = Base64.encode(userName  + ':' + password);
             }
@@ -154,13 +222,30 @@ define('views/login', ['view'], function (Dep) {
             let headers = {
                 'Authorization': 'Basic ' + authString,
                 'Espo-Authorization': authString,
-                'Espo-Authorization-By-Token': 'false',
-                'Espo-Authorization-Create-Token-Secret': 'true',
             };
+
+            this.proceed(headers, userName, password);
+        },
+
+        /**
+         * @private
+         * @param {Object.<string, string>} headers
+         * @param {string} [userName]
+         * @param {string} [password]
+         */
+        proceed: function (headers, userName, password) {
+            headers = Espo.Utils.clone(headers);
+
+            let initialHeaders = Espo.Utils.clone(headers);
+
+            headers['Espo-Authorization-By-Token'] = 'false';
+            headers['Espo-Authorization-Create-Token-Secret'] = 'true';
 
             if (this.anotherUser !== null) {
                 headers['X-Another-User'] = this.anotherUser;
             }
+
+            this.notifyLoading();
 
             Espo.Ajax
                 .getRequest('App/user', null, {
@@ -181,7 +266,7 @@ define('views/login', ['view'], function (Dep) {
 
                         if (statusReason === 'second-step-required') {
                             xhr.errorIsHandled = true;
-                            this.onSecondStepRequired(userName, password, data);
+                            this.onSecondStepRequired(initialHeaders, userName, password, data);
 
                             return;
                         }
@@ -194,13 +279,17 @@ define('views/login', ['view'], function (Dep) {
         /**
          * Trigger login to proceed to the application.
          *
-         * @public
-         * @param {string} userName A username.
+         * @private
+         * @param {?string} userName A username.
          * @param {Object.<string, *>} data Data returned from the `App/user` request.
          */
         triggerLogin: function (userName, data) {
             if (this.anotherUser) {
                 data.anotherUser = this.anotherUser;
+            }
+
+            if (!userName) {
+                userName = (data.user || {}).userName;
             }
 
             this.trigger('login', userName, data);
@@ -243,29 +332,32 @@ define('views/login', ['view'], function (Dep) {
         },
 
         /**
-         * @public
+         * @private
          */
         disableForm: function () {
             this.$submit.addClass('disabled').attr('disabled', 'disabled');
-        },
-
-        /**
-         * @public
-         */
-        undisableForm: function () {
-            this.$submit.removeClass('disabled').removeAttr('disabled');
+            this.$signIn.addClass('disabled').attr('disabled', 'disabled');
         },
 
         /**
          * @private
+         */
+        undisableForm: function () {
+            this.$submit.removeClass('disabled').removeAttr('disabled');
+            this.$signIn.removeClass('disabled').removeAttr('disabled');
+        },
+
+        /**
+         * @private
+         * @param {Object.<string, string>} headers
          * @param {string} userName
          * @param {string} password
-         * @param {Object.<string, *>}data
+         * @param {Object.<string, *>} data
          */
-        onSecondStepRequired: function (userName, password, data) {
+        onSecondStepRequired: function (headers, userName, password, data) {
             let view = data.view || 'views/login-second-step';
 
-            this.trigger('redirect', view, userName, password, data);
+            this.trigger('redirect', view, headers, userName, password, data);
         },
 
         /**
@@ -286,8 +378,28 @@ define('views/login', ['view'], function (Dep) {
         /**
          * @private
          */
+        showFallback: function () {
+            this.$el.find('[data-action="showFallback"]').addClass('hidden');
+
+            this.$el.find('.panel-body').addClass('fallback-shown');
+
+            this.$username.closest('.cell').removeClass('hidden');
+            this.$password.closest('.cell').removeClass('hidden');
+            this.$submit.closest('.cell').removeClass('hidden');
+        },
+
+        /**
+         * @private
+         */
+        notifyLoading: function () {
+            Espo.Ui.notify(' ... ');
+        },
+
+        /**
+         * @private
+         */
         showPasswordChangeRequest: function () {
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+            this.notifyLoading();
 
             this.createView('passwordChangeRequest', 'views/modals/password-change-request', {
                 url: window.location.href,

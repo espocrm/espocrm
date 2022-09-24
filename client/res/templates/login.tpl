@@ -7,9 +7,27 @@
             </div>
         </div>
         <div class="panel-body">
-            <div>
+            <div class="">
                 <form id="login-form">
-                    <div class="form-group">
+                    {{#if hasSignIn}}
+                    <div class="cell" data-name="sign-in">
+                        {{#if hasFallback}}
+                        <div class="pull-right">
+                            <a
+                                role="button"
+                                tabindex="0"
+                                class="btn btn-link btn-icon"
+                                data-action="showFallback"
+                            ><span class="fas fa-chevron-down"></span></a>
+                        </div>
+                        {{/if}}
+                        <button
+                            class="btn btn-default btn-x-wide"
+                            id="sign-in"
+                        >{{signInText}}</button>
+                    </div>
+                    {{/if}}
+                    <div class="form-group cell" data-name="username">
                         <label for="field-username">{{translate 'Username'}}</label>
                         <input
                             type="text"
@@ -23,7 +41,7 @@
                             maxlength="255"
                         >
                     </div>
-                    <div class="form-group">
+                    <div class="form-group cell" data-name="password">
                         <label for="login">{{translate 'Password'}}</label>
                         <input
                             type="password"
@@ -36,12 +54,12 @@
                         >
                     </div>
                     {{#if anotherUser}}
-                    <div class="form-group">
+                    <div class="form-group cell">
                         <label>{{translate 'Log in as'}}</label>
                         <div>{{anotherUser}}</div>
                     </div>
                     {{/if}}
-                    <div class="margin-top-2x">
+                    <div class="margin-top-2x cell" data-name="submit">
                         {{#if showForgotPassword}}
                         <a
                             role="button"

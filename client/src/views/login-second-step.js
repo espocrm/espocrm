@@ -53,6 +53,22 @@ define('views/login-second-step', ['view'], function (Dep) {
          */
         anotherUser: null,
 
+        /**
+         * Response from the first step.
+         *
+         * @type {Object.<string, *>}
+         * @private
+         */
+        loginData: null,
+
+        /**
+         * Headers composed in the first step.
+         *
+         * @type {Object.<string, string>}
+         * @private
+         */
+        headers: null,
+
         /** @private */
         isPopoverDestroyed: false,
 
@@ -86,6 +102,8 @@ define('views/login-second-step', ['view'], function (Dep) {
         setup: function () {
             this.message = this.translate(this.options.loginData.message, 'messages', 'User');
             this.anotherUser = this.options.anotherUser || null;
+            this.headers = this.options.headers || {};
+            this.loginData = this.options.loginData;
         },
 
         /** @inheritDoc */
@@ -98,13 +116,11 @@ define('views/login-second-step', ['view'], function (Dep) {
          * @private
          */
         send: function () {
-            let code = this.$code
-                .val()
-                .trim()
-                .replace(/\s/g, '');
+            let code = this.$code.val().trim().replace(/\s/g, '');
 
             let userName = this.options.userName;
-            let password = this.options.loginData.token || this.options.password;
+            let token = this.loginData.token;
+            let headers = Espo.Utils.clone(this.headers);
 
             if (code === '') {
                 this.processEmptyCode();
@@ -114,23 +130,24 @@ define('views/login-second-step', ['view'], function (Dep) {
 
             this.disableForm();
 
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+            if (userName && token) {
+                let authString = Base64.encode(userName  + ':' + token);
 
-            let authString = Base64.encode(userName  + ':' + password);
+                headers['Authorization'] = 'Basic ' + authString;
+                headers['Espo-Authorization'] = authString;
+            }
 
-            let headers = {
-                'Authorization': 'Basic ' + authString,
-                'Espo-Authorization': authString,
-                'Espo-Authorization-Code': code,
-                'Espo-Authorization-Create-Token-Secret': 'true',
-            };
+            headers['Espo-Authorization-Code'] = code;
+            headers['Espo-Authorization-Create-Token-Secret'] = 'true';
 
             if (this.anotherUser !== null) {
                 headers['X-Another-User'] = this.anotherUser;
             }
 
+            this.notifyLoading();
+
             Espo.Ajax
-                .getRequest('App/user', {code: code}, {
+                .getRequest('App/user', null, {
                     login: true,
                     headers: headers,
                 })
@@ -151,13 +168,17 @@ define('views/login-second-step', ['view'], function (Dep) {
         /**
          * Trigger login to proceed to the application.
          *
-         * @public
+         * @private
          * @param {string} userName A username.
          * @param {Object.<string, *>} data Data returned from the `App/user` request.
          */
         triggerLogin: function (userName, data) {
             if (this.anotherUser) {
                 data.anotherUser = this.anotherUser;
+            }
+
+            if (!userName) {
+                userName = (data.user || {}).userName;
             }
 
             this.trigger('login', userName, data);
@@ -215,14 +236,21 @@ define('views/login-second-step', ['view'], function (Dep) {
         },
 
         /**
-         * @public
+         * @private
+         */
+        notifyLoading: function () {
+            Espo.Ui.notify(' ... ');
+        },
+
+        /**
+         * @private
          */
         disableForm: function () {
             this.$submit.addClass('disabled').attr('disabled', 'disabled');
         },
 
         /**
-         * @public
+         * @private
          */
         undisableForm: function () {
             this.$submit.removeClass('disabled').removeAttr('disabled');

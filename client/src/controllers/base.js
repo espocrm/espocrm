@@ -59,7 +59,7 @@ define('controllers/base', ['controller'], function (Dep) {
                     this.trigger('login', this.normalizeLoginData(userName, data));
                 });
 
-                loginView.once('redirect', (viewName, userName, password, data) => {
+                loginView.once('redirect', (viewName, headers, userName, password, data) => {
                     loginView.remove();
 
                     this.entire(viewName, {
@@ -67,6 +67,7 @@ define('controllers/base', ['controller'], function (Dep) {
                         userName: userName,
                         password: password,
                         anotherUser: anotherUser,
+                        headers: headers,
                     }, secondStepView => {
                         secondStepView.render();
 

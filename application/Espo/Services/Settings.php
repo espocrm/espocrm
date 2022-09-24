@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Authentication\Logins\Espo;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -113,7 +114,44 @@ class Settings
             $data->loginView = $loginView;
         }
 
+        $loginData = $this->getLoginData();
+
+        if ($loginData) {
+            $data->loginData = (object) $loginData;
+        }
+
         return $data;
+    }
+
+    /**
+     * @return ?array{
+     *     handler: string,
+     *     fallback: bool,
+     *     data: stdClass,
+     *     method: string,
+     * }
+     */
+    private function getLoginData(): ?array
+    {
+        $method = $this->config->get('authenticationMethod') ?? Espo::NAME;
+
+        /** @var ?string $handler */
+        $handler = $this->metadata->get(['authenticationMethods', $method, 'login', 'handler']);
+
+        if (!$handler) {
+            return null;
+        }
+
+        $fallback = (bool) $this->metadata->get(['authenticationMethods', $method, 'login', 'fallback']);
+        /** @var stdClass $data */
+        $data = (object) ($this->metadata->get(['authenticationMethods', $method, 'login', 'data']) ?? []);
+
+        return [
+            'handler' => $handler,
+            'fallback' => $fallback,
+            'method' => $method,
+            'data' => $data,
+        ];
     }
 
     /**
