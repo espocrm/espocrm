@@ -748,6 +748,8 @@ define('views/modal', ['view'], function (Dep) {
             }
 
             this.$el.find('footer button[data-name="'+name+'"]').removeClass('hidden');
+
+            this.adjustButtons();
         },
 
         /**
