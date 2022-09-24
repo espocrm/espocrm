@@ -47,13 +47,12 @@ use Exception;
  */
 class Auth
 {
-    private $log;
+    private const HEADER_ESPO_AUTHORIZATION = 'Espo-Authorization';
 
-    private $authentication;
-
-    private $authRequired;
-
-    private $isEntryPoint;
+    private Log $log;
+    private Authentication $authentication;
+    private bool $authRequired;
+    private bool $isEntryPoint;
 
     public function __construct(
         Log $log,
@@ -87,7 +86,7 @@ class Auth
             ->withPassword($password)
             ->withMethod($authenticationMethod);
 
-        $hasAuthData = (bool) ($username || $authenticationMethod);
+        $hasAuthData = $username || $authenticationMethod;
 
         if (!$hasAuthData) {
             $password = $this->obtainTokenFromCookies($request);
@@ -271,9 +270,11 @@ class Auth
 
     protected function obtainAuthenticationMethodFromRequest(Request $request): ?string
     {
-        if ($request->hasHeader('Espo-Authorization')) {
+        if ($request->hasHeader(self::HEADER_ESPO_AUTHORIZATION)) {
             return null;
         }
+
+        // @todo Get headers from metadata `authenticationMethods` > * > `credentialsHeader`.
 
         if ($request->hasHeader('X-Hmac-Authorization')) {
             return 'Hmac';
@@ -296,9 +297,9 @@ class Auth
      */
     protected function obtainUsernamePasswordFromRequest(Request $request): array
     {
-        if ($request->hasHeader('Espo-Authorization')) {
+        if ($request->hasHeader(self::HEADER_ESPO_AUTHORIZATION)) {
             list($username, $password) = $this->decodeAuthorizationString(
-                $request->getHeader('Espo-Authorization') ?? ''
+                $request->getHeader(self::HEADER_ESPO_AUTHORIZATION) ?? ''
             );
 
             return [$username, $password];

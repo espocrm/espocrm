@@ -29,19 +29,19 @@
 
 namespace Espo\Core\Api;
 
-use Espo\Core\Utils\Log;
+use Espo\Core\InjectableFactory;
 
 class AuthBuilderFactory
 {
-    private $log;
+    private InjectableFactory $injectableFactory;
 
-    public function __construct(Log $log)
+    public function __construct(InjectableFactory $injectableFactory)
     {
-        $this->log = $log;
+        $this->injectableFactory = $injectableFactory;
     }
 
     public function create(): AuthBuilder
     {
-        return new AuthBuilder($this->log);
+        return $this->injectableFactory->create(AuthBuilder::class);
     }
 }

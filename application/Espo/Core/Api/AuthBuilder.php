@@ -29,10 +29,10 @@
 
 namespace Espo\Core\Api;
 
-use Espo\Core\{
-    Authentication\Authentication,
-    Utils\Log,
-};
+use Espo\Core\Authentication\Authentication;
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\Binding\ContextualBinder;
+use Espo\Core\InjectableFactory;
 
 use RuntimeException;
 
@@ -42,16 +42,14 @@ use RuntimeException;
 class AuthBuilder
 {
     private bool $authRequired = false;
-
     private bool $isEntryPoint = false;
-
     private ?Authentication $authentication = null;
 
-    private Log $log;
+    private InjectableFactory $injectableFactory;
 
-    public function __construct(Log $log)
+    public function __construct(InjectableFactory $injectableFactory)
     {
-        $this->log = $log;
+        $this->injectableFactory = $injectableFactory;
     }
 
     public function setAuthentication(Authentication $authentication): self
@@ -81,6 +79,17 @@ class AuthBuilder
             throw new RuntimeException("Authentication is not set.");
         }
 
-        return new Auth($this->log, $this->authentication, $this->authRequired, $this->isEntryPoint);
+        return $this->injectableFactory->createWithBinding(
+            Auth::class,
+            BindingContainerBuilder
+                ::create()
+                ->bindInstance(Authentication::class, $this->authentication)
+                ->inContext(Auth::class, function (ContextualBinder $binder) {
+                    $binder
+                        ->bindValue('$authRequired', $this->authRequired)
+                        ->bindValue('$isEntryPoint', $this->isEntryPoint);
+                })
+                ->build()
+        );
     }
 }
