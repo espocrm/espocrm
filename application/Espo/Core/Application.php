@@ -29,6 +29,8 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Application\Runner;
+use Espo\Core\Application\RunnerParameterized;
 use Espo\Core\Container;
 use Espo\Core\Container\ContainerBuilder;
 use Espo\Core\InjectableFactory;
@@ -70,7 +72,7 @@ class Application
     /**
      * Run an application runner.
      *
-     * @param string $className A runner class name.
+     * @param class-string<Runner|RunnerParameterized> $className A runner class name.
      * @param ?RunnerParams $params Runner parameters.
      */
     public function run(string $className, ?RunnerParams $params = null): void
@@ -159,7 +161,7 @@ class Application
     }
 
     /**
-     * Setup the system user. The system user is used when no user is logged in.
+     * Set up the system user. The system user is used when no user is logged in.
      */
     public function setupSystemUser(): void
     {

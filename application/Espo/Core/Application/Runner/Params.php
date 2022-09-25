@@ -34,14 +34,10 @@ namespace Espo\Core\Application\Runner;
  */
 class Params
 {
-    /**
-     * @var array<string,mixed>
-     */
+    /** @var array<string,mixed> */
     private $data = [];
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Get a parameter value.

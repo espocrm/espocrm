@@ -29,13 +29,8 @@
 
 namespace Espo\Core;
 
-use Espo\Entities\{
-    User,
-};
-
-use Espo\Core\{
-    ORM\EntityManagerProxy,
-};
+use Espo\Entities\User;
+use Espo\Core\ORM\EntityManagerProxy;
 
 use RuntimeException;
 
@@ -44,9 +39,8 @@ use RuntimeException;
  */
 class ApplicationUser
 {
-    private $container;
-
-    private $entityManagerProxy;
+    private Container $container;
+    private EntityManagerProxy $entityManagerProxy;
 
     public function __construct(Container $container, EntityManagerProxy $entityManagerProxy)
     {

@@ -51,9 +51,8 @@ use Closure;
  */
 class InjectableFactory
 {
-    private $container;
-
-    private $bindingContainer;
+    private Container $container;
+    private ?BindingContainer $bindingContainer;
 
     public function __construct(Container $container, ?BindingContainer $bindingContainer = null)
     {

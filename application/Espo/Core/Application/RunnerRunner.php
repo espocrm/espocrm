@@ -42,11 +42,9 @@ use ReflectionClass;
  */
 class RunnerRunner
 {
-    private $log;
-
-    private $applicationUser;
-
-    private $injectableFactory;
+    private Log $log;
+    private ApplicationUser $applicationUser;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(
         Log $log,
@@ -58,9 +56,13 @@ class RunnerRunner
         $this->injectableFactory = $injectableFactory;
     }
 
+    /**
+     * @param class-string<Runner|RunnerParameterized> $className
+     * @throws RunnerException
+     */
     public function run(string $className, ?Params $params = null): void
     {
-        if (!$className || !class_exists($className)) {
+        if (!class_exists($className)) {
             $this->log->error("Application runner '{$className}' does not exist.");
 
             throw new RunnerException();
@@ -88,13 +90,12 @@ class RunnerRunner
         }
 
         if ($runner instanceof RunnerParameterized) {
-            $runner->run(
-                $params ?? Params::create()
-            );
+            $runner->run($params ?? Params::create());
 
             return;
         }
 
+        /** @phpstan-ignore-next-line */
         throw new RunnerException("Class should implement Runner or RunnerParameterized interface.");
     }
 }

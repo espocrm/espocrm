@@ -46,25 +46,15 @@ use ReflectionNamedType;
  */
 class Container implements ContainerInterface
 {
-    /**
-     * @var array<string,object>
-     */
+    /** @var array<string,object> */
     private $data = [];
-
-    /**
-     * @var array<string,ReflectionClass<object>>
-     */
+    /** @var array<string,ReflectionClass<object>> */
     private $classCache = [];
-
-    /**
-     * @var array<string,class-string<Loader>>
-     */
+    /** @var array<string,class-string<Loader>> */
     private $loaderClassNames;
 
     private ?Configuration $configuration = null;
-
     private ?BindingContainer $bindingContainer = null;
-
     private InjectableFactory $injectableFactory;
 
     /**
