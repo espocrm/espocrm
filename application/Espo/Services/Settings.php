@@ -135,16 +135,44 @@ class Settings
     {
         $method = $this->config->get('authenticationMethod') ?? Espo::NAME;
 
+        /** @var array<string, mixed> $mData */
+        $mData = $this->metadata->get(['authenticationMethods', $method, 'login']) ?? [];
+
         /** @var ?string $handler */
-        $handler = $this->metadata->get(['authenticationMethods', $method, 'login', 'handler']);
+        $handler = $mData['handler'] ?? null;
 
         if (!$handler) {
             return null;
         }
 
-        $fallback = (bool) $this->metadata->get(['authenticationMethods', $method, 'login', 'fallback']);
+        if ($this->applicationState->isPortal()) {
+            /** @var ?bool $portal */
+            $portal = $mData['portal'] ?? null;
+
+            if ($portal === null) {
+                /** @var ?string $portalConfigParam */
+                $portalConfigParam = $mData['portalConfigParam'] ?? null;
+
+                $portal = $portalConfigParam && $this->config->get($portalConfigParam);
+            }
+
+            if (!$portal) {
+                return null;
+            }
+        }
+
+        /** @var ?bool $fallback */
+        $fallback = $mData['fallback'] ?? null;
+
+        if ($fallback === null) {
+            /** @var ?string $fallbackConfigParam */
+            $fallbackConfigParam = $mData['fallbackConfigParam'] ?? null;
+
+            $fallback = $fallbackConfigParam && $this->config->get($fallbackConfigParam);
+        }
+
         /** @var stdClass $data */
-        $data = (object) ($this->metadata->get(['authenticationMethods', $method, 'login', 'data']) ?? []);
+        $data = (object) ($mData['fallbackConfigParam'] ?? []);
 
         return [
             'handler' => $handler,
