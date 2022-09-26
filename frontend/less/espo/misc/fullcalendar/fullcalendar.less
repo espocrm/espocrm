@@ -65,8 +65,18 @@
     }
 }
 
-.fc-unthemed .fc-view-container td.fc-today {
-    background: var(--calendar-today-bg);
+.fc-unthemed {
+    .fc-view-container {
+        td.fc-today {
+            background: var(--calendar-today-bg);
+        }
+
+        .fc-agenda-view .fc-time-grid-container {
+            td.fc-today {
+                background: transparent
+            }
+        }
+    }
 }
 
 .fc-unthemed th,
