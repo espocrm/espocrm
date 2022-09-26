@@ -107,7 +107,7 @@
     "enterTotpCode": "Vnesite kodo iz aplikacije za preverjanje pristnosti.",
     "verifyTotpCode": "Skenirajte kodo QR z aplikacijo za preverjanje pristnosti v mobilni napravi. Če imate težave s skeniranjem, lahko skrivnost vnesete ročno. Po tem boste v aplikaciji videli 6-mestno kodo. Vnesite to kodo v spodnje polje.",
     "generateAndSendNewPassword": "Novo geslo bo ustvarjeno in poslano na uporabnikov elektronski naslov.",
-    "security2FaResetConfimation": "Ali ste prepričani, da želite ponastaviti trenutne nastavitve 2FA?",
+    "security2FaResetConfirmation": "Ali ste prepričani, da želite ponastaviti trenutne nastavitve 2FA?",
     "ldapUserInEspoNotFound": "Uporabnika ni mogoče najti v EspoCRM. Za ustvarjanje uporabnika se obrnite na skrbnika.",
     "passwordRecoverySentIfMatched": "Ob predpostavki, da se vneseni podatki ujemajo s katerim koli uporabniškim računom.",
     "auth2FARequiredHeader": "Zahtevana je dvostopenjska avtentikacija",

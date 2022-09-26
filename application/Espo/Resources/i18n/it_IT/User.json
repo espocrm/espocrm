@@ -101,7 +101,7 @@
     "enterTotpCode": "Inserisci un codice dalla tua app di autenticazione.",
     "verifyTotpCode": "Scansiona il codice QR con l'app di autenticazione mobile. In caso di problemi con la scansione, è possibile inserire il segreto manualmente. Successivamente vedrai un codice di 6 cifre nella tua applicazione. Inserisci questo codice nel campo sottostante.",
     "generateAndSendNewPassword": "Una nuova password verrà generata e inviata all'indirizzo e-mail dell'utente.",
-    "security2FaResetConfimation": "Sei sicuro di voler ripristinare le attuali impostazioni 2FA?",
+    "security2FaResetConfirmation": "Sei sicuro di voler ripristinare le attuali impostazioni 2FA?",
     "ldapUserInEspoNotFound": "Utente non trovato in EspoCRM. Contatta l’amministratore di sistema per creare un utente.",
     "auth2FARequiredHeader": "Autenticazione a 2 fattori richiesta",
     "auth2FARequired": "È necessario impostare l'autenticazione a due fattori. Usa un'applicazione di autenticazione sul tuo cellulare (ad esempio, Google Authenticator).",

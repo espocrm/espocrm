@@ -108,7 +108,7 @@
     "enterTotpCode": "使用您的認證 APP 掃描 QR-code。如果您在掃描時遇到問題，可以手動輸入密碼。之後，您將在 APP 中看到一組6位代碼。在下面的欄位中輸入此代碼。",
     "verifyTotpCode": "將會生成一組新密碼並將發送到使用者的電子郵件地址。",
     "generateAndSendNewPassword": "您確定要重設當前的2FA嗎？",
-    "security2FaResetConfimation": "API有效"
+    "security2FaResetConfirmation": "API有效"
   },
   "boolFilters": {
     "onlyMyTeam": "只有我的團隊"

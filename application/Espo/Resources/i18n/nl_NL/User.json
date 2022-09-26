@@ -105,7 +105,7 @@
     "enterTotpCode": "Voer een code van uw authenticatie-app in.",
     "verifyTotpCode": "Scan de QR-code met uw mobiele authenticator app. Als je problemen hebt met scannen, kun je het geheim handmatig invoeren. Daarna ziet u een 6-cijferige code in uw applicatie. Voer deze code in het onderstaande veld in.",
     "generateAndSendNewPassword": "Een nieuw wachtwoord zal worden gegenereerd en naar het e-mailadres van de gebruiker worden verzonden.",
-    "security2FaResetConfimation": "Weet u zeker dat u de huidige 2FA-instellingen wilt resetten?",
+    "security2FaResetConfirmation": "Weet u zeker dat u de huidige 2FA-instellingen wilt resetten?",
     "ldapUserInEspoNotFound": "De gebruiker is niet gevonden in EspoCRM. Neem contact op met uw beheerder om de gebruiker aan te maken.",
     "passwordRecoverySentIfMatched": "Aangenomen dat de ingevoerde gegevens overeenkomen met een gebruikersaccount.",
     "auth2FARequiredHeader": "2 factor authenticatie vereist",

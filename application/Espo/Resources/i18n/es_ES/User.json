@@ -104,7 +104,7 @@
     "enterTotpCode": "Ingrese un código de su aplicación de autenticación.",
     "verifyTotpCode": "Escanee el código QR con su aplicación de autenticación móvil. Si tiene problemas para escanear, puede ingresar el secreto manualmente. Después de eso, verá un código de 6 dígitos en su aplicación. Ingresar este código en el campo de abajo.",
     "generateAndSendNewPassword": "Se generará una nueva contraseña y se enviará a la dirección de correo electrónico del usuario.",
-    "security2FaResetConfimation": "¿Está seguro de que desea restablecer la configuración actual de 2FA?",
+    "security2FaResetConfirmation": "¿Está seguro de que desea restablecer la configuración actual de 2FA?",
     "ldapUserInEspoNotFound": "El usuario no se encuentra en EspoCRM. Póngase en contacto con su administrador para crear el usuario.",
     "passwordRecoverySentIfMatched": "Suponiendo que los datos ingresados coincidieran con cualquier cuenta de usuario.",
     "auth2FARequiredHeader": "Se requiere autenticación de 2 factores",

@@ -153,7 +153,7 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
         },
 
         actionReset: function (dialog) {
-            this.confirm(this.translate('security2FaResetConfimation', 'messages', 'User'), () => {
+            this.confirm(this.translate('security2FaResetConfirmation', 'messages', 'User'), () => {
                 this.actionApply(dialog, true);
             });
         },

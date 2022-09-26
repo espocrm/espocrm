@@ -111,7 +111,7 @@
     "enterTotpCode": "Įveskite autentifikatoriaus programėlės kodą.",
     "verifyTotpCode": "Nuskaitykite QR kodą mobiliąja autentifikavimo programa. Jei turite problemų su nuskaitymu, paslaptį galite įvesti rankiniu būdu. Po to programoje pamatysite 6 skaitmenų kodą. Įveskite šį kodą į toliau esantį laukelį.",
     "generateAndSendNewPassword": "Naujas slaptažodis bus sugeneruotas ir išsiųstas naudotojo el. pašto adresu.",
-    "security2FaResetConfimation": "Ar tikrai norite iš naujo nustatyti dabartinius 2FA nustatymus?",
+    "security2FaResetConfirmation": "Ar tikrai norite iš naujo nustatyti dabartinius 2FA nustatymus?",
     "ldapUserInEspoNotFound": "Vartotojas nerastas \"EspoCRM\". Kreipkitės į administratorių, kad jis sukurtų naudotoją.",
     "passwordRecoverySentIfMatched": "Darant prielaidą, kad įvesti duomenys atitinka bet kurią naudotojo paskyrą.",
     "auth2FARequiredHeader": "Reikalingas 2 veiksnių autentiškumo patvirtinimas",
