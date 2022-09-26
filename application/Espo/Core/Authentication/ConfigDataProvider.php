@@ -29,8 +29,11 @@
 
 namespace Espo\Core\Authentication;
 
+use Espo\Core\Authentication\Login\MetadataParams;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
+
+use RuntimeException;
 
 class ConfigDataProvider
 {
@@ -123,5 +126,34 @@ class ConfigDataProvider
     public function isAnotherUserDisabled(): bool
     {
         return (bool) $this->config->get('authAnotherUserDisabled');
+    }
+
+    /**
+     * @return MetadataParams[]
+     */
+    public function getLoginMetadataParamsList(): array
+    {
+        $list = [];
+
+        /** @var array<string, array<string, mixed>> $data */
+        $data = $this->metadata->get(['authenticationMethods']) ?? [];
+
+        foreach ($data as $method => $item) {
+            $list[] = MetadataParams::fromRaw($method, $item);
+        }
+
+        return $list;
+    }
+
+    public function getMethodLoginMetadataParams(string $method): MetadataParams
+    {
+        /** @var ?array<string, mixed> $data */
+        $data = $this->metadata->get(['authenticationMethods', $method]);
+
+        if ($data === null) {
+            throw new RuntimeException();
+        }
+
+        return MetadataParams::fromRaw($method, $data);
     }
 }

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Api;
 
+use Espo\Core\Authentication\ConfigDataProvider;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ServiceUnavailable;
 use Espo\Core\Exceptions\Forbidden;
@@ -39,6 +40,7 @@ use Espo\Core\Authentication\Result;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Json;
 
+use Espo\Core\Utils\Metadata;
 use Exception;
 
 /**
@@ -51,12 +53,14 @@ class Auth
 
     private Log $log;
     private Authentication $authentication;
+    private ConfigDataProvider $configDataProvider;
     private bool $authRequired;
     private bool $isEntryPoint;
 
     public function __construct(
         Log $log,
         Authentication $authentication,
+        ConfigDataProvider $configDataProvider,
         bool $authRequired = true,
         bool $isEntryPoint = false
     ) {
@@ -64,6 +68,7 @@ class Auth
         $this->authentication = $authentication;
         $this->authRequired = $authRequired;
         $this->isEntryPoint = $isEntryPoint;
+        $this->configDataProvider = $configDataProvider;
     }
 
     /**
@@ -274,18 +279,21 @@ class Auth
             return null;
         }
 
-        // @todo Get headers from metadata `authenticationMethods` > * > `credentialsHeader`.
+        $paramsList = array_values(array_filter(
+            $this->configDataProvider->getLoginMetadataParamsList(),
+            function ($params) use ($request): bool {
+                $header = $params->getCredentialsHeader();
 
-        if ($request->hasHeader('X-Hmac-Authorization')) {
-            return 'Hmac';
-        }
+                if (!$header || !$params->isApi()) {
+                    return false;
+                }
 
-        if ($request->hasHeader('X-Api-Key')) {
-            return 'ApiKey';
-        }
+                return $request->hasHeader($header);
+            }
+        ));
 
-        if ($request->hasHeader('X-Auth-Method')) {
-            return $request->getHeader('X-Auth-Method');
+        if (count($paramsList)) {
+            return $paramsList[0]->getMethod();
         }
 
         return null;

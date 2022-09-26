@@ -1,3 +1,4 @@
 {
-    "api": true
+    "api": true,
+    "credentialsHeader": "X-Hmac-Authorization"
 }
