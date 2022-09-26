@@ -34,6 +34,10 @@ define('views/user/modals/password', ['views/modal', 'model'], function (Dep, Mo
 
         className: 'dialog dialog-record',
 
+        shortcutKeys: {
+            'Control+Enter': 'apply',
+        },
+
         setup: function () {
             this.buttonList = [
                 {
@@ -44,9 +48,10 @@ define('views/user/modals/password', ['views/modal', 'model'], function (Dep, Mo
                 {
                     name: 'cancel',
                     label: 'Cancel',
-                }
+                },
             ];
 
+            this.headerHtml = '&nbsp';
 
             this.userModel = this.options.userModel;
 

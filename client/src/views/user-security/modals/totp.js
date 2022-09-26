@@ -36,6 +36,10 @@ define('views/user-security/modals/totp',
 
         className: 'dialog dialog-record',
 
+        shortcutKeys: {
+            'Control+Enter': 'apply',
+        },
+
         setup: function () {
             this.buttonList = [
                 {
@@ -46,8 +50,10 @@ define('views/user-security/modals/totp',
                 {
                     name: 'cancel',
                     label: 'Cancel',
-                }
+                },
             ];
+
+            this.headerHtml = '&nbsp';
 
             var model = new Model();
 

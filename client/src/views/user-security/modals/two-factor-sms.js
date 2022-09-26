@@ -36,6 +36,10 @@ define('views/user-security/modals/two-factor-sms',
 
         className: 'dialog dialog-record',
 
+        shortcutKeys: {
+            'Control+Enter': 'apply',
+        },
+
         events: {
             'click [data-action="sendCode"]': function () {
                 this.actionSendCode();
@@ -53,8 +57,10 @@ define('views/user-security/modals/two-factor-sms',
                 {
                     name: 'cancel',
                     label: 'Cancel',
-                }
+                },
             ];
+
+            this.headerHtml = '&nbsp';
 
             let codeLength = this.getConfig().get('auth2FASmsCodeLength') || 7;
 

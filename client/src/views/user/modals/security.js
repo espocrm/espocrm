@@ -34,6 +34,10 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
 
         className: 'dialog dialog-record',
 
+        shortcutKeys: {
+            'Control+Enter': 'apply',
+        },
+
         setup: function () {
             this.buttonList = [
                 {

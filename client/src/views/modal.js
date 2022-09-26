@@ -393,6 +393,10 @@ define('views/modal', ['view'], function (Dep) {
                         return;
                     }
 
+                    if (this.hasActionItem(actionName) && !this.hasAvailableActionItem(actionName)) {
+                        return;
+                    }
+
                     e.preventDefault();
                     e.stopPropagation();
 
@@ -850,6 +854,23 @@ define('views/modal', ['view'], function (Dep) {
                 $dropdownGroup.addClass('hidden');
                 $dropdownGroup.find('> button').addClass('hidden');
             }
+        },
+
+        /**
+         * Whether an action item exists (hidden, disabled or not).
+         *
+         * @param {string} name An action item name.
+         */
+        hasActionItem: function (name) {
+            let hasButton = this.buttonList
+                .findIndex(item => item.name === name) !== -1;
+
+            if (hasButton) {
+                return true;
+            }
+
+            return this.dropdownItemList
+                .findIndex(item => item.name === name) !== -1;
         },
 
         /**
