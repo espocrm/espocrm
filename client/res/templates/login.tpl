@@ -24,6 +24,7 @@
                         <button
                             class="btn btn-default btn-x-wide"
                             id="sign-in"
+                            type="button"
                         >{{signInText}}</button>
                     </div>
                     {{/if}}

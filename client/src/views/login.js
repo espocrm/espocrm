@@ -94,6 +94,12 @@ define('views/login', ['view'], function (Dep) {
                 if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
                     e.preventDefault();
 
+                    if (this.handler && !this.fallback) {
+                        this.signIn();
+
+                        return;
+                    }
+
                     this.login();
                 }
             },
