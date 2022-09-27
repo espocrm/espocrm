@@ -278,7 +278,8 @@
         "Field": "Field",
         "Resolution": "Resolution",
         "Resolve Conflict": "Resolve Conflict",
-        "Download": "Download"
+        "Download": "Download",
+        "Global Search": "Global Search"
     },
     "messages": {
         "pleaseWait": "Please wait...",
