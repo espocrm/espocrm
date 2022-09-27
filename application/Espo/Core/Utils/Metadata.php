@@ -366,16 +366,18 @@ class Metadata
                 }
 
                 foreach ($additionalFields as $subFieldName => $subFieldParams) {
+                    $item = Util::arrayToObject($subFieldParams);
+
                     if (isset($entityDefsItem->fields->$subFieldName)) {
                         $data->entityDefs->$entityType->fields->$subFieldName = DataUtil::merge(
-                            Util::arrayToObject($subFieldParams),
+                            $item,
                             $entityDefsItem->fields->$subFieldName
                         );
+
+                        continue;
                     }
-                    else {
-                        $data->entityDefs->$entityType->fields->$subFieldName =
-                            Util::arrayToObject($subFieldParams);
-                    }
+
+                    $data->entityDefs->$entityType->fields->$subFieldName = $item;
                 }
             }
         }
