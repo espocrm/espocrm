@@ -1072,27 +1072,35 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($result, Util::concatPath($input));
     }
 
-    public function testArrayToObject()
+    public function testArrayToObject(): void
     {
-        $testArr= array(
+        $testArr= [
             'useCache' => true,
-            'sub' =>  array (
+            'sub' =>  [
                 'subV' => '125',
-                'subO' => array(
+                'subO' => [
                     'subOV' => '125',
-                ),
-            ),
-        );
+                ],
+                'subList' => [
+                    '0',
+                    '1'
+                ],
+            ],
+        ];
 
-        $testResult= (object) array(
+        $testResult= (object) [
             'useCache' => true,
-        );
-        $testResult->sub = (object) array (
-                'subV' => '125',
-        );
-        $testResult->sub->subO = (object) array (
-                'subOV' => '125',
-        );
+        ];
+
+        $testResult->sub = (object) [
+            'subV' => '125',
+        ];
+
+        $testResult->sub->subO = (object) [
+            'subOV' => '125',
+        ];
+
+        $testResult->sub->subList = ['0', '1'];
 
         $this->assertEquals($testResult, Util::arrayToObject($testArr));
     }

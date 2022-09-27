@@ -305,8 +305,17 @@ class Util
      */
     private static function arrayToObjectInternal($value)
     {
-        if (is_array($value)) {
-            return (object) array_map(fn($v) => self::arrayToObjectInternal($v), $value);
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        // @todo Change to `array_is_list` when PHP 8.1 is the min supported.
+        $isList = $value === array_values($value);
+
+        $value =  array_map(fn($v) => self::arrayToObjectInternal($v), $value);
+
+        if (!$isList) {
+            $value = (object) $value;
         }
 
         return $value;
