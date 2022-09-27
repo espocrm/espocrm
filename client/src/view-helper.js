@@ -297,6 +297,10 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
 
                 list = list || [];
 
+                if(!Array.isArray(list)) {
+                    list = Object.values(list)
+                }
+
                 let html = '';
 
                 let multiple = (Object.prototype.toString.call(value) === '[object Array]');
