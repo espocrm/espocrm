@@ -840,7 +840,7 @@ define('views/fields/base', ['view'], function (Dep) {
                 });
 
                 this.listenTo(this, 'change', () => {
-                    var attributes = this.fetch();
+                    const attributes = Espo.Utils.deepClone(this.fetch());
 
                     this.model.set(attributes, {ui: true});
                 });
