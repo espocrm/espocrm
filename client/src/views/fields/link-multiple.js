@@ -770,8 +770,8 @@ define('views/fields/link-multiple', ['views/fields/base', 'helpers/record-modal
         fetch: function () {
             let data = {};
 
-            data[this.idsName] = this.ids;
-            data[this.nameHashName] = this.nameHash;
+            data[this.idsName] = Espo.Utils.clone(this.ids);
+            data[this.nameHashName] = Espo.Utils.clone(this.nameHash);
 
             return data;
         },
