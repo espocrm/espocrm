@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Acl\Cache\Clearer as AclCacheClearer;
 use Espo\ORM\Entity;
 
 use Espo\Core\Di;
@@ -38,10 +39,8 @@ use Espo\Core\Di;
  */
 class Role extends Record implements
 
-    Di\FileManagerAware,
     Di\DataManagerAware
 {
-    use Di\FileManagerSetter;
     use Di\DataManagerSetter;
 
     protected $forceSelectAllAttributes = true;
@@ -49,20 +48,26 @@ class Role extends Record implements
     public function afterCreateEntity(Entity $entity, $data)
     {
         parent::afterCreateEntity($entity, $data);
+
         $this->clearRolesCache();
     }
 
     public function afterUpdateEntity(Entity $entity, $data)
     {
         parent::afterUpdateEntity($entity, $data);
+
         $this->clearRolesCache();
     }
 
     protected function clearRolesCache(): void
     {
-        $this->fileManager->removeInDir('data/cache/application/acl');
-        $this->fileManager->removeInDir('data/cache/application/aclMap');
+        $this->createAclCacheClearer()->clearForAllInternalUsers();
 
         $this->dataManager->updateCacheTimestamp();
+    }
+
+    private function createAclCacheClearer(): AclCacheClearer
+    {
+        return $this->injectableFactory->create(AclCacheClearer::class);
     }
 }

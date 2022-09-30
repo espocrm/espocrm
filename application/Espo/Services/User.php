@@ -40,7 +40,7 @@ use Espo\Repositories\Portal as PortalRepository;
 
 use Espo\Core\Mail\Sender;
 
-use Espo\Core\{
+use Espo\Core\{Acl\Cache\Clearer as AclCacheClearer,
     Exceptions\Forbidden,
     Exceptions\Error,
     Exceptions\NotFound,
@@ -52,8 +52,7 @@ use Espo\Core\{
     Password\Recovery,
     Record\CreateParams,
     Record\UpdateParams,
-    Record\DeleteParams,
-};
+    Record\DeleteParams};
 
 use Espo\ORM\Entity;
 
@@ -908,7 +907,7 @@ class User extends Record implements
             property_exists($data, 'portalRolesIds') ||
             property_exists($data, 'portalsIds')
         ) {
-            $this->clearRoleCache($entity->getId());
+            $this->clearRoleCache($entity);
         }
 
         if (
@@ -949,18 +948,16 @@ class User extends Record implements
         }
     }
 
-    protected function clearRoleCache(string $id): void
+    protected function clearRoleCache(UserEntity $user): void
     {
-        $this->fileManager->removeFile('data/cache/application/acl/' . $id . '.php');
-        $this->fileManager->removeFile('data/cache/application/aclMap/' . $id . '.php');
+        $this->createAclCacheClearer()->clearForUser($user);
 
         $this->dataManager->updateCacheTimestamp();
     }
 
     protected function clearPortalRolesCache(): void
     {
-        $this->fileManager->removeInDir('data/cache/application/aclPortal');
-        $this->fileManager->removeInDir('data/cache/application/aclPortalMap');
+        $this->createAclCacheClearer()->clearForAllPortalUsers();
 
         $this->dataManager->updateCacheTimestamp();
     }
@@ -1015,5 +1012,10 @@ class User extends Record implements
     {
         /** @var PortalRepository */
         return $this->entityManager->getRDBRepository(PortalEntity::ENTITY_TYPE);
+    }
+
+    private function createAclCacheClearer(): AclCacheClearer
+    {
+        return $this->injectableFactory->create(AclCacheClearer::class);
     }
 }

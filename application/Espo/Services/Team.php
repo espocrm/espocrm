@@ -29,6 +29,8 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Acl\Cache\Clearer as AclCacheClearer;
+use Espo\Entities\User as UserEntity;
 use Espo\ORM\Entity;
 
 use Espo\Core\Select\SearchParams;
@@ -40,10 +42,8 @@ use Espo\Core\Di;
  */
 class Team extends Record implements
 
-    Di\FileManagerAware,
     Di\DataManagerAware
 {
-    use Di\FileManagerSetter;
     use Di\DataManagerSetter;
 
     public function afterUpdateEntity(Entity $entity, $data)
@@ -57,8 +57,7 @@ class Team extends Record implements
 
     protected function clearRolesCache(): void
     {
-        $this->fileManager->removeInDir('data/cache/application/acl');
-        $this->fileManager->removeInDir('data/cache/application/aclMap');
+        $this->createAclCacheClearer()->clearForAllInternalUsers();
 
         $this->dataManager->updateCacheTimestamp();
     }
@@ -68,8 +67,12 @@ class Team extends Record implements
         parent::link($id, $link, $foreignId);
 
         if ($link === 'users') {
-            $this->fileManager->removeFile('data/cache/application/acl/' . $foreignId . '.php');
-            $this->fileManager->removeFile('data/cache/application/aclMap/' . $foreignId . '.php');
+            /** @var ?UserEntity $user */
+            $user = $this->entityManager->getEntityById(UserEntity::ENTITY_TYPE, $foreignId);
+
+            if ($user) {
+                $this->createAclCacheClearer()->clearForUser($user);
+            }
 
             $this->dataManager->updateCacheTimestamp();
         }
@@ -80,8 +83,12 @@ class Team extends Record implements
         parent::unlink($id, $link, $foreignId);
 
         if ($link === 'users') {
-            $this->fileManager->removeFile('data/cache/application/acl/' . $foreignId . '.php');
-            $this->fileManager->removeFile('data/cache/application/aclMap/' . $foreignId . '.php');
+            /** @var ?UserEntity $user */
+            $user = $this->entityManager->getEntityById(UserEntity::ENTITY_TYPE, $foreignId);
+
+            if ($user) {
+                $this->createAclCacheClearer()->clearForUser($user);
+            }
 
             $this->dataManager->updateCacheTimestamp();
         }
@@ -96,5 +103,10 @@ class Team extends Record implements
         }
 
         return $result;
+    }
+
+    private function createAclCacheClearer(): AclCacheClearer
+    {
+        return $this->injectableFactory->create(AclCacheClearer::class);
     }
 }

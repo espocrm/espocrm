@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Acl\Cache\Clearer as AclCacheClearer;
 use Espo\ORM\Entity;
 
 use Espo\Repositories\Portal as Repository;
@@ -41,10 +42,8 @@ use Espo\Core\Di;
  */
 class Portal extends Record implements
 
-    Di\FileManagerAware,
     Di\DataManagerAware
 {
-    use Di\FileManagerSetter;
     use Di\DataManagerSetter;
 
     protected $getEntityBeforeUpdate = true;
@@ -72,8 +71,7 @@ class Portal extends Record implements
 
     protected function clearRolesCache(): void
     {
-        $this->fileManager->removeInDir('data/cache/application/aclPortal');
-        $this->fileManager->removeInDir('data/cache/application/aclPortalMap');
+        $this->createAclCacheClearer()->clearForAllPortalUsers();
 
         $this->dataManager->updateCacheTimestamp();
     }
@@ -82,5 +80,10 @@ class Portal extends Record implements
     {
         /** @var Repository */
         return $this->getRepository();
+    }
+
+    private function createAclCacheClearer(): AclCacheClearer
+    {
+        return $this->injectableFactory->create(AclCacheClearer::class);
     }
 }
