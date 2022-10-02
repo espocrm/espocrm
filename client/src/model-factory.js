@@ -94,7 +94,7 @@ define('model-factory', [], function () {
          * @private
          */
         getSeed: function (name, callback) {
-            if ('name' in this.seeds) {
+            if (name in this.seeds) {
                 callback(this.seeds[name]);
 
                 return;
