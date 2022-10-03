@@ -188,7 +188,10 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                         this.trigger('model-sync');
                     });
 
-                    this.listenToOnce(this.model, 'sync', () => this.createRecordView());
+                    this.listenToOnce(this.model, 'sync', () => {
+                        this.setupActionItems();
+                        this.createRecordView();
+                    });
 
                     this.model.fetch();
 
