@@ -207,7 +207,9 @@ class RequestWrapper implements ApiRequest
     {
         $contents = $this->getBodyContents();
 
-        if ($this->getContentType() === 'application/json' && $contents) {
+        $contentType = $this->getContentType();
+
+        if ($contentType === 'application/json' && $contents) {
             $parsedBody = Json::decode($contents);
 
             if (is_array($parsedBody)) {
@@ -223,6 +225,25 @@ class RequestWrapper implements ApiRequest
             $this->parsedBody = $parsedBody;
 
             return;
+        }
+
+        if (
+            in_array($contentType, ['application/x-www-form-urlencoded', 'multipart/form-data']) &&
+            $contents
+        ) {
+            $parsedBody = $this->request->getParsedBody();
+
+            if (is_array($parsedBody)) {
+                $this->parsedBody = (object) $parsedBody;
+
+                return;
+            }
+
+            if ($parsedBody instanceof stdClass) {
+                $this->parsedBody = $parsedBody;
+
+                return;
+            }
         }
 
         $this->parsedBody = (object) [];
