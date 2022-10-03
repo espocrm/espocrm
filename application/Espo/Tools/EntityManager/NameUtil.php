@@ -56,6 +56,8 @@ class NameUtil
         'insteadof', 'interface', 'isset', 'list', 'namespace', 'new', 'or', 'print', 'private',
         'protected', 'public', 'require', 'require_once', 'return', 'static', 'switch', 'throw',
         'trait', 'try', 'unset', 'use', 'var', 'while', 'xor', 'common', 'fn', 'parent',
+        'int', 'float', 'bool', 'string', 'true', 'false', 'null', 'void', 'iterable', 'object',
+        'mixed', 'never',
     ];
 
     /**
