@@ -23,7 +23,9 @@
         "dragonmantank/cron-expression": "3.0.*",
         "laminas/laminas-mail": "2.15.*",
         "laminas/laminas-ldap": "2.*",
-        "laminas/laminas-servicemanager": "^3.6",
+        "laminas/laminas-servicemanager": "^3.11",
+        "laminas/laminas-crypt": "^3.8",
+        "laminas/laminas-zendframework-bridge": "^1.4",
         "monolog/monolog": "2.*",
         "yzalis/identicon": "*",
         "zordius/lightncandy": "dev-espo#v1.2.5e",
@@ -43,7 +45,6 @@
         "doctrine/dbal": "^3.3.3",
         "league/flysystem-async-aws-s3": "^2.0",
         "johngrogg/ics-parser": "^3.0",
-        "laminas/laminas-zendframework-bridge": "^1.4",
         "phpseclib/phpseclib": "^3.0"
     },
     "require-dev": {
