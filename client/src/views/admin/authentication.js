@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/authentication', 'views/settings/record/edit', function (Dep) {
+define('views/admin/authentication', ['views/settings/record/edit'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,8 +37,9 @@ define('views/admin/authentication', 'views/settings/record/edit', function (Dep
         setup: function () {
             this.methodList = [];
 
-            var defs = this.getMetadata().get(['authenticationMethods']) || {};
-            for (var method in defs) {
+            let defs = this.getMetadata().get(['authenticationMethods']) || {};
+
+            for (let method in defs) {
                 if (defs[method].settings && defs[method].settings.isAvailable) {
                     this.methodList.push(method);
                 }
@@ -49,19 +50,22 @@ define('views/admin/authentication', 'views/settings/record/edit', function (Dep
             Dep.prototype.setup.call(this);
 
             this.handlePanelsVisibility();
-            this.listenTo(this.model, 'change:authenticationMethod', function () {
+
+            this.listenTo(this.model, 'change:authenticationMethod', () => {
                 this.handlePanelsVisibility();
-            }, this);
+            });
 
             this.manage2FAFields();
-            this.listenTo(this.model, 'change:auth2FA', function () {
+
+            this.listenTo(this.model, 'change:auth2FA', () => {
                 this.manage2FAFields();
-            }, this);
+            });
 
             this.managePasswordRecoveryFields();
-            this.listenTo(this.model, 'change:passwordRecoveryDisabled', function () {
+
+            this.listenTo(this.model, 'change:passwordRecoveryDisabled', () => {
                 this.managePasswordRecoveryFields();
-            }, this);
+            });
         },
 
         setupBeforeFinal: function () {
@@ -70,55 +74,63 @@ define('views/admin/authentication', 'views/settings/record/edit', function (Dep
                 panels: {},
             };
 
-            this.methodList.forEach(function (method) {
-                var fieldList = this.getMetadata().get(['authenticationMethods', method, 'settings', 'fieldList']);
+            this.methodList.forEach(method => {
+                let fieldList = this.getMetadata().get(['authenticationMethods', method, 'settings', 'fieldList']);
+
                 if (fieldList) {
                     this.authFields[method] = fieldList;
                 }
-                var mDynamicLogicFieldsDefs = this.getMetadata().get(['authenticationMethods', method, 'settings', 'dynamicLogic', 'fields']);
+
+                let mDynamicLogicFieldsDefs = this.getMetadata()
+                    .get(['authenticationMethods', method, 'settings', 'dynamicLogic', 'fields']);
+
                 if (mDynamicLogicFieldsDefs) {
-                    for (var f in mDynamicLogicFieldsDefs) {
+                    for (let f in mDynamicLogicFieldsDefs) {
                         this.dynamicLogicDefs.fields[f] = Espo.Utils.cloneDeep(mDynamicLogicFieldsDefs[f]);
                     }
                 }
-            }, this);
+            });
 
             Dep.prototype.setupBeforeFinal.call(this);
         },
 
         modifyDetailLayout: function (layout) {
-            this.methodList.forEach(function (method) {
-                var mLayout = this.getMetadata().get(['authenticationMethods', method, 'settings', 'layout']);
+            this.methodList.forEach(method => {
+                let mLayout = this.getMetadata().get(['authenticationMethods', method, 'settings', 'layout']);
+
                 if (mLayout) {
                     mLayout = Espo.Utils.cloneDeep(mLayout);
                     mLayout.name = method;
+
                     layout.push(mLayout);
                 }
-            }, this);
+            });
         },
 
         handlePanelsVisibility: function () {
             var authenticationMethod = this.model.get('authenticationMethod');
 
-            this.methodList.forEach(function (method) {
+            this.methodList.forEach(method => {
                 var fieldList = (this.authFields[method] || []);
 
-                if (method != authenticationMethod) {
+                if (method !== authenticationMethod) {
                     this.hidePanel(method);
 
-                    fieldList.forEach(function (field) {
+                    fieldList.forEach(field => {
                         this.hideField(field);
-                    }, this);
-                } else {
-                    this.showPanel(method);
+                    });
 
-                    fieldList.forEach(function (field) {
-                        this.showField(field);
-                    }, this);
-
-                    this.processDynamicLogic();
+                    return;
                 }
-            }, this);
+
+                this.showPanel(method);
+
+                fieldList.forEach(field => {
+                    this.showField(field);
+                });
+
+                this.processDynamicLogic();
+            });
         },
 
         manage2FAFields: function () {
@@ -126,11 +138,13 @@ define('views/admin/authentication', 'views/settings/record/edit', function (Dep
                 this.showField('auth2FAForced');
                 this.showField('auth2FAMethodList');
                 this.setFieldRequired('auth2FAMethodList');
-            } else {
-                this.hideField('auth2FAForced');
-                this.hideField('auth2FAMethodList');
-                this.setFieldNotRequired('auth2FAMethodList');
+
+                return;
             }
+
+            this.hideField('auth2FAForced');
+            this.hideField('auth2FAMethodList');
+            this.setFieldNotRequired('auth2FAMethodList');
         },
 
         managePasswordRecoveryFields: function () {
@@ -138,12 +152,13 @@ define('views/admin/authentication', 'views/settings/record/edit', function (Dep
                 this.showField('passwordRecoveryForAdminDisabled');
                 this.showField('passwordRecoveryForInternalUsersDisabled');
                 this.showField('passwordRecoveryNoExposure');
-            } else {
-                this.hideField('passwordRecoveryForAdminDisabled');
-                this.hideField('passwordRecoveryForInternalUsersDisabled');
-                this.hideField('passwordRecoveryNoExposure');
-            }
-        },
 
+                return;
+            }
+
+            this.hideField('passwordRecoveryForAdminDisabled');
+            this.hideField('passwordRecoveryForInternalUsersDisabled');
+            this.hideField('passwordRecoveryNoExposure');
+        },
     });
 });
