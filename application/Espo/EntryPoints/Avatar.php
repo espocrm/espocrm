@@ -75,9 +75,13 @@ class Avatar extends Image implements Di\MetadataAware
             $sum += ord($hash[$i]);
         }
 
-        $x = intval($sum % 128) + 1;
+        $x = $sum % 128 + 1;
 
         $colorList = $this->metadata->get(['app', 'avatars', 'colorList']) ?? $this->colorList;
+
+        if ($x === 128) {
+            $x--;
+        }
 
         $index = intval($x * count($colorList) / 128);
 
