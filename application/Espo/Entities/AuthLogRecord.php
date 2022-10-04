@@ -38,4 +38,5 @@ class AuthLogRecord extends \Espo\Core\ORM\Entity
     public const DENIAL_REASON_IS_PORTAL_USER = 'IS_PORTAL_USER';
     public const DENIAL_REASON_IS_NOT_PORTAL_USER = 'IS_NOT_PORTAL_USER';
     public const DENIAL_REASON_USER_IS_NOT_IN_PORTAL = 'USER_IS_NOT_IN_PORTAL';
+    public const DENIAL_REASON_IS_SYSTEM_USER = 'IS_SYSTEM_USER';
 }

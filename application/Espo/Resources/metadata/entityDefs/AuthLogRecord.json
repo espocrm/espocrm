@@ -33,7 +33,15 @@
         },
         "denialReason": {
             "type": "enum",
-            "options": ["", "CREDENTIALS", "INACTIVE_USER", "IS_PORTAL_USER", "IS_NOT_PORTAL_USER", "USER_IS_NOT_IN_PORTAL"],
+            "options": [
+                "",
+                "CREDENTIALS",
+                "INACTIVE_USER",
+                "IS_PORTAL_USER",
+                "IS_NOT_PORTAL_USER",
+                "USER_IS_NOT_IN_PORTAL",
+                "IS_SYSTEM_USER"
+            ],
             "readOnly": true
         },
         "requestTime": {

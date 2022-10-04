@@ -410,6 +410,15 @@ class Authentication
             return false;
         }
 
+        if ($user->isSystem()) {
+            $this->log
+                ->info("AUTH: Trying to login to crm as a system user '{$user->getUserName()}'.");
+
+            $this->logDenied($authLogRecord, AuthLogRecord::DENIAL_REASON_IS_SYSTEM_USER);
+
+            return false;
+        }
+
         if (!$user->isAdmin() && !$this->isPortal() && $user->isPortal()) {
             $this->log
                 ->info("AUTH: Trying to login to crm as a portal user '" . $user->getUserName() . "'.");
