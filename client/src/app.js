@@ -931,8 +931,15 @@ function (
 
                 if (arr.length > 1) {
                     Ajax.postRequest('App/action/destroyAuthToken', {
-                        token: arr[1]
-                    });
+                            token: arr[1]
+                        })
+                        .then((data, status, xhr) => {
+                            let redirectUrl = xhr.getResponseHeader('X-Logout-Redirect-Url');
+
+                            if (redirectUrl) {
+                                setTimeout(() => window.location.href = redirectUrl, 50);
+                            }
+                        });
                 }
             }
 

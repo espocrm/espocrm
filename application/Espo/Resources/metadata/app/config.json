@@ -21,6 +21,72 @@
         },
         "workingTimeCalendar": {
             "level": "admin"
+        },
+        "oidcClientId": {
+            "level": "admin"
+        },
+        "oidcClientSecret": {
+            "level": "admin"
+        },
+        "oidcAuthorizationEndpoint": {
+            "level": "admin"
+        },
+        "oidcTokenEndpoint": {
+            "level": "admin"
+        },
+        "oidcJwksEndpoint": {
+            "level": "admin"
+        },
+        "oidcJwksCachePeriod": {
+            "level": "admin"
+        },
+        "oidcJwtSignatureAlgorithmList": {
+            "level": "admin"
+        },
+        "oidcScopes": {
+            "level": "admin"
+        },
+        "oidcGroupClaim": {
+            "level": "admin"
+        },
+        "oidcCreateUser": {
+            "level": "admin"
+        },
+        "oidcUsernameClaim": {
+            "level": "admin"
+        },
+        "oidcTeamsIds": {
+            "level": "admin"
+        },
+        "oidcTeamsNames": {
+            "level": "admin"
+        },
+        "oidcTeamsColumns": {
+            "level": "admin"
+        },
+        "oidcSync": {
+            "level": "admin"
+        },
+        "oidcSyncTeams": {
+            "level": "admin"
+        },
+        "oidcFallback": {
+            "level": "admin"
+        },
+        "oidcAllowRegularUserFallback": {
+            "level": "admin"
+        },
+        "oidcAllowAdminUser": {
+            "level": "admin"
+        },
+        "oidcAuthorizationPrompt": {
+            "level": "admin"
+        },
+        "oidcAuthorizationMaxAge": {
+            "level": "admin"
+        },
+        "oidcLogoutUrl": {
+            "level": "admin"
         }
     }
 }

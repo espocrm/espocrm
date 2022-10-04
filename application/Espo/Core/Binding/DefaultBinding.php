@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Binding;
 
+use Espo\Core\Authentication\Jwt\SignatureVerifierFactory;
+
 class DefaultBinding implements BindingProcessor
 {
     public function process(Binder $binder): void
@@ -219,6 +221,19 @@ class DefaultBinding implements BindingProcessor
             'Espo\\Core\\Sms\\Sender',
             'Espo\\Core\\Sms\\SenderFactory'
         );
+
+        $binder
+            ->bindImplementation(
+                'Espo\\Core\\Authentication\\Jwt\\KeyFactory',
+                'Espo\\Core\\Authentication\\Jwt\\DefaultKeyFactory'
+            );
+
+        $binder
+            ->for('Espo\\Core\\Authentication\\Oidc\\TokenValidator')
+            ->bindImplementation(
+                'Espo\\Core\\Authentication\\Jwt\\SignatureVerifierFactory',
+                'Espo\\Core\\Authentication\\Oidc\\DefaultSignatureVerifierFactory'
+            );
     }
 
     private function bindAcl(Binder $binder): void

@@ -285,6 +285,24 @@
         }
     },
     {
+        "route": "Oidc/authorizationData",
+        "method": "get",
+        "params": {
+            "controller": "Oidc",
+            "action": "authorizationData"
+        },
+        "noAuth": true
+    },
+    {
+        "route": "Oidc/backchannelLogout",
+        "method": "post",
+        "params": {
+            "controller": "Oidc",
+            "action": "backchannelLogout"
+        },
+        "noAuth": true
+    },
+    {
         "route": "/:controller/:id",
         "method": "get",
         "params": {

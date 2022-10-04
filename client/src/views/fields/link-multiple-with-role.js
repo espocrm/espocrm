@@ -31,7 +31,7 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
     /**
      * A link-multiple field with a relation column.
      *
-     * @deprecated Use `link-multiple-with-columns`.
+     * @inheritDoc Prefer using `link-multiple-with-columns` instead.
      *
      * @class
      * @name Class
@@ -60,6 +60,18 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
          * A value to fetch for an empty role.
          */
         emptyRoleValue: null,
+
+        /**
+         * A role placeholder text.
+         */
+        rolePlaceholderText: null,
+
+        /**
+         * A role value max length.
+         *
+         * @protected
+         */
+        roleMaxLength: 50,
 
         /**
          * @const
@@ -300,11 +312,11 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
                 $role = this.getJQSelect(id, role);
             }
             else {
-                let text = this.translate(this.roleField, 'fields', this.roleFieldScope);
+                let text = this.rolePlaceholderText || this.translate(this.roleField, 'fields', this.roleFieldScope);
 
                 $role = $('<input>')
                     .addClass('role form-control input-sm pull-right')
-                    .attr('maxlength', 50) // @todo Get the value from metadata.
+                    .attr('maxlength', this.roleMaxLength) // @todo Get the value from metadata.
                     .attr('placeholder', text)
                     .attr('data-id', id)
                     .attr('value', role || '');

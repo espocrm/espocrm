@@ -1,0 +1,245 @@
+{
+    "implementationClassName": "Espo\\Core\\Authentication\\Oidc\\Login",
+    "logoutClassName": "Espo\\Core\\Authentication\\Oidc\\Logout",
+    "login": {
+        "handler": "handlers/login/oidc",
+        "fallbackConfigParam": "oidcFallback"
+    },
+    "settings": {
+        "isAvailable": true,
+        "layout": {
+            "label": "OIDC",
+            "rows": [
+                [
+                    {
+                        "name": "oidcClientId"
+                    },
+                    {
+                        "name": "oidcClientSecret"
+                    }
+                ],
+                [
+                    {
+                        "name": "oidcAuthorizationRedirectUri",
+                        "view": "views/settings/fields/oidc-redirect-uri",
+                        "params": {
+                            "readOnly": true,
+                            "copyToClipboard": true
+                        }
+                    },
+                    false
+                ],
+                [
+                    {
+                        "name": "oidcAuthorizationEndpoint"
+                    },
+                    {
+                        "name": "oidcTokenEndpoint"
+                    }
+                ],
+                [
+                    {
+                        "name": "oidcJwksEndpoint"
+                    },
+                    {
+                        "name": "oidcJwtSignatureAlgorithmList"
+                    }
+                ],
+                [
+                    {
+                        "name": "oidcScopes"
+                    },
+                    {
+                        "name": "oidcUsernameClaim"
+                    }
+                ],
+                [
+                    {
+                        "name": "oidcCreateUser"
+                    },
+                    {
+                        "name": "oidcSync"
+                    }
+                ],
+                [
+                    {
+                        "name": "oidcTeams"
+                    },
+                    {
+                        "name": "oidcGroupClaim"
+                    }
+                ],
+                [
+                    {
+                        "name": "oidcSyncTeams"
+                    },
+                    false
+                ],
+                [
+                    {
+                        "name": "oidcFallback"
+                    },
+                    {
+                        "name": "oidcAllowRegularUserFallback"
+                    }
+                ],
+                [
+                    {
+                        "name": "oidcAllowAdminUser"
+                    },
+                    {
+                        "name": "oidcLogoutUrl"
+                    }
+                ]
+            ]
+        },
+        "fieldList": [
+            "oidcClientId",
+            "oidcClientSecret",
+            "oidcAuthorizationEndpoint",
+            "oidcTokenEndpoint",
+            "oidcJwksEndpoint",
+            "oidcJwtSignatureAlgorithmList",
+            "oidcScopes",
+            "oidcGroupClaim",
+            "oidcCreateUser",
+            "oidcUsernameClaim",
+            "oidcTeams",
+            "oidcSync",
+            "oidcSyncTeams",
+            "oidcAuthorizationRedirectUri",
+            "oidcFallback",
+            "oidcAllowRegularUserFallback",
+            "oidcAllowAdminUser",
+            "oidcLogoutUrl"
+        ],
+        "dynamicLogic": {
+            "fields": {
+                "oidcClientId": {
+                    "required": {
+                        "conditionGroup": [
+                            {
+                                "type": "equals",
+                                "attribute": "authenticationMethod",
+                                "value": "Oidc"
+                            }
+                        ]
+                    }
+                },
+                "oidcAuthorizationEndpoint": {
+                    "required": {
+                        "conditionGroup": [
+                            {
+                                "type": "equals",
+                                "attribute": "authenticationMethod",
+                                "value": "Oidc"
+                            }
+                        ]
+                    }
+                },
+                "oidcTokenEndpoint": {
+                    "required": {
+                        "conditionGroup": [
+                            {
+                                "type": "equals",
+                                "attribute": "authenticationMethod",
+                                "value": "Oidc"
+                            }
+                        ]
+                    }
+                },
+                "oidcUsernameClaim": {
+                    "required": {
+                        "conditionGroup": [
+                            {
+                                "type": "equals",
+                                "attribute": "authenticationMethod",
+                                "value": "Oidc"
+                            }
+                        ]
+                    }
+                },
+                "oidcJwtSignatureAlgorithmList": {
+                    "required": {
+                        "conditionGroup": [
+                            {
+                                "type": "equals",
+                                "attribute": "authenticationMethod",
+                                "value": "Oidc"
+                            }
+                        ]
+                    }
+                },
+                "oidcJwksEndpoint": {
+                    "required": {
+                        "conditionGroup": [
+                            {
+                                "type": "equals",
+                                "attribute": "authenticationMethod",
+                                "value": "Oidc"
+                            },
+                            {
+                                "type": "or",
+                                "value": [
+                                    {
+                                        "type": "contains",
+                                        "attribute": "oidcJwtSignatureAlgorithmList",
+                                        "value": "RS256"
+                                    },
+                                    {
+                                        "type": "contains",
+                                        "attribute": "oidcJwtSignatureAlgorithmList",
+                                        "value": "RS384"
+                                    },
+                                    {
+                                        "type": "contains",
+                                        "attribute": "oidcJwtSignatureAlgorithmList",
+                                        "value": "RS512"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "oidcAllowRegularUserFallback": {
+                    "invalid": {
+                        "conditionGroup": [
+                            {
+                                "type": "equals",
+                                "attribute": "authenticationMethod",
+                                "value": "Oidc"
+                            },
+                            {
+                                "type": "isTrue",
+                                "attribute": "oidcAllowRegularUserFallback"
+                            },
+                            {
+                                "type": "isFalse",
+                                "attribute": "oidcFallback"
+                            }
+                        ]
+                    }
+                },
+                "oidcAllowAdminUser": {
+                    "invalid": {
+                        "conditionGroup": [
+                            {
+                                "type": "equals",
+                                "attribute": "authenticationMethod",
+                                "value": "Oidc"
+                            },
+                            {
+                                "type": "isFalse",
+                                "attribute": "oidcAllowAdminUser"
+                            },
+                            {
+                                "type": "isFalse",
+                                "attribute": "oidcFallback"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

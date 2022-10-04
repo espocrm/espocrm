@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Authentication;
 
+use Espo\Core\Authentication\Logout\Params as LogoutParams;
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
@@ -65,6 +66,7 @@ class Authentication
     private const HEADER_CREATE_TOKEN_SECRET = 'Espo-Authorization-Create-Token-Secret';
     private const HEADER_BY_TOKEN = 'Espo-Authorization-By-Token';
     private const HEADER_ANOTHER_USER = 'X-Another-User';
+    private const HEADER_LOGOUT_REDIRECT_URL = 'X-Logout-Redirect-Url';
 
     private const COOKIE_AUTH_TOKEN_SECRET = 'auth-token-secret';
 
@@ -79,6 +81,7 @@ class Authentication
     private TwoFactorLoginFactory $twoFactorLoginFactory;
     private AuthTokenManager $authTokenManager;
     private HookManager $hookManager;
+    private LogoutFactory $logoutFactory;
     private Log $log;
 
     public function __construct(
@@ -91,6 +94,7 @@ class Authentication
         AuthTokenManager $authTokenManager,
         HookManager $hookManager,
         Log $log,
+        LogoutFactory $logoutFactory,
         bool $allowAnyAccess = false
     ) {
         $this->allowAnyAccess = $allowAnyAccess;
@@ -103,6 +107,7 @@ class Authentication
         $this->twoFactorLoginFactory = $twoFactorLoginFactory;
         $this->authTokenManager = $authTokenManager;
         $this->hookManager = $hookManager;
+        $this->logoutFactory = $logoutFactory;
         $this->log = $log;
     }
 
@@ -547,6 +552,20 @@ class Authentication
 
             if ($sentSecret === $authToken->getSecret()) {
                 $this->setSecretInCookie(null, $response);
+            }
+        }
+
+        $method = $this->configDataProvider->getDefaultAuthenticationMethod();
+
+        if ($this->logoutFactory->isCreatable($method)) {
+            $logout = $this->logoutFactory->create($method);
+
+            $result = $logout->logout($authToken, LogoutParams::create());
+
+            $redirectUrl = $result->getRedirectUrl();
+
+            if ($redirectUrl) {
+                $response->setHeader(self::HEADER_LOGOUT_REDIRECT_URL, $redirectUrl);
             }
         }
 

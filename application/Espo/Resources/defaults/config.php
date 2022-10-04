@@ -220,5 +220,9 @@ return [
     'clientCspScriptSourceList' => [
         'https://maps.googleapis.com',
     ],
+    'oidcJwtSignatureAlgorithmList' => ['RS256'],
+    'oidcUsernameClaim' => 'sub',
+    'oidcFallback' => true,
+    'oidcScopes' => ['profile', 'email', 'phone'],
     'isInstalled' => false,
 ];

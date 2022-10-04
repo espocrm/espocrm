@@ -10,7 +10,8 @@
                 "maxLength",
                 "tooltipText",
                 "inlineEditDisabled"
-            ]
+            ],
+            "index": true
         },
         "name": {
             "type": "personName",

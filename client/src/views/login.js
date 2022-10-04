@@ -381,7 +381,11 @@ define('views/login', ['view'], function (Dep) {
                 $cell.removeClass('has-error');
             });
 
-            Espo.Ui.error(this.translate('wrongUsernamePassword', 'messages', 'User'));
+            let messageKey = this.handler ?
+                'failedToLogIn' :
+                'wrongUsernamePassword';
+
+            Espo.Ui.error(this.translate(messageKey, 'messages', 'User'));
         },
 
         /**

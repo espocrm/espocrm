@@ -189,7 +189,9 @@ class RDBRepository implements Repository
             }
         }
         else {
-            $entity->updateFetchedValues();
+            if (empty($options['keepDirty'])) {
+                $entity->updateFetchedValues();
+            }
         }
 
         if ($entity instanceof BaseEntity) {

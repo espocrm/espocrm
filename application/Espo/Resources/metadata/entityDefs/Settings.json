@@ -755,6 +755,91 @@
             "type": "link",
             "tooltip": true,
             "entity": "WorkingTimeCalendar"
+        },
+        "oidcClientId": {
+            "type": "varchar"
+        },
+        "oidcClientSecret": {
+            "type": "password"
+        },
+        "oidcAuthorizationEndpoint": {
+            "type": "url",
+            "strip": false
+        },
+        "oidcTokenEndpoint": {
+            "type": "url",
+            "strip": false
+        },
+        "oidcJwksEndpoint": {
+            "type": "url",
+            "strip": false
+        },
+        "oidcJwtSignatureAlgorithmList": {
+            "type": "multiEnum",
+            "options": [
+                "RS256",
+                "RS384",
+                "RS512",
+                "HS256",
+                "HS384",
+                "HS512"
+            ]
+        },
+        "oidcScopes": {
+            "type": "multiEnum",
+            "allowCustomOptions": true,
+            "options": [
+                "profile",
+                "email",
+                "phone",
+                "address"
+            ]
+        },
+        "oidcGroupClaim": {
+            "type": "varchar",
+            "tooltip": true
+        },
+        "oidcCreateUser": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "oidcUsernameClaim": {
+            "type": "varchar",
+            "options": [
+                "sub",
+                "preferred_username",
+                "email"
+            ],
+            "tooltip": true
+        },
+        "oidcTeams": {
+            "type": "linkMultiple",
+            "entity": "Team",
+            "additionalAttributeList": ["columns"],
+            "view": "views/settings/fields/oidc-teams",
+            "tooltip": true
+        },
+        "oidcSync": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "oidcSyncTeams": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "oidcFallback": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "oidcAllowRegularUserFallback": {
+            "type": "bool"
+        },
+        "oidcAllowAdminUser": {
+            "type": "bool"
+        },
+        "oidcLogoutUrl": {
+            "type": "varchar",
+            "tooltip": true
         }
     }
 }

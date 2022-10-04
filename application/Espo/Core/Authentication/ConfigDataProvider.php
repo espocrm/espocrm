@@ -30,6 +30,7 @@
 namespace Espo\Core\Authentication;
 
 use Espo\Core\Authentication\Login\MetadataParams;
+use Espo\Core\Authentication\Logins\Espo;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 
@@ -112,7 +113,7 @@ class ConfigDataProvider
      */
     public function getDefaultAuthenticationMethod(): string
     {
-        return $this->config->get('authenticationMethod', 'Espo');
+        return $this->config->get('authenticationMethod', Espo::NAME);
     }
 
     /**
