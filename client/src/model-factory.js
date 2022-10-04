@@ -38,8 +38,6 @@ define('model-factory', [], function () {
     let ModelFactory = function (metadata, user) {
         this.metadata = metadata;
         this.user = user;
-
-        this.seeds = {};
     };
 
     _.extend(ModelFactory.prototype, /** @lends module:model-factory.Class# */ {
@@ -48,11 +46,6 @@ define('model-factory', [], function () {
          * @private
          */
         metadata: null,
-
-        /**
-         * @private
-         */
-        seeds: null,
 
         /**
          * @public
@@ -91,27 +84,25 @@ define('model-factory', [], function () {
         },
 
         /**
-         * @private
+         * Get a class.
+         *
+         * @param {string} name An entity type.
+         * @param {function(module:model.Class): void} callback A callback.
+         * @public
          */
         getSeed: function (name, callback) {
-            if ('name' in this.seeds) {
-                callback(this.seeds[name]);
-
-                return;
-            }
-
-            let className = this.metadata.get('clientDefs.' + name + '.model') || 'model';
+            let className = this.metadata.get(['clientDefs', name, 'model']) || 'model';
 
             require(className, modelClass => {
-                this.seeds[name] = modelClass.extend({
+                let seed = modelClass.extend({
                     name: name,
                     entityType: name,
-                    defs: this.metadata.get('entityDefs.' + name) || {},
+                    defs: this.metadata.get(['entityDefs', name]) || {},
                     dateTime: this.dateTime,
                     _user: this.user,
                 });
 
-                callback(this.seeds[name]);
+                callback(seed);
             });
         },
     });
