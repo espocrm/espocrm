@@ -1207,6 +1207,15 @@ input.global-search-input {
     .label-md {
         line-height: 1.4;
     }
+
+    > .label-md {
+        max-width: calc(100%);
+        display: inline-block;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        vertical-align: top;
+    }
 }
 
 .list > table td input[type="checkbox"],
