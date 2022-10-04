@@ -98,12 +98,30 @@ define('views/admin/authentication', ['views/settings/record/edit'], function (D
             this.methodList.forEach(method => {
                 let mLayout = this.getMetadata().get(['authenticationMethods', method, 'settings', 'layout']);
 
-                if (mLayout) {
-                    mLayout = Espo.Utils.cloneDeep(mLayout);
-                    mLayout.name = method;
-
-                    layout.push(mLayout);
+                if (!mLayout) {
+                    return;
                 }
+
+                mLayout = Espo.Utils.cloneDeep(mLayout);
+                mLayout.name = method;
+
+                this.prepareLayout(mLayout, method);
+
+                layout.push(mLayout);
+            });
+        },
+
+        prepareLayout: function (layout, method) {
+            layout.rows.forEach(row => {
+                row
+                    .filter(item => !item.noLabel && !item.labelText && item.name)
+                    .forEach(item => {
+                        let labelText = this.translate(item.name, 'fields', 'Settings');
+
+                        if (labelText.toLowerCase().indexOf(method.toLowerCase() + ' ') === 0) {
+                            item.labelText = labelText.substring(method.length + 1);
+                        }
+                    });
             });
         },
 
