@@ -287,6 +287,8 @@ class Sync
             throw new RuntimeException("No `userNameRegularExpression` in config.");
         }
 
+        $username = strtolower($username);
+
         /** @var string $result */
         $result = preg_replace("/{$regExp}/", '_', $username);
 
