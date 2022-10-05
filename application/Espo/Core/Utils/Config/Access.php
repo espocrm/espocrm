@@ -35,19 +35,18 @@ use Espo\Core\Utils\FieldUtil;
 
 class Access
 {
+    /** Not available for all users. */
     public const LEVEL_SYSTEM = 'system';
-
+    /** Available only for the super-admin. */
     public const LEVEL_SUPER_ADMIN = 'superAdmin';
-
+    /** Available only for the admin. */
     public const LEVEL_ADMIN = 'admin';
-
+    /** Available for all, even before logging in. */
     public const LEVEL_GLOBAL = 'global';
 
-    private $config;
-
-    private $metadata;
-
-    private $fieldUtil;
+    private Config $config;
+    private Metadata $metadata;
+    private FieldUtil $fieldUtil;
 
     public function __construct(Config $config, Metadata $metadata, FieldUtil $fieldUtil)
     {
