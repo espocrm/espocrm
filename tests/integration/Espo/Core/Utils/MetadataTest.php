@@ -50,6 +50,8 @@ class MetadataTest extends \tests\integration\Core\BaseTestCase
      */
     public function testAppend1()
     {
+        $initial = $this->getMetadata()->get(['app', 'rebuild', 'actionClassNameList']);
+
         $contents1 = Json::encode(
             (object) [
                 'actionClassNameList' => [
@@ -73,14 +75,14 @@ class MetadataTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        /** @var Metadata */
+        /** @var Metadata $metadata */
         $metadata = $app->getContainer()->get('metadata');
 
         $this->assertSame(
-            [
-                "Espo\\Core\\Rebuild\\Actions\\ScheduledJobs",
-                "\\Espo\\Core\\Rebuild\\Actions\\ScheduledJobs",
-            ],
+            array_merge(
+                $initial,
+                ["\\Espo\\Core\\Rebuild\\Actions\\ScheduledJobs"]
+            ),
             $metadata->get(['app', 'rebuild', 'actionClassNameList'])
         );
 
