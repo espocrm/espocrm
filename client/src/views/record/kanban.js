@@ -962,7 +962,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             collection.data.select = this.collection.data.select;
 
-            this.showMoreRecords(collection, $list, $showMore, () => {
+            this.showMoreRecords({}, collection, $list, $showMore, () => {
                 this.noRebuild = false;
 
                 collection.models.forEach((model) => {

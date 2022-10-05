@@ -434,6 +434,12 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         _$focusedCheckbox: null,
 
         /**
+         * @protected
+         * @type {?JQuery}
+         */
+        $selectAllCheckbox: null,
+
+        /**
          * @inheritDoc
          */
         events: {
@@ -904,8 +910,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 paginationEnabled: this.pagination,
                 paginationTop: paginationTop,
                 paginationBottom: paginationBottom,
-                showMoreActive: this.collection.total > this.collection.length ||
-                    this.collection.total === -1,
+                showMoreActive: this.collection.hasMore(),
                 showMoreEnabled: this.showMore,
                 showCount: this.showCount && this.collection.total > 0,
                 moreCount: moreCount,
@@ -1002,7 +1007,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             this.hideActions();
 
             this.$el.find('input.record-checkbox').prop('checked', true).attr('disabled', 'disabled');
-            this.$el.find('input.select-all').prop('checked', true);
+            this.$selectAllCheckbox.prop('checked', true);
 
             this.massActionList.forEach(item => {
                 if (!~this.checkAllResultMassActionList.indexOf(item)) {
@@ -1031,7 +1036,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             this.allResultIsChecked = false;
 
             this.$el.find('input.record-checkbox').prop('checked', false).removeAttr('disabled');
-            this.$el.find('input.select-all').prop('checked', false);
+            this.$selectAllCheckbox.prop('checked', false);
 
             this.massActionList.forEach(item => {
                 if (!~this.checkAllResultMassActionList.indexOf(item)) {
@@ -1407,6 +1412,14 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                         this.removeRecordFromList(id);
                         this.uncheckRecord(id, null, true);
                     });
+
+                    if (this.$selectAllCheckbox.prop('checked')) {
+                        this.$selectAllCheckbox.prop('checked', false);
+
+                        if (this.collection.hasMore()) {
+                            this.showMoreRecords({skipNotify: true});
+                        }
+                    }
 
                     let msg = count === 1 ? 'massRemoveResultSingle' : 'massRemoveResult';
 
@@ -2125,6 +2138,8 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         },
 
         afterRender: function () {
+            this.$selectAllCheckbox = this.$el.find('input.select-all');
+
             if (this.allResultIsChecked) {
                 this.selectAllResult();
             }
@@ -2715,23 +2730,25 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         /**
          * Show more records.
          *
+         * @param {{skipNotify?: boolean}} [options]
          * @param {module:collection.Class} [collection]
          * @param {JQuery} [$list]
          * @param {JQuery} [$showMore]
          * @param {function(): void} [callback] A callback.
          */
-        showMoreRecords: function (collection, $list, $showMore, callback) {
+        showMoreRecords: function (options, collection, $list, $showMore, callback) {
             collection = collection || this.collection;
-
             $showMore =  $showMore || this.$el.find('.show-more');
-
             $list = $list || this.$el.find(this.listContainerEl);
+            options = options || {};
 
             $showMore.children('a').addClass('disabled');
 
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            if (!options.skipNotify) {
+                Espo.Ui.notify(this.translate('loading', 'messages'));
+            }
 
-            var final = () => {
+            let final = () => {
                 $showMore.parent().append($showMore);
 
                 if (
@@ -2758,35 +2775,39 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                         .prop('checked', true);
                 }
 
-                Espo.Ui.notify(false);
+                if (!options.skipNotify) {
+                    Espo.Ui.notify(false);
+                }
 
                 if (callback) {
                     callback.call(this);
                 }
             };
 
-            var initialCount = collection.length;
+            let initialCount = collection.length;
 
-            var success = () => {
-                Espo.Ui.notify(false);
+            let success = () => {
+                if (!options.skipNotify) {
+                    Espo.Ui.notify(false);
+                }
 
                 $showMore.addClass('hidden');
 
-                var rowCount = collection.length - initialCount;
-                var rowsReady = 0;
+                let rowCount = collection.length - initialCount;
+                let rowsReady = 0;
 
                 if (collection.length <= initialCount) {
                     final();
                 }
 
-                for (var i = initialCount; i < collection.length; i++) {
-                    var model = collection.at(i);
+                for (let i = initialCount; i < collection.length; i++) {
+                    let model = collection.at(i);
 
                     this.buildRow(i, model, (view) => {
-                        var model = view.model;
+                        let model = view.model;
 
-                        view.getHtml((html) => {
-                            var $row = $(this.getRowContainerHtml(model.id));
+                        view.getHtml(html => {
+                            let $row = $(this.getRowContainerHtml(model.id));
 
                             $row.append(html);
 

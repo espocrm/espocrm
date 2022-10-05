@@ -311,6 +311,15 @@ define('collection', [], function () {
         },
 
         /**
+         * Has more.
+         *
+         * @return {boolean}
+         */
+        hasMore: function () {
+            return this.total > this.length || this.total === -1;
+        },
+
+        /**
          * Parse a response from the backend.
          *
          * @param {Object} response A response.
