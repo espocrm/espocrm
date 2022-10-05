@@ -11,7 +11,10 @@
                 "tooltipText",
                 "inlineEditDisabled"
             ],
-            "index": true
+            "index": true,
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\User\\UserName\\Valid"
+            ]
         },
         "name": {
             "type": "personName",
