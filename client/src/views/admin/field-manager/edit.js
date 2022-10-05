@@ -100,7 +100,17 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
             },
             'click button[data-action="resetToDefault"]': function () {
                 this.resetToDefault();
-            }
+            },
+            'keydown.form': function (e) {
+                let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                if (key === 'Control+KeyS' || key === 'Control+Enter') {
+                    this.save();
+
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            },
         },
 
         setupFieldData: function (callback) {

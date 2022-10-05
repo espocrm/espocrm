@@ -41,6 +41,16 @@ define('views/admin/entity-manager/formula', ['view', 'lib!espo', 'model'], func
             'click [data-action="close"]': function () {
                 this.actionClose();
             },
+            'keydown.form': function (e) {
+                let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                if (key === 'Control+KeyS' || key === 'Control+Enter') {
+                    this.actionSave();
+
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            },
         },
 
         data: function () {

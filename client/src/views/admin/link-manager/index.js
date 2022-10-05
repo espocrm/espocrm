@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/link-manager/index', 'view', function (Dep) {
+define('views/admin/link-manager/index', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -182,6 +182,7 @@ define('views/admin/link-manager/index', 'view', function (Dep) {
 
                 this.listenTo(view, 'after:save', () => {
                     this.clearView('edit');
+
                     this.setupLinkData();
                     this.render();
                 });
@@ -201,38 +202,38 @@ define('views/admin/link-manager/index', 'view', function (Dep) {
 
                 this.listenTo(view, 'after:save', () => {
                     this.clearView('edit');
+
                     this.setupLinkData();
                     this.render();
                 });
 
                 this.listenTo(view, 'close', () => {
                     this.clearView('edit');
-                }, this);
+                });
             });
         },
 
         removeLink: function (link) {
-            $.ajax({
-                url: 'EntityManager/action/removeLink',
-                type: 'POST',
-                data: JSON.stringify({
+            Espo.Ajax
+                .postRequest('EntityManager/action/removeLink', {
                     entity: this.scope,
                     link: link,
                 })
-            }).then(() => {
-                this.$el.find('table tr[data-link="'+link+'"]').remove();
+                .then(() => {
+                    this.$el.find('table tr[data-link="'+link+'"]').remove();
 
-                this.getMetadata().loadSkipCache().then(() => {
-                    this.setupLinkData();
+                    this.getMetadata().loadSkipCache().then(() => {
+                        this.setupLinkData();
 
-                    this.render();
+                        this.render();
+                    });
                 });
-            });
         },
 
         renderHeader: function () {
             if (!this.scope) {
                 $('#scope-header').html('');
+
                 return;
             }
 
