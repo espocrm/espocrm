@@ -171,7 +171,7 @@ class Language
 
                 $data['Settings'] = [
                     'options' => [
-                        'weekStart' => $languageObj->get(['Settings', 'options', 'weekStart']),
+                        'auth2FAMethodList' => $languageObj->get(['Settings', 'options', 'auth2FAMethodList']),
                     ],
                 ];
                 $data['Admin'] = [
