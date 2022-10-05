@@ -1330,7 +1330,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
         massActionRemove: function () {
             if (!this.getAcl().check(this.entityType, 'delete')) {
-                this.notify('Access denied', 'error');
+                Espo.Ui.error(this.translate('Access denied'));
 
                 return false;
             }
@@ -1339,12 +1339,10 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 message: this.translate('removeSelectedRecordsConfirmation', 'messages', this.scope),
                 confirmText: this.translate('Remove'),
             }, () => {
-                this.notify('Removing...');
+                Espo.Ui.notify(this.translate('Removing...'));
 
                 let helper = new MassActionHelper(this);
-
                 let params = this.getMassActionSelectionPostData();
-
                 let idle = !!params.searchParams && helper.checkIsIdle(this.collection.total);
 
                 Espo.Ajax.postRequest('MassAction', {
@@ -1356,7 +1354,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 .then(result => {
                     result = result || {};
 
-                    let afterAllResult = (count) => {
+                    let afterAllResult = count => {
                         if (!count) {
                             Espo.Ui.warning(this.translate('noRecordsRemoved', 'messages'));
 
@@ -1365,17 +1363,13 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
                         this.unselectAllResult();
 
-                        this.listenToOnce(this.collection, 'sync', () => {
-                            var msg = 'massRemoveResult';
+                        this.collection
+                            .fetch()
+                            .then(() => {
+                                let msg = count === 1 ? 'massRemoveResultSingle' : 'massRemoveResult';
 
-                            if (count === 1) {
-                                msg = 'massRemoveResultSingle';
-                            }
-
-                            Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
-                        });
-
-                        this.collection.fetch();
+                                Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
+                            });
 
                         Espo.Ui.notify(false);
                     };
@@ -1384,14 +1378,13 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                         helper
                             .process(result.id, 'delete')
                             .then(view => {
-                                this.listenToOnce(view, 'close:success', result =>
-                                    afterAllResult(result.count));
+                                this.listenToOnce(view, 'close:success', result => afterAllResult(result.count));
                             });
 
                         return;
                     }
 
-                    var count = result.count;
+                    let count = result.count;
 
                     if (this.allResultIsChecked) {
                         afterAllResult(count);
@@ -1399,7 +1392,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                         return;
                     }
 
-                    var idsRemoved = result.ids || [];
+                    let idsRemoved = result.ids || [];
 
                     if (!count) {
                         Espo.Ui.warning(this.translate('noRecordsRemoved', 'messages'));
@@ -1407,7 +1400,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                         return;
                     }
 
-                    idsRemoved.forEach((id) => {
+                    idsRemoved.forEach(id => {
                         Espo.Ui.notify(false);
 
                         this.collection.trigger('model-removing', id);
@@ -1415,11 +1408,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                         this.uncheckRecord(id, null, true);
                     });
 
-                    var msg = 'massRemoveResult';
-
-                    if (count === 1) {
-                        msg = 'massRemoveResultSingle';
-                    }
+                    let msg = count === 1 ? 'massRemoveResultSingle' : 'massRemoveResult';
 
                     Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
                 });
