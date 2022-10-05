@@ -33,6 +33,7 @@ use Espo\Core\{
     Application\Runner,
     DataManager,
 };
+use Exception;
 
 /**
  * Rebuilds an application.
@@ -41,7 +42,7 @@ class Rebuild implements Runner
 {
     use Cli;
 
-    private $dataManager;
+    private DataManager $dataManager;
 
     public function __construct(DataManager $dataManager)
     {
@@ -50,6 +51,13 @@ class Rebuild implements Runner
 
     public function run(): void
     {
-        $this->dataManager->rebuild();
+        try {
+            $this->dataManager->rebuild();
+        }
+        catch (Exception $e) {
+            echo "Error: " . $e->getMessage() . "\n";
+
+            exit(1);
+        }
     }
 }
