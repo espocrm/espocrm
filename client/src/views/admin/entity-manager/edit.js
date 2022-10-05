@@ -392,6 +392,7 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
                 hasStreamField: this.hasStreamField,
                 isCustom: this.isCustom,
                 subjectEntityType: this.scope,
+                shortcutKeysEnabled: true,
             }).then(view => {
                 this.listenTo(view, 'save', () => this.actionSave());
                 this.listenTo(view, 'cancel', () => this.actionCancel());

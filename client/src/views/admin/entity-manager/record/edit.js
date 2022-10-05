@@ -42,6 +42,11 @@ define('views/admin/entity-manager/record/edit', 'views/record/edit', function (
 
         saveAndNewAction: false,
 
+        shortcutKeys: {
+            'Control+Enter': 'save',
+            'Control+KeyS': 'save',
+        },
+
         setup: function () {
             this.isCreate = this.options.isNew;
 

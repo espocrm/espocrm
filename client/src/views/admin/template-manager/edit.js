@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/template-manager/edit', ['view', 'model'], function (Dep, Model) {
+define('views/admin/template-manager/edit', ['view', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -48,7 +48,17 @@ Espo.define('views/admin/template-manager/edit', ['view', 'model'], function (De
             },
             'click [data-action="resetToDefault"]': function () {
                 this.actionResetToDefault();
-            }
+            },
+            'keydown.form': function (e) {
+                let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                if (key === 'Control+KeyS' || key === 'Control+Enter') {
+                    this.actionSave();
+
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            },
         },
 
         setup: function () {
