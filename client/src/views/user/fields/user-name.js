@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/fields/user-name', 'views/fields/varchar', function (Dep) {
+define('views/user/fields/user-name', ['views/fields/varchar'], function (Dep) {
 
     return Dep.extend({
 
@@ -39,16 +39,21 @@ define('views/user/fields/user-name', 'views/fields/varchar', function (Dep) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            var userNameRegularExpression = this.getUserNameRegularExpression();
+            let userNameRegularExpression = this.getUserNameRegularExpression();
 
-            if (this.mode === 'edit') {
-                this.$element.on('change', function () {
-                    var value = this.$element.val();
-                    var re = new RegExp(userNameRegularExpression, 'gi');
-                    value = value.replace(re, '').replace(/[\s]/g, '_').toLowerCase();
+            if (this.isEditMode()) {
+                this.$element.on('change', () => {
+                    let value = this.$element.val();
+                    let re = new RegExp(userNameRegularExpression, 'gi');
+
+                    value = value
+                        .replace(re, '')
+                        .replace(/[\s]/g, '_')
+                        .toLowerCase();
+
                     this.$element.val(value);
                     this.trigger('change');
-                }.bind(this));
+                });
             }
         },
 
@@ -57,26 +62,25 @@ define('views/user/fields/user-name', 'views/fields/varchar', function (Dep) {
         },
 
         validateUserName: function () {
-            var value = this.model.get(this.name);
+            let value = this.model.get(this.name);
 
             if (!value) {
                 return;
             }
 
-            var userNameRegularExpression = this.getUserNameRegularExpression();
+            let userNameRegularExpression = this.getUserNameRegularExpression();
 
-            var re = new RegExp(userNameRegularExpression, 'gi');
+            let re = new RegExp(userNameRegularExpression, 'gi');
 
             if (!re.test(value)) {
                 return;
             }
 
-            var msg = this.translate('fieldInvalid', 'messages').replace('{field}', this.getLabelText());
+            let msg = this.translate('fieldInvalid', 'messages').replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg);
 
             return true;
         },
-
     });
 });
