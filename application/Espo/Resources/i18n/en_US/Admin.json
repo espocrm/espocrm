@@ -301,7 +301,8 @@
         "authTokens": "history,access,log",
         "entityManager": "fields,relations,relationships",
         "templateManager": "notifications",
-        "jobs": "cron"
+        "jobs": "cron",
+        "labelManager": "language,translation"
     },
     "options": {
         "previewSize": {
