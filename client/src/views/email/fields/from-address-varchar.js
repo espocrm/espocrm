@@ -271,7 +271,7 @@ define(
                                 .attr('tabindex', '0')
                                 .attr('data-action', 'addToContact')
                                 .attr('data-address', address)
-                                .text(this.translate('Add to Lead', 'labels', 'Email'))
+                                .text(this.translate('Add to Contact', 'labels', 'Email'))
                         )
                 );
             }
