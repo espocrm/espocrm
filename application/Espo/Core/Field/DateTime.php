@@ -43,7 +43,6 @@ use RuntimeException;
 class DateTime implements DateTimeable
 {
     private string $value;
-
     private DateTimeImmutable $dateTime;
 
     private const SYSTEM_FORMAT = 'Y-m-d H:i:s';
@@ -330,6 +329,16 @@ class DateTime implements DateTimeable
     public static function fromString(string $value): self
     {
         return new self($value);
+    }
+
+    /**
+     * Create from a timestamp.
+     */
+    public static function fromTimestamp(int $timestamp): self
+    {
+        $dateTime = (new DateTimeImmutable)->setTimestamp($timestamp);
+
+        return self::fromDateTime($dateTime);
     }
 
     /**

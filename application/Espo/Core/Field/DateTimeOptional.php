@@ -45,11 +45,9 @@ use RuntimeException;
 class DateTimeOptional implements DateTimeable
 {
     private ?DateTime $dateTimeValue = null;
-
     private ?Date $dateValue = null;
 
     private const SYSTEM_FORMAT = 'Y-m-d H:i:s';
-
     private const SYSTEM_FORMAT_DATE = 'Y-m-d';
 
     public function __construct(string $value)
@@ -431,6 +429,16 @@ class DateTimeOptional implements DateTimeable
         }
 
         return self::fromString($value);
+    }
+
+    /**
+     * Create from a timestamp.
+     */
+    public static function fromTimestamp(int $timestamp): self
+    {
+        $dateTime = (new DateTimeImmutable)->setTimestamp($timestamp);
+
+        return self::fromDateTime($dateTime);
     }
 
     /**

@@ -370,5 +370,14 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
             $value->addSeconds(0)
         );
     }
+
+    public function testFromTimestamp(): void
+    {
+        $timestamp = 1664959621;
+
+        $value = DateTime::fromTimestamp($timestamp);
+
+        $this->assertEquals($timestamp, $value->getTimestamp());
+    }
 }
 
