@@ -13,6 +13,9 @@
         "emailKeepParentTeamsEntityList"
     ],
     "params": {
+        "smtpPassword": {
+            "level": "internal"
+        },
         "awsS3Storage": {
             "level": "system"
         },
@@ -22,11 +25,14 @@
         "workingTimeCalendar": {
             "level": "admin"
         },
+        "ldapPassword": {
+            "level": "internal"
+        },
         "oidcClientId": {
             "level": "admin"
         },
         "oidcClientSecret": {
-            "level": "admin"
+            "level": "internal"
         },
         "oidcAuthorizationEndpoint": {
             "level": "admin"

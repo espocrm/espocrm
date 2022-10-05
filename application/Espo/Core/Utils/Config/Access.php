@@ -32,16 +32,19 @@ namespace Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\FieldUtil;
+use Espo\Entities\Settings;
 
 class Access
 {
-    /** Not available for all users. */
+    /** No one can read/write. */
     public const LEVEL_SYSTEM = 'system';
-    /** Available only for the super-admin. */
+    /** No one can read, admin can write. */
+    public const LEVEL_INTERNAL = 'internal';
+    /** Only super-admin can read/write. */
     public const LEVEL_SUPER_ADMIN = 'superAdmin';
-    /** Available only for the admin. */
+    /** Only admin can read/write. */
     public const LEVEL_ADMIN = 'admin';
-    /** Available for all, even before logging in. */
+    /** Even not logged-in can read. Admin can write. */
     public const LEVEL_GLOBAL = 'global';
 
     private Config $config;
@@ -62,14 +65,14 @@ class Access
     {
         $itemList = $this->config->get('adminItems') ?? [];
 
-        $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
+        $fieldDefs = $this->metadata->get(['entityDefs', Settings::ENTITY_TYPE, 'fields']);
 
         foreach ($fieldDefs as $field => $fieldParams) {
             if (empty($fieldParams['onlyAdmin'])) {
                 continue;
             }
 
-            foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
+            foreach ($this->fieldUtil->getAttributeList(Settings::ENTITY_TYPE, $field) as $attribute) {
                 $itemList[] = $attribute;
             }
         }
@@ -85,18 +88,26 @@ class Access
     /**
      * @return string[]
      */
+    public function getInternalParamList(): array
+    {
+        return $this->getParamListByLevel(self::LEVEL_INTERNAL);
+    }
+
+    /**
+     * @return string[]
+     */
     public function getSystemParamList(): array
     {
         $itemList = $this->config->get('systemItems') ?? [];
 
-        $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
+        $fieldDefs = $this->metadata->get(['entityDefs', Settings::ENTITY_TYPE, 'fields']);
 
         foreach ($fieldDefs as $field => $fieldParams) {
             if (empty($fieldParams['onlySystem'])) {
                 continue;
             }
 
-            foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
+            foreach ($this->fieldUtil->getAttributeList(Settings::ENTITY_TYPE, $field) as $attribute) {
                 $itemList[] = $attribute;
             }
         }
@@ -116,14 +127,14 @@ class Access
     {
         $itemList = $this->config->get('globalItems', []);
 
-        $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
+        $fieldDefs = $this->metadata->get(['entityDefs', Settings::ENTITY_TYPE, 'fields']);
 
         foreach ($fieldDefs as $field => $fieldParams) {
             if (empty($fieldParams['global'])) {
                 continue;
             }
 
-            foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
+            foreach ($this->fieldUtil->getAttributeList(Settings::ENTITY_TYPE, $field) as $attribute) {
                 $itemList[] = $attribute;
             }
         }
@@ -150,6 +161,7 @@ class Access
     }
 
     /**
+     * @param self::LEVEL_* $level
      * @return string[]
      */
     private function getParamListByLevel(string $level): array

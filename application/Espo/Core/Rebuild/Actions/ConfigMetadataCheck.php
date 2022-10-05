@@ -27,39 +27,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Config;
+namespace Espo\Core\Rebuild\Actions;
 
-use Espo\Core\Utils\Config;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Rebuild\RebuildAction;
+
+use Espo\Core\Utils\Config\Access;
 use Espo\Core\Utils\Metadata;
 
-class InternalConfigHelper
+/**
+ * Check whether config metadata is valid.
+ */
+class ConfigMetadataCheck implements RebuildAction
 {
-    private $config;
+    private Metadata $metadata;
 
-    private $metadata;
-
-    public function __construct(Config $config, Metadata $metadata)
+    public function __construct(Metadata $metadata)
     {
-        $this->config = $config;
         $this->metadata = $metadata;
     }
 
-    public function isParamForInternalConfig(string $name): bool
+    /**
+     * @throws Error
+     */
+    public function process(): void
     {
-        if ($this->config->isInternal($name)) {
-            return true;
+        $levelList = [
+            Access::LEVEL_INTERNAL,
+            Access::LEVEL_ADMIN,
+            Access::LEVEL_GLOBAL,
+            Access::LEVEL_SUPER_ADMIN,
+            Access::LEVEL_SYSTEM,
+        ];
+
+        $params = $this->metadata->get(['app', 'config', 'params']) ?? [];
+
+        foreach ($params as $name => $item) {
+            $level = $item['level'] ?? null;
+
+            if ($level !== null && !in_array($level, $levelList)) {
+                throw new Error("Config parameter '{$name}' has not a allowed level in app > config.");
+            }
         }
-
-        if (in_array($name, $this->config->get('systemItems') ?? [])) {
-            return true;
-        }
-
-        $level = $this->metadata->get(['app', 'config', 'params', $name, 'level']);
-
-        if ($level === Access::LEVEL_SYSTEM || $level === Access::LEVEL_INTERNAL) {
-            return true;
-        }
-
-        return false;
     }
 }

@@ -267,6 +267,10 @@ class Settings
             $ignoreItemList[] = $item;
         }
 
+        foreach ($this->access->getInternalParamList() as $item) {
+            $ignoreItemList[] = $item;
+        }
+
         if (!$user->isAdmin() || $user->isSystem()) {
             foreach ($this->access->getAdminParamList() as $item) {
                 $ignoreItemList[] = $item;
