@@ -280,7 +280,7 @@ class Sync
 
     public function normalizeUsername(string $username): string
     {
-        /** @var string $regExp */
+        /** @var ?string $regExp */
         $regExp = $this->config->get('userNameRegularExpression');
 
         if (!$regExp) {
