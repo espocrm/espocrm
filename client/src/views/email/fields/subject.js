@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/subject', 'views/fields/varchar', function (Dep) {
+define('views/email/fields/subject', ['views/fields/varchar'], function (Dep) {
 
     return Dep.extend({
 
@@ -47,10 +47,8 @@ define('views/email/fields/subject', 'views/fields/varchar', function (Dep) {
 
             if (!data.isNotEmpty) {
                 if (
-                    this.model.get('name') !== null
-                    &&
-                    this.model.get('name') !== ''
-                    &&
+                    this.model.get('name') !== null &&
+                    this.model.get('name') !== '' &&
                     this.model.has('name')
                 ) {
                     data.isNotEmpty = true;
@@ -69,13 +67,14 @@ define('views/email/fields/subject', 'views/fields/varchar', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.listenTo(this.model, 'change', function () {
-                if (this.mode == 'list' || this.mode == 'listLink') {
+
+            this.listenTo(this.model, 'change', () => {
+                if (this.mode === 'list' || this.mode === 'listLink') {
                     if (this.model.hasChanged('isRead') || this.model.hasChanged('isImportant')) {
                         this.reRender();
                     }
                 }
-            }, this);
+            });
         },
 
         afterRender: function () {
@@ -88,6 +87,5 @@ define('views/email/fields/subject', 'views/fields/varchar', function (Dep) {
             data.name = data.subject;
             return data;
         },
-
     });
 });
