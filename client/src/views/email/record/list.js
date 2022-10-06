@@ -351,6 +351,9 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
             return Espo.Ajax.postRequest('Email/action/retrieveFromTrash', {id: id});
         },
 
+        /**
+         * @todo Use one API request.
+         */
         actionRetrieveFromTrashMoveToFolder: function (data) {
             let id = data.id;
             let folderId = data.folderId;

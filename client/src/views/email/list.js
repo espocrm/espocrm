@@ -312,12 +312,6 @@ define('views/email/list', ['views/list'], function (Dep) {
                     return;
                 }
 
-                if (folderId === this.FOLDER_INBOX) {
-                    this.getRecordView().actionRetrieveFromTrash({id: id});
-
-                    return;
-                }
-
                 this.getRecordView().actionRetrieveFromTrashMoveToFolder({id: id, folderId: folderId});
 
                 return;
