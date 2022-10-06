@@ -142,11 +142,7 @@ define('views/email/list', ['views/list'], function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            $(document).on('dragover.' + this.cid, e => {
-                if (this.draggedEmailId) {
-                    e.preventDefault();
-                }
-            });
+            this.initDragoverEvent();
 
             this.once('remove', () => $(document).off('dragover.' + this.cid));
 
@@ -189,6 +185,22 @@ define('views/email/list', ['views/list'], function (Dep) {
             data.foldersDisabled = this.foldersDisabled;
 
             return data;
+        },
+
+        /**
+         * @inheritDoc
+         */
+        setupReuse: function (params) {
+            this.applyRoutingParams(params);
+            this.initDragoverEvent();
+        },
+
+        initDragoverEvent: function () {
+            $(document).on('dragover.' + this.cid, e => {
+                if (this.draggedEmailId) {
+                    e.preventDefault();
+                }
+            });
         },
 
         /**

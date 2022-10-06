@@ -150,6 +150,13 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
             }
         },
 
+        /**
+         * @inheritDoc
+         */
+        setupReuse: function (params) {
+            this.applyRoutingParams(params);
+        },
+
         applyRoutingParams: function (params) {
             if (!this.isExpanded) {
                 if ('categoryId' in params) {

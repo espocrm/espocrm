@@ -616,5 +616,13 @@ define('views/main', ['view'], function (Dep) {
             $buttonsVisible.first().addClass('radius-left');
             $buttonsVisible.last().addClass('radius-right');
         },
+
+        /**
+         * Called when a stored view is reused (by the controller).
+         *
+         * @public
+         * @param {Object.<string, *>} params Routing params.
+         */
+        setupReuse: function (params) {},
     });
 });

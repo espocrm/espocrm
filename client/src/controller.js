@@ -548,8 +548,8 @@ define('controller', [], function () {
                     ) {
                         process(main);
 
-                        if (main && typeof main.applyRoutingParams === 'function') {
-                            main.applyRoutingParams(options.params || {});
+                        if (main && typeof main.setupReuse === 'function') {
+                            main.setupReuse(options.params || {});
                         }
 
                         return;
