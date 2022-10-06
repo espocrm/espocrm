@@ -3129,6 +3129,15 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             }
         },
 
+        /**
+         * @public
+         * @param {string} id An ID.
+         * @return {boolean}
+         */
+        isIdChecked: function (id) {
+            return this.checkedList.indexOf(id) !== -1;
+        },
+
         getTableMinWidth: function () {
             if (!this.listLayout) {
                 return;

@@ -89,8 +89,17 @@ define('views/email/list', ['views/list'], function (Dep) {
                 e.originalEvent.dataTransfer.effectAllowed = 'move';
 
                 e.originalEvent.dataTransfer.setData('text/plain', id);
+
+                $target.closest('tr').addClass('active');
             },
-            'dragend a.link': function () {
+            'dragend a.link': function (e) {
+                let $target = $(e.target);
+                let id = $target.attr('data-id');
+
+                if (!this.getRecordView().isIdChecked(id)) {
+                    $target.closest('tr').removeClass('active');
+                }
+
                 this.draggedEmailId = null;
             },
             'dragenter .folder-list > li.droppable': function (e) {
@@ -127,14 +136,19 @@ define('views/email/list', ['views/list'], function (Dep) {
 
                 this.onDrop(id, folderId);
             },
-            'dragover .folder-list > li.droppable': function (e) {
-                e.preventDefault();
-            },
             ...Dep.prototype.events,
         },
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            $(document).on('dragover.' + this.cid, e => {
+                if (this.draggedEmailId) {
+                    e.preventDefault();
+                }
+            });
+
+            this.once('remove', () => $(document).off('dragover.' + this.cid));
 
             this.addMenuItem('dropdown', false);
 
@@ -313,7 +327,7 @@ define('views/email/list', ['views/list'], function (Dep) {
 
         onDrop: function (id, folderId) {
             if (folderId === this.FOLDER_IMPORTANT) {
-                this.getRecordView().actionMarkAsImportant({id: id});
+                setTimeout(() => this.getRecordView().actionMarkAsImportant({id: id}), 10);
 
                 return;
             }
