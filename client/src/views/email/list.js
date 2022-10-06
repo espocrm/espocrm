@@ -26,9 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/list', 'views/list', function (Dep) {
+define('views/email/list', ['views/list'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @memberOf module:views/email/list
+     * @extends module:views/list.Class
+     */
+    return Dep.extend(/** @lends module:views/email/list.Class# */{
 
         createButton: false,
 
@@ -43,6 +49,78 @@ define('views/email/list', 'views/list', function (Dep) {
         defaultFolderId: 'inbox',
 
         keepCurrentRootUrl: true,
+
+        /** @const */
+        FOLDER_ALL: 'all',
+        /** @const */
+        FOLDER_INBOX: 'inbox',
+        /** @const */
+        FOLDER_IMPORTANT: 'important',
+        /** @const */
+        FOLDER_SENT: 'sent',
+        /** @const */
+        FOLDER_DRAFTS: 'drafts',
+        /** @const */
+        FOLDER_TRASH: 'trash',
+
+        noDropFolderIdList: [
+            'all',
+            'sent',
+            'drafts',
+        ],
+
+        events: {
+            'mousedown .folders-container + .list-container a.link': function (e) {
+                $(e.target).attr('draggable', 'true');
+            },
+            'dragstart a.link': function (e) {
+                let $target = $(e.target);
+                let id = $target.attr('data-id');
+
+                e.originalEvent.dataTransfer.dropEffect = 'move';
+                e.originalEvent.dataTransfer.effectAllowed = 'move';
+
+                e.originalEvent.dataTransfer.setData('text/plain', id);
+            },
+            'dragenter .folder-list > li.droppable': function (e) {
+                if (this.selectedFolderId === this.FOLDER_ALL) {
+                    return;
+                }
+
+                let $target = $(e.target);
+
+                $target.addClass('active');
+                $target.find('a').css('pointer-events', 'none');
+            },
+            'dragleave .folder-list > li.droppable': function (e) {
+                if (this.selectedFolderId === this.FOLDER_ALL) {
+                    return;
+                }
+
+                let $target = $(e.target);
+
+                $target.removeClass('active')
+                $target.find('a').css('pointer-events', '');
+            },
+            'drop .folder-list > li.droppable': function (e) {
+                if (this.selectedFolderId === this.FOLDER_ALL) {
+                    return;
+                }
+
+                let $target = $(e.target);
+                let folderId = $target.attr('data-id');
+                let id = e.originalEvent.dataTransfer.getData('text/plain');
+
+                $target.removeClass('active');
+                $target.find('a').css('pointer-events', '');
+
+                this.onDrop(id, folderId);
+            },
+            'dragover .folder-list > li.droppable': function (e) {
+                e.preventDefault();
+            },
+            ...Dep.prototype.events,
+        },
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -140,7 +218,13 @@ define('views/email/list', 'views/list', function (Dep) {
         loadFolders: function () {
             var xhr = null;
 
-            this.getFolderCollection((collection) => {
+            this.getFolderCollection(collection => {
+                collection.forEach(model => {
+                    if (this.noDropFolderIdList.indexOf(model.id) === -1) {
+                        model.droppable = true;
+                    }
+                });
+
                 this.createView('folders', 'views/email-folder/list-side', {
                     collection: collection,
                     emailCollection: this.collection,
@@ -214,6 +298,46 @@ define('views/email/list', 'views/list', function (Dep) {
                     $(window).scrollTop(0);
                 }
             }
+        },
+
+        onDrop: function (id, folderId) {
+            if (folderId === this.FOLDER_IMPORTANT) {
+                this.getRecordView().actionMarkAsImportant({id: id});
+
+                return;
+            }
+
+            if (this.selectedFolderId === this.FOLDER_TRASH) {
+                if (folderId === this.FOLDER_TRASH) {
+                    return;
+                }
+
+                if (folderId === this.FOLDER_INBOX) {
+                    this.getRecordView().actionRetrieveFromTrash({id: id});
+
+                    return;
+                }
+
+                this.getRecordView().actionRetrieveFromTrashMoveToFolder({id: id, folderId: folderId});
+
+                return;
+            }
+
+            if (folderId === this.FOLDER_TRASH) {
+                this.getRecordView().actionMoveToTrash({id: id});
+
+                return;
+            }
+
+            this.getRecordView().actionMoveToFolder({id: id, folderId: folderId});
+        },
+
+        /**
+         * @protected
+         * @return {module:views/email/record/list.Class}
+         */
+        getRecordView: function () {
+            return this.getView('list');
         },
 
         /**

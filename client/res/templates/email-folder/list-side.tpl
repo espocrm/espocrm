@@ -1,5 +1,4 @@
-
-<ul class="list-group list-group-side list-group-no-border">
+<ul class="list-group list-group-side list-group-no-border folder-list">
     <li data-id="all" class="list-group-item{{#ifEqual 'all' selectedFolderId}} selected{{/ifEqual}}">
         <a
             href="#Email/list/folder=all"
@@ -11,7 +10,7 @@
     {{#each collection.models}}
     <li
         data-id="{{get this 'id'}}"
-        class="list-group-item{{#ifAttrEquals this 'id' ../selectedFolderId}} selected{{/ifAttrEquals}}"
+        class="list-group-item{{#ifAttrEquals this 'id' ../selectedFolderId}} selected{{/ifAttrEquals}}{{#if droppable}} droppable{{/if}}"
     >
         <a
             href="#Email/list/folder={{get this 'id'}}"

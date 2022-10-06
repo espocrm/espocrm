@@ -28,7 +28,13 @@
 
 define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], function (Dep, MassActionHelper) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @memberOf module:views/email/record/list
+     * @extends module:views/record/list.Class
+     */
+    return Dep.extend(/** @lends module:views/email/record/list.Class# */{
 
         rowActionsView: 'views/email/record/row-actions/default',
 
@@ -309,7 +315,9 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
         },
 
         actionMoveToTrash: function (data) {
-            var id = data.id;
+            let id = data.id;
+
+            Espo.Ui.notify(' ... ');
 
             Espo.Ajax
                 .postRequest('Email/action/moveToTrash', {
@@ -323,12 +331,11 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
         },
 
         actionRetrieveFromTrash: function (data) {
-            var id = data.id;
+            let id = data.id;
 
-            Espo.Ajax
-                .postRequest('Email/action/retrieveFromTrash', {
-                    id: id
-                })
+            Espo.Ui.notify(' ... ');
+
+            this.retrieveFromTrash(id)
                 .then(() => {
                     Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
 
@@ -336,8 +343,60 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
                 });
         },
 
+        /**
+         * @param {string} id
+         * @return {Promise}
+         */
+        retrieveFromTrash: function (id) {
+            return Espo.Ajax.postRequest('Email/action/retrieveFromTrash', {id: id});
+        },
+
+        actionRetrieveFromTrashMoveToFolder: function (data) {
+            let id = data.id;
+            let folderId = data.folderId;
+
+            Espo.Ui.notify(' ... ');
+
+            this.retrieveFromTrash(id)
+                .then(() => {
+                    return this.moveToFolder(id, folderId)
+                })
+                .then(() => {
+                    this.collection.fetch().then(() => {
+                        Espo.Ui.success(this.translate('Done'));
+                    });
+                });
+        },
+
+        /**
+         * @param {string} id
+         * @param {string} folderId
+         * @return {Promise}
+         */
+        moveToFolder: function (id, folderId) {
+            return Espo.Ajax
+                .postRequest('Email/action/moveToFolder', {
+                    id: id,
+                    folderId: folderId,
+                });
+        },
+
         actionMoveToFolder: function (data) {
-            var id = data.id;
+            let id = data.id;
+            let folderId = data.folderId;
+
+            if (folderId) {
+                Espo.Ui.notify(' ... ');
+
+                this.moveToFolder(id, folderId)
+                    .then(() => {
+                        this.collection.fetch().then(() => {
+                            Espo.Ui.success(this.translate('Done'));
+                        });
+                    });
+
+                return;
+            }
 
             this.createView('dialog', 'views/email-folder/modals/select-folder', {}, view => {
                 view.render();
@@ -345,11 +404,9 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
                 this.listenToOnce(view, 'select', folderId => {
                     this.clearView('dialog');
 
-                    Espo.Ajax
-                        .postRequest('Email/action/moveToFolder', {
-                            id: id,
-                            folderId: folderId
-                        })
+                    Espo.Ui.notify(' ... ');
+
+                    this.moveToFolder(id, folderId)
                         .then(() => {
                             this.collection.fetch().then(() => {
                                 Espo.Ui.success(this.translate('Done'));

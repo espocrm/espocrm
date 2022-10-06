@@ -984,6 +984,19 @@ input.global-search-input {
     }
 }
 
+.list-group {
+    .list-group-item {
+        &.droppable.active {
+            background-color: var(--state-warning-bg);
+        }
+    }
+}
+
+.list-group-side {
+    > li.droppable.active {
+        border-left-color: var(--brand-warning);
+    }
+}
 
 .list-group-item {
     margin-bottom: 0;
