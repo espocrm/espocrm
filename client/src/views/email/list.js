@@ -69,6 +69,12 @@ define('views/email/list', ['views/list'], function (Dep) {
             'drafts',
         ],
 
+        /**
+         * @private
+         * @type {?string}
+         */
+        draggedEmailId: null,
+
         events: {
             'mousedown .folders-container + .list-container a.link': function (e) {
                 $(e.target).attr('draggable', 'true');
@@ -77,13 +83,18 @@ define('views/email/list', ['views/list'], function (Dep) {
                 let $target = $(e.target);
                 let id = $target.attr('data-id');
 
+                this.draggedEmailId = id;
+
                 e.originalEvent.dataTransfer.dropEffect = 'move';
                 e.originalEvent.dataTransfer.effectAllowed = 'move';
 
                 e.originalEvent.dataTransfer.setData('text/plain', id);
             },
+            'dragend a.link': function () {
+                this.draggedEmailId = null;
+            },
             'dragenter .folder-list > li.droppable': function (e) {
-                if (this.selectedFolderId === this.FOLDER_ALL) {
+                if (this.selectedFolderId === this.FOLDER_ALL || !this.draggedEmailId) {
                     return;
                 }
 
@@ -93,7 +104,7 @@ define('views/email/list', ['views/list'], function (Dep) {
                 $target.find('a').css('pointer-events', 'none');
             },
             'dragleave .folder-list > li.droppable': function (e) {
-                if (this.selectedFolderId === this.FOLDER_ALL) {
+                if (this.selectedFolderId === this.FOLDER_ALL || !this.draggedEmailId) {
                     return;
                 }
 
@@ -103,7 +114,7 @@ define('views/email/list', ['views/list'], function (Dep) {
                 $target.find('a').css('pointer-events', '');
             },
             'drop .folder-list > li.droppable': function (e) {
-                if (this.selectedFolderId === this.FOLDER_ALL) {
+                if (this.selectedFolderId === this.FOLDER_ALL || !this.draggedEmailId) {
                     return;
                 }
 
