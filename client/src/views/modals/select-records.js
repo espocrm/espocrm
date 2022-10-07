@@ -149,6 +149,16 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 }
             }
 
+            if (this.getMetadata().get(['clientDefs', this.scope, 'searchPanelDisabled'])) {
+                this.searchPanel = false;
+            }
+
+            if (this.getUser().isPortal()) {
+                if (this.getMetadata().get(['clientDefs', this.scope, 'searchPanelInPortalDisabled'])) {
+                    this.searchPanel = false;
+                }
+            }
+
             this.$header = $('<span>');
 
             this.$header.append(
