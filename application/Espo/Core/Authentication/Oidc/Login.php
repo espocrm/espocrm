@@ -234,7 +234,7 @@ class Login implements LoginInterface
             $response = '';
         }
 
-        if ($error) {
+        if ($error || is_int($status) && ($status >= 400 && $status < 500)) {
             if ($status === 400) {
                 $this->log->error(self::composeLogMessage('Bad token request.', $status, $response));
 
