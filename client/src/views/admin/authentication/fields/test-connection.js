@@ -72,7 +72,7 @@ define('views/admin/authentication/fields/test-connection', 'views/fields/base',
             this.notify('Connecting', null, null, 'Settings');
 
             $.ajax({
-                url: 'Settings/action/testLdapConnection',
+                url: 'Ldap/action/testConnection',
                 type: 'POST',
                 data: JSON.stringify(data),
                 error: (xhr, status) => {

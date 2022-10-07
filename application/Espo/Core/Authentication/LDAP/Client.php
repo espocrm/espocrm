@@ -27,9 +27,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\LDAP;
+namespace Espo\Core\Authentication\Ldap;
 
-class Client extends \Laminas\Ldap\Ldap
-{
-
-}
+class Client extends \Laminas\Ldap\Ldap {}

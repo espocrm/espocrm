@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\Logins;
+namespace Espo\Core\Authentication\Ldap;
 
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
 use Espo\Core\FieldProcessing\EmailAddress\Saver as EmailAddressSaver;
@@ -38,6 +38,7 @@ use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
 use Espo\Entities\User;
 
 use Espo\Core\{
+    Authentication\Logins\Espo,
     ORM\EntityManager,
     Api\Request,
     Utils\Config,
@@ -47,44 +48,33 @@ use Espo\Core\{
     Authentication\Login,
     Authentication\Login\Data,
     Authentication\Result,
-    Authentication\LDAP\Utils as LDAPUtils,
-    Authentication\LDAP\Client as Client,
-    Authentication\LDAP\ClientFactory as ClientFactory,
+    Authentication\Ldap\Utils as LDAPUtils,
+    Authentication\Ldap\Client as Client,
+    Authentication\Ldap\ClientFactory as ClientFactory,
     Authentication\AuthToken\AuthToken,
     Authentication\Result\FailReason,
 };
 
 use Exception;
 
-class LDAP implements Login
+class LdapLogin implements Login
 {
     private $utils;
 
-    /**
-     * @var ?Client
-     */
+    /** @var ?Client */
     private $client = null;
 
     private bool $isPortal;
 
     private Config $config;
-
     private EntityManager $entityManager;
-
     private PasswordHash $passwordHash;
-
     private Language $language;
-
     private Log $log;
-
     private Espo $baseLogin;
-
     private ClientFactory $clientFactory;
-
     private LinkMultipleSaver $linkMultipleSaver;
-
     private EmailAddressSaver $emailAddressSaver;
-
     private PhoneNumberSaver $phoneNumberSaver;
 
     public function __construct(

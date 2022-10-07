@@ -32,37 +32,24 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
-
-use Espo\Core\Authentication\LDAP\Utils as LDAPUtils;
-use Espo\Core\Authentication\LDAP\Client as LDAPClient;
 use Espo\Core\Api\Request;
 use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\Config;
-
 use Espo\Services\Settings as Service;
-
 use Espo\Entities\User;
 
-use Laminas\Ldap\Exception\LdapException;
 use stdClass;
 
 class Settings
 {
-    private Metadata $metadata;
     private Service $service;
     private User $user;
-    private Config $config;
 
     public function __construct(
-        Metadata $metadata,
         Service $service,
-        User $user,
-        Config $config
+        User $user
     ) {
-        $this->metadata = $metadata;
         $this->service = $service;
         $this->user = $user;
-        $this->config = $config;
     }
 
     public function getActionRead(): stdClass
@@ -86,36 +73,6 @@ class Settings
         $this->service->setConfigData($data);
 
         return $this->getConfigData();
-    }
-
-    /**
-     * @throws Forbidden
-     * @throws LdapException
-     */
-    public function postActionTestLdapConnection(Request $request): bool
-    {
-        if (!$this->user->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        $data = $request->getParsedBody();
-
-        if (!isset($data->password)) {
-            $data->password = $this->config->get('ldapPassword');
-        }
-
-        $ldapUtils = new LDAPUtils();
-
-        $options = $ldapUtils->normalizeOptions(
-            get_object_vars($data)
-        );
-
-        $ldapClient = new LDAPClient($options);
-
-        // An exception thrown if no connection.
-        $ldapClient->bind();
-
-        return true;
     }
 
     private function getConfigData(): stdClass
