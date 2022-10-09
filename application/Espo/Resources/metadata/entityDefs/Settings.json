@@ -226,6 +226,9 @@
             "validationList": [
                 "array",
                 "required"
+            ],
+            "mandatoryValidationList": [
+                "array"
             ]
         },
         "quickCreateList": {

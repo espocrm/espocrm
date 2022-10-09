@@ -160,6 +160,9 @@
             "validationList": [
                 "array",
                 "required"
+            ],
+            "mandatoryValidationList": [
+                "array"
             ]
         },
         "emailReplyToAllByDefault": {
