@@ -43,8 +43,8 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
         dropdownItemList: [
             {
                 name: 'markAllAsRead',
-                label: 'Mark all as read'
-            }
+                label: 'Mark all as read',
+            },
         ],
 
         setup: function () {
@@ -59,7 +59,7 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
             this.addMassAction('moveToTrash', false, true);
 
             this.listenTo(this.collection, 'moving-to-trash', (id) => {
-                var model = this.collection.get(id);
+                let model = this.collection.get(id);
 
                 if (model) {
                     model.set('inTrash', true);
@@ -71,7 +71,7 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
             });
 
             this.listenTo(this.collection, 'retrieving-from-trash', (id) => {
-                var model = this.collection.get(id);
+                let model = this.collection.get(id);
 
                 if (model) {
                     model.set('inTrash', false);
@@ -84,19 +84,17 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
         },
 
         massActionMarkAsRead: function () {
-            var ids = [];
+            let ids = [];
 
-            for (var i in this.checkedList) {
+            for (let i in this.checkedList) {
                 ids.push(this.checkedList[i]);
             }
 
             Espo.Ajax
-                .postRequest('Email/action/markAsRead', {
-                    ids: ids,
-                });
+                .postRequest('Email/action/markAsRead', {ids: ids});
 
             ids.forEach(id => {
-                var model = this.collection.get(id);
+                let model = this.collection.get(id);
 
                 if (model) {
                     model.set('isRead', true);
@@ -105,19 +103,17 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
         },
 
         massActionMarkAsNotRead: function () {
-            var ids = [];
+            let ids = [];
 
-            for (var i in this.checkedList) {
+            for (let i in this.checkedList) {
                 ids.push(this.checkedList[i]);
             }
 
             Espo.Ajax
-                .postRequest('Email/action/markAsNotRead', {
-                    ids: ids,
-                });
+                .postRequest('Email/action/markAsNotRead', {ids: ids});
 
             ids.forEach(id => {
-                var model = this.collection.get(id);
+                let model = this.collection.get(id);
 
                 if (model) {
                     model.set('isRead', false);
@@ -126,19 +122,17 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
         },
 
         massActionMarkAsImportant: function () {
-            var ids = [];
+            let ids = [];
 
-            for (var i in this.checkedList) {
+            for (let i in this.checkedList) {
                 ids.push(this.checkedList[i]);
             }
 
             Espo.Ajax
-                .postRequest('Email/action/markAsImportant', {
-                    ids: ids,
-                });
+                .postRequest('Email/action/markAsImportant', {ids: ids});
 
             ids.forEach(id => {
-                var model = this.collection.get(id);
+                let model = this.collection.get(id);
 
                 if (model) {
                     model.set('isImportant', true);
@@ -147,19 +141,17 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
         },
 
         massActionMarkAsNotImportant: function () {
-            var ids = [];
+            let ids = [];
 
-            for (var i in this.checkedList) {
+            for (let i in this.checkedList) {
                 ids.push(this.checkedList[i]);
             }
 
             Espo.Ajax
-                .postRequest('Email/action/markAsNotImportant', {
-                    ids: ids,
-                });
+                .postRequest('Email/action/markAsNotImportant', {ids: ids});
 
             ids.forEach(id => {
-                var model = this.collection.get(id);
+                let model = this.collection.get(id);
 
                 if (model) {
                     model.set('isImportant', false);
@@ -168,16 +160,14 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
         },
 
         massActionMoveToTrash: function () {
-            var ids = [];
+            let ids = [];
 
-            for (var i in this.checkedList) {
+            for (let i in this.checkedList) {
                 ids.push(this.checkedList[i]);
             }
 
             Espo.Ajax
-                .postRequest('Email/action/moveToTrash', {
-                    ids: ids
-                })
+                .postRequest('Email/action/moveToTrash', {ids: ids})
                 .then(() => {
                     Espo.Ui.success(this.translate('Done'));
                 });
@@ -187,21 +177,19 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
             }
 
             ids.forEach(id => {
-                this.collection.trigger('moving-to-trash', id);
+                this.collection.trigger('moving-to-trash', id, this.collection.get(id));
             });
         },
 
         massActionRetrieveFromTrash: function () {
-            var ids = [];
+            let ids = [];
 
-            for (var i in this.checkedList) {
+            for (let i in this.checkedList) {
                 ids.push(this.checkedList[i]);
             }
 
             Espo.Ajax
-                .postRequest('Email/action/retrieveFromTrash', {
-                    ids: ids
-                })
+                .postRequest('Email/action/retrieveFromTrash', {ids: ids})
                 .then(() => {
                     Espo.Ui.success(this.translate('Done'));
                 });
@@ -211,17 +199,11 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
             }
 
             ids.forEach(id => {
-                this.collection.trigger('retrieving-from-trash', id);
+                this.collection.trigger('retrieving-from-trash', id, this.collection.get(id));
             });
         },
 
         massActionMoveToFolder: function () {
-            var ids = [];
-
-            for (var i in this.checkedList) {
-                ids.push(this.checkedList[i]);
-            }
-
             this.createView('dialog', 'views/email-folder/modals/select-folder', {}, view => {
                 view.render();
 
@@ -272,14 +254,14 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
         actionMarkAsImportant: function (data) {
             data = data || {};
 
-            var id = data.id;
+            let id = data.id;
 
             Espo.Ajax
                 .postRequest('Email/action/markAsImportant', {
                     id: id,
                 });
 
-            var model = this.collection.get(id);
+            let model = this.collection.get(id);
 
             if (model) {
                 model.set('isImportant', true);
@@ -289,14 +271,12 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
         actionMarkAsNotImportant: function (data) {
             data = data || {};
 
-            var id = data.id;
+            let id = data.id;
 
             Espo.Ajax
-                .postRequest('Email/action/markAsNotImportant', {
-                    id: id,
-                });
+                .postRequest('Email/action/markAsNotImportant', {id: id});
 
-            var model = this.collection.get(id);
+            let model = this.collection.get(id);
 
             if (model) {
                 model.set('isImportant', false);
@@ -326,7 +306,7 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
                 .then(() => {
                     Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
 
-                    this.collection.trigger('moving-to-trash', id);
+                    this.collection.trigger('moving-to-trash', id, this.collection.get(id));
                 });
         },
 
@@ -339,7 +319,7 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
                 .then(() => {
                     Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
 
-                    this.collection.trigger('retrieving-from-trash', id);
+                    this.collection.trigger('retrieving-from-trash', id, this.collection.get(id));
                 });
         },
 
@@ -420,13 +400,13 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
         },
 
         actionSend: function (data) {
-            var id = data.id;
+            let id = data.id;
 
             this.confirm({
                 message: this.translate('sendConfirm', 'messages', 'Email'),
                 confirmText: this.translate('Send', 'labels', 'Email'),
             }).then(() => {
-                var model = this.collection.get(id);
+                let model = this.collection.get(id);
 
                 if (!model) {
                     return;
@@ -450,6 +430,5 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
                 );
             });
         },
-
     });
 });

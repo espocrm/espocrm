@@ -34,38 +34,32 @@ use Laminas\Mail\Message;
 use Espo\Services\EmailAccount as EmailAccountService;
 use Espo\Services\InboundEmail as InboundEmailService;
 
-use Espo\Repositories\UserData as UserDataRepository;
-
 use Espo\Core\Utils\Json;
 
-use Espo\{
-    Modules\Crm\Entities\CaseObj,
-    ORM\Entity,
-    Entities\User,
-    Entities\Email as EmailEntity,
-};
+use Espo\Modules\Crm\Entities\CaseObj;
+use Espo\ORM\Entity;
+use Espo\Entities\User;
+use Espo\Entities\Email as EmailEntity;
+use Espo\Repositories\UserData as UserDataRepository;
+use Espo\Tools\Email\Service;
 
-use Espo\Entities\EmailFolder;
 use Espo\Entities\InboundEmail;
 use Espo\Entities\EmailAccount;
-use Espo\Entities\Notification;
 use Espo\Entities\Preferences;
 use Espo\Entities\Attachment;
 use Espo\Entities\UserData;
 
-use Espo\Core\{
-    Acl\Table,
-    Exceptions\Error,
-    Exceptions\ErrorSilent,
-    Exceptions\Forbidden,
-    Exceptions\NotFound,
-    Exceptions\BadRequest,
-    Di,
-    Mail\Exceptions\SendingError,
-    Select\Where\Item as WhereItem,
-    Mail\Sender,
-    Mail\SmtpParams,
-    Record\CreateParams};
+use Espo\Core\Acl\Table;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\ErrorSilent;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Di;
+use Espo\Core\Mail\Exceptions\SendingError;
+use Espo\Core\Mail\Sender;
+use Espo\Core\Mail\SmtpParams;
+use Espo\Core\Record\CreateParams;
 
 use Exception;
 use Throwable;
@@ -113,10 +107,8 @@ class Email extends Record implements
         'sentById',
         'replyToString',
         'hasAttachment',
+        'groupFolderId',
     ];
-
-    private const FOLDER_INBOX = 'inbox';
-    private const FOLDER_DRAFTS = 'drafts';
 
     public function getUserSmtpParams(string $userId): ?SmtpParams
     {
@@ -172,6 +164,8 @@ class Email extends Record implements
     }
 
     /**
+     * @todo Move to Tools\Email\SendService.
+     *
      * @throws BadRequest
      * @throws SendingError
      * @throws Error
@@ -477,7 +471,7 @@ class Email extends Record implements
         /** @var EmailEntity $entity */
         $entity = parent::create($data, $params);
 
-        if ($entity->get('status') === EmailEntity::STATUS_SENDING) {
+        if ($entity->getStatus() === EmailEntity::STATUS_SENDING) {
             $this->sendEntity($entity, $this->user);
         }
 
@@ -488,7 +482,7 @@ class Email extends Record implements
     {
         /** @var EmailEntity $entity */
 
-        if ($entity->get('status') === EmailEntity::STATUS_SENDING) {
+        if ($entity->getStatus() === EmailEntity::STATUS_SENDING) {
             $messageId = Sender::generateMessageId($entity);
 
             $entity->set('messageId', '<' . $messageId . '>');
@@ -503,7 +497,7 @@ class Email extends Record implements
     {
         /** @var EmailEntity $entity */
 
-        if ($entity->get('status') === EmailEntity::STATUS_SENDING) {
+        if ($entity->getStatus() === EmailEntity::STATUS_SENDING) {
             $this->sendEntity($entity, $this->user);
         }
 
@@ -527,284 +521,11 @@ class Email extends Record implements
         return $entity;
     }
 
-    /**
-     * @param string[] $idList
-     */
-    public function markAsReadByIdList(array $idList, ?string $userId = null): bool
+    private function markAsRead(string $id, ?string $userId = null): void
     {
-        foreach ($idList as $id) {
-            $this->markAsRead($id, $userId);
-        }
+        $service = $this->injectableFactory->create(Service::class);
 
-        return true;
-    }
-
-    /**
-     * @param string[] $idList
-     */
-    public function markAsNotReadByIdList(array $idList, ?string $userId = null): bool
-    {
-        foreach ($idList as $id) {
-            $this->markAsNotRead($id, $userId);
-        }
-
-        return true;
-    }
-
-    /**
-     * @param string[] $idList
-     */
-    public function markAsImportantByIdList(array $idList, ?string $userId = null): bool
-    {
-        foreach ($idList as $id) {
-            $this->markAsImportant($id, $userId);
-        }
-
-        return true;
-    }
-
-    /**
-     * @param string[] $idList
-     */
-    public function markAsNotImportantByIdList(array $idList, ?string $userId = null): bool
-    {
-        foreach ($idList as $id) {
-            $this->markAsNotImportant($id, $userId);
-        }
-
-        return true;
-    }
-
-    /**
-     * @param string[] $idList
-     */
-    public function moveToTrashByIdList(array $idList, ?string $userId = null): bool
-    {
-        foreach ($idList as $id) {
-            $this->moveToTrash($id, $userId);
-        }
-
-        return true;
-    }
-
-    /**
-     * @param string[] $idList
-     */
-    public function moveToFolderByIdList(array $idList, ?string $folderId, ?string $userId = null): bool
-    {
-        foreach ($idList as $id) {
-            $this->moveToFolder($id, $folderId, $userId);
-        }
-
-        return true;
-    }
-
-    /**
-     * @param string[] $idList
-     */
-    public function retrieveFromTrashByIdList(array $idList, ?string $userId = null): bool
-    {
-        foreach ($idList as $id) {
-            $this->retrieveFromTrash($id, $userId);
-        }
-
-        return true;
-    }
-
-    public function markAllAsRead(?string $userId = null): bool
-    {
-        $userId = $userId ?? $this->user->getId();
-
-        $update = $this->entityManager->getQueryBuilder()->update()
-            ->in('EmailUser')
-            ->set(['isRead' => true])
-            ->where([
-                'deleted' => false,
-                'userId' => $userId,
-                'isRead' => false,
-            ])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($update);
-
-        $update = $this->entityManager->getQueryBuilder()
-            ->update()
-            ->in(Notification::ENTITY_TYPE)
-            ->set(['read' => true])
-            ->where([
-                'deleted' => false,
-                'userId' => $userId,
-                'relatedType' => EmailEntity::ENTITY_TYPE,
-                'read' => false,
-                'type' => Notification::TYPE_EMAIL_RECEIVED,
-            ])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($update);
-
-        return true;
-    }
-
-    public function markAsRead(string $id, ?string $userId = null): bool
-    {
-        $userId = $userId ?? $this->user->getId();
-
-        $update = $this->entityManager->getQueryBuilder()->update()
-            ->in('EmailUser')
-            ->set(['isRead' => true])
-            ->where([
-                'deleted' => false,
-                'userId' => $userId,
-                'emailId' => $id,
-            ])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($update);
-
-        $this->markNotificationAsRead($id, $userId);
-
-        return true;
-    }
-
-    public function markAsNotRead(string $id, ?string $userId = null): bool
-    {
-        $userId = $userId ?? $this->user->getId();
-
-        $update = $this->entityManager->getQueryBuilder()->update()
-            ->in('EmailUser')
-            ->set(['isRead' => false])
-            ->where([
-                'deleted' => false,
-                'userId' => $userId,
-                'emailId' => $id,
-            ])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($update);
-
-        return true;
-    }
-
-    public function markAsImportant(string $id, ?string $userId = null): bool
-    {
-        $userId = $userId ?? $this->user->getId();
-
-        $update = $this->entityManager->getQueryBuilder()->update()
-            ->in('EmailUser')
-            ->set(['isImportant' => true])
-            ->where([
-                'deleted' => false,
-                'userId' => $userId,
-                'emailId' => $id,
-            ])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($update);
-
-        return true;
-    }
-
-    public function markAsNotImportant(string $id, ?string $userId = null): bool
-    {
-        $userId = $userId ?? $this->user->getId();
-
-        $update = $this->entityManager->getQueryBuilder()->update()
-            ->in('EmailUser')
-            ->set(['isImportant' => false])
-            ->where([
-                'deleted' => false,
-                'userId' => $userId,
-                'emailId' => $id,
-            ])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($update);
-
-        return true;
-    }
-
-    public function moveToTrash(string $id, ?string $userId = null): bool
-    {
-        $userId = $userId ?? $this->user->getId();
-
-        $update = $this->entityManager->getQueryBuilder()->update()
-            ->in('EmailUser')
-            ->set(['inTrash' => true])
-            ->where([
-                'deleted' => false,
-                'userId' => $userId,
-                'emailId' => $id,
-            ])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($update);
-
-        $this->markNotificationAsRead($id, $userId);
-
-        return true;
-    }
-
-    public function retrieveFromTrash(string $id, ?string $userId = null): bool
-    {
-        $userId = $userId ?? $this->user->getId();
-
-        $update = $this->entityManager->getQueryBuilder()->update()
-            ->in('EmailUser')
-            ->set(['inTrash' => false])
-            ->where([
-                'deleted' => false,
-                'userId' => $userId,
-                'emailId' => $id,
-            ])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($update);
-
-        return true;
-    }
-
-    public function markNotificationAsRead(string $id, string $userId): void
-    {
-        $update = $this->entityManager->getQueryBuilder()->update()
-            ->in(Notification::ENTITY_TYPE)
-            ->set(['read' => true])
-            ->where([
-                'deleted' => false,
-                'userId' => $userId,
-                'relatedType' => EmailEntity::ENTITY_TYPE,
-                'relatedId' => $id,
-                'read' => false,
-                'type' => Notification::TYPE_EMAIL_RECEIVED,
-            ])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($update);
-    }
-
-    public function moveToFolder(string $id, ?string $folderId, ?string $userId = null): bool
-    {
-        $userId = $userId ?? $this->user->getId();
-
-        if ($folderId === self::FOLDER_INBOX) {
-            $folderId = null;
-        }
-
-        $update = $this->entityManager->getQueryBuilder()->update()
-            ->in('EmailUser')
-            ->set([
-                'folderId' => $folderId,
-                'inTrash' => false,
-            ])
-            ->where([
-                'deleted' => false,
-                'userId' => $userId,
-                'emailId' => $id,
-            ])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($update);
-
-        return true;
+        $service->markAsRead($id, $userId);
     }
 
     static public function parseFromName(?string $string): string
@@ -812,10 +533,10 @@ class Email extends Record implements
         $fromName = '';
 
         if ($string && stripos($string, '<') !== false) {
-            /** @var string $replasedString */
-            $replasedString = preg_replace('/(<.*>)/', '', $string);
+            /** @var string $replacedString */
+            $replacedString = preg_replace('/(<.*>)/', '', $string);
 
-            $fromName = trim($replasedString, '" ');
+            $fromName = trim($replacedString, '" ');
         }
 
         return $fromName;
@@ -1103,12 +824,12 @@ class Email extends Record implements
             }
         }
 
-        if ($entity->get('status') === EmailEntity::STATUS_DRAFT) {
+        if ($entity->getStatus() === EmailEntity::STATUS_DRAFT) {
             $skipFilter = true;
         }
 
         if (
-            $entity->get('status') === EmailEntity::STATUS_SENDING &&
+            $entity->getStatus() === EmailEntity::STATUS_SENDING &&
             $entity->getFetched('status') === EmailEntity::STATUS_DRAFT
         ) {
             $skipFilter = true;
@@ -1156,61 +877,6 @@ class Email extends Record implements
                 $email->clear($attribute);
             }
         }
-    }
-
-    public function getFoldersNotReadCounts(): stdClass
-    {
-        $data = [];
-
-        $selectBuilder = $this->selectBuilderFactory
-            ->create()
-            ->from(EmailEntity::ENTITY_TYPE)
-            ->withAccessControlFilter();
-
-        $draftsSelectBuilder = clone $selectBuilder;
-
-        $selectBuilder->withWhere(
-            WhereItem::fromRaw([
-                'type' => 'isTrue',
-                'attribute' => 'isNotRead',
-            ])
-        );
-
-        $folderIdList = [self::FOLDER_INBOX, self::FOLDER_DRAFTS];
-
-        $emailFolderList = $this->entityManager
-            ->getRDBRepository(EmailFolder::ENTITY_TYPE)
-            ->where([
-                'assignedUserId' => $this->user->getId(),
-            ])
-            ->find();
-
-        foreach ($emailFolderList as $folder) {
-            $folderIdList[] = $folder->getId();
-        }
-
-        foreach ($folderIdList as $folderId) {
-            $itemSelectBuilder = clone $selectBuilder;
-
-            if ($folderId === self::FOLDER_DRAFTS) {
-                $itemSelectBuilder = clone $draftsSelectBuilder;
-            }
-
-            $itemSelectBuilder->withWhere(
-                WhereItem::fromRaw([
-                   'type' => 'inFolder',
-                   'attribute' => 'folderId',
-                   'value' => $folderId,
-                ])
-            );
-
-            $data[$folderId] = $this->entityManager
-                ->getRDBRepository(EmailEntity::ENTITY_TYPE)
-                ->clone($itemSelectBuilder->build())
-                ->count();
-        }
-
-        return (object) $data;
     }
 
     private function getRepliedEmailMessageId(EmailEntity $email): ?string

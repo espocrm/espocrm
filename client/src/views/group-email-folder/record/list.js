@@ -26,36 +26,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-folder/record/row-actions/default', ['views/record/row-actions/default'], function (Dep) {
+define('views/group-email-folder/record/list', ['views/record/list'], function (Dep) {
 
     return Dep.extend({
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+        rowActionsView: 'views/email-folder/record/row-actions/default',
 
-        getActionList: function () {
-            var list = Dep.prototype.getActionList.call(this);
+        actionMoveUp: function (data) {
+            let model = this.collection.get(data.id);
 
-            if (this.options.acl.edit) {
-                list.unshift({
-                    action: 'moveDown',
-                    label: 'Move Down',
-                    data: {
-                        id: this.model.id,
-                    },
-                });
-
-                list.unshift({
-                    action: 'moveUp',
-                    label: 'Move Up',
-                    data: {
-                        id: this.model.id,
-                    },
-                });
+            if (!model) {
+                return;
             }
 
-            return list;
+            let index = this.collection.indexOf(model);
+
+            if (index === 0) {
+                return;
+            }
+
+            this.ajaxPostRequest('GroupEmailFolder/action/moveUp', {id: model.id})
+                .then(() => {
+                    this.collection.fetch();
+                });
+        },
+
+        actionMoveDown: function (data) {
+            let model = this.collection.get(data.id);
+
+            if (!model) {
+                return;
+            }
+
+            let index = this.collection.indexOf(model);
+
+            if ((index === this.collection.length - 1) && (this.collection.length === this.collection.total)) {
+                return;
+            }
+
+            this.ajaxPostRequest('GroupEmailFolder/action/moveDown', {id: model.id})
+                .then(() => {
+                    this.collection.fetch();
+                });
         },
     });
 });

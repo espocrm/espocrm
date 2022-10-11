@@ -30,16 +30,22 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
-
-use Espo\Services\EmailFolder as Service;
-
-use Espo\Core\{
-    Controllers\RecordBase,
-    Api\Request,
-};
+use Espo\Core\Controllers\RecordBase;
+use Espo\Core\Api\Request;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Tools\EmailFolder\Service;
+use stdClass;
 
 class EmailFolder extends RecordBase
 {
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function postActionMoveUp(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -53,6 +59,12 @@ class EmailFolder extends RecordBase
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function postActionMoveDown(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -66,19 +78,15 @@ class EmailFolder extends RecordBase
         return true;
     }
 
-    /**
-     * @return array{
-     *   list:array<array<string,mixed>>
-     * }
-     */
-    public function getActionListAll(): array
+    public function getActionListAll(): stdClass
     {
-        return $this->getEmailFolderService()->listAll();
+        $list = $this->getEmailFolderService()->listAll();
+
+        return (object) ['list' => $list];
     }
 
     private function getEmailFolderService(): Service
     {
-        /** @var Service */
-        return $this->getRecordService();
+        return $this->injectableFactory->create(Service::class);
     }
 }

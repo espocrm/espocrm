@@ -29,26 +29,21 @@
 
 namespace Espo\Classes\Select\Email\Where\ItemConverters;
 
-use Espo\Core\{
-    Select\Where\ItemConverter,
-    Select\Where\Item,
-};
+use Espo\Core\Select\Where\ItemConverter;
+use Espo\Core\Select\Where\Item;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\WhereItem as WhereClauseItem,
-    ORM\Query\Part\WhereClause,
-    ORM\EntityManager,
-    Entities\User,
-    Classes\Select\Email\Helpers\JoinHelper,
-};
+use Espo\Entities\Email;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
+use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\EntityManager;
+use Espo\Entities\User;
+use Espo\Classes\Select\Email\Helpers\JoinHelper;
 
 class InFolder implements ItemConverter
 {
     private User $user;
-
     private EntityManager $entityManager;
-
     private JoinHelper $joinHelper;
 
     public function __construct(User $user, EntityManager $entityManager, JoinHelper $joinHelper)
@@ -93,9 +88,13 @@ class InFolder implements ItemConverter
         $whereClause = [
             'emailUser.inTrash' => false,
             'emailUser.folderId' => null,
-            'emailUser.userId' => $this->user->id,
+            'emailUser.userId' => $this->user->getId(),
             [
-                'status' => ['Archived', 'Sent'],
+                'status' => [
+                    Email::STATUS_ARCHIVED,
+                    Email::STATUS_SENT,
+                ],
+                'groupFolderId' => null,
             ],
         ];
 
@@ -106,15 +105,15 @@ class InFolder implements ItemConverter
 
             $whereClause[] = [
                 'OR' => [
-                    'status' => 'Archived',
-                    'createdById!=' => $this->user->id,
+                    'status' => Email::STATUS_ARCHIVED,
+                    'createdById!=' => $this->user->getId(),
                 ],
             ];
         }
         else {
             $whereClause[] = [
-                'status' => 'Archived',
-                'createdById!=' => $this->user->id,
+                'status' => Email::STATUS_ARCHIVED,
+                'createdById!=' => $this->user->getId(),
             ];
         }
 
@@ -129,12 +128,12 @@ class InFolder implements ItemConverter
             'OR' => [
                 'fromEmailAddressId' => $this->getEmailAddressIdList(),
                 [
-                    'status' => 'Sent',
-                    'createdById' => $this->user->id,
+                    'status' => Email::STATUS_SENT,
+                    'createdById' => $this->user->getId(),
                 ]
             ],
             [
-                'status!=' => 'Draft',
+                'status!=' => Email::STATUS_DRAFT,
             ],
             'emailUser.inTrash' => false,
         ]);
@@ -145,7 +144,7 @@ class InFolder implements ItemConverter
         $this->joinEmailUser($queryBuilder);
 
         return WhereClause::fromRaw([
-            'emailUser.userId' => $this->user->id,
+            'emailUser.userId' => $this->user->getId(),
             'emailUser.isImportant' => true,
         ]);
     }
@@ -155,7 +154,7 @@ class InFolder implements ItemConverter
         $this->joinEmailUser($queryBuilder);
 
         return WhereClause::fromRaw([
-            'emailUser.userId' => $this->user->id,
+            'emailUser.userId' => $this->user->getId(),
             'emailUser.inTrash' => true,
         ]);
     }
@@ -163,7 +162,7 @@ class InFolder implements ItemConverter
     protected function convertDraft(QueryBuilder $queryBuilder): WhereClauseItem
     {
         return WhereClause::fromRaw([
-            'status' => 'Draft',
+            'status' => Email::STATUS_DRAFT,
             'createdById' => $this->user->getId(),
         ]);
     }
@@ -172,9 +171,26 @@ class InFolder implements ItemConverter
     {
         $this->joinEmailUser($queryBuilder);
 
+        if (substr($folderId, 0, 6) === 'group:') {
+            $groupFolderId = substr($folderId, 6);
+
+            if ($groupFolderId === '') {
+                $groupFolderId = null;
+            }
+
+            return WhereClause::fromRaw([
+                'groupFolderId' => $groupFolderId,
+                'OR' => [
+                    'emailUser.id' => null,
+                    'emailUser.inTrash' => false,
+                ]
+            ]);
+        }
+
         return WhereClause::fromRaw([
             'emailUser.inTrash' => false,
             'emailUser.folderId' => $folderId,
+            'groupFolderId' => null,
         ]);
     }
 
@@ -189,7 +205,7 @@ class InFolder implements ItemConverter
     protected function getEmailAddressIdList(): array
     {
         $emailAddressList = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->getRelation($this->user, 'emailAddresses')
             ->select(['id'])
             ->find();

@@ -37,6 +37,12 @@
                 "delete": "own",
                 "create": "yes"
             },
+            "GroupEmailFolder": {
+                "read": "team",
+                "edit": "no",
+                "delete": "no",
+                "create": "no"
+            },
             "Preferences": {
                 "read": "own",
                 "edit": "own",

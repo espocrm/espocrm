@@ -1,0 +1,17 @@
+{
+    "controller": "controllers/record",
+    "recordViews": {
+        "list": "views/group-email-folder/record/list"
+    },
+    "searchPanelDisabled": true,
+    "massUpdateDisabled": true,
+    "mergeDisabled": true,
+    "relationshipPanels": {
+        "emails": {
+            "select": false,
+            "create": false,
+            "rowActionsView": "views/record/row-actions/remove-only",
+            "unlinkDisabled": true
+        }
+    }
+}

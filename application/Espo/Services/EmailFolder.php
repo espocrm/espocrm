@@ -30,31 +30,13 @@
 namespace Espo\Services;
 
 use Espo\ORM\Entity;
-use Espo\ORM\EntityCollection;
-
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Error;
-
-use Espo\Core\Di;
 
 /**
  * @extends Record<\Espo\Entities\EmailFolder>
  */
-class EmailFolder extends Record implements Di\LanguageAware
+class EmailFolder extends Record
 {
-    use Di\LanguageSetter;
-
-    /**
-     * @var string[]
-     */
-    protected $systemFolderList = ['inbox', 'important', 'sent'];
-
-    /**
-     * @var string[]
-     */
-    protected $systemFolderEndList = ['drafts', 'trash'];
-
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         parent::beforeCreateEntity($entity, $data);
@@ -62,138 +44,9 @@ class EmailFolder extends Record implements Di\LanguageAware
         if (!$this->user->isAdmin() || !$entity->get('assignedUserId')) {
             $entity->set('assignedUserId', $this->user->getId());
         }
-        if (!$this->acl->check($entity, 'edit')) {
+
+        if (!$this->acl->checkEntityEdit($entity)) {
             throw new Forbidden();
         }
-    }
-
-    public function moveUp(string $id): void
-    {
-        $entity = $this->entityManager->getEntity('EmailFolder', $id);
-        if (!$entity) {
-            throw new NotFound();
-        }
-
-        if (!$this->acl->check($entity, 'edit')) {
-            throw new Forbidden();
-        }
-
-        $currentIndex = $entity->get('order');
-
-        if (!is_int($currentIndex)) {
-            throw new Error();
-        }
-
-        $previousEntity = $this->getRepository()
-            ->where([
-                'order<' => $currentIndex,
-                'assignedUserId' => $entity->get('assignedUserId'),
-            ])
-            ->order('order', true)
-            ->findOne();
-
-        if (!$previousEntity) {
-            return;
-        }
-
-        $entity->set('order', $previousEntity->get('order'));
-
-        $previousEntity->set('order', $currentIndex);
-
-        $this->entityManager->saveEntity($entity);
-        $this->entityManager->saveEntity($previousEntity);
-    }
-
-    public function moveDown(string $id): void
-    {
-        $entity = $this->entityManager->getEntity('EmailFolder', $id);
-
-        if (!$entity) {
-            throw new NotFound();
-        }
-        if (!$this->acl->check($entity, 'edit')) {
-            throw new Forbidden();
-        }
-
-        $currentIndex = $entity->get('order');
-
-        if (!is_int($currentIndex)) {
-            throw new Error();
-        }
-
-        $nextEntity = $this->getRepository()
-            ->where([
-                'order>' => $currentIndex,
-                'assignedUserId' => $entity->get('assignedUserId'),
-            ])
-            ->order('order', false)
-            ->findOne();
-
-        if (!$nextEntity) {
-            return;
-        }
-
-        $entity->set('order', $nextEntity->get('order'));
-
-        $nextEntity->set('order', $currentIndex);
-
-        $this->entityManager->saveEntity($entity);
-        $this->entityManager->saveEntity($nextEntity);
-    }
-
-    /**
-     * @return array{
-     *   list:array<array<string,mixed>>
-     * }
-     */
-    public function listAll()
-    {
-        $limit = $this->config->get('emailFolderMaxCount', 100);
-
-        $folderList = $this->getRepository()
-            ->where([
-                'assignedUserId' => $this->user->getId()
-            ])
-            ->order('order')
-            ->limit(0, $limit)
-            ->find();
-
-        $list = new EntityCollection();
-
-        foreach ($this->systemFolderList as $name) {
-            $folder = $this->entityManager->getNewEntity('EmailFolder');
-
-            $folder->set('name', $this->language->translate($name, 'presetFilters', 'Email'));
-            $folder->set('id', $name);
-
-            $list[] = $folder;
-        }
-
-        foreach ($folderList as $folder) {
-            $list[] = $folder;
-        }
-
-        foreach ($this->systemFolderEndList as $name) {
-            $folder = $this->entityManager->getNewEntity('EmailFolder');
-
-            $folder->set('name', $this->language->translate($name, 'presetFilters', 'Email'));
-            $folder->set('id', $name);
-
-            $list[] = $folder;
-        }
-
-        $finalList = [];
-
-        foreach ($list as $item) {
-            $attributes = get_object_vars($item->getValueMap());
-
-            $attributes['childCollection'] = [];
-
-            $finalList[] = $attributes;
-        }
-
-        return [
-            'list' => $finalList
-        ];
     }
 }

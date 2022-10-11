@@ -41,6 +41,7 @@ use Espo\Core\Api\Request;
 use Espo\Entities\Email as EmailEntity;
 use Espo\Services\Email as Service;
 use Espo\Services\EmailTemplate as EmailTemplateService;
+use Espo\Tools\Email\Service as ToolService;
 
 use stdClass;
 
@@ -150,7 +151,7 @@ class Email extends Record
             }
         }
 
-        $this->getEmailService()->markAsReadByIdList($idList);
+        $this->getEmailToolService()->markAsReadIdList($idList);
 
         return true;
     }
@@ -174,14 +175,14 @@ class Email extends Record
             }
         }
 
-        $this->getEmailService()->markAsNotReadByIdList($idList);
+        $this->getEmailToolService()->markAsNotReadIdList($idList);
 
         return true;
     }
 
     public function postActionMarkAllAsRead(): bool
     {
-        $this->getEmailService()->markAllAsRead();
+        $this->getEmailToolService()->markAllAsRead();
 
         return true;
     }
@@ -205,7 +206,7 @@ class Email extends Record
             }
         }
 
-        $this->getEmailService()->markAsImportantByIdList($idList);
+        $this->getEmailToolService()->markAsImportantIdList($idList);
 
         return true;
     }
@@ -229,7 +230,7 @@ class Email extends Record
             }
         }
 
-        $this->getEmailService()->markAsNotImportantByIdList($idList);
+        $this->getEmailToolService()->markAsNotImportantIdList($idList);
 
         return true;
     }
@@ -253,7 +254,7 @@ class Email extends Record
             }
         }
 
-        $this->getEmailService()->moveToTrashByIdList($idList);
+        $this->getEmailToolService()->moveToTrashIdList($idList);
 
         return true;
     }
@@ -277,18 +278,20 @@ class Email extends Record
             }
         }
 
-        $this->getEmailService()->retrieveFromTrashByIdList($idList);
+        $this->getEmailToolService()->retrieveFromTrashIdList($idList);
 
         return true;
     }
 
     public function getActionGetFoldersNotReadCounts(): stdClass
     {
-        return $this->getEmailService()->getFoldersNotReadCounts();
+        return (object) $this->getEmailToolService()->getFoldersNotReadCounts();
     }
 
     /**
      * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
      */
     public function postActionMoveToFolder(Request $request): bool
     {
@@ -308,7 +311,14 @@ class Email extends Record
             throw new BadRequest();
         }
 
-        $this->getEmailService()->moveToFolderByIdList($idList, $data->folderId);
+        if (count($idList) === 1) {
+            $this->getEmailToolService()->moveToFolder($idList[0], $data->folderId);
+
+            return true;
+
+        }
+
+        $this->getEmailToolService()->moveToFolderIdList($idList, $data->folderId);
 
         return true;
     }
@@ -327,6 +337,11 @@ class Email extends Record
             'parentType' => $request->getQueryParam('parentType'),
             'to' => $request->getQueryParam('to'),
         ]);
+    }
+
+    private function getEmailToolService(): ToolService
+    {
+        return $this->injectableFactory->create(ToolService::class);
     }
 
     private function getEmailService(): Service

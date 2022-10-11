@@ -38,19 +38,16 @@ define('views/email-folder/modals/select-folder', ['views/modal'], function (Dep
 
         data: function () {
             return {
-                dashletList: this.dashletList,
+                folderDataList: this.folderDataList,
             };
         },
 
         events: {
             'click a[data-action="selectFolder"]': function (e) {
-                let id = $(e.currentTarget).data('id');
-                let model = this.collection.get(id);
-                let name = this.translate('inbox', 'presetFilters', 'Email');
+                let $target = $(e.currentTarget);
 
-                if (model) {
-                    name = model.get('name');
-                }
+                let id = $target.attr('data-id');
+                let name = $target.attr('data-name');
 
                 this.trigger('select', id, name);
                 this.close();
@@ -61,26 +58,33 @@ define('views/email-folder/modals/select-folder', ['views/modal'], function (Dep
             {
                 name: 'cancel',
                 label: 'Cancel',
-            }
+            },
         ],
 
         setup: function () {
             this.headerText = '';
 
-            this.wait(true);
+            this.wait(
+                Espo.Ajax.getRequest('EmailFolder/action/listAll')
+                    .then(data => {
+                        this.folderDataList = data.list
+                            .filter(item => {
+                                return ['inbox', 'important', 'sent', 'drafts', 'trash'].indexOf(item.id) === -1;
+                            })
+                            .map(item => {
+                                return {
+                                    id: item.id,
+                                    name: item.name,
+                                    isGroup: item.id.indexOf('group:') === 0,
+                                };
+                            });
 
-            this.getCollectionFactory().create('EmailFolder', (collection) => {
-                this.collection = collection;
-
-                collection.maxSize = this.getConfig().get('emailFolderMaxCount') || 100;
-                collection.data.boolFilterList = ['onlyMy'];
-
-                collection
-                    .fetch()
-                    .then(() => {
-                        this.wait(false);
-                    });
-            });
+                        this.folderDataList.unshift({
+                            id: 'inbox',
+                            name: this.translate('inbox', 'presetFilters', 'Email'),
+                        })
+                    })
+            );
         },
     });
 });

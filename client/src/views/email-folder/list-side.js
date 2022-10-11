@@ -26,37 +26,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-folder/list-side', 'view', function (Dep) {
+define('views/email-folder/list-side', ['view'], function (Dep) {
 
     return Dep.extend({
 
         template: 'email-folder/list-side',
 
+        FOLDER_ALL: 'all',
+        FOLDER_INBOX: 'inbox',
+        FOLDER_DRAFTS: 'drafts',
+
         events: {
             'click [data-action="selectFolder"]': function (e) {
                 e.preventDefault();
-                var id = $(e.currentTarget).data('id');
+
+                let id = $(e.currentTarget).data('id');
+
                 this.actionSelectFolder(id);
             }
         },
 
         data: function () {
-            var data = {};
+            let data = {};
+
             data.selectedFolderId = this.selectedFolderId;
             data.showEditLink = this.options.showEditLink;
             data.scope = this.scope;
+
             return data;
         },
 
         actionSelectFolder: function (id) {
             this.$el.find('li.selected').removeClass('selected');
+
             this.selectFolder(id);
+
             this.$el.find('li[data-id="'+id+'"]').addClass('selected');
         },
 
         setup: function () {
             this.scope = 'EmailFolder';
-            this.selectedFolderId = this.options.selectedFolderId || 'all';
+            this.selectedFolderId = this.options.selectedFolderId || this.FOLDER_ALL;
             this.emailCollection = this.options.emailCollection;
 
             this.loadNotReadCounts();
@@ -64,80 +74,130 @@ define('views/email-folder/list-side', 'view', function (Dep) {
             this.listenTo(this.emailCollection, 'sync', this.loadNotReadCounts);
             this.listenTo(this.emailCollection, 'folders-update', this.loadNotReadCounts);
 
-            this.listenTo(this.emailCollection, 'all-marked-read', function (m) {
+            this.listenTo(this.emailCollection, 'all-marked-read', () => {
                 this.countsData = this.countsData || {};
-                for (var id in this.countsData) {
-                    if (id === 'drafts') {
+
+                for (let id in this.countsData) {
+                    if (id === this.FOLDER_DRAFTS) {
                         continue;
                     }
+
                     this.countsData[id] = 0;
                 }
+
                 this.renderCounts();
             });
 
-            this.listenTo(this.emailCollection, 'draft-sent', function (m) {
-                this.decreaseNotReadCount('drafts');
+            this.listenTo(this.emailCollection, 'draft-sent', () => {
+                this.decreaseNotReadCount(this.FOLDER_DRAFTS);
                 this.renderCounts();
             });
 
-            this.listenTo(this.emailCollection, 'change:isRead', function (model) {
-                if (this.countsIsBeingLoaded) return;
+            this.listenTo(this.emailCollection, 'change:isRead', model => {
+                if (this.countsIsBeingLoaded) {
+                    return;
+                }
+
                 this.manageCountsDataAfterModelChanged(model);
-            }, this);
+            });
 
-            this.listenTo(this.emailCollection, 'model-removing', function (id) {
-                var model = this.emailCollection.get(id);
-                if (!model) return;
-                if (this.countsIsBeingLoaded) return;
+            this.listenTo(this.emailCollection, 'model-removing', id => {
+                let model = this.emailCollection.get(id);
+
+                if (!model) {
+                    return;
+                }
+
+                if (this.countsIsBeingLoaded) {
+                    return;
+                }
+
                 this.manageModelRemoving(model);
-            }, this);
+            });
 
-            this.listenTo(this.emailCollection, 'moving-to-trash', function (id) {
-                var model = this.emailCollection.get(id);
-                if (!model) return;
-                if (this.countsIsBeingLoaded) return;
+            this.listenTo(this.emailCollection, 'moving-to-trash', (id, model) => {
+                model = this.emailCollection.get(id) || model;
+
+                if (!model) {
+                    return;
+                }
+
+                if (this.countsIsBeingLoaded) {
+                    return;
+                }
+
                 this.manageModelRemoving(model);
-            }, this);
+            });
 
-            this.listenTo(this.emailCollection, 'retrieving-from-trash', function (id) {
-                var model = this.emailCollection.get(id);
-                if (!model) return;
-                if (this.countsIsBeingLoaded) return;
+            this.listenTo(this.emailCollection, 'retrieving-from-trash', (id, model) => {
+                model = this.emailCollection.get(id) || model;
+
+                if (!model) {
+                    return;
+                }
+
+                if (this.countsIsBeingLoaded) {
+                    return;
+                }
+
                 this.manageModelRetrieving(model);
-            }, this);
+            });
         },
 
         manageModelRemoving: function (model) {
             if (model.get('status') === 'Draft') {
-                this.decreaseNotReadCount('drafts');
+                this.decreaseNotReadCount(this.FOLDER_DRAFTS);
                 this.renderCounts();
+
                 return;
             }
 
-            if (!model.get('isUsers')) return;
-            if (model.get('isRead')) return;
+            if (!model.get('isUsers')) {
+                return;
+            }
 
-            var folderId = model.get('folderId') || 'inbox';
+            if (model.get('isRead')) {
+                return;
+            }
+
+            let folderId = model.get('groupFolderId') ?
+                ('group:' + model.get('groupFolderId')) :
+                (model.get('folderId') || this.FOLDER_INBOX);
+
             this.decreaseNotReadCount(folderId);
             this.renderCounts();
         },
 
         manageModelRetrieving: function (model) {
-            if (!model.get('isUsers')) return;
-            if (model.get('isRead')) return;
-            var folderId = model.get('folderId') || 'inbox';
+            if (!model.get('isUsers')) {
+                return;
+            }
+
+            if (model.get('isRead')) {
+                return;
+            }
+
+            let folderId = model.get('groupFolderId') ?
+                ('group:' + model.get('groupFolderId')) :
+                (model.get('folderId') || this.FOLDER_INBOX);
+
             this.increaseNotReadCount(folderId);
             this.renderCounts();
         },
 
         manageCountsDataAfterModelChanged: function (model) {
-            if (!model.get('isUsers')) return;
-            var folderId = model.get('folderId') || 'inbox';
-            if (!model.get('isRead')) {
-                this.increaseNotReadCount(folderId);
-            } else {
-                this.decreaseNotReadCount(folderId);
+            if (!model.get('isUsers')) {
+                return;
             }
+
+            let folderId = model.get('groupFolderId') ?
+                ('group:' + model.get('groupFolderId')) :
+                (model.get('folderId') || this.FOLDER_INBOX);
+
+            !model.get('isRead') ?
+                this.increaseNotReadCount(folderId) :
+                this.decreaseNotReadCount(folderId);
+
             this.renderCounts();
         },
 
@@ -149,7 +209,9 @@ define('views/email-folder/list-side', 'view', function (Dep) {
 
         decreaseNotReadCount: function (folderId) {
             this.countsData = this.countsData || {};
+
             this.countsData[folderId] = this.countsData[folderId] || 0;
+
             if (this.countsData[folderId]) {
                 this.countsData[folderId]--;
             }
@@ -170,33 +232,42 @@ define('views/email-folder/list-side', 'view', function (Dep) {
         },
 
         loadNotReadCounts: function () {
-            if (this.countsIsBeingLoaded) return;
+            if (this.countsIsBeingLoaded) {
+                return;
+            }
 
             this.countsIsBeingLoaded = true;
-            this.ajaxGetRequest('Email/action/getFoldersNotReadCounts').then(function (data) {
+
+            this.ajaxGetRequest('Email/action/getFoldersNotReadCounts').then(data => {
                 this.countsData = data;
+
                 if (this.isRendered()) {
                     this.renderCounts();
                     this.countsIsBeingLoaded = false;
-                } else {
-                    this.once('after:render', function () {
-                        this.renderCounts();
-                        this.countsIsBeingLoaded = false;
-                    }, this);
+
+                    return;
                 }
-            }.bind(this));
+
+                this.once('after:render', () => {
+                    this.renderCounts();
+                    this.countsIsBeingLoaded = false;
+                });
+
+            });
         },
 
         renderCounts: function () {
-            var data = this.countsData;
-            for (var id in data) {
-                var value = '';
+            let data = this.countsData;
+
+            for (let id in data) {
+                let value = '';
+
                 if (data[id]) {
                     value = data[id].toString();
                 }
+
                 this.$el.find('li a.count[data-id="'+id+'"]').text(value);
             }
         },
-
     });
 });

@@ -103,7 +103,7 @@ define('views/email/list', ['views/list'], function (Dep) {
                 this.draggedEmailId = null;
             },
             'dragenter .folder-list > li.droppable': function (e) {
-                if (this.selectedFolderId === this.FOLDER_ALL || !this.draggedEmailId) {
+                if (!this.isDroppable(e)) {
                     return;
                 }
 
@@ -113,7 +113,7 @@ define('views/email/list', ['views/list'], function (Dep) {
                 $target.find('a').css('pointer-events', 'none');
             },
             'dragleave .folder-list > li.droppable': function (e) {
-                if (this.selectedFolderId === this.FOLDER_ALL || !this.draggedEmailId) {
+                if (!this.isDroppable(e)) {
                     return;
                 }
 
@@ -123,7 +123,7 @@ define('views/email/list', ['views/list'], function (Dep) {
                 $target.find('a').css('pointer-events', '');
             },
             'drop .folder-list > li.droppable': function (e) {
-                if (this.selectedFolderId === this.FOLDER_ALL || !this.draggedEmailId) {
+                if (!this.isDroppable(e)) {
                     return;
                 }
 
@@ -137,6 +137,37 @@ define('views/email/list', ['views/list'], function (Dep) {
                 this.onDrop(id, folderId);
             },
             ...Dep.prototype.events,
+        },
+
+        isDroppable: function (e) {
+            if (!this.draggedEmailId) {
+                return false;
+            }
+
+            let $target = $(e.target);
+            let folderId = $target.attr('data-id');
+
+            if (this.selectedFolderId === this.FOLDER_ALL) {
+                if (folderId.indexOf('group:') === 0) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            if (this.selectedFolderId === this.FOLDER_DRAFTS) {
+                if (folderId.indexOf('group:') === 0) {
+                    return true;
+                }
+
+                if (folderId === this.FOLDER_TRASH) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            return true;
         },
 
         setup: function () {
@@ -255,10 +286,26 @@ define('views/email/list', ['views/list'], function (Dep) {
         loadFolders: function () {
             var xhr = null;
 
+            let auxFolderList = [
+                this.FOLDER_TRASH,
+                this.FOLDER_DRAFTS,
+                this.FOLDER_ALL,
+                this.FOLDER_INBOX,
+                this.FOLDER_IMPORTANT,
+                this.FOLDER_SENT,
+            ];
+
             this.getFolderCollection(collection => {
                 collection.forEach(model => {
                     if (this.noDropFolderIdList.indexOf(model.id) === -1) {
                         model.droppable = true;
+                    }
+
+                    if (model.id.indexOf('group:') === 0) {
+                        model.title = this.translate('groupFolder', 'fields', 'Email');
+                    }
+                    else if (auxFolderList.indexOf(model.id) === -1) {
+                        model.title = this.translate('folder', 'fields', 'Email');
                     }
                 });
 

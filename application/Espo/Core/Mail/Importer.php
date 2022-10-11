@@ -97,6 +97,7 @@ class Importer
         $userIdList = $data->getUserIdList();
         $filterList = $data->getFilterList();
         $folderData = $data->getFolderData();
+        $groupEmailFolderId = $data->getGroupEmailFolderId();
 
         $parser = $message instanceof MessageWrapper ?
             ($message->getParser() ?? $this->parserFactory->create()) :
@@ -130,6 +131,7 @@ class Importer
         $email->set('status', Email::STATUS_ARCHIVED);
         $email->set('attachmentsIds', []);
         $email->set('teamsIds', $teamIdList);
+        $email->set('groupFolderId', $groupEmailFolderId);
 
         if ($assignedUserId) {
             $email->set('assignedUserId', $assignedUserId);
@@ -231,7 +233,8 @@ class Importer
                 $assignedUserId,
                 $userIdList,
                 $folderData,
-                $teamIdList
+                $teamIdList,
+                $groupEmailFolderId
             );
 
             return $duplicate;
@@ -367,7 +370,8 @@ class Importer
                         $assignedUserId,
                         $userIdList,
                         $folderData,
-                        $teamIdList
+                        $teamIdList,
+                        $groupEmailFolderId
                     );
 
                     return $duplicate;
@@ -404,7 +408,8 @@ class Importer
                 $assignedUserId,
                 $userIdList,
                 $folderData,
-                $teamIdList
+                $teamIdList,
+                $groupEmailFolderId
             );
 
             return $duplicate;
@@ -656,7 +661,8 @@ class Importer
         ?string $assignedUserId,
         array $userIdList,
         array $folderData,
-        array $teamIdList
+        array $teamIdList,
+        ?string $groupEmailFolderId
     ): void {
 
         /** @var EmailRepository $emailRepository */
@@ -738,6 +744,13 @@ class Importer
                     ->getRelation($duplicate, 'teams')
                     ->relateById($teamId);
             }
+        }
+
+        if ($groupEmailFolderId && !$duplicate->getGroupFolder()) {
+            $this->entityManager
+                ->getRDBRepository(Email::ENTITY_TYPE)
+                ->getRelation($duplicate, 'groupFolder')
+                ->relateById($groupEmailFolderId);
         }
 
         if ($duplicate->getParentType() && $processNoteAcl) {

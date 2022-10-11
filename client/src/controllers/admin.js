@@ -165,6 +165,10 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager, _) {
             this.getRouter().dispatch('EmailFilter', 'list', {fromAdmin: true});
         },
 
+        actionGroupEmailFolders: function () {
+            this.getRouter().dispatch('GroupEmailFolder', 'list', {fromAdmin: true});
+        },
+
         actionEmailTemplates: function () {
             this.getRouter().dispatch('EmailTemplate', 'list', {fromAdmin: true});
         },

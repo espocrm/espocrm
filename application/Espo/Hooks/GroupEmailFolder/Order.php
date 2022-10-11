@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,36 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-folder/record/row-actions/default', ['views/record/row-actions/default'], function (Dep) {
+namespace Espo\Hooks\GroupEmailFolder;
 
-    return Dep.extend({
+use Espo\Entities\GroupEmailFolder;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+class Order
+{
+    private EntityManager $entityManager;
 
-        getActionList: function () {
-            var list = Dep.prototype.getActionList.call(this);
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
 
-            if (this.options.acl.edit) {
-                list.unshift({
-                    action: 'moveDown',
-                    label: 'Move Down',
-                    data: {
-                        id: this.model.id,
-                    },
-                });
+    /**
+     * @param GroupEmailFolder $entity
+     */
+    public function beforeSave(Entity $entity): void
+    {
+        $order = $entity->getOrder();
 
-                list.unshift({
-                    action: 'moveUp',
-                    label: 'Move Up',
-                    data: {
-                        id: this.model.id,
-                    },
-                });
-            }
+        if ($order !== null) {
+            return;
+        }
 
-            return list;
-        },
-    });
-});
+        $order = $this->entityManager
+            ->getRDBRepositoryByClass(GroupEmailFolder::class)
+            ->max('order');
+
+        if (!$order) {
+            $order = 0;
+        }
+
+        $order++;
+
+        $entity->set('order', $order);
+    }
+}

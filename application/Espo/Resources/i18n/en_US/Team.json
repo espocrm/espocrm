@@ -12,7 +12,8 @@
         "roles": "Roles",
         "layoutSet": "Layout Set",
         "workingTimeCalendar": "Working Time Calendar",
-        "inboundEmails": "Group Email Accounts"
+        "inboundEmails": "Group Email Accounts",
+        "groupEmailFolders": "Group Email Folders"
     },
     "tooltips": {
         "workingTimeCalendar": "A calendar will be applied to users who have this team set as a Default Team.",

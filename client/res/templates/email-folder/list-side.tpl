@@ -23,6 +23,7 @@
             data-action="selectFolder"
             data-id="{{get this 'id'}}"
             class="side-link"
+            {{#if title}}title="{{title}}"{{/if}}
         >{{get this 'name'}}</a>
     </li>
     {{/each}}

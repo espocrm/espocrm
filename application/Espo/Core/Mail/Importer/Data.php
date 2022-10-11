@@ -55,6 +55,8 @@ class Data
      */
     private array $folderData = [];
 
+    private ?string $groupEmailFolderId = null;
+
     public static function create(): self
     {
         return new self();
@@ -100,6 +102,11 @@ class Data
     public function getFolderData(): array
     {
         return $this->folderData;
+    }
+
+    public function getGroupEmailFolderId(): ?string
+    {
+        return $this->groupEmailFolderId;
     }
 
     public function withAssignedUserId(?string $assignedUserId): self
@@ -160,6 +167,14 @@ class Data
     {
         $obj = clone $this;
         $obj->folderData = $folderData;
+
+        return $obj;
+    }
+
+    public function withGroupEmailFolderId(?string $groupEmailFolderId): self
+    {
+        $obj = clone $this;
+        $obj->groupEmailFolderId = $groupEmailFolderId;
 
         return $obj;
     }

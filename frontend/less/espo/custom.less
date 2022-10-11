@@ -2586,7 +2586,7 @@ table.table td.cell .html-container {
 
 .list-group-side > li {
     border: 0;
-    padding: 5px 0 5px (@container-padding - 3px);
+    padding: 5px 3px 5px (@container-padding - 3px);
     margin-left: -(@container-padding);
     border-left: 3px solid transparent;
 }
@@ -2951,6 +2951,12 @@ table.table-admin-panel {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.folders-container + .list-container > .list[data-scope="Email"] {
+    td.cell[data-name="subject"] {
+        user-select: none;
+    }
 }
 
 .admin-search-container {

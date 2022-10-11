@@ -1,0 +1,57 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 64,
+            "trim": true,
+            "pattern": "$noBadCharacters"
+        },
+        "order": {
+            "type": "int"
+        },
+        "teams": {
+            "type": "linkMultiple"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "foreign": "groupEmailFolders"
+        },
+        "emails": {
+            "type": "hasMany",
+            "entity": "Email",
+            "foreign": "groupEmailFolder"
+        }
+    },
+    "collection": {
+        "orderBy": "order",
+        "order": "asc"
+    }
+}

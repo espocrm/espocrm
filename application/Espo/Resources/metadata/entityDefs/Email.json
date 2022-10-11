@@ -477,6 +477,9 @@
                 "tooltipText"
             ],
             "layoutAvailabilityList": []
+        },
+        "groupFolder": {
+            "type": "link"
         }
     },
     "links": {
@@ -626,6 +629,11 @@
         "createdEvent": {
             "type": "belongsToParent",
             "entityList": ["Meeting"]
+        },
+        "groupFolder": {
+            "type": "belongsTo",
+            "entity": "GroupEmailFolder",
+            "foreign": "emails"
         }
     },
     "collection": {

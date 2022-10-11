@@ -283,6 +283,7 @@ class Fetcher
         $userIdList = $account->getUsers()->getIdList();
         $userId = $account->getUser() ? $account->getUser()->getId() : null;
         $assignedUserId = $account->getAssignedUser() ? $account->getAssignedUser()->getId() : null;
+        $groupEmailFolderId = $account->getGroupEmailFolder() ? $account->getGroupEmailFolder()->getId() : null;
 
         $fetchOnlyHeader = $this->checkFetchOnlyHeader($storage, $id);
 
@@ -303,7 +304,8 @@ class Fetcher
             ->withFetchOnlyHeader($fetchOnlyHeader)
             ->withFolderData($folderData)
             ->withUserIdList($userIdList)
-            ->withAssignedUserId($assignedUserId);
+            ->withAssignedUserId($assignedUserId)
+            ->withGroupEmailFolderId($groupEmailFolderId);
 
         try {
             $message = new MessageWrapper($id, $storage, $parser);

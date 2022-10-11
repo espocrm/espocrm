@@ -38,9 +38,11 @@ use Espo\Core\MassAction\QueryBuilder;
 use Espo\Core\MassAction\Result;
 use Espo\Entities\Email;
 use Espo\Entities\EmailFolder;
+use Espo\Entities\GroupEmailFolder;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
-use Espo\Services\Email as EmailService;
+use Espo\Tools\Email\Service as EmailService;
+use Exception;
 
 class MoveToFolder implements MassAction
 {
@@ -75,7 +77,7 @@ class MoveToFolder implements MassAction
             throw new BadRequest("No folder ID.");
         }
 
-        if ($folderId !== self::FOLDER_INBOX) {
+        if ($folderId !== self::FOLDER_INBOX && strpos($folderId, 'group:') !== 0) {
             $folder = $this->entityManager
                 ->getRDBRepositoryByClass(EmailFolder::class)
                 ->where([
@@ -86,6 +88,17 @@ class MoveToFolder implements MassAction
 
             if (!$folder) {
                 throw new Forbidden("Folder not found.");
+            }
+        }
+
+        if ($folderId && strpos($folderId, 'group:') === 0) {
+            $folder = $this->entityManager
+                ->getRDBRepositoryByClass(GroupEmailFolder::class)
+                ->where(['id' => substr($folderId, 6)])
+                ->findOne();
+
+            if (!$folder) {
+                throw new Forbidden("Group folder not found.");
             }
         }
 
@@ -101,7 +114,12 @@ class MoveToFolder implements MassAction
         $count = 0;
 
         foreach ($collection as $email) {
-            $this->service->moveToFolder($email->getId(), $folderId, $this->user->getId());
+            try {
+                $this->service->moveToFolder($email->getId(), $folderId, $this->user->getId());
+            }
+            catch (Exception $e) {
+                continue;
+            }
 
             $count++;
         }

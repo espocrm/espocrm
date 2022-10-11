@@ -240,4 +240,9 @@ class Account implements AccountInterface
     {
         return $this->entity->getSentFolder();
     }
+
+    public function getGroupEmailFolder(): ?Link
+    {
+        return null;
+    }
 }

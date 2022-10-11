@@ -168,6 +168,10 @@
         "fromName": {
             "type": "varchar"
         },
+        "groupEmailFolder": {
+            "type": "link",
+            "tooltip": true
+        },
         "imapHandler": {
             "type": "varchar",
             "readOnly": true
@@ -228,6 +232,10 @@
             "type": "hasMany",
             "entity": "Email",
             "foreign": "inboundEmails"
+        },
+        "groupEmailFolder": {
+            "type": "belongsTo",
+            "entity": "GroupEmailFolder"
         }
     },
     "collection": {

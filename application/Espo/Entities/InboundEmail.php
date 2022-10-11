@@ -180,4 +180,10 @@ class InboundEmail extends Entity
     {
         return $this->get('sentFolder');
     }
+
+    public function getGroupEmailFolder(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('groupEmailFolder');
+    }
 }

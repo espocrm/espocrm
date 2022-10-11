@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,36 +27,50 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-folder/record/row-actions/default', ['views/record/row-actions/default'], function (Dep) {
+namespace Espo\Controllers;
 
-    return Dep.extend({
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Controllers\Record;
+use Espo\Core\Api\Request;
+use Espo\Tools\EmailFolder\GroupFolderService as Service;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+class GroupEmailFolder extends Record
+{
+    /**
+     * @throws BadRequest
+     */
+    public function postActionMoveUp(Request $request): bool
+    {
+        $data = $request->getParsedBody();
 
-        getActionList: function () {
-            var list = Dep.prototype.getActionList.call(this);
+        if (empty($data->id)) {
+            throw new BadRequest();
+        }
 
-            if (this.options.acl.edit) {
-                list.unshift({
-                    action: 'moveDown',
-                    label: 'Move Down',
-                    data: {
-                        id: this.model.id,
-                    },
-                });
+        $this->getEmailFolderService()->moveUp($data->id);
 
-                list.unshift({
-                    action: 'moveUp',
-                    label: 'Move Up',
-                    data: {
-                        id: this.model.id,
-                    },
-                });
-            }
+        return true;
+    }
 
-            return list;
-        },
-    });
-});
+    /**
+     * @throws BadRequest
+     */
+    public function postActionMoveDown(Request $request): bool
+    {
+        $data = $request->getParsedBody();
+
+        if (empty($data->id)) {
+            throw new BadRequest();
+        }
+
+        $this->getEmailFolderService()->moveDown($data->id);
+
+        return true;
+    }
+
+    private function getEmailFolderService(): Service
+    {
+        /** @var Service */
+        return $this->injectableFactory->create(Service::class);
+    }
+}

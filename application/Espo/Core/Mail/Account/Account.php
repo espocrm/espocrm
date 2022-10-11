@@ -103,6 +103,10 @@ interface Account
     public function getEmailFolder(): ?Link;
 
     /**
+     * A group folder fetched emails should be put into.
+     */
+    public function getGroupEmailFolder(): ?Link;
+    /**
      * Folders to fetch from.
      *
      * @return string[]

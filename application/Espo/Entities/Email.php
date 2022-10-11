@@ -47,14 +47,12 @@ class Email extends Entity
     public const ENTITY_TYPE = 'Email';
 
     public const STATUS_BEING_IMPORTED = 'Being Imported';
-
     public const STATUS_ARCHIVED = 'Archived';
-
     public const STATUS_SENT = 'Sent';
-
     public const STATUS_SENDING = 'Sending';
-
     public const STATUS_DRAFT = 'Draft';
+
+    public const RELATIONSHIP_EMAIL_USER = 'EmailUser';
 
     protected function _getSubject(): ?string
     {
@@ -547,6 +545,12 @@ class Email extends Entity
     {
         /** @var ?Link */
         return $this->getValueObject('createdBy');
+    }
+
+    public function getGroupFolder(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('groupFolder');
     }
 
     private function getEmailRepository(): EmailRepository

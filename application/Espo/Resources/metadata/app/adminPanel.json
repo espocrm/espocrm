@@ -204,6 +204,12 @@
                 "description": "emailFilters"
             },
             {
+                "url": "#Admin/groupEmailFolders",
+                "label": "Group Email Folders",
+                "iconClass": "fas fa-folder",
+                "description": "groupEmailFolders"
+            },
+            {
                 "url": "#Admin/emailTemplates",
                 "label": "Email Templates",
                 "iconClass": "fas fa-envelope-square",

@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,36 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-folder/record/row-actions/default', ['views/record/row-actions/default'], function (Dep) {
+namespace Espo\Entities;
 
-    return Dep.extend({
+class GroupEmailFolder extends \Espo\Core\ORM\Entity
+{
+    public const ENTITY_TYPE = 'GroupEmailFolder';
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
-
-        getActionList: function () {
-            var list = Dep.prototype.getActionList.call(this);
-
-            if (this.options.acl.edit) {
-                list.unshift({
-                    action: 'moveDown',
-                    label: 'Move Down',
-                    data: {
-                        id: this.model.id,
-                    },
-                });
-
-                list.unshift({
-                    action: 'moveUp',
-                    label: 'Move Up',
-                    data: {
-                        id: this.model.id,
-                    },
-                });
-            }
-
-            return list;
-        },
-    });
-});
+    public function getOrder(): ?int
+    {
+        return $this->get('order');
+    }
+}
