@@ -84,9 +84,9 @@ class InboundEmail extends RecordService implements
     {
         /** @var ?InboundEmailEntity $inboundEmail */
         $inboundEmail = $this->entityManager
-            ->getRDBRepository('InboundEmail')
+            ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
             ->where([
-                'status' => 'Active',
+                'status' => InboundEmailEntity::STATUS_ACTIVE,
                 'useSmtp' => true,
                 'smtpHost!=' => null,
                 'emailAddress' => $emailAddress,
@@ -96,13 +96,9 @@ class InboundEmail extends RecordService implements
         return $inboundEmail;
     }
 
-    /**
-     * @param string $emailAddress
-     * @return InboundEmailEntity|null
-     */
-    public function findSharedAccountForUser(User $user, $emailAddress)
+    public function findSharedAccountForUser(User $user, string $emailAddress): ?InboundEmailEntity
     {
-        $groupEmailAccountPermission = $this->getAclManager()->get($user, 'groupEmailAccountPermission');
+        $groupEmailAccountPermission = $this->aclManager->getPermissionLevel($user, 'groupEmailAccountPermission');
 
         if (!$groupEmailAccountPermission || $groupEmailAccountPermission === 'no') {
             return null;
@@ -122,7 +118,7 @@ class InboundEmail extends RecordService implements
                 ->distinct()
                 ->join('teams')
                 ->where([
-                    'status' => 'Active',
+                    'status' => InboundEmailEntity::STATUS_ACTIVE,
                     'useSmtp' => true,
                     'smtpIsShared' => true,
                     'teamsMiddle.teamId' => $teamIdList,
@@ -136,7 +132,7 @@ class InboundEmail extends RecordService implements
             return $this->entityManager
                 ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
                 ->where([
-                    'status' => 'Active',
+                    'status' => InboundEmailEntity::STATUS_ACTIVE,
                     'useSmtp' => true,
                     'smtpIsShared' => true,
                     'emailAddress' => $emailAddress,

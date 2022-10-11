@@ -141,7 +141,7 @@ class Email extends Record implements
         if (!$smtpParams && $fromAddress) {
             $emailAccountService = $this->getEmailAccountService();
 
-            $emailAccount = $emailAccountService->findAccountForUser($user, $fromAddress);
+            $emailAccount = $emailAccountService->findAccountForUserForSending($user, $fromAddress);
 
             if ($emailAccount && $emailAccount->isAvailableForSending()) {
                 $smtpParams = $emailAccountService->getSmtpParamsFromAccount($emailAccount);
@@ -225,7 +225,7 @@ class Email extends Record implements
 
             $emailAccountService = $this->getEmailAccountService();
 
-            $emailAccount = $emailAccountService->findAccountForUser($user, $originalFromAddress);
+            $emailAccount = $emailAccountService->findAccountForUserForSending($user, $originalFromAddress);
 
             if (!$smtpParams) {
                 if ($emailAccount && $emailAccount->isAvailableForSending()) {
@@ -247,15 +247,14 @@ class Email extends Record implements
         if (!$smtpParams) {
             $inboundEmailService = $this->getInboundEmailService();
 
-            if ($user) {
-                $inboundEmail = $inboundEmailService->findSharedAccountForUser($user, $originalFromAddress);
-            } else {
-                $inboundEmail = $inboundEmailService->findAccountForSending($originalFromAddress);
-            }
+            $inboundEmail = $user ?
+                $inboundEmailService->findSharedAccountForUser($user, $originalFromAddress) :
+                $inboundEmailService->findAccountForSending($originalFromAddress);
 
             if ($inboundEmail) {
                 $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
             }
+
             if ($smtpParams) {
                 $emailSender->withSmtpParams($smtpParams);
             }
@@ -349,7 +348,7 @@ class Email extends Record implements
         if ($inboundEmail) {
             $entity->addLinkMultipleId('inboundEmails', $inboundEmail->getId());
 
-            if ($inboundEmail->get('storeSentEmails')) {
+            if ($inboundEmail->storeSentEmails()) {
                 try {
                     $inboundEmailService = $this->getInboundEmailService();
 
@@ -366,7 +365,7 @@ class Email extends Record implements
         else if ($emailAccount) {
             $entity->addLinkMultipleId('emailAccounts', $emailAccount->getId());
 
-            if ($emailAccount->get('storeSentEmails')) {
+            if ($emailAccount->storeSentEmails()) {
                 try {
                     $emailAccountService = $this->getEmailAccountService();
 

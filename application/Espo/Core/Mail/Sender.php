@@ -395,9 +395,9 @@ class Sender
         if (!$this->systemInboundEmailIsCached && $address) {
             /** @var ?InboundEmail $systemInboundEmail */
             $systemInboundEmail = $this->entityManager
-                ->getRDBRepository('InboundEmail')
+                ->getRDBRepository(InboundEmail::ENTITY_TYPE)
                 ->where([
-                    'status' => 'Active',
+                    'status' => InboundEmail::STATUS_ACTIVE,
                     'useSmtp' => true,
                     'emailAddress' => $address,
                 ])
@@ -523,7 +523,7 @@ class Sender
 
         if (count($attachmentCollection)) {
             /** @var AttachmentRepository $attachmentRepository */
-            $attachmentRepository = $this->entityManager->getRepository('Attachment');
+            $attachmentRepository = $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
 
             foreach ($attachmentCollection as $a) {
                 if ($a->get('contents')) {
@@ -557,7 +557,7 @@ class Sender
 
         if (!empty($attachmentInlineList)) {
             /** @var AttachmentRepository $attachmentRepository */
-            $attachmentRepository = $this->entityManager->getRepository('Attachment');
+            $attachmentRepository = $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
 
             foreach ($attachmentInlineList as $a) {
                 if ($a->get('contents')) {
@@ -579,8 +579,8 @@ class Sender
                 $attachment->encoding = Mime::ENCODING_BASE64;
                 $attachment->id = $a->id;
 
-                if ($a->get('type')) {
-                    $attachment->type = $a->get('type');
+                if ($a->getType()) {
+                    $attachment->type = $a->getType();
                 }
 
                 $attachmentPartList[] = $attachment;
@@ -599,7 +599,7 @@ class Sender
 
         $htmlPart = null;
 
-        $isHtml = $email->get('isHtml');
+        $isHtml = $email->isHtml();
 
         if ($isHtml) {
             $htmlPart = new MimePart($email->getBodyForSending());
@@ -744,7 +744,7 @@ class Sender
     {
         $rand = mt_rand(1000, 9999);
 
-        if ($email->get('parentType') && $email->get('parentId')) {
+        if ($email->getParentType() && $email->getParentId()) {
             $messageId =
                 '' . $email->get('parentType') . '/' .
                 $email->get('parentId') . '/' . time() . '/' . $rand . '@espo';

@@ -41,6 +41,8 @@ class InboundEmail extends Entity
 {
     public const ENTITY_TYPE = 'InboundEmail';
 
+    public const STATUS_ACTIVE = 'Active';
+
     public function isAvailableForFetching(): bool
     {
         return $this->isActive() && $this->get('useImap');
@@ -53,7 +55,12 @@ class InboundEmail extends Entity
 
     public function isActive(): bool
     {
-        return $this->get('status') === 'Active';
+        return $this->get('status') === self::STATUS_ACTIVE;
+    }
+
+    public function storeSentEmails(): bool
+    {
+        return (bool) $this->get('storeSentEmails');
     }
 
     public function getFromName(): ?string

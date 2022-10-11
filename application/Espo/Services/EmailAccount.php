@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Exceptions\Error;
 use Laminas\Mail\Message;
 
 use Espo\ORM\Entity;
@@ -105,6 +106,9 @@ class EmailAccount extends Record implements
         return $entity;
     }
 
+    /**
+     * @throws Error
+     */
     public function storeSentMessage(EmailAccountEntity $emailAccount, Message $message): void
     {
         /** @var AccountService $service */
@@ -113,21 +117,17 @@ class EmailAccount extends Record implements
         $service->storeSentMessage($emailAccount->getId(), $message);
     }
 
-    /**
-     * @return EmailAccountEntity|null
-     */
-    public function findAccountForUser(User $user, string $address)
+    public function findAccountForUserForSending(User $user, string $address): ?EmailAccountEntity
     {
-        $emailAccount = $this->entityManager
-            ->getRDBRepository('EmailAccount')
+        return $this->entityManager
+            ->getRDBRepository(EmailAccountEntity::ENTITY_TYPE)
             ->where([
                 'emailAddress' => $address,
                 'assignedUserId' => $user->getId(),
-                'status' => 'Active',
+                'status' => EmailAccountEntity::STATUS_ACTIVE,
+                'useSmtp' => true,
             ])
             ->findOne();
-
-        return $emailAccount;
     }
 
     /**

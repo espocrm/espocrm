@@ -41,6 +41,8 @@ class EmailAccount extends Entity
 {
     public const ENTITY_TYPE = 'EmailAccount';
 
+    public const STATUS_ACTIVE = 'Active';
+
     public function isAvailableForFetching(): bool
     {
         return $this->isActive() && $this->get('useImap');
@@ -53,7 +55,7 @@ class EmailAccount extends Entity
 
     public function isActive(): bool
     {
-        return $this->get('status') === 'Active';
+        return $this->get('status') === self::STATUS_ACTIVE;
     }
 
     public function getEmailAddress(): ?string
@@ -76,6 +78,11 @@ class EmailAccount extends Entity
     public function keepFetchedEmailsUnread(): bool
     {
         return (bool) $this->get('keepFetchedEmailsUnread');
+    }
+
+    public function storeSentEmails(): bool
+    {
+        return (bool) $this->get('storeSentEmails');
     }
 
     public function getFetchData(): stdClass
