@@ -147,7 +147,7 @@ class RelationDefs
     {
         if (!$this->hasForeignEntityType()) {
             throw new RuntimeException(
-                "No 'entity' paramater defined in the relation '{$this->name}'."
+                "No 'entity' parameter defined in the relation '{$this->name}'."
             );
         }
 
@@ -170,7 +170,7 @@ class RelationDefs
     {
         if (!$this->hasForeignRelationName()) {
             throw new RuntimeException(
-                "No 'foreign' paramater defined in the relation '{$this->name}'."
+                "No 'foreign' parameter defined in the relation '{$this->name}'."
             );
         }
 
@@ -193,7 +193,7 @@ class RelationDefs
     {
         if (!$this->hasForeignKey()) {
             throw new RuntimeException(
-                "No 'foreignKey' paramater defined in the relation '{$this->name}'."
+                "No 'foreignKey' parameter defined in the relation '{$this->name}'."
             );
         }
 
@@ -216,7 +216,7 @@ class RelationDefs
     {
         if (!$this->hasKey()) {
             throw new RuntimeException(
-                "No 'key' paramater defined in the relation '{$this->name}'."
+                "No 'key' parameter defined in the relation '{$this->name}'."
             );
         }
 
@@ -224,7 +224,7 @@ class RelationDefs
     }
 
     /**
-     * Whether a mid key is defined. For Many-to-Many relationships only.
+     * Whether a mid-key is defined. For Many-to-Many relationships only.
      */
     public function hasMidKey(): bool
     {
@@ -232,14 +232,14 @@ class RelationDefs
     }
 
     /**
-     * Get a mid key. For Many-to-Many relationships only.
+     * Get a mid-key. For Many-to-Many relationships only.
      * @throws RuntimeException
      */
     public function getMidKey(): string
     {
         if (!$this->hasMidKey()) {
             throw new RuntimeException(
-                "No 'midKey' paramater defined in the relation '{$this->name}'."
+                "No 'midKey' parameter defined in the relation '{$this->name}'."
             );
         }
 
@@ -247,7 +247,7 @@ class RelationDefs
     }
 
     /**
-     * Whether a foreign mid key is defined. For Many-to-Many relationships only.
+     * Whether a foreign mid-key is defined. For Many-to-Many relationships only.
      * @throws RuntimeException
      */
     public function hasForeignMidKey(): bool
@@ -256,14 +256,14 @@ class RelationDefs
     }
 
     /**
-     * Get a foreign mid key. For Many-to-Many relationships only.
+     * Get a foreign mid-key. For Many-to-Many relationships only.
      * @throws RuntimeException
      */
     public function getForeignMidKey(): string
     {
         if (!$this->hasForeignMidKey()) {
             throw new RuntimeException(
-                "No 'foreignMidKey' paramater defined in the relation '{$this->name}'."
+                "No 'foreignMidKey' parameter defined in the relation '{$this->name}'."
             );
         }
 
@@ -286,7 +286,7 @@ class RelationDefs
     {
         if (!$this->hasRelationshipName()) {
             throw new RuntimeException(
-                "No 'relationName' paramater defined in the relation '{$this->name}'."
+                "No 'relationName' parameter defined in the relation '{$this->name}'."
             );
         }
 
