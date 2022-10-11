@@ -451,8 +451,6 @@ define('views/record/search', ['view'], function (Dep) {
             if (this.isSearchedWithAdvancedFilter) {
                 this.showResetFiltersButton();
 
-                console.log(this.$applyFilters.get(0));
-
                 this.$applyFilters.focus();
 
                 return;
