@@ -35,69 +35,72 @@ use Espo\Entities\EmailFilter;
 class FiltersMatcher
 {
     /**
-     * @param iterable<EmailFilter>|EmailFilter $subject
+     * @param Email $email
+     * @param iterable<EmailFilter> $filterList
      */
-    public function match(Email $email, $subject, bool $skipBody = false): bool
+    public function findMatch(Email $email, $filterList, bool $skipBody = false): ?EmailFilter
     {
-        if (is_array($subject) || is_iterable($subject)) {
-            $filterList = $subject;
-        }
-        else {
-            $filterList = [$subject];
-        }
-
         foreach ($filterList as $filter) {
-            $filterCount = 0;
+            if ($this->match($email, $filter, $skipBody)) {
+                return $filter;
+            }
+        }
 
-            $from = $filter->getFrom();
-            $subject = $filter->getSubject();
+        return null;
+    }
 
-            if ($from) {
-                $filterCount++;
+    public function match(Email $email, EmailFilter $filter, bool $skipBody = false): bool
+    {
+        $filterCount = 0;
 
-                if (
-                    !$this->matchString(
-                        strtolower($from),
-                        strtolower($email->getFromAddress() ?? '')
-                    )
-                ) {
-                    continue;
-                }
+        $from = $filter->getFrom();
+        $subject = $filter->getSubject();
+
+        if ($from) {
+            $filterCount++;
+
+            if (
+                !$this->matchString(
+                    strtolower($from),
+                    strtolower($email->getFromAddress() ?? '')
+                )
+            ) {
+                return false;
+            }
+        }
+
+        if ($filter->getTo()) {
+            $filterCount++;
+
+            if (!$this->matchTo($email, $filter)) {
+                return false;
+            }
+        }
+
+        if ($subject) {
+            $filterCount++;
+
+            if (
+                !$this->matchString($subject, $email->getSubject() ?? '')
+            ) {
+                return false;
+            }
+        }
+
+        if (count($filter->getBodyContains())) {
+            $filterCount++;
+
+            if ($skipBody) {
+                return false;
             }
 
-            if ($filter->getTo()) {
-                $filterCount++;
-
-                if (!$this->matchTo($email, $filter)) {
-                    continue;
-                }
+            if (!$this->matchBody($email, $filter)) {
+                return false;
             }
+        }
 
-            if ($subject) {
-                $filterCount++;
-
-                if (
-                    !$this->matchString($subject, $email->getSubject() ?? '')
-                ) {
-                    continue;
-                }
-            }
-
-            if (count($filter->getBodyContains())) {
-                $filterCount++;
-
-                if ($skipBody) {
-                    continue;
-                }
-
-                if (!$this->matchBody($email, $filter)) {
-                    continue;
-                }
-            }
-
-            if ($filterCount) {
-                return true;
-            }
+        if ($filterCount) {
+            return true;
         }
 
         return false;
@@ -157,7 +160,7 @@ class FiltersMatcher
         }
 
         $pattern = preg_quote($pattern, '#');
-        $pattern = str_replace('\*', '.*', $pattern).'\z';
+        $pattern = str_replace('\*', '.*', $pattern) . '\z';
 
         if (preg_match('#^' . $pattern . '#', $value)) {
             return true;

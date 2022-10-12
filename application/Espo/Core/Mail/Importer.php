@@ -181,7 +181,7 @@ class Importer
             $email->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
         }
 
-        if ($this->filtersMatcher->match($email, $filterList, true)) {
+        if ($this->filtersMatcher->findMatch($email, $filterList, true)) {
             return null;
         }
 
@@ -265,7 +265,7 @@ class Importer
         if (!$data->fetchOnlyHeader()) {
             $inlineAttachmentList = $parser->getInlineAttachmentList($message, $email);
 
-            if ($this->filtersMatcher->match($email, $filterList)) {
+            if ($this->filtersMatcher->findMatch($email, $filterList)) {
                 return null;
             }
         }

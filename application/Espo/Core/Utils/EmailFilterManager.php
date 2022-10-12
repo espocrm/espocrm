@@ -43,7 +43,7 @@ use Espo\ORM\Query\Part\Order;
  */
 class EmailFilterManager
 {
-    /** @var array<string,\Traversable<EmailFilter>> */
+    /** @var array<string, iterable<EmailFilter>> */
     private array $data = [];
     private EntityManager $entityManager;
     private FiltersMatcher $filtersMatcher;
@@ -77,12 +77,6 @@ class EmailFilterManager
             $this->data[$userId] = $emailFilterList;
         }
 
-        foreach ($this->data[$userId] as $emailFilter) {
-            if ($this->filtersMatcher->match($email, $emailFilter)) {
-                return $emailFilter;
-            }
-        }
-
-        return null;
+        return $this->filtersMatcher->findMatch($email, $this->data[$userId]);
     }
 }
