@@ -118,6 +118,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          *
          * @property {string} name A name.
          * @property {string} [label] A label.
+         * @property {string} [labelTranslation] A label translation path.
          * @property {string} [html] An HTML.
          * @property {string} [text] A text.
          * @property {'default'|'danger'|'success'|'warning'} [style] A style.
@@ -133,6 +134,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          *
          * @property {string} name A name.
          * @property {string} [label] A label.
+         * @property {string} [labelTranslation] A label translation path.
          * @property {string} [html] An HTML.
          * @property {string} [text] A text.
          * @property {boolean} [hidden] Hidden.

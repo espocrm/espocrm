@@ -45,10 +45,11 @@ define('views/record/panel-actions', ['view'], function (Dep) {
         setup: function () {
             this.buttonList = this.options.defs.buttonList || [];
             this.actionList = this.options.defs.actionList || [];
+            this.defs = this.options.defs;
         },
 
         getButtonList: function () {
-            var list = [];
+            let list = [];
 
             this.buttonList.forEach(item => {
                 if (item.hidden) {
@@ -62,17 +63,18 @@ define('views/record/panel-actions', ['view'], function (Dep) {
         },
 
         getActionList: function () {
-            var list = [];
+            return this.actionList
+                .filter(item => !item.hidden)
+                .map(item => {
+                    item = Espo.Utils.clone(item);
 
-            this.actionList.forEach(item => {
-                if (item.hidden) {
-                    return;
-                }
+                    if (item.action) {
+                        item.data = Espo.Utils.clone(item.data || {});
+                        item.data.panel = this.options.defs.name;
+                    }
 
-                list.push(item);
-            });
-
-            return list;
+                    return item;
+                });
         },
     });
 });

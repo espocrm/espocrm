@@ -342,22 +342,100 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                 return this.language.translate(name, category, scope);
             });
 
-            Handlebars.registerHelper('button', (name, options) => {
-                let style = options.hash.style || 'default';
+            Handlebars.registerHelper('dropdownItem', (name, options) => {
                 let scope = options.hash.scope || null;
-                let label = options.hash.label || name;
+                let label = options.hash.label;
+                let labelTranslation = options.hash.labelTranslation;
+                let data = options.hash.data;
+                let hidden = options.hash.hidden;
+                let disabled = options.hash.disabled;
+                let title = options.hash.title;
+                let link = options.hash.link;
+                let action = options.hash.action || name;
+                let iconHtml = options.hash.iconHtml;
 
                 let html =
                     options.hash.html ||
                     options.hash.text ||
-                    this.language.translate(label, 'labels', scope);
+                    (
+                        labelTranslation ?
+                            this.language.translatePath(labelTranslation) :
+                            this.language.translate(label, 'labels', scope)
+                    );
 
                 if (!options.hash.html) {
                     html = this.escapeString(html);
                 }
 
-                let $button = $('<button>')
-                    .attr('type', 'button')
+                if (iconHtml) {
+                    html = iconHtml + ' ' + html;
+                }
+
+                let $li = $('<li>')
+                    .addClass(hidden ? 'hidden' : '')
+                    .addClass(disabled ? 'disabled' : '');
+
+                let $a = $('<a>')
+                    .attr('role', 'button')
+                    .attr('tabindex', '0')
+                    .addClass('action')
+                    .html(html);
+
+                if (action) {
+                    $a.attr('data-action', action);
+                }
+
+                $li.append($a);
+
+                link ?
+                    $a.attr('href', link) :
+                    $a.attr('role', 'button');
+
+                if (data) {
+                    for (let key in data) {
+                        $a.attr('data-' + Espo.Utils.camelCaseToHyphen(key), data[key]);
+                    }
+                }
+
+                if (disabled) {
+                    $li.attr('disabled', 'disabled');
+                }
+
+                if (title) {
+                    $a.attr('title', title);
+                }
+
+                return new Handlebars.SafeString($li.get(0).outerHTML);
+            });
+
+            Handlebars.registerHelper('button', (name, options) => {
+                let style = options.hash.style || 'default';
+                let scope = options.hash.scope || null;
+                let label = options.hash.label || name;
+                let labelTranslation = options.hash.labelTranslation;
+                let link = options.hash.link;
+                let iconHtml = options.hash.iconHtml;
+
+                let html =
+                    options.hash.html ||
+                    options.hash.text ||
+                    (
+                        labelTranslation ?
+                            this.language.translatePath(labelTranslation) :
+                            this.language.translate(label, 'labels', scope)
+                    );
+
+                if (!options.hash.html) {
+                    html = this.escapeString(html);
+                }
+
+                if (iconHtml) {
+                    html = iconHtml + ' ' + html;
+                }
+
+                let tag = link ? '<a>' : '<button>';
+
+                let $button = $(tag)
                     .addClass('btn action')
                     .addClass(options.hash.className || '')
                     .addClass(options.hash.hidden ? 'hidden' : '')
@@ -365,6 +443,10 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                     .attr('data-action', name)
                     .addClass('btn-' + style)
                     .html(html);
+
+                link ?
+                    $button.href(link) :
+                    $button.attr('type', 'button')
 
                 if (options.hash.disabled) {
                     $button.attr('disabled', 'disabled');

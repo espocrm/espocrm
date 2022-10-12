@@ -306,7 +306,7 @@ define('view', [], function () {
         /**
          * Translate a label.
          *
-         * @param {string} label Label.
+         * @param {module:views/modal.Class~Button} label Label.
          * @param {string} [category] Category.
          * @param {string} [scope] Scope.
          * @returns {string}

@@ -58,6 +58,7 @@ define('views/modal', ['view'], function (Dep) {
          * @property {string} [label] A label. To be translated
          *   (with a scope defined in the `scope` class property).
          * @property {string} [text] A text (not translated).
+         * @property {string} [labelTranslation] A label translation path.
          * @property {string} [html] HTML.
          * @property {boolean} [pullLeft=false] Deprecated. Use the `position` property.
          * @property {'left'|'right'} [position='left'] A position.
@@ -428,7 +429,7 @@ define('views/modal', ['view'], function (Dep) {
             });
 
             this.buttonList.forEach(item => {
-                var o = {};
+                let o = {};
 
                 if (typeof item === 'string') {
                     o.name = item;
@@ -439,9 +440,13 @@ define('views/modal', ['view'], function (Dep) {
                 }
 
                 if (!o.text) {
-                    if ('label' in o) {
+                    if (o.labelTranslation) {
+                        o.text = this.getLanguage().translatePath(o.labelTranslation);
+                    }
+                    else if ('label' in o) {
                         o.text = this.translate(o.label, 'labels', this.scope);
-                    } else {
+                    }
+                    else {
                         o.text = this.translate(o.name, 'modalActions', this.scope);
                     }
                 }
@@ -479,9 +484,13 @@ define('views/modal', ['view'], function (Dep) {
                 }
 
                 if (!o.text) {
-                    if ('label' in o) {
+                    if (o.labelTranslation) {
+                        o.text = this.getLanguage().translatePath(o.labelTranslation);
+                    }
+                    else if ('label' in o) {
                         o.text = this.translate(o.label, 'labels', this.scope)
-                    } else {
+                    }
+                    else {
                         o.text = this.translate(o.name, 'modalActions', this.scope);
                     }
                 }

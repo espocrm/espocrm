@@ -6,6 +6,7 @@
                 {{button name
                     scope=../entityType
                     label=label
+                    labelTranslation=labelTranslation
                     style=style
                     hidden=hidden
                     html=html
@@ -23,24 +24,26 @@
             ><span class="fas fa-ellipsis-h"></span></button>
             <ul class="dropdown-menu pull-left">
                 {{#each dropdownItemList}}
-                {{#if this}}
-                <li
-                    class="{{#if hidden}}hidden{{/if}}{{#if disabled}} disabled{{/if}}"
-                ><a
-                    role="button"
-                    tabindex="0"
-                    class="action"
-                    data-action="{{name}}"
-                    {{#if title}}title="{{title}}"{{/if}}
-                    {{#each data}} data-{{@key}}="{{./this}}"{{/each}}
-                >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../entityType}}{{/if}}{{/if}}</a></li>
-                {{else}}
-                    {{#unless @first}}
-                    {{#unless @last}}
-                    <li class="divider"></li>
-                    {{/unless}}
-                    {{/unless}}
-                {{/if}}
+                        {{#if this}}
+                        {{dropdownItem
+                            name
+                            scope=../entityType
+                            label=label
+                            labelTranslation=labelTranslation
+                            html=html
+                            title=title
+                            text=text
+                            hidden=hidden
+                            disabled=disabled
+                            data=data
+                        }}
+                    {{else}}
+                        {{#unless @first}}
+                        {{#unless @last}}
+                        <li class="divider"></li>
+                        {{/unless}}
+                        {{/unless}}
+                    {{/if}}
                 {{/each}}
             </ul>
             {{/if}}
@@ -71,17 +74,18 @@
     <div class="detail-button-container button-container edit-buttons hidden clearfix">
         <div class="btn-group actions-btn-group" role="group">
         {{#each buttonEditList}}
-        {{button name
-            scope=../entityType
-            label=label
-            style=style
-            hidden=hidden
-            html=html
-            title=title
-            text=text
-            className='btn-xs-wide'
-            disabled=disabled
-        }}
+            {{button name
+                scope=../entityType
+                label=label
+                labelTranslation=labelTranslation
+                style=style
+                hidden=hidden
+                html=html
+                title=title
+                text=text
+                className='btn-xs-wide'
+                disabled=disabled
+            }}
         {{/each}}
         {{#if dropdownEditItemList}}
         <button
@@ -91,25 +95,26 @@
         ><span class="fas fa-ellipsis-h"></span></button>
         <ul class="dropdown-menu pull-left">
             {{#each dropdownEditItemList}}
-            {{#if this}}
-            <li
-                class="{{#if hidden}}hidden{{/if}}{{#if disabled}} disabled{{/if}}"
-            >
-                <a
-                    role="button"
-                    tabindex="0"
-                    class="action"
-                    data-action="{{name}}"
-                    {{#if title}}title="{{title}}"{{/if}}
-                >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../entityType}}{{/if}}{{/if}}</a></li>
-            </li>
-            {{else}}
-                {{#unless @first}}
-                {{#unless @last}}
-                <li class="divider"></li>
-                {{/unless}}
-                {{/unless}}
-            {{/if}}
+                {{#if this}}
+                    {{dropdownItem
+                        name
+                        scope=../entityType
+                        label=label
+                        labelTranslation=labelTranslation
+                        html=html
+                        title=title
+                        text=text
+                        hidden=hidden
+                        disabled=disabled
+                        data=data
+                    }}
+                {{else}}
+                    {{#unless @first}}
+                    {{#unless @last}}
+                    <li class="divider"></li>
+                    {{/unless}}
+                    {{/unless}}
+                {{/if}}
             {{/each}}
         </ul>
         {{/if}}

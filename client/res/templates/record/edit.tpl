@@ -7,6 +7,7 @@
                 name
                 scope=../entityType
                 label=label
+                labelTranslation=labelTranslation
                 style=style
                 html=html
                 hidden=hidden
@@ -25,25 +26,26 @@
         </button>
         <ul class="dropdown-menu pull-left">
             {{#each dropdownItemList}}
-            {{#if this}}
-            <li
-                class="{{#if hidden}}hidden{{/if}}{{#if disabled}} disabled{{/if}}"
-            >
-                <a
-                    role="button"
-                    tabindex="0"
-                    class="action"
-                    data-action="{{name}}"
-                    {{#if title}}title="{{title}}"{{/if}}
-                >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../entityType}}{{/if}}{{/if}}</a></li>
-            </li>
-            {{else}}
-                {{#unless @first}}
-                {{#unless @last}}
-                <li class="divider"></li>
-                {{/unless}}
-                {{/unless}}
-            {{/if}}
+                {{#if this}}
+                    {{dropdownItem
+                        name
+                        scope=../entityType
+                        label=label
+                        labelTranslation=labelTranslation
+                        html=html
+                        title=title
+                        text=text
+                        hidden=hidden
+                        disabled=disabled
+                        data=data
+                    }}
+                {{else}}
+                    {{#unless @first}}
+                    {{#unless @last}}
+                    <li class="divider"></li>
+                    {{/unless}}
+                    {{/unless}}
+                {{/if}}
             {{/each}}
         </ul>
         {{/if}}

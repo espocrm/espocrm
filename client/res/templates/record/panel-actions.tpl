@@ -17,16 +17,19 @@
 <ul class="dropdown-menu">
     {{#each actionList}}
     {{#if this}}
-    <li><a
-        {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
-        tabindex="0"
-        class="action{{#if hidden}} hidden{{/if}}"
-        {{#if action}}
-            data-panel="{{../defs.name}}"
-            data-action="{{action}}"
-        {{/if}}
-        {{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}
-    >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}</a></li>
+        {{dropdownItem
+            action
+            scope=../scope
+            label=label
+            labelTranslation=labelTranslation
+            html=html
+            title=title
+            text=text
+            hidden=hidden
+            disabled=disabled
+            data=data
+            link=link
+        }}
     {{else}}
     {{#unless @first}}
     {{#unless @last}}
