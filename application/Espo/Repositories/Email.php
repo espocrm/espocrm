@@ -29,6 +29,10 @@
 
 namespace Espo\Repositories;
 
+use Espo\Entities\EmailFilter;
+use Espo\Entities\InboundEmail;
+use Espo\Entities\User as UserEntity;
+use Espo\Modules\Crm\Entities\Account;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 
@@ -49,7 +53,7 @@ class Email extends Database implements
 {
     use Di\EmailFilterManagerSetter;
 
-    protected function prepareAddressess(EmailEntity $entity, string $type, bool $addAssignedUser = false): void
+    protected function prepareAddresses(EmailEntity $entity, string $type, bool $addAssignedUser = false): void
     {
         if (!$entity->has($type)) {
             return;
@@ -91,7 +95,7 @@ class Email extends Database implements
     ): void {
 
         $userList = $this->getEmailAddressRepository()
-            ->getEntityListByAddressId($emailAddressId, null, 'User', true);
+            ->getEntityListByAddressId($emailAddressId, null, UserEntity::ENTITY_TYPE, true);
 
         foreach ($userList as $user) {
             $entity->addLinkMultipleId('users', $user->getId());
@@ -252,7 +256,7 @@ class Email extends Database implements
 
             if (!$p) {
                 $p = $this->entityManager
-                    ->getRDBRepository('InboundEmail')
+                    ->getRDBRepository(InboundEmail::ENTITY_TYPE)
                     ->where(['emailAddress' => $address])
                     ->findOne();
             }
@@ -280,9 +284,12 @@ class Email extends Database implements
         $entity->set('idHash', $idHash);
     }
 
+    /**
+     * @param EmailEntity $entity
+     */
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->isNew() && !$entity->get('messageId')) {
+        if ($entity->isNew() && !$entity->getMessageId()) {
             $entity->setDummyMessageId();
         }
 
@@ -308,7 +315,7 @@ class Email extends Database implements
                 $from = trim($entity->get('from'));
 
                 if (!empty($from)) {
-                    $ids = $this->getEmailAddressRepository()->getIds([$from]);
+                    $ids = $this->getEmailAddressRepository()->getIdListFormAddressList([$from]);
 
                     if (!empty($ids)) {
                         $entity->set('fromEmailAddressId', $ids[0]);
@@ -320,7 +327,7 @@ class Email extends Database implements
                             $user = $this->getEmailAddressRepository()
                                 ->getEntityByAddressId(
                                     $entity->get('fromEmailAddressId'),
-                                    'User',
+                                    UserEntity::ENTITY_TYPE,
                                     true
                                 );
 
@@ -335,19 +342,19 @@ class Email extends Database implements
             }
 
             if ($entity->has('to')) {
-                $this->prepareAddressess($entity, 'to', true);
+                $this->prepareAddresses($entity, 'to', true);
             }
 
             if ($entity->has('cc')) {
-                $this->prepareAddressess($entity, 'cc');
+                $this->prepareAddresses($entity, 'cc');
             }
 
             if ($entity->has('bcc')) {
-                $this->prepareAddressess($entity, 'bcc');
+                $this->prepareAddresses($entity, 'bcc');
             }
 
             if ($entity->has('replyTo')) {
-                $this->prepareAddressess($entity, 'replyTo');
+                $this->prepareAddresses($entity, 'replyTo');
             }
 
             $assignedUserId = $entity->get('assignedUserId');
@@ -358,7 +365,7 @@ class Email extends Database implements
 
         parent::beforeSave($entity, $options);
 
-        if ($entity->get('status') === 'Sending' && $entity->get('createdById')) {
+        if ($entity->getStatus() === EmailEntity::STATUS_SENDING && $entity->get('createdById')) {
             $entity->addLinkMultipleId('users', $entity->get('createdById'));
             $entity->setLinkMultipleColumn('users', 'isRead', $entity->get('createdById'), true);
         }
@@ -394,7 +401,7 @@ class Email extends Database implements
             if ($parent) {
                 $accountId = null;
 
-                if ($parent->getEntityType() == 'Account') {
+                if ($parent->getEntityType() == Account::ENTITY_TYPE) {
                     $accountId = $parent->getId();
                 }
 
@@ -402,13 +409,13 @@ class Email extends Database implements
                     !$accountId &&
                     $parent->get('accountId') &&
                     $parent instanceof CoreEntity &&
-                    $parent->getRelationParam('account', 'entity') == 'Account'
+                    $parent->getRelationParam('account', 'entity') === Account::ENTITY_TYPE
                 ) {
                     $accountId = $parent->get('accountId');
                 }
 
                 if ($accountId) {
-                    $account = $this->entityManager->getEntity('Account', $accountId);
+                    $account = $this->entityManager->getEntityById(Account::ENTITY_TYPE, $accountId);
 
                     if ($account) {
                         $entity->set('accountId', $accountId);
@@ -425,7 +432,7 @@ class Email extends Database implements
         $userIdList = $entity->getLinkMultipleIdList('users');
 
         foreach ($userIdList as $userId) {
-            if ($entity->get('status') === 'Sent') {
+            if ($entity->getStatus() === EmailEntity::STATUS_SENT) {
                 if ($entity->get('sentById') && $entity->get('sentById') === $userId) {
                     continue;
                 }
@@ -434,13 +441,13 @@ class Email extends Database implements
             $filter = $this->emailFilterManager->getMatchingFilter($entity, $userId);
 
             if ($filter) {
-                $action = $filter->get('action');
+                $action = $filter->getAction();
 
-                if ($action === 'Skip') {
+                if ($action === EmailFilter::ACTION_SKIP) {
                     $entity->setLinkMultipleColumn('users', 'inTrash', $userId, true);
                 }
-                else if ($action === 'Move to Folder') {
-                    $folderId = $filter->get('emailFolderId');
+                else if ($action === EmailFilter::ACTION_MOVE_TO_FOLDER) {
+                    $folderId = $filter->getEmailFolderId();
 
                     if ($folderId) {
                         $entity->setLinkMultipleColumn('users', 'folderId', $userId, $folderId);
@@ -450,14 +457,17 @@ class Email extends Database implements
         }
     }
 
+    /**
+     * @param EmailEntity $entity
+     */
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
 
         if (!$entity->isNew()) {
             if (
-                $entity->get('parentType') &&
-                $entity->get('parentId') &&
+                $entity->getParentType() &&
+                $entity->getParentId() &&
                 $entity->isAttributeChanged('parentId')
             ) {
                 /** @var \Espo\ORM\Collection<EmailEntity> $replyList */
@@ -468,10 +478,10 @@ class Email extends Database implements
                         continue;
                     }
 
-                    if (!$reply->get('parentId')) {
+                    if (!$reply->getParentId()) {
                         $reply->set([
-                            'parentId' => $entity->get('parentId'),
-                            'parentType' => $entity->get('parentType')
+                            'parentId' => $entity->getParentId(),
+                            'parentType' => $entity->getParentType(),
                         ]);
 
                         $this->entityManager->saveEntity($reply);
@@ -481,13 +491,27 @@ class Email extends Database implements
         }
 
         if (
-            ($entity->get('status') === 'Archived' || $entity->get('status') === 'Sent') &&
-            ($entity->isAttributeChanged('status') || $entity->isNew())
+            (
+                $entity->getStatus() === EmailEntity::STATUS_ARCHIVED ||
+                $entity->getStatus() === EmailEntity::STATUS_SENT
+            ) &&
+            (
+                $entity->isAttributeChanged('status') ||
+                $entity->isNew()
+            )
         ) {
-            if ($entity->get('repliedId')) {
-                $replied = $this->entityManager->getEntity('Email', $entity->get('repliedId'));
-                if ($replied && $replied->getId() !== $entity->getId() && !$replied->get('isReplied')) {
+            $repliedId = $entity->get('repliedId');
+
+            if ($repliedId) {
+                $replied = $this->entityManager->getEntityById(EmailEntity::ENTITY_TYPE, $repliedId);
+
+                if (
+                    $replied &&
+                    $replied->getId() !== $entity->getId() &&
+                    !$replied->get('isReplied')
+                ) {
                     $replied->set('isReplied', true);
+
                     $this->entityManager->saveEntity($replied, ['silent' => true]);
                 }
             }

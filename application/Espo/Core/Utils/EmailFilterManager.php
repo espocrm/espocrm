@@ -34,19 +34,18 @@ use Espo\Core\Mail\FiltersMatcher;
 
 use Espo\Entities\Email;
 use Espo\Entities\EmailFilter;
+use Espo\Entities\User;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Order;
 
 /**
  * Looks for any matching Email Filter for a given email and user.
  */
 class EmailFilterManager
 {
-    /**
-     * @var array<string,\Traversable<EmailFilter>>
-     */
+    /** @var array<string,\Traversable<EmailFilter>> */
     private array $data = [];
-
     private EntityManager $entityManager;
-
     private FiltersMatcher $filtersMatcher;
 
     public function __construct(EntityManager $entityManager, FiltersMatcher $filtersMatcher)
@@ -62,9 +61,17 @@ class EmailFilterManager
                 ->getRDBRepository(EmailFilter::ENTITY_TYPE)
                 ->where([
                     'parentId' => $userId,
-                    'parentType' => 'User',
+                    'parentType' => User::ENTITY_TYPE,
                 ])
-                ->order('LIST:action:Skip,Move to Folder')
+                ->order(
+                    Order::createByPositionInList(
+                        Expression::column('action'),
+                        [
+                            EmailFilter::ACTION_SKIP,
+                            EmailFilter::ACTION_MOVE_TO_FOLDER,
+                        ]
+                    )
+                )
                 ->find();
 
             $this->data[$userId] = $emailFilterList;

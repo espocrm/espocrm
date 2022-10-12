@@ -33,6 +33,22 @@ class EmailFilter extends \Espo\Core\ORM\Entity
 {
     public const ENTITY_TYPE = 'EmailFilter';
 
+    public const ACTION_SKIP = 'Skip';
+    public const ACTION_MOVE_TO_FOLDER = 'Move to Folder';
+
+    /**
+     * @return self::ACTION_*|null
+     */
+    public function getAction(): ?string
+    {
+        return $this->get('action');
+    }
+
+    public function getEmailFolderId(): ?string
+    {
+        return $this->get('emailFolderId');
+    }
+
     public function getFrom(): ?string
     {
         return $this->get('from');
