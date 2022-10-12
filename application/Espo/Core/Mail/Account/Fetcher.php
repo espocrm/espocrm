@@ -48,9 +48,12 @@ use Espo\Core\Field\DateTime as DateTimeField;
 use Espo\Entities\EmailFilter;
 use Espo\Entities\Email;
 
+use Espo\Entities\InboundEmail;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
 
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Order;
 use Throwable;
 use DateTime;
 
@@ -392,22 +395,40 @@ class Fetcher
      */
     private function getFilterList(Account $account): Collection
     {
-        /** @var Collection<EmailFilter> */
-        return $this->entityManager
+        $actionList = [EmailFilter::ACTION_SKIP];
+
+        if ($account->getEntityType() === InboundEmail::ENTITY_TYPE) {
+            $actionList[] = EmailFilter::ACTION_MOVE_TO_GROUP_FOLDER;
+        }
+
+        $builder = $this->entityManager
             ->getRDBRepository(EmailFilter::ENTITY_TYPE)
             ->where([
-                'action' => 'Skip',
+                'action' => $actionList,
                 'OR' => [
                     [
                         'parentType' => $account->getEntityType(),
                         'parentId' => $account->getId(),
+                        'action' => $actionList,
                     ],
                     [
                         'parentId' => null,
+                        'action' => EmailFilter::ACTION_SKIP,
                     ],
                 ]
-            ])
-            ->find();
+            ]);
+
+        if (count($actionList) > 1) {
+            $builder->order(
+                Order::createByPositionInList(
+                    Expression::column('action'),
+                    $actionList
+                )
+            );
+        }
+
+        /** @var Collection<EmailFilter> */
+        return $builder->find();
     }
 
     private function checkFetchOnlyHeader(Storage $storage, int $id): bool

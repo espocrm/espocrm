@@ -6,7 +6,12 @@
         "bodyContains": "Body Contains",
         "action": "Action",
         "isGlobal": "Is Global",
-        "emailFolder": "Folder"
+        "emailFolder": "Folder",
+        "groupEmailFolder": "Group Email Folder"
+    },
+    "links": {
+        "emailFolder": "Folder",
+        "groupEmailFolder": "Group Email Folder"
     },
     "labels": {
         "Create EmailFilter": "Create Email Filter",
@@ -15,7 +20,8 @@
     "options": {
         "action": {
             "Skip": "Ignore",
-            "Move to Folder": "Put in Folder"
+            "Move to Folder": "Put in Folder",
+            "Move to Group Folder": "Put in Group Folder"
         }
     },
     "tooltips": {

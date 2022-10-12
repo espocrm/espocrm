@@ -14,6 +14,9 @@
                 {"name": "emailFolder"}
             ],
             [
+                {"name": "groupEmailFolder"}
+            ],
+            [
                 {"name": "from"}
             ],
             [
@@ -27,5 +30,4 @@
             ]
         ]
     }
-
 ]

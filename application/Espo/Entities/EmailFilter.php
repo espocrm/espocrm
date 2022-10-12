@@ -35,6 +35,7 @@ class EmailFilter extends \Espo\Core\ORM\Entity
 
     public const ACTION_SKIP = 'Skip';
     public const ACTION_MOVE_TO_FOLDER = 'Move to Folder';
+    public const ACTION_MOVE_TO_GROUP_FOLDER = 'Move to Group Folder';
 
     /**
      * @return self::ACTION_*|null
@@ -47,6 +48,26 @@ class EmailFilter extends \Espo\Core\ORM\Entity
     public function getEmailFolderId(): ?string
     {
         return $this->get('emailFolderId');
+    }
+
+    public function getGroupEmailFolderId(): ?string
+    {
+        return $this->get('groupEmailFolderId');
+    }
+
+    public function isGlobal(): bool
+    {
+        return (bool) $this->get('isGlobal');
+    }
+
+    public function getParentType(): ?string
+    {
+        return $this->get('parentType');
+    }
+
+    public function getParentId(): ?string
+    {
+        return $this->get('parentId');
     }
 
     public function getFrom(): ?string

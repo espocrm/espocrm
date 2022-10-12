@@ -1,14 +1,11 @@
 {
     "controller": "controllers/record",
+    "dynamicHandler": "handlers/email-filter",
     "modalViews": {
         "edit": "views/email-filter/modals/edit"
     },
     "recordViews": {
-        "list": "views/email-filter/record/list",
-        "detail": "views/email-filter/record/detail",
-        "edit": "views/email-filter/record/edit",
-        "editQuick": "views/email-filter/record/edit-small",
-        "detailQuick": "views/email-filter/record/detail-small"
+        "list": "views/email-filter/record/list"
     },
     "searchPanelDisabled": false,
     "menu": {
@@ -23,5 +20,116 @@
             ]
         }
     },
-    "boolFilterList": ["onlyMy"]
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "dynamicLogic": {
+        "fields": {
+            "parent": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "attribute": "isGlobal",
+                            "type": "isFalse"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "attribute": "isGlobal",
+                            "type": "isFalse"
+                        }
+                    ]
+                }
+            },
+            "emailFolder": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "attribute": "action",
+                            "type": "equals",
+                            "value": "Move to Folder"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "attribute": "action",
+                            "type": "equals",
+                            "value": "Move to Folder"
+                        }
+                    ]
+                }
+            },
+            "groupEmailFolder": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "attribute": "action",
+                            "type": "equals",
+                            "value": "Move to Group Folder"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "attribute": "action",
+                            "type": "equals",
+                            "value": "Move to Group Folder"
+                        }
+                    ]
+                }
+            }
+        },
+        "options": {
+            "action": [
+                {
+                    "conditionGroup": [
+                        {
+                            "attribute": "isGlobal",
+                            "type": "isTrue"
+                        }
+                    ],
+                    "optionList": [
+                        "Skip"
+                    ]
+                },
+                {
+                    "conditionGroup": [
+                        {
+                            "attribute": "parentType",
+                            "type": "equals",
+                            "value": "User"
+                        }
+                    ],
+                    "optionList": [
+                        "Skip",
+                        "Move to Folder"
+                    ]
+                },
+                {
+                    "conditionGroup": [
+                        {
+                            "attribute": "parentType",
+                            "type": "equals",
+                            "value": "InboundEmail"
+                        }
+                    ],
+                    "optionList": [
+                        "Skip",
+                        "Move to Group Folder"
+                    ]
+                },
+                {
+                    "conditionGroup": [],
+                    "optionList": [
+                        "Skip"
+                    ]
+                }
+            ]
+        }
+    }
 }

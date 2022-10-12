@@ -31,6 +31,7 @@ namespace Espo\Core\Mail;
 
 use Espo\Core\Mail\Importer\DuplicateFinder;
 use Espo\Entities\Email;
+use Espo\Entities\EmailFilter;
 use Espo\Entities\Job;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
@@ -181,8 +182,16 @@ class Importer
             $email->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
         }
 
-        if ($this->filtersMatcher->findMatch($email, $filterList, true)) {
+        $matchedFilter = $this->filtersMatcher->findMatch($email, $filterList, true);
+
+        if ($matchedFilter && $matchedFilter->getAction() === EmailFilter::ACTION_SKIP) {
             return null;
+        }
+
+        if ($matchedFilter && $matchedFilter->getAction() === EmailFilter::ACTION_MOVE_TO_GROUP_FOLDER) {
+            $groupEmailFolderId = $matchedFilter->getGroupEmailFolderId();
+
+            $email->set('groupFolderId', $groupEmailFolderId);
         }
 
         if (
@@ -265,8 +274,16 @@ class Importer
         if (!$data->fetchOnlyHeader()) {
             $inlineAttachmentList = $parser->getInlineAttachmentList($message, $email);
 
-            if ($this->filtersMatcher->findMatch($email, $filterList)) {
+            $matchedFilter = $this->filtersMatcher->findMatch($email, $filterList);
+
+            if ($matchedFilter && $matchedFilter->getAction() === EmailFilter::ACTION_SKIP) {
                 return null;
+            }
+
+            if ($matchedFilter && $matchedFilter->getAction() === EmailFilter::ACTION_MOVE_TO_GROUP_FOLDER) {
+                $groupEmailFolderId = $matchedFilter->getGroupEmailFolderId();
+
+                $email->set('groupFolderId', $groupEmailFolderId);
             }
         }
         else {
