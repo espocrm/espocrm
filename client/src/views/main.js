@@ -62,6 +62,7 @@ define('views/main', ['view'], function (Dep) {
          * @property {string} [action] An action.
          * @property {string} [link] A link.
          * @property {string} [label] A translatable label.
+         * @property {string} [labelTranslation] A label translation path.
          * @property {'default'|'danger'|'success'|'warning'} [style] A style. Only for buttons.
          * @property {boolean} [hidden]
          * @property {Object.<string,string|number|boolean>} [data] Data attribute values.
