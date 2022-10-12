@@ -463,7 +463,7 @@ define('dynamic-logic', [], function () {
         },
 
         /**
-         * @param {string} field
+         * @param {string} panel
          * @private
          */
         makePanelVisibleTrue: function (panel) {
@@ -471,7 +471,7 @@ define('dynamic-logic', [], function () {
         },
 
         /**
-         * @param {string} field
+         * @param {string} panel
          * @private
          */
         makePanelVisibleFalse: function (panel) {
@@ -479,7 +479,7 @@ define('dynamic-logic', [], function () {
         },
 
         /**
-         * @param {string} field
+         * @param {string} panel
          * @private
          */
         makePanelStyledTrue: function (panel) {
@@ -487,7 +487,7 @@ define('dynamic-logic', [], function () {
         },
 
         /**
-         * @param {string} field
+         * @param {string} panel
          * @private
          */
         makePanelStyledFalse: function (panel) {
