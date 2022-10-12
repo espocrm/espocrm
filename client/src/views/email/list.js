@@ -146,6 +146,14 @@ define('views/email/list', ['views/list'], function (Dep) {
             let $target = $(e.target);
             let folderId = $target.attr('data-id');
 
+            if (this.selectedFolderId === this.FOLDER_DRAFTS) {
+                return false;
+            }
+
+            if (this.selectedFolderId === this.FOLDER_SENT && folderId === this.FOLDER_INBOX) {
+                return false;
+            }
+
             if (this.selectedFolderId === this.FOLDER_ALL) {
                 if (folderId.indexOf('group:') === 0) {
                     return true;
