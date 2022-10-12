@@ -26,13 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email-filter/record/edit-small', 'views/email-filter/record/edit', function (Dep) {
+define('views/email-filter/record/edit-small', ['views/email-filter/record/edit'], function (Dep) {
 
     return Dep.extend({
 
-        bottomView: null
-
+        bottomView: null,
     });
-
 });
 

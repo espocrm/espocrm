@@ -26,19 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email-filter/record/detail', 'views/record/detail', function (Dep) {
+define('views/email-filter/record/detail', ['views/record/detail'], function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.setupFilterFields();
         },
 
         setupFilterFields: function () {
             this.controlIsGlobal();
-            this.listenTo(this.model, 'change:isGlobal', function (model, value, data) {
+
+            this.listenTo(this.model, 'change:isGlobal', (model, value, data) => {
                 this.controlIsGlobal();
+
                 if (data.ui) {
                     if (model.get('isGlobal')) {
                         this.model.set({
@@ -52,7 +55,7 @@ Espo.define('views/email-filter/record/detail', 'views/record/detail', function 
                         this.model.set('parentName', this.getUser().get('name'));
                     }
                 }
-            }, this);
+            });
 
             if (!this.getUser().isAdmin()) {
                 this.setFieldReadOnly('parent');
@@ -77,9 +80,10 @@ Espo.define('views/email-filter/record/detail', 'views/record/detail', function 
 
 
             this.controlEmailFolder();
-            this.listenTo(this.model, 'change', function () {
+
+            this.listenTo(this.model, 'change', () => {
                 this.controlEmailFolder();
-            }, this);
+            });
         },
 
         controlIsGlobal: function () {
@@ -96,9 +100,6 @@ Espo.define('views/email-filter/record/detail', 'views/record/detail', function 
             } else {
                 this.showField('emailFolder');
             }
-        }
-
+        },
     });
-
 });
-
