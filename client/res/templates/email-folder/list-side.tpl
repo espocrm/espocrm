@@ -1,5 +1,8 @@
 <ul class="list-group list-group-side list-group-no-border folder-list">
-    <li data-id="all" class="list-group-item{{#ifEqual 'all' selectedFolderId}} selected{{/ifEqual}}">
+    <li
+        data-id="all"
+        class="list-group-item{{#ifEqual 'all' selectedFolderId}} selected{{/ifEqual}} droppable"
+    >
         <a
             href="#Email/list/folder=all"
             data-action="selectFolder"

@@ -64,7 +64,6 @@ define('views/email/list', ['views/list'], function (Dep) {
         FOLDER_TRASH: 'trash',
 
         noDropFolderIdList: [
-            'all',
             'sent',
             'drafts',
         ],
@@ -149,6 +148,14 @@ define('views/email/list', ['views/list'], function (Dep) {
 
             if (this.selectedFolderId === this.FOLDER_ALL) {
                 if (folderId.indexOf('group:') === 0) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            if (folderId === this.FOLDER_ALL) {
+                if (this.selectedFolderId.indexOf('group:') === 0) {
                     return true;
                 }
 
@@ -405,6 +412,10 @@ define('views/email/list', ['views/list'], function (Dep) {
                 this.getRecordView().actionMoveToTrash({id: id});
 
                 return;
+            }
+
+            if (this.selectedFolderId.indexOf('group:') === 0 && folderId === this.FOLDER_ALL) {
+                folderId = this.FOLDER_INBOX;
             }
 
             this.getRecordView().actionMoveToFolder({id: id, folderId: folderId});
