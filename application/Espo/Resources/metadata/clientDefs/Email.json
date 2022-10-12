@@ -68,6 +68,19 @@
                     ]
                 },
                 {
+                    "label": "Group Folders",
+                    "link": "#GroupEmailFolder",
+                    "configCheck": "!emailFoldersDisabled",
+                    "accessDataList": [
+                        {
+                            "inPortalDisabled": true
+                        },
+                        {
+                            "isAdminOnly": true
+                        }
+                    ]
+                },
+                {
                     "label":"Filters",
                     "link":"#EmailFilter",
                     "accessDataList": [
