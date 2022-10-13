@@ -34,6 +34,7 @@ use Espo\Core\Job\Job\Status;
 use Espo\Core\Job\Preparator;
 use Espo\Core\Job\Preparator\Data;
 
+use Espo\Entities\InboundEmail;
 use Espo\ORM\EntityManager;
 
 use Espo\Entities\Job as JobEntity;
@@ -52,9 +53,9 @@ class CheckInboundEmails implements Preparator
     public function prepare(Data $data, DateTimeImmutable $executeTime): void
     {
         $collection = $this->entityManager
-            ->getRDBRepository('InboundEmail')
+            ->getRDBRepository(InboundEmail::ENTITY_TYPE)
             ->where([
-                'status' => 'Active',
+                'status' => InboundEmail::STATUS_ACTIVE,
                 'useImap' => true,
             ])
             ->find();
@@ -68,7 +69,7 @@ class CheckInboundEmails implements Preparator
                         Status::RUNNING,
                         Status::READY,
                     ],
-                    'targetType' => 'InboundEmail',
+                    'targetType' => InboundEmail::ENTITY_TYPE,
                     'targetId' => $entity->getId(),
                 ])
                 ->findOne();
@@ -82,7 +83,7 @@ class CheckInboundEmails implements Preparator
                 ->where([
                     'scheduledJobId' => $data->getId(),
                     'status' => Status::PENDING,
-                    'targetType' => 'InboundEmail',
+                    'targetType' => InboundEmail::ENTITY_TYPE,
                     'targetId' => $entity->getId(),
                 ])
                 ->count();
@@ -97,7 +98,7 @@ class CheckInboundEmails implements Preparator
                 'name' => $data->getName(),
                 'scheduledJobId' => $data->getId(),
                 'executeTime' => $executeTime->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
-                'targetType' => 'InboundEmail',
+                'targetType' => InboundEmail::ENTITY_TYPE,
                 'targetId' => $entity->getId(),
             ]);
 

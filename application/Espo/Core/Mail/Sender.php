@@ -504,7 +504,7 @@ class Sender
         if (!$email->isNew()) {
             /** @var \Espo\ORM\Collection<\Espo\Entities\Attachment> $relatedAttachmentCollection */
             $relatedAttachmentCollection = $this->entityManager
-                ->getRDBRepository('Email')
+                ->getRDBRepository(Email::ENTITY_TYPE)
                 ->getRelation($email, 'attachments')
                 ->find();
 

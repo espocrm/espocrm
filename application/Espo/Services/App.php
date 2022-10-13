@@ -556,7 +556,7 @@ class App
     }
 
     /**
-     * @todo Remove in 7.2. Move to another place. CLI command.
+     * @todo Remove in 7.4. Move to another place. CLI command.
      */
     public function jobPopulateOptedOutPhoneNumbers(): void
     {

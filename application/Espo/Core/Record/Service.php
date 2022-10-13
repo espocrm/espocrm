@@ -1235,7 +1235,7 @@ class Service implements Crud,
         }
 
         /** @var User|null $user */
-        $user = $this->entityManager->getEntity('User', $foreignId);
+        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $foreignId);
 
         if (!$user) {
             throw new NotFound();
@@ -1253,7 +1253,7 @@ class Service implements Crud,
             throw new ForbiddenSilent("No 'read' access to user.");
         }
 
-        if ($user->isPortal() && $this->acl->get('portal') !== AclTable::LEVEL_YES) {
+        if ($user->isPortal() && $this->acl->getPermissionLevel('portal') !== AclTable::LEVEL_YES) {
             throw new ForbiddenSilent("No 'portal' permission.");
         }
 
@@ -1304,8 +1304,8 @@ class Service implements Crud,
             throw new NotFound();
         }
 
-        /** @var User|null $user */
-        $user = $this->entityManager->getEntity('User', $foreignId);
+        /** @var ?User $user */
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $foreignId);
 
         if (!$user) {
             throw new NotFound();
@@ -1323,7 +1323,7 @@ class Service implements Crud,
             throw new ForbiddenSilent("No 'read' access to user.");
         }
 
-        if ($user->isPortal() && $this->acl->get('portal') !== AclTable::LEVEL_YES) {
+        if ($user->isPortal() && $this->acl->getPermissionLevel('portal') !== AclTable::LEVEL_YES) {
             throw new ForbiddenSilent("No 'portal' permission.");
         }
 

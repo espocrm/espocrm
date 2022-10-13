@@ -29,6 +29,8 @@
 
 namespace Espo\Modules\Crm\Services;
 
+use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Meeting as MeetingEntity;
 use Espo\ORM\Entity;
 use Espo\Modules\Crm\Business\Event\Invitations;
 use Espo\Services\Record;
@@ -89,7 +91,7 @@ class Meeting extends Record implements
         if (!$entity->isNew()) {
             $existingIdList = [];
 
-            $usersCollection = $this->getEntityManager()
+            $usersCollection = $this->entityManager
                 ->getRDBRepository($entity->getEntityType())
                 ->getRelation($entity, 'users')
                 ->select('id')
@@ -139,15 +141,16 @@ class Meeting extends Record implements
 
         $sentCount = 0;
 
-        $users = $this->getEntityManager()
+        $users = $this->entityManager
             ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, 'users')
             ->find();
 
         foreach ($users as $user) {
             if (
-                $user->getId() === $this->getUser()->getId() &&
-                $entity->getLinkMultipleColumn('users', 'status', $user->getId()) === 'Accepted'
+                $user->getId() === $this->user->getId() &&
+                $entity->getLinkMultipleColumn('users', 'status', $user->getId()) ===
+                    MeetingEntity::ATTENDEE_STATUS_ACCEPTED
             ) {
                 continue;
             }
@@ -161,7 +164,7 @@ class Meeting extends Record implements
             }
         }
 
-        $contacts = $this->getEntityManager()
+        $contacts = $this->entityManager
             ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, 'contacts')
             ->find();
@@ -179,7 +182,7 @@ class Meeting extends Record implements
             }
         }
 
-        $leads = $this->getEntityManager()
+        $leads = $this->entityManager
             ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, 'leads')
             ->find();
@@ -212,12 +215,12 @@ class Meeting extends Record implements
         assert($this->entityType !== null);
 
         foreach ($ids as $id) {
-            $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
+            $entity = $this->entityManager->getEntity($this->entityType, $id);
 
-            if ($entity && $this->getAcl()->check($entity, 'edit')) {
-                $entity->set('status', 'Held');
+            if ($entity && $this->acl->checkEntityEdit($entity)) {
+                $entity->set('status', MeetingEntity::STATUS_HELD);
 
-                $this->getEntityManager()->saveEntity($entity);
+                $this->entityManager->saveEntity($entity);
             }
         }
 
@@ -232,12 +235,12 @@ class Meeting extends Record implements
         assert($this->entityType !== null);
 
         foreach ($ids as $id) {
-            $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
+            $entity = $this->entityManager->getEntity($this->entityType, $id);
 
-            if ($entity && $this->getAcl()->check($entity, 'edit')) {
-                $entity->set('status', 'Not Held');
+            if ($entity && $this->acl->checkEntityEdit($entity)) {
+                $entity->set('status', MeetingEntity::STATUS_NOT_HELD);
 
-                $this->getEntityManager()->saveEntity($entity);
+                $this->entityManager->saveEntity($entity);
             }
         }
 
@@ -246,7 +249,7 @@ class Meeting extends Record implements
 
     public function setAcceptanceStatus(string $id, string $status, ?string $userId = null): bool
     {
-        $userId = $userId ?? $this->getUser()->getId();
+        $userId = $userId ?? $this->user->getId();
 
         assert(is_string($this->entityType));
 
@@ -257,7 +260,7 @@ class Meeting extends Record implements
             throw new BadRequest();
         }
 
-        $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
+        $entity = $this->entityManager->getEntity($this->entityType, $id);
 
         if (!$entity) {
             throw new NotFound();
@@ -269,7 +272,7 @@ class Meeting extends Record implements
             return false;
         }
 
-        $this->getEntityManager()
+        $this->entityManager
             ->getRDBRepository($this->entityType)
             ->updateRelation(
                 $entity,
@@ -285,7 +288,7 @@ class Meeting extends Record implements
             'dateStart' => $entity->get('dateStart'),
             'status' => $status,
             'link' => 'users',
-            'inviteeType' => 'User',
+            'inviteeType' => User::ENTITY_TYPE,
             'inviteeId' => $userId,
         ];
 

@@ -29,6 +29,7 @@
 
 namespace Espo\EntryPoints;
 
+use Espo\Core\ApplicationUser;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 
@@ -38,6 +39,8 @@ use Espo\Core\Di;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 
+use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\Exceptions\NotFoundSilent;
 use Identicon\Identicon;
 
 class Avatar extends Image implements Di\MetadataAware
@@ -88,6 +91,12 @@ class Avatar extends Image implements Di\MetadataAware
         return $colorList[$index];
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     * @throws NotFoundSilent
+     * @throws ForbiddenSilent
+     */
     public function run(Request $request, Response $response): void
     {
         $userId = $request->getQueryParam('id');
@@ -133,7 +142,7 @@ class Avatar extends Image implements Di\MetadataAware
 
         $color = $this->getColor($userId);
 
-        if ($hash === 'system') {
+        if ($hash === ApplicationUser::SYSTEM_USER_ID) {
             $color = $this->metadata->get(['app', 'avatars', 'systemColor']) ?? $this->systemColor;
         }
 
@@ -142,6 +151,9 @@ class Avatar extends Image implements Di\MetadataAware
         $response->writeBody($imgContent);
     }
 
+    /**
+     * @throws Error
+     */
     protected function renderBlank(Response $response): void
     {
         ob_start();

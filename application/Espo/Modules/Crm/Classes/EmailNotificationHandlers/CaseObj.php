@@ -32,6 +32,7 @@ namespace Espo\Modules\Crm\Classes\EmailNotificationHandlers;
 use Espo\Core\Notification\EmailNotificationHandler;
 
 use Espo\Core\Mail\SenderParams;
+use Espo\Entities\InboundEmail;
 use Espo\ORM\Entity;
 use Espo\Entities\User;
 use Espo\Entities\Email;
@@ -65,7 +66,7 @@ class CaseObj implements EmailNotificationHandler
 
         if (!array_key_exists($inboundEmailId, $this->inboundEmailEntityHash)) {
             $this->inboundEmailEntityHash[$inboundEmailId] =
-                $this->entityManager->getEntity('InboundEmail', $inboundEmailId);
+                $this->entityManager->getEntityById(InboundEmail::ENTITY_TYPE, $inboundEmailId);
         }
 
         $inboundEmail = $this->inboundEmailEntityHash[$inboundEmailId];

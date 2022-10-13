@@ -58,9 +58,24 @@ class InboundEmail extends Entity
         return $this->get('status') === self::STATUS_ACTIVE;
     }
 
+    public function smtpIsForMassEmail(): bool
+    {
+        return (bool) $this->get('smtpIsForMassEmail');
+    }
+
     public function storeSentEmails(): bool
     {
         return (bool) $this->get('storeSentEmails');
+    }
+
+    public function getReplyToAddress(): ?string
+    {
+        return $this->get('replyToAddress');
+    }
+
+    public function getName(): ?string
+    {
+        return $this->get('name');
     }
 
     public function getFromName(): ?string

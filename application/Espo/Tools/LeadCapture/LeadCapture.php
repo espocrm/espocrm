@@ -471,7 +471,7 @@ class LeadCapture
             return [
                 'status' => 'expired',
                 'message' => $this->defaultLanguage
-                    ->translateLabel('optInConfirmationExpired', 'messages', 'LeadCapture'),
+                    ->translateLabel('optInConfirmationExpired', 'messages', LeadCaptureEntity::ENTITY_TYPE),
             ];
         }
 
@@ -603,7 +603,7 @@ class LeadCapture
 
         $linkHtml =
             '<a href='.$url.'>' .
-            $this->defaultLanguage->translateLabel('Confirm Opt-In', 'labels', 'LeadCapture') .
+            $this->defaultLanguage->translateLabel('Confirm Opt-In', 'labels', LeadCaptureEntity::ENTITY_TYPE) .
             '</a>';
 
         $body = str_replace('{optInUrl}', $url, $body);

@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\ApplicationUser;
 use Espo\Core\Utils\Util;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Field\DateTime;
@@ -166,7 +167,8 @@ class Email extends Entity
 
     public function isManuallyArchived(): bool
     {
-        return $this->get('status') === 'Archived' && $this->get('createdById') !== 'system';
+        return $this->getStatus() === self::STATUS_ARCHIVED &&
+            $this->get('createdById') !== ApplicationUser::SYSTEM_USER_ID;
     }
 
     public function addAttachment(Attachment $attachment): void
@@ -176,7 +178,7 @@ class Email extends Entity
         }
 
         $attachment->set('parentId', $this->id);
-        $attachment->set('parentType', 'Email');
+        $attachment->set('parentType', self::ENTITY_TYPE);
 
         if (!$this->entityManager) {
             throw new RuntimeException();
@@ -310,7 +312,7 @@ class Email extends Entity
             }
 
             /** @var Attachment|null $attachment */
-            $attachment = $this->entityManager->getEntity('Attachment', $id);
+            $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
 
             if ($attachment) {
                 $attachmentList[] = $attachment;

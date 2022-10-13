@@ -51,21 +51,14 @@ use Espo\Tools\MassUpdate\Data as MassUpdateData;
 class MassUpdate implements MassAction
 {
     private MassUpdateOriginal $massUpdateOriginal;
-
     private QueryBuilder $queryBuilder;
-
     private EntityManager $entityManager;
-
     private Acl $acl;
-
     private User $user;
-
     private FileManager $fileManager;
-
     private DataManager $dataManager;
 
     private const PERMISSION = 'massUpdatePermission';
-
     private const SYSTEM_USER_ID = 'system';
 
     /** @var string[] */
@@ -96,6 +89,9 @@ class MassUpdate implements MassAction
         $this->dataManager = $dataManager;
     }
 
+    /**
+     * @throws Forbidden
+     */
     public function process(Params $params, Data $data): Result
     {
         $entityType = $params->getEntityType();
@@ -108,7 +104,7 @@ class MassUpdate implements MassAction
             throw new Forbidden("No edit access for '{$entityType}'.");
         }
 
-        if ($this->acl->get(self::PERMISSION) !== Table::LEVEL_YES) {
+        if ($this->acl->getPermissionLevel(self::PERMISSION) !== Table::LEVEL_YES) {
             throw new Forbidden("No mass-update permission.");
         }
 
@@ -136,6 +132,9 @@ class MassUpdate implements MassAction
         return $result;
     }
 
+    /**
+     * @throws Forbidden
+     */
     private function checkAccess(MassUpdateData $data): void
     {
         foreach ($this->notAllowedAttributeList as $attribute) {
@@ -145,6 +144,9 @@ class MassUpdate implements MassAction
         }
     }
 
+    /**
+     * @throws Forbidden
+     */
     private function checkEntity(Entity $entity, MassUpdateData $data): void
     {
         if ($entity->getId() === self::SYSTEM_USER_ID) {

@@ -32,10 +32,47 @@ namespace Espo\Modules\Crm\Entities;
 class MassEmail extends \Espo\Core\ORM\Entity
 {
     public const ENTITY_TYPE = 'MassEmail';
-
     public const STATUS_COMPLETE = 'Complete';
-
     public const STATUS_FAILED = 'Failed';
-
     public const STATUS_IN_PROGRESS = 'In Process';
+
+    public function getEmailTemplateId(): ?string
+    {
+        return $this->get('emailTemplateId');
+    }
+
+    public function getCampaignId(): ?string
+    {
+        return $this->get('campaignId');
+    }
+
+    public function getInboundEmailId(): ?string
+    {
+        return $this->get('inboundEmailId');
+    }
+
+    public function getFromName(): ?string
+    {
+        return $this->get('fromName');
+    }
+
+    public function getReplyToName(): ?string
+    {
+        return $this->get('replyToName');
+    }
+
+    public function getFromAddress(): ?string
+    {
+        return $this->get('fromAddress');
+    }
+
+    public function getReplyToAddress(): ?string
+    {
+        return $this->get('replyToAddress');
+    }
+
+    public function storeSentEmails(): bool
+    {
+        return (bool) $this->get('storeSentEmails');
+    }
 }

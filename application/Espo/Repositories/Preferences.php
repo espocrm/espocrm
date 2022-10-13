@@ -29,6 +29,7 @@
 
 namespace Espo\Repositories;
 
+use Espo\Entities\Autofollow;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\EntityFactory;
@@ -87,13 +88,13 @@ class Preferences implements Repository,
     public function getNew(): Entity
     {
         /** @var PreferencesEntity */
-        return $this->entityFactory->create('Preferences');
+        return $this->entityFactory->create(PreferencesEntity::ENTITY_TYPE);
     }
 
     public function getById(string $id): ?Entity
     {
         /** @var PreferencesEntity $entity */
-        $entity = $this->entityFactory->create('Preferences');
+        $entity = $this->entityFactory->create(PreferencesEntity::ENTITY_TYPE);
 
         $entity->set('id', $id);
 
@@ -125,7 +126,7 @@ class Preferences implements Repository,
 
         $select = $this->entityManager->getQueryBuilder()
             ->select()
-            ->from('Preferences')
+            ->from(PreferencesEntity::ENTITY_TYPE)
             ->select(['id', 'data'])
             ->where([
                 'id' => $id,
@@ -187,7 +188,7 @@ class Preferences implements Repository,
         $autoFollowEntityTypeList = [];
 
         $autofollowList = $this->entityManager
-            ->getRDBRepository('Autofollow')
+            ->getRDBRepository(Autofollow::ENTITY_TYPE)
             ->select(['entityType'])
             ->where([
                 'userId' => $id,
@@ -216,7 +217,7 @@ class Preferences implements Repository,
         $delete = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from('Autofollow')
+            ->from(Autofollow::ENTITY_TYPE)
             ->where([
                 'userId' => $id,
             ])
@@ -229,7 +230,7 @@ class Preferences implements Repository,
         });
 
         foreach ($entityTypeList as $entityType) {
-            $this->entityManager->createEntity('Autofollow', [
+            $this->entityManager->createEntity(Autofollow::ENTITY_TYPE, [
                 'userId' => $id,
                 'entityType' => $entityType,
             ]);
@@ -258,7 +259,7 @@ class Preferences implements Repository,
 
         $insert = $this->entityManager->getQueryBuilder()
             ->insert()
-            ->into('Preferences')
+            ->into(PreferencesEntity::ENTITY_TYPE)
             ->columns(['id', 'data'])
             ->values([
                 'id' => $entity->getId(),
@@ -272,7 +273,7 @@ class Preferences implements Repository,
         $this->entityManager->getQueryExecutor()->execute($insert);
 
         /** @var User|null $user */
-        $user = $this->entityManager->getEntity('User', $entity->getId());
+        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $entity->getId());
 
         if ($user && !$user->isPortal()) {
             $this->storeAutoFollowEntityTypeList($entity);
@@ -283,7 +284,7 @@ class Preferences implements Repository,
     {
         $delete = $this->entityManager->getQueryBuilder()
             ->delete()
-            ->from('Preferences')
+            ->from(PreferencesEntity::ENTITY_TYPE)
             ->where([
                 'id' => $id,
             ])

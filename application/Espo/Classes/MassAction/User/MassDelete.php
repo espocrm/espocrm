@@ -30,6 +30,7 @@
 namespace Espo\Classes\MassAction\User;
 
 use Espo\Core\{
+    ApplicationUser,
     MassAction\Actions\MassDelete as MassDeleteOriginal,
     MassAction\QueryBuilder,
     MassAction\Params,
@@ -48,15 +49,11 @@ use Espo\{
 
 class MassDelete implements MassAction
 {
-    private $massDeleteOriginal;
-
-    private $queryBuilder;
-
-    private $entityManager;
-
-    private $acl;
-
-    private $user;
+    private MassDeleteOriginal $massDeleteOriginal;
+    private QueryBuilder $queryBuilder;
+    private EntityManager $entityManager;
+    private Acl $acl;
+    private User $user;
 
     public function __construct(
         MassDeleteOriginal $massDeleteOriginal,
@@ -72,22 +69,28 @@ class MassDelete implements MassAction
         $this->user = $user;
     }
 
+    /**
+     * @throws Forbidden
+     */
     public function process(Params $params, Data $data): Result
     {
         $entityType = $params->getEntityType();
 
-        if (!$this->acl->check($entityType, 'delete')) {
+        if (!$this->acl->check($entityType, Acl\Table::ACTION_DELETE)) {
             throw new Forbidden("No delete access for '{$entityType}'.");
         }
 
-        if (!$params->hasIds() && $this->acl->get('massUpdatePermission') !== 'yes') {
+        if (
+            !$params->hasIds() &&
+            $this->acl->getPermissionLevel('massUpdatePermission') !== Acl\Table::LEVEL_YES
+        ) {
             throw new Forbidden("No mass-update permission.");
         }
 
         $query = $this->queryBuilder->build($params);
 
         $collection = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->clone($query)
             ->sth()
             ->select(['id'])
@@ -100,9 +103,12 @@ class MassDelete implements MassAction
         return $this->massDeleteOriginal->process($params, $data);
     }
 
+    /**
+     * @throws Forbidden
+     */
     protected function checkEntity(Entity $entity): void
     {
-        if ($entity->getId() === 'system') {
+        if ($entity->getId() === ApplicationUser::SYSTEM_USER_ID) {
             throw new Forbidden("Can't delete 'system' user.");
         }
 

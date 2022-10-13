@@ -39,11 +39,11 @@ use Espo\Core\{
 };
 
 use Espo\{
+    Entities\InboundEmail,
     ORM\Entity,
     Services\Record,
     Modules\Crm\Tools\MassEmail\Processor,
-    Modules\Crm\Tools\MassEmail\Queue,
-};
+    Modules\Crm\Tools\MassEmail\Queue};
 
 /**
  * @extends Record<\Espo\Modules\Crm\Entities\MassEmail>
@@ -166,11 +166,11 @@ class MassEmail extends Record
 
         $dataList = [];
 
-        $inboundEmailList = $this->getEntityManager()
-            ->getRDBRepository('InboundEmail')
+        $inboundEmailList = $this->entityManager
+            ->getRDBRepository(InboundEmail::ENTITY_TYPE)
             ->where([
                 'useSmtp' => true,
-                'status' => 'Active',
+                'status' => InboundEmail::STATUS_ACTIVE,
                 'smtpIsForMassEmail' => true,
                 ['emailAddress!=' => ''],
                 ['emailAddress!=' => null],

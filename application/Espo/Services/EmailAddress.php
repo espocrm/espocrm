@@ -29,6 +29,8 @@
 
 namespace Espo\Services;
 
+use Espo\Entities\InboundEmail as InboundEmailEntity;
+use Espo\Entities\User as UserEntity;
 use Espo\Repositories\EmailAddress as Repository;
 use Espo\Entities\EmailAddress as EmailAddressEntity;
 
@@ -103,7 +105,7 @@ class EmailAddress extends Record
                 ->distinct();
         }
 
-        if ($entityType === 'User') {
+        if ($entityType === UserEntity::ENTITY_TYPE) {
             $this->handleQueryBuilderUser($filter, $builder);
         }
 
@@ -217,7 +219,7 @@ class EmailAddress extends Record
         }
 
         $list = $this->entityManager
-            ->getRDBRepository('InboundEmail')
+            ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
             ->select(['id', 'name', 'emailAddress'])
             ->where([
                 'emailAddress*' => $query . '%',
@@ -227,10 +229,10 @@ class EmailAddress extends Record
 
         foreach ($list as $item) {
             $result[] = [
-                'emailAddress' => $item->get('emailAddress'),
-                'entityName' => $item->get('name'),
-                'entityType' => 'InboundEmail',
-                'entityId' => $item->get('id'),
+                'emailAddress' => $item->getEmailAddress(),
+                'entityName' => $item->getName(),
+                'entityType' => InboundEmailEntity::ENTITY_TYPE,
+                'entityId' => $item->getId(),
             ];
         }
     }

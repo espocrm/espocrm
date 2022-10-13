@@ -38,6 +38,15 @@ class Meeting extends Entity
 {
     public const ENTITY_TYPE = 'Meeting';
 
+    public const ATTENDEE_STATUS_NONE = 'None';
+    public const ATTENDEE_STATUS_ACCEPTED = 'Accepted';
+    public const ATTENDEE_STATUS_TENTATIVE = 'Tentative';
+    public const ATTENDEE_STATUS_DECLINED = 'Declined';
+
+    public const STATUS_PLANNED = 'Planned';
+    public const STATUS_HELD = 'Held';
+    public const STATUS_NOT_HELD = 'Not Held';
+
     public function getDateStart(): ?DateTimeOptional
     {
         /** @var ?DateTimeOptional */
