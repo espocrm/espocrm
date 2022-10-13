@@ -26,50 +26,56 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/compose-from-address', 'views/fields/base', function (Dep) {
+define('views/email/fields/compose-from-address', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
         editTemplate: 'email/fields/compose-from-address/edit',
 
         data: function () {
-            var noSmtpMessage = this.translate('noSmtpSetup', 'messages', 'Email');
+            let noSmtpMessage = this.translate('noSmtpSetup', 'messages', 'Email');
 
-            var linkHtml = '<a href="#EmailAccount">'+this.translate('EmailAccount', 'scopeNamesPlural') + '</a>';
-
-            if (!this.getAcl().check('EmailAccount')) {
-                linkHtml = '<a href="#Preferences">'+this.translate('Preferences')+'</a>';
-            }
+            let linkHtml = this.getAcl().check('EmailAccount') ?
+                $('<a>')
+                    .attr('href', '#EmailAccount')
+                    .text(this.translate('EmailAccount', 'scopeNamesPlural'))
+                    .get(0).outerHTML :
+                $('<a>')
+                    .attr('href', '#Preferences')
+                    .text(this.translate('Preferences'))
+                    .get(0).outerHTML;
 
             noSmtpMessage = noSmtpMessage.replace('{link}', linkHtml);
 
-            return _.extend({
+            return {
                 list: this.list,
                 noSmtpMessage: noSmtpMessage,
-            }, Dep.prototype.data.call(this));
+                ...Dep.prototype.data.call(this),
+            };
         },
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            
+
             this.list = [];
 
-            var primaryEmailAddress = this.getUser().get('emailAddress');
+            let primaryEmailAddress = this.getUser().get('emailAddress');
 
             if (primaryEmailAddress) {
                 this.list.push(primaryEmailAddress);
             }
 
-            var emailAddressList = this.getUser().get('emailAddressList') || [];
+            let emailAddressList = this.getUser().get('emailAddressList') || [];
 
-            emailAddressList.forEach(item => {
-                this.list.push(item);
-            });
+            emailAddressList.forEach(item => this.list.push(item));
 
             this.list = _.uniq(this.list);
 
-            if (this.getConfig().get('outboundEmailIsShared') && this.getConfig().get('outboundEmailFromAddress')) {
-                var address = this.getConfig().get('outboundEmailFromAddress');
+            if (
+                this.getConfig().get('outboundEmailIsShared') &&
+                this.getConfig().get('outboundEmailFromAddress')
+            ) {
+                let address = this.getConfig().get('outboundEmailFromAddress');
 
                 if (!~this.list.indexOf(address)) {
                     this.list.push(this.getConfig().get('outboundEmailFromAddress'));
