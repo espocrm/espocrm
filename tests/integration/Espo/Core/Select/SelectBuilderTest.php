@@ -574,6 +574,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
             'emailUser.userId' => $userId,
             [
                 'status' => ['Archived', 'Sent'],
+                'groupFolderId' => null,
             ],
             'fromEmailAddressId!=' => [$emailAddressId],
             [
