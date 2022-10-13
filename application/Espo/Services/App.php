@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\Entities\InboundEmail as InboundEmailEntity;
 use Espo\Services\Settings as SettingsService;
 
 use Espo\Repositories\PhoneNumber as PhoneNumberRepository;
@@ -37,14 +38,14 @@ use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\{
     Acl,
+    Authentication\Logins\Espo,
     DataManager,
     InjectableFactory,
     Utils\Metadata,
     Utils\Config,
     Utils\Language,
     Utils\FieldUtil,
-    Utils\Log,
-};
+    Utils\Log};
 
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
@@ -52,10 +53,10 @@ use Espo\Entities\PhoneNumber;
 use Espo\Entities\ArrayValue;
 
 use Espo\ORM\{
+    Collection,
     EntityManager,
     Repository\RDBRepository,
-    Entity,
-};
+    Entity};
 
 use Espo\Tools\App\AppParam;
 use stdClass;
@@ -63,27 +64,17 @@ use Throwable;
 
 class App
 {
-    private $config;
-
-    private $entityManager;
-
-    private $metadata;
-
-    private $acl;
-
-    private $dataManager;
-
-    private $injectableFactory;
-
-    private $settingsService;
-
-    private $user;
-
-    private $preferences;
-
-    private $fieldUtil;
-
-    private $log;
+    private Config $config;
+    private EntityManager $entityManager;
+    private Metadata $metadata;
+    private Acl $acl;
+    private DataManager $dataManager;
+    private InjectableFactory $injectableFactory;
+    private SettingsService $settingsService;
+    private User $user;
+    private Preferences $preferences;
+    private FieldUtil $fieldUtil;
+    private Log $log;
 
     public function __construct(
         Config $config,
@@ -159,8 +150,10 @@ class App
         $appParams = [
             'maxUploadSize' => $this->getMaxUploadSize() / 1024.0 / 1024.0,
             'isRestrictedMode' => $this->config->get('restrictedMode'),
-            'passwordChangeForNonAdminDisabled' => $this->config->get('authenticationMethod', 'Espo') !== 'Espo',
-            'timeZoneList' => $this->metadata->get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options'], []),
+            'passwordChangeForNonAdminDisabled' => $this->config
+                    ->get('authenticationMethod', Espo::NAME) !== Espo::NAME,
+            'timeZoneList' => $this->metadata
+                ->get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options'], []),
             'auth2FARequired' => $auth2FARequired,
         ];
 
@@ -206,8 +199,8 @@ class App
 
         $data = $user->getValueMap();
 
-        $data->emailAddressList = $emailAddressData->emailAddressList;
-        $data->userEmailAddressList = $emailAddressData->userEmailAddressList;
+        $data->emailAddressList = $emailAddressData['emailAddressList'];
+        $data->userEmailAddressList = $emailAddressData['userEmailAddressList'];
 
         unset($data->authTokenId);
         unset($data->password);
@@ -260,91 +253,123 @@ class App
         return $data;
     }
 
-    private function getEmailAddressData(): stdClass
+    /**
+     * @return array{
+     *     emailAddressList: string[],
+     *     userEmailAddressList: string[],
+     * }
+     */
+    private function getEmailAddressData(): array
     {
         $user = $this->user;
 
         $emailAddressList = [];
         $userEmailAddressList = [];
 
+        /** @var Collection<\Espo\Entities\EmailAddress> $emailAddressCollection */
         $emailAddressCollection = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->getRelation($user, 'emailAddresses')
             ->find();
 
         foreach ($emailAddressCollection as $emailAddress) {
-            if ($emailAddress->get('invalid')) {
+            if ($emailAddress->isInvalid()) {
                 continue;
             }
 
-            $userEmailAddressList[] = $emailAddress->get('name');
+            $userEmailAddressList[] = $emailAddress->getAddress();
 
-            if ($user->get('emailAddress') === $emailAddress->get('name')) {
+            if ($user->getEmailAddress() === $emailAddress->getAddress()) {
                 continue;
             }
 
-            $emailAddressList[] = $emailAddress->get('name');
+            $emailAddressList[] = $emailAddress->getAddress();
         }
 
-        if ($user->get('emailAddress')) {
-            array_unshift($emailAddressList, $user->get('emailAddress'));
+        if ($user->getEmailAddress()) {
+            array_unshift($emailAddressList, $user->getEmailAddress());
         }
 
-        $entityManager = $this->entityManager;
+        $emailAddressList = array_merge(
+            $emailAddressList,
+            $this->getUserGroupEmailAddressList($user)
+        );
 
-        /** @var string[] $teamIdList */
-        $teamIdList = $user->getLinkMultipleIdList('teams');
+        $emailAddressList = array_values(array_unique($emailAddressList));
 
-        $groupEmailAccountPermission = $this->acl->get('groupEmailAccountPermission');
-
-        if ($groupEmailAccountPermission && $groupEmailAccountPermission !== 'no') {
-            if ($groupEmailAccountPermission === 'team') {
-                if (count($teamIdList)) {
-                    $inboundEmailList = $entityManager
-                        ->getRDBRepository('InboundEmail')
-                        ->where([
-                            'status' => 'Active',
-                            'useSmtp' => true,
-                            'smtpIsShared' => true,
-                            'teamsMiddle.teamId' => $teamIdList,
-                        ])
-                        ->join('teams')
-                        ->distinct()
-                        ->find();
-
-                    foreach ($inboundEmailList as $inboundEmail) {
-                        if (!$inboundEmail->get('emailAddress')) {
-                            continue;
-                        }
-
-                        $emailAddressList[] = $inboundEmail->get('emailAddress');
-                    }
-                }
-            }
-            else if ($groupEmailAccountPermission === 'all') {
-                $inboundEmailList = $entityManager
-                    ->getRDBRepository('InboundEmail')
-                    ->where([
-                        'status' => 'Active',
-                        'useSmtp' => true,
-                        'smtpIsShared' => true,
-                    ])
-                    ->find();
-
-                foreach ($inboundEmailList as $inboundEmail) {
-                    if (!$inboundEmail->get('emailAddress')) {
-                        continue;
-                    }
-
-                    $emailAddressList[] = $inboundEmail->get('emailAddress');
-                }
-            }
-        }
-
-        return (object) [
+        return [
             'emailAddressList' => $emailAddressList,
             'userEmailAddressList' => $userEmailAddressList,
         ];
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getUserGroupEmailAddressList(User $user): array
+    {
+        $groupEmailAccountPermission = $this->acl->getPermissionLevel('groupEmailAccountPermission');
+
+        if (!$groupEmailAccountPermission || $groupEmailAccountPermission === Acl\Table::LEVEL_NO) {
+            return [];
+        }
+
+        if ($groupEmailAccountPermission === Acl\Table::LEVEL_TEAM) {
+            $teamIdList = $user->getLinkMultipleIdList('teams') ?? [];
+
+            if (!count($teamIdList)) {
+                return [];
+            }
+
+            $inboundEmailList = $this->entityManager
+                ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
+                ->where([
+                    'status' => InboundEmailEntity::STATUS_ACTIVE,
+                    'useSmtp' => true,
+                    'smtpIsShared' => true,
+                    'teamsMiddle.teamId' => $teamIdList,
+                ])
+                ->join('teams')
+                ->distinct()
+                ->find();
+
+            $list = [];
+
+            foreach ($inboundEmailList as $inboundEmail) {
+                if (!$inboundEmail->getEmailAddress()) {
+                    continue;
+                }
+
+                $list[] = $inboundEmail->getEmailAddress();
+            }
+
+            return $list;
+        }
+
+        if ($groupEmailAccountPermission === Acl\Table::LEVEL_ALL) {
+            $inboundEmailList = $this->entityManager
+                ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
+                ->where([
+                    'status' => InboundEmailEntity::STATUS_ACTIVE,
+                    'useSmtp' => true,
+                    'smtpIsShared' => true,
+                ])
+                ->find();
+
+            $list = [];
+
+            foreach ($inboundEmailList as $inboundEmail) {
+                if (!$inboundEmail->getEmailAddress()) {
+                    continue;
+                }
+
+                $list[] = $inboundEmail->getEmailAddress();
+            }
+
+            return $list;
+        }
+
+        return [];
     }
 
     /**
