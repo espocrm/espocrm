@@ -110,5 +110,15 @@ class BeforeUpgrade
         ]);
 
         $entityManager->saveEntity($account);
+
+        $preferences->set('smtpServer', null);
+        $preferences->set('smtpPort', null);
+        $preferences->set('smtpAuth', null);
+        $preferences->set('smtpAuth', null);
+        $preferences->set('smtpSecurity', null);
+        $preferences->set('smtpUsername', null);
+        $preferences->set('smtpPassword', null);
+
+        $entityManager->saveEntity($preferences);
     }
 }
