@@ -309,9 +309,7 @@ class Importer
                 /** @var Email|null $replied */
                 $replied = $this->entityManager
                     ->getRDBRepository(Email::ENTITY_TYPE)
-                    ->where([
-                        'messageId' => $inReplyTo
-                    ])
+                    ->where(['messageId' => $inReplyTo])
                     ->findOne();
 
                 if ($replied) {
@@ -351,7 +349,7 @@ class Importer
         }
 
         if (!$parentFound) {
-            $from = $email->get('from');
+            $from = $email->getFromAddress();
 
             if ($from) {
                 $parentFound = $this->findParentByAddress($email, $from);

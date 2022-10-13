@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\ORM\Collection;
 use Laminas\Mail\Message;
 
 use Espo\Services\EmailAccount as EmailAccountService;
@@ -176,22 +177,24 @@ class Email extends Record implements
         $userAddressList = [];
 
         if ($user) {
+            /** @var Collection<\Espo\Entities\EmailAddress> $emailAddressCollection */
             $emailAddressCollection = $this->entityManager
                 ->getRDBRepository(User::ENTITY_TYPE)
                 ->getRelation($user, 'emailAddresses')
                 ->find();
 
             foreach ($emailAddressCollection as $ea) {
-                $userAddressList[] = $ea->get('lower');
+                $userAddressList[] = $ea->getLower();
             }
         }
 
-        $fromAddress = strtolower($entity->get('from'));
-        $originalFromAddress = $entity->get('from');
+        $originalFromAddress = $entity->getFromAddress();
 
-        if (!$fromAddress) {
+        if (!$originalFromAddress) {
             throw new Error("Email sending: Can't send with empty 'from' address.");
         }
+
+        $fromAddress = strtolower($originalFromAddress);
 
         $inboundEmail = null;
         $emailAccount = null;
@@ -262,26 +265,26 @@ class Email extends Record implements
         $params = [];
 
         $parent = null;
-        $parentId = $entity->get('parentId');
-        $parentType = $entity->get('parentType');
+        $parentId = $entity->getParentId();
+        $parentType = $entity->getParentType();
 
         if ($parentType && $parentId) {
             $parent = $this->entityManager->getEntityById($parentType, $parentId);
         }
 
+        // @todo Refactor? Move to a separate class? Make extensible?
         if (
-            $parent &&
-            $parent->getEntityType() == CaseObj::ENTITY_TYPE &&
-            $parent->get('inboundEmailId')
+            $parent instanceof CaseObj &&
+            $parent->getInboundEmailId()
         ) {
             /** @var string $inboundEmailId */
-            $inboundEmailId = $parent->get('inboundEmailId');
+            $inboundEmailId = $parent->getInboundEmailId();
 
             /** @var ?InboundEmail $inboundEmail */
             $inboundEmail = $this->entityManager->getEntityById(InboundEmail::ENTITY_TYPE, $inboundEmailId);
 
-            if ($inboundEmail && $inboundEmail->get('replyToAddress')) {
-                $params['replyToAddress'] = $inboundEmail->get('replyToAddress');
+            if ($inboundEmail && $inboundEmail->getReplyToAddress()) {
+                $params['replyToAddress'] = $inboundEmail->getReplyToAddress();
             }
         }
 
@@ -438,6 +441,7 @@ class Email extends Record implements
      * @throws \Espo\Core\Exceptions\Forbidden
      * @throws \Espo\Core\Exceptions\Conflict
      * @throws \Espo\Core\Exceptions\BadRequest
+     * @throws SendingError
      */
     public function create(stdClass $data, CreateParams $params): Entity
     {
@@ -465,6 +469,7 @@ class Email extends Record implements
     /**
      * @throws BadRequest
      * @throws Error
+     * @throws SendingError
      */
     protected function afterUpdateEntity(Entity $entity, $data)
     {
@@ -836,7 +841,9 @@ class Email extends Record implements
 
     private function getRepliedEmailMessageId(EmailEntity $email): ?string
     {
-        if (!$email->get('repliedId')) {
+        $repliedLink = $email->getReplied();
+
+        if (!$repliedLink) {
             return null;
         }
 
@@ -844,9 +851,7 @@ class Email extends Record implements
         $replied = $this->entityManager
             ->getRDBRepository(EmailEntity::ENTITY_TYPE)
             ->select(['messageId'])
-            ->where([
-                'id' => $email->get('repliedId')
-            ])
+            ->where(['id' => $repliedLink->getId()])
             ->findOne();
 
         if (!$replied) {

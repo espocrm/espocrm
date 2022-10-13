@@ -555,6 +555,12 @@ class Email extends Entity
         return $this->getValueObject('groupFolder');
     }
 
+    public function getReplied(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('replied');
+    }
+
     private function getEmailRepository(): EmailRepository
     {
         if (!$this->entityManager) {

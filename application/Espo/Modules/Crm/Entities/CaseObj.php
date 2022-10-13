@@ -34,4 +34,19 @@ class CaseObj extends \Espo\Core\ORM\Entity
     public const ENTITY_TYPE = 'Case';
 
     protected $entityType = 'Case';
+
+    public function getName(): ?string
+    {
+        return $this->get('name');
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->get('status');
+    }
+
+    public function getInboundEmailId(): ?string
+    {
+        return $this->get('inboundEmailId');
+    }
 }

@@ -57,6 +57,11 @@ class EmailAddress extends Entity
         return $this->get('name');
     }
 
+    public function getLower(): string
+    {
+        return $this->get('lower');
+    }
+
     public function isOptedOut(): bool
     {
         return $this->get('optOut');
