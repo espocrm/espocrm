@@ -295,6 +295,12 @@ class App
             $this->getUserGroupEmailAddressList($user)
         );
 
+        $outboundEmailFromAddress = $this->config->get('outboundEmailFromAddress');
+
+        if ($this->config->get('outboundEmailIsShared') && $outboundEmailFromAddress) {
+            $emailAddressList[] = $outboundEmailFromAddress;
+        }
+
         $emailAddressList = array_values(array_unique($emailAddressList));
 
         return [

@@ -57,30 +57,7 @@ define('views/email/fields/compose-from-address', ['views/fields/base'], functio
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.list = [];
-
-            let primaryEmailAddress = this.getUser().get('emailAddress');
-
-            if (primaryEmailAddress) {
-                this.list.push(primaryEmailAddress);
-            }
-
-            let emailAddressList = this.getUser().get('emailAddressList') || [];
-
-            emailAddressList.forEach(item => this.list.push(item));
-
-            this.list = _.uniq(this.list);
-
-            if (
-                this.getConfig().get('outboundEmailIsShared') &&
-                this.getConfig().get('outboundEmailFromAddress')
-            ) {
-                let address = this.getConfig().get('outboundEmailFromAddress');
-
-                if (!~this.list.indexOf(address)) {
-                    this.list.push(this.getConfig().get('outboundEmailFromAddress'));
-                }
-            }
+            this.list = this.getUser().get('emailAddressList') || [];
         },
     });
 });
