@@ -449,7 +449,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
         $this->email->set('body', 'test <img src="?entryPoint=attachment&amp;id=Id01">');
 
         $this->entityManager->expects($this->exactly(1))
-                            ->method('getEntity')
+                            ->method('getEntityById')
                             ->with('Attachment', 'Id01');
 
         $this->email->getInlineAttachmentList();
@@ -467,7 +467,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
         $this->email->set('body', 'test <img src="?entryPoint=attachment&amp;id=Id01">');
 
         $this->entityManager->expects($this->any())
-                            ->method('getEntity')
+                            ->method('getEntityById')
                             ->with('Attachment', 'Id01')
                             ->will($this->returnValue($attachment));
 
