@@ -34,6 +34,7 @@ use Espo\Core\Job\Job\Status;
 use Espo\Core\Job\Preparator;
 use Espo\Core\Job\Preparator\Data;
 
+use Espo\Entities\EmailAccount;
 use Espo\ORM\EntityManager;
 
 use Espo\Entities\Job as JobEntity;
@@ -42,7 +43,7 @@ use DateTimeImmutable;
 
 class CheckEmailAccounts implements Preparator
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {
@@ -52,10 +53,10 @@ class CheckEmailAccounts implements Preparator
     public function prepare(Data $data, DateTimeImmutable $executeTime): void
     {
         $collection = $this->entityManager
-            ->getRDBRepository('EmailAccount')
+            ->getRDBRepository(EmailAccount::ENTITY_TYPE)
             ->join('assignedUser', 'assignedUserAdditional')
             ->where([
-                'status' => 'Active',
+                'status' => EmailAccount::STATUS_ACTIVE,
                 'useImap' => true,
                 'assignedUserAdditional.isActive' => true,
             ])
@@ -70,7 +71,7 @@ class CheckEmailAccounts implements Preparator
                         Status::RUNNING,
                         Status::READY,
                     ],
-                    'targetType' => 'EmailAccount',
+                    'targetType' => EmailAccount::ENTITY_TYPE,
                     'targetId' => $entity->getId(),
                 ])
                 ->findOne();
@@ -84,7 +85,7 @@ class CheckEmailAccounts implements Preparator
                 ->where([
                     'scheduledJobId' => $data->getId(),
                     'status' => Status::PENDING,
-                    'targetType' => 'EmailAccount',
+                    'targetType' => EmailAccount::ENTITY_TYPE,
                     'targetId' => $entity->getId(),
                 ])
                 ->count();
@@ -99,7 +100,7 @@ class CheckEmailAccounts implements Preparator
                 'name' => $data->getName(),
                 'scheduledJobId' => $data->getId(),
                 'executeTime' => $executeTime->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
-                'targetType' => 'EmailAccount',
+                'targetType' => EmailAccount::ENTITY_TYPE,
                 'targetId' => $entity->getId(),
             ]);
 

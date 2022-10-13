@@ -41,13 +41,10 @@ use Espo\Entities\User;
 
 class Language
 {
-    private $metadata;
-
-    private $acl;
-
-    private $user;
-
-    private $container;
+    private Metadata $metadata;
+    private Acl $acl;
+    private User $user;
+    private Container $container;
 
     public function __construct(
         Metadata $metadata,

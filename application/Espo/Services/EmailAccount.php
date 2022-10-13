@@ -84,21 +84,21 @@ class EmailAccount extends Record implements
     {
         if (!$this->user->isAdmin()) {
             $count = $this->entityManager
-                ->getRDBRepository('EmailAccount')
+                ->getRDBRepository(EmailAccountEntity::ENTITY_TYPE)
                 ->where([
-                    'assignedUserId' => $this->getUser()->getId()
+                    'assignedUserId' => $this->user->getId()
                 ])
                 ->count();
 
-            if ($count >= $this->getConfig()->get('maxEmailAccountCount', \PHP_INT_MAX)) {
+            if ($count >= $this->config->get('maxEmailAccountCount', \PHP_INT_MAX)) {
                 throw new Forbidden();
             }
         }
 
         $entity = parent::create($data, $params);
 
-        if (!$this->getUser()->isAdmin()) {
-            $entity->set('assignedUserId', $this->getUser()->getId());
+        if (!$this->user->isAdmin()) {
+            $entity->set('assignedUserId', $this->user->getId());
         }
 
         $this->entityManager->saveEntity($entity);

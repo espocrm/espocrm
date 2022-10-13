@@ -31,6 +31,7 @@ namespace Espo\Classes\Select\EmailFilter\AccessControlFilters;
 
 use Espo\{
     Core\Select\AccessControl\Filter,
+    Entities\EmailAccount,
     ORM\Query\SelectBuilder as QueryBuilder,
     ORM\EntityManager,
     Entities\User,
@@ -38,9 +39,8 @@ use Espo\{
 
 class OnlyOwn implements Filter
 {
-    private $user;
-
-    private $entityManager;
+    private User $user;
+    private EntityManager $entityManager;
 
     public function __construct(User $user, EntityManager $entityManager)
     {
@@ -53,14 +53,14 @@ class OnlyOwn implements Filter
         $part = [];
 
         $part[] = [
-            'parentType' => 'User',
+            'parentType' => User::ENTITY_TYPE,
             'parentId' => $this->user->getId(),
         ];
 
         $idList = [];
 
         $emailAccountList = $this->entityManager
-            ->getRDBRepository('EmailAccount')
+            ->getRDBRepository(EmailAccount::ENTITY_TYPE)
             ->select('id')
             ->where([
                 'assignedUserId' => $this->user->getId(),
@@ -76,7 +76,7 @@ class OnlyOwn implements Filter
                 'OR' => [
                     $part,
                     [
-                        'parentType' => 'EmailAccount',
+                        'parentType' => EmailAccount::ENTITY_TYPE,
                         'parentId' => $idList,
                     ],
                 ]

@@ -31,6 +31,7 @@ namespace Espo\Classes\Select\EmailFilter\BoolFilters;
 
 use Espo\{
     Core\Select\Bool\Filter,
+    Entities\EmailAccount,
     ORM\Query\SelectBuilder as QueryBuilder,
     ORM\Query\Part\WhereClause,
     ORM\Query\Part\Where\OrGroupBuilder,
@@ -40,9 +41,8 @@ use Espo\{
 
 class OnlyMy implements Filter
 {
-    private $user;
-
-    private $entityManager;
+    private User $user;
+    private  EntityManager $entityManager;
 
     public function __construct(User $user, EntityManager $entityManager)
     {
@@ -55,14 +55,14 @@ class OnlyMy implements Filter
         $part = [];
 
         $part[] = [
-            'parentType' => 'User',
+            'parentType' => User::ENTITY_TYPE,
             'parentId' => $this->user->getId(),
         ];
 
         $idList = [];
 
         $emailAccountList = $this->entityManager
-            ->getRDBRepository('EmailAccount')
+            ->getRDBRepository(EmailAccount::ENTITY_TYPE)
             ->select('id')
             ->where([
                 'assignedUserId' => $this->user->getId(),
@@ -78,7 +78,7 @@ class OnlyMy implements Filter
                 'OR' => [
                     $part,
                     [
-                        'parentType' => 'EmailAccount',
+                        'parentType' => EmailAccount::ENTITY_TYPE,
                         'parentId' => $idList,
                     ],
                 ]
