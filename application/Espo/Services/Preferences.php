@@ -43,7 +43,6 @@ use Espo\Core\{
     Exceptions\Forbidden,
     Exceptions\NotFound,
     FieldValidation\FieldValidationManager,
-    Utils\Crypt,
     Acl\Table,
     Acl,
     Utils\Config,
@@ -55,7 +54,6 @@ class Preferences
 {
     private EntityManager $entityManager;
     private User $user;
-    private Crypt $crypt;
     private Acl $acl;
     private Config $config;
     private FieldValidationManager $fieldValidationManager;
@@ -63,14 +61,12 @@ class Preferences
     public function __construct(
         EntityManager $entityManager,
         User $user,
-        Crypt $crypt,
         Acl $acl,
         Config $config,
         FieldValidationManager $fieldValidationManager
     ) {
         $this->entityManager = $entityManager;
         $this->user = $user;
-        $this->crypt = $crypt;
         $this->acl = $acl;
         $this->config = $config;
         $this->fieldValidationManager = $fieldValidationManager;
@@ -105,10 +101,10 @@ class Preferences
             throw new NotFound();
         }
 
-        $entity->set('smtpEmailAddress', $user->getEmailAddress());
         $entity->set('name', $user->getName());
         $entity->set('isPortalUser', $user->isPortal());
 
+        // @todo Remove.
         $entity->clear('smtpPassword');
 
         $forbiddenAttributeList = $this->acl
@@ -151,19 +147,15 @@ class Preferences
             throw new NotFound();
         }
 
-        if (property_exists($data, 'smtpPassword')) {
-            $data->smtpPassword = $this->crypt->encrypt($data->smtpPassword);
-        }
-
         $entity->set($data);
 
         $this->fieldValidationManager->process($entity, $data);
 
         $this->entityManager->saveEntity($entity);
 
-        $entity->set('smtpEmailAddress', $user->getEmailAddress());
         $entity->set('name', $user->getName());
 
+        // @todo Remove.
         $entity->clear('smtpPassword');
 
         return $entity;

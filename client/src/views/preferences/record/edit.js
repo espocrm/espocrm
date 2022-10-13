@@ -48,34 +48,6 @@ define('views/preferences/record/edit', ['views/record/edit'], function (Dep) {
 
         dynamicLogicDefs: {
             fields: {
-                'smtpUsername': {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                type: 'isTrue',
-                                attribute: 'smtpAuth',
-                            },
-                            {
-                                type: 'isNotEmpty',
-                                attribute: 'smtpServer',
-                            }
-                        ]
-                    }
-                },
-                'smtpPassword': {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                type: 'isTrue',
-                                attribute: 'smtpAuth',
-                            },
-                            {
-                                type: 'isNotEmpty',
-                                attribute: 'smtpServer',
-                            }
-                        ]
-                    }
-                },
                 'tabList': {
                     visible: {
                         conditionGroup: [
@@ -204,33 +176,6 @@ define('views/preferences/record/edit', ['views/record/edit'], function (Dep) {
                     window.location.reload();
                 }
             });
-
-            this.listenTo(this.model, 'change:smtpSecurity', (model, smtpSecurity, o) => {
-                if (!o.ui) {
-                    return;
-                }
-
-                if (smtpSecurity === 'SSL') {
-                    this.model.set('smtpPort', '465');
-                } else if (smtpSecurity === 'TLS') {
-                    this.model.set('smtpPort', '587');
-                } else {
-                    this.model.set('smtpPort', '25');
-                }
-            });
-
-            if (/*this.getAcl().checkScope('EmailAccountScope') && */!this.model.get('smtpServer')) {
-                this.hideField('smtpServer');
-                this.hideField('smtpPort');
-                this.hideField('smtpSecurity');
-                this.hideField('smtpServer');
-                this.hideField('smtpAuth');
-                this.hideField('smtpUsername');
-                this.hideField('smtpPassword');
-                this.hideField('testSend');
-                this.hideField('smtpEmailAddress');
-                this.hidePanel('smtp');
-            }
         },
 
         controlFollowCreatedEntityListVisibility: function () {

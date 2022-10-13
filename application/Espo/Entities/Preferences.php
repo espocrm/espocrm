@@ -34,28 +34,12 @@ class Preferences extends \Espo\Core\ORM\Entity
     public const ENTITY_TYPE = 'Preferences';
 
     /**
-     * @return ?array<string,mixed>
+     * For backward compatibility.
+     * @deprecated
+     * @return null
      */
-    public function getSmtpParams(): ?array
+    public function getSmtpParams()
     {
-        $smtpParams = [];
-
-        $smtpParams['server'] = $this->get('smtpServer');
-
-        if ($smtpParams['server']) {
-            $smtpParams['port'] = $this->get('smtpPort');
-            $smtpParams['server'] = $this->get('smtpServer');
-            $smtpParams['auth'] = $this->get('smtpAuth');
-            $smtpParams['security'] = $this->get('smtpSecurity');
-
-            if ($this->get('smtpAuth')) {
-                $smtpParams['username'] = $this->get('smtpUsername');
-                $smtpParams['password'] = $this->get('smtpPassword');
-            }
-
-            return $smtpParams;
-        }
-
         return null;
     }
 }

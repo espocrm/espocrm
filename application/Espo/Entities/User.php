@@ -39,33 +39,21 @@ class User extends Person
     public const ENTITY_TYPE = 'User';
 
     public const ATTRIBUTE_TYPE = 'type';
-
     public const ATTRIBUTE_IS_ACTIVE = 'isActive';
 
     public const LINK_ACCOUNTS = 'accounts';
-
     public const LINK_CONTACT = 'contact';
-
     public const LINK_PORTALS = 'portals';
-
     public const LINK_TEAMS = 'teams';
-
     public const LINK_DEFAULT_TEAM = 'defaultTeam';
-
     public const LINK_ROLES = 'roles';
-
     public const LINK_PORTAL_ROLES = 'portalRoles';
 
     public const TYPE_PORTAL = 'portal';
-
     public const TYPE_ADMIN = 'admin';
-
     public const TYPE_SYSTEM = 'system';
-
     public const TYPE_REGULAR = 'regular';
-
     public const TYPE_API = 'api';
-
     public const TYPE_SUPER_ADMIN = 'super-admin';
 
     public function isActive(): bool

@@ -35,14 +35,9 @@ define('views/email/fields/compose-from-address', ['views/fields/base'], functio
         data: function () {
             let noSmtpMessage = this.translate('noSmtpSetup', 'messages', 'Email');
 
-            let linkHtml = this.getAcl().check('EmailAccount') ?
-                $('<a>')
+            let linkHtml = $('<a>')
                     .attr('href', '#EmailAccount')
                     .text(this.translate('EmailAccount', 'scopeNamesPlural'))
-                    .get(0).outerHTML :
-                $('<a>')
-                    .attr('href', '#Preferences')
-                    .text(this.translate('Preferences'))
                     .get(0).outerHTML;
 
             noSmtpMessage = noSmtpMessage.replace('{link}', linkHtml);

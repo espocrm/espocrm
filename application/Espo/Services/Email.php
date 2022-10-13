@@ -45,7 +45,6 @@ use Espo\Tools\Email\Service;
 
 use Espo\Entities\InboundEmail;
 use Espo\Entities\EmailAccount;
-use Espo\Entities\Preferences;
 use Espo\Entities\Attachment;
 use Espo\Entities\UserData;
 
@@ -110,6 +109,9 @@ class Email extends Record implements
         'groupFolderId',
     ];
 
+    /**
+     * @todo Move to Tools\Email.
+     */
     public function getUserSmtpParams(string $userId): ?SmtpParams
     {
         /** @var ?User $user */
@@ -125,20 +127,9 @@ class Email extends Record implements
             $fromAddress = strtolower($fromAddress);
         }
 
-        /** @var ?Preferences $preferences */
-        $preferences = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $user->getId());
+        $smtpParams = null;
 
-        if (!$preferences) {
-            return null;
-        }
-
-        $smtpParams = $preferences->getSmtpParams();
-
-        if ($smtpParams && array_key_exists('password', $smtpParams)) {
-            $smtpParams['password'] = $this->crypt->decrypt($smtpParams['password']);
-        }
-
-        if (!$smtpParams && $fromAddress) {
+        if ($fromAddress) {
             $emailAccountService = $this->getEmailAccountService();
 
             $emailAccount = $emailAccountService->findAccountForUserForSending($user, $fromAddress);
@@ -208,29 +199,12 @@ class Email extends Record implements
         $smtpParams = null;
 
         if ($user && in_array($fromAddress, $userAddressList)) {
-            $primaryUserAddress = strtolower($user->getEmailAddress() ?? '');
-
-            if ($primaryUserAddress === $fromAddress) {
-                /** @var ?Preferences $preferences */
-                $preferences = $this->entityManager->getEntity(Preferences::ENTITY_TYPE, $user->getId());
-
-                if ($preferences) {
-                    $smtpParams = $preferences->getSmtpParams();
-
-                    if ($smtpParams && array_key_exists('password', $smtpParams)) {
-                        $smtpParams['password'] = $this->crypt->decrypt($smtpParams['password']);
-                    }
-                }
-            }
-
             $emailAccountService = $this->getEmailAccountService();
 
             $emailAccount = $emailAccountService->findAccountForUserForSending($user, $originalFromAddress);
 
-            if (!$smtpParams) {
-                if ($emailAccount && $emailAccount->isAvailableForSending()) {
-                    $smtpParams = $emailAccountService->getSmtpParamsFromAccount($emailAccount);
-                }
+            if ($emailAccount && $emailAccount->isAvailableForSending()) {
+                $smtpParams = $emailAccountService->getSmtpParamsFromAccount($emailAccount);
             }
 
             if ($smtpParams) {
@@ -646,24 +620,6 @@ class Email extends Record implements
      */
     private function obtainSendTestEmailPassword(?string $type, ?string $id): ?string
     {
-        if ($type === 'preferences') {
-            if (!$id) {
-                return null;
-            }
-
-            if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
-                throw new Forbidden();
-            }
-
-            $preferences = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $id);
-
-            if (!$preferences) {
-                throw new NotFound();
-            }
-
-            return $this->crypt->decrypt($preferences->get('smtpPassword'));
-        }
-
         if ($type === 'emailAccount') {
             if (!$this->acl->checkScope(EmailAccount::ENTITY_TYPE)) {
                 throw new Forbidden();
