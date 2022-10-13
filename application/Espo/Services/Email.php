@@ -320,11 +320,16 @@ class Email extends Record implements
             throw ErrorSilent::createWithBody('sendingFail', Json::encode($errorData));
         }
 
+        if ($inboundEmail) {
+            $entity->addLinkMultipleId('inboundEmails', $inboundEmail->getId());
+        }
+        else if ($emailAccount) {
+            $entity->addLinkMultipleId('emailAccounts', $emailAccount->getId());
+        }
+
         $this->entityManager->saveEntity($entity, ['isJustSent' => true]);
 
         if ($inboundEmail) {
-            $entity->addLinkMultipleId('inboundEmails', $inboundEmail->getId());
-
             if ($inboundEmail->storeSentEmails()) {
                 try {
                     $inboundEmailService = $this->getInboundEmailService();
@@ -340,8 +345,6 @@ class Email extends Record implements
             }
         }
         else if ($emailAccount) {
-            $entity->addLinkMultipleId('emailAccounts', $emailAccount->getId());
-
             if ($emailAccount->storeSentEmails()) {
                 try {
                     $emailAccountService = $this->getEmailAccountService();
@@ -408,7 +411,7 @@ class Email extends Record implements
      */
     public function validateEmailAddresses(EmailEntity $entity): void
     {
-        $from = $entity->get('from');
+        $from = $entity->getFromAddress();
 
         if ($from) {
             if (!filter_var($from, \FILTER_VALIDATE_EMAIL)) {
