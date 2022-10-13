@@ -39,6 +39,8 @@ use RuntimeException;
  */
 class ApplicationUser
 {
+    public const SYSTEM_USER_ID = 'system';
+
     private Container $container;
     private EntityManagerProxy $entityManagerProxy;
 
@@ -53,14 +55,14 @@ class ApplicationUser
      */
     public function setupSystemUser(): void
     {
-        $user = $this->entityManagerProxy->getEntity('User', 'system');
+        $user = $this->entityManagerProxy->getEntityById(User::ENTITY_TYPE, self::SYSTEM_USER_ID);
 
         if (!$user) {
             throw new RuntimeException("System user is not found.");
         }
 
         $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
-        $user->set('type', 'system');
+        $user->set('type', User::TYPE_SYSTEM);
 
         $this->container->set('user', $user);
     }

@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Formula\Functions\ExtGroup\EmailGroup;
 
+use Espo\Core\ApplicationUser;
+use Espo\Entities\Email;
+use Exception;
 use Espo\Core\Formula\{
     Functions\BaseFunction,
     ArgumentList,
@@ -61,52 +64,60 @@ class SendType extends BaseFunction implements
 
         $em = $this->entityManager;
 
-        $email = $em->getEntity('Email', $id);
+        /** @var ?Email $email */
+        $email = $em->getEntityById(Email::ENTITY_TYPE, $id);
 
         if (!$email) {
             $this->log("Email '{$id}' does not exist.");
+
             return false;
         }
 
-        $status = $email->get('status');
+        $status = $email->getStatus();
 
-        if ($status && in_array($status, ['Sent'])) {
+        if ($status === Email::STATUS_SENT) {
             $this->log("Can't send email that has 'Sent' status.");
+
             return false;
         }
 
         /** @var \Espo\Services\Email $service */
-        $service = $this->serviceFactory->create('Email');
+        $service = $this->serviceFactory->create(Email::ENTITY_TYPE);
 
         $service->loadAdditionalFields($email);
 
         $toSave = false;
 
-        if ($status !== 'Sending') {
-            $email->set('status', 'Sending');
+        if ($status !== Email::STATUS_SENDING) {
+            $email->set('status', Email::STATUS_SENDING);
+
             $toSave = true;
         }
 
         if (!$email->get('from')) {
             $from = $this->config->get('outboundEmailFromAddress');
+
             if ($from) {
                 $email->set('from', $from);
+
                 $toSave = true;
             }
         }
 
         if ($toSave) {
             $em->saveEntity($email, [
-                'modifiedById' => 'system',
+                'modifiedById' => ApplicationUser::SYSTEM_USER_ID,
                 'silent' => true,
             ]);
         }
 
         try {
             $service->sendEntity($email);
-        } catch (\Exception $e) {
+        }
+        catch (Exception $e) {
             $message = $e->getMessage();
             $this->log("Error while sending. Message: {$message}." , 'error');
+
             return false;
         }
 
