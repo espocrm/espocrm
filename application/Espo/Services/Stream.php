@@ -73,19 +73,11 @@ use LogicException;
 
 class Stream
 {
-    /**
-     * @var ?array<string,string>
-     */
+    /** @var ?array<string,string> */
     private $statusStyles = null;
-
-    /**
-     * @var ?array<string,string>
-     */
+    /** @var ?array<string,string> */
     private $statusFields = null;
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $successDefaultStyleList = [
         'Held',
         'Closed Won',
@@ -94,10 +86,7 @@ class Stream
         'Complete',
         'Sold',
     ];
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $dangerDefaultStyleList = [
         'Not Held',
         'Closed Lost',
@@ -120,28 +109,6 @@ class Stream
      */
     private $auditedFieldsCache = [];
 
-    private $entityManager;
-
-    private $config;
-
-    private $user;
-
-    private $metadata;
-
-    private $acl;
-
-    private $aclManager;
-
-    private $fieldUtil;
-
-    private $selectBuilderFactory;
-
-    private $userAclManagerProvider;
-
-    private $noteAccessControl;
-
-    private $recordServiceContainer;
-
     /**
      * When a record is re-assigned, ACL will be recalculated for related notes
      * created within the period.
@@ -156,6 +123,18 @@ class Stream
      * Not used currently.
      */
     private const NOTE_NOTIFICATION_PERIOD = '1 hour';
+
+    private EntityManager $entityManager;
+    private Config $config;
+    private User $user;
+    private Metadata $metadata;
+    private Acl $acl;
+    private AclManager $aclManager;
+    private FieldUtil $fieldUtil;
+    private SelectBuilderFactory $selectBuilderFactory;
+    private UserAclManagerProvider $userAclManagerProvider;
+    private NoteAccessControl $noteAccessControl;
+    private RecordServiceContainer $recordServiceContainer;
 
     public function __construct(
         EntityManager $entityManager,
