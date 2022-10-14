@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\Entities\EmailAccount as EmailAccountEntity;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
 use Espo\Services\Settings as SettingsService;
 
@@ -263,12 +264,15 @@ class App
     {
         $user = $this->user;
 
+        $outboundEmailIsShared = $this->config->get('outboundEmailIsShared');
+        $outboundEmailFromAddress = $this->config->get('outboundEmailFromAddress');
+
         $emailAddressList = [];
         $userEmailAddressList = [];
 
         /** @var Collection<\Espo\Entities\EmailAddress> $emailAddressCollection */
         $emailAddressCollection = $this->entityManager
-            ->getRDBRepository(User::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(User::class)
             ->getRelation($user, 'emailAddresses')
             ->find();
 
@@ -290,14 +294,16 @@ class App
             array_unshift($emailAddressList, $user->getEmailAddress());
         }
 
+        if (!$outboundEmailIsShared) {
+            $emailAddressList = $this->filterUserEmailAddressList($user, $emailAddressList);
+        }
+
         $emailAddressList = array_merge(
             $emailAddressList,
             $this->getUserGroupEmailAddressList($user)
         );
 
-        $outboundEmailFromAddress = $this->config->get('outboundEmailFromAddress');
-
-        if ($this->config->get('outboundEmailIsShared') && $outboundEmailFromAddress) {
+        if ($outboundEmailIsShared && $outboundEmailFromAddress) {
             $emailAddressList[] = $outboundEmailFromAddress;
         }
 
@@ -307,6 +313,35 @@ class App
             'emailAddressList' => $emailAddressList,
             'userEmailAddressList' => $userEmailAddressList,
         ];
+    }
+
+    /**
+     * @param string[] $emailAddressList
+     * @return string[]
+     */
+    private function filterUserEmailAddressList(User $user, array $emailAddressList): array
+    {
+        $emailAccountCollection = $this->entityManager
+            ->getRDBRepositoryByClass(EmailAccountEntity::class)
+            ->select(['id', 'emailAddress'])
+            ->where([
+                'assignedUserId' => $user->getId(),
+                'useSmtp' => true,
+                'status' => EmailAccountEntity::STATUS_ACTIVE,
+            ])
+            ->find();
+
+        $inAccountList = array_map(
+            fn (EmailAccountEntity $e) => $e->getEmailAddress(),
+            [...$emailAccountCollection]
+        );
+
+        $filteredList = array_values(array_filter(
+            $emailAddressList,
+            fn (string $item) => in_array($item, $inAccountList)
+        ));
+
+        return $filteredList;
     }
 
     /**
