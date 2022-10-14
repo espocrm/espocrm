@@ -48,6 +48,11 @@ class Meeting extends Entity
     public const STATUS_HELD = 'Held';
     public const STATUS_NOT_HELD = 'Not Held';
 
+    public function getStatus(): ?string
+    {
+        return $this->get('status');
+    }
+
     public function getDateStart(): ?DateTimeOptional
     {
         /** @var ?DateTimeOptional */

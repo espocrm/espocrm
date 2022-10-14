@@ -36,7 +36,12 @@ class CaseObj extends \Espo\Core\ORM\Entity
 {
     public const ENTITY_TYPE = 'Case';
 
+    public const STATUS_NEW = 'New';
     public const STATUS_ASSIGNED = 'Assigned';
+    public const STATUS_CLOSED = 'Closed';
+    public const STATUS_PENDING = 'Pending';
+    public const STATUS_REJECTED = 'Rejected';
+    public const STATUS_DUPLICATE = 'Duplicate';
 
     protected $entityType = 'Case';
 

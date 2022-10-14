@@ -36,7 +36,12 @@ class Lead extends \Espo\Core\Entities\Person
 {
     public const ENTITY_TYPE = 'Lead';
 
+    public const STATUS_NEW = 'New';
+    public const STATUS_ASSIGNED = 'Assigned';
+    public const STATUS_IN_PROCESS = 'In Process';
     public const STATUS_CONVERTED = 'Converted';
+    public const STATUS_RECYCLED = 'Recycled';
+    public const STATUS_DEAD = 'Dead';
 
     public function getStatus(): ?string
     {

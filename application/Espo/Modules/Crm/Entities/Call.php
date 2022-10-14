@@ -39,6 +39,15 @@ class Call extends Entity
 {
     public const ENTITY_TYPE = 'Call';
 
+    public const STATUS_PLANNED = 'Planned';
+    public const STATUS_HELD = 'Held';
+    public const STATUS_NOT_HELD = 'Not Held';
+
+    public function getStatus(): ?string
+    {
+        return $this->get('status');
+    }
+
     public function getDateStart(): ?DateTime
     {
         /** @var ?DateTime */

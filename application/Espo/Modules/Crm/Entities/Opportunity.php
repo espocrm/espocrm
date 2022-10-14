@@ -40,6 +40,9 @@ class Opportunity extends Entity
 {
     public const ENTITY_TYPE = 'Opportunity';
 
+    public const STAGE_CLOSED_WON = 'Closed Won';
+    public const STAGE_CLOSED_LOST = 'Closed Lost';
+
     public function getName(): ?string
     {
         return $this->get('name');
