@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Acl\Table;
 use Laminas\Mail\Message;
 
 use Espo\ORM\Entity;
@@ -100,11 +101,11 @@ class InboundEmail extends RecordService implements
     {
         $groupEmailAccountPermission = $this->aclManager->getPermissionLevel($user, 'groupEmailAccountPermission');
 
-        if (!$groupEmailAccountPermission || $groupEmailAccountPermission === 'no') {
+        if (!$groupEmailAccountPermission || $groupEmailAccountPermission === Table::LEVEL_NO) {
             return null;
         }
 
-        if ($groupEmailAccountPermission === 'team') {
+        if ($groupEmailAccountPermission === Table::LEVEL_TEAM) {
             /** @var string[] $teamIdList */
             $teamIdList = $user->getLinkMultipleIdList('teams');
 
@@ -127,7 +128,7 @@ class InboundEmail extends RecordService implements
                 ->findOne();
         }
 
-        if ($groupEmailAccountPermission === 'all') {
+        if ($groupEmailAccountPermission === Table::LEVEL_ALL) {
             /** @var ?InboundEmailEntity */
             return $this->entityManager
                 ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
