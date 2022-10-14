@@ -29,12 +29,15 @@
 
 namespace Espo\Controllers;
 
-use Espo\Services\Notification as Service;
+use Espo\Tools\Notification\RecordService as Service;
 
 use Espo\Core\{
     Controllers\RecordBase,
     Api\Request,
     Api\Response,
+    Exceptions\BadRequest,
+    Exceptions\Error,
+    Exceptions\Forbidden
 };
 
 use stdClass;
@@ -43,6 +46,11 @@ class Notification extends RecordBase
 {
     public static $defaultAction = 'list';
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     */
     public function getActionList(Request $request, Response $response): stdClass
     {
         $userId = $this->user->getId();
@@ -60,7 +68,7 @@ class Notification extends RecordBase
             'after' => $after,
         ];
 
-        $recordCollection = $this->getNotificationService()->getList($userId, $params);
+        $recordCollection = $this->getNotificationService()->get($userId, $params);
 
         return (object) [
             'total' => $recordCollection->getTotal(),
@@ -86,7 +94,6 @@ class Notification extends RecordBase
 
     private function getNotificationService(): Service
     {
-        /** @var Service */
-        return $this->recordServiceContainer->get('Notification');
+        return $this->injectableFactory->create(Service::class);
     }
 }

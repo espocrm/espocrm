@@ -38,18 +38,17 @@ class Notification extends \Espo\Core\ORM\Entity
     public const ENTITY_TYPE = 'Notification';
 
     public const TYPE_ENTITY_REMOVED = 'EntityRemoved';
-
     public const TYPE_ASSIGN = 'Assign';
-
     public const TYPE_EMAIL_RECEIVED = 'EmailReceived';
-
     public const TYPE_NOTE = 'Note';
-
     public const TYPE_MENTION_IN_POST = 'MentionInPost';
-
     public const TYPE_MESSAGE = 'Message';
-
     public const TYPE_SYSTEM = 'System';
+
+    public function getType(): ?string
+    {
+        return $this->get('type');
+    }
 
     public function setMessage(?string $message): self
     {
@@ -63,6 +62,11 @@ class Notification extends \Espo\Core\ORM\Entity
         $this->set('type', $type);
 
         return $this;
+    }
+
+    public function getData(): ?stdClass
+    {
+        return $this->get('data');
     }
 
     public function setData(stdClass $data): self

@@ -36,7 +36,7 @@ use Espo\Core\Utils\Acl\UserAclManagerProvider;
 
 class NoteAccessControl
 {
-    private $userAclManagerProvider;
+    private UserAclManagerProvider $userAclManagerProvider;
 
     public function __construct(UserAclManagerProvider $userAclManagerProvider)
     {

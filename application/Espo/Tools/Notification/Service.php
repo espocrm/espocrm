@@ -44,13 +44,10 @@ use Espo\ORM\EntityManager;
 
 class Service
 {
-    private $entityManager;
-
-    private $config;
-
-    private $aclManager;
-
-    private $webSocketSubmission;
+    private EntityManager $entityManager;
+    private Config $config;
+    private AclManager $aclManager;
+    private Submission $webSocketSubmission;
 
     public function __construct(
         EntityManager $entityManager,

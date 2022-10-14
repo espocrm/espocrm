@@ -41,31 +41,19 @@ class Note extends Entity
     public const ENTITY_TYPE = 'Note';
 
     public const TARGET_SELF = 'self';
-
     public const TARGET_ALL = 'all';
-
     public const TARGET_TEAMS = 'teams';
-
     public const TARGET_USERS = 'users';
-
     public const TARGET_PORTALS = 'portals';
 
     public const TYPE_POST = 'Post';
-
     public const TYPE_UPDATE = 'Update';
-
     public const TYPE_STATUS = 'Status';
-
     public const TYPE_CREATE = 'Create';
-
     public const TYPE_CREATE_RELATED = 'CreateRelated';
-
     public const TYPE_RELATE = 'Relate';
-
     public const TYPE_ASSIGN = 'Assign';
-
     public const TYPE_EMAIL_RECEIVED = 'EmailReceived';
-
     public const TYPE_EMAIL_SENT = 'EmailSent';
 
     private bool $aclIsProcessed = false;
@@ -73,6 +61,11 @@ class Note extends Entity
     public function isPost(): bool
     {
         return $this->getType() === self::TYPE_POST;
+    }
+
+    public function isGlobal(): bool
+    {
+        return (bool) $this->get('isGlobal');
     }
 
     public function getType(): ?string
