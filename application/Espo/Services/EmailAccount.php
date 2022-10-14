@@ -131,6 +131,7 @@ class EmailAccount extends Record implements
     }
 
     /**
+     * @internal Can not be refactored to return SmtpParams (bc issue).
      * @return ?array<string,mixed>
      */
     public function getSmtpParamsFromAccount(EmailAccountEntity $emailAccount): ?array

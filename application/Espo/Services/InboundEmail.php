@@ -152,6 +152,7 @@ class InboundEmail extends RecordService implements
     }
 
     /**
+     * @internal Can be refactored to return SmtpParams.
      * @return ?array<string,mixed>
      */
     public function getSmtpParamsFromAccount(InboundEmailEntity $emailAccount): ?array
