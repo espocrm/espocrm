@@ -27,54 +27,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Hooks\Common;
+namespace Espo\Tools\Stream\Jobs;
 
-use Espo\ORM\Entity;
+use Espo\Core\Job\Job;
+use Espo\Core\Job\Job\Data;
+
+use Espo\ORM\EntityManager;
 
 use Espo\Tools\Stream\Service as Service;
 
-/**
- * Notes having `related` or `superParent` are subjects to access control
- * through `users` and `teams` fields.
- *
- * When users or teams of `related` or `parent` record are changed
- * the note record will be changed too.
- */
-class StreamNotesAcl
+class ProcessNoteAcl implements Job
 {
-    public static int $order = 10;
-
     private Service $service;
+    private EntityManager $entityManager;
 
-    public function __construct(Service $service)
-    {
+    public function __construct(
+        Service $service,
+        EntityManager $entityManager
+    ) {
         $this->service = $service;
+        $this->entityManager = $entityManager;
     }
 
-    /**
-     * @param array<string,mixed> $options
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    public function afterSave(Entity $entity, array $options): void
+    public function run(Data $data): void
     {
-        if (!empty($options['noStream'])) {
+        $targetType = $data->getTargetType();
+        $targetId = $data->getTargetId();
+
+        if (!$targetType || !$targetId) {
             return;
         }
 
-        if (!empty($options['silent'])) {
+        if (!$this->entityManager->hasRepository($targetType)) {
             return;
         }
 
-        if (!empty($options['skipStreamNotesAcl'])) {
+        $entity = $this->entityManager->getEntityById($targetType, $targetId);
+
+        if (!$entity) {
             return;
         }
 
-        if ($entity->isNew()) {
-            return;
-        }
-
-        $forceProcessNoteNotifications = !empty($options['forceProcessNoteNotifications']);
-
-        $this->service->processNoteAcl($entity, $forceProcessNoteNotifications);
+        $this->service->processNoteAcl($entity, true);
     }
 }

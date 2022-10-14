@@ -36,7 +36,7 @@ use Espo\Core\Notification\AssignmentNotificator\Params as AssignmentNotificator
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
 
-use Espo\Services\Stream as StreamService;
+use Espo\Tools\Stream\Service as StreamService;
 
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
@@ -62,11 +62,8 @@ class HookProcessor
     private $hasStreamCache = [];
 
     private Metadata $metadata;
-
     private Config $config;
-
     private EntityManager $entityManager;
-
     private StreamService $streamService;
 
     private AssignmentNotificatorFactory $notificatorFactory;

@@ -55,7 +55,7 @@ use Espo\ORM\EntityManager;
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Services\EmailAccount as EmailAccountService;
 use Espo\Services\InboundEmail as InboundEmailService;
-use Espo\Services\Stream as StreamService;
+use Espo\Tools\Stream\Service as StreamService;
 use Exception;
 use Laminas\Mail\Message;
 use Throwable;

@@ -37,7 +37,7 @@ use Espo\Core\Acl\Exceptions\NotImplemented as AclNotImplemented;
 
 use Espo\ORM\EntityManager;
 
-use Espo\Services\Stream as Service;
+use Espo\Tools\Stream\Service as Service;
 use Espo\Entities\User;
 
 /**
@@ -45,11 +45,9 @@ use Espo\Entities\User;
  */
 class ControlFollowers implements Job
 {
-    private $service;
-
-    private $aclManager;
-
-    private $entityManager;
+    private Service $service;
+    private AclManager $aclManager;
+    private EntityManager $entityManager;
 
     public function __construct(
         Service $service,
@@ -76,7 +74,7 @@ class ControlFollowers implements Job
             return;
         }
 
-        $idList = $this->service->getEntityFolowerIdList($entity);
+        $idList = $this->service->getEntityFollowerIdList($entity);
 
         $userList = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)

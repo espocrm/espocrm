@@ -32,7 +32,7 @@ namespace Espo\Tools\Notification;
 use Espo\Core\AclManager as InternalAclManager;
 use Espo\Core\Acl\Table;
 
-use Espo\Services\Stream as StreamService;
+use Espo\Tools\Stream\Service as StreamService;
 
 use Espo\ORM\EntityManager;
 use Espo\ORM\Collection;
@@ -50,15 +50,11 @@ use Espo\Entities\Note;
  */
 class NoteHookProcessor
 {
-    private $streamService;
-
-    private $service;
-
-    private $entityManager;
-
-    private $user;
-
-    private $internalAclManager;
+    private StreamService $streamService;
+    private Service $service;
+    private EntityManager $entityManager;
+    private User $user;
+    private InternalAclManager $internalAclManager;
 
     public function __construct(
         StreamService $streamService,

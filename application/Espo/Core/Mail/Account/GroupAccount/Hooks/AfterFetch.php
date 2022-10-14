@@ -47,7 +47,7 @@ use Espo\Core\Utils\Crypt;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Log;
 
-use Espo\Services\Stream as StreamService;
+use Espo\Tools\Stream\Service as StreamService;
 use Espo\Services\EmailTemplate as EmailTemplateService;
 
 use Espo\Entities\InboundEmail;

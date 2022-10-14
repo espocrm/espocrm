@@ -41,7 +41,7 @@ use Espo\Core\{
 
 use Espo\Entities\User;
 
-use Espo\Services\Stream as StreamService;
+use Espo\Tools\Stream\Service as StreamService;
 
 /**
  * @implements LoaderInterface<Entity>
@@ -51,13 +51,9 @@ class FollowersLoader implements LoaderInterface
     private const FOLLOWERS_LIMIT = 6;
 
     private StreamService $streamService;
-
     private Metadata $metadata;
-
     private User $user;
-
     private Acl $acl;
-
     private Config $config;
 
     public function __construct(

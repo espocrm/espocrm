@@ -29,10 +29,11 @@
 
 namespace Espo\Core\Mail;
 
+use Espo\Core\Job\Job\Data as JobData;
+use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Mail\Importer\DuplicateFinder;
 use Espo\Entities\Email;
 use Espo\Entities\EmailFilter;
-use Espo\Entities\Job;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Repositories\Email as EmailRepository;
@@ -56,6 +57,7 @@ use Espo\Modules\Crm\Entities\Lead;
 
 use DateTime;
 use DateTimeZone;
+use Espo\Tools\Stream\Jobs\ProcessNoteAcl;
 use Exception;
 
 /**
@@ -64,6 +66,7 @@ use Exception;
 class Importer
 {
     private const SUBJECT_MAX_LENGTH = 255;
+    private const PROCESS_ACL_DELAY_PERIOD = '5 seconds';
 
     private EntityManager $entityManager;
     private Config $config;
@@ -72,6 +75,7 @@ class Importer
     private ParserFactory $parserFactory;
     private LinkMultipleSaver $linkMultipleSaver;
     private DuplicateFinder $duplicateFinder;
+    private JobSchedulerFactory $jobSchedulerFactory;
 
     public function __construct(
         EntityManager $entityManager,
@@ -79,13 +83,15 @@ class Importer
         AssignmentNotificatorFactory $notificatorFactory,
         ParserFactory $parserFactory,
         LinkMultipleSaver $linkMultipleSaver,
-        DuplicateFinder $duplicateFinder
+        DuplicateFinder $duplicateFinder,
+        JobSchedulerFactory $jobSchedulerFactory
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
         $this->parserFactory = $parserFactory;
         $this->linkMultipleSaver = $linkMultipleSaver;
         $this->duplicateFinder = $duplicateFinder;
+        $this->jobSchedulerFactory = $jobSchedulerFactory;
 
         $this->notificator = $notificatorFactory->create(Email::ENTITY_TYPE);
         $this->filtersMatcher = new FiltersMatcher();
@@ -774,25 +780,20 @@ class Importer
             // To grant access to the user who received the email.
 
             $dt = new DateTime();
+            $dt->modify('+' . self::PROCESS_ACL_DELAY_PERIOD);
 
-            $dt->modify('+5 seconds');
-
-            $executeAt = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
-
-            $job = $this->entityManager->getNewEntity(Job::ENTITY_TYPE);
-
-            $job->set([
-                'serviceName' => 'Stream',
-                'methodName' => 'processNoteAclJob',
-                'data' => [
-                    'targetType' => Email::ENTITY_TYPE,
-                    'targetId' => $duplicate->getId(),
-                ],
-                'executeAt' => $executeAt,
-                'queue' => QueueName::Q1,
-            ]);
-
-            $this->entityManager->saveEntity($job);
+            $this->jobSchedulerFactory
+                ->create()
+                ->setClassName(ProcessNoteAcl::class)
+                ->setData(
+                    JobData
+                        ::create()
+                        ->withTargetId($duplicate->getId())
+                        ->withTargetType(Email::ENTITY_TYPE)
+                )
+                ->setQueue(QueueName::Q1)
+                ->setTime($dt)
+                ->schedule();
         }
     }
 

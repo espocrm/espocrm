@@ -37,6 +37,7 @@ use Espo\Core\Notification\AssignmentNotificator;
 use Espo\ORM\Value\ValueAccessor;
 use Espo\ORM\Value\ValueAccessorFactory;
 use Espo\Core\{
+    Job\JobSchedulerFactory,
     Mail\Importer,
     Mail\Importer\Data as ImporterData,
     Mail\MessageWrapper,
@@ -48,8 +49,7 @@ use Espo\Core\{
     Repositories\Database,
     Utils\Metadata,
     Notification\AssignmentNotificatorFactory,
-    FieldProcessing\Relation\LinkMultipleSaver,
-};
+    FieldProcessing\Relation\LinkMultipleSaver};
 
 use Espo\ORM\Repository\RDBSelectBuilder;
 
@@ -142,6 +142,8 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
 
 
         $this->duplicateFinder = $this->createMock(Importer\DuplicateFinder::class);
+
+        $this->jobSchedulerFactory = $this->createMock(JobSchedulerFactory::class);
     }
 
     function testImport1()
@@ -183,7 +185,8 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
             $this->assignmentNotificatorFactory,
             $this->parserFactory,
             $this->linkMultipleSaver,
-            $this->duplicateFinder
+            $this->duplicateFinder,
+            $this->jobSchedulerFactory
         );
 
         $message = new MessageWrapper(0, null, null, $contents);

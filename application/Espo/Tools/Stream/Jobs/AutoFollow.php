@@ -35,9 +35,11 @@ use Espo\Core\Job\Job\Data;
 use Espo\Core\AclManager;
 use Espo\Core\Acl\Exceptions\NotImplemented as AclNotImplemented;
 
+use Espo\Entities\Note;
+use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
 
-use Espo\Services\Stream as Service;
+use Espo\Tools\Stream\Service as Service;
 use Espo\Tools\Notification\Service as NotificationService;
 
 use Espo\Entities\User;
@@ -47,13 +49,10 @@ use Espo\Entities\User;
  */
 class AutoFollow implements Job
 {
-    private $service;
-
-    private $notificationService;
-
-    private $aclManager;
-
-    private $entityManager;
+    private Service $service;
+    private NotificationService $notificationService;
+    private AclManager $aclManager;
+    private EntityManager $entityManager;
 
     public function __construct(
         Service $service,
@@ -69,6 +68,7 @@ class AutoFollow implements Job
 
     public function run(Data $data): void
     {
+        /** @var string[] $userIdList */
         $userIdList = $data->get('userIdList') ?? [];
         $entityType = $data->get('entityType');
         $entityId = $data->get('entityId');
@@ -77,7 +77,7 @@ class AutoFollow implements Job
             return;
         }
 
-        $entity = $this->entityManager->getEntity($entityType, $entityId);
+        $entity = $this->entityManager->getEntityById($entityType, $entityId);
 
         if (!$entity) {
             return;
@@ -85,7 +85,7 @@ class AutoFollow implements Job
 
         foreach ($userIdList as $i => $userId) {
             /** @var User|null $user */
-            $user = $this->entityManager->getEntity('User', $userId);
+            $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
             if (!$user) {
                 unset($userIdList[$i]);
@@ -121,9 +121,9 @@ class AutoFollow implements Job
 
         $this->service->followEntityMass($entity, $userIdList);
 
-        /** @var iterable<\Espo\Entities\Note> $noteList */
+        /** @var Collection<Note> $noteList */
         $noteList = $this->entityManager
-            ->getRDBRepository('Note')
+            ->getRDBRepository(Note::ENTITY_TYPE)
             ->where([
                 'parentType' => $entityType,
                 'parentId' => $entityId,

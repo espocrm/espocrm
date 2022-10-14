@@ -30,7 +30,7 @@
 namespace Espo\Tools\Stream;
 
 use Espo\Core\Utils\Metadata;
-use Espo\Services\Stream as Service;
+use Espo\Tools\Stream\Service as Service;
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
 use Espo\Entities\Note;
@@ -53,31 +53,18 @@ use Espo\Core\ORM\Entity as CoreEntity;
  */
 class HookProcessor
 {
-    /**
-     * @var array<string,bool>
-     */
+    /** @var array<string,bool> */
     private $hasStreamCache = [];
-
-    /**
-     * @var array<string,bool>
-     */
+    /** @var array<string,bool> */
     private $isLinkObservableInStreamCache = [];
-
-    /**
-     * @var ?array<string,?string>
-     */
+    /** @var ?array<string,?string> */
     private $statusFields = null;
 
     private Metadata $metadata;
-
     private EntityManager $entityManager;
-
     private Service $service;
-
     private User $user;
-
     private Preferences $preferences;
-
     private JobSchedulerFactory $jobSchedulerFactory;
 
     public function __construct(
@@ -508,8 +495,6 @@ class HookProcessor
         if ($this->user->getId() === $assignedUserId) {
             $entity->set('isFollowed', true);
         }
-
-        return;
     }
 
     private function afterSaveStreamNotNew2(CoreEntity $entity): void
@@ -633,9 +618,9 @@ class HookProcessor
 
         if ($audited) {
             $note1 = $this->entityManager
-                ->getRDBRepository('Note')
+                ->getRDBRepository(Note::ENTITY_TYPE)
                 ->where([
-                    'type' => 'Relate',
+                    'type' => Note::TYPE_RELATE,
                     'parentId' => $entity->getId(),
                     'parentType' => $entityType,
                     'relatedId' => $foreignEntity->getId(),
@@ -650,9 +635,9 @@ class HookProcessor
 
         if ($auditedForeign) {
             $note2 = $this->entityManager
-                ->getRDBRepository('Note')
+                ->getRDBRepository(Note::ENTITY_TYPE)
                 ->where([
-                    'type' => 'Relate',
+                    'type' => Note::TYPE_RELATE,
                     'parentId' => $foreignEntity->getId(),
                     'parentType' => $foreignEntityType,
                     'relatedId' => $entity->getId(),

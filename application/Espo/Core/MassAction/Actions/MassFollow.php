@@ -29,7 +29,7 @@
 
 namespace Espo\Core\MassAction\Actions;
 
-use Espo\Services\Stream as StreamService;
+use Espo\Tools\Stream\Service as StreamService;
 
 use Espo\Core\{
     MassAction\QueryBuilder,
@@ -48,15 +48,11 @@ use Espo\{
 
 class MassFollow implements MassAction
 {
-    private $queryBuilder;
-
-    private $acl;
-
-    private $streamService;
-
-    private $entityManager;
-
-    private $user;
+    private QueryBuilder $queryBuilder;
+    private Acl $acl;
+    private StreamService $streamService;
+    private EntityManager $entityManager;
+    private User $user;
 
     public function __construct(
         QueryBuilder $queryBuilder,

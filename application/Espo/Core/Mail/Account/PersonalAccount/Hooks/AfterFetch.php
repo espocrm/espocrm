@@ -33,7 +33,7 @@ use Espo\Core\Mail\Account\Account;
 use Espo\Core\Mail\Account\Hook\BeforeFetchResult;
 use Espo\Core\Mail\Account\Hook\AfterFetch as AfterFetchInterface;
 
-use Espo\Services\Stream as StreamService;
+use Espo\Tools\Stream\Service as StreamService;
 use Espo\Entities\Email;
 
 use Espo\ORM\EntityManager;
@@ -41,7 +41,6 @@ use Espo\ORM\EntityManager;
 class AfterFetch implements AfterFetchInterface
 {
     private EntityManager $entityManager;
-
     private StreamService $streamService;
 
     public function __construct(

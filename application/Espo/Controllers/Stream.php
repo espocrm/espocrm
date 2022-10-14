@@ -36,7 +36,7 @@ use Espo\Core\{
     Record\SearchParamsFetcher,
 };
 
-use Espo\Services\Stream as Service;
+use Espo\Tools\Stream\Service as Service;
 
 use stdClass;
 
@@ -44,9 +44,8 @@ class Stream
 {
     public static string $defaultAction = 'list';
 
-    private $service;
-
-    private $searchParamsFetcher;
+    private Service $service;
+    private SearchParamsFetcher $searchParamsFetcher;
 
     public function __construct(
         Service $service,

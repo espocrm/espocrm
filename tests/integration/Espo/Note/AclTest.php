@@ -30,7 +30,7 @@
 namespace tests\integration\Espo\Note;
 
 use Espo\{
-    Services\Stream as StreamService,
+    Tools\Stream\Service as StreamService,
     ORM\EntityManager,
 };
 
@@ -42,7 +42,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $em = $this->getContainer()->get('entityManager');
 
         /* @var $streamService StreamService*/
-        $streamService = $this->getContainer()->get('serviceFactory')->create('Stream');
+        $streamService = $this->getContainer()->get('injectableFactory')->create(StreamService::class);
 
         $team1 = $em->createEntity('Team', [
             'name' => 'team-1',

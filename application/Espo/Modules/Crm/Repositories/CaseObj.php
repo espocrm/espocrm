@@ -30,7 +30,7 @@
 namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
-use Espo\Services\Stream as StreamService;
+use Espo\Tools\Stream\Service as StreamService;
 use Espo\Core\Di;
 
 /**

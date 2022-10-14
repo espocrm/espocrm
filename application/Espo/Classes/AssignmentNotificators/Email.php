@@ -29,7 +29,7 @@
 
 namespace Espo\Classes\AssignmentNotificators;
 
-use Espo\Services\Stream as StreamService;
+use Espo\Tools\Stream\Service as StreamService;
 
 use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\AssignmentNotificator\Params;
