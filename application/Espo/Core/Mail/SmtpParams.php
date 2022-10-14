@@ -34,36 +34,20 @@ use RuntimeException;
 class SmtpParams
 {
     private string $server;
-
     private int $port;
-
     private ?string $fromAddress = null;
-
     private ?string $fromName = null;
-
-    /**
-     * @var array<string,mixed>|null
-     */
+    /** @var ?array<string,mixed> */
     private ?array $connectionOptions = null;
-
     private bool $auth = false;
-
     private ?string $authMechanism = null;
-
-    /**
-     * @var ?class-string
-     */
+    /** @var ?class-string */
     private ?string $authClassName = null;
-
     private ?string $username = null;
-
     private ?string $password = null;
-
     private ?string $security = null;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private array $paramList = [
         'server',
         'port',
