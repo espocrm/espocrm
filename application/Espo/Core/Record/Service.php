@@ -75,6 +75,7 @@ use stdClass;
 use ArrayAccess;
 use InvalidArgumentException;
 use LogicException;
+use tests\unit\testData\DB\TEntity;
 
 /**
  * The layer between a controller and ORM repository. For CRUD and other operations with records.
@@ -858,26 +859,17 @@ class Service implements Crud,
             $this->prepareEntityForOutput($entity);
         }
 
-        if (!$disableCount) {
-            $total = $this->getRepository()
-                ->clone($query)
-                ->count();
-        }
-        else if (
-            $maxSize &&
-            is_countable($collection) &&
-            count($collection) > $maxSize &&
-            $collection instanceof ArrayAccess
-        ) {
-            $total = RecordCollection::TOTAL_HAS_MORE;
-
-            unset($collection[count($collection) - 1]);
-        }
-        else {
-            $total = RecordCollection::TOTAL_HAS_NO_MORE;
+        if ($disableCount) {
+            /** @var RecordCollection<TEntity> */
+            return RecordCollection::createNoCount($collection, $maxSize);
         }
 
-        return new RecordCollection($collection, $total);
+        $total = $this->getRepository()
+            ->clone($query)
+            ->count();
+
+        /** @var RecordCollection<TEntity> */
+        return RecordCollection::create($collection, $total);
     }
 
     protected function createSelectApplierClassNameListProvider(): ApplierClassNameListProvider
@@ -1043,28 +1035,19 @@ class Service implements Crud,
             $recordService->prepareEntityForOutput($itemEntity);
         }
 
-        if (!$disableCount) {
-            $total = $this->entityManager
-                ->getRDBRepository($this->entityType)
-                ->getRelation($entity, $link)
-                ->clone($query)
-                ->count();
-        }
-        else if (
-            $maxSize &&
-            is_countable($collection) &&
-            count($collection) > $maxSize &&
-            $collection instanceof ArrayAccess
-        ) {
-            $total = RecordCollection::TOTAL_HAS_MORE;
-
-            unset($collection[count($collection) - 1]);
-        }
-        else {
-            $total = RecordCollection::TOTAL_HAS_NO_MORE;
+        if ($disableCount) {
+            /** @var RecordCollection<TEntity> */
+            return RecordCollection::createNoCount($collection, $maxSize);
         }
 
-        return new RecordCollection($collection, $total);
+        $total = $this->entityManager
+            ->getRDBRepository($this->entityType)
+            ->getRelation($entity, $link)
+            ->clone($query)
+            ->count();
+
+        /** @var RecordCollection<TEntity> */
+        return RecordCollection::create($collection, $total);
     }
 
     /**

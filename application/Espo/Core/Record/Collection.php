@@ -35,21 +35,17 @@ use Espo\ORM\EntityCollection;
 use stdClass;
 
 /**
- * Contains an an ORM collection and total number of records.
+ * Contains an ORM collection and total number of records.
  *
  * @template TEntity of \Espo\ORM\Entity
  */
 class Collection
 {
     public const TOTAL_HAS_MORE = -1;
-
     public const TOTAL_HAS_NO_MORE = -2;
 
-    /**
-     * @var OrmCollection<TEntity>
-     */
+    /** @var OrmCollection<TEntity> */
     private OrmCollection $collection;
-
     private ?int $total;
 
     /**
@@ -104,5 +100,35 @@ class Collection
         }
 
         return $this->collection->getValueMapList();
+    }
+
+    /**
+     * @param OrmCollection<TEntity> $collection
+     * @return self<TEntity>
+     */
+    public static function create(OrmCollection $collection, ?int $total = null): self
+    {
+        return new self($collection, $total);
+    }
+
+    /**
+     * @param OrmCollection<TEntity> $collection
+     * @return self<TEntity>
+     */
+    public static function createNoCount(OrmCollection $collection, ?int $maxSize): self
+    {
+        if (
+            $maxSize !== null &&
+            $collection instanceof EntityCollection &&
+            count($collection) > $maxSize
+        ) {
+            $copyCollection = new EntityCollection([...$collection], $collection->getEntityType());
+
+            unset($copyCollection[count($copyCollection) - 1]);
+
+            return new self($copyCollection, self::TOTAL_HAS_MORE);
+        }
+
+        return new self($collection, self::TOTAL_HAS_NO_MORE);
     }
 }

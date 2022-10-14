@@ -27,44 +27,55 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\GlobalSearch;
 
+use Espo\Core\Acl;
+use Espo\Core\Record\Collection;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
+use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Query\Part\Expression as Expr;
 
-use Espo\Core\Di;
 use Espo\Core\Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory;
 use Espo\Core\Select\Text\FullTextSearch\DataComposer\Params as FullTextSearchDataComposerParams;
 use Espo\Core\Select\SelectBuilderFactory;
 
-use PDO;
-use stdClass;
-
-class GlobalSearch implements
-    Di\EntityManagerAware,
-    Di\MetadataAware,
-    Di\AclAware,
-    Di\ConfigAware
+class Service
 {
-    use Di\EntityManagerSetter;
-    use Di\MetadataSetter;
-    use Di\AclSetter;
-    use Di\ConfigSetter;
-
-    private $fullTextSearchDataComposerFactory;
-
-    private $selectBuilderFactory;
+    private FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory;
+    private SelectBuilderFactory $selectBuilderFactory;
+    private EntityManager $entityManager;
+    private Metadata $metadata;
+    private Acl $acl;
+    private Config $config;
 
     public function __construct(
         FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory,
-        SelectBuilderFactory $selectBuilderFactory
+        SelectBuilderFactory $selectBuilderFactory,
+        EntityManager $entityManager,
+        Metadata $metadata,
+        Acl $acl,
+        Config $config
     ) {
         $this->fullTextSearchDataComposerFactory = $fullTextSearchDataComposerFactory;
         $this->selectBuilderFactory = $selectBuilderFactory;
+        $this->entityManager = $entityManager;
+        $this->metadata = $metadata;
+        $this->acl = $acl;
+        $this->config = $config;
     }
 
-    public function find(string $filter, int $offset, int $maxSize): stdClass
+    /**
+     * @param string $filter
+     * @param int $offset
+     * @param int $maxSize
+     * @return Collection<Entity>
+     */
+    public function find(string $filter, int $offset, int $maxSize): Collection
     {
         $entityTypeList = $this->config->get('globalSearchEntityList') ?? [];
 
@@ -90,10 +101,7 @@ class GlobalSearch implements
         }
 
         if (count($queryList) === 0) {
-            return (object) [
-                'total' => 0,
-                'list' => [],
-            ];
+            return new Collection(new EntityCollection(), 0);
         }
 
         $builder = $this->entityManager->getQueryBuilder()
@@ -114,13 +122,11 @@ class GlobalSearch implements
 
         $unionQuery = $builder->build();
 
+        $collection = new EntityCollection();
+
         $sth = $this->entityManager->getQueryExecutor()->execute($unionQuery);
 
-        $rows = $sth->fetchAll(PDO::FETCH_ASSOC) ?: [];
-
-        $resultList = [];
-
-        foreach ($rows as $row) {
+        while ($row = $sth->fetch()) {
             $entity = $this->entityManager
                 ->getRDBRepository($row['entityType'])
                 ->select(['id', 'name'])
@@ -131,24 +137,10 @@ class GlobalSearch implements
                 continue;
             }
 
-            $itemData = $entity->getValueMap();
-            $itemData->_scope = $entity->getEntityType();
-
-            $resultList[] = $itemData;
+            $collection->append($entity);
         }
 
-        $total = -2;
-
-        if (count($resultList) > $maxSize) {
-            $total = -1;
-
-            unset($resultList[count($resultList) - 1]);
-        }
-
-        return (object) [
-            'total' => $total,
-            'list' => $resultList,
-        ];
+        return Collection::createNoCount($collection, $maxSize);
     }
 
     protected function getEntityTypeQuery(
@@ -160,7 +152,7 @@ class GlobalSearch implements
         bool &$hasFullTextSearch
     ): ?Select {
 
-        if (!$this->acl->checkScope($entityType, 'read')) {
+        if (!$this->acl->checkScope($entityType, Acl\Table::ACTION_READ)) {
             return null;
         }
 

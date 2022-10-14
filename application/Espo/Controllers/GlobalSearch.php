@@ -30,20 +30,23 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Services\GlobalSearch as Service;
+use Espo\Tools\GlobalSearch\Service;
 use Espo\Core\Api\Request;
 
 use stdClass;
 
 class GlobalSearch
 {
-    private $service;
+    private Service $service;
 
     public function __construct(Service $service)
     {
         $this->service = $service;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function getActionSearch(Request $request): stdClass
     {
         $query = $request->getQueryParam('q');
@@ -55,6 +58,11 @@ class GlobalSearch
         $offset = intval($request->getQueryParam('offset'));
         $maxSize = intval($request->getQueryParam('maxSize'));
 
-        return $this->service->find($query, $offset, $maxSize);
+        $result = $this->service->find($query, $offset, $maxSize);
+
+        return (object) [
+            'total' => $result->getTotal(),
+            'list' => $result->getValueMapList(),
+        ];
     }
 }
