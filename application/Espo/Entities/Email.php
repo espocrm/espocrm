@@ -34,13 +34,12 @@ use Espo\Core\Utils\Util;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Field\DateTime;
 
-use Espo\Entities\Attachment;
-use Espo\Services\Email as EmailService;
 use Espo\Repositories\Email as EmailRepository;
 
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Field\Link;
 
+use Espo\Tools\Email\Util as EmailUtil;
 use RuntimeException;
 
 class Email extends Entity
@@ -100,7 +99,7 @@ class Email extends Entity
             return null;
         }
 
-        $string = EmailService::parseFromName($this->get('fromString'));
+        $string = EmailUtil::parseFromName($this->get('fromString'));
 
         if ($string === '') {
             return null;
@@ -115,7 +114,7 @@ class Email extends Entity
             return null;
         }
 
-        return EmailService::parseFromAddress($this->get('fromString'));
+        return EmailUtil::parseFromAddress($this->get('fromString'));
     }
 
     protected function _getReplyToName(): ?string
@@ -130,7 +129,7 @@ class Email extends Entity
             return null;
         }
 
-        return EmailService::parseFromName(
+        return EmailUtil::parseFromName(
             trim(explode(';', $string)[0])
         );
     }
@@ -147,7 +146,7 @@ class Email extends Entity
             return null;
         }
 
-        return EmailService::parseFromAddress(
+        return EmailUtil::parseFromAddress(
             trim(explode(';', $string)[0])
         );
     }
@@ -355,6 +354,11 @@ class Email extends Entity
     public function isHtml(): ?bool
     {
         return $this->get('isHtml');
+    }
+
+    public function isRead(): ?bool
+    {
+        return $this->get('isRead');
     }
 
     public function setIsHtml(bool $isHtml = true): self

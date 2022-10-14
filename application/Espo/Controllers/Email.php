@@ -41,6 +41,7 @@ use Espo\Core\Api\Request;
 use Espo\Entities\Email as EmailEntity;
 use Espo\Services\Email as Service;
 use Espo\Services\EmailTemplate as EmailTemplateService;
+use Espo\Tools\Email\SendService;
 use Espo\Tools\Email\Service as ToolService;
 
 use stdClass;
@@ -127,7 +128,7 @@ class Email extends Record
          * } $data
          */
 
-        $this->getEmailService()->sendTestEmail($data);
+        $this->getSendService()->sendTestEmail($data);
 
         return true;
     }
@@ -342,6 +343,11 @@ class Email extends Record
     private function getEmailToolService(): ToolService
     {
         return $this->injectableFactory->create(ToolService::class);
+    }
+
+    private function getSendService(): SendService
+    {
+        return $this->injectableFactory->create(SendService::class);
     }
 
     private function getEmailService(): Service

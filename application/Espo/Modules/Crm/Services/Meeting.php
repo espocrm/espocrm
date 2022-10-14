@@ -35,13 +35,13 @@ use Espo\ORM\Entity;
 use Espo\Modules\Crm\Business\Event\Invitations;
 use Espo\Services\Record;
 
-use Espo\Services\Email as EmailService;
 use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\Di;
+use Espo\Tools\Email\SendService;
 
 /**
  * @extends Record<CoreEntity>
@@ -125,7 +125,7 @@ class Meeting extends Record implements
         $smtpParams = null;
 
         if ($useUserSmtp) {
-            $smtpParams = $this->getEmailService()->getUserSmtpParams($this->user->getId());
+            $smtpParams = $this->getEmailSendService()->getUserSmtpParams($this->user->getId());
         }
 
         return $this->injectableFactory->createWith(Invitations::class, [
@@ -297,8 +297,8 @@ class Meeting extends Record implements
         return true;
     }
 
-    private function getEmailService(): EmailService
+    private function getEmailSendService(): SendService
     {
-        return $this->injectableFactory->create(EmailService::class);
+        return $this->injectableFactory->create(SendService::class);
     }
 }

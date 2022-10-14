@@ -29,7 +29,6 @@
 
 namespace Espo\Classes\AssignmentNotificators;
 
-use Espo\Services\Email as EmailService;
 use Espo\Services\Stream as StreamService;
 
 use Espo\Core\Notification\AssignmentNotificator;
@@ -49,6 +48,7 @@ use Espo\Repositories\Email as EmailRepository;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use DateTime;
+use Espo\Tools\Email\Util;
 use Exception;
 
 class Email implements AssignmentNotificator
@@ -56,15 +56,10 @@ class Email implements AssignmentNotificator
     private const DAYS_THRESHOLD = 2;
 
     private ?StreamService $streamService = null;
-
     private $user;
-
     private $entityManager;
-
     private $injectableFactory;
-
     private $aclManager;
-
     private $userChecker;
 
     public function __construct(
@@ -178,12 +173,12 @@ class Email implements AssignmentNotificator
 
         $userIdFrom = null;
 
-        if ($person && $person->getEntityType() === 'User') {
+        if ($person && $person->getEntityType() === User::ENTITY_TYPE) {
             $userIdFrom = $person->getId();
         }
 
         if (empty($data['personEntityId'])) {
-            $data['fromString'] = EmailService::parseFromName($entity->get('fromString'));
+            $data['fromString'] = Util::parseFromName($entity->get('fromString'));
 
             if (empty($data['fromString']) && $from) {
                 $data['fromString'] = $from;

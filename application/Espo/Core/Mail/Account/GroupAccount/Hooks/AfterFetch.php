@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Mail\Account\GroupAccount\Hooks;
 
+use Espo\Core\ApplicationUser;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Tools\Email\Util;
 use Laminas\Mail\Message;
 
 use Espo\Core\Mail\Account\Account;
@@ -44,7 +47,6 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Log;
 
 use Espo\Services\Stream as StreamService;
-use Espo\Services\Email as EmailService;
 use Espo\Services\EmailTemplate as EmailTemplateService;
 
 use Espo\Entities\InboundEmail;
@@ -69,21 +71,13 @@ use DateTime;
 class AfterFetch implements AfterFetchInterface
 {
     private EntityManager $entityManager;
-
     private StreamService $streamService;
-
     private Config $config;
-
     private EmailSender $emailSender;
-
     private InjectableFactory $injectableFactory;
-
     private Crypt $crypt;
-
     private Log $log;
-
     private RoundRobin $roundRobin;
-
     private LeastBusy $leastBusy;
 
     private const DEFAULT_AUTOREPLY_LIMIT = 5;
@@ -216,8 +210,8 @@ class AfterFetch implements AfterFetchInterface
                 ->where([
                     'toEmailAddresses.id' => $emailAddress->getId(),
                     'dateSent>' => $threshold,
-                    'status' => 'Sent',
-                    'createdById' => 'system',
+                    'status' => Email::STATUS_SENT,
+                    'createdById' => ApplicationUser::SYSTEM_USER_ID,
                 ])
                 ->join('toEmailAddresses')
                 ->count();
@@ -229,7 +223,7 @@ class AfterFetch implements AfterFetchInterface
 
         $message = new Message();
 
-        $messageId = $email->get('messageId');
+        $messageId = $email->getMessageId();
 
         if ($messageId) {
             $message->getHeaders()->addHeaderLine('In-Reply-To', $messageId);
@@ -246,14 +240,14 @@ class AfterFetch implements AfterFetchInterface
                 $entityHash['Case'] = $case;
 
                 if ($case->get('contactId')) {
-                    $contact = $this->entityManager->getEntity('Contact', $case->get('contactId'));
+                    $contact = $this->entityManager->getEntity(Contact::ENTITY_TYPE, $case->get('contactId'));
                 }
             }
 
             if (empty($contact)) {
-                $contact = $this->entityManager->getNewEntity('Contact');
+                $contact = $this->entityManager->getNewEntity(Contact::ENTITY_TYPE);
 
-                $fromName = EmailService::parseFromName($email->get('fromString'));
+                $fromName = Util::parseFromName($email->get('fromString'));
 
                 if (!empty($fromName)) {
                     $contact->set('name', $fromName);
@@ -432,7 +426,7 @@ class AfterFetch implements AfterFetchInterface
 
         $case = $this->emailToCase($email, $params);
 
-        $user = $this->entityManager->getEntity('User', $case->get('assignedUserId'));
+        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $case->get('assignedUserId'));
 
         $this->streamService->noteEmailReceived($case, $email, true);
 

@@ -31,6 +31,7 @@ namespace Espo\Core\Formula\Functions\ExtGroup\EmailGroup;
 
 use Espo\Core\ApplicationUser;
 use Espo\Entities\Email;
+use Espo\Tools\Email\SendService;
 use Exception;
 use Espo\Core\Formula\{
     Functions\BaseFunction,
@@ -42,11 +43,13 @@ use Espo\Core\Di;
 class SendType extends BaseFunction implements
     Di\EntityManagerAware,
     Di\ServiceFactoryAware,
-    Di\ConfigAware
+    Di\ConfigAware,
+    Di\InjectableFactoryAware
 {
     use Di\EntityManagerSetter;
     use Di\ServiceFactorySetter;
     use Di\ConfigSetter;
+    use Di\InjectableFactorySetter;
 
     public function process(ArgumentList $args)
     {
@@ -111,8 +114,10 @@ class SendType extends BaseFunction implements
             ]);
         }
 
+        $sendService = $this->injectableFactory->create(SendService::class);
+
         try {
-            $service->sendEntity($email);
+            $sendService->send($email);
         }
         catch (Exception $e) {
             $message = $e->getMessage();
