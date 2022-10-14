@@ -103,8 +103,9 @@ class Collection
     }
 
     /**
-     * @param OrmCollection<TEntity> $collection
-     * @return self<TEntity>
+     * @template CEntity of \Espo\ORM\Entity
+     * @param OrmCollection<CEntity> $collection
+     * @return self<CEntity>
      */
     public static function create(OrmCollection $collection, ?int $total = null): self
     {
@@ -112,8 +113,9 @@ class Collection
     }
 
     /**
-     * @param OrmCollection<TEntity> $collection
-     * @return self<TEntity>
+     * @template CEntity of \Espo\ORM\Entity
+     * @param OrmCollection<CEntity> $collection
+     * @return self<CEntity>
      */
     public static function createNoCount(OrmCollection $collection, ?int $maxSize): self
     {

@@ -44,7 +44,7 @@ use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
 
 use Espo\Entities\User;
-use Espo\Entities\Note as NoteEntity;
+use Espo\Entities\Note;
 use Espo\Entities\Email;
 use Espo\Entities\EmailAddress;
 
@@ -398,28 +398,25 @@ class Service
      * } $params
      * @throws NotFound
      * @throws Forbidden
+     * @return RecordCollection<Note>
      */
-    public function findUserStream(string $userId, array $params): stdClass
+    public function findUserStream(string $userId, array $params): RecordCollection
     {
         $offset = intval($params['offset'] ?? 0);
         $maxSize = intval($params['maxSize']);
 
         $sqLimit = $offset + $maxSize + 1;
 
-        if ($userId === $this->user->getId()) {
-            $user = $this->user;
+        $user = $userId === $this->user->getId() ?
+            $this->user :
+            $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
+
+        if (!$user) {
+            throw new NotFound();
         }
-        else {
-            /** @var ?User $user */
-            $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $userId);
 
-            if (!$user) {
-                throw new NotFound();
-            }
-
-            if (!$this->acl->checkUserPermission($user, 'user')) {
-                throw new Forbidden();
-            }
+        if (!$this->acl->checkUserPermission($user, 'user')) {
+            throw new Forbidden();
         }
 
         $skipOwn = $params['skipOwn'] ?? false;
@@ -457,7 +454,7 @@ class Service
 
             $additionalQuery = $this->selectBuilderFactory
                 ->create()
-                ->from(NoteEntity::ENTITY_TYPE)
+                ->from(Note::ENTITY_TYPE)
                 ->withComplexExpressionsForbidden()
                 ->withWherePermissionCheck()
                 ->withSearchParams($searchParams)
@@ -474,7 +471,7 @@ class Service
             $baseBuilder->clone($additionalQuery);
         }
         else {
-            $baseBuilder->from(NoteEntity::ENTITY_TYPE);
+            $baseBuilder->from(Note::ENTITY_TYPE);
         }
 
         $baseBuilder
@@ -747,7 +744,7 @@ class Service
                 'createdById!=' => $user->getId(),
                 'usersMiddle.userId' => $user->getId(),
                 'parentId' => null,
-                'type' => NoteEntity::TYPE_POST,
+                'type' => Note::TYPE_POST,
                 'isGlobal' => false,
             ])
             ->build();
@@ -763,7 +760,7 @@ class Service
                     ->where([
                         'parentId' => null,
                         'portalsMiddle.portalId' => $portalIdList,
-                        'type' => NoteEntity::TYPE_POST,
+                        'type' => Note::TYPE_POST,
                         'isGlobal' => false,
                     ])
                     ->build();
@@ -777,7 +774,7 @@ class Service
                 ->where([
                     'parentId' => null,
                     'teamsMiddle.teamId' => $teamIdList,
-                    'type' => NoteEntity::TYPE_POST,
+                    'type' => Note::TYPE_POST,
                     'isGlobal' => false,
                 ])
                 ->build();
@@ -801,7 +798,7 @@ class Service
             ->where([
                 'createdById' => $user->getId(),
                 'parentId' => null,
-                'type' => NoteEntity::TYPE_POST,
+                'type' => Note::TYPE_POST,
                 'isGlobal' => false,
             ])
             ->build();
@@ -815,7 +812,7 @@ class Service
                 ->leftJoin('createdBy')
                 ->where([
                     'parentId' => null,
-                    'type' => NoteEntity::TYPE_POST,
+                    'type' => Note::TYPE_POST,
                     'isGlobal' => true,
                 ])
                 ->build();
@@ -839,7 +836,7 @@ class Service
             ->compose($unionQuery);
 
         $sthCollection = $this->entityManager
-            ->getRDBRepository(NoteEntity::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(Note::class)
             ->findBySql($sql);
 
         $collection = $this->entityManager
@@ -852,18 +849,7 @@ class Service
             $this->applyAccessControlToNote($e, $user);
         }
 
-        $total = -2;
-
-        if (count($collection) > $maxSize) {
-            $total = -1;
-
-            unset($collection[count($collection) - 1]);
-        }
-
-        return (object) [
-            'total' => $total,
-            'collection' => $collection,
-        ];
+        return RecordCollection::createNoCount($collection, $maxSize);
     }
 
     /**
@@ -896,8 +882,8 @@ class Service
         if (in_array(Email::ENTITY_TYPE, $ignoreScopeList)) {
             $whereClause[] = [
                 'type!=' => [
-                    NoteEntity::TYPE_EMAIL_RECEIVED,
-                    NoteEntity::TYPE_EMAIL_SENT,
+                    Note::TYPE_EMAIL_RECEIVED,
+                    Note::TYPE_EMAIL_SENT,
                 ],
             ];
         }
@@ -927,14 +913,14 @@ class Service
         if (!empty($params['filter'])) {
             switch ($params['filter']) {
                 case 'posts':
-                    $whereClause[]['type'] = NoteEntity::TYPE_POST;
+                    $whereClause[]['type'] = Note::TYPE_POST;
 
                     break;
 
                   case 'updates':
                     $whereClause[]['type'] = [
-                        NoteEntity::TYPE_UPDATE,
-                        NoteEntity::TYPE_STATUS,
+                        Note::TYPE_UPDATE,
+                        Note::TYPE_STATUS,
                     ];
 
                     break;
@@ -944,7 +930,7 @@ class Service
         return $whereClause;
     }
 
-    private function loadNoteAdditionalFields(NoteEntity $note): void
+    private function loadNoteAdditionalFields(Note $note): void
     {
         $note->loadAdditionalFields();
     }
@@ -960,8 +946,9 @@ class Service
      * } $params
      * @throws NotFound
      * @throws Forbidden
+     * @return RecordCollection<Note>
      */
-    public function find(string $scope, ?string $id, array $params): stdClass
+    public function find(string $scope, ?string $id, array $params): RecordCollection
     {
         if ($scope === User::ENTITY_TYPE) {
             if (empty($id)) {
@@ -993,7 +980,7 @@ class Service
 
             $additionalQuery = $this->selectBuilderFactory
                 ->create()
-                ->from(NoteEntity::ENTITY_TYPE)
+                ->from(Note::ENTITY_TYPE)
                 ->withComplexExpressionsForbidden()
                 ->withWherePermissionCheck()
                 ->withSearchParams($searchParams)
@@ -1008,7 +995,7 @@ class Service
             $builder->clone($additionalQuery);
         }
         else {
-            $builder->from(NoteEntity::ENTITY_TYPE);
+            $builder->from(Note::ENTITY_TYPE);
         }
 
         $where = [
@@ -1132,14 +1119,14 @@ class Service
         if (!empty($params['filter'])) {
             switch ($params['filter']) {
                 case 'posts':
-                    $where['type'] = NoteEntity::TYPE_POST;
+                    $where['type'] = Note::TYPE_POST;
 
                     break;
 
                   case 'updates':
                     $where['type'] = [
-                        NoteEntity::TYPE_ASSIGN,
-                        NoteEntity::TYPE_STATUS,
+                        Note::TYPE_ASSIGN,
+                        Note::TYPE_STATUS,
                     ];
 
                     break;
@@ -1166,8 +1153,8 @@ class Service
             if (in_array(Email::ENTITY_TYPE, $ignoreScopeList)) {
                 $where[] = [
                     'type!=' => [
-                        NoteEntity::TYPE_EMAIL_RECEIVED,
-                        NoteEntity::TYPE_EMAIL_SENT,
+                        Note::TYPE_EMAIL_RECEIVED,
+                        Note::TYPE_EMAIL_SENT,
                     ]
                 ];
             }
@@ -1187,16 +1174,15 @@ class Service
             ->limit($params['offset'] ?? 0, $params['maxSize'])
             ->order('number', 'DESC');
 
-        /** @var iterable<NoteEntity> $collection */
         $collection = $this->entityManager
-            ->getRDBRepository(NoteEntity::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(Note::class)
             ->clone($builder->build())
             ->find();
 
         foreach ($collection as $e) {
             if (
-                $e->getType() === NoteEntity::TYPE_POST ||
-                $e->getType() === NoteEntity::TYPE_EMAIL_RECEIVED
+                $e->getType() === Note::TYPE_POST ||
+                $e->getType() === Note::TYPE_EMAIL_RECEIVED
             ) {
                 $e->loadAttachments();
             }
@@ -1216,20 +1202,17 @@ class Service
         }
 
         $count = $this->entityManager
-            ->getRDBRepository(NoteEntity::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(Note::class)
             ->clone($countBuilder->build())
             ->count();
 
-        return (object) [
-            'total' => $count,
-            'collection' => $collection,
-        ];
+        return RecordCollection::create($collection, $count);
     }
 
     private function loadAssignedUserName(Entity $entity): void
     {
         $user = $this->entityManager
-            ->getRDBRepository(User::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(User::class)
             ->select(['name'])
             ->where([
                 'id' =>  $entity->get('assignedUserId'),
@@ -1237,7 +1220,7 @@ class Service
             ->findOne();
 
         if ($user) {
-            $entity->set('assignedUserName', $user->get('name'));
+            $entity->set('assignedUserName', $user->getName());
         }
     }
 
@@ -1248,7 +1231,7 @@ class Service
      * When users or teams of `related` or `parent` record are changed
      * the note record will be changed too.
      */
-    private function processNoteTeamsUsers(NoteEntity $note, Entity $entity): void
+    private function processNoteTeamsUsers(Note $note, Entity $entity): void
     {
         if (!$entity instanceof CoreEntity) {
             return;
@@ -1317,9 +1300,9 @@ class Service
 
         if (
             $this->entityManager
-                ->getRDBRepository(NoteEntity::ENTITY_TYPE)
+                ->getRDBRepository(Note::ENTITY_TYPE)
                 ->where([
-                    'type' => NoteEntity::TYPE_EMAIL_RECEIVED,
+                    'type' => Note::TYPE_EMAIL_RECEIVED,
                     'parentId' => $entity->getId(),
                     'parentType' => $entityType,
                     'relatedId' => $email->getId(),
@@ -1330,10 +1313,10 @@ class Service
             return;
         }
 
-        /** @var NoteEntity $note */
-        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
+        /** @var Note $note */
+        $note = $this->entityManager->getNewEntity(Note::ENTITY_TYPE);
 
-        $note->set('type', NoteEntity::TYPE_EMAIL_RECEIVED);
+        $note->set('type', Note::TYPE_EMAIL_RECEIVED);
         $note->set('parentId', $entity->getId());
         $note->set('parentType', $entityType);
         $note->set('relatedId', $email->getId());
@@ -1383,10 +1366,10 @@ class Service
     {
         $entityType = $entity->getEntityType();
 
-        /** @var NoteEntity $note */
-        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
+        /** @var Note $note */
+        $note = $this->entityManager->getNewEntity(Note::ENTITY_TYPE);
 
-        $note->set('type', NoteEntity::TYPE_EMAIL_SENT);
+        $note->set('type', Note::TYPE_EMAIL_SENT);
         $note->set('parentId', $entity->getId());
         $note->set('parentType', $entityType);
         $note->set('relatedId', $email->getId());
@@ -1447,10 +1430,10 @@ class Service
     {
         $entityType = $entity->getEntityType();
 
-        /** @var NoteEntity $note */
-        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
+        /** @var Note $note */
+        $note = $this->entityManager->getNewEntity(Note::ENTITY_TYPE);
 
-        $note->set('type', NoteEntity::TYPE_CREATE);
+        $note->set('type', Note::TYPE_CREATE);
         $note->set('parentId', $entity->getId());
         $note->set('parentType', $entityType);
 
@@ -1535,12 +1518,12 @@ class Service
         array $options = []
     ): void {
 
-        /** @var NoteEntity $note */
-        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
+        /** @var Note $note */
+        $note = $this->entityManager->getNewEntity(Note::ENTITY_TYPE);
 
         $entityType = $entity->getEntityType();
 
-        $note->set('type', NoteEntity::TYPE_CREATE_RELATED);
+        $note->set('type', Note::TYPE_CREATE_RELATED);
         $note->set('parentId', $parentId);
         $note->set('parentType', $parentType);
         $note->set([
@@ -1572,10 +1555,10 @@ class Service
         $entityType = $entity->getEntityType();
 
         $existing = $this->entityManager
-            ->getRDBRepository(NoteEntity::ENTITY_TYPE)
+            ->getRDBRepository(Note::ENTITY_TYPE)
             ->select(['id'])
             ->where([
-                'type' => NoteEntity::TYPE_RELATE,
+                'type' => Note::TYPE_RELATE,
                 'parentId' => $parentId,
                 'parentType' => $parentType,
                 'relatedId' => $entity->getId(),
@@ -1587,11 +1570,11 @@ class Service
             return;
         }
 
-        /** @var NoteEntity $note */
-        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
+        /** @var Note $note */
+        $note = $this->entityManager->getNewEntity(Note::ENTITY_TYPE);
 
         $note->set([
-            'type' => NoteEntity::TYPE_RELATE,
+            'type' => Note::TYPE_RELATE,
             'parentId' => $parentId,
             'parentType' => $parentType,
             'relatedType' => $entityType,
@@ -1614,10 +1597,10 @@ class Service
      */
     public function noteAssign(Entity $entity, array $options = []): void
     {
-        /** @var NoteEntity $note */
-        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
+        /** @var Note $note */
+        $note = $this->entityManager->getNewEntity(Note::ENTITY_TYPE);
 
-        $note->set('type', NoteEntity::TYPE_ASSIGN);
+        $note->set('type', Note::TYPE_ASSIGN);
         $note->set('parentId', $entity->getId());
         $note->set('parentType', $entity->getEntityType());
 
@@ -1662,10 +1645,10 @@ class Service
      */
     public function noteStatus(Entity $entity, string $field, array $options = []): void
     {
-        /** @var NoteEntity $note */
-        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
+        /** @var Note $note */
+        $note = $this->entityManager->getNewEntity(Note::ENTITY_TYPE);
 
-        $note->set('type', NoteEntity::TYPE_STATUS);
+        $note->set('type', Note::TYPE_STATUS);
         $note->set('parentId', $entity->getId());
         $note->set('parentType', $entity->getEntityType());
 
@@ -1828,10 +1811,10 @@ class Service
             return;
         }
 
-        /** @var NoteEntity $note */
-        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
+        /** @var Note $note */
+        $note = $this->entityManager->getNewEntity(Note::ENTITY_TYPE);
 
-        $note->set('type', NoteEntity::TYPE_UPDATE);
+        $note->set('type', Note::TYPE_UPDATE);
         $note->set('parentId', $entity->getId());
         $note->set('parentType', $entity->getEntityType());
 
@@ -2277,7 +2260,7 @@ class Service
         $limit = $this->config->get('noteAclLimit', self::NOTE_ACL_LIMIT);
 
         $noteList = $this->entityManager
-            ->getRDBRepository(NoteEntity::ENTITY_TYPE)
+            ->getRDBRepository(Note::ENTITY_TYPE)
             ->where([
                 'OR' => [
                     [
@@ -2338,7 +2321,7 @@ class Service
      * } $params
      * @return void
      */
-    private function processNoteAclItem(Entity $entity, NoteEntity $note, array $params): void
+    private function processNoteAclItem(Entity $entity, Note $note, array $params): void
     {
         $teamsAttributeIsChanged = $params['teamsAttributeIsChanged'];
         $usersAttributeIsChanged = $params['usersAttributeIsChanged'];
@@ -2379,7 +2362,7 @@ class Service
         ]);
     }
 
-    public function applyAccessControlToNote(NoteEntity $note, ?User $user = null): void
+    public function applyAccessControlToNote(Note $note, ?User $user = null): void
     {
         if (!$user) {
             $user = $this->user;

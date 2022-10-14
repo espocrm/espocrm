@@ -33,8 +33,9 @@ use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\{
     Api\Request,
-    Record\SearchParamsFetcher,
-};
+    Exceptions\Forbidden,
+    Exceptions\NotFound,
+    Record\SearchParamsFetcher};
 
 use Espo\Tools\Stream\Service as Service;
 
@@ -55,6 +56,11 @@ class Stream
         $this->searchParamsFetcher = $searchParamsFetcher;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function getActionList(Request $request): stdClass
     {
         $params = $request->getRouteParams();
@@ -80,11 +86,16 @@ class Stream
         ]);
 
         return (object) [
-            'total' => $result->total,
-            'list' => $result->collection->getValueMapList()
+            'total' => $result->getTotal(),
+            'list' => $result->getValueMapList(),
         ];
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function getActionListPosts(Request $request): stdClass
     {
         $params = $request->getRouteParams();
@@ -113,8 +124,8 @@ class Stream
         ]);
 
         return (object) [
-            'total' => $result->total,
-            'list' => $result->collection->getValueMapList(),
+            'total' => $result->getTotal(),
+            'list' => $result->getValueMapList(),
         ];
     }
 }

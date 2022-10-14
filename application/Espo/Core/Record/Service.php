@@ -860,7 +860,6 @@ class Service implements Crud,
         }
 
         if ($disableCount) {
-            /** @var RecordCollection<TEntity> */
             return RecordCollection::createNoCount($collection, $maxSize);
         }
 
@@ -868,7 +867,6 @@ class Service implements Crud,
             ->clone($query)
             ->count();
 
-        /** @var RecordCollection<TEntity> */
         return RecordCollection::create($collection, $total);
     }
 
@@ -1036,7 +1034,6 @@ class Service implements Crud,
         }
 
         if ($disableCount) {
-            /** @var RecordCollection<TEntity> */
             return RecordCollection::createNoCount($collection, $maxSize);
         }
 
@@ -1046,7 +1043,6 @@ class Service implements Crud,
             ->clone($query)
             ->count();
 
-        /** @var RecordCollection<TEntity> */
         return RecordCollection::create($collection, $total);
     }
 
