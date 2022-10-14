@@ -31,6 +31,7 @@ namespace Espo\Core\Mail\Account\GroupAccount\Hooks;
 
 use Espo\Core\ApplicationUser;
 use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\Tools\Email\Util;
 use Laminas\Mail\Message;
 
@@ -178,7 +179,9 @@ class AfterFetch implements AfterFetchInterface
 
         $inboundEmail = $account->getEntity();
 
-        if (!$email->get('from')) {
+        $fromAddress = $email->getFromAddress();
+
+        if (!$fromAddress) {
             return;
         }
 
@@ -201,8 +204,7 @@ class AfterFetch implements AfterFetchInterface
         /** @var EmailAddressRepository $emailAddressRepository */
         $emailAddressRepository = $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
 
-        $emailAddress = $emailAddressRepository->getByAddress($email->get('from'));
-
+        $emailAddress = $emailAddressRepository->getByAddress($fromAddress);
 
         if ($emailAddress) {
             $sentCount = $this->entityManager
@@ -236,18 +238,22 @@ class AfterFetch implements AfterFetchInterface
         try {
             $entityHash = [];
 
-            if ($case) {
-                $entityHash['Case'] = $case;
+            $contact = null;
 
-                if ($case->get('contactId')) {
-                    $contact = $this->entityManager->getEntity(Contact::ENTITY_TYPE, $case->get('contactId'));
+            if ($case) {
+                $entityHash[CaseObj::ENTITY_TYPE] = $case;
+
+                $contactLink = $case->getContact();
+
+                if ($contactLink) {
+                    $contact = $this->entityManager->getEntityById(Contact::ENTITY_TYPE, $contactLink->getId());
                 }
             }
 
-            if (empty($contact)) {
+            if (!$contact) {
                 $contact = $this->entityManager->getNewEntity(Contact::ENTITY_TYPE);
 
-                $fromName = Util::parseFromName($email->get('fromString'));
+                $fromName = Util::parseFromName($email->getFromString() ?? '');
 
                 if (!empty($fromName)) {
                     $contact->set('name', $fromName);
@@ -255,11 +261,11 @@ class AfterFetch implements AfterFetchInterface
             }
 
             $entityHash['Person'] = $contact;
-            $entityHash['Contact'] = $contact;
-            $entityHash['Email'] = $email;
+            $entityHash[Contact::ENTITY_TYPE] = $contact;
+            $entityHash[Email::ENTITY_TYPE] = $email;
 
             if ($user) {
-                $entityHash['User'] = $user;
+                $entityHash[User::ENTITY_TYPE] = $user;
             }
 
             $emailTemplateService = $this->getEmailTemplateService();
@@ -276,9 +282,9 @@ class AfterFetch implements AfterFetchInterface
                 $subject = '[#' . $case->get('number'). '] ' . $subject;
             }
 
-            $reply = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
+            $reply = $this->entityManager->getRDBRepositoryByClass(Email::class)->getNew();
 
-            $reply->set('to', $email->get('from'));
+            $reply->set('to', $fromAddress);
             $reply->set('subject', $subject);
             $reply->set('body', $replyData['body']);
             $reply->set('isHtml', $replyData['isHtml']);
@@ -288,16 +294,16 @@ class AfterFetch implements AfterFetchInterface
                 $reply->set('teamsIds', $email->get('teamsIds'));
             }
 
-            if ($email->get('parentId') && $email->get('parentType')) {
-                $reply->set('parentId', $email->get('parentId'));
-                $reply->set('parentType', $email->get('parentType'));
+            if ($email->getParentId() && $email->getParentType()) {
+                $reply->set('parentId', $email->getParentId());
+                $reply->set('parentType', $email->getParentType());
             }
 
             $this->entityManager->saveEntity($reply);
 
             $sender = $this->emailSender->create();
 
-            if ($inboundEmail->get('useSmtp')) {
+            if ($inboundEmail->isAvailableForSending()) {
                 $smtpParams = $this->getSmtpParamsFromInboundEmail($inboundEmail);
 
                 if ($smtpParams) {
@@ -307,20 +313,20 @@ class AfterFetch implements AfterFetchInterface
 
             $senderParams = [];
 
-            if ($inboundEmail->get('fromName')) {
-                $senderParams['fromName'] = $inboundEmail->get('fromName');
+            if ($inboundEmail->getFromName()) {
+                $senderParams['fromName'] = $inboundEmail->getFromName();
             }
 
-            if ($inboundEmail->get('replyFromAddress')) {
-                $senderParams['fromAddress'] = $inboundEmail->get('replyFromAddress');
+            if ($inboundEmail->getReplyFromAddress()) {
+                $senderParams['fromAddress'] = $inboundEmail->getReplyFromAddress();
             }
 
-            if ($inboundEmail->get('replyFromName')) {
-                $senderParams['fromName'] = $inboundEmail->get('replyFromName');
+            if ($inboundEmail->getReplyFromName()) {
+                $senderParams['fromName'] = $inboundEmail->getReplyFromName();
             }
 
-            if ($inboundEmail->get('replyToAddress')) {
-                $senderParams['replyToAddress'] = $inboundEmail->get('replyToAddress');
+            if ($inboundEmail->getReplyToAddress()) {
+                $senderParams['replyToAddress'] = $inboundEmail->getReplyToAddress();
             }
 
             $sender
@@ -371,11 +377,15 @@ class AfterFetch implements AfterFetchInterface
     {
         $inboundEmail = $account->getEntity();
 
+        $parentId = $email->getParentId();
+
         if (
-            $email->get('parentType') === CaseObj::ENTITY_TYPE &&
-            $email->get('parentId')
+            $email->getParentType() === CaseObj::ENTITY_TYPE &&
+            $parentId
         ) {
-            $case = $this->entityManager->getEntity(CaseObj::ENTITY_TYPE, $email->get('parentId'));
+            $case = $this->entityManager
+                ->getRDBRepositoryByClass(CaseObj::class)
+                ->getById($parentId);
 
             if (!$case) {
                 return;
@@ -417,16 +427,20 @@ class AfterFetch implements AfterFetchInterface
         }
 
         $params = [
-            'caseDistribution' => $inboundEmail->get('caseDistribution'),
+            'caseDistribution' => $inboundEmail->getCaseDistribution(),
             'teamId' => $inboundEmail->get('teamId'),
             'userId' => $inboundEmail->get('assignToUserId'),
-            'targetUserPosition' => $inboundEmail->get('targetUserPosition'),
+            'targetUserPosition' => $inboundEmail->getTargetUserPosition(),
             'inboundEmailId' => $inboundEmail->getId(),
         ];
 
         $case = $this->emailToCase($email, $params);
 
-        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $case->get('assignedUserId'));
+        $assignedUserLink = $case->getAssignedUser();
+
+        $user = $assignedUserLink ?
+            $this->entityManager->getEntityById(User::ENTITY_TYPE, $assignedUserLink->getId())
+            : null;
 
         $this->streamService->noteEmailReceived($case, $email, true);
 
@@ -444,10 +458,10 @@ class AfterFetch implements AfterFetchInterface
             $userIdList = $case->getLinkMultipleIdList('assignedUsers');
         }
         else {
-            $assignedUserId = $case->get('assignedUserId');
+            $assignedUserLink = $case->getAssignedUser();
 
-            if ($assignedUserId) {
-                $userIdList[] = $assignedUserId;
+            if ($assignedUserLink) {
+                $userIdList[] = $assignedUserLink->getId();
             }
         }
 
@@ -550,17 +564,18 @@ class AfterFetch implements AfterFetchInterface
         }
 
         switch ($caseDistribution) {
-            case 'Direct-Assignment':
+            case InboundEmail::CASE_DISTRIBUTION_DIRECT_ASSIGNMENT:
                 if ($userId) {
                     $case->set('assignedUserId', $userId);
-                    $case->set('status', 'Assigned');
+                    $case->set('status', CaseObj::STATUS_ASSIGNED);
                 }
 
                 break;
 
-            case 'Round-Robin':
+            case InboundEmail::CASE_DISTRIBUTION_ROUND_ROBIN:
                 if ($teamId) {
-                    $team = $this->entityManager->getEntity(Team::ENTITY_TYPE, $teamId);
+                    /** @var ?Team $team */
+                    $team = $this->entityManager->getEntityById(Team::ENTITY_TYPE, $teamId);
 
                     if ($team) {
                         $this->assignRoundRobin($case, $team, $targetUserPosition);
@@ -569,9 +584,10 @@ class AfterFetch implements AfterFetchInterface
 
                 break;
 
-            case 'Least-Busy':
+            case InboundEmail::CASE_DISTRIBUTION_LEAST_BUSY:
                 if ($teamId) {
-                    $team = $this->entityManager->getEntity(Team::ENTITY_TYPE, $teamId);
+                    /** @var ?Team $team */
+                    $team = $this->entityManager->getEntityById(Team::ENTITY_TYPE, $teamId);
 
                     if ($team) {
                         $this->assignLeastBusy($case, $team, $targetUserPosition);
@@ -581,8 +597,10 @@ class AfterFetch implements AfterFetchInterface
                 break;
         }
 
-        if ($case->get('assignedUserId')) {
-            $email->set('assignedUserId', $case->get('assignedUserId'));
+        $assignedUserLink = $case->getAssignedUser();
+
+        if ($assignedUserLink) {
+            $email->set('assignedUserId', $assignedUserLink->getId());
         }
 
         if ($email->get('accountId')) {
@@ -590,10 +608,10 @@ class AfterFetch implements AfterFetchInterface
         }
 
         $contact = $this->entityManager
-            ->getRDBRepository('Contact')
+            ->getRDBRepository(Contact::ENTITY_TYPE)
             ->join('emailAddresses', 'emailAddressesMultiple')
             ->where([
-                'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
+                'emailAddressesMultiple.id' => $email->get('fromEmailAddressId'),
             ])
             ->findOne();
 
@@ -603,7 +621,7 @@ class AfterFetch implements AfterFetchInterface
         else {
             if (!$case->get('accountId')) {
                 $lead = $this->entityManager
-                    ->getRDBRepository('Lead')
+                    ->getRDBRepository(Lead::ENTITY_TYPE)
                     ->join('emailAddresses', 'emailAddressesMultiple')
                     ->where([
                         'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
@@ -618,7 +636,7 @@ class AfterFetch implements AfterFetchInterface
 
         $this->entityManager->saveEntity($case);
 
-        $email->set('parentType', 'Case');
+        $email->set('parentType', CaseObj::ENTITY_TYPE);
         $email->set('parentId', $case->getId());
 
         $this->entityManager->saveEntity($email, [
@@ -626,8 +644,10 @@ class AfterFetch implements AfterFetchInterface
             'skipLinkMultipleUpdate' => true,
         ]);
 
-        // Unknown reason to do this.
-        $fetchedCase = $this->entityManager->getEntity('Case', $case->getId());
+        // Unknown reason of doing this.
+        $fetchedCase = $this->entityManager
+            ->getRDBRepositoryByClass(CaseObj::class)
+            ->getById($case->getId());
 
         if ($fetchedCase) {
             return $fetchedCase;
@@ -644,7 +664,7 @@ class AfterFetch implements AfterFetchInterface
 
         if ($user) {
             $case->set('assignedUserId', $user->getId());
-            $case->set('status', 'Assigned');
+            $case->set('status', CaseObj::STATUS_ASSIGNED);
         }
     }
 
@@ -654,7 +674,7 @@ class AfterFetch implements AfterFetchInterface
 
         if ($user) {
             $case->set('assignedUserId', $user->getId());
-            $case->set('status', 'Assigned');
+            $case->set('status', CaseObj::STATUS_ASSIGNED);
         }
     }
 }

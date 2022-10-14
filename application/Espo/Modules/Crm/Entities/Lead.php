@@ -29,6 +29,9 @@
 
 namespace Espo\Modules\Crm\Entities;
 
+use Espo\Core\Field\Link;
+use Espo\Core\Field\LinkMultiple;
+
 class Lead extends \Espo\Core\Entities\Person
 {
     public const ENTITY_TYPE = 'Lead';
@@ -84,5 +87,17 @@ class Lead extends \Espo\Core\Entities\Person
         }
 
         return false;
+    }
+
+    public function getAssignedUser(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('assignedUser');
+    }
+
+    public function getTeams(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('teams');
     }
 }

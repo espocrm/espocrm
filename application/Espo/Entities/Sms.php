@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Field\LinkMultiple;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Sms\Sms as SmsInterface;
 use Espo\Core\Field\DateTime;
@@ -42,13 +43,9 @@ class Sms extends Entity implements SmsInterface
     public const ENTITY_TYPE = 'Sms';
 
     public const STATUS_ARCHIVED = 'Archived';
-
     public const STATUS_SENT = 'Sent';
-
     public const STATUS_SENDING = 'Sending';
-
     public const STATUS_DRAFT = 'Draft';
-
     public const STATUS_FAILED = 'Failed';
 
     public function getDateSent(): ?DateTime
@@ -156,5 +153,11 @@ class Sms extends Entity implements SmsInterface
 
         /** @var SmsRepository */
         return $this->entityManager->getRepository(self::ENTITY_TYPE);
+    }
+
+    public function getTeams(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('teams');
     }
 }

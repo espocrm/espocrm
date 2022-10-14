@@ -30,10 +30,11 @@
 namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\{
+    Field\Link,
+    Field\LinkMultiple,
     ORM\Entity,
     Field\Currency,
-    Field\Date,
-};
+    Field\Date};
 
 class Opportunity extends Entity
 {
@@ -100,5 +101,17 @@ class Opportunity extends Entity
     public function setProbability(?int $probability): void
     {
         $this->set('probability', $probability);
+    }
+
+    public function getAssignedUser(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('assignedUser');
+    }
+
+    public function getTeams(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('teams');
     }
 }

@@ -43,6 +43,10 @@ class InboundEmail extends Entity
 
     public const STATUS_ACTIVE = 'Active';
 
+    public const CASE_DISTRIBUTION_DIRECT_ASSIGNMENT = 'Direct-Assignment';
+    public const CASE_DISTRIBUTION_ROUND_ROBIN = 'Round-Robin';
+    public const CASE_DISTRIBUTION_LEAST_BUSY = 'Least-Busy';
+
     public function isAvailableForFetching(): bool
     {
         return $this->isActive() && $this->get('useImap');
@@ -73,6 +77,16 @@ class InboundEmail extends Entity
         return $this->get('replyToAddress');
     }
 
+    public function getReplyFromAddress(): ?string
+    {
+        return $this->get('replyFromAddress');
+    }
+
+    public function getReplyFromName(): ?string
+    {
+        return $this->get('replyFromName');
+    }
+
     public function getName(): ?string
     {
         return $this->get('name');
@@ -92,6 +106,11 @@ class InboundEmail extends Entity
     {
         /** @var ?Link */
         return $this->getValueObject('assignToUser');
+    }
+
+    public function getTargetUserPosition(): ?string
+    {
+        return $this->get('targetUserPosition');
     }
 
     public function getTeam(): ?Link
@@ -207,5 +226,10 @@ class InboundEmail extends Entity
     {
         /** @var ?Link */
         return $this->getValueObject('groupEmailFolder');
+    }
+
+    public function getCaseDistribution(): ?string
+    {
+        return $this->get('caseDistribution');
     }
 }

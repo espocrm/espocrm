@@ -30,11 +30,12 @@
 namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\{
+    Field\Link,
+    Field\LinkMultiple,
     ORM\Entity,
     Field\EmailAddressGroup,
     Field\PhoneNumberGroup,
-    Field\Address,
-};
+    Field\Address};
 
 class Account extends Entity
 {
@@ -102,5 +103,17 @@ class Account extends Entity
         $this->setValueObject('shippingAddress', $address);
 
         return $this;
+    }
+
+    public function getAssignedUser(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('assignedUser');
+    }
+
+    public function getTeams(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('teams');
     }
 }

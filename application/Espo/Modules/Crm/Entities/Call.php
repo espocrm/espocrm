@@ -30,9 +30,10 @@
 namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\{
+    Field\Link,
+    Field\LinkMultiple,
     ORM\Entity,
-    Field\DateTime,
-};
+    Field\DateTime};
 
 class Call extends Entity
 {
@@ -58,5 +59,17 @@ class Call extends Entity
     public function setDateEnd(?DateTime $dateEnd): void
     {
         $this->setValueObject('dateEnd', $dateEnd);
+    }
+
+    public function getAssignedUser(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('assignedUser');
+    }
+
+    public function getTeams(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('teams');
     }
 }

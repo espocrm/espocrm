@@ -30,6 +30,8 @@
 namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\Field\Date;
+use Espo\Core\Field\Link;
+use Espo\Core\Field\LinkMultiple;
 
 class Campaign extends \Espo\Core\ORM\Entity
 {
@@ -45,5 +47,17 @@ class Campaign extends \Espo\Core\ORM\Entity
     {
         /** @var ?Date */
         return $this->getValueObject('endDate');
+    }
+
+    public function getAssignedUser(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('assignedUser');
+    }
+
+    public function getTeams(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('teams');
     }
 }

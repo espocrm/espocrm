@@ -30,6 +30,7 @@
 namespace Espo\Entities;
 
 use Espo\Core\ApplicationUser;
+use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Utils\Util;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Field\DateTime;
@@ -71,7 +72,6 @@ class Email extends Entity
     {
         return $this->has('name');
     }
-
 
     protected function _hasFromName(): bool
     {
@@ -426,6 +426,11 @@ class Email extends Entity
         return $this;
     }
 
+    public function getFromString(): ?string
+    {
+        return $this->get('fromString');
+    }
+
     public function getFromAddress(): ?string
     {
         if (!$this->hasInContainer('from') && !$this->isNew()) {
@@ -545,6 +550,18 @@ class Email extends Entity
     public function getStatus(): ?string
     {
         return $this->get('status');
+    }
+
+    public function getAccount(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('account');
+    }
+
+    public function getTeams(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('teams');
     }
 
     public function getCreatedBy(): ?Link
