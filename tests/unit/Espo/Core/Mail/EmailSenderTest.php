@@ -41,7 +41,7 @@ use Espo\Entities\{
 
 use Espo\Core\{
     Mail\EmailSender,
-    Mail\SmtpTransportFactory,
+    Mail\Smtp\TransportFactory,
     ORM\EntityManager,
     Utils\Config,
     Utils\Log,
@@ -56,7 +56,7 @@ class EmailSenderTest extends \PHPUnit\Framework\TestCase
         $config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
         $entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
         $injectableFactory = $this->createMock(InjectableFactory::class);
-        $transportFactory = $this->getMockBuilder(SmtpTransportFactory::class)->disableOriginalConstructor()->getMock();
+        $transportFactory = $this->getMockBuilder(TransportFactory::class)->disableOriginalConstructor()->getMock();
 
         $this->transport = $this->getMockBuilder(SmtpTransport::class)->disableOriginalConstructor()->getMock();
 

@@ -27,16 +27,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail;
+namespace Espo\Core\Mail\Smtp;
 
-use Laminas\{
-    Mail\Transport\Smtp as SmtpTransport,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Mail\SmtpParams;
 
-class SmtpTransportFactory
+class HandlerProcessor
 {
-    public function create(): SmtpTransport
+    private InjectableFactory $injectableFactory;
+
+    public function __construct(InjectableFactory $injectableFactory)
     {
-        return new SmtpTransport();
+        $this->injectableFactory = $injectableFactory;
+    }
+
+    /**
+     * @param class-string<object> $className
+     */
+    public function handle(string $className, SmtpParams $params, ?string $id): SmtpParams
+    {
+        $handler = $this->injectableFactory->create($className);
+
+        if ($handler instanceof Handler) {
+            return $handler->handle($params, $id);
+        }
+
+        if (method_exists($handler, 'applyParams')) {
+            $raw = $params->toArray();
+
+            $handler->applyParams($id, $raw);
+
+            return SmtpParams::fromArray($raw);
+        }
+
+        return $params;
     }
 }

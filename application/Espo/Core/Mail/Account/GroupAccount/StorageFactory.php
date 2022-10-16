@@ -33,9 +33,9 @@ use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\Account;
 use Espo\Core\Mail\Account\StorageFactory as StorageFactoryInterface;
 use Espo\Core\Mail\Account\Storage\LaminasStorage;
+use Espo\Core\Mail\Exceptions\NoImap;
 use Espo\Core\Mail\Mail\Storage\Imap;
 
-use Espo\Core\Utils\Crypt;
 use Espo\Core\Utils\Log;
 use Espo\Core\InjectableFactory;
 
@@ -43,29 +43,34 @@ use Throwable;
 
 class StorageFactory implements StorageFactoryInterface
 {
-    private Crypt $crypt;
-
     private Log $log;
-
     private InjectableFactory $injectableFactory;
 
-    public function __construct(Crypt $crypt, Log $log, InjectableFactory $injectableFactory)
-    {
-        $this->crypt = $crypt;
+    public function __construct(
+        Log $log,
+        InjectableFactory $injectableFactory
+    ) {
         $this->log = $log;
         $this->injectableFactory = $injectableFactory;
     }
 
+    /**
+     * @throws NoImap
+     */
     public function create(Account $account): LaminasStorage
     {
+        $imapParams = $account->getImapParams();
+
+        if (!$imapParams) {
+            throw new NoImap();
+        }
+
         $params = Params::createBuilder()
-            ->setHost($account->getHost())
-            ->setPort($account->getPort())
-            ->setSecurity($account->getSecurity())
-            ->setUsername($account->getUsername())
-            ->setPassword(
-                $this->crypt->decrypt($account->getPassword() ?? '')
-            )
+            ->setHost($imapParams->getHost())
+            ->setPort($imapParams->getPort())
+            ->setSecurity($imapParams->getSecurity())
+            ->setUsername($imapParams->getUsername())
+            ->setPassword($imapParams->getPassword())
             ->setId($account->getId())
             ->setImapHandlerClassName($account->getImapHandlerClassName())
             ->build();

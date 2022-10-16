@@ -27,42 +27,52 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Account\GroupAccount;
+namespace Espo\Core\Mail\Account;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\InjectableFactory;
-use Espo\Core\Binding\BindingContainerBuilder;
-
-use Espo\Entities\InboundEmail;
-
-use Espo\ORM\EntityManager;
-
-class AccountFactory
+class ImapParams
 {
-    private InjectableFactory $injectableFactory;
-    private EntityManager $entityManager;
+    private string $host;
+    private int $port;
+    private string $username;
+    private ?string $password;
+    private ?string $security;
 
-    public function __construct(InjectableFactory $injectableFactory, EntityManager $entityManager)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->entityManager = $entityManager;
+    public function __construct(
+        string $host,
+        int $port,
+        string $username,
+        ?string $password,
+        ?string $security
+    ) {
+        $this->host = $host;
+        $this->port = $port;
+        $this->username = $username;
+        $this->password = $password;
+        $this->security = $security;
     }
 
-    /**
-     * @throws Error
-     */
-    public function create(string $id): Account
+    public function getHost(): string
     {
-        $entity = $this->entityManager->getEntityById(InboundEmail::ENTITY_TYPE, $id);
+        return $this->host;
+    }
 
-        if (!$entity) {
-            throw new Error("InboundEmail '{$id}' not found.");
-        }
+    public function getPort(): int
+    {
+        return $this->port;
+    }
 
-        $binding = BindingContainerBuilder::create()
-            ->bindInstance(InboundEmail::class, $entity)
-            ->build();
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
 
-        return $this->injectableFactory->createWithBinding(Account::class, $binding);
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function getSecurity(): ?string
+    {
+        return $this->security;
     }
 }

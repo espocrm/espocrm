@@ -29,22 +29,15 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Acl\Table;
-use Laminas\Mail\Message;
-
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Mail\Account\GroupAccount\AccountFactory;
+use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\ORM\Entity;
-
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Mail\Account\GroupAccount\Service as AccountService;
-
 use Espo\Services\Record as RecordService;
-
 use Espo\Entities\InboundEmail as InboundEmailEntity;
-use Espo\Entities\User;
 
 use Espo\Core\Di;
-
-use Throwable;
 
 /**
  * @extends Record<\Espo\Entities\InboundEmail>
@@ -81,144 +74,24 @@ class InboundEmail extends RecordService implements
         }
     }
 
-    public function findAccountForSending(string $emailAddress): ?InboundEmailEntity
-    {
-        /** @var ?InboundEmailEntity $inboundEmail */
-        $inboundEmail = $this->entityManager
-            ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
-            ->where([
-                'status' => InboundEmailEntity::STATUS_ACTIVE,
-                'useSmtp' => true,
-                'smtpHost!=' => null,
-                'emailAddress' => $emailAddress,
-            ])
-            ->findOne();
-
-        return $inboundEmail;
-    }
-
-    public function findSharedAccountForUser(User $user, string $emailAddress): ?InboundEmailEntity
-    {
-        $groupEmailAccountPermission = $this->aclManager->getPermissionLevel($user, 'groupEmailAccountPermission');
-
-        if (!$groupEmailAccountPermission || $groupEmailAccountPermission === Table::LEVEL_NO) {
-            return null;
-        }
-
-        if ($groupEmailAccountPermission === Table::LEVEL_TEAM) {
-            /** @var string[] $teamIdList */
-            $teamIdList = $user->getLinkMultipleIdList('teams');
-
-            if (!count($teamIdList)) {
-                return null;
-            }
-
-            /** @var ?InboundEmailEntity */
-            return $this->entityManager
-                ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
-                ->distinct()
-                ->join('teams')
-                ->where([
-                    'status' => InboundEmailEntity::STATUS_ACTIVE,
-                    'useSmtp' => true,
-                    'smtpIsShared' => true,
-                    'teamsMiddle.teamId' => $teamIdList,
-                    'emailAddress' => $emailAddress,
-                ])
-                ->findOne();
-        }
-
-        if ($groupEmailAccountPermission === Table::LEVEL_ALL) {
-            /** @var ?InboundEmailEntity */
-            return $this->entityManager
-                ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
-                ->where([
-                    'status' => InboundEmailEntity::STATUS_ACTIVE,
-                    'useSmtp' => true,
-                    'smtpIsShared' => true,
-                    'emailAddress' => $emailAddress,
-                ])
-                ->findOne();
-        }
-
-        return null;
-    }
-
-    public function storeSentMessage(InboundEmailEntity $emailAccount, Message $message): void
-    {
-        /** @var AccountService $service */
-        $service = $this->injectableFactory->create(AccountService::class);
-
-        $service->storeSentMessage($emailAccount->getId(), $message);
-    }
-
     /**
-     * @internal Can be refactored to return SmtpParams.
      * @return ?array<string,mixed>
+     * @throws Error
+     * @throws NoSmtp
+     * @internal Left for bc.
+     * @deprecated
      */
     public function getSmtpParamsFromAccount(InboundEmailEntity $emailAccount): ?array
     {
-        $smtpParams = [];
+        $params = $this->injectableFactory
+            ->create(AccountFactory::class)
+            ->create($emailAccount->getId())
+            ->getSmtpParams();
 
-        $smtpParams['server'] = $emailAccount->get('smtpHost');
-
-        if ($smtpParams['server']) {
-            $smtpParams['port'] = $emailAccount->get('smtpPort');
-            $smtpParams['auth'] = $emailAccount->get('smtpAuth');
-            $smtpParams['security'] = $emailAccount->get('smtpSecurity');
-            $smtpParams['username'] = $emailAccount->get('smtpUsername');
-            $smtpParams['password'] = $emailAccount->get('smtpPassword');
-
-            if ($emailAccount->get('smtpAuth')) {
-                $smtpParams['authMechanism'] = $emailAccount->get('smtpAuthMechanism');
-            }
-
-            if ($emailAccount->get('fromName')) {
-                $smtpParams['fromName'] = $emailAccount->get('fromName');
-            }
-
-            if ($emailAccount->get('emailAddress')) {
-                $smtpParams['fromAddress'] = $emailAccount->get('emailAddress');
-            }
-
-            if (array_key_exists('password', $smtpParams) && is_string($smtpParams['password'])) {
-                $smtpParams['password'] = $this->crypt->decrypt($smtpParams['password']);
-            }
-
-            $this->applySmtpHandler($emailAccount, $smtpParams);
-
-            return $smtpParams;
+        if (!$params) {
+            return null;
         }
 
-        return null;
-    }
-
-    /**
-     * @param array<string,mixed> $params
-     */
-    public function applySmtpHandler(InboundEmailEntity $emailAccount, array &$params): void
-    {
-        /** @var ?class-string $handlerClassName */
-        $handlerClassName = $emailAccount->get('smtpHandler');
-
-        if (!$handlerClassName) {
-            return;
-        }
-
-        try {
-            $handler = $this->injectableFactory->create($handlerClassName);
-        }
-        catch (Throwable $e) {
-            $this->log->error(
-                "InboundEmail: Could not create Smtp Handler for account {$emailAccount->id}. Error: " .
-                    $e->getMessage()
-            );
-
-            return;
-        }
-
-        if (method_exists($handler, 'applyParams')) {
-            $handler->applyParams($emailAccount->getId(), $params);
-        }
+        return $params->toArray();
     }
 }

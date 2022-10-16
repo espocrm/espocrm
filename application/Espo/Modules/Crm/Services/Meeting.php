@@ -29,6 +29,8 @@
 
 namespace Espo\Modules\Crm\Services;
 
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\Mail\SmtpParams;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Meeting as MeetingEntity;
 use Espo\ORM\Entity;
@@ -128,9 +130,13 @@ class Meeting extends Record implements
             $smtpParams = $this->getEmailSendService()->getUserSmtpParams($this->user->getId());
         }
 
-        return $this->injectableFactory->createWith(Invitations::class, [
-            'smtpParams' => $smtpParams,
-        ]);
+        $builder = BindingContainerBuilder::create();
+
+        if ($smtpParams) {
+            $builder->bindInstance(SmtpParams::class, $smtpParams);
+        }
+
+        return $this->injectableFactory->createWithBinding(Invitations::class, $builder->build());
     }
 
     public function sendInvitations(CoreEntity $entity, bool $useUserSmtp = true): bool

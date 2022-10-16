@@ -29,21 +29,15 @@
 
 namespace Espo\Core\Mail;
 
+use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\InjectableFactory;
-
-use Espo\{
-    Entities\Email,
-    Entities\InboundEmail,
-    Services\InboundEmail as InboundEmailService,
-};
-
+use Espo\Entities\Attachment;
 use Laminas\Mail\Message;
 
-use Espo\Core\{
-    Utils\Config,
-    ORM\EntityManager,
-    Utils\Log,
-};
+use Espo\Entities\Email;
+
+use Espo\Core\Mail\Account\SendingAccountProvider;
+use Espo\Core\Utils\Config;
 
 /**
  * A service for email sending. Can send with SMTP parameters of the system email account or with specific parameters.
@@ -51,46 +45,28 @@ use Espo\Core\{
  */
 class EmailSender
 {
-    private ?InboundEmail $systemInboundEmail = null;
-
-    private ?InboundEmailService $inboundEmailService = null;
-
-    private bool $systemInboundEmailIsCached = false;
-
     private Config $config;
-
-    private EntityManager $entityManager;
-
+    private SendingAccountProvider $accountProvider;
     private InjectableFactory $injectableFactory;
-
-    private SmtpTransportFactory $transportFactory;
-
-    private Log $log;
 
     public function __construct(
         Config $config,
-        EntityManager $entityManager,
-        InjectableFactory $injectableFactory,
-        SmtpTransportFactory $transportFactory,
-        Log $log
+        SendingAccountProvider $accountProvider,
+        InjectableFactory $injectableFactory
     ) {
         $this->config = $config;
-        $this->entityManager = $entityManager;
+        $this->accountProvider = $accountProvider;
         $this->injectableFactory = $injectableFactory;
-        $this->transportFactory = $transportFactory;
-        $this->log = $log;
     }
 
     private function createSender(): Sender
     {
-        return new Sender(
-            $this->config,
-            $this->entityManager,
-            $this->injectableFactory,
-            $this->log,
-            $this->transportFactory,
-            $this->getInboundEmailService(),
-            $this->getSystemInboundEmail()
+        return $this->injectableFactory->createWithBinding(
+            Sender::class,
+            BindingContainerBuilder
+                ::create()
+                ->bindInstance(SendingAccountProvider::class, $this->accountProvider)
+                ->build()
         );
     }
 
@@ -125,7 +101,7 @@ class EmailSender
     /**
      * With specific attachments.
      *
-     * @param iterable<\Espo\Entities\Attachment> $attachmentList
+     * @param iterable<Attachment> $attachmentList
      */
     public function withAttachments(iterable $attachmentList): Sender
     {
@@ -159,40 +135,11 @@ class EmailSender
             return true;
         }
 
-        if ($this->getSystemInboundEmail()) {
+        if ($this->accountProvider->getSystem()) {
             return true;
         }
 
         return false;
-    }
-
-    private function getSystemInboundEmail(): ?InboundEmail
-    {
-        $address = $this->config->get('outboundEmailFromAddress');
-
-        if (!$this->systemInboundEmailIsCached && $address) {
-            $this->systemInboundEmail = $this->entityManager
-                ->getRDBRepository(InboundEmail::ENTITY_TYPE)
-                ->where([
-                    'status' => InboundEmail::STATUS_ACTIVE,
-                    'useSmtp' => true,
-                    'emailAddress' => $address,
-                ])
-                ->findOne();
-        }
-
-        $this->systemInboundEmailIsCached = true;
-
-        return $this->systemInboundEmail;
-    }
-
-    private function getInboundEmailService(): InboundEmailService
-    {
-        if (!$this->inboundEmailService) {
-            $this->inboundEmailService = $this->injectableFactory->create(InboundEmailService::class);
-        }
-
-        return $this->inboundEmailService;
     }
 
     /**

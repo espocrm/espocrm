@@ -38,12 +38,14 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Controllers\Record;
 use Espo\Core\Api\Request;
 
+use Espo\Core\Mail\SmtpParams;
 use Espo\Entities\Email as EmailEntity;
 use Espo\Services\Email as Service;
 use Espo\Services\EmailTemplate as EmailTemplateService;
 use Espo\Tools\Email\SendService;
 use Espo\Tools\Email\Service as ToolService;
 
+use Espo\Tools\Email\TestSendData;
 use stdClass;
 
 class Email extends Record
@@ -80,55 +82,51 @@ class Email extends Record
             throw new Forbidden();
         }
 
-        $data = get_object_vars($request->getParsedBody());
+        $data = $request->getParsedBody();
 
-        $allowedParamList = [
-            'type',
-            'id',
-            'username',
-            'password',
-            'auth',
-            'authMechanism',
-            'userId',
-            'fromAddress',
-            'fromName',
-            'server',
-            'port',
-            'security',
-            'emailAddress',
-        ];
+        $type = $data->type ?? null;
+        $id = $data->id ?? null;
+        $server = $data->server ?? null;
+        $port = $data->int ?? null;
+        $username = $data->username ?? null;
+        $password = $data->password ?? null;
+        $auth = $data->auth ?? null;
+        $authMechanism = $data->authMechanism ?? null;
+        $security = $data->security ?? null;
+        $userId = $data->userId ?? null;
+        $fromAddress = $data->fromAddress ?? null;
+        $fromName = $data->fromName ?? null;
+        $emailAddress = $data->emailAddress ?? null;
 
-        foreach (array_keys($data) as $key) {
-            if (!in_array($key, $allowedParamList)) {
-                throw new BadRequest("Not allowed parameter `{$key}`.");
-            }
+        if (!is_string($server)) {
+            throw new BadRequest("`server`");
         }
 
-        $emailAddress = $data['emailAddress'] ?? null;
+        if (!is_int($port)) {
+            throw new BadRequest("`port`.");
+        }
 
         if (!is_string($emailAddress)) {
-            throw new BadRequest("No email address.");
+            throw new BadRequest("`emailAddress`.");
         }
 
-        /**
-         * @var array{
-         *     type?: ?string,
-         *     id?: ?string,
-         *     username?: ?string,
-         *     password?: ?string,
-         *     auth?: bool,
-         *     authMechanism?: ?string,
-         *     userId?: ?string,
-         *     fromAddress?: ?string,
-         *     fromName?: ?string,
-         *     server: string,
-         *     port: int,
-         *     security: string,
-         *     emailAddress: string,
-         * } $data
-         */
+        $smtpParams = SmtpParams
+            ::create($server, $port)
+            ->withSecurity($security)
+            ->withFromName($fromName)
+            ->withFromAddress($fromAddress)
+            ->withAuth($auth);
 
-        $this->getSendService()->sendTestEmail($data);
+        if ($auth) {
+            $smtpParams = $smtpParams
+                ->withUsername($username)
+                ->withPassword($password)
+                ->withAuthMechanism($authMechanism);
+        }
+
+        $data = new TestSendData($emailAddress, $type, $id, $userId);
+
+        $this->getSendService()->sendTestEmail($smtpParams, $data);
 
         return true;
     }

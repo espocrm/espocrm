@@ -368,7 +368,7 @@ class Installer
             'language' => $saveData['language'] ?? 'en_US',
             'siteUrl' => $siteUrl,
             'passwordSalt' => $this->getPasswordHash()->generateSalt(),
-            'cryptKey' => $this->getContainer()->get('crypt')->generateKey(),
+            'cryptKey' => Util::generateSecretKey(),
             'hashSecretKey' => Util::generateSecretKey(),
             'theme' => $saveData['theme'] ?? 'Espo',
         ];

@@ -34,11 +34,8 @@ class Params
     private ?string $host = null;
 
     private ?int $port = null;
-
     private ?string $username = null;
-
     private ?string $password = null;
-
     private ?string $security = null;
 
     /**
@@ -47,9 +44,7 @@ class Params
     private ?string $imapHandlerClassName = null;
 
     private ?string $id = null;
-
     private ?string $userId = null;
-
     private ?string $emailAddress = null;
 
     /**

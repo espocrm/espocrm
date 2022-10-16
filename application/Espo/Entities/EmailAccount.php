@@ -162,4 +162,48 @@ class EmailAccount extends Entity
     {
         return $this->get('sentFolder');
     }
+
+    public function getSmtpHost(): ?string
+    {
+        return $this->get('smtpHost');
+    }
+
+    public function getSmtpPort(): ?int
+    {
+        return $this->get('smtpPort');
+    }
+
+    public function getSmtpAuth(): bool
+    {
+        return $this->get('smtpAuth');
+    }
+
+    public function getSmtpSecurity(): ?string
+    {
+        return $this->get('smtpSecurity');
+    }
+
+    public function getSmtpUsername(): ?string
+    {
+        return $this->get('smtpUsername');
+    }
+
+    public function getSmtpPassword(): ?string
+    {
+        return $this->get('smtpPassword');
+    }
+
+    public function getSmtpAuthMechanism(): ?string
+    {
+        return $this->get('smtpAuthMechanism');
+    }
+
+    /**
+     * @return ?class-string<object>
+     */
+    public function getSmtpHandlerClassName(): ?string
+    {
+        /** @var ?class-string<object> */
+        return $this->get('smtpHandler');
+    }
 }

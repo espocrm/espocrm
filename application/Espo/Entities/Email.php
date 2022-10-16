@@ -332,6 +332,16 @@ class Email extends Entity
         return $this->get('subject');
     }
 
+    /**
+     * @param self::STATUS_* $status
+     */
+    public function setStatus(string $status): self
+    {
+        $this->set('status', $status);
+
+        return $this;
+    }
+
     public function setSubject(?string $subject): self
     {
         $this->set('subject', $subject);

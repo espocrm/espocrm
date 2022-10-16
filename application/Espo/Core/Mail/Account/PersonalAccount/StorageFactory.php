@@ -33,10 +33,10 @@ use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\StorageFactory as StorageFactoryInterface;
 use Espo\Core\Mail\Account\Account;
 
+use Espo\Core\Mail\Exceptions\NoImap;
 use Espo\Core\Mail\Mail\Storage\Imap;
 use Espo\Core\Mail\Account\Storage\LaminasStorage;
 
-use Espo\Core\Utils\Crypt;
 use Espo\Core\Utils\Log;
 use Espo\Core\InjectableFactory;
 
@@ -50,26 +50,23 @@ use Throwable;
 
 class StorageFactory implements StorageFactoryInterface
 {
-    private Crypt $crypt;
-
     private Log $log;
-
     private InjectableFactory $injectableFactory;
-
     private EntityManager $entityManager;
 
     public function __construct(
-        Crypt $crypt,
         Log $log,
         InjectableFactory $injectableFactory,
         EntityManager $entityManager
     ) {
-        $this->crypt = $crypt;
         $this->log = $log;
         $this->injectableFactory = $injectableFactory;
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @throws NoImap
+     */
     public function create(Account $account): LaminasStorage
     {
         $userLink = $account->getUser();
@@ -80,14 +77,18 @@ class StorageFactory implements StorageFactoryInterface
 
         $userId = $userLink->getId();
 
+        $imapParams = $account->getImapParams();
+
+        if (!$imapParams) {
+            throw new NoImap();
+        }
+
         $params = Params::createBuilder()
-            ->setHost($account->getHost())
-            ->setPort($account->getPort())
-            ->setSecurity($account->getSecurity())
-            ->setUsername($account->getUsername())
-            ->setPassword(
-                $this->crypt->decrypt($account->getPassword() ?? '')
-            )
+            ->setHost($imapParams->getHost())
+            ->setPort($imapParams->getPort())
+            ->setSecurity($imapParams->getSecurity())
+            ->setUsername($imapParams->getUsername())
+            ->setPassword($imapParams->getPassword())
             ->setEmailAddress($account->getEmailAddress())
             ->setUserId($userId)
             ->setId($account->getId())

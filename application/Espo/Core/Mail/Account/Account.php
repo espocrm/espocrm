@@ -32,7 +32,7 @@ namespace Espo\Core\Mail\Account;
 use Espo\Core\Field\Date;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
-
+use Espo\Core\Mail\SmtpParams;
 use Espo\Entities\Email;
 
 interface Account
@@ -106,6 +106,7 @@ interface Account
      * A group folder fetched emails should be put into.
      */
     public function getGroupEmailFolder(): ?Link;
+
     /**
      * Folders to fetch from.
      *
@@ -113,24 +114,43 @@ interface Account
      */
     public function getMonitoredFolderList(): array;
 
+    /**
+     * Gen an ID.
+     */
     public function getId(): ?string;
 
+    /**
+     * Get an entity type.
+     */
     public function getEntityType(): string;
 
-    public function getHost(): ?string;
-
-    public function getPort(): ?int;
-
-    public function getUsername(): ?string;
-
-    public function getPassword(): ?string;
-
-    public function getSecurity(): ?string;
+    /**
+     * Get IMAP params.
+     */
+    public function getImapParams(): ?ImapParams;
 
     /**
      * @return ?class-string<object>
      */
     public function getImapHandlerClassName(): ?string;
 
+    /**
+     * Get a SENT folder.
+     */
     public function getSentFolder(): ?string;
+
+    /**
+     * Is available for sending.
+     */
+    public function isAvailableForSending(): bool;
+
+    /**
+     * Get SMTP params.
+     */
+    public function getSmtpParams(): ?SmtpParams;
+
+    /**
+     * Store sent emails on IMAP.
+     */
+    public function storeSentEmails(): bool;
 }

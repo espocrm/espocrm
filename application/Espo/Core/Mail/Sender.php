@@ -29,11 +29,20 @@
 
 namespace Espo\Core\Mail;
 
+use Espo\Core\Mail\Exceptions\NoSmtp;
+use Espo\Core\Mail\Smtp\TransportFactory;
+use Espo\ORM\Collection;
+use Espo\ORM\EntityCollection;
+
+use Espo\Core\Field\DateTime;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
+use Espo\Core\Mail\Account\SendingAccountProvider;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Entities\Attachment;
-
-use Espo\Core\InjectableFactory;
+use Espo\Entities\Email;
+use Espo\ORM\EntityManager;
 
 use Laminas\{
     Mime\Message as MimeMessage,
@@ -49,17 +58,6 @@ use Laminas\{
     Mail\Protocol\Exception\RuntimeException as ProtocolRuntimeException,
 };
 
-use Espo\Entities\Email;
-use Espo\Entities\InboundEmail;
-
-use Espo\Services\InboundEmail as InboundEmailService;
-
-use Espo\ORM\EntityManager;
-
-use Espo\Core\Field\DateTime;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Log;
-
 use Exception;
 use InvalidArgumentException;
 
@@ -69,66 +67,34 @@ use InvalidArgumentException;
 class Sender
 {
     private ?SmtpTransport $transport = null;
-
     private bool $isGlobal = false;
-
-    /**
-     * @var array<string,mixed>
-     */
+    /** @var array<string,mixed>  */
     private array $params = [];
-
-    /**
-     * @var array<string,mixed>
-     */
+    /** @var array<string,mixed> */
     private array $overrideParams = [];
-
-    private bool $systemInboundEmailIsCached = false;
-
     private ?Envelope $envelope = null;
-
     private ?Message $message = null;
-
-    /**
-     * @var iterable<\Espo\Entities\Attachment>|null
-     */
+    /** @var iterable<Attachment>|null */
     private $attachmentList = null;
 
     private Config $config;
-
     private EntityManager $entityManager;
-
-    private InjectableFactory $injectableFactory;
-
-    private SmtpTransportFactory $transportFactory;
-
-    private ?InboundEmail $systemInboundEmail = null;
-
-    private ?InboundEmailService $inboundEmailService = null;
-
     private Log $log;
+    private TransportFactory $transportFactory;
+    private SendingAccountProvider $accountProvider;
 
     public function __construct(
         Config $config,
         EntityManager $entityManager,
-        InjectableFactory $injectableFactory,
         Log $log,
-        SmtpTransportFactory $transportFactory,
-        ?InboundEmailService $inboundEmailService = null,
-        ?InboundEmail $systemInboundEmail = null
+        TransportFactory $transportFactory,
+        SendingAccountProvider $accountProvider
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
-        $this->injectableFactory = $injectableFactory;
         $this->log = $log;
-
         $this->transportFactory = $transportFactory;
-
-        $this->inboundEmailService = $inboundEmailService;
-        $this->systemInboundEmail = $systemInboundEmail;
-
-        if ($systemInboundEmail) {
-            $this->systemInboundEmailIsCached = true;
-        }
+        $this->accountProvider = $accountProvider;
 
         $this->useGlobal();
     }
@@ -199,7 +165,7 @@ class Sender
     /**
      * With specific attachments.
      *
-     * @param iterable<\Espo\Entities\Attachment> $attachmentList
+     * @param iterable<Attachment> $attachmentList
      */
     public function withAttachments(iterable $attachmentList): self
     {
@@ -339,37 +305,24 @@ class Sender
         }
     }
 
+    /**
+     * @throws NoSmtp
+     */
     private function applyGlobal(): void
     {
-        $config = $this->config;
+        $systemAccount = $this->accountProvider->getSystem();
 
-        $groupAccount = null;
-
-        if (!$config->get('smtpServer') && $config->get('outboundEmailFromAddress')) {
-            $groupAccount = $this->getSystemInboundEmail();
+        if (!$systemAccount) {
+            throw new NoSmtp("No system SMTP settings.");
         }
 
-        if ($groupAccount) {
-            $service = $this->getInboundEmailService();
+        $smtpParams = $systemAccount->getSmtpParams();
 
-            $params = $service->getSmtpParamsFromAccount($groupAccount);
-
-            if ($params) {
-                $this->applySmtp($params);
-            }
-
-            return;
+        if (!$smtpParams) {
+            throw new NoSmtp("No system SMTP settings.");
         }
 
-        $this->applySmtp([
-            'server' => $config->get('smtpServer'),
-            'port' => $config->get('smtpPort'),
-            'auth' => $config->get('smtpAuth'),
-            'authMechanism' => $config->get('smtpAuthMechanism', 'login'),
-            'username' => $config->get('smtpUsername'),
-            'password' => $config->get('smtpPassword'),
-            'security' => $config->get('smtpSecurity'),
-        ]);
+        $this->applySmtp($smtpParams->toArray());
     }
 
     /**
@@ -381,43 +334,11 @@ class Sender
             return true;
         }
 
-        if ($this->getSystemInboundEmail()) {
+        if ($this->accountProvider->getSystem()) {
             return true;
         }
 
         return false;
-    }
-
-    private function getSystemInboundEmail(): ?InboundEmail
-    {
-        $address = $this->config->get('outboundEmailFromAddress');
-
-        if (!$this->systemInboundEmailIsCached && $address) {
-            /** @var ?InboundEmail $systemInboundEmail */
-            $systemInboundEmail = $this->entityManager
-                ->getRDBRepository(InboundEmail::ENTITY_TYPE)
-                ->where([
-                    'status' => InboundEmail::STATUS_ACTIVE,
-                    'useSmtp' => true,
-                    'emailAddress' => $address,
-                ])
-                ->findOne();
-
-            $this->systemInboundEmail = $systemInboundEmail;
-        }
-
-        $this->systemInboundEmailIsCached = true;
-
-        return $this->systemInboundEmail;
-    }
-
-    private function getInboundEmailService(): InboundEmailService
-    {
-        if (!$this->inboundEmailService) {
-            $this->inboundEmailService = $this->injectableFactory->create(InboundEmailService::class);
-        }
-
-        return $this->inboundEmailService;
     }
 
     /**
@@ -425,7 +346,7 @@ class Sender
      *
      * @param ?array<string,mixed> $params @deprecated
      * @param ?Message $message @deprecated
-     * @param iterable<\Espo\Entities\Attachment> $attachmentList @deprecated
+     * @param iterable<Attachment> $attachmentList @deprecated
      * @throws SendingError
      */
     public function send(
@@ -460,7 +381,7 @@ class Sender
         }
         else {
             if (empty($params['fromAddress']) && !$config->get('outboundEmailFromAddress')) {
-                throw new SendingError('outboundEmailFromAddress is not specified in config.');
+                throw new NoSmtp('outboundEmailFromAddress is not specified in config.');
             }
 
             $fromAddress = $params['fromAddress'] ?? $config->get('outboundEmailFromAddress');
@@ -496,13 +417,13 @@ class Sender
 
         $attachmentPartList = [];
 
-        /** @var \Espo\ORM\EntityCollection<\Espo\Entities\Attachment> $attachmentCollection */
+        /** @var EntityCollection<Attachment> $attachmentCollection */
         $attachmentCollection = $this->entityManager
             ->getCollectionFactory()
             ->create(Attachment::ENTITY_TYPE);
 
         if (!$email->isNew()) {
-            /** @var \Espo\ORM\Collection<\Espo\Entities\Attachment> $relatedAttachmentCollection */
+            /** @var Collection<Attachment> $relatedAttachmentCollection */
             $relatedAttachmentCollection = $this->entityManager
                 ->getRDBRepository(Email::ENTITY_TYPE)
                 ->getRelation($email, 'attachments')
@@ -701,7 +622,7 @@ class Sender
 
             $this->transport->send($message);
 
-            $email->set('status', Email::STATUS_SENT);
+            $email->setStatus(Email::STATUS_SENT);
             $email->set('dateSent', DateTime::createNow()->getString());
         }
         catch (Exception $e) {

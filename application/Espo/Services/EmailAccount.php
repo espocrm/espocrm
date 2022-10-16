@@ -30,21 +30,19 @@
 namespace Espo\Services;
 
 use Espo\Core\Exceptions\Error;
-use Laminas\Mail\Message;
+use Espo\Core\Mail\Account\PersonalAccount\AccountFactory;
+use Espo\Core\Mail\Exceptions\NoSmtp;
 
 use Espo\ORM\Entity;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Mail\Account\PersonalAccount\Service as AccountService;
 use Espo\Core\Record\CreateParams;
 
 use Espo\Entities\EmailAccount as EmailAccountEntity;
-use Espo\Entities\User;
 
 use Espo\Core\Di;
 
-use Throwable;
 use stdClass;
 
 /**
@@ -107,88 +105,23 @@ class EmailAccount extends Record implements
     }
 
     /**
-     * @throws Error
-     */
-    public function storeSentMessage(EmailAccountEntity $emailAccount, Message $message): void
-    {
-        /** @var AccountService $service */
-        $service = $this->injectableFactory->create(AccountService::class);
-
-        $service->storeSentMessage($emailAccount->getId(), $message);
-    }
-
-    public function findAccountForUserForSending(User $user, string $address): ?EmailAccountEntity
-    {
-        return $this->entityManager
-            ->getRDBRepository(EmailAccountEntity::ENTITY_TYPE)
-            ->where([
-                'emailAddress' => $address,
-                'assignedUserId' => $user->getId(),
-                'status' => EmailAccountEntity::STATUS_ACTIVE,
-                'useSmtp' => true,
-            ])
-            ->findOne();
-    }
-
-    /**
-     * @internal Can not be refactored to return SmtpParams (bc issue).
      * @return ?array<string,mixed>
+     * @throws Error
+     * @throws NoSmtp
+     * @internal Left for bc.
+     * @deprecated
      */
     public function getSmtpParamsFromAccount(EmailAccountEntity $emailAccount): ?array
     {
-        $smtpParams = [];
+        $params = $this->injectableFactory
+            ->create(AccountFactory::class)
+            ->create($emailAccount->getId())
+            ->getSmtpParams();
 
-        $smtpParams['server'] = $emailAccount->get('smtpHost');
-
-        if ($smtpParams['server']) {
-            $smtpParams['port'] = $emailAccount->get('smtpPort');
-            $smtpParams['auth'] = $emailAccount->get('smtpAuth');
-            $smtpParams['security'] = $emailAccount->get('smtpSecurity');
-
-            if ($emailAccount->get('smtpAuth')) {
-                $smtpParams['username'] = $emailAccount->get('smtpUsername');
-                $smtpParams['password'] = $emailAccount->get('smtpPassword');
-                $smtpParams['authMechanism'] = $emailAccount->get('smtpAuthMechanism');
-            }
-
-            if (array_key_exists('password', $smtpParams)) {
-                $smtpParams['password'] = $this->crypt->decrypt($smtpParams['password']);
-            }
-
-            $this->applySmtpHandler($emailAccount, $smtpParams);
-
-            return $smtpParams;
+        if (!$params) {
+            return null;
         }
 
-        return null;
-    }
-
-    /**
-     * @param array<string,mixed> $params
-     */
-    public function applySmtpHandler(EmailAccountEntity $emailAccount, array &$params): void
-    {
-        /** @var ?class-string $handlerClassName */
-        $handlerClassName = $emailAccount->get('smtpHandler');
-
-        if (!$handlerClassName) {
-            return;
-        }
-
-        try {
-            $handler = $this->injectableFactory->create($handlerClassName);
-        }
-        catch (Throwable $e) {
-            $this->log->error(
-                "EmailAccount: Could not create Smtp Handler for account {$emailAccount->getId()}. Error: " .
-                $e->getMessage()
-            );
-
-            return;
-        }
-
-        if (method_exists($handler, 'applyParams')) {
-            $handler->applyParams($emailAccount->getId(), $params);
-        }
+        return $params->toArray();
     }
 }

@@ -29,6 +29,7 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Mail\Account\GroupAccount\Service;
 use Espo\Core\Mail\Account\Storage\Params as StorageParams;
 
@@ -62,6 +63,9 @@ class InboundEmail extends Record
         return $this->getInboundEmailService()->getFolderList($params);
     }
 
+    /**
+     * @throws Error
+     */
     public function postActionTestConnection(Request $request): bool
     {
         $data = $request->getParsedBody();

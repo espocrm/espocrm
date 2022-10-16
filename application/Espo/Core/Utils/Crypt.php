@@ -34,9 +34,7 @@ use RuntimeException;
 class Crypt
 {
     private string $cryptKey;
-
     private ?string $key = null;
-
     private ?string $iv = null;
 
     public function __construct(Config $config)
@@ -103,10 +101,5 @@ class Crypt
         }
 
         return trim($value);
-    }
-
-    public function generateKey(): string
-    {
-        return Util::generateSecretKey();
     }
 }

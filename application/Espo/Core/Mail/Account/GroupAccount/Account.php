@@ -32,8 +32,13 @@ namespace Espo\Core\Mail\Account\GroupAccount;
 use Espo\Core\Field\Date;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Mail\Exceptions\NoSmtp;
+use Espo\Core\Mail\Account\ImapParams;
+use Espo\Core\Mail\Smtp\HandlerProcessor;
+use Espo\Core\Mail\SmtpParams;
 use Espo\Core\Utils\Config;
 
+use Espo\Core\Utils\Crypt;
 use Espo\Entities\InboundEmail;
 use Espo\Entities\User;
 use Espo\Entities\Email;
@@ -42,22 +47,30 @@ use Espo\ORM\EntityManager;
 
 use Espo\Core\Mail\Account\Account as AccountInterface;
 use Espo\Core\Mail\Account\FetchData;
+use RuntimeException;
 
 class Account implements AccountInterface
 {
-    private InboundEmail $entity;
-
-    private EntityManager $entityManager;
-
-    private Config $config;
-
     private const PORTION_LIMIT = 20;
 
-    public function __construct(InboundEmail $entity, EntityManager $entityManager, Config $config)
-    {
+    private InboundEmail $entity;
+    private EntityManager $entityManager;
+    private Config $config;
+    private HandlerProcessor $handlerProcessor;
+    private Crypt $crypt;
+
+    public function __construct(
+        InboundEmail $entity,
+        EntityManager $entityManager,
+        Config $config,
+        HandlerProcessor $handlerProcessor,
+        Crypt $crypt
+    ) {
         $this->entity = $entity;
         $this->entityManager = $entityManager;
         $this->config = $config;
+        $this->handlerProcessor = $handlerProcessor;
+        $this->crypt = $crypt;
     }
 
     public function updateFetchData(FetchData $fetchData): void
@@ -186,31 +199,6 @@ class Account implements AccountInterface
         return $this->entity->getEntityType();
     }
 
-    public function getHost(): ?string
-    {
-        return $this->entity->getHost();
-    }
-
-    public function getPort(): ?int
-    {
-        return $this->entity->getPort();
-    }
-
-    public function getUsername(): ?string
-    {
-        return $this->entity->getUsername();
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->entity->getPassword();
-    }
-
-    public function getSecurity(): ?string
-    {
-        return $this->entity->getSecurity();
-    }
-
     /**
      * @return ?class-string<object>
      */
@@ -237,5 +225,91 @@ class Account implements AccountInterface
     public function getGroupEmailFolder(): ?Link
     {
         return $this->entity->getGroupEmailFolder();
+    }
+
+    public function isAvailableForSending(): bool
+    {
+        return $this->entity->isAvailableForSending();
+    }
+
+    /**
+     * @throws NoSmtp
+     */
+    public function getSmtpParams(): ?SmtpParams
+    {
+        $host = $this->entity->getSmtpHost();
+
+        if (!$host) {
+            return null;
+        }
+
+        $port = $this->entity->getPort();
+
+        if ($port === null) {
+            throw new NoSmtp("Empty port.");
+        }
+
+        $smtpParams = SmtpParams::create($host, $port)
+            ->withSecurity($this->entity->getSmtpSecurity())
+            ->withAuth($this->entity->getSmtpAuth());
+
+        if ($this->entity->getSmtpAuth()) {
+            $password = $this->entity->getSmtpPassword();
+
+            if ($password !== null) {
+                $password = $this->crypt->decrypt($password);
+            }
+
+            $smtpParams = $smtpParams
+                ->withUsername($this->entity->getSmtpUsername())
+                ->withPassword($password)
+                ->withAuthMechanism($this->entity->getSmtpAuthMechanism());
+        }
+
+        $handlerClassName = $this->entity->getSmtpHandlerClassName();
+
+        if (!$handlerClassName) {
+            return $smtpParams;
+        }
+
+        return $this->handlerProcessor->handle($handlerClassName, $smtpParams, $this->getId());
+    }
+
+    public function storeSentEmails(): bool
+    {
+        return $this->entity->storeSentEmails();
+    }
+
+    public function getImapParams(): ?ImapParams
+    {
+        $host = $this->entity->getHost();
+        $port = $this->entity->getPort();
+        $username = $this->entity->getUsername();
+        $password = $this->entity->getPassword();
+        $security = $this->entity->getSecurity();
+
+        if (!$host) {
+            return null;
+        }
+
+        if ($port === null) {
+            throw new RuntimeException("No port.");
+        }
+
+        if ($username === null) {
+            throw new RuntimeException("No username.");
+        }
+
+        if ($password !== null) {
+            $password = $this->crypt->decrypt($password);
+        }
+
+        return new ImapParams(
+            $host,
+            $port,
+            $username,
+            $password,
+            $security
+        );
     }
 }

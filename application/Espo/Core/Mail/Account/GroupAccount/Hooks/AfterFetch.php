@@ -30,6 +30,8 @@
 namespace Espo\Core\Mail\Account\GroupAccount\Hooks;
 
 use Espo\Core\ApplicationUser;
+use Espo\Core\Mail\Account\GroupAccount\AccountFactory as GroupAccountFactory;
+use Espo\Core\Mail\SenderParams;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\Tools\Email\Util;
@@ -43,7 +45,6 @@ use Espo\Core\Mail\EmailSender;
 
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
-use Espo\Core\Utils\Crypt;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Log;
 
@@ -76,14 +77,13 @@ class AfterFetch implements AfterFetchInterface
     private Config $config;
     private EmailSender $emailSender;
     private InjectableFactory $injectableFactory;
-    private Crypt $crypt;
     private Log $log;
     private RoundRobin $roundRobin;
     private LeastBusy $leastBusy;
 
     private const DEFAULT_AUTOREPLY_LIMIT = 5;
-
     private const DEFAULT_AUTOREPLY_SUPPRESS_PERIOD = '2 hours';
+    private GroupAccountFactory $groupAccountFactory;
 
     public function __construct(
         EntityManager $entityManager,
@@ -91,20 +91,20 @@ class AfterFetch implements AfterFetchInterface
         Config $config,
         EmailSender $emailSender,
         InjectableFactory $injectableFactory,
-        Crypt $crypt,
         Log $log,
         RoundRobin $roundRobin,
-        LeastBusy $leastBusy
+        LeastBusy $leastBusy,
+        GroupAccountFactory $groupAccountFactory
     ) {
         $this->entityManager = $entityManager;
         $this->streamService = $streamService;
         $this->config = $config;
         $this->emailSender = $emailSender;
         $this->injectableFactory = $injectableFactory;
-        $this->crypt = $crypt;
         $this->log = $log;
         $this->roundRobin = $roundRobin;
         $this->leastBusy = $leastBusy;
+        $this->groupAccountFactory = $groupAccountFactory;
     }
 
     public function process(Account $account, Email $email, BeforeFetchResult $beforeFetchResult): void
@@ -304,29 +304,31 @@ class AfterFetch implements AfterFetchInterface
             $sender = $this->emailSender->create();
 
             if ($inboundEmail->isAvailableForSending()) {
-                $smtpParams = $this->getSmtpParamsFromInboundEmail($inboundEmail);
+                $groupAccount = $this->groupAccountFactory->create($inboundEmail->getId());
+
+                $smtpParams = $groupAccount->getSmtpParams();
 
                 if ($smtpParams) {
                     $sender->withSmtpParams($smtpParams);
                 }
             }
 
-            $senderParams = [];
+            $senderParams = SenderParams::create();
 
             if ($inboundEmail->getFromName()) {
-                $senderParams['fromName'] = $inboundEmail->getFromName();
+                $senderParams->withFromName($inboundEmail->getFromName());
             }
 
             if ($inboundEmail->getReplyFromAddress()) {
-                $senderParams['fromAddress'] = $inboundEmail->getReplyFromAddress();
+                $senderParams->withFromAddress($inboundEmail->getReplyFromAddress());
             }
 
             if ($inboundEmail->getReplyFromName()) {
-                $senderParams['fromName'] = $inboundEmail->getReplyFromName();
+                $senderParams->withFromName($inboundEmail->getReplyFromName());
             }
 
             if ($inboundEmail->getReplyToAddress()) {
-                $senderParams['replyToAddress'] = $inboundEmail->getReplyToAddress();
+                $senderParams->withReplyToAddress($inboundEmail->getReplyToAddress());
             }
 
             $sender
@@ -345,32 +347,6 @@ class AfterFetch implements AfterFetchInterface
     {
         /** @var EmailTemplateService */
         return $this->injectableFactory->create(EmailTemplateService::class);
-    }
-
-    /**
-     * @return array<string,mixed>
-     */
-    private function getSmtpParamsFromInboundEmail(InboundEmail $emailAccount): ?array
-    {
-        $smtpParams = [];
-
-        $smtpParams['server'] = $emailAccount->get('smtpHost');
-
-        if ($smtpParams['server']) {
-            $smtpParams['port'] = $emailAccount->get('smtpPort');
-            $smtpParams['auth'] = $emailAccount->get('smtpAuth');
-            $smtpParams['security'] = $emailAccount->get('smtpSecurity');
-            $smtpParams['username'] = $emailAccount->get('smtpUsername');
-            $smtpParams['password'] = $emailAccount->get('smtpPassword');
-
-            if (array_key_exists('password', $smtpParams)) {
-                $smtpParams['password'] = $this->crypt->decrypt($smtpParams['password']);
-            }
-
-            return $smtpParams;
-        }
-
-        return null;
     }
 
     private function createCase(GroupAccount $account, Email $email): void

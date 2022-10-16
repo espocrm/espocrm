@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Mail\Account\GroupAccount;
 
+use Espo\Core\Mail\Account\Account as Account;
 use Laminas\Mail\Message;
 
 use Espo\Core\Exceptions\Error;
@@ -37,27 +38,19 @@ use Espo\Core\Mail\Account\Fetcher;
 use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\StorageFactory;
 
-use Espo\Core\Utils\Crypt;
-
 class Service
 {
     private Fetcher $fetcher;
-
     private AccountFactory $accountFactory;
-
-    private Crypt $crypt;
-
     private StorageFactory $storageFactory;
 
     public function __construct(
         Fetcher $fetcher,
         AccountFactory $accountFactory,
-        Crypt $crypt,
         StorageFactory $storageFactory
     ) {
         $this->fetcher = $fetcher;
         $this->accountFactory = $accountFactory;
-        $this->crypt = $crypt;
         $this->storageFactory = $storageFactory;
     }
 
@@ -82,10 +75,7 @@ class Service
             $account = $this->accountFactory->create($params->getId());
 
             $params = $params
-                ->withPassword(
-                    $params->getPassword() ??
-                    $this->crypt->decrypt($account->getPassword() ?? '')
-                )
+                ->withPassword($this->getPassword($params, $account))
                 ->withImapHandlerClassName($account->getImapHandlerClassName());
         }
 
@@ -103,16 +93,30 @@ class Service
             $account = $this->accountFactory->create($params->getId());
 
             $params = $params
-                ->withPassword(
-                    $params->getPassword() ??
-                    $this->crypt->decrypt($account->getPassword() ?? '')
-                )
+                ->withPassword($this->getPassword($params, $account))
                 ->withImapHandlerClassName($account->getImapHandlerClassName());
         }
 
         $storage = $this->storageFactory->createWithParams($params);
 
         $storage->getFolderNames();
+    }
+
+    private function getPassword(Params $params, Account $account): ?string
+    {
+        $password = $params->getPassword();
+
+        if ($password !== null) {
+            return $password;
+        }
+
+        $imapParams = $account->getImapParams();
+
+        if (!$imapParams) {
+            return null;
+        }
+
+        return $imapParams->getPassword();
     }
 
     /**

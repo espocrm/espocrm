@@ -27,42 +27,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Account\GroupAccount;
+namespace Espo\Tools\Email;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\InjectableFactory;
-use Espo\Core\Binding\BindingContainerBuilder;
-
-use Espo\Entities\InboundEmail;
-
-use Espo\ORM\EntityManager;
-
-class AccountFactory
+class TestSendData
 {
-    private InjectableFactory $injectableFactory;
-    private EntityManager $entityManager;
+    private string $emailAddress;
+    private ?string $type;
+    private ?string $id;
+    private ?string $userId;
 
-    public function __construct(InjectableFactory $injectableFactory, EntityManager $entityManager)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->entityManager = $entityManager;
+    public function __construct(
+        string $emailAddress,
+        ?string $type,
+        ?string $id,
+        ?string $userId
+    ) {
+        $this->emailAddress = $emailAddress;
+        $this->type = $type;
+        $this->id = $id;
+        $this->userId = $userId;
     }
 
-    /**
-     * @throws Error
-     */
-    public function create(string $id): Account
+    public function getEmailAddress(): string
     {
-        $entity = $this->entityManager->getEntityById(InboundEmail::ENTITY_TYPE, $id);
+        return $this->emailAddress;
+    }
 
-        if (!$entity) {
-            throw new Error("InboundEmail '{$id}' not found.");
-        }
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
 
-        $binding = BindingContainerBuilder::create()
-            ->bindInstance(InboundEmail::class, $entity)
-            ->build();
 
-        return $this->injectableFactory->createWithBinding(Account::class, $binding);
+    public function getId(): ?string
+    {
+        return $this->id;
+    }
+
+    public function getUserId(): ?string
+    {
+        return $this->userId;
     }
 }

@@ -40,7 +40,6 @@ use Espo\ORM\EntityManager;
 class AccountFactory
 {
     private InjectableFactory $injectableFactory;
-
     private EntityManager $entityManager;
 
     public function __construct(InjectableFactory $injectableFactory, EntityManager $entityManager)
