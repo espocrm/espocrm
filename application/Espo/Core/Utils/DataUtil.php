@@ -159,17 +159,22 @@ class DataUtil
     {
         $appendIdentifier = '__APPEND__';
 
-        if (
-            is_object($data) &&
-            is_object($overrideData) &&
-            get_object_vars($data) === [] &&
-            get_object_vars($overrideData) === []
-        ) {
-            return (object) [];
-        }
+        /** @var mixed $data */
+        /** @var mixed $overrideData */
 
         if (empty($data) && empty($overrideData)) {
-            return [];
+            /** @var mixed $data */
+            /** @var mixed $overrideData */
+
+            if (is_object($data) || is_object($overrideData)) {
+                return (object) [];
+            }
+            else if (is_array($data) || is_array($overrideData)) {
+                return [];
+            }
+
+            /** @var array<string|int, mixed>|stdClass */
+            return $overrideData;
         }
 
         if (is_object($overrideData)) {
@@ -212,6 +217,7 @@ class DataUtil
             return $overrideData;
         }
 
+        /** @var array<string|int, mixed>|stdClass */
         return $overrideData;
     }
 }
