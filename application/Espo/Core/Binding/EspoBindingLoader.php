@@ -30,6 +30,7 @@
 namespace Espo\Core\Binding;
 
 use Espo\Core\Utils\Module;
+use Espo\Binding;
 
 class EspoBindingLoader implements BindingLoader
 {
@@ -46,7 +47,7 @@ class EspoBindingLoader implements BindingLoader
 
         $binder = new Binder($data);
 
-        (new DefaultBinding())->process($binder);
+        (new Binding())->process($binder);
 
         foreach ($this->moduleNameList as $moduleName) {
             $this->loadModule($binder, $moduleName);

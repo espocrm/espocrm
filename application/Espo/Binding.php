@@ -27,11 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Binding;
+namespace Espo;
 
-use Espo\Core\Authentication\Jwt\SignatureVerifierFactory;
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingProcessor;
 
-class DefaultBinding implements BindingProcessor
+/**
+ * Default binding for the dependency injection framework. Custom binding should be set up in
+ * `Espo\Modules\{ModuleName}\Binding` or `Espo\Custom\Binding`.
+ *
+ * @link https://docs.espocrm.com/development/di/#binding.
+ */
+class Binding implements BindingProcessor
 {
     public function process(Binder $binder): void
     {
