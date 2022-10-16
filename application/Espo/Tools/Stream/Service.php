@@ -29,13 +29,11 @@
 
 namespace Espo\Tools\Stream;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
+use Espo\Core\ApplicationUser;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
 use Espo\Modules\Crm\Entities\Account;
-
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use Espo\ORM\Entity;
@@ -51,7 +49,6 @@ use Espo\Entities\EmailAddress;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
-use Espo\Core\Acl;
 use Espo\Core\AclManager;
 use Espo\Core\Acl\Table;
 use Espo\Core\Acl\Exceptions\NotImplemented as AclNotImplemented;
@@ -88,7 +85,6 @@ class Service
     ];
 
     /**
-     *
      * @var array<
      *   string,
      *   array<
@@ -103,16 +99,14 @@ class Service
      */
     private $auditedFieldsCache = [];
 
+    private const SUBSCRIPTION_ENTITY_TYPE = 'Subscription';
+
     /**
      * When a record is re-assigned, ACL will be recalculated for related notes
      * created within the period.
      */
     private const NOTE_ACL_PERIOD = '3 days';
-
     private const NOTE_ACL_LIMIT = 50;
-
-    private const SYSTEM_USER_ID = 'system';
-
     /**
      * Not used currently.
      */
@@ -122,12 +116,10 @@ class Service
     private Config $config;
     private User $user;
     private Metadata $metadata;
-    private Acl $acl;
     private AclManager $aclManager;
     private FieldUtil $fieldUtil;
     private SelectBuilderFactory $selectBuilderFactory;
     private UserAclManagerProvider $userAclManagerProvider;
-    private NoteAccessControl $noteAccessControl;
     private RecordServiceContainer $recordServiceContainer;
 
     public function __construct(
@@ -135,24 +127,20 @@ class Service
         Config $config,
         User $user,
         Metadata $metadata,
-        Acl $acl,
         AclManager $aclManager,
         FieldUtil $fieldUtil,
         SelectBuilderFactory $selectBuilderFactory,
         UserAclManagerProvider $userAclManagerProvider,
-        NoteAccessControl $noteAccessControl,
         RecordServiceContainer $recordServiceContainer
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
         $this->user = $user;
         $this->metadata = $metadata;
-        $this->acl = $acl;
         $this->aclManager = $aclManager;
         $this->fieldUtil = $fieldUtil;
         $this->selectBuilderFactory = $selectBuilderFactory;
         $this->userAclManagerProvider = $userAclManagerProvider;
-        $this->noteAccessControl = $noteAccessControl;
         $this->recordServiceContainer = $recordServiceContainer;
     }
 
@@ -200,8 +188,8 @@ class Service
             $userId = $this->user->getId();
         }
 
-        $isFollowed = (bool) $this->entityManager
-            ->getRDBRepository('Subscription')
+        return (bool) $this->entityManager
+            ->getRDBRepository(self::SUBSCRIPTION_ENTITY_TYPE)
             ->select(['id'])
             ->where([
                 'userId' => $userId,
@@ -209,8 +197,6 @@ class Service
                 'entityId' => $entity->getId(),
             ])
             ->findOne();
-
-        return $isFollowed;
     }
 
     /**
@@ -227,7 +213,7 @@ class Service
         $userIdList = [];
 
         foreach ($sourceUserIdList as $id) {
-            if ($id === self::SYSTEM_USER_ID) {
+            if ($id === ApplicationUser::SYSTEM_USER_ID) {
                 continue;
             }
 
@@ -240,7 +226,11 @@ class Service
             foreach ($userIdList as $i => $userId) {
                 $user = $this->entityManager
                     ->getRDBRepository(User::ENTITY_TYPE)
-                    ->select(['id', 'type', 'isActive'])
+                    ->select([
+                        'id',
+                        'type',
+                        'isActive',
+                    ])
                     ->where([
                         'id' => $userId,
                         'isActive' => true,
@@ -249,6 +239,7 @@ class Service
 
                 if (!$user) {
                     unset($userIdList[$i]);
+
                     continue;
                 }
 
@@ -273,7 +264,7 @@ class Service
 
         $delete = $this->entityManager->getQueryBuilder()
             ->delete()
-            ->from('Subscription')
+            ->from(self::SUBSCRIPTION_ENTITY_TYPE)
             ->where([
                 'userId' => $userIdList,
                 'entityId' => $entity->getId(),
@@ -286,7 +277,7 @@ class Service
         $collection = new EntityCollection();
 
         foreach ($userIdList as $userId) {
-            $subscription = $this->entityManager->getNewEntity('Subscription');
+            $subscription = $this->entityManager->getNewEntity(self::SUBSCRIPTION_ENTITY_TYPE);
 
             $subscription->set([
                 'userId' => $userId,
@@ -302,7 +293,7 @@ class Service
 
     public function followEntity(Entity $entity, string $userId, bool $skipAclCheck = false): bool
     {
-        if ($userId === self::SYSTEM_USER_ID) {
+        if ($userId === ApplicationUser::SYSTEM_USER_ID) {
             return false;
         }
 
@@ -313,7 +304,11 @@ class Service
         if (!$skipAclCheck) {
             $user = $this->entityManager
                 ->getRDBRepository(User::ENTITY_TYPE)
-                ->select(['id', 'type', 'isActive'])
+                ->select([
+                    'id',
+                    'type',
+                    'isActive',
+                ])
                 ->where([
                     'id' => $userId,
                     'isActive' => true,
@@ -339,7 +334,7 @@ class Service
             return true;
         }
 
-        $this->entityManager->createEntity('Subscription', [
+        $this->entityManager->createEntity(self::SUBSCRIPTION_ENTITY_TYPE, [
             'entityId' => $entity->getId(),
             'entityType' => $entity->getEntityType(),
             'userId' => $userId,
@@ -350,13 +345,13 @@ class Service
 
     public function unfollowEntity(Entity $entity, string $userId): bool
     {
-        if (!$this->metadata->get('scopes.' . $entity->getEntityType() . '.stream')) {
+        if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'stream'])) {
             return false;
         }
 
         $delete = $this->entityManager->getQueryBuilder()
             ->delete()
-            ->from('Subscription')
+            ->from(self::SUBSCRIPTION_ENTITY_TYPE)
             ->where([
                 'userId' => $userId,
                 'entityId' => $entity->getId(),
@@ -377,7 +372,7 @@ class Service
 
         $delete = $this->entityManager->getQueryBuilder()
             ->delete()
-            ->from('Subscription')
+            ->from(self::SUBSCRIPTION_ENTITY_TYPE)
             ->where([
                 'entityId' => $entity->getId(),
                 'entityType' => $entity->getEntityType(),
@@ -387,797 +382,6 @@ class Service
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
-    /**
-     * @throws NotFound
-     * @throws Forbidden
-     * @return RecordCollection<Note>
-     */
-    public function findUserStream(?string $userId, FindParams $params): RecordCollection
-    {
-        $userId ??= $this->user->getId();
-
-        $offset = $params->getOffset() ?? 0;
-        $maxSize = $params->getMaxSize();
-
-        $sqLimit = $offset + $maxSize + 1;
-
-        $user = $userId === $this->user->getId() ?
-            $this->user :
-            $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
-
-        if (!$user) {
-            throw new NotFound("User not found.");
-        }
-
-        if (!$this->acl->checkUserPermission($user, 'user')) {
-            throw new Forbidden("No user permission access.");
-        }
-
-        $teamIdList = $user->getTeamIdList();
-
-        $select = [
-            'id',
-            'number',
-            'type',
-            'post',
-            'data',
-            'parentType',
-            'parentId',
-            'relatedType',
-            'relatedId',
-            'targetType',
-            'createdAt',
-            'createdById',
-            'createdByName',
-            'isGlobal',
-            'isInternal',
-            'createdByGender',
-        ];
-
-        $onlyTeamEntityTypeList = $this->getOnlyTeamEntityTypeList($user);
-        $onlyOwnEntityTypeList = $this->getOnlyOwnEntityTypeList($user);
-
-        $additionalQuery = null;
-
-        $searchParams = $params->getSearchParams();
-
-        if (
-            $searchParams->getWhere() ||
-            $searchParams->getTextFilter() ||
-            $searchParams->getPrimaryFilter() ||
-            $searchParams->getBoolFilterList() !== []
-        ) {
-            $additionalQuery = $this->selectBuilderFactory
-                ->create()
-                ->from(Note::ENTITY_TYPE)
-                ->withComplexExpressionsForbidden()
-                ->withWherePermissionCheck()
-                ->withSearchParams($searchParams)
-                ->buildQueryBuilder()
-                ->order([])
-                ->build();
-        }
-
-        $queryList = [];
-
-        $baseBuilder = $this->entityManager->getQueryBuilder()->select();
-
-        if ($additionalQuery) {
-            $baseBuilder->clone($additionalQuery);
-        }
-        else {
-            $baseBuilder->from(Note::ENTITY_TYPE);
-        }
-
-        $baseBuilder
-            ->select($select)
-            ->order('number', 'DESC')
-            ->limit(0, $sqLimit)
-            ->where(
-                $this->getUserStreamWhereClause($params, $user)
-            );
-
-        $subscriptionBuilder = clone $baseBuilder;
-
-        $subscriptionIgnoreWhereClause = $this->getUserStreamSubscriptionIgnoreWhereClause($user);
-
-        $subscriptionBuilder
-            ->leftJoin('createdBy')
-            ->join(
-                'Subscription',
-                'subscription',
-                [
-                    'entityType:' => 'parentType',
-                    'entityId:' => 'parentId',
-                    'subscription.userId' => $user->getId(),
-                ]
-            )
-            ->where($subscriptionIgnoreWhereClause);
-
-        if ($user->isPortal()) {
-            $subscriptionBuilder->where([
-                'isInternal' => false,
-            ]);
-
-            $notAllEntityTypeList = $this->getNotAllEntityTypeList($user);
-
-            $orGroup = [
-                [
-                    'relatedId' => null,
-                ],
-                [
-                    'relatedId!=' => null,
-                    'relatedType!=' => $notAllEntityTypeList,
-                ],
-            ];
-
-            $aclManager = $this->getUserAclManager($user);
-
-            if ($aclManager && $aclManager->check($user, Email::ENTITY_TYPE, Table::ACTION_READ)) {
-                $orGroup[] = [
-                    'relatedId!=' => null,
-                    'relatedType' => Email::ENTITY_TYPE,
-                    'noteUser.userId' => $user->getId(),
-                ];
-
-                $subscriptionBuilder->leftJoin(
-                    'noteUser',
-                    'noteUser', [
-                        'noteUser.noteId=:' => 'id',
-                        'noteUser.deleted' => false,
-                        'note.relatedType' => Email::ENTITY_TYPE,
-                    ]
-                );
-            }
-
-            $subscriptionBuilder->where([
-                'OR' => $orGroup,
-            ]);
-
-            $queryList[] = $subscriptionBuilder->build();
-        }
-
-        if (!$user->isPortal()) {
-            $subscriptionRestBuilder = clone $subscriptionBuilder;
-
-            $subscriptionRestBuilder->where([
-                'OR' => [
-                    [
-                        'relatedId!=' => null,
-                        'relatedType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
-                    ],
-                    [
-                        'relatedId=' => null,
-                    ],
-                ],
-            ]);
-
-            $queryList[] = $subscriptionRestBuilder->build();
-
-            if (count($onlyTeamEntityTypeList)) {
-                $subscriptionTeamBuilder = clone $subscriptionBuilder;
-
-                $subscriptionTeamBuilder
-                    ->distinct()
-                    ->leftJoin(
-                        'noteTeam',
-                        'noteTeam',
-                        [
-                            'noteTeam.noteId=:' => 'id',
-                            'noteTeam.deleted' => false,
-                        ]
-                    )
-                    ->leftJoin(
-                        'noteUser',
-                        'noteUser',
-                        [
-                            'noteUser.noteId=:' => 'id',
-                            'noteUser.deleted' => false,
-                        ]
-                    )
-                    ->where([
-                        [
-                            'relatedId!=' => null,
-                            'relatedType=' => $onlyTeamEntityTypeList,
-                        ],
-                        [
-                            'OR' => [
-                                'noteTeam.teamId' => $teamIdList,
-                                'noteUser.userId' => $user->getId(),
-                            ],
-                        ],
-                    ]);
-
-                $queryList[] = $subscriptionTeamBuilder->build();
-            }
-
-            if (count($onlyOwnEntityTypeList)) {
-                $subscriptionOwnBuilder = clone $subscriptionBuilder;
-
-                $subscriptionOwnBuilder
-                    ->distinct()
-                    ->leftJoin(
-                        'noteUser',
-                        'noteUser',
-                        [
-                            'noteUser.noteId=:' => 'id',
-                            'noteUser.deleted' => false,
-                        ]
-                    )
-                    ->where([
-                        [
-                            'relatedId!=' => null,
-                            'relatedType=' => $onlyOwnEntityTypeList,
-                        ],
-                        'noteUser.userId' => $user->getId(),
-                    ]);
-
-                $queryList[] = $subscriptionOwnBuilder->build();
-            }
-        }
-
-        $subscriptionSuperBuilder = clone $baseBuilder;
-
-        $subscriptionSuperBuilder
-            ->join(
-                'Subscription',
-                'subscription',
-                [
-                    'entityType:' => 'superParentType',
-                    'entityId:' => 'superParentId',
-                    'subscription.userId' => $user->getId(),
-                ]
-            )
-            ->leftJoin(
-                'Subscription',
-                'subscriptionExclude',
-                [
-                    'entityType:' => 'parentType',
-                    'entityId:' => 'parentId',
-                    'subscription.userId' => $user->getId(),
-                ]
-            )
-            ->where([
-                'OR' => [
-                    'parentId!=:' => 'superParentId',
-                    'parentType!=:' => 'superParentType',
-                ],
-                'subscriptionExclude.id' => null,
-            ])
-            ->where($subscriptionIgnoreWhereClause);
-
-        if (!$user->isPortal()) {
-            $subscriptionSuperRestBuilder = clone $subscriptionSuperBuilder;
-
-            $subscriptionSuperRestBuilder->where([
-                'OR' => [
-                    [
-                        'relatedId!=' => null,
-                        'relatedType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
-                    ],
-                    [
-                        'relatedId=' => null,
-                        'parentType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
-                    ],
-                ],
-            ]);
-
-            $queryList[] = $subscriptionSuperRestBuilder->build();
-
-            if (count($onlyTeamEntityTypeList)) {
-                $subscriptionSuperTeamBuilder = clone $subscriptionSuperBuilder;
-
-                $subscriptionSuperTeamBuilder
-                    ->distinct()
-                    ->leftJoin(
-                        'noteTeam',
-                        'noteTeam',
-                        [
-                            'noteTeam.noteId=:' => 'id',
-                            'noteTeam.deleted' => false,
-                        ]
-                    )
-                    ->leftJoin(
-                        'noteUser',
-                        'noteUser',
-                        [
-                            'noteUser.noteId=:' => 'id',
-                            'noteUser.deleted' => false,
-                        ]
-                    )
-                    ->where([
-                        'OR' => [
-                            [
-                                'relatedId!=' => null,
-                                'relatedType=' => $onlyTeamEntityTypeList,
-                            ],
-                            [
-                                'relatedId=' => null,
-                                'parentType=' => $onlyTeamEntityTypeList,
-                            ],
-                        ],
-                        [
-                            'OR' => [
-                                'noteTeam.teamId' => $teamIdList,
-                                'noteUser.userId' => $user->getId(),
-                            ],
-                        ]
-                    ]);
-
-                $queryList[] = $subscriptionSuperTeamBuilder->build();
-            }
-
-            if (count($onlyOwnEntityTypeList)) {
-                $subscriptionSuperOwnBuilder = clone $subscriptionSuperBuilder;
-
-                $subscriptionSuperOwnBuilder
-                    ->distinct()
-                    ->leftJoin(
-                        'noteUser',
-                        'noteUser',
-                        [
-                            'noteUser.noteId=:' => 'id',
-                            'noteUser.deleted' => false,
-                        ]
-                    )
-                    ->where([
-                        [
-                            'relatedId!=' => null,
-                            'relatedType=' => $onlyOwnEntityTypeList,
-                        ],
-                        'noteUser.userId' => $user->getId(),
-                    ]);
-
-                $queryList[] = $subscriptionSuperOwnBuilder->build();
-            }
-        }
-
-        $queryList[] = (clone $baseBuilder)
-            ->leftJoin('users')
-            ->leftJoin('createdBy')
-            ->where([
-                'createdById!=' => $user->getId(),
-                'usersMiddle.userId' => $user->getId(),
-                'parentId' => null,
-                'type' => Note::TYPE_POST,
-                'isGlobal' => false,
-            ])
-            ->build();
-
-        if ($user->isPortal()) {
-            $portalIdList = $user->getLinkMultipleIdList('portals');
-
-            if (!empty($portalIdList)) {
-
-                $queryList[] = (clone $baseBuilder)
-                    ->leftJoin('portals')
-                    ->leftJoin('createdBy')
-                    ->where([
-                        'parentId' => null,
-                        'portalsMiddle.portalId' => $portalIdList,
-                        'type' => Note::TYPE_POST,
-                        'isGlobal' => false,
-                    ])
-                    ->build();
-            }
-        }
-
-        if (!empty($teamIdList)) {
-            $queryList[] = (clone $baseBuilder)
-                ->leftJoin('teams')
-                ->leftJoin('createdBy')
-                ->where([
-                    'parentId' => null,
-                    'teamsMiddle.teamId' => $teamIdList,
-                    'type' => Note::TYPE_POST,
-                    'isGlobal' => false,
-                ])
-                ->build();
-        }
-
-        if ($params->skipOwn()) {
-            foreach ($queryList as $i => $query) {
-                $queryList[$i] = $this->entityManager
-                    ->getQueryBuilder()
-                    ->select()
-                    ->clone($query)
-                    ->where([
-                        'createdById!=' => $this->user->getId(),
-                    ])
-                    ->build();
-            }
-        }
-
-        $queryList[] = (clone $baseBuilder)
-            ->leftJoin('createdBy')
-            ->where([
-                'createdById' => $user->getId(),
-                'parentId' => null,
-                'type' => Note::TYPE_POST,
-                'isGlobal' => false,
-            ])
-            ->build();
-
-        if (
-            (!$user->isPortal() || $user->isAdmin()) &&
-            !$user->isApi()
-        ) {
-
-            $queryList[] = (clone $baseBuilder)
-                ->leftJoin('createdBy')
-                ->where([
-                    'parentId' => null,
-                    'type' => Note::TYPE_POST,
-                    'isGlobal' => true,
-                ])
-                ->build();
-        }
-
-        $builder = $this->entityManager
-            ->getQueryBuilder()
-            ->union()
-            ->all()
-            ->order('number', 'DESC')
-            ->limit($offset, $maxSize + 1);
-
-        foreach ($queryList as $query) {
-            $builder->query($query);
-        }
-
-        $unionQuery = $builder->build();
-
-        $sql = $this->entityManager
-            ->getQueryComposer()
-            ->compose($unionQuery);
-
-        $sthCollection = $this->entityManager
-            ->getRDBRepositoryByClass(Note::class)
-            ->findBySql($sql);
-
-        $collection = $this->entityManager
-            ->getCollectionFactory()
-            ->createFromSthCollection($sthCollection);
-
-        foreach ($collection as $e) {
-            $this->loadNoteAdditionalFields($e);
-
-            $this->applyAccessControlToNote($e, $user);
-        }
-
-        return RecordCollection::createNoCount($collection, $maxSize);
-    }
-
-    /**
-     * @return array<mixed,mixed>
-     */
-    private function getUserStreamSubscriptionIgnoreWhereClause(User $user): array
-    {
-        $ignoreScopeList = $this->getIgnoreScopeList($user);
-
-        if (empty($ignoreScopeList)) {
-            return [];
-        }
-
-        $whereClause = [];
-
-        $whereClause[] = [
-            'OR' => [
-                'relatedType' => null,
-                'relatedType!=' => $ignoreScopeList,
-            ]
-        ];
-
-        $whereClause[] = [
-            'OR' => [
-                'parentType' => null,
-                'parentType!=' => $ignoreScopeList,
-            ]
-        ];
-
-        if (in_array(Email::ENTITY_TYPE, $ignoreScopeList)) {
-            $whereClause[] = [
-                'type!=' => [
-                    Note::TYPE_EMAIL_RECEIVED,
-                    Note::TYPE_EMAIL_SENT,
-                ],
-            ];
-        }
-
-        return $whereClause;
-    }
-
-    /**
-     * @return array<mixed,mixed>
-     */
-    private function getUserStreamWhereClause(FindParams $params, User $user): array
-    {
-        $whereClause = [];
-
-        if ($params->getAfter()) {
-            $whereClause[]['createdAt>'] = $params->getAfter()->getString();
-        }
-
-        if ($params->getFilter() === FindParams::FILTER_POSTS) {
-            $whereClause[]['type'] = Note::TYPE_POST;
-        }
-        else if ($params->getFilter() === FindParams::FILTER_UPDATES) {
-            $whereClause[]['type'] = [
-                Note::TYPE_UPDATE,
-                Note::TYPE_STATUS,
-            ];
-        }
-
-        return $whereClause;
-    }
-
-    private function loadNoteAdditionalFields(Note $note): void
-    {
-        $note->loadAdditionalFields();
-    }
-
-    /**
-     * @throws NotFound
-     * @throws Forbidden
-     * @return RecordCollection<Note>
-     */
-    public function find(string $scope, string $id, FindParams $params): RecordCollection
-    {
-        if ($scope === User::ENTITY_TYPE) {
-            throw new Forbidden();
-        }
-
-        $entity = $this->entityManager->getEntityById($scope, $id);
-
-        $onlyTeamEntityTypeList = $this->getOnlyTeamEntityTypeList($this->user);
-        $onlyOwnEntityTypeList = $this->getOnlyOwnEntityTypeList($this->user);
-
-        if (empty($entity)) {
-            throw new NotFound();
-        }
-
-        if (!$this->acl->checkEntity($entity, Table::ACTION_STREAM)) {
-            throw new Forbidden();
-        }
-
-        $additionalQuery = null;
-
-        $searchParams = $params->getSearchParams();
-
-        if (
-            $searchParams->getWhere() ||
-            $searchParams->getTextFilter() ||
-            $searchParams->getPrimaryFilter() ||
-            $searchParams->getBoolFilterList() !== []
-        ) {
-            $additionalQuery = $this->selectBuilderFactory
-                ->create()
-                ->from(Note::ENTITY_TYPE)
-                ->withComplexExpressionsForbidden()
-                ->withWherePermissionCheck()
-                ->withSearchParams($searchParams)
-                ->buildQueryBuilder()
-                ->order([])
-                ->build();
-        }
-
-        $builder = $this->entityManager->getQueryBuilder()->select();
-
-        if ($additionalQuery) {
-            $builder->clone($additionalQuery);
-        }
-        else {
-            $builder->from(Note::ENTITY_TYPE);
-        }
-
-        $where = [
-            'OR' => [
-                [
-                    'parentType' => $scope,
-                    'parentId' => $id,
-                ],
-                [
-                    'superParentType' => $scope,
-                    'superParentId' => $id,
-                ],
-            ]
-        ];
-
-        if ($this->user->isPortal()) {
-            $where = [
-                'parentType' => $scope,
-                'parentId' => $id,
-                'isInternal' => false,
-            ];
-
-            $notAllEntityTypeList = $this->getNotAllEntityTypeList($this->user);
-
-            $orGroup = [
-                [
-                    'relatedId' => null,
-                ],
-                [
-                    'relatedId!=' => null,
-                    'relatedType!=' => $notAllEntityTypeList,
-                ],
-            ];
-
-            if ($this->acl->check(Email::ENTITY_TYPE, Table::ACTION_READ)) {
-                $builder->leftJoin(
-                    'noteUser',
-                    'noteUser',
-                    [
-                        'noteUser.noteId=:' => 'id',
-                        'noteUser.deleted' => false,
-                        'note.relatedType' => Email::ENTITY_TYPE,
-                    ]
-                );
-
-                $orGroup[] = [
-                    'relatedId!=' => null,
-                    'relatedType' => Email::ENTITY_TYPE,
-                    'noteUser.userId' => $this->user->getId(),
-                ];
-            }
-
-            $where[] = [
-                'OR' => $orGroup,
-            ];
-        }
-
-        if (!$this->user->isPortal()) {
-            if (count($onlyTeamEntityTypeList) || count($onlyOwnEntityTypeList)) {
-                $builder
-                    ->distinct()
-                    ->leftJoin('teams')
-                    ->leftJoin('users');
-
-                $where[] = [
-                    'OR' => [
-                        'OR' => [
-                            [
-                                'relatedId!=' => null,
-                                'relatedType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
-                            ],
-                            [
-                                'relatedId=' => null,
-                                'superParentId' => $id,
-                                'superParentType' => $scope,
-                                'parentId!=' => null,
-                                'parentType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
-                            ],
-                            [
-                                'relatedId=' => null,
-                                'parentType=' => $scope,
-                                'parentId=' => $id,
-                            ]
-                        ],
-                        [
-                            'OR' => [
-                                [
-                                    'relatedId!=' => null,
-                                    'relatedType=' => $onlyTeamEntityTypeList,
-                                ],
-                                [
-                                    'relatedId=' => null,
-                                    'parentType=' => $onlyTeamEntityTypeList,
-                                ]
-                            ],
-                            [
-                                'OR' => [
-                                    'teamsMiddle.teamId' => $this->user->getTeamIdList(),
-                                    'usersMiddle.userId' => $this->user->getId(),
-                                ]
-                            ]
-                        ],
-                        [
-                            'OR' => [
-                                [
-                                    'relatedId!=' => null,
-                                    'relatedType=' => $onlyOwnEntityTypeList,
-                                ],
-                                [
-                                    'relatedId=' => null,
-                                    'parentType=' => $onlyOwnEntityTypeList,
-                                ]
-                            ],
-                            'usersMiddle.userId' => $this->user->getId(),
-                        ]
-                    ]
-                ];
-            }
-        }
-
-        $filter = $params->getFilter();
-
-        if ($filter === FindParams::FILTER_POSTS) {
-            $where['type'] = Note::TYPE_POST;
-        }
-        else if ($filter === FindParams::FILTER_UPDATES) {
-            $where['type'] = [
-                Note::TYPE_ASSIGN,
-                Note::TYPE_STATUS,
-            ];
-        }
-
-        $ignoreScopeList = $this->getIgnoreScopeList($this->user);
-
-        if (!empty($ignoreScopeList)) {
-            $where[] = [
-                'OR' => [
-                    'relatedType' => null,
-                    'relatedType!=' => $ignoreScopeList,
-                ]
-            ];
-
-            $where[] = [
-                'OR' => [
-                    'parentType' => null,
-                    'parentType!=' => $ignoreScopeList,
-                ]
-            ];
-
-            if (in_array(Email::ENTITY_TYPE, $ignoreScopeList)) {
-                $where[] = [
-                    'type!=' => [
-                        Note::TYPE_EMAIL_RECEIVED,
-                        Note::TYPE_EMAIL_SENT,
-                    ]
-                ];
-            }
-        }
-
-        $builder->where($where);
-
-        $after = $params->getAfter();
-        $offset = $params->getOffset();
-        $maxSize = $params->getMaxSize();
-
-        if ($after) {
-            $builder->where([
-                'createdAt>' => $after->getString(),
-            ]);
-        }
-
-        $countBuilder = clone $builder;
-
-        $builder
-            ->limit($offset ?? 0, $maxSize)
-            ->order('number', 'DESC');
-
-        $collection = $this->entityManager
-            ->getRDBRepositoryByClass(Note::class)
-            ->clone($builder->build())
-            ->find();
-
-        foreach ($collection as $e) {
-            if (
-                $e->getType() === Note::TYPE_POST ||
-                $e->getType() === Note::TYPE_EMAIL_RECEIVED
-            ) {
-                $e->loadAttachments();
-            }
-
-            if (
-                $e->getParentId() && $e->getParentType() &&
-                ($e->getParentId() !== $id || $e->getParentType() !== $scope)
-            ) {
-                $e->loadParentNameField('parent');
-            }
-
-            if ($e->getRelatedId() && $e->getRelatedType()) {
-                $e->loadParentNameField('related');
-            }
-
-            $this->applyAccessControlToNote($e);
-        }
-
-        $count = $this->entityManager
-            ->getRDBRepositoryByClass(Note::class)
-            ->clone($countBuilder->build())
-            ->count();
-
-        return RecordCollection::create($collection, $count);
-    }
 
     private function loadAssignedUserName(Entity $entity): void
     {
@@ -1296,7 +500,7 @@ class Service
 
         if ($email->get('accountId')) {
             $note->set('superParentId', $email->get('accountId'));
-            $note->set('superParentType', 'Account');
+            $note->set('superParentType', Account::ENTITY_TYPE);
         }
 
         $withContent = in_array($entityType, $this->config->get('streamEmailWithContentEntityTypeList', []));
@@ -1347,9 +551,11 @@ class Service
 
         $this->processNoteTeamsUsers($note, $email);
 
-        if ($email->get('accountId')) {
-            $note->set('superParentId', $email->get('accountId'));
-            $note->set('superParentType', 'Account');
+        $accountLink = $email->getAccount();
+
+        if ($accountLink) {
+            $note->set('superParentId', $accountLink->getId());
+            $note->set('superParentType', Account::ENTITY_TYPE);
         }
 
         $withContent = in_array($entityType, $this->config->get('streamEmailWithContentEntityTypeList', []));
@@ -1361,7 +567,7 @@ class Service
         $data = [];
 
         $data['emailId'] = $email->getId();
-        $data['emailName'] = $email->get('name');
+        $data['emailName'] = $email->getSubject();
 
         if ($withContent) {
             $data['attachmentsIds'] = $email->get('attachmentsIds');
@@ -1409,7 +615,7 @@ class Service
 
         if ($entity->has('accountId') && $entity->get('accountId')) {
             $note->set('superParentId', $entity->get('accountId'));
-            $note->set('superParentType', 'Account');
+            $note->set('superParentType', Account::ENTITY_TYPE);
 
             // only if has super parent
             $this->processNoteTeamsUsers($note, $entity);
@@ -1505,7 +711,7 @@ class Service
 
         if ($entity->has('accountId') && $entity->get('accountId')) {
             $note->set('superParentId', $entity->get('accountId'));
-            $note->set('superParentType', 'Account');
+            $note->set('superParentType', Account::ENTITY_TYPE);
         }
 
         $o = [];
@@ -1675,7 +881,7 @@ class Service
         }
 
         /** @var array<string,array<string,mixed>> $fields */
-        $fields = $this->metadata->get('entityDefs.' . $entityType . '.fields');
+        $fields = $this->metadata->get(['entityDefs', $entityType, 'fields']);
 
         $auditedFields = [];
 
@@ -1823,11 +1029,15 @@ class Service
         $userList = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
             ->select(['id'])
-            ->join('Subscription', 'subscription', [
-                'subscription.userId=:' => 'user.id',
-                'subscription.entityId' => $entity->getId(),
-                'subscription.entityType' => $entity->getEntityType(),
-            ])
+            ->join(
+                self::SUBSCRIPTION_ENTITY_TYPE,
+                'subscription',
+                [
+                    'subscription.userId=:' => 'user.id',
+                    'subscription.entityId' => $entity->getId(),
+                    'subscription.entityType' => $entity->getEntityType(),
+                ]
+            )
             ->where(['isActive' => true])
             ->find();
 
@@ -1858,7 +1068,7 @@ class Service
         }
 
         $builder->join(
-            'Subscription',
+            self::SUBSCRIPTION_ENTITY_TYPE,
             'subscription',
             [
                 'subscription.userId=:' => 'user.id',
@@ -1871,7 +1081,7 @@ class Service
 
         /** @var \Espo\ORM\Collection<User> $collection */
         $collection = $this->entityManager
-            ->getRDBRepository(User::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(User::class)
             ->clone($query)
             ->find();
 
@@ -1906,7 +1116,7 @@ class Service
             ->getRDBRepository(User::ENTITY_TYPE)
             ->select(['id', 'name'])
             ->join(
-                'Subscription',
+                self::SUBSCRIPTION_ENTITY_TYPE,
                 'subscription',
                 [
                     'subscription.userId=:' => 'user.id',
@@ -1940,78 +1150,6 @@ class Service
         return $data;
     }
 
-    /**
-     * @return string[]
-     */
-    private function getOnlyTeamEntityTypeList(User $user): array
-    {
-        if ($user->isPortal()) {
-            return [];
-        }
-
-        $list = [];
-
-        $scopes = $this->metadata->get('scopes', []);
-
-        foreach ($scopes as $scope => $item) {
-            if ($scope === User::ENTITY_TYPE) {
-                continue;
-            }
-
-            if (empty($item['entity'])) {
-                continue;
-            }
-
-            if (empty($item['object'])) {
-                continue;
-            }
-
-            if (
-                $this->aclManager->checkReadOnlyTeam($user, $scope)
-            ) {
-                $list[] = $scope;
-            }
-        }
-
-        return $list;
-    }
-
-    /**
-     * @return string[]
-     */
-    private function getOnlyOwnEntityTypeList(User $user): array
-    {
-        if ($user->isPortal()) {
-            return [];
-        }
-
-        $list = [];
-
-        $scopes = $this->metadata->get('scopes', []);
-
-        foreach ($scopes as $scope => $item) {
-            if ($scope === User::ENTITY_TYPE) {
-                continue;
-            }
-
-            if (empty($item['entity'])) {
-                continue;
-            }
-
-            if (empty($item['object'])) {
-                continue;
-            }
-
-            if (
-                $this->aclManager->checkReadOnlyOwn($user, $scope)
-            ) {
-                $list[] = $scope;
-            }
-        }
-
-        return $list;
-    }
-
     private function getUserAclManager(User $user): ?AclManager
     {
         try {
@@ -2020,83 +1158,6 @@ class Service
         catch (Error $e) {
             return null;
         }
-    }
-
-    /**
-     * @return string[]
-     */
-    private function getNotAllEntityTypeList(User $user): array
-    {
-        if (!$user->isPortal()) {
-            return [];
-        }
-
-        $aclManager = $this->getUserAclManager($user);
-
-        $list = [];
-
-        $scopes = $this->metadata->get('scopes', []);
-
-        foreach ($scopes as $scope => $item) {
-            if ($scope === User::ENTITY_TYPE) {
-                continue;
-            }
-
-            if (empty($item['entity'])) {
-                continue;
-            }
-
-            if (empty($item['object'])) {
-                continue;
-            }
-
-            if (
-                !$aclManager ||
-                $aclManager->getLevel($user, $scope, Table::ACTION_READ) !== Table::LEVEL_ALL
-            ) {
-                $list[] = $scope;
-            }
-        }
-
-        return $list;
-    }
-
-    /**
-     * @return string[]
-     */
-    private function getIgnoreScopeList(User $user): array
-    {
-        $ignoreScopeList = [];
-
-        $scopes = $this->metadata->get('scopes', []);
-
-        $aclManager = $this->getUserAclManager($user);
-
-        foreach ($scopes as $scope => $item) {
-            if (empty($item['entity'])) {
-                continue;
-            }
-
-            if (empty($item['object'])) {
-                continue;
-            }
-
-            try {
-                $hasAccess =
-                    $aclManager &&
-                    $aclManager->checkScope($user, $scope, Table::ACTION_READ) &&
-                    $aclManager->checkScope($user, $scope, Table::ACTION_STREAM);
-            }
-            catch (AclNotImplemented $e) {
-                $hasAccess = false;
-            }
-
-            if (!$hasAccess) {
-                $ignoreScopeList[] = $scope;
-            }
-        }
-
-        return $ignoreScopeList;
     }
 
     /**
@@ -2112,7 +1173,7 @@ class Service
         $builder = $this->entityManager
             ->getQueryBuilder()
             ->select()
-            ->from('Subscription')
+            ->from(self::SUBSCRIPTION_ENTITY_TYPE)
             ->select('userId')
             ->where([
                 'entityId' => $parentId,
@@ -2330,15 +1391,6 @@ class Service
         $this->entityManager->saveEntity($note, [
             'forceProcessNotifications' => $forceProcessNoteNotifications,
         ]);
-    }
-
-    public function applyAccessControlToNote(Note $note, ?User $user = null): void
-    {
-        if (!$user) {
-            $user = $this->user;
-        }
-
-        $this->noteAccessControl->apply($note, $user);
     }
 
     private function getEmailAddressRepository(): EmailAddressRepository

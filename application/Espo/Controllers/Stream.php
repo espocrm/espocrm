@@ -39,7 +39,7 @@ use Espo\Core\Record\SearchParamsFetcher;
 
 use Espo\Entities\User as UserEntity;
 use Espo\Tools\Stream\FindParams;
-use Espo\Tools\Stream\Service as Service;
+use Espo\Tools\Stream\RecordService;
 
 use stdClass;
 
@@ -47,11 +47,11 @@ class Stream
 {
     public static string $defaultAction = 'list';
 
-    private Service $service;
+    private RecordService $service;
     private SearchParamsFetcher $searchParamsFetcher;
 
     public function __construct(
-        Service $service,
+        RecordService $service,
         SearchParamsFetcher $searchParamsFetcher
     ) {
         $this->service = $service;
@@ -92,7 +92,7 @@ class Stream
         );
 
         $result = $scope === UserEntity::ENTITY_TYPE ?
-            $this->service->findUserStream($id, $findParams) :
+            $this->service->findUser($id, $findParams) :
             $this->service->find($scope, $id ?? '', $findParams);
 
         return (object) [
@@ -133,7 +133,7 @@ class Stream
         );
 
         $result = $scope === UserEntity::ENTITY_TYPE ?
-            $this->service->findUserStream($id, $findParams) :
+            $this->service->findUser($id, $findParams) :
             $this->service->find($scope, $id ?? '', $findParams);
 
         return (object) [
