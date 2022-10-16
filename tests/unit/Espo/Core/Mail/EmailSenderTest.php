@@ -40,73 +40,76 @@ use Espo\Entities\{
 };
 
 use Espo\Core\{
+    Mail\Account\Account,
+    Mail\Account\SendingAccountProvider,
     Mail\EmailSender,
+    Mail\Sender,
     Mail\Smtp\TransportFactory,
+    Mail\SmtpParams,
     ORM\EntityManager,
     Utils\Config,
-    Utils\Log,
-};
-
-use Espo\Services\InboundEmail as InboundEmailService;
+    Utils\Log};
 
 class EmailSenderTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp() : void
+    public function setUp(): void
     {
-        $config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
-        $entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
+        $this->config = $this->createMock(Config::class);
+        $entityManager = $this->createMock(EntityManager::class);
         $injectableFactory = $this->createMock(InjectableFactory::class);
-        $transportFactory = $this->getMockBuilder(TransportFactory::class)->disableOriginalConstructor()->getMock();
+        $transportFactory = $this->createMock(TransportFactory::class);
+        $this->transport = $this->createMock(SmtpTransport::class);
 
-        $this->transport = $this->getMockBuilder(SmtpTransport::class)->disableOriginalConstructor()->getMock();
-
+        $accountProvider = $this->createMock(SendingAccountProvider::class);
         $log = $this->createMock(Log::class);
 
         $emailSender = new EmailSender(
-            $config,
-            $entityManager,
-            $injectableFactory,
-            $transportFactory,
-            $log
+            $this->config,
+            $accountProvider,
+            $injectableFactory
         );
+
+        $sender = new Sender(
+            $this->config,
+            $entityManager,
+            $log,
+            $transportFactory,
+            $accountProvider
+        );
+
+        $this->emailSender = $emailSender;
+
+        $injectableFactory
+            ->expects($this->any())
+            ->method('createWithBinding')
+            ->willReturn($sender);
 
         $transportFactory
             ->expects($this->any())
             ->method('create')
             ->willReturn($this->transport);
 
-        $this->emailSender = $emailSender;
-        $this->config = $config;
 
-        $config
+        $account = $this->createMock(Account::class);
+
+        $account
+            ->expects($this->once())
+            ->method('getSmtpParams')
+            ->willReturn(
+                SmtpParams::create('test-server', 85)
+            );
+
+        $accountProvider
+            ->expects($this->once())
+            ->method('getSystem')
+            ->willReturn($account);
+
+        $this->config
             ->expects($this->any())
             ->method('get')
             ->will(
                 $this->returnValueMap([
                     ['outboundEmailFromAddress', null, null],
-                    ['smtpServer', null, 'test-server'],
-                    ['smtpPort', null, '85'],
-                ])
-            );
-
-        $entityManager
-            ->expects($this->any())
-            ->method('getRepository')
-            ->will(
-                $this->returnValueMap([
-                    ['outboundEmailFromAddress', null, 'test@from.com'],
-                    ['smtpServer', null, 'test-server'],
-                ])
-            );
-
-        $inboundEmailService = $this->createMock(InboundEmailService::class);
-
-        $injectableFactory
-            ->expects($this->any())
-            ->method('create')
-              ->will(
-                $this->returnValueMap([
-                    [InboundEmailService::class, $inboundEmailService],
                 ])
             );
     }

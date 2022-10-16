@@ -32,16 +32,11 @@ namespace Espo\Core\Mail;
 class SenderParams
 {
     private ?string $fromAddress = null;
-
     private ?string $fromName = null;
-
     private ?string $replyToAddress = null;
-
     private ?string $replyToName = null;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $paramList = [
         'fromAddress',
         'fromName',
