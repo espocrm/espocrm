@@ -37,33 +37,31 @@ use Espo\Entities\UniqueId;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Lead;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Exceptions\NotFound,
-    Exceptions\BadRequest,
-    FieldValidation\FieldValidationManager,
-    FieldValidation\FieldValidationParams,
-    ORM\EntityManager,
-    Utils\FieldUtil,
-    Utils\Language,
-    HookManager,
-    Mail\EmailSender,
-    Utils\Config,
-    Utils\DateTime as DateTimeUtil,
-    Utils\Log,
-    Job\QueueName};
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\FieldValidation\FieldValidationManager;
+use Espo\Core\FieldValidation\FieldValidationParams;
+use Espo\Core\HookManager;
+use Espo\Core\Job\QueueName;
+use Espo\Core\Mail\EmailSender;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Templates\Entities\Person;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\FieldUtil;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Log;
 
-use Espo\{
-    Entities\Email,
-    Entities\EmailTemplate,
-    Entities\InboundEmail,
-    Entities\Job,
-    Entities\LeadCaptureLogRecord,
-    Modules\Crm\Entities\Campaign,
-    Modules\Crm\Entities\TargetList,
-    ORM\Entity,
-    Entities\LeadCapture as LeadCaptureEntity,
-};
+use Espo\Entities\Email;
+use Espo\Entities\EmailTemplate;
+use Espo\Entities\InboundEmail;
+use Espo\Entities\Job;
+use Espo\Entities\LeadCapture as LeadCaptureEntity;
+use Espo\Entities\LeadCaptureLogRecord;
+use Espo\Modules\Crm\Entities\Campaign;
+use Espo\Modules\Crm\Entities\TargetList;
+use Espo\ORM\Entity;
 
 use stdClass;
 use DateTime;
@@ -125,7 +123,7 @@ class LeadCapture
     {
         /** @var ?LeadCaptureEntity $leadCapture */
         $leadCapture = $this->entityManager
-            ->getRDBRepository(LeadCaptureEntity::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(LeadCaptureEntity::class)
             ->where([
                 'apiKey' => $apiKey,
                 'isActive' => true,
@@ -573,8 +571,8 @@ class LeadCapture
 
         $emailData = $this->emailTemplateService
             ->parseTemplate($emailTemplate, [
-                'Person' => $lead,
-                'Lead' => $lead,
+                Person::TEMPLATE_TYPE => $lead,
+                Lead::ENTITY_TYPE => $lead,
             ]);
 
         if (!$lead) {

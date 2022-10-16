@@ -29,15 +29,15 @@
 
 namespace Espo\Core\Templates\Entities;
 
-use Espo\Core\{
-    ORM\Entity,
-    Field\EmailAddressGroup,
-    Field\PhoneNumberGroup,
-    Field\Address,
-};
+use Espo\Core\Field\Address;
+use Espo\Core\Field\EmailAddressGroup;
+use Espo\Core\Field\PhoneNumberGroup;
+use Espo\Core\ORM\Entity;
 
 class Company extends Entity
 {
+    public const TEMPLATE_TYPE = 'Company';
+
     public function getEmailAddressGroup(): EmailAddressGroup
     {
         /** @var EmailAddressGroup */

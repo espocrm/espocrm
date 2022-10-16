@@ -29,8 +29,14 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Acl\Table;
+use Espo\Core\Templates\Entities\Company;
+use Espo\Core\Templates\Entities\Person;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
 use Espo\Entities\User as UserEntity;
+use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\Repositories\EmailAddress as Repository;
 use Espo\Entities\EmailAddress as EmailAddressEntity;
 
@@ -198,14 +204,18 @@ class EmailAddress extends Record
 
     private function handleQueryBuilderUser(string $filter, QueryBuilder $queryBuilder): void
     {
-        if ($this->acl->get('portalPermission') === 'no') {
+        if ($this->acl->getPermissionLevel('portalPermission') === Table::LEVEL_NO) {
             $queryBuilder->where([
-                'type!=' => 'portal',
+                'type!=' => UserEntity::TYPE_PORTAL,
             ]);
         }
 
         $queryBuilder->where([
-            'type!=' => ['api', 'system', 'super-admin'],
+            'type!=' => [
+                UserEntity::TYPE_API,
+                UserEntity::TYPE_SYSTEM,
+                UserEntity::TYPE_SUPER_ADMIN,
+            ],
         ]);
     }
 
@@ -305,7 +315,12 @@ class EmailAddress extends Record
      */
     protected function getHavingEmailAddressEntityTypeList(): array
     {
-        $list = ['Account', 'Contact', 'Lead', 'User'];
+        $list = [
+            Account::ENTITY_TYPE,
+            Contact::ENTITY_TYPE,
+            Lead::ENTITY_TYPE,
+            UserEntity::ENTITY_TYPE,
+        ];
 
         $scopeDefs = $this->metadata->get(['scopes']);
 
@@ -313,7 +328,10 @@ class EmailAddress extends Record
             if (
                 empty($defs['disabled']) &&
                 !empty($defs['type']) &&
-                ($defs['type'] === 'Person' || $defs['type'] === 'Company')
+                (
+                    $defs['type'] === Person::TEMPLATE_TYPE ||
+                    $defs['type'] === Company::TEMPLATE_TYPE
+                )
             ) {
                 $list[] = $scope;
             }

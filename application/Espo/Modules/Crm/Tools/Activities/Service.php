@@ -35,6 +35,8 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
 
 use Espo\Core\ServiceFactory;
+use Espo\Core\Templates\Entities\Company;
+use Espo\Core\Templates\Entities\Person;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Metadata;
@@ -48,6 +50,7 @@ use Espo\Modules\Crm\Entities\Lead;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Reminder;
 use Espo\Modules\Crm\Entities\Task;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\UnionBuilder;
 use Espo\ORM\Query\SelectBuilder;
@@ -68,7 +71,6 @@ use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
 use PDO;
 use DateTime;
-use stdClass;
 
 class Service
 {
@@ -117,14 +119,14 @@ class Service
                 $scope,
                 [Contact::ENTITY_TYPE, Lead::ENTITY_TYPE, User::ENTITY_TYPE]
             ) ||
-            $this->metadata->get(['scopes', $scope, 'type']) === 'Person';
+            $this->metadata->get(['scopes', $scope, 'type']) === Person::TEMPLATE_TYPE;
     }
 
     protected function isCompany(string $scope): bool
     {
         return
-            in_array($scope, [Account::ENTITY_TYPE]) ||
-            $this->metadata->get(['scopes', $scope, 'type']) === 'Company';
+            $scope == Account::ENTITY_TYPE ||
+            $this->metadata->get(['scopes', $scope, 'type']) === Company::TEMPLATE_TYPE;
     }
 
     /**
@@ -321,15 +323,16 @@ class Service
         array $statusList,
         string $targetEntityType
     ) {
+        if ($entity instanceof User && $targetEntityType === Meeting::ENTITY_TYPE) {
+            return $this->getActivitiesUserMeetingQuery($entity, $statusList);
+        }
+
+        if ($entity instanceof User && $targetEntityType === Call::ENTITY_TYPE) {
+            return $this->getActivitiesUserCallQuery($entity, $statusList);
+        }
 
         $entityType = $entity->getEntityType();
         $id = $entity->getId();
-
-        $methodName = 'getActivities' . $entityType . $targetEntityType . 'Query';
-
-        if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $statusList);
-        }
 
         $seed = $this->entityManager->getNewEntity($targetEntityType);
 
@@ -474,14 +477,12 @@ class Service
      */
     protected function getActivitiesEmailQuery(Entity $entity, array $statusList = [])
     {
+        if ($entity instanceof User) {
+            return $this->getActivitiesUserEmailQuery($entity, $statusList);
+        }
+
         $entityType = $entity->getEntityType();
         $id = $entity->getId();
-
-        $methodName = 'getActivities' . $entityType . 'EmailQuery';
-
-        if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $statusList);
-        }
 
         $baseBuilder = $this->selectBuilderFactory
             ->create()
@@ -1075,6 +1076,7 @@ class Service
         $serviceName = 'Activities' . $entity->getEntityType();
 
         if ($this->serviceFactory->checkExists($serviceName)) {
+            // For bc.
             $service = $this->serviceFactory->create($serviceName);
 
             $methodName = 'getActivities' . $scope . 'Query';
@@ -1084,10 +1086,16 @@ class Service
             }
         }
 
-        $methodName = 'getActivities' . $scope . 'Query';
+        if ($scope === Meeting::ENTITY_TYPE) {
+            return $this->getActivitiesMeetingQuery($entity, $statusList);
+        }
 
-        if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $statusList);
+        if ($scope === Call::ENTITY_TYPE) {
+            return $this->getActivitiesCallQuery($entity, $statusList);
+        }
+
+        if ($scope === Email::ENTITY_TYPE) {
+            return $this->getActivitiesEmailQuery($entity, $statusList);
         }
 
         return $this->getActivitiesBaseQuery($entity, $scope, $statusList);
@@ -1172,10 +1180,7 @@ class Service
      *   maxSize?: ?int,
      * } $params
      * @param ?string[] $entityTypeList
-     * @return array{
-     *   total: int,
-     *   list: stdClass[],
-     * }
+     * @return RecordCollection<Entity>
      * @throws Forbidden
      * @throws NotFound
      */
@@ -1184,8 +1189,9 @@ class Service
         array $params = [],
         ?array $entityTypeList = null,
         ?int $futureDays = null
-    ): array {
+    ): RecordCollection {
 
+        /** @var ?User $user */
         $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
@@ -1230,11 +1236,8 @@ class Service
             $queryList[] = $this->getUpcomingActivitiesEntityTypeQuery($entityType, $params, $user, $futureDays);
         }
 
-        if (empty($queryList)) {
-            return [
-                'total' => 0,
-                'list' => [],
-            ];
+        if ($queryList === []) {
+            return RecordCollection::create(new EntityCollection(), 0);
         }
 
         $builder = $this->entityManager
@@ -1273,27 +1276,28 @@ class Service
 
         $rows = $sth->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
-        $entityDataList = [];
+        $collection = new EntityCollection();
 
         foreach ($rows as $row) {
-            $entity = $this->entityManager->getEntity($row['entityType'], $row['id']);
+            /** @var string $itemEntityType */
+            $itemEntityType = $row['entityType'];
+            /** @var string $itemId */
+            $itemId = $row['id'];
+
+            $entity = $this->entityManager->getEntityById($itemEntityType, $itemId);
 
             if (!$entity) {
-                $entity = $this->entityManager->getNewEntity($row['entityType']);
+                // @todo Revise.
+                $entity = $this->entityManager->getNewEntity($itemEntityType);
 
-                $entity->set('id', $row['id']);
+                $entity->set('id', $itemId);
             }
 
-            $entityData = $entity->getValueMap();
-            $entityData->_scope = $entity->getEntityType();
-
-            $entityDataList[] = $entityData;
+            $collection->append($entity);;
         }
 
-        return [
-            'total' => $totalCount,
-            'list' => $entityDataList,
-        ];
+        /** @var RecordCollection<Entity> */
+        return RecordCollection::create($collection, $totalCount);
     }
 
     /**

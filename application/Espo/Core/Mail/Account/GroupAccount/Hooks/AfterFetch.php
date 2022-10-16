@@ -32,6 +32,7 @@ namespace Espo\Core\Mail\Account\GroupAccount\Hooks;
 use Espo\Core\ApplicationUser;
 use Espo\Core\Mail\Account\GroupAccount\AccountFactory as GroupAccountFactory;
 use Espo\Core\Mail\SenderParams;
+use Espo\Core\Templates\Entities\Person;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\Tools\Email\Util;
@@ -260,7 +261,7 @@ class AfterFetch implements AfterFetchInterface
                 }
             }
 
-            $entityHash['Person'] = $contact;
+            $entityHash[Person::TEMPLATE_TYPE] = $contact;
             $entityHash[Contact::ENTITY_TYPE] = $contact;
             $entityHash[Email::ENTITY_TYPE] = $email;
 

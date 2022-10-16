@@ -233,15 +233,20 @@ class Activities
 
         $futureDays = intval($request->getQueryParam('futureDays'));
 
-        return (object) $this->service->getUpcomingActivities(
+        $recordCollection = $this->service->getUpcomingActivities(
             $userId,
             [
                 'offset' => $offset,
-                'maxSize' => $maxSize
+                'maxSize' => $maxSize,
             ],
             $entityTypeList,
             $futureDays
         );
+
+        return (object) [
+            'total' => $recordCollection->getTotal(),
+            'list' => $recordCollection->getValueMapList(),
+        ];
     }
 
     /**

@@ -29,6 +29,10 @@
 
 namespace Espo\Tools\EmailTemplate;
 
+use Espo\Core\Templates\Entities\Person as PersonTemplate;
+use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 
@@ -55,22 +59,16 @@ use DateTimezone;
 
 class Processor
 {
+    private const KEY_PARENT = 'Parent';
+
     private $formatter;
-
     private $entityManager;
-
     private $aclManager;
-
     private $recordServiceContainer;
-
     private $config;
-
     private $fileStorageManager;
-
     private $user;
-
     private $htmlizerFactory;
-
     private $dateTime;
 
     public function __construct(
@@ -101,8 +99,8 @@ class Processor
 
         $user = $data->getUser() ?? $this->user;
 
-        if (!isset($entityHash['User'])) {
-            $entityHash['User'] = $user;
+        if (!isset($entityHash[User::ENTITY_TYPE])) {
+            $entityHash[User::ENTITY_TYPE] = $user;
         }
 
         $foundByAddressEntity = null;
@@ -112,13 +110,18 @@ class Processor
                 ->getEntityByAddress(
                     $data->getEmailAddress(),
                     null,
-                    ['Contact', 'Lead', 'Account', 'User']
+                    [
+                        Contact::ENTITY_TYPE,
+                        Lead::ENTITY_TYPE,
+                        Account::ENTITY_TYPE,
+                        User::ENTITY_TYPE,
+                    ]
                 );
         }
 
         if ($foundByAddressEntity) {
             if ($foundByAddressEntity instanceof Person) {
-                $entityHash['Person'] = $foundByAddressEntity;
+                $entityHash[PersonTemplate::TEMPLATE_TYPE] = $foundByAddressEntity;
             }
 
             if (!isset($entityHash[$foundByAddressEntity->getEntityType()])) {
@@ -146,10 +149,10 @@ class Processor
             $parent = $data->getParent();
 
             $entityHash[$parent->getEntityType()] = $parent;
-            $entityHash['Parent'] = $parent;
+            $entityHash[self::KEY_PARENT] = $parent;
 
-            if (!isset($entityHash['Person']) && $parent instanceof Person) {
-                $entityHash['Person'] = $parent;
+            if (!isset($entityHash[PersonTemplate::TEMPLATE_TYPE]) && $parent instanceof Person) {
+                $entityHash[PersonTemplate::TEMPLATE_TYPE] = $parent;
             }
         }
 
@@ -161,10 +164,10 @@ class Processor
             }
         }
 
-        $subject = $template->get('subject') ?? '';
-        $body = $template->get('body') ?? '';
+        $subject = $template->getSubject() ?? '';
+        $body = $template->getBody() ?? '';
 
-        $parent = $entityHash['Parent'] ?? null;
+        $parent = $entityHash[self::KEY_PARENT] ?? null;
 
         $htmlizer = null;
 
@@ -216,7 +219,7 @@ class Processor
         return new Result(
             $subject,
             $body,
-            $template->get('isHtml'),
+            $template->isHtml(),
             $attachmentList
         );
     }
@@ -379,13 +382,13 @@ class Processor
 
         /** @var iterable<Attachment> $attachmentList */
         $attachmentList = $this->entityManager
-            ->getRDBRepository('EmailTemplate')
+            ->getRDBRepositoryByClass(EmailTemplate::class)
             ->getRelation($template, 'attachments')
             ->find();
 
         foreach ($attachmentList as $attachment) {
             /** @var Attachment $clone */
-            $clone = $this->entityManager->getEntity('Attachment');
+            $clone = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
 
             $data = $attachment->getValueMap();
 
@@ -395,7 +398,7 @@ class Processor
 
             $clone->set($data);
             $clone->set('sourceId', $attachment->getSourceId());
-            $clone->set('storage', $attachment->get('storage'));
+            $clone->set('storage', $attachment->getStorage());
 
             if (!$this->fileStorageManager->exists($attachment)) {
                 continue;

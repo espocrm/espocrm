@@ -29,8 +29,9 @@
 
 namespace Espo\Core\Templates\Entities;
 
-class Event extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class Event extends Entity
 {
-
+    public const TEMPLATE_TYPE = 'Event';
 }
-

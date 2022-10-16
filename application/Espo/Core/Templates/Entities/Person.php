@@ -29,8 +29,9 @@
 
 namespace Espo\Core\Templates\Entities;
 
-class Person extends \Espo\Core\Entities\Person
+use Espo\Core\Entities\Person as PersonEntity;
+
+class Person extends PersonEntity
 {
-
+    public const TEMPLATE_TYPE = 'Person';
 }
-

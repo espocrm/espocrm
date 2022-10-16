@@ -29,6 +29,8 @@
 
 namespace Espo\Tools\EntityManager\Link\Hooks;
 
+use Espo\Core\Templates\Entities\Company;
+use Espo\Core\Templates\Entities\Person;
 use Espo\Tools\EntityManager\Link\CreateHook;
 use Espo\Tools\EntityManager\Link\Params;
 use Espo\Tools\EntityManager\Link\Type;
@@ -76,7 +78,7 @@ class TargetListCreate implements CreateHook
 
         $type = $this->metadata->get(['scopes', $entityType, 'type']);
 
-        if (!in_array($type, ['Person', 'Company'])) {
+        if (!in_array($type, [Person::TEMPLATE_TYPE, Company::TEMPLATE_TYPE])) {
             return;
         }
 
