@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Notification\AssignmentNotificator;
 
+/**
+ * @immutable
+ */
 class Params
 {
     /**

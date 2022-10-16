@@ -29,6 +29,9 @@
 
 namespace Espo\Core\FieldProcessing\Saver;
 
+/**
+ * @immutable
+ */
 class Params
 {
     /**

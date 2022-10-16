@@ -29,10 +29,12 @@
 
 namespace Espo\Core\Utils\Resource\FileReader;
 
+/**
+ * @immutable
+ */
 class Params
 {
     private ?string $scope = null;
-
     private ?string $moduleName = null;
 
     public static function create(): self

@@ -33,15 +33,16 @@ use Espo\Core\Select\SearchParams;
 
 use RuntimeException;
 
+/**
+ * @immutable
+ */
 class Params
 {
     private string $entityType;
-
     /**
      * @var ?string[]
      */
     private $ids = null;
-
     private ?SearchParams $searchParams = null;
 
     private function __construct() {}

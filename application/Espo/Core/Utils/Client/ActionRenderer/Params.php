@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Utils\Client\ActionRenderer;
 
+/**
+ * @immutable
+ */
 class Params
 {
     private string $controller;

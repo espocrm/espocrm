@@ -29,6 +29,9 @@
 
 namespace Espo\Core\FieldProcessing\Loader;
 
+/**
+ * @immutable
+ */
 class Params
 {
     /**

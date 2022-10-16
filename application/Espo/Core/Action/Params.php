@@ -31,11 +31,13 @@ namespace Espo\Core\Action;
 
 use RuntimeException;
 
+/**
+ * @immutable
+ */
 class Params
 {
-    private $entityType;
-
-    private $id;
+    private string $entityType;
+    private string $id;
 
     /**
      * @throws RuntimeException

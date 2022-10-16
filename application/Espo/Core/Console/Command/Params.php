@@ -33,22 +33,16 @@ use Espo\Core\Utils\Util;
 
 /**
  * Command parameters.
+ *
+ * @immutable
  */
 class Params
 {
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string,string> */
     private $options;
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $flagList;
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $argumentList;
 
     /**

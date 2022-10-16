@@ -29,18 +29,16 @@
 
 namespace Espo\Tools\EntityManager\Link;
 
+/**
+ * @immutable
+ */
 class Params
 {
     private string $type;
-
     private string $entityType;
-
     private string $link;
-
     private string $foreignLink;
-
     private ?string $foreignEntityType = null;
-
     private ?string $name = null;
 
     public function __construct(
