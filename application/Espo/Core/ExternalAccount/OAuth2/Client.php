@@ -216,7 +216,7 @@ class Client
      * @return array{
      *   result: array<string,mixed>|string,
      *   code: int,
-     *   contentType: string,
+     *   contentType: string|false,
      *   header: string,
      * }
      * @throws Exception
@@ -258,9 +258,9 @@ class Client
      * @param string $httpMethod
      * @param array<string,string> $httpHeaders
      * @return array{
-     *   result: array<string,mixed>|string,
+     *   result: array<string, mixed>|string,
      *   code: int,
-     *   contentType: string,
+     *   contentType: string|false,
      *   header: string,
      * }
      * @throws Exception
@@ -353,25 +353,27 @@ class Client
         $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
         $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 
-        $responceHeader = substr($response, 0, $headerSize);
-        $responceBody = substr($response, $headerSize);
-
-        $resultArray = null;
+        $responseHeader = substr($response, 0, $headerSize);
+        $responseBody = substr($response, $headerSize);
 
         if ($curlError = curl_error($ch)) {
             throw new Exception($curlError);
         }
-        else {
-            $resultArray = json_decode($responceBody, true);
-        }
+
+        $resultArray = json_decode($responseBody, true);
 
         curl_close($ch);
 
+        /** @var array<string, mixed>|string $result */
+        $result = ($resultArray !== null) ?
+            $resultArray :
+            $responseBody;
+
         return [
-            'result' => (null !== $resultArray) ? $resultArray : $responceBody,
+            'result' => $result,
             'code' => intval($httpCode),
             'contentType' => $contentType,
-            'header' => $responceHeader,
+            'header' => $responseHeader,
         ];
     }
 
@@ -383,9 +385,9 @@ class Client
      *   client_secret?: string,
      * } $params
      * @return array{
-     *   result: array<string,mixed>|string,
+     *   result: array<string, mixed>|string,
      *   code: int,
-     *   contentType: string,
+     *   contentType: string|false,
      *   header: string,
      * }
      * @throws Exception

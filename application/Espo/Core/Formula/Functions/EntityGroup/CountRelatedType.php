@@ -31,7 +31,7 @@ namespace Espo\Core\Formula\Functions\EntityGroup;
 
 use Espo\Core\Exceptions\Error;
 
-use Espo\Core\ORM\EntityManager;
+use Espo\ORM\EntityManager;
 
 use Espo\Core\Di;
 

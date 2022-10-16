@@ -205,7 +205,7 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
 
     /**
      * @param string $allowedItemName
-     * @return ?array<string,mixed>'
+     * @return ?array<string,mixed>
      */
     private function getAllowedAdditionalParam($allowedItemName)
     {
@@ -219,20 +219,23 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
 
         $additionalParam = null;
 
-        $linkName = $this->getLinkName();
-        $entityName = $this->getEntityName();
-
         if (isset($itemLinkParams) && isset($itemForeignLinkParams)) {
             if (!empty($itemLinkParams) && !is_array($itemLinkParams)) {
                 $additionalParam = $itemLinkParams;
-            } else if (!empty($itemForeignLinkParams) && !is_array($itemForeignLinkParams)) {
+            }
+            else if (!empty($itemForeignLinkParams) && !is_array($itemForeignLinkParams)) {
                 $additionalParam = $itemForeignLinkParams;
-            } else {
+            }
+            else {
+                /** @var array<int|string, mixed> $itemLinkParams */
+                /** @var array<int|string, mixed> $itemForeignLinkParams */
                 $additionalParam = Util::merge($itemLinkParams, $itemForeignLinkParams);
             }
-        } else if (isset($itemLinkParams)) {
+        }
+        else if (isset($itemLinkParams)) {
             $additionalParam = $itemLinkParams;
-        } else if (isset($itemForeignLinkParams)) {
+        }
+        else if (isset($itemForeignLinkParams)) {
             $additionalParam = $itemForeignLinkParams;
         }
 

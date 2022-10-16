@@ -591,7 +591,8 @@ class Permission
 
         foreach ($fileList as $fileName) {
             $pathInfo = pathinfo($fileName);
-            $dirname = $pathInfo['dirname'];
+            /** @var string $dirname */
+            $dirname = $pathInfo['dirname'] ?? null;
 
             $currentPath = $fileName;
 

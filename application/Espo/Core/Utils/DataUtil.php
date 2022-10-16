@@ -31,6 +31,7 @@ namespace Espo\Core\Utils;
 
 use InvalidArgumentException;
 use LogicException;
+use stdClass;
 
 class DataUtil
 {
@@ -114,9 +115,9 @@ class DataUtil
     }
 
     /**
-     * @param array<string|int,mixed>|\stdClass $data
+     * @param array<string|int,mixed>|stdClass $data
      * @param mixed $needle
-     * @return array<string|int,mixed>|\stdClass
+     * @return array<string|int,mixed>|stdClass
      */
     public static function unsetByValue(&$data, $needle)
     {
@@ -150,25 +151,25 @@ class DataUtil
     }
 
     /**
-     *
-     * @param array<string,mixed>|\stdClass $data
-     * @param array<string,mixed>|\stdClass $overrideData
-     * @return array<string|int,mixed>|\stdClass
+     * @param array<string, mixed>|stdClass $data
+     * @param array<string, mixed>|stdClass $overrideData
+     * @return array<string|int, mixed>|stdClass
      */
     public static function merge($data, $overrideData)
     {
         $appendIdentifier = '__APPEND__';
 
+        if (
+            is_object($data) &&
+            is_object($overrideData) &&
+            get_object_vars($data) === [] &&
+            get_object_vars($overrideData) === []
+        ) {
+            return (object) [];
+        }
+
         if (empty($data) && empty($overrideData)) {
-            if (is_object($data) || is_object($overrideData)) {
-                return (object) [];
-            }
-            else if (is_array($data) || is_array($overrideData)) {
-                return [];
-            }
-            else {
-                return $overrideData;
-            }
+            return [];
         }
 
         if (is_object($overrideData)) {
@@ -188,7 +189,8 @@ class DataUtil
 
             return $data;
         }
-        else if (is_array($overrideData)) {
+
+        if (is_array($overrideData)) {
             if (empty($data)) {
                 $data = [];
             }
@@ -203,15 +205,13 @@ class DataUtil
 
                     $data[] = $item;
                 }
-            }
-            else {
-                $data = $overrideData;
+
+                return $data;
             }
 
-            return $data;
-        }
-        else {
             return $overrideData;
         }
+
+        return $overrideData;
     }
 }

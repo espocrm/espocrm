@@ -398,7 +398,7 @@ class Language
     private function getLanguageData(string $language, bool $reload = false): array
     {
         if (!$reload && isset($this->data[$language])) {
-            return $this->data[$language] ?? [];
+            return $this->data[$language];
         }
 
         $cacheKey = $this->getCacheKey($language);

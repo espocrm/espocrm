@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\ORM\EntityManager;
+use Espo\ORM\EntityManager;
 
 use Espo\Core\Formula\{
     Functions\BaseFunction,

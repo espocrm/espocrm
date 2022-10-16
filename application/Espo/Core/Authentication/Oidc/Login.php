@@ -226,7 +226,7 @@ class Login implements LoginInterface
         /** @var string|false $response */
         $response = curl_exec($curl);
         $error = curl_error($curl);
-        $status = curl_getinfo($curl, CURLINFO_HTTP_CODE) ?? 0;
+        $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);
 

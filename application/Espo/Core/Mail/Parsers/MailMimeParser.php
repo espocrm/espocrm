@@ -66,7 +66,6 @@ class MailMimeParser implements Parser
     ];
 
     private EntityManager $entityManager;
-
     private ?WrappeeParser $parser = null;
 
     /**
@@ -337,11 +336,12 @@ class MailMimeParser implements Parser
                 $contentId = trim($contentId, '<>');
             }
 
-            if ($disposition == 'inline') {
+            if ($disposition === 'inline') {
                 $attachment->set('role', Attachment::ROLE_INLINE_ATTACHMENT);
             }
             else {
                 $disposition = 'attachment';
+
                 $attachment->set('role', Attachment::ROLE_ATTACHMENT);
             }
 
@@ -349,23 +349,27 @@ class MailMimeParser implements Parser
 
             $this->entityManager->saveEntity($attachment);
 
-            if ($disposition == 'attachment') {
+            if ($disposition === 'attachment') {
                 $email->addLinkMultipleId('attachments', $attachment->getId());
 
                 if ($contentId) {
                     $inlineIds[$contentId] = $attachment->getId();
                 }
-            }
-            else if ($disposition == 'inline') {
-                if ($contentId) {
-                    $inlineIds[$contentId] = $attachment->getId();
 
-                    $inlineAttachmentList[] = $attachment;
-                }
-                else {
-                    $email->addLinkMultipleId('attachments', $attachment->getId());
-                }
+                continue;
             }
+
+            // inline
+
+            if ($contentId) {
+                $inlineIds[$contentId] = $attachment->getId();
+
+                $inlineAttachmentList[] = $attachment;
+
+                continue;
+            }
+
+            $email->addLinkMultipleId('attachments', $attachment->getId());
         }
 
         $body = $email->get('body');

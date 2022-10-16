@@ -55,11 +55,8 @@ class Manager
     protected string $tmpDir = 'data/tmp';
 
     protected const RENAME_RETRY_NUMBER = 10;
-
     protected const RENAME_RETRY_INTERVAL = 0.1;
-
     protected const GET_SAFE_CONTENTS_RETRY_NUMBER = 10;
-
     protected const GET_SAFE_CONTENTS_RETRY_INTERVAL = 0.1;
 
     /**
@@ -127,41 +124,49 @@ class Manager
 
         $cdir = scandir($path) ?: [];
 
-        foreach ($cdir as $key => $value) {
-            if (!in_array($value, [".", ".."])) {
-                $add = false;
+        foreach ($cdir as $value) {
+            if (in_array($value, [".", ".."])) {
+                continue;
+            }
 
-                if (is_dir($path . Util::getSeparator() . $value)) {
-                    if ($recursively || (is_int($recursively) && $recursively!=0)) {
-                        $nextRecursively = is_int($recursively) ? ($recursively-1) : $recursively;
+            $add = false;
 
-                        $result[$value] = $this->getFileList(
-                            $path . Util::getSeparator() . $value,
-                            $nextRecursively,
-                            $filter,
-                            $onlyFileType
-                        );
-                    }
-                    else if (!isset($onlyFileType) || !$onlyFileType){ /*save only directories*/
-                        $add = true;
-                    }
+            if (is_dir($path . Util::getSeparator() . $value)) {
+                /** @var mixed $recursively */
+                if (
+                    !is_int($recursively) && $recursively ||
+                    is_int($recursively) && $recursively !== 0
+                ) {
+                    $nextRecursively = is_int($recursively) ? ($recursively - 1) : $recursively;
+
+                    $result[$value] = $this->getFileList(
+                        $path . Util::getSeparator() . $value,
+                        $nextRecursively,
+                        $filter,
+                        $onlyFileType
+                    );
                 }
-                else if (!isset($onlyFileType) || $onlyFileType) { /*save only files*/
+                else if (!isset($onlyFileType) || !$onlyFileType) { /* save only directories */
                     $add = true;
                 }
+            }
+            else if (!isset($onlyFileType) || $onlyFileType) { /* save only files */
+                $add = true;
+            }
 
-                if ($add) {
-                    if (!empty($filter)) {
-                        if (preg_match('/'.$filter.'/i', $value)) {
-                            $result[] = $value;
-                        }
-                    }
-                    else {
-                        $result[] = $value;
-                    }
+            if (!$add) {
+                continue;
+            }
+
+            if (!empty($filter)) {
+                if (preg_match('/'.$filter.'/i', $value)) {
+                    $result[] = $value;
                 }
 
+                continue;
             }
+
+            $result[] = $value;
         }
 
         if ($returnSingleArray) {
@@ -677,17 +682,18 @@ class Manager
 
         $pathParts = pathinfo($filePath);
 
-        if (!file_exists($pathParts['dirname'])) {
+        /** @var string $dirname */
+        $dirname = $pathParts['dirname'] ?? null;
+
+        if (!file_exists($dirname)) {
             $dirPermissionOriginal = $defaultPermissions['dir'];
 
             $dirPermission = is_string($dirPermissionOriginal) ?
                 (int) base_convert($dirPermissionOriginal, 8, 10) :
                 $dirPermissionOriginal;
 
-            if (!$this->mkdir($pathParts['dirname'], $dirPermission)) {
-                throw new PermissionError(
-                    'Permission denied: unable to create a folder on the server ' . $pathParts['dirname']
-                );
+            if (!$this->mkdir($dirname, $dirPermission)) {
+                throw new PermissionError('Permission denied: unable to create a folder on the server ' . $dirname);
             }
         }
 

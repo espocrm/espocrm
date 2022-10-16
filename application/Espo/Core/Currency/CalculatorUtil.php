@@ -88,6 +88,7 @@ class CalculatorUtil
             );
         }
 
+        /** @var ?string $result */
         $result = bcdiv(
             $arg1,
             $arg2,

@@ -105,13 +105,13 @@ class EspoRotatingFileHandler extends EspoFileHandler
         $fileInfo = pathinfo($this->filename);
 
         $timedFilename = str_replace(
-            array('{filename}', '{date}'),
-            array($fileInfo['filename'], date($this->dateFormat)),
-            $fileInfo['dirname'] . '/' . $this->filenameFormat
+            ['{filename}', '{date}'],
+            [$fileInfo['filename'], date($this->dateFormat)],
+            ($fileInfo['dirname'] ?? '') . '/' . $this->filenameFormat
         );
 
         if (!empty($fileInfo['extension'])) {
-            $timedFilename .= '.'.$fileInfo['extension'];
+            $timedFilename .= '.' . $fileInfo['extension'];
         }
 
         return $timedFilename;
