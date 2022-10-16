@@ -29,6 +29,8 @@
 
 namespace tests\integration\Espo\GlobalSearch;
 
+use Espo\Tools\GlobalSearch\Service;
+
 class GlobalSearchTest extends \tests\integration\Core\BaseTestCase
 {
     public function testSearch1()
@@ -84,7 +86,7 @@ class GlobalSearchTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication(true);
 
-        $service = $app->getContainer()->get('serviceFactory')->create('GlobalSearch');
+        $service = $app->getContainer()->get('injectableFactory')->create(Service::class);
 
         $result = $service->find('1', 0, 10);
 
