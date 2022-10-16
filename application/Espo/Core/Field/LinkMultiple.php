@@ -33,6 +33,8 @@ use RuntimeException;
 
 /**
  * A link-multiple value object. Immutable.
+ *
+ * @immutable
  */
 class LinkMultiple
 {

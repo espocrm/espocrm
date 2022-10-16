@@ -40,34 +40,24 @@ use InvalidArgumentException;
 
 /**
  * Compares an expression to a value or another expression. Immutable.
+ *
+ * @immutable
  */
 class Comparison implements WhereItem
 {
     private const OPERATOR_EQUAL = '=';
-
     private const OPERATOR_NOT_EQUAL = '!=';
-
     private const OPERATOR_GREATER = '>';
-
     private const OPERATOR_GREATER_OR_EQUAL = '>=';
-
     private const OPERATOR_LESS = '<';
-
     private const OPERATOR_LESS_OR_EQUAL = '<=';
-
     private const OPERATOR_LIKE = '*';
-
     private const OPERATOR_NOT_LIKE = '!*';
-
     private const OPERATOR_IN_SUB_QUERY = '=s';
-
     private const OPERATOR_NOT_IN_SUB_QUERY = '!=s';
 
     private string $rawKey;
-
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $rawValue;
 
     /**

@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Record;
 
+/**
+ * @immutable
+ */
 class ReadParams
 {
     public function __construct() {}

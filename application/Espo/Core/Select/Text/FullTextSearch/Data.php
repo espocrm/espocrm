@@ -33,20 +33,20 @@ use Espo\ORM\Query\Part\Expression;
 
 use InvalidArgumentException;
 
+/**
+ * @immutable
+ */
 class Data
 {
     private Expression $expression;
-
     /**
      * @var string[]
      */
     private array $fieldList;
-
     /**
      * @var string[]
      */
     private array $columnList;
-
     /**
      * @var Mode::* $mode
      */

@@ -36,11 +36,12 @@ use InvalidArgumentException;
 
 /**
  * A currency value object. Immutable.
+ *
+ * @immutable
  */
 class Currency
 {
     private string $amount;
-
     private string $code;
 
     /**

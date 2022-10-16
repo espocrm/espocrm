@@ -29,10 +29,12 @@
 
 namespace Espo\Core\Record;
 
+/**
+ * @immutable
+ */
 class CreateParams
 {
     private bool $skipDuplicateCheck = false;
-
     private ?string $duplicateSourceId = null;
 
     public function __construct() {}

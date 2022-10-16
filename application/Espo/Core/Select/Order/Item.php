@@ -33,10 +33,12 @@ use Espo\Core\Select\SearchParams;
 
 use InvalidArgumentException;
 
+/**
+ * @immutable
+ */
 class Item
 {
     private string $orderBy;
-
     private string $order;
 
     private function __construct(string $orderBy, string $order)

@@ -33,13 +33,14 @@ use RuntimeException;
 
 /**
  * LOCK TABLE parameters.
+ *
+ * @immutable
  */
 class LockTable implements Query
 {
     use BaseTrait;
 
     public const MODE_SHARE = 'SHARE';
-
     public const MODE_EXCLUSIVE = 'EXCLUSIVE';
 
     /**

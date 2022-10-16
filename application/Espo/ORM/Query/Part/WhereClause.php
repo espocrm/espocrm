@@ -29,12 +29,12 @@
 
 namespace Espo\ORM\Query\Part;
 
-use Espo\ORM\Query\{
-    Part\Where\AndGroup,
-};
+use Espo\ORM\Query\Part\Where\AndGroup;
 
 /**
  * A where-clause. Immutable.
+ *
+ * @immutable
  */
 class WhereClause extends AndGroup
 {

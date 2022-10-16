@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Select\Text\FullTextSearch\DataComposer;
 
+/**
+ * @immutable
+ */
 class Params
 {
     private function __construct() {}

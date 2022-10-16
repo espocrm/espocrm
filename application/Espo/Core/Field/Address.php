@@ -33,17 +33,15 @@ use Espo\Core\Field\Address\AddressBuilder;
 
 /**
  * An address value object. Immutable.
+ *
+ * @immutable
  */
 class Address
 {
     private $street = null;
-
     private $city = null;
-
     private $country = null;
-
     private $state = null;
-
     private $postalCode = null;
 
     public function __construct(

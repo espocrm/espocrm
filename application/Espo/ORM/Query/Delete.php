@@ -33,6 +33,8 @@ use RuntimeException;
 
 /**
  * Delete parameters.
+ *
+ * @immutable
  */
 class Delete implements Query
 {

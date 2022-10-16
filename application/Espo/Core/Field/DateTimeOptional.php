@@ -29,8 +29,6 @@
 
 namespace Espo\Core\Field;
 
-use Espo\Core\Field\DateTime;
-use Espo\Core\Field\Date;
 use Espo\Core\Field\DateTime\DateTimeable;
 
 use DateTimeImmutable;
@@ -41,6 +39,8 @@ use RuntimeException;
 
 /**
  * A date-time or date. Immutable.
+ *
+ * @immutable
  */
 class DateTimeOptional implements DateTimeable
 {

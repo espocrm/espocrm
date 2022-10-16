@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Record;
 
+/**
+ * @immutable
+ */
 class FindParams
 {
     private bool $noTotal = false;

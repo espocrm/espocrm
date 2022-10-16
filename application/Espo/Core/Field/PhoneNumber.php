@@ -33,15 +33,14 @@ use RuntimeException;
 
 /**
  * A phone number value. Immutable.
+ *
+ * @immutable
  */
 class PhoneNumber
 {
     private string $number;
-
     private ?string $type = null;
-
     private bool $isOptedOut = false;
-
     private bool $isInvalid = false;
 
     public function __construct(string $number)

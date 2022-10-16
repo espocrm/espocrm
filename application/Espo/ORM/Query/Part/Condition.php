@@ -29,18 +29,15 @@
 
 namespace Espo\ORM\Query\Part;
 
-use Espo\ORM\Query\Part\{
-    WhereItem,
-    Where\AndGroup,
-    Where\OrGroup,
-    Where\Not,
-    Where\Comparison,
-};
+use Espo\ORM\Query\Part\Where\AndGroup;
+use Espo\ORM\Query\Part\Where\Comparison;
+use Espo\ORM\Query\Part\Where\Not;
+use Espo\ORM\Query\Part\Where\OrGroup;
 
 use Espo\ORM\Query\Select;
 
 /**
- * A util-class for creating items that can be used as a where-clause.
+ * An util-class for creating items that can be used as a where-clause.
  */
 class Condition
 {

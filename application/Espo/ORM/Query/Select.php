@@ -39,6 +39,8 @@ use RuntimeException;
 /**
  * Select parameters.
  *
+ * @immutable
+ *
  * @todo Add validation and normalization.
  */
 class Select implements SelectingQuery
@@ -47,7 +49,6 @@ class Select implements SelectingQuery
     use BaseTrait;
 
     public const ORDER_ASC = Order::ASC;
-
     public const ORDER_DESC = Order::DESC;
 
     /**

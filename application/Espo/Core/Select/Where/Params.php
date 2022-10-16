@@ -31,10 +31,12 @@ namespace Espo\Core\Select\Where;
 
 use InvalidArgumentException;
 
+/**
+ * @immutable
+ */
 class Params
 {
     private bool $applyPermissionCheck = false;
-
     private bool $forbidComplexExpressions = false;
 
     private function __construct()

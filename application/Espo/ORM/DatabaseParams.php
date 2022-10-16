@@ -29,32 +29,23 @@
 
 namespace Espo\ORM;
 
+/**
+ * @immutable
+ */
 class DatabaseParams
 {
     private ?string $platform = null;
-
     private ?string $host = null;
-
     private ?int $port = null;
-
     private ?string $name = null;
-
     private ?string $username = null;
-
     private ?string $password = null;
-
     private ?string $charset = null;
-
     private ?string $sslCa = null;
-
     private ?string $sslCert = null;
-
     private ?string $sslKey = null;
-
     private ?string $sslCaPath = null;
-
     private ?string $sslCipher = null;
-
     private bool $sslVerifyDisabled = false;
 
     public static function create(): self

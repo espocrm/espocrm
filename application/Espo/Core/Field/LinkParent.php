@@ -33,13 +33,13 @@ use RuntimeException;
 
 /**
  * A link-parent value object. Immutable.
+ *
+ * @immutable
  */
 class LinkParent
 {
     private string $entityType;
-
     private string $id;
-
     private ?string $name = null;
 
     public function __construct(string $entityType, string $id)

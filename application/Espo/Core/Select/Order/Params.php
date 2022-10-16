@@ -33,20 +33,16 @@ use Espo\Core\Select\SearchParams;
 
 use InvalidArgumentException;
 
+/**
+ * @immutable
+ */
 class Params
 {
     private bool $forbidComplexExpressions = false;
-
     private bool $forceDefault = false;
-
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $orderBy = null;
-
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $order = null;
 
     private function __construct()

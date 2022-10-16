@@ -31,11 +31,12 @@ namespace Espo\ORM\Query\Part;
 
 /**
  * A select item. Immutable.
+ *
+ * @immutable
  */
 class Selection
 {
     private $expression;
-
     private $alias = null;
 
     private function __construct(Expression $expression, ?string $alias = null)

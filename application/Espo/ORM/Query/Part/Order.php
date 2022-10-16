@@ -33,15 +33,15 @@ use RuntimeException;
 
 /**
  * An order item. Immutable.
+ *
+ * @immutable
  */
 class Order
 {
     public const ASC = 'ASC';
-
     public const DESC = 'DESC';
 
     private Expression $expression;
-
     private bool $isDesc = false;
 
     private function __construct(Expression $expression)

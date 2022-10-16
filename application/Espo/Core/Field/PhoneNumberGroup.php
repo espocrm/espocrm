@@ -34,18 +34,14 @@ use RuntimeException;
 /**
  * A phone number group. Contains a list of phone numbers. One phone number is set as primary.
  * If not empty, then there always should be a primary number. Immutable.
+ *
+ * @immutable
  */
 class PhoneNumberGroup
 {
-    /**
-     * @var PhoneNumber[]
-     */
+    /** @var PhoneNumber[] */
     private $list = [];
-
-    /**
-     * @var ?PhoneNumber
-     */
-    private $primary = null;
+    private ?PhoneNumber $primary = null;
 
     /**
      * @param PhoneNumber[] $list

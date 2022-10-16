@@ -35,13 +35,13 @@ use FILTER_VALIDATE_EMAIL;
 
 /**
  * An email address value. Immutable.
+ *
+ * @immutable
  */
 class EmailAddress
 {
     private string $address;
-
     private bool $isOptedOut = false;
-
     private bool $isInvalid = false;
 
     public function __construct(string $address)

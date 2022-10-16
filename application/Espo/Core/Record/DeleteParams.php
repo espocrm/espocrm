@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Record;
 
+/**
+ * @immutable
+ */
 class DeleteParams
 {
     public function __construct() {}

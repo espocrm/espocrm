@@ -33,6 +33,8 @@ use RuntimeException;
 
 /**
  * Union parameters.
+ *
+ * @immutable
  */
 class Union implements SelectingQuery
 {

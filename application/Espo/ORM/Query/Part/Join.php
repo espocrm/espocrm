@@ -33,13 +33,13 @@ use RuntimeException;
 
 /**
  * A join item. Immutable.
+ *
+ * @immutable
  */
 class Join
 {
     private string $target;
-
     private ?string $alias = null;
-
     private ?WhereItem $conditions = null;
 
     private function __construct(string $target, ?string $alias = null)

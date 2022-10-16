@@ -29,10 +29,12 @@
 
 namespace Espo\Core\Record;
 
+/**
+ * @immutable
+ */
 class UpdateParams
 {
     private bool $skipDuplicateCheck = false;
-
     private ?int $versionNumber = null;
 
     public function __construct() {}

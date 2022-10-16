@@ -29,18 +29,16 @@
 
 namespace Espo\ORM\Query\Part\Where;
 
-use Espo\ORM\Query\Part\{
-    WhereItem,
-};
+use Espo\ORM\Query\Part\WhereItem;
 
 /**
  * A NOT-operator. Immutable.
+ *
+ * @immutable
  */
 class Not implements WhereItem
 {
-    /**
-     * @var array<mixed,mixed>
-     */
+    /** @var array<mixed,mixed> */
     private $rawValue = [];
 
     public function getRaw(): array

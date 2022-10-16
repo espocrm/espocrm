@@ -39,11 +39,12 @@ use RuntimeException;
 
 /**
  * A date value object. Immutable.
+ *
+ * @immutable
  */
 class Date implements DateTimeable
 {
     private string $value;
-
     private DateTimeImmutable $dateTime;
 
     private const SYSTEM_FORMAT = 'Y-m-d';

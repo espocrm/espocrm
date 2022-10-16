@@ -31,19 +31,16 @@ namespace Espo\Core\Select\Text\Filter;
 
 use Espo\ORM\Query\Part\WhereItem;
 
+/**
+ * @immutable
+ */
 class Data
 {
     private string $filter;
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private array $attributeList;
-
     private bool $skipWildcards = false;
-
     private ?WhereItem $fullTextSearchWhereItem = null;
-
     private bool $forceFullTextSearch = false;
 
     /**

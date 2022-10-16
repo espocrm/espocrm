@@ -35,15 +35,13 @@ use Iterator;
 /**
  * A list of order items.
  *
+ * @immutable
  * @implements Iterator<Order>
  */
 class OrderList implements Iterator
 {
     private int $position = 0;
-
-    /**
-     * @var Order[]
-     */
+    /** @var Order[] */
     private array $list;
 
     /**

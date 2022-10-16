@@ -33,13 +33,13 @@ use Espo\ORM\Query\Part\WhereItem;
 
 /**
  * OR-group. Immutable.
+ *
+ * @immutable
  */
 class OrGroup implements WhereItem
 {
 
-    /**
-     * @var array<mixed,mixed>
-     */
+    /** @var array<mixed,mixed> */
     private $rawValue = [];
 
     public function __construct()

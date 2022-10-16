@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Select\Text;
 
+/**
+ * @immutable
+ */
 class FilterParams
 {
     private bool $noFullTextSearch = false;

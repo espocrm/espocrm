@@ -36,6 +36,8 @@ use Espo\ORM\Query\Part\{
 
 /**
  * AND-group. Immutable.
+ *
+ * @immutable
  */
 class AndGroup implements WhereItem
 {

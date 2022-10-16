@@ -33,6 +33,8 @@ use RuntimeException;
 
 /**
  * A link-multiple item. Immutable.
+ *
+ * @immutable
  */
 class LinkMultipleItem
 {
