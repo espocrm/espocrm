@@ -34,7 +34,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Api\Request;
 use Espo\Core\Utils\Metadata;
-use Espo\Services\Settings as Service;
+use Espo\Tools\App\SettingsService as Service;
 use Espo\Entities\User;
 
 use stdClass;

@@ -35,14 +35,13 @@ use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Services\Layout as Service;
+use Espo\Tools\Layout\Service as Service;
 use Espo\Entities\User;
 
 class Layout
 {
-    private $user;
-
-    private $service;
+    private User $user;
+    private Service $service;
 
     public function __construct(User $user, Service $service)
     {

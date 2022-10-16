@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\App;
 
 use Espo\Core\Authentication\Logins\Espo;
 use Espo\ORM\Entity;
@@ -52,7 +52,7 @@ use Espo\Repositories\Portal as PortalRepository;
 
 use stdClass;
 
-class Settings
+class SettingsService
 {
     private ApplicationState $applicationState;
     private Config $config;

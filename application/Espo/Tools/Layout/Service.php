@@ -27,66 +27,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\Layout;
 
 use Espo\Entities\LayoutRecord;
 
-use Espo\Core\{
-    Exceptions\NotFound,
-    Exceptions\Forbidden,
-    Exceptions\Error,
-    Acl,
-    Acl\Exceptions\NotImplemented,
-    Utils\Layout as LayoutUtil,
-    ORM\EntityManager,
-    Utils\Metadata,
-    DataManager,
-    Utils\Json,
-};
+use Espo\Core\Acl;
+use Espo\Core\Acl\Exceptions\NotImplemented;
+use Espo\Core\DataManager;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Layout as LayoutUtil;
+use Espo\Core\Utils\Metadata;
 
-use Espo\{
-    Entities\User,
-    Tools\LayoutManager\LayoutManager,
-};
+use Espo\Entities\LayoutSet;
+use Espo\Entities\Portal as PortalEntity;
+use Espo\Entities\Team as TeamEntity;
+use Espo\Entities\User;
+use Espo\Tools\LayoutManager\LayoutManager;
 
 use stdClass;
 
-class Layout
+class Service
 {
-    /**
-     * @var Acl
-     */
-    protected $acl;
-
-    /**
-     * @var LayoutUtil
-     */
-    protected $layout;
-
-    /**
-     * @var LayoutManager
-     */
-    protected $layoutManager;
-
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var Metadata
-     */
-    protected $metadata;
-
-    /**
-     * @var DataManager
-     */
-    protected $dataManager;
-
-    /**
-     * @var User
-     */
-    protected $user;
+    private Acl $acl;
+    private LayoutUtil $layout;
+    private LayoutManager $layoutManager;
+    private EntityManager $entityManager;
+    private Metadata $metadata;
+    private DataManager $dataManager;
+    private User $user;
 
     public function __construct(
         Acl $acl,
@@ -169,7 +141,7 @@ class Layout
 
             if ($portalId) {
                 $portal = $em
-                    ->getRDBRepository('Portal')
+                    ->getRDBRepositoryByClass(PortalEntity::class)
                     ->select(['layoutSetId'])
                     ->where(['id' => $portalId])
                     ->findOne();
@@ -183,7 +155,7 @@ class Layout
 
             if ($teamId) {
                 $team = $em
-                    ->getRDBRepository('Team')
+                    ->getRDBRepositoryByClass(TeamEntity::class)
                     ->select(['layoutSetId'])
                     ->where(['id' => $teamId])
                     ->findOne();
@@ -270,9 +242,9 @@ class Layout
         bool $skipCheck = false
     ): ?LayoutRecord {
 
-        $em = $this->entityManager;
+        $entityManager = $this->entityManager;
 
-        $layoutSet = $em->getEntity('LayoutSet', $setId);
+        $layoutSet = $entityManager->getEntityById(LayoutSet::ENTITY_TYPE, $setId);
 
         if (!$layoutSet) {
             throw new NotFound("LayoutSet {$setId} not found.");
@@ -290,15 +262,13 @@ class Layout
             throw new NotFound("Layout {$fullName} is no allowed in set.");
         }
 
-        $layout = $em
-            ->getRDBRepository('LayoutRecord')
+        return $entityManager
+            ->getRDBRepositoryByClass(LayoutRecord::class)
             ->where([
                 'layoutSetId' => $setId,
                 'name' => $fullName,
             ])
             ->findOne();
-
-        return $layout;
     }
 
     /**
@@ -313,7 +283,7 @@ class Layout
             $layout = $this->getRecordFromSet($scope, $name, $setId);
 
             if (!$layout) {
-                $layout = $this->entityManager->getNewEntity('LayoutRecord');
+                $layout = $this->entityManager->getNewEntity(LayoutRecord::ENTITY_TYPE);
 
                 $layout->set([
                     'layoutSetId' => $setId,

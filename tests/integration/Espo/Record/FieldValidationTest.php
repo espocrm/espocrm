@@ -36,7 +36,7 @@ use Espo\Core\{
     Record\UpdateParams,
 };
 
-use Espo\Services\Settings as SettingsService;
+use Espo\Tools\App\SettingsService as SettingsService;
 
 class FieldValidationTest extends \tests\integration\Core\BaseTestCase
 {
@@ -400,8 +400,7 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
 
     public function testSettings()
     {
-        /* @var $service SettingsService */
-        $service = $this->getContainer()->get('serviceFactory')->create('Settings');
+        $service = $this->getContainer()->get('injectableFactory')->create(SettingsService::class);
 
         $this->expectException(BadRequest::class);
 

@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\App;
 
 use Espo\Core\Acl;
 use Espo\Core\Utils\Metadata as MetadataUtil;
@@ -36,13 +36,11 @@ use Espo\Entities\User;
 
 use stdClass;
 
-class Metadata
+class MetadataService
 {
-    private $acl;
-
-    private $metadata;
-
-    private $user;
+    private Acl $acl;
+    private MetadataUtil $metadata;
+    private User $user;
 
     public function __construct(Acl $acl, MetadataUtil $metadata, User $user)
     {

@@ -33,7 +33,7 @@ use Espo\Entities\DashboardTemplate;
 use Espo\Entities\EmailAccount as EmailAccountEntity;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
 use Espo\Entities\Settings;
-use Espo\Services\Settings as SettingsService;
+use Espo\Tools\App\SettingsService as SettingsService;
 
 use Espo\Core\Acl;
 use Espo\Core\Authentication\Logins\Espo;
