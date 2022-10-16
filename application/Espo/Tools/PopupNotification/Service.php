@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\PopupNotification;
 
+use Espo\Core\InjectableFactory;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
@@ -44,20 +45,26 @@ class Service
     private ServiceFactory $serviceFactory;
     private User $user;
     private Log $log;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(
         Metadata $metadata,
         ServiceFactory $serviceFactory,
         User $user,
-        Log $log
+        Log $log,
+        InjectableFactory $injectableFactory
     ) {
         $this->metadata = $metadata;
         $this->serviceFactory = $serviceFactory;
         $this->user = $user;
         $this->log = $log;
+        $this->injectableFactory = $injectableFactory;
     }
 
-    public function getGroupedList(): stdClass
+    /**
+     * @return array<string, Item[]> Items grouped by type.
+     */
+    public function getGrouped(): array
     {
         $data = $this->metadata->get(['app', 'popupNotifications']) ?? [];
 
@@ -83,16 +90,40 @@ class Service
             return true;
         });
 
-        $result = (object) [];
+        $result = [];
 
         foreach ($data as $type => $item) {
-            $serviceName = $item['serviceName'];
-            $methodName = $item['methodName'];
+            /** @var ?class-string<Provider> $className */
+            $className = $item['providerClassName'] ?? null;
 
             try {
+                if ($className) {
+                    $provider = $this->injectableFactory->create($className);
+
+                    $result[$type] = $provider->get($this->user);
+
+                    continue;
+                }
+
+                // For bc.
+
+                $serviceName = $item['serviceName'];
+                $methodName = $item['methodName'];
+
                 $service = $this->serviceFactory->create($serviceName);
 
-                $result->$type = $service->$methodName($this->user->id);
+                $itemList = array_map(
+                    function ($raw) {
+                        if ($raw instanceof stdClass) {
+                            return new Item($raw->id ?? null, $raw->data);
+                        }
+
+                        return new Item($raw['id'] ?? null, $raw['data']);
+                    },
+                    $service->$methodName($this->user->getId())
+                );
+
+                $result[$type] = $itemList;
             }
             catch (Throwable $e) {
                 $this->log->error("Popup notifications: " . $e->getMessage());

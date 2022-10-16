@@ -57,8 +57,6 @@ use Espo\Core\ServiceFactory;
 use Espo\Tools\WorkingTime\Extractor;
 use PDO;
 use Exception;
-use stdClass;
-use DateTime;
 
 class Service
 {

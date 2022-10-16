@@ -1,7 +1,7 @@
 {
     "event": {
-        "url": "Activities/action/popupNotifications",
         "grouped": true,
+        "providerClassName": "Espo\\Modules\\Crm\\Tools\\Activities\\PopupNotificationsProvider",
         "serviceName": "Activities",
         "methodName": "getPopupNotifications",
         "interval": 15,

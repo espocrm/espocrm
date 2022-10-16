@@ -27,12 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Services;
+namespace Espo\Modules\Crm\Tools\Activities;
 
+use Espo\Core\Acl;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Core\ServiceFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\Email;
+use Espo\Entities\Preferences;
+use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Call;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
+use Espo\Modules\Crm\Entities\Meeting;
+use Espo\Modules\Crm\Entities\Reminder;
+use Espo\Modules\Crm\Entities\Task;
+use Espo\ORM\EntityManager;
 use Espo\ORM\Query\UnionBuilder;
 use Espo\ORM\Query\SelectBuilder;
 
@@ -48,74 +64,77 @@ use Espo\Core\Select\Where\ConverterFactory as WhereConverterFactory;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\FieldProcessing\ListLoadProcessor;
 use Espo\Core\FieldProcessing\Loader\Params as FieldLoaderParams;
-use Espo\Core\Di;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
-use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Entities\User as UserEntity;
 
 use PDO;
-use Exception;
 use DateTime;
-use DateInterval;
 use stdClass;
 
-class Activities implements
-
-    Di\ConfigAware,
-    Di\MetadataAware,
-    Di\AclAware,
-    Di\ServiceFactoryAware,
-    Di\EntityManagerAware,
-    Di\UserAware
+class Service
 {
-    use Di\ConfigSetter;
-    use Di\MetadataSetter;
-    use Di\AclSetter;
-    use Di\ServiceFactorySetter;
-    use Di\EntityManagerSetter;
-    use Di\UserSetter;
-
-    const UPCOMING_ACTIVITIES_FUTURE_DAYS = 1;
-    const UPCOMING_ACTIVITIES_TASK_FUTURE_DAYS = 7;
-    const REMINDER_PAST_HOURS = 24;
+    private const UPCOMING_ACTIVITIES_FUTURE_DAYS = 1;
+    private const UPCOMING_ACTIVITIES_TASK_FUTURE_DAYS = 7;
 
     private WhereConverterFactory $whereConverterFactory;
     private ListLoadProcessor $listLoadProcessor;
     private RecordServiceContainer $recordServiceContainer;
     private SelectBuilderFactory $selectBuilderFactory;
+    private Config $config;
+    private Metadata $metadata;
+    private Acl $acl;
+    private ServiceFactory $serviceFactory;
+    private EntityManager $entityManager;
+    private User $user;
 
     public function __construct(
         WhereConverterFactory $whereConverterFactory,
         ListLoadProcessor $listLoadProcessor,
         RecordServiceContainer $recordServiceContainer,
-        SelectBuilderFactory $selectBuilderFactory
+        SelectBuilderFactory $selectBuilderFactory,
+        Config $config,
+        Metadata $metadata,
+        Acl $acl,
+        ServiceFactory $serviceFactory,
+        EntityManager $entityManager,
+        User $user
     ) {
         $this->whereConverterFactory = $whereConverterFactory;
         $this->listLoadProcessor = $listLoadProcessor;
         $this->recordServiceContainer = $recordServiceContainer;
         $this->selectBuilderFactory = $selectBuilderFactory;
+        $this->config = $config;
+        $this->metadata = $metadata;
+        $this->acl = $acl;
+        $this->serviceFactory = $serviceFactory;
+        $this->entityManager = $entityManager;
+        $this->user = $user;
     }
 
     protected function isPerson(string $scope): bool
     {
-        return in_array($scope, ['Contact', 'Lead', 'User']) ||
+        return
+            in_array(
+                $scope,
+                [Contact::ENTITY_TYPE, Lead::ENTITY_TYPE, User::ENTITY_TYPE]
+            ) ||
             $this->metadata->get(['scopes', $scope, 'type']) === 'Person';
     }
 
     protected function isCompany(string $scope): bool
     {
-        return in_array($scope, ['Account']) || $this->metadata->get(['scopes', $scope, 'type']) === 'Company';
+        return
+            in_array($scope, [Account::ENTITY_TYPE]) ||
+            $this->metadata->get(['scopes', $scope, 'type']) === 'Company';
     }
 
     /**
      * @param string[] $statusList
      */
-    protected function getActivitiesUserMeetingQuery(UserEntity $entity, array $statusList = []): Select
+    protected function getActivitiesUserMeetingQuery(User $entity, array $statusList = []): Select
     {
         $builder = $this->selectBuilderFactory
             ->create()
-            ->from('Meeting')
+            ->from(Meeting::ENTITY_TYPE)
             ->withStrictAccessControl()
             ->buildQueryBuilder()
             ->select([
@@ -172,13 +191,13 @@ class Activities implements
     /**
      * @param string[] $statusList
      */
-    protected function getActivitiesUserCallQuery(UserEntity $entity, array $statusList = []): Select
+    protected function getActivitiesUserCallQuery(User $entity, array $statusList = []): Select
     {
-        $seed = $this->entityManager->getNewEntity('Call');
+        $seed = $this->entityManager->getNewEntity(Call::ENTITY_TYPE);
 
         $builder = $this->selectBuilderFactory
             ->create()
-            ->from('Call')
+            ->from(Call::ENTITY_TYPE)
             ->withStrictAccessControl()
             ->buildQueryBuilder()
             ->select([
@@ -242,10 +261,10 @@ class Activities implements
      * @param string[] $statusList
      * @return Select|Select[]
      */
-    protected function getActivitiesUserEmailQuery(UserEntity $entity, array $statusList = [])
+    protected function getActivitiesUserEmailQuery(User $entity, array $statusList = [])
     {
         if ($entity->isPortal() && $entity->get('contactId')) {
-            $contact = $this->entityManager->getEntity('Contact', $entity->get('contactId'));
+            $contact = $this->entityManager->getEntity(Contact::ENTITY_TYPE, $entity->get('contactId'));
 
             if ($contact) {
                 return $this->getActivitiesEmailQuery($contact, $statusList);
@@ -254,7 +273,7 @@ class Activities implements
 
         $builder = $this->selectBuilderFactory
             ->create()
-            ->from('Email')
+            ->from(Email::ENTITY_TYPE)
             ->withStrictAccessControl()
             ->buildQueryBuilder()
             ->select([
@@ -350,12 +369,12 @@ class Activities implements
 
         $builder = clone $baseBuilder;
 
-        if ($entityType == 'Account') {
+        if ($entityType === Account::ENTITY_TYPE) {
             $builder->where([
                 'OR' => [
                     [
                         'parentId' => $id,
-                        'parentType' => 'Account',
+                        'parentType' => Account::ENTITY_TYPE,
                     ],
                     [
                         'accountId' => $id,
@@ -363,12 +382,12 @@ class Activities implements
                 ],
             ]);
         }
-        else if ($entityType == 'Lead' && $entity->get('createdAccountId')) {
+        else if ($entityType === Lead::ENTITY_TYPE && $entity->get('createdAccountId')) {
             $builder->where([
                 'OR' => [
                     [
                         'parentId' => $id,
-                        'parentType' => 'Lead',
+                        'parentType' => Lead::ENTITY_TYPE,
                     ],
                     [
                         'accountId' => $entity->get('createdAccountId'),
@@ -392,17 +411,17 @@ class Activities implements
         $link = null;
 
         switch ($entityType) {
-            case 'Contact':
+            case Contact::ENTITY_TYPE:
                 $link = 'contacts';
 
                 break;
 
-            case 'Lead':
+            case Lead::ENTITY_TYPE:
                 $link = 'leads';
 
                 break;
 
-            case 'User':
+            case User::ENTITY_TYPE:
                 $link = 'users';
 
                 break;
@@ -437,7 +456,7 @@ class Activities implements
      */
     protected function getActivitiesMeetingQuery(Entity $entity, array $statusList = [])
     {
-        return $this->getActivitiesMeetingOrCallQuery($entity, $statusList, 'Meeting');
+        return $this->getActivitiesMeetingOrCallQuery($entity, $statusList, Meeting::ENTITY_TYPE);
     }
 
     /**
@@ -446,7 +465,7 @@ class Activities implements
      */
     protected function getActivitiesCallQuery(Entity $entity, array $statusList = [])
     {
-        return $this->getActivitiesMeetingOrCallQuery($entity, $statusList, 'Call');
+        return $this->getActivitiesMeetingOrCallQuery($entity, $statusList, Call::ENTITY_TYPE);
     }
 
     /**
@@ -494,12 +513,12 @@ class Activities implements
 
         $builder = clone $baseBuilder;
 
-        if ($entityType == 'Account') {
+        if ($entityType === Account::ENTITY_TYPE) {
             $builder->where([
                 'OR' => [
                     [
                         'parentId' => $id,
-                        'parentType' => 'Account',
+                        'parentType' => Account::ENTITY_TYPE,
                     ],
                     [
                         'accountId' => $id,
@@ -512,7 +531,7 @@ class Activities implements
                 'OR' => [
                     [
                         'parentId' => $id,
-                        'parentType' => 'Lead',
+                        'parentType' => Lead::ENTITY_TYPE,
                     ],
                     [
                         'accountId' => $entity->get('createdAccountId'),
@@ -646,7 +665,7 @@ class Activities implements
 
         $offset = $params['offset'] ?? 0;
 
-        if (!$onlyScope && $scope === 'User') {
+        if (!$onlyScope && $scope === User::ENTITY_TYPE) {
             // optimizing sub-queries
 
             $newQueryList = [];
@@ -733,7 +752,7 @@ class Activities implements
             $list[] = $row;
         }
 
-        if ($scope === 'User') {
+        if ($scope === User::ENTITY_TYPE) {
             if ($maxSize && count($list) > $maxSize) {
                 $totalCount = -1;
 
@@ -752,7 +771,7 @@ class Activities implements
      */
     protected function accessCheck(Entity $entity): void
     {
-        if ($entity instanceof UserEntity) {
+        if ($entity instanceof User) {
             if (!$this->acl->checkUserPermission($entity, 'user')) {
                 throw new Forbidden();
             }
@@ -796,13 +815,15 @@ class Activities implements
         }
 
         if (!$isHistory) {
-            $statusList = $this->metadata->get(['scopes', $entityType, 'activityStatusList'], ['Planned']);
+            $statusList = $this->metadata->get(['scopes', $entityType, 'activityStatusList']) ??
+                [Meeting::STATUS_PLANNED];
         }
         else {
-            $statusList = $this->metadata->get(['scopes', $entityType, 'historyStatusList'], ['Held', 'Not Held']);
+            $statusList = $this->metadata->get(['scopes', $entityType, 'historyStatusList']) ??
+                [Meeting::STATUS_HELD, Meeting::STATUS_NOT_HELD];
         }
 
-        if ($entityType === 'Email' && $searchParams->getOrderBy() === 'dateStart') {
+        if ($entityType === Email::ENTITY_TYPE && $searchParams->getOrderBy() === 'dateStart') {
             $searchParams = $searchParams->withOrderBy('dateSent');
         }
 
@@ -947,7 +968,8 @@ class Activities implements
         $parts = [];
 
         /** @var string[] $entityTypeList */
-        $entityTypeList = $this->config->get('activitiesEntityList', ['Meeting', 'Call']);
+        $entityTypeList = $this->config->get('activitiesEntityList') ??
+            [Meeting::ENTITY_TYPE, Call::ENTITY_TYPE];
 
         foreach ($entityTypeList as $entityType) {
             if (!$fetchAll && $targetScope !== $entityType) {
@@ -962,7 +984,8 @@ class Activities implements
                 continue;
             }
 
-            $statusList = $this->metadata->get(['scopes', $entityType, 'activityStatusList'], ['Planned']);
+            $statusList = $this->metadata->get(['scopes', $entityType, 'activityStatusList']) ??
+                [Meeting::STATUS_PLANNED];
 
             $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList);
         }
@@ -1006,7 +1029,12 @@ class Activities implements
         $parts = [];
 
         /** @var string[] $entityTypeList */
-        $entityTypeList = $this->config->get('historyEntityList', ['Meeting', 'Call', 'Email']);
+        $entityTypeList = $this->config->get('historyEntityList') ??
+            [
+                Meeting::ENTITY_TYPE,
+                Call::ENTITY_TYPE,
+                Email::ENTITY_TYPE
+            ];
 
         foreach ($entityTypeList as $entityType) {
             if (!$fetchAll && $targetScope !== $entityType) {
@@ -1021,9 +1049,8 @@ class Activities implements
                 continue;
             }
 
-            $statusList = $this->metadata->get(
-                ['scopes', $entityType, 'historyStatusList'], ['Held', 'Not Held']
-            );
+            $statusList = $this->metadata->get(['scopes', $entityType, 'historyStatusList']) ??
+                [Meeting::STATUS_HELD, Meeting::STATUS_NOT_HELD];
 
             $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList);
         }
@@ -1031,7 +1058,7 @@ class Activities implements
         $result = $this->getResultFromQueryParts($parts, $scope, $params);
 
         foreach ($result['list'] as &$item) {
-            if ($item['_scope'] == 'Email') {
+            if ($item['_scope'] === Email::ENTITY_TYPE) {
                 $item['dateSent'] = $item['dateStart'];
             }
         }
@@ -1099,7 +1126,7 @@ class Activities implements
                 ['""', 'hasAttachment'],
             ]);
 
-        if ($entity->getEntityType() === 'User') {
+        if ($entity->getEntityType() === User::ENTITY_TYPE) {
             $builder->where([
                 'assignedUserId' => $entity->getId(),
             ]);
@@ -1123,7 +1150,7 @@ class Activities implements
         $builder = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from('Reminder')
+            ->from(Reminder::ENTITY_TYPE)
             ->where([
                 'id' => $id,
             ]);
@@ -1137,82 +1164,6 @@ class Activities implements
         $deleteQuery = $builder->build();
 
         $this->entityManager->getQueryExecutor()->execute($deleteQuery);
-    }
-
-    /**
-     * @return array<int,array<string,mixed>>
-     * @throws Exception
-     */
-    public function getPopupNotifications(string $userId): array
-    {
-        $dt = new DateTime();
-
-        $pastHours = $this->config->get('reminderPastHours', self::REMINDER_PAST_HOURS);
-
-        $now = $dt->format('Y-m-d H:i:s');
-        $nowShifted = $dt->sub(new DateInterval('PT'.strval($pastHours).'H'))->format('Y-m-d H:i:s');
-
-        /** @var iterable<\Espo\Modules\Crm\Entities\Reminder> $reminderCollection */
-        $reminderCollection = $this->entityManager
-            ->getRDBRepository('Reminder')
-            ->select(['id', 'entityType', 'entityId'])
-            ->where([
-                'type' => 'Popup',
-                'userId' => $userId,
-                'remindAt<=' => $now,
-                'startAt>' => $nowShifted,
-            ])
-            ->find();
-
-        $resultList = [];
-
-        foreach ($reminderCollection as $reminder) {
-            $reminderId = $reminder->get('id');
-            $entityType = $reminder->get('entityType');
-            $entityId = $reminder->get('entityId');
-
-            $entity = $this->entityManager->getEntity($entityType, $entityId);
-
-            $data = null;
-
-            if (!$entity) {
-                continue;
-            }
-
-            if (
-                $entity instanceof CoreEntity &&
-                $entity->hasLinkMultipleField('users')
-            ) {
-                $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
-                $status = $entity->getLinkMultipleColumn('users', 'status', $userId);
-
-                if ($status === 'Declined') {
-                    $this->removeReminder($reminderId);
-
-                    continue;
-                }
-            }
-
-            $dateAttribute = 'dateStart';
-
-            if ($entityType === 'Task') {
-                $dateAttribute = 'dateEnd';
-            }
-
-            $data = [
-                'id' => $entity->getId(),
-                'entityType' => $entityType,
-                $dateAttribute => $entity->get($dateAttribute),
-                'name' => $entity->get('name'),
-            ];
-
-            $resultList[] = [
-                'id' => $reminderId,
-                'data' => $data,
-            ];
-        }
-
-        return $resultList;
     }
 
     /**
@@ -1235,7 +1186,7 @@ class Activities implements
         ?int $futureDays = null
     ): array {
 
-        $user = $this->entityManager->getEntity('User', $userId);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             throw new NotFound();
@@ -1259,7 +1210,7 @@ class Activities implements
         foreach ($entityTypeList as $entityType) {
             if (
                 !$this->metadata->get(['scopes', $entityType, 'activity']) &&
-                $entityType !== 'Task'
+                $entityType !== Task::ENTITY_TYPE
             ) {
                 continue;
             }
@@ -1351,13 +1302,13 @@ class Activities implements
     protected function getUpcomingActivitiesEntityTypeQuery(
         string $entityType,
         array $params,
-        UserEntity $user,
+        User $user,
         int $futureDays
     ): Select {
 
         $beforeString = (new DateTime())
             ->modify('+' . $futureDays . ' days')
-            ->format('Y-m-d H:i:s');
+            ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
         $builder = $this->selectBuilderFactory
             ->create()
@@ -1368,7 +1319,7 @@ class Activities implements
 
         $primaryFilter = 'planned';
 
-        if ($entityType === 'Task') {
+        if ($entityType === Task::ENTITY_TYPE) {
             $primaryFilter = 'actual';
         }
 
@@ -1384,7 +1335,7 @@ class Activities implements
 
         $timeZone = $this->getUserTimeZone($user);
 
-        if ($entityType === 'Task') {
+        if ($entityType === Task::ENTITY_TYPE) {
             $upcomingTaskFutureDays = $this->config->get(
                 'activitiesUpcomingTaskFutureDays',
                 self::UPCOMING_ACTIVITIES_TASK_FUTURE_DAYS
@@ -1392,7 +1343,7 @@ class Activities implements
 
             $taskBeforeString = (new DateTime())
                 ->modify('+' . $upcomingTaskFutureDays . ' days')
-                ->format('Y-m-d H:i:s');
+                ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
             $queryBuilder->where([
                 'OR' => [
@@ -1489,9 +1440,9 @@ class Activities implements
         return $queryBuilder->build();
     }
 
-    protected function getUserTimeZone(UserEntity $user): string
+    protected function getUserTimeZone(User $user): string
     {
-        $preferences = $this->entityManager->getEntity('Preferences', $user->getId());
+        $preferences = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $user->getId());
 
         if ($preferences) {
             $timeZone = $preferences->get('timeZone');

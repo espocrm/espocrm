@@ -40,7 +40,7 @@ use Espo\Core\Field\DateTime;
 use Espo\Core\Record\SearchParamsFetcher;
 
 use Espo\Modules\Crm\Tools\Calendar\FetchParams;
-use Espo\Modules\Crm\Services\Activities as Service;
+use Espo\Modules\Crm\Tools\Activities\Service as Service;
 use Espo\Modules\Crm\Tools\Calendar\Item as CalendarItem;
 use Espo\Modules\Crm\Tools\Calendar\Service as CalendarService;
 use Espo\Entities\User;
@@ -108,8 +108,8 @@ class Activities
 
         $fetchParams = FetchParams
             ::create(
-                DateTime::fromString($from . ':00'),
-                DateTime::fromString($to . ':00')
+                DateTime::fromString($from),
+                DateTime::fromString($to)
             )
             ->withScopeList($scopeList);
 
@@ -242,17 +242,6 @@ class Activities
             $entityTypeList,
             $futureDays
         );
-    }
-
-    /**
-     * @return array<int,array<string,mixed>>
-     * @throws \Exception
-     */
-    public function getActionPopupNotifications(): array
-    {
-        $userId = $this->user->getId();
-
-        return $this->service->getPopupNotifications($userId);
     }
 
     /**
@@ -404,8 +393,8 @@ class Activities
 
         $map = $this->calendarService->fetchBusyRangesForUsers(
             $userIdList,
-            DateTime::fromString($from . ':00'),
-            DateTime::fromString($to . ':00'),
+            DateTime::fromString($from),
+            DateTime::fromString($to),
             $request->getQueryParam('entityType'),
             $request->getQueryParam('entityId')
         );

@@ -35,7 +35,7 @@ use stdClass;
 
 class PopupNotification
 {
-    private $service;
+    private Service $service;
 
     public function __construct(Service $service)
     {
@@ -44,6 +44,23 @@ class PopupNotification
 
     public function getActionGrouped(): stdClass
     {
-        return $this->service->getGroupedList();
+        $grouped = $this->service->getGrouped();
+
+        $result = (object) [];
+
+        foreach ($grouped as $type => $itemList) {
+            $rawList = array_map(
+                function ($item) {
+                    return (object) [
+                        'id' => $item->getId(),
+                        'data' => $item->getData(),
+                    ];
+                },
+                $itemList
+            );
+            $result->$type = $rawList;
+        }
+
+        return $result;
     }
 }

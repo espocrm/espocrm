@@ -27,27 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Entities;
+namespace Espo\Tools\PopupNotification;
 
-class Reminder extends \Espo\Core\ORM\Entity
+use stdClass;
+
+class Item
 {
-    public const ENTITY_TYPE = 'Reminder';
+    private ?string $id;
+    private stdClass $data;
 
-    public const TYPE_POPUP = 'Popup';
-    public const TYPE_EMAIL = 'Email';
-
-    public function getUserId(): ?string
-    {
-        return $this->get('userId');
+    /**
+     * @param ?string $id An ID.
+     * @param stdClass $data Data to pass to a front-end handler.
+     */
+    public function __construct(
+        ?string $id,
+        stdClass $data
+    ) {
+        $this->id = $id;
+        $this->data = $data;
     }
 
-    public function getTargetEntityId(): ?string
+    public function getId(): ?string
     {
-        return $this->get('entityId');
+        return $this->id;
     }
 
-    public function getTargetEntityType(): ?string
+    public function getData(): stdClass
     {
-        return $this->get('entityType');
+        return $this->data;
     }
 }
