@@ -704,7 +704,7 @@ class Service
 
         $totalCount = -2;
 
-        if ($scope !== 'User') {
+        if ($scope !== User::ENTITY_TYPE) {
             $countQuery = $this->entityManager->getQueryBuilder()
                 ->select()
                 ->fromQuery($builder->build(), 'c')
@@ -720,7 +720,7 @@ class Service
 
         $builder->order('dateStart', 'DESC');
 
-        if ($scope === 'User') {
+        if ($scope === User::ENTITY_TYPE) {
             $maxSizeQ++;
         } else {
             $builder->order('createdAt', 'DESC');
