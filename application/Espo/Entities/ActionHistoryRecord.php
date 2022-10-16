@@ -29,8 +29,12 @@
 
 namespace Espo\Entities;
 
-class ActionHistoryRecord extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class ActionHistoryRecord extends Entity
 {
-
+    public const ACTION_READ = 'read';
+    public const ACTION_UPDATE = 'update';
+    public const ACTION_CREATE = 'create';
+    public const ACTION_DELETE = 'delete';
 }
-

@@ -27,28 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\ActionHistory;
 
-use Espo\Core\{
-    Utils\Metadata,
-    Utils\Util,
-    ORM\EntityManager,
-    FieldProcessing\ListLoadProcessor,
-};
+use Espo\Core\Record\Collection as RecordCollection;
+use Espo\Entities\ActionHistoryRecord;
+use Espo\Core\FieldProcessing\ListLoadProcessor;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Util;
 
 use Espo\Entities\User;
 
-use ArrayAccess;
-
-class LastViewed
+class Service
 {
-    private $metadata;
-
-    private $entityManager;
-
-    private $user;
-
-    private $listLoadProcessor;
+    private Metadata $metadata;
+    private EntityManager $entityManager;
+    private User $user;
+    private ListLoadProcessor $listLoadProcessor;
 
     public function __construct(
         Metadata $metadata,
@@ -63,19 +58,10 @@ class LastViewed
     }
 
     /**
-     * @param array{
-     *   offset: ?int,
-     *   maxSize: ?int,
-     * } $params
-     * @return array{
-     *   total: int,
-     *   collection: \Espo\ORM\Collection<\Espo\Entities\ActionHistoryRecord>,
-     * }
+     * @return RecordCollection<ActionHistoryRecord>
      */
-    public function getList(array $params): array
+    public function getLastViewed(?int $maxSize, ?int $offset): RecordCollection
     {
-        $repository = $this->entityManager->getRDBRepository('ActionHistoryRecord');
-
         $scopes = $this->metadata->get('scopes');
 
         $targetTypeList = array_filter(
@@ -85,14 +71,14 @@ class LastViewed
             }
         );
 
-        $offset = $params['offset'] ?? 0;
-        $maxSize = $params['maxSize'] ?? 0;
+        $maxSize = $maxSize ?? 0;
+        $offset = $offset ?? 0;
 
-        /** @var \Espo\ORM\Collection<\Espo\Entities\ActionHistoryRecord> $collection */
-        $collection = $repository
+        $collection = $this->entityManager
+            ->getRDBRepositoryByClass(ActionHistoryRecord::class)
             ->where([
                 'userId' => $this->user->getId(),
-                'action' => 'read',
+                'action' => ActionHistoryRecord::ACTION_READ,
                 'targetType' => $targetTypeList,
             ])
             ->order('MAX:createdAt', 'DESC')
@@ -103,7 +89,7 @@ class LastViewed
                 ['MAX:createdAt', 'createdAt'],
             ])
             ->group(['targetId', 'targetType'])
-            ->limit($offset, $params['maxSize'] + 1)
+            ->limit($offset, $maxSize + 1)
             ->find();
 
         foreach ($collection as $entity) {
@@ -112,23 +98,6 @@ class LastViewed
             $entity->set('id', Util::generateId());
         }
 
-        if (
-            $maxSize &&
-            is_countable($collection) &&
-            count($collection) > $maxSize &&
-            $collection instanceof ArrayAccess
-        ) {
-            $total = -1;
-
-            unset($collection[count($collection) - 1]);
-        }
-        else {
-            $total = -2;
-        }
-
-        return [
-            'total' => $total,
-            'collection' => $collection,
-        ];
+        return RecordCollection::createNoCount($collection,  $maxSize);
     }
 }

@@ -34,15 +34,14 @@ use Espo\Core\{
     Record\SearchParamsFetcher,
 };
 
-use Espo\Services\LastViewed as Service;
+use Espo\Tools\ActionHistory\Service as Service;
 
 use stdClass;
 
 class LastViewed
 {
-    private $searchParamsFetcher;
-
-    private $service;
+    private SearchParamsFetcher $searchParamsFetcher;
+    private Service $service;
 
     public function __construct(SearchParamsFetcher $searchParamsFetcher, Service $service)
     {
@@ -57,16 +56,11 @@ class LastViewed
         $offset = $searchParams->getOffset();
         $maxSize = $searchParams->getMaxSize();
 
-        $params = [
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-        ];
-
-        $result = $this->service->getList($params);
+        $result = $this->service->getLastViewed($maxSize, $offset);
 
         return (object) [
-            'total' => $result['total'],
-            'list' => $result['collection']->getValueMapList(),
+            'total' => $result->getTotal(),
+            'list' => $result->getValueMapList(),
         ];
     }
 }
