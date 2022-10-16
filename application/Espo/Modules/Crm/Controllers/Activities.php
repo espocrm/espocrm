@@ -315,11 +315,14 @@ class Activities
             'orderBy' => $orderBy,
         ];
 
-        if ($name === 'history') {
-            return (object) $this->service->getHistory($entityType, $id, $methodParams);
-        }
+        $recordCollection = $name === 'history' ?
+            $this->service->getHistory($entityType, $id, $methodParams) :
+            $this->service->getActivities($entityType, $id, $methodParams);
 
-        return (object) $this->service->getActivities($entityType, $id, $methodParams);
+        return (object) [
+            'total' => $recordCollection->getTotal(),
+            'list' => $recordCollection->getValueMapList(),
+        ];
     }
 
     /**

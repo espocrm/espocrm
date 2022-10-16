@@ -69,6 +69,7 @@ use Espo\Core\FieldProcessing\ListLoadProcessor;
 use Espo\Core\FieldProcessing\Loader\Params as FieldLoaderParams;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
+use LogicException;
 use PDO;
 use DateTime;
 
@@ -76,6 +77,13 @@ class Service
 {
     private const UPCOMING_ACTIVITIES_FUTURE_DAYS = 1;
     private const UPCOMING_ACTIVITIES_TASK_FUTURE_DAYS = 7;
+
+    /** @var array<string, array<string, string>> */
+    private array $attributeMap = [
+        Email::ENTITY_TYPE => [
+            'dateSent' => 'dateStart',
+        ],
+    ];
 
     private WhereConverterFactory $whereConverterFactory;
     private ListLoadProcessor $listLoadProcessor;
@@ -620,18 +628,13 @@ class Service
      *   offset?: ?int,
      *   maxSize?: ?int,
      * } $params
-     * @return array{
-     *   list: array<string,mixed>[],
-     *   total: int,
-     * }
+     * @return RecordCollection<Entity>
      */
-    protected function getResultFromQueryParts(array $parts, string $scope, array $params): array
+    protected function getResultFromQueryParts(array $parts, string $scope, array $params): RecordCollection
     {
-        if (empty($parts)) {
-            return [
-                'list' => [],
-                'total' => 0,
-            ];
+        if ($parts === []) {
+            /** @var RecordCollection<Entity> */
+            return new RecordCollection(new EntityCollection(), 0);
         }
 
         $onlyScope = false;
@@ -696,7 +699,8 @@ class Service
             $queryList = $newQueryList;
         }
 
-        $builder = $this->entityManager->getQueryBuilder()
+        $builder = $this->entityManager
+            ->getQueryBuilder()
             ->union();
 
         foreach ($queryList as $query) {
@@ -706,7 +710,8 @@ class Service
         $totalCount = -2;
 
         if ($scope !== User::ENTITY_TYPE) {
-            $countQuery = $this->entityManager->getQueryBuilder()
+            $countQuery = $this->entityManager
+                ->getQueryBuilder()
                 ->select()
                 ->fromQuery($builder->build(), 'c')
                 ->select('COUNT:(c.id)', 'count')
@@ -737,34 +742,32 @@ class Service
 
         $rowList = $sth->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
-        $boolAttributeList = ['hasAttachment'];
-
-        $list = [];
+        $collection = new EntityCollection();
 
         foreach ($rowList as $row) {
-            foreach ($boolAttributeList as $attribute) {
-                if (!array_key_exists($attribute, $row)) {
-                    continue;
-                }
+            $itemEntityType = $row['_scope'] ?? null;
 
-                $row[$attribute] = $row[$attribute] == '1' ? true : false;
+            if (!is_string($itemEntityType)) {
+                throw new LogicException();
             }
 
-            $list[] = $row;
+            foreach (($this->attributeMap[$itemEntityType] ?? []) as $attributeActual => $attribute) {
+                $row[$attributeActual] = $row[$attribute];
+
+                unset($row[$attribute]);
+            }
+
+            $itemEntity = $this->entityManager->getNewEntity($itemEntityType);
+            $itemEntity->set($row);
+
+            $collection->append($itemEntity);
         }
 
         if ($scope === User::ENTITY_TYPE) {
-            if ($maxSize && count($list) > $maxSize) {
-                $totalCount = -1;
-
-                unset($list[count($list) - 1]);
-            }
+            return RecordCollection::createNoCount($collection, $maxSize);
         }
 
-        return [
-            'list' => $list,
-            'total' => $totalCount,
-        ];
+        return RecordCollection::create($collection, $totalCount);
     }
 
     /**
@@ -938,17 +941,14 @@ class Service
      *   offset?: ?int,
      *   maxSize?: ?int,
      * } $params
-     * @return array{
-     *   list: array<string,mixed>[],
-     *   total: int,
-     * }
+     * @return RecordCollection<Entity>
      * @throws NotFound
      * @throws Error
      * @throws Forbidden
      */
-    public function getActivities(string $scope, string $id, array $params = []): array
+    public function getActivities(string $scope, string $id, array $params = []): RecordCollection
     {
-        $entity = $this->entityManager->getEntity($scope, $id);
+        $entity = $this->entityManager->getEntityById($scope, $id);
 
         if (!$entity) {
             throw new NotFound();
@@ -1000,17 +1000,15 @@ class Service
      *   offset?: ?int,
      *   maxSize?: ?int,
      * } $params
-     * @return array{
-     *   list: array<string,mixed>[],
-     *   total: int,
-     * }
+     * @return RecordCollection<Entity>
      * @throws NotFound
      * @throws Error
      * @throws Forbidden
      */
-    public function getHistory(string $scope, string $id, array $params = []): array
+    public function getHistory(string $scope, string $id, array $params = []): RecordCollection
     {
-        $entity = $this->entityManager->getEntity($scope, $id);
+        $entity = $this->entityManager->getEntityById($scope, $id);
+
         if (!$entity) {
             throw new NotFound();
         }
@@ -1056,15 +1054,7 @@ class Service
             $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList);
         }
 
-        $result = $this->getResultFromQueryParts($parts, $scope, $params);
-
-        foreach ($result['list'] as &$item) {
-            if ($item['_scope'] === Email::ENTITY_TYPE) {
-                $item['dateSent'] = $item['dateStart'];
-            }
-        }
-
-        return $result;
+        return $this->getResultFromQueryParts($parts, $scope, $params);
     }
 
     /**
