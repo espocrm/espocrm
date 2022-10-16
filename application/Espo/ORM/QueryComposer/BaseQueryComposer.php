@@ -1270,6 +1270,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $entityType = $entity->getEntityType();
 
         if (strpos($attribute, ':')) {
+            /** @var int $delimiterPosition */
             $delimiterPosition = strpos($attribute, ':');
             $function = substr($attribute, 0, $delimiterPosition);
 
@@ -2103,52 +2104,58 @@ abstract class BaseQueryComposer implements QueryComposer
         foreach ($entity->getRelationList() as $relationName) {
             $type = $entity->getRelationType($relationName);
 
-            if ($type === Entity::BELONGS_TO || $type === Entity::HAS_ONE) {
-                if ($this->getRelationParam($entity, $relationName, 'noJoin')) {
-                    continue;
-                }
+            if ($type !== Entity::BELONGS_TO && $type !== Entity::HAS_ONE) {
+                continue;
+            }
 
-                if (in_array($relationName, $skipList)) {
-                    continue;
-                }
+            if ($this->getRelationParam($entity, $relationName, 'noJoin')) {
+                continue;
+            }
 
-                foreach ($skipList as $sItem) {
-                    if (is_array($sItem) && count($sItem) > 1) {
-                        if ($sItem[1] === $relationName) {
-                            continue 2;
-                        }
+            if (in_array($relationName, $skipList)) {
+                continue;
+            }
+
+            foreach ($skipList as $sItem) {
+                if (is_array($sItem) && count($sItem) > 1) {
+                    if ($sItem[1] === $relationName) {
+                        continue 2;
                     }
-                }
-
-                if (
-                    is_array($select) && !self::isSelectAll($select) && !in_array($relationName, $relationsToJoin)
-                ) {
-                    continue;
-                }
-
-                if ($type == Entity::BELONGS_TO) {
-                    $join = $this->getBelongsToJoinItemPart($entity, $relationName, null, $params);
-
-                    if (!$join) {
-                        continue;
-                    }
-
-                    $joinsArr[] = 'LEFT ' . $join;
-                }
-                else if ($type == Entity::HAS_ONE) {
-                    $join = $this->getJoinItemPart(
-                        $entity,
-                        $relationName,
-                        true,
-                        [],
-                        null,
-                        [],
-                        $params,
-                    );
-
-                    $joinsArr[] = $join;
                 }
             }
+
+            if (
+                is_array($select) &&
+                !self::isSelectAll($select) &&
+                !in_array($relationName, $relationsToJoin)
+            ) {
+                continue;
+            }
+
+            if ($type === Entity::BELONGS_TO) {
+                $join = $this->getBelongsToJoinItemPart($entity, $relationName, null, $params);
+
+                if (!$join) {
+                    continue;
+                }
+
+                $joinsArr[] = 'LEFT ' . $join;
+
+                continue;
+            }
+
+            // HAS_ONE
+            $join = $this->getJoinItemPart(
+                $entity,
+                $relationName,
+                true,
+                [],
+                null,
+                [],
+                $params,
+            );
+
+            $joinsArr[] = $join;
         }
 
         return implode(' ', $joinsArr);
@@ -3072,21 +3079,21 @@ abstract class BaseQueryComposer implements QueryComposer
                 $arr[] = $this->quote($item);
             }
 
-            $operator = "IN";
-
-            if ($operator == '<>') {
-                $operator = 'NOT IN';
-            }
+            $operator = $operator === '<>' ? 'NOT IN' : 'IN';
 
             if (count($arr)) {
                 $sql .= " " . $operator . " (" . implode(', ', $arr) . ")";
-            } else {
-                if ($operator === 'IN') {
-                    $sql .= " IS NULL";
-                } else {
-                    $sql .= " IS NOT NULL";
-                }
+
+                return $sql;
             }
+
+            if ($operator === 'IN') {
+                $sql .= " IS NULL";
+
+                return $sql;
+            }
+
+            $sql .= " IS NOT NULL";
 
             return $sql;
         }

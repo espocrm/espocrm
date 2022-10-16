@@ -96,7 +96,7 @@ class UnionBuilder implements Builder
     /**
      * Apply ORDER.
      *
-     * @param string|array<array{string,bool|string}> $orderBy A select alias.
+     * @param string|array<array{string, bool|string}|array{string}> $orderBy A select alias.
      * @param string|bool $direction OrderExpression::ASC|OrderExpression::DESC. TRUE for DESC order.
      */
     public function order($orderBy, $direction = Order::ASC): self
@@ -111,13 +111,17 @@ class UnionBuilder implements Builder
 
         if (is_array($orderBy)) {
             foreach ($orderBy as $item) {
-                if (count($item) == 2) {
+                /** @var mixed[] $item */
+
+                if (count($item) === 2) {
+                    /** @var array{string, bool|string} $item */
                     $this->order($item[0], $item[1]);
 
                     continue;
                 }
 
-                if (count($item) == 1) {
+                if (count($item) === 1) {
+                    /** @var array{string} $item */
                     $this->order($item[0]);
 
                     continue;
