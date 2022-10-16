@@ -27,19 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\App;
 
 use Espo\Core\Utils\Language as LanguageUtil;
 
-use Espo\Core\{
-    Acl,
-    Container,
-    Utils\Metadata,
-};
+use Espo\Core\Acl;
+use Espo\Core\Container;
+use Espo\Core\Utils\Metadata;
 
 use Espo\Entities\User;
 
-class Language
+class LanguageService
 {
     private Metadata $metadata;
     private Acl $acl;
@@ -58,7 +56,7 @@ class Language
         $this->container = $container;
     }
 
-    // TODO use proxy
+    // @todo Use proxy.
     protected function getDefaultLanguage(): LanguageUtil
     {
         /** @var LanguageUtil */

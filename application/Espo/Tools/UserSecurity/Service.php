@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\UserSecurity;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -40,27 +40,21 @@ use Espo\Entities\UserData;
 
 use Espo\Repositories\UserData as UserDataRepository;
 
-use Espo\Core\{
-    Utils\Config,
-    Authentication\LoginFactory,
-    Authentication\TwoFactor\UserSetupFactory as TwoFactorUserSetupFactory,
-    Authentication\Login\Data as LoginData,
-    Api\RequestNull,
-};
+use Espo\Core\Api\RequestNull;
+use Espo\Core\Authentication\Login\Data as LoginData;
+use Espo\Core\Authentication\LoginFactory;
+use Espo\Core\Authentication\TwoFactor\UserSetupFactory as TwoFactorUserSetupFactory;
+use Espo\Core\Utils\Config;
 
 use stdClass;
 
-class UserSecurity
+class Service
 {
-    private $entityManager;
-
-    private $user;
-
-    private $config;
-
-    private $authLoginFactory;
-
-    private $twoFactorUserSetupFactory;
+    private EntityManager $entityManager;
+    private User $user;
+    private Config $config;
+    private LoginFactory $authLoginFactory;
+    private TwoFactorUserSetupFactory $twoFactorUserSetupFactory;
 
     public function __construct(
         EntityManager $entityManager,
@@ -76,6 +70,10 @@ class UserSecurity
         $this->twoFactorUserSetupFactory = $twoFactorUserSetupFactory;
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function read(string $id): stdClass
     {
         if (!$this->user->isAdmin() && $id !== $this->user->getId()) {

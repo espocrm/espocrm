@@ -27,40 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\Currency;
 
-use Espo\Core\Exceptions\{
-    BadRequest,
-    Forbidden,
-};
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 
-use Espo\Core\{
-    DataManager,
-    Utils\Config,
-    Utils\Config\ConfigWriter,
-    Acl,
-};
+use Espo\Core\Acl;
+use Espo\Core\DataManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ConfigWriter;
 
 use stdClass;
 
-class CurrencyRate
+class RateService
 {
-    private $config;
+    private Config $config;
+    private ConfigWriter $configWriter;
+    private DataManager $dataManager;
+    private Acl $acl;
 
-    private $configWriter;
-
-    private $dataManager;
-
-    private $acl;
-
-    public function __construct(Config $config, ConfigWriter $configWriter, DataManager $dataManager, Acl $acl)
-    {
+    public function __construct(
+        Config $config,
+        ConfigWriter $configWriter,
+        DataManager $dataManager,
+        Acl $acl
+    ) {
         $this->config = $config;
         $this->configWriter = $configWriter;
         $this->dataManager = $dataManager;
         $this->acl = $acl;
     }
 
+    /**
+     * @throws Forbidden
+     */
     public function get(): stdClass
     {
         if (!$this->acl->check('Currency')) {
@@ -76,6 +77,11 @@ class CurrencyRate
         );
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     */
     public function set(stdClass $rates): stdClass
     {
         if (!$this->acl->check('Currency')) {
@@ -119,7 +125,6 @@ class CurrencyRate
         $this->configWriter->set('currencyRates', $rates);
 
         $this->configWriter->save();
-
         $this->dataManager->rebuildDatabase([]);
 
         return (object) (

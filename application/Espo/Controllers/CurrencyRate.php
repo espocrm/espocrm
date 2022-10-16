@@ -29,15 +29,13 @@
 
 namespace Espo\Controllers;
 
-use Espo\Services\CurrencyRate as Service;
-
+use Espo\Tools\Currency\RateService as Service;
 use Espo\Core\Api\Request;
-
 use stdClass;
 
 class CurrencyRate
 {
-    private $service;
+    private Service $service;
 
     public function __construct(Service $service)
     {

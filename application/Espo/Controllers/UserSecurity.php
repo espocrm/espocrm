@@ -29,12 +29,14 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\Api\Request;
 
-use Espo\Services\UserSecurity as Service;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Tools\UserSecurity\Service as Service;
 
 use Espo\Entities\User;
 
@@ -42,10 +44,12 @@ use stdClass;
 
 class UserSecurity
 {
-    private $service;
+    private Service $service;
+    private User $user;
 
-    private $user;
-
+    /**
+     * @throws Forbidden
+     */
     public function __construct(Service $service, User $user)
     {
         $this->service = $service;
@@ -59,6 +63,11 @@ class UserSecurity
         }
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function getActionRead(Request $request): stdClass
     {
         $id = $request->getRouteParam('id');
@@ -74,6 +83,12 @@ class UserSecurity
         return $this->service->read($id);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function postActionGetTwoFactorUserSetupData(Request $request): stdClass
     {
         $data = $request->getParsedBody();
@@ -91,6 +106,11 @@ class UserSecurity
         return $this->service->getTwoFactorUserSetupData($id, $data);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function putActionUpdate(Request $request): stdClass
     {
         $id = $request->getRouteParam('id');

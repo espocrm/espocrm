@@ -41,13 +41,10 @@ use Espo\Entities\User;
 
 class TwoFactorSms
 {
-    private $util;
-
-    private $user;
-
-    private $entityManager;
-
-    private $config;
+    private Util $util;
+    private User $user;
+    private EntityManager $entityManager;
+    private Config $config;
 
     public function __construct(Util $util, User $user, EntityManager $entityManager, Config $config)
     {

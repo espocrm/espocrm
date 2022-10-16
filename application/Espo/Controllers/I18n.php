@@ -29,13 +29,13 @@
 
 namespace Espo\Controllers;
 
-use Espo\Services\Language as Service;
+use Espo\Tools\App\LanguageService as Service;
 
 use Espo\Core\Api\Request;
 
 class I18n
 {
-    private $service;
+    private Service $service;
 
     public function __construct(Service $service)
     {
