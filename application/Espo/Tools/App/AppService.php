@@ -27,49 +27,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\App;
 
+use Espo\Entities\DashboardTemplate;
 use Espo\Entities\EmailAccount as EmailAccountEntity;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
+use Espo\Entities\Settings;
 use Espo\Services\Settings as SettingsService;
 
-use Espo\Repositories\PhoneNumber as PhoneNumberRepository;
-use Espo\Repositories\ArrayValue as ArrayValueRepository;
-use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Core\{
-    Acl,
-    Authentication\Logins\Espo,
-    DataManager,
-    InjectableFactory,
-    Utils\Metadata,
-    Utils\Config,
-    Utils\Language,
-    Utils\FieldUtil,
-    Utils\Log};
+use Espo\Core\Acl;
+use Espo\Core\Authentication\Logins\Espo;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\FieldUtil;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
 
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
-use Espo\Entities\PhoneNumber;
-use Espo\Entities\ArrayValue;
 
-use Espo\ORM\{
-    Collection,
-    EntityManager,
-    Repository\RDBRepository,
-    Entity};
+use Espo\ORM\Collection;
+use Espo\ORM\EntityManager;
 
-use Espo\Tools\App\AppParam;
 use stdClass;
 use Throwable;
 
-class App
+class AppService
 {
     private Config $config;
     private EntityManager $entityManager;
     private Metadata $metadata;
     private Acl $acl;
-    private DataManager $dataManager;
     private InjectableFactory $injectableFactory;
     private SettingsService $settingsService;
     private User $user;
@@ -82,7 +71,6 @@ class App
         EntityManager $entityManager,
         Metadata $metadata,
         Acl $acl,
-        DataManager $dataManager,
         InjectableFactory $injectableFactory,
         SettingsService $settingsService,
         User $user,
@@ -94,7 +82,6 @@ class App
         $this->entityManager = $entityManager;
         $this->metadata = $metadata;
         $this->acl = $acl;
-        $this->dataManager = $dataManager;
         $this->injectableFactory = $injectableFactory;
         $this->settingsService = $settingsService;
         $this->user = $user;
@@ -127,7 +114,7 @@ class App
 
         if ($user->get('dashboardTemplateId')) {
             $dashboardTemplate = $this->entityManager
-                ->getEntity('DashboardTemplate', $user->get('dashboardTemplateId'));
+                ->getEntity(DashboardTemplate::ENTITY_TYPE, $user->get('dashboardTemplateId'));
 
             if ($dashboardTemplate) {
                 $settings->forcedDashletsOptions = $dashboardTemplate->get('dashletsOptions') ?? (object) [];
@@ -154,7 +141,7 @@ class App
             'passwordChangeForNonAdminDisabled' => $this->config
                     ->get('authenticationMethod', Espo::NAME) !== Espo::NAME,
             'timeZoneList' => $this->metadata
-                ->get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options'], []),
+                ->get(['entityDefs', Settings::ENTITY_TYPE, 'fields', 'timeZone', 'options'], []),
             'auth2FARequired' => $auth2FARequired,
         ];
 
@@ -363,7 +350,7 @@ class App
             }
 
             $inboundEmailList = $this->entityManager
-                ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
+                ->getRDBRepositoryByClass(InboundEmailEntity::class)
                 ->where([
                     'status' => InboundEmailEntity::STATUS_ACTIVE,
                     'useSmtp' => true,
@@ -389,7 +376,7 @@ class App
 
         if ($groupEmailAccountPermission === Acl\Table::LEVEL_ALL) {
             $inboundEmailList = $this->entityManager
-                ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
+                ->getRDBRepositoryByClass(InboundEmailEntity::class)
                 ->where([
                     'status' => InboundEmailEntity::STATUS_ACTIVE,
                     'useSmtp' => true,
@@ -464,187 +451,12 @@ class App
         return $value;
     }
 
-    public function jobClearCache(): void
-    {
-        $this->dataManager->clearCache();
-    }
-
-    public function jobRebuild(): void
-    {
-        $this->dataManager->rebuild();
-    }
-
-    /**
-     * @todo Remove in 7.2.
-     */
-    public function jobPopulatePhoneNumberNumeric(): void
-    {
-        $numberList = $this->entityManager
-            ->getRDBRepository('PhoneNumber')
-            ->find();
-
-        foreach ($numberList as $number) {
-            $this->entityManager->saveEntity($number);
-        }
-    }
-
-    /**
-     * @todo Remove in 7.2. Move to another place. CLI command.
-     */
-    public function jobPopulateArrayValues(): void
-    {
-        /** @var string[] $scopeList */
-        $scopeList = array_keys($this->metadata->get(['scopes']));
-
-        $query = $this->entityManager->getQueryBuilder()
-            ->delete()
-            ->from('ArrayValue')
-            ->build();
-
-        $this->entityManager
-            ->getQueryExecutor()
-            ->execute($query);
-
-        foreach ($scopeList as $scope) {
-            if (!$this->metadata->get(['scopes', $scope, 'entity'])) {
-                continue;
-            }
-
-            if ($this->metadata->get(['scopes', $scope, 'disabled'])) {
-                continue;
-            }
-
-            $attributeList = [];
-
-            $entityDefs = $this->entityManager
-                ->getDefs()
-                ->getEntity($scope);
-
-            foreach ($entityDefs->getAttributeList() as $attributeDefs) {
-                $attribute = $attributeDefs->getName();
-                $type = $attributeDefs->getType();
-
-                if ($type !== Entity::JSON_ARRAY) {
-                    continue;
-                }
-
-                if (!$attributeDefs->getParam('storeArrayValues')) {
-                    continue;
-                }
-
-                if (!$attributeDefs->getParam('notStorable')) {
-                    continue;
-                }
-
-                $attributeList[] = $attribute;
-            }
-
-            $select = ['id'];
-
-            $orGroup = [];
-
-            foreach ($attributeList as $attribute) {
-                $select[] = $attribute;
-
-                $orGroup[$attribute . '!='] = null;
-            }
-
-            $repository = $this->entityManager->getRepository($scope);
-
-            if (!$repository instanceof RDBRepository) {
-                continue;
-            }
-
-            if (!count($attributeList)) {
-                continue;
-            }
-
-            $query = $this->entityManager
-                ->getQueryBuilder()
-                ->select()
-                ->from($scope)
-                ->select($select)
-                ->where([
-                    'OR' => $orGroup,
-                ])
-                ->build();
-
-            $sth = $this->entityManager
-                ->getQueryExecutor()
-                ->execute($query);
-
-            while ($dataRow = $sth->fetch()) {
-                $entity = $this->entityManager->getEntityFactory()->create($scope);
-
-                if (!$entity instanceof CoreEntity) {
-                    continue;
-                }
-
-                $entity->set($dataRow);
-                $entity->setAsFetched();
-
-                foreach ($attributeList as $attribute) {
-                    $this->getArrayValueRepository()->storeEntityAttribute($entity, $attribute, true);
-                }
-            }
-        }
-    }
-
-    /**
-     * @todo Remove in 7.4. Move to another place. CLI command.
-     */
-    public function jobPopulateOptedOutPhoneNumbers(): void
-    {
-        $entityTypeList = ['Contact', 'Lead'];
-
-        foreach ($entityTypeList as $entityType) {
-            $entityList = $this->entityManager
-                ->getRDBRepository($entityType)
-                ->where([
-                    'doNotCall' => true,
-                    'phoneNumber!=' => null,
-                ])
-                ->select(['id', 'phoneNumber'])
-                ->find();
-
-            foreach ($entityList as $entity) {
-                $phoneNumber = $entity->get('phoneNumber');
-
-                if (!$phoneNumber) {
-                    continue;
-                }
-
-                $phoneNumberEntity = $this->getPhoneNumberRepository()->getByNumber($phoneNumber);
-
-                if (!$phoneNumberEntity) {
-                    continue;
-                }
-
-                $phoneNumberEntity->set('optOut', true);
-
-                $this->entityManager->saveEntity($phoneNumberEntity);
-            }
-        }
-    }
-
     private function filterPreferencesData(stdClass $data): void
     {
-        $passwordFieldList = $this->fieldUtil->getFieldByTypeList('Preferences', 'password');
+        $passwordFieldList = $this->fieldUtil->getFieldByTypeList(Preferences::ENTITY_TYPE, 'password');
 
         foreach ($passwordFieldList as $field) {
             unset($data->$field);
         }
-    }
-
-    private function getPhoneNumberRepository(): PhoneNumberRepository
-    {
-        /** @var PhoneNumberRepository */
-        return $this->entityManager->getRepository(PhoneNumber::ENTITY_TYPE);
-    }
-
-    private function getArrayValueRepository(): ArrayValueRepository
-    {
-        /** @var ArrayValueRepository */
-        return $this->entityManager->getRepository(ArrayValue::ENTITY_TYPE);
     }
 }

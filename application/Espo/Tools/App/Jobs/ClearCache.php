@@ -27,51 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Tools\App\Jobs;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Authentication\Authentication;
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use Espo\Core\InjectableFactory;
+use Espo\Core\DataManager;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Job\JobDataLess;
 
-use Espo\Tools\App\AppService as Service;
-
-use stdClass;
-
-class App
+class ClearCache implements JobDataLess
 {
-    private InjectableFactory $injectableFactory;
+    private DataManager $dataManager;
 
-    public function __construct(
-        InjectableFactory $injectableFactory
-    ) {
-        $this->injectableFactory = $injectableFactory;
-    }
-
-    public function getActionUser(): stdClass
+    public function __construct(DataManager $dataManager)
     {
-        return (object) $this->getService()->getUserData();
+        $this->dataManager = $dataManager;
     }
 
     /**
-     * @throws BadRequest
+     * @throws Error
      */
-    public function postActionDestroyAuthToken(Request $request, Response $response): bool
+    public function run(): void
     {
-        $data = $request->getParsedBody();
-
-        if (empty($data->token)) {
-            throw new BadRequest();
-        }
-
-        $auth = $this->injectableFactory->create(Authentication::class);
-
-        return $auth->destroyAuthToken($data->token, $request, $response);
-    }
-
-    private function getService(): Service
-    {
-        return $this->injectableFactory->create(Service::class);
+        $this->dataManager->clearCache();
     }
 }
