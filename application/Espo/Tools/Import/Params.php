@@ -29,52 +29,38 @@
 
 namespace Espo\Tools\Import;
 
+use Espo\Core\Utils\ObjectUtil;
 use stdClass;
 use TypeError;
 
+/**
+ * @immutable
+ */
 class Params
 {
     public const ACTION_CREATE = 'create';
-
     public const ACTION_CREATE_AND_UPDATE = 'createAndUpdate';
-
     public const ACTION_UPDATE = 'update';
 
     private ?string $action = null;
-
     private ?string $delimiter = null;
-
     private ?string $textQualifier = null;
-
     private ?string $personNameFormat = null;
-
     private bool $idleMode = false;
-
     private bool $manualMode = false;
-
     private bool $silentMode = false;
-
     private bool $headerRow = false;
-
     private bool $skipDuplicateChecking = false;
-
     private bool $startFromLastIndex = false;
-
     /**
      * @var int[]
      */
     private $updateBy = [];
-
     private stdClass $defaultValues;
-
     private ?string $dateFormat = null;
-
     private ?string $timeFormat = null;
-
     private ?string $currency = null;
-
     private ?string $timezone = null;
-
     private ?string $decimalMark = null;
 
     private function __construct()
@@ -142,7 +128,7 @@ class Params
 
     public function getDefaultValues(): stdClass
     {
-        return $this->defaultValues;
+        return ObjectUtil::clone($this->defaultValues);
     }
 
     public function getDateFormat(): ?string

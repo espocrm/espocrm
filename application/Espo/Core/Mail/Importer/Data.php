@@ -29,32 +29,29 @@
 
 namespace Espo\Core\Mail\Importer;
 
+/**
+ * @immutable
+ */
 class Data
 {
     private ?string $assignedUserId = null;
-
     /**
      * @var string[]
      */
     private array $teamIdList = [];
-
     /**
      * @var string[]
      */
     private $userIdList = [];
-
     /**
      * @var iterable<\Espo\Entities\EmailFilter>
      */
     private $filterList = [];
-
     private bool $fetchOnlyHeader = false;
-
     /**
      * @var array<string,string>
      */
     private array $folderData = [];
-
     private ?string $groupEmailFolderId = null;
 
     public static function create(): self

@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Authentication\Login;
 
+/**
+ * @immutable
+ */
 class MetadataParams
 {
     private string $method;

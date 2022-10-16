@@ -30,13 +30,14 @@
 namespace Espo\Core\Authentication;
 
 use Espo\Core\Authentication\Result\Data;
-
 use Espo\Entities\User;
 
 use stdClass;
 
 /**
  * An authentication result.
+ *
+ * @immutable
  */
 class Result
 {

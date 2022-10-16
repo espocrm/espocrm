@@ -29,10 +29,12 @@
 
 namespace Espo\Tools\EmailTemplate;
 
+/**
+ * @immutable
+ */
 class Params
 {
     private bool $applyAcl = false;
-
     private bool $copyAttachments = false;
 
     public function applyAcl(): bool

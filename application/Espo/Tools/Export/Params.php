@@ -29,33 +29,28 @@
 
 namespace Espo\Tools\Export;
 
-use Espo\Core\{
-    Select\SearchParams,
-    Select\Where\Item as WhereItem,
-};
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\Where\Item as WhereItem;
 
 use RuntimeException;
 
+/**
+ * @immutable
+ */
 class Params
 {
     private string $entityType;
-
     /**
      * @var ?string[]
      */
     private $attributeList = null;
-
     /**
      * @var ?string[]
      */
     private $fieldList = null;
-
     private ?string $fileName = null;
-
     private ?string $format = null;
-
     private ?string $name = null;
-
     private ?SearchParams $searchParams = null;
 
     private bool $applyAccessControl = true;

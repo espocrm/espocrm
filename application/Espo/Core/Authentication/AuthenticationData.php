@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Authentication;
 
+/**
+ * @immutable
+ */
 class AuthenticationData
 {
     private ?string $username;

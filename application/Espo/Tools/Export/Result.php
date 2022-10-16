@@ -29,9 +29,12 @@
 
 namespace Espo\Tools\Export;
 
+/**
+ * @immutable
+ */
 class Result
 {
-    private $attachmentId;
+    private string $attachmentId;
 
     public function __construct(string $attachmentId)
     {

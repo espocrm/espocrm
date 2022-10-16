@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Mail;
 
+/**
+ * @immutable
+ */
 class SenderParams
 {
     private ?string $fromAddress = null;

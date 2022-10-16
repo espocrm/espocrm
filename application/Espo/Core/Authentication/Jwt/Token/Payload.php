@@ -34,6 +34,9 @@ use RuntimeException;
 use JsonException;
 use stdClass;
 
+/**
+ * @immutable
+ */
 class Payload
 {
     private ?string $sub;

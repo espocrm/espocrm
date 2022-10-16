@@ -33,6 +33,8 @@ use RuntimeException;
 
 /**
  * An auth token data. Used for auth token creation.
+ *
+ * @immutable
  */
 class Data
 {

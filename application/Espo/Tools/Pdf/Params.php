@@ -29,6 +29,9 @@
 
 namespace Espo\Tools\Pdf;
 
+/**
+ * @immutable
+ */
 class Params
 {
     private bool $applyAcl = false;

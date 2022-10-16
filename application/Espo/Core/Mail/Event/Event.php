@@ -38,21 +38,13 @@ use RuntimeException;
 class Event
 {
     private ?string $attendees = null;
-
     private ?string $organizer = null;
-
     private ?string $dateStart = null;
-
     private ?string $dateEnd = null;
-
     private ?string $location = null;
-
     private ?string $name = null;
-
     private ?string $description = null;
-
     private ?string $timezone = null;
-
     private ?string $uid = null;
 
     private bool $isAllDay = false;

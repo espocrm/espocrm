@@ -39,19 +39,17 @@ use Espo\Entities\User;
 
 use Espo\Entities\Attachment;
 
-use Espo\Core\{
-    Utils\Json,
-    Select\SelectBuilderFactory,
-    Acl,
-    Acl\Table,
-    Acl\GlobalRestriction,
-    Record\ServiceContainer,
-    Utils\Metadata,
-    FileStorage\Manager as FileStorageManager,
-    FieldProcessing\ListLoadProcessor,
-    FieldProcessing\Loader\Params as LoaderParams,
-    Utils\FieldUtil,
-};
+use Espo\Core\Acl;
+use Espo\Core\Acl\GlobalRestriction;
+use Espo\Core\Acl\Table;
+use Espo\Core\FieldProcessing\ListLoadProcessor;
+use Espo\Core\FieldProcessing\Loader\Params as LoaderParams;
+use Espo\Core\FileStorage\Manager as FileStorageManager;
+use Espo\Core\Record\ServiceContainer;
+use Espo\Core\Select\SelectBuilderFactory;
+use Espo\Core\Utils\FieldUtil;
+use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Metadata;
 
 use Espo\{
     ORM\Collection,
@@ -67,30 +65,20 @@ class Export
      * @var ?Params
      */
     private ?Params $params = null;
-
     /**
      * @var ?Collection<Entity>
      */
     private ?Collection $collection = null;
 
     private $processorFactory;
-
     private $selectBuilderFactory;
-
     private $serviceContainer;
-
     private $acl;
-
     private $entityManager;
-
     private $metadata;
-
     private $fileStorageManager;
-
     private $listLoadProcessor;
-
     private $fieldUtil;
-
     private User $user;
 
     public function __construct(

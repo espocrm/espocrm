@@ -35,6 +35,8 @@ use RuntimeException;
 
 /**
  * JWT token.
+ *
+ * @immutable
  */
 class Token
 {

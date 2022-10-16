@@ -29,10 +29,12 @@
 
 namespace Espo\Tools\Export;
 
+/**
+ * @immutable
+ */
 class ServiceResult
 {
     private ?Result $result = null;
-
     private ?string $id = null;
 
     private function __construct() {}

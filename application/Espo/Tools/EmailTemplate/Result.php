@@ -36,11 +36,8 @@ use stdClass;
 class Result
 {
     private $subject;
-
     private $body;
-
     private $isHtml = false;
-
     private $attachmentList = [];
 
     /**

@@ -31,18 +31,16 @@ namespace Espo\Tools\Import;
 
 use stdClass;
 
+/**
+ * @immutable
+ */
 class Result
 {
     private ?string $id = null;
-
     private int $countCreated = 0;
-
     private int $countUpdated = 0;
-
     private int $countError = 0;
-
     private int $countDuplicate = 0;
-
     private bool $manualMode = false;
 
     public function getId(): ?string

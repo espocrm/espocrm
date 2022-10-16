@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Mail\Account;
 
+/**
+ * @immutable
+ */
 class ImapParams
 {
     private string $host;

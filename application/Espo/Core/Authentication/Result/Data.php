@@ -29,20 +29,18 @@
 
 namespace Espo\Core\Authentication\Result;
 
-use Espo\Entities\User;
-
 use stdClass;
 
+/**
+ * @immutable
+ */
 class Data
 {
     private ?string $message = null;
     private ?string $token = null;
     private ?string $view = null;
     private ?string $failReason = null;
-
-    /**
-     * @var array<string,mixed>
-     */
+    /** @var array<string, mixed> */
     private array $data = [];
 
     private function __construct(

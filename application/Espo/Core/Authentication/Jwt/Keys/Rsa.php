@@ -33,6 +33,9 @@ use Espo\Core\Authentication\Jwt\Key;
 use UnexpectedValueException;
 use stdClass;
 
+/**
+ * @immutable
+ */
 class Rsa implements Key
 {
     private string $kid;

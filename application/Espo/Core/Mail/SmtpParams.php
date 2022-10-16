@@ -31,6 +31,9 @@ namespace Espo\Core\Mail;
 
 use RuntimeException;
 
+/**
+ * @immutable
+ */
 class SmtpParams
 {
     private string $server;

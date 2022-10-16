@@ -31,22 +31,21 @@ namespace Espo\Tools\Export\Processor;
 
 use RuntimeException;
 
+/**
+ * @immutable
+ */
 class Params
 {
     private string $fileName;
-
     /**
      * @var string[]
      */
     private $attributeList;
-
     /**
      * @var ?string[]
      */
     private $fieldList = null;
-
     private ?string $name = null;
-
     private ?string $entityType = null;
 
     /**

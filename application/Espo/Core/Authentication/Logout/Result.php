@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Authentication\Logout;
 
+/**
+ * @immutable
+ */
 class Result
 {
     private ?string $redirectUrl = null;
