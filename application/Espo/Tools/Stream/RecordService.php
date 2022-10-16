@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\ORM\EntityManager;
 
+use Espo\Entities\Subscription;
 use Espo\Entities\User;
 use Espo\Entities\Note;
 use Espo\Entities\Email;
@@ -50,8 +51,6 @@ use Espo\Core\Utils\Acl\UserAclManagerProvider;
 
 class RecordService
 {
-    private const SUBSCRIPTION_ENTITY_TYPE = 'Subscription';
-
     private EntityManager $entityManager;
     private User $user;
     private Metadata $metadata;
@@ -180,7 +179,7 @@ class RecordService
         $subscriptionBuilder
             ->leftJoin('createdBy')
             ->join(
-                self::SUBSCRIPTION_ENTITY_TYPE,
+                Subscription::ENTITY_TYPE,
                 'subscription',
                 [
                     'entityType:' => 'parentType',
@@ -316,7 +315,7 @@ class RecordService
 
         $subscriptionSuperBuilder
             ->join(
-                self::SUBSCRIPTION_ENTITY_TYPE,
+                Subscription::ENTITY_TYPE,
                 'subscription',
                 [
                     'entityType:' => 'superParentType',
@@ -325,7 +324,7 @@ class RecordService
                 ]
             )
             ->leftJoin(
-                self::SUBSCRIPTION_ENTITY_TYPE,
+                Subscription::ENTITY_TYPE,
                 'subscriptionExclude',
                 [
                     'entityType:' => 'parentType',
