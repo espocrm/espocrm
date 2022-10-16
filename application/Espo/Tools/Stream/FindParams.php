@@ -31,7 +31,6 @@ namespace Espo\Tools\Stream;
 
 use Espo\Core\Field\DateTime;
 use Espo\Core\Select\SearchParams;
-use Espo\Core\Select\Where\Item as WhereItem;
 
 /**
  * @immutable
@@ -50,7 +49,7 @@ class FindParams
         SearchParams $searchParams,
         bool $skipOwn = false,
         ?DateTime $after = null,
-        ?string $filter = null,
+        ?string $filter = null
     ) {
         $this->searchParams = $searchParams;
         $this->skipOwn = $skipOwn;
