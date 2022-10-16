@@ -34,7 +34,7 @@ use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\Api\Request;
 
-use Espo\Services\TwoFactorEmail as Service;
+use Espo\Tools\UserSecurity\TwoFactorEmailService as Service;
 
 use Espo\Entities\User;
 

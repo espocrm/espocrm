@@ -29,7 +29,7 @@
 
 namespace Espo\Controllers;
 
-use Espo\Services\PopupNotification as Service;
+use Espo\Tools\PopupNotification\Service as Service;
 
 use stdClass;
 

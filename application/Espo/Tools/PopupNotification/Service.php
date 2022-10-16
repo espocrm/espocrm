@@ -27,33 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\PopupNotification;
 
-use Espo\Core\{
-    ServiceFactory,
-    Utils\Metadata,
-    Utils\Log,
-};
+use Espo\Core\ServiceFactory;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
 
-use Espo\{
-    Entities\User,
-};
+use Espo\Entities\User;
 
 use stdClass;
 use Throwable;
 
-class PopupNotification
+class Service
 {
-    private $metadata;
+    private Metadata $metadata;
+    private ServiceFactory $serviceFactory;
+    private User $user;
+    private Log $log;
 
-    private $serviceFactory;
-
-    private $user;
-
-    private $log;
-
-    public function __construct(Metadata $metadata, ServiceFactory $serviceFactory, User $user, Log $log)
-    {
+    public function __construct(
+        Metadata $metadata,
+        ServiceFactory $serviceFactory,
+        User $user,
+        Log $log
+    ) {
         $this->metadata = $metadata;
         $this->serviceFactory = $serviceFactory;
         $this->user = $user;

@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\UserSecurity;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -39,18 +39,19 @@ use Espo\ORM\EntityManager;
 
 use Espo\Entities\User;
 
-class TwoFactorEmail
+class TwoFactorEmailService
 {
-    private $util;
+    private Util $util;
+    private User $user;
+    private EntityManager $entityManager;
+    private Config $config;
 
-    private $user;
-
-    private $entityManager;
-
-    private $config;
-
-    public function __construct(Util $util, User $user, EntityManager $entityManager, Config $config)
-    {
+    public function __construct(
+        Util $util,
+        User $user,
+        EntityManager $entityManager,
+        Config $config
+    ) {
         $this->util = $util;
         $this->user = $user;
         $this->entityManager = $entityManager;
