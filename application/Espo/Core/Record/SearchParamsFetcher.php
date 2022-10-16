@@ -45,7 +45,6 @@ class SearchParamsFetcher
     private const MAX_SIZE_LIMIT = 200;
 
     private Config $config;
-
     private TextMetadataProvider $textMetadataProvider;
 
     public function __construct(Config $config, TextMetadataProvider $textMetadataProvider)

@@ -37,16 +37,15 @@ use stdClass;
 
 /**
  * Search parameters.
+ *
+ * @immutable
  */
 class SearchParams
 {
-    /**
-     * @var array<string,mixed>
-     */
+    /** @var array<string,mixed> */
     private array $rawParams = [];
 
     public const ORDER_ASC = 'ASC';
-
     public const ORDER_DESC = 'DESC';
 
     private function __construct() {}

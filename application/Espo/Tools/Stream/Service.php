@@ -388,22 +388,16 @@ class Service
     }
 
     /**
-     * @param array{
-     *   offset?: int|null,
-     *   maxSize: int|null,
-     *   skipOwn?: bool,
-     *   where?: ?array<mixed,mixed>,
-     *   after?: ?string,
-     *   filter?: ?string,
-     * } $params
      * @throws NotFound
      * @throws Forbidden
      * @return RecordCollection<Note>
      */
-    public function findUserStream(string $userId, array $params): RecordCollection
+    public function findUserStream(?string $userId, FindParams $params): RecordCollection
     {
-        $offset = intval($params['offset'] ?? 0);
-        $maxSize = intval($params['maxSize']);
+        $userId ??= $this->user->getId();
+
+        $offset = $params->getOffset() ?? 0;
+        $maxSize = $params->getMaxSize();
 
         $sqLimit = $offset + $maxSize + 1;
 
@@ -412,14 +406,12 @@ class Service
             $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
 
         if (!$user) {
-            throw new NotFound();
+            throw new NotFound("User not found.");
         }
 
         if (!$this->acl->checkUserPermission($user, 'user')) {
-            throw new Forbidden();
+            throw new Forbidden("No user permission access.");
         }
-
-        $skipOwn = $params['skipOwn'] ?? false;
 
         $teamIdList = $user->getTeamIdList();
 
@@ -447,11 +439,14 @@ class Service
 
         $additionalQuery = null;
 
-        if (!empty($params['where'])) {
-            $searchParams = SearchParams::fromRaw([
-                'where' => $params['where'],
-            ]);
+        $searchParams = $params->getSearchParams();
 
+        if (
+            $searchParams->getWhere() ||
+            $searchParams->getTextFilter() ||
+            $searchParams->getPrimaryFilter() ||
+            $searchParams->getBoolFilterList() !== []
+        ) {
             $additionalQuery = $this->selectBuilderFactory
                 ->create()
                 ->from(Note::ENTITY_TYPE)
@@ -780,7 +775,7 @@ class Service
                 ->build();
         }
 
-        if ($skipOwn) {
+        if ($params->skipOwn()) {
             foreach ($queryList as $i => $query) {
                 $queryList[$i] = $this->entityManager
                     ->getQueryBuilder()
@@ -803,7 +798,7 @@ class Service
             ])
             ->build();
 
-         if (
+        if (
             (!$user->isPortal() || $user->isAdmin()) &&
             !$user->isApi()
         ) {
@@ -892,39 +887,24 @@ class Service
     }
 
     /**
-     * @param array{
-     *   offset?: int|null,
-     *   maxSize: int|null,
-     *   skipOwn?: bool,
-     *   where?: ?array<mixed,mixed>,
-     *   after?: ?string,
-     *   filter?: ?string,
-     * } $params
      * @return array<mixed,mixed>
      */
-    private function getUserStreamWhereClause(array $params, User $user): array
+    private function getUserStreamWhereClause(FindParams $params, User $user): array
     {
         $whereClause = [];
 
-        if (!empty($params['after'])) {
-            $whereClause[]['createdAt>'] = $params['after'];
+        if ($params->getAfter()) {
+            $whereClause[]['createdAt>'] = $params->getAfter()->getString();
         }
 
-        if (!empty($params['filter'])) {
-            switch ($params['filter']) {
-                case 'posts':
-                    $whereClause[]['type'] = Note::TYPE_POST;
-
-                    break;
-
-                  case 'updates':
-                    $whereClause[]['type'] = [
-                        Note::TYPE_UPDATE,
-                        Note::TYPE_STATUS,
-                    ];
-
-                    break;
-            }
+        if ($params->getFilter() === FindParams::FILTER_POSTS) {
+            $whereClause[]['type'] = Note::TYPE_POST;
+        }
+        else if ($params->getFilter() === FindParams::FILTER_UPDATES) {
+            $whereClause[]['type'] = [
+                Note::TYPE_UPDATE,
+                Note::TYPE_STATUS,
+            ];
         }
 
         return $whereClause;
@@ -936,29 +916,17 @@ class Service
     }
 
     /**
-     * @param array{
-     *   offset?: int|null,
-     *   maxSize: int|null,
-     *   skipOwn?: bool,
-     *   where?: ?array<mixed,mixed>,
-     *   after?: ?string,
-     *   filter?: ?string,
-     * } $params
      * @throws NotFound
      * @throws Forbidden
      * @return RecordCollection<Note>
      */
-    public function find(string $scope, ?string $id, array $params): RecordCollection
+    public function find(string $scope, string $id, FindParams $params): RecordCollection
     {
         if ($scope === User::ENTITY_TYPE) {
-            if (empty($id)) {
-                $id = $this->user->getId();
-            }
-
-            return $this->findUserStream($id, $params);
+            throw new Forbidden();
         }
 
-        $entity = $this->entityManager->getEntity($scope, $id);
+        $entity = $this->entityManager->getEntityById($scope, $id);
 
         $onlyTeamEntityTypeList = $this->getOnlyTeamEntityTypeList($this->user);
         $onlyOwnEntityTypeList = $this->getOnlyOwnEntityTypeList($this->user);
@@ -973,11 +941,14 @@ class Service
 
         $additionalQuery = null;
 
-        if (!empty($params['where'])) {
-            $searchParams = SearchParams::fromRaw([
-                'where' => $params['where'],
-            ]);
+        $searchParams = $params->getSearchParams();
 
+        if (
+            $searchParams->getWhere() ||
+            $searchParams->getTextFilter() ||
+            $searchParams->getPrimaryFilter() ||
+            $searchParams->getBoolFilterList() !== []
+        ) {
             $additionalQuery = $this->selectBuilderFactory
                 ->create()
                 ->from(Note::ENTITY_TYPE)
@@ -1116,21 +1087,16 @@ class Service
             }
         }
 
-        if (!empty($params['filter'])) {
-            switch ($params['filter']) {
-                case 'posts':
-                    $where['type'] = Note::TYPE_POST;
+        $filter = $params->getFilter();
 
-                    break;
-
-                  case 'updates':
-                    $where['type'] = [
-                        Note::TYPE_ASSIGN,
-                        Note::TYPE_STATUS,
-                    ];
-
-                    break;
-            }
+        if ($filter === FindParams::FILTER_POSTS) {
+            $where['type'] = Note::TYPE_POST;
+        }
+        else if ($filter === FindParams::FILTER_UPDATES) {
+            $where['type'] = [
+                Note::TYPE_ASSIGN,
+                Note::TYPE_STATUS,
+            ];
         }
 
         $ignoreScopeList = $this->getIgnoreScopeList($this->user);
@@ -1162,16 +1128,20 @@ class Service
 
         $builder->where($where);
 
-        if (!empty($params['after'])) {
+        $after = $params->getAfter();
+        $offset = $params->getOffset();
+        $maxSize = $params->getMaxSize();
+
+        if ($after) {
             $builder->where([
-                'createdAt>' => $params['after'],
+                'createdAt>' => $after->getString(),
             ]);
         }
 
         $countBuilder = clone $builder;
 
         $builder
-            ->limit($params['offset'] ?? 0, $params['maxSize'])
+            ->limit($offset ?? 0, $maxSize)
             ->order('number', 'DESC');
 
         $collection = $this->entityManager

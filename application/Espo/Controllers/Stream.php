@@ -31,12 +31,14 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 
-use Espo\Core\{
-    Api\Request,
-    Exceptions\Forbidden,
-    Exceptions\NotFound,
-    Record\SearchParamsFetcher};
+use Espo\Core\Api\Request;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Field\DateTime;
+use Espo\Core\Record\SearchParamsFetcher;
 
+use Espo\Entities\User as UserEntity;
+use Espo\Tools\Stream\FindParams;
 use Espo\Tools\Stream\Service as Service;
 
 use stdClass;
@@ -63,27 +65,35 @@ class Stream
      */
     public function getActionList(Request $request): stdClass
     {
-        $params = $request->getRouteParams();
+        $id = $request->getRouteParam('id');
+        $scope = $request->getRouteParam('scope');
 
-        $scope = $params['scope'];
-        $id = isset($params['id']) ? $params['id'] : null;
+        if ($scope === null) {
+            throw new BadRequest();
+        }
+
+        if ($id === null && $scope !== UserEntity::ENTITY_TYPE) {
+            throw new BadRequest("No ID.");
+        }
 
         $searchParams = $this->searchParamsFetcher->fetch($request);
-
-        $offset = $searchParams->getOffset();
-        $maxSize = $searchParams->getMaxSize();
 
         $after = $request->getQueryParam('after');
         $filter = $request->getQueryParam('filter');
         $skipOwn = $request->getQueryParam('skipOwn') === 'true';
 
-        $result = $this->service->find($scope, $id, [
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'after' => $after,
-            'filter' => $filter,
-            'skipOwn' => $skipOwn,
-        ]);
+        /** @todo Use named params. */
+        $findParams = new FindParams(
+            $searchParams,
+            $skipOwn,
+            $after ?
+                DateTime::fromString($after) : null,
+            $filter
+        );
+
+        $result = $scope === UserEntity::ENTITY_TYPE ?
+            $this->service->findUserStream($id, $findParams) :
+            $this->service->find($scope, $id ?? '', $findParams);
 
         return (object) [
             'total' => $result->getTotal(),
@@ -98,30 +108,33 @@ class Stream
      */
     public function getActionListPosts(Request $request): stdClass
     {
-        $params = $request->getRouteParams();
+        $id = $request->getRouteParam('id');
+        $scope = $request->getRouteParam('scope');
 
-        $scope = $params['scope'];
-        $id = isset($params['id']) ? $params['id'] : null;
-
-        $searchParams = $this->searchParamsFetcher->fetch($request);
-
-        $offset = $searchParams->getOffset();
-        $maxSize = $searchParams->getMaxSize();
-
-        $after = $request->getQueryParam('after');
-        $where = $request->getQueryParams()['where'] ?? null;
-
-        if ($where !== null && !is_array($where)) {
+        if ($scope === null) {
             throw new BadRequest();
         }
 
-        $result = $this->service->find($scope, $id, [
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'after' => $after,
-            'filter' => 'posts',
-            'where' => $where,
-        ]);
+        if ($id === null && $scope !== UserEntity::ENTITY_TYPE) {
+            throw new BadRequest("No ID.");
+        }
+
+        $after = $request->getQueryParam('after');
+
+        $searchParams = $this->searchParamsFetcher->fetch($request);
+
+        /** @todo Use named params. */
+        $findParams = new FindParams(
+            $searchParams,
+            false,
+            $after ?
+                DateTime::fromString($after) : null,
+            FindParams::FILTER_POSTS
+        );
+
+        $result = $scope === UserEntity::ENTITY_TYPE ?
+            $this->service->findUserStream($id, $findParams) :
+            $this->service->find($scope, $id ?? '', $findParams);
 
         return (object) [
             'total' => $result->getTotal(),

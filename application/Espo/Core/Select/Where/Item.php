@@ -35,21 +35,18 @@ use Espo\Core\Select\Where\Item\Data\DateTime as DateTimeData;
 use InvalidArgumentException;
 use RuntimeException;
 
+/**
+ * @immutable
+ */
 class Item
 {
     public const TYPE_AND = Item\Type::AND;
-
     public const TYPE_OR = Item\Type::OR;
 
     private string $type;
-
     private ?string $attribute = null;
-
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $value = null;
-
     private ?Data $data = null;
 
     /**

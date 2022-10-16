@@ -27,50 +27,64 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Where;
+namespace Espo\Tools\Stream;
 
-use Espo\Core\{
-    Select\Where\Params,
-    Select\Where\ConverterFactory,
-    Select\Where\CheckerFactory,
-    Select\Where\Item as WhereItem,
-};
+use Espo\Core\Field\DateTime;
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\Where\Item as WhereItem;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Entities\User,
-};
-
-class Applier
+/**
+ * @immutable
+ */
+class FindParams
 {
-    private string $entityType;
+    public const FILTER_POSTS = 'posts';
+    public const FILTER_UPDATES = 'updates';
 
-    private User $user;
-    private ConverterFactory $converterFactory;
-    private CheckerFactory $checkerFactory;
+    private SearchParams $searchParams;
+    private bool $skipOwn;
+    private ?DateTime $after;
+    private ?string $filter;
 
     public function __construct(
-        string $entityType,
-        User $user,
-        ConverterFactory $converterFactory,
-        CheckerFactory $checkerFactory
+        SearchParams $searchParams,
+        bool $skipOwn = false,
+        ?DateTime $after = null,
+        ?string $filter = null,
     ) {
-        $this->entityType = $entityType;
-        $this->user = $user;
-        $this->converterFactory = $converterFactory;
-        $this->checkerFactory = $checkerFactory;
+        $this->searchParams = $searchParams;
+        $this->skipOwn = $skipOwn;
+        $this->after = $after;
+        $this->filter = $filter;
     }
 
-    public function apply(QueryBuilder $queryBuilder, WhereItem $whereItem, Params $params): void
+    public function getSearchParams(): SearchParams
     {
-        $checker = $this->checkerFactory->create($this->entityType, $this->user);
+        return $this->searchParams;
+    }
 
-        $checker->check($whereItem, $params);
+    public function getMaxSize(): ?int
+    {
+        return $this->searchParams->getMaxSize();
+    }
 
-        $converter = $this->converterFactory->create($this->entityType, $this->user);
+    public function getOffset(): ?int
+    {
+        return $this->searchParams->getOffset();
+    }
 
-        $whereClause = $converter->convert($queryBuilder, $whereItem);
+    public function skipOwn(): bool
+    {
+        return $this->skipOwn;
+    }
 
-        $queryBuilder->where($whereClause);
+    public function getAfter(): ?DateTime
+    {
+        return $this->after;
+    }
+
+    public function getFilter(): ?string
+    {
+        return $this->filter;
     }
 }
