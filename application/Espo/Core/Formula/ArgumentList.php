@@ -45,16 +45,10 @@ use SeekableIterator;
  */
 class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, SeekableIterator
 {
-    /**
-     * @var mixed[]
-     */
+    /** @var mixed[] */
     protected $dataList;
-
     private int $position = 0;
-
-    /**
-     * @param mixed[] $dataList
-     */
+    /** @param mixed[] $dataList */
     public function __construct(array $dataList)
     {
         $this->dataList = $dataList;
@@ -97,6 +91,7 @@ class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, See
     /**
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->getArgumentByIndex($this->position);
@@ -105,6 +100,7 @@ class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, See
     /**
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->position;
@@ -142,6 +138,7 @@ class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, See
      * @param mixed $offset
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (!$this->offsetExists($offset)) {

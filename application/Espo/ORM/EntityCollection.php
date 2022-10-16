@@ -49,16 +49,10 @@ use InvalidArgumentException;
 class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, SeekableIterator
 {
     private ?EntityFactory $entityFactory = null;
-
     private ?string $entityType;
-
     private int $position = 0;
-
     private bool $isFetched = false;
-
-    /**
-     * @var array<TEntity|array<string,mixed>>
-     */
+    /** @var array<TEntity|array<string, mixed>> */
     protected array $dataList = [];
 
     /**
@@ -86,6 +80,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     /**
      * @return TEntity
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->getEntityByOffset($this->position);
@@ -94,6 +89,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     /**
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->position;
@@ -149,6 +145,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
      * @param mixed $offset
      * @return ?TEntity
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (!isset($this->dataList[$offset])) {
