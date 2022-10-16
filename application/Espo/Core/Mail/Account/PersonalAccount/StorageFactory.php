@@ -164,6 +164,7 @@ class StorageFactory implements StorageFactoryInterface
                     }
 
                     if ($handler && method_exists($handler, 'prepareProtocol')) {
+                        // @todo Incorporate an interface `LaminasProtocolPreparator`.
                         $imapParams = $handler->prepareProtocol($userId, $emailAddress, $rawParams);
                     }
                 }

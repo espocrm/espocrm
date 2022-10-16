@@ -113,6 +113,7 @@ class StorageFactory implements StorageFactoryInterface
                 // for backward compatibility
                 $rawParams['ssl'] = $rawParams['security'] ?? null;
 
+                // @todo Incorporate an interface `LaminasProtocolPreparator`.
                 $imapParams = $handler->prepareProtocol($rawParams['id'], $rawParams);
             }
         }
