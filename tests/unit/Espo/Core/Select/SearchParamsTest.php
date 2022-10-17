@@ -392,4 +392,16 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
             $where->getRaw()
         );
     }
+
+    public function testWithBoolFilterAdded(): void
+    {
+        $params = SearchParams
+            ::create()
+            ->withBoolFilterList(['test1']);
+
+        $this->assertEquals(
+            ['test1', 'test2'],
+            $params->withBoolFilterAdded('test2')->getBoolFilterList()
+        );
+    }
 }
