@@ -29,6 +29,7 @@
 
 namespace tests\integration\Espo\Currency;
 
+use Espo\Tools\Currency\RateService;
 use Espo\Core\{
     Utils\Config\ConfigWriter,
 };
@@ -51,7 +52,7 @@ class CurrencyTest extends \tests\integration\Core\BaseTestCase
 
         $configWriter->save();
 
-        $service = $app->getContainer()->get('serviceFactory')->create('CurrencyRate');
+        $service = $app->getContainer()->get('injectableFactory')->create(RateService::class);
 
         $newRates = $service->set(
             (object) [

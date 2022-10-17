@@ -30,6 +30,7 @@
 namespace tests\integration\Espo\LeadCapture;
 
 use Espo\Core\Record\CreateParams;
+use Espo\Tools\LeadCapture\CaptureService;
 
 class LeadCaptureTest extends \tests\integration\Core\BaseTestCase
 {
@@ -43,9 +44,10 @@ class LeadCaptureTest extends \tests\integration\Core\BaseTestCase
         $team = $entityManager->getEntity('Team');
         $entityManager->saveEntity($team);
 
-        $leadCaptureService = $this->getContainer()->get('serviceFactory')->create('LeadCapture');
+        $recordService = $this->getContainer()->get('recordServiceContainer')->get('LeadCapture');
+        $service = $this->getInjectableFactory()->create(CaptureService::class);
 
-        $leadCapureData = (object) [
+        $leadCaptureData = (object) [
             'name' => 'test',
             'subscribeToTargetList' => true,
             'targetListId' => $targetList->id,
@@ -53,8 +55,8 @@ class LeadCaptureTest extends \tests\integration\Core\BaseTestCase
             'fieldList' => ['name', 'emailAddress'],
             'leadSource' => 'Web Site'
         ];
-        
-        $leadCapture = $leadCaptureService->create($leadCapureData, CreateParams::create());
+
+        $leadCapture = $recordService->create($leadCaptureData, CreateParams::create());
 
         $this->assertNotEmpty($leadCapture->get('apiKey'));
 
@@ -64,7 +66,7 @@ class LeadCaptureTest extends \tests\integration\Core\BaseTestCase
             'emailAddress' => 'test@tester.com'
         ];
 
-        $leadCaptureService->leadCapture($leadCapture->get('apiKey'), $data);
+        $service->capture($leadCapture->get('apiKey'), $data);
 
         $lead = $entityManager->getRepository('Lead')
             ->where(['emailAddress' => 'test@tester.com'])

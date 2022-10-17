@@ -35,10 +35,10 @@ use Espo\Core\{
     Application,
     Container,
     DataManager,
+    InjectableFactory,
     Utils\Config,
     Utils\File\Manager as FileManager,
-    Utils\Metadata,
-};
+    Utils\Metadata};
 
 use Espo\Entities\User;
 
@@ -133,6 +133,11 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
     protected function getDataManager(): DataManager
     {
         return $this->getApplication()->getContainer()->get('dataManager');
+    }
+
+    protected function getInjectableFactory(): InjectableFactory
+    {
+        return $this->getApplication()->getContainer()->get('injectableFactory');
     }
 
     protected function getMetadata(): Metadata

@@ -29,14 +29,17 @@
 
 namespace tests\integration\Espo\Settings;
 
+use Espo\Tools\App\SettingsService;
+
 class AccessTest extends \tests\integration\Core\BaseTestCase
 {
-
     public function testGlobalAccess()
     {
         $app = $this->createApplication();
 
-        $data = $app->getContainer()->get('serviceFactory')->create('Settings')->getConfigData();
+        $data = $app->getContainer()->get('injectableFactory')
+            ->create(SettingsService::class)
+            ->getConfigData();
 
         $this->assertTrue(property_exists($data, 'cacheTimestamp'));
         $this->assertFalse(property_exists($data, 'googleMapsApiKey'));
@@ -62,7 +65,9 @@ class AccessTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $data = $app->getContainer()->get('serviceFactory')->create('Settings')->getConfigData();
+        $data = $app->getContainer()->get('injectableFactory')
+            ->create(SettingsService::class)
+            ->getConfigData();
 
         $this->assertTrue(property_exists($data, 'version'));
         $this->assertTrue(property_exists($data, 'outboundEmailFromAddress'));
@@ -82,12 +87,14 @@ class AccessTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $data = $app->getContainer()->get('serviceFactory')->create('Settings')->getConfigData();
+        $data = $app->getContainer()->get('injectableFactory')
+            ->create(SettingsService::class)
+            ->getConfigData();
 
         $this->assertFalse(property_exists($data, 'outboundEmailFromAddress'));
     }
 
-    public function testAdminccess()
+    public function testAdminAccess()
     {
         $this->createUser([
             'userName' => 'admin-tester',
