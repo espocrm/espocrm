@@ -29,28 +29,33 @@
 
 namespace Espo\Controllers;
 
-use Espo\Services\LeadCapture as Service;
+use Espo\Core\Exceptions\ForbiddenSilent;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 
-use Espo\Core\{
-    Controllers\Record,
-    Api\Request,
-    Api\Response,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\Error;
 
+use Espo\Tools\LeadCapture\LeadCapture as LeadCaptureService;
 use stdClass;
 
 class LeadCapture extends Record
 {
+    /**
+     * @throws BadRequest
+     * @throws NotFound
+     * @throws Error
+     */
     public function postActionLeadCapture(Request $request, Response $response): bool
     {
-        $params = $request->getRouteParams();
         $data = $request->getParsedBody();
+        $apiKey = $request->getRouteParam('apiKey');
 
-        if (empty($params['apiKey'])) {
+        if (!$apiKey) {
             throw new BadRequest('No API key provided.');
         }
 
@@ -58,20 +63,24 @@ class LeadCapture extends Record
 
         $response->setHeader('Access-Control-Allow-Origin', $allowOrigin);
 
-        $this->getLeadCaptureService()->leadCapture($params['apiKey'], $data);
+        $this->getLeadCaptureService()->capture($apiKey, $data);
 
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws NotFound
+     */
     public function optionsActionLeadCapture(Request $request, Response $response): bool
     {
-        $params = $request->getRouteParams();
+        $apiKey = $request->getRouteParam('apiKey');
 
-        if (empty($params['apiKey'])) {
+        if (!$apiKey) {
             throw new BadRequest('No API key provided.');
         }
 
-        if (!$this->getLeadCaptureService()->isApiKeyValid($params['apiKey'])) {
+        if (!$this->getLeadCaptureService()->isApiKeyValid($apiKey)) {
             throw new NotFound();
         }
 
@@ -84,6 +93,11 @@ class LeadCapture extends Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws NotFound
+     * @throws ForbiddenSilent
+     */
     public function postActionGenerateNewApiKey(Request $request): stdClass
     {
         $data = $request->getParsedBody();
@@ -103,16 +117,15 @@ class LeadCapture extends Record
      */
     public function getActionSmtpAccountDataList(): array
     {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
 
         return $this->getLeadCaptureService()->getSmtpAccountDataList();
     }
 
-    private function getLeadCaptureService(): Service
+    private function getLeadCaptureService(): LeadCaptureService
     {
-        /** @var Service */
-        return $this->getRecordService();
+        return $this->injectableFactory->create(LeadCaptureService::class);
     }
 }

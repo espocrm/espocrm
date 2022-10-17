@@ -29,6 +29,12 @@
 
 namespace Espo\Tools\LeadCapture;
 
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\Job\JobSchedulerFactory;
+use Espo\Core\Record\ServiceContainer;
+use Espo\Core\Utils\Util;
+use Espo\Entities\User;
 use Espo\Modules\Crm\Services\Campaign as CampaignService;
 use Espo\Services\EmailTemplate as EmailTemplateService;
 use Espo\Services\InboundEmail as InboundEmailService;
@@ -56,13 +62,13 @@ use Espo\Core\Utils\Log;
 use Espo\Entities\Email;
 use Espo\Entities\EmailTemplate;
 use Espo\Entities\InboundEmail;
-use Espo\Entities\Job;
 use Espo\Entities\LeadCapture as LeadCaptureEntity;
 use Espo\Entities\LeadCaptureLogRecord;
 use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Modules\Crm\Entities\TargetList;
 use Espo\ORM\Entity;
 
+use Espo\Tools\LeadCapture\Jobs\OptInConfirmation;
 use stdClass;
 use DateTime;
 
@@ -81,6 +87,9 @@ class LeadCapture
     private EmailTemplateService $emailTemplateService;
     private InboundEmailService $inboundEmailService;
     private FieldValidationManager $fieldValidationManager;
+    private JobSchedulerFactory $jobSchedulerFactory;
+    private User $user;
+    private ServiceContainer $recordServiceContainer;
 
     public function __construct(
         EntityManager $entityManager,
@@ -94,7 +103,10 @@ class LeadCapture
         CampaignService $campaignService,
         EmailTemplateService $emailTemplateService,
         InboundEmailService $inboundEmailService,
-        FieldValidationManager $fieldValidationManager
+        FieldValidationManager $fieldValidationManager,
+        JobSchedulerFactory $jobSchedulerFactory,
+        User $user,
+        ServiceContainer $recordServiceContainer
     ) {
         $this->entityManager = $entityManager;
         $this->fieldUtil = $fieldUtil;
@@ -108,6 +120,9 @@ class LeadCapture
         $this->emailTemplateService = $emailTemplateService;
         $this->inboundEmailService = $inboundEmailService;
         $this->fieldValidationManager = $fieldValidationManager;
+        $this->jobSchedulerFactory = $jobSchedulerFactory;
+        $this->user = $user;
+        $this->recordServiceContainer = $recordServiceContainer;
     }
 
     /**
@@ -219,14 +234,14 @@ class LeadCapture
 
         $this->entityManager->saveEntity($uniqueId);
 
-        $this->entityManager->createEntity(Job::ENTITY_TYPE, [
-            'serviceName' => 'LeadCapture',
-            'methodName' => 'jobOptInConfirmation',
-            'data' => (object) [
+        $this->jobSchedulerFactory
+            ->create()
+            ->setClassName(OptInConfirmation::class)
+            ->setData([
                 'id' => $uniqueId->getIdValue(),
-            ],
-            'queue' => QueueName::E0,
-        ]);
+            ])
+            ->setQueue(QueueName::E0)
+            ->schedule();
     }
 
     /**
@@ -851,5 +866,87 @@ class LeadCapture
         }
 
         $this->entityManager->saveEntity($logRecord);
+    }
+
+    public function isApiKeyValid(string $apiKey): bool
+    {
+        $leadCapture = $this->entityManager
+            ->getRDBRepository(LeadCaptureEntity::ENTITY_TYPE)
+            ->where([
+                'apiKey' => $apiKey,
+                'isActive' => true,
+            ])
+            ->findOne();
+
+        if ($leadCapture) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @throws ForbiddenSilent
+     * @throws NotFound
+     */
+    public function generateNewApiKeyForEntity(string $id): Entity
+    {
+        $service = $this->recordServiceContainer->get(LeadCaptureEntity::ENTITY_TYPE);
+
+        $entity = $service->getEntity($id);
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        $entity->set('apiKey', $this->generateApiKey());
+
+        $this->entityManager->saveEntity($entity);
+
+        $service->prepareEntityForOutput($entity);
+
+        return $entity;
+    }
+
+    public function generateApiKey(): string
+    {
+        return Util::generateApiKey();
+    }
+
+    /**
+     * @return stdClass[]
+     * @throws Forbidden
+     */
+    public function getSmtpAccountDataList(): array
+    {
+        if (!$this->user->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        $dataList = [];
+
+        $inboundEmailList = $this->entityManager
+            ->getRDBRepositoryByClass(InboundEmail::class)
+            ->where([
+                'useSmtp' => true,
+                'status' => InboundEmail::STATUS_ACTIVE,
+                ['emailAddress!=' => ''],
+                ['emailAddress!=' => null],
+            ])
+            ->find();
+
+        foreach ($inboundEmailList as $inboundEmail) {
+            $item = (object) [];
+
+            $key = 'inboundEmail:' . $inboundEmail->getId();
+
+            $item->key = $key;
+            $item->emailAddress = $inboundEmail->getEmailAddress();
+            $item->fromName = $inboundEmail->getFromName();
+
+            $dataList[] = $item;
+        }
+
+        return $dataList;
     }
 }

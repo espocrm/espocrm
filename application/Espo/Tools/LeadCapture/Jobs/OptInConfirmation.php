@@ -27,30 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\EntryPoints;
+namespace Espo\Tools\LeadCapture\Jobs;
 
-use Espo\Tools\LeadCapture\LeadCapture as Service;
-
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use Espo\Core\EntryPoint\EntryPoint;
-use Espo\Core\EntryPoint\Traits\NoAuth;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Utils\Client\ActionRenderer;
+use Espo\Core\Job\Job;
+use Espo\Core\Job\Job\Data;
+use Espo\Tools\LeadCapture\LeadCapture;
+use RuntimeException;
 
-class ConfirmOptIn implements EntryPoint
+class OptInConfirmation implements Job
 {
-    use NoAuth;
+    private LeadCapture $leadCapture;
 
-    private Service $service;
-    private ActionRenderer $actionRenderer;
-
-    public function __construct(Service $service, ActionRenderer $actionRenderer)
+    public function __construct(LeadCapture $leadCapture)
     {
-        $this->service = $service;
-        $this->actionRenderer = $actionRenderer;
+        $this->leadCapture = $leadCapture;
     }
 
     /**
@@ -58,24 +51,14 @@ class ConfirmOptIn implements EntryPoint
      * @throws Error
      * @throws NotFound
      */
-    public function run(Request $request, Response $response): void
+    public function run(Data $data): void
     {
-        $id = $request->getQueryParam('id');
+        $uniqueId = $data->get('id');
 
-        if (!$id) {
-            throw new BadRequest();
+        if (!$uniqueId) {
+            throw new RuntimeException();
         }
 
-        $data = $this->service->confirmOptIn($id);
-
-        $action = 'optInConfirmationExpired';
-
-        if ($data['status'] === 'success') {
-            $action = 'optInConfirmationSuccess';
-        }
-
-        $params = new ActionRenderer\Params('controllers/lead-capture-opt-in-confirmation', $action, $data);
-
-        $this->actionRenderer->write($response, $params);
+        $this->leadCapture->confirmOptIn($uniqueId);
     }
 }

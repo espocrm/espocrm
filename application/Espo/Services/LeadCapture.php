@@ -30,37 +30,21 @@
 namespace Espo\Services;
 
 use Espo\Entities\LeadCapture as LeadCaptureEntity;
-
-use Espo\Entities\InboundEmail;
-
-use Espo\{
-    Modules\Crm\Entities\Lead,
-    ORM\Entity,
-    Tools\LeadCapture\LeadCapture as Tool,
-};
-
-use Espo\Core\{
-    Exceptions\Forbidden,
-    Exceptions\NotFound,
-    Exceptions\Error,
-    Utils\Util,
-};
-
-use stdClass;
+use Espo\Modules\Crm\Entities\Lead;
+use Espo\ORM\Entity;
+use Espo\Tools\LeadCapture\LeadCapture as Tool;
+use Espo\Core\Utils\Util;
 
 /**
- * @extends Record<\Espo\Entities\LeadCapture>
+ * @extends Record<LeadCaptureEntity>
  */
 class LeadCapture extends Record
 {
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $readOnlyAttributeList = ['apiKey'];
 
     /**
      * @param LeadCaptureEntity $entity
-     * @throws Error
      */
     public function prepareEntityForOutput(Entity $entity)
     {
@@ -106,12 +90,7 @@ class LeadCapture extends Record
         foreach ($attributeList as $i => $attribute) {
             $value = strtoupper(Util::camelCaseToUnderscore($attribute));
 
-            if (
-                in_array(
-                    $seed->getAttributeType($attribute),
-                    [Entity::VARCHAR, Entity::TEXT]
-                )
-            ) {
+            if (in_array($seed->getAttributeType($attribute), [Entity::VARCHAR, Entity::TEXT])) {
                 $value = '"' . $value . '"';
             }
 
@@ -131,135 +110,13 @@ class LeadCapture extends Record
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
-        $apiKey = $this->generateApiKey();
+        $apiKey = $this->createLeadCaptureService()->generateApiKey();
 
         $entity->set('apiKey', $apiKey);
     }
 
-    /**
-     * @throws \Espo\Core\Exceptions\ForbiddenSilent
-     * @throws NotFound
-     * @throws Error
-     */
-    public function generateNewApiKeyForEntity(string $id): Entity
-    {
-        $entity = $this->getEntity($id);
-
-        if (!$entity) {
-            throw new NotFound();
-        }
-
-        $apiKey = $this->generateApiKey();
-
-        $entity->set('apiKey', $apiKey);
-
-        $this->entityManager->saveEntity($entity);
-
-        $this->prepareEntityForOutput($entity);
-
-        return $entity;
-    }
-
-    public function generateApiKey(): string
-    {
-        return Util::generateApiKey();
-    }
-
-    public function isApiKeyValid(string $apiKey): bool
-    {
-        $leadCapture = $this->entityManager
-            ->getRDBRepository(LeadCaptureEntity::ENTITY_TYPE)
-            ->where([
-                'apiKey' => $apiKey,
-                'isActive' => true,
-            ])
-            ->findOne();
-
-        if ($leadCapture) {
-            return true;
-        }
-
-        return false;
-    }
-
-    protected function createTool(): Tool
+    protected function createLeadCaptureService(): Tool
     {
         return $this->injectableFactory->create(Tool::class);
-    }
-
-    /**
-     * @throws \Espo\Core\Exceptions\BadRequest
-     * @throws NotFound
-     * @throws Error
-     */
-    public function leadCapture(string $apiKey, stdClass $data): void
-    {
-        $this->createTool()->capture($apiKey, $data);
-    }
-
-    /**
-     * @throws Error
-     */
-    public function jobOptInConfirmation(stdClass $data): void
-    {
-        if (empty($data->id)) {
-            throw new Error();
-        }
-
-        $this->createTool()->sendOptInConfirmation($data->id);
-    }
-
-    /**
-     * @throws \Espo\Core\Exceptions\BadRequest
-     * @throws Error
-     * @throws NotFound
-     *
-     * @return array{
-     *   status: 'success'|'expired',
-     *   message: ?string,
-     *   leadCaptureName?: ?string,
-     *   leadCaptureId?: string,
-     * }
-     */
-    public function confirmOptIn(string $id): array
-    {
-        return $this->createTool()->confirmOptIn($id);
-    }
-
-    /**
-     * @return stdClass[]
-     * @throws Forbidden
-     */
-    public function getSmtpAccountDataList(): array
-    {
-        if (!$this->user->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        $dataList = [];
-
-        $inboundEmailList = $this->entityManager
-            ->getRDBRepository(InboundEmail::ENTITY_TYPE)
-            ->where([
-                'useSmtp' => true,
-                'status' => 'Active',
-                ['emailAddress!=' => ''],
-                ['emailAddress!=' => null],
-            ])
-            ->find();
-
-        foreach ($inboundEmailList as $inboundEmail) {
-            $item = (object) [];
-
-            $key = 'inboundEmail:' . $inboundEmail->getId();
-
-            $item->key = $key;
-            $item->emailAddress = $inboundEmail->getEmailAddress();
-            $item->fromName = $inboundEmail->getFromName();
-
-            $dataList[] = $item;
-        }
-
-        return $dataList;
     }
 }
