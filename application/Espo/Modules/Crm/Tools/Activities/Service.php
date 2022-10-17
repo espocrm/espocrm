@@ -623,14 +623,9 @@ class Service
 
     /**
      * @param array<string,Select|array<string,mixed>> $parts
-     * @param array{
-     *   scope?: ?string,
-     *   offset?: ?int,
-     *   maxSize?: ?int,
-     * } $params
      * @return RecordCollection<Entity>
      */
-    protected function getResultFromQueryParts(array $parts, string $scope, array $params): RecordCollection
+    protected function getResultFromQueryParts(array $parts, string $scope, FetchParams $params): RecordCollection
     {
         if ($parts === []) {
             /** @var RecordCollection<Entity> */
@@ -639,11 +634,11 @@ class Service
 
         $onlyScope = false;
 
-        if (!empty($params['scope'])) {
-            $onlyScope = $params['scope'];
+        if ($params->getEntityType()) {
+            $onlyScope = $params->getEntityType();
         }
 
-        $maxSize = $params['maxSize'] ?? null;
+        $maxSize = $params->getMaxSize();
 
         $queryList = [];
 
@@ -667,7 +662,7 @@ class Service
 
         $maxSizeQ = $maxSize;
 
-        $offset = $params['offset'] ?? 0;
+        $offset = $params->getOffset() ?? 0;
 
         if (!$onlyScope && $scope === User::ENTITY_TYPE) {
             // optimizing sub-queries
@@ -936,17 +931,12 @@ class Service
     }
 
     /**
-     * @param array{
-     *   scope?: ?string,
-     *   offset?: ?int,
-     *   maxSize?: ?int,
-     * } $params
      * @return RecordCollection<Entity>
      * @throws NotFound
      * @throws Error
      * @throws Forbidden
      */
-    public function getActivities(string $scope, string $id, array $params = []): RecordCollection
+    public function getActivities(string $scope, string $id, FetchParams $params): RecordCollection
     {
         $entity = $this->entityManager->getEntityById($scope, $id);
 
@@ -956,7 +946,7 @@ class Service
 
         $this->accessCheck($entity);
 
-        $targetScope = $params['scope'] ?? null;
+        $targetScope = $params->getEntityType();
 
         $fetchAll = empty($targetScope);
 
@@ -995,17 +985,12 @@ class Service
     }
 
     /**
-     * @param array{
-     *   scope?: ?string,
-     *   offset?: ?int,
-     *   maxSize?: ?int,
-     * } $params
      * @return RecordCollection<Entity>
      * @throws NotFound
      * @throws Error
      * @throws Forbidden
      */
-    public function getHistory(string $scope, string $id, array $params = []): RecordCollection
+    public function getHistory(string $scope, string $id, FetchParams $params): RecordCollection
     {
         $entity = $this->entityManager->getEntityById($scope, $id);
 
@@ -1015,7 +1000,7 @@ class Service
 
         $this->accessCheck($entity);
 
-        $targetScope = $params['scope'] ?? null;
+        $targetScope = $params->getEntityType();
 
         $fetchAll = empty($targetScope);
 

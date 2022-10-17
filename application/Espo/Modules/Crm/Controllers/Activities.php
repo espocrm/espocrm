@@ -39,6 +39,7 @@ use Espo\Core\Acl;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Record\SearchParamsFetcher;
 
+use Espo\Modules\Crm\Tools\Activities\FetchParams as ActivitiesFetchParams;
 use Espo\Modules\Crm\Tools\Calendar\FetchParams;
 use Espo\Modules\Crm\Tools\Activities\Service as Service;
 use Espo\Modules\Crm\Tools\Calendar\Item as CalendarItem;
@@ -302,22 +303,18 @@ class Activities
 
         $offset = $searchParams->getOffset();
         $maxSize = $searchParams->getMaxSize();
-        $order = $searchParams->getOrder();
-        $orderBy = $searchParams->getOrderBy();
 
-        $scope = $request->getQueryParam('entityType') ?? null;
+        $targetEntityType = $request->getQueryParam('entityType');
 
-        $methodParams = [
-            'scope' => $scope,
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'order' => $order,
-            'orderBy' => $orderBy,
-        ];
+        $fetchParams = new ActivitiesFetchParams(
+            $maxSize,
+            $offset,
+            $targetEntityType
+        );
 
         $recordCollection = $name === 'history' ?
-            $this->service->getHistory($entityType, $id, $methodParams) :
-            $this->service->getActivities($entityType, $id, $methodParams);
+            $this->service->getHistory($entityType, $id, $fetchParams) :
+            $this->service->getActivities($entityType, $id, $fetchParams);
 
         return (object) [
             'total' => $recordCollection->getTotal(),
