@@ -29,13 +29,14 @@
 
 namespace Espo\Classes\Select\Note\BoolFilters;
 
+use Espo\Core\Select\Bool\Filter;
 use Espo\Entities\User;
 use Espo\ORM\Query\Part\Condition;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
-class SkipOwn implements \Espo\Core\Select\Bool\Filter
+class SkipOwn implements Filter
 {
     private User $user;
 

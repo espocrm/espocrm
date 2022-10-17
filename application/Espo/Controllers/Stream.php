@@ -147,7 +147,7 @@ class Stream
         }
 
         if ($request->getQueryParam('skipOwn') === 'true') {
-            $searchParams = $searchParams->withBoolFilterList(['skipOwn']);
+            $searchParams = $searchParams->withBoolFilterAdded('skipOwn');
         }
 
         return $searchParams;

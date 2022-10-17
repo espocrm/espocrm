@@ -59,6 +59,8 @@ class SearchParams
     }
 
     /**
+     * Attributes to be selected.
+     *
      * @return ?string[]
      */
     public function getSelect(): ?array
@@ -66,37 +68,58 @@ class SearchParams
         return $this->rawParams['select'] ?? null;
     }
 
+    /**
+     * An order-by field.
+     */
     public function getOrderBy(): ?string
     {
         return $this->rawParams['orderBy'] ?? null;
     }
 
+    /**
+     * An order direction.
+     *
+     * @return self::ORDER_ASC|self::ORDER_DESC
+     */
     public function getOrder(): ?string
     {
         return $this->rawParams['order'] ?? null;
     }
 
+    /**
+     * An offset.
+     */
     public function getOffset(): ?int
     {
         return $this->rawParams['offset'] ?? null;
     }
 
+    /**
+     * A max-size.
+     */
     public function getMaxSize(): ?int
     {
         return $this->rawParams['maxSize'] ?? null;
     }
 
+    /**
+     * A text filter.
+     */
     public function getTextFilter(): ?string
     {
         return $this->rawParams['textFilter'] ?? null;
     }
 
+    /**
+     * A primary filter.
+     */
     public function getPrimaryFilter(): ?string
     {
         return $this->rawParams['primaryFilter'] ?? null;
     }
 
     /**
+     * A bool filter list.
      *
      * @return string[]
      */
@@ -105,6 +128,9 @@ class SearchParams
         return $this->rawParams['boolFilterList'] ?? [];
     }
 
+    /**
+     * A where.
+     */
     public function getWhere(): ?WhereItem
     {
         $raw = $this->rawParams['where'] ?? null;
@@ -119,38 +145,46 @@ class SearchParams
         ]);
     }
 
+    /**
+     * A max text attribute length.
+     */
     public function getMaxTextAttributeLength(): ?int
     {
         return $this->rawParams['maxTextAttributeLength'];
     }
 
     /**
-     * Attributes to select. NULL means to select all attributes.
+     * With attributes to be selected. NULL means to select all attributes.
      *
      * @param string[]|null $select
      */
     public function withSelect(?array $select): self
     {
         $obj = clone $this;
-
         $obj->rawParams['select'] = $select;
 
         return $obj;
     }
 
+    /**
+     * With an order-by field.
+     */
     public function withOrderBy(?string $orderBy): self
     {
         $obj = clone $this;
-
         $obj->rawParams['orderBy'] = $orderBy;
 
         return $obj;
     }
 
+    /**
+     * With an order direction.
+     *
+     * @param self::ORDER_ASC|self::ORDER_DESC|null $order
+     */
     public function withOrder(?string $order): self
     {
         $obj = clone $this;
-
         $obj->rawParams['order'] = $order;
 
         if ($order !== self::ORDER_ASC && $order !== self::ORDER_DESC) {
@@ -160,54 +194,78 @@ class SearchParams
         return $obj;
     }
 
+    /**
+     * With an offset.
+     */
     public function withOffset(?int $offset): self
     {
         $obj = clone $this;
-
         $obj->rawParams['offset'] = $offset;
 
         return $obj;
     }
 
+    /**
+     * With a mix size.
+     */
     public function withMaxSize(?int $maxSize): self
     {
         $obj = clone $this;
-
         $obj->rawParams['maxSize'] = $maxSize;
 
         return $obj;
     }
 
+    /**
+     * With a text filter.
+     */
     public function withTextFilter(?string $filter): self
     {
         $obj = clone $this;
-
         $obj->rawParams['textFilter'] = $filter;
 
         return $obj;
     }
 
+    /**
+     * With a primary filter.
+     *
+     * @param string|null $primaryFilter
+     * @return $this
+     */
     public function withPrimaryFilter(?string $primaryFilter): self
     {
         $obj = clone $this;
-
         $obj->rawParams['primaryFilter'] = $primaryFilter;
 
         return $obj;
     }
 
     /**
+     * With a bool filter list. Previously set bool filter will be unset.
+     *
      * @param string[] $boolFilterList
      */
     public function withBoolFilterList(array $boolFilterList): self
     {
         $obj = clone $this;
-
         $obj->rawParams['boolFilterList'] = $boolFilterList;
 
         return $obj;
     }
 
+    public function withBoolFilterAdded(string $boolFilter): self
+    {
+        $obj = clone $this;
+        $obj->rawParams['boolFilterList'] ??= [];
+        $obj->rawParams['boolFilterList'][] = $boolFilter;
+
+        return $obj;
+    }
+
+    /**
+     * With a where. The previously set where will be unset.
+     */
     public function withWhere(WhereItem $where): self
     {
         $obj = clone $this;
@@ -223,6 +281,9 @@ class SearchParams
         return $obj;
     }
 
+    /**
+     * With a where added.
+     */
     public function withWhereAdded(WhereItem $whereItem): self
     {
         $obj = clone $this;
@@ -236,6 +297,9 @@ class SearchParams
         return $obj;
     }
 
+    /**
+     * With max text attribute length (long texts will be cut to avoid fetching too much data).
+     */
     public function withMaxTextAttributeLength(?int $value): self
     {
         $obj = clone $this;
