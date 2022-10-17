@@ -32,16 +32,16 @@ namespace Espo\Tools\LeadCapture\Jobs;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Job\Job;
 use Espo\Core\Job\Job\Data;
-use Espo\Tools\LeadCapture\LeadCapture;
+use Espo\Tools\LeadCapture\ConfirmationSender;
 use RuntimeException;
 
 class OptInConfirmation implements Job
 {
-    private LeadCapture $leadCapture;
+    private ConfirmationSender $sender;
 
-    public function __construct(LeadCapture $leadCapture)
+    public function __construct(ConfirmationSender $sender)
     {
-        $this->leadCapture = $leadCapture;
+        $this->sender = $sender;
     }
 
     /**
@@ -55,6 +55,6 @@ class OptInConfirmation implements Job
             throw new RuntimeException();
         }
 
-        $this->leadCapture->sendOptInConfirmation($uniqueId);
+        $this->sender->send($uniqueId);
     }
 }

@@ -1,0 +1,232 @@
+<?php
+/************************************************************************
+ * This file is part of EspoCRM.
+ *
+ * EspoCRM - Open Source CRM application.
+ * Copyright (C) 2014-2022 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Website: https://www.espocrm.com
+ *
+ * EspoCRM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * EspoCRM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
+
+namespace Espo\Tools\LeadCapture;
+
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Mail\Account\GroupAccount\AccountFactory;
+use Espo\Core\Mail\EmailSender;
+use Espo\Core\Mail\Exceptions\NoSmtp;
+use Espo\Core\Mail\Exceptions\SendingError;
+use Espo\Core\Templates\Entities\Person;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime;
+use Espo\Core\Utils\Language;
+use Espo\Entities\Email;
+use Espo\Entities\EmailTemplate;
+use Espo\Entities\LeadCapture as LeadCaptureEntity;
+use Espo\Entities\UniqueId;
+use Espo\Modules\Crm\Entities\Lead;
+use Espo\ORM\EntityManager;
+use Espo\Services\EmailTemplate as EmailTemplateService;
+
+class ConfirmationSender
+{
+    private EntityManager $entityManager;
+    private EmailTemplateService $emailTemplateService;
+    private Config $config;
+    private Language $defaultLanguage;
+    private EmailSender $emailSender;
+    private AccountFactory $accountFactory;
+    private DateTime $dateTime;
+
+    public function __construct(
+        EntityManager $entityManager,
+        EmailTemplateService $emailTemplateService,
+        Config $config,
+        Language $defaultLanguage,
+        EmailSender $emailSender,
+        AccountFactory $accountFactory,
+        DateTime $dateTime
+    ) {
+        $this->entityManager = $entityManager;
+        $this->emailTemplateService = $emailTemplateService;
+        $this->config = $config;
+        $this->defaultLanguage = $defaultLanguage;
+        $this->emailSender = $emailSender;
+        $this->accountFactory = $accountFactory;
+        $this->dateTime = $dateTime;
+    }
+
+    /**
+     * Send opt-in confirmation email.
+     *
+     * @param string $id A unique ID.
+     * @throws Error
+     * @throws NoSmtp
+     * @throws SendingError
+     */
+    public function send(string $id): void
+    {
+        /** @var ?UniqueId $uniqueId */
+        $uniqueId = $this->entityManager
+            ->getRDBRepository(UniqueId::ENTITY_TYPE)
+            ->where(['name' => $id])
+            ->findOne();
+
+        if (!$uniqueId) {
+            throw new Error("LeadCapture: UniqueId not found.");
+        }
+
+        $uniqueIdData = $uniqueId->getData();
+
+        if (empty($uniqueIdData->data)) {
+            throw new Error("LeadCapture: data not found.");
+        }
+
+        if (empty($uniqueIdData->leadCaptureId)) {
+            throw new Error("LeadCapture: leadCaptureId not found.");
+        }
+
+        $data = $uniqueIdData->data;
+        $leadCaptureId = $uniqueIdData->leadCaptureId;
+        $leadId = $uniqueIdData->leadId ?? null;
+
+        $terminateAt = $uniqueId->getTerminateAt();
+
+        if ($terminateAt && time() > strtotime($terminateAt->getString())) {
+            throw new Error("LeadCapture: Opt-in confirmation expired.");
+        }
+
+        /** @var ?LeadCaptureEntity $leadCapture */
+        $leadCapture = $this->entityManager->getEntity(LeadCaptureEntity::ENTITY_TYPE, $leadCaptureId);
+
+        if (!$leadCapture) {
+            throw new Error("LeadCapture: LeadCapture not found.");
+        }
+
+        $optInConfirmationEmailTemplateId = $leadCapture->getOptInConfirmationEmailTemplateId();
+
+        if (!$optInConfirmationEmailTemplateId) {
+            throw new Error("LeadCapture: No optInConfirmationEmailTemplateId.");
+        }
+
+        /** @var ?EmailTemplate $emailTemplate */
+        $emailTemplate = $this->entityManager
+            ->getEntityById(EmailTemplate::ENTITY_TYPE, $optInConfirmationEmailTemplateId);
+
+        if (!$emailTemplate) {
+            throw new Error("LeadCapture: EmailTemplate not found.");
+        }
+
+        if ($leadId) {
+            /** @var ?Lead $lead */
+            $lead = $this->entityManager->getEntityById(Lead::ENTITY_TYPE, $leadId);
+        }
+        else {
+            $lead = $this->entityManager->getNewEntity(Lead::ENTITY_TYPE);
+
+            $lead->set($data);
+        }
+
+        $emailData = $this->emailTemplateService
+            ->parseTemplate($emailTemplate, [
+                Person::TEMPLATE_TYPE => $lead,
+                Lead::ENTITY_TYPE => $lead,
+            ]);
+
+        if (!$lead) {
+            throw new Error("Lead Capture: Could not find lead.");
+        }
+
+        $emailAddress = $lead->getEmailAddress();
+
+        if (!$emailAddress) {
+            throw new Error("Lead Capture: No lead email address.");
+        }
+
+        $subject = $emailData['subject'];
+        $body = $emailData['body'];
+        $isHtml = $emailData['isHtml'];
+
+        if (
+            mb_strpos($body, '{optInUrl}') === false &&
+            mb_strpos($body, '{optInLink}') === false
+        ) {
+            if ($isHtml) {
+                $body .= "<p>{optInLink}</p>";
+            } else {
+                $body .= "\n\n{optInUrl}";
+            }
+        }
+
+        $url = $this->config->getSiteUrl() . '/?entryPoint=confirmOptIn&id=' . $uniqueId->getIdValue();
+
+        $linkHtml =
+            '<a href='.$url.'>' .
+            $this->defaultLanguage->translateLabel('Confirm Opt-In', 'labels', LeadCaptureEntity::ENTITY_TYPE) .
+            '</a>';
+
+        $body = str_replace('{optInUrl}', $url, $body);
+        $body = str_replace('{optInLink}', $linkHtml, $body);
+
+        $createdAt = $uniqueId->getCreatedAt()->getString();
+
+        if ($createdAt) {
+            $dateString = $this->dateTime->convertSystemDateTime($createdAt, null, $this->config->get('dateFormat'));
+            $timeString = $this->dateTime->convertSystemDateTime($createdAt, null, $this->config->get('timeFormat'));
+            $dateTimeString = $this->dateTime->convertSystemDateTime($createdAt);
+
+            $body = str_replace('{optInDate}', $dateString, $body);
+            $body = str_replace('{optInTime}', $timeString, $body);
+            $body = str_replace('{optInDateTime}', $dateTimeString, $body);
+        }
+
+        /** @var Email $email */
+        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
+
+        $email
+            ->setSubject($subject)
+            ->setBody($body)
+            ->setIsHtml($isHtml)
+            ->addToAddress($emailAddress);
+
+        $smtpParams = null;
+
+        $inboundEmailId = $leadCapture->getInboundEmailId();
+
+        if ($inboundEmailId) {
+            $account = $this->accountFactory->create($inboundEmailId);
+
+            if (!$account->isAvailableForSending()) {
+                throw new Error("Lead Capture:  Group email account {$inboundEmailId} can't be used for sending.");
+            }
+
+            $smtpParams = $account->getSmtpParams();
+        }
+
+        $sender = $this->emailSender->create();
+
+        if ($smtpParams) {
+            $sender->withSmtpParams($smtpParams);
+        }
+
+        $sender->send($email);
+    }
+}
