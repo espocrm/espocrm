@@ -29,15 +29,13 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Utils\Config,
-    Utils\Log,
-    ORM\EntityManager,
-    ServiceFactory,
-    Utils\System,
-    Utils\DateTime as DateTimeUtil
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\ServiceFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\System;
 
 use Espo\Core\Job\Job\Data;
 use Espo\Core\Job\Job\Status;
@@ -49,15 +47,10 @@ use Throwable;
 class JobRunner
 {
     private JobFactory $jobFactory;
-
     private ScheduleUtil $scheduleUtil;
-
     private EntityManager $entityManager;
-
     private ServiceFactory $serviceFactory;
-
     private Log $log;
-
     private Config $config;
 
     public function __construct(
