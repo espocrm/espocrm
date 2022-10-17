@@ -32,12 +32,10 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
-use Espo\Services\EmailAddress as Service;
+use Espo\Tools\Email\AddressService as Service;
 
-use Espo\Core\{
-    Controllers\RecordBase,
-    Api\Request,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Controllers\RecordBase;
 
 class EmailAddress extends RecordBase
 {
@@ -77,7 +75,6 @@ class EmailAddress extends RecordBase
 
     private function getEmailAddressService(): Service
     {
-        /** @var Service */
-        return $this->getRecordService();
+        return $this->injectableFactory->create(Service::class);
     }
 }

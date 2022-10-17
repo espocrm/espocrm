@@ -27,36 +27,154 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\Email;
 
+use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
+use Espo\Core\Select\SelectBuilderFactory;
+use Espo\Core\Select\Text\MetadataProvider as TextMetadataProvider;
 use Espo\Core\Templates\Entities\Company;
 use Espo\Core\Templates\Entities\Person;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\EmailAddress as EmailAddressEntity;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
+use Espo\Entities\User;
 use Espo\Entities\User as UserEntity;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Lead;
-use Espo\Repositories\EmailAddress as Repository;
-use Espo\Entities\EmailAddress as EmailAddressEntity;
-
+use Espo\ORM\EntityManager;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\Repositories\EmailAddress as Repository;
 
-use Espo\Core\Select\Text\MetadataProvider as TextMetadataProvider;
-
-/**
- * @extends Record<\Espo\Entities\EmailAddress>
- */
-class EmailAddress extends Record
+class AddressService
 {
     private const ERASED_PREFIX = 'ERASED:';
 
-    private ?TextMetadataProvider $textMetadataProvider = null;
+    private Config $config;
+    private Acl $acl;
+    private Metadata $metadata;
+    private SelectBuilderFactory $selectBuilderFactory;
+    private EntityManager $entityManager;
+    private User $user;
+    private TextMetadataProvider $textMetadataProvider;
+
+    public function __construct(
+        Config $config,
+        Acl $acl,
+        Metadata $metadata,
+        SelectBuilderFactory $selectBuilderFactory,
+        EntityManager $entityManager,
+        User $user,
+        TextMetadataProvider $textMetadataProvider
+    ) {
+        $this->config = $config;
+        $this->acl = $acl;
+        $this->metadata = $metadata;
+        $this->selectBuilderFactory = $selectBuilderFactory;
+        $this->entityManager = $entityManager;
+        $this->user = $user;
+        $this->textMetadataProvider = $textMetadataProvider;
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function searchInAddressBook(string $query, int $limit, bool $onlyActual = false): array
+    {
+        $result = [];
+
+        $entityTypeList = $this->config->get('emailAddressLookupEntityTypeList') ?? [];
+
+        $allEntityTypeList = $this->getHavingEmailAddressEntityTypeList();
+
+        foreach ($entityTypeList as $entityType) {
+            if (!in_array($entityType, $allEntityTypeList)) {
+                continue;
+            }
+
+            if (!$this->acl->checkScope($entityType)) {
+                continue;
+            }
+
+            $this->findInAddressBookByEntityType($query, $limit, $entityType, $result, $onlyActual);
+        }
+
+        $this->findInInboundEmail($query, $limit, $result);
+
+        $finalResult = [];
+
+        foreach ($result as $item) {
+            foreach ($finalResult as $item1) {
+                if ($item['emailAddress'] == $item1['emailAddress']) {
+                    continue 2;
+                }
+            }
+
+            $finalResult[] = $item;
+        }
+
+        usort($finalResult, function ($item1, $item2) use ($query) {
+            if (strpos($query, '@') === false) {
+                return 0;
+            }
+
+            $p1 = strpos($item1['emailAddress'], $query);
+            $p2 = strpos($item2['emailAddress'], $query);
+
+            if ($p1 === 0 && $p2 !== 0) {
+                return -1;
+            }
+
+            if ($p1 !== 0 && $p2 !== 0) {
+                return 0;
+            }
+
+            if ($p1 !== 0 && $p2 === 0) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        return $finalResult;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getHavingEmailAddressEntityTypeList(): array
+    {
+        $list = [
+            Account::ENTITY_TYPE,
+            Contact::ENTITY_TYPE,
+            Lead::ENTITY_TYPE,
+            User::ENTITY_TYPE,
+        ];
+
+        $scopeDefs = $this->metadata->get(['scopes']);
+
+        foreach ($scopeDefs as $scope => $defs) {
+            if (
+                empty($defs['disabled']) &&
+                !empty($defs['type']) &&
+                (
+                    $defs['type'] === Person::TEMPLATE_TYPE ||
+                    $defs['type'] === Company::TEMPLATE_TYPE
+                )
+            ) {
+                $list[] = $scope;
+            }
+        }
+
+        return $list;
+    }
 
     /**
      * @param array<int,array<string,mixed>> $result
      */
-    protected function findInAddressBookByEntityType(
+    private function findInAddressBookByEntityType(
         string $filter,
         int $limit,
         string $entityType,
@@ -111,11 +229,15 @@ class EmailAddress extends Record
                 ->distinct();
         }
 
-        if ($entityType === UserEntity::ENTITY_TYPE) {
+        if ($entityType === User::ENTITY_TYPE) {
             $this->handleQueryBuilderUser($filter, $builder);
         }
 
-        $select = ['id', 'emailAddress', 'name'];
+        $select = [
+            'id',
+            'emailAddress',
+            'name',
+        ];
 
         if (
             $this->metadata->get(
@@ -202,6 +324,43 @@ class EmailAddress extends Record
         }
     }
 
+    /**
+     * @param array<int,array<string,mixed>> $result
+     */
+    protected function findInInboundEmail(string $query, int $limit, array &$result): void
+    {
+        if ($this->user->isPortal()) {
+            return;
+        }
+
+        $list = $this->entityManager
+            ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
+            ->select([
+                'id',
+                'name',
+                'emailAddress',
+            ])
+            ->where([
+                'emailAddress*' => $query . '%',
+            ])
+            ->order('name')
+            ->find();
+
+        foreach ($list as $item) {
+            $result[] = [
+                'emailAddress' => $item->getEmailAddress(),
+                'entityName' => $item->getName(),
+                'entityType' => InboundEmailEntity::ENTITY_TYPE,
+                'entityId' => $item->getId(),
+            ];
+        }
+    }
+
+    private function hasFullTextSearch(string $entityType): bool
+    {
+        return $this->textMetadataProvider->hasFullTextSearch($entityType);
+    }
+
     private function handleQueryBuilderUser(string $filter, QueryBuilder $queryBuilder): void
     {
         if ($this->acl->getPermissionLevel('portalPermission') === Table::LEVEL_NO) {
@@ -219,139 +378,9 @@ class EmailAddress extends Record
         ]);
     }
 
-    /**
-     * @param array<int,array<string,mixed>> $result
-     */
-    protected function findInInboundEmail(string $query, int $limit, array &$result): void
-    {
-        if ($this->user->isPortal()) {
-            return;
-        }
-
-        $list = $this->entityManager
-            ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
-            ->select(['id', 'name', 'emailAddress'])
-            ->where([
-                'emailAddress*' => $query . '%',
-            ])
-            ->order('name')
-            ->find();
-
-        foreach ($list as $item) {
-            $result[] = [
-                'emailAddress' => $item->getEmailAddress(),
-                'entityName' => $item->getName(),
-                'entityType' => InboundEmailEntity::ENTITY_TYPE,
-                'entityId' => $item->getId(),
-            ];
-        }
-    }
-
-    /**
-     * @return array<int,array<string,mixed>>
-     */
-    public function searchInAddressBook(string $query, int $limit, bool $onlyActual = false): array
-    {
-        $result = [];
-
-        $entityTypeList = $this->config->get('emailAddressLookupEntityTypeList') ?? [];
-
-        $allEntityTypeList = $this->getHavingEmailAddressEntityTypeList();
-
-        foreach ($entityTypeList as $entityType) {
-            if (!in_array($entityType, $allEntityTypeList)) {
-                continue;
-            }
-
-            if (!$this->acl->checkScope($entityType)) {
-                continue;
-            }
-
-            $this->findInAddressBookByEntityType($query, $limit, $entityType, $result, $onlyActual);
-        }
-
-        $this->findInInboundEmail($query, $limit, $result);
-
-        $finalResult = [];
-
-        foreach ($result as $item) {
-            foreach ($finalResult as $item1) {
-                if ($item['emailAddress'] == $item1['emailAddress']) {
-                    continue 2;
-                }
-            }
-
-            $finalResult[] = $item;
-        }
-
-        usort($finalResult, function ($item1, $item2) use ($query) {
-            if (strpos($query, '@') === false) {
-                return 0;
-            }
-
-            $p1 = strpos($item1['emailAddress'], $query);
-            $p2 = strpos($item2['emailAddress'], $query);
-
-            if ($p1 === 0 && $p2 !== 0) {
-                return -1;
-            }
-
-            if ($p1 !== 0 && $p2 !== 0) {
-                return 0;
-            }
-
-            if ($p1 !== 0 && $p2 === 0) {
-                return 1;
-            }
-
-            return 0;
-        });
-
-        return $finalResult;
-    }
-
-    /**
-     * @return string[]
-     */
-    protected function getHavingEmailAddressEntityTypeList(): array
-    {
-        $list = [
-            Account::ENTITY_TYPE,
-            Contact::ENTITY_TYPE,
-            Lead::ENTITY_TYPE,
-            UserEntity::ENTITY_TYPE,
-        ];
-
-        $scopeDefs = $this->metadata->get(['scopes']);
-
-        foreach ($scopeDefs as $scope => $defs) {
-            if (
-                empty($defs['disabled']) &&
-                !empty($defs['type']) &&
-                (
-                    $defs['type'] === Person::TEMPLATE_TYPE ||
-                    $defs['type'] === Company::TEMPLATE_TYPE
-                )
-            ) {
-                $list[] = $scope;
-            }
-        }
-
-        return $list;
-    }
-
     private function getEmailAddressRepository(): Repository
     {
         /** @var Repository */
         return $this->entityManager->getRepository(EmailAddressEntity::ENTITY_TYPE);
-    }
-
-    private function hasFullTextSearch(string $entityType): bool
-    {
-        if ($this->textMetadataProvider === null) {
-            $this->textMetadataProvider = $this->injectableFactory->create(TextMetadataProvider::class);
-        }
-
-        return $this->textMetadataProvider->hasFullTextSearch($entityType);
     }
 }
