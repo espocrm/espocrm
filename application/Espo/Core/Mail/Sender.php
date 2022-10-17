@@ -44,19 +44,17 @@ use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\ORM\EntityManager;
 
-use Laminas\{
-    Mime\Message as MimeMessage,
-    Mime\Part as MimePart,
-    Mime\Mime as Mime,
-    Mail\Header\Sender as SenderHeader,
-    Mail\Header\MessageId as MessageIdHeader,
-    Mail\Header\ContentType as ContentTypeHeader,
-    Mail\Message,
-    Mail\Transport\SmtpOptions,
-    Mail\Transport\Envelope,
-    Mail\Transport\Smtp as SmtpTransport,
-    Mail\Protocol\Exception\RuntimeException as ProtocolRuntimeException,
-};
+use Laminas\Mail\Header\ContentType as ContentTypeHeader;
+use Laminas\Mail\Header\MessageId as MessageIdHeader;
+use Laminas\Mail\Header\Sender as SenderHeader;
+use Laminas\Mail\Message;
+use Laminas\Mail\Protocol\Exception\RuntimeException as ProtocolRuntimeException;
+use Laminas\Mail\Transport\Envelope;
+use Laminas\Mail\Transport\Smtp as SmtpTransport;
+use Laminas\Mail\Transport\SmtpOptions;
+use Laminas\Mime\Message as MimeMessage;
+use Laminas\Mime\Mime as Mime;
+use Laminas\Mime\Part as MimePart;
 
 use Exception;
 use InvalidArgumentException;

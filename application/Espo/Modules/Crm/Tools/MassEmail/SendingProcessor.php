@@ -34,6 +34,7 @@ use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\SenderParams;
 use Espo\Core\Mail\SmtpParams;
 use Espo\Entities\Attachment;
+use Espo\Modules\Crm\Tools\MassEmail\MessagePreparator\Data;
 use Espo\ORM\Collection;
 use Laminas\Mail\Message;
 
@@ -43,7 +44,6 @@ use Espo\Entities\EmailAddress;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Mail\EmailSender;
-use Espo\Core\Mail\Mail\Header\XQueueItemId;
 use Espo\Core\Mail\Sender;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
@@ -76,6 +76,7 @@ class SendingProcessor
     private AccountFactory $accountFactory;
     private CampaignService $campaignService;
     private EmailTemplateService $emailTemplateService;
+    private MessageHeadersPreparator $headersPreparator;
 
     public function __construct(
         Config $config,
@@ -85,7 +86,8 @@ class SendingProcessor
         Log $log,
         AccountFactory $accountFactory,
         CampaignService $campaignService,
-        EmailTemplateService $emailTemplateService
+        EmailTemplateService $emailTemplateService,
+        MessageHeadersPreparator $headersPreparator
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
@@ -95,6 +97,7 @@ class SendingProcessor
         $this->accountFactory = $accountFactory;
         $this->campaignService = $campaignService;
         $this->emailTemplateService = $emailTemplateService;
+        $this->headersPreparator = $headersPreparator;
     }
 
     /**
@@ -288,6 +291,7 @@ class SendingProcessor
 
         $emailData['body'] = $body;
 
+        /** @var Email $email */
         $email = $this->entityManager
             ->getRDBRepositoryByClass(Email::class)
             ->getNew();
@@ -300,57 +304,44 @@ class SendingProcessor
             return null;
         }
 
-        $email->set('to', $emailAddress);
+        $email->addToAddress($emailAddress);
 
         if ($massEmail->getFromAddress()) {
-            $email->set('from', $massEmail->getFromAddress());
+            $email->setFromAddress($massEmail->getFromAddress());
         }
 
-        if ($massEmail->getReplyToAddress()) {
-            $email->set('replyTo', $massEmail->getReplyToAddress());
+        $replyToAddress = $massEmail->getReplyToAddress();
+
+        if ($replyToAddress) {
+            $email->addReplyToAddress($replyToAddress);
         }
 
         return $email;
     }
 
-    /**
-     * @todo Refactor. Use composition with an interface.
-     */
-    protected function prepareQueueItemMessage(
+    private function prepareQueueItemMessage(
         EmailQueueItem $queueItem,
         Sender $sender,
         Message $message,
         SenderParams $senderParams
-    ): SenderParams {
+    ): void {
 
-        $header = new XQueueItemId();
-        $header->setId($queueItem->getId());
+        $id = $queueItem->getId();
 
-        $message->getHeaders()->addHeader($header);
-        $message->getHeaders()->addHeaderLine('Precedence', 'bulk');
+        $this->headersPreparator->prepare($message->getHeaders(), new Data($id, $senderParams));
 
-        if (!$this->config->get('massEmailDisableMandatoryOptOutLink')) {
-            $optOutUrl = $this->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $queueItem->getId();
-
-            $message->getHeaders()->addHeaderLine('List-Unsubscribe', '<' . $optOutUrl . '>');
-        }
-
-        $fromAddress =
-            $senderParams->getFromAddress() ??
-            $this->config->get('outboundEmailFromAddress');
+        $fromAddress = $senderParams->getFromAddress();
 
         if (
             $this->config->get('massEmailVerp') &&
             $fromAddress &&
             strpos($fromAddress, '@')
         ) {
-            $bounceAddress = explode('@', $fromAddress)[0] . '+bounce-qid-' . $queueItem->getId() .
+            $bounceAddress = explode('@', $fromAddress)[0] . '+bounce-qid-' . $id .
                 '@' . explode('@', $fromAddress)[1];
 
             $sender->withEnvelopeOptions(['from' => $bounceAddress]);
         }
-
-        return $senderParams;
     }
 
     private function setFailed(MassEmail $massEmail): void
@@ -464,6 +455,11 @@ class SendingProcessor
             );
         }
 
+        $senderParams = $senderParams->withFromAddress(
+            $massEmail->getFromAddress() ??
+            $this->config->get('outboundEmailFromAddress')
+        );
+
         if ($massEmail->getFromName()) {
             $senderParams = $senderParams->withFromName($massEmail->getFromName());
         }
@@ -486,7 +482,7 @@ class SendingProcessor
 
             $message = new Message();
 
-            $senderParams = $this->prepareQueueItemMessage($queueItem, $sender, $message, $senderParams);
+            $this->prepareQueueItemMessage($queueItem, $sender, $message, $senderParams);
 
             $sender
                 ->withParams($senderParams)
@@ -539,6 +535,8 @@ class SendingProcessor
 
     private function getSiteUrl(): string
     {
-        return $this->config->get('massEmailSiteUrl') ?? $this->config->get('siteUrl');
+        return
+            $this->config->get('massEmailSiteUrl') ??
+            $this->config->get('siteUrl');
     }
 }

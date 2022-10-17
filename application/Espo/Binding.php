@@ -229,11 +229,10 @@ class Binding implements BindingProcessor
             'Espo\\Core\\Sms\\SenderFactory'
         );
 
-        $binder
-            ->bindImplementation(
-                'Espo\\Core\\Authentication\\Jwt\\KeyFactory',
-                'Espo\\Core\\Authentication\\Jwt\\DefaultKeyFactory'
-            );
+        $binder->bindImplementation(
+            'Espo\\Core\\Authentication\\Jwt\\KeyFactory',
+            'Espo\\Core\\Authentication\\Jwt\\DefaultKeyFactory'
+        );
 
         $binder
             ->for('Espo\\Core\\Authentication\\Oidc\\TokenValidator')
