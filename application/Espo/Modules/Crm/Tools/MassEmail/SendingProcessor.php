@@ -231,7 +231,7 @@ class SendingProcessor
     /**
      * @param iterable<CampaignTrackingUrl> $trackingUrlList
      */
-    protected function getPreparedEmail(
+    private function getPreparedEmail(
         EmailQueueItem $queueItem,
         MassEmail $massEmail,
         EmailTemplate $emailTemplate,
