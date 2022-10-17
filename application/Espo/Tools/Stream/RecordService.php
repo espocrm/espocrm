@@ -48,6 +48,7 @@ use Espo\Core\Acl\Exceptions\NotImplemented as AclNotImplemented;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Acl\UserAclManagerProvider;
+use Espo\ORM\Query\Select;
 
 class RecordService
 {
@@ -91,8 +92,8 @@ class RecordService
     {
         $userId ??= $this->user->getId();
 
-        $offset = $params->getOffset() ?? 0;
-        $maxSize = $params->getMaxSize();
+        $offset = $params->getSearchParams()->getOffset() ?? 0;
+        $maxSize = $params->getSearchParams()->getMaxSize();
 
         $sqLimit = $offset + $maxSize + 1;
 
@@ -132,26 +133,7 @@ class RecordService
         $onlyTeamEntityTypeList = $this->getOnlyTeamEntityTypeList($user);
         $onlyOwnEntityTypeList = $this->getOnlyOwnEntityTypeList($user);
 
-        $additionalQuery = null;
-
-        $searchParams = $params->getSearchParams();
-
-        if (
-            $searchParams->getWhere() ||
-            $searchParams->getTextFilter() ||
-            $searchParams->getPrimaryFilter() ||
-            $searchParams->getBoolFilterList() !== []
-        ) {
-            $additionalQuery = $this->selectBuilderFactory
-                ->create()
-                ->from(Note::ENTITY_TYPE)
-                ->withComplexExpressionsForbidden()
-                ->withWherePermissionCheck()
-                ->withSearchParams($searchParams)
-                ->buildQueryBuilder()
-                ->order([])
-                ->build();
-        }
+        $additionalQuery = $this->buildAdditionalQuery($params);
 
         $queryList = [];
 
@@ -636,26 +618,7 @@ class RecordService
             throw new Forbidden();
         }
 
-        $additionalQuery = null;
-
-        $searchParams = $params->getSearchParams();
-
-        if (
-            $searchParams->getWhere() ||
-            $searchParams->getTextFilter() ||
-            $searchParams->getPrimaryFilter() ||
-            $searchParams->getBoolFilterList() !== []
-        ) {
-            $additionalQuery = $this->selectBuilderFactory
-                ->create()
-                ->from(Note::ENTITY_TYPE)
-                ->withComplexExpressionsForbidden()
-                ->withWherePermissionCheck()
-                ->withSearchParams($searchParams)
-                ->buildQueryBuilder()
-                ->order([])
-                ->build();
-        }
+        $additionalQuery = $this->buildAdditionalQuery($params);
 
         $builder = $this->entityManager->getQueryBuilder()->select();
 
@@ -826,8 +789,8 @@ class RecordService
         $builder->where($where);
 
         $after = $params->getAfter();
-        $offset = $params->getOffset();
-        $maxSize = $params->getMaxSize();
+        $offset = $params->getSearchParams()->getOffset();
+        $maxSize = $params->getSearchParams()->getMaxSize();
 
         if ($after) {
             $builder->where([
@@ -874,6 +837,34 @@ class RecordService
             ->count();
 
         return RecordCollection::create($collection, $count);
+    }
+
+    private function buildAdditionalQuery(FindParams $params): ?Select
+    {
+        $searchParams = $params->getSearchParams();
+
+        if (
+            $searchParams->getWhere() ||
+            $searchParams->getTextFilter() ||
+            $searchParams->getPrimaryFilter() ||
+            $searchParams->getBoolFilterList() !== []
+        ) {
+           return $this->selectBuilderFactory
+                ->create()
+                ->from(Note::ENTITY_TYPE)
+                ->withComplexExpressionsForbidden()
+                ->withWherePermissionCheck()
+                ->withSearchParams(
+                    $searchParams
+                        ->withOffset(null)
+                        ->withMaxSize(null)
+                )
+                ->buildQueryBuilder()
+                ->order([])
+                ->build();
+        }
+
+        return null;
     }
 
     /**

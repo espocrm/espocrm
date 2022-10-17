@@ -62,16 +62,6 @@ class FindParams
         return $this->searchParams;
     }
 
-    public function getMaxSize(): ?int
-    {
-        return $this->searchParams->getMaxSize();
-    }
-
-    public function getOffset(): ?int
-    {
-        return $this->searchParams->getOffset();
-    }
-
     public function skipOwn(): bool
     {
         return $this->skipOwn;
