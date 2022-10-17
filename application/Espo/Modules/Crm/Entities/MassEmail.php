@@ -29,12 +29,17 @@
 
 namespace Espo\Modules\Crm\Entities;
 
-class MassEmail extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class MassEmail extends Entity
 {
     public const ENTITY_TYPE = 'MassEmail';
+
     public const STATUS_COMPLETE = 'Complete';
     public const STATUS_FAILED = 'Failed';
     public const STATUS_IN_PROGRESS = 'In Process';
+    public const STATUS_PENDING = 'Pending';
+    public const STATUS_DRAFT = 'Draft';
 
     public function getEmailTemplateId(): ?string
     {

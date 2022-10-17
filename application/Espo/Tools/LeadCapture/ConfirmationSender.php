@@ -215,7 +215,7 @@ class ConfirmationSender
             $account = $this->accountFactory->create($inboundEmailId);
 
             if (!$account->isAvailableForSending()) {
-                throw new Error("Lead Capture:  Group email account {$inboundEmailId} can't be used for sending.");
+                throw new Error("Lead Capture: Group email account {$inboundEmailId} can't be used for sending.");
             }
 
             $smtpParams = $account->getSmtpParams();

@@ -29,79 +29,77 @@
 
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
+use Espo\Core\Mail\Account\GroupAccount\AccountFactory;
+use Espo\Core\Mail\Exceptions\NoSmtp;
+use Espo\Core\Mail\SenderParams;
+use Espo\Core\Mail\SmtpParams;
+use Espo\Entities\Attachment;
+use Espo\ORM\Collection;
 use Laminas\Mail\Message;
 
 use Espo\Entities\EmailTemplate;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Entities\EmailAddress;
 
-use Espo\Core\{
-    Exceptions\Error,
-    ORM\EntityManager,
-    ServiceFactory,
-    Utils\Config,
-    Utils\DateTime as DateTimeUtil,
-    Utils\Language,
-    Mail\EmailSender,
-    Mail\Sender,
-    Mail\Mail\Header\XQueueItemId,
-    Utils\Log};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Mail\EmailSender;
+use Espo\Core\Mail\Mail\Header\XQueueItemId;
+use Espo\Core\Mail\Sender;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Log;
 
-use Espo\{
-    Entities\InboundEmail,
-    Modules\Crm\Entities\EmailQueueItem,
-    Modules\Crm\Entities\Campaign,
-    Modules\Crm\Entities\MassEmail,
-    Modules\Crm\Entities\CampaignTrackingUrl,
-    Modules\Crm\Services\Campaign as CampaignService,
-    Services\EmailTemplate as EmailTemplateService,
-    ORM\Entity,
-    Entities\Email
-};
+use Espo\Entities\Email;
+use Espo\Modules\Crm\Entities\Campaign;
+use Espo\Modules\Crm\Entities\CampaignTrackingUrl;
+use Espo\Modules\Crm\Entities\EmailQueueItem;
+use Espo\Modules\Crm\Entities\MassEmail;
+use Espo\Modules\Crm\Services\Campaign as CampaignService;
+use Espo\ORM\Entity;
+use Espo\Services\EmailTemplate as EmailTemplateService;
 
 use Exception;
 use DateTime;
 
-class Processor
+class SendingProcessor
 {
-    private $config;
+    private const MAX_ATTEMPT_COUNT = 3;
+    private const MAX_PER_HOUR_COUNT = 10000;
 
-    private $serviceFactory;
-
-    private $entityManager;
-
-    private $defaultLanguage;
-
-    private $emailSender;
-
-    protected const MAX_ATTEMPT_COUNT = 3;
-
-    protected const MAX_PER_HOUR_COUNT = 10000;
-
-    private ?CampaignService $campaignService = null;
-
-    private ?EmailTemplateService $emailTemplateService = null;
-
-    protected Log $log;
+    private Config $config;
+    private EntityManager $entityManager;
+    private Language $defaultLanguage;
+    private EmailSender $emailSender;
+    private Log $log;
+    private AccountFactory $accountFactory;
+    private CampaignService $campaignService;
+    private EmailTemplateService $emailTemplateService;
 
     public function __construct(
         Config $config,
-        ServiceFactory $serviceFactory,
         EntityManager $entityManager,
         Language $defaultLanguage,
         EmailSender $emailSender,
-        Log $log
+        Log $log,
+        AccountFactory $accountFactory,
+        CampaignService $campaignService,
+        EmailTemplateService $emailTemplateService
     ) {
         $this->config = $config;
-        $this->serviceFactory = $serviceFactory;
         $this->entityManager = $entityManager;
         $this->defaultLanguage = $defaultLanguage;
         $this->emailSender = $emailSender;
         $this->log = $log;
+        $this->accountFactory = $accountFactory;
+        $this->campaignService = $campaignService;
+        $this->emailTemplateService = $emailTemplateService;
     }
 
     /**
      * @throws Error
+     * @throws NoSmtp
      */
     public function process(MassEmail $massEmail, bool $isTest = false): void
     {
@@ -112,7 +110,7 @@ class Processor
             $threshold->modify('-1 hour');
 
             $sentLastHourCount = $this->entityManager
-                ->getRDBRepository(EmailQueueItem::ENTITY_TYPE)
+                ->getRDBRepositoryByClass(EmailQueueItem::class)
                 ->where([
                     'status' => EmailQueueItem::STATUS_SENT,
                     'sentAt>' => $threshold->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
@@ -127,7 +125,7 @@ class Processor
         }
 
         $queueItemList = $this->entityManager
-            ->getRDBRepository(EmailQueueItem::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(EmailQueueItem::class)
             ->where([
                 'status' => EmailQueueItem::STATUS_PENDING,
                 'massEmailId' => $massEmail->getId(),
@@ -162,42 +160,35 @@ class Processor
             return;
         }
 
-        /** @var iterable<\Espo\Entities\Attachment> $attachmentList */
+        /** @var Collection<Attachment> $attachmentList */
         $attachmentList = $this->entityManager
-            ->getRDBRepository(EmailTemplate::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(EmailTemplate::class)
             ->getRelation($emailTemplate, 'attachments')
             ->find();
 
         $smtpParams = null;
+        $senderParams = SenderParams::create();
 
         $inboundEmailId = $massEmail->getInboundEmailId();
 
         if ($inboundEmailId) {
-            /** @var ?InboundEmail $inboundEmail */
-            $inboundEmail = $this->entityManager->getEntityById(InboundEmail::ENTITY_TYPE, $inboundEmailId);
+            $account = $this->accountFactory->create($inboundEmailId);
 
-            if (!$inboundEmail) {
-                throw new Error("Group Email Account '{$inboundEmailId}' is not available.");
-            }
+            $smtpParams = $account->getSmtpParams();
 
             if (
-                !$inboundEmail->isAvailableForSending() ||
-                !$inboundEmail->smtpIsForMassEmail()
+                !$account->isAvailableForSending() ||
+                !$account->getEntity()->smtpIsForMassEmail() ||
+                !$smtpParams
             ) {
-                throw new Error("Group Email Account '{$inboundEmailId}' can't be used for Mass Email.");
+                throw new Error("Mass Email: Group email account {$inboundEmailId} can't be used for mass email.");
             }
 
-            /** @var \Espo\Services\InboundEmail $inboundEmailService */
-            $inboundEmailService = $this->serviceFactory->create(InboundEmail::ENTITY_TYPE);
-
-            $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
-
-            if (!$smtpParams) {
-                throw new Error("Group Email Account '{$inboundEmailId}' has no SMTP params.");
-            }
-
-            if ($inboundEmail->getReplyToAddress()) {
-                $smtpParams['replyToAddress'] = $inboundEmail->getReplyToAddress();
+            if ($account->getEntity()->getReplyToAddress()) {
+                $senderParams = $senderParams
+                    ->withReplyToAddress(
+                        $account->getEntity()->getReplyToAddress()
+                    );
             }
         }
 
@@ -209,25 +200,28 @@ class Processor
                 $attachmentList,
                 $campaign,
                 $isTest,
-                $smtpParams
+                $smtpParams,
+                $senderParams
             );
         }
 
-        if (!$isTest) {
-            $countLeft = $this->entityManager
-                ->getRDBRepository(EmailQueueItem::ENTITY_TYPE)
-                ->where([
-                    'status' => EmailQueueItem::STATUS_PENDING,
-                    'massEmailId' => $massEmail->getId(),
-                    'isTest' => false,
-                ])
-                ->count();
+        if ($isTest) {
+            return;
+        }
 
-            if ($countLeft == 0) {
-                $massEmail->set('status', MassEmail::STATUS_COMPLETE);
+        $countLeft = $this->entityManager
+            ->getRDBRepositoryByClass(EmailQueueItem::class)
+            ->where([
+                'status' => EmailQueueItem::STATUS_PENDING,
+                'massEmailId' => $massEmail->getId(),
+                'isTest' => false,
+            ])
+            ->count();
 
-                $this->entityManager->saveEntity($massEmail);
-            }
+        if ($countLeft === 0) {
+            $massEmail->set('status', MassEmail::STATUS_COMPLETE);
+
+            $this->entityManager->saveEntity($massEmail);
         }
     }
 
@@ -246,7 +240,7 @@ class Processor
             'parent' => $target,
         ];
 
-        $emailData = $this->getEmailTemplateService()->parseTemplate($emailTemplate, $templateParams);
+        $emailData = $this->emailTemplateService->parseTemplate($emailTemplate, $templateParams);
 
         $body = $emailData['body'];
 
@@ -320,21 +314,19 @@ class Processor
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @todo Refactor. Use composition with an interface.
      */
     protected function prepareQueueItemMessage(
         EmailQueueItem $queueItem,
         Sender $sender,
         Message $message,
-        array &$params
-    ): void {
+        SenderParams $senderParams
+    ): SenderParams {
 
         $header = new XQueueItemId();
-
         $header->setId($queueItem->getId());
 
         $message->getHeaders()->addHeader($header);
-
         $message->getHeaders()->addHeaderLine('Precedence', 'bulk');
 
         if (!$this->config->get('massEmailDisableMandatoryOptOutLink')) {
@@ -343,28 +335,32 @@ class Processor
             $message->getHeaders()->addHeaderLine('List-Unsubscribe', '<' . $optOutUrl . '>');
         }
 
-        $fromAddress = $params['fromAddress'] ?? $this->config->get('outboundEmailFromAddress');
+        $fromAddress =
+            $senderParams->getFromAddress() ??
+            $this->config->get('outboundEmailFromAddress');
 
-        if ($this->config->get('massEmailVerp')) {
-            if ($fromAddress && strpos($fromAddress, '@')) {
-                $bounceAddress = explode('@', $fromAddress)[0] . '+bounce-qid-' . $queueItem->getId() .
-                    '@' . explode('@', $fromAddress)[1];
+        if (
+            $this->config->get('massEmailVerp') &&
+            $fromAddress &&
+            strpos($fromAddress, '@')
+        ) {
+            $bounceAddress = explode('@', $fromAddress)[0] . '+bounce-qid-' . $queueItem->getId() .
+                '@' . explode('@', $fromAddress)[1];
 
-                $sender->withEnvelopeOptions([
-                    'from' => $bounceAddress,
-                ]);
-            }
+            $sender->withEnvelopeOptions(['from' => $bounceAddress]);
         }
+
+        return $senderParams;
     }
 
-    protected function setFailed(MassEmail $massEmail): void
+    private function setFailed(MassEmail $massEmail): void
     {
         $massEmail->set('status', MassEmail::STATUS_FAILED);
 
         $this->entityManager->saveEntity($massEmail);
 
         $queueItemList = $this->entityManager
-            ->getRDBRepository(EmailQueueItem::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(EmailQueueItem::class)
             ->where([
                 'status' => EmailQueueItem::STATUS_PENDING,
                 'massEmailId' => $massEmail->getId(),
@@ -379,17 +375,17 @@ class Processor
     }
 
     /**
-     * @param iterable<\Espo\Entities\Attachment> $attachmentList
-     * @param ?array<string,mixed> $smtpParams
+     * @param Collection<Attachment> $attachmentList
      */
-    protected function sendQueueItem(
+    private function sendQueueItem(
         EmailQueueItem $queueItem,
         MassEmail $massEmail,
         EmailTemplate $emailTemplate,
-        $attachmentList = [],
-        ?Campaign $campaign = null,
-        bool $isTest = false,
-        $smtpParams = null
+        $attachmentList,
+        ?Campaign $campaign,
+        bool $isTest,
+        ?SmtpParams $smtpParams,
+        SenderParams $senderParams
     ): bool {
 
         /** @var ?EmailQueueItem $queueItemFetched */
@@ -408,11 +404,7 @@ class Processor
 
         $target = $this->entityManager->getEntityById($queueItem->getTargetType(), $queueItem->getTargetId());
 
-        $emailAddress = null;
-
-        if ($target) {
-            $emailAddress = $target->get('emailAddress');
-        }
+        $emailAddress = $target ? $target->get('emailAddress') : null;
 
         if (
             !$target ||
@@ -431,23 +423,26 @@ class Processor
 
         $emailAddressRecord = $emailAddressRepository->getByAddress($emailAddress);
 
-        if ($emailAddressRecord) {
-            if ($emailAddressRecord->isInvalid() || $emailAddressRecord->isOptedOut()) {
-                $queueItem->set('status', EmailQueueItem::STATUS_FAILED);
+        if (
+            $emailAddressRecord && (
+                $emailAddressRecord->isInvalid() ||
+                $emailAddressRecord->isOptedOut()
+            )
+        ) {
+            $queueItem->set('status', EmailQueueItem::STATUS_FAILED);
 
-                $this->entityManager->saveEntity($queueItem);
+            $this->entityManager->saveEntity($queueItem);
 
-                return false;
-            }
+            return false;
         }
 
         /** @var CampaignTrackingUrl[] $trackingUrlList */
         $trackingUrlList = [];
 
         if ($campaign) {
-            /** @var \Espo\ORM\Collection<CampaignTrackingUrl> $trackingUrlList */
+            /** @var Collection<CampaignTrackingUrl> $trackingUrlList */
             $trackingUrlList = $this->entityManager
-                ->getRDBRepository(Campaign::ENTITY_TYPE)
+                ->getRDBRepositoryByClass(Campaign::class)
                 ->getRelation($campaign, 'trackingUrls')
                 ->find();
         }
@@ -459,7 +454,7 @@ class Processor
         }
 
         if ($email->get('replyToAddress')) { // @todo Revise.
-            unset($smtpParams['replyToAddress']);
+            $senderParams = $senderParams->withReplyToAddress(null);
         }
 
         if ($campaign) {
@@ -469,14 +464,12 @@ class Processor
             );
         }
 
-        $params = [];
-
         if ($massEmail->getFromName()) {
-            $params['fromName'] = $massEmail->getFromName();
+            $senderParams = $senderParams->withFromName($massEmail->getFromName());
         }
 
         if ($massEmail->getReplyToName()) {
-            $params['replyToName'] = $massEmail->getReplyToName();
+            $senderParams = $senderParams->withReplyToName($massEmail->getReplyToName());
         }
 
         try {
@@ -493,10 +486,10 @@ class Processor
 
             $message = new Message();
 
-            $this->prepareQueueItemMessage($queueItem, $sender, $message, $params);
+            $senderParams = $this->prepareQueueItemMessage($queueItem, $sender, $message, $senderParams);
 
             $sender
-                ->withParams($params)
+                ->withParams($senderParams)
                 ->withMessage($message)
                 ->withAttachments($attachmentList)
                 ->send($email);
@@ -504,12 +497,9 @@ class Processor
         catch (Exception $e) {
             $maxAttemptCount = $this->config->get('massEmailMaxAttemptCount', self::MAX_ATTEMPT_COUNT);
 
-            if ($queueItem->getAttemptCount() >= $maxAttemptCount) {
-                $queueItem->set('status', EmailQueueItem::STATUS_FAILED);
-            }
-            else {
+            $queueItem->getAttemptCount() >= $maxAttemptCount ?
+                $queueItem->set('status', EmailQueueItem::STATUS_FAILED) :
                 $queueItem->set('status', EmailQueueItem::STATUS_PENDING);
-            }
 
             $this->entityManager->saveEntity($queueItem);
 
@@ -533,7 +523,7 @@ class Processor
         $this->entityManager->saveEntity($queueItem);
 
         if ($campaign) {
-            $this->getCampaignService()->logSent(
+            $this->campaignService->logSent(
                 $campaign->getId(),
                 $queueItem->getId(),
                 $target,
@@ -547,31 +537,7 @@ class Processor
         return true;
     }
 
-    protected function getEmailTemplateService(): EmailTemplateService
-    {
-        if (!$this->emailTemplateService) {
-            /** @var EmailTemplateService $service */
-            $service = $this->serviceFactory->create(EmailTemplate::ENTITY_TYPE);
-
-            $this->emailTemplateService = $service;
-        }
-
-        return $this->emailTemplateService;
-    }
-
-    protected function getCampaignService(): CampaignService
-    {
-        if (!$this->campaignService) {
-            /** @var CampaignService $service */
-            $service = $this->serviceFactory->create(Campaign::ENTITY_TYPE);
-
-            $this->campaignService = $service;
-        }
-
-        return $this->campaignService;
-    }
-
-    protected function getSiteUrl(): string
+    private function getSiteUrl(): string
     {
         return $this->config->get('massEmailSiteUrl') ?? $this->config->get('siteUrl');
     }

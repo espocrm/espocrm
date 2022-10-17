@@ -29,28 +29,22 @@
 
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
+use Espo\ORM\Collection;
+use Espo\ORM\Entity;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Entities\EmailAddress;
-
 use Espo\Modules\Crm\Entities\TargetList;
 use Espo\Modules\Crm\Entities\MassEmail;
 use Espo\Modules\Crm\Entities\EmailQueueItem;
-
 use Espo\Core\Exceptions\Error;
-
 use Espo\ORM\EntityManager;
-
 use Espo\Core\Utils\Metadata;
 
-class Queue
+class QueueCreator
 {
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected array $targetLinkList;
-
     protected EntityManager $entityManager;
-
     private Metadata $metadata;
 
     public function __construct(EntityManager $entityManager, Metadata $metadata)
@@ -61,7 +55,7 @@ class Queue
         $this->targetLinkList = $this->metadata->get(['scopes', 'TargetList', 'targetLinkList']) ?? [];
     }
 
-    protected function cleanupQueueItems(MassEmail $massEmail): void
+    private function cleanupQueueItems(MassEmail $massEmail): void
     {
         $delete = $this->entityManager
             ->getQueryBuilder()
@@ -80,7 +74,7 @@ class Queue
     }
 
     /**
-     * @param iterable<\Espo\ORM\Entity> $additionalTargetList
+     * @param iterable<Entity> $additionalTargetList
      * @throws Error
      */
     public function create(MassEmail $massEmail, bool $isTest = false, iterable $additionalTargetList = []): void
@@ -100,7 +94,7 @@ class Queue
         $itemList = [];
 
         if (!$isTest) {
-            /** @var \Espo\ORM\Collection<TargetList> $excludingTargetListList */
+            /** @var Collection<TargetList> $excludingTargetListList */
             $excludingTargetListList = $this->entityManager
                 ->getRDBRepository(MassEmail::ENTITY_TYPE)
                 ->getRelation($massEmail, 'excludingTargetLists')
@@ -128,7 +122,7 @@ class Queue
                 }
             }
 
-            /** @var \Espo\ORM\Collection<TargetList> $targetListCollection */
+            /** @var Collection<TargetList> $targetListCollection */
             $targetListCollection = $em
                 ->getRDBRepository(MassEmail::ENTITY_TYPE)
                 ->getRelation($massEmail, 'targetLists')

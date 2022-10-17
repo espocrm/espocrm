@@ -29,31 +29,30 @@
 
 namespace Espo\Modules\Crm\Jobs;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    Job\JobDataLess,
-    Utils\Log,
-};
+use Espo\Core\Job\JobDataLess;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\DateTime;
+use Espo\Core\Utils\Log;
 
-use Espo\{
-    Modules\Crm\Tools\MassEmail\Processor,
-    Modules\Crm\Tools\MassEmail\Queue,
-};
+use Espo\Modules\Crm\Entities\MassEmail;
+use Espo\Modules\Crm\Tools\MassEmail\QueueCreator;
+use Espo\Modules\Crm\Tools\MassEmail\SendingProcessor;
 
 use Throwable;
 
 class ProcessMassEmail implements JobDataLess
 {
-    private $processor;
+    private SendingProcessor $processor;
+    private QueueCreator $queue;
+    private EntityManager $entityManager;
+    private Log $log;
 
-    private $queue;
-
-    private $entityManager;
-
-    private $log;
-
-    public function __construct(Processor $processor, Queue $queue, EntityManager $entityManager, Log $log)
-    {
+    public function __construct(
+        SendingProcessor $processor,
+        QueueCreator $queue,
+        EntityManager $entityManager,
+        Log $log
+    ) {
         $this->processor = $processor;
         $this->queue = $queue;
         $this->entityManager = $entityManager;
@@ -63,10 +62,10 @@ class ProcessMassEmail implements JobDataLess
     public function run(): void
     {
         $pendingMassEmailList = $this->entityManager
-            ->getRDBRepository('MassEmail')
+            ->getRDBRepositoryByClass(MassEmail::class)
             ->where([
-                'status' => 'Pending',
-                'startAt<=' => date('Y-m-d H:i:s'),
+                'status' => MassEmail::STATUS_PENDING,
+                'startAt<=' => date(DateTime::SYSTEM_DATE_TIME_FORMAT),
             ])
             ->find();
 
@@ -83,9 +82,9 @@ class ProcessMassEmail implements JobDataLess
         }
 
         $massEmailList = $this->entityManager
-            ->getRDBRepository('MassEmail')
+            ->getRDBRepositoryByClass(MassEmail::class)
             ->where([
-                'status' => 'In Process',
+                'status' => MassEmail::STATUS_IN_PROGRESS,
             ])
             ->find();
 

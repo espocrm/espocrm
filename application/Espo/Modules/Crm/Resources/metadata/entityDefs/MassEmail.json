@@ -8,7 +8,13 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Draft", "Pending", "Complete", "In Process", "Failed"],
+            "options": [
+                "Draft",
+                "Pending",
+                "Complete",
+                "In Process",
+                "Failed"
+            ],
             "default": "Pending"
         },
         "storeSentEmails": {

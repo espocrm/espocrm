@@ -29,36 +29,35 @@
 
 namespace Espo\Modules\Crm\Services;
 
+use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Modules\Crm\Entities\MassEmail as MassEmailEntity;
 
-use Espo\Core\{
-    Exceptions\Forbidden,
-    Exceptions\BadRequest,
-    Exceptions\NotFound,
-    Exceptions\Error,
-};
+use Espo\Core\Acl\Table;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 
-use Espo\{
-    Entities\InboundEmail,
-    ORM\Entity,
-    Services\Record,
-    Modules\Crm\Tools\MassEmail\Processor,
-    Modules\Crm\Tools\MassEmail\Queue};
+use Espo\Entities\InboundEmail;
+use Espo\Modules\Crm\Entities\EmailQueueItem;
+use Espo\Modules\Crm\Tools\MassEmail\SendingProcessor;
+use Espo\Modules\Crm\Tools\MassEmail\QueueCreator;
+use Espo\ORM\Collection;
+use Espo\ORM\Entity;
+use Espo\Services\Record;
 
 /**
  * @extends Record<\Espo\Modules\Crm\Entities\MassEmail>
  */
 class MassEmail extends Record
 {
-    protected $mandatorySelectAttributeList = [
-        'campaignId',
-    ];
+    protected $mandatorySelectAttributeList = ['campaignId'];
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         parent::beforeCreateEntity($entity, $data);
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, Table::ACTION_EDIT)) {
             throw new Forbidden();
         }
     }
@@ -67,16 +66,16 @@ class MassEmail extends Record
     {
         parent::afterDeleteEntity($massEmail);
 
-        $delete = $this->getEntityManager()
+        $delete = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from('EmailQueueItem')
+            ->from(EmailQueueItem::ENTITY_TYPE)
             ->where([
                  'massEmailId' => $massEmail->getId(),
             ])
             ->build();
 
-        $this->getEntityManager()->getQueryExecutor()->execute($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
     /**
@@ -85,6 +84,7 @@ class MassEmail extends Record
      * @throws Error
      * @throws Forbidden
      * @throws NotFound
+     * @throws NoSmtp
      */
     public function processTest(string $id, array $targetDataList): void
     {
@@ -102,31 +102,31 @@ class MassEmail extends Record
             $targetId = $item->id;
             $targetType = $item->type;
 
-            $target = $this->getEntityManager()->getEntity($targetType, $targetId);
+            $target = $this->entityManager->getEntityById($targetType, $targetId);
 
             if (!$target) {
                 throw new Error("Target not found.");
             }
 
-            if (!$this->getAcl()->check($target, 'read')) {
+            if (!$this->acl->check($target, Table::ACTION_READ)) {
                 throw new Forbidden();
             }
 
             $targetList[] = $target;
         }
 
-        $massEmail = $this->getEntityManager()->getEntity('MassEmail', $id);
+        /** @var ?MassEmailEntity $massEmail */
+        $massEmail = $this->entityManager->getEntityById(MassEmailEntity::ENTITY_TYPE, $id);
 
         if (!$massEmail) {
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->check($massEmail, 'read')) {
+        if (!$this->acl->check($massEmail, Table::ACTION_READ)) {
             throw new Forbidden();
         }
 
         $this->createTestQueue($massEmail, $targetList);
-
         $this->processTestSending($massEmail);
     }
 
@@ -136,17 +136,18 @@ class MassEmail extends Record
      */
     protected function createTestQueue(MassEmailEntity $massEmail, iterable $targetList): void
     {
-        $queue = $this->injectableFactory->create(Queue::class);
+        $queue = $this->injectableFactory->create(QueueCreator::class);
 
         $queue->create($massEmail, true, $targetList);
     }
 
     /**
      * @throws Error
+     * @throws NoSmtp
      */
     protected function processTestSending(MassEmailEntity $massEmail): void
     {
-        $processor = $this->injectableFactory->create(Processor::class);
+        $processor = $this->injectableFactory->create(SendingProcessor::class);
 
         $processor->process($massEmail, true);
     }
@@ -158,14 +159,15 @@ class MassEmail extends Record
     public function getSmtpAccountDataList(): array
     {
         if (
-            !$this->getAcl()->checkScope('MassEmail', 'create') &&
-            !$this->getAcl()->checkScope('MassEmail', 'edit')
+            !$this->acl->checkScope(MassEmailEntity::ENTITY_TYPE, Table::ACTION_CREATE) &&
+            !$this->acl->checkScope(MassEmailEntity::ENTITY_TYPE, Table::ACTION_EDIT)
         ) {
             throw new Forbidden();
         }
 
         $dataList = [];
 
+        /** @var Collection<InboundEmail> $inboundEmailList */
         $inboundEmailList = $this->entityManager
             ->getRDBRepository(InboundEmail::ENTITY_TYPE)
             ->where([
@@ -183,8 +185,8 @@ class MassEmail extends Record
             $key = 'inboundEmail:' . $inboundEmail->getId();
 
             $item->key = $key;
-            $item->emailAddress = $inboundEmail->get('emailAddress');
-            $item->fromName = $inboundEmail->get('fromName');
+            $item->emailAddress = $inboundEmail->getEmailAddress();
+            $item->fromName = $inboundEmail->getFromName();
 
             $dataList[] = $item;
         }
