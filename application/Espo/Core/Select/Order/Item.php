@@ -39,8 +39,12 @@ use InvalidArgumentException;
 class Item
 {
     private string $orderBy;
+    /** @var SearchParams::ORDER_ASC|SearchParams::ORDER_DESC */
     private string $order;
 
+    /**
+     * @param SearchParams::ORDER_ASC|SearchParams::ORDER_DESC $order
+     */
     private function __construct(string $orderBy, string $order)
     {
         if (
@@ -54,6 +58,9 @@ class Item
         $this->order = $order;
     }
 
+    /**
+     * @param SearchParams::ORDER_ASC|SearchParams::ORDER_DESC|null $order
+     */
     public static function create(string $orderBy, ?string $order = null): self
     {
         if ($order === null) {
@@ -73,6 +80,8 @@ class Item
 
     /**
      * Get a direction.
+     *
+     * @return SearchParams::ORDER_ASC|SearchParams::ORDER_DESC
      */
     public function getOrder(): string
     {

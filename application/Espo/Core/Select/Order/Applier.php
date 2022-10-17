@@ -31,27 +31,19 @@ namespace Espo\Core\Select\Order;
 
 use Espo\ORM\Query\Part\OrderList;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Exceptions\Forbidden,
-    Select\SearchParams,
-    Select\Order\Params as OrderParams,
-    Select\Order\Item as OrderItem,
-    Select\Order\ItemConverterFactory,
-    Select\Order\MetadataProvider,
-    Select\Order\OrdererFactory,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Select\Order\Item as OrderItem;
+use Espo\Core\Select\Order\Params as OrderParams;
+use Espo\Core\Select\SearchParams;
 
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class Applier
 {
     private string $entityType;
-
     private MetadataProvider $metadataProvider;
-
     private ItemConverterFactory $itemConverterFactory;
-
     private OrdererFactory $ordererFactory;
 
     public function __construct(
@@ -66,6 +58,10 @@ class Applier
         $this->ordererFactory = $ordererFactory;
     }
 
+    /**
+     * @throws Forbidden
+     * @throws Error
+     */
     public function apply(QueryBuilder $queryBuilder, OrderParams $params): void
     {
         if ($params->forceDefault()) {
@@ -97,6 +93,10 @@ class Applier
         $this->applyOrder($queryBuilder, $orderBy, $params->getOrder());
     }
 
+    /**
+     * @param SearchParams::ORDER_ASC|SearchParams::ORDER_DESC|null $order
+     * @throws Error
+     */
     private function applyDefaultOrder(QueryBuilder $queryBuilder, ?string $order): void
     {
         $orderBy = $this->metadataProvider->getDefaultOrderBy($this->entityType);
@@ -121,9 +121,15 @@ class Applier
             }
         }
 
+        /** @var SearchParams::ORDER_ASC|SearchParams::ORDER_DESC|null $order */
+
         $this->applyOrder($queryBuilder, $orderBy, $order);
     }
 
+    /**
+     * @param SearchParams::ORDER_ASC|SearchParams::ORDER_DESC|null $order
+     * @throws Error
+     */
     private function applyOrder(QueryBuilder $queryBuilder, string $orderBy, ?string $order): void
     {
         if (!$orderBy) {

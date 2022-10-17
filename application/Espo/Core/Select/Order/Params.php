@@ -42,12 +42,10 @@ class Params
     private bool $forceDefault = false;
     /** @var mixed */
     private $orderBy = null;
-    /** @var mixed */
+    /** @var SearchParams::ORDER_ASC|SearchParams::ORDER_DESC|null */
     private $order = null;
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * @param array<string,mixed> $params
@@ -98,9 +96,11 @@ class Params
         return $this->orderBy;
     }
 
+    /**
+     * @return SearchParams::ORDER_ASC|SearchParams::ORDER_DESC|null
+     */
     public function getOrder(): ?string
     {
-        /** @var ?string */
         return $this->order;
     }
 }
