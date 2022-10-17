@@ -40,7 +40,8 @@ use Espo\Core\Api\Response;
 use Espo\Core\Controllers\Record;
 use Espo\Core\Exceptions\Error;
 
-use Espo\Tools\LeadCapture\LeadCapture as LeadCaptureService;
+use Espo\Tools\LeadCapture\Service;
+use Espo\Tools\LeadCapture\CaptureService as CaptureService;
 use stdClass;
 
 class LeadCapture extends Record
@@ -63,7 +64,7 @@ class LeadCapture extends Record
 
         $response->setHeader('Access-Control-Allow-Origin', $allowOrigin);
 
-        $this->getLeadCaptureService()->capture($apiKey, $data);
+        $this->getCaptureService()->capture($apiKey, $data);
 
         return true;
     }
@@ -124,8 +125,13 @@ class LeadCapture extends Record
         return $this->getLeadCaptureService()->getSmtpAccountDataList();
     }
 
-    private function getLeadCaptureService(): LeadCaptureService
+    private function getCaptureService(): CaptureService
     {
-        return $this->injectableFactory->create(LeadCaptureService::class);
+        return $this->injectableFactory->create(CaptureService::class);
+    }
+
+    private function getLeadCaptureService(): Service
+    {
+        return $this->injectableFactory->create(Service::class);
     }
 }

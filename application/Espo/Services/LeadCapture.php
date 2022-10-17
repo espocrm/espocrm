@@ -32,7 +32,7 @@ namespace Espo\Services;
 use Espo\Entities\LeadCapture as LeadCaptureEntity;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\Entity;
-use Espo\Tools\LeadCapture\LeadCapture as Tool;
+use Espo\Tools\LeadCapture\Service as LeadCaptureService;
 use Espo\Core\Utils\Util;
 
 /**
@@ -115,8 +115,8 @@ class LeadCapture extends Record
         $entity->set('apiKey', $apiKey);
     }
 
-    protected function createLeadCaptureService(): Tool
+    protected function createLeadCaptureService(): LeadCaptureService
     {
-        return $this->injectableFactory->create(Tool::class);
+        return $this->injectableFactory->create(LeadCaptureService::class);
     }
 }

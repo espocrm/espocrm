@@ -86,7 +86,7 @@ class ConfirmationSender
     {
         /** @var ?UniqueId $uniqueId */
         $uniqueId = $this->entityManager
-            ->getRDBRepository(UniqueId::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(UniqueId::class)
             ->where(['name' => $id])
             ->findOne();
 

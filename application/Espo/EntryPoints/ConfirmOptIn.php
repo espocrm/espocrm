@@ -29,7 +29,7 @@
 
 namespace Espo\EntryPoints;
 
-use Espo\Tools\LeadCapture\LeadCapture as Service;
+use Espo\Tools\LeadCapture\CaptureService as Service;
 
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
