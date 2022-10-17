@@ -37,8 +37,9 @@ use Espo\Core\{
     Api\Response,
     Exceptions\BadRequest,
     Exceptions\Error,
-    Exceptions\Forbidden
-};
+    Exceptions\Forbidden,
+    Select\SearchParams,
+    Select\Where\Item as WhereItem};
 
 use stdClass;
 
@@ -53,22 +54,34 @@ class Notification extends RecordBase
      */
     public function getActionList(Request $request, Response $response): stdClass
     {
-        $userId = $this->user->getId();
+        $searchParamsAux = $this->searchParamsFetcher->fetch($request);
 
-        $searchParams = $this->searchParamsFetcher->fetch($request);
-
-        $offset = $searchParams->getOffset();
-        $maxSize = $searchParams->getMaxSize();
+        $offset = $searchParamsAux->getOffset();
+        $maxSize = $searchParamsAux->getMaxSize();
 
         $after = $request->getQueryParam('after');
 
-        $params = [
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'after' => $after,
-        ];
+        $searchParams = SearchParams
+            ::create()
+            ->withOffset($offset)
+            ->withMaxSize($maxSize);
 
-        $recordCollection = $this->getNotificationService()->get($userId, $params);
+        if ($after) {
+            $searchParams = $searchParams
+                ->withWhereAdded(
+                    WhereItem
+                        ::createBuilder()
+                        ->setAttribute('createdAt')
+                        ->setType(WhereItem\Type::AFTER)
+                        ->setValue($after)
+                        ->build()
+                );
+
+        }
+
+        $userId = $this->user->getId();
+
+        $recordCollection = $this->getNotificationService()->get($userId, $searchParams);
 
         return (object) [
             'total' => $recordCollection->getTotal(),

@@ -32,6 +32,8 @@ namespace Espo\Tools\Notification;
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Record\Collection as RecordCollection;
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Note;
 use Espo\Entities\Notification;
@@ -46,38 +48,37 @@ class RecordService
     private Acl $acl;
     private Metadata $metadata;
     private NoteAccessControl $noteAccessControl;
+    private SelectBuilderFactory $selectBuilderFactory;
 
     public function __construct(
         EntityManager $entityManager,
         Acl $acl,
         Metadata $metadata,
-        NoteAccessControl $noteAccessControl
+        NoteAccessControl $noteAccessControl,
+        SelectBuilderFactory $selectBuilderFactory
     ) {
         $this->entityManager = $entityManager;
         $this->acl = $acl;
         $this->metadata = $metadata;
         $this->noteAccessControl = $noteAccessControl;
+        $this->selectBuilderFactory = $selectBuilderFactory;
     }
 
     /**
-     * @todo Use params class FetchParams.
+     * Get notifications for a user.
      *
-     * @param array{
-     *   after?: ?string,
-     *   offset?: ?int,
-     *   maxSize?: ?int,
-     * } $params
      * @return RecordCollection<Notification>
      * @throws Error
      */
-    public function get(string $userId, array $params = []): RecordCollection
+    public function get(string $userId, SearchParams $searchParams): RecordCollection
     {
-        $queryBuilder = $this->entityManager
-            ->getQueryBuilder()
-            ->select()
-            ->from(Notification::ENTITY_TYPE);
-
-        $whereClause = ['userId' => $userId];
+        $queryBuilder = $this->selectBuilderFactory
+            ->create()
+            ->from(Notification::ENTITY_TYPE)
+            ->withSearchParams($searchParams)
+            ->buildQueryBuilder()
+            ->where(['userId' => $userId])
+            ->order('number', SearchParams::ORDER_DESC);
 
         $user = $this->entityManager
             ->getRDBRepositoryByClass(User::class)
@@ -87,32 +88,16 @@ class RecordService
             throw new Error("User not found.");
         }
 
-        if (!empty($params['after'])) {
-            $whereClause['createdAt>'] = $params['after'];
-        }
-
         $ignoreScopeList = $this->getIgnoreScopeList();
 
-        if (!empty($ignoreScopeList)) {
-            $where = [];
-
-            $where[] = [
+        if ($ignoreScopeList !== []) {
+            $queryBuilder->where([
                 'OR' => [
                     'relatedParentType' => null,
                     'relatedParentType!=' => $ignoreScopeList,
-                ]
-            ];
-
-            $whereClause[] = $where;
+                ],
+            ]);
         }
-
-        $offset = $params['offset'] ?? null;
-        $maxSize = $params['maxSize'] ?? null;
-
-        $queryBuilder
-            ->limit($offset, $maxSize)
-            ->order('createdAt', 'DESC')
-            ->where($whereClause);
 
         $query = $queryBuilder->build();
 
