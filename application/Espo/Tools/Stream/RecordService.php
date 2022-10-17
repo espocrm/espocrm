@@ -48,7 +48,7 @@ use Espo\Core\Acl\Exceptions\NotImplemented as AclNotImplemented;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Acl\UserAclManagerProvider;
-use Espo\ORM\Query\Select;
+use Espo\ORM\Query\SelectBuilder as SelectQueryBuilder;
 
 class RecordService
 {
@@ -133,26 +133,12 @@ class RecordService
         $onlyTeamEntityTypeList = $this->getOnlyTeamEntityTypeList($user);
         $onlyOwnEntityTypeList = $this->getOnlyOwnEntityTypeList($user);
 
-        $additionalQuery = $this->buildAdditionalQuery($params);
-
         $queryList = [];
 
-        $baseBuilder = $this->entityManager->getQueryBuilder()->select();
-
-        if ($additionalQuery) {
-            $baseBuilder->clone($additionalQuery);
-        }
-        else {
-            $baseBuilder->from(Note::ENTITY_TYPE);
-        }
-
-        $baseBuilder
+        $baseBuilder = $this->buildBaseQueryBuilder($params)
             ->select($select)
             ->order('number', 'DESC')
-            ->limit(0, $sqLimit)
-            ->where(
-                $this->getUserStreamWhereClause($params, $user)
-            );
+            ->limit(0, $sqLimit);
 
         $subscriptionBuilder = clone $baseBuilder;
 
@@ -563,30 +549,6 @@ class RecordService
         return $whereClause;
     }
 
-    /**
-     * @return array<mixed,mixed>
-     */
-    private function getUserStreamWhereClause(FindParams $params, User $user): array
-    {
-        $whereClause = [];
-
-        if ($params->getAfter()) {
-            $whereClause[]['createdAt>'] = $params->getAfter()->getString();
-        }
-
-        if ($params->getFilter() === FindParams::FILTER_POSTS) {
-            $whereClause[]['type'] = Note::TYPE_POST;
-        }
-        else if ($params->getFilter() === FindParams::FILTER_UPDATES) {
-            $whereClause[]['type'] = [
-                Note::TYPE_UPDATE,
-                Note::TYPE_STATUS,
-            ];
-        }
-
-        return $whereClause;
-    }
-
     private function loadNoteAdditionalFields(Note $note): void
     {
         $note->loadAdditionalFields();
@@ -618,16 +580,7 @@ class RecordService
             throw new Forbidden();
         }
 
-        $additionalQuery = $this->buildAdditionalQuery($params);
-
-        $builder = $this->entityManager->getQueryBuilder()->select();
-
-        if ($additionalQuery) {
-            $builder->clone($additionalQuery);
-        }
-        else {
-            $builder->from(Note::ENTITY_TYPE);
-        }
+        $builder = $this->buildBaseQueryBuilder($params);
 
         $where = [
             'OR' => [
@@ -684,84 +637,79 @@ class RecordService
             ];
         }
 
-        if (!$this->user->isPortal()) {
-            if (count($onlyTeamEntityTypeList) || count($onlyOwnEntityTypeList)) {
-                $builder
-                    ->distinct()
-                    ->leftJoin('teams')
-                    ->leftJoin('users');
+        if (
+            !$this->user->isPortal() &&
+            (count($onlyTeamEntityTypeList) || count($onlyOwnEntityTypeList))
+        ) {
+            $builder
+                ->distinct()
+                ->leftJoin('teams')
+                ->leftJoin('users');
 
-                $where[] = [
+            $where[] = [
+                'OR' => [
                     'OR' => [
+                        [
+                            'relatedId!=' => null,
+                            'relatedType!=' => array_merge(
+                                $onlyTeamEntityTypeList,
+                                $onlyOwnEntityTypeList
+                            ),
+                        ],
+                        [
+                            'relatedId=' => null,
+                            'superParentId' => $id,
+                            'superParentType' => $scope,
+                            'parentId!=' => null,
+                            'parentType!=' => array_merge(
+                                $onlyTeamEntityTypeList,
+                                $onlyOwnEntityTypeList
+                            ),
+                        ],
+                        [
+                            'relatedId=' => null,
+                            'parentType=' => $scope,
+                            'parentId=' => $id,
+                        ]
+                    ],
+                    [
                         'OR' => [
                             [
                                 'relatedId!=' => null,
-                                'relatedType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
+                                'relatedType=' => $onlyTeamEntityTypeList,
                             ],
                             [
                                 'relatedId=' => null,
-                                'superParentId' => $id,
-                                'superParentType' => $scope,
-                                'parentId!=' => null,
-                                'parentType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
-                            ],
-                            [
-                                'relatedId=' => null,
-                                'parentType=' => $scope,
-                                'parentId=' => $id,
+                                'parentType=' => $onlyTeamEntityTypeList,
                             ]
                         ],
                         [
                             'OR' => [
-                                [
-                                    'relatedId!=' => null,
-                                    'relatedType=' => $onlyTeamEntityTypeList,
-                                ],
-                                [
-                                    'relatedId=' => null,
-                                    'parentType=' => $onlyTeamEntityTypeList,
-                                ]
-                            ],
-                            [
-                                'OR' => [
-                                    'teamsMiddle.teamId' => $this->user->getTeamIdList(),
-                                    'usersMiddle.userId' => $this->user->getId(),
-                                ]
+                                'teamsMiddle.teamId' => $this->user->getTeamIdList(),
+                                'usersMiddle.userId' => $this->user->getId(),
                             ]
-                        ],
-                        [
-                            'OR' => [
-                                [
-                                    'relatedId!=' => null,
-                                    'relatedType=' => $onlyOwnEntityTypeList,
-                                ],
-                                [
-                                    'relatedId=' => null,
-                                    'parentType=' => $onlyOwnEntityTypeList,
-                                ]
-                            ],
-                            'usersMiddle.userId' => $this->user->getId(),
                         ]
+                    ],
+                    [
+                        'OR' => [
+                            [
+                                'relatedId!=' => null,
+                                'relatedType=' => $onlyOwnEntityTypeList,
+                            ],
+                            [
+                                'relatedId=' => null,
+                                'parentType=' => $onlyOwnEntityTypeList,
+                            ]
+                        ],
+                        'usersMiddle.userId' => $this->user->getId(),
                     ]
-                ];
-            }
-        }
-
-        $filter = $params->getFilter();
-
-        if ($filter === FindParams::FILTER_POSTS) {
-            $where['type'] = Note::TYPE_POST;
-        }
-        else if ($filter === FindParams::FILTER_UPDATES) {
-            $where['type'] = [
-                Note::TYPE_ASSIGN,
-                Note::TYPE_STATUS,
+                ]
             ];
         }
 
         $ignoreScopeList = $this->getIgnoreScopeList($this->user);
 
-        if (!empty($ignoreScopeList)) {
+        if ($ignoreScopeList !== []) {
             $where[] = [
                 'OR' => [
                     'relatedType' => null,
@@ -788,15 +736,8 @@ class RecordService
 
         $builder->where($where);
 
-        $after = $params->getAfter();
         $offset = $params->getSearchParams()->getOffset();
         $maxSize = $params->getSearchParams()->getMaxSize();
-
-        if ($after) {
-            $builder->where([
-                'createdAt>' => $after->getString(),
-            ]);
-        }
 
         $countBuilder = clone $builder;
 
@@ -839,8 +780,13 @@ class RecordService
         return RecordCollection::create($collection, $count);
     }
 
-    private function buildAdditionalQuery(FindParams $params): ?Select
+    private function buildBaseQueryBuilder(FindParams $params): SelectQueryBuilder
     {
+        $builder = $this->entityManager
+            ->getQueryBuilder()
+            ->select()
+            ->from(Note::ENTITY_TYPE);
+
         $searchParams = $params->getSearchParams();
 
         if (
@@ -849,7 +795,7 @@ class RecordService
             $searchParams->getPrimaryFilter() ||
             $searchParams->getBoolFilterList() !== []
         ) {
-           return $this->selectBuilderFactory
+            $builder = $this->selectBuilderFactory
                 ->create()
                 ->from(Note::ENTITY_TYPE)
                 ->withComplexExpressionsForbidden()
@@ -860,11 +806,30 @@ class RecordService
                         ->withMaxSize(null)
                 )
                 ->buildQueryBuilder()
-                ->order([])
-                ->build();
+                ->order([]);
         }
 
-        return null;
+        if ($params->getAfter()) {
+            $builder->where([
+                'createdAt>' => $params->getAfter()->getString(),
+            ]);
+        }
+
+        if ($params->getFilter() === FindParams::FILTER_POSTS) {
+            $builder->where([
+                'type' => Note::TYPE_POST,
+            ]);
+        }
+        else if ($params->getFilter() === FindParams::FILTER_UPDATES) {
+            $builder->where([
+                'type' => [
+                    Note::TYPE_UPDATE,
+                    Note::TYPE_STATUS,
+                ],
+            ]);
+        }
+
+        return $builder;
     }
 
     /**
