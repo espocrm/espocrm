@@ -44,7 +44,6 @@ use RuntimeException;
 class ServiceFactory
 {
     private const RECORD_SERVICE_NAME = 'Record';
-
     private const RECORD_TREE_SERVICE_NAME = 'RecordTree';
 
     /**
@@ -55,13 +54,9 @@ class ServiceFactory
     ];
 
     private Factory $serviceFactory;
-
     private Metadata $metadata;
-
     private User $user;
-
     private Acl $acl;
-
     private AclManager $aclManager;
 
     public function __construct(
