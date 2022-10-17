@@ -499,7 +499,7 @@ class SendingProcessor
 
             $this->entityManager->saveEntity($queueItem);
 
-            $this->log->error('MassEmail#sendQueueItem: [' . $e->getCode() . '] ' .$e->getMessage());
+            $this->log->error("Mass Email, send item: {$e->getCode()}, " . $e->getMessage());
 
             return false;
         }

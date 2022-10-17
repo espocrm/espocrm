@@ -37,7 +37,7 @@ class MassEmail extends Entity
 
     public const STATUS_COMPLETE = 'Complete';
     public const STATUS_FAILED = 'Failed';
-    public const STATUS_IN_PROGRESS = 'In Process';
+    public const STATUS_IN_PROCESS = 'In Process';
     public const STATUS_PENDING = 'Pending';
     public const STATUS_DRAFT = 'Draft';
 

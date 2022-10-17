@@ -213,7 +213,7 @@ class QueueCreator
         }
 
         if (!$isTest) {
-            $massEmail->set('status', MassEmail::STATUS_IN_PROGRESS);
+            $massEmail->set('status', MassEmail::STATUS_IN_PROCESS);
 
             if (empty($itemList)) {
                 $massEmail->set('status', MassEmail::STATUS_COMPLETE);

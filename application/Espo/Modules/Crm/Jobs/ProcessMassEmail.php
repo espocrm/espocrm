@@ -84,7 +84,7 @@ class ProcessMassEmail implements JobDataLess
         $massEmailList = $this->entityManager
             ->getRDBRepositoryByClass(MassEmail::class)
             ->where([
-                'status' => MassEmail::STATUS_IN_PROGRESS,
+                'status' => MassEmail::STATUS_IN_PROCESS,
             ])
             ->find();
 
