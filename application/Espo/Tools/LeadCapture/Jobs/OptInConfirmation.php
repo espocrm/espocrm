@@ -29,9 +29,7 @@
 
 namespace Espo\Tools\LeadCapture\Jobs;
 
-use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Job\Job;
 use Espo\Core\Job\Job\Data;
 use Espo\Tools\LeadCapture\LeadCapture;
@@ -47,9 +45,7 @@ class OptInConfirmation implements Job
     }
 
     /**
-     * @throws BadRequest
      * @throws Error
-     * @throws NotFound
      */
     public function run(Data $data): void
     {
@@ -59,6 +55,6 @@ class OptInConfirmation implements Job
             throw new RuntimeException();
         }
 
-        $this->leadCapture->confirmOptIn($uniqueId);
+        $this->leadCapture->sendOptInConfirmation($uniqueId);
     }
 }
