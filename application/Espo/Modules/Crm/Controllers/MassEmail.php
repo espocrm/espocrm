@@ -29,18 +29,29 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
-use Espo\Modules\Crm\Services\MassEmail as Service;
+use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Mail\Exceptions\NoSmtp;
+use Espo\Modules\Crm\Entities\MassEmail as MassEmailEntity;
+use Espo\Modules\Crm\Tools\MassEmail\Service;
 
-use Espo\Core\{
-    Exceptions\BadRequest,
-    Exceptions\Forbidden,
-    Api\Request,
-};
+use Espo\Core\Acl\Table;
+use Espo\Core\Api\Request;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 
 use stdClass;
 
-class MassEmail extends \Espo\Core\Controllers\Record
+class MassEmail extends Record
 {
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws NoSmtp
+     * @throws NotFound
+     */
     public function postActionSendTest(Request $request): bool
     {
         $id = $request->getParsedBody()->id ?? null;
@@ -62,8 +73,8 @@ class MassEmail extends \Espo\Core\Controllers\Record
     public function getActionSmtpAccountDataList(): array
     {
         if (
-            !$this->getAcl()->checkScope('MassEmail', 'create') &&
-            !$this->getAcl()->checkScope('MassEmail', 'edit')
+            !$this->acl->checkScope(MassEmailEntity::ENTITY_TYPE, Table::ACTION_CREATE) &&
+            !$this->acl->checkScope(MassEmailEntity::ENTITY_TYPE, Table::ACTION_EDIT)
         ) {
             throw new Forbidden();
         }
@@ -73,7 +84,6 @@ class MassEmail extends \Espo\Core\Controllers\Record
 
     private function getMassEmailService(): Service
     {
-        /** @var Service */
-        return $this->getServiceFactory()->create('MassEmail');
+        return $this->injectableFactory->create(Service::class);
     }
 }

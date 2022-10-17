@@ -41,6 +41,11 @@ class MassEmail extends Entity
     public const STATUS_PENDING = 'Pending';
     public const STATUS_DRAFT = 'Draft';
 
+    public function getStatus(): ?string
+    {
+        return $this->get('status');
+    }
+
     public function getEmailTemplateId(): ?string
     {
         return $this->get('emailTemplateId');

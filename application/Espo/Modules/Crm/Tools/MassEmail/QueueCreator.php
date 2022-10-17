@@ -42,6 +42,8 @@ use Espo\Core\Utils\Metadata;
 
 class QueueCreator
 {
+    private const ERASED_PREFIX = 'ERASED:';
+
     /** @var string[] */
     protected array $targetLinkList;
     protected EntityManager $entityManager;
@@ -79,11 +81,9 @@ class QueueCreator
      */
     public function create(MassEmail $massEmail, bool $isTest = false, iterable $additionalTargetList = []): void
     {
-        if (!$isTest && $massEmail->get('status') !== EmailQueueItem::STATUS_PENDING) {
-            throw new Error("Mass Email '" . $massEmail->getId() . "' should be 'Pending'.");
+        if (!$isTest && $massEmail->getStatus() !== MassEmail::STATUS_PENDING) {
+            throw new Error("Mass Email {$massEmail->getId()} should has status 'Pending'.");
         }
-
-        $em = $this->entityManager;
 
         if (!$isTest) {
             $this->cleanupQueueItems($massEmail);
@@ -96,13 +96,14 @@ class QueueCreator
         if (!$isTest) {
             /** @var Collection<TargetList> $excludingTargetListList */
             $excludingTargetListList = $this->entityManager
-                ->getRDBRepository(MassEmail::ENTITY_TYPE)
+                ->getRDBRepositoryByClass(MassEmail::class)
                 ->getRelation($massEmail, 'excludingTargetLists')
                 ->find();
 
             foreach ($excludingTargetListList as $excludingTargetList) {
                 foreach ($this->targetLinkList as $link) {
-                    $excludingList = $em->getRDBRepository(TargetList::ENTITY_TYPE)
+                    $excludingList = $this->entityManager
+                        ->getRDBRepositoryByClass(TargetList::class)
                         ->getRelation($excludingTargetList, $link)
                         ->sth()
                         ->select(['id', 'emailAddress'])
@@ -123,20 +124,19 @@ class QueueCreator
             }
 
             /** @var Collection<TargetList> $targetListCollection */
-            $targetListCollection = $em
-                ->getRDBRepository(MassEmail::ENTITY_TYPE)
+            $targetListCollection = $this->entityManager
+                ->getRDBRepositoryByClass(MassEmail::class)
                 ->getRelation($massEmail, 'targetLists')
                 ->find();
 
             foreach ($targetListCollection as $targetList) {
                 foreach ($this->targetLinkList as $link) {
-                    $recordList = $em->getRDBRepository('TargetList')
+                    $recordList = $this->entityManager
+                        ->getRDBRepositoryByClass(TargetList::class)
                         ->getRelation($targetList, $link)
                         ->select(['id', 'emailAddress'])
                         ->sth()
-                        ->where([
-                            '@relation.optedOut' => false,
-                        ])
+                        ->where(['@relation.optedOut' => false])
                         ->find();
 
                     foreach ($recordList as $record) {
@@ -184,14 +184,17 @@ class QueueCreator
                 continue;
             }
 
-            if (strpos($emailAddress, 'ERASED:') === 0) {
+            if (strpos($emailAddress, self::ERASED_PREFIX) === 0) {
                 continue;
             }
 
             $emailAddressRecord = $this->getEmailAddressRepository()->getByAddress($emailAddress);
 
             if ($emailAddressRecord) {
-                if ($emailAddressRecord->get('invalid') || $emailAddressRecord->get('optOut')) {
+                if (
+                    $emailAddressRecord->isInvalid() ||
+                    $emailAddressRecord->isOptedOut()
+                ) {
                     continue;
                 }
             }
