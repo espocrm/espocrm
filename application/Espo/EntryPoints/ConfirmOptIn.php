@@ -39,6 +39,8 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Client\ActionRenderer;
+use Espo\Tools\LeadCapture\ConfirmResult;
+use LogicException;
 
 class ConfirmOptIn implements EntryPoint
 {
@@ -66,13 +68,28 @@ class ConfirmOptIn implements EntryPoint
             throw new BadRequest();
         }
 
-        $data = $this->service->confirmOptIn($id);
+        $result = $this->service->confirmOptIn($id);
 
-        $action = 'optInConfirmationExpired';
+        $action = null;
 
-        if ($data['status'] === 'success') {
+        if ($result->getStatus() === ConfirmResult::STATUS_EXPIRED) {
+            $action = 'optInConfirmationExpired';
+        }
+
+        if ($result->getStatus() === ConfirmResult::STATUS_SUCCESS) {
             $action = 'optInConfirmationSuccess';
         }
+
+        if (!$action) {
+            throw new LogicException();
+        }
+
+        $data = [
+            'status' => $result->getStatus(),
+            'message' => $result->getMessage(),
+            'leadCaptureId' => $result->getLeadCaptureId(),
+            'leadCaptureName' => $result->getLeadCaptureName(),
+        ];
 
         $params = new ActionRenderer\Params('controllers/lead-capture-opt-in-confirmation', $action, $data);
 

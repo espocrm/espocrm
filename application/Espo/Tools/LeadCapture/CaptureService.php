@@ -408,16 +408,9 @@ class CaptureService
      * @throws BadRequest
      * @throws Error
      * @throws NotFound
-     *
      * @param string $id A unique ID.
-     * @return array{
-     *   status: 'success'|'expired',
-     *   message: ?string,
-     *   leadCaptureName?: ?string,
-     *   leadCaptureId?: string,
-     * }
      */
-    public function confirmOptIn(string $id): array
+    public function confirmOptIn(string $id): ConfirmResult
     {
         /** @var ?UniqueId $uniqueId */
         $uniqueId = $this->entityManager
@@ -447,11 +440,11 @@ class CaptureService
         $terminateAt = $uniqueId->getTerminateAt();
 
         if ($terminateAt && time() > strtotime($terminateAt->getString())) {
-            return [
-                'status' => 'expired',
-                'message' => $this->defaultLanguage
-                    ->translateLabel('optInConfirmationExpired', 'messages', LeadCaptureEntity::ENTITY_TYPE),
-            ];
+            return new ConfirmResult(
+                ConfirmResult::STATUS_EXPIRED,
+                $this->defaultLanguage
+                    ->translateLabel('optInConfirmationExpired', 'messages', LeadCaptureEntity::ENTITY_TYPE)
+            );
         }
 
         /** @var ?LeadCaptureEntity $leadCapture */
@@ -471,12 +464,13 @@ class CaptureService
             $this->entityManager->saveEntity($uniqueId);
         }
 
-        return [
-            'status' => 'success',
-            'message' => $leadCapture->getOptInConfirmationSuccessMessage(),
-            'leadCaptureName' => $leadCapture->getName(),
-            'leadCaptureId' => $leadCapture->getId(),
-        ];
+        return new ConfirmResult(
+            ConfirmResult::STATUS_SUCCESS,
+            $this->defaultLanguage
+                ->translateLabel('optInConfirmationExpired', 'messages', LeadCaptureEntity::ENTITY_TYPE),
+            $leadCapture->getId(),
+            $leadCapture->getName()
+        );
     }
 
     /**
