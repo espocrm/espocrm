@@ -1,0 +1,9 @@
+{
+    "primaryFilterClassNameMap": {
+        "posts": "Espo\\Classes\\Select\\Note\\PrimaryFilters\\Posts",
+        "updates": "Espo\\Classes\\Select\\Note\\PrimaryFilters\\Updates"
+    },
+    "boolFilterClassNameMap": {
+        "skipOwn": "Espo\\Classes\\Select\\Note\\BoolFilters\\SkipOwn"
+    }
+}

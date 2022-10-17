@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
 
+use Espo\Core\Select\SearchParams;
 use Espo\ORM\EntityManager;
 
 use Espo\Entities\Subscription;
@@ -88,12 +89,12 @@ class RecordService
      * @throws Forbidden
      * @return RecordCollection<Note>
      */
-    public function findUser(?string $userId, FindParams $params): RecordCollection
+    public function findUser(?string $userId, SearchParams $searchParams): RecordCollection
     {
         $userId ??= $this->user->getId();
 
-        $offset = $params->getSearchParams()->getOffset() ?? 0;
-        $maxSize = $params->getSearchParams()->getMaxSize();
+        $offset = $searchParams->getOffset() ?? 0;
+        $maxSize = $searchParams->getMaxSize();
 
         $sqLimit = $offset + $maxSize + 1;
 
@@ -135,7 +136,7 @@ class RecordService
 
         $queryList = [];
 
-        $baseBuilder = $this->buildBaseQueryBuilder($params)
+        $baseBuilder = $this->buildBaseQueryBuilder($searchParams)
             ->select($select)
             ->order('number', 'DESC')
             ->limit(0, $sqLimit);
@@ -438,19 +439,6 @@ class RecordService
                 ->build();
         }
 
-        if ($params->skipOwn()) {
-            foreach ($queryList as $i => $query) {
-                $queryList[$i] = $this->entityManager
-                    ->getQueryBuilder()
-                    ->select()
-                    ->clone($query)
-                    ->where([
-                        'createdById!=' => $this->user->getId(),
-                    ])
-                    ->build();
-            }
-        }
-
         $queryList[] = (clone $baseBuilder)
             ->leftJoin('createdBy')
             ->where([
@@ -561,7 +549,7 @@ class RecordService
      * @throws Forbidden
      * @return RecordCollection<Note>
      */
-    public function find(string $scope, string $id, FindParams $params): RecordCollection
+    public function find(string $scope, string $id, SearchParams $searchParams): RecordCollection
     {
         if ($scope === User::ENTITY_TYPE) {
             throw new Forbidden();
@@ -580,7 +568,7 @@ class RecordService
             throw new Forbidden();
         }
 
-        $builder = $this->buildBaseQueryBuilder($params);
+        $builder = $this->buildBaseQueryBuilder($searchParams);
 
         $where = [
             'OR' => [
@@ -736,8 +724,8 @@ class RecordService
 
         $builder->where($where);
 
-        $offset = $params->getSearchParams()->getOffset();
-        $maxSize = $params->getSearchParams()->getMaxSize();
+        $offset = $searchParams->getOffset();
+        $maxSize = $searchParams->getMaxSize();
 
         $countBuilder = clone $builder;
 
@@ -780,14 +768,12 @@ class RecordService
         return RecordCollection::create($collection, $count);
     }
 
-    private function buildBaseQueryBuilder(FindParams $params): SelectQueryBuilder
+    private function buildBaseQueryBuilder(SearchParams $searchParams): SelectQueryBuilder
     {
         $builder = $this->entityManager
             ->getQueryBuilder()
             ->select()
             ->from(Note::ENTITY_TYPE);
-
-        $searchParams = $params->getSearchParams();
 
         if (
             $searchParams->getWhere() ||
@@ -807,26 +793,6 @@ class RecordService
                 )
                 ->buildQueryBuilder()
                 ->order([]);
-        }
-
-        if ($params->getAfter()) {
-            $builder->where([
-                'createdAt>' => $params->getAfter()->getString(),
-            ]);
-        }
-
-        if ($params->getFilter() === FindParams::FILTER_POSTS) {
-            $builder->where([
-                'type' => Note::TYPE_POST,
-            ]);
-        }
-        else if ($params->getFilter() === FindParams::FILTER_UPDATES) {
-            $builder->where([
-                'type' => [
-                    Note::TYPE_UPDATE,
-                    Note::TYPE_STATUS,
-                ],
-            ]);
         }
 
         return $builder;

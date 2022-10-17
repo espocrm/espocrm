@@ -27,53 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Stream;
+namespace Espo\Classes\Select\Note\BoolFilters;
 
-use Espo\Core\Field\DateTime;
-use Espo\Core\Select\SearchParams;
+use Espo\Entities\User;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Where\OrGroupBuilder;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
-/**
- * @immutable
- */
-class FindParams
+class SkipOwn implements \Espo\Core\Select\Bool\Filter
 {
-    public const FILTER_POSTS = 'posts';
-    public const FILTER_UPDATES = 'updates';
+    private User $user;
 
-    private SearchParams $searchParams;
-    private bool $skipOwn;
-    private ?DateTime $after;
-    private ?string $filter;
-
-    public function __construct(
-        SearchParams $searchParams,
-        bool $skipOwn = false,
-        ?DateTime $after = null,
-        ?string $filter = null
-    ) {
-        $this->searchParams = $searchParams;
-        $this->skipOwn = $skipOwn;
-        $this->after = $after;
-        $this->filter = $filter;
+    public function __construct(User $user)
+    {
+        $this->user = $user;
     }
 
-    public function getSearchParams(): SearchParams
+    public function apply(QueryBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {
-        return $this->searchParams;
-    }
-
-    public function skipOwn(): bool
-    {
-        return $this->skipOwn;
-    }
-
-    public function getAfter(): ?DateTime
-    {
-        return $this->after;
-    }
-
-    public function getFilter(): ?string
-    {
-        return $this->filter;
+        $orGroupBuilder->add(
+            Condition::notEqual(
+                Expression::column('createdById'),
+                $this->user->getId()
+            )
+        );
     }
 }

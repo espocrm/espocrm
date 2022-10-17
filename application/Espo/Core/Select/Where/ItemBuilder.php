@@ -34,14 +34,9 @@ use Espo\Core\Select\Where\Item\Data;
 class ItemBuilder
 {
     private ?string $type = null;
-
     private ?string $attribute = null;
-
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $value = null;
-
     private ?Data $data = null;
 
     public static function create(): self
@@ -49,6 +44,12 @@ class ItemBuilder
         return new self();
     }
 
+    /**
+     * Set a type.
+     *
+     * @param (Item\Type::*)|string $type
+     * @return $this
+     */
     public function setType(string $type): self
     {
         $this->type = $type;
@@ -57,6 +58,8 @@ class ItemBuilder
     }
 
     /**
+     * Set a value.
+     *
      * @param mixed $value
      */
     public function setValue($value): self
@@ -66,6 +69,9 @@ class ItemBuilder
         return $this;
     }
 
+    /**
+     * Set an attribute.
+     */
     public function setAttribute(?string $attribute): self
     {
         $this->attribute = $attribute;
@@ -73,6 +79,9 @@ class ItemBuilder
         return $this;
     }
 
+    /**
+     * Set data.
+     */
     public function setData(?Data $data): self
     {
         $this->data = $data;

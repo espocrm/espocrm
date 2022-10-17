@@ -34,11 +34,11 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Field\DateTime;
 use Espo\Core\Record\SearchParamsFetcher;
 
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\Where\Item as WhereItem;
 use Espo\Entities\User as UserEntity;
-use Espo\Tools\Stream\FindParams;
 use Espo\Tools\Stream\RecordService;
 
 use stdClass;
@@ -76,24 +76,11 @@ class Stream
             throw new BadRequest("No ID.");
         }
 
-        $searchParams = $this->searchParamsFetcher->fetch($request);
-
-        $after = $request->getQueryParam('after');
-        $filter = $request->getQueryParam('filter');
-        $skipOwn = $request->getQueryParam('skipOwn') === 'true';
-
-        /** @todo Use named params. */
-        $findParams = new FindParams(
-            $searchParams,
-            $skipOwn,
-            $after ?
-                DateTime::fromString($after) : null,
-            $filter
-        );
+        $searchParams = $this->fetchSearchParams($request);
 
         $result = $scope === UserEntity::ENTITY_TYPE ?
-            $this->service->findUser($id, $findParams) :
-            $this->service->find($scope, $id ?? '', $findParams);
+            $this->service->findUser($id, $searchParams) :
+            $this->service->find($scope, $id ?? '', $searchParams);
 
         return (object) [
             'total' => $result->getTotal(),
@@ -119,26 +106,50 @@ class Stream
             throw new BadRequest("No ID.");
         }
 
-        $after = $request->getQueryParam('after');
-
-        $searchParams = $this->searchParamsFetcher->fetch($request);
-
-        /** @todo Use named params. */
-        $findParams = new FindParams(
-            $searchParams,
-            false,
-            $after ?
-                DateTime::fromString($after) : null,
-            FindParams::FILTER_POSTS
-        );
+        $searchParams = $this->fetchSearchParams($request)
+            ->withPrimaryFilter('posts');
 
         $result = $scope === UserEntity::ENTITY_TYPE ?
-            $this->service->findUser($id, $findParams) :
-            $this->service->find($scope, $id ?? '', $findParams);
+            $this->service->findUser($id, $searchParams) :
+            $this->service->find($scope, $id ?? '', $searchParams);
 
         return (object) [
             'total' => $result->getTotal(),
             'list' => $result->getValueMapList(),
         ];
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    private function fetchSearchParams(Request $request): SearchParams
+    {
+        $searchParams = $this->searchParamsFetcher->fetch($request);
+
+        $after = $request->getQueryParam('after');
+        $filter = $request->getQueryParam('filter');
+
+        if ($after) {
+            $searchParams = $searchParams
+                ->withWhereAdded(
+                    WhereItem
+                        ::createBuilder()
+                        ->setAttribute('createdAt')
+                        ->setType(WhereItem\Type::AFTER)
+                        ->setValue($after)
+                        ->build()
+                );
+        }
+
+        if ($filter) {
+            $searchParams = $searchParams->withPrimaryFilter($filter);
+        }
+
+        if ($request->getQueryParam('skipOwn') === 'true') {
+            $searchParams = $searchParams->withBoolFilterList(['skipOwn']);
+        }
+
+        return $searchParams;
     }
 }
