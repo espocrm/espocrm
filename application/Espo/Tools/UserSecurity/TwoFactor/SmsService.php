@@ -27,19 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\UserSecurity;
+namespace Espo\Tools\UserSecurity\TwoFactor;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 
 use Espo\Core\Utils\Config;
-use Espo\Core\Authentication\TwoFactor\Email\Util;
+use Espo\Core\Authentication\TwoFactor\Sms\Util;
 
 use Espo\ORM\EntityManager;
 
 use Espo\Entities\User;
 
-class TwoFactorEmailService
+class SmsService
 {
     private Util $util;
     private User $user;
@@ -58,7 +59,12 @@ class TwoFactorEmailService
         $this->config = $config;
     }
 
-    public function sendCode(string $userId, string $emailAddress): void
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws Error
+     */
+    public function sendCode(string $userId, string $phoneNumber): void
     {
         if (!$this->user->isAdmin() && $userId !== $this->user->getId()) {
             throw new Forbidden();
@@ -66,16 +72,20 @@ class TwoFactorEmailService
 
         $this->checkAllowed();
 
+        /** @var ?User $user */
         $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             throw new NotFound();
         }
 
-        $this->util->sendCode($user, $emailAddress);
-        $this->util->storeEmailAddress($user, $emailAddress);
+        $this->util->sendCode($user, $phoneNumber);
+        $this->util->storePhoneNumber($user, $phoneNumber);
     }
 
+    /**
+     * @throws Forbidden
+     */
     private function checkAllowed(): void
     {
         if (!$this->config->get('auth2FA')) {
@@ -84,8 +94,8 @@ class TwoFactorEmailService
 
         $methodList = $this->config->get('auth2FAMethodList') ?? [];
 
-        if (!in_array('Email', $methodList)) {
-            throw new Forbidden("Email 2FA is not allowed.");
+        if (!in_array('Sms', $methodList)) {
+            throw new Forbidden("Sms 2FA is not allowed.");
         }
     }
 }

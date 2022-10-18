@@ -29,21 +29,25 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\Api\Request;
 
-use Espo\Tools\UserSecurity\TwoFactorSmsService as Service;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Tools\UserSecurity\TwoFactor\SmsService as Service;
 
 use Espo\Entities\User;
 
 class TwoFactorSms
 {
-    private $service;
+    private Service $service;
+    private User $user;
 
-    private $user;
-
+    /**
+     * @throws Forbidden
+     */
     public function __construct(Service $service, User $user)
     {
         $this->service = $service;
@@ -56,6 +60,13 @@ class TwoFactorSms
             throw new Forbidden();
         }
     }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function postActionSendCode(Request $request): bool
     {
         $data = $request->getParsedBody();
