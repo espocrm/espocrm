@@ -27,12 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Password;
+namespace Espo\Tools\UserSecurity\Password;
 
 use Espo\Core\Job\JobSchedulerFactory;
+use Espo\Core\Mail\Exceptions\NoSmtp;
+use Espo\Core\Mail\Exceptions\SendingError;
+use Espo\Core\Mail\SmtpParams;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Json;
 
+use Espo\Entities\Email;
 use Espo\Entities\User;
 use Espo\Entities\PasswordChangeRequest;
 use Espo\Entities\Portal;
@@ -55,7 +59,7 @@ use Espo\Core\Utils\Log;
 use Espo\Core\Utils\TemplateFileManager;
 use Espo\Tools\UserSecurity\Password\Jobs\RemoveRecoveryRequest;
 
-class Recovery
+class RecoveryService
 {
     /** Milliseconds. */
     private const REQUEST_DELAY = 3000;
@@ -114,6 +118,7 @@ class Recovery
         }
 
         $userId = $request->get('userId');
+
         if (!$userId) {
             throw new Error();
         }
@@ -139,6 +144,7 @@ class Recovery
      * @throws Forbidden
      * @throws NotFound
      * @throws Error
+     * @throws SendingError
      */
     public function request(string $emailAddress, string $userName, ?string $url): bool
     {
@@ -242,10 +248,14 @@ class Recovery
         return true;
     }
 
+    /**
+     * @throws Error
+     */
     private function createRequestNoSave(User $user, ?string $url = null): PasswordChangeRequest
     {
         $this->checkUser($user);
 
+        /** @var PasswordChangeRequest $entity */
         $entity = $this->entityManager->getNewEntity(PasswordChangeRequest::ENTITY_TYPE);
 
         $entity->set([
@@ -337,7 +347,7 @@ class Recovery
         return $this->config->get('passwordRecoveryRequestDelay') ?? self::REQUEST_DELAY;
     }
 
-    protected function delay(?int $delay = null): void
+    private function delay(?int $delay = null): void
     {
         if ($delay === null) {
             $delay = $this->getDelay();
@@ -346,13 +356,18 @@ class Recovery
         usleep($delay * 1000);
     }
 
-    protected function send(string $requestId, string $emailAddress, User $user): void
+    /**
+     * @throws Error
+     * @throws SendingError
+     */
+    private function send(string $requestId, string $emailAddress, User $user): void
     {
         if (!$emailAddress) {
             return;
         }
 
-        $email = $this->entityManager->getNewEntity('Email');
+        /** @var Email $email */
+        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
         if (!$this->emailSender->hasSystemSmtp() && !$this->config->get('internalSmtpServer')) {
             throw new Error("Password recovery: SMTP credentials are not defined.");
@@ -366,7 +381,7 @@ class Recovery
         $siteUrl = $this->config->getSiteUrl();
 
         if ($user->isPortal()) {
-            /** @var Portal|null $portal */
+            /** @var ?Portal $portal */
             $portal = $this->entityManager
                 ->getRDBRepository(Portal::ENTITY_TYPE)
                 ->distinct()
@@ -401,31 +416,45 @@ class Recovery
         $subject = $htmlizer->render($user, $subjectTpl, null, $data, true);
         $body = $htmlizer->render($user, $bodyTpl, null, $data, true);
 
+        $email
+            ->setSubject($subject)
+            ->setBody($body)
+            ->addToAddress($emailAddress);
+
         $email->set([
-            'subject' => $subject,
-            'body' => $body,
-            'to' => $emailAddress,
             'isSystem' => true,
         ]);
 
         if (!$this->emailSender->hasSystemSmtp()) {
-            $sender->withSmtpParams([
-                'server' => $this->config->get('internalSmtpServer'),
-                'port' => $this->config->get('internalSmtpPort'),
-                'auth' => $this->config->get('internalSmtpAuth'),
-                'username' => $this->config->get('internalSmtpUsername'),
-                'password' => $this->config->get('internalSmtpPassword'),
-                'security' => $this->config->get('internalSmtpSecurity'),
-                'fromAddress' => $this->config->get(
-                    'internalOutboundEmailFromAddress',
+            $server = $this->config->get('internalSmtpServer');
+            $port = $this->config->get('internalSmtpPort');
+
+            if (!$server || $port === null) {
+                throw new NoSmtp();
+            }
+
+            $smtpParams = SmtpParams
+                ::create($server, $port)
+                ->withAuth($this->config->get('internalSmtpAuth'))
+                ->withUsername($this->config->get('internalSmtpUsername'))
+                ->withPassword($this->config->get('internalSmtpPassword'))
+                ->withSecurity($this->config->get('internalSmtpSecurity'))
+                ->withFromName(
+                    $this->config->get('internalOutboundEmailFromAddress') ??
                     $this->config->get('outboundEmailFromAddress')
-                ),
-            ]);
+                );
+
+            $sender->withSmtpParams($smtpParams);
         }
 
         $sender->send($email);
     }
 
+    /**
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     private function fail(?string $msg = null, int $errorCode = 403): void
     {
         $noExposure = $this->config->get('passwordRecoveryNoExposure') ?? false;

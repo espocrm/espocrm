@@ -36,7 +36,6 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\FieldValidation\FieldValidationManager;
 use Espo\Core\Mail\EmailSender;
 use Espo\Core\Mail\Exceptions\SendingError;
-use Espo\Core\Password\Recovery;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\PasswordHash;
@@ -53,7 +52,7 @@ class Service
     private Sender $sender;
     private PasswordHash $passwordHash;
     private EntityManager $entityManager;
-    private Recovery $recovery;
+    private RecoveryService $recovery;
     private FieldValidationManager $fieldValidationManager;
     private Checker $checker;
 
@@ -66,7 +65,7 @@ class Service
         Sender $sender,
         PasswordHash $passwordHash,
         EntityManager $entityManager,
-        Recovery $recovery,
+        RecoveryService $recovery,
         FieldValidationManager $fieldValidationManager,
         Checker $checker
     ) {

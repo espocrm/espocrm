@@ -33,7 +33,7 @@ use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Job\JobSchedulerFactory;
 
-use Espo\Core\Password\Jobs\SendAccessInfo as SendAccessInfoJob;
+use Espo\Tools\UserSecurity\Password\Jobs\SendAccessInfo as SendAccessInfoJob;
 use Espo\Core\Job\Job\Data as JobData;
 
 use Espo\Entities\User;

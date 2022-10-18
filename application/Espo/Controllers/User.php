@@ -39,7 +39,7 @@ use Espo\Services\User as Service;
 use Espo\Core\Api\Request;
 use Espo\Core\Controllers\Record;
 use Espo\Core\Mail\Exceptions\SendingError;
-use Espo\Core\Password\Recovery;
+use Espo\Tools\UserSecurity\Password\RecoveryService;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\Where\Item as WhereItem;
 
@@ -140,7 +140,7 @@ class User extends Record
         }
 
         $this->injectableFactory
-            ->create(Recovery::class)
+            ->create(RecoveryService::class)
             ->request($emailAddress, $userName, $url);
 
         return true;

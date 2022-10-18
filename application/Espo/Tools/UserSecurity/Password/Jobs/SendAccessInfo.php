@@ -27,17 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Password\Jobs;
+namespace Espo\Tools\UserSecurity\Password\Jobs;
 
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Entities\User;
-
 use Espo\Core\Job\Job;
 use Espo\Core\Job\Job\Data;
 use Espo\Core\Exceptions\Error;
-
 use Espo\ORM\EntityManager;
-
 use Espo\Tools\UserSecurity\Password\Service as PasswordService;
 
 class SendAccessInfo implements Job
