@@ -27,23 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Tools\Pdf\Jobs;
 
-use Espo\Core\ORM\Entity;
-use UnexpectedValueException;
+use Espo\Core\Job\Job;
+use Espo\Core\Job\Job\Data;
+use Espo\Entities\Attachment;
+use Espo\ORM\EntityManager;
+use RuntimeException;
 
-class Template extends Entity
+class RemoveMassFile implements Job
 {
-    public const ENTITY_TYPE = 'Template';
+    private const ATTACHMENT_MASS_PDF_ROLE = 'Mass Pdf';
+    private EntityManager $entityManager;
 
-    public function getTargetEntityType(): string
+    public function __construct(EntityManager $entityManager)
     {
-        $entityType = $this->get('entityType');
+        $this->entityManager = $entityManager;
+    }
 
-        if ($entityType === null) {
-            throw new UnexpectedValueException();
+    public function run(Data $data): void
+    {
+        $id = $data->getTargetId();
+
+        if (!$id) {
+            throw new RuntimeException();
         }
 
-        return $entityType;
+        /** @var ?Attachment $attachment */
+        $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
+
+        if (!$attachment) {
+            return;
+        }
+
+        if ($attachment->getRole() !== self::ATTACHMENT_MASS_PDF_ROLE) {
+            throw new RuntimeException();
+        }
+
+        $this->entityManager->removeEntity($attachment);
     }
 }

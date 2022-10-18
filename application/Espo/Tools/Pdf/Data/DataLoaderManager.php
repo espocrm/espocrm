@@ -40,7 +40,6 @@ use Espo\Tools\Pdf\Params;
 class DataLoaderManager
 {
     private Metadata $metadata;
-
     private InjectableFactory $injectableFactory;
 
     public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)

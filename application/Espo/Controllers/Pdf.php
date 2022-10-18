@@ -29,32 +29,36 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\{
-    Exceptions\Forbidden,
-    Exceptions\BadRequest,
-};
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 
-use Espo\Core\{
-    Api\Request,
-    Acl,
-};
+use Espo\Core\Acl;
+use Espo\Core\Api\Request;
 
-use Espo\Services\Pdf as Service;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Entities\Template as TemplateEntity;
+use Espo\Tools\Pdf\MassService;
 
 use stdClass;
 
 class Pdf
 {
-    private $service;
+    private MassService $service;
+    private Acl $acl;
 
-    private $acl;
-
-    public function __construct(Service $service, Acl $acl)
+    public function __construct(MassService $service, Acl $acl)
     {
         $this->service = $service;
         $this->acl = $acl;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function postActionMassPrint(Request $request): stdClass
     {
         $data = $request->getParsedBody();
@@ -71,7 +75,7 @@ class Pdf
             throw new BadRequest();
         }
 
-        if (!$this->acl->checkScope('Template')) {
+        if (!$this->acl->checkScope(TemplateEntity::ENTITY_TYPE)) {
             throw new Forbidden();
         }
 
@@ -79,14 +83,10 @@ class Pdf
             throw new Forbidden();
         }
 
+        $id = $this->service->generate($data->entityType, $data->idList, $data->templateId);
+
         return (object) [
-            'id' => $this->service
-                ->massGenerate(
-                    $data->entityType,
-                    $data->idList,
-                    $data->templateId,
-                    true
-                )
+            'id' => $id,
         ];
     }
 }

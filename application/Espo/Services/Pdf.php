@@ -29,336 +29,72 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
-
-use Espo\Core\Acl;
-use Espo\Core\Acl\Table;
-use Espo\Core\Job\QueueName;
-use Espo\Core\ORM\EntityManager;
-use Espo\Core\Record\ServiceContainer;
-use Espo\Core\Select\SelectBuilderFactory;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Language;
-use Espo\Core\Utils\Util;
-
-use Espo\Tools\Pdf\Builder;
-use Espo\Tools\Pdf\Contents;
 use Espo\Tools\Pdf\Data;
-use Espo\Tools\Pdf\Data\DataLoaderManager;
-use Espo\Tools\Pdf\IdDataMap;
 use Espo\Tools\Pdf\Params;
-use Espo\Tools\Pdf\TemplateWrapper;
-
+use Espo\Tools\Pdf\Service;
 use Espo\Entities\Template;
 
-use DateTime;
-use stdClass;
-
+/**
+ * @deprecated Left for bc.
+ */
 class Pdf
 {
-    private const DEFAULT_ENGINE = 'Tcpdf';
-
-    private string $removeMassFilePeriod = '1 hour';
-
-    private $config;
-    private $entityManager;
-    private $acl;
-    private $defaultLanguage;
-    private $selectBuilderFactory;
-    private $builder;
-    private $serviceContainer;
-    private $dataLoaderManager;
+    private Service $service;
 
     public function __construct(
-        Config $config,
-        EntityManager $entityManager,
-        Acl $acl,
-        Language $defaultLanguage,
-        SelectBuilderFactory $selectBuilderFactory,
-        Builder $builder,
-        ServiceContainer $serviceContainer,
-        DataLoaderManager $dataLoaderManager
+        Service $service
     ) {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->acl = $acl;
-        $this->defaultLanguage = $defaultLanguage;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->builder = $builder;
-        $this->serviceContainer = $serviceContainer;
-        $this->dataLoaderManager = $dataLoaderManager;
+        $this->service = $service;
     }
 
     /**
-     * @param string[] $idList
-     * @throws Error
-     * @throws NotFound
-     * @throws Forbidden
-     */
-    public function massGenerate(
-        string $entityType,
-        array $idList,
-        string $templateId,
-        bool $checkAcl = false
-    ): string {
-
-        $service = $this->serviceContainer->get($entityType);
-
-        $maxCount = $this->config->get('massPrintPdfMaxCount');
-
-        if ($maxCount) {
-            if (count($idList) > $maxCount) {
-                throw new Error("Mass print to PDF max count exceeded.");
-            }
-        }
-
-        $template = $this->entityManager->getEntity('Template', $templateId);
-
-        if (!$template) {
-            throw new NotFound();
-        }
-
-        $params = Params::create();
-
-        if ($checkAcl) {
-            if (!$this->acl->check($template)) {
-                throw new Forbidden();
-            }
-
-            if (!$this->acl->checkScope($entityType)) {
-                throw new Forbidden();
-            }
-
-            $params = $params->withAcl();
-        }
-
-        $query = $this->selectBuilderFactory
-            ->create()
-            ->from($entityType)
-            ->withAccessControlFilter()
-            ->build();
-
-        $collection = $this->entityManager
-            ->getRDBRepository($entityType)
-            ->clone($query)
-            ->where([
-                'id' => $idList,
-            ])
-            ->find();
-
-        $idDataMap = IdDataMap::create();
-
-        foreach ($collection as $entity) {
-            $service->loadAdditionalFields($entity);
-
-            $idDataMap->set(
-                $entity->getId(),
-                $this->dataLoaderManager->load($entity, $params)
-            );
-
-            // deprecated
-            if (method_exists($service, 'loadAdditionalFieldsForPdf')) {
-                $service->loadAdditionalFieldsForPdf($entity);
-            }
-        }
-
-        $templateWrapper = new TemplateWrapper($template);
-
-        $engine = $this->config->get('pdfEngine') ?? self::DEFAULT_ENGINE;
-
-        $printer = $this->builder
-            ->setTemplate($templateWrapper)
-            ->setEngine($engine)
-            ->build();
-
-        $contents = $printer->printCollection($collection, $params, $idDataMap);
-
-        $entityTypeTranslated = $this->defaultLanguage->translateLabel($entityType, 'scopeNamesPlural');
-
-        $filename = Util::sanitizeFileName($entityTypeTranslated) . '.pdf';
-
-        $attachment = $this->entityManager->getNewEntity('Attachment');
-
-        $attachment->set([
-            'name' => $filename,
-            'type' => 'application/pdf',
-            'role' => 'Mass Pdf',
-            'contents' => $contents->getString(),
-        ]);
-
-        $this->entityManager->saveEntity($attachment);
-
-        $job = $this->entityManager->getNewEntity('Job');
-
-        $job->set([
-            'serviceName' => 'Pdf',
-            'methodName' => 'removeMassFileJob',
-            'data' => [
-                'id' => $attachment->getId(),
-            ],
-            'executeTime' => (new DateTime())->modify('+' . $this->removeMassFilePeriod)->format('Y-m-d H:i:s'),
-            'queue' => QueueName::Q1,
-        ]);
-
-        $this->entityManager->saveEntity($job);
-
-        return $attachment->getId();
-    }
-
-    public function removeMassFileJob(stdClass $data): void
-    {
-        if (empty($data->id)) {
-            return;
-        }
-
-        $attachment = $this->entityManager->getEntity('Attachment', $data->id);
-
-        if (!$attachment) {
-            return;
-        }
-
-        if ($attachment->get('role') !== 'Mass Pdf') {
-            return;
-        }
-
-        $this->entityManager->removeEntity($attachment);
-    }
-
-    /**
-     * Generate PDF. ACL check is processed if `$params` is null.
-     *
      * @throws Error
      * @throws Forbidden
      */
     public function generate(Entity $entity, Template $template, ?Params $params = null, ?Data $data = null): string
     {
-        if ($params === null) {
-            $params = Params::create()->withAcl();
+        $additionalData = null;
+
+        if ($data) {
+            $additionalData = get_object_vars($data->getAdditionalTemplateData());
         }
 
-        $result = $this->buildFromTemplateInternal($entity, $template, false, null, $params, $data);
-
-        assert($result !== null);
-
-        return $result;
+        return $this->buildFromTemplate($entity, $template, false, $additionalData);
     }
 
     /**
      * @param ?array<string,mixed> $additionalData
      * @throws Error
      * @throws Forbidden
-     * @deprecated
+     * @throws NotFound
+     *
+     * @deprecated Left for bc.
      */
     public function buildFromTemplate(
         Entity $entity,
         Template $template,
         bool $displayInline = false,
         ?array $additionalData = null
-    ): ?string {
+    ): string {
 
-        return $this->buildFromTemplateInternal($entity, $template, $displayInline, $additionalData);
-    }
+        $data = Data::create()
+            ->withAdditionalTemplateData(
+                (object) ($additionalData ?? [])
+            );
 
-    /**
-     * @param ?array<string,mixed> $additionalData
-     * @throws Error
-     * @throws Forbidden
-     * @deprecated
-     */
-    private function buildFromTemplateInternal(
-        Entity $entity,
-        Template $template,
-        bool $displayInline = false,
-        ?array $additionalData = null,
-        ?Params $params = null,
-        ?Data $data = null
-    ): ?string {
-
-        $entityType = $entity->getEntityType();
-
-        $service = $this->serviceContainer->get($entityType);
-
-        $service->loadAdditionalFields($entity);
-
-        if (method_exists($service, 'loadAdditionalFieldsForPdf')) {
-            // deprecated
-            $service->loadAdditionalFieldsForPdf($entity);
-        }
-
-        if ($template->get('entityType') !== $entityType) {
-            throw new Error("Not matching entity types.");
-        }
-
-        $applyAcl = true;
-
-        if ($params) {
-            $applyAcl = $params->applyAcl();
-        }
-
-        if ($applyAcl) {
-            if (
-                !$this->acl->check($entity, Table::ACTION_READ) ||
-                !$this->acl->check($template, Table::ACTION_READ)
-            ) {
-                throw new Forbidden();
-            }
-        }
-
-        $templateWrapper = new TemplateWrapper($template);
-
-        if (!$data) {
-            $data = Data::create()
-                ->withAdditionalTemplateData(
-                    (object) ($additionalData ?? [])
-                );
-        }
-
-        $data = $this->dataLoaderManager->load($entity, $params, $data);
-
-        $engine = $this->config->get('pdfEngine') ?? self::DEFAULT_ENGINE;
-
-        $printer = $this->builder
-            ->setTemplate($templateWrapper)
-            ->setEngine($engine)
-            ->build();
-
-        $contents = $printer->printEntity($entity, $params, $data);
-
-        if ($displayInline) {
-            $this->displayInline($entity, $contents);
-
-            return null;
-        }
-
-        return $contents->getString();
-    }
-
-    /**
-     * @deprecated
-     */
-    private function displayInline(Entity $entity, Contents $contents): void
-    {
-        $fileName = Util::sanitizeFileName(
-            $entity->get('name') ?? 'unnamed'
+        $contents = $this->service->generate(
+            $entity->getEntityType(),
+            $entity->getId(),
+            $template->getId(),
+            null,
+            $data
         );
 
-        $fileName = $fileName . '.pdf';
-
-        header('Content-Type: application/pdf');
-        header('Cache-Control: private, must-revalidate, post-check=0, pre-check=0, max-age=1');
-        header('Pragma: public');
-        header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
-        header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-        header('Content-Disposition: inline; filename="'.basename($fileName).'"');
-
-        if (!isset($_SERVER['HTTP_ACCEPT_ENCODING']) or empty($_SERVER['HTTP_ACCEPT_ENCODING'])) {
-            header('Content-Length: '. $contents->getLength());
-        }
-
-        echo $contents->getString();
+        return $contents->getString();
     }
 }

@@ -29,28 +29,27 @@
 
 namespace Espo\Core\Formula\Functions\ExtGroup\PdfGroup;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-    Exceptions\Error,
-};
-
-use Espo\Services\Pdf as Service;
-
+use Espo\Core\Field\LinkParent;
+use Espo\Entities\Attachment;
+use Espo\Entities\Template;
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Utils\Util;
-
 use Espo\Tools\Pdf\Params;
-
 use Espo\Core\Di;
 
+use Espo\Tools\Pdf\Service;
 use Exception;
 
 class GenerateType extends BaseFunction implements
     Di\EntityManagerAware,
-    Di\ServiceFactoryAware
+    Di\InjectableFactoryAware,
+    Di\FileStorageManagerAware
 {
     use Di\EntityManagerSetter;
-    use Di\ServiceFactorySetter;
+    use Di\InjectableFactorySetter;
+    use Di\FileStorageManagerSetter;
 
     public function process(ArgumentList $args)
     {
@@ -98,7 +97,8 @@ class GenerateType extends BaseFunction implements
             throw new Error();
         }
 
-        $template = $em->getEntity('Template', $templateId);
+        /** @var ?Template $template */
+        $template = $em->getEntityById(Template::ENTITY_TYPE, $templateId);
 
         if (!$template) {
             $this->log("Template {$templateId} does not exist.");
@@ -117,10 +117,14 @@ class GenerateType extends BaseFunction implements
         $params = Params::create()->withAcl(false);
 
         try {
-            /** @var Service $service */
-            $service = $this->serviceFactory->create('Pdf');
+            $service = $this->injectableFactory->create(Service::class);
 
-            $contents = $service->generate($entity, $template, $params);
+            $contents = $service->generate(
+                $entity->getEntityType(),
+                $entity->getId(),
+                $template->getId(),
+                $params
+            );
         }
         catch (Exception $e) {
             $this->log("Error while generating. Message: " . $e->getMessage() . ".", 'error');
@@ -128,14 +132,19 @@ class GenerateType extends BaseFunction implements
             throw new Error();
         }
 
-        $attachment = $em->createEntity('Attachment', [
-            'name' => $fileName,
-            'type' => 'application/pdf',
-            'contents' => $contents,
-            'relatedId' => $id,
-            'relatedType' => $entityType,
-            'role' => 'Attachment',
-        ]);
+        /** @var Attachment $attachment */
+        $attachment = $em->getNewEntity(Attachment::ENTITY_TYPE);
+
+        $attachment
+            ->setName($fileName)
+            ->setType('application/pdf')
+            ->setSize($contents->getStream()->getSize())
+            ->setRelated(LinkParent::create($entityType, $id))
+            ->setRole(Attachment::ROLE_ATTACHMENT);
+
+        $em->saveEntity($attachment);
+
+        $this->fileStorageManager->putStream($attachment, $contents->getStream());
 
         return $attachment->getId();
     }
