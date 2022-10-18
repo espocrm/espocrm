@@ -29,25 +29,20 @@
 
 namespace Espo\Classes\Jobs;
 
-use Espo\Core\{
-    Utils\Config,
-    ORM\EntityManager,
-    Job\JobDataLess,
-};
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Entities\Job;
+use Espo\Core\Job\JobDataLess;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
 
 use DateTime;
 use DateTimeZone;
 
 class CheckNewVersion implements JobDataLess
 {
-    /**
-     * @var Config
-     */
+    /** @var Config */
     protected $config;
-
-    /**
-     * @var EntityManager
-     */
+    /** @var EntityManager */
     protected $entityManager;
 
     public function __construct(Config $config, EntityManager $entityManager)
@@ -58,22 +53,21 @@ class CheckNewVersion implements JobDataLess
 
     public function run(): void
     {
-        if (!$this->config->get('adminNotifications') || !$this->config->get('adminNotificationsNewVersion')) {
+        if (
+            !$this->config->get('adminNotifications') ||
+            !$this->config->get('adminNotificationsNewVersion')
+        ) {
             return;
         }
 
-        $job = $this->entityManager->getNewEntity('Job');
+        $className = \Espo\Tools\AdminNotifications\Jobs\CheckNewVersion::class;
 
-        $job->set([
-            'name' => 'Check for New Version (job)',
-            'serviceName' => 'AdminNotifications',
-            'methodName' => 'jobCheckNewVersion',
+        /** @todo Job scheduler is not used for bc reasons. */
+        $this->entityManager->createEntity(Job::ENTITY_TYPE, [
+            'name' => $className,
+            'className' => $className,
             'executeTime' => $this->getRunTime(),
         ]);
-
-        $this->entityManager->saveEntity($job);
-
-        return;
     }
 
     protected function getRunTime(): string
@@ -82,7 +76,7 @@ class CheckNewVersion implements JobDataLess
         $minute = rand(0, 59);
 
         $nextDay = new DateTime('+ 1 day');
-        $time = $nextDay->format('Y-m-d') . ' ' . $hour . ':' . $minute . ':00';
+        $time = $nextDay->format(DateTimeUtil::SYSTEM_DATE_FORMAT) . ' ' . $hour . ':' . $minute . ':00';
 
         $timeZone = $this->config->get('timeZone');
 
@@ -92,7 +86,9 @@ class CheckNewVersion implements JobDataLess
 
         $datetime = new DateTime($time, new DateTimeZone($timeZone));
 
-        return $datetime->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+        return $datetime
+            ->setTimezone(new DateTimeZone('UTC'))
+            ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
     }
 
     /**

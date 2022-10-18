@@ -27,87 +27,52 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\AdminNotifications\Jobs;
 
-use Espo\Core\{
-    Utils\Config,
-    Utils\Config\ConfigWriter,
-    Di,
-};
+use Espo\Core\Job\JobDataLess;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Entities\Extension;
+use Espo\ORM\EntityManager;
+use Espo\Tools\AdminNotifications\LatestReleaseDataRequester;
 
-class AdminNotifications implements
-
-    Di\EntityManagerAware
+/**
+ * Checking for new extension versions.
+ */
+class CheckNewExtensionVersion implements JobDataLess
 {
-    use Di\EntityManagerSetter;
+    private Config $config;
+    private ConfigWriter $configWriter;
+    private EntityManager $entityManager;
+    private LatestReleaseDataRequester $requester;
 
-    private $config;
-
-    private $configWriter;
-
-    public function __construct(Config $config, ConfigWriter $configWriter)
-    {
+    public function __construct(
+        Config $config,
+        ConfigWriter $configWriter,
+        EntityManager $entityManager,
+        LatestReleaseDataRequester $requester
+    ) {
         $this->config = $config;
         $this->configWriter = $configWriter;
+        $this->entityManager = $entityManager;
+        $this->requester = $requester;
     }
 
-    /**
-     * Job for checking a new version of EspoCRM.
-     */
-    public function jobCheckNewVersion(): void
+    public function run(): void
     {
         $config = $this->config;
 
-        if (!$config->get('adminNotifications') || !$config->get('adminNotificationsNewVersion')) {
+        if (
+            !$config->get('adminNotifications') ||
+            !$config->get('adminNotificationsNewExtensionVersion')
+        ) {
             return;
         }
 
-        $latestRelease = $this->getLatestRelease();
-
-        if ($latestRelease === null) {
-            return;
-        }
-
-        if (empty($latestRelease['version'])) {
-            // @todo Check the logic. WTF?
-            $this->configWriter->set('latestVersion', $latestRelease['version']);
-
-            $this->configWriter->save();
-
-            return;
-        }
-
-        if ($config->get('latestVersion') != $latestRelease['version']) {
-            $this->configWriter->set('latestVersion', $latestRelease['version']);
-
-            if (!empty($latestRelease['notes'])) {
-                // @todo Create a notification.
-            }
-
-            $this->configWriter->save();
-
-            return;
-        }
-
-        if (!empty($latestRelease['notes'])) {
-            // @todo Find and modify notification.
-        }
-    }
-
-    /**
-     * Job for checking a new version of installed extensions.
-     */
-    public function jobCheckNewExtensionVersion(): void
-    {
-        $config = $this->config;
-
-        if (!$config->get('adminNotifications') || !$config->get('adminNotificationsNewExtensionVersion')) {
-            return;
-        }
-
-        $query = $this->entityManager->getQueryBuilder()
+        $query = $this->entityManager
+            ->getQueryBuilder()
             ->select()
-            ->from('Extension')
+            ->from(Extension::ENTITY_TYPE)
             ->select(['id', 'name', 'version', 'checkVersionUrl'])
             ->where([
                 'deleted' => false,
@@ -125,7 +90,7 @@ class AdminNotifications implements
 
             $extensionName = $row['name'];
 
-            $latestRelease = $this->getLatestRelease($url, [
+            $latestRelease = $this->requester->request($url, [
                 'name' => $extensionName,
             ]);
 
@@ -168,57 +133,5 @@ class AdminNotifications implements
 
             $this->configWriter->save();
         }
-    }
-
-    /**
-     * @param array<string,mixed> $requestData
-     * @return ?array<mixed,mixed>
-     */
-    protected function getLatestRelease(
-        ?string $url = null,
-        array $requestData = [],
-        string $urlPath = 'release/latest'
-    ): ?array {
-
-        if (!function_exists('curl_version')) {
-            return null;
-        }
-
-        $ch = curl_init();
-
-        $requestUrl = $url ? trim($url) : base64_decode('aHR0cHM6Ly9zLmVzcG9jcm0uY29tLw==');
-        $requestUrl = (substr($requestUrl, -1) == '/') ? $requestUrl : $requestUrl . '/';
-
-        $requestUrl .= empty($requestData) ?
-            $urlPath . '/' :
-            $urlPath . '/?' . http_build_query($requestData);
-
-        curl_setopt($ch, CURLOPT_URL, $requestUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
-
-        /** @var string|false $result */
-        $result = curl_exec($ch);
-
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        curl_close($ch);
-
-        if ($result === false) {
-            return null;
-        }
-
-
-        if ($httpCode !== 200) {
-            return null;
-        }
-
-        $data = json_decode($result, true);
-
-        if (!is_array($data)) {
-            return null;
-        }
-
-        return $data;
     }
 }

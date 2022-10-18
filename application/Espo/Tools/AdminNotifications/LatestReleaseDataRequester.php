@@ -27,27 +27,58 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Jobs;
+namespace Espo\Tools\AdminNotifications;
 
-use Espo\Entities\Job;
-
-class CheckNewExtensionVersion extends CheckNewVersion
+class LatestReleaseDataRequester
 {
-    public function run(): void
-    {
-        if (
-            !$this->config->get('adminNotifications') ||
-            !$this->config->get('adminNotificationsNewExtensionVersion')
-        ) {
-            return;
+    /**
+     * @param array<string, mixed> $requestData
+     * @return ?array<mixed, mixed>
+     */
+    public function request(
+        ?string $url = null,
+        array $requestData = [],
+        string $urlPath = 'release/latest'
+    ): ?array {
+
+        if (!function_exists('curl_version')) {
+            return null;
         }
 
-        $className = \Espo\Tools\AdminNotifications\Jobs\CheckNewExtensionVersion::class;
+        $ch = curl_init();
 
-        $this->entityManager->createEntity(Job::ENTITY_TYPE, [
-            'name' => $className,
-            'className' => $className,
-            'executeTime' => $this->getRunTime(),
-        ]);
+        $requestUrl = $url ? trim($url) : base64_decode('aHR0cHM6Ly9zLmVzcG9jcm0uY29tLw==');
+        $requestUrl = (substr($requestUrl, -1) == '/') ? $requestUrl : $requestUrl . '/';
+
+        $requestUrl .= empty($requestData) ?
+            $urlPath . '/' :
+            $urlPath . '/?' . http_build_query($requestData);
+
+        curl_setopt($ch, CURLOPT_URL, $requestUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+
+        /** @var string|false $result */
+        $result = curl_exec($ch);
+
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+
+        if ($result === false) {
+            return null;
+        }
+
+        if ($httpCode !== 200) {
+            return null;
+        }
+
+        $data = json_decode($result, true);
+
+        if (!is_array($data)) {
+            return null;
+        }
+
+        return $data;
     }
 }
