@@ -141,6 +141,13 @@ class Processor
 
                 $service->loadAdditionalFields($parent);
 
+                if (
+                    $params->applyAcl() &&
+                    !$this->aclManager->checkEntityRead($this->user, $parent)
+                ) {
+                    $parent = null;
+                }
+
                 $data = $data->withParent($parent);
             }
         }
@@ -159,6 +166,14 @@ class Processor
         if ($data->getRelatedId() && $data->getRelatedType()) {
             $related = $this->entityManager->getEntity($data->getRelatedType(), $data->getRelatedId());
 
+            if (
+                $related &&
+                $params->applyAcl() &&
+                !$this->aclManager->checkEntityRead($this->user, $related)
+            ) {
+                $related = null;
+            }
+
             if ($related) {
                 $entityHash[$related->getEntityType()] = $related;
             }
@@ -168,8 +183,6 @@ class Processor
         $body = $template->getBody() ?? '';
 
         $parent = $entityHash[self::KEY_PARENT] ?? null;
-
-        $htmlizer = null;
 
         if ($parent && !$this->config->get('emailTemplateHtmlizerDisabled')) {
             $handlebarsInSubject = strpos($subject, '{{') !== false && strpos($subject, '}}') !== false;

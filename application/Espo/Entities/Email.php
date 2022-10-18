@@ -170,6 +170,9 @@ class Email extends Entity
             $this->get('createdById') !== ApplicationUser::SYSTEM_USER_ID;
     }
 
+    /**
+     * @todo Revise.
+     */
     public function addAttachment(Attachment $attachment): void
     {
         if (!$this->id) {

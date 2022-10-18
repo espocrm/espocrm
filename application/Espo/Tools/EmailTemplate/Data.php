@@ -30,28 +30,18 @@
 namespace Espo\Tools\EmailTemplate;
 
 use Espo\ORM\Entity;
-
 use Espo\Entities\User;
 
 class Data
 {
-    /**
-     * @var array<string,Entity>
-     */
+    /** @var array<string, Entity> */
     private $entityHash = [];
-
     private ?string $emailAddress = null;
-
     private ?Entity $parent = null;
-
     private ?string $parentId = null;
-
     private ?string $parentType = null;
-
     private ?string $relatedId = null;
-
     private ?string $relatedType = null;
-
     private ?User $user = null;
 
     /**

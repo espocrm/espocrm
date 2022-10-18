@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use Espo\Tools\EmailTemplate\Processor;
@@ -46,6 +47,8 @@ use Espo\Core\Di;
 use stdClass;
 
 /**
+ * @deprecated For bc. Use `Espo\Tools\EmailTemplate\Service`.
+ *
  * @extends Record<\Espo\Entities\EmailTemplate>
  */
 class EmailTemplate extends Record implements
@@ -55,6 +58,8 @@ class EmailTemplate extends Record implements
     use Di\FieldUtilSetter;
 
     /**
+     * @deprecated For bc. Use `Espo\Tools\EmailTemplate\Processor`.
+     *
      * @param array<string,mixed> $params
      * @return array{
      *   subject: string,
@@ -99,9 +104,11 @@ class EmailTemplate extends Record implements
     }
 
     /**
+     * @deprecated For bc. Use `Espo\Tools\EmailTemplate\Service`.
+     *
      * @param array<string,mixed> $params
      * @return array<string,mixed>
-     * @throws \Espo\Core\Exceptions\ForbiddenSilent
+     * @throws Forbidden
      * @throws NotFound
      */
     public function parse(string $id, array $params = [], bool $copyAttachments = false): array

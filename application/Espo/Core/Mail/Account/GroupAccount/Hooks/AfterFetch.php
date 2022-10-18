@@ -36,6 +36,9 @@ use Espo\Core\Templates\Entities\Person;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\Tools\Email\Util;
+use Espo\Tools\EmailTemplate\Data as EmailTemplateData;
+use Espo\Tools\EmailTemplate\Params as EmailTemplateParams;
+use Espo\Tools\EmailTemplate\Service as EmailTemplateService;
 use Laminas\Mail\Message;
 
 use Espo\Core\Mail\Account\Account;
@@ -46,11 +49,9 @@ use Espo\Core\Mail\EmailSender;
 
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
-use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Log;
 
 use Espo\Tools\Stream\Service as StreamService;
-use Espo\Services\EmailTemplate as EmailTemplateService;
 
 use Espo\Entities\InboundEmail;
 use Espo\Entities\Email;
@@ -77,7 +78,6 @@ class AfterFetch implements AfterFetchInterface
     private StreamService $streamService;
     private Config $config;
     private EmailSender $emailSender;
-    private InjectableFactory $injectableFactory;
     private Log $log;
     private RoundRobin $roundRobin;
     private LeastBusy $leastBusy;
@@ -85,27 +85,28 @@ class AfterFetch implements AfterFetchInterface
     private const DEFAULT_AUTOREPLY_LIMIT = 5;
     private const DEFAULT_AUTOREPLY_SUPPRESS_PERIOD = '2 hours';
     private GroupAccountFactory $groupAccountFactory;
+    private EmailTemplateService $emailTemplateService;
 
     public function __construct(
         EntityManager $entityManager,
         StreamService $streamService,
         Config $config,
         EmailSender $emailSender,
-        InjectableFactory $injectableFactory,
         Log $log,
         RoundRobin $roundRobin,
         LeastBusy $leastBusy,
-        GroupAccountFactory $groupAccountFactory
+        GroupAccountFactory $groupAccountFactory,
+        EmailTemplateService $emailTemplateService
     ) {
         $this->entityManager = $entityManager;
         $this->streamService = $streamService;
         $this->config = $config;
         $this->emailSender = $emailSender;
-        $this->injectableFactory = $injectableFactory;
         $this->log = $log;
         $this->roundRobin = $roundRobin;
         $this->leastBusy = $leastBusy;
         $this->groupAccountFactory = $groupAccountFactory;
+        $this->emailTemplateService = $emailTemplateService;
     }
 
     public function process(Account $account, Email $email, BeforeFetchResult $beforeFetchResult): void
@@ -269,27 +270,29 @@ class AfterFetch implements AfterFetchInterface
                 $entityHash[User::ENTITY_TYPE] = $user;
             }
 
-            $emailTemplateService = $this->getEmailTemplateService();
-
-            $replyData = $emailTemplateService->parse(
+            $replyData = $this->emailTemplateService->process(
                 $replyEmailTemplateId,
-                ['entityHash' => $entityHash],
-                true
+                EmailTemplateData::create()
+                    ->withEntityHash($entityHash),
+                EmailTemplateParams::create()
+                    ->withApplyAcl(false)
+                    ->withCopyAttachments(true)
             );
 
-            $subject = $replyData['subject'];
+            $subject = $replyData->getSubject();
 
             if ($case) {
                 $subject = '[#' . $case->get('number'). '] ' . $subject;
             }
 
+            /** @var Email $reply */
             $reply = $this->entityManager->getRDBRepositoryByClass(Email::class)->getNew();
 
-            $reply->set('to', $fromAddress);
-            $reply->set('subject', $subject);
-            $reply->set('body', $replyData['body']);
-            $reply->set('isHtml', $replyData['isHtml']);
-            $reply->set('attachmentsIds', $replyData['attachmentsIds']);
+            $reply
+                ->addToAddress($fromAddress)
+                ->setSubject($subject)
+                ->setBody($replyData->getBody())
+                ->setIsHtml($replyData->isHtml());
 
             if ($email->has('teamsIds')) {
                 $reply->set('teamsIds', $email->get('teamsIds'));
@@ -335,6 +338,7 @@ class AfterFetch implements AfterFetchInterface
             $sender
                 ->withParams($senderParams)
                 ->withMessage($message)
+                ->withAttachments($replyData->getAttachmentList())
                 ->send($reply);
 
             $this->entityManager->saveEntity($reply);
@@ -342,12 +346,6 @@ class AfterFetch implements AfterFetchInterface
         catch (Throwable $e) {
             $this->log->error("Inbound Email: Auto-reply error: " . $e->getMessage());
         }
-    }
-
-    private function getEmailTemplateService(): EmailTemplateService
-    {
-        /** @var EmailTemplateService */
-        return $this->injectableFactory->create(EmailTemplateService::class);
     }
 
     private function createCase(GroupAccount $account, Email $email): void

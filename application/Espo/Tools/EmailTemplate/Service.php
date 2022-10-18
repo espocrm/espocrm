@@ -27,51 +27,65 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Tools\EmailTemplate;
 
-use Espo\Core\Exceptions\BadRequest;
-
+use Espo\Core\Acl;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Tools\EmailTemplate\Data;
-use Espo\Tools\EmailTemplate\Service;
+use Espo\Core\Record\ServiceContainer;
+use Espo\Entities\EmailTemplate;
+use Espo\Entities\User;
+use Espo\ORM\EntityManager;
 
-use Espo\Core\Api\Request;
-use Espo\Core\Controllers\Record;
-
-use stdClass;
-
-class EmailTemplate extends Record
+class Service
 {
+    private Processor $processor;
+    private User $user;
+    private Acl $acl;
+    private EntityManager $entityManager;
+
+    public function __construct(
+        Processor $processor,
+        User $user,
+        Acl $acl,
+        EntityManager $entityManager
+    ) {
+        $this->processor = $processor;
+        $this->user = $user;
+        $this->acl = $acl;
+        $this->entityManager = $entityManager;
+    }
 
     /**
-     * @throws BadRequest
+     * Prepare an email data with an applied template.
+     *
      * @throws NotFound
      * @throws ForbiddenSilent
      */
-    public function actionParse(Request $request): stdClass
+    public function process(string $emailTemplateId, Data $data, ?Params $params = null): Result
     {
-        $id = $request->getQueryParam('id');
+        /** @var ?EmailTemplate $emailTemplate */
+        $emailTemplate = $this->entityManager->getEntityById(EmailTemplate::ENTITY_TYPE, $emailTemplateId);
 
-        if ($id === null) {
-            throw new BadRequest("No `id`.");
+        if (!$emailTemplate) {
+            throw new NotFound();
         }
 
-        $data = Data::create()
-            ->withRelatedType($request->getQueryParam('relatedType'))
-            ->withRelatedId($request->getQueryParam('relatedId'))
-            ->withParentType($request->getQueryParam('parentType'))
-            ->withParentId($request->getQueryParam('parentId'))
-            ->withEmailAddress($request->getQueryParam('emailAddress'));
+        $params ??= Params::create()
+            ->withApplyAcl(true)
+            ->withCopyAttachments(true);
 
-        $result = $this->getEmailTemplateService()->process($id, $data);
+        if (
+            $params->applyAcl() &&
+            !$this->acl->checkEntityRead($emailTemplate)
+        ) {
+            throw new ForbiddenSilent();
+        }
 
-        return $result->getValueMap();
+        if (!$data->getUser()) {
+            $data = $data->withUser($this->user);
+        }
 
-    }
-
-    private function getEmailTemplateService(): Service
-    {
-        return $this->injectableFactory->create(Service::class);
+        return $this->processor->process($emailTemplate, $params, $data);
     }
 }
