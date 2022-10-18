@@ -29,16 +29,17 @@
 
 namespace Espo\Controllers;
 
-use Espo\Services\Attachment as Service;
-
-use Espo\Core\{
-    Exceptions\Forbidden,
-    Exceptions\BadRequest,
-    Api\Request,
-    Api\Response,
-    Controllers\RecordBase,
-};
-
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Controllers\RecordBase;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Tools\Attachment\FieldData;
+use Espo\Tools\Attachment\Service;
+use Espo\Tools\Attachment\UploadUrlService;
+use Espo\Tools\Attachment\UploadService;
 use stdClass;
 
 class Attachment extends RecordBase
@@ -55,52 +56,76 @@ class Attachment extends RecordBase
     /**
      * @throws BadRequest
      * @throws Forbidden
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      */
     public function postActionGetAttachmentFromImageUrl(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->url)) {
-            throw new BadRequest();
+        $url = $data->url ?? null;
+        $field = $data->field ?? null;
+        $parentType = $data->parentType ?? null;
+        $relatedType = $data->relatedType ?? null;
+
+        if (!$url || !$field) {
+            throw new BadRequest("No `url` or `field`.");
         }
 
-        if (empty($data->field)) {
-            throw new BadRequest('postActionGetAttachmentFromImageUrl: No field specified.');
+        try {
+            $fieldData = new FieldData(
+                $field,
+                $parentType,
+                $relatedType
+            );
+        }
+        catch (Error $e) {
+            throw new BadRequest($e->getMessage());
         }
 
-        return $this->getAttachmentService()
-            ->getAttachmentFromImageUrl($data)
+        return $this->injectableFactory
+            ->create(UploadUrlService::class)
+            ->uploadImage($url, $fieldData)
             ->getValueMap();
     }
 
     /**
      * @throws BadRequest
      * @throws Forbidden
-     * @throws \Espo\Core\Exceptions\Error
-     * @throws \Espo\Core\Exceptions\NotFound
+     * @throws NotFound
      */
     public function postActionGetCopiedAttachment(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->id)) {
-            throw new BadRequest();
+        $id = $data->id ?? null;
+        $field = $data->field ?? null;
+        $parentType = $data->parentType ?? null;
+        $relatedType = $data->relatedType ?? null;
+
+        if (!$id || !$field) {
+            throw new BadRequest("No `id` or `field`.");
         }
 
-        if (empty($data->field)) {
-            throw new BadRequest('postActionGetCopiedAttachment copy: No field specified.');
+        try {
+            $fieldData = new FieldData(
+                $field,
+                $parentType,
+                $relatedType
+            );
+        }
+        catch (Error $e) {
+            throw new BadRequest($e->getMessage());
         }
 
         return $this->getAttachmentService()
-            ->getCopiedAttachment($data)
+            ->copy($id, $fieldData)
             ->getValueMap();
     }
 
     /**
      * @throws BadRequest
      * @throws Forbidden
-     * @throws \Espo\Core\Exceptions\NotFound
+     * @throws NotFound
      */
     public function getActionFile(Request $request, Response $response): void
     {
@@ -112,18 +137,21 @@ class Attachment extends RecordBase
 
         $fileData = $this->getAttachmentService()->getFileData($id);
 
+        if ($fileData->getType()) {
+            $response->setHeader('Content-Type', $fileData->getType());
+        }
+
         $response
-            ->setHeader('Content-Type', $fileData->type)
-            ->setHeader('Content-Disposition', 'attachment; filename="' . $fileData->name . '"')
-            ->setHeader('Content-Length', (string) $fileData->size)
-            ->setBody($fileData->stream);
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $fileData->getName() . '"')
+            ->setHeader('Content-Length', (string) $fileData->getSize())
+            ->setBody($fileData->getStream());
     }
 
     /**
      * @throws BadRequest
      * @throws Forbidden
-     * @throws \Espo\Core\Exceptions\Error
-     * @throws \Espo\Core\Exceptions\NotFound
+     * @throws Error
+     * @throws NotFound
      */
     public function postActionChunk(Request $request, Response $response): void
     {
@@ -134,14 +162,15 @@ class Attachment extends RecordBase
             throw new BadRequest();
         }
 
-        $this->getAttachmentService()->uploadChunk($id, $body);
+        $this->injectableFactory
+            ->create(UploadService::class)
+            ->uploadChunk($id, $body);
 
         $response->writeBody('true');
     }
 
     private function getAttachmentService(): Service
     {
-        /** @var Service */
-        return $this->getRecordService();
+        return $this->injectableFactory->create(Service::class);
     }
 }

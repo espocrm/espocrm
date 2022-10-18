@@ -149,16 +149,19 @@ class Attachment extends Database implements
         }
     }
 
+    /**
+     * Copy an attachment record (to reuse the same file w/o copying it in the storage).
+     */
     public function getCopiedAttachment(AttachmentEntity $entity, ?string $role = null): AttachmentEntity
     {
         $attachment = $this->getNew();
 
         $attachment->set([
             'sourceId' => $entity->getSourceId(),
-            'name' => $entity->get('name'),
-            'type' => $entity->get('type'),
-            'size' => $entity->get('size'),
-            'role' => $entity->get('role'),
+            'name' => $entity->getName(),
+            'type' => $entity->getType(),
+            'size' => $entity->getSize(),
+            'role' => $entity->getRole(),
         ]);
 
         if ($role) {
@@ -180,6 +183,9 @@ class Attachment extends Database implements
         return $this->fileStorageManager->getStream($entity);
     }
 
+    /**
+     * A size in bytes.
+     */
     public function getSize(AttachmentEntity $entity): int
     {
         return $this->fileStorageManager->getSize($entity);

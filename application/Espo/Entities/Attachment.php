@@ -55,26 +55,41 @@ class Attachment extends Entity
         return $sourceId;
     }
 
+    /**
+     * A storage.
+     */
     public function getStorage(): ?string
     {
         return $this->get('storage');
     }
 
+    /**
+     * A file name.
+     */
     public function getName(): ?string
     {
         return $this->get('name');
     }
 
+    /**
+     * A size in bytes.
+     */
     public function getSize(): ?int
     {
         return $this->get('size');
     }
 
+    /**
+     * A mime-type.
+     */
     public function getType(): ?string
     {
         return $this->get('type');
     }
 
+    /**
+     * A field the attachment is related through.
+     */
     public function getTargetField(): ?string
     {
         return $this->get('field');
@@ -107,6 +122,9 @@ class Attachment extends Entity
         return (bool) $this->get('isBeingUploaded');
     }
 
+    /**
+     * A role.
+     */
     public function getRole(): ?string
     {
         return $this->get('role');
