@@ -48,21 +48,13 @@ use TypeError;
  */
 class JobScheduler
 {
-    /**
-     * @var ?class-string
-     */
+    /** @var ?class-string */
     private ?string $className = null;
-
     private ?string $queue = null;
-
     private ?string $group = null;
-
     private ?Data $data = null;
-
     private ?DateTimeImmutable $time = null;
-
     private ?DateInterval $delay = null;
-
     private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
