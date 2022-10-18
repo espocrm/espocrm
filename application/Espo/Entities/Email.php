@@ -352,6 +352,16 @@ class Email extends Entity
         return $this;
     }
 
+    /**
+     * @param string[] $idList
+     */
+    public function setAttachmentIdList(array $idList): self
+    {
+        $this->setLinkMultipleIdList('attachments', $idList);
+
+        return $this;
+    }
+
     public function getBody(): ?string
     {
         return $this->get('body');

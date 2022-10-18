@@ -158,7 +158,10 @@ class Processor
             $entityHash[$parent->getEntityType()] = $parent;
             $entityHash[self::KEY_PARENT] = $parent;
 
-            if (!isset($entityHash[PersonTemplate::TEMPLATE_TYPE]) && $parent instanceof Person) {
+            if (
+                !isset($entityHash[PersonTemplate::TEMPLATE_TYPE]) &&
+                $parent instanceof Person
+            ) {
                 $entityHash[PersonTemplate::TEMPLATE_TYPE] = $parent;
             }
         }

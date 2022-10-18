@@ -29,21 +29,23 @@
 
 namespace Espo\Core\Formula\Functions\ExtGroup\EmailGroup;
 
+use Espo\Core\ApplicationUser;
 use Espo\Entities\Email;
-
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
-
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Di;
+use Espo\Entities\EmailTemplate;
+use Espo\Tools\EmailTemplate\Data;
+use Espo\Tools\EmailTemplate\Params;
+use Espo\Tools\EmailTemplate\Processor;
 
 class ApplyTemplateType extends BaseFunction implements
+
     Di\EntityManagerAware,
-    Di\ServiceFactoryAware
+    Di\InjectableFactoryAware
 {
     use Di\EntityManagerSetter;
-    use Di\ServiceFactorySetter;
+    use Di\InjectableFactorySetter;
 
     public function process(ArgumentList $args)
     {
@@ -76,10 +78,10 @@ class ApplyTemplateType extends BaseFunction implements
 
         $em = $this->entityManager;
 
-        /** @var Email|null $email */
-        $email = $em->getEntity('Email', $id);
-
-        $emailTemplate = $em->getEntity('EmailTemplate', $templateId);
+        /** @var ?Email $email */
+        $email = $em->getEntityById(Email::ENTITY_TYPE, $id);
+        /** @var ?EmailTemplate $emailTemplate */
+        $emailTemplate = $em->getEntityById(EmailTemplate::ENTITY_TYPE, $templateId);
 
         if (!$email) {
             $this->log("Email {$id} does not exist.");
@@ -89,53 +91,59 @@ class ApplyTemplateType extends BaseFunction implements
 
         if (!$emailTemplate) {
             $this->log("EmailTemplate {$templateId} does not exist.");
+
             return false;
         }
 
-        $status = $email->get('status');
+        $status = $email->getStatus();
 
-        if ($status && in_array($status, ['Sent'])) {
+        if ($status && $status === Email::STATUS_SENT) {
             $this->log("Can't apply template to email with 'Sent' status.");
+
             return false;
         }
 
-        /** @var \Espo\Services\EmailTemplate $emailTemplateService */
-        $emailTemplateService = $this->serviceFactory->create('EmailTemplate');
+        $processor = $this->injectableFactory->create(Processor::class);
 
-        $params = [];
+        $params = Params::create()
+            ->withCopyAttachments(true)
+            ->withApplyAcl(false);
+
+        $data = Data::create();
 
         if (!$parentType || !$parentId) {
-            $parentType = $email->get('parentType');
-            $parentId = $email->get('parentId');
+            $parentType = $email->getParentType();
+            $parentId = $email->getParentId();
         }
 
         if ($parentType && $parentId) {
-            $params['parentType'] = $parentType;
-            $params['parentId'] = $parentId;
+            $data = $data
+                ->withParentId($parentId)
+                ->withParentType($parentType);
         }
 
-        $emailAddressList = $email->get('toEmailAddresses');
+        $data = $data->withEmailAddress(
+            $email->getToAddressList()[0] ?? null
+        );
 
-        if (count($emailAddressList)) {
-            $params['emailAddress'] = $emailAddressList[0]->get('name');
-        }
+        $emailData = $processor->process($emailTemplate, $params, $data);
 
-        $data = $emailTemplateService->parseTemplate($emailTemplate, $params, true, true);
+        /** @var string[] $attachmentsIdList */
+        $attachmentsIdList = $email->getLinkMultipleIdList('attachments') ?? [];
 
-        /** @var string[] $attachmentsIds */
-        $attachmentsIds = $email->getLinkMultipleIdList('attachments');
+        $attachmentsIdList = array_merge(
+            $attachmentsIdList,
+            $emailData->getAttachmentIdList()
+        );
 
-        $attachmentsIds = array_merge($attachmentsIds, $data['attachmentsIds']);
-
-        $email->set([
-            'name' => $data['subject'],
-            'body' => $data['body'],
-            'isHtml' => $data['isHtml'],
-            'attachmentsIds' => $attachmentsIds,
-        ]);
+        $email
+            ->setSubject($emailData->getSubject())
+            ->setBody($emailData->getBody())
+            ->setIsHtml($emailData->isHtml())
+            ->setAttachmentIdList($attachmentsIdList);
 
         $em->saveEntity($email, [
-            'modifiedById' => 'system',
+            'modifiedById' => ApplicationUser::SYSTEM_USER_ID,
         ]);
 
         return true;

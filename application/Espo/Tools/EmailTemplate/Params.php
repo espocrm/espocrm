@@ -59,7 +59,7 @@ class Params
     }
 
     /**
-     * To copy template attachments records.
+     * To copy template attachments records. Not needed if an email not supposed to be stored.
      */
     public function withCopyAttachments(bool $copyAttachments = true): self
     {

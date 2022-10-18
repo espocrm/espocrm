@@ -88,6 +88,8 @@ class Data
     }
 
     /**
+     * An entity hash.
+     *
      * @param array<string,Entity> $entityHash
      */
     public function withEntityHash(array $entityHash): self
@@ -98,6 +100,9 @@ class Data
         return $obj;
     }
 
+    /**
+     * An email address.
+     */
     public function withEmailAddress(?string $emailAddress): self
     {
         $obj = clone $this;

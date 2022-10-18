@@ -78,6 +78,20 @@ class Result
         return $this->attachmentList;
     }
 
+    /**
+     * @return string[]
+     */
+    public function getAttachmentIdList(): array
+    {
+        $list = [];
+
+        foreach ($this->attachmentList as $attachment) {
+            $list[] = $attachment->getId();
+        }
+
+        return $list;
+    }
+
     public function getValueMap(): stdClass
     {
         $attachmentsIds = [];

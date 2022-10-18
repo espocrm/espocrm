@@ -44,34 +44,36 @@ use Espo\Entities\LeadCapture as LeadCaptureEntity;
 use Espo\Entities\UniqueId;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\EntityManager;
-use Espo\Services\EmailTemplate as EmailTemplateService;
+use Espo\Tools\EmailTemplate\Data as EmailTemplateData;
+use Espo\Tools\EmailTemplate\Params as EmailTemplateParams;
+use Espo\Tools\EmailTemplate\Processor as EmailTemplateProcessor;
 
 class ConfirmationSender
 {
     private EntityManager $entityManager;
-    private EmailTemplateService $emailTemplateService;
     private Config $config;
     private Language $defaultLanguage;
     private EmailSender $emailSender;
     private AccountFactory $accountFactory;
     private DateTime $dateTime;
+    private EmailTemplateProcessor $emailTemplateProcessor;
 
     public function __construct(
         EntityManager $entityManager,
-        EmailTemplateService $emailTemplateService,
         Config $config,
         Language $defaultLanguage,
         EmailSender $emailSender,
         AccountFactory $accountFactory,
-        DateTime $dateTime
+        DateTime $dateTime,
+        EmailTemplateProcessor $emailTemplateProcessor
     ) {
         $this->entityManager = $entityManager;
-        $this->emailTemplateService = $emailTemplateService;
         $this->config = $config;
         $this->defaultLanguage = $defaultLanguage;
         $this->emailSender = $emailSender;
         $this->accountFactory = $accountFactory;
         $this->dateTime = $dateTime;
+        $this->emailTemplateProcessor = $emailTemplateProcessor;
     }
 
     /**
@@ -145,12 +147,6 @@ class ConfirmationSender
             $lead->set($data);
         }
 
-        $emailData = $this->emailTemplateService
-            ->parseTemplate($emailTemplate, [
-                Person::TEMPLATE_TYPE => $lead,
-                Lead::ENTITY_TYPE => $lead,
-            ]);
-
         if (!$lead) {
             throw new Error("Lead Capture: Could not find lead.");
         }
@@ -161,9 +157,19 @@ class ConfirmationSender
             throw new Error("Lead Capture: No lead email address.");
         }
 
-        $subject = $emailData['subject'];
-        $body = $emailData['body'];
-        $isHtml = $emailData['isHtml'];
+        $emailData = $this->emailTemplateProcessor->process(
+            $emailTemplate,
+            EmailTemplateParams::create(),
+            EmailTemplateData::create()
+                ->withEntityHash([
+                    Person::TEMPLATE_TYPE => $lead,
+                    Lead::ENTITY_TYPE => $lead,
+                ])
+        );
+
+        $subject = $emailData->getSubject();
+        $body = $emailData->getBody();
+        $isHtml = $emailData->isHtml();
 
         if (
             mb_strpos($body, '{optInUrl}') === false &&
@@ -227,6 +233,8 @@ class ConfirmationSender
             $sender->withSmtpParams($smtpParams);
         }
 
-        $sender->send($email);
+        $sender
+            ->withAttachments($emailData->getAttachmentList())
+            ->send($email);
     }
 }

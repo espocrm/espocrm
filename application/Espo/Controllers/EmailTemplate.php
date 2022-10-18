@@ -43,7 +43,6 @@ use stdClass;
 
 class EmailTemplate extends Record
 {
-
     /**
      * @throws BadRequest
      * @throws NotFound

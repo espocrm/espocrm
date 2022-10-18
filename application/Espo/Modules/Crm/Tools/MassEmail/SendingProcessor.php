@@ -58,7 +58,9 @@ use Espo\Modules\Crm\Entities\EmailQueueItem;
 use Espo\Modules\Crm\Entities\MassEmail;
 use Espo\Modules\Crm\Services\Campaign as CampaignService;
 use Espo\ORM\Entity;
-use Espo\Services\EmailTemplate as EmailTemplateService;
+use Espo\Tools\EmailTemplate\Data as TemplateData;
+use Espo\Tools\EmailTemplate\Params as TemplateParams;
+use Espo\Tools\EmailTemplate\Processor as TemplateProcessor;
 
 use Exception;
 use DateTime;
@@ -75,8 +77,8 @@ class SendingProcessor
     private Log $log;
     private AccountFactory $accountFactory;
     private CampaignService $campaignService;
-    private EmailTemplateService $emailTemplateService;
     private MessageHeadersPreparator $headersPreparator;
+    private TemplateProcessor $templateProcessor;
 
     public function __construct(
         Config $config,
@@ -86,8 +88,8 @@ class SendingProcessor
         Log $log,
         AccountFactory $accountFactory,
         CampaignService $campaignService,
-        EmailTemplateService $emailTemplateService,
-        MessageHeadersPreparator $headersPreparator
+        MessageHeadersPreparator $headersPreparator,
+        TemplateProcessor $templateProcessor
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
@@ -96,8 +98,8 @@ class SendingProcessor
         $this->log = $log;
         $this->accountFactory = $accountFactory;
         $this->campaignService = $campaignService;
-        $this->emailTemplateService = $emailTemplateService;
         $this->headersPreparator = $headersPreparator;
+        $this->templateProcessor = $templateProcessor;
     }
 
     /**
@@ -239,13 +241,22 @@ class SendingProcessor
         iterable $trackingUrlList = []
     ): ?Email {
 
-        $templateParams = [
-            'parent' => $target,
-        ];
+        $emailAddress = $target->get('emailAddress');
 
-        $emailData = $this->emailTemplateService->parseTemplate($emailTemplate, $templateParams);
+        if (!$emailAddress) {
+            return null;
+        }
 
-        $body = $emailData['body'];
+        $emailData = $this->templateProcessor->process(
+            $emailTemplate,
+            TemplateParams::create()
+                ->withApplyAcl(false) // @todo Revise.
+                ->withCopyAttachments(false), // @todo Revise.
+            TemplateData::create()
+                ->withParent($target)
+        );
+
+        $body = $emailData->getBody();
 
         $optOutUrl = $this->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $queueItem->getId();
 
@@ -268,7 +279,7 @@ class SendingProcessor
             !$this->config->get('massEmailDisableMandatoryOptOutLink') &&
             stripos($body, '?entryPoint=unsubscribe&id') === false
         ) {
-            if ($emailData['isHtml']) {
+            if ($emailData->isHtml()) {
                 $body .= "<br><br>" . $optOutLink;
             }
             else {
@@ -283,28 +294,26 @@ class SendingProcessor
         $trackOpenedHtml =
             '<img alt="' . $trackImageAlt . '" width="1" height="1" border="0" src="' . $trackOpenedUrl . '">';
 
-        if ($massEmail->get('campaignId') && $this->config->get('massEmailOpenTracking')) {
-            if ($emailData['isHtml']) {
+        if (
+            $massEmail->getCampaignId() &&
+            $this->config->get('massEmailOpenTracking')
+        ) {
+            if ($emailData->isHtml()) {
                 $body .= '<br>' . $trackOpenedHtml;
             }
         }
-
-        $emailData['body'] = $body;
 
         /** @var Email $email */
         $email = $this->entityManager
             ->getRDBRepositoryByClass(Email::class)
             ->getNew();
 
-        $email->set($emailData);
-
-        $emailAddress = $target->get('emailAddress');
-
-        if (empty($emailAddress)) {
-            return null;
-        }
-
-        $email->addToAddress($emailAddress);
+        $email
+            ->addToAddress($emailAddress)
+            ->setSubject($emailData->getSubject())
+            ->setBody($body)
+            ->setIsHtml($emailData->isHtml())
+            ->setAttachmentIdList($emailData->getAttachmentIdList());
 
         if ($massEmail->getFromAddress()) {
             $email->setFromAddress($massEmail->getFromAddress());
@@ -377,7 +386,7 @@ class SendingProcessor
         bool $isTest,
         ?SmtpParams $smtpParams,
         SenderParams $senderParams
-    ): bool {
+    ): void {
 
         /** @var ?EmailQueueItem $queueItemFetched */
         $queueItemFetched = $this->entityManager->getEntityById($queueItem->getEntityType(), $queueItem->getId());
@@ -386,7 +395,7 @@ class SendingProcessor
             !$queueItemFetched ||
             $queueItemFetched->getStatus() !== EmailQueueItem::STATUS_PENDING
         ) {
-            return false;
+            return;
         }
 
         $queueItem->set('status', EmailQueueItem::STATUS_SENDING);
@@ -406,7 +415,7 @@ class SendingProcessor
 
             $this->entityManager->saveEntity($queueItem);
 
-            return false;
+            return;
         }
 
         /** @var EmailAddressRepository $emailAddressRepository */
@@ -424,7 +433,7 @@ class SendingProcessor
 
             $this->entityManager->saveEntity($queueItem);
 
-            return false;
+            return;
         }
 
         /** @var CampaignTrackingUrl[] $trackingUrlList */
@@ -441,7 +450,7 @@ class SendingProcessor
         $email = $this->getPreparedEmail($queueItem, $massEmail, $emailTemplate, $target, $trackingUrlList);
 
         if (!$email) {
-            return false;
+            return;
         }
 
         if ($email->get('replyToAddress')) { // @todo Revise.
@@ -501,7 +510,7 @@ class SendingProcessor
 
             $this->log->error("Mass Email, send item: {$e->getCode()}, " . $e->getMessage());
 
-            return false;
+            return;
         }
 
         $emailObject = $emailTemplate;
@@ -530,7 +539,6 @@ class SendingProcessor
             );
         }
 
-        return true;
     }
 
     private function getSiteUrl(): string
