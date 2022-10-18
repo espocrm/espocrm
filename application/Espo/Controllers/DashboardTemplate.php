@@ -31,12 +31,12 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 
-use Espo\Services\DashboardTemplate as Service;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Tools\Dashboard\Service;
 
-use Espo\Core\{
-    Api\Request,
-    Controllers\Record,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Controllers\Record;
 
 class DashboardTemplate extends Record
 {
@@ -45,6 +45,11 @@ class DashboardTemplate extends Record
         return $this->user->isAdmin();
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function postActionDeployToUsers(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -57,7 +62,7 @@ class DashboardTemplate extends Record
             throw new BadRequest();
         }
 
-        $this->getDashboardTemplateService()->deployToUsers(
+        $this->getDashboardTemplateService()->deployTemplateToUsers(
             $data->id,
             $data->userIdList,
             !empty($data->append)
@@ -66,6 +71,10 @@ class DashboardTemplate extends Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws NotFound
+     */
     public function postActionDeployToTeam(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -78,7 +87,7 @@ class DashboardTemplate extends Record
             throw new BadRequest();
         }
 
-        $this->getDashboardTemplateService()->deployToTeam(
+        $this->getDashboardTemplateService()->deployTemplateToTeam(
             $data->id,
             $data->teamId,
             !empty($data->append)
@@ -89,7 +98,6 @@ class DashboardTemplate extends Record
 
     private function getDashboardTemplateService(): Service
     {
-        /** @var Service */
-        return $this->getRecordService();
+        return $this->injectableFactory->create(Service::class);
     }
 }
