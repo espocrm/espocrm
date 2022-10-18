@@ -35,14 +35,12 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
-use Espo\Entities\User as UserEntity;
-use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 class ApiService
 {
     private ServiceContainer $serviceContainer;
-    private UserEntity $user;
+    private User $user;
     private EntityManager $entityManager;
 
     public function __construct(
@@ -59,7 +57,7 @@ class ApiService
      * @throws Forbidden
      * @throws NotFound
      */
-    public function generateNewApiKey(string $id): Entity
+    public function generateNewApiKey(string $id): User
     {
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
@@ -67,7 +65,7 @@ class ApiService
 
         $service = $this->serviceContainer->get(User::ENTITY_TYPE);
 
-        /** @var ?UserEntity $entity */
+        /** @var ?User $entity */
         $entity = $service->getEntity($id);
 
         if (!$entity) {
