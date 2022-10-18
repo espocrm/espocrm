@@ -30,6 +30,7 @@
 namespace Espo\Services;
 
 use Espo\Core\ApplicationUser;
+use Espo\Core\Authentication\Logins\Hmac;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Entities\Team as TeamEntity;
 use Espo\Entities\User as UserEntity;
@@ -39,7 +40,6 @@ use Espo\Core\Di;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\DeleteParams;
 use Espo\Core\Record\UpdateParams;
@@ -54,7 +54,7 @@ use stdClass;
 use Exception;
 
 /**
- * @extends Record<\Espo\Entities\User>
+ * @extends Record<UserEntity>
  */
 class User extends Record implements
 
@@ -62,26 +62,27 @@ class User extends Record implements
 {
     use Di\DataManagerSetter;
 
-    private const AUTHENTICATION_METHOD_HMAC = 'Hmac';
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $mandatorySelectAttributeList = [
         'isActive',
         'userName',
         'type',
     ];
 
-    /**
-     * @var string[]
-     */
-    protected $validateSkipFieldList = ['name', "firstName", "lastName"];
+    /** @var string[] */
+    protected $validateSkipFieldList = [
+        'name',
+        'firstName',
+        'lastName',
+    ];
 
-    /**
-     * @var string[]
-     */
-    protected $allowedUserTypeList = ['regular', 'admin', 'portal', 'api'];
+    /** @var string[] */
+    private $allowedUserTypeList = [
+        UserEntity::TYPE_REGULAR,
+        UserEntity::TYPE_ADMIN,
+        UserEntity::TYPE_PORTAL,
+        UserEntity::TYPE_API,
+    ];
 
     /**
      * @throws Forbidden
@@ -236,7 +237,7 @@ class User extends Record implements
 
         if ($entity->isApi()) {
             if ($this->user->isAdmin()) {
-                if ($entity->getAuthMethod() === self::AUTHENTICATION_METHOD_HMAC) {
+                if ($entity->getAuthMethod() === Hmac::NAME) {
                     $secretKey = $this->getSecretKeyForUserId($entity->getId());
                     $entity->set('secretKey', $secretKey);
                 }
@@ -252,44 +253,6 @@ class User extends Record implements
         $apiKeyUtil = $this->injectableFactory->create(ApiKeyUtil::class);
 
         return $apiKeyUtil->getSecretKeyForUserId($id);
-    }
-
-    /**
-     * @throws Forbidden
-     * @throws NotFound
-     */
-    public function generateNewApiKeyForEntity(string $id): Entity
-    {
-        /** @var ?UserEntity $entity */
-        $entity = $this->getEntity($id);
-
-        if (!$entity) {
-            throw new NotFound();
-        }
-
-        if (!$this->user->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        if (!$entity->isApi()) {
-            throw new Forbidden();
-        }
-
-        $apiKey = Util::generateApiKey();
-
-        $entity->set('apiKey', $apiKey);
-
-        if ($entity->getAuthMethod() === self::AUTHENTICATION_METHOD_HMAC) {
-            $secretKey = Util::generateSecretKey();
-
-            $entity->set('secretKey', $secretKey);
-        }
-
-        $this->entityManager->saveEntity($entity);
-
-        $this->prepareEntityForOutput($entity);
-
-        return $entity;
     }
 
     protected function getInternalUserCount(): int
@@ -309,7 +272,7 @@ class User extends Record implements
     protected function getPortalUserCount(): int
     {
         return $this->entityManager
-            ->getRDBRepository(UserEntity::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(UserEntity::class)
             ->where([
                 'isActive' => true,
                 'type' => UserEntity::TYPE_PORTAL,
@@ -356,7 +319,7 @@ class User extends Record implements
 
             $entity->set('apiKey', $apiKey);
 
-            if ($entity->getAuthMethod() === self::AUTHENTICATION_METHOD_HMAC) {
+            if ($entity->getAuthMethod() === Hmac::NAME) {
                 $secretKey = Util::generateSecretKey();
 
                 $entity->set('secretKey', $secretKey);
@@ -435,7 +398,7 @@ class User extends Record implements
         if ($entity->isApi()) {
             if (
                 $entity->isAttributeChanged('authMethod') &&
-                $entity->getAuthMethod() === self::AUTHENTICATION_METHOD_HMAC
+                $entity->getAuthMethod() === Hmac::NAME
             ) {
                 $secretKey = Util::generateSecretKey();
 

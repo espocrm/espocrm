@@ -29,23 +29,22 @@
 
 namespace Espo\Core\Authentication\Logins;
 
-use Espo\Core\{
-    Api\Request,
-    Utils\ApiKey,
-    Authentication\Login,
-    Authentication\Login\Data,
-    Authentication\Result,
-    Authentication\Helper\UserFinder,
-    Authentication\Result\FailReason,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Authentication\Helper\UserFinder;
+use Espo\Core\Authentication\Login;
+use Espo\Core\Authentication\Login\Data;
+use Espo\Core\Authentication\Result;
+use Espo\Core\Authentication\Result\FailReason;
+use Espo\Core\Utils\ApiKey;
 
 use RuntimeException;
 
 class Hmac implements Login
 {
-    private $userFinder;
+    public const NAME = 'Hmac';
 
-    private $apiKeyUtil;
+    private UserFinder $userFinder;
+    private ApiKey $apiKeyUtil;
 
     public function __construct(UserFinder $userFinder, ApiKey $apiKeyUtil)
     {

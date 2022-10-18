@@ -33,12 +33,10 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-
-use Espo\Services\User as Service;
-
 use Espo\Core\Api\Request;
 use Espo\Core\Controllers\Record;
 use Espo\Core\Mail\Exceptions\SendingError;
+use Espo\Tools\UserSecurity\ApiService;
 use Espo\Tools\UserSecurity\Password\RecoveryService;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\Where\Item as WhereItem;
@@ -163,11 +161,11 @@ class User extends Record
             throw new Forbidden();
         }
 
-        return $this->getUserService()
-            ->generateNewApiKeyForEntity($data->id)
+        return $this->injectableFactory
+            ->create(ApiService::class)
+            ->generateNewApiKey($data->id)
             ->getValueMap();
     }
-
 
     /**
      * @throws BadRequest
@@ -256,11 +254,5 @@ class User extends Record
     private function getPasswordService(): PasswordService
     {
         return $this->injectableFactory->create(PasswordService::class);
-    }
-
-    private function getUserService(): Service
-    {
-        /** @var Service */
-        return $this->getServiceFactory()->create('User');
     }
 }
