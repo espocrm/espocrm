@@ -29,7 +29,8 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use Espo\Services\Pdf as PdfService;
+use Espo\Entities\Template;
+use Espo\Modules\Crm\Tools\Campaign\MailMergeGenerator;
 
 use Espo\Modules\Crm\Entities\Campaign as CampaignEntity;
 
@@ -39,6 +40,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
 
 use Espo\Core\Di;
@@ -374,6 +376,11 @@ class Campaign extends Record implements
         $this->entityManager->saveEntity($logRecord);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     * @throws Forbidden
+     */
     public function generateMailMergePdf(string $campaignId, string $link, bool $checkAcl = false): string
     {
         /** @var CampaignEntity $campaign */
@@ -406,7 +413,8 @@ class Campaign extends Record implements
             throw new Error("Could not mail merge campaign w/o specified template.");
         }
 
-        $template = $this->entityManager->getEntity('Template', $campaign->get($link . 'TemplateId'));
+        /** @var ?Template $template */
+        $template = $this->entityManager->getEntity(Template::ENTITY_TYPE, $campaign->get($link . 'TemplateId'));
 
         if (!$template) {
             throw new Error("Template not found.");
@@ -482,7 +490,10 @@ class Campaign extends Record implements
                     $hasAddress = false;
 
                     foreach ($addressFieldList as $addressField) {
-                        if ($e->get($addressField . 'Street') || $e->get($addressField . 'PostalCode')) {
+                        if (
+                            $e->get($addressField . 'Street') ||
+                            $e->get($addressField . 'PostalCode')
+                        ) {
                             $hasAddress = true;
                             break;
                         }
@@ -504,17 +515,18 @@ class Campaign extends Record implements
         $filename = $campaign->get('name') . ' - ' .
             $this->defaultLanguage->translateLabel($targetEntityType, 'scopeNamesPlural');
 
-        return $this->getPdfService()->generateMailMerge(
-            $targetEntityType,
-            $targetEntityList,
-            $template,
-            $filename,
-            $campaign->getId()
-        );
-    }
+        /** @var EntityCollection<Entity> $collection */
+        $collection = $this->entityManager
+            ->getCollectionFactory()
+            ->create($targetEntityType, $targetEntityList);
 
-    private function getPdfService(): PdfService
-    {
-        return $this->injectableFactory->create(PdfService::class);
+        return $this->injectableFactory
+            ->create(MailMergeGenerator::class)
+            ->generate(
+                $collection,
+                $template,
+                $campaign->getId(),
+                $filename
+            );
     }
 }

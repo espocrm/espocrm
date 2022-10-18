@@ -31,33 +31,27 @@ namespace Espo\Services;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Exceptions\{
-    Forbidden,
-    NotFound,
-    Error,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 
-use Espo\Core\{
-    Acl,
-    Acl\Table,
-    Utils\Config,
-    Utils\Language,
-    Utils\Util,
-    ORM\EntityManager,
-    Select\SelectBuilderFactory,
-    Record\ServiceContainer,
-    Job\QueueName,
-};
+use Espo\Core\Acl;
+use Espo\Core\Acl\Table;
+use Espo\Core\Job\QueueName;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Record\ServiceContainer;
+use Espo\Core\Select\SelectBuilderFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Util;
 
-use Espo\{
-    Tools\Pdf\Builder,
-    Tools\Pdf\Contents,
-    Tools\Pdf\TemplateWrapper,
-    Tools\Pdf\Data,
-    Tools\Pdf\IdDataMap,
-    Tools\Pdf\Params,
-    Tools\Pdf\Data\DataLoaderManager,
-};
+use Espo\Tools\Pdf\Builder;
+use Espo\Tools\Pdf\Contents;
+use Espo\Tools\Pdf\Data;
+use Espo\Tools\Pdf\Data\DataLoaderManager;
+use Espo\Tools\Pdf\IdDataMap;
+use Espo\Tools\Pdf\Params;
+use Espo\Tools\Pdf\TemplateWrapper;
 
 use Espo\Entities\Template;
 
@@ -71,19 +65,12 @@ class Pdf
     private string $removeMassFilePeriod = '1 hour';
 
     private $config;
-
     private $entityManager;
-
     private $acl;
-
     private $defaultLanguage;
-
     private $selectBuilderFactory;
-
     private $builder;
-
     private $serviceContainer;
-
     private $dataLoaderManager;
 
     public function __construct(
@@ -104,73 +91,6 @@ class Pdf
         $this->builder = $builder;
         $this->serviceContainer = $serviceContainer;
         $this->dataLoaderManager = $dataLoaderManager;
-    }
-
-    /**
-     * @param iterable<Entity> $entityList
-     * @throws Error
-     */
-    public function generateMailMerge(
-        string $entityType,
-        iterable $entityList,
-        Template $template,
-        string $name,
-        ?string $campaignId = null
-    ): string {
-
-        $collection = $this->entityManager->getCollectionFactory()->create($entityType);
-
-        foreach ($entityList as $entity) {
-            $collection[] = $entity;
-        }
-
-        $params = Params::create()->withAcl();
-
-        $idDataMap = IdDataMap::create();
-
-        $service = $this->serviceContainer->get($entityType);
-
-        foreach ($entityList as $entity) {
-            $service->loadAdditionalFields($entity);
-
-            $idDataMap->set(
-                $entity->getId(),
-                $this->dataLoaderManager->load($entity, $params)
-            );
-
-            // deprecated
-            if (method_exists($service, 'loadAdditionalFieldsForPdf')) {
-                $service->loadAdditionalFieldsForPdf($entity);
-            }
-        }
-
-        $engine = $this->config->get('pdfEngine') ?? self::DEFAULT_ENGINE;
-
-        $templateWrapper = new TemplateWrapper($template);
-
-        $printer = $this->builder
-            ->setTemplate($templateWrapper)
-            ->setEngine($engine)
-            ->build();
-
-        $contents = $printer->printCollection($collection, $params, $idDataMap);
-
-        $filename = Util::sanitizeFileName($name) . '.pdf';
-
-        $attachment = $this->entityManager->getNewEntity('Attachment');
-
-        $attachment->set([
-            'name' => $filename,
-            'relatedType' => 'Campaign',
-            'type' => 'application/pdf',
-            'relatedId' => $campaignId,
-            'role' => 'Mail Merge',
-            'contents' => $contents->getString(),
-        ]);
-
-        $this->entityManager->saveEntity($attachment);
-
-        return $attachment->getId();
     }
 
     /**
