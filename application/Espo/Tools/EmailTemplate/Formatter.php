@@ -39,15 +39,11 @@ use Espo\Core\Utils\Language;
 
 class Formatter
 {
-    private $metadata;
-
-    private $config;
-
-    private $dateTime;
-
-    private $number;
-
-    private $language;
+    private Metadata $metadata;
+    private Config $config;
+    private DateTimeUtil $dateTime;
+    private NumberUtil $number;
+    private Language $language;
 
     public function __construct(
         Metadata $metadata,

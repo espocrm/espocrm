@@ -41,11 +41,11 @@ use Espo\Core\Api\Request;
 use Espo\Core\Mail\SmtpParams;
 use Espo\Entities\Email as EmailEntity;
 use Espo\Services\Email as Service;
-use Espo\Services\EmailTemplate as EmailTemplateService;
 use Espo\Tools\Email\SendService;
 use Espo\Tools\Email\Service as ToolService;
 
 use Espo\Tools\Email\TestSendData;
+use Espo\Tools\EmailTemplate\InsertField\Service as InsertFieldService;
 use stdClass;
 
 class Email extends Record
@@ -331,11 +331,13 @@ class Email extends Record
             throw new Forbidden();
         }
 
-        return $this->getEmailTemplateService()->getInsertFieldData([
-            'parentId' => $request->getQueryParam('parentId'),
-            'parentType' => $request->getQueryParam('parentType'),
-            'to' => $request->getQueryParam('to'),
-        ]);
+        return $this->injectableFactory
+            ->create(InsertFieldService::class)
+            ->getData(
+                $request->getQueryParam('parentType'),
+                $request->getQueryParam('parentId'),
+                $request->getQueryParam('to')
+            );
     }
 
     private function getEmailToolService(): ToolService
@@ -352,11 +354,5 @@ class Email extends Record
     {
         /** @var Service */
         return $this->getRecordService();
-    }
-
-    private function getEmailTemplateService(): EmailTemplateService
-    {
-        /** @var EmailTemplateService */
-        return $this->getServiceFactory()->create('EmailTemplate');
     }
 }

@@ -30,21 +30,12 @@
 namespace Espo\Services;
 
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Repositories\EmailAddress as EmailAddressRepository;
-
 use Espo\Tools\EmailTemplate\Processor;
 use Espo\Tools\EmailTemplate\Params;
 use Espo\Tools\EmailTemplate\Data;
-use Espo\Tools\EmailTemplate\Formatter;
-
 use Espo\Entities\EmailTemplate as EmailTemplateEntity;
-use Espo\Entities\EmailAddress;
-
 use Espo\Core\Exceptions\NotFound;
-
 use Espo\Core\Di;
-
-use stdClass;
 
 /**
  * @deprecated For bc. Use `Espo\Tools\EmailTemplate\Service`.
@@ -123,113 +114,8 @@ class EmailTemplate extends Record implements
         return $this->parseTemplate($emailTemplate, $params, $copyAttachments);
     }
 
-    /**
-     * @param array<string,mixed> $params
-     */
-    public function getInsertFieldData(array $params): stdClass
-    {
-        $to = $params['to'] ?? null;
-        $parentId = $params['parentId'] ?? null;
-        $parentType = $params['parentType'] ?? null;
-
-        $result = (object) [];
-
-        $dataList = [];
-
-        if ($parentId && $parentType) {
-            $e = $this->entityManager->getEntity($parentType, $parentId);
-
-            if ($e && $this->acl->check($e)) {
-                $dataList[] = [
-                    'type' => 'parent',
-                    'entity' => $e,
-                ];
-            }
-        }
-
-        if ($to) {
-            $e = $this->getEmailAddressRepository()->getEntityByAddress($to, null, ['Contact', 'Lead', 'Account']);
-
-            if ($e && $e->getEntityType() !== 'User' && $this->acl->check($e)) {
-                $dataList[] = [
-                    'type' => 'to',
-                    'entity' => $e,
-                ];
-            }
-        }
-
-        $fm = $this->fieldUtil;
-
-        $formatter = $this->createFormatter();
-
-        foreach ($dataList as $item) {
-            $type = $item['type'];
-            $e = $item['entity'];
-
-            $entityType = $e->getEntityType();
-
-            $recordService = $this->recordServiceContainer->get($entityType);
-
-            $recordService->prepareEntityForOutput($e);
-
-            $ignoreTypeList = ['image', 'file', 'map', 'wysiwyg', 'linkMultiple', 'attachmentMultiple', 'bool'];
-
-            foreach ($fm->getEntityTypeFieldList($entityType) as $field) {
-                $fieldType = $fm->getEntityTypeFieldParam($entityType, $field, 'type');
-                $fieldAttributeList = $fm->getAttributeList($entityType, $field);
-
-                if (
-                    $fm->getEntityTypeFieldParam($entityType, $field, 'disabled') ||
-                    $fm->getEntityTypeFieldParam($entityType, $field, 'directAccessDisabled') ||
-                    $fm->getEntityTypeFieldParam($entityType, $field, 'templatePlaceholderDisabled') ||
-                    in_array($fieldType, $ignoreTypeList)
-                ) {
-                    foreach ($fieldAttributeList as $a) {
-                        $e->clear($a);
-                    }
-                }
-            }
-
-            $attributeList = $fm->getEntityTypeAttributeList($entityType);
-
-            $values = (object) [];
-
-            foreach ($attributeList as $a) {
-                if (!$e->has($a)) {
-                    continue;
-                }
-
-                $value = $formatter->formatAttributeValue($e, $a);
-
-                if ($value !== null && $value !== '') {
-                    $values->$a = $value;
-                }
-            }
-
-            $result->$type = (object) [
-                'entityType' => $e->getEntityType(),
-                'id' => $e->getId(),
-                'values' => $values,
-                'name' => $e->get('name'),
-            ];
-        }
-
-        return $result;
-    }
-
     private function createProcessor(): Processor
     {
         return $this->injectableFactory->create(Processor::class);
-    }
-
-    private function createFormatter(): Formatter
-    {
-        return $this->injectableFactory->create(Formatter::class);
-    }
-
-    private function getEmailAddressRepository(): EmailAddressRepository
-    {
-        /** @var EmailAddressRepository */
-        return $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
     }
 }
