@@ -27,30 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\App;
 
 use Espo\ORM\EntityManager;
 
 use Espo\Repositories\Preferences as Repository;
+use Espo\Entities\Preferences;
+use Espo\Entities\User;
 
-use Espo\Entities\{
-    User,
-    Preferences as PreferencesEntity,
-};
-
-use Espo\Core\{
-    Exceptions\BadRequest,
-    Exceptions\Forbidden,
-    Exceptions\NotFound,
-    FieldValidation\FieldValidationManager,
-    Acl\Table,
-    Acl,
-    Utils\Config,
-};
+use Espo\Core\Acl;
+use Espo\Core\Acl\Table;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\FieldValidation\FieldValidationManager;
+use Espo\Core\Utils\Config;
 
 use stdClass;
 
-class Preferences
+class PreferencesService
 {
     private EntityManager $entityManager;
     private User $user;
@@ -88,12 +83,12 @@ class Preferences
      * @throws Forbidden
      * @throws NotFound
      */
-    public function read(string $userId): PreferencesEntity
+    public function read(string $userId): Preferences
     {
         $this->processAccessCheck($userId);
 
-        /** @var ?PreferencesEntity $entity */
-        $entity = $this->entityManager->getEntityById(PreferencesEntity::ENTITY_TYPE, $userId);
+        /** @var ?Preferences $entity */
+        $entity = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $userId);
         /** @var ?User $user */
         $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
@@ -108,7 +103,7 @@ class Preferences
         $entity->clear('smtpPassword');
 
         $forbiddenAttributeList = $this->acl
-            ->getScopeForbiddenAttributeList(PreferencesEntity::ENTITY_TYPE, Table::ACTION_READ);
+            ->getScopeForbiddenAttributeList(Preferences::ENTITY_TYPE, Table::ACTION_READ);
 
         foreach ($forbiddenAttributeList as $attribute) {
             $entity->clear($attribute);
@@ -122,16 +117,16 @@ class Preferences
      * @throws NotFound
      * @throws BadRequest
      */
-    public function update(string $userId, stdClass $data): PreferencesEntity
+    public function update(string $userId, stdClass $data): Preferences
     {
         $this->processAccessCheck($userId);
 
-        if ($this->acl->getLevel(PreferencesEntity::ENTITY_TYPE, Table::ACTION_EDIT) === Table::LEVEL_NO) {
+        if ($this->acl->getLevel(Preferences::ENTITY_TYPE, Table::ACTION_EDIT) === Table::LEVEL_NO) {
             throw new Forbidden();
         }
 
         $forbiddenAttributeList = $this->acl
-            ->getScopeForbiddenAttributeList(PreferencesEntity::ENTITY_TYPE, Table::ACTION_EDIT);
+            ->getScopeForbiddenAttributeList(Preferences::ENTITY_TYPE, Table::ACTION_EDIT);
 
         foreach ($forbiddenAttributeList as $attribute) {
             unset($data->$attribute);
@@ -140,8 +135,8 @@ class Preferences
         /** @var ?User $user */
         $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
-        /** @var ?PreferencesEntity $entity */
-        $entity = $this->entityManager->getEntityById(PreferencesEntity::ENTITY_TYPE, $userId);
+        /** @var ?Preferences $entity */
+        $entity = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $userId);
 
         if (!$entity || !$user) {
             throw new NotFound();
@@ -184,14 +179,14 @@ class Preferences
     {
         $this->processAccessCheck($userId);
 
-        if ($this->acl->getLevel(PreferencesEntity::ENTITY_TYPE, Table::ACTION_EDIT) === Table::LEVEL_NO) {
+        if ($this->acl->getLevel(Preferences::ENTITY_TYPE, Table::ACTION_EDIT) === Table::LEVEL_NO) {
             throw new Forbidden();
         }
 
         /** @var ?User $user */
         $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
-        $preferences = $this->entityManager->getEntityById(PreferencesEntity::ENTITY_TYPE, $userId);
+        $preferences = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $userId);
 
         if (!$user) {
             throw new NotFound();
@@ -206,7 +201,7 @@ class Preferences
         }
 
         $forbiddenAttributeList = $this->acl
-            ->getScopeForbiddenAttributeList(PreferencesEntity::ENTITY_TYPE, Table::ACTION_EDIT);
+            ->getScopeForbiddenAttributeList(Preferences::ENTITY_TYPE, Table::ACTION_EDIT);
 
         if (in_array('dashboardLayout', $forbiddenAttributeList)) {
             throw new Forbidden();
@@ -231,6 +226,6 @@ class Preferences
     private function getRepository(): Repository
     {
         /** @var Repository */
-        return $this->entityManager->getRepository(PreferencesEntity::ENTITY_TYPE);
+        return $this->entityManager->getRepository(Preferences::ENTITY_TYPE);
     }
 }
