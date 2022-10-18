@@ -27,46 +27,55 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Cleanup;
+namespace Espo\Tools\UserSecurity\Password;
 
-use Espo\Core\Cleanup\Cleanup;
 use Espo\Core\Utils\Config;
-use Espo\Core\Field\DateTime;
+use Espo\Core\Utils\Util;
 
-use Espo\ORM\EntityManager;
-
-use Espo\Entities\PasswordChangeRequest;
-
-class PasswordChangeRequests implements Cleanup
+/**
+ * A password generator.
+ *
+ * @todo Use an interface with binding.
+ */
+class Generator
 {
     private Config $config;
-    private EntityManager $entityManager;
 
-    private string $cleanupPeriod = '30 days';
-
-    public function __construct(Config $config, EntityManager $entityManager)
-    {
+    public function __construct(
+        Config $config
+    ) {
         $this->config = $config;
-        $this->entityManager = $entityManager;
     }
 
-    public function process(): void
+    /**
+     * Generate a password.
+     */
+    public function generate(): string
     {
-        $period = '-' . $this->config->get('cleanupPasswordChangeRequestsPeriod', $this->cleanupPeriod);
+        $length = $this->config->get('passwordStrengthLength');
+        $letterCount = $this->config->get('passwordStrengthLetterCount');
+        $numberCount = $this->config->get('passwordStrengthNumberCount');
 
-        $before = DateTime::createNow()
-            ->modify($period)
-            ->getString();
+        $generateLength = $this->config->get('passwordGenerateLength', 10);
+        $generateLetterCount = $this->config->get('passwordGenerateLetterCount', 4);
+        $generateNumberCount = $this->config->get('passwordGenerateNumberCount', 2);
 
-        $delete = $this->entityManager
-            ->getQueryBuilder()
-            ->delete()
-            ->from(PasswordChangeRequest::ENTITY_TYPE)
-            ->where([
-                'createdAt<' => $before,
-            ])
-            ->build();
+        $length = is_null($length) ? $generateLength : $length;
+        $letterCount = is_null($letterCount) ? $generateLetterCount : $letterCount;
+        $numberCount = is_null($letterCount) ? $generateNumberCount : $numberCount;
 
-        $this->entityManager->getQueryExecutor()->execute($delete);
+        if ($length < $generateLength) {
+            $length = $generateLength;
+        }
+
+        if ($letterCount < $generateLetterCount) {
+            $letterCount = $generateLetterCount;
+        }
+
+        if ($numberCount < $generateNumberCount) {
+            $numberCount = $generateNumberCount;
+        }
+
+        return Util::generatePassword($length, $letterCount, $numberCount, true);
     }
 }

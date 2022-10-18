@@ -36,17 +36,23 @@ use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Services\User as Service;
 
-use Espo\Core\{
-    Controllers\Record,
-    Api\Request,
-    Select\SearchParams,
-    Select\Where\Item as WhereItem,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Controllers\Record;
+use Espo\Core\Mail\Exceptions\SendingError;
+use Espo\Core\Password\Recovery;
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\Where\Item as WhereItem;
 
+use Espo\Tools\UserSecurity\Password\Service as PasswordService;
 use stdClass;
 
 class User extends Record
 {
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws Error
+     */
     public function getActionAcl(Request $request): stdClass
     {
         $userId = $request->getQueryParam('id');
@@ -55,40 +61,53 @@ class User extends Record
             throw new Error();
         }
 
-        if (!$this->user->isAdmin() && $this->user->getId() !== $userId) {
+        if (
+            !$this->user->isAdmin() &&
+            $this->user->getId() !== $userId
+        ) {
             throw new Forbidden();
         }
 
-        $user = $this->getEntityManager()->getEntity('User', $userId);
+        $user = $this->entityManager->getEntityById(\Espo\Entities\User::ENTITY_TYPE, $userId);
 
         if (empty($user)) {
             throw new NotFound();
         }
 
-        return $this->getAclManager()->getMapData($user);
+        return $this->aclManager->getMapData($user);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function postActionChangeOwnPassword(Request $request): bool
     {
         $data = $request->getParsedBody();
 
+        $password = $data->password ?? null;
+        $currentPassword = $data->currentPassword ?? null;
+
         if (
-            !property_exists($data, 'password') ||
-            !property_exists($data, 'currentPassword')
+            !is_string($password) ||
+            !is_string($currentPassword)
         ) {
             throw new BadRequest();
         }
 
-        $this->getUserService()->changePassword(
-            $this->user->getId(),
-            $data->password,
-            true,
-            $data->currentPassword
-        );
+        $this->getPasswordService()->changePasswordWithCheck($this->user->getId(), $password, $currentPassword);
 
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function postActionChangePasswordByRequest(Request $request): stdClass
     {
         $data = $request->getParsedBody();
@@ -97,31 +116,41 @@ class User extends Record
             throw new BadRequest();
         }
 
-        return $this->getUserService()->changePasswordByRequest($data->requestId, $data->password);
+        $url = $this->getPasswordService()->changePasswordByRecovery($data->requestId, $data->password);
+
+        return (object) [
+            'url' => $url,
+        ];
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function postActionPasswordChangeRequest(Request $request): bool
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->userName) || empty($data->emailAddress)) {
+        $userName = $data->userName ?? null;
+        $emailAddress = $data->emailAddress ?? null;
+        $url = $data->url ?? null;
+
+        if (!$userName || !$emailAddress) {
             throw new BadRequest();
         }
 
-        $userName = $data->userName;
-        $emailAddress = $data->emailAddress;
-
-        $url = null;
-
-        if (!empty($data->url)) {
-            $url = $data->url;
-        }
-
-        $this->getUserService()->passwordChangeRequest($userName, $emailAddress, $url);
+        $this->injectableFactory
+            ->create(Recovery::class)
+            ->request($emailAddress, $userName, $url);
 
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function postActionGenerateNewApiKey(Request $request): stdClass
     {
         $data = $request->getParsedBody();
@@ -139,6 +168,14 @@ class User extends Record
             ->getValueMap();
     }
 
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws SendingError
+     * @throws NotFound
+     */
     public function postActionGenerateNewPassword(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -151,11 +188,17 @@ class User extends Record
             throw new Forbidden();
         }
 
-        $this->getUserService()->generateNewPasswordForUser($data->id);
+        $this->getPasswordService()->generateAndSendNewPasswordForUser($data->id);
 
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws Error
+     */
     public function postActionSendPasswordChangeLink(Request $request): bool
     {
         if (!$this->user->isAdmin()) {
@@ -168,7 +211,7 @@ class User extends Record
             throw new BadRequest();
         }
 
-        $this->getUserService()->sendPasswordChangeLink($id);
+        $this->getPasswordService()->createAndSendPasswordRecovery($id);
 
         return true;
     }
@@ -208,6 +251,11 @@ class User extends Record
                 'value' => $userType,
             ])
         );
+    }
+
+    private function getPasswordService(): PasswordService
+    {
+        return $this->injectableFactory->create(PasswordService::class);
     }
 
     private function getUserService(): Service

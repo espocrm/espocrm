@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Password;
 
+use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Json;
 
@@ -44,41 +45,31 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Field\DateTime;
 
-use Espo\Core\{
-    Authentication\Logins\Espo as EspoLogin,
-    ORM\EntityManager,
-    Utils\Config,
-    Mail\EmailSender,
-    Htmlizer\HtmlizerFactory as HtmlizerFactory,
-    Utils\TemplateFileManager,
-    Utils\Log,
-    Job\QueueName,
-};
+use Espo\Core\Authentication\Logins\Espo as EspoLogin;
+use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
+use Espo\Core\Job\QueueName;
+use Espo\Core\Mail\EmailSender;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\TemplateFileManager;
+use Espo\Tools\UserSecurity\Password\Jobs\RemoveRecoveryRequest;
 
 class Recovery
 {
-    /**
-     * Milliseconds.
-     */
+    /** Milliseconds. */
     private const REQUEST_DELAY = 3000;
-
     private const REQUEST_LIFETIME = '3 hours';
-
     private const NEW_USER_REQUEST_LIFETIME = '2 days';
-
     private const EXISTING_USER_REQUEST_LIFETIME = '2 days';
 
-    protected EntityManager $entityManager;
-
-    protected Config $config;
-
-    protected EmailSender $emailSender;
-
-    protected HtmlizerFactory $htmlizerFactory;
-
-    protected TemplateFileManager $templateFileManager;
-
+    private EntityManager $entityManager;
+    private Config $config;
+    private EmailSender $emailSender;
+    private HtmlizerFactory $htmlizerFactory;
+    private TemplateFileManager $templateFileManager;
     private Log $log;
+    private JobSchedulerFactory $jobSchedulerFactory;
 
     public function __construct(
         EntityManager $entityManager,
@@ -86,7 +77,8 @@ class Recovery
         EmailSender $emailSender,
         HtmlizerFactory $htmlizerFactory,
         TemplateFileManager $templateFileManager,
-        Log $log
+        Log $log,
+        JobSchedulerFactory $jobSchedulerFactory
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
@@ -94,8 +86,14 @@ class Recovery
         $this->htmlizerFactory = $htmlizerFactory;
         $this->templateFileManager = $templateFileManager;
         $this->log = $log;
+        $this->jobSchedulerFactory = $jobSchedulerFactory;
     }
 
+    /**
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function getRequest(string $id): PasswordChangeRequest
     {
         $config = $this->config;
@@ -137,6 +135,11 @@ class Recovery
         }
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws Error
+     */
     public function request(string $emailAddress, string $userName, ?string $url): bool
     {
         $config = $this->config;
@@ -148,7 +151,7 @@ class Recovery
         }
 
         $user = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
                 'userName' => $userName,
                 'emailAddress' => $emailAddress,
@@ -269,6 +272,9 @@ class Recovery
         return $entity;
     }
 
+    /**
+     * @throws Error
+     */
     public function createAndSendRequestForExistingUser(User $user, ?string $url = null): PasswordChangeRequest
     {
         $this->checkUser($user);
@@ -283,7 +289,8 @@ class Recovery
 
         $this->entityManager->saveEntity($entity);
 
-        $lifetime = $this->config->get('passwordChangeRequestExistingUserLifetime') ??
+        $lifetime =
+            $this->config->get('passwordChangeRequestExistingUserLifetime') ??
             self::EXISTING_USER_REQUEST_LIFETIME;
 
         $this->createCleanupRequestJob($entity->getId(), $lifetime);
@@ -312,15 +319,17 @@ class Recovery
 
     private function createCleanupRequestJob(string $id, string $lifetime): void
     {
-        $this->entityManager->createEntity('Job', [
-            'serviceName' => 'User',
-            'methodName' => 'removeChangePasswordRequestJob',
-            'data' => ['id' => $id],
-            'executeTime' => DateTime::createNow()
-                ->modify('+' . $lifetime)
-                ->getString(),
-            'queue' => QueueName::Q1,
-        ]);
+        $this->jobSchedulerFactory
+            ->create()
+            ->setClassName(RemoveRecoveryRequest::class)
+            ->setData(['id' => $id])
+            ->setTime(
+                DateTime::createNow()
+                    ->modify('+' . $lifetime)
+                    ->getDateTime()
+            )
+            ->setQueue(QueueName::Q1)
+            ->schedule();
     }
 
     private function getDelay(): int

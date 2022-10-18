@@ -27,46 +27,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Cleanup;
+namespace Espo\Tools\UserSecurity\Password\Jobs;
 
-use Espo\Core\Cleanup\Cleanup;
-use Espo\Core\Utils\Config;
-use Espo\Core\Field\DateTime;
-
-use Espo\ORM\EntityManager;
-
+use Espo\Core\Job\Job;
+use Espo\Core\Job\Job\Data;
 use Espo\Entities\PasswordChangeRequest;
+use Espo\ORM\EntityManager;
+use RuntimeException;
 
-class PasswordChangeRequests implements Cleanup
+class RemoveRecoveryRequest implements Job
 {
-    private Config $config;
     private EntityManager $entityManager;
 
-    private string $cleanupPeriod = '30 days';
-
-    public function __construct(Config $config, EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->config = $config;
         $this->entityManager = $entityManager;
     }
 
-    public function process(): void
+    public function run(Data $data): void
     {
-        $period = '-' . $this->config->get('cleanupPasswordChangeRequestsPeriod', $this->cleanupPeriod);
+        $id = $data->get('id');
 
-        $before = DateTime::createNow()
-            ->modify($period)
-            ->getString();
+        if (!$id) {
+            throw new RuntimeException();
+        }
 
-        $delete = $this->entityManager
-            ->getQueryBuilder()
-            ->delete()
-            ->from(PasswordChangeRequest::ENTITY_TYPE)
-            ->where([
-                'createdAt<' => $before,
-            ])
-            ->build();
+        $entity = $this->entityManager->getEntity(PasswordChangeRequest::ENTITY_TYPE, $id);
 
-        $this->entityManager->getQueryExecutor()->execute($delete);
+        if (!$entity) {
+            return;
+        }
+
+        $this->entityManager->removeEntity($entity);
     }
 }

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Password\Jobs;
 
+use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Entities\User;
 
 use Espo\Core\Job\Job;
@@ -37,20 +38,23 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\ORM\EntityManager;
 
-use Espo\Services\User as Service;
+use Espo\Tools\UserSecurity\Password\Service as PasswordService;
 
 class SendAccessInfo implements Job
 {
     private EntityManager $entityManager;
+    private PasswordService $passwordService;
 
-    private Service $service;
-
-    public function __construct(EntityManager $entityManager, Service $service)
+    public function __construct(EntityManager $entityManager, PasswordService $passwordService)
     {
         $this->entityManager = $entityManager;
-        $this->service = $service;
+        $this->passwordService = $passwordService;
     }
 
+    /**
+     * @throws SendingError
+     * @throws Error
+     */
     public function run(Data $data): void
     {
         $userId = $data->getTargetId();
@@ -59,12 +63,13 @@ class SendAccessInfo implements Job
             throw new Error();
         }
 
+        /** @var ?User $user */
         $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             throw new Error("User '{$userId}' not found.");
         }
 
-        $this->service->sendAccessInfoNew($user);
+        $this->passwordService->sendAccessInfoForNewUser($user);
     }
 }

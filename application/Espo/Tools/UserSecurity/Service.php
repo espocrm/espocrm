@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\UserSecurity;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
@@ -105,7 +106,7 @@ class Service
 
     /**
      * @throws BadRequest
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      * @throws Forbidden
      * @throws NotFound
      */
@@ -171,6 +172,11 @@ class Service
         return $clientData;
     }
 
+    /**
+     * @throws Error
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function update(string $id, stdClass $data): stdClass
     {
         if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
