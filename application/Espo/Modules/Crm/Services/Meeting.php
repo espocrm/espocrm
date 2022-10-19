@@ -57,11 +57,6 @@ class Meeting extends Record implements
     /**
      * @var string[]
      */
-    protected $exportSkipFieldList = ['duration'];
-
-    /**
-     * @var string[]
-     */
     protected $duplicateIgnoreAttributeList = [
         'usersColumns',
         'contactsColumns',
