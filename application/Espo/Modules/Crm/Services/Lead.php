@@ -29,64 +29,59 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\ConflictSilent;
-
-use Espo\Core\Utils\Json;
-
+use Espo\Core\Utils\DateTime;
+use Espo\Entities\Email;
+use Espo\Modules\Crm\Entities\Campaign as CampaignEntity;
+use Espo\Modules\Crm\Entities\CampaignLogRecord as CampaignLogRecordEntity;
 use Espo\ORM\Entity;
-
 use Espo\Modules\Crm\Entities\Lead as LeadEntity;
-
 use Espo\Services\Record;
-
-use Espo\Repositories\Attachment as AttachmentRepository;
-use Espo\Entities\Attachment;
-use Espo\Modules\Crm\Entities\Account;
-use Espo\Modules\Crm\Entities\Opportunity;
-use Espo\Modules\Crm\Entities\Contact;
-
 use Espo\Core\Di;
 
-use stdClass;
-
 /**
- * @extends Record<\Espo\Modules\Crm\Entities\Lead>
+ * @extends Record<LeadEntity>
  */
-class Lead extends Record implements
-
-    Di\FieldUtilAware
+class Lead extends Record
 {
-    use Di\FieldUtilSetter;
-
     protected $linkMandatorySelectAttributeList = [
         'targetLists' => ['isOptedOut'],
     ];
 
+    /**
+     * @param LeadEntity $entity
+     */
     protected function afterCreateEntity(Entity $entity, $data)
     {
         if (!empty($data->emailId)) {
-            $email = $this->entityManager->getEntity('Email', $data->emailId);
+            /** @var ?Email $email */
+            $email = $this->entityManager->getEntityById(Email::ENTITY_TYPE, $data->emailId);
 
-            if ($email && !$email->get('parentId') && $this->acl->check($email)) {
+            if (
+                $email &&
+                !$email->getParentId() &&
+                $this->acl->check($email)
+            ) {
                 $email->set([
-                    'parentType' => 'Lead',
+                    'parentType' => LeadEntity::ENTITY_TYPE,
                     'parentId' => $entity->getId(),
                 ]);
 
                 $this->entityManager->saveEntity($email);
             }
         }
-        if ($entity->get('campaignId')) {
-            $campaign = $this->entityManager->getEntity('Campaign', $entity->get('campaignId'));
+
+        $campaignLink = $entity->getCampaign();
+
+        if ($campaignLink) {
+            $campaign = $this->entityManager->getEntityById(CampaignEntity::ENTITY_TYPE, $campaignLink->getId());
 
             if ($campaign) {
-                $log = $this->entityManager->getNewEntity('CampaignLogRecord');
+                $log = $this->entityManager->getNewEntity(CampaignLogRecordEntity::ENTITY_TYPE);
 
                 $log->set([
-                    'action' => 'Lead Created',
-                    'actionDate' => date('Y-m-d H:i:s'),
-                    'parentType' => 'Lead',
+                    'action' => CampaignLogRecordEntity::ACTION_LEAD_CREATED,
+                    'actionDate' => DateTime::getSystemNowString(),
+                    'parentType' => LeadEntity::ENTITY_TYPE,
                     'parentId' => $entity->getId(),
                     'campaignId' => $campaign->getId(),
                 ]);
@@ -94,393 +89,5 @@ class Lead extends Record implements
                 $this->entityManager->saveEntity($log);
             }
         }
-    }
-
-    /**
-     * @return array<string,array<string,mixed>>
-     * @throws Forbidden
-     */
-    public function getConvertAttributes(string $id): array
-    {
-        /** @var LeadEntity $lead */
-        $lead = $this->getEntity($id);
-
-        if (!$this->acl->check($lead, 'read')) {
-            throw new Forbidden();
-        }
-
-        $data = [];
-
-        /** @var string[] $entityList */
-        $entityList = $this->metadata->get('entityDefs.Lead.convertEntityList', []);
-
-        $ignoreAttributeList = ['createdAt', 'modifiedAt', 'modifiedById', 'modifiedByName', 'createdById', 'createdByName'];
-
-        /** @var array<string,array<string,string>> $convertFieldsDefs */
-        $convertFieldsDefs = $this->metadata->get('entityDefs.Lead.convertFields', []);
-
-        foreach ($entityList as $entityType) {
-            if (!$this->acl->checkScope($entityType, 'edit')) {
-                continue;
-            }
-
-            $attributes = [];
-            $fieldMap = [];
-
-            /** @var string[] $fieldList */
-            $fieldList = array_keys($this->metadata->get('entityDefs.Lead.fields', []));
-
-            foreach ($fieldList as $field) {
-                if (!$this->metadata->get('entityDefs.'.$entityType.'.fields.' . $field)) {
-                    continue;
-                }
-
-                if (
-                    $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type'])
-                    !==
-                    $this->metadata->get(['entityDefs', 'Lead', 'fields', $field, 'type'])
-                ) {
-                    continue;
-                }
-
-                $fieldMap[$field] = $field;
-            }
-
-            if (array_key_exists($entityType, $convertFieldsDefs)) {
-                foreach ($convertFieldsDefs[$entityType] as $field => $leadField) {
-                    $fieldMap[$field] = $leadField;
-                }
-            }
-
-            foreach ($fieldMap as $field => $leadField) {
-                $type = $this->metadata->get(['entityDefs', 'Lead', 'fields', $field, 'type']);
-
-                if (in_array($type, ['file', 'image'])) {
-                    $attachment = $lead->get($field);
-
-                    if ($attachment) {
-                        $attachment = $this->getAttachmentRepository()->getCopiedAttachment($attachment);
-
-                        $idAttribute = $field . 'Id';
-                        $nameAttribute = $field . 'Name';
-
-                        $attributes[$idAttribute] = $attachment->getId();
-                        $attributes[$nameAttribute] = $attachment->get('name');
-                    }
-
-                    continue;
-                }
-                else if (in_array($type, ['attachmentMultiple'])) {
-                    $attachmentList = $lead->get($field);
-
-                    if (count($attachmentList)) {
-                        $idList = [];
-                        $nameHash = (object) [];
-                        $typeHash = (object) [];
-
-                        foreach ($attachmentList as $attachment) {
-                            $attachment = $this->getAttachmentRepository()->getCopiedAttachment($attachment);
-
-                            $idList[] = $attachment->getId();
-
-                            $nameHash->{$attachment->getId()} = $attachment->get('name');
-                            $typeHash->{$attachment->getId()} = $attachment->get('type');
-                        }
-
-                        $attributes[$field . 'Ids'] = $idList;
-                        $attributes[$field . 'Names'] = $nameHash;
-                        $attributes[$field . 'Types'] = $typeHash;
-                    }
-
-                    continue;
-                }
-                else if ($type === 'linkMultiple') {
-                    $attributes[$field . 'Ids'] = $lead->get($leadField . 'Ids');
-                    $attributes[$field . 'Names'] = $lead->get($leadField . 'Names');
-                    $attributes[$field . 'Columns'] = $lead->get($leadField . 'Columns');
-
-                    continue;
-                }
-
-                $leadAttributeList = $this->fieldUtil->getAttributeList('Lead', $leadField);
-
-                $attributeList = $this->fieldUtil->getAttributeList($entityType, $field);
-
-                if (count($attributeList) !== count($leadAttributeList)) {
-                    continue;
-                }
-
-                foreach ($attributeList as $i => $attribute) {
-                    if (in_array($attribute, $ignoreAttributeList)) {
-                        continue;
-                    }
-
-                    $leadAttribute = $leadAttributeList[$i] ?? null;
-
-                    if (!$leadAttribute || !$lead->has($leadAttribute)) {
-                        continue;
-                    }
-
-                    $attributes[$attribute] = $lead->get($leadAttribute);
-                }
-            }
-
-            $data[$entityType] = $attributes;
-        }
-
-        return $data;
-    }
-
-    /**
-     * @param stdClass|null $additionalData
-     * @throws Forbidden
-     * @throws ConflictSilent
-     */
-    public function convert(string $id, object $recordsData, ?object $additionalData = null): LeadEntity
-    {
-        /** @var LeadEntity $lead */
-        $lead = $this->getEntity($id);
-
-        $additionalData = $additionalData ?? (object) [];
-
-        if (!$this->acl->check($lead, 'edit')) {
-            throw new Forbidden();
-        }
-
-        $duplicateList = [];
-        $duplicateCheck = !($additionalData->skipDuplicateCheck ?? false);
-
-        $entityManager = $this->entityManager;
-
-        $skipSave = false;
-
-        $contact = null;
-        $account = null;
-        $opportunity = null;
-
-        if (!empty($recordsData->Account)) {
-            $account = $entityManager->getNewEntity('Account');
-
-            $account->set(get_object_vars($recordsData->Account));
-
-            if ($duplicateCheck) {
-                /** @var Account[] $rDuplicateList */
-                $rDuplicateList = $this->recordServiceContainer
-                    ->get('Account')
-                    ->findDuplicates($account);
-
-                if ($rDuplicateList) {
-                    foreach ($rDuplicateList as $e) {
-                        $item = $e->getValueMap();
-                        $item->_entityType = $e->getEntityType();
-                        $duplicateList[] = $item;
-                        $skipSave = true;
-                    }
-                }
-            }
-
-            if (!$skipSave) {
-                $entityManager->saveEntity($account);
-
-                $lead->set('createdAccountId', $account->getId());
-            }
-        }
-
-        if (!empty($recordsData->Contact)) {
-            $contact = $entityManager->getNewEntity('Contact');
-
-            $contact->set(get_object_vars($recordsData->Contact));
-
-            if ($account && $account->hasId()) {
-                $contact->set('accountId', $account->getId());
-            }
-
-            if ($duplicateCheck) {
-                /** @var Contact[] $rDuplicateList */
-                $rDuplicateList = $this->recordServiceContainer
-                    ->get('Contact')
-                    ->findDuplicates($contact);
-
-                if ($rDuplicateList) {
-                    foreach ($rDuplicateList as $e) {
-                        $item = $e->getValueMap();
-                        $item->_entityType = $e->getEntityType();
-
-                        $duplicateList[] = $item;
-
-                        $skipSave = true;
-                    }
-                }
-            }
-
-            if (!$skipSave) {
-                $entityManager->saveEntity($contact);
-
-                $lead->set('createdContactId', $contact->getId());
-            }
-        }
-
-        if (!empty($recordsData->Opportunity)) {
-            $opportunity = $entityManager->getNewEntity('Opportunity');
-
-            $opportunity->set(get_object_vars($recordsData->Opportunity));
-
-            if ($account && $account->hasId()) {
-                $opportunity->set('accountId', $account->getId());
-            }
-
-            if ($contact && $contact->hasId()) {
-                $opportunity->set('contactId', $contact->getId());
-            }
-
-            if ($duplicateCheck) {
-                /** @var Opportunity[] $rDuplicateList */
-                $rDuplicateList = $this->recordServiceContainer
-                    ->get('Opportunity')
-                    ->findDuplicates($opportunity);
-
-                if ($rDuplicateList) {
-                    foreach ($rDuplicateList as $e) {
-                        $item = $e->getValueMap();
-                        $item->_entityType = $e->getEntityType();
-                        $duplicateList[] = $item;
-
-                        $skipSave = true;
-                    }
-                }
-            }
-
-            if (!$skipSave) {
-                $entityManager->saveEntity($opportunity);
-
-                if ($contact && $contact->hasId()) {
-                    $entityManager->getRDBRepository('Contact')->relate($contact, 'opportunities', $opportunity);
-                }
-
-                $lead->set('createdOpportunityId', $opportunity->getId());
-            }
-        }
-
-        if ($duplicateCheck && count($duplicateList)) {
-            $reason = [
-                'reason' => 'duplicate',
-                'duplicates' => $duplicateList,
-            ];
-
-            throw new ConflictSilent(Json::encode($reason));
-        }
-
-        $lead->set('status', 'Converted');
-
-        $entityManager->saveEntity($lead);
-
-        $leadRepisotory = $entityManager->getRDBRepository('Lead');
-
-        $meetings = $leadRepisotory
-            ->getRelation($lead, 'meetings')
-            ->select(['id', 'parentId', 'parentType'])
-            ->find();
-
-        foreach ($meetings as $meeting) {
-            if ($contact &&  $contact->hasId()) {
-                $entityManager->getRDBRepository('Meeting')->relate($meeting, 'contacts', $contact);
-            }
-
-            if ($opportunity && $opportunity->hasId()) {
-                $meeting->set('parentId', $opportunity->getId());
-                $meeting->set('parentType', 'Opportunity');
-
-                $entityManager->saveEntity($meeting);
-            }
-            else if ($account && $account->hasId()) {
-                $meeting->set('parentId', $account->getId());
-                $meeting->set('parentType', 'Account');
-
-                $entityManager->saveEntity($meeting);
-            }
-        }
-
-        $calls = $leadRepisotory
-            ->getRelation($lead, 'calls')
-            ->select(['id', 'parentId', 'parentType'])
-            ->find();
-
-        foreach ($calls as $call) {
-            if ($contact && $contact->hasId()) {
-                $entityManager->getRDBRepository('Call')->relate($call, 'contacts', $contact);
-            }
-
-            if ($opportunity && $opportunity->hasId()) {
-                $call->set('parentId', $opportunity->getId());
-                $call->set('parentType', 'Opportunity');
-
-                $entityManager->saveEntity($call);
-            }
-            else if ($account && $account->hasId()) {
-                $call->set('parentId', $account->getId());
-                $call->set('parentType', 'Account');
-
-                $entityManager->saveEntity($call);
-            }
-        }
-
-        $emails = $leadRepisotory
-            ->getRelation($lead, 'emails')
-            ->select(['id', 'parentId', 'parentType'])
-            ->find();
-
-        foreach ($emails as $email) {
-            if ($opportunity && $opportunity->hasId()) {
-                $email->set('parentId', $opportunity->getId());
-                $email->set('parentType', 'Opportunity');
-
-                $entityManager->saveEntity($email);
-            }
-            else if ($account && $account->hasId()) {
-                $email->set('parentId', $account->getId());
-                $email->set('parentType', 'Account');
-
-                $entityManager->saveEntity($email);
-            }
-        }
-
-        $documents = $leadRepisotory
-            ->getRelation($lead, 'documents')
-            ->select(['id'])
-            ->find();
-
-        foreach ($documents as $document) {
-            if ($account && $account->hasId()) {
-                $entityManager->getRDBRepository('Document')->relate($document, 'accounts', $account);
-            }
-
-            if ($opportunity && $opportunity->hasId()) {
-                $entityManager->getRDBRepository('Document')->relate($document, 'opportunities', $opportunity);
-            }
-        }
-
-        $streamService = $this->getStreamService();
-
-        if ($streamService->checkIsFollowed($lead, $this->getUser()->getId())) {
-            if ($opportunity && $opportunity->hasId()) {
-                $streamService->followEntity($opportunity, $this->getUser()->getId());
-            }
-
-            if ($account && $account->hasId()) {
-                $streamService->followEntity($account, $this->getUser()->getId());
-            }
-
-            if ($contact && $contact->hasId()) {
-                $streamService->followEntity($contact, $this->getUser()->getId());
-            }
-        }
-
-        return $lead;
-    }
-
-    private function getAttachmentRepository(): AttachmentRepository
-    {
-        /** @var AttachmentRepository */
-        return $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
     }
 }

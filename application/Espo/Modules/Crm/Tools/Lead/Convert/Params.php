@@ -27,11 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Entities;
+namespace Espo\Modules\Crm\Tools\Lead\Convert;
 
-class CampaignLogRecord extends \Espo\Core\ORM\Entity
+class Params
 {
-    public const ENTITY_TYPE = 'CampaignLogRecord';
+    private bool $skipDuplicateCheck;
 
-    public const ACTION_LEAD_CREATED = 'Lead Created';
+    public function __construct(
+        bool $skipDuplicateCheck
+    ) {
+        $this->skipDuplicateCheck = $skipDuplicateCheck;
+    }
+
+    public function skipDuplicateCheck(): bool
+    {
+        return $this->skipDuplicateCheck;
+    }
 }

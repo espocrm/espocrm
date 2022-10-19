@@ -27,11 +27,59 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Entities;
+namespace Espo\Modules\Crm\Tools\Lead\Convert;
 
-class CampaignLogRecord extends \Espo\Core\ORM\Entity
+use Espo\Core\Utils\ObjectUtil;
+use stdClass;
+use UnexpectedValueException;
+
+/**
+ * Raw attribute values of multiple records.
+ *
+ * @immutable
+ */
+class Values
 {
-    public const ENTITY_TYPE = 'CampaignLogRecord';
+    /** @var array<string, stdClass> */
+    private array $data = [];
 
-    public const ACTION_LEAD_CREATED = 'Lead Created';
+    public static function create(): self
+    {
+        return new self();
+    }
+
+    public function has(string $entityType): bool
+    {
+        return array_key_exists($entityType, $this->data);
+    }
+
+    public function get(string $entityType): stdClass
+    {
+        $data = $this->data[$entityType] ?? null;
+
+        if ($data === null) {
+            throw new UnexpectedValueException();
+        }
+
+        return $data;
+    }
+
+    public function with(string $entityType, stdClass $data): self
+    {
+        $obj = clone $this;
+        $obj->data[$entityType] = ObjectUtil::clone($data);
+
+        return $obj;
+    }
+
+    public function getRaw(): stdClass
+    {
+        $data = (object) [];
+
+        foreach ($this->data as $entityType => $item) {
+            $data->$entityType = ObjectUtil::clone($item);
+        }
+
+        return $data;
+    }
 }

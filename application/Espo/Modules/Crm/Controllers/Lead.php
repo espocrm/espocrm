@@ -29,35 +29,60 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use Espo\Core\Controllers\Record;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
-use Espo\Modules\Crm\Services\Lead as Service;
+use Espo\Core\Exceptions\ConflictSilent;
+use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Modules\Crm\Tools\Lead\Convert\Params as ConvertParams;
+use Espo\Modules\Crm\Tools\Lead\Convert\Values;
+use Espo\Modules\Crm\Tools\Lead\ConvertService;
 use stdClass;
 
-class Lead extends \Espo\Core\Controllers\Record
+class Lead extends Record
 {
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws ConflictSilent
+     */
     public function postActionConvert(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->id)) {
+        $id = $data->id ?? null;
+        $records = $data->records ?? (object) [];
+
+        if (!$id) {
             throw new BadRequest();
         }
 
-        if (empty($data->records)) {
-            $data->records = (object) [];
+        if (!$records instanceof stdClass) {
+            throw new BadRequest();
         }
 
-        $additionalData = (object) [
-            'skipDuplicateCheck' => $data->skipDuplicateCheck ?? false,
-        ];
+        $recordsPayload = Values::create();
 
-        $entity = $this->getLeadService()->convert($data->id, $data->records, $additionalData);
+        foreach (get_object_vars($records) as $entityType => $payload) {
+            $recordsPayload = $recordsPayload->with($entityType, $payload);
+        }
 
-        return $entity->getValueMap();
+        $skipDuplicateCheck = $data->skipDuplicateCheck ?? false;
+
+        $params = new ConvertParams($skipDuplicateCheck);
+
+        $lead = $this->injectableFactory
+            ->create(ConvertService::class)
+            ->convert($id, $recordsPayload, $params);
+
+        return $lead->getValueMap();
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function postActionGetConvertAttributes(Request $request): stdClass
     {
         $data = $request->getParsedBody();
@@ -66,12 +91,10 @@ class Lead extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
-        return (object) $this->getLeadService()->getConvertAttributes($data->id);
-    }
+        $data = $this->injectableFactory
+            ->create(ConvertService::class)
+            ->getValues($data->id);
 
-    private function getLeadService(): Service
-    {
-        /** @var Service */
-        return $this->getRecordService();
+        return $data->getRaw();
     }
 }

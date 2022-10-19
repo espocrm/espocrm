@@ -94,6 +94,12 @@ class Lead extends \Espo\Core\Entities\Person
         return false;
     }
 
+    public function getCampaign(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('campaign');
+    }
+
     public function getAssignedUser(): ?Link
     {
         /** @var ?Link */
