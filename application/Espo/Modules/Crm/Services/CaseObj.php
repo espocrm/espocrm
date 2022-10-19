@@ -29,11 +29,9 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use Espo\{
-    ORM\Entity,
-    Services\Record,
-    Modules\Crm\Entities\CaseObj as CaseEntity,
-};
+use Espo\Modules\Crm\Entities\CaseObj as CaseEntity;
+use Espo\ORM\Entity;
+use Espo\Services\Record;
 
 use stdClass;
 

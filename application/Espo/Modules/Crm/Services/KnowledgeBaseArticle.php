@@ -35,20 +35,15 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Services\Record;
-
 use Espo\Entities\Attachment;
-
 use Espo\Modules\Crm\Entities\KnowledgeBaseArticle as KnowledgeBaseArticleEntity;
-
-use Espo\Core\{
-    Di,
-    Select\SearchParams,
-};
+use Espo\Core\Di;
+use Espo\Core\Select\SearchParams;
 
 use stdClass;
 
 /**
- * @extends Record<\Espo\Modules\Crm\Entities\KnowledgeBaseArticle>
+ * @extends Record<KnowledgeBaseArticleEntity>
  */
 class KnowledgeBaseArticle extends Record implements
 

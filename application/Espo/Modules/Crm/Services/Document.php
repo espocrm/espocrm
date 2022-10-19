@@ -29,8 +29,11 @@
 
 namespace Espo\Modules\Crm\Services;
 
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 
+use Espo\ORM\Collection;
+use Espo\ORM\EntityCollection;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Entities\Attachment;
 
@@ -42,9 +45,9 @@ use Espo\Services\Record;
 class Document extends Record
 {
     /**
-     * @return \Espo\ORM\Collection<Attachment>
+     * @return Collection<Attachment>
      * @throws NotFound
-     * @throws \Espo\Core\Exceptions\Forbidden
+     * @throws Forbidden
      */
     public function getAttachmentList(string $id)
     {
@@ -69,7 +72,7 @@ class Document extends Record
 
         $attachment = $this->getAttachmentRepository()->getCopiedAttachment($file, 'Attachment');
 
-        /** @var \Espo\ORM\EntityCollection<Attachment> $attachmentList */
+        /** @var EntityCollection<Attachment> $attachmentList */
         $attachmentList = $this->entityManager
             ->getCollectionFactory()
             ->create('Attachment');
