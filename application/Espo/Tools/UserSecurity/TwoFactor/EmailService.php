@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\UserSecurity\TwoFactor;
 
+use Espo\Core\Authentication\TwoFactor\Email\EmailLogin;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -94,7 +95,7 @@ class EmailService
 
         $methodList = $this->config->get('auth2FAMethodList') ?? [];
 
-        if (!in_array('Email', $methodList)) {
+        if (!in_array(EmailLogin::NAME, $methodList)) {
             throw new Forbidden("Email 2FA is not allowed.");
         }
     }

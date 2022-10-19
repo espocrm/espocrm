@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Authentication\Helper;
 
+use Espo\Core\Authentication\Logins\ApiKey;
+use Espo\Core\Authentication\Logins\Hmac;
 use Espo\ORM\EntityManager;
 
 use Espo\Entities\User;
@@ -50,7 +52,7 @@ class UserFinder
             ->where([
                 'userName' => $username,
                 'password' => $hash,
-                'type!=' => ['api', 'system'],
+                'type!=' => [User::TYPE_API, User::TYPE_SYSTEM],
             ])
             ->findOne();
 
@@ -63,9 +65,9 @@ class UserFinder
         $user = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
-                'type' => 'api',
+                'type' => User::TYPE_API,
                 'apiKey' => $apiKey,
-                'authMethod' => 'Hmac',
+                'authMethod' => Hmac::NAME,
             ])
             ->findOne();
 
@@ -78,9 +80,9 @@ class UserFinder
         $user = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
-                'type' => 'api',
+                'type' => User::TYPE_API,
                 'apiKey' => $apiKey,
-                'authMethod' => 'ApiKey',
+                'authMethod' => ApiKey::NAME,
             ])
             ->findOne();
 

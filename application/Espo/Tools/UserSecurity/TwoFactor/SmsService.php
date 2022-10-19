@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\UserSecurity\TwoFactor;
 
+use Espo\Core\Authentication\TwoFactor\Sms\SmsLogin;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -94,7 +95,7 @@ class SmsService
 
         $methodList = $this->config->get('auth2FAMethodList') ?? [];
 
-        if (!in_array('Sms', $methodList)) {
+        if (!in_array(SmsLogin::NAME, $methodList)) {
             throw new Forbidden("Sms 2FA is not allowed.");
         }
     }

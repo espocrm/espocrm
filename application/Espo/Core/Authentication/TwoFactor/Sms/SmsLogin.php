@@ -46,12 +46,10 @@ use RuntimeException;
 
 class SmsLogin implements Login
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    public const NAME = 'Sms';
 
-    private $util;
+    private EntityManager $entityManager;
+    private Util $util;
 
     public function __construct(EntityManager $entityManager, Util $util)
     {
@@ -105,7 +103,7 @@ class SmsLogin implements Login
             return false;
         }
 
-        if ($userData->get('auth2FAMethod') !== 'Sms') {
+        if ($userData->get('auth2FAMethod') !== self::NAME) {
             return false;
         }
 

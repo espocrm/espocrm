@@ -47,12 +47,10 @@ use RuntimeException;
 
 class TotpLogin implements Login
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    public const NAME = 'Totp';
 
-    private $totp;
+    private EntityManager $entityManager;
+    private Util $totp;
 
     public function __construct(EntityManager $entityManager, Util $totp)
     {
@@ -98,7 +96,7 @@ class TotpLogin implements Login
             return false;
         }
 
-        if ($userData->get('auth2FAMethod') !== 'Totp') {
+        if ($userData->get('auth2FAMethod') !== self::NAME) {
             return false;
         }
 
