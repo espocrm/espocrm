@@ -29,7 +29,6 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
-use Espo\Core\Acl\Table;
 use Espo\Core\Controllers\Record;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
@@ -39,8 +38,8 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Api\Request;
 
 use Espo\Modules\Crm\Entities\Meeting as MeetingEntity;
-use Espo\Modules\Crm\Services\Meeting as Service;
 use Espo\Modules\Crm\Tools\Meeting\InvitationService;
+use Espo\Modules\Crm\Tools\Meeting\Service;
 
 class Meeting extends Record
 {
@@ -65,28 +64,49 @@ class Meeting extends Record
         return $resultList !== 0;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function postActionMassSetHeld(Request $request): bool
     {
-        $data = $request->getParsedBody();
+        $ids = $request->getParsedBody()->id ?? null;
 
-        if (empty($data->ids) || !is_array($data->ids)) {
-            throw new BadRequest();
+        if (!is_array($ids)) {
+            throw new BadRequest("No `ids`.");
         }
 
-        return $this->getMeetingService()->massSetHeld($data->ids);
+        $this->injectableFactory
+            ->create(Service::class)
+            ->massSetHeld(MeetingEntity::ENTITY_TYPE, $ids);
+
+        return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function postActionMassSetNotHeld(Request $request): bool
     {
-        $data = $request->getParsedBody();
+        $ids = $request->getParsedBody()->id ?? null;
 
-        if (empty($data->ids) || !is_array($data->ids)) {
-            throw new BadRequest();
+        if (!is_array($ids)) {
+            throw new BadRequest("No `ids`.");
         }
 
-        return $this->getMeetingService()->massSetNotHeld($data->ids);
+        $this->injectableFactory
+            ->create(Service::class)
+            ->massSetNotHeld(MeetingEntity::ENTITY_TYPE, $ids);
+
+        return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws NotFound
+     * @throws Forbidden
+     */
     public function postActionSetAcceptanceStatus(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -95,12 +115,10 @@ class Meeting extends Record
             throw new BadRequest();
         }
 
-        return $this->getMeetingService()->setAcceptanceStatus($data->id, $data->status);
-    }
+        $this->injectableFactory
+            ->create(Service::class)
+            ->setAcceptance(MeetingEntity::ENTITY_TYPE, $data->id, $data->status);
 
-    private function getMeetingService(): Service
-    {
-        /** @var Service */
-        return $this->getRecordService();
+        return true;
     }
 }

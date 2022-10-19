@@ -29,16 +29,17 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use Espo\Core\Controllers\Record;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Api\Request;
 use Espo\Modules\Crm\Entities\Call as CallEntity;
-use Espo\Modules\Crm\Services\Call as Service;
 use Espo\Modules\Crm\Tools\Meeting\InvitationService;
+use Espo\Modules\Crm\Tools\Meeting\Service;
 
-class Call extends \Espo\Core\Controllers\Record
+class Call extends Record
 {
     /**
      * @throws BadRequest
@@ -61,28 +62,49 @@ class Call extends \Espo\Core\Controllers\Record
         return $resultList !== 0;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function postActionMassSetHeld(Request $request): bool
     {
-        $data = $request->getParsedBody();
+        $ids = $request->getParsedBody()->id ?? null;
 
-        if (empty($data->ids) || !is_array($data->ids)) {
-            throw new BadRequest();
+        if (!is_array($ids)) {
+            throw new BadRequest("No `ids`.");
         }
 
-        return $this->getCallService()->massSetHeld($data->ids);
+        $this->injectableFactory
+            ->create(Service::class)
+            ->massSetHeld(CallEntity::ENTITY_TYPE, $ids);
+
+        return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function postActionMassSetNotHeld(Request $request): bool
     {
-        $data = $request->getParsedBody();
+        $ids = $request->getParsedBody()->id ?? null;
 
-        if (empty($data->ids) || !is_array($data->ids)) {
-            throw new BadRequest();
+        if (!is_array($ids)) {
+            throw new BadRequest("No `ids`.");
         }
 
-        return $this->getCallService()->massSetNotHeld($data->ids);
+        $this->injectableFactory
+            ->create(Service::class)
+            ->massSetNotHeld(CallEntity::ENTITY_TYPE, $ids);
+
+        return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws NotFound
+     * @throws Forbidden
+     */
     public function postActionSetAcceptanceStatus(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -91,12 +113,10 @@ class Call extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
-        return $this->getCallService()->setAcceptanceStatus($data->id, $data->status);
-    }
+        $this->injectableFactory
+            ->create(Service::class)
+            ->setAcceptance(CallEntity::ENTITY_TYPE, $data->id, $data->status);
 
-    private function getCallService(): Service
-    {
-        /** @var Service */
-        return $this->getRecordService();
+        return true;
     }
 }

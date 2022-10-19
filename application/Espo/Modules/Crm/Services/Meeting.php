@@ -29,13 +29,9 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use Espo\Entities\User;
-use Espo\Modules\Crm\Entities\Meeting as MeetingEntity;
 use Espo\ORM\Entity;
 use Espo\Services\Record;
 use Espo\Core\ORM\Entity as CoreEntity;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\Di;
 
@@ -63,6 +59,9 @@ class Meeting extends Record implements
         'leadsColumns',
     ];
 
+    /**
+     * @todo Move to assignment checker?
+     */
     public function checkAssignment(Entity $entity): bool
     {
         $result = parent::checkAssignment($entity);
@@ -107,96 +106,6 @@ class Meeting extends Record implements
                 return false;
             }
         }
-
-        return true;
-    }
-
-    /**
-     * @param string[] $ids
-     */
-    public function massSetHeld(array $ids): bool
-    {
-        assert($this->entityType !== null);
-
-        foreach ($ids as $id) {
-            $entity = $this->entityManager->getEntity($this->entityType, $id);
-
-            if ($entity && $this->acl->checkEntityEdit($entity)) {
-                $entity->set('status', MeetingEntity::STATUS_HELD);
-
-                $this->entityManager->saveEntity($entity);
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param string[] $ids
-     */
-    public function massSetNotHeld(array $ids): bool
-    {
-        assert($this->entityType !== null);
-
-        foreach ($ids as $id) {
-            $entity = $this->entityManager->getEntity($this->entityType, $id);
-
-            if ($entity && $this->acl->checkEntityEdit($entity)) {
-                $entity->set('status', MeetingEntity::STATUS_NOT_HELD);
-
-                $this->entityManager->saveEntity($entity);
-            }
-        }
-
-        return true;
-    }
-
-    public function setAcceptanceStatus(string $id, string $status, ?string $userId = null): bool
-    {
-        $userId = $userId ?? $this->user->getId();
-
-        assert(is_string($this->entityType));
-
-        $statusList = $this->metadata
-                ->get(['entityDefs', $this->entityType, 'fields', 'acceptanceStatus', 'options'], []);
-
-        if (!in_array($status, $statusList)) {
-            throw new BadRequest();
-        }
-
-        $entity = $this->entityManager->getEntity($this->entityType, $id);
-
-        if (!$entity) {
-            throw new NotFound();
-        }
-
-        assert($entity instanceof CoreEntity);
-
-        if (!$entity->hasLinkMultipleId('users', $userId)) {
-            return false;
-        }
-
-        $this->entityManager
-            ->getRDBRepository($this->entityType)
-            ->updateRelation(
-                $entity,
-                'users',
-                $userId,
-                (object) ['status' => $status]
-            );
-
-        $actionData = [
-            'eventName' => $entity->get('name'),
-            'eventType' => $entity->getEntityType(),
-            'eventId' => $entity->getId(),
-            'dateStart' => $entity->get('dateStart'),
-            'status' => $status,
-            'link' => 'users',
-            'inviteeType' => User::ENTITY_TYPE,
-            'inviteeId' => $userId,
-        ];
-
-        $this->hookManager->process($this->entityType, 'afterConfirmation', $entity, [], $actionData);
 
         return true;
     }
