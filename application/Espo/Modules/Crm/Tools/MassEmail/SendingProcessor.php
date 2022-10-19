@@ -56,7 +56,7 @@ use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Modules\Crm\Entities\CampaignTrackingUrl;
 use Espo\Modules\Crm\Entities\EmailQueueItem;
 use Espo\Modules\Crm\Entities\MassEmail;
-use Espo\Modules\Crm\Services\Campaign as CampaignService;
+use Espo\Modules\Crm\Tools\Campaign\LogService as CampaignService;
 use Espo\ORM\Entity;
 use Espo\Tools\EmailTemplate\Data as TemplateData;
 use Espo\Tools\EmailTemplate\Params as TemplateParams;
@@ -528,17 +528,8 @@ class SendingProcessor
         $this->entityManager->saveEntity($queueItem);
 
         if ($campaign) {
-            $this->campaignService->logSent(
-                $campaign->getId(),
-                $queueItem->getId(),
-                $target,
-                $emailObject,
-                $target->get('emailAddress'),
-                null,
-                $queueItem->isTest()
-            );
+            $this->campaignService->logSent($campaign->getId(), $queueItem, $emailObject);
         }
-
     }
 
     private function getSiteUrl(): string

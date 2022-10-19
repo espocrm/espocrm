@@ -29,9 +29,33 @@
 
 namespace Espo\Modules\Crm\Entities;
 
-class CampaignTrackingUrl extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class CampaignTrackingUrl extends Entity
 {
     public const ENTITY_TYPE = 'CampaignTrackingUrl';
+
+    public const ACTION_SHOW_MESSAGE = 'Show Message';
+
+    public function getCampaignId(): ?string
+    {
+        return $this->get('campaignId');
+    }
+
+    public function getAction(): ?string
+    {
+        return $this->get('action');
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->get('message');
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->get('url');
+    }
 
     protected function _getUrlToUse(): string
     {

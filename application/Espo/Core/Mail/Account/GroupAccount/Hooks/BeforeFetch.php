@@ -31,45 +31,36 @@ namespace Espo\Core\Mail\Account\GroupAccount\Hooks;
 
 use Espo\Core\Mail\Account\Hook\BeforeFetch as BeforeFetchInterface;
 use Espo\Core\Mail\Account\Hook\BeforeFetchResult;
-
 use Espo\Core\Mail\Account\Account;
 use Espo\Core\Mail\Message;
 use Espo\Core\Mail\Account\GroupAccount\BouncedRecognizer;
-
 use Espo\Core\Utils\Log;
-use Espo\Core\InjectableFactory;
-
+use Espo\Entities\EmailAddress;
 use Espo\ORM\EntityManager;
-
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Modules\Crm\Entities\MassEmail;
 use Espo\Modules\Crm\Entities\EmailQueueItem;
-use Espo\Modules\Crm\Services\Campaign as CampaignService;
+use Espo\Modules\Crm\Tools\Campaign\LogService as CampaignService;
 
 use Throwable;
 
 class BeforeFetch implements BeforeFetchInterface
 {
     private Log $log;
-
     private EntityManager $entityManager;
-
-    private InjectableFactory $injectableFactory;
-
     private BouncedRecognizer $bouncedRecognizer;
-
-    private ?CampaignService $campaignService = null;
+    private CampaignService $campaignService;
 
     public function __construct(
         Log $log,
         EntityManager $entityManager,
-        InjectableFactory $injectableFactory,
-        BouncedRecognizer $bouncedRecognizer
+        BouncedRecognizer $bouncedRecognizer,
+        CampaignService $campaignService
     ) {
         $this->log = $log;
         $this->entityManager = $entityManager;
-        $this->injectableFactory = $injectableFactory;
         $this->bouncedRecognizer = $bouncedRecognizer;
+        $this->campaignService = $campaignService;
     }
 
     public function process(Account $account, Message $message): BeforeFetchResult
@@ -106,31 +97,36 @@ class BeforeFetch implements BeforeFetchInterface
             return false;
         }
 
-        $queueItem = $this->entityManager->getEntity(EmailQueueItem::ENTITY_TYPE, $queueItemId);
+        /** @var ?EmailQueueItem $queueItem */
+        $queueItem = $this->entityManager->getEntityById(EmailQueueItem::ENTITY_TYPE, $queueItemId);
 
         if (!$queueItem) {
             return false;
         }
 
-        $massEmailId = $queueItem->get('massEmailId');
-        $massEmail = $this->entityManager->getEntity(MassEmail::ENTITY_TYPE, $massEmailId);
-
+        $massEmail = null;
         $campaignId = null;
+        $massEmailId = $queueItem->getMassEmailId();
 
-        if ($massEmail) {
-            $campaignId = $massEmail->get('campaignId');
+        if ($massEmailId) {
+            /** @var ?MassEmail $massEmail */
+            $massEmail = $this->entityManager->getEntityById(MassEmail::ENTITY_TYPE, $massEmailId);
         }
 
-        $targetType = $queueItem->get('targetType');
-        $targetId = $queueItem->get('targetId');
-        $target = $this->entityManager->getEntity($targetType, $targetId);
+        if ($massEmail) {
+            $campaignId = $massEmail->getCampaignId();
+        }
 
-        $emailAddress = $queueItem->get('emailAddress');
+        $emailAddress = $queueItem->getEmailAddress();
+
+        if (!$emailAddress) {
+            return true;
+        }
 
         /** @var EmailAddressRepository $emailAddressRepository */
-        $emailAddressRepository = $this->entityManager->getRepository('EmailAddress');
+        $emailAddressRepository = $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
 
-        if ($isHard && $emailAddress) {
+        if ($isHard) {
             $emailAddressEntity = $emailAddressRepository->getByAddress($emailAddress);
 
             if ($emailAddressEntity) {
@@ -140,33 +136,16 @@ class BeforeFetch implements BeforeFetchInterface
             }
         }
 
-        if (
-            $campaignId &&
-            $target &&
-            $target->hasId()
-        ) {
-            $this->getCampaignService()
-                ->logBounced(
-                    $campaignId,
-                    $queueItemId,
-                    $target,
-                    $emailAddress,
-                    $isHard,
-                    null,
-                    $queueItem->get('isTest')
-                );
+        $targetType = $queueItem->getTargetType();
+        $targetId = $queueItem->getTargetId();
+
+        $target = $this->entityManager->getEntityById($targetType, $targetId);
+
+        if ($campaignId && $target) {
+            $this->campaignService->logBounced($campaignId, $queueItem, $isHard);
         }
 
         return true;
-    }
-
-    private function getCampaignService(): CampaignService
-    {
-        if (!$this->campaignService) {
-            $this->campaignService = $this->injectableFactory->create(CampaignService::class);
-        }
-
-        return $this->campaignService;
     }
 
     private function checkMessageIsAutoReply(Message $message): bool

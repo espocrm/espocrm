@@ -29,31 +29,21 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\{
-    Utils\System,
-    ORM\EntityManager,
-    Utils\DateTime as DateTimeUtil,
-};
-
-use Espo\{
-    Entities\Job as JobEntity,
-};
-
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\System;
+use Espo\Entities\Job as JobEntity;
 use Espo\Core\Job\Job\Status;
 
 use Spatie\Async\Pool as AsyncPool;
 
 class QueueProcessor
 {
-    private $params;
-
-    private $queueUtil;
-
-    private $jobRunner;
-
-    private $asyncPoolFactory;
-
-    private $entityManager;
+    private QueueProcessorParams $params;
+    private QueueUtil $queueUtil;
+    private JobRunner $jobRunner;
+    private AsyncPoolFactory $asyncPoolFactory;
+    private EntityManager $entityManager;
 
     public function __construct(
         QueueProcessorParams $params,

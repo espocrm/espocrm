@@ -29,65 +29,38 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
-use Espo\Modules\Crm\Services\Campaign as Service;
+use Espo\Entities\EmailAddress;
+use Espo\Modules\Crm\Entities\Campaign;
+use Espo\Modules\Crm\Tools\Campaign\LogService;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
-
-use Espo\{
-    Modules\Crm\Entities\EmailQueueItem,
-    Modules\Crm\Entities\CampaignTrackingUrl,
-};
-
-use Espo\Core\{
-    Exceptions\NotFoundSilent,
-    Exceptions\BadRequest,
-    EntryPoint\EntryPoint,
-    EntryPoint\Traits\NoAuth,
-    Api\Request,
-    Api\Response,
-    ORM\EntityManager,
-    Utils\Hasher,
-    HookManager,
-    Utils\ClientManager,
-    Utils\Metadata,
-};
+use Espo\Modules\Crm\Entities\CampaignTrackingUrl;
+use Espo\Modules\Crm\Entities\EmailQueueItem;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\EntryPoint\EntryPoint;
+use Espo\Core\EntryPoint\Traits\NoAuth;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFoundSilent;
+use Espo\Core\HookManager;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\ClientManager;
+use Espo\Core\Utils\Hasher;
+use Espo\Core\Utils\Metadata;
 
 class CampaignUrl implements EntryPoint
 {
     use NoAuth;
 
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var Service
-     */
-    protected $service;
-
-    /**
-     * @var Hasher
-     */
-    protected $hasher;
-
-    /**
-     * @var HookManager
-     */
-    protected $hookManager;
-
-    /**
-     * @var ClientManager
-     */
-    protected $clientManager;
-
-    /**
-     * @var Metadata
-     */
-    protected $metadata;
+    private EntityManager $entityManager;
+    private LogService $service;
+    private Hasher $hasher;
+    private HookManager $hookManager;
+    private ClientManager $clientManager;
+    private Metadata $metadata;
 
     public function __construct(
         EntityManager $entityManager,
-        Service $service,
+        LogService $service,
         Hasher $hasher,
         HookManager $hookManager,
         ClientManager $clientManager,
@@ -101,6 +74,10 @@ class CampaignUrl implements EntryPoint
         $this->metadata = $metadata;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws NotFoundSilent
+     */
     public function run(Request $request, Response $response): void
     {
         $queueItemId = $request->getQueryParam('queueItemId') ?? null;
@@ -113,7 +90,8 @@ class CampaignUrl implements EntryPoint
             throw new BadRequest();
         }
 
-        $trackingUrl = $this->entityManager->getEntity('CampaignTrackingUrl', $trackingUrlId);
+        /** @var ?CampaignTrackingUrl $trackingUrl */
+        $trackingUrl = $this->entityManager->getEntityById(CampaignTrackingUrl::ENTITY_TYPE, $trackingUrlId);
 
         if (!$trackingUrl) {
             throw new NotFoundSilent("Tracking URL '{$trackingUrlId}' not found.");
@@ -130,7 +108,8 @@ class CampaignUrl implements EntryPoint
                 throw new BadRequest();
             }
 
-            $queueItem = $this->entityManager->getEntity('EmailQueueItem', $queueItemId);
+            /** @var ?EmailQueueItem $queueItem */
+            $queueItem = $this->entityManager->getEntityById(EmailQueueItem::ENTITY_TYPE, $queueItemId);
 
             if (!$queueItem) {
                 throw new NotFoundSilent();
@@ -139,59 +118,54 @@ class CampaignUrl implements EntryPoint
             $this->processWithQueueItem($trackingUrl, $queueItem);
         }
 
-        if ($trackingUrl->get('action') === 'Show Message') {
-            $this->displayMessage($trackingUrl->get('message'));
+        if ($trackingUrl->getAction() === CampaignTrackingUrl::ACTION_SHOW_MESSAGE) {
+            $this->displayMessage($trackingUrl->getMessage());
 
             return;
         }
 
-        if ($trackingUrl->get('url')) {
+        $url = $trackingUrl->getUrl();
+
+        if ($url) {
             ob_clean();
 
-            header('Location: ' . $trackingUrl->get('url') . '');
+            header('Location: ' . $url);
 
             die;
         }
     }
 
-    protected function processWithQueueItem(CampaignTrackingUrl $trackingUrl, EmailQueueItem $queueItem): void
+    private function processWithQueueItem(CampaignTrackingUrl $trackingUrl, EmailQueueItem $queueItem): void
     {
-        $target = null;
         $campaign = null;
 
-        $targetType = $queueItem->get('targetType');
-        $targetId = $queueItem->get('targetId');
+        $targetType = $queueItem->getTargetType();
+        $targetId = $queueItem->getTargetId();
 
-        if ($targetType && $targetId) {
-            $target = $this->entityManager->getEntity($targetType, $targetId);
-        }
+        $target = $this->entityManager->getEntityById($targetType, $targetId);
 
-        $campaignId = $trackingUrl->get('campaignId');
+        $campaignId = $trackingUrl->getCampaignId();
 
         if ($campaignId) {
-            $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
+            $campaign = $this->entityManager->getEntityById(Campaign::ENTITY_TYPE, $campaignId);
         }
 
         if ($target) {
-            $this->hookManager->process('CampaignTrackingUrl', 'afterClick', $trackingUrl, [], [
+            $this->hookManager->process(CampaignTrackingUrl::ENTITY_TYPE, 'afterClick', $trackingUrl, [], [
                 'targetId' => $targetId,
                 'targetType' => $targetType,
             ]);
         }
 
         if ($campaign && $target) {
-            $this->service->logClicked(
-                $campaignId,
-                $queueItem->getId(),
-                $target,
-                $trackingUrl,
-                null,
-                $queueItem->get('isTest')
-            );
+            $this->service->logClicked($campaign->getId(), $queueItem, $trackingUrl);
         }
     }
 
-    protected function processWithHash(CampaignTrackingUrl $trackingUrl, string $emailAddress, string $hash): void
+    /**
+     * @throws NotFoundSilent
+     */
+    private function processWithHash(CampaignTrackingUrl $trackingUrl, string $emailAddress, string $hash): void
     {
         $hashActual = $this->hasher->hash($emailAddress);
 
@@ -210,14 +184,17 @@ class CampaignUrl implements EntryPoint
         $entityList = $eaRepository->getEntityListByAddressId($ea->getId());
 
         foreach ($entityList as $target) {
-            $this->hookManager->process('CampaignTrackingUrl', 'afterClick', $trackingUrl, [], [
+            $this->hookManager->process(CampaignTrackingUrl::ENTITY_TYPE, 'afterClick', $trackingUrl, [], [
                 'targetId' => $target->getId(),
                 'targetType' => $target->getEntityType(),
             ]);
         }
     }
 
-    protected function processWithUniqueId(CampaignTrackingUrl $trackingUrl, string $uid, string $hash): void
+    /**
+     * @throws NotFoundSilent
+     */
+    private function processWithUniqueId(CampaignTrackingUrl $trackingUrl, string $uid, string $hash): void
     {
         $hashActual = $this->hasher->hash($uid);
 
@@ -225,17 +202,17 @@ class CampaignUrl implements EntryPoint
             throw new NotFoundSilent();
         }
 
-        $this->hookManager->process('CampaignTrackingUrl', 'afterClick', $trackingUrl, [], [
+        $this->hookManager->process(CampaignTrackingUrl::ENTITY_TYPE, 'afterClick', $trackingUrl, [], [
             'uid' => $uid,
         ]);
     }
 
-    protected function displayMessage(?string $message): void
+    private function displayMessage(?string $message): void
     {
         $data = [
             'message' => $message ?? '',
-            'view' => $this->metadata->get(['clientDefs', 'Campaign', 'trackinkUrlMessageView']),
-            'template' => $this->metadata->get(['clientDefs', 'Campaign', 'trackinkUrlMessageTemplate']),
+            'view' => $this->metadata->get(['clientDefs', 'Campaign', 'trackingUrlMessageView']),
+            'template' => $this->metadata->get(['clientDefs', 'Campaign', 'trackingUrlMessageTemplate']),
         ];
 
         $runScript = "
@@ -252,6 +229,6 @@ class CampaignUrl implements EntryPoint
     private function getEmailAddressRepository(): EmailAddressRepository
     {
         /** @var EmailAddressRepository */
-        return $this->entityManager->getRepository('EmailAddress');
+        return $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
     }
 }

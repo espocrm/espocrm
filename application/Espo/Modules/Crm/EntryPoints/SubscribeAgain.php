@@ -29,48 +29,41 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
+use Espo\Core\Exceptions\Error;
+use Espo\Modules\Crm\Entities\Campaign;
+use Espo\Modules\Crm\Entities\CampaignLogRecord;
+use Espo\Modules\Crm\Entities\EmailQueueItem;
+use Espo\Modules\Crm\Entities\MassEmail;
+use Espo\Modules\Crm\Entities\TargetList;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
-
 use Espo\Modules\Crm\Tools\MassEmail\Util as MassEmailUtil;
-
-use Espo\Core\{
-    Exceptions\NotFound,
-    Exceptions\BadRequest,
-    Api\Request,
-    Api\Response,
-    EntryPoint\EntryPoint,
-    EntryPoint\Traits\NoAuth,
-    ORM\EntityManager,
-    Utils\ClientManager,
-    HookManager,
-    Utils\Config,
-    Utils\Metadata,
-    Utils\Hasher,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\EntryPoint\EntryPoint;
+use Espo\Core\EntryPoint\Traits\NoAuth;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\HookManager;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\ClientManager;
+use Espo\Core\Utils\Hasher;
+use Espo\Core\Utils\Metadata;
 
 class SubscribeAgain implements EntryPoint
 {
     use NoAuth;
 
-    protected EntityManager $entityManager;
-
-    protected ClientManager $clientManager;
-
-    protected HookManager $hookManager;
-
-    protected Config $config;
-
-    protected Metadata $metadata;
-
-    protected Hasher $hasher;
-
+    private EntityManager $entityManager;
+    private ClientManager $clientManager;
+    private HookManager $hookManager;
+    private Metadata $metadata;
+    private Hasher $hasher;
     private MassEmailUtil $util;
 
     public function __construct(
         EntityManager $entityManager,
         ClientManager $clientManager,
         HookManager $hookManager,
-        Config $config,
         Metadata $metadata,
         Hasher $hasher,
         MassEmailUtil $util
@@ -78,12 +71,16 @@ class SubscribeAgain implements EntryPoint
         $this->entityManager = $entityManager;
         $this->clientManager = $clientManager;
         $this->hookManager = $hookManager;
-        $this->config = $config;
         $this->metadata = $metadata;
         $this->hasher = $hasher;
         $this->util = $util;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     * @throws NotFound
+     */
     public function run(Request $request, Response $response): void
     {
         $id = $request->getQueryParam('id') ?? null;
@@ -102,7 +99,8 @@ class SubscribeAgain implements EntryPoint
 
         $queueItemId = $id;
 
-        $queueItem = $this->entityManager->getEntity('EmailQueueItem', $queueItemId);
+        /** @var ?EmailQueueItem $queueItem */
+        $queueItem = $this->entityManager->getEntity(EmailQueueItem::ENTITY_TYPE, $queueItemId);
 
         if (!$queueItem) {
             throw new NotFound();
@@ -110,80 +108,78 @@ class SubscribeAgain implements EntryPoint
 
         $campaign = null;
         $target = null;
-
-        $campaignId = null;
-
-        $massEmailId = $queueItem->get('massEmailId');
+        $massEmail = null;
+        $massEmailId = $queueItem->getMassEmailId();
 
         if ($massEmailId) {
-            $massEmail = $this->entityManager->getEntity('MassEmail', $massEmailId);
+            /** @var ?MassEmail $massEmail */
+            $massEmail = $this->entityManager->getEntity(MassEmail::ENTITY_TYPE, $massEmailId);
+        }
 
-            if ($massEmail) {
-                $campaignId = $massEmail->get('campaignId');
+        if ($massEmail) {
+            $campaignId = $massEmail->getCampaignId();
 
-                if ($campaignId) {
-                    $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
-                }
+            if ($campaignId) {
+                $campaign = $this->entityManager->getEntityById(Campaign::ENTITY_TYPE, $campaignId);
+            }
 
-                $targetType = $queueItem->get('targetType');
-                $targetId = $queueItem->get('targetId');
+            $targetType = $queueItem->getTargetType();
+            $targetId = $queueItem->getTargetId();
 
-                if ($targetType && $targetId) {
-                    $target = $this->entityManager->getEntity($targetType, $targetId);
+            $target = $this->entityManager->getEntityById($targetType, $targetId);
 
-                    if (!$target) {
-                        throw new NotFound();
+            if (!$target) {
+                throw new NotFound();
+            }
+
+            if ($massEmail->get('optOutEntirely')) {
+                $emailAddress = $target->get('emailAddress');
+
+                if ($emailAddress) {
+                    $ea = $this->getEmailAddressRepository()->getByAddress($emailAddress);
+
+                    if ($ea) {
+                        $ea->set('optOut', false);
+                        $this->entityManager->saveEntity($ea);
                     }
-
-                    if ($massEmail->get('optOutEntirely')) {
-                        $emailAddress = $target->get('emailAddress');
-
-                        if ($emailAddress) {
-                            $ea = $this->getEmailAddressRepository()->getByAddress($emailAddress);
-
-                            if ($ea) {
-                                $ea->set('optOut', false);
-                                $this->entityManager->saveEntity($ea);
-                            }
-                        }
-                    }
-
-                    $link = $this->util->getLinkByEntityType($target->getEntityType());
-
-                    $targetListList = $this->entityManager
-                        ->getRDBRepository('MassEmail')
-                        ->getRelation($massEmail, 'targetLists')
-                        ->find();
-
-                    foreach ($targetListList as $targetList) {
-                        $optedInResult = $this->entityManager
-                            ->getRDBRepository('TargetList')
-                            ->updateRelation($targetList, $link, $target->getId(), ['optedOut' => false]);
-
-                        if ($optedInResult) {
-                            $hookData = [
-                               'link' => $link,
-                               'targetId' => $targetId,
-                               'targetType' => $targetType,
-                            ];
-
-                            $this->hookManager
-                                ->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
-                        }
-                    }
-
-                    $this->hookManager->process($target->getEntityType(), 'afterCancelOptOut', $target, [], []);
-
-                    $this->display(['queueItemId' => $queueItemId]);
                 }
             }
+
+            $link = $this->util->getLinkByEntityType($target->getEntityType());
+
+            $targetListList = $this->entityManager
+                ->getRDBRepository(MassEmail::ENTITY_TYPE)
+                ->getRelation($massEmail, 'targetLists')
+                ->find();
+
+            foreach ($targetListList as $targetList) {
+                $optedInResult = $this->entityManager
+                    ->getRDBRepository(TargetList::ENTITY_TYPE)
+                    ->updateRelation($targetList, $link, $target->getId(), ['optedOut' => false]);
+
+                if ($optedInResult) {
+                    $hookData = [
+                       'link' => $link,
+                       'targetId' => $targetId,
+                       'targetType' => $targetType,
+                    ];
+
+                    $this->hookManager
+                        ->process(TargetList::ENTITY_TYPE, 'afterCancelOptOut', $targetList, [], $hookData);
+                }
+            }
+
+            $this->hookManager->process($target->getEntityType(), 'afterCancelOptOut', $target, [], []);
+
+            $this->display(['queueItemId' => $queueItemId]);
         }
 
         if ($campaign && $target) {
             $logRecord = $this->entityManager
-                ->getRDBRepository('CampaignLogRecord')->where([
+                ->getRDBRepository(CampaignLogRecord::ENTITY_TYPE)
+                ->where([
                     'queueItemId' => $queueItemId,
-                    'action' => 'Opted Out',
+                    'action' => CampaignLogRecord::ACTION_OPTED_OUT,
                 ])
                 ->order('createdAt', true)
                 ->findOne();
@@ -195,7 +191,7 @@ class SubscribeAgain implements EntryPoint
     }
 
     /**
-     * @param array<string,mixed> $actionData
+     * @param array<string, mixed> $actionData
      */
     protected function display(array $actionData): void
     {
@@ -216,6 +212,9 @@ class SubscribeAgain implements EntryPoint
         $this->clientManager->display($runScript);
     }
 
+    /**
+     * @throws NotFound
+     */
     protected function processWithHash(string $emailAddress, string $hash): void
     {
         $hash2 = $this->hasher->hash($emailAddress);
@@ -228,27 +227,26 @@ class SubscribeAgain implements EntryPoint
 
         $ea = $repository->getByAddress($emailAddress);
 
-        if ($ea) {
-            $entityList = $repository->getEntityListByAddressId($ea->getId());
-
-            if ($ea->get('optOut')) {
-                $ea->set('optOut', false);
-
-                $this->entityManager->saveEntity($ea);
-
-                foreach ($entityList as $entity) {
-                    $this->hookManager->process($entity->getEntityType(), 'afterCancelOptOut', $entity, [], []);
-                }
-            }
-
-            $this->display([
-                'emailAddress' => $emailAddress,
-                'hash' => $hash,
-            ]);
-        }
-        else {
+        if (!$ea) {
             throw new NotFound();
         }
+
+        $entityList = $repository->getEntityListByAddressId($ea->getId());
+
+        if ($ea->isOptedOut()) {
+            $ea->set('optOut', false);
+
+            $this->entityManager->saveEntity($ea);
+
+            foreach ($entityList as $entity) {
+                $this->hookManager->process($entity->getEntityType(), 'afterCancelOptOut', $entity, [], []);
+            }
+        }
+
+        $this->display([
+            'emailAddress' => $emailAddress,
+            'hash' => $hash,
+        ]);
     }
 
     private function getEmailAddressRepository(): EmailAddressRepository

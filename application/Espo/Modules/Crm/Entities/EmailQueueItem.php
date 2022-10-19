@@ -29,7 +29,9 @@
 
 namespace Espo\Modules\Crm\Entities;
 
-class EmailQueueItem extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class EmailQueueItem extends Entity
 {
     public const ENTITY_TYPE = 'EmailQueueItem';
 
@@ -73,5 +75,15 @@ class EmailQueueItem extends \Espo\Core\ORM\Entity
         }
 
         return $value;
+    }
+
+    public function getMassEmailId(): ?string
+    {
+        return $this->get('massEmailId');
+    }
+
+    public function getEmailAddress(): ?string
+    {
+        return $this->get('emailAddress');
     }
 }

@@ -30,12 +30,6 @@
 namespace Espo\Tools\LeadCapture;
 
 use Espo\Core\Job\JobSchedulerFactory;
-use Espo\Modules\Crm\Services\Campaign as CampaignService;
-
-use Espo\Entities\UniqueId;
-use Espo\Modules\Crm\Entities\Contact;
-use Espo\Modules\Crm\Entities\Lead;
-
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
@@ -48,13 +42,15 @@ use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Log;
-
+use Espo\ORM\Entity;
+use Espo\Entities\UniqueId;
 use Espo\Entities\LeadCapture as LeadCaptureEntity;
 use Espo\Entities\LeadCaptureLogRecord;
 use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Modules\Crm\Entities\TargetList;
-use Espo\ORM\Entity;
-
+use Espo\Modules\Crm\Tools\Campaign\LogService as CampaignService;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\Tools\LeadCapture\Jobs\OptInConfirmation;
 use stdClass;
 use DateTime;
@@ -67,9 +63,9 @@ class CaptureService
     private HookManager $hookManager;
     private Log $log;
 
-    private CampaignService $campaignService;
     private FieldValidationManager $fieldValidationManager;
     private JobSchedulerFactory $jobSchedulerFactory;
+    private CampaignService $campaignService;
 
     public function __construct(
         EntityManager $entityManager,
@@ -77,18 +73,18 @@ class CaptureService
         Language $defaultLanguage,
         HookManager $hookManager,
         Log $log,
-        CampaignService $campaignService,
         FieldValidationManager $fieldValidationManager,
-        JobSchedulerFactory $jobSchedulerFactory
+        JobSchedulerFactory $jobSchedulerFactory,
+        CampaignService $campaignService
     ) {
         $this->entityManager = $entityManager;
         $this->fieldUtil = $fieldUtil;
         $this->defaultLanguage = $defaultLanguage;
         $this->hookManager = $hookManager;
         $this->log = $log;
-        $this->campaignService = $campaignService;
         $this->fieldValidationManager = $fieldValidationManager;
         $this->jobSchedulerFactory = $jobSchedulerFactory;
+        $this->campaignService = $campaignService;
     }
 
     /**
