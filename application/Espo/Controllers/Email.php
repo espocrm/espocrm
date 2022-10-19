@@ -87,7 +87,7 @@ class Email extends Record
         $type = $data->type ?? null;
         $id = $data->id ?? null;
         $server = $data->server ?? null;
-        $port = $data->int ?? null;
+        $port = $data->port ?? null;
         $username = $data->username ?? null;
         $password = $data->password ?? null;
         $auth = $data->auth ?? null;
@@ -101,6 +101,7 @@ class Email extends Record
         if (!is_string($server)) {
             throw new BadRequest("`server`");
         }
+
 
         if (!is_int($port)) {
             throw new BadRequest("`port`.");
