@@ -29,20 +29,8 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use Espo\Entities\Template;
-use Espo\Modules\Crm\Tools\Campaign\MailMergeGenerator;
-
-use Espo\Modules\Crm\Entities\Campaign as CampaignEntity;
-
 use Espo\ORM\Entity;
-
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
-
-use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
-
 use Espo\Core\Di;
 
 /**
@@ -54,25 +42,6 @@ class Campaign extends Record implements
 {
     use Di\DefaultLanguageSetter;
 
-    /**
-     * @var array<string,string[]>
-     */
-    protected $entityTypeAddressFieldListMap = [
-        'Account' => ['billingAddress', 'shippingAddress'],
-        'Contact' => ['address'],
-        'Lead' => ['address'],
-        'User' => [],
-    ];
-
-    /**
-     * @var string[]
-     */
-    protected $targetLinkList = [
-        'accounts',
-        'contacts',
-        'leads',
-        'users',
-    ];
 
     public function logLeadCreated(
         string $campaignId,
@@ -376,157 +345,5 @@ class Campaign extends Record implements
         $this->entityManager->saveEntity($logRecord);
     }
 
-    /**
-     * @throws BadRequest
-     * @throws Error
-     * @throws Forbidden
-     */
-    public function generateMailMergePdf(string $campaignId, string $link, bool $checkAcl = false): string
-    {
-        /** @var CampaignEntity $campaign */
-        $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
 
-        if ($checkAcl && !$this->acl->check($campaign, 'read')) {
-            throw new Forbidden();
-        }
-
-        /** @var string $targetEntityType */
-        $targetEntityType = $campaign->getRelationParam($link, 'entity');
-
-        if ($checkAcl) {
-            if (!$this->acl->check($targetEntityType, 'read')) {
-                throw new Forbidden("Could not mail merge campaign because access to target entity type is forbidden.");
-            }
-        }
-
-        if (!in_array($link, $this->targetLinkList)) {
-            throw new BadRequest();
-        }
-
-        if ($campaign->get('type') !== 'Mail') {
-            throw new Error("Could not mail merge campaign not of Mail type.");
-        }
-
-        if (
-            !$campaign->get($link . 'TemplateId')
-        ) {
-            throw new Error("Could not mail merge campaign w/o specified template.");
-        }
-
-        /** @var ?Template $template */
-        $template = $this->entityManager->getEntity(Template::ENTITY_TYPE, $campaign->get($link . 'TemplateId'));
-
-        if (!$template) {
-            throw new Error("Template not found.");
-        }
-
-        if ($template->get('entityType') !== $targetEntityType) {
-            throw new Error("Template is not of proper entity type.");
-        }
-
-        $campaign->loadLinkMultipleField('targetLists');
-        $campaign->loadLinkMultipleField('excludingTargetLists');
-
-        if (count($campaign->getLinkMultipleIdList('targetLists') ?? []) === 0) {
-            throw new Error("Could not mail merge campaign w/o any specified target list.");
-        }
-
-        $metTargetHash = [];
-        $targetEntityList = [];
-
-        /** @var iterable<\Espo\Modules\Crm\Entities\TargetList> $excludingTargetListList */
-        $excludingTargetListList = $this->entityManager
-            ->getRDBRepository('Campaign')
-            ->getRelation($campaign, 'excludingTargetLists')
-            ->find();
-
-        foreach ($excludingTargetListList as $excludingTargetList) {
-            $recordList = $this->entityManager
-                ->getRDBRepository('TargetList')
-                ->getRelation($excludingTargetList, $link)
-                ->find();
-
-            foreach ($recordList as $excludingTarget) {
-                $hashId = $excludingTarget->getEntityType() . '-' . $excludingTarget->getId();
-                $metTargetHash[$hashId] = true;
-            }
-        }
-
-        $addressFieldList = $this->entityTypeAddressFieldListMap[$targetEntityType];
-
-        /** @var iterable<\Espo\Modules\Crm\Entities\TargetList> $targetListCollection */
-        $targetListCollection = $this->entityManager
-            ->getRDBRepository('Campaign')
-            ->getRelation($campaign, 'targetLists')
-            ->find();
-
-        foreach ($targetListCollection as $targetList) {
-            if (!$campaign->get($link . 'TemplateId')) {
-                continue;
-            }
-
-            $entityList = $this->entityManager
-                ->getRDBRepository('TargetList')
-                ->getRelation($targetList, $link)
-                ->where([
-                    '@relation.optedOut' => false,
-                ])
-                ->find();
-
-            foreach ($entityList as $e) {
-                $hashId = $e->getEntityType() . '-'. $e->getId();
-
-                if (!empty($metTargetHash[$hashId])) {
-                    continue;
-                }
-
-                $metTargetHash[$hashId] = true;
-
-                if ($campaign->get('mailMergeOnlyWithAddress')) {
-                    if (empty($addressFieldList)) {
-                        continue;
-                    }
-
-                    $hasAddress = false;
-
-                    foreach ($addressFieldList as $addressField) {
-                        if (
-                            $e->get($addressField . 'Street') ||
-                            $e->get($addressField . 'PostalCode')
-                        ) {
-                            $hasAddress = true;
-                            break;
-                        }
-                    }
-
-                    if (!$hasAddress) {
-                        continue;
-                    }
-                }
-
-                $targetEntityList[] = $e;
-            }
-        }
-
-        if (empty($targetEntityList)) {
-            throw new Error("No targets available for mail merge.");
-        }
-
-        $filename = $campaign->get('name') . ' - ' .
-            $this->defaultLanguage->translateLabel($targetEntityType, 'scopeNamesPlural');
-
-        /** @var EntityCollection<Entity> $collection */
-        $collection = $this->entityManager
-            ->getCollectionFactory()
-            ->create($targetEntityType, $targetEntityList);
-
-        return $this->injectableFactory
-            ->create(MailMergeGenerator::class)
-            ->generate(
-                $collection,
-                $template,
-                $campaign->getId(),
-                $filename
-            );
-    }
 }

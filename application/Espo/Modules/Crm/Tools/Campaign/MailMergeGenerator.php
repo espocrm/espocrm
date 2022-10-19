@@ -75,6 +75,9 @@ class MailMergeGenerator
     }
 
     /**
+     * Generate a mail-merge PDF.
+     *
+     * @return string An attachment ID.
      * @param EntityCollection<Entity> $collection
      * @throws Error
      */
