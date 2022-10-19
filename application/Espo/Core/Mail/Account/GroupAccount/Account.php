@@ -243,7 +243,7 @@ class Account implements AccountInterface
             return null;
         }
 
-        $port = $this->entity->getPort();
+        $port = $this->entity->getSmtpPort();
 
         if ($port === null) {
             throw new NoSmtp("Empty port.");
