@@ -29,21 +29,15 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use Espo\Core\Binding\BindingContainerBuilder;
-use Espo\Core\Mail\SmtpParams;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Meeting as MeetingEntity;
 use Espo\ORM\Entity;
-use Espo\Modules\Crm\Business\Event\Invitations;
 use Espo\Services\Record;
-
 use Espo\Core\ORM\Entity as CoreEntity;
-
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\Di;
-use Espo\Tools\Email\SendService;
 
 /**
  * @extends Record<CoreEntity>
@@ -114,100 +108,9 @@ class Meeting extends Record implements
         }
 
         foreach ($newIdList as $userId) {
-            if (!$this->getAcl()->checkAssignmentPermission($userId)) {
+            if (!$this->acl->checkAssignmentPermission($userId)) {
                 return false;
             }
-        }
-
-        return true;
-    }
-
-    protected function getInvitationManager(bool $useUserSmtp = true): Invitations
-    {
-        $smtpParams = null;
-
-        if ($useUserSmtp) {
-            $smtpParams = $this->getEmailSendService()->getUserSmtpParams($this->user->getId());
-        }
-
-        $builder = BindingContainerBuilder::create();
-
-        if ($smtpParams) {
-            $builder->bindInstance(SmtpParams::class, $smtpParams);
-        }
-
-        return $this->injectableFactory->createWithBinding(Invitations::class, $builder->build());
-    }
-
-    public function sendInvitations(CoreEntity $entity, bool $useUserSmtp = true): bool
-    {
-        $invitationManager = $this->getInvitationManager($useUserSmtp);
-
-        $emailHash = [];
-
-        $sentCount = 0;
-
-        $users = $this->entityManager
-            ->getRDBRepository($entity->getEntityType())
-            ->getRelation($entity, 'users')
-            ->find();
-
-        foreach ($users as $user) {
-            if (
-                $user->getId() === $this->user->getId() &&
-                $entity->getLinkMultipleColumn('users', 'status', $user->getId()) ===
-                    MeetingEntity::ATTENDEE_STATUS_ACCEPTED
-            ) {
-                continue;
-            }
-
-            if ($user->get('emailAddress') && !array_key_exists($user->get('emailAddress'), $emailHash)) {
-                $invitationManager->sendInvitation($entity, $user, 'users');
-
-                $emailHash[$user->get('emailAddress')] = true;
-
-                $sentCount ++;
-            }
-        }
-
-        $contacts = $this->entityManager
-            ->getRDBRepository($entity->getEntityType())
-            ->getRelation($entity, 'contacts')
-            ->find();
-
-        foreach ($contacts as $contact) {
-            if (
-                $contact->get('emailAddress') &&
-                !array_key_exists($contact->get('emailAddress'), $emailHash)
-            ) {
-                $invitationManager->sendInvitation($entity, $contact, 'contacts');
-
-                $emailHash[$contact->get('emailAddress')] = true;
-
-                $sentCount ++;
-            }
-        }
-
-        $leads = $this->entityManager
-            ->getRDBRepository($entity->getEntityType())
-            ->getRelation($entity, 'leads')
-            ->find();
-
-        foreach ($leads as $lead) {
-            if (
-                $lead->get('emailAddress') &&
-                !array_key_exists($lead->get('emailAddress'), $emailHash)
-            ) {
-                $invitationManager->sendInvitation($entity, $lead, 'leads');
-
-                $emailHash[$lead->get('emailAddress')] = true;
-
-                $sentCount ++;
-            }
-        }
-
-        if (!$sentCount) {
-            return false;
         }
 
         return true;
@@ -301,10 +204,5 @@ class Meeting extends Record implements
         $this->hookManager->process($this->entityType, 'afterConfirmation', $entity, [], $actionData);
 
         return true;
-    }
-
-    private function getEmailSendService(): SendService
-    {
-        return $this->injectableFactory->create(SendService::class);
     }
 }

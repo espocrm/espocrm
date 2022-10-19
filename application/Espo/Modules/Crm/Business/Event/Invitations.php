@@ -55,23 +55,14 @@ use DateTime;
 class Invitations
 {
     private $smtpParams;
-
     private $entityManager;
-
     private $emailSender;
-
     private $config;
-
     private $dateTime; /** @phpstan-ignore-line */
-
     private $language;
-
     private $number; /** @phpstan-ignore-line */
-
     private $templateFileManager;
-
     private $fileManager; /** @phpstan-ignore-line */
-
     private $htmlizerFactory;
 
     /**

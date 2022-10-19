@@ -29,40 +29,40 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use Espo\Core\Acl\Table;
+use Espo\Core\Controllers\Record;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 
 use Espo\Core\Api\Request;
 
+use Espo\Modules\Crm\Entities\Meeting as MeetingEntity;
 use Espo\Modules\Crm\Services\Meeting as Service;
+use Espo\Modules\Crm\Tools\Meeting\InvitationService;
 
-class Meeting extends \Espo\Core\Controllers\Record
+class Meeting extends Record
 {
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws ForbiddenSilent
+     * @throws NotFound
+     */
     public function postActionSendInvitations(Request $request): bool
     {
-        $data = $request->getParsedBody();
+        $id = $request->getParsedBody()->id ?? null;
 
-        if (empty($data->id)) {
+        if (!$id) {
             throw new BadRequest();
         }
 
-        /** @var \Espo\Modules\Crm\Entities\Meeting|null $entity */
-        $entity = $this->getMeetingService()->getEntity($data->id);
+        $resultList = $this->injectableFactory
+            ->create(InvitationService::class)
+            ->send(MeetingEntity::ENTITY_TYPE, $id);
 
-        if (!$entity) {
-            throw new NotFound();
-        }
-
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
-        }
-
-        if (!$this->getAcl()->checkScope('Email', 'create')) {
-            throw new Forbidden();
-        }
-
-        return $this->getMeetingService()->sendInvitations($entity);
+        return $resultList !== 0;
     }
 
     public function postActionMassSetHeld(Request $request): bool
