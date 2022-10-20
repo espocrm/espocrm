@@ -759,7 +759,7 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                             modelList = [modelList];
                         }
 
-                        modelList.forEach((model) => {
+                        modelList.forEach(model => {
                             if (model.name === 'Attachment') {
                                 this.setAttachment(model);
 
@@ -767,7 +767,11 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                             }
 
                             Espo.Ajax
-                                .postRequest(source + '/action/getAttachmentList', {id: model.id})
+                                .postRequest(source + '/action/getAttachmentList', {
+                                    id: model.id,
+                                    field: this.name,
+                                    relatedType: this.entityType,
+                                })
                                 .then(attachmentList => {
                                     attachmentList.forEach(item => {
                                         this.getModelFactory().create('Attachment', (attachment) => {

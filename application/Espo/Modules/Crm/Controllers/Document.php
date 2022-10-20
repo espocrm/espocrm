@@ -29,42 +29,58 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Controllers\Record;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
 
-use Espo\Modules\Crm\Services\Document as Service;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Modules\Crm\Tools\Document\Service;
+use Espo\Tools\Attachment\FieldData;
+use stdClass;
 
-class Document extends \Espo\Core\Controllers\Record
+class Document extends Record
 {
+
     /**
-     * @return \stdClass[]
+     * @return stdClass[]
      * @throws BadRequest
      * @throws Forbidden
-     * @throws \Espo\Core\Exceptions\NotFound
+     * @throws Error
+     * @throws NotFound
      */
     public function postActionGetAttachmentList(Request $request): array
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->id)) {
-            throw new BadRequest();
+        $id = $data->id ?? null;
+        $field = $data->field ?? null;
+        $parentType = $data->parentType ?? null;
+        $relatedType = $data->relatedType ?? null;
+
+        if (!$id || !$field) {
+            throw new BadRequest("No `id` or `field`.");
         }
 
-        $id = $data->id;
-
-        if (!$this->getAcl()->checkScope('Attachment', 'create')) {
-            throw new Forbidden();
+        try {
+            $fieldData = new FieldData(
+                $field,
+                $parentType,
+                $relatedType
+            );
+        }
+        catch (Error $e) {
+            throw new BadRequest($e->getMessage());
         }
 
-        return $this->getDocumentService()
-            ->getAttachmentList($id)
-            ->getValueMapList();
+        $attachment = $this->getDocumentService()->copyAttachment($id, $fieldData);
+
+        return [$attachment->getValueMap()];
     }
 
     private function getDocumentService(): Service
     {
-        /** @var Service */
-        return $this->getRecordService();
+        return $this->injectableFactory->create(Service::class);
     }
 }

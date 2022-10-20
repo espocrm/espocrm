@@ -836,7 +836,11 @@ function (Dep, FileUpload) {
                             }
 
                             Espo.Ajax
-                                .postRequest(source + '/action/getAttachmentList', {id: model.id})
+                                .postRequest(source + '/action/getAttachmentList', {
+                                    id: model.id,
+                                    field: this.name,
+                                    parentType: this.entityType,
+                                })
                                 .then(attachmentList => {
                                     attachmentList.forEach(item => {
                                         this.getModelFactory().create('Attachment', attachment => {
