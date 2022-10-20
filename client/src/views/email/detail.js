@@ -242,7 +242,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
             var viewName = this.getMetadata().get('clientDefs.Case.modalViews.edit') || 'views/modals/edit';
 
-            Espo.Ui.notify(this.translate('loading', 'messsages'));
+            Espo.Ui.notify(this.translate('loading', 'messages'));
 
             (new Promise(resolve => {
                 if (!(this.model.get('attachmentsIds') || []).length) {
