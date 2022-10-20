@@ -37,6 +37,7 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Mail\SmtpParams;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
+use Espo\Core\Utils\Config;
 use Espo\Entities\Email;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Business\Event\Invitations;
@@ -57,6 +58,7 @@ class InvitationService
     private InjectableFactory $injectableFactory;
     private Acl $acl;
     private EntityManager $entityManager;
+    private Config $config;
 
     public function __construct(
         RecordServiceContainer $recordServiceContainer,
@@ -64,7 +66,8 @@ class InvitationService
         User $user,
         InjectableFactory $injectableFactory,
         Acl $acl,
-        EntityManager $entityManager
+        EntityManager $entityManager,
+        Config $config
     ) {
         $this->recordServiceContainer = $recordServiceContainer;
         $this->sendService = $sendService;
@@ -72,6 +75,7 @@ class InvitationService
         $this->injectableFactory = $injectableFactory;
         $this->acl = $acl;
         $this->entityManager = $entityManager;
+        $this->config = $config;
     }
 
     /**
@@ -178,7 +182,9 @@ class InvitationService
 
     private function getSender(): Invitations
     {
-        $smtpParams = $this->sendService->getUserSmtpParams($this->user->getId());
+        $smtpParams = !$this->config->get('eventInvitationForceSystemSmtp') ?
+            $this->sendService->getUserSmtpParams($this->user->getId()) :
+            null;
 
         $builder = BindingContainerBuilder::create();
 
