@@ -47,4 +47,13 @@ class KnowledgeBaseArticle extends \Espo\Core\ORM\Entity
         /** @var LinkMultiple */
         return $this->getValueObject('teams');
     }
+
+    /**
+     * @return string[]
+     */
+    public function getAttachmentIdList(): array
+    {
+        /** @var string[] */
+        return $this->getLinkMultipleIdList('attachments');
+    }
 }

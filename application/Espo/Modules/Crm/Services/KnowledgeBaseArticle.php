@@ -29,18 +29,14 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Services\Record;
-use Espo\Entities\Attachment;
 use Espo\Modules\Crm\Entities\KnowledgeBaseArticle as KnowledgeBaseArticleEntity;
 use Espo\Core\Di;
 use Espo\Core\Select\SearchParams;
-
-use stdClass;
 
 /**
  * @extends Record<KnowledgeBaseArticleEntity>
@@ -52,69 +48,6 @@ class KnowledgeBaseArticle extends Record implements
     use Di\FileStorageManagerSetter;
 
     protected $readOnlyAttributeList = ['order'];
-
-    public function getCopiedAttachments(string $id, ?string $parentType = null, ?string $parentId = null): stdClass
-    {
-        $ids = [];
-        $names = (object) [];
-
-        if (empty($id)) {
-            throw new BadRequest();
-        }
-
-        $entity = $this->entityManager->getEntity('KnowledgeBaseArticle', $id);
-
-        if (!$entity) {
-            throw new NotFound();
-        }
-
-        if (!$this->acl->checkEntity($entity, 'read')) {
-            throw new Forbidden();
-        }
-
-        $entity->loadLinkMultipleField('attachments');
-
-        $attachmentsIds = $entity->get('attachmentsIds');
-
-        foreach ($attachmentsIds as $attachmentId) {
-            /** @var Attachment|null $source */
-            $source = $this->entityManager->getEntity('Attachment', $attachmentId);
-
-            if ($source) {
-                $attachment = $this->entityManager->getNewEntity('Attachment');
-
-                $attachment->set('role', 'Attachment');
-                $attachment->set('type', $source->get('type'));
-                $attachment->set('size', $source->get('size'));
-                $attachment->set('global', $source->get('global'));
-                $attachment->set('name', $source->get('name'));
-                $attachment->set('sourceId', $source->getSourceId());
-                $attachment->set('storage', $source->get('storage'));
-
-                if (!empty($parentType) && !empty($parentId)) {
-                    $attachment->set('parentType', $parentType);
-                    $attachment->set('parentId', $parentId);
-                }
-
-                if ($this->fileStorageManager->exists($source)) {
-                    $this->entityManager->saveEntity($attachment);
-
-                    $contents = $this->fileStorageManager->getContents($source);
-
-                    $this->fileStorageManager->putContents($attachment, $contents);
-
-                    $ids[] = $attachment->getId();
-
-                    $names->{$attachment->getId()} = $attachment->get('name');
-                }
-            }
-        }
-
-        return (object) [
-            'ids' => $ids,
-            'names' => $names,
-        ];
-    }
 
     /**
      * @param ?array<mixed,mixed> $where

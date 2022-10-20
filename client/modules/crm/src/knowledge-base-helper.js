@@ -52,8 +52,10 @@ define('crm:knowledge-base-helper', ['ajax'], function (Ajax) {
                 model.get('name');
 
             Ajax.postRequest('KnowledgeBaseArticle/action/getCopiedAttachments', {
-                id: model.id
-            }).then((data) => {
+                id: model.id,
+                parentType: 'Email',
+                field : 'attachments',
+            }).then(data => {
                 attributes.attachmentsIds = data.ids;
                 attributes.attachmentsNames = data.names;
                 attributes.isHtml = true;

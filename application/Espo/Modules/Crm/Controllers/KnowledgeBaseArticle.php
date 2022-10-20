@@ -31,24 +31,66 @@ namespace Espo\Modules\Crm\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Json;
 use Espo\Modules\Crm\Services\KnowledgeBaseArticle as Service;
+use Espo\Modules\Crm\Tools\KnowledgeBase\Service as KBService;
 
+use Espo\Tools\Attachment\FieldData;
 use stdClass;
 
 class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
 {
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function postActionGetCopiedAttachments(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->id)) {
-            throw new BadRequest();
+        $id = $data->id ?? null;
+        $field = $data->field ?? null;
+        $parentType = $data->parentType ?? null;
+        $relatedType = $data->relatedType ?? null;
+
+        if (!$id || !$field) {
+            throw new BadRequest("No `id` or `field`.");
         }
 
-        $id = $data->id;
+        try {
+            $fieldData = new FieldData(
+                $field,
+                $parentType,
+                $relatedType
+            );
+        }
+        catch (Error $e) {
+            throw new BadRequest($e->getMessage());
+        }
 
-        return $this->getArticleService()->getCopiedAttachments($id);
+        $list = $this->injectableFactory
+            ->create(KBService::class)
+            ->copyAttachments($id, $fieldData);
+
+        $ids = array_map(
+            fn ($item) => $item->getId(),
+            $list
+        );
+
+        $names = (object) [];
+
+        foreach ($list as $item) {
+            $names->{$item->getId()} = $item->getName();
+        }
+
+        return (object) [
+            'ids' => $ids,
+            'names' => $names,
+        ];
     }
 
     public function postActionMoveToTop(Request $request): bool

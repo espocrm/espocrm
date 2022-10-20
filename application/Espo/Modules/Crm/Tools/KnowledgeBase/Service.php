@@ -27,81 +27,83 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Attachment;
+namespace Espo\Modules\Crm\Tools\KnowledgeBase;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Entities\Attachment;
+use Espo\Modules\Crm\Entities\KnowledgeBaseArticle;
 use Espo\ORM\EntityManager;
 use Espo\Repositories\Attachment as AttachmentRepository;
+use Espo\Tools\Attachment\AccessChecker as AttachmentAccessChecker;
+use Espo\Tools\Attachment\FieldData;
 
 class Service
 {
-    private ServiceContainer $recordServiceContainer;
     private EntityManager $entityManager;
-    private AccessChecker $accessChecker;
+    private AttachmentAccessChecker $attachmentAccessChecker;
+    private ServiceContainer $serviceContainer;
 
     public function __construct(
-        ServiceContainer $recordServiceContainer,
         EntityManager $entityManager,
-        AccessChecker $accessChecker
+        AttachmentAccessChecker $attachmentAccessChecker,
+        ServiceContainer $serviceContainer
     ) {
-        $this->recordServiceContainer = $recordServiceContainer;
         $this->entityManager = $entityManager;
-        $this->accessChecker = $accessChecker;
+        $this->attachmentAccessChecker = $attachmentAccessChecker;
+        $this->serviceContainer = $serviceContainer;
     }
 
     /**
-     * Get file data (for downloading).
+     * Copy article attachments for re-using (e.g. in an email).
      *
+     * @return Attachment[]
      * @throws NotFound
      * @throws Forbidden
      */
-    public function getFileData(string $id): FileData
+    public function copyAttachments(string $id, FieldData $fieldData): array
     {
-        /** @var ?Attachment $attachment */
-        $attachment = $this->recordServiceContainer
-            ->get(Attachment::ENTITY_TYPE)
+        /** @var ?KnowledgeBaseArticle $entity */
+        $entity = $this->serviceContainer
+            ->get(KnowledgeBaseArticle::ENTITY_TYPE)
             ->getEntity($id);
 
-        if (!$attachment) {
+        if (!$entity) {
             throw new NotFound();
         }
 
-        return new FileData(
-            $attachment->getName(),
-            $attachment->getType(),
-            $this->getAttachmentRepository()->getStream($attachment),
-            $this->getAttachmentRepository()->getSize($attachment)
-        );
+        $this->attachmentAccessChecker->check($fieldData);
+
+        $list = [];
+
+        foreach ($entity->getAttachmentIdList() as $attachmentId) {
+            $attachment = $this->copyAttachment($attachmentId, $fieldData);
+
+            if ($attachment) {
+                $list[] = $attachment;
+            }
+        }
+
+        return $list;
     }
 
-    /**
-     * Copy an attachment record (to reuse the same file w/o copying it in the storage).
-     *
-     * @throws Forbidden
-     * @throws NotFound
-     */
-    public function copy(string $id, FieldData $data): Attachment
+    private function copyAttachment(string $attachmentId, FieldData $fieldData): ?Attachment
     {
-        $this->accessChecker->check($data);
-
         /** @var ?Attachment $attachment */
-        $attachment = $this->recordServiceContainer
-            ->get(Attachment::ENTITY_TYPE)
-            ->getEntity($id);
+        $attachment = $this->entityManager
+            ->getRDBRepositoryByClass(Attachment::class)
+            ->getById($attachmentId);
 
         if (!$attachment) {
-            throw new NotFound();
+            return null;
         }
 
         $copied = $this->getAttachmentRepository()->getCopiedAttachment($attachment);
 
-        $copied->set('parentType', $data->getParentType());
-        $copied->set('relatedType', $data->getRelatedType());
-        $copied->setTargetField($data->getField());
+        $copied->set('parentType', $fieldData->getParentType());
+        $copied->set('relatedType', $fieldData->getRelatedType());
+        $copied->setTargetField($fieldData->getField());
         $copied->setRole(Attachment::ROLE_ATTACHMENT);
 
         $this->getAttachmentRepository()->save($copied);
