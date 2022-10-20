@@ -29,23 +29,21 @@
 
 namespace Espo\Core\Record;
 
-use Espo\Core\Exceptions\Error;
+use Espo\ORM\Entity;
+use Espo\ORM\Repository\Util as RepositoryUtil;
 
 /**
  * Container for record services. Lazy loading is used.
  * Usually there's no need to have multiple record service instances of the same entity type.
  * Use this container instead of serviceFactory to get record services.
  *
- * Important. Returns services for the current user.
+ * Important. Returns record services for the current user.
  * Use the service-factory to create services for a specific user.
  */
 class ServiceContainer
 {
-    /**
-     * @var array<string,Service<\Espo\ORM\Entity>>
-     */
+    /** @var array<string,Service<Entity>> */
     private $data = [];
-
     private ServiceFactory $serviceFactory;
 
     public function __construct(ServiceFactory $serviceFactory)
@@ -54,7 +52,24 @@ class ServiceContainer
     }
 
     /**
-     * @return Service<\Espo\ORM\Entity>
+     * Get a record service by an entity class name.
+     *
+     * @template T of Entity
+     * @param class-string<T> $className An entity class name.
+     * @return Service<T>
+     */
+    public function getByClass(string $className): Service
+    {
+        $entityType = RepositoryUtil::getEntityTypeByClass($className);
+
+        /** @var Service<T> */
+        return $this->get($entityType);
+    }
+
+    /**
+     * Get a record service by an entity type.
+     *
+     * @return Service<Entity>
      */
     public function get(string $entityType): Service
     {

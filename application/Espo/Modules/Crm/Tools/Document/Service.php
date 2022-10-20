@@ -67,7 +67,7 @@ class Service
     {
         /** @var ?Document $entity */
         $entity = $this->serviceContainer
-            ->get(Document::ENTITY_TYPE)
+            ->getByClass(Document::class)
             ->getEntity($id);
 
         if (!$entity) {
