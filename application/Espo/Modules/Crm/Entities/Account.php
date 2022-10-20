@@ -53,6 +53,11 @@ class Account extends Entity
         return $this;
     }
 
+    public function getEmailAddress(): ?string
+    {
+        return $this->get('emailAddress');
+    }
+
     public function getEmailAddressGroup(): EmailAddressGroup
     {
         /** @var EmailAddressGroup */

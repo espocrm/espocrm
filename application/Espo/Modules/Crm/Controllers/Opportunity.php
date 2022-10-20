@@ -29,19 +29,19 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use Espo\Core\Acl\Table;
 use Espo\Core\Controllers\Record;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
 use Espo\Core\Field\Date;
-use Espo\Core\Portal\Acl\Table;
 use Espo\Modules\Crm\Entities\Opportunity as OpportunityEntity;
-use Espo\Modules\Crm\Services\Opportunity as Service;
 use Espo\Modules\Crm\Tools\Opportunity\Report\ByLeadSource;
 use Espo\Modules\Crm\Tools\Opportunity\Report\ByStage;
 use Espo\Modules\Crm\Tools\Opportunity\Report\DateRange;
 use Espo\Modules\Crm\Tools\Opportunity\Report\SalesByMonth;
 use Espo\Modules\Crm\Tools\Opportunity\Report\SalesPipeline;
+use Espo\Modules\Crm\Tools\Opportunity\Service;
 use stdClass;
 
 class Opportunity extends Record
@@ -171,7 +171,9 @@ class Opportunity extends Record
      */
     public function getActionEmailAddressList(Request $request): array
     {
-        if (!$request->getQueryParam('id')) {
+        $id = $request->getQueryParam('id');
+
+        if (!$id) {
             throw new BadRequest();
         }
 
@@ -179,12 +181,13 @@ class Opportunity extends Record
             throw new Forbidden();
         }
 
-        return $this->getOpportunityService()->getEmailAddressList($request->getQueryParam('id'));
-    }
+        $result = $this->injectableFactory
+            ->create(Service::class)
+            ->getEmailAddressList($id);
 
-    private function getOpportunityService(): Service
-    {
-        /** @var Service */
-        return $this->getRecordService();
+        return array_map(
+            fn ($item) => $item->getValueMap(),
+            $result
+        );
     }
 }

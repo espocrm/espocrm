@@ -27,40 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Entities;
+namespace Espo\Tools\Email;
 
-use Espo\Core\Entities\Person;
-use Espo\Core\Field\Link;
-use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Field\EmailAddress;
+use Espo\ORM\Entity;
+use stdClass;
 
-class Contact extends Person
+class EmailAddressEntityPair
 {
-    public const ENTITY_TYPE = 'Contact';
+    private EmailAddress $emailAddress;
+    private Entity $entity;
 
-    public function getAssignedUser(): ?Link
-    {
-        /** @var ?Link */
-        return $this->getValueObject('assignedUser');
+    public function __construct(
+        EmailAddress $emailAddress,
+        Entity $entity
+    ) {
+        $this->emailAddress = $emailAddress;
+        $this->entity = $entity;
     }
 
-    /**
-     * A primary account.
-     */
-    public function getAccount(): ?Link
+    public function getEmailAddress(): EmailAddress
     {
-        /** @var ?Link */
-        return $this->getValueObject('account');
+        return $this->emailAddress;
     }
 
-    public function getAccounts(): LinkMultiple
+    public function getEntity(): Entity
     {
-        /** @var LinkMultiple */
-        return $this->getValueObject('accounts');
+        return $this->entity;
     }
 
-    public function getTeams(): LinkMultiple
+    public function getValueMap(): stdClass
     {
-        /** @var LinkMultiple */
-        return $this->getValueObject('teams');
+        return (object) [
+            'emailAddress' => $this->emailAddress->getAddress(),
+            'name' => $this->entity->get('name'),
+            'entityId' => $this->entity->getId(),
+            'entityType' => $this->entity->getEntityType(),
+        ];
     }
 }

@@ -106,6 +106,27 @@ class Opportunity extends Entity
         $this->set('probability', $probability);
     }
 
+    public function getAccount(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('account');
+    }
+
+    /**
+     * A primary contact.
+     */
+    public function getContact(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('contact');
+    }
+
+    public function getContacts(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('contacts');
+    }
+
     public function getAssignedUser(): ?Link
     {
         /** @var ?Link */

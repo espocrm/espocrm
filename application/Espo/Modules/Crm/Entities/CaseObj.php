@@ -66,10 +66,19 @@ class CaseObj extends \Espo\Core\ORM\Entity
         return $this->getValueObject('account');
     }
 
+    /**
+     * A primary contact.
+     */
     public function getContact(): ?Link
     {
         /** @var ?Link */
-        return $this->getValueObject('link');
+        return $this->getValueObject('contact');
+    }
+
+    public function getContacts(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('contacts');
     }
 
     public function getLead(): ?Link

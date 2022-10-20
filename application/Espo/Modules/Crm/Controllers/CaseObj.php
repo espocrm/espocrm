@@ -29,37 +29,43 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use Espo\Core\Acl\Table;
+use Espo\Core\Controllers\Record;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
+use Espo\Modules\Crm\Entities\CaseObj as CaseEntity;
+use Espo\Modules\Crm\Tools\CaseObj\Service;
+use stdClass;
 
-use Espo\Modules\Crm\Services\CaseObj as Service;
-
-class CaseObj extends \Espo\Core\Controllers\Record
+class CaseObj extends Record
 {
-    protected $name = 'Case';
+    protected $name = CaseEntity::ENTITY_TYPE;
 
     /**
-     * @return \stdClass[]
+     * @return stdClass[]
      * @throws BadRequest
      * @throws Forbidden
      */
     public function getActionEmailAddressList(Request $request): array
     {
-        if (!$request->getQueryParam('id')) {
+        $id = $request->getQueryParam('id');
+
+        if (!$id) {
             throw new BadRequest();
         }
 
-        if (!$this->getAcl()->checkScope($this->name, 'read')) {
+        if (!$this->acl->checkScope(CaseEntity::ENTITY_TYPE, Table::ACTION_READ)) {
             throw new Forbidden();
         }
 
-        return $this->getCaseService()->getEmailAddressList($request->getQueryParam('id'));
-    }
+        $result = $this->injectableFactory
+            ->create(Service::class)
+            ->getEmailAddressList($id);
 
-    private function getCaseService(): Service
-    {
-        /** @var Service */
-        return $this->getRecordService();
+        return array_map(
+            fn ($item) => $item->getValueMap(),
+            $result
+        );
     }
 }
