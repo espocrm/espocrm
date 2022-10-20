@@ -44,7 +44,7 @@ use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Exception;
 
-class Service
+class InboxService
 {
     private const FOLDER_INBOX = 'inbox';
     private const FOLDER_DRAFTS = 'drafts';

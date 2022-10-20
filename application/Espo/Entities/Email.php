@@ -605,6 +605,15 @@ class Email extends Entity
         return $this->getValueObject('replied');
     }
 
+    /**
+     * @return string[]
+     */
+    public function getAttachmentIdList(): array
+    {
+        /** @var string[] */
+        return $this->getLinkMultipleIdList('attachments');
+    }
+
     private function getEmailRepository(): EmailRepository
     {
         if (!$this->entityManager) {

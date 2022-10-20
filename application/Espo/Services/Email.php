@@ -30,20 +30,14 @@
 namespace Espo\Services;
 
 use Espo\Tools\Email\SendService;
-
 use Espo\ORM\Entity;
 use Espo\Entities\User;
 use Espo\Entities\Email as EmailEntity;
-use Espo\Tools\Email\Service;
-
-use Espo\Entities\Attachment;
-
+use Espo\Tools\Email\InboxService;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Di;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Mail\Sender;
 use Espo\Core\Mail\SmtpParams;
@@ -53,19 +47,14 @@ use Espo\Tools\Email\Util;
 use stdClass;
 
 /**
- * @extends Record<\Espo\Entities\Email>
+ * @extends Record<EmailEntity>
  */
-class Email extends Record implements
-
-    Di\FileStorageManagerAware
+class Email extends Record
 {
-    use Di\FileStorageManagerSetter;
 
     protected $getEntityBeforeUpdate = true;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $allowedForUpdateFieldList = [
         'parent',
         'teams',
@@ -105,6 +94,7 @@ class Email extends Record implements
 
     /**
      * @deprecated Use `Espo\Tools\Email\SendService`.
+     *
      * @throws BadRequest
      * @throws SendingError
      * @throws Error
@@ -190,7 +180,7 @@ class Email extends Record implements
 
     private function markAsRead(string $id, ?string $userId = null): void
     {
-        $service = $this->injectableFactory->create(Service::class);
+        $service = $this->injectableFactory->create(InboxService::class);
 
         $service->markAsRead($id, $userId);
     }
@@ -209,88 +199,6 @@ class Email extends Record implements
     static public function parseFromAddress(?string $string): string
     {
         return Util::parseFromAddress($string);
-    }
-
-    /**
-     * @throws BadRequest
-     * @throws Forbidden
-     * @throws NotFound
-     */
-    public function getCopiedAttachments(
-        string $id,
-        ?string $parentType = null,
-        ?string $parentId = null,
-        ?string $field = null
-    ): stdClass {
-
-        $ids = [];
-        $names = (object) [];
-
-        if (empty($id)) {
-            throw new BadRequest();
-        }
-
-        /** @var ?EmailEntity $email */
-        $email = $this->entityManager->getEntityById(EmailEntity::ENTITY_TYPE, $id);
-
-        if (!$email) {
-            throw new NotFound();
-        }
-
-        if (!$this->acl->checkEntityRead($email)) {
-            throw new Forbidden();
-        }
-
-        $email->loadLinkMultipleField('attachments');
-
-        $attachmentsIds = $email->get('attachmentsIds');
-
-        foreach ($attachmentsIds as $attachmentId) {
-            /** @var ?Attachment $source */
-            $source = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $attachmentId);
-
-            if ($source) {
-                /** @var Attachment $attachment */
-                $attachment = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
-
-                $attachment->set('role', Attachment::ROLE_ATTACHMENT);
-                $attachment->set('type', $source->getType());
-                $attachment->set('size', $source->getSize());
-                $attachment->set('global', $source->get('global'));
-                $attachment->set('name', $source->getName());
-                $attachment->set('sourceId', $source->getSourceId());
-                $attachment->set('storage', $source->getStorage());
-
-                if ($field) {
-                    $attachment->set('field', $field);
-                }
-
-                if ($parentType) {
-                    $attachment->set('parentType', $parentType);
-                }
-
-                if ($parentType && $parentId) {
-                    $attachment->set('parentId', $parentId);
-                }
-
-                if ($this->fileStorageManager->exists($source)) {
-                    $this->entityManager->saveEntity($attachment);
-
-                    $contents = $this->fileStorageManager->getContents($source);
-
-                    $this->fileStorageManager->putContents($attachment, $contents);
-
-                    $ids[] = $attachment->getId();
-
-                    $names->{$attachment->getId()} = $attachment->getName();
-                }
-            }
-        }
-
-        return (object) [
-            'ids' => $ids,
-            'names' => $names,
-        ];
     }
 
     protected function beforeUpdateEntity(Entity $entity, $data)

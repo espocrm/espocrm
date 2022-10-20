@@ -49,4 +49,13 @@ class EmailTemplate extends Entity
     {
         return (bool) $this->get('isHtml');
     }
+
+    /**
+     * @return string[]
+     */
+    public function getAttachmentIdList(): array
+    {
+        /** @var string[] */
+        return $this->getLinkMultipleIdList('attachments');
+    }
 }

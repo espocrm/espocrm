@@ -40,10 +40,11 @@ use Espo\Core\Api\Request;
 
 use Espo\Core\Mail\SmtpParams;
 use Espo\Entities\Email as EmailEntity;
-use Espo\Services\Email as Service;
+use Espo\Tools\Attachment\FieldData;
 use Espo\Tools\Email\SendService;
-use Espo\Tools\Email\Service as ToolService;
+use Espo\Tools\Email\InboxService as InboxService;
 
+use Espo\Tools\Email\Service;
 use Espo\Tools\Email\TestSendData;
 use Espo\Tools\EmailTemplate\InsertField\Service as InsertFieldService;
 use stdClass;
@@ -59,15 +60,45 @@ class Email extends Record
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->id)) {
-            throw new BadRequest();
+        $id = $data->id ?? null;
+        $field = $data->field ?? null;
+        $parentType = $data->parentType ?? null;
+        $relatedType = $data->relatedType ?? null;
+
+        if (!$id || !$field) {
+            throw new BadRequest("No `id` or `field`.");
         }
 
-        $id = $data->id;
-        $parentType = $data->parentType ?? null;
-        $field = $data->field ?? null;
+        try {
+            $fieldData = new FieldData(
+                $field,
+                $parentType,
+                $relatedType
+            );
+        }
+        catch (Error $e) {
+            throw new BadRequest($e->getMessage());
+        }
 
-        return $this->getEmailService()->getCopiedAttachments($id, $parentType, null, $field);
+        $list = $this->injectableFactory
+            ->create(Service::class)
+            ->copyAttachments($id, $fieldData);
+
+        $ids = array_map(
+            fn ($item) => $item->getId(),
+            $list
+        );
+
+        $names = (object) [];
+
+        foreach ($list as $item) {
+            $names->{$item->getId()} = $item->getName();
+        }
+
+        return (object) [
+            'ids' => $ids,
+            'names' => $names,
+        ];
     }
 
     /**
@@ -151,7 +182,7 @@ class Email extends Record
             }
         }
 
-        $this->getEmailToolService()->markAsReadIdList($idList);
+        $this->getInboxService()->markAsReadIdList($idList);
 
         return true;
     }
@@ -175,14 +206,14 @@ class Email extends Record
             }
         }
 
-        $this->getEmailToolService()->markAsNotReadIdList($idList);
+        $this->getInboxService()->markAsNotReadIdList($idList);
 
         return true;
     }
 
     public function postActionMarkAllAsRead(): bool
     {
-        $this->getEmailToolService()->markAllAsRead();
+        $this->getInboxService()->markAllAsRead();
 
         return true;
     }
@@ -206,7 +237,7 @@ class Email extends Record
             }
         }
 
-        $this->getEmailToolService()->markAsImportantIdList($idList);
+        $this->getInboxService()->markAsImportantIdList($idList);
 
         return true;
     }
@@ -230,7 +261,7 @@ class Email extends Record
             }
         }
 
-        $this->getEmailToolService()->markAsNotImportantIdList($idList);
+        $this->getInboxService()->markAsNotImportantIdList($idList);
 
         return true;
     }
@@ -254,7 +285,7 @@ class Email extends Record
             }
         }
 
-        $this->getEmailToolService()->moveToTrashIdList($idList);
+        $this->getInboxService()->moveToTrashIdList($idList);
 
         return true;
     }
@@ -278,14 +309,14 @@ class Email extends Record
             }
         }
 
-        $this->getEmailToolService()->retrieveFromTrashIdList($idList);
+        $this->getInboxService()->retrieveFromTrashIdList($idList);
 
         return true;
     }
 
     public function getActionGetFoldersNotReadCounts(): stdClass
     {
-        return (object) $this->getEmailToolService()->getFoldersNotReadCounts();
+        return (object) $this->getInboxService()->getFoldersNotReadCounts();
     }
 
     /**
@@ -312,13 +343,13 @@ class Email extends Record
         }
 
         if (count($idList) === 1) {
-            $this->getEmailToolService()->moveToFolder($idList[0], $data->folderId);
+            $this->getInboxService()->moveToFolder($idList[0], $data->folderId);
 
             return true;
 
         }
 
-        $this->getEmailToolService()->moveToFolderIdList($idList, $data->folderId);
+        $this->getInboxService()->moveToFolderIdList($idList, $data->folderId);
 
         return true;
     }
@@ -341,19 +372,13 @@ class Email extends Record
             );
     }
 
-    private function getEmailToolService(): ToolService
+    private function getInboxService(): InboxService
     {
-        return $this->injectableFactory->create(ToolService::class);
+        return $this->injectableFactory->create(InboxService::class);
     }
 
     private function getSendService(): SendService
     {
         return $this->injectableFactory->create(SendService::class);
-    }
-
-    private function getEmailService(): Service
-    {
-        /** @var Service */
-        return $this->getRecordService();
     }
 }

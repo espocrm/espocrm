@@ -41,7 +41,7 @@ use Espo\Entities\EmailFolder;
 use Espo\Entities\GroupEmailFolder;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
-use Espo\Tools\Email\Service as EmailService;
+use Espo\Tools\Email\InboxService as EmailService;
 use Exception;
 
 class MoveToFolder implements MassAction
