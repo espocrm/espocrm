@@ -105,7 +105,10 @@ class AccessTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $data = $app->getContainer()->get('serviceFactory')->create('Settings')->getConfigData();
+        $data = $app->getContainer()
+            ->get('injectableFactory')
+            ->create(SettingsService::class)
+            ->getConfigData();
 
         $this->assertTrue(property_exists($data, 'version'));
         $this->assertTrue(property_exists($data, 'outboundEmailFromAddress'));
