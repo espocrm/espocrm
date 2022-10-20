@@ -31,11 +31,11 @@ namespace Espo\Core\Record;
 
 use Espo\Core\ServiceFactory as Factory;
 use Espo\Core\Utils\Metadata;
-
 use Espo\Entities\User;
 use Espo\Core\Acl;
 use Espo\Core\AclManager;
-
+use Espo\ORM\Entity;
+use Espo\ORM\Repository\Util as RepositoryUtil;
 use RuntimeException;
 
 /**
@@ -46,9 +46,7 @@ class ServiceFactory
     private const RECORD_SERVICE_NAME = 'Record';
     private const RECORD_TREE_SERVICE_NAME = 'RecordTree';
 
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string, string> */
     private $defaultTypeMap = [
         'CategoryTree' => self::RECORD_TREE_SERVICE_NAME,
     ];
@@ -74,7 +72,39 @@ class ServiceFactory
     }
 
     /**
-     * @return Service<\Espo\ORM\Entity>
+     * Create a record service by an entity class name.
+     *
+     * @template T of Entity
+     * @param class-string<T> $className An entity class name.
+     * @return Service<T>
+     */
+    public function createByClass(string $className): Service
+    {
+        $entityType = RepositoryUtil::getEntityTypeByClass($className);
+
+        /** @var Service<T> */
+        return $this->create($entityType);
+    }
+
+    /**
+     * Create a record service for a user by an entity class name.
+     *
+     * @template T of Entity
+     * @param class-string<T> $className An entity class name.
+     * @return Service<T>
+     */
+    public function createByClassForUser(string $className, User $user): Service
+    {
+        $entityType = RepositoryUtil::getEntityTypeByClass($className);
+
+        /** @var Service<T> */
+        return $this->createForUser($entityType, $user);
+    }
+
+    /**
+     * Create a record service by an entity type.
+     *
+     * @return Service<Entity>
      */
     public function create(string $entityType): Service
     {
@@ -87,7 +117,9 @@ class ServiceFactory
     }
 
     /**
-     * @return Service<\Espo\ORM\Entity>
+     * Create a record service for a user.
+     *
+     * @return Service<Entity>
      */
     public function createForUser(string $entityType, User $user): Service
     {
@@ -102,9 +134,9 @@ class ServiceFactory
     }
 
     /**
-     * @return Service<\Espo\ORM\Entity>
+     * @return Service<Entity>
      */
-    public function createInternal(string $entityType): Service
+    private function createInternal(string $entityType): Service
     {
         if (!$this->metadata->get(['scopes', $entityType, 'entity'])) {
             throw new RuntimeException("Can't create record service '{$entityType}', there's no such entity type.");
@@ -124,7 +156,7 @@ class ServiceFactory
     }
 
     /**
-     * @return Service<\Espo\ORM\Entity>
+     * @return Service<Entity>
      */
     private function createDefault(string $entityType): Service
     {
