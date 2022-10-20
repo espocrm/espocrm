@@ -29,22 +29,30 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use Espo\Core\Controllers\Record;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-
 use Espo\Core\Api\Request;
-
+use Espo\Core\Field\Date;
+use Espo\Core\Portal\Acl\Table;
+use Espo\Modules\Crm\Entities\Opportunity as OpportunityEntity;
 use Espo\Modules\Crm\Services\Opportunity as Service;
-
+use Espo\Modules\Crm\Tools\Opportunity\Report\ByLeadSource;
+use Espo\Modules\Crm\Tools\Opportunity\Report\ByStage;
+use Espo\Modules\Crm\Tools\Opportunity\Report\DateRange;
+use Espo\Modules\Crm\Tools\Opportunity\Report\SalesByMonth;
+use Espo\Modules\Crm\Tools\Opportunity\Report\SalesPipeline;
 use stdClass;
 
-class Opportunity extends \Espo\Core\Controllers\Record
+class Opportunity extends Record
 {
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function getActionReportByLeadSource(Request $request): stdClass
     {
-        $level = $this->getAcl()->getLevel('Opportunity', 'read');
-
-        if (!$level || $level == 'no') {
+        if (!$this->acl->checkScope(OpportunityEntity::ENTITY_TYPE)) {
             throw new Forbidden();
         }
 
@@ -56,14 +64,24 @@ class Opportunity extends \Espo\Core\Controllers\Record
             throw new BadRequest("No `dateFilter` parameter.");
         }
 
-        return $this->getOpportunityService()->reportByLeadSource($dateFilter, $dateFrom, $dateTo);
+        $range = new DateRange(
+            $dateFilter,
+            $dateFrom ? Date::fromString($dateFrom) : null,
+            $dateTo ? Date::fromString($dateTo) : null
+        );
+
+        return $this->injectableFactory
+            ->create(ByLeadSource::class)
+            ->run($range);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function getActionReportByStage(Request $request): stdClass
     {
-        $level = $this->getAcl()->getLevel('Opportunity', 'read');
-
-        if (!$level || $level == 'no') {
+        if (!$this->acl->checkScope(OpportunityEntity::ENTITY_TYPE)) {
             throw new Forbidden();
         }
 
@@ -75,14 +93,24 @@ class Opportunity extends \Espo\Core\Controllers\Record
             throw new BadRequest("No `dateFilter` parameter.");
         }
 
-        return $this->getOpportunityService()->reportByStage($dateFilter, $dateFrom, $dateTo);
+        $range = new DateRange(
+            $dateFilter,
+            $dateFrom ? Date::fromString($dateFrom) : null,
+            $dateTo ? Date::fromString($dateTo) : null
+        );
+
+        return $this->injectableFactory
+            ->create(ByStage::class)
+            ->run($range);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function getActionReportSalesByMonth(Request $request): stdClass
     {
-        $level = $this->getAcl()->getLevel('Opportunity', 'read');
-
-        if (!$level || $level == 'no') {
+        if (!$this->acl->checkScope(OpportunityEntity::ENTITY_TYPE)) {
             throw new Forbidden();
         }
 
@@ -94,14 +122,24 @@ class Opportunity extends \Espo\Core\Controllers\Record
             throw new BadRequest("No `dateFilter` parameter.");
         }
 
-        return $this->getOpportunityService()->reportSalesByMonth($dateFilter, $dateFrom, $dateTo);
+        $range = new DateRange(
+            $dateFilter,
+            $dateFrom ? Date::fromString($dateFrom) : null,
+            $dateTo ? Date::fromString($dateTo) : null
+        );
+
+        return $this->injectableFactory
+            ->create(SalesByMonth::class)
+            ->run($range);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function getActionReportSalesPipeline(Request $request): stdClass
     {
-        $level = $this->getAcl()->getLevel('Opportunity', 'read');
-
-        if (!$level || $level == 'no') {
+        if (!$this->acl->checkScope(OpportunityEntity::ENTITY_TYPE)) {
             throw new Forbidden();
         }
 
@@ -115,8 +153,15 @@ class Opportunity extends \Espo\Core\Controllers\Record
             throw new BadRequest("No `dateFilter` parameter.");
         }
 
-        return $this->getOpportunityService()
-            ->reportSalesPipeline($dateFilter, $dateFrom, $dateTo, $useLastStage, $teamId);
+        $range = new DateRange(
+            $dateFilter,
+            $dateFrom ? Date::fromString($dateFrom) : null,
+            $dateTo ? Date::fromString($dateTo) : null
+        );
+
+        return $this->injectableFactory
+            ->create(SalesPipeline::class)
+            ->run($range, $useLastStage, $teamId);
     }
 
     /**
@@ -130,7 +175,7 @@ class Opportunity extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
-        if (!$this->getAcl()->checkScope($this->name, 'read')) {
+        if (!$this->acl->checkScope(OpportunityEntity::ENTITY_TYPE, Table::ACTION_READ)) {
             throw new Forbidden();
         }
 
