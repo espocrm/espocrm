@@ -29,19 +29,20 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use Espo\Core\Controllers\Record;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Select\Where\Item as WhereItem;
 use Espo\Core\Utils\Json;
-use Espo\Modules\Crm\Services\KnowledgeBaseArticle as Service;
 use Espo\Modules\Crm\Tools\KnowledgeBase\Service as KBService;
 
 use Espo\Tools\Attachment\FieldData;
 use stdClass;
 
-class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
+class KnowledgeBaseArticle extends Record
 {
     /**
      * @throws BadRequest
@@ -72,9 +73,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
             throw new BadRequest($e->getMessage());
         }
 
-        $list = $this->injectableFactory
-            ->create(KBService::class)
-            ->copyAttachments($id, $fieldData);
+        $list = $this->getArticleService()->copyAttachments($id, $fieldData);
 
         $ids = array_map(
             fn ($item) => $item->getId(),
@@ -93,6 +92,12 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         ];
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function postActionMoveToTop(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -104,7 +109,9 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         $where = null;
 
         if (!empty($data->where)) {
-            $where = json_decode(Json::encode($data->where), true);
+            $where = WhereItem::fromRawAndGroup(
+                Json::decode(Json::encode($data->where), true)
+            );
         }
 
         $this->getArticleService()->moveToTop($data->id, $where);
@@ -112,6 +119,12 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function postActionMoveUp(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -123,7 +136,9 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         $where = null;
 
         if (!empty($data->where)) {
-            $where = json_decode(Json::encode($data->wher), true);
+            $where = WhereItem::fromRawAndGroup(
+                Json::decode(Json::encode($data->where), true)
+            );
         }
 
         $this->getArticleService()->moveUp($data->id, $where);
@@ -131,6 +146,12 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function postActionMoveDown(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -142,7 +163,9 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         $where = null;
 
         if (!empty($data->where)) {
-            $where = json_decode(Json::encode($data->where), true);
+            $where = WhereItem::fromRawAndGroup(
+                Json::decode(Json::encode($data->where), true)
+            );
         }
 
         $this->getArticleService()->moveDown($data->id, $where);
@@ -150,6 +173,12 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function postActionMoveToBottom(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -161,7 +190,9 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         $where = null;
 
         if (!empty($data->where)) {
-            $where = json_decode(Json::encode($data->where), true);
+            $where = WhereItem::fromRawAndGroup(
+                Json::decode(Json::encode($data->where), true)
+            );
         }
 
         $this->getArticleService()->moveToBottom($data->id, $where);
@@ -169,9 +200,8 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         return true;
     }
 
-    private function getArticleService(): Service
+    private function getArticleService(): KBService
     {
-        /** @var Service */
-        return $this->getRecordService();
+        return $this->injectableFactory->create(KBService::class);
     }
 }

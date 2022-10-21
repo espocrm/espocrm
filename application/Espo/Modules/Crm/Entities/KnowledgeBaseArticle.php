@@ -31,10 +31,16 @@ namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
+use Espo\Core\ORM\Entity;
 
-class KnowledgeBaseArticle extends \Espo\Core\ORM\Entity
+class KnowledgeBaseArticle extends Entity
 {
     public const ENTITY_TYPE = 'KnowledgeBaseArticle';
+
+    public function getOrder(): ?int
+    {
+        return $this->get('order');
+    }
 
     public function getAssignedUser(): ?Link
     {
