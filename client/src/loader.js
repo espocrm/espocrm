@@ -759,7 +759,7 @@
         /**
          * Require a module or multiple modules.
          *
-         * @param {string|string[]} subject A module or modules to require.
+         * @param {...string} subject A module or modules to require.
          * @returns {Promise<unknown>}
          */
         requirePromise: function (subject) {
