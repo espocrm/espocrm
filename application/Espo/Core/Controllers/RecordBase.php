@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Controllers;
 
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
@@ -43,7 +43,6 @@ use Espo\Core\Record\UpdateParamsFetcher;
 use Espo\Core\Record\DeleteParamsFetcher;
 use Espo\Core\Record\FindParamsFetcher;
 use Espo\Core\Record\Service as RecordService;
-
 use Espo\Core\Container;
 use Espo\Core\Acl;
 use Espo\Core\AclManager;
@@ -53,56 +52,38 @@ use Espo\Core\ServiceFactory;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\Select\SearchParams;
-
 use Espo\Core\Di;
-
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
-
+use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 use stdClass;
 
-class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFactoryAware
+class RecordBase extends Base implements
+
+    Di\EntityManagerAware,
+    Di\InjectableFactoryAware
 {
     use Di\EntityManagerSetter;
     use Di\InjectableFactorySetter;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public static $defaultAction = 'list';
 
     protected SearchParamsFetcher $searchParamsFetcher;
-
     protected CreateParamsFetcher $createParamsFetcher;
-
     protected ReadParamsFetcher $readParamsFetcher;
-
     protected UpdateParamsFetcher $updateParamsFetcher;
-
     protected DeleteParamsFetcher $deleteParamsFetcher;
-
     protected FindParamsFetcher $findParamsFetcher;
-
-    /**
-     * @var RecordServiceContainer
-     */
+    /** @var RecordServiceContainer */
     protected $recordServiceContainer;
-
-    /**
-     * @var Config
-     */
+    /** @var Config */
     protected $config;
-
-    /**
-     * @var User
-     */
+    /** @var User */
     protected $user;
-
-    /**
-     * @var Acl
-     */
+    /** @var Acl */
     protected $acl;
 
     /**
@@ -157,7 +138,7 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
     }
 
     /**
-     * @return RecordService<\Espo\ORM\Entity>
+     * @return RecordService<Entity>
      */
     protected function getRecordService(?string $entityType = null): RecordService
     {
@@ -194,7 +175,7 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
      * Create a record.
      *
      * @throws Forbidden
-     * @throws \Espo\Core\Exceptions\Conflict
+     * @throws Conflict
      * @throws BadRequest
      */
     public function postActionCreate(Request $request, Response $response): stdClass
@@ -216,7 +197,7 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
      * @throws BadRequest
      * @throws NotFound
      * @throws Forbidden
-     * @throws \Espo\Core\Exceptions\Conflict
+     * @throws Conflict
      */
     public function patchActionUpdate(Request $request, Response $response): stdClass
     {
@@ -229,7 +210,7 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
      * @throws BadRequest
      * @throws NotFound
      * @throws Forbidden
-     * @throws \Espo\Core\Exceptions\Conflict
+     * @throws Conflict
      */
     public function putActionUpdate(Request $request, Response $response): stdClass
     {
@@ -301,6 +282,10 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     protected function fetchSearchParamsFromRequest(Request $request): SearchParams
     {
         return $this->searchParamsFetcher->fetch($request);
