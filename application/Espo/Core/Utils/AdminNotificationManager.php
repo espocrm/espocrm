@@ -29,13 +29,7 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    Utils\Config,
-    Utils\Language,
-    Utils\ScheduledJob,
-    Utils\Util,
-};
+use Espo\ORM\EntityManager;
 
 /**
  * Notifications on the admin panel.
@@ -43,11 +37,8 @@ use Espo\Core\{
 class AdminNotificationManager
 {
     private EntityManager $entityManager;
-
     private Config $config;
-
     private Language $language;
-
     private ScheduledJob $scheduledJob;
 
     public function __construct(
