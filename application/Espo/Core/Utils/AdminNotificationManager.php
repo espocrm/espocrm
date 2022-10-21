@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Entities\Extension;
 use Espo\ORM\EntityManager;
 
 /**
@@ -107,6 +108,13 @@ class AdminNotificationManager
                     'message' => $this->prepareMessage($message, $extensionDetails)
                 ];
             }
+        }
+
+        if (!$this->config->get('adminNotificationsExtensionLicenseDisabled')) {
+            $notificationList = array_merge(
+                $notificationList,
+                $this->getExtensionLicenseNotificationList()
+            );
         }
 
         return $notificationList;
@@ -202,5 +210,57 @@ class AdminNotificationManager
         }
 
         return $message;
+    }
+
+    /**
+     * @return array<int, array{id: string, type: string, message: string}>
+     */
+    private function getExtensionLicenseNotificationList(): array
+    {
+        $extensionList = $this->entityManager
+            ->getRDBRepositoryByClass(Extension::class)
+            ->where([
+                'licenseStatus' => [
+                    Extension::LICENSE_STATUS_INVALID,
+                    Extension::LICENSE_STATUS_EXPIRED,
+                    Extension::LICENSE_STATUS_SOFT_EXPIRED,
+                ],
+            ])
+            ->find();
+
+        $list = [];
+
+        foreach ($extensionList as $extension) {
+            $message =
+                $extension->getLicenseStatusMessage() ??
+                $this->getExtensionLicenseMessageLabel($extension);
+
+            if (!$message) {
+                continue;
+            }
+
+            $message = $this->language->translateLabel($message, 'messages');
+
+            $name = $extension->getName();
+
+            $list[] = [
+                'id' => 'newExtensionVersionIsAvailable' . Util::toCamelCase($name, ' ', true),
+                'type' => 'newExtensionVersionIsAvailable',
+                'message' => $this->prepareMessage($message, ['name' => $name]),
+            ];
+        }
+
+        return $list;
+    }
+
+    private function getExtensionLicenseMessageLabel(Extension $extension): ?string
+    {
+        $status = $extension->getLicenseStatus();
+
+        if (!$status) {
+            return null;
+        }
+
+        return 'extensionLicense' . ucfirst(Util::hyphenToCamelCase($status));
     }
 }

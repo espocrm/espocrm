@@ -361,7 +361,8 @@
         "massActionProcessed": "Mass action has been processed.",
         "validationFailure": "Backend validation failure.\n\nField: `{field}`\nValidation: `{type}`",
         "extensionLicenseInvalid": "Invalid '{name}' extension license.",
-        "extensionLicenseExpired": "Expired '{name}' extension license.",
+        "extensionLicenseExpired": "The '{name}' extension license subscription has expired.",
+        "extensionLicenseSoftExpired": "The '{name}' extension license subscription has expired.",
         "confirmAppRefresh": "The application has been updated. It is recommended to refresh the page to ensure the proper functioning.",
         "error404": "The url you requested can't be handled.",
         "error403": "You don't have an access to this area."
