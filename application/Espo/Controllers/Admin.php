@@ -29,36 +29,28 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 
 use Espo\Core\Container;
 use Espo\Core\DataManager;
 use Espo\Core\Api\Request;
-
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\AdminNotificationManager;
 use Espo\Core\Utils\SystemRequirements;
 use Espo\Core\Utils\ScheduledJob;
-
 use Espo\Core\Upgrades\UpgradeManager;
-
 use Espo\Entities\User;
 
 class Admin
 {
-    private $container;
-
-    private $config;
-
-    private $user;
-
-    private $adminNotificationManager;
-
-    private $systemRequirements;
-
-    private $scheduledJob;
-
-    private $dataManager;
+    private Container $container;
+    private Config $config;
+    private User $user;
+    private AdminNotificationManager $adminNotificationManager;
+    private SystemRequirements $systemRequirements;
+    private ScheduledJob $scheduledJob;
+    private DataManager $dataManager;
 
     public function __construct(
         Container $container,
@@ -113,9 +105,8 @@ class Admin
      *   version: string,
      * }
      * @throws Forbidden
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      * @todo Use Request.
-     *
      */
     public function postActionUploadUpgradePackage($params, $data): array
     {
@@ -138,7 +129,7 @@ class Admin
 
     /**
      * @throws Forbidden
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      */
     public function postActionRunUpgrade(Request $request): bool
     {
