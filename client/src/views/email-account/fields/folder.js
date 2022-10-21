@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-account/fields/folder', 'views/fields/base', function (Dep) {
+define('views/email-account/fields/folder', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -55,24 +55,26 @@ define('views/email-account/fields/folder', 'views/fields/base', function (Dep) 
                     data.id = this.model.id;
                 }
 
-                Espo.Ajax.postRequest(this.getFoldersUrl, data).then(function (folders) {
+                Espo.Ajax.postRequest(this.getFoldersUrl, data).then(folders => {
                     this.createView('modal', 'views/email-account/modals/select-folder', {
                         folders: folders
-                    }, function (view) {
+                    }, (view) => {
                         this.notify(false);
 
                         view.render();
 
-                        this.listenToOnce(view, 'select', function (folder) {
+                        this.listenToOnce(view, 'select', (folder) => {
                             view.close();
+
                             this.addFolder(folder);
-                        }, this);
+                        });
                     });
-                }.bind(this)).fail(function () {
+                })
+                .catch(() => {
                     Espo.Ui.error(this.translate('couldNotConnectToImap', 'messages', 'EmailAccount'));
 
                     xhr.errorIsHandled = true;
-                }.bind(this));
+                });
             }
         },
 

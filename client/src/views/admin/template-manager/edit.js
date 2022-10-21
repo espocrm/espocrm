@@ -151,7 +151,9 @@ define('views/admin/template-manager/edit', ['view', 'model'], function (Dep, Mo
             }
 
             Espo.Ui.notify(this.translate('saving', 'messages'));
-            this.ajaxPostRequest('TemplateManager/action/saveTemplate', data).then(function () {
+
+            this.ajaxPostRequest('TemplateManager/action/saveTemplate', data)
+            .then(() => {
                 this.setConfirmLeaveOut(false);
 
                 this.attributes.body = data.body;
@@ -162,21 +164,23 @@ define('views/admin/template-manager/edit', ['view', 'model'], function (Dep, Mo
                 this.$resetToDefault.removeClass('disabled').removeAttr('disabled');
 
                 Espo.Ui.success(this.translate('Saved'));
-            }.bind(this)).fail(function () {
+            })
+            .catch(() => {
                 this.$save.removeClass('disabled').removeAttr('disabled');
                 this.$cancel.removeClass('disabled').removeAttr('disabled');
                 this.$resetToDefault.removeClass('disabled').removeAttr('disabled');
-            }.bind(this));
+            });
         },
 
         actionCancel: function () {
             this.model.set('subject', this.attributes.subject);
             this.model.set('body', this.attributes.body);
+
             this.setConfirmLeaveOut(false);
         },
 
         actionResetToDefault: function () {
-            this.confirm(this.translate('confirmation', 'messages'), function () {
+            this.confirm(this.translate('confirmation', 'messages'), () => {
                 this.$save.addClass('disabled').attr('disabled');
                 this.$cancel.addClass('disabled').attr('disabled');
                 this.$resetToDefault.addClass('disabled').attr('disabled');
@@ -192,26 +196,27 @@ define('views/admin/template-manager/edit', ['view', 'model'], function (Dep, Mo
 
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-                this.ajaxPostRequest('TemplateManager/action/resetTemplate', data).then(function (returnData) {
-                    this.$save.removeClass('disabled').removeAttr('disabled');
-                    this.$cancel.removeClass('disabled').removeAttr('disabled');
-                    this.$resetToDefault.removeClass('disabled').removeAttr('disabled');
+                this.ajaxPostRequest('TemplateManager/action/resetTemplate', data)
+                    .then(returnData => {
+                        this.$save.removeClass('disabled').removeAttr('disabled');
+                        this.$cancel.removeClass('disabled').removeAttr('disabled');
+                        this.$resetToDefault.removeClass('disabled').removeAttr('disabled');
 
-                    this.attributes.body = returnData.body;
-                    this.attributes.subject = returnData.subject;
+                        this.attributes.body = returnData.body;
+                        this.attributes.subject = returnData.subject;
 
-                    this.model.set('subject', returnData.subject);
-                    this.model.set('body', returnData.body);
-                    this.setConfirmLeaveOut(false);
+                        this.model.set('subject', returnData.subject);
+                        this.model.set('body', returnData.body);
+                        this.setConfirmLeaveOut(false);
 
-                    Espo.Ui.notify(false);
-                }.bind(this)).fail(function () {
-                    this.$save.removeClass('disabled').removeAttr('disabled');
-                    this.$cancel.removeClass('disabled').removeAttr('disabled');
-                    this.$resetToDefault.removeClass('disabled').removeAttr('disabled');
-                }.bind(this));
-            }.bind(this));
-        }
-
+                        Espo.Ui.notify(false);
+                    })
+                    .catch(() => {
+                        this.$save.removeClass('disabled').removeAttr('disabled');
+                        this.$cancel.removeClass('disabled').removeAttr('disabled');
+                        this.$resetToDefault.removeClass('disabled').removeAttr('disabled');
+                    });
+            });
+        },
     });
 });

@@ -312,8 +312,7 @@ InstallScript.prototype.step5 = function() {
 		})
 		.fail(function(ajaxData){
 
-		})
-
+		});
 	})
 
 	$('.field-smtpAuth').find('input[type="checkbox"]').change( function(e){

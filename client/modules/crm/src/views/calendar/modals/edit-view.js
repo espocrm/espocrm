@@ -47,11 +47,7 @@ define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], function
         setup: function () {
             var id = this.options.id;
 
-            if (id) {
-                this.isNew = false;
-            } else {
-                this.isNew = true;
-            }
+            this.isNew = !id;
 
             var calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
 
@@ -159,16 +155,16 @@ define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], function
             this.getPreferences()
                 .save(
                     {
-                        'calendarViewDataList': calendarViewDataList
+                        'calendarViewDataList': calendarViewDataList,
                     },
                     {patch: true}
                 )
-                .then(() =>{
+                .then(() => {
                     Espo.Ui.notify(false);
                         this.trigger('after:save', data);
                         this.remove();
                 })
-                .fail(() => {
+                .catch(() => {
                     this.enableButton('remove');
                     this.enableButton('save');
                 });
@@ -206,7 +202,7 @@ define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], function
                         this.trigger('after:remove');
                         this.remove();
                     })
-                    .fail(() => {
+                    .catch(() => {
                         this.enableButton('remove');
                         this.enableButton('save');
                     });

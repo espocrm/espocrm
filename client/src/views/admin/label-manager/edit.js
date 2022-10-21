@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/label-manager/edit', 'view', function (Dep) {
+define('views/admin/label-manager/edit', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -155,7 +155,7 @@ define('views/admin/label-manager/edit', 'view', function (Dep) {
 
                 this.getLanguage().loadSkipCache();
             })
-            .fail(() => {
+            .catch(() => {
                 this.$save.removeClass('disabled').removeAttr('disabled');
                 this.$cancel.removeClass('disabled').removeAttr('disabled');
             });
@@ -210,7 +210,6 @@ define('views/admin/label-manager/edit', 'view', function (Dep) {
         getCategoryData: function (category) {
             return this.scopeData[category] || {};
         },
-
     });
 });
 

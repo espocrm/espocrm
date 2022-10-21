@@ -43,7 +43,7 @@ define('views/personal-data/modals/personal-data', ['views/modal'], function (De
                 {
                     name: 'cancel',
                     label: 'Close'
-                }
+                },
             ];
 
             this.headerText = this.getLanguage().translate('Personal Data');
@@ -54,7 +54,7 @@ define('views/personal-data/modals/personal-data', ['views/modal'], function (De
                     name: 'erase',
                     label: 'Erase',
                     style: 'danger',
-                    disabled: true
+                    disabled: true,
                 });
             }
 
@@ -65,9 +65,10 @@ define('views/personal-data/modals/personal-data', ['views/modal'], function (De
             this.createView('record', 'views/personal-data/record/record', {
                 el: this.getSelector() + ' .record',
                 model: this.model
-            }, function (view) {
-                this.listenTo(view, 'check', function (fieldList) {
+            }, (view) => {
+                this.listenTo(view, 'check', (fieldList) => {
                     this.fieldList = fieldList;
+
                     if (fieldList.length) {
                         this.enableButton('erase');
                     } else {
@@ -85,21 +86,22 @@ define('views/personal-data/modals/personal-data', ['views/modal'], function (De
             this.confirm({
                 message: this.translate('erasePersonalDataConfirmation', 'messages'),
                 confirmText: this.translate('Erase')
-            }, function () {
+            }, () => {
                 this.disableButton('erase');
+
                 this.ajaxPostRequest('DataPrivacy/action/erase', {
                     fieldList: this.fieldList,
                     entityType: this.scope,
-                    id: this.model.id
-                }).then(function () {
+                    id: this.model.id,
+                }).then(() => {
                     Espo.Ui.success(this.translate('Done'));
 
                     this.trigger('erase');
-                }.bind(this)).fail(function () {
+                })
+                .catch(() => {
                     this.enableButton('erase');
-                }.bind(this));
-            }.bind(this));
-        }
-
+                });
+            });
+        },
     });
 });
