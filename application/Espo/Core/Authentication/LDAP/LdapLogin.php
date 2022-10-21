@@ -232,10 +232,10 @@ class LdapLogin implements Login
         }
 
         $user = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
                 'userName' => $username,
-                'type!=' => ['api', 'system'],
+                'type!=' => [User::TYPE_API, User::TYPE_SYSTEM],
             ])
             ->findOne();
 
@@ -290,13 +290,14 @@ class LdapLogin implements Login
 
         $userId = $authToken->getUserId();
 
-        $user = $this->entityManager->getEntity('User', $userId);
+        /** @var ?User $user */
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             return null;
         }
 
-        $tokenUsername = $user->get('userName');
+        $tokenUsername = $user->getUserName();
 
         if (strtolower($username) != strtolower($tokenUsername)) {
             $ip = $_SERVER['REMOTE_ADDR'] ?? '';
@@ -310,7 +311,7 @@ class LdapLogin implements Login
 
         /** @var ?User */
         return $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
                 'userName' => $username,
             ])
@@ -322,11 +323,11 @@ class LdapLogin implements Login
         $hash = $this->passwordHash->hash($password);
 
         return $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
                 'userName' => $username,
                 'password' => $hash,
-                'type' => ['admin', 'super-admin'],
+                'type' => [User::TYPE_ADMIN, User::TYPE_SUPER_ADMIN],
             ])
             ->findOne();
     }
@@ -393,7 +394,7 @@ class LdapLogin implements Login
         $user->setAsNotNew();
         $user->updateFetchedValues();
 
-        return $this->entityManager->getEntity('User', $user->getId());
+        return $this->entityManager->getEntityById(User::ENTITY_TYPE, $user->getId());
     }
 
     /**
