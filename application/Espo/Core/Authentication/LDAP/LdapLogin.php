@@ -32,38 +32,29 @@ namespace Espo\Core\Authentication\Ldap;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
 use Espo\Core\FieldProcessing\EmailAddress\Saver as EmailAddressSaver;
 use Espo\Core\FieldProcessing\PhoneNumber\Saver as PhoneNumberSaver;
-
 use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
-
+use Espo\Core\Api\Request;
+use Espo\Core\Authentication\AuthToken\AuthToken;
+use Espo\Core\Authentication\Ldap\Client as Client;
+use Espo\Core\Authentication\Ldap\ClientFactory as ClientFactory;
+use Espo\Core\Authentication\Ldap\Utils as LDAPUtils;
+use Espo\Core\Authentication\Login;
+use Espo\Core\Authentication\Login\Data;
+use Espo\Core\Authentication\Logins\Espo;
+use Espo\Core\Authentication\Result;
+use Espo\Core\Authentication\Result\FailReason;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\PasswordHash;
 use Espo\Entities\User;
-
-use Espo\Core\{
-    Authentication\Logins\Espo,
-    ORM\EntityManager,
-    Api\Request,
-    Utils\Config,
-    Utils\PasswordHash,
-    Utils\Language,
-    Utils\Log,
-    Authentication\Login,
-    Authentication\Login\Data,
-    Authentication\Result,
-    Authentication\Ldap\Utils as LDAPUtils,
-    Authentication\Ldap\Client as Client,
-    Authentication\Ldap\ClientFactory as ClientFactory,
-    Authentication\AuthToken\AuthToken,
-    Authentication\Result\FailReason,
-};
-
 use Exception;
 
 class LdapLogin implements Login
 {
-    private $utils;
-
-    /** @var ?Client */
-    private $client = null;
-
+    private LDAPUtils $utils;
+    private ?Client $client = null;
     private bool $isPortal;
 
     private Config $config;
@@ -235,7 +226,11 @@ class LdapLogin implements Login
             ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
                 'userName' => $username,
-                'type!=' => [User::TYPE_API, User::TYPE_SYSTEM],
+                'type!=' => [
+                    User::TYPE_API,
+                    User::TYPE_SYSTEM,
+                    User::TYPE_SUPER_ADMIN,
+                ],
             ])
             ->findOne();
 
@@ -297,9 +292,9 @@ class LdapLogin implements Login
             return null;
         }
 
-        $tokenUsername = $user->getUserName();
+        $tokenUsername = $user->getUserName() ?? '';
 
-        if (strtolower($username) != strtolower($tokenUsername)) {
+        if (strtolower($username) !== strtolower($tokenUsername)) {
             $ip = $_SERVER['REMOTE_ADDR'] ?? '';
 
             $this->log->alert(
