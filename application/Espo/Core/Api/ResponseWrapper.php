@@ -41,10 +41,7 @@ use Espo\Core\Api\Response as ApiResponse;
  */
 class ResponseWrapper implements ApiResponse
 {
-    /**
-     * @var Psr7Response
-     */
-    private $response;
+    private Psr7Response $response;
 
     public function __construct(Psr7Response $response)
     {

@@ -45,19 +45,13 @@ use LogicException;
  */
 class RequestProcessor
 {
-    private $authenticationFactory;
-
-    private $actionProcessor;
-
-    private $authBuilderFactory;
-
-    private $errorOutput;
-
-    private $config;
-
-    private $log;
-
-    private $applicationUser;
+    private AuthenticationFactory $authenticationFactory;
+    private ActionProcessor $actionProcessor;
+    private AuthBuilderFactory $authBuilderFactory;
+    private ErrorOutput $errorOutput;
+    private Config $config;
+    private Log $log;
+    private ApplicationUser $applicationUser;
 
     public function __construct(
         AuthenticationFactory $authenticationFactory,

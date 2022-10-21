@@ -49,7 +49,6 @@ use stdClass;
 class ActionProcessor
 {
     private InjectableFactory $injectableFactory;
-
     private ClassFinder $classFinder;
 
     public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder)

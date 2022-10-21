@@ -29,10 +29,6 @@
 
 namespace Espo\Core\Api;
 
-use Espo\Core\Api\RequestWrapper;
-use Espo\Core\Api\ResponseWrapper;
-use Espo\Core\Api\RequestProcessor;
-use Espo\Core\Api\Route;
 use Espo\Core\Api\Route\RouteParamsFetcher;
 use Espo\Core\Utils\Route as RouteUtil;
 use Espo\Core\Utils\Log;
@@ -48,13 +44,10 @@ use Psr\Http\Message\ServerRequestInterface as Psr7Request;
  */
 class Starter
 {
-    private $requestProcessor;
-
-    private $routeUtil;
-
-    private $routeParamsFetcher;
-
-    private $log;
+    private RequestProcessor $requestProcessor;
+    private RouteUtil $routeUtil;
+    private RouteParamsFetcher $routeParamsFetcher;
+    private Log $log;
 
     public function __construct(
         RequestProcessor $requestProcessor,

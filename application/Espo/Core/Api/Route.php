@@ -32,14 +32,9 @@ namespace Espo\Core\Api;
 class Route
 {
     private string $method;
-
     private string $route;
-
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string,string> */
     private array $params;
-
     private bool $noAuth;
 
     /**

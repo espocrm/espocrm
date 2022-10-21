@@ -47,14 +47,9 @@ use stdClass;
 class RequestWrapper implements ApiRequest
 {
     private Psr7Request $request;
-
     private string $basePath;
-
     private ?stdClass $parsedBody = null;
-
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string,string> */
     private array $routeParams;
 
     /**
