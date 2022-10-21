@@ -360,6 +360,8 @@
         "massPrintPdfMaxCountError": "Can't print more that {maxCount} records.",
         "massActionProcessed": "Mass action has been processed.",
         "validationFailure": "Backend validation failure.\n\nField: `{field}`\nValidation: `{type}`",
+        "extensionLicenseInvalid": "Invalid '{name}' extension license.",
+        "extensionLicenseExpired": "Expired '{name}' extension license.",
         "confirmAppRefresh": "The application has been updated. It is recommended to refresh the page to ensure the proper functioning.",
         "error404": "The url you requested can't be handled.",
         "error403": "You don't have an access to this area."

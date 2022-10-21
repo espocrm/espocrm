@@ -12,6 +12,21 @@
         "fileList": {
             "type": "jsonArray"
         },
+        "licenseStatus": {
+            "type": "enum",
+            "options": [
+                "",
+                "Valid",
+                "Invalid",
+                "Expired",
+                "Soft-Expired"
+            ],
+            "index": true,
+            "maxLength": 36
+        },
+        "licenseStatusMessage": {
+            "type": "varchar"
+        },
         "description": {
             "type": "text"
         },

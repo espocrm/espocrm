@@ -103,6 +103,8 @@ define('views/site/master', ['view'], function (Dep) {
 
             this.adjustContent();
 
+            let extensions = this.getHelper().getAppParam('extensions') || [];
+
             if (this.getConfig().get('maintenanceMode')) {
                 this.createView('dialog', 'views/modal', {
                     templateContent: '<div class="text-danger">{{complexText viewObject.options.message}}</div>',
@@ -123,6 +125,9 @@ define('views/site/master', ['view'], function (Dep) {
                 this.createView('dialog', 'views/modals/auth2fa-required', {}, (view) => {
                     view.render();
                 });
+            }
+            else if (extensions.length !== 0) {
+                this.processExtensions(extensions);
             }
         },
 
@@ -162,6 +167,59 @@ define('views/site/master', ['view'], function (Dep) {
             }
 
             this.isSmallScreen = false;
+        },
+
+        /**
+         * @param {{
+         *     name: string,
+         *     licenseStatus: string,
+         *     licenseStatusMessage:? string,
+         *     notify: boolean,
+         * }[]} list
+         */
+        processExtensions: function (list) {
+            let messageList = [];
+
+            list.forEach(item => {
+                if (!item.notify) {
+                    return;
+                }
+
+                let message = item.licenseStatusMessage ??
+                    'extensionLicense' +
+                    Espo.Utils.upperCaseFirst(
+                        Espo.Utils.hyphenToCamelCase(item.licenseStatus.toLowerCase())
+                    );
+
+                messageList.push(
+                    this.translate(message, 'messages')
+                        .replace('{name}', item.name)
+                );
+            });
+
+            if (!messageList.length) {
+                return;
+            }
+
+            let message = messageList.join('\n\n');
+
+            message = this.getHelper().transformMarkdownText(message);
+
+            let dialog = new Espo.Ui.Dialog({
+                backdrop: 'static',
+                buttonList: [
+                    {
+                        name: 'close',
+                        text: this.translate('Close'),
+                        className: 'btn-s-wide',
+                        onClick: () => dialog.close(),
+                    }
+                ],
+                className: 'dialog-confirm text-danger',
+                body: message.toString(),
+            });
+
+            dialog.show();
         },
     });
 });
