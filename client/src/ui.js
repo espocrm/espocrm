@@ -38,7 +38,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
      * @typedef {Object} module:ui.Dialog~Params
      *
      * @property {string} [className='dialog'] A class-name or multiple space separated.
-     * @property {'static'|true|false} [static='static'] A backdrop.
+     * @property {'static'|true|false} [backdrop='static'] A backdrop.
      * @property {boolean} [closeButton=true] A close button.
      * @property {boolean} [collapseButton=false] A collapse button.
      * @property {string|null} [header] A header HTML.
