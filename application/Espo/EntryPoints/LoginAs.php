@@ -77,6 +77,6 @@ class LoginAs implements EntryPoint
             ";
 
         $this->clientManager->writeHeaders($response);
-        $response->writeBody($this->clientManager->render($script));        ;
+        $response->writeBody($this->clientManager->render($script));
     }
 }
