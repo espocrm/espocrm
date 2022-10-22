@@ -26,5 +26,9 @@
     },
     "version": {
         "listed": true
+    },
+    "rebuildCategoryPaths": {
+        "className": "Espo\\Classes\\ConsoleCommands\\RebuildCategoryPaths",
+        "listed": true
     }
 }
