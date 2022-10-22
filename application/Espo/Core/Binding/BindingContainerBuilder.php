@@ -34,7 +34,6 @@ use Closure;
 class BindingContainerBuilder
 {
     private BindingData $data;
-
     private Binder $binder;
 
     public function __construct()

@@ -34,7 +34,8 @@ use Espo\Binding;
 
 class EspoBindingLoader implements BindingLoader
 {
-    private $moduleNameList;
+    /** @var string[] */
+    private array $moduleNameList;
 
     public function __construct(Module $module)
     {

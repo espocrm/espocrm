@@ -33,9 +33,8 @@ use LogicException;
 
 class ContextualBinder
 {
-    private $data;
-
-    private $className;
+    private BindingData $data;
+    private string $className;
 
     public function __construct(BindingData $data, string $className)
     {

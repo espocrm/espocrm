@@ -35,7 +35,6 @@ use stdClass;
 class BindingData
 {
     private stdClass $global;
-
     private stdClass $context;
 
     public function __construct()
