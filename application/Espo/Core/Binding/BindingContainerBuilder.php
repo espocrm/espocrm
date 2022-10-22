@@ -46,7 +46,7 @@ class BindingContainerBuilder
      * Bind an interface to an implementation.
      *
      * @param string $key An interface or interface with a parameter name (`Interface $name`).
-     * @param string $implementationClassName An implementation class name.
+     * @param class-string<object> $implementationClassName An implementation class name.
      */
     public function bindImplementation(string $key, string $implementationClassName): self
     {
@@ -98,7 +98,7 @@ class BindingContainerBuilder
      * Bind an interface to a factory.
      *
      * @param string $key An interface or interface with a parameter name (`Interface $name`).
-     * @param string $factoryClassName A factory class name.
+     * @param class-string<Factory> $factoryClassName A factory class name.
      */
     public function bindFactory(string $key, string $factoryClassName): self
     {
@@ -110,7 +110,7 @@ class BindingContainerBuilder
     /**
      * Creates a contextual binder and pass it as an argument of a callback.
      *
-     * @param string $className A context.
+     * @param class-string<object> $className A context.
      * @param Closure(ContextualBinder): void $callback A callback with a `ContextualBinder` argument.
      */
     public function inContext(string $className, Closure $callback): self

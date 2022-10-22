@@ -45,7 +45,6 @@ class EspoBindingLoader implements BindingLoader
     public function load(): BindingData
     {
         $data = new BindingData();
-
         $binder = new Binder($data);
 
         (new Binding())->process($binder);

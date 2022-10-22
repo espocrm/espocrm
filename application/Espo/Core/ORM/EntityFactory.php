@@ -29,34 +29,26 @@
 
 namespace Espo\Core\ORM;
 
-use Espo\Core\{
-    Utils\ClassFinder,
-    InjectableFactory,
-    ORM\Entity as BaseEntity,
-    Binding\BindingContainer,
-    Binding\BindingData,
-    Binding\Binder,
-};
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
+use Espo\Core\ORM\Entity as BaseEntity;
+use Espo\Core\Utils\ClassFinder;
 
-use Espo\ORM\{
-    Entity,
-    EntityManager,
-    EntityFactory as EntityFactoryInterface,
-    Value\ValueAccessorFactory,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\EntityFactory as EntityFactoryInterface;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Value\ValueAccessorFactory;
 
 use RuntimeException;
 
 class EntityFactory implements EntityFactoryInterface
 {
     private ClassFinder $classFinder;
-
     private Helper $helper;
-
     private InjectableFactory $injectableFactory;
-
     private ?EntityManager $entityManager = null;
-
     private ?ValueAccessorFactory $valueAccessorFactory = null;
 
     public function __construct(ClassFinder $classFinder, Helper $helper, InjectableFactory $injectableFactory)
@@ -67,11 +59,11 @@ class EntityFactory implements EntityFactoryInterface
     }
 
     /**
-     * @return ?class-string<\Espo\ORM\Entity>
+     * @return ?class-string<Entity>
      */
     private function getClassName(string $entityType): ?string
     {
-        /** @var ?class-string<\Espo\ORM\Entity> */
+        /** @var ?class-string<Entity> */
         return $this->classFinder->find('Entities', $entityType);
     }
 
@@ -117,7 +109,8 @@ class EntityFactory implements EntityFactoryInterface
     }
 
     /**
-     * @param array<string,mixed> $defs
+     * @param class-string<Entity> $className
+     * @param array<string, mixed> $defs
      */
     private function getBindingContainer(string $className, string $entityType, array $defs): BindingContainer
     {

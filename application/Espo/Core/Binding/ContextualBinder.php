@@ -34,8 +34,12 @@ use LogicException;
 class ContextualBinder
 {
     private BindingData $data;
+    /** @var class-string<object> */
     private string $className;
 
+    /**
+     * @param class-string<object> $className
+     */
     public function __construct(BindingData $data, string $className)
     {
         $this->data = $data;
@@ -46,7 +50,7 @@ class ContextualBinder
      * Bind an interface to an implementation.
      *
      * @param string $key An interface or interface with a parameter name (`Interface $name`).
-     * @param string $implementationClassName An implementation class name.
+     * @param class-string<object> $implementationClassName An implementation class name.
      */
     public function bindImplementation(string $key, string $implementationClassName): self
     {
@@ -142,7 +146,7 @@ class ContextualBinder
      * Bind an interface to a factory.
      *
      * @param string $key An interface or interface with a parameter name (`Interface $name`).
-     * @param string $factoryClassName A factory class name.
+     * @param class-string<Factory> $factoryClassName A factory class name.
      */
     public function bindFactory(string $key, string $factoryClassName): self
     {

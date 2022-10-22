@@ -29,16 +29,14 @@
 
 namespace Espo\Classes\AppInfo;
 
-use Espo\Core\{
-    Utils\Module,
-    Binding\EspoBindingLoader,
-    Binding\Binding as BindingItem,
-    Console\Command\Params,
-};
+use Espo\Core\Binding\Binding as BindingItem;
+use Espo\Core\Binding\EspoBindingLoader;
+use Espo\Core\Console\Command\Params;
+use Espo\Core\Utils\Module;
 
 class Binding
 {
-    private $module;
+    private Module $module;
 
     public function __construct(Module $module)
     {

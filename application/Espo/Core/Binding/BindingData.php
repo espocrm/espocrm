@@ -57,6 +57,9 @@ class BindingData
         $this->global->$key = $binding;
     }
 
+    /**
+     * @param class-string<object> $className
+     */
     public function hasContext(string $className, string $key): bool
     {
         if (!property_exists($this->context, $className)) {
@@ -70,6 +73,9 @@ class BindingData
         return true;
     }
 
+    /**
+     * @param class-string<object> $className
+     */
     public function getContext(string $className, string $key): Binding
     {
         if (!$this->hasContext($className, $key)) {
@@ -108,10 +114,11 @@ class BindingData
     }
 
     /**
-     * @return string[]
+     * @return class-string<object>[]
      */
     public function getContextList(): array
     {
+        /** @var class-string<object>[] */
         return array_keys(
             get_object_vars($this->context)
         );
