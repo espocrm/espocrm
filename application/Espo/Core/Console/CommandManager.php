@@ -42,11 +42,9 @@ use Espo\Core\Console\Command\Params;
 class CommandManager
 {
     private InjectableFactory $injectableFactory;
-
     private Metadata $metadata;
 
     private const DEFAULT_COMMAND = 'Help';
-
     private const DEFAULT_COMMAND_FLAG = 'help';
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)

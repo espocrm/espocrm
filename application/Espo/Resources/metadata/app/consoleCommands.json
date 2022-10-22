@@ -30,5 +30,9 @@
     "rebuildCategoryPaths": {
         "className": "Espo\\Classes\\ConsoleCommands\\RebuildCategoryPaths",
         "listed": true
+    },
+    "populateArrayValues": {
+        "className": "Espo\\Classes\\ConsoleCommands\\PopulateArrayValues",
+        "listed": false
     }
 }
