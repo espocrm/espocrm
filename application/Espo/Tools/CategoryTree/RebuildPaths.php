@@ -30,7 +30,7 @@
 namespace Espo\Tools\CategoryTree;
 
 use Espo\Core\Exceptions\Error;
-use Espo\Core\ORM\Entity;
+use Espo\ORM\Entity;
 use Espo\Core\Repositories\CategoryTree;
 use Espo\ORM\EntityManager;
 
