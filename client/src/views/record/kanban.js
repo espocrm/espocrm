@@ -460,6 +460,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             let $groupColumnList = this.$el.find('.group-column-list');
 
             $list.sortable({
+                distance: 10,
                 connectWith: '.group-column-list',
                 cancel: '.btn-group *',
                 containment: this.getSelector(),
