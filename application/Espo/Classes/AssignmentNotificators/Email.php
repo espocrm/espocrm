@@ -29,60 +29,62 @@
 
 namespace Espo\Classes\AssignmentNotificators;
 
+use Espo\Entities\EmailAddress;
+use Espo\Entities\EmailFolder;
+use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\Tools\Stream\Service as StreamService;
-
 use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\AssignmentNotificator\Params;
 use Espo\Core\Notification\UserEnabledChecker;
-use Espo\Core\InjectableFactory;
 use Espo\Core\AclManager;
-
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
-
 use Espo\Entities\User;
 use Espo\Entities\Notification;
 use Espo\Entities\Email as EmailEntity;
-
 use Espo\Repositories\Email as EmailRepository;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
-
-use DateTime;
 use Espo\Tools\Email\Util;
+use DateTime;
 use Exception;
 
+/**
+ * @implements AssignmentNotificator<EmailEntity>
+ */
 class Email implements AssignmentNotificator
 {
     private const DAYS_THRESHOLD = 2;
 
-    private ?StreamService $streamService = null;
-    private $user;
-    private $entityManager;
-    private $injectableFactory;
-    private $aclManager;
-    private $userChecker;
+    private User $user;
+    private EntityManager $entityManager;
+    private UserEnabledChecker $userChecker;
+    private AclManager $aclManager;
+    private StreamService $streamService;
 
     public function __construct(
         User $user,
         EntityManager $entityManager,
         UserEnabledChecker $userChecker,
-        InjectableFactory $injectableFactory,
-        AclManager $aclManager
+        AclManager $aclManager,
+        StreamService $streamService
     ) {
         $this->user = $user;
         $this->entityManager = $entityManager;
         $this->userChecker = $userChecker;
-        $this->injectableFactory = $injectableFactory;
         $this->aclManager = $aclManager;
+        $this->streamService = $streamService;
     }
 
+    /**
+     * @param EmailEntity $entity
+     */
     public function process(Entity $entity, Params $params): void
     {
-        /** @var EmailEntity $entity */
-
         if (
             !in_array(
-                $entity->get('status'),
+                $entity->getStatus(),
                 [
                     EmailEntity::STATUS_ARCHIVED,
                     EmailEntity::STATUS_SENT,
@@ -141,13 +143,13 @@ class Email implements AssignmentNotificator
 
         $data = [
             'emailId' => $entity->getId(),
-            'emailName' => $entity->get('name'),
+            'emailName' => $entity->getSubject(),
         ];
 
         /** @var EmailRepository $emailRepository */
-        $emailRepository = $this->entityManager->getRepository('Email');
+        $emailRepository = $this->entityManager->getRepository(EmailEntity::ENTITY_TYPE);
         /** @var EmailAddressRepository $emailAddressRepository */
-        $emailAddressRepository = $this->entityManager->getRepository('EmailAddress');
+        $emailAddressRepository = $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
 
         if (!$entity->has('from')) {
             $emailRepository->loadFromField($entity);
@@ -162,7 +164,11 @@ class Email implements AssignmentNotificator
         $from = $entity->get('from');
 
         if ($from) {
-            $person = $emailAddressRepository->getEntityByAddress($from, null, ['User', 'Contact', 'Lead']);
+            $person = $emailAddressRepository->getEntityByAddress($from, null, [
+                User::ENTITY_TYPE,
+                Contact::ENTITY_TYPE,
+                Lead::ENTITY_TYPE,
+            ]);
 
             if ($person) {
                 $data['personEntityType'] = $person->getEntityType();
@@ -187,8 +193,8 @@ class Email implements AssignmentNotificator
 
         $parent = null;
 
-        $parentId = $entity->get('parentId');
-        $parentType = $entity->get('parentType');
+        $parentId = $entity->getParentId();
+        $parentType = $entity->getParentType();
 
         if ($parentType && $parentId) {
             $parent = $this->entityManager->getEntityById($parentType, $parentId);
@@ -196,10 +202,10 @@ class Email implements AssignmentNotificator
 
         $account = null;
 
-        $accountId = $entity->get('accountId');
+        $accountLink = $entity->getAccount();
 
-        if ($accountId) {
-            $account = $this->entityManager->getEntityById('Account', $accountId);
+        if ($accountLink) {
+            $account = $this->entityManager->getEntityById(Account::ENTITY_TYPE, $accountLink->getId());
         }
 
         foreach ($userIdList as $userId) {
@@ -215,7 +221,7 @@ class Email implements AssignmentNotificator
                 continue;
             }
 
-            if (!$this->userChecker->checkAssignment('Email', $userId)) {
+            if (!$this->userChecker->checkAssignment(EmailEntity::ENTITY_TYPE, $userId)) {
                 continue;
             }
 
@@ -228,7 +234,7 @@ class Email implements AssignmentNotificator
                 if ($folderId) {
                     if (
                         $this->entityManager
-                            ->getRDBRepository('EmailFolder')
+                            ->getRDBRepositoryByClass(EmailFolder::class)
                             ->where([
                                 'id' => $folderId,
                                 'skipNotifications' => true,
@@ -241,7 +247,7 @@ class Email implements AssignmentNotificator
             }
 
             /** @var User|null $user */
-            $user = $this->entityManager->getEntity('User', $userId);
+            $user = $this->entityManager->getEntityById(EmailEntity::ENTITY_TYPE, $userId);
 
             if (!$user) {
                 continue;
@@ -251,18 +257,18 @@ class Email implements AssignmentNotificator
                 continue;
             }
 
-            if (!$this->aclManager->checkScope($user, 'Email')) {
+            if (!$this->aclManager->checkScope($user, EmailEntity::ENTITY_TYPE)) {
                 continue;
             }
 
             $isArchivedOrBeingImported =
-                $entity->get('status') === EmailEntity::STATUS_ARCHIVED ||
+                $entity->getStatus() === EmailEntity::STATUS_ARCHIVED ||
                 $params->getOption('isBeingImported');
 
             if (
                 $isArchivedOrBeingImported &&
                 $parent &&
-                $this->getStreamService()->checkIsFollowed($parent, $userId)
+                $this->streamService->checkIsFollowed($parent, $userId)
             ) {
                 continue;
             }
@@ -270,7 +276,7 @@ class Email implements AssignmentNotificator
             if (
                 $isArchivedOrBeingImported &&
                 $account &&
-                $this->getStreamService()->checkIsFollowed($account, $userId)
+                $this->streamService->checkIsFollowed($account, $userId)
             ) {
                 continue;
             }
@@ -281,7 +287,7 @@ class Email implements AssignmentNotificator
                     'type' => Notification::TYPE_EMAIL_RECEIVED,
                     'userId' => $userId,
                     'relatedId' => $entity->getId(),
-                    'relatedType' => 'Email',
+                    'relatedType' => EmailEntity::ENTITY_TYPE,
                 ])
                 ->select(['id'])
                 ->findOne();
@@ -295,17 +301,8 @@ class Email implements AssignmentNotificator
                 'userId' => $userId,
                 'data' => $data,
                 'relatedId' => $entity->getId(),
-                'relatedType' => 'Email',
+                'relatedType' => EmailEntity::ENTITY_TYPE,
             ]);
         }
-    }
-
-    private function getStreamService(): StreamService
-    {
-        if (empty($this->streamService)) {
-            $this->streamService = $this->injectableFactory->create(StreamService::class);
-        }
-
-        return $this->streamService;
     }
 }

@@ -30,31 +30,20 @@
 namespace Espo\Core\Notification;
 
 use Espo\Core\ORM\Entity as CoreEntity;
-
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\User;
 use Espo\Entities\Notification;
-
 use Espo\Core\Notification\AssignmentNotificator\Params;
 
+/**
+ * @implements AssignmentNotificator<Entity>
+ */
 class DefaultAssignmentNotificator implements AssignmentNotificator
 {
-    /**
-     * @var User
-     */
-    protected $user;
-
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var UserEnabledChecker
-     */
-    protected $userChecker;
+    protected User $user;
+    protected EntityManager $entityManager;
+    protected UserEnabledChecker $userChecker;
 
     public function __construct(User $user, EntityManager $entityManager, UserEnabledChecker $userChecker)
     {

@@ -70,6 +70,7 @@ class Importer
 
     private EntityManager $entityManager;
     private Config $config;
+    /** @var AssignmentNotificator<Email>  */
     private AssignmentNotificator $notificator;
     private FiltersMatcher $filtersMatcher;
     private ParserFactory $parserFactory;
@@ -93,7 +94,7 @@ class Importer
         $this->duplicateFinder = $duplicateFinder;
         $this->jobSchedulerFactory = $jobSchedulerFactory;
 
-        $this->notificator = $notificatorFactory->create(Email::ENTITY_TYPE);
+        $this->notificator = $notificatorFactory->createByClass(Email::class);
         $this->filtersMatcher = new FiltersMatcher();
     }
 

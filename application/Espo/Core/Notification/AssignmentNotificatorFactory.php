@@ -29,25 +29,19 @@
 
 namespace Espo\Core\Notification;
 
-use Espo\Core\{
-    InjectableFactory,
-    Utils\ClassFinder,
-    Utils\Metadata,
-    Notification\DefaultAssignmentNotificator,
-    Notification\AssignmentNotificator,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\ClassFinder;
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\Entity;
+use Espo\ORM\Repository\Util as RepositoryUtil;
 
 class AssignmentNotificatorFactory
 {
-    /**
-     * @var class-string<AssignmentNotificator>
-     */
+    /** @var class-string<AssignmentNotificator<Entity>> */
     protected string $defaultClassName = DefaultAssignmentNotificator::class;
 
     private InjectableFactory $injectableFactory;
-
     private ClassFinder $classFinder;
-
     private Metadata $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder, Metadata $metadata)
@@ -58,9 +52,22 @@ class AssignmentNotificatorFactory
     }
 
     /**
+     * @template T of Entity
+     * @param class-string<T> $className An entity class name.
+     * @return AssignmentNotificator<T>
+     */
+    public function createByClass(string $className): AssignmentNotificator
+    {
+        $entityType = RepositoryUtil::getEntityTypeByClass($className);
+
+        /** @var AssignmentNotificator<T> */
+        return $this->create($entityType);
+    }
+
+    /**
      * @todo Change return type to AssignmentNotificator.
      *
-     * @return AssignmentNotificator
+     * @return AssignmentNotificator<Entity>
      */
     public function create(string $entityType): object // AssignmentNotificator
     {
@@ -70,11 +77,11 @@ class AssignmentNotificatorFactory
     }
 
     /**
-     * @return class-string<AssignmentNotificator>
+     * @return class-string<AssignmentNotificator<Entity>>
      */
     private function getClassName(string $entityType): string
     {
-        /** @var ?class-string<AssignmentNotificator> $className1 */
+        /** @var ?class-string<AssignmentNotificator<Entity>> $className1 */
         $className1 = $this->metadata->get(['notificationDefs', $entityType, 'assignmentNotificatorClassName']);
 
         if ($className1) {
@@ -82,7 +89,7 @@ class AssignmentNotificatorFactory
         }
 
         /* For backward compatibility. */
-        /** @var ?class-string<AssignmentNotificator> $className2 */
+        /** @var ?class-string<AssignmentNotificator<Entity>> $className2 */
         $className2 = $this->classFinder->find('Notificators', $entityType);
 
         if ($className2) {

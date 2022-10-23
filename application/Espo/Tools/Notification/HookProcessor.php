@@ -32,18 +32,13 @@ namespace Espo\Tools\Notification;
 use Espo\Core\Notification\AssignmentNotificatorFactory;
 use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\AssignmentNotificator\Params as AssignmentNotificatorParams;
-
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
-
 use Espo\Tools\Stream\Service as StreamService;
-
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
-
 use Espo\Entities\User;
 use Espo\Entities\Notification;
-
 use Espo\Core\ORM\Entity as CoreEntity;
 
 /**
@@ -51,29 +46,19 @@ use Espo\Core\ORM\Entity as CoreEntity;
  */
 class HookProcessor
 {
-    /**
-     * @var array<string,AssignmentNotificator>
-     */
-    private $notifatorsHash = [];
-
-    /**
-     * @var array<string,bool>
-     */
+    /** @var array<string, AssignmentNotificator<Entity>> */
+    private $notificatorsHash = [];
+    /** @var array<string,bool> */
     private $hasStreamCache = [];
+    /** @var array<string,string> */
+    private $userNameHash = [];
 
     private Metadata $metadata;
     private Config $config;
     private EntityManager $entityManager;
     private StreamService $streamService;
-
     private AssignmentNotificatorFactory $notificatorFactory;
-
     private User $user;
-
-    /**
-     * @var array<string,string>
-     */
-    private $userNameHash = [];
 
     public function __construct(
         Metadata $metadata,
@@ -201,17 +186,17 @@ class HookProcessor
     }
 
     /**
-     * @return AssignmentNotificator
+     * @return AssignmentNotificator<Entity>
      */
     private function getNotificator(string $entityType): object
     {
-        if (empty($this->notifatorsHash[$entityType])) {
+        if (empty($this->notificatorsHash[$entityType])) {
             $notificator = $this->notificatorFactory->create($entityType);
 
-            $this->notifatorsHash[$entityType] = $notificator;
+            $this->notificatorsHash[$entityType] = $notificator;
         }
 
-        return $this->notifatorsHash[$entityType];
+        return $this->notificatorsHash[$entityType];
     }
 
     private function getUserNameById(string $id): string
@@ -221,7 +206,7 @@ class HookProcessor
         }
 
         if (!array_key_exists($id, $this->userNameHash)) {
-            /** @var User|null $user */
+            /** @var ?User $user */
             $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $id);
 
             if ($user) {
