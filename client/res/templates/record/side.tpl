@@ -24,7 +24,7 @@
             <h4 class="panel-title">
                 {{#unless notRefreshable}}
                 <span
-                    style="cursor: pointer;"
+                    style="cursor: pointer; user-select: none;"
                     class="action"
                     title="{{translate 'clickToRefresh' category='messages'}}"
                     data-action="refresh" data-panel="{{name}}"
