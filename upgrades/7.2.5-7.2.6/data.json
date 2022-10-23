@@ -1,0 +1,14 @@
+{
+    "mandatoryFiles": [
+        "application/Espo/Core/Authentication/LDAP/Client.php",
+        "application/Espo/Core/Authentication/LDAP/ClientFactory.php",
+        "application/Espo/Core/Authentication/LDAP/Utils.php"
+    ],
+    "manifest": {
+        "delete": [
+            "application/Espo/Core/Authentication/Ldap/Client.php",
+            "application/Espo/Core/Authentication/Ldap/ClientFactory.php",
+            "application/Espo/Core/Authentication/Ldap/Utils.php"
+        ]
+    }
+}
