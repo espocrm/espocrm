@@ -76,12 +76,12 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                 e.preventDefault();
 
-                var id = $(e.currentTarget).data('id');
-                var model = this.collection.get(id);
+                let id = $(e.currentTarget).data('id');
+                let model = this.collection.get(id);
 
-                var scope = this.getModelScope(id);
+                let scope = this.getModelScope(id);
 
-                var options = {
+                let options = {
                     id: id,
                     model: model,
                 };
@@ -94,9 +94,9 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 this.getRouter().dispatch(scope, 'view', options);
             },
             'click [data-action="groupShowMore"]': function (e) {
-                var $target = $(e.currentTarget);
+                let $target = $(e.currentTarget);
 
-                var group = $target.data('name');
+                let group = $target.data('name');
 
                 this.groupShowMore(group);
             },
@@ -268,7 +268,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 ['entityDefs', this.scope, 'fields', this.statusField, 'options'])
             );
 
-            var statusIgnoreList = this.getMetadata().get(['scopes', this.scope, 'kanbanStatusIgnoreList']) || [];
+            let statusIgnoreList = this.getMetadata().get(['scopes', this.scope, 'kanbanStatusIgnoreList']) || [];
 
             this.statusList = this.statusList.filter((item) => {
                 if (~statusIgnoreList.indexOf(item)) {
@@ -327,7 +327,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         afterRender: function () {
-            var $window = $(window);
+            let $window = $(window);
 
             this.$listKanban = this.$el.find('.list-kanban');
             this.$content = $('#content');
@@ -364,15 +364,15 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         initStickableHeader: function () {
-            var $container = this.$headContainer = this.$el.find('.kanban-head-container');
-            var topBarHeight = this.getThemeManager().getParam('navbarHeight') || 30;
+            let $container = this.$headContainer = this.$el.find('.kanban-head-container');
+            let topBarHeight = this.getThemeManager().getParam('navbarHeight') || 30;
 
-            var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+            let screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
-            var $middle = this.$el.find('.kanban-columns-container');
-            var $window = $(window);
+            let $middle = this.$el.find('.kanban-columns-container');
+            let $window = $(window);
 
-            var $block = $('<div>')
+            let $block = $('<div>')
                 .addClass('kanban-head-placeholder')
                 .html('&nbsp;')
                 .hide()
@@ -389,8 +389,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 controlSticking();
             });
 
-            var controlSticking = () => {
-                var width = $middle.width();
+            let controlSticking = () => {
+                let width = $middle.width();
 
                 if ($(window.document).width() < screenWidthXs) {
                     $container.removeClass('sticked');
@@ -405,10 +405,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     return;
                 }
 
-                var stickTop = this.$listKanban.position().top - topBarHeight;
+                let stickTop = this.$listKanban.position().top - topBarHeight;
 
-                var edge = $middle.position().top + $middle.outerHeight(true);
-                var scrollTop = $window.scrollTop();
+                let edge = $middle.position().top + $middle.outerHeight(true);
+                let scrollTop = $window.scrollTop();
 
                 if (scrollTop < edge) {
                     if (scrollTop > stickTop) {
@@ -449,15 +449,15 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         initSortable: function () {
-            var $list = this.$groupColumnList;
+            let $list = this.$groupColumnList;
 
             $list.find('> .item').on('touchstart', (e) => {
                 e.originalEvent.stopPropagation();
             });
 
-            var orderDisabled = this.orderDisabled;
+            let orderDisabled = this.orderDisabled;
 
-            let $grouoColumnList = this.$el.find('.group-column-list');
+            let $groupColumnList = this.$el.find('.group-column-list');
 
             $list.sortable({
                 connectWith: '.group-column-list',
@@ -476,7 +476,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     }
                 },
                 start: (e, ui) => {
-                    $grouoColumnList.addClass('drop-active');
+                    $groupColumnList.addClass('drop-active');
 
                     $list.sortable('refreshPositions');
 
@@ -498,21 +498,21 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     this.sortIsStarted = false;
                     this.$draggable = null;
 
-                    var $item = $(ui.item);
+                    let $item = $(ui.item);
 
                     this.$el.find('.group-column-list').removeClass('drop-active');
 
-                    var group = $item.closest('.group-column-list').data('name');
-                    var id = $item.data('id');
+                    let group = $item.closest('.group-column-list').data('name');
+                    let id = $item.data('id');
 
-                    var draggedGroupFrom = this.draggedGroupFrom;
+                    let draggedGroupFrom = this.draggedGroupFrom;
 
                     this.draggedGroupFrom = null;
 
                     this.$showMore.removeClass('hidden');
 
                     if (group !== draggedGroupFrom) {
-                        var model = this.collection.get(id);
+                        let model = this.collection.get(id);
 
                         if (!model) {
                             $list.sortable('cancel');
@@ -520,7 +520,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                             return;
                         }
 
-                        var attributes = {};
+                        let attributes = {};
 
                         attributes[this.statusField] = group;
 
@@ -580,9 +580,9 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         getGroupOrderFromDom: function (group) {
-            var ids = [];
+            let ids = [];
 
-            var $group = this.$el.find('.group-column-list[data-name="'+group+'"]');
+            let $group = this.$el.find('.group-column-list[data-name="'+group+'"]');
 
             $group.children().each((i, el) => {
                 ids.push($(el).data('id'));
@@ -592,11 +592,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         reOrderGroup: function (group) {
-            var groupCollection = this.getGroupCollection(group);
+            let groupCollection = this.getGroupCollection(group);
+            let ids = this.getGroupOrderFromDom(group);
 
-            var ids = this.getGroupOrderFromDom(group);
-
-            var modelMap = {};
+            let modelMap = {};
 
             groupCollection.models.forEach((m) => {
                 modelMap[m.id] = m;
@@ -606,8 +605,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 groupCollection.pop({silent: true});
             }
 
-            ids.forEach(function (id) {
-                var model = modelMap[id];
+            ids.forEach(id => {
+                let model = modelMap[id];
 
                 if (!model) {
                     return;
@@ -618,10 +617,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         rebuildGroupDataList: function () {
-            this.groupDataList.forEach((item) => {
+            this.groupDataList.forEach(item => {
                 item.dataList = [];
 
-                for (var model of item.collection.models) {
+                for (let model of item.collection.models) {
                     item.dataList.push({
                         key: model.id,
                         id: model.id,
@@ -631,7 +630,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         moveModelBetweenGroupCollections: function (model, groupFrom, groupTo) {
-            var collection = this.getGroupCollection(groupFrom);
+            let collection = this.getGroupCollection(groupFrom);
 
             if (!collection) {
                 return;
@@ -639,7 +638,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             collection.remove(model.id, {silent: true});
 
-            var collection = this.getGroupCollection(groupTo);
+            collection = this.getGroupCollection(groupTo);
 
             if (!collection) {
                 return;
@@ -699,7 +698,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         buildRows: function (callback) {
-            var groupList = (this.collection.dataAdditional || {}).groupList || [];
+            let groupList = (this.collection.dataAdditional || {}).groupList || [];
 
             this.collection.reset();
 
@@ -874,8 +873,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         onChangeGroup: function (model, value, o) {
-            var id = model.id;
-            var group = model.get(this.statusField);
+            let id = model.id;
+            let group = model.get(this.statusField);
 
             this.collection.subCollectionList.forEach((collection) => {
                 if (collection.get(id)) {
@@ -941,8 +940,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         groupShowMore: function (group) {
-            for (var i in this.groupDataList) {
-                var groupItem = this.groupDataList[i];
+            for (let i in this.groupDataList) {
+                let groupItem = this.groupDataList[i];
 
                 if (groupItem.name === group) {
                     break;
@@ -955,10 +954,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 return;
             }
 
-            var collection = groupItem.collection;
+            let collection = groupItem.collection;
 
-            var $list = this.$el.find('.group-column-list[data-name="'+group+'"]');
-            var $showMore = this.$el.find('.group-column[data-name="'+group+'"] .show-more');
+            let $list = this.$el.find('.group-column-list[data-name="'+group+'"]');
+            let $showMore = this.$el.find('.group-column[data-name="'+group+'"] .show-more');
 
             collection.data.select = this.collection.data.select;
 
@@ -992,7 +991,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         actionMoveOver: function (data) {
-            var model = this.collection.get(data.id);
+            let model = this.collection.get(data.id);
 
             this.createView('moveOverDialog', 'views/modals/kanban-move-over', {
                 model: model,
@@ -1003,7 +1002,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         getGroupCollection: function (group) {
-            var collection = null;
+            let collection = null;
 
             this.collection.subCollectionList.forEach((itemCollection) => {
                 if (itemCollection.groupName === group) {
@@ -1039,7 +1038,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             attributes[this.statusField] = group;
 
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
+            let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
                 'views/modals/edit';
 
             let options = {
