@@ -67,7 +67,15 @@ define('ajax', [], function () {
                 options.data = data;
             }
 
-            return $.ajax(options);
+            return new AjaxPromise((resolve, reject) => {
+                $.ajax(options)
+                    .then((...args) => {
+                        resolve(...args);
+                    })
+                    .fail((...args) => {
+                        reject(...args);
+                    });
+            });
         },
 
         /**
@@ -146,6 +154,16 @@ define('ajax', [], function () {
             return Ajax.request(url, 'GET', data, options);
         },
     };
+
+    // For bc.
+    class AjaxPromise extends Promise {
+        fail(...args) {
+            return this.catch(...args);
+        }
+        success(...args) {
+            return this.then(...args);
+        }
+    }
 
     return Ajax;
 });
