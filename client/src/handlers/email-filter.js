@@ -56,8 +56,7 @@ define('handlers/email-filter', ['dynamic-handler'], (Dep) => {
             }
             else if (
                 this.model.get('parentType') &&
-                !this.recordView.options.duplicateSourceId &&
-                this.model.get('parentType') !== 'User'
+                !this.recordView.options.duplicateSourceId
             ) {
                 this.recordView.setFieldReadOnly('parent');
                 this.recordView.setFieldReadOnly('isGlobal');
@@ -69,11 +68,15 @@ define('handlers/email-filter', ['dynamic-handler'], (Dep) => {
                 }
 
                 if (value) {
-                    this.model.set('action', 'Skip');
-                    this.model.set('parentType', null);
-                    this.model.set('parentId', null);
-                    this.model.set('emailFolderId', null);
-                    this.model.set('groupEmailFolderId', null);
+                    this.model.set({
+                        action: 'Skip',
+                        parentName: null,
+                        parentType: null,
+                        parentId: null,
+                        emailFolderId: null,
+                        groupEmailFolderId: null,
+                        markAsRead: false,
+                    });
                 }
             });
 
@@ -84,10 +87,15 @@ define('handlers/email-filter', ['dynamic-handler'], (Dep) => {
 
                 // Avoiding side effects.
                 setTimeout(() => {
+                    if (value !== 'User') {
+                        this.model.set('markAsRead', false);
+                    }
+
                     if (value === 'EmailAccount') {
                         this.model.set('action', 'Skip');
                         this.model.set('emailFolderId', null);
                         this.model.set('groupEmailFolderId', null);
+                        this.model.set('markAsRead', false);
 
                         return;
                     }

@@ -69,6 +69,7 @@ class EmailFilterManager
                         [
                             EmailFilter::ACTION_SKIP,
                             EmailFilter::ACTION_MOVE_TO_FOLDER,
+                            EmailFilter::ACTION_NONE,
                         ]
                     )
                 )

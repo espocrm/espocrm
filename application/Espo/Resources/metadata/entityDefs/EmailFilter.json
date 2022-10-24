@@ -44,7 +44,8 @@
             "options": [
                 "Skip",
                 "Move to Folder",
-                "Move to Group Folder"
+                "Move to Group Folder",
+                "None"
             ],
             "view": "views/email-filter/fields/action"
         },
@@ -54,6 +55,9 @@
         },
         "groupEmailFolder": {
             "type": "link"
+        },
+        "markAsRead": {
+            "type": "bool"
         },
         "createdAt": {
             "type": "datetime",

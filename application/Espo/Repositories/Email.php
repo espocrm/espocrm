@@ -45,7 +45,7 @@ use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Entities\EmailAddress;
 
 /**
- * @extends Database<\Espo\Entities\Email>
+ * @extends Database<EmailEntity>
  */
 class Email extends Database implements
 
@@ -444,14 +444,19 @@ class Email extends Database implements
                 $action = $filter->getAction();
 
                 if ($action === EmailFilter::ACTION_SKIP) {
-                    $entity->setLinkMultipleColumn('users', 'inTrash', $userId, true);
+                    $entity->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IN_TRASH, $userId, true);
                 }
                 else if ($action === EmailFilter::ACTION_MOVE_TO_FOLDER) {
                     $folderId = $filter->getEmailFolderId();
 
                     if ($folderId) {
-                        $entity->setLinkMultipleColumn('users', 'folderId', $userId, $folderId);
+                        $entity
+                            ->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_FOLDER_ID, $userId, $folderId);
                     }
+                }
+
+                if ($filter->markAsRead()) {
+                    $entity->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IS_READ, $userId, true);
                 }
             }
         }

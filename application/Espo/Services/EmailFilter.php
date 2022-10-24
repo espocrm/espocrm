@@ -93,6 +93,7 @@ class EmailFilter extends Record
             !in_array(
                 $entity->getAction(),
                 [
+                    EmailFilterEntity::ACTION_NONE,
                     EmailFilterEntity::ACTION_SKIP,
                     EmailFilterEntity::ACTION_MOVE_TO_FOLDER,
                 ]

@@ -213,6 +213,10 @@ class Email implements AssignmentNotificator
                 continue;
             }
 
+            if ($entity->getLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IS_READ, $userId)) {
+                continue;
+            }
+
             if (!$this->userChecker->checkAssignment(EmailEntity::ENTITY_TYPE, $userId)) {
                 continue;
             }

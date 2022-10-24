@@ -29,13 +29,16 @@
 
 namespace Espo\Entities;
 
-class EmailFilter extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class EmailFilter extends Entity
 {
     public const ENTITY_TYPE = 'EmailFilter';
 
     public const ACTION_SKIP = 'Skip';
     public const ACTION_MOVE_TO_FOLDER = 'Move to Folder';
     public const ACTION_MOVE_TO_GROUP_FOLDER = 'Move to Group Folder';
+    public const ACTION_NONE = 'None';
 
     /**
      * @return self::ACTION_*|null
@@ -53,6 +56,11 @@ class EmailFilter extends \Espo\Core\ORM\Entity
     public function getGroupEmailFolderId(): ?string
     {
         return $this->get('groupEmailFolderId');
+    }
+
+    public function markAsRead(): bool
+    {
+        return (bool) $this->get('markAsRead');
     }
 
     public function isGlobal(): bool

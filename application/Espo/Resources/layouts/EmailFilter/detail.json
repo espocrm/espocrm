@@ -17,6 +17,9 @@
                 false, {"name": "groupEmailFolder"}
             ],
             [
+                false, {"name": "markAsRead"}
+            ],
+            [
                 {"name": "subject", "fullWidth": true}
             ],
             [
