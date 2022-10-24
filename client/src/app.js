@@ -930,10 +930,9 @@ function (
                 let arr = Base64.decode(this.auth).split(':');
 
                 if (arr.length > 1) {
-                    Ajax.postRequest('App/action/destroyAuthToken', {
-                            token: arr[1]
-                        })
-                        .then((data, status, xhr) => {
+                    Ajax
+                        .postRequest('App/action/destroyAuthToken', {token: arr[1]}, {fullResponse: true})
+                        .then(xhr => {
                             let redirectUrl = xhr.getResponseHeader('X-Logout-Redirect-Url');
 
                             if (redirectUrl) {

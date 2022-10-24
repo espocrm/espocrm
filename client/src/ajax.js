@@ -46,6 +46,7 @@ define('ajax', [], function () {
          * @property {'xml'|'json'|'text'} [dataType] A data type.
          * @property {boolean} [local] If true, the API URL won't be prepended.
          * @property {string} [contentType] A content type.
+         * @property {boolean} [fullResponse] To resolve with `module:ajax.XhrWrapper`.
          */
 
         /**
@@ -69,11 +70,15 @@ define('ajax', [], function () {
 
             return new AjaxPromise((resolve, reject) => {
                 $.ajax(options)
-                    .then((...args) => {
-                        resolve(...args);
+                    .then((response, status, xhr) => {
+                        let obj = options.fullResponse ?
+                            new XhrWrapper(xhr) :
+                            response;
+
+                        resolve(obj);
                     })
-                    .fail((...args) => {
-                        reject(...args);
+                    .fail(xhr => {
+                        reject(xhr);
                     });
             });
         },
@@ -158,10 +163,34 @@ define('ajax', [], function () {
     // For bc.
     class AjaxPromise extends Promise {
         fail(...args) {
-            return this.catch(...args);
+            return this.catch(args[0]);
         }
-        success(...args) {
-            return this.then(...args);
+        done(...args) {
+            return this.then(args[0]);
+        }
+    }
+
+    /**
+     * @name module:ajax.XhrWrapper
+     */
+    class XhrWrapper {
+        /**
+         * @param {JQueryXHR} xhr
+         */
+        constructor(xhr) {
+            this.xhr = xhr;
+        }
+
+        getResponseHeader(name) {
+            return this.xhr.getResponseHeader(name);
+        }
+
+        getStatus() {
+            return this.xhr.status;
+        }
+
+        getParsedBody() {
+            return this.xhr.responseJSON;
         }
     }
 
