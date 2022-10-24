@@ -181,16 +181,33 @@ define('ajax', [], function () {
             this.xhr = xhr;
         }
 
+        /**
+         * @param {string} name
+         * @return {string}
+         */
         getResponseHeader(name) {
             return this.xhr.getResponseHeader(name);
         }
 
+        /**
+         * @return {Number}
+         */
         getStatus() {
             return this.xhr.status;
         }
 
-        getParsedBody() {
+        /**
+         * @return {*}
+         */
+        getResponseParsedBody() {
             return this.xhr.responseJSON;
+        }
+
+        /**
+         * @return {string}
+         */
+        getResponseBody() {
+            return this.xhr.responseText;
         }
     }
 
