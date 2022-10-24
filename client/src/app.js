@@ -1160,74 +1160,77 @@ function (
             });
 
             $(document).ajaxError((e, xhr, options) => {
-                if (xhr.errorIsHandled) {
-                    return;
-                }
+                // To process after a promise-catch.
+                setTimeout(() => {
+                    if (xhr.errorIsHandled) {
+                        return;
+                    }
 
-                switch (xhr.status) {
-                    case 0:
-                        if (xhr.statusText === 'timeout') {
-                            Ui.error(this.language.translate('Timeout'), true);
-                        }
+                    switch (xhr.status) {
+                        case 0:
+                            if (xhr.statusText === 'timeout') {
+                                Ui.error(this.language.translate('Timeout'), true);
+                            }
 
-                        break;
+                            break;
 
-                    case 200:
-                        Ui.error(this.language.translate('Bad server response'));
+                        case 200:
+                            Ui.error(this.language.translate('Bad server response'));
 
-                        console.error('Bad server response: ' + xhr.responseText);
+                            console.error('Bad server response: ' + xhr.responseText);
 
-                        break;
+                            break;
 
-                    case 401:
-                        if (!options.login) {
-                            if (this.auth) {
-                                this.logout();
+                        case 401:
+                            if (!options.login) {
+                                if (this.auth) {
+                                    this.logout();
+
+                                    break
+                                }
+
+                                console.error('Error 401: Unauthorized.');
+                            }
+
+                            break;
+
+                        case 403:
+                            if (options.main) {
+                                this.baseController.error403();
+
+                                break;
+                            }
+
+                            this._processErrorAlert(xhr, 'Access denied');
+
+                            break;
+
+                        case 400:
+                            this._processErrorAlert(xhr, 'Bad request');
+
+                            break;
+
+                        case 404:
+                            if (options.main) {
+                                this.baseController.error404();
 
                                 break
                             }
 
-                            console.error('Error 401: Unauthorized.');
-                        }
-
-                        break;
-
-                    case 403:
-                        if (options.main) {
-                            this.baseController.error403();
+                            this._processErrorAlert(xhr, 'Not found', true);
 
                             break;
-                        }
 
-                        this._processErrorAlert(xhr, 'Access denied');
+                        default:
+                            this._processErrorAlert(xhr, null);
+                    }
 
-                        break;
+                    let statusReason = xhr.getResponseHeader('X-Status-Reason');
 
-                    case 400:
-                        this._processErrorAlert(xhr, 'Bad request');
-
-                        break;
-
-                    case 404:
-                        if (options.main) {
-                            this.baseController.error404();
-
-                            break
-                        }
-
-                        this._processErrorAlert(xhr, 'Not found', true);
-
-                        break;
-
-                    default:
-                        this._processErrorAlert(xhr, null);
-                }
-
-                let statusReason = xhr.getResponseHeader('X-Status-Reason');
-
-                if (statusReason) {
-                    console.error('Server side error ' + xhr.status + ': ' + statusReason);
-                }
+                    if (statusReason) {
+                        console.error('Server side error ' + xhr.status + ': ' + statusReason);
+                    }
+                }, 0);
             });
         },
 
