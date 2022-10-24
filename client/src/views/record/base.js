@@ -1092,7 +1092,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                         {
                             patch: !model.isNew(),
                             headers: headers,
-                            // Catch use a promise-catch, as it's called
+                            // Can't use a promise-catch, as it's called
                             // after the default ajaxError callback.
                             error: (m, xhr) => onError(xhr, reject),
                         },
