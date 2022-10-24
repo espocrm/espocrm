@@ -32,6 +32,7 @@ namespace Espo\Tools\Kanban;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\FieldProcessing\ListLoadProcessor;
 use Espo\Core\FieldProcessing\Loader\Params as FieldLoaderParams;
+use Espo\Core\Record\Collection;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
@@ -227,20 +228,13 @@ class Kanban
                 $totalSub = $repository->clone($itemQuery)->count();
             }
             else {
-                if (
-                    $maxSize &&
-                    is_countable($collectionSub) &&
-                    count($collectionSub) > $maxSize &&
-                    $collectionSub instanceof ArrayAccess
-                ) {
-                    $totalSub = -1;
+                $recordCollection = Collection::createNoCount($collectionSub, $maxSize);
 
-                    unset($collectionSub[count($collectionSub) - 1]);
+                $collectionSub = $recordCollection->getCollection();
+                $totalSub = $recordCollection->getTotal();
 
+                if ($totalSub === Collection::TOTAL_HAS_MORE) {
                     $hasMore = true;
-                }
-                else {
-                    $totalSub = -2;
                 }
             }
 
@@ -264,7 +258,7 @@ class Kanban
 
         $total = !$this->countDisabled ?
             $repository->clone($query)->count() :
-            ($hasMore ? -1 : -2);
+            ($hasMore ? Collection::TOTAL_HAS_MORE : Collection::TOTAL_HAS_NO_MORE);
 
         return new Result($collection, $total, $additionalData);
     }
