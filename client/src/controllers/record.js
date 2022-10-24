@@ -152,9 +152,9 @@ define('controllers/record', ['controller'], function (Dep) {
         prepareModelView: function (model, options) {},
 
         actionView: function (options) {
-            var id = options.id;
+            let id = options.id;
 
-            var isReturn = this.getRouter().backProcessed;
+            let isReturn = this.getRouter().backProcessed;
 
             if (isReturn) {
                 if (this.lastViewActionOptions && this.lastViewActionOptions.id === id) {
@@ -167,14 +167,14 @@ define('controllers/record', ['controller'], function (Dep) {
 
             this.lastViewActionOptions = options;
 
-            var createView = (model) => {
+            let createView = (model) => {
                 this.prepareModelView(model, options);
 
                 this.createViewView.call(this, options, model);
             };
 
             if ('model' in options) {
-                var model = options.model;
+                let model = options.model;
 
                 createView(model);
 
@@ -234,9 +234,9 @@ define('controllers/record', ['controller'], function (Dep) {
          */
         prepareModelCreate: function (model, options) {
             this.listenToOnce(model, 'before:save', () => {
-                var key = this.name + 'List';
+                let key = this.name + 'List';
 
-                var stored = this.getStoredMainView(key);
+                let stored = this.getStoredMainView(key);
 
                 if (stored && !stored.storeViewAfterCreate) {
                     this.clearStoredMainView(key);
@@ -244,9 +244,9 @@ define('controllers/record', ['controller'], function (Dep) {
             });
 
             this.listenToOnce(model, 'after:save', () => {
-                var key = this.name + 'List';
+                let key = this.name + 'List';
 
-                var stored = this.getStoredMainView(key);
+                let stored = this.getStoredMainView(key);
 
                 if (stored && stored.storeViewAfterCreate && stored.collection) {
                     this.listenToOnce(stored, 'after:render', () => {
@@ -303,9 +303,9 @@ define('controllers/record', ['controller'], function (Dep) {
          */
         prepareModelEdit: function (model, options) {
             this.listenToOnce(model, 'before:save', () => {
-                var key = this.name + 'List';
+                let key = this.name + 'List';
 
-                var stored = this.getStoredMainView(key);
+                let stored = this.getStoredMainView(key);
 
                 if (stored && !stored.storeViewAfterUpdate) {
                     this.clearStoredMainView(key);
@@ -314,7 +314,7 @@ define('controllers/record', ['controller'], function (Dep) {
         },
 
         actionEdit: function (options) {
-            var id = options.id;
+            let id = options.id;
 
             let optionsOptions = options.options || {};
 
@@ -334,7 +334,7 @@ define('controllers/record', ['controller'], function (Dep) {
                     .then(() => {
                         this.hideLoadingNotification();
 
-                        var o = {
+                        let o = {
                             scope: this.name,
                             model: model,
                             returnUrl: options.returnUrl,
@@ -364,12 +364,12 @@ define('controllers/record', ['controller'], function (Dep) {
         },
 
         actionMerge: function (options) {
-            var ids = options.ids.split(',');
+            let ids = options.ids.split(',');
 
             this.getModel().then((model) => {
-                var models = [];
+                let models = [];
 
-                var proceed = () => {
+                let proceed = () => {
                     this.main('views/merge', {
                         models: models,
                         scope: this.name,
@@ -377,10 +377,10 @@ define('controllers/record', ['controller'], function (Dep) {
                     });
                 };
 
-                var i = 0;
+                let i = 0;
 
-                ids.forEach((id) => {
-                    var current = model.clone();
+                ids.forEach(id => {
+                    let current = model.clone();
 
                     current.id = id;
                     models.push(current);
