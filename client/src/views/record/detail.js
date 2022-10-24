@@ -1872,7 +1872,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             this.getHelper().processSetupHandlers(this, this.setupHandlerType);
 
-            this.initInlideEditDynamicWithLogicInteroperability();
+            this.initInlineEditDynamicWithLogicInteroperability();
 
             this.forcePatchAttributeDependencyMap = this.getMetadata()
                 .get(['clientDefs', this.scope, 'forcePatchAttributeDependencyMap']) || {};
@@ -1992,7 +1992,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 });
         },
 
-        initInlideEditDynamicWithLogicInteroperability: function () {
+        initInlineEditDynamicWithLogicInteroperability: function () {
             let blockEdit = false;
 
             let process = (type, field) => {
