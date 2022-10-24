@@ -255,7 +255,7 @@ class RecordService
         }
 
         return $this->entityManager
-            ->getRDBRepositoryByClass(Note::class)
+            ->getRDBRepositoryByClass(Notification::class)
             ->where($whereClause)
             ->count();
     }
