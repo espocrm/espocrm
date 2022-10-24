@@ -55,6 +55,11 @@ class Email extends Entity
 
     public const RELATIONSHIP_EMAIL_USER = 'EmailUser';
 
+    public const USERS_COLUMN_IS_READ = 'isRead';
+    public const USERS_COLUMN_IN_TRASH = 'inTrash';
+    public const USERS_COLUMN_FOLDER_ID = 'folderId';
+    public const USERS_COLUMN_IS_IMPORTANT = 'isImportant';
+
     protected function _getSubject(): ?string
     {
         return $this->get('name');

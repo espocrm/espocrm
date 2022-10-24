@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\AssignmentNotificators;
 
+use Espo\Core\Field\DateTime;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\EmailFolder;
 use Espo\Modules\Crm\Entities\Account;
@@ -47,8 +48,6 @@ use Espo\Entities\Email as EmailEntity;
 use Espo\Repositories\Email as EmailRepository;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Tools\Email\Util;
-use DateTime;
-use Exception;
 
 /**
  * @implements AssignmentNotificator<EmailEntity>
@@ -106,26 +105,19 @@ class Email implements AssignmentNotificator
             }
         }
 
-        $dateSent = $entity->get('dateSent');
+        $dateSent = $entity->getDateSent();
 
         if (!$dateSent) {
             return;
         }
 
-        try {
-            $dt = new DateTime($dateSent);
-        }
-        catch (Exception $e) {
-            return;
-        }
-
-        if ($dt->diff(new DateTime())->days > self::DAYS_THRESHOLD) {
+        if ($dateSent->diff(DateTime::createNow())->days > self::DAYS_THRESHOLD) {
             return;
         }
 
         $emailUserIdList = $entity->get('usersIds');
 
-        if (is_null($emailUserIdList) || !is_array($emailUserIdList)) {
+        if (!is_array($emailUserIdList)) {
             return;
         }
 
@@ -184,7 +176,7 @@ class Email implements AssignmentNotificator
         }
 
         if (empty($data['personEntityId'])) {
-            $data['fromString'] = Util::parseFromName($entity->get('fromString'));
+            $data['fromString'] = Util::parseFromName($entity->getFromString());
 
             if (empty($data['fromString']) && $from) {
                 $data['fromString'] = $from;
@@ -217,7 +209,7 @@ class Email implements AssignmentNotificator
                 continue;
             }
 
-            if ($entity->getLinkMultipleColumn('users', 'inTrash', $userId)) {
+            if ($entity->getLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IN_TRASH, $userId)) {
                 continue;
             }
 
@@ -229,24 +221,23 @@ class Email implements AssignmentNotificator
                 $params->getOption('isBeingImported') ||
                 $params->getOption('isJustSent')
             ) {
-                $folderId = $entity->getLinkMultipleColumn('users', 'folderId', $userId);
+                $folderId = $entity->getLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_FOLDER_ID, $userId);
 
-                if ($folderId) {
-                    if (
-                        $this->entityManager
-                            ->getRDBRepositoryByClass(EmailFolder::class)
-                            ->where([
-                                'id' => $folderId,
-                                'skipNotifications' => true,
-                            ])
-                            ->count()
-                    ) {
-                        continue;
-                    }
+                if (
+                    $folderId &&
+                    $this->entityManager
+                        ->getRDBRepositoryByClass(EmailFolder::class)
+                        ->where([
+                            'id' => $folderId,
+                            'skipNotifications' => true,
+                        ])
+                        ->count()
+                ) {
+                    continue;
                 }
             }
 
-            /** @var User|null $user */
+            /** @var ?User $user */
             $user = $this->entityManager->getEntityById(EmailEntity::ENTITY_TYPE, $userId);
 
             if (!$user) {
