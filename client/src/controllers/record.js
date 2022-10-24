@@ -182,8 +182,17 @@ define('controllers/record', ['controller'], function (Dep) {
 
                 model
                     .fetch()
-                    .then(() => {
-                        this.hideLoadingNotification();
+                    .then(() => this.hideLoadingNotification())
+                    .catch(xhr => {
+                        if (
+                            xhr.status === 403 &&
+                            options.isAfterCreate
+                        ) {
+                            this.hideLoadingNotification();
+                            xhr.errorIsHandled = true;
+
+                            model.trigger('fetch-forbidden');
+                        }
                     });
 
                 this.listenToOnce(this.baseController, 'action', () => {

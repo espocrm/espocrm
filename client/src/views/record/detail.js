@@ -3211,6 +3211,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     id: this.model.id,
                     rootUrl: this.options.rootUrl,
                     model: this.model,
+                    isAfterCreate: true,
                 });
 
                 return true;

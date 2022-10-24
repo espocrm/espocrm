@@ -80,6 +80,13 @@ define('views/detail', ['views/main'], function (Dep) {
         rootLinkDisabled: false,
 
         /**
+         * A root URL.
+         *
+         * @type {string}
+         */
+        rootUrl: '',
+
+        /**
          * Add an un-follow button.
          */
         addUnfollowButtonToMenu: function () {
@@ -118,6 +125,8 @@ define('views/detail', ['views/main'], function (Dep) {
             this.headerView = this.options.headerView || this.headerView;
             this.recordView = this.options.recordView || this.recordView;
 
+            this.rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+
             this.setupHeader();
             this.setupRecord();
 
@@ -134,6 +143,36 @@ define('views/detail', ['views/main'], function (Dep) {
             }
 
             this.getHelper().processSetupHandlers(this, 'detail');
+
+            this.initRedirect();
+        },
+
+        /**
+         * @private
+         */
+        initRedirect: function () {
+            if (!this.options.params.isAfterCreate) {
+                return;
+            }
+
+            let redirect = () => {
+                Espo.Ui.success(this.translate('Created'));
+
+                setTimeout(() => {
+                    this.getRouter().navigate(this.rootUrl, {trigger: true});
+                }, 1000)
+            };
+
+            if (
+                this.model.lastXhr &&
+                this.model.lastXhr.status === 403
+            ) {
+                redirect();
+
+                return;
+            }
+
+            this.listenToOnce(this.model, 'fetch-forbidden', () => redirect())
         },
 
         /**
@@ -273,7 +312,6 @@ define('views/detail', ['views/main'], function (Dep) {
                 $name.css('text-decoration', 'line-through');
             }
 
-            let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
             let headerIconHtml = this.getHeaderIconHtml();
             let scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
 
@@ -283,7 +321,7 @@ define('views/detail', ['views/main'], function (Dep) {
                 $root = $('<span>')
                     .append(
                         $('<a>')
-                            .attr('href', rootUrl)
+                            .attr('href', this.rootUrl)
                             .addClass('action')
                             .attr('data-action', 'navigateToRoot')
                             .text(scopeLabel)
