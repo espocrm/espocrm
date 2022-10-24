@@ -1253,6 +1253,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             this.initFieldsControlBehaviour();
         },
 
+        /**
+         * @private
+         */
         initFieldsControlBehaviour: function () {
             let fields = this.getFieldViews();
 
@@ -1293,6 +1296,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
         },
 
+        /**
+         * @private
+         */
         initStickableButtonsContainer: function () {
             let $containers = this.$el.find('.detail-button-container');
             let $container = this.$el.find('.detail-button-container.record-buttons');
@@ -1932,6 +1938,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             this.initDynamicHandler();
         },
 
+        /**
+         * @private
+         */
         _initInlineEditSave: function () {
             this.listenTo(this.recordHelper, 'inline-edit-save', (field, o) => {
                 this.inlineEditSave(field, o);
@@ -1992,6 +2001,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 });
         },
 
+        /**
+         * @private
+         */
         initInlineEditDynamicWithLogicInteroperability: function () {
             let blockEdit = false;
 
@@ -2036,11 +2048,14 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             this.on('reset-field-option-list', (field) => process('options', field));
         },
 
+        /**
+         * @private
+         */
         initDynamicHandler: function () {
             let dynamicHandlerClassName = this.dynamicHandlerClassName ||
                 this.getMetadata().get(['clientDefs', this.scope, 'dynamicHandler']);
 
-            let init = function (dynamicHandler) {
+            let init = dynamicHandler => {
                 this.listenTo(this.model, 'change', (model, o) => {
                     if ('onChange' in dynamicHandler) {
                         dynamicHandler.onChange.call(dynamicHandler, model, o);
@@ -2061,7 +2076,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 if ('init' in dynamicHandler) {
                     dynamicHandler.init();
                 }
-            }.bind(this);
+            };
 
             if (dynamicHandlerClassName) {
                 this.wait(
