@@ -242,7 +242,7 @@ class Email implements AssignmentNotificator
             }
 
             /** @var ?User $user */
-            $user = $this->entityManager->getEntityById(EmailEntity::ENTITY_TYPE, $userId);
+            $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
             if (!$user) {
                 continue;
