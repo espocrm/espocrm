@@ -941,8 +941,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         groupShowMore: function (group) {
+            let groupItem;
+
             for (let i in this.groupDataList) {
-                let groupItem = this.groupDataList[i];
+                groupItem = this.groupDataList[i];
 
                 if (groupItem.name === group) {
                     break;
