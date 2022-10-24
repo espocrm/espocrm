@@ -29,31 +29,25 @@
 
 namespace Espo\Tools\Kanban;
 
-use Espo\Core\{
-    AclManager,
-    InjectableFactory,
-    Utils\Config,
-    Utils\Metadata,
-    Exceptions\ForbiddenSilent,
-    Acl\Table,
-    Select\SearchParams,
-};
+use Espo\Core\Acl\Table;
+use Espo\Core\AclManager;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 
 use Espo\Entities\User;
 
 class KanbanService
 {
-    private $user;
-
-    private $aclManager;
-
-    private $injectableFactory;
-
-    private $config;
-
-    private $metadata;
-
-    private $orderer;
+    private User $user;
+    private AclManager $aclManager;
+    private InjectableFactory $injectableFactory;
+    private Config $config;
+    private Metadata $metadata;
+    private Orderer $orderer;
 
     public function __construct(
         User $user,
@@ -71,6 +65,10 @@ class KanbanService
         $this->orderer = $orderer;
     }
 
+    /**
+     * @throws Error
+     * @throws ForbiddenSilent
+     */
     public function getData(string $entityType, SearchParams $searchParams): Result
     {
         $this->processAccessCheck($entityType);
@@ -120,6 +118,9 @@ class KanbanService
         return $this->injectableFactory->create(Kanban::class);
     }
 
+    /**
+     * @throws ForbiddenSilent
+     */
     private function processAccessCheck(string $entityType): void
     {
         if (!$this->metadata->get(['scopes', $entityType, 'object'])) {

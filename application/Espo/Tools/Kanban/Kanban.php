@@ -29,48 +29,32 @@
 
 namespace Espo\Tools\Kanban;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Utils\Metadata,
-    Select\SelectBuilderFactory,
-    Select\SearchParams,
-    FieldProcessing\ListLoadProcessor,
-    FieldProcessing\Loader\Params as FieldLoaderParams,
-    Record\ServiceContainer as RecordServiceContainer,
-};
-
-use Espo\{
-    ORM\EntityManager,
-};
-
+use Espo\Core\Exceptions\Error;
+use Espo\Core\FieldProcessing\ListLoadProcessor;
+use Espo\Core\FieldProcessing\Loader\Params as FieldLoaderParams;
+use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\SelectBuilderFactory;
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\EntityManager;
 use ArrayAccess;
 
 class Kanban
 {
     private const DEFAULT_MAX_ORDER_NUMBER = 50;
-
     private const MAX_GROUP_LENGTH = 100;
 
-    protected ?string $entityType = null;
-
-    protected bool $countDisabled = false;
-
-    protected bool $orderDisabled = false;
-
-    protected ?SearchParams $searchParams = null;
-
-    protected ?string $userId = null;
-
-    protected int $maxOrderNumber = self::DEFAULT_MAX_ORDER_NUMBER;
+    private ?string $entityType = null;
+    private bool $countDisabled = false;
+    private bool $orderDisabled = false;
+    private ?SearchParams $searchParams = null;
+    private ?string $userId = null;
+    private int $maxOrderNumber = self::DEFAULT_MAX_ORDER_NUMBER;
 
     private $metadata;
-
     private $selectBuilderFactory;
-
     private $entityManager;
-
     private $listLoadProcessor;
-
     private $recordServiceContainer;
 
     public function __construct(
@@ -137,6 +121,8 @@ class Kanban
 
     /**
      * Get kanban record data.
+     *
+     * @throws Error
      */
     public function getResult(): Result
     {
@@ -271,23 +257,22 @@ class Kanban
             }
 
             $groupData->total = $totalSub;
-
             $groupData->list = $collectionSub->getValueMapList();
 
             $additionalData->groupList[] = $groupData;
         }
 
-        if (!$this->countDisabled) {
-            $total = $repository->clone($query)->count();
-        }
-        else {
-            $total = $hasMore ? -1 : -2;
-        }
+        $total = !$this->countDisabled ?
+            $repository->clone($query)->count() :
+            ($hasMore ? -1 : -2);
 
         return new Result($collection, $total, $additionalData);
     }
 
-    protected function getStatusField(): string
+    /**
+     * @throws Error
+     */
+    private function getStatusField(): string
     {
         assert(is_string($this->entityType));
 
@@ -304,7 +289,7 @@ class Kanban
      * @return string[]
      * @throws Error
      */
-    protected function getStatusList(): array
+    private function getStatusList(): array
     {
         assert(is_string($this->entityType));
 
@@ -322,7 +307,7 @@ class Kanban
     /**
      * @return string[]
      */
-    protected function getStatusIgnoreList(): array
+    private function getStatusIgnoreList(): array
     {
         assert(is_string($this->entityType));
 
