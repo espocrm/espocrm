@@ -493,7 +493,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return;
             }
 
-            var options = {
+            let options = {
                 id: this.model.id,
                 model: this.model,
             };
@@ -518,11 +518,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         actionSave: function (data) {
             data = data || {};
 
-            var modeBeforeSave = this.mode;
+            let modeBeforeSave = this.mode;
 
             this.save(data.options)
                 .catch(reason => {
-                    if (modeBeforeSave === 'edit' && reason === 'error') {
+                    if (modeBeforeSave === this.MODE_EDIT && reason === 'error') {
                         this.setEditMode();
                     }
                 });
@@ -564,13 +564,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * A `self-assign` action.
          */
         actionSelfAssign: function () {
-            var attributes = {
+            let attributes = {
                 assignedUserId: this.getUser().id,
                 assignedUserName: this.getUser().get('name'),
             };
 
             if ('getSelfAssignAttributes' in this) {
-                var attributesAdditional = this.getSelfAssignAttributes();
+                let attributesAdditional = this.getSelfAssignAttributes();
 
                 if (attributesAdditional) {
                     for (let i in attributesAdditional) {
@@ -597,7 +597,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 view.render();
 
                 this.listenToOnce(view, 'after:update', attributes => {
-                    var isChanged = false;
+                    let isChanged = false;
 
                     for (let a in attributes) {
                         if (attributes[a] !== this.model.get(a)) {
@@ -685,7 +685,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             if (this.type === this.TYPE_DETAIL && this.printPdfAction) {
-                var printPdfAction = true;
+                let printPdfAction = true;
 
                 if (
                     !~(this.getHelper().getAppParam('templateEntityTypeList') || [])
@@ -707,7 +707,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     this.getAcl().check(this.entityType, 'edit') &&
                     !this.getMetadata().get(['clientDefs', this.scope, 'convertCurrencyDisabled'])
                 ) {
-                    var currencyFieldList = this.getFieldManager()
+                    let currencyFieldList = this.getFieldManager()
                         .getEntityTypeFieldList(this.entityType, {
                             type: 'currency',
                             acl: 'edit',
@@ -1338,7 +1338,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             let $navbarRight = $('#navbar .navbar-right');
 
             if (this.stickButtonsFormBottomSelector) {
-                var $bottom = this.$el.find(this.stickButtonsFormBottomSelector);
+                let $bottom = this.$el.find(this.stickButtonsFormBottomSelector);
 
                 if ($bottom.length) {
                     $middle = $bottom;
@@ -1510,7 +1510,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         resetModelChanges: function () {
-            var skipReRender = true;
+            let skipReRender = true;
 
             if (this.updatedAttributes) {
                 this.attributes = this.updatedAttributes;
@@ -1519,7 +1519,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 skipReRender = false;
             }
 
-            var attributes = this.model.attributes;
+            let attributes = this.model.attributes;
 
             for (let attr in attributes) {
                 if (!(attr in this.attributes)) {
@@ -1540,7 +1540,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                 this.notify('Removing...');
 
-                var collection = this.model.collection;
+                let collection = this.model.collection;
 
                 this.model
                     .destroy({wait: true})
@@ -1616,10 +1616,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         handleDataBeforeRender: function (data) {},
 
         data: function () {
-            var navigateButtonsEnabled = !this.navigateButtonsDisabled && !!this.model.collection;
+            let navigateButtonsEnabled = !this.navigateButtonsDisabled && !!this.model.collection;
 
-            var previousButtonEnabled = false;
-            var nextButtonEnabled = false;
+            let previousButtonEnabled = false;
+            let nextButtonEnabled = false;
 
             if (navigateButtonsEnabled) {
                 if (this.indexOfRecord > 0) {
@@ -1705,7 +1705,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return true;
             }
 
-            var isEmpty = true;
+            let isEmpty = true;
 
             this.dropdownItemList.forEach(item => {
                 if (!item.hidden) {
@@ -1721,7 +1721,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return true;
             }
 
-            var isEmpty = true;
+            let isEmpty = true;
 
             this.dropdownEditItemList.forEach(item => {
                 if (!item.hidden) {
@@ -1742,7 +1742,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             this._initInlineEditSave();
 
-            var collection = this.collection = this.model.collection;
+            let collection = this.collection = this.model.collection;
 
             if (collection) {
                 this.listenTo(this.model, 'destroy', () => {
@@ -1913,7 +1913,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             });
 
-            var dependencyDefs = Espo.Utils.clone(
+            let dependencyDefs = Espo.Utils.clone(
                 this.getMetadata().get(['clientDefs', this.model.name, 'formDependency']) || {}
             );
 
@@ -1921,7 +1921,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             this.initDependancy();
 
-            var dynamicLogic = Espo.Utils.clone(
+            let dynamicLogic = Espo.Utils.clone(
                 this.getMetadata().get(['clientDefs', this.model.name, 'dynamicLogic']) || {}
             );
 
@@ -2037,19 +2037,19 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         initDynamicHandler: function () {
-            var dynamicHandlerClassName = this.dynamicHandlerClassName ||
+            let dynamicHandlerClassName = this.dynamicHandlerClassName ||
                 this.getMetadata().get(['clientDefs', this.scope, 'dynamicHandler']);
 
-            var init = function (dynamicHandler) {
+            let init = function (dynamicHandler) {
                 this.listenTo(this.model, 'change', (model, o) => {
                     if ('onChange' in dynamicHandler) {
                         dynamicHandler.onChange.call(dynamicHandler, model, o);
                     }
 
-                    var changedAttributes = model.changedAttributes();
+                    let changedAttributes = model.changedAttributes();
 
                     for (let attribute in changedAttributes) {
-                        var methodName = 'onChange' + Espo.Utils.upperCaseFirst(attribute);
+                        let methodName = 'onChange' + Espo.Utils.upperCaseFirst(attribute);
 
                         if (methodName in dynamicHandler) {
                             dynamicHandler[methodName]
@@ -2067,7 +2067,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this.wait(
                     new Promise(resolve => {
                         require(dynamicHandlerClassName, (DynamicHandler) => {
-                            var dynamicHandler = this.dynamicHandler = new DynamicHandler(this);
+                            let dynamicHandler = this.dynamicHandler = new DynamicHandler(this);
 
                             init(dynamicHandler);
 
@@ -2077,12 +2077,12 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 );
             }
 
-            var handlerList = this.getMetadata().get(['clientDefs', this.scope, 'dynamicHandlerList']) || [];
+            let handlerList = this.getMetadata().get(['clientDefs', this.scope, 'dynamicHandlerList']) || [];
 
             if (handlerList.length) {
-                var self = this;
+                let self = this;
 
-                var promiseList = [];
+                let promiseList = [];
 
                 handlerList.forEach((className) => {
                     promiseList.push(
@@ -2158,25 +2158,24 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         switchToModelByIndex: function (indexOfRecord) {
-            var collection = this.model.collection || this.collection;
+            let collection = this.model.collection || this.collection;
 
             if (!collection) {
                 return;
             }
 
-            var model = collection.at(indexOfRecord);
+            let model = collection.at(indexOfRecord);
 
             if (!model) {
                 throw new Error("Model is not found in collection by index.");
             }
 
-            var id = model.id;
+            let id = model.id;
+            let scope = model.name || this.scope;
 
-            var scope = model.name || this.scope;
+            let url;
 
-            var url;
-
-            if (this.mode === 'edit') {
+            if (this.mode === this.MODE_EDIT) {
                 url = '#' + scope + '/edit/' + id;
             } else {
                 url = '#' + scope + '/view/' + id;
@@ -2195,7 +2194,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         actionPrevious: function () {
             this.model.abortLastFetch();
 
-            var collection;
+            let collection;
 
             if (!this.model.collection) {
                 collection = this.collection;
@@ -2218,7 +2217,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return;
             }
 
-            var indexOfRecord = this.indexOfRecord - 1;
+            let indexOfRecord = this.indexOfRecord - 1;
 
             this.switchToModelByIndex(indexOfRecord);
         },
@@ -2226,7 +2225,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         actionNext: function () {
             this.model.abortLastFetch();
 
-            var collection;
+            let collection;
 
             if (!this.model.collection) {
                 collection = this.collection;
@@ -2253,27 +2252,28 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return;
             }
 
-            var indexOfRecord = this.indexOfRecord + 1;
+            let indexOfRecord = this.indexOfRecord + 1;
 
             if (indexOfRecord <= collection.length - 1) {
                 this.switchToModelByIndex(indexOfRecord);
+
+                return;
             }
-            else {
-                collection
-                    .fetch({
-                        more: true,
-                        remove: false,
-                    })
-                    .then(() => {
-                        this.switchToModelByIndex(indexOfRecord);
-                    });
-            }
+
+            collection
+                .fetch({
+                    more: true,
+                    remove: false,
+                })
+                .then(() => {
+                    this.switchToModelByIndex(indexOfRecord);
+                });
         },
 
         actionViewPersonalData: function () {
             this.createView('viewPersonalData', 'views/personal-data/modals/personal-data', {
                 model: this.model
-            }, function (view) {
+            }, view => {
                 view.render();
 
                 this.listenToOnce(view, 'erase', () => {
@@ -2284,18 +2284,18 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         actionViewFollowers: function (data) {
-            var viewName = this.getMetadata().get(
+            let viewName = this.getMetadata().get(
                     ['clientDefs', this.model.name, 'relationshipPanels', 'followers', 'viewModalView']
                 ) ||
                 this.getMetadata().get(['clientDefs', 'User', 'modalViews', 'relatedList']) ||
                 'views/modals/followers-list';
 
-            var selectDisabled =
+            let selectDisabled =
                 !this.getUser().isAdmin() &&
                 this.getAcl().get('followerManagementPermission') === 'no' &&
                 this.getAcl().get('portalPermission') === 'no';
 
-            var options = {
+            let options = {
                 model: this.model,
                 link: 'followers',
                 scope: 'User',
@@ -2321,7 +2321,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 view.render();
 
                 this.listenTo(view, 'action', (action, data, e) => {
-                    var method = 'action' + Espo.Utils.upperCaseFirst(action);
+                    let method = 'action' + Espo.Utils.upperCaseFirst(action);
 
                     if (typeof this[method] === 'function') {
                         this[method](data, e);
@@ -2394,7 +2394,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         afterNotModified: function () {
-            var msg = this.translate('notModified', 'messages');
+            let msg = this.translate('notModified', 'messages');
 
             Espo.Ui.warning(msg, 'warning');
 
@@ -2433,13 +2433,12 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         errorHandlerModified: function (data, options) {
             Espo.Ui.notify(false);
 
-            var versionNumber = data.versionNumber;
+            let versionNumber = data.versionNumber;
+            let values = data.values || {};
 
-            var values = data.values || {};
+            let attributeList = Object.keys(values);
 
-            var attributeList = Object.keys(values);
-
-            var diffAttributeList = [];
+            let diffAttributeList = [];
 
             attributeList.forEach(attribute => {
                 if (this.attributes[attribute] !== values[attribute]) {
@@ -2503,13 +2502,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this.readOnly = true;
             }
 
-            var bottomView = this.getView('bottom');
+            let bottomView = this.getView('bottom');
 
             if (bottomView && 'setReadOnly' in bottomView) {
                 bottomView.setReadOnly();
             }
 
-            var sideView = this.getView('side');
+            let sideView = this.getView('side');
 
             if (sideView && 'setReadOnly' in sideView) {
                 sideView.setReadOnly();
@@ -2525,13 +2524,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this.readOnly = false;
             }
 
-            var bottomView = this.getView('bottom');
+            let bottomView = this.getView('bottom');
 
             if (bottomView && 'setNotReadOnly' in bottomView) {
                 bottomView.setNotReadOnly(onlyNotSetAsReadOnly);
             }
 
-            var sideView = this.getView('side');
+            let sideView = this.getView('side');
 
             if (sideView && 'setNotReadOnly' in sideView) {
                 sideView.setNotReadOnly(onlyNotSetAsReadOnly);
@@ -2551,7 +2550,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         manageAccessEdit: function (second) {
             if (this.isNew) return;
 
-            var editAccess = this.getAcl().checkModel(this.model, 'edit', true);
+            let editAccess = this.getAcl().checkModel(this.model, 'edit', true);
 
             if (!editAccess || this.readOnlyLocked) {
                 this.readOnly = true;
@@ -2608,7 +2607,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return;
             }
 
-            var deleteAccess = this.getAcl().checkModel(this.model, 'delete', true);
+            let deleteAccess = this.getAcl().checkModel(this.model, 'delete', true);
 
             if (!deleteAccess) {
                 this.hideActionItem('delete');
@@ -2638,7 +2637,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return;
             }
 
-            var streamAccess = this.getAcl().checkModel(this.model, 'stream', true);
+            let streamAccess = this.getAcl().checkModel(this.model, 'stream', true);
 
             if (!streamAccess) {
                 this.hideActionItem('viewFollowers');
@@ -3100,7 +3099,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @protected
          */
         createSideView: function () {
-            var el = this.options.el || '#' + (this.id);
+            let el = this.options.el || '#' + (this.id);
 
             this.createView('side', this.sideView, {
                 model: this.model,
@@ -3120,7 +3119,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @protected
          */
         createMiddleView: function (callback) {
-            var el = this.options.el || '#' + (this.id);
+            let el = this.options.el || '#' + (this.id);
 
             this.waitForView('middle');
 
@@ -3147,7 +3146,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @protected
          */
         createBottomView: function () {
-            var el = this.options.el || '#' + (this.id);
+            let el = this.options.el || '#' + (this.id);
 
             this.createView('bottom', this.bottomView, {
                 model: this.model,
@@ -3189,7 +3188,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          */
         exitAfterCreate: function () {
             if (!this.returnAfterCreate && this.model.id) {
-                var url = '#' + this.scope + '/view/' + this.model.id;
+                let url = '#' + this.scope + '/view/' + this.model.id;
 
                 this.getRouter().navigate(url, {trigger: false});
 
@@ -3212,10 +3211,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          */
         exit: function (after) {
             if (after) {
-                var methodName = 'exitAfter' + Espo.Utils.upperCaseFirst(after);
+                let methodName = 'exitAfter' + Espo.Utils.upperCaseFirst(after);
 
                 if (methodName in this) {
-                    var result = this[methodName]();
+                    let result = this[methodName]();
 
                     if (result) {
                         return;
@@ -3223,8 +3222,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            var url;
-            var options;
+            let url;
+            let options;
 
             if (this.returnUrl) {
                 url = this.returnUrl;
@@ -3241,6 +3240,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                     return;
                 }
+
                 if (this.model.id) {
                     url = '#' + this.scope + '/view/' + this.model.id;
 
@@ -3265,8 +3265,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             if (this.returnDispatchParams) {
-                var controller = this.returnDispatchParams.controller;
-                var action = this.returnDispatchParams.action;
+                let controller = this.returnDispatchParams.controller;
+                let action = this.returnDispatchParams.action;
                 options = this.returnDispatchParams.options || {};
 
                 this.getRouter().navigate(url, {trigger: false});
@@ -3279,7 +3279,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         subscribeToWebSocket: function () {
-            var topic = 'recordUpdate.' + this.entityType + '.' + this.model.id;
+            let topic = 'recordUpdate.' + this.entityType + '.' + this.model.id;
 
             this.recordUpdateWebSocketTopic = topic;
             this.isSubscribedToWebSocked = true;
@@ -3303,7 +3303,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             if (this.inlineEditModeIsOn || this.mode === 'edit') {
-                var m = this.model.clone();
+                let m = this.model.clone();
 
                 m.fetch().then(() => {
                     if (this.inlineEditModeIsOn || this.mode === 'edit') {

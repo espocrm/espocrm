@@ -121,15 +121,11 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
         actionSave: function (data) {
             data = data || {};
 
-            var isNew = this.isNew;
+            let isNew = this.isNew;
 
             this.save(data.options)
-                .then(
-                    function () {
-                        this.exit(isNew ? 'create' : 'save');
-                    }.bind(this)
-                )
-                .catch(function () {});
+                .then(() => this.exit(isNew ? 'create' : 'save'))
+                .catch(() => {});
         },
 
         /**
@@ -216,7 +212,7 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
         actionSaveAndNew: function (data) {
             data = data || {};
 
-            var proceedCallback = () => {
+            let proceedCallback = () => {
                 Espo.Ui.success(this.translate('Created'));
 
                 this.getRouter().dispatch(this.scope, 'create', {

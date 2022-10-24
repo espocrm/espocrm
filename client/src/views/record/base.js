@@ -138,13 +138,13 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                 this.recordHelper.setFieldStateParam(name, 'hiddenLocked', true);
             }
 
-            var processHtml = () => {
-                var fieldView = this.getFieldView(name);
+            let processHtml = () => {
+                let fieldView = this.getFieldView(name);
 
                 if (fieldView) {
-                    var $field = fieldView.$el;
-                    var $cell = $field.closest('.cell[data-name="' + name + '"]');
-                    var $label = $cell.find('label.control-label[data-name="' + name + '"]');
+                    let $field = fieldView.$el;
+                    let $cell = $field.closest('.cell[data-name="' + name + '"]');
+                    let $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
                     $field.addClass('hidden');
                     $label.addClass('hidden');
@@ -185,13 +185,13 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
 
             this.recordHelper.setFieldStateParam(name, 'hidden', false);
 
-            var processHtml = () => {
-                var fieldView = this.getFieldView(name);
+            let processHtml = () => {
+                let fieldView = this.getFieldView(name);
 
                 if (fieldView) {
-                    var $field = fieldView.$el;
-                    var $cell = $field.closest('.cell[data-name="' + name + '"]');
-                    var $label = $cell.find('label.control-label[data-name="' + name + '"]');
+                    let $field = fieldView.$el;
+                    let $cell = $field.closest('.cell[data-name="' + name + '"]');
+                    let $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
                     $field.removeClass('hidden');
                     $label.removeClass('hidden');
@@ -238,7 +238,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                 this.recordHelper.setFieldStateParam(name, 'readOnlyLocked', true);
             }
 
-            var view = this.getFieldView(name);
+            let view = this.getFieldView(name);
 
             if (view) {
                 view.setReadOnly(locked);
@@ -259,7 +259,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
 
             this.recordHelper.setFieldStateParam(name, 'readOnly', false);
 
-            var view = this.getFieldView(name);
+            let view = this.getFieldView(name);
 
             if (view) {
                 if (view.readOnly) {
@@ -289,7 +289,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
 
             this.recordHelper.setFieldStateParam(name, 'required', true);
 
-            var view = this.getFieldView(name);
+            let view = this.getFieldView(name);
 
             if (view) {
                 view.setRequired();
@@ -310,7 +310,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
 
             this.recordHelper.setFieldStateParam(name, 'required', false);
 
-            var view = this.getFieldView(name);
+            let view = this.getFieldView(name);
 
             if (view) {
                 view.setNotRequired();
@@ -333,7 +333,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
 
             this.recordHelper.setFieldOptionList(name, list);
 
-            var view = this.getFieldView(name);
+            let view = this.getFieldView(name);
 
             if (view) {
                 if ('setOptionList' in view) {
@@ -356,7 +356,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
 
             this.recordHelper.clearFieldOptionList(name);
 
-            var view = this.getFieldView(name);
+            let view = this.getFieldView(name);
 
             if (view) {
                 if ('resetOptionList' in view) {
@@ -403,11 +403,11 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
         stylePanel: function (name) {
             this.recordHelper.setPanelStateParam(name, 'styled', true);
 
-            var process = () => {
-                var $panel = this.$el.find('.panel[data-name="'+name+'"]');
-                var $btn = $panel.find('> .panel-heading .btn');
+            let process = () => {
+                let $panel = this.$el.find('.panel[data-name="'+name+'"]');
+                let $btn = $panel.find('> .panel-heading .btn');
 
-                var style = $panel.attr('data-style');
+                let style = $panel.attr('data-style');
 
                 if (!style) {
                     return;
@@ -439,11 +439,11 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
         unstylePanel: function (name) {
             this.recordHelper.setPanelStateParam(name, 'styled', false);
 
-            var process = () => {
-                var $panel = this.$el.find('.panel[data-name="'+name+'"]');
-                var $btn = $panel.find('> .panel-heading .btn');
+            let process = () => {
+                let $panel = this.$el.find('.panel[data-name="'+name+'"]');
+                let $btn = $panel.find('> .panel-heading .btn');
 
-                var style = $panel.attr('data-style');
+                let style = $panel.attr('data-style');
 
                 if (!style) {
                     return;
@@ -487,10 +487,10 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * @return {Object.<string,module:views/fields/base.Class>}
          */
         getFieldViews: function (withHidden) {
-            var fields = {};
+            let fields = {};
 
             this.fieldList.forEach(item => {
-                var view = this.getFieldView(item);
+                let view = this.getFieldView(item);
 
                 if (view) {
                     fields[item] = view;
@@ -572,7 +572,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          */
         handleDataBeforeRender: function (data) {
             this.getFieldList().forEach((field) => {
-                var viewKey = field + 'Field';
+                let viewKey = field + 'Field';
 
                 data[field] = data[viewKey];
             });
@@ -689,9 +689,9 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                 this.updatedAttributes = null;
             }
 
-            var attributes = this.model.attributes;
+            let attributes = this.model.attributes;
 
-            for (var attr in attributes) {
+            for (let attr in attributes) {
                 if (!(attr in this.attributes)) {
                     this.model.unset(attr);
                 }
@@ -707,7 +707,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * @param {Object.<string,*>} [options] Options.
          */
         setModelAttributes: function (setAttributes, options) {
-            for (var item in this.model.attributes) {
+            for (let item in this.model.attributes) {
                 if (!(item in setAttributes)) {
                     this.model.unset(item);
                 }
@@ -767,7 +767,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * @protected
          */
         setupFieldLevelSecurity: function () {
-            var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
+            let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
 
             forbiddenFieldList.forEach((field) => {
                 this.hideField(field, true);
@@ -938,7 +938,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * Processed after save a not modified record.
          */
         afterNotModified: function () {
-            var msg = this.translate('notModified', 'messages');
+            let msg = this.translate('notModified', 'messages');
 
             Espo.Ui.warning(msg);
 
@@ -972,17 +972,17 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
         save: function (options) {
             options = options || {};
 
-            var headers = options.headers || {};
+            let headers = options.headers || {};
 
-            var model = this.model;
+            let model = this.model;
 
             this.lastSaveCancelReason = null;
 
             this.beforeBeforeSave();
 
             let fetchedAttributes = this.fetch();
-            var initialAttributes = this.attributes;
-            var beforeSaveAttributes = this.model.getClonedAttributes();
+            let initialAttributes = this.attributes;
+            let beforeSaveAttributes = this.model.getClonedAttributes();
 
             let attributes = _.extend(
                 Espo.Utils.cloneDeep(beforeSaveAttributes),
@@ -1055,7 +1055,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                 options.afterValidate();
             }
 
-            var optimisticConcurrencyControl = this.getMetadata()
+            let optimisticConcurrencyControl = this.getMetadata()
                 .get(['entityDefs', this.entityType, 'optimisticConcurrencyControl']);
 
             if (optimisticConcurrencyControl && this.model.get('versionNumber') !== null) {
@@ -1121,10 +1121,10 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * @param {module:views/record/base~saveOptions} [options] Options.
          */
         handleSaveError: function (xhr, options) {
-            var response = null;
+            let response = null;
 
             if (~[409, 500].indexOf(xhr.status)) {
-                var statusReason = xhr.getResponseHeader('X-Status-Reason');
+                let statusReason = xhr.getResponseHeader('X-Status-Reason');
 
                 if (statusReason) {
                     try {
@@ -1137,8 +1137,10 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                             reason: statusReason.toString(),
                         };
 
+                        let data;
+
                         try {
-                            var data = JSON.parse(xhr.responseText);
+                            data = JSON.parse(xhr.responseText);
                         }
                         catch (e) {
                             console.error('Could not parse error response body.');
@@ -1155,9 +1157,9 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                 return;
             }
 
-            var reason = response.reason;
+            let reason = response.reason;
 
-            var handlerName =
+            let handlerName =
                 this.getMetadata()
                     .get(['clientDefs', this.scope, 'saveErrorHandlers', reason]) ||
                 this.getMetadata()
@@ -1175,7 +1177,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                 return;
             }
 
-            var methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(reason);
+            let methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(reason);
 
             if (methodName in this) {
                 xhr.errorIsHandled = true;
@@ -1214,7 +1216,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * @return {Object<string,*>|null}
          */
         processFetch: function () {
-            var data = this.fetch();
+            let data = this.fetch();
 
             this.model.set(data);
 
@@ -1231,17 +1233,17 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
         populateDefaults: function () {
             this.model.populateDefaults();
 
-            var defaultHash = {};
+            let defaultHash = {};
 
             if (!this.getUser().get('portalId')) {
                 if (this.model.hasField('assignedUser') || this.model.hasField('assignedUsers')) {
-                    var assignedUserField = 'assignedUser';
+                    let assignedUserField = 'assignedUser';
 
                     if (this.model.hasField('assignedUsers')) {
                         assignedUserField = 'assignedUsers';
                     }
 
-                    var fillAssignedUser = true;
+                    let fillAssignedUser = true;
 
                     if (this.getPreferences().get('doNotFillAssignedUserIfNotRequired')) {
                         fillAssignedUser = false;
@@ -1282,7 +1284,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                     }
                 }
 
-                var defaultTeamId = this.getUser().get('defaultTeamId');
+                let defaultTeamId = this.getUser().get('defaultTeamId');
 
                 if (defaultTeamId) {
                     if (
@@ -1350,7 +1352,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                     if (this.getUser().get('contactId')) {
                         defaultHash['contactsIds'] = [this.getUser().get('contactId')];
 
-                        var names = {};
+                        let names = {};
 
                         names[this.getUser().get('contactId')] = this.getUser().get('contactName');
                         defaultHash['contactsNames'] = names;
@@ -1358,7 +1360,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                 }
             }
 
-            for (var attr in defaultHash) {
+            for (let attr in defaultHash) {
                 if (this.model.has(attr)) {
                     delete defaultHash[attr];
                 }
@@ -1386,8 +1388,8 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * @private
          */
         _handleDependencyAttribute: function (attr) {
-            var data = this.dependencyDefs[attr];
-            var value = this.model.get(attr);
+            let data = this.dependencyDefs[attr];
+            let value = this.model.get(attr);
 
             if (value in (data.map || {})) {
                 (data.map[value] || []).forEach((item) => {
@@ -1408,17 +1410,18 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * @private
          */
         _doDependencyAction: function (data) {
-            var action = data.action;
+            let action = data.action;
 
-            var methodName = 'dependencyAction' + Espo.Utils.upperCaseFirst(action);
+            let methodName = 'dependencyAction' + Espo.Utils.upperCaseFirst(action);
+
             if (methodName in this && typeof this.methodName === 'function') {
                 this.methodName(data);
 
                 return;
             }
 
-            var fieldList = data.fieldList || data.fields || [];
-            var panelList = data.panelList || data.panels || [];
+            let fieldList = data.fieldList || data.fields || [];
+            let panelList = data.panelList || data.panels || [];
 
             switch (action) {
                 case 'hide':
@@ -1485,7 +1488,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * @param {Object<string,*>} [options] View options.
          */
         createField: function (name, view, params, mode, readOnly, options) {
-            var o = {
+            let o = {
                 model: this.model,
                 mode: mode || 'edit',
                 el: this.options.el + ' .field[data-name="' + name + '"]',
@@ -1502,12 +1505,12 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
             view = view || this.model.getFieldParam(name, 'view');
 
             if (!view) {
-                var type = this.model.getFieldType(name) || 'base';
+                let type = this.model.getFieldType(name) || 'base';
                 view = this.getFieldManager().getViewName(type);
             }
 
             if (options) {
-                for (var param in options) {
+                for (let param in options) {
                     o[param] = options[param];
                 }
             }
@@ -1528,7 +1531,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                 o.customOptionList = this.recordHelper.getFieldOptionList(name);
             }
 
-            var viewKey = name + 'Field';
+            let viewKey = name + 'Field';
 
             this.createView(viewKey, view, o);
 
