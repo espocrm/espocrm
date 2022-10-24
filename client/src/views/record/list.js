@@ -1837,6 +1837,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             this.scope = this.options.scope || this.entityType;
 
             this.massActionList = Espo.Utils.clone(this.massActionList);
+            this.checkAllResultMassActionList = Espo.Utils.clone(this.checkAllResultMassActionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
 
             this.mandatorySelectAttributeList = Espo.Utils.clone(
