@@ -2568,13 +2568,17 @@ table.table td.cell .html-container {
     padding: 2px 0;
 }
 
-.list-group-side li.selected a.side-link,
-.list-group-side li.selected a:hover.side-link,
-.list-group-side li.selected a:active.side-link,
-.list-group-side li.selected a:visited.side-link,
-.list-group-side li.selected a:focus.side-link {
-    color: @brand-danger;
-    font-weight: 600;
+.list-group-side li.selected {
+    a {
+        &.side-link,
+        &:hover.side-link,
+        &:active.side-link,
+        &:visited.side-link,
+        &:focus.side-link {
+            color: var(--brand-danger);
+            font-weight: 600;
+        }
+    }
 }
 
 .email-address-create-dropdown .btn {
