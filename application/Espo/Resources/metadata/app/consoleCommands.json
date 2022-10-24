@@ -29,7 +29,7 @@
     },
     "rebuildCategoryPaths": {
         "className": "Espo\\Classes\\ConsoleCommands\\RebuildCategoryPaths",
-        "listed": true
+        "listed": false
     },
     "populateArrayValues": {
         "className": "Espo\\Classes\\ConsoleCommands\\PopulateArrayValues",
