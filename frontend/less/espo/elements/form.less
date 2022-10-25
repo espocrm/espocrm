@@ -252,8 +252,7 @@ input[type="checkbox"].form-checkbox {
         }
     }
 
-    &:checked
-    {
+    &:checked {
         border-color: var(--btn-primary-border);
         background-color: var(--btn-primary-bg);
         &::before {
@@ -270,8 +269,18 @@ input[type="checkbox"].form-checkbox {
 
         &:checked::before {
             background-color: transparent;
-            //background-color: var(--gray-soft);
             color: var(--gray-soft);
+        }
+
+        &:not(.form-checkbox-simple) {
+            border-color: var(--btn-default-border);
+            background-color: var(--btn-default-bg);
+            opacity: 0.8;
+
+            &:checked::before {
+                background-color: var(--btn-default-bg);
+                color: var(--gray-soft);
+            }
         }
     }
 }
