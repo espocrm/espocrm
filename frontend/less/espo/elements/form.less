@@ -212,10 +212,10 @@ fieldset[disabled] .form-control {
 
 input[type="checkbox"].form-checkbox {
     appearance: none;
-    background-color: var(--btn-default-bg);
+    background-color: var(--input-bg);
     margin: 0;
     border-radius: var(--border-radius);
-    border: 1px solid var(--btn-default-border);
+    border: 1px solid var(--input-border);
     height: @line-height-computed;
     width: @line-height-computed;
     display: grid;
@@ -240,15 +240,12 @@ input[type="checkbox"].form-checkbox {
 
     &:not(:disabled):not(:checked) {
         &:hover {
-            background-color: var(--btn-default-hover-bg);
-            border-color: var(--btn-default-hover-border);
+
         }
     }
 
     &:not(:disabled):checked {
         &:hover {
-            background-color: var(--btn-primary-hover-bg);
-            border-color: var(--btn-primary-hover-border);
         }
     }
 
@@ -264,7 +261,7 @@ input[type="checkbox"].form-checkbox {
 
     &:disabled {
         cursor: default;
-        border-color: var(--btn-default-border);
+        border-color: var(--input-border);
         background-color: transparent;
 
         &:checked::before {
@@ -273,12 +270,11 @@ input[type="checkbox"].form-checkbox {
         }
 
         &:not(.form-checkbox-simple) {
-            border-color: var(--btn-default-border);
-            background-color: var(--btn-default-bg);
-            opacity: 0.8;
+            border-color: var(--input-border);
+            background-color: transparent;
 
             &:checked::before {
-                background-color: var(--btn-default-bg);
+                background-color: transparent;
                 color: var(--gray-soft);
             }
         }
