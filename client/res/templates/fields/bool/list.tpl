@@ -1,1 +1,1 @@
-<input type="checkbox"{{#if value}} checked{{/if}} disabled>
+<input type="checkbox" class="form-checkbox form-checkbox-simple"{{#if value}} checked{{/if}} disabled>

@@ -1066,6 +1066,7 @@ input.global-search-input {
     .checklist-label {
         color: @text-color;
         margin-bottom: 0;
+        padding-left: 5px;
     }
 
     .checklist-item-container {
@@ -1075,8 +1076,14 @@ input.global-search-input {
         }
 
         > input[type=checkbox] {
-            margin: 3px 3px 0 0;
+            float: left;
         }
+
+        > input[type=checkbox]:not(:disabled) + label {
+            cursor: pointer;
+        }
+
+        user-select: none;
     }
 
     .multi-enum-item-label-container {
@@ -1236,7 +1243,7 @@ input.global-search-input {
 .list > table th input[type="checkbox"] {
     margin: 0;
     position: relative;
-    top: 1px;
+    top: 3px;
 }
 
 .list > table th span.caret {

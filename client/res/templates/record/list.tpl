@@ -122,7 +122,7 @@
             <tr>
                 {{#if checkboxes}}
                 <th width="{{checkboxColumnWidth}}" data-name="r-checkbox">
-                    <span class="select-all-container"><input type="checkbox" class="select-all"></span>
+                    <span class="select-all-container"><input type="checkbox" class="select-all form-checkbox form-checkbox-small"></span>
                     {{#unless checkAllResultDisabled}}
                     <div class="btn-group checkbox-dropdown">
                         <a
