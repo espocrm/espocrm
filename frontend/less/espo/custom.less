@@ -1239,11 +1239,14 @@ input.global-search-input {
     }
 }
 
-.list > table td input[type="checkbox"],
-.list > table th input[type="checkbox"] {
-    margin: 0;
-    position: relative;
-    top: 3px;
+.list > table {
+    td, th {
+        input.form-checkbox-small[type="checkbox"] {
+            margin: 0;
+            position: relative;
+            top: 3px;
+        }
+    }
 }
 
 .list > table th span.caret {
