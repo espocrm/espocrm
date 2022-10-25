@@ -112,25 +112,17 @@ class FieldValidationManager
 
         $dataIsSet = $data !== null;
 
-        if (!$data) {
-            $data = (object) [];
-        }
+        $data ??= (object) [];
+        $params ??= new FieldValidationParams();
 
-        if (!$params) {
-            $params = new FieldValidationParams();
-        }
-
-        $fieldList = $this->fieldUtil->getEntityTypeFieldList($entity->getEntityType());
-
-        $skipFieldList = $params->getSkipFieldList();
+        $fieldList = array_filter(
+            $this->fieldUtil->getEntityTypeFieldList($entity->getEntityType()),
+            fn ($field) => !in_array($field, $params->getSkipFieldList())
+        );
 
         $failureList = [];
 
         foreach ($fieldList as $field) {
-            if (in_array($field, $skipFieldList)) {
-                continue;
-            }
-
             if (
                 !$entity->isNew() &&
                 $dataIsSet &&
@@ -148,25 +140,50 @@ class FieldValidationManager
     }
 
     /**
+     * @return string[]
+     */
+    private function getMandatoryValidationList(string $entityType, string $field): array
+    {
+        $fieldType = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
+
+        return
+            $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'mandatoryValidationList']) ??
+            $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList']) ?? [];
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getValidationList(string $entityType, string $field): array
+    {
+        $fieldType = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
+
+        return
+            $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'validationList']) ??
+            $this->metadata->get(['fields', $fieldType, 'validationList']) ?? [];
+    }
+
+    /**
      * Check a specific field for a specific validation type.
      */
     public function check(Entity $entity, string $field, string $type, ?stdClass $data = null): bool
     {
-        if (!$data) {
-            $data = (object) [];
-        }
-
+        $data ??= (object) [];
         $entityType = $entity->getEntityType();
 
-        $fieldType = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
+        $result = $this->processValidator($entity, $field, $type, new Data($data));
+
+        if (!$result) {
+            return false;
+        }
+
         $validationValue = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, $type);
+        $isMandatory = in_array($type, $this->getMandatoryValidationList($entityType, $field));
 
-        $mandatoryValidationList = $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList'], []);
+        $skip = !$isMandatory && (is_null($validationValue) || $validationValue === false);
 
-        if (!in_array($type, $mandatoryValidationList)) {
-            if (is_null($validationValue) || $validationValue === false) {
-                return true;
-            }
+        if ($skip) {
+            return true;
         }
 
         $result1 = $this->processFieldCheck($entityType, $type, $entity, $field, $validationValue);
@@ -178,12 +195,6 @@ class FieldValidationManager
         $result2 = $this->processFieldRawCheck($entityType, $type, $data, $field, $validationValue);
 
         if (!$result2) {
-            return false;
-        }
-
-        $result3 = $this->processValidator($entity, $field, $type, new Data($data));
-
-        if (!$result3) {
             return false;
         }
 
@@ -245,31 +256,19 @@ class FieldValidationManager
 
         $entityType = $entity->getEntityType();
 
-        $fieldType = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
+        $validationList = array_unique(array_merge(
+            $this->getValidationList($entityType, $field),
+            $this->getMandatoryValidationList($entityType, $field)
+        ));
 
-        $validationList =
-            $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'validationList']) ??
-            $this->metadata->get(['fields', $fieldType, 'validationList']) ?? [];
-
-        $mandatoryValidationList =
-            $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'mandatoryValidationList']) ??
-            $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList']) ?? [];
-
-        $validationList = array_unique(array_merge($validationList, $mandatoryValidationList));
+        $validationList = array_filter(
+            $validationList,
+            fn ($type) => !in_array($field, $params->getTypeSkipFieldList($type))
+        );
 
         $failureList = [];
 
         foreach ($validationList as $type) {
-            $value = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, $type);
-
-            if (is_null($value) && !in_array($type, $mandatoryValidationList)) {
-                continue;
-            }
-
-            if (in_array($field, $params->getTypeSkipFieldList($type))) {
-                continue;
-            }
-
             $result = $this->check($entity, $field, $type, $data);
 
             if ($result) {
