@@ -19,8 +19,9 @@
         },
         {
             "name": "defaultType",
-            "type": "varchar",
-            "default": "Mobile"
+            "type": "enum",
+            "default": "Mobile",
+            "view": "views/admin/field-manager/fields/phone/default"
         },
         {
             "name": "audited",
