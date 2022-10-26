@@ -1,4 +1,4 @@
-<ul class="list-group array-add-list-group no-side-margin">
+<ul class="list-group list-group-panel array-add-list-group no-side-margin">
 {{#each dashletList}}
     <li class="list-group-item clearfix">
         <a

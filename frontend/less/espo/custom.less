@@ -2850,7 +2850,10 @@ table.table td.cell .html-container {
 
 .list-group-panel {
     background-color: @panel-bg;
-    border-radius: var(--panel-border-radius);
+    &:not(.no-side-margin) {
+        border-radius: var(--panel-border-radius);
+    }
+
     border: var(--panel-border-width) solid var(--panel-default-border);
 
     > .list-group-item {
@@ -2859,14 +2862,18 @@ table.table td.cell .html-container {
 
         &:first-child {
             border-top: 0;
-            border-top-left-radius: var(--panel-border-radius);
-            border-top-right-radius: var(--panel-border-radius);
+            &:not(.no-side-margin) {
+                border-top-left-radius: var(--panel-border-radius);
+                border-top-right-radius: var(--panel-border-radius);
+            }
         }
 
         &:last-child {
             border-bottom: 0;
-            border-bottom-left-radius: var(--panel-border-radius);
-            border-bottom-right-radius: var(--panel-border-radius);
+            &:not(.no-side-margin) {
+                border-bottom-left-radius: var(--panel-border-radius);
+                border-bottom-right-radius: var(--panel-border-radius);
+            }
         }
     }
 }
