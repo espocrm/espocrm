@@ -1,0 +1,67 @@
+{
+  "labels": {
+    "Converted To": "Converter em",
+    "Create Lead": "Criar Lead",
+    "Convert": "Converter",
+    "convert": "converter"
+  },
+  "fields": {
+    "name": "Nome",
+    "title": "Título",
+    "phoneNumber": "Telemóvel",
+    "accountName": "Nome de conta",
+    "doNotCall": "Não contactar",
+    "address": "Endereço",
+    "status": "Estado",
+    "source": "Origem",
+    "opportunityAmount": "Montante da oportunidade",
+    "opportunityAmountConverted": "Montante da oportunidade (convertido)",
+    "description": "Descrição",
+    "createdAccount": "Conta",
+    "createdContact": "Contacto",
+    "createdOpportunity": "Oportunidade",
+    "campaign": "Campanha",
+    "targetLists": "Públicos Alvo",
+    "targetList": "Público Alvo",
+    "industry": "Indústria",
+    "acceptanceStatus": "Estado de aceitação",
+    "opportunityAmountCurrency": "Moeda da quantidade de oportunidade",
+    "acceptanceStatusMeetings": "Estados de Aceitação (reuniões)",
+    "acceptanceStatusCalls": "Estado de Aceitação (chamadas)",
+    "convertedAt": "Convertido em"
+  },
+  "links": {
+    "targetLists": "Públicos Alvo",
+    "campaignLogRecords": "Registo de campanha",
+    "campaign": "Campanha",
+    "createdAccount": "Conta",
+    "createdContact": "Contacto",
+    "createdOpportunity": "Oportunidade",
+    "cases": "Casos",
+    "documents": "Documentos"
+  },
+  "options": {
+    "status": {
+      "New": "Novo",
+      "Assigned": "Atribuído",
+      "In Process": "Em progresso",
+      "Converted": "Convertido",
+      "Recycled": "Reciclado",
+      "Dead": "Morto"
+    },
+    "source": {
+      "Call": "Chamada",
+      "Existing Customer": "Cliente existente",
+      "Partner": "Parceiro",
+      "Public Relations": "Relações públicas",
+      "Web Site": "Website",
+      "Campaign": "Campanha",
+      "Other": "Outro"
+    }
+  },
+  "presetFilters": {
+    "active": "Ativo",
+    "actual": "Atual",
+    "converted": "Convertido"
+  }
+}

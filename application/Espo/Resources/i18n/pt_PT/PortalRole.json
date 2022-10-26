@@ -1,0 +1,19 @@
+{
+  "links": {
+    "users": "Utilizadores"
+  },
+  "labels": {
+    "Access": "Acesso",
+    "Create PortalRole": "Crie uma função de portal",
+    "Scope Level": "Nível de âmbito",
+    "Field Level": "Nível de campo"
+  },
+  "fields": {
+    "exportPermission": "Exportar permissões",
+    "massUpdatePermission": "Permissão de atualização em massa"
+  },
+  "tooltips": {
+    "exportPermission": "Define se os utilizadores do portal têm a capacidade de exportar registos.",
+    "massUpdatePermission": "Define se os utilizadores do portal têm a capacidade de fazer atualizações em massa de registos."
+  }
+}

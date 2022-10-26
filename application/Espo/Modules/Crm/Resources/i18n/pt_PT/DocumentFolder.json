@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "Criar pasta de documentos",
+    "Manage Categories": "Gerir Pastas",
+    "Documents": "Documentos"
+  },
+  "links": {
+    "documents": "Documentos"
+  }
+}

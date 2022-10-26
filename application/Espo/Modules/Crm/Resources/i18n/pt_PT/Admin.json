@@ -1,0 +1,11 @@
+{
+  "layouts": {
+    "detailConvert": "Converter Lead",
+    "listForAccount": "Lista (para contas)",
+    "listForContact": "Lista (para contactos)"
+  },
+  "templates": {
+    "invitation": "Convites",
+    "reminder": "Lembrete"
+  }
+}

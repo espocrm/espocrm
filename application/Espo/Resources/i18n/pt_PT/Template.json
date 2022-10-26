@@ -1,0 +1,45 @@
+{
+  "fields": {
+    "name": "Nome",
+    "body": "Corpo",
+    "entityType": "Tipo de Entidade",
+    "header": "Cabeçalho",
+    "footer": "Rodapé",
+    "leftMargin": "Margem esquerda",
+    "topMargin": "Margem superior",
+    "rightMargin": "Margem direita",
+    "bottomMargin": "Margem inferior",
+    "printFooter": "Imprimir rodapé",
+    "footerPosition": "Posição do Rodapé",
+    "variables": "Espaços reservados disponíveis",
+    "pageOrientation": "Orientação da página",
+    "pageFormat": "Formato folha",
+    "fontFace": "Tipo de letra",
+    "pageWidth": "Largura da página (mm)",
+    "pageHeight": "Altura da página (mm)",
+    "headerPosition": "Posição do cabeçalho",
+    "printHeader": "Imprimir cabeçalho",
+    "title": "Título"
+  },
+  "labels": {
+    "Create Template": "Criar template"
+  },
+  "tooltips": {
+    "footer": "Use {pageNumber} para imprimir o número da página",
+    "variables": "Copie e cole o placeholder necessário para Cabeçalho, Corpo ou Rodapé."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Vertital",
+      "Landscape": "Horizontal"
+    },
+    "placeholders": {
+      "today": "Hoje (data)",
+      "now": "Agora (data-hora)",
+      "pagebreak": "Quebra de página"
+    },
+    "pageFormat": {
+      "Custom": "Customizado"
+    }
+  }
+}

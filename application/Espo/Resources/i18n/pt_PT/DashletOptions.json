@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "title": "Título",
+    "dateFrom": "Data de",
+    "dateTo": "Data até",
+    "autorefreshInterval": "Intervalo de atualização automática",
+    "displayRecords": "Exibir registos",
+    "isDoubleHeight": "Altura 2x",
+    "mode": "Modo",
+    "enabledScopeList": "O que exibir",
+    "users": "Utilizadores",
+    "entityType": "Tipo de entidade",
+    "primaryFilter": "Filtro primário",
+    "boolFilterList": "Filtros adicionais",
+    "sortBy": "Ordenação (campo)",
+    "sortDirection": "Ordenação (direção)",
+    "dateFilter": "Filtro data",
+    "skipOwn": "Não mostrar registos próprios"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Semana (agenda)",
+      "basicWeek": "Semana",
+      "month": "Mês",
+      "basicDay": "Dia",
+      "agendaDay": "Dia (agenda)",
+      "timeline": "Linha do tempo"
+    }
+  },
+  "messages": {
+    "selectEntityType": "Selecione tipo de entidade nas opções de dashlet."
+  },
+  "tooltips": {
+    "skipOwn": "Ações feitas pela sua conta de utilizador não serão exibidas"
+  }
+}

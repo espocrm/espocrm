@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "Nome",
+    "portalRoles": "Perfis",
+    "isActive": "Ativo",
+    "isDefault": "Por defeito",
+    "tabList": "Lista de abas",
+    "quickCreateList": "Lista de criação rápida",
+    "theme": "Tema",
+    "language": "Idioma",
+    "dashboardLayout": "Layout do painel",
+    "dateFormat": "Formato de data",
+    "timeFormat": "Formato de hora",
+    "timeZone": "Fuso horário",
+    "weekStart": "Primeiro dia da semana",
+    "defaultCurrency": "Moeda padrão",
+    "customUrl": "URL personalizado",
+    "customId": "ID personalizado",
+    "layoutSet": "Conjunto de layouts"
+  },
+  "links": {
+    "users": "Utilizadores",
+    "portalRoles": "Perfis",
+    "notes": "Notas",
+    "layoutSet": "Conjutnto de layouts"
+  },
+  "tooltips": {
+    "portalRoles": "As funções de portal especificadas serão aplicadas a todos os utilizadores deste portal.",
+    "layoutSet": "Fornece a capacidade de ter layouts diferentes dos padrões."
+  },
+  "labels": {
+    "Create Portal": "Criar portal",
+    "User Interface": "Interface de utilizador",
+    "General": "Geral",
+    "Settings": "Configurações"
+  }
+}

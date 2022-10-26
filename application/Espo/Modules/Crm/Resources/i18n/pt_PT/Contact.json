@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "name": "Nome",
+    "accountRole": "Título",
+    "account": "Conta",
+    "accounts": "Contas",
+    "phoneNumber": "Telefone",
+    "accountType": "Tipo de conta",
+    "doNotCall": "Não contactar",
+    "address": "Endereço",
+    "opportunityRole": "Função da Oportunidade",
+    "description": "Descrição",
+    "campaign": "Campanha",
+    "targetLists": "Públicos Alvo",
+    "targetList": "Público Alvo",
+    "portalUser": "Utilizador do Portal",
+    "originalLead": "Origem Lead",
+    "acceptanceStatus": "Estado de aceitação",
+    "accountIsInactive": "Conta Inativa",
+    "acceptanceStatusMeetings": "Estado de Aceitação (reuniões)",
+    "acceptanceStatusCalls": "Estado de Aceitação (chamadas)",
+    "title": "Título da conta principal",
+    "hasPortalUser": "Utilizador do portal"
+  },
+  "links": {
+    "opportunities": "Oportunidades",
+    "cases": "Casos",
+    "targetLists": "Públicos Alvo",
+    "campaignLogRecords": "Registo de Campanha",
+    "campaign": "Campanha",
+    "account": "Conta (primária)",
+    "accounts": "Contas",
+    "casesPrimary": "Casos (primário)",
+    "portalUser": "Utilizador do Portal",
+    "originalLead": "Lead original",
+    "documents": "Documentos",
+    "tasksPrimary": "Tarefas (expandidas)",
+    "opportunitiesPrimary": "Oportunidades (primário)"
+  },
+  "labels": {
+    "Create Contact": "Criar contato"
+  },
+  "options": {
+    "opportunityRole": {
+      "Decision Maker": "Tomada de decisão",
+      "Evaluator": "Avaliador",
+      "Influencer": "Influenciador"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "Utilizadores do portal",
+    "notPortalUsers": "Não Utilizadores do Portal",
+    "accountActive": "Ativo"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "name": "Nome",
+    "status": "Estado",
+    "job": "Trabalho",
+    "scheduling": "Agendando"
+  },
+  "links": {
+    "log": "Registo"
+  },
+  "labels": {
+    "Create ScheduledJob": "Criar trabalho agendado",
+    "As often as possible": "O mais frequente possível"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "Limpar",
+      "CheckInboundEmails": "Verificar contas de email do grupo",
+      "CheckEmailAccounts": "Verificar contas de email pessoais",
+      "SendEmailReminders": "Enviar lembretes por email",
+      "AuthTokenControl": "Controle de token de autenticação",
+      "SendEmailNotifications": "Enviar notificações por email",
+      "CheckNewVersion": "Verificar se há nova versão",
+      "ProcessWebhookQueue": "Processar fila de webhook"
+    },
+    "cronSetup": {
+      "linux": "Nota: Adicione esta linha ao arquivo crontab para executar o Espo Scheduled Jobs:",
+      "mac": "Nota: Adicione esta linha ao arquivo crontab para executar o Espo Scheduled Jobs:",
+      "windows": "Nota: Crie um arquivo em lote com os seguintes comandos para executar o Espo Scheduled Jobs usando as Tarefas Agendadas do Windows:",
+      "default": "Nota: Adicione este comando ao Cron Job (tarefa programada):"
+    },
+    "status": {
+      "Active": "Ativo",
+      "Inactive": "Inativo"
+    }
+  },
+  "tooltips": {
+    "scheduling": "Notação Crontab. Define a frequência de execuções de trabalho.\n\n*/5 * * * * - todos os 5 minutos\n\n`0 */2 * * * - todas as 2 horas\n\n`30 1 * * * - uma vez por dia às 01:30\n\n0 0 1 * * - no primeiro dia do mês"
+  }
+}

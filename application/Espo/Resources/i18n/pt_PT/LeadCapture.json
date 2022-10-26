@@ -1,0 +1,46 @@
+{
+  "fields": {
+    "name": "Nome",
+    "campaign": "Campanha",
+    "isActive": "Ativo",
+    "subscribeToTargetList": "Inscrever-se na lista de alvos",
+    "subscribeContactToTargetList": "Inscrever contato se existir",
+    "targetList": "Público alvo",
+    "optInConfirmation": "Duplo Opt-In",
+    "optInConfirmationEmailTemplate": "Modelo de email de confirmação de opt-in",
+    "optInConfirmationLifetime": "Vida útil da confirmação de opt-in (horas)",
+    "optInConfirmationSuccessMessage": "Texto a ser exibido após a confirmação de aceitação",
+    "leadSource": "Origem da Lead",
+    "apiKey": "API key",
+    "targetTeam": "Equipa alvo",
+    "exampleRequestMethod": "Método",
+    "createLeadBeforeOptInConfirmation": "Criar lead antes de confirmar",
+    "duplicateCheck": "Duplicate check ",
+    "skipOptInConfirmationIfSubscribed": "Pular confirmação se a lead já estiver na lista de alvos.",
+    "smtpAccount": "AMTP Account",
+    "inboundEmail": "Conta de email de grupo",
+    "exampleRequestHeaders": "Cabeçalhos"
+  },
+  "links": {
+    "targetList": "Público alvo",
+    "campaign": "Campanha",
+    "optInConfirmationEmailTemplate": "Modelo de email de confirmação de opt-in",
+    "targetTeam": "Equipa alvo",
+    "logRecords": "Registo",
+    "inboundEmail": "Conta de email de grupo"
+  },
+  "labels": {
+    "Create LeadCapture": "Criar ponto de entrada",
+    "Generate New API Key": "Gerar nova chave API",
+    "Request": "Pedido",
+    "Confirm Opt-In": "Confirme Opt-In"
+  },
+  "messages": {
+    "generateApiKey": "Criar nova chave API",
+    "optInConfirmationExpired": "O link de confirmação de ativação expirou.",
+    "optInIsConfirmed": "O opt-in confirmado."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown é suportado"
+  }
+}

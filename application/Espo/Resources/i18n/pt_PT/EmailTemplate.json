@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "name": "Nome",
+    "status": "Estado",
+    "isHtml": "É Html",
+    "body": "Corpo",
+    "subject": "Assunto",
+    "attachments": "Anexos",
+    "oneOff": "Único",
+    "category": "Categoria",
+    "insertField": "Inserir campo"
+  },
+  "labels": {
+    "Create EmailTemplate": "Criar template de email",
+    "Info": "Informação",
+    "Available placeholders": "Espaços reservados disponíveis"
+  },
+  "tooltips": {
+    "oneOff": "Verifique se vai usar este modelo apenas uma vez. Por exemplo: para email em massa."
+  },
+  "presetFilters": {
+    "actual": "Atual"
+  },
+  "placeholderTexts": {
+    "optOutLink": "um link de cancelamento de inscrição.",
+    "today": "Hoje",
+    "now": "Data & Hora corrente",
+    "currentYear": "Ano atual",
+    "optOutUrl": "URL para um link de cancelamento de inscrição"
+  },
+  "messages": {
+    "infoText": "Espaços reservados disponíveis:\n\n{optOutUrl} &#8211;URL para um link de cancelamento de inscrição;\n\n{optOutLink} &#8211; um link de cancelamento de inscrição."
+  }
+}

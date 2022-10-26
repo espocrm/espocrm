@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "status": "Estado",
+    "processedCount": "Contagem processada"
+  },
+  "options": {
+    "status": {
+      "Pending": "Pendente",
+      "Running": "Executando",
+      "Success": "Sucesso",
+      "Failed": "Falhado"
+    }
+  },
+  "messages": {
+    "infoText": "A ação em massa está a ser processada em modo inativo pelo cron. Pode levar algum tempo para terminar. Fechar esta caixa de diálogo não afetará o processo de execução."
+  }
+}

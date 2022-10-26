@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "name": "Nome",
+    "status": "Estado",
+    "target": "Alvo",
+    "sentAt": "Data de envio",
+    "attemptCount": "Tentativas",
+    "emailAddress": "Endereço de email",
+    "massEmail": "Email em massa",
+    "isTest": "Teste"
+  },
+  "links": {
+    "target": "Alvo",
+    "massEmail": "Email em massa"
+  },
+  "options": {
+    "status": {
+      "Pending": "Pendente",
+      "Sent": "Enviado",
+      "Failed": "Falhado",
+      "Sending": "A enviar"
+    }
+  },
+  "presetFilters": {
+    "pending": "Pendente",
+    "sent": "Enviado",
+    "failed": "Falhado"
+  }
+}

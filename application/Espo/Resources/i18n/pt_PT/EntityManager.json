@@ -1,0 +1,81 @@
+{
+  "labels": {
+    "Fields": "Campos",
+    "Relationships": "Relações",
+    "Schedule": "Agendamento",
+    "Formula": "Fórmula"
+  },
+  "fields": {
+    "name": "Nome",
+    "type": "Tipo",
+    "labelSingular": "Singular",
+    "labelPlural": "Plural",
+    "stream": "Fluxo",
+    "label": "Etiqueta",
+    "linkType": "Tipo de link",
+    "entityForeign": "Entidade estrangeira",
+    "linkForeign": "Link estrangeiro",
+    "labelForeign": "Label estrangeira",
+    "sortBy": "Ordenação por defeito (campo)",
+    "sortDirection": "Ordenação por defeito (orientação)",
+    "relationName": "Nome da tabela intermédia",
+    "linkMultipleField": "Link múltiplo campo",
+    "linkMultipleFieldForeign": "Link estrangeiro multiplo campo",
+    "disabled": "Desativado",
+    "textFilterFields": "Filtro de texto - campos ",
+    "audited": "Auditado",
+    "auditedForeign": "Estrangeiro auditado",
+    "statusField": "Estado do campo",
+    "beforeSaveCustomScript": "Depois de salvar - script customizado",
+    "color": "Cor",
+    "kanbanViewMode": "Vista kanban",
+    "kanbanStatusIgnoreList": "Ignorar grupos na vista kanban",
+    "fullTextSearch": "Pesquisa de texto completo",
+    "countDisabled": "Desativar contagem de registos",
+    "parentEntityTypeList": "Tipo de Entity Parents",
+    "foreignLinkEntityTypeList": "Links estrangeiros",
+    "entity": "Entidade",
+    "optimisticConcurrencyControl": "Controle de simultaneidade otimista"
+  },
+  "options": {
+    "type": {
+      "": "Nenhum",
+      "Person": "Pessoa",
+      "CategoryTree": "Árvore de categorias",
+      "Event": "Evento",
+      "BasePlus": "Base plus",
+      "Company": "Empresa"
+    },
+    "linkType": {
+      "manyToMany": "Many-to-many",
+      "oneToMany": "One-to-many",
+      "manyToOne": "Many-to-one",
+      "parentToChildren": "Parent-to-children",
+      "childrenToParent": "Children-to-parent",
+      "oneToOneRight": "One-to-one right",
+      "oneToOneLeft": "One-to-one left"
+    },
+    "sortDirection": {
+      "asc": "Crescente",
+      "desc": "Descendente"
+    }
+  },
+  "messages": {
+    "entityCreated": "A entidade foi criada.",
+    "linkAlreadyExists": "Conflito de nome de link.",
+    "linkConflict": "Conflito de nome: link ou campo com o mesmo nome já existe.",
+    "confirmRemove": "Tem a certeza que quer remover o tipo de entidade do sistema?"
+  },
+  "tooltips": {
+    "statusField": "Atualizações desse campo são registradas no fluxo.",
+    "textFilterFields": "Campos usados pela pesquisa de texto.",
+    "stream": "Se a entidade tem um fluxo.",
+    "disabled": "Verifique se não precisa dessa entidade no sistema.",
+    "linkAudited": "A criação de registos e links relacionados com registos existentes será registrada no fluxo.",
+    "linkMultipleField": "Link Multiple field fornece uma maneira prática de editar relações. Não use se tem um grande número de registos relacionados.",
+    "entityType": "Base Plus - possui painéis Atividades, Histórico e Tarefas.\n\nEvento - disponível no painel Calendário e Atividades.",
+    "fullTextSearch": "A reconstrução em execução é necessária.",
+    "countDisabled": "O nome total não será mostrado na vista de lista. Pode diminuir o tempo de carregamento quando a tabela da base de dados é grande.",
+    "optimisticConcurrencyControl": "Previne conflitos de escrita."
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "futureDays": "Próximos X dias",
+    "useLastStage": "Agrupar pelo último estado alcançado",
+    "team": "Equipa"
+  }
+}

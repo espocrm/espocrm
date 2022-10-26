@@ -1,0 +1,11 @@
+{
+  "labels": {
+    "Primary": "Primário",
+    "Opted Out": "Opted out",
+    "Invalid": "Inválido"
+  },
+  "fields": {
+    "optOut": "Opted out",
+    "invalid": "Inválido"
+  }
+}

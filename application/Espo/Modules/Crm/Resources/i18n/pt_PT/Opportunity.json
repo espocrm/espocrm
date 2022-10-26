@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "Nome",
+    "account": "Conta",
+    "stage": "Estado",
+    "amount": "Montante",
+    "probability": "Probabilidade, %",
+    "leadSource": "Origem Lead",
+    "doNotCall": "Não contactar",
+    "closeDate": "Data de fecho",
+    "contacts": "Contactos",
+    "description": "Descrição",
+    "amountConverted": "Montante (convertido)",
+    "amountWeightedConverted": "Quantia ponderada",
+    "campaign": "Campanha",
+    "originalLead": "Origem Lead",
+    "amountCurrency": "Valor em moeda",
+    "contactRole": "Função do contacto",
+    "lastStage": "Último estado",
+    "contact": "Contacto (primário)"
+  },
+  "links": {
+    "contacts": "Contactos",
+    "documents": "Documentos",
+    "campaign": "Campanha",
+    "originalLead": "Lead original",
+    "contact": "Contacto (primário)"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Prospecção",
+      "Qualification": "Qualificação",
+      "Needs Analysis": "Precisa de análise",
+      "Value Proposition": "Proposta de valor",
+      "Id. Decision Makers": "Identidade. Tomadores de decisão",
+      "Perception Analysis": "Análise de percepção",
+      "Proposal/Price Quote": "Proposta/Cotação de preço",
+      "Negotiation/Review": "Negociação/Revisão",
+      "Closed Won": "Fechada como ganha",
+      "Closed Lost": "Fechada como perdida",
+      "Proposal": "Proposta",
+      "Negotiation": "Negociação"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "Criar Oportunidade"
+  },
+  "presetFilters": {
+    "open": "Abrir",
+    "won": "Ganho",
+    "lost": "Perdido"
+  }
+}

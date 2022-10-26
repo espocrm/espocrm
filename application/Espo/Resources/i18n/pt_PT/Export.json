@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "fieldList": "Lista de campos",
+    "exportAllFields": "Exportar todos os campos",
+    "format": "Formatação",
+    "status": "Estado"
+  },
+  "options": {
+    "format": {
+      "xlsx": "XLSX (excel)"
+    },
+    "status": {
+      "Pending": "Pendente",
+      "Running": "Correndo",
+      "Success": "Sucesso",
+      "Failed": "Falhou"
+    }
+  },
+  "messages": {
+    "exportProcessed": "A exportação foi processada. Baixe o [ficheiro]({url})",
+    "infoText": "A exportação está a ser processada. Pode demorar a terminar. Fechar esta caixa de diálogo não vai afetar o processo."
+  }
+}

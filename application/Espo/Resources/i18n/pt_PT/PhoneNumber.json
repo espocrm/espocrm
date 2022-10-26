@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "type": "Tipo",
+    "optOut": "Opted-out",
+    "invalid": "Inválido"
+  }
+}

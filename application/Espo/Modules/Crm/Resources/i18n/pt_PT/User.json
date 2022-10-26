@@ -1,0 +1,10 @@
+{
+  "links": {
+    "targetLists": "Públicos Alvo"
+  },
+  "fields": {
+    "acceptanceStatus": "Estado de aceitação",
+    "acceptanceStatusMeetings": "Estado de Aceitação (Reuniões)",
+    "acceptanceStatusCalls": "Estado de Aceitação (Chamadas)"
+  }
+}

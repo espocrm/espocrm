@@ -1,0 +1,82 @@
+{
+  "fields": {
+    "name": "Nome",
+    "description": "Descrição",
+    "status": "Estado",
+    "type": "Tipo",
+    "startDate": "Data de Início",
+    "endDate": "Data de Fim",
+    "targetLists": "Públicos Alvo",
+    "excludingTargetLists": "Excluir dos Públicos Alvo",
+    "sentCount": "Enviado",
+    "openedCount": "Aberto",
+    "clickedCount": "Clicado",
+    "optedOutCount": "Opted-out",
+    "bouncedCount": "Devolvido",
+    "hardBouncedCount": "Hard bounced",
+    "softBouncedCount": "Soft bounced",
+    "leadCreatedCount": "Leads criadas",
+    "revenue": "Receita",
+    "revenueConverted": "Receita (convertido)",
+    "budget": "Orçamento",
+    "budgetConverted": "Orçamento (convertido)",
+    "contactsTemplate": "Modelo de contactos",
+    "leadsTemplate": "Modelo de leads",
+    "accountsTemplate": "Modelos de contas",
+    "usersTemplate": "Modelos de utilizadores",
+    "mailMergeOnlyWithAddress": "Ignorar registos sem endereço preenchido",
+    "optedInCount": "Opted-in",
+    "budgetCurrency": "Moeda do orçamento"
+  },
+  "links": {
+    "targetLists": "Públicos Alvo",
+    "excludingTargetLists": "Excluir dos Públicos Alvo",
+    "accounts": "Contas",
+    "contacts": "Contactos",
+    "opportunities": "Oportunidades",
+    "campaignLogRecords": "Registo",
+    "massEmails": "Emails em massa",
+    "trackingUrls": "Rasteamento de URLs",
+    "contactsTemplate": "Modelo de contactos",
+    "leadsTemplate": "Modelos de Leads ",
+    "accountsTemplate": "Modelos de contas",
+    "usersTemplate": "Modelos de utilizadores"
+  },
+  "options": {
+    "type": {
+      "Television": "Televisão",
+      "Radio": "Rádio"
+    },
+    "status": {
+      "Planning": "Plano",
+      "Active": "Ativo",
+      "Inactive": "Inativo",
+      "Complete": "Completo"
+    }
+  },
+  "labels": {
+    "Create Campaign": "Criar Campanha",
+    "Target Lists": "Públicos Alvo",
+    "Statistics": "Estatistica",
+    "hard": "Difícil",
+    "soft": "Fácil",
+    "Unsubscribe": "Cancelar subscrição",
+    "Mass Emails": "Emails em massa",
+    "Email Templates": "Modelo de email",
+    "Unsubscribe again": "Cancelar subscrição outra vez",
+    "Subscribe again": "Subcrever outra vez",
+    "Create Target List": "Criar Público Alvo",
+    "Generate Mail Merge PDF": "Gerar Mail Merge PDF"
+  },
+  "presetFilters": {
+    "active": "Ativo"
+  },
+  "messages": {
+    "unsubscribed": "Foi eliminado da nossa lista de distribuição.",
+    "subscribedAgain": "Está subscrito novamente"
+  },
+  "tooltips": {
+    "targetLists": "Alvos que devem receber mensagens.",
+    "excludingTargetLists": "Alvos que não devem receber mensagens."
+  }
+}

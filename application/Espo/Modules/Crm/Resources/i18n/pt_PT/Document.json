@@ -1,0 +1,40 @@
+{
+  "labels": {
+    "Create Document": "Criar documento",
+    "Details": "Detalhes"
+  },
+  "fields": {
+    "name": "Nome",
+    "status": "Estado",
+    "file": "Ficheiro",
+    "type": "Tipo",
+    "publishDate": "Data de Publicação",
+    "expirationDate": "Data de validade",
+    "description": "Descrição",
+    "accounts": "Contas",
+    "folder": "Pasta"
+  },
+  "links": {
+    "accounts": "Contas",
+    "opportunities": "Oportunidades",
+    "folder": "Pasta",
+    "contacts": "Contactos"
+  },
+  "options": {
+    "status": {
+      "Active": "Ativo",
+      "Draft": "Rascunho",
+      "Expired": "Expirado",
+      "Canceled": "Cancelado"
+    },
+    "type": {
+      "": "Nenhum",
+      "Contract": "Contrato",
+      "License Agreement": "Contrato de licença"
+    }
+  },
+  "presetFilters": {
+    "active": "Ativo",
+    "draft": "Rascunho"
+  }
+}

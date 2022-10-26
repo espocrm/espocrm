@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "post": "Publicar",
+    "attachments": "Anexos",
+    "targetType": "Alvo",
+    "teams": "Equipas",
+    "users": "Utilizadores",
+    "portals": "Portais",
+    "type": "Tipo",
+    "isGlobal": "Global",
+    "isInternal": "Interno (para utilizadores internos)",
+    "related": "Relacionado",
+    "createdByGender": "Criado por género",
+    "data": "Dados",
+    "number": "Número"
+  },
+  "filters": {
+    "all": "Todos",
+    "posts": "Publicações",
+    "updates": "Atualizações"
+  },
+  "messages": {
+    "writeMessage": "Escreve a sua mensagem aqui"
+  },
+  "options": {
+    "targetType": {
+      "self": "para mim mesmo",
+      "users": "para utilizador(s) em particular",
+      "teams": "para equipa(s) em particular",
+      "all": "para utilizadores internos",
+      "portals": "para utilizadores do portal"
+    },
+    "type": {
+      "Post": "Publicar"
+    }
+  },
+  "links": {
+    "superParent": "Super parent",
+    "related": "Relacionado"
+  }
+}

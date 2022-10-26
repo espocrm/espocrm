@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "from": "De",
+    "to": "Para",
+    "subject": "Assunto",
+    "bodyContains": "O corpo contém",
+    "action": "Ação",
+    "isGlobal": "Global",
+    "emailFolder": "Pasta"
+  },
+  "labels": {
+    "Create EmailFilter": "Criar filtro de email"
+  },
+  "tooltips": {
+    "from": "A enviar emails a partir do endereços especificados. Deixe vazio se não for necessário. Você pode usar wildcard *.",
+    "to": "A enviar emails para o endereço especificado. Deixe vazio se não for necessário. Você pode usar wildcard.",
+    "name": "Dê ao filtro um nome descritivo.",
+    "bodyContains": "O corpo do email contém qualquer uma das palavras ou frases especificadas.",
+    "isGlobal": "Aplica esse filtro a todos os emails recebidos no sistema.",
+    "subject": "Utilize wildcard *:\n\ntext* - começa com o texto,\n*text* - contém o texto. \n *termina com o texto"
+  },
+  "options": {
+    "action": {
+      "Skip": "Ignorar",
+      "Move to Folder": "Coloque na pasta"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "name": "Nome",
+    "roles": "Cargos",
+    "positionList": "Lista de posições",
+    "layoutSet": "Conjunto de layouts",
+    "workingTimeCalendar": "Calendário de horário de trabalho"
+  },
+  "links": {
+    "users": "Utilizadores",
+    "notes": "Notas",
+    "roles": "Cargos",
+    "inboundEmails": "Contas de email do grupo",
+    "layoutSet": "Conjunto de layouts",
+    "workingTimeCalendar": "Calendário de horário de trabalho"
+  },
+  "tooltips": {
+    "roles": "Funções de acesso. Os utilizadores dessa equipe obtêm o nível de controlo de acesso das funções selecionadas.",
+    "positionList": "Posições disponíveis nesta equipa. Por exemplo. Vendedor, Gerente",
+    "layoutSet": "Oferece a possiblidade de ter layouts que diferem dos lauouts padrões. Um conjunto de layouts será aplicado para utilizadores que têm esta equipa como equipa padrão.",
+    "workingTimeCalendar": "Um calendário será aplicado aos utilizadores que têm esta equipa como equipa padrão."
+  },
+  "labels": {
+    "Create Team": "Criar equipa"
+  }
+}

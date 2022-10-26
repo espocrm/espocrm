@@ -1,0 +1,25 @@
+{
+  "insertFromSourceLabels": {
+    "Document": "Inserir documento"
+  },
+  "fields": {
+    "role": "Função",
+    "related": "Relacionado",
+    "file": "Ficheiro",
+    "type": "Tipo",
+    "field": "Campo",
+    "sourceId": "ID Origem",
+    "storage": "Amazenamento",
+    "size": "Tamanho (bytes)",
+    "isBeingUploaded": "Está a ser carregado"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Anexo",
+      "Inline Attachment": "Anexo inline",
+      "Import File": "Importar ficheiro",
+      "Export File": "Exportar ficheiro",
+      "Mass Pdf": "Mass PDF"
+    }
+  }
+}

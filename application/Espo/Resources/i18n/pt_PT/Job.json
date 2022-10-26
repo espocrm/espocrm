@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "status": "Estado",
+    "executeTime": "Executar em",
+    "attempts": "Tentativas em falta",
+    "failedAttempts": "Tentativas falhadas",
+    "serviceName": "Serviço",
+    "methodName": "Método",
+    "scheduledJob": "Trabalho agendado",
+    "data": "Dados",
+    "method": "Método (descontinuado)",
+    "scheduledJobJob": "Nome do trabalho agendado",
+    "executedAt": "Executado em",
+    "startedAt": "Começou às",
+    "targetType": "Tipo de Alvo",
+    "targetId": "Alvo ID",
+    "number": "Número",
+    "queue": "Fila",
+    "job": "Trabalho",
+    "group": "Grupo",
+    "className": "Nome da classe",
+    "targetGroup": "Grupo alvo"
+  },
+  "options": {
+    "status": {
+      "Pending": "Pendente",
+      "Success": "Sucesso",
+      "Running": "A executar",
+      "Failed": "Falhado"
+    }
+  }
+}

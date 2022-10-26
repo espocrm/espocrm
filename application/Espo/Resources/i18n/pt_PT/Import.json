@@ -1,0 +1,104 @@
+{
+  "labels": {
+    "Revert Import": "Reverter Importação",
+    "Return to Import": "Voltar à importação",
+    "Run Import": "Iniciar Importação",
+    "Back": "Voltar",
+    "Field Mapping": "Mapeamento de campos",
+    "Default Values": "Valores padrão",
+    "Add Field": "Adicionar campo",
+    "Created": "Criado",
+    "Updated": "Atualizado",
+    "Result": "Resultado",
+    "Show records": "Mostrar registos",
+    "Remove Duplicates": "Remover duplicados",
+    "importedCount": "Importado (contagem)",
+    "duplicateCount": "Duplciados (Contagem)",
+    "updatedCount": "Atualizado (Contagem)",
+    "Create Only": "Apenas criar",
+    "Create and Update": "Criar e atualizar",
+    "Update Only": "Apenas atualizar",
+    "Update by": "Atualizar por",
+    "Set as Not Duplicate": "Marcar como não duplicado",
+    "File (CSV)": "Ficheiro (CSV)",
+    "First Row Value": "Valor da primeira linha",
+    "Skip": "Ignorar",
+    "Header Row Value": "Valor do cabeçalho",
+    "Field": "Campo",
+    "What to Import?": "Importar o quê?",
+    "Entity Type": "Tipo de entidade",
+    "What to do?": "Fazer o quê?",
+    "Properties": "Propriedades",
+    "Header Row": "Linha de cabeçalho",
+    "Person Name Format": "Formato do nome da pessoa",
+    "Field Delimiter": "Delimitador",
+    "Date Format": "Formato de data",
+    "Decimal Mark": "Marca decimal",
+    "Text Qualifier": "Qualificador de texto",
+    "Time Format": "Formato de hora",
+    "Currency": "Moeda",
+    "Preview": "Pré-visualizar",
+    "Next": "Seguinte",
+    "Step 1": "Passo 1",
+    "Step 2": "Passo 2",
+    "Double Quote": "Citação dupla",
+    "Single Quote": "Citação única",
+    "Imported": "Importado",
+    "Duplicates": "Duplicados",
+    "Skip searching for duplicates": "Ignorar pesquisa por duplicatas",
+    "Timezone": "Fuso horário",
+    "Remove Import Log": "Remover log de importação",
+    "New Import": "Nova importação",
+    "Import Results": "Importar Resultados",
+    "Silent Mode": "Modo silencioso",
+    "New import with same params": "Novo import com os mesmos parametros",
+    "Run Manually": "Correr de forma manual",
+    "Export": "Exportar"
+  },
+  "messages": {
+    "utf8": "Deve ser codificado em UTF-8",
+    "duplicatesRemoved": "Duplicados removidos",
+    "inIdle": "Executar em modo inativo (para grande volume de dados; via cron)",
+    "revert": "A ação removerá todos os registos importados permanentemente.",
+    "removeDuplicates": "A ação removerá permanentemente todos os registos importados que foram reconhecidos como duplicados.",
+    "confirmRevert": "A ação removerá todos os registos importados permanentemente. Tem a certeza?",
+    "confirmRemoveDuplicates": "A ação removerá permanentemente todos os registos importados que foram reconhecidos como duplicados. Tem a certeza?",
+    "removeImportLog": "A ação removerá o log de importação. Todos os registos importados serão mantidos. Use-o se tiver certeza de que a importação está correta.",
+    "confirmRemoveImportLog": "A ação removerá o log de importação. Todos os registos importados serão mantidos. Não poderá reverter os resultados da importação. Tem a certeza?",
+    "noErrors": "Sem erros."
+  },
+  "fields": {
+    "file": "Ficheiro",
+    "entityType": "Tipo de entidade",
+    "imported": "Registos importados",
+    "duplicates": "Registos duplicados",
+    "updated": "Registos atualizados",
+    "status": "Estado"
+  },
+  "options": {
+    "status": {
+      "Failed": "Falhado",
+      "In Process": "Em progresso",
+      "Complete": "Completo",
+      "Pending": "Pendente"
+    },
+    "personNameFormat": {
+      "f l": "Primeiro Último",
+      "l f": "Último Primeiro",
+      "f m l": "Primeio Meio Último",
+      "l f m": "Úlitmo Primeiro Meio",
+      "l, f": "Último, Primeiro"
+    }
+  },
+  "strings": {
+    "commandToRun": "Comando para executar (da linha de comandos)",
+    "saveAsDefault": "Salvar como padrão"
+  },
+  "tooltips": {
+    "manualMode": "Se marcado, terá de executar a importação manualmente desde a linha de comandos. O comando será mostrado após configurar a importação. ",
+    "silentMode": "A maioria dos scripts será ignorada após a execução. As notas de transmissão não serão criadas. A importação será executada mais rapidamente"
+  },
+  "links": {
+    "errors": "Erros"
+  }
+}

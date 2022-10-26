@@ -1,0 +1,20 @@
+{
+  "labels": {
+    "Check Syntax": "Verificar sintaxe."
+  },
+  "fields": {
+    "target": "Alvo",
+    "targetType": "Tipo do Alvo",
+    "error": "Erro"
+  },
+  "messages": {
+    "runSuccess": "Executado com sucesso.",
+    "runError": "Erro.",
+    "checkSyntaxSuccess": "Sintaxe está correta.",
+    "checkSyntaxError": "Erro de sintaxe.",
+    "emptyScript": "O script está vazio."
+  },
+  "tooltips": {
+    "output": "Os valores de impressão com a função `output\\printLine`. "
+  }
+}

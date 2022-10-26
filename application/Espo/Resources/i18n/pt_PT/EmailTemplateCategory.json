@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "Criar categoria",
+    "Manage Categories": "Gerir categorias",
+    "EmailTemplates": "Template de email"
+  },
+  "fields": {
+    "order": "Ordem",
+    "childList": "Lista pequena"
+  },
+  "links": {
+    "emailTemplates": "Template email"
+  }
+}

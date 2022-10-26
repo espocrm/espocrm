@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "parent": "Relativo a",
+    "dateStart": "Data de início",
+    "dateEnd": "Data de fim",
+    "duration": "Duração",
+    "status": "Estado",
+    "reminders": "Lembretes",
+    "dateStartDate": "Data de início (todo o dia)",
+    "dateEndDate": "Data de fim (todo o dia)",
+    "isAllDay": "Todo o dia"
+  },
+  "links": {
+    "parent": "Relativo a"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planeado",
+      "Held": "Manter",
+      "Not Held": "Não manter"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "Criar {entityTypeTranslated}",
+    "Schedule {entityType}": "Planeamento {entityTypeTranslated}",
+    "Log {entityType}": "Registo {entityTypeTranslated}",
+    "Set Held": "Configurar manter",
+    "Set Not Held": "Configurar não manter"
+  },
+  "massActions": {
+    "setHeld": "Configurar manter",
+    "setNotHeld": "Configurar não manter"
+  },
+  "presetFilters": {
+    "planned": "Planeado",
+    "held": "Manter",
+    "todays": "Hoje"
+  }
+}

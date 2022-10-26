@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "dateFormat": "Formato de data",
+    "timeFormat": "Formato de hora",
+    "timeZone": "Fuso horário",
+    "weekStart": "Primeiro dia da semana",
+    "thousandSeparator": "Separador dos milhares",
+    "decimalMark": "Marca decimal",
+    "defaultCurrency": "Moeda padrão",
+    "currencyList": "Lista de moedas",
+    "language": "Idioma",
+    "exportDelimiter": "Delimitador de exportação",
+    "signature": "Assinatura de email",
+    "dashboardTabList": "Lista de abas",
+    "tabList": "Lista de abas",
+    "defaultReminders": "Lembretes padrão",
+    "theme": "Tema",
+    "useCustomTabList": "Lista de abas personalizadas",
+    "receiveAssignmentEmailNotifications": "Notificações por email após a atribuição",
+    "receiveMentionEmailNotifications": "Notificações por email sobre menções em publicações",
+    "receiveStreamEmailNotifications": "Notificações por email sobre publicações e atualizações de estados",
+    "dashboardLayout": "Layout do Painel",
+    "emailReplyForceHtml": "Responder a email em HTML",
+    "autoFollowEntityTypeList": "Auto acompanhamento global",
+    "emailReplyToAllByDefault": "Email Responder a todos por padrão",
+    "doNotFillAssignedUserIfNotRequired": "Não preencha previamente o utilizador atribuído na criação do registo",
+    "followEntityOnStreamPost": "Seguir automaticamente o registo após publicar no Fluxo",
+    "followCreatedEntities": "Siga automaticamente os registos criados",
+    "followCreatedEntityTypeList": "Siga automaticamente os registos criados de tipos de entidade específicos",
+    "emailUseExternalClient": "Use um cliente de email externo",
+    "scopeColorsDisabled": "Desativar cores do âmbito",
+    "tabColorsDisabled": "Desativar cores das guias",
+    "assignmentNotificationsIgnoreEntityTypeList": "Notificações de atribuição no aplicativo",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Notificaões de atribuição via email"
+  },
+  "options": {
+    "weekStart": {
+      "0": "domingo",
+      "1": "segunda"
+    }
+  },
+  "labels": {
+    "Notifications": "Notificações",
+    "User Interface": "Interface de utilizador",
+    "Locale": "Localidade",
+    "Reset Dashboard to Default": "Redefinir o painel para o padrão"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Seguir automaticamente TODOS os novos registos (criados por qualquer utilizador) dos tipos de entidade selecionados. Para poder ver informações no fluxo e receber notificações sobre todos os registos no sistema.",
+    "doNotFillAssignedUserIfNotRequired": "Quando criar um registo, o utilizador atribuído não será preenchido com o próprio utilizador, a menos que o campo seja obrigatório.",
+    "followCreatedEntities": "Quando criar novos registos, eles serão automaticamente seguidos, mesmo se atribuídos a outro utilizador.",
+    "followCreatedEntityTypeList": "Quando criar novos registos de tipos de entidade selecionados, eles serão seguidos automaticamente, mesmo se atribuídos a outro utilizador."
+  }
+}

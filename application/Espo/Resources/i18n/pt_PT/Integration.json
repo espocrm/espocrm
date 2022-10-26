@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "enabled": "Ativo",
+    "clientId": "ID do client",
+    "redirectUri": "Redirecione URI"
+  },
+  "messages": {
+    "selectIntegration": "Selecione uma integração desde o menu.",
+    "noIntegrations": "Nenhuma integração está disponível."
+  },
+  "help": {
+    "Google": "Obtenha as credenciais do OAuth 2.0 no Google Developers Console.**\n\nVisite o [Google Developers Console](https://console.developers.google.com/project) para obter as credenciais do OAuth 2.0, como Client ID e Client Segredo que é conhecido pelo aplicativo do Google e do EspoCRM.",
+    "GoogleMaps": "Obtenha API key [aqui](https://developers.google.com/maps/documentation/javascript/get-api-key)."
+  }
+}

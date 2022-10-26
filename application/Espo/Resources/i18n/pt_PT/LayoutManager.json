@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "width": "Comprimento (%) ",
+    "link": "Ligação",
+    "notSortable": "Não ordenável",
+    "align": "Alinhar",
+    "panelName": "Nome do painel",
+    "style": "Estilo",
+    "sticked": "Colado",
+    "isLarge": "Tamanho de fonte grande",
+    "dynamicLogicVisible": "Condições que tornam o painel visível",
+    "hidden": "Escondido",
+    "dynamicLogicStyled": "Condiçõees que aplicam o estilo",
+    "widthPx": "Largura (px)",
+    "noLabel": "Sem etiqueta",
+    "tabLabel": "Etiqueta de aba",
+    "tabBreak": "Quebra de tabulação"
+  },
+  "options": {
+    "align": {
+      "left": "Esquerda",
+      "right": "Direita"
+    },
+    "style": {
+      "default": "Padrão",
+      "success": "Sucesso",
+      "danger": "Perigo",
+      "info": "Informação",
+      "warning": "Aviso",
+      "primary": "Primário"
+    }
+  },
+  "labels": {
+    "New panel": "Novo Painel"
+  },
+  "tooltips": {
+    "link": "Se marcado, um valor de campo será exibido como um link apontando para a visualização de detalhes do registo. Geralmente é usado para campos *Nome*.",
+    "hiddenPanel": "Precisa de clicar \"ver mais\" para ver o painel.",
+    "sticked": "O painel será colado ao painel superior. Sem espaço entre os painéis.",
+    "panelStyle": "Cor do painel.",
+    "dynamicLogicVisible": "Se definido, o painel estará escondido, até que a condição seja atendida.",
+    "dynamicLogicStyled": "A cor será aplicada se determinada condição for atendida. A cor é definida pelo parâmetro *Estilo*.",
+    "tabBreak": "Uma aba separada para o painel e para todos os paineis seguintes, até à próxima quebra.",
+    "noLabel": "Não exiba um rótulo de coluna no cabeçalho.",
+    "notSortable": "Desativa a capacidade de classificar por coluna.",
+    "width": "Largura da coluna em percentagem. É recommendado que haja uma coluna com a largura não definida, geralmente é o campo *Nome*.",
+    "widthPx": "Largura da coluna em pixels. Tem efeito apenas quando o valor em percetagem não está definido. Torna a largura fixa."
+  },
+  "messages": {
+    "cantBeEmpty": "O layout não pode estar vazio.",
+    "fieldsIncompatible": "Campos que não podem estar juntos no layout: {fields}."
+  }
+}

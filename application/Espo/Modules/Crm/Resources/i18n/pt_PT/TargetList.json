@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "Nome",
+    "description": "Descrição",
+    "entryCount": "Contagem de entradas",
+    "campaigns": "Campanhas",
+    "endDate": "Data fim",
+    "targetLists": "Públicos Alvo",
+    "includingActionList": "Incluindo",
+    "excludingActionList": "Excluindo",
+    "optedOutCount": "Contagem de saída (opt-out)",
+    "targetStatus": "Estado ",
+    "isOptedOut": "Opted-out"
+  },
+  "links": {
+    "accounts": "Contas",
+    "contacts": "Contactos",
+    "campaigns": "Campanhas",
+    "massEmails": "Emails em massa"
+  },
+  "options": {
+    "type": {
+      "Television": "Televisão",
+      "Radio": "Rádio"
+    },
+    "targetStatus": {
+      "Opted Out": "Opted-out",
+      "Listed": "Listado"
+    }
+  },
+  "labels": {
+    "Create TargetList": "Criar Público Alvo",
+    "Opted Out": "Opted-out",
+    "Cancel Opt-Out": "Cancelar opt-out",
+    "Opt-Out": "Opt-out"
+  }
+}

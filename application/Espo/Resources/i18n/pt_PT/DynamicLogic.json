@@ -1,0 +1,30 @@
+{
+  "options": {
+    "operators": {
+      "equals": "Igual",
+      "notEquals": "Diferente",
+      "greaterThan": "Maior que",
+      "lessThan": "Menor que",
+      "greaterThanOrEquals": "Maior ou igual que",
+      "lessThanOrEquals": "Menor ou igual a",
+      "in": "Em",
+      "notIn": "Não em",
+      "inPast": "No passado",
+      "inFuture": "É Futuro",
+      "isToday": "É hoje",
+      "isTrue": "É verdade",
+      "isFalse": "É falso",
+      "isEmpty": "Sem informação",
+      "isNotEmpty": "Tem informação",
+      "contains": "Contém",
+      "has": "Contém",
+      "notContains": "Não contém",
+      "notHas": "Não contém",
+      "startsWith": "Começa com",
+      "endsWith": "Acaba com"
+    }
+  },
+  "labels": {
+    "Field": "Campo"
+  }
+}

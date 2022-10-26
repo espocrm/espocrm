@@ -1,0 +1,74 @@
+{
+  "fields": {
+    "name": "Nome",
+    "emailAddress": "Endereço de email",
+    "status": "Estado",
+    "assignToUser": "Atribuído ao utilizador",
+    "username": "Utilizador",
+    "password": "Senha",
+    "port": "Porta",
+    "monitoredFolders": "Pastas monotorizadas",
+    "trashFolder": "Lixo",
+    "createCase": "Criar Caso",
+    "reply": "Auto resposta",
+    "caseDistribution": "Distribuição de casos",
+    "replyEmailTemplate": "Modelo de email de resposta",
+    "replyFromAddress": "Responder do endereço",
+    "replyToAddress": "Responder para endereço",
+    "replyFromName": "Responder do nome",
+    "targetUserPosition": "Posição do utilizador alvo",
+    "fetchSince": "Procurar desde",
+    "addAllTeamUsers": "Para todos os utilizadores",
+    "team": "Equipa alvo",
+    "teams": "Equipas",
+    "sentFolder": "Enviados",
+    "storeSentEmails": "Armazenar emails enviados",
+    "useSmtp": "Usar SMTP",
+    "smtpPort": "SMTP Post",
+    "fromName": "Do Nome",
+    "smtpIsShared": "SMTP is shared",
+    "smtpIsForMassEmail": "SMTP Is for Mass Email ",
+    "useImap": "Procurar emails",
+    "keepFetchedEmailsUnread": "Mantenha os emails encontrados como não lidos",
+    "security": "Segurança"
+  },
+  "tooltips": {
+    "reply": "Notifique os remetentes de email que seus emails foram recebidos.\n\nSomente um email será enviado para um determinado destinatário durante algum período de tempo para evitar o loop.",
+    "createCase": "Criar casos automaticamente a partir de emails recebidos.",
+    "replyToAddress": "Especifique o endereço de email da caixa de correio para que as respostas cheguem até aqui.",
+    "caseDistribution": "Como os casos serão atribuídos. Atribuído diretamente ao utilizador ou a alguém da equipa.",
+    "assignToUser": "Casos de utilizadores serão atribuídos a.",
+    "team": "Casos de equipa serão atribuídos a.",
+    "teams": "Os emails das equipas serão atribuídos a.",
+    "addAllTeamUsers": "Os emails serão exibidos na Caixa de entrada de todos os utilizadores da equipa especificada.",
+    "targetUserPosition": "Utilizadores com posição especificada serão distribuídos com casos.",
+    "monitoredFolders": "Várias pastas devem ser separadas por vírgula.",
+    "smtpIsShared": "Se marcado, os utilizadores poderão enviar emails usando o seu serviço SMTP. A disponibilidade é controlada por funções através da permissão de conta de email do grupo.",
+    "smtpIsForMassEmail": "Se marcado, o SMTP estará disponível para email em massa.",
+    "storeSentEmails": "Os emails enviados serão armazenados no servidor IMAP.",
+    "useSmtp": "Possiblidade de enviar emails."
+  },
+  "links": {
+    "filters": "Filtros",
+    "assignToUser": "Atribuído ao utilizador"
+  },
+  "options": {
+    "status": {
+      "Active": "Ativo",
+      "Inactive": "Inativo"
+    },
+    "caseDistribution": {
+      "": "Nenhum",
+      "Direct-Assignment": "Atribuição direta",
+      "Least-Busy": "Menos ocupado"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "Crie uma conta de email",
+    "Actions": "Ações",
+    "Main": "Principal"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Não foi possível conectar-se ao servidor IMAP"
+  }
+}

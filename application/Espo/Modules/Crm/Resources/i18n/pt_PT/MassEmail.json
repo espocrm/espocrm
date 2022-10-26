@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "name": "Nome",
+    "status": "Estado",
+    "storeSentEmails": "Armazenar emails enviados",
+    "startAt": "Data de início",
+    "fromAddress": "A partir do endereço",
+    "fromName": "A partir do nome",
+    "replyToAddress": "Responder para o endereço",
+    "replyToName": "Responder para o nome",
+    "campaign": "Campanha",
+    "emailTemplate": "Modelo de email",
+    "inboundEmail": "Conta de email",
+    "targetLists": "Públicos Alvo",
+    "excludingTargetLists": "Exluir dos Públicos Alvo",
+    "optOutEntirely": "Desativar totalmente",
+    "smtpAccount": "Conta SMTP"
+  },
+  "links": {
+    "targetLists": "Público Alvo",
+    "excludingTargetLists": "Exluir do Público Alvo",
+    "queueItems": "Items da fila",
+    "campaign": "Campanha",
+    "emailTemplate": "Modelo de email",
+    "inboundEmail": "Conta de email"
+  },
+  "options": {
+    "status": {
+      "Draft": "Rascunho",
+      "Pending": "Pendente",
+      "In Process": "Em progresso",
+      "Complete": "Completo",
+      "Canceled": "Cancelado",
+      "Failed": "Falhado"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Criar email em massa",
+    "Send Test": "Enviar teste",
+    "System SMTP": "Sistema SMTP",
+    "system": "sistema",
+    "group": "grupo"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Selecione pelo menos um alvo.",
+    "testSent": "Email(s) de teste devem ser enviados"
+  },
+  "tooltips": {
+    "optOutEntirely": "Os endereços de email dos destinatários que não foram inscritos serão marcados como excluídos e não receberão mais nenhum email em massa.",
+    "targetLists": "Alvos que devem receber mensagens.",
+    "excludingTargetLists": "Alvos que não devem receber mensagens.",
+    "storeSentEmails": "Os emails serão armazenados no CRM."
+  },
+  "presetFilters": {
+    "actual": "Atual",
+    "complete": "Completo"
+  }
+}
