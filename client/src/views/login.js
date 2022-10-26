@@ -118,6 +118,7 @@ define('views/login', ['view'], function (Dep) {
                 hasFallback: !!this.handler && this.fallback,
                 method: this.method,
                 signInText: this.signInText,
+                logInText: this.logInText,
             };
         },
 
@@ -143,6 +144,14 @@ define('views/login', ['view'], function (Dep) {
                     this.translate(this.method, 'signInLabels') :
                     this.translate('Sign in');
             }
+
+            if (this.getLanguage().has('Log in', 'labels', 'Global')) {
+                this.logInText = this.translate('Log in');
+            }
+
+            this.logInText = this.getLanguage().has('Log in', 'labels', 'Global') ?
+                this.translate('Log in') :
+                this.translate('Login');
         },
 
         /**

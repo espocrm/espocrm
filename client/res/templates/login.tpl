@@ -73,7 +73,7 @@
                             class="btn btn-primary btn-s-wide"
                             id="btn-login"
                             tabindex="3"
-                        >{{translate 'Login' scope='User'}}</button>
+                        >{{logInText}}</button>
                     </div>
                 </form>
             </div>
