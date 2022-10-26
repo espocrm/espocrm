@@ -75,13 +75,13 @@ define('views/fields/checklist', ['views/fields/array'], function (Dep) {
         },
 
         getOptionDataList: function () {
-            var valueList = this.model.get(this.name) || [];
-            var list = [];
+            let valueList = this.model.get(this.name) || [];
+            let list = [];
 
             this.params.options.forEach((item) => {
-                var isChecked = ~valueList.indexOf(item);
-                var dataName = 'checklistItem-' + this.name + '-' + item;
-                var id = 'checklist-item-' + this.name + '-' + item;
+                let isChecked = ~valueList.indexOf(item);
+                let dataName = item;
+                let id = this.cid + '-' + Espo.Utils.camelCaseToHyphen(item.replace(/\s+/g, '-'));
 
                 if (this.isInversed) {
                     isChecked = !isChecked;
@@ -100,11 +100,11 @@ define('views/fields/checklist', ['views/fields/array'], function (Dep) {
         },
 
         fetch: function () {
-            var list = [];
+            let list = [];
 
-            this.params.options.forEach((item) => {
-                var $item = this.$el.find('input[data-name="checklistItem-' + this.name + '-' + item + '"]');
-                var isChecked = $item.get(0) && $item.get(0).checked;
+            this.params.options.forEach(item => {
+                let $item = this.$el.find('input[data-name="' + item + '"]');
+                let isChecked = $item.get(0) && $item.get(0).checked;
 
                 if (this.isInversed) {
                     isChecked = !isChecked;
@@ -115,7 +115,7 @@ define('views/fields/checklist', ['views/fields/array'], function (Dep) {
                 }
             });
 
-            var data = {};
+            let data = {};
 
             data[this.name] = list;
 
@@ -124,7 +124,7 @@ define('views/fields/checklist', ['views/fields/array'], function (Dep) {
 
         validateRequired: function () {
             if (this.isRequired()) {
-                var value = this.model.get(this.name);
+                let value = this.model.get(this.name);
 
                 if (!value || value.length === 0) {
                     var msg = this.translate('fieldIsRequired', 'messages')
@@ -139,10 +139,10 @@ define('views/fields/checklist', ['views/fields/array'], function (Dep) {
 
         validateMaxCount: function () {
             if (this.params.maxCount) {
-                var itemList = this.model.get(this.name) || [];
+                let itemList = this.model.get(this.name) || [];
 
                 if (itemList.length > this.params.maxCount) {
-                    var msg =
+                    let msg =
                         this.translate('fieldExceedsMaxCount', 'messages')
                             .replace('{field}', this.getLabelText())
                             .replace('{maxCount}', this.params.maxCount.toString());
