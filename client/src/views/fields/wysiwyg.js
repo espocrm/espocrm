@@ -334,6 +334,17 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             var $body = $iframe.contents().find('html body');
 
+            $body.find('img').each((i, img) => {
+                let $img = $(img);
+
+                if ($img.css('max-width') !== 'none') {
+                    return;
+                }
+
+                $img.css('max-width', '100%');
+            });
+
+
             var $document = $(documentElement);
 
             var processWidth = function () {
