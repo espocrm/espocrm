@@ -298,6 +298,16 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     return;
                 }
 
+                if (data.noteId) {
+                    let model = this.collection.get(data.noteId);
+
+                    if (model) {
+                        model.fetch();
+                    }
+
+                    return;
+                }
+
                 this.collection.fetchNew();
             });
         },
