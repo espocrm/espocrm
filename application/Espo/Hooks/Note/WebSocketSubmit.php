@@ -56,10 +56,6 @@ class WebSocketSubmit
             return;
         }
 
-        if (!$entity->isNew()) {
-            return;
-        }
-
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');
 
@@ -74,6 +70,10 @@ class WebSocketSubmit
         $data = (object) [
             'createdById' => $entity->get('createdById'),
         ];
+
+        if (!$entity->isNew()) {
+            $data->noteId = $entity->getId();
+        }
 
         $topic = "streamUpdate.{$parentType}.{$parentId}";
 

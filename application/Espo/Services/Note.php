@@ -170,6 +170,19 @@ class Note extends Record
         }
     }
 
+    public function filterUpdateInput(stdClass $data): void
+    {
+        parent::filterUpdateInput($data);
+
+        unset($data->parentId);
+        unset($data->parentType);
+        unset($data->targetType);
+        unset($data->usersIds);
+        unset($data->teamsIds);
+        unset($data->portalsIds);
+        unset($data->isGlobal);
+    }
+
     /**
      * @param NoteEntity $entity
      * @param stdClass $data
@@ -186,14 +199,6 @@ class Note extends Record
         if (!$entity->isPost() && !$this->user->isAdmin()) {
             throw new ForbiddenSilent("Only 'Post' type allowed.");
         }
-
-        $entity->clear('parentId');
-        $entity->clear('parentType');
-        $entity->clear('targetType');
-        $entity->clear('usersIds');
-        $entity->clear('teamsIds');
-        $entity->clear('portalsIds');
-        $entity->clear('isGlobal');
     }
 
     protected function handlePostText(NoteEntity $entity): void
