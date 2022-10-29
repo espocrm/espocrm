@@ -661,6 +661,8 @@ define('crm:views/record/panels/activities',
 
             data.viewOptions = data.viewOptions || {};
             data.viewOptions.massUnlinkDisabled = true;
+            data.viewOptions.fullFormUrl = '#' + this.model.entityType + '/' + this.name + '/' +
+                this.model.id + '/' + data.scope;
 
             Dep.prototype.actionViewRelatedList.call(this, data);
         },

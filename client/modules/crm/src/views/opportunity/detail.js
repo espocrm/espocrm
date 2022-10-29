@@ -26,26 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/opportunity/detail', 'views/detail', function (Dep) {
+define('crm:views/opportunity/detail', ['views/detail'], function (Dep) {
 
     return Dep.extend({
-
-        relatedAttributeMap: {
-            'contacts': {
-                'accountId': 'accountId',
-                'accountName': 'accountName'
-            },
-        },
-
-        relatedAttributeFunctions: {
-            'documents': function () {
-                var data = {};
-                if (this.model.get('accountId')) {
-                    data['accountsIds'] = [this.model.get('accountId')]
-                }
-                return data;
-            }
-        },
 
         selectRelatedFilters: {
             'contacts': {
@@ -81,6 +64,5 @@ Espo.define('crm:views/opportunity/detail', 'views/detail', function (Dep) {
                 },
             },
         },
-
     });
 });

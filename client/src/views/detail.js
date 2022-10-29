@@ -369,36 +369,13 @@ define('views/detail', ['views/main'], function (Dep) {
         },
 
         /**
-         * When a related record created, attributes will be copied from a current entity.
-         *
-         * Example:
-         * ```
-         * {
-         *     'linkName': {
-         *         'attributeNameOfCurrentEntity': 'attributeNameOfCreatedRelatedEntity',
-         *     }
-         * }
-         * ```
-         *
+         * @deprecated Use metadata clientDefs > {EntityType} > relationshipPanels > {link} > createAttributeMap.
          * @type {Object}
          */
         relatedAttributeMap: {},
 
         /**
-         * When a related record created, use a function to obtain some attributes for a created entity.
-         *
-         * Example:
-         * ```
-         * {
-         *     'linkName': function () {
-         *         return {
-         *            'someAttribute': this.model.get('attribute1') + ' ' +
-         *                 this.model.get('attribute2')
-         *         };
-         *     },
-         * }
-         * ```
-         *
+         * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > createHandler.
          * @type {Object}
          */
         relatedAttributeFunctions: {},
@@ -468,11 +445,11 @@ define('views/detail', ['views/main'], function (Dep) {
         actionCreateRelated: function (data) {
             data = data || {};
 
-            var link = data.link;
-            var scope = this.model.defs['links'][link].entity;
-            var foreignLink = this.model.defs['links'][link].foreign;
+            let link = data.link;
+            let scope = this.model.defs['links'][link].entity;
+            let foreignLink = this.model.defs['links'][link].foreign;
 
-            var attributes = {};
+            let attributes = {};
 
             if (
                 this.relatedAttributeFunctions[link] &&
@@ -481,40 +458,60 @@ define('views/detail', ['views/main'], function (Dep) {
                 attributes = _.extend(this.relatedAttributeFunctions[link].call(this), attributes);
             }
 
-            Object.keys(this.relatedAttributeMap[link] || {})
+            let attributeMap = this.getMetadata()
+                .get(['clientDefs', this.scope, 'relationshipPanels', link, 'createAttributeMap']) ||
+                this.relatedAttributeMap[link] || {};
+
+            Object.keys(attributeMap)
                 .forEach(attr => {
-                    attributes[this.relatedAttributeMap[link][attr]] = this.model.get(attr);
+                    attributes[attributeMap[attr]] = this.model.get(attr);
                 });
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
-            var viewName = this.getMetadata()
-                .get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+            let handler = this.getMetadata()
+                .get(['clientDefs', this.scope, 'relationshipPanels', link, 'createHandler']);
 
-            this.createView('quickCreate', viewName, {
-                scope: scope,
-                relate: {
-                    model: this.model,
-                    link: foreignLink,
-                },
-                attributes: attributes,
-            }, (view) => {
-                view.render();
-                view.notify(false);
+            (new Promise(resolve => {
+                if (!handler) {
+                    resolve({});
 
-                this.listenToOnce(view, 'after:save', () => {
-                    if (data.fromSelectRelated) {
-                        setTimeout(() => {
-                            this.clearView('dialogSelectRelated');
-                        }, 25);
-                    }
+                    return;
+                }
 
-                    this.updateRelationshipPanel(link);
+                Espo.loader.requirePromise(handler)
+                    .then(Handler => new Handler(this.getHelper()))
+                    .then(handler => resolve(handler.getAttributes(this.model)));
+            }))
+                .then(additionalAttributes => {
+                    attributes = {...attributes, ...additionalAttributes};
 
-                    this.model.trigger('after:relate');
-                    this.model.trigger('after:relate:' + link);
+                    let viewName = this.getMetadata()
+                        .get(['clientDefs', scope, 'modalViews', 'edit']) || 'views/modals/edit';
+
+                    this.createView('quickCreate', viewName, {
+                        scope: scope,
+                        relate: {
+                            model: this.model,
+                            link: foreignLink,
+                        },
+                        attributes: attributes,
+                    }, view => {
+                        view.render();
+                        view.notify(false);
+
+                        this.listenToOnce(view, 'after:save', () => {
+                            if (data.fromSelectRelated) {
+                                setTimeout(() => this.clearView('dialogSelectRelated'), 25);
+                            }
+
+                            this.updateRelationshipPanel(link);
+
+                            this.model.trigger('after:relate');
+                            this.model.trigger('after:relate:' + link);
+                        });
+                    });
                 });
-            });
         },
 
         /**

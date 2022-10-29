@@ -40,23 +40,23 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
 
         massActionList: ['remove', 'massUpdate'],
 
-        dropdownItemList: [
-            {
-                name: 'markAllAsRead',
-                label: 'Mark all as read',
-            },
-        ],
-
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.addMassAction('retrieveFromTrash', false, true);
-            this.addMassAction('moveToFolder', true, true);
-            this.addMassAction('markAsNotImportant', false, true);
-            this.addMassAction('markAsImportant', false, true);
-            this.addMassAction('markAsNotRead', false, true);
-            this.addMassAction('markAsRead', false, true);
-            this.addMassAction('moveToTrash', false, true);
+            if (this.collection.url === this.entityType) {
+                this.addMassAction('retrieveFromTrash', false, true);
+                this.addMassAction('moveToFolder', true, true);
+                this.addMassAction('markAsNotImportant', false, true);
+                this.addMassAction('markAsImportant', false, true);
+                this.addMassAction('markAsNotRead', false, true);
+                this.addMassAction('markAsRead', false, true);
+                this.addMassAction('moveToTrash', false, true);
+
+                this.dropdownItemList.push({
+                    name: 'markAllAsRead',
+                    label: 'Mark all as read',
+                });
+            }
 
             this.listenTo(this.collection, 'moving-to-trash', (id) => {
                 let model = this.collection.get(id);

@@ -26,41 +26,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/contact/detail', ['views/detail'], function (Dep) {
+define('handlers/create-related-handler', [], () => {
 
-    return Dep.extend({
+    /**
+     * Prepares attributes for a related record that is being created.
+     *
+     * @abstract
+     * @class
+     * @name Class
+     * @memberOf module:handlers/create-related-handler
+     */
+    class Class {
 
-        selectRelatedFilters: {
-            'cases': {
-                'account': function () {
-                    if (this.model.get('accountId')) {
-                        return {
-                            attribute: 'accountId',
-                            type: 'equals',
-                            value: this.model.get('accountId'),
-                            data: {
-                                type: 'is',
-                                nameValue: this.model.get('accountName')
-                            }
-                        };
-                    }
-                }
-            },
-            'opportunities': {
-                'account': function () {
-                    if (this.model.get('accountId')) {
-                        return {
-                            attribute: 'accountId',
-                            type: 'equals',
-                            value: this.model.get('accountId'),
-                            data: {
-                                type: 'is',
-                                nameValue: this.model.get('accountName')
-                            }
-                        };
-                    }
-                }
-            }
-        },
-    });
+        /**
+         * @param {module:view-helper.Class} viewHelper
+         */
+        constructor(viewHelper) {
+            this.viewHelper = viewHelper;
+        }
+
+        /**
+         * Get attributes for a new record.
+         *
+         * @abstract
+         * @param {module:model.Class} model A model.
+         * @return Object.<string, *> Attributes.
+         */
+        getAttributes(model) {
+            return {};
+        }
+    }
+
+    return Class;
 });

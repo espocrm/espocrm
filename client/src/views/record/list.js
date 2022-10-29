@@ -1806,7 +1806,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
             this.massActionList[method](item);
 
-            if (allResult) {
+            if (allResult && this.collection.url === this.entityType) {
                 this.checkAllResultMassActionList[method](item);
             }
 

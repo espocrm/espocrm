@@ -26,41 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/contact/detail', ['views/detail'], function (Dep) {
+define('crm:handlers/campaign/mass-emails-create', ['handlers/create-related-handler'], Dep => {
 
-    return Dep.extend({
-
-        selectRelatedFilters: {
-            'cases': {
-                'account': function () {
-                    if (this.model.get('accountId')) {
-                        return {
-                            attribute: 'accountId',
-                            type: 'equals',
-                            value: this.model.get('accountId'),
-                            data: {
-                                type: 'is',
-                                nameValue: this.model.get('accountName')
-                            }
-                        };
-                    }
-                }
-            },
-            'opportunities': {
-                'account': function () {
-                    if (this.model.get('accountId')) {
-                        return {
-                            attribute: 'accountId',
-                            type: 'equals',
-                            value: this.model.get('accountId'),
-                            data: {
-                                type: 'is',
-                                nameValue: this.model.get('accountName')
-                            }
-                        };
-                    }
-                }
-            }
-        },
-    });
+    return class extends Dep {
+        /**
+         * @param {module:model.Class} model
+         */
+        getAttributes(model) {
+            return {
+                name: model.get('name') + ' ' + this.viewHelper.dateTime.getToday(),
+            };
+        }
+    }
 });

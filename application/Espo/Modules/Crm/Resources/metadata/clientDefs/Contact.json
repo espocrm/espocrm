@@ -57,7 +57,19 @@
             "create": false
         },
         "opportunities": {
-            "layout": "listForContact"
+            "layout": "listForContact",
+            "createAttributeMap": {
+                "accountId": "accountId",
+                "accountName": "accountName"
+            }
+        },
+        "cases": {
+            "createAttributeMap": {
+                "accountId": "accountId",
+                "accountName": "accountName",
+                "id": "contactId",
+                "name": "contactName"
+            }
         },
         "targetLists": {
             "create": false,

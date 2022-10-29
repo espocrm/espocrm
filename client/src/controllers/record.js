@@ -407,6 +407,44 @@ define('controllers/record', ['controller'], function (Dep) {
             });
         },
 
+        actionRelated: function (options) {
+            let id = options.id;
+            let link = options.link;
+
+            let viewName = this.getViewName('listRelated');
+
+            let model;
+
+            this.getModel()
+                .then(m => {
+                    model = m;
+                    model.id = id;
+
+                    return model.fetch({main: true});
+                })
+                .then(() => {
+                    let foreignEntityType = model.getLinkParam(link, 'entity');
+
+                    if (!foreignEntityType) {
+                        this.baseController.error404();
+
+                        throw new Error(`Bad link '${link}'.`);
+                    }
+
+                    return this.collectionFactory.create(foreignEntityType);
+                })
+                .then(collection => {
+                    collection.url = model.entityType + '/' + id + '/' + link;
+
+                    this.main(viewName, {
+                        scope: this.name,
+                        model: model,
+                        collection: collection,
+                        link: link,
+                    });
+                })
+        },
+
         /**
          * Get a collection for the current controller.
          *

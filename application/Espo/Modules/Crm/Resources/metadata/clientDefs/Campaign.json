@@ -52,13 +52,22 @@
       ]
     },
     "relationshipPanels": {
-      "campaignLogRecords": {
-        "view": "crm:views/campaign/record/panels/campaign-log-records",
-        "layout": "listForCampaign",
-        "rowActionsView": "views/record/row-actions/remove-only",
-        "select": false,
-        "create": false
-      }
+        "campaignLogRecords": {
+            "view": "crm:views/campaign/record/panels/campaign-log-records",
+            "layout": "listForCampaign",
+            "rowActionsView": "views/record/row-actions/remove-only",
+            "select": false,
+            "create": false
+        },
+        "massEmails": {
+            "createAttributeMap": {
+                "targetListsIds": "targetListsIds",
+                "targetListsNames": "targetListsNames",
+                "excludingTargetListsIds": "excludingTargetListsIds",
+                "excludingTargetListsNames": "excludingTargetListsNames"
+            },
+            "createHandler": "crm:handlers/campaign/mass-emails-create"
+        }
     },
     "filterList": [
       "active"

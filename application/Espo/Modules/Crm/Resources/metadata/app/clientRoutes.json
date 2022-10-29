@@ -1,0 +1,16 @@
+{
+    ":entityType/activities/:id/:targetEntityType": {
+        "params": {
+            "controller": "Activities",
+            "action": "activities"
+        },
+        "order": 1
+    },
+    ":entityType/history/:id/:targetEntityType": {
+        "params": {
+            "controller": "Activities",
+            "action": "history"
+        },
+        "order": 1
+    }
+}

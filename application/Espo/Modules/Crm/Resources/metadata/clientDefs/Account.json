@@ -50,7 +50,16 @@
       "contacts": {
          "filterList": ["all", "accountActive"],
          "layout":"listForAccount",
-         "orderBy": "name"
+         "orderBy": "name",
+         "createAttributeMap": {
+             "billingAddressCity": "addressCity",
+             "billingAddressStreet": "addressStreet",
+             "billingAddressPostalCode": "addressPostalCode",
+             "billingAddressState": "addressState",
+             "billingAddressCountry": "addressCountry",
+             "id": "accountId",
+             "name": "accountName"
+         }
       },
       "opportunities":{
          "layout":"listForAccount"

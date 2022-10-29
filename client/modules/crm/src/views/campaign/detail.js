@@ -26,26 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/campaign/detail', 'views/detail', function (Dep) {
+define('crm:views/campaign/detail', ['views/detail'], function (Dep) {
 
-    return Dep.extend({
-
-        relatedAttributeMap: {
-            'massEmails': {
-                'targetListsIds': 'targetListsIds',
-                'targetListsNames': 'targetListsNames',
-                'excludingTargetListsIds': 'excludingTargetListsIds',
-                'excludingTargetListsNames': 'excludingTargetListsNames',
-            },
-        },
-
-        relatedAttributeFunctions: {
-            'massEmails':  function () {
-                return {
-                    name: this.model.get('name') + ' ' + this.getDateTime().getToday()
-                };
-            }
-        },
-
-    });
+    /** Left for bc. */
+    return Dep.extend({});
 });
