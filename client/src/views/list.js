@@ -617,7 +617,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
 
                         Espo.Ui.notify(this.translate('loading', 'messages'));
 
-                        this.collection.fetch()
+                        this.collection.fetch({main: true})
                             .then(() => Espo.Ui.notify(false));
 
                     });
