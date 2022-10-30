@@ -320,34 +320,46 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 return;
             }
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
-            this.createView('quickCreate', 'views/modals/edit', {
-                scope: this.scope,
-                fullFormDisabled: true,
-                attributes: this.options.createAttributes,
-            }, (view) => {
-                view.once('after:render', () => {
-                    this.notify(false);
+            let viewName = this.getMetadata()
+                .get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
+                'views/modals/edit';
+
+            new Promise(resolve => {
+                if (this.options.createAttributesProvider) {
+                    this.options.createAttributesProvider().then(attributes => {
+                        resolve(attributes)
+                    });
+
+                    return;
+                }
+
+                resolve(this.options.createAttributes || {});
+            })
+                .then(attributes => {
+                    this.createView('quickCreate', viewName, {
+                        scope: this.scope,
+                        fullFormDisabled: true,
+                        attributes: attributes,
+                    }, view => {
+                        view.render()
+                            .then(() => Espo.Ui.notify(false));
+
+                        this.listenToOnce(view, 'leave', () => {
+                            view.close();
+                            this.close();
+                        });
+
+                        this.listenToOnce(view, 'after:save', (model) => {
+                            view.close();
+
+                            this.trigger('select', model);
+
+                            setTimeout(() => this.close(), 10);
+                        });
+                    });
                 });
-
-                view.render();
-
-                this.listenToOnce(view, 'leave', () => {
-                    view.close();
-                    this.close();
-                });
-
-                this.listenToOnce(view, 'after:save', (model) => {
-                    view.close();
-
-                    this.trigger('select', model);
-
-                    setTimeout(() => {
-                        this.close();
-                    }, 10);
-                });
-            });
         },
 
         actionSelect: function () {

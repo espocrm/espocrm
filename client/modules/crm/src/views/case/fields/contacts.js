@@ -31,14 +31,5 @@ define('crm:views/case/fields/contacts', ['views/fields/link-multiple-with-prima
     return Dep.extend({
 
         primaryLink: 'contact',
-
-        getCreateAttributes: function () {
-            if (this.model.get('accountId')) {
-                return {
-                    accountId: this.model.get('accountId'),
-                    accountName: this.model.get('accountName'),
-                };
-            }
-        },
     });
 });

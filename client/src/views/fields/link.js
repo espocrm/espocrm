@@ -314,21 +314,23 @@ define('views/fields/link', ['views/fields/base', 'helpers/record-modal'], funct
                 this.createDisabled = this.options.createDisabled;
             }
 
-            if (this.mode !== 'list') {
+            if (!this.isListMode()) {
                 this.addActionHandler('selectLink', () => {
-                    this.notify('Loading...');
+                    Espo.Ui.notify(' ... ');
 
-                    var viewName = this.getMetadata()
+                    let viewName = this.getMetadata()
                             .get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
                         this.selectRecordsView;
 
+                    let createButton = !this.createDisabled && this.isEditMode();
+
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
-                        createButton: !this.createDisabled && !this.isSearchMode(),
+                        createButton: createButton,
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
-                        createAttributes: this.isEditMode() ? this.getCreateAttributes() : null,
+                        createAttributes: createButton ? this.getCreateAttributes() : null,
                         mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                         forceSelectAllAttributes: this.forceSelectAllAttributes,
                         filterList: this.getSelectFilterList(),

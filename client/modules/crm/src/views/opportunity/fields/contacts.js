@@ -29,17 +29,6 @@
 define('crm:views/opportunity/fields/contacts',
 ['views/fields/link-multiple-with-columns-with-primary'], function (Dep) {
 
-    return Dep.extend({
-
-        getCreateAttributes: function () {
-            if (this.model.get('accountId')) {
-                return {
-                    accountId: this.model.get('accountId'),
-                    accountName: this.model.get('accountName'),
-                }
-            }
-
-            return null;
-        },
-    });
+    /** Left for bc. */
+    return Dep.extend({});
 });

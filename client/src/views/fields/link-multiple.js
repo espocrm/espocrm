@@ -124,6 +124,14 @@ define('views/fields/link-multiple', ['views/fields/base', 'helpers/record-modal
         createDisabled: false,
 
         /**
+         * Force create button even is disabled in clientDefs > relationshipPanels.
+         *
+         * @protected
+         * @type {boolean}
+         */
+        forceCreateButton: false,
+
+        /**
          * @protected
          * @type {boolean}
          */
@@ -283,10 +291,17 @@ define('views/fields/link-multiple', ['views/fields/base', 'helpers/record-modal
          * Attributes to pass to a model when creating a new record.
          * Can be extended.
          *
-         * @return {Object.<string,*>|null}
+         * @return {Object.<string, *>|null}
          */
         getCreateAttributes: function () {
-            return null;
+            let attributeMap = this.getMetadata()
+                .get(['clientDefs', this.entityType, 'relationshipPanels', this.name, 'createAttributeMap']) || {};
+
+            let attributes = {};
+
+            Object.keys(attributeMap).forEach(attr => attributes[attributeMap[attr]] = this.model.get(attr));
+
+            return attributes;
         },
 
         /**
@@ -883,6 +898,35 @@ define('views/fields/link-multiple', ['views/fields/base', 'helpers/record-modal
 
             let handler = panelDefs.selectHandler || null;
 
+            let createButton = this.isEditMode() &&
+                (!this.createDisabled && !panelDefs.createDisabled || this.forceCreateButton);
+
+            let createAttributesProvider = null;
+
+            if (createButton) {
+                createAttributesProvider = () => {
+                    let attributes = this.getCreateAttributes() || {};
+
+                    if (!panelDefs.createHandler) {
+                        return Promise.resolve(attributes);
+                    }
+
+                    return new Promise(resolve => {
+                        Espo.loader.requirePromise(panelDefs.createHandler)
+                            .then(Handler => new Handler(this.getHelper()))
+                            .then(handler => {
+                                handler.getAttributes(this.model)
+                                    .then(additionalAttributes => {
+                                        resolve({
+                                            ...attributes,
+                                            ...additionalAttributes,
+                                        });
+                                    });
+                            });
+                    });
+                };
+            }
+
             new Promise(resolve => {
                 if (!handler) {
                     resolve({});
@@ -908,21 +952,21 @@ define('views/fields/link-multiple', ['views/fields/base', 'helpers/record-modal
 
                 this.createView('dialog', viewName, {
                     scope: this.foreignScope,
-                    createButton: !this.createDisabled && !this.isSearchMode(),
+                    createButton: createButton,
                     filters: advanced,
                     boolFilterList: boolFilterList,
                     primaryFilterName: primaryFilter,
                     filterList: this.getSelectFilterList(),
                     multiple: true,
-                    createAttributes: this.isEditMode() ? this.getCreateAttributes() : null,
                     mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                     forceSelectAllAttributes: this.forceSelectAllAttributes,
+                    createAttributesProvider: createAttributesProvider,
                 }, dialog => {
                     dialog.render();
 
                     Espo.Ui.notify(false);
 
-                    this.listenToOnce(dialog, 'select', (models) => {
+                    this.listenToOnce(dialog, 'select', models => {
                         this.clearView('dialog');
 
                         if (Object.prototype.toString.call(models) !== '[object Array]') {
