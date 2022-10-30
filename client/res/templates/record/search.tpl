@@ -57,6 +57,7 @@
                                     type="checkbox"
                                     data-role="boolFilterCheckbox"
                                     data-name="{{./this}}"
+                                    class="form-checkbox form-checkbox-small"
                                     {{#ifPropEquals ../bool this true}}checked{{/ifPropEquals}}
                                 > {{translate this scope=../entityType category='boolFilters'}}
                             </label></li>

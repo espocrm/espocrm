@@ -68,6 +68,18 @@ ul.dropdown-menu > li.checkbox {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+
+    label {
+        padding-left: 23px;
+
+        input[type="checkbox"].form-checkbox {
+            margin-left: -23px;
+
+            &.form-checkbox-small {
+                margin-top: 3px;
+            }
+        }
+    }
 }
 
 ul.dropdown-menu {
@@ -93,6 +105,10 @@ ul.dropdown-menu {
 
         > .check-icon + div {
             padding-right: 20px;
+        }
+
+        span.fa-check {
+            padding-top: 2px;
         }
     }
 
