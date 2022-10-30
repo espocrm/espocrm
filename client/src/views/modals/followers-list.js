@@ -78,8 +78,8 @@ define('views/modals/followers-list', ['views/modals/related-list'], function (D
                 primaryFilterName: filter,
                 massSelect: false,
                 foreignEntityType: 'User',
+                viewKey: 'selectFollowers',
             });
         },
-
     });
 });

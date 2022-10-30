@@ -482,7 +482,7 @@ define('views/detail', ['views/main'], function (Dep) {
         /**
          * Action 'selectRelated'.
          *
-         * @param {Object} data
+         * @param {Object.<string, *>} data
          */
         actionSelectRelated: function (data) {
             let link = data.link;
@@ -565,7 +565,10 @@ define('views/detail', ['views/main'], function (Dep) {
 
             primaryFilterName = primaryFilterName || panelDefs.selectPrimaryFilter || null;
 
-            let viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews' , 'select']) ||
+            let viewKey = data.viewKey || 'select';
+
+            let viewName = panelDefs.selectModalView ||
+                this.getMetadata().get(['clientDefs', scope, 'modalViews' , viewKey]) ||
                 'views/modals/select-records';
 
             Espo.Ui.notify(' ... ');
