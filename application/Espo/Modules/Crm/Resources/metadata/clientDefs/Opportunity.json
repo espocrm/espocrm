@@ -80,7 +80,7 @@
                 "accountName": "accountName"
             },
             "createHandler": "crm:handlers/opportunity/contacts-create",
-            "selectHandler": "handlers/select-related/same-account"
+            "selectHandler": "handlers/select-related/same-account-many"
         },
         "documents": {
             "selectHandler": "handlers/select-related/same-account-many"

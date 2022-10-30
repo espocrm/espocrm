@@ -36,11 +36,22 @@ define('handlers/select-related/same-account-many', ['handlers/select-related'],
         getFilters(model) {
             let advanced = {};
 
-            let accountId = model.get('accountId');
+            let accountId = null;
+            let accountName = null;
+
+            if (model.get('accountId')) {
+                accountId = model.get('accountId');
+                accountName = model.get('accountName');
+            }
+
+            if (!accountId && model.get('parentType') === 'Account' && model.get('parentId')) {
+                accountId = model.get('parentId');
+                accountName = model.get('parentName');
+            }
 
             if (accountId) {
                 let nameHash = {};
-                nameHash[accountId] = model.get('accountName');
+                nameHash[accountId] = accountName;
 
                 advanced.accounts = {
                     field: 'accounts',

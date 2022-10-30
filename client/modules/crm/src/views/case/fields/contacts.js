@@ -32,25 +32,6 @@ define('crm:views/case/fields/contacts', ['views/fields/link-multiple-with-prima
 
         primaryLink: 'contact',
 
-        getSelectFilters: function () {
-            if (this.model.get('accountId')) {
-                let nameHash = {};
-
-                nameHash[this.model.get('accountId')] = this.model.get('accountName');
-
-                return {
-                    'accounts': {
-                        type: 'linkedWith',
-                        value: [this.model.get('accountId')],
-                        data: {
-                            type: 'anyOf',
-                            nameHash: nameHash,
-                        }
-                    }
-                };
-            }
-        },
-
         getCreateAttributes: function () {
             if (this.model.get('accountId')) {
                 return {

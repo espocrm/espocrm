@@ -59,6 +59,13 @@
             "create": false,
             "recordListView": "crm:views/knowledge-base-article/record/list-for-case",
             "rowActionsView": "crm:views/knowledge-base-article/record/row-actions/for-case"
+        },
+        "contacts": {
+            "createAttributeMap": {
+                "accountId": "accountId",
+                "accountName": "accountName"
+            },
+            "selectHandler": "handlers/select-related/same-account-many"
         }
     },
     "boolFilterList": ["onlyMy"],

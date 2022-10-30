@@ -568,7 +568,7 @@ define('views/detail', ['views/main'], function (Dep) {
             let viewKey = data.viewKey || 'select';
 
             let viewName = panelDefs.selectModalView ||
-                this.getMetadata().get(['clientDefs', scope, 'modalViews' , viewKey]) ||
+                this.getMetadata().get(['clientDefs', scope, 'modalViews', viewKey]) ||
                 'views/modals/select-records';
 
             Espo.Ui.notify(' ... ');

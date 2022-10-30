@@ -325,42 +325,7 @@ define('views/fields/link-multiple', ['views/fields/base', 'helpers/record-modal
             this.iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
 
             if (!this.isListMode()) {
-                this.addActionHandler('selectLink', () => {
-                    this.notify('Loading...');
-
-                    let viewName = this.getMetadata()
-                            .get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
-                        this.selectRecordsView;
-
-                    this.createView('dialog', viewName, {
-                        scope: this.foreignScope,
-                        createButton: !this.createDisabled && !this.isSearchMode(),
-                        filters: this.getSelectFilters(),
-                        boolFilterList: this.getSelectBoolFilterList(),
-                        primaryFilterName: this.getSelectPrimaryFilterName(),
-                        filterList: this.getSelectFilterList(),
-                        multiple: true,
-                        createAttributes: this.isEditMode() ? this.getCreateAttributes() : null,
-                        mandatorySelectAttributeList: this.mandatorySelectAttributeList,
-                        forceSelectAllAttributes: this.forceSelectAllAttributes,
-                    }, dialog => {
-                        dialog.render();
-
-                        Espo.Ui.notify(false);
-
-                        this.listenToOnce(dialog, 'select', (models) => {
-                            this.clearView('dialog');
-
-                            if (Object.prototype.toString.call(models) !== '[object Array]') {
-                                models = [models];
-                            }
-
-                            models.forEach(model => {
-                                this.addLink(model.id, model.get('name'));
-                            });
-                        });
-                    });
-                });
+                this.addActionHandler('selectLink', () => this.actionSelect());
 
                 this.events['click a[data-action="clearLink"]'] = (e) => {
                     let id = $(e.currentTarget).attr('data-id');
@@ -899,6 +864,76 @@ define('views/fields/link-multiple', ['views/fields/base', 'helpers/record-modal
             helper.showDetail(this, {
                 id: id,
                 scope: entityType,
+            });
+        },
+
+        /**
+         * @protected
+         */
+        actionSelect: function () {
+            Espo.Ui.notify(' ... ');
+
+            /** @var {Object.<string, *>} */
+            let panelDefs = this.getMetadata()
+                .get(['clientDefs', this.entityType, 'relationshipPanels', this.name]) || {};
+
+            let viewName = panelDefs.selectModalView ||
+                this.getMetadata().get(`clientDefs.${this.foreignScope}.modalViews.select`) ||
+                this.selectRecordsView;
+
+            let handler = panelDefs.selectHandler || null;
+
+            new Promise(resolve => {
+                if (!handler) {
+                    resolve({});
+
+                    return;
+                }
+
+                Espo.loader.requirePromise(handler)
+                    .then(Handler => new Handler(this.getHelper()))
+                    .then(handler => {
+                        handler.getFilters(this.model)
+                            .then(filters => resolve(filters));
+                    });
+            }).then(filters => {
+                let advanced = {...(this.getSelectFilters() || {}), ...(filters.advanced || {})};
+                let boolFilterList = [
+                    ...(this.getSelectBoolFilterList() || []),
+                    ...(filters.bool || []),
+                    ...(panelDefs.selectBoolFilterList || []),
+                ];
+                let primaryFilter = this.getSelectPrimaryFilterName() ||
+                    filters.primary || panelDefs.selectPrimaryFilter;
+
+                this.createView('dialog', viewName, {
+                    scope: this.foreignScope,
+                    createButton: !this.createDisabled && !this.isSearchMode(),
+                    filters: advanced,
+                    boolFilterList: boolFilterList,
+                    primaryFilterName: primaryFilter,
+                    filterList: this.getSelectFilterList(),
+                    multiple: true,
+                    createAttributes: this.isEditMode() ? this.getCreateAttributes() : null,
+                    mandatorySelectAttributeList: this.mandatorySelectAttributeList,
+                    forceSelectAllAttributes: this.forceSelectAllAttributes,
+                }, dialog => {
+                    dialog.render();
+
+                    Espo.Ui.notify(false);
+
+                    this.listenToOnce(dialog, 'select', (models) => {
+                        this.clearView('dialog');
+
+                        if (Object.prototype.toString.call(models) !== '[object Array]') {
+                            models = [models];
+                        }
+
+                        models.forEach(model => {
+                            this.addLink(model.id, model.get('name'));
+                        });
+                    });
+                });
             });
         },
     });

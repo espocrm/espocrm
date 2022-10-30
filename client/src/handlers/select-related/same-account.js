@@ -36,14 +36,27 @@ define('handlers/select-related/same-account', ['handlers/select-related'], Dep 
         getFilters(model) {
             let advanced = {};
 
+            let accountId = null;
+            let accountName = null;
+
             if (model.get('accountId')) {
+                accountId = model.get('accountId');
+                accountName = model.get('accountName');
+            }
+
+            if (!accountId && model.get('parentType') === 'Account' && model.get('parentId')) {
+                accountId = model.get('parentId');
+                accountName = model.get('parentName');
+            }
+
+            if (accountId) {
                 advanced.account = {
                     attribute: 'accountId',
                     type: 'equals',
-                    value: model.get('accountId'),
+                    value: accountId,
                     data: {
                         type: 'is',
-                        nameValue: model.get('accountName')
+                        nameValue: accountName,
                     },
                 };
             }

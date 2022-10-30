@@ -95,6 +95,11 @@
         "dateEnd": ["dateStart"],
         "dateEndDate": ["dateStartDate"]
     },
+    "relationshipPanels": {
+        "contacts": {
+            "selectHandler": "handlers/select-related/same-account-many"
+        }
+    },
     "dynamicLogic":{
         "fields":{
             "reminders": {

@@ -26,32 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/opportunity/fields/contacts', ['views/fields/link-multiple-with-columns-with-primary'], function (Dep) {
+define('crm:views/opportunity/fields/contacts',
+['views/fields/link-multiple-with-columns-with-primary'], function (Dep) {
 
     return Dep.extend({
-
-        getSelectFilters: function () {
-            let accountId = this.model.get('accountId');
-
-            if (accountId) {
-                let nameHash = {};
-
-                nameHash[accountId] = this.model.get('accountName');
-
-                return {
-                    'accounts': {
-                        type: 'linkedWith',
-                        value: [accountId],
-                        data: {
-                            type: 'anyOf',
-                            nameHash: nameHash,
-                        },
-                    }
-                };
-            }
-
-            return null;
-        },
 
         getCreateAttributes: function () {
             if (this.model.get('accountId')) {
