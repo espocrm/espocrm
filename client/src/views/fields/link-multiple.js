@@ -413,20 +413,26 @@ define('views/fields/link-multiple', ['views/fields/base', 'helpers/record-modal
                 let select = ['id', 'name'];
 
                 if (this.mandatorySelectAttributeList) {
-
                     select = select.concat(this.mandatorySelectAttributeList);
                 }
 
                 url += '&select=' + select.join(',')
             }
 
-            let boolList = this.getSelectBoolFilterList();
+            /** @var {Object.<string, *>} */
+            let panelDefs = this.getMetadata()
+                .get(['clientDefs', this.entityType, 'relationshipPanels', this.name]) || {};
 
-            if (boolList) {
+            let boolList = [
+                ...(this.getSelectBoolFilterList() || []),
+                ...(panelDefs.selectBoolFilterList || []),
+            ];
+
+            if (boolList.length) {
                 url += '&' + $.param({'boolFilterList': boolList});
             }
 
-            let primary = this.getSelectPrimaryFilterName();
+            let primary = this.getSelectPrimaryFilterName() || panelDefs.selectPrimaryFilter;
 
             if (primary) {
                 url += '&' + $.param({'primaryFilter': primary});
