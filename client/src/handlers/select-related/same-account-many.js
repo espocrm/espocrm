@@ -26,8 +26,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/opportunity/detail', ['views/detail'], function (Dep) {
+define('handlers/select-related/same-account-many', ['handlers/select-related'], Dep => {
 
-    /** Left for bc. */
-    return Dep.extend({});
+    return class extends Dep {
+        /**
+         * @param {module:model.Class} model
+         * @return {Promise<module:handlers/select-related~filters>}
+         */
+        getFilters(model) {
+            let advanced = {};
+
+            let accountId = model.get('accountId');
+
+            if (accountId) {
+                let nameHash = {};
+                nameHash[accountId] = model.get('accountName');
+
+                advanced.accounts = {
+                    field: 'accounts',
+                    type: 'linkedWith',
+                    value: [accountId],
+                    data: {nameHash: nameHash},
+                };
+            }
+
+            return Promise.resolve({
+                advanced: advanced,
+            });
+        }
+    }
 });

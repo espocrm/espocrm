@@ -61,7 +61,8 @@
             "createAttributeMap": {
                 "accountId": "accountId",
                 "accountName": "accountName"
-            }
+            },
+            "selectHandler": "handlers/select-related/same-account"
         },
         "cases": {
             "createAttributeMap": {
@@ -69,7 +70,8 @@
                 "accountName": "accountName",
                 "id": "contactId",
                 "name": "contactName"
-            }
+            },
+            "selectHandler": "handlers/select-related/same-account"
         },
         "targetLists": {
             "create": false,

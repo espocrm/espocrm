@@ -26,8 +26,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/opportunity/detail', ['views/detail'], function (Dep) {
+define('handlers/select-related', [], () => {
 
-    /** Left for bc. */
-    return Dep.extend({});
+    /**
+     * @typedef Object
+     * @name module:handlers/select-related~filters
+     * @property {Object.<string, module:search-manager~advancedFilter>} [advanced]
+     *  Advanced filters map. A field name as a key.
+     * @property {string[]} [bool] Bool filters.
+     * @property {string} [primary] A primary filter.
+     */
+
+    /**
+     * Prepares filters for selecting records to relate.
+     *
+     * @abstract
+     * @class
+     * @name Class
+     * @memberOf module:handlers/select-related
+     */
+    class Class {
+
+        /**
+         * @param {module:view-helper.Class} viewHelper
+         */
+        constructor(viewHelper) {
+            this.viewHelper = viewHelper;
+        }
+
+        /**
+         * Get filters for selecting records to relate.
+         *
+         * @abstract
+         * @param {module:model.Class} model A model.
+         * @return {Promise<module:handlers/select-related~filters>} Filters.
+         */
+        getFilters(model) {
+            return Promise.resolve({});
+        }
+    }
+
+    return Class;
 });

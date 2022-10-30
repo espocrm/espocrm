@@ -28,39 +28,6 @@
 
 define('crm:views/contact/detail', ['views/detail'], function (Dep) {
 
-    return Dep.extend({
-
-        selectRelatedFilters: {
-            'cases': {
-                'account': function () {
-                    if (this.model.get('accountId')) {
-                        return {
-                            attribute: 'accountId',
-                            type: 'equals',
-                            value: this.model.get('accountId'),
-                            data: {
-                                type: 'is',
-                                nameValue: this.model.get('accountName')
-                            }
-                        };
-                    }
-                }
-            },
-            'opportunities': {
-                'account': function () {
-                    if (this.model.get('accountId')) {
-                        return {
-                            attribute: 'accountId',
-                            type: 'equals',
-                            value: this.model.get('accountId'),
-                            data: {
-                                type: 'is',
-                                nameValue: this.model.get('accountName')
-                            }
-                        };
-                    }
-                }
-            }
-        },
-    });
+    /** Left for bc. */
+    return Dep.extend({});
 });

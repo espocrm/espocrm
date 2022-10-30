@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:handlers/opportunity/contacts-create', ['handlers/create-related-handler'], Dep => {
+define('crm:handlers/opportunity/contacts-create', ['handlers/create-related'], Dep => {
 
     return class extends Dep {
         /**

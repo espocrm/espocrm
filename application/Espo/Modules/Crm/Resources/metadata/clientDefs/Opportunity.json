@@ -79,7 +79,11 @@
                 "accountId": "accountId",
                 "accountName": "accountName"
             },
-            "createHandler": "crm:handlers/opportunity/contacts-create"
+            "createHandler": "crm:handlers/opportunity/contacts-create",
+            "selectHandler": "handlers/select-related/same-account"
+        },
+        "documents": {
+            "selectHandler": "handlers/select-related/same-account-many"
         }
     },
    "dynamicLogic": {

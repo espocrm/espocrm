@@ -26,36 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('handlers/create-related-handler', [], () => {
+define('handlers/select-related/same-account', ['handlers/select-related'], Dep => {
 
-    /**
-     * Prepares attributes for a related record that is being created.
-     *
-     * @abstract
-     * @class
-     * @name Class
-     * @memberOf module:handlers/create-related-handler
-     */
-    class Class {
-
+    return class extends Dep {
         /**
-         * @param {module:view-helper.Class} viewHelper
+         * @param {module:model.Class} model
+         * @return {Promise<module:handlers/select-related~filters>}
          */
-        constructor(viewHelper) {
-            this.viewHelper = viewHelper;
-        }
+        getFilters(model) {
+            let advanced = {};
 
-        /**
-         * Get attributes for a new record.
-         *
-         * @abstract
-         * @param {module:model.Class} model A model.
-         * @return {Promise<Object.<string, *>>} Attributes.
-         */
-        getAttributes(model) {
-            return Promise.resolve({});
+            if (model.get('accountId')) {
+                advanced.account = {
+                    attribute: 'accountId',
+                    type: 'equals',
+                    value: model.get('accountId'),
+                    data: {
+                        type: 'is',
+                        nameValue: model.get('accountName')
+                    },
+                };
+            }
+
+            return Promise.resolve({
+                advanced: advanced,
+            });
         }
     }
-
-    return Class;
 });
