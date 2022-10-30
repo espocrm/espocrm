@@ -5,7 +5,7 @@
             <tr>
                 <th width="20%"></th>
                 {{#each dataList}}
-                <th width="5%">
+                <th width="5%" style="vertical-align: top;">
                     <input type="radio" name="check-all" value="{{id}}" data-id="{{id}}" class="pull-right">
                 </th>
                 <th width="{{../width}}%">
