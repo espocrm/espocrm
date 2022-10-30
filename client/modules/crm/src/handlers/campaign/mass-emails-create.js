@@ -33,9 +33,9 @@ define('crm:handlers/campaign/mass-emails-create', ['handlers/create-related-han
          * @param {module:model.Class} model
          */
         getAttributes(model) {
-            return {
+            return Promise.resolve({
                 name: model.get('name') + ' ' + this.viewHelper.dateTime.getToday(),
-            };
+            });
         }
     }
 });

@@ -50,10 +50,10 @@ define('handlers/create-related-handler', [], () => {
          *
          * @abstract
          * @param {module:model.Class} model A model.
-         * @return Object.<string, *> Attributes.
+         * @return Promise<Object.<string, *>> Attributes.
          */
         getAttributes(model) {
-            return {};
+            return Promise.resolve({});
         }
     }
 

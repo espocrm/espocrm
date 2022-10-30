@@ -481,7 +481,10 @@ define('views/detail', ['views/main'], function (Dep) {
 
                 Espo.loader.requirePromise(handler)
                     .then(Handler => new Handler(this.getHelper()))
-                    .then(handler => resolve(handler.getAttributes(this.model)));
+                    .then(handler => {
+                        handler.getAttributes(this.model)
+                            .then(attributes => resolve(attributes));
+                    });
             }))
                 .then(additionalAttributes => {
                     attributes = {...attributes, ...additionalAttributes};

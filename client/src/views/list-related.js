@@ -640,7 +640,10 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
 
                 Espo.loader.requirePromise(handler)
                     .then(Handler => new Handler(this.getHelper()))
-                    .then(handler => resolve(handler.getAttributes(this.model)));
+                    .then(handler => {
+                        handler.getAttributes(this.model)
+                            .then(attributes => resolve(attributes));
+                    });
             }))
                 .then(additionalAttributes => {
                     attributes = {...attributes, ...additionalAttributes};

@@ -39,7 +39,7 @@ define('crm:handlers/opportunity/contacts-create', ['handlers/create-related-han
                 attributes['accountsIds'] = [model.get('accountId')]
             }
 
-            return attributes;
+            return Promise.resolve(attributes);
         }
     }
 });
