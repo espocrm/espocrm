@@ -80,6 +80,13 @@ class RecordService
             ->where(['userId' => $userId])
             ->order('number', SearchParams::ORDER_DESC);
 
+        $offset = $searchParams->getOffset();
+        $limit = $searchParams->getMaxSize();
+
+        if ($limit) {
+            $queryBuilder->limit($offset, $limit + 1);
+        }
+
         $user = $this->entityManager
             ->getRDBRepositoryByClass(User::class)
             ->getById($userId);
@@ -110,22 +117,23 @@ class RecordService
             throw new Error("Collection is not instance of EntityCollection.");
         }
 
-        $count = $this->entityManager
-            ->getRDBRepositoryByClass(Notification::class)
-            ->clone($query)
-            ->count();
-
         $ids = [];
 
         foreach ($collection as $k => $entity) {
+            if ($k === $limit - 1) {
+                break;
+            }
+
             $ids[] = $entity->getId();
 
-            $this->prepareListItem($entity, $k, $collection, $count, $user);
+            $this->prepareListItem($entity, $k, $collection, $limit, $user);
         }
+
+        $collection = new EntityCollection([...$collection], Notification::ENTITY_TYPE);
 
         $this->markAsRead($ids);
 
-        return RecordCollection::create($collection, $count);
+        return RecordCollection::createNoCount($collection, $limit);
     }
 
     /**
