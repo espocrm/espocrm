@@ -30,6 +30,7 @@
 namespace Espo\Classes\FieldValidators;
 
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Defs;
 use Espo\ORM\Entity;
 
 class VarcharType
@@ -37,10 +38,12 @@ class VarcharType
     private Metadata $metadata;
 
     private const DEFAULT_MAX_LENGTH = 255;
+    private Defs $defs;
 
-    public function __construct(Metadata $metadata)
+    public function __construct(Metadata $metadata, Defs $defs)
     {
         $this->metadata = $metadata;
+        $this->defs = $defs;
     }
 
     public function checkRequired(Entity $entity, string $field): bool
@@ -51,6 +54,14 @@ class VarcharType
     public function checkMaxLength(Entity $entity, string $field, ?int $validationValue): bool
     {
         if (!$this->isNotEmpty($entity, $field)) {
+            return true;
+        }
+
+        $fieldDefs = $this->defs
+            ->getEntity($entity->getEntityType())
+            ->getField($field);
+
+        if ($fieldDefs->isNotStorable() && !$validationValue) {
             return true;
         }
 
