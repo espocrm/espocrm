@@ -702,7 +702,7 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                 'views/modals/select-records';
 
             if (viewName) {
-                this.notify('Loading...');
+                Espo.Ui.notify(' ... ');
 
                 var filters = null;
 
