@@ -902,18 +902,27 @@ input.global-search-input {
 }
 
 .radio-container {
-    > label {
-        margin-right: 8px;
-        margin-bottom: 0;
-        font-weight: normal;
-        font-size: 15px;
-        height: 20px;
+    > div {
+        > label {
+            margin-right: 10px;
+            margin-bottom: 0;
+            font-weight: normal;
+            font-size: 15px;
+            height: 20px;
+            cursor: pointer;
 
-        input[type="radio"] {
-            vertical-align: middle;
-            margin-top: -3px;
+            input[type="radio"] {
+                vertical-align: middle;
+                margin-top: -3px;
+                margin-right: 2px;
+                cursor: pointer;
+            }
         }
+
+        display: inline-block;
+        min-width: var(--btn-xs-wide-width);
     }
+
     margin-bottom: 10px;
     user-select: none;
 }
