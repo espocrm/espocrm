@@ -42,7 +42,9 @@ define('views/modals/select-records-with-categories', ['views/modals/select-reco
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             data.categoriesDisabled = this.categoriesDisabled;
+
             return data;
         },
 
@@ -51,8 +53,8 @@ define('views/modals/select-records-with-categories', ['views/modals/select-reco
             this.categoryScope = this.categoryScope || this.scope + 'Category';
 
             this.categoriesDisabled = this.categoriesDisabled ||
-                                   this.getMetadata().get('scopes.' + this.categoryScope + '.disabled') ||
-                                   !this.getAcl().checkScope(this.categoryScope);
+               this.getMetadata().get('scopes.' + this.categoryScope + '.disabled') ||
+               !this.getAcl().checkScope(this.categoryScope);
 
             Dep.prototype.setup.call(this);
         },
@@ -61,16 +63,17 @@ define('views/modals/select-records-with-categories', ['views/modals/select-reco
             if (!this.categoriesDisabled) {
                 this.loadCategories();
             }
+
             Dep.prototype.loadList.call(this);
         },
 
         loadCategories: function () {
-            this.getCollectionFactory().create(this.categoryScope, function (collection) {
+            this.getCollectionFactory().create(this.categoryScope, (collection) => {
                 collection.url = collection.name + '/action/listTree';
 
                 collection.data.onlyNotEmpty = true;
 
-                this.listenToOnce(collection, 'sync', function () {
+                this.listenToOnce(collection, 'sync', () => {
                     this.createView('categories', 'views/record/list-tree', {
                         collection: collection,
                         el: this.options.el + ' .categories-container',
@@ -81,16 +84,16 @@ define('views/modals/select-records-with-categories', ['views/modals/select-reco
                         buttonsDisabled: true,
                         checkboxes: false,
                         isExpanded: this.isExpanded,
-                    }, function (view) {
+                    }, (view) => {
                         if (this.isRendered()) {
                             view.render();
                         } else {
-                            this.listenToOnce(this, 'after:render', function () {
+                            this.listenToOnce(this, 'after:render', () => {
                                 view.render();
-                            }, this);
+                            });
                         }
 
-                        this.listenTo(view, 'select', function (model) {
+                        this.listenTo(view, 'select', (model) => {
                             this.currentCategoryId = null;
                             this.currentCategoryName = '';
 
@@ -101,17 +104,19 @@ define('views/modals/select-records-with-categories', ['views/modals/select-reco
 
                             this.applyCategoryToCollection();
 
-                            Espo.Ui.notify(this.translate('loading', 'messages'));
-                            this.listenToOnce(this.collection, 'sync', function () {
-                                this.notify(false);
-                            }, this);
-                            this.collection.fetch();
+                            Espo.Ui.notify(' ... ');
 
-                        }, this);
-                    }.bind(this));
-                }, this);
+                            this.listenToOnce(this.collection, 'sync', () => {
+                                this.notify(false);
+                            });
+
+                            this.collection.fetch();
+                        });
+                    });
+                });
+
                 collection.fetch();
-            }, this);
+            });
         },
 
         applyCategoryToCollection: function () {
@@ -120,7 +125,6 @@ define('views/modals/select-records-with-categories', ['views/modals/select-reco
 
         isCategoryMultiple: function () {
             List.prototype.isCategoryMultiple.call(this);
-        }
-
+        },
     });
 });

@@ -535,7 +535,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                 return;
             }
 
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             this.createListRecordView(true);
         },
@@ -615,7 +615,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
 
-                        Espo.Ui.notify(this.translate('loading', 'messages'));
+                        Espo.Ui.notify(' ... ');
 
                         this.collection.fetch({main: true})
                             .then(() => Espo.Ui.notify(false));
@@ -695,7 +695,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
 
             let attributes = this.getCreateAttributes() || {};
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
                 'views/modals/edit';

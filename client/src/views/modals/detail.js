@@ -591,7 +591,7 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
             let viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
                 'views/modals/edit';
 
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             return new Promise(resolve => {
                 this.createView('quickEdit', viewName, {
@@ -681,7 +681,7 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
         },
 
         actionDuplicate: function () {
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             Espo.Ajax
                 .postRequest(this.scope + '/action/getDuplicateAttributes', {

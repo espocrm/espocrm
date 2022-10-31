@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/knowledge-base-article/record/list-for-case', 'views/record/list', function (Dep) {
+define('crm:views/knowledge-base-article/record/list-for-case', ['views/record/list'], function (Dep) {
 
     return Dep.extend({
 
@@ -51,7 +51,7 @@ Espo.define('crm:views/knowledge-base-article/record/list-for-case', 'views/reco
                             contactList.url = 'Case/' + parentModel.id + '/contacts';
                             contactList.fetch().then(function () {
                                 contactList.forEach(function (contact) {
-                                    if (contact.id == parentModel.get('contactId')) {
+                                    if (contact.id === parentModel.get('contactId')) {
                                         contactListFinal.unshift(contact);
                                     } else {
                                         contactListFinal.push(contact);
@@ -121,7 +121,6 @@ Espo.define('crm:views/knowledge-base-article/record/list-for-case', 'views/reco
             }.bind(this)).catch(function () {
                 Espo.Ui.notify(false);
             });
-        }
-
+        },
     });
 });

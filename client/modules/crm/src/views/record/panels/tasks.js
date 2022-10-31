@@ -166,7 +166,7 @@ define('crm:views/record/panels/tasks', ['views/record/panels/relationship'], fu
             let scope = 'Task';
             let foreignLink = this.model.defs['links'][link].foreign;
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
                 'views/modals/edit';

@@ -182,7 +182,7 @@ define(
                 }
             }
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
                 'views/modals/edit';

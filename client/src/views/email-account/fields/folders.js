@@ -70,7 +70,7 @@ define('views/email-account/fields/folders', ['views/fields/array'], function (D
         },
 
         actionAddItem: function () {
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             this.fetchFolders()
                 .then(options => {

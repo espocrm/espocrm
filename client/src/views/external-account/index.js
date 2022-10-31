@@ -80,7 +80,8 @@ define('views/external-account/index', 'view', function (Dep) {
                     this.getMetadata().get(['integrations', integration, 'userView']) ||
                     'views/external-account/' + Espo.Utils.camelCaseToHyphen(authMethod);
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
+
             this.createView('content', viewName, {
                 el: '#external-account-content',
                 id: id,

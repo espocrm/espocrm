@@ -86,7 +86,7 @@ define('views/stream', ['view'], function (Dep) {
         },
 
         afterRender: function () {
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             this.getCollectionFactory().create('Note', (collection) => {
                 this.collection = collection;
@@ -142,7 +142,7 @@ define('views/stream', ['view'], function (Dep) {
 
             this.getRouter().navigate(url);
 
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             this.listenToOnce(this.collection, 'sync', () => {
                 Espo.Ui.notify(false);

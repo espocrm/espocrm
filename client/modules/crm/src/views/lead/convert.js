@@ -62,7 +62,7 @@ define('crm:views/lead/convert', ['view'], function (Dep) {
             this.wait(true);
             this.id = this.options.id;
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             this.getModelFactory().create('Lead', (model) => {
                 this.model = model;
@@ -181,7 +181,7 @@ define('crm:views/lead/convert', ['view'], function (Dep) {
             var process = (data) => {
                 this.$el.find('[data-action="convert"]').addClass('disabled');
 
-                this.notify(this.translate('pleaseWait', 'messages'));
+                Espo.Ui.notify(' ... ');
 
                 Espo.Ajax
                 .postRequest('Lead/action/convert', data)

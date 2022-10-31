@@ -397,7 +397,8 @@ define('views/import/step2', 'view', function (Dep) {
 
             $(this.containerSelector + ' button[data-name="update"]').removeClass('disabled');
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
+
             var label = this.translate(name, 'fields', this.scope);
 
             var removeLink = '<a role="button" class="pull-right" data-action="removeField" data-name="'+name+'">'+

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/call/record/list', 'views/record/list', function (Dep) {
+define('crm:views/call/record/list', ['views/record/list'], function (Dep) {
 
     return Dep.extend({
 
@@ -40,42 +40,48 @@ define('crm:views/call/record/list', 'views/record/list', function (Dep) {
 
         actionSetHeld: function (data) {
             var id = data.id;
+
             if (!id) {
                 return;
             }
+
             var model = this.collection.get(id);
+
             if (!model) {
                 return;
             }
 
             model.set('status', 'Held');
 
-            this.listenToOnce(model, 'sync', function () {
+            this.listenToOnce(model, 'sync', () => {
                 this.notify(false);
                 this.collection.fetch();
-            }, this);
+            });
 
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             model.save();
         },
 
         actionSetNotHeld: function (data) {
             var id = data.id;
+
             if (!id) {
                 return;
             }
+
             var model = this.collection.get(id);
+
             if (!model) {
                 return;
             }
 
             model.set('status', 'Not Held');
 
-            this.listenToOnce(model, 'sync', function () {
+            this.listenToOnce(model, 'sync', () => {
                 this.notify(false);
                 this.collection.fetch();
-            }, this);
+            });
 
             this.notify('Saving...');
             model.save();
@@ -85,46 +91,52 @@ define('crm:views/call/record/list', 'views/record/list', function (Dep) {
             Espo.Ui.notify(this.translate('saving', 'messages'));
 
             var data = {};
+
             data.ids = this.checkedList;
+
             $.ajax({
                 url: this.collection.url + '/action/massSetHeld',
                 type: 'POST',
                 data: JSON.stringify(data)
-            }).done(function (result) {
+            }).then(result => {
                 this.notify(false);
-                this.listenToOnce(this.collection, 'sync', function () {
-                    data.ids.forEach(function (id) {
+
+                this.listenToOnce(this.collection, 'sync', () => {
+                    data.ids.forEach(id => {
                         if (this.collection.get(id)) {
                             this.checkRecord(id);
                         }
-                    }, this);
-                }, this);
+                    });
+                });
+
                 this.collection.fetch();
-            }.bind(this));
+            });
         },
 
         massActionSetNotHeld: function () {
             Espo.Ui.notify(this.translate('saving', 'messages'));
 
             var data = {};
+
             data.ids = this.checkedList;
+
             $.ajax({
                 url: this.collection.url + '/action/massSetNotHeld',
                 type: 'POST',
                 data: JSON.stringify(data)
-            }).done(function (result) {
+            }).then(result => {
                 this.notify(false);
-                this.listenToOnce(this.collection, 'sync', function () {
-                    data.ids.forEach(function (id) {
+
+                this.listenToOnce(this.collection, 'sync', () => {
+                    data.ids.forEach(id => {
                         if (this.collection.get(id)) {
                             this.checkRecord(id);
                         }
-                    }, this);
-                }, this);
+                    });
+                });
+
                 this.collection.fetch();
-            }.bind(this));
+            });
         },
-
     });
-
 });

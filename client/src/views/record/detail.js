@@ -2328,7 +2328,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             this.createView('modalRelatedList', viewName, options, (view) => {
                 Espo.Ui.notify(false);

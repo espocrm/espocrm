@@ -88,7 +88,7 @@ define('views/email/fields/body', 'views/fields/wysiwyg', function (Dep) {
             var parentId = this.model.get('parentId');
             var parentType = this.model.get('parentType');
 
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             this.createView('insertFieldDialog', 'views/email/modals/insert-field', {
                 parentId: parentId,

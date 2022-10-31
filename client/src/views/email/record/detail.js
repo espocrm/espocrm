@@ -445,7 +445,7 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
                 }
             }
 
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             this.createView('modalRelatedList', viewName, options, (view) => {
                 Espo.Ui.notify(false);

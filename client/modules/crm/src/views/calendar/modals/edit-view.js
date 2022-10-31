@@ -191,7 +191,7 @@ define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], function
                     }
                 });
 
-                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+                Espo.Ui.notify(' ... ');
 
                 this.getPreferences()
                     .save({

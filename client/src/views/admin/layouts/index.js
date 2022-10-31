@@ -214,7 +214,7 @@ define('views/admin/layouts/index', ['view'], function (Dep) {
 
             this.navigate(scope, type);
 
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             let typeReal = this.getMetadata()
                 .get('clientDefs.' + scope + '.additionalLayouts.' + type + '.type') || type;

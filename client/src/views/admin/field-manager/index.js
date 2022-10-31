@@ -120,7 +120,7 @@ define('views/admin/field-manager/index', ['view'], function (Dep) {
 
             this.getRouter().navigate('#Admin/fieldManager/scope=' + scope, {trigger: false});
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             this.createView('content', 'views/admin/field-manager/list', {
                 el: '#fields-content',
@@ -143,7 +143,7 @@ define('views/admin/field-manager/index', ['view'], function (Dep) {
             this.getRouter()
                 .navigate('#Admin/fieldManager/scope=' + scope + '&field=' + field, {trigger: false});
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             this.createView('content', 'views/admin/field-manager/edit', {
                 el: '#fields-content',
@@ -169,7 +169,7 @@ define('views/admin/field-manager/index', ['view'], function (Dep) {
             this.getRouter()
                 .navigate('#Admin/fieldManager/scope=' + scope + '&type=' + type + '&create=true', {trigger: false});
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             this.createView('content', 'Admin.FieldManager.Edit', {
                 el: '#fields-content',

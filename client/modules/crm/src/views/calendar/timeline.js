@@ -740,7 +740,8 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 attributes.assignedUserName = userName || userId;
             }
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
+
             this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
                 attributes: attributes,
                 enabledScopeList: this.enabledScopeList,
@@ -756,7 +757,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
         },
 
         viewEvent: function (scope, id) {
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             var viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'detail']) ||
                 'views/modals/detail';
@@ -1034,7 +1035,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
         fetchEvents: function (from, to, callback) {
             if (!this.options.noFetchLoadingMessage) {
-                Espo.Ui.notify(this.translate('loading', 'messages'));
+                Espo.Ui.notify(' ... ');
             }
 
             from = from.clone().add((-1) * this.leftMargin, 'seconds');
@@ -1113,7 +1114,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
                 'views/modals/select-records';
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             this.createView('dialog', viewName, {
                 scope: 'User',

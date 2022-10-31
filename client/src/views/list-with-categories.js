@@ -339,7 +339,7 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
                 this.hideListContainer();
                 this.$nestedCategoriesContainer.addClass('hidden');
 
-                Espo.Ui.notify(this.translate('loading', 'messages'));
+                Espo.Ui.notify(' ... ');
 
                 Promise
                     .all([
@@ -529,7 +529,7 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
 
                         this.collection.abortLastFetch();
 
-                        Espo.Ui.notify(this.translate('loading', 'messages'));
+                        Espo.Ui.notify(' ... ');
 
                         this.collection
                             .fetch()

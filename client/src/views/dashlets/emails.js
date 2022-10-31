@@ -51,7 +51,8 @@ define('views/dashlets/emails', ['views/dashlets/abstract/record-list'], functio
         actionCompose: function () {
             var attributes = this.getCreateAttributes() || {};
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
+
             var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') ||
                 'views/modals/compose-email';
 

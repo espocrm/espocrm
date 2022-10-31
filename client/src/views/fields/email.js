@@ -442,10 +442,11 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
             var viewName = this.getMetadata()
                 .get('clientDefs.' + this.scope + '.modalViews.compose') || 'views/modals/compose-email';
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
+
             this.createView('quickCreate', viewName, {
                 attributes: attributes,
-            }, function (view) {
+            }, view => {
                 view.render();
                 view.notify(false);
             });

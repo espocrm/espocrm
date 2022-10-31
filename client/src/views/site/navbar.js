@@ -1117,7 +1117,7 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         quickCreate: function (scope) {
-            Espo.Ui.notify(this.translate('Loading...'));
+            Espo.Ui.notify(' ... ');
 
             var type = this.getMetadata().get(['clientDefs', scope, 'quickCreateModalType']) || 'edit';
             var viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', type]) || 'views/modals/edit';
@@ -1134,7 +1134,7 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         actionShowLastViewed: function () {
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             this.createView('dialog', 'views/modals/last-viewed', {}, (view) => {
                 view.render();

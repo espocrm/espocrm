@@ -485,7 +485,8 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         refresh: function () {
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
+
             this.collection.abortLastFetch();
             this.collection.reset();
 
@@ -812,7 +813,7 @@ define('views/record/search', ['view'], function (Dep) {
             this.collection.where = this.searchManager.getWhere();
             this.collection.offset = 0;
 
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             this.collection.fetch().then(() => {
                 Espo.Ui.notify(false);

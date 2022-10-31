@@ -773,7 +773,7 @@ function (Dep, FileUpload) {
                 'views/modals/select-records';
 
             if (viewName) {
-                this.notify('Loading...');
+                Espo.Ui.notify(' ... ');
 
                 var filters = null;
 

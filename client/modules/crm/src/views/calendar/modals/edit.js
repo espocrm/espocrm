@@ -48,7 +48,7 @@ define('crm:views/calendar/modals/edit', ['views/modals/edit'], function (Dep) {
 
         events: {
             'change .scope-switcher input[name="scope"]': function () {
-                this.notify('Loading...');
+                Espo.Ui.notify(' ... ');
 
                 var scope = $('.scope-switcher input[name="scope"]:checked').val();
                 this.scope = scope;

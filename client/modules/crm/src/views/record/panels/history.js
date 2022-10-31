@@ -138,7 +138,7 @@ define('crm:views/record/panels/history', ['crm:views/record/panels/activities']
                 };
             }
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
                 'views/modals/edit';
@@ -171,7 +171,7 @@ define('crm:views/record/panels/history', ['crm:views/record/panels/activities']
                 let emailHelper =
                     new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime(), this.getAcl());
 
-                Espo.Ui.notify(this.translate('loading', 'messages'));
+                Espo.Ui.notify(' ... ');
 
                 this.getModelFactory().create('Email')
                     .then(model => {

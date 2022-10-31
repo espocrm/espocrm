@@ -258,7 +258,7 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
         },
 
         actionChangePassword: function () {
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             this.createView('changePassword', 'views/modals/change-password', {
                 userId: this.model.id
@@ -287,7 +287,7 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
         },
 
         actionAccess: function () {
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             $.ajax({
                 url: 'User/action/acl',

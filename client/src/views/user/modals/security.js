@@ -195,7 +195,7 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
                 var view = this.getMetadata().get(['app', 'authentication2FAMethods', auth2FAMethod, 'userApplyView']);
 
                 if (view) {
-                    Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+                    Espo.Ui.notify(' ... ');
 
                     this.createView('dialog', view, {
                         model: this.model,

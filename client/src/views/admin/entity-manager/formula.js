@@ -120,7 +120,7 @@ define('views/admin/entity-manager/formula', ['view', 'lib!espo', 'model'], func
                 data.beforeSaveCustomScript = null;
             }
 
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             Espo.Ajax
                 .postRequest('EntityManager/action/formula', {

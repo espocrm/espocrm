@@ -480,7 +480,7 @@ define('crm:views/record/panels/activities',
                 };
             }
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
                 'views/modals/edit';
@@ -593,7 +593,7 @@ define('crm:views/record/panels/activities',
                 };
             }
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             this.getComposeEmailAttributes(scope, data, attributes => {
                 this.createView('quickCreate', 'views/modals/compose-email', {

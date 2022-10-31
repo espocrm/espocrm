@@ -223,7 +223,7 @@ define('views/record/list-tree-item', 'view', function (Dep) {
                     collection.parentId = this.model.id;
                     collection.maxDepth = 1;
 
-                    Espo.Ui.notify(this.translate('loading', 'messages'));
+                    Espo.Ui.notify(' ... ');
 
                     this.listenToOnce(collection, 'sync', function () {
 

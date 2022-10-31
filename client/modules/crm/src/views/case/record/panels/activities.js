@@ -26,13 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/case/record/panels/activities', 'crm:views/record/panels/activities', function (Dep) {
+define('crm:views/case/record/panels/activities', ['crm:views/record/panels/activities'], function (Dep) {
 
     return Dep.extend({
 
         getComposeEmailAttributes: function (scope, data, callback) {
             data = data || {};
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
+            Espo.Ui.notify(' ... ');
 
             Dep.prototype.getComposeEmailAttributes.call(this, scope, data, function (attributes) {
                 attributes.name = '[#' + this.model.get('number') + '] ' + this.model.get('name');
@@ -56,7 +57,6 @@ Espo.define('crm:views/case/record/panels/activities', 'crm:views/record/panels/
 
                 }.bind(this));
             }.bind(this))
-        }
-
+        },
     });
 });

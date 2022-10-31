@@ -47,15 +47,16 @@ define('views/record/deleted-detail', ['views/record/detail'], function (Dep) {
         },
 
         actionRestoreDeleted: function () {
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+            Espo.Ui.notify(' ... ');
+
             Espo.Ajax.postRequest(this.model.entityType + '/action/restoreDeleted', {
                 id: this.model.id
-            }).then(function () {
+            }).then(() => {
                 Espo.Ui.notify(false);
+
                 this.model.set('deleted', false);
                 this.model.trigger('after:restore-deleted');
-            }.bind(this));
+            });
         },
-
     });
 });

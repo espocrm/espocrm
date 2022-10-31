@@ -539,7 +539,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                     return;
                 }
 
-                Espo.Ui.notify(this.translate('loading', 'messages'));
+                Espo.Ui.notify(' ... ');
 
                 this.collection.once('sync', () => {
                     Espo.Ui.notify(false);
@@ -689,7 +689,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
             let order = asc ? 'asc' : 'desc';
 
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             let maxSizeLimit = this.getConfig().get('recordListMaxSizeLimit') || 200;
 
@@ -1456,7 +1456,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 this.listenToOnce(view, 'select', (templateModel) => {
                     this.clearView('pdfTemplate');
 
-                    Espo.Ui.notify(this.translate('loading', 'messages'));
+                    Espo.Ui.notify(' ... ');
 
                     this.ajaxPostRequest(
                             'Pdf/action/massPrint',
@@ -1608,7 +1608,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 return false;
             }
 
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             var ids = false;
 
@@ -2746,7 +2746,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             $showMore.children('a').addClass('disabled');
 
             if (!options.skipNotify) {
-                Espo.Ui.notify(this.translate('loading', 'messages'));
+                Espo.Ui.notify(' ... ');
             }
 
             let final = () => {
@@ -2967,7 +2967,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 'views/modals/edit';
 
             if (!this.quickEditDisabled) {
-                Espo.Ui.notify(this.translate('loading', 'messages'));
+                Espo.Ui.notify(' ... ');
 
                 let options = {
                     scope: scope,

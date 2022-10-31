@@ -62,6 +62,7 @@ define('crm:views/knowledge-base-article/record/detail', 'views/record/detail', 
 
         actionSendInEmail: function () {
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
             Espo.require('crm:knowledge-base-helper', function (Helper) {
                 var helper = new Helper(this.getLanguage());
 

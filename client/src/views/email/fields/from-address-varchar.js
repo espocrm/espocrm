@@ -405,7 +405,7 @@ define(
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') ||
                 'views/modals/select-records';
 
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             var filters = {};
 

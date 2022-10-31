@@ -73,7 +73,7 @@ define(() => {
             let viewName = this.metadata.get(['clientDefs', scope, 'modalViews', 'detail']) ||
                 'views/modals/detail';
 
-            Espo.Ui.notify(view.translate('loading', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             let options = {
                 scope: scope,

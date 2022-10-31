@@ -572,7 +572,7 @@ function (Dep, SearchManager, RecordModal) {
                 }
             }
 
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             this.createView('modalRelatedList', viewName, options, (view) => {
                 Espo.Ui.notify(false);
@@ -659,7 +659,7 @@ function (Dep, SearchManager, RecordModal) {
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
                 'views/modals/edit';
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             this.createView('quickEdit', viewName, {
                 scope: scope,

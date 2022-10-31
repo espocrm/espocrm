@@ -75,7 +75,7 @@ define('views/admin/integrations/index', 'view', function (Dep) {
                 'views/admin/integrations/' +
                 Espo.Utils.camelCaseToHyphen(this.getMetadata().get('integrations.' + integration + '.authMethod'));
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             this.createView('content', viewName, {
                 el: '#integration-content',

@@ -974,6 +974,10 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                 type = 'danger';
             }
 
+            if (sanitizedMessage === ' ... ') {
+                sanitizedMessage = '<span class="fas fa-spinner fa-spin">';
+            }
+
             let additionalClassName = closeButton ? ' alert-closable' : '';
 
             let $el = $('<div>')

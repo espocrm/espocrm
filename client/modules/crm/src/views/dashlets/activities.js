@@ -177,7 +177,8 @@ define(
 
             this.populateAttributesAssignedUser(scope, attributes);
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
+
             var viewName = this.getMetadata().get('clientDefs.'+scope+'.modalViews.edit') || 'views/modals/edit';
 
             this.createView('quickCreate', viewName, {
@@ -198,7 +199,7 @@ define(
 
             this.populateAttributesAssignedUser('Meeting', attributes);
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             var viewName = this.getMetadata().get('clientDefs.Meeting.modalViews.edit') || 'views/modals/edit';
 
@@ -220,7 +221,7 @@ define(
 
             this.populateAttributesAssignedUser('Call', attributes);
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             var viewName = this.getMetadata().get('clientDefs.Call.modalViews.edit') || 'views/modals/edit';
 

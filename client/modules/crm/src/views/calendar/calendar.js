@@ -651,7 +651,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                     $calendar.fullCalendar('unselect');
                 },
                 eventClick: (event) => {
-                    this.notify('Loading...');
+                    Espo.Ui.notify(' ... ');
 
                     let viewName = this.getMetadata().get(['clientDefs', event.scope, 'modalViews', 'detail']) ||
                         'views/modals/detail';
@@ -891,7 +891,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 attributes.assignedUserName = this.options.userName || this.options.userId;
             }
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
                 attributes: attributes,

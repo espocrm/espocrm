@@ -48,7 +48,7 @@ define('views/site/master', ['view'], function (Dep) {
         },
 
         showLoadingNotification: function () {
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
         },
 
         hideLoadingNotification: function () {

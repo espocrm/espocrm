@@ -52,7 +52,7 @@ define('views/fields/user',[ 'views/fields/link'], function (Dep) {
             };
 
             this.addActionHandler('selectLinkTeams', function () {
-                this.notify('Loading...');
+                Espo.Ui.notify(' ... ');
 
                 var viewName = this.getMetadata().get('clientDefs.Team.modalViews.select') ||
                     'views/modals/select-records';

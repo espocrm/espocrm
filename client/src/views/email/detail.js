@@ -178,7 +178,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
             var viewName = this.getMetadata().get('clientDefs.Lead.modalViews.edit') || 'views/modals/edit';
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             this.createView('quickCreate', viewName, {
                 scope: 'Lead',
@@ -242,7 +242,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
             var viewName = this.getMetadata().get('clientDefs.Case.modalViews.edit') || 'views/modals/edit';
 
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             (new Promise(resolve => {
                 if (!(this.model.get('attachmentsIds') || []).length) {
@@ -297,7 +297,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
             var viewName = this.getMetadata().get('clientDefs.Task.modalViews.edit') || 'views/modals/edit';
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             this.createView('quickCreate', viewName, {
                 scope: 'Task',
@@ -378,7 +378,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
             var viewName = this.getMetadata().get('clientDefs.Contact.modalViews.edit') || 'views/modals/edit';
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             this.createView('quickCreate', viewName, {
                 scope: 'Contact',
@@ -412,7 +412,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
             var attributes = emailHelper.getReplyAttributes(this.model, data, cc);
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
                 'views/modals/compose-email';
@@ -443,7 +443,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                 this.getAcl()
             );
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             Espo.Ajax
                 .postRequest('Email/action/getDuplicateAttributes', {
@@ -459,7 +459,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                     attributes.attachmentsIds = duplicateAttributes.attachmentsIds;
                     attributes.attachmentsNames = duplicateAttributes.attachmentsNames;
 
-                    this.notify('Loading...');
+                    Espo.Ui.notify(' ... ');
 
                     var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
                         'views/modals/compose-email';
@@ -543,7 +543,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                     attributes.accountsNames[this.model.get('accountId')] = this.model.get('accountName');
                 }
 
-                Espo.Ui.notify(this.translate('loading', 'messages'))
+                Espo.Ui.notify(' ... ');
 
                 this.ajaxPostRequest('Attachment/action/getCopiedAttachment', {
                     id: id,

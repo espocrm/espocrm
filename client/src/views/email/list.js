@@ -255,7 +255,7 @@ define('views/email/list', ['views/list'], function (Dep) {
         actionComposeEmail: function (data) {
             data = data || {};
 
-            this.notify('Loading...');
+            Espo.Ui.notify(' ... ');
 
             let viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
                 'views/modals/compose-email';

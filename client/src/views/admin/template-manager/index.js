@@ -101,7 +101,7 @@ Espo.define('views/admin/template-manager/index', 'view', function (Dep) {
         },
 
         createRecordView: function () {
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             this.createView('record', 'views/admin/template-manager/edit', {
                 el: this.getSelector() + ' .template-record',
