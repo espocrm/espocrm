@@ -519,6 +519,9 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             'click [data-action="showMore"]': function () {
                 this.showMoreRecords();
             },
+            'mousedown a.sort': function (e) {
+                e.preventDefault();
+            },
             /**
              * @param {JQueryKeyEventObject} e
              * @this module:views/record/list.Class
