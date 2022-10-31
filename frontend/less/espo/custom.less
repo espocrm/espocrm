@@ -48,7 +48,8 @@ label.attach-file-label:focus-visible {
     outline: none;
 }
 
-input[type=checkbox]:focus-visible {
+input[type=checkbox]:focus-visible,
+input[type=radio]:focus-visible{
     outline-offset: 3px;
 }
 
@@ -913,14 +914,12 @@ input.global-search-input {
 
             input[type="radio"] {
                 vertical-align: middle;
-                margin-top: -3px;
-                margin-right: 2px;
                 cursor: pointer;
             }
         }
 
         display: inline-block;
-        min-width: var(--btn-xs-wide-width);
+        min-width: var(--btn-s-wide-width);
     }
 
     margin-bottom: 10px;
