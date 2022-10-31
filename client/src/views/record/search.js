@@ -449,7 +449,9 @@ define('views/record/search', ['view'], function (Dep) {
             this.controlResetButtonVisibility();
 
             if (this.isSearchedWithAdvancedFilter) {
-                this.showResetFiltersButton();
+                this.hasAdvancedFilter() ?
+                    this.showApplyFiltersButton() :
+                    this.showResetFiltersButton();
 
                 this.$applyFilters.focus();
 
