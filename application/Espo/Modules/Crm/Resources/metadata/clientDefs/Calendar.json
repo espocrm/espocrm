@@ -2,7 +2,7 @@
     "colors": {
         "Meeting": "#558BBD",
         "Call": "#CF605D",
-        "Task": "#76BA4E"
+        "Task": "#70c173"
     },
     "scopeList": ["Meeting", "Call", "Task"],
     "allDayScopeList": ["Task"],
