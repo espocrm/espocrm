@@ -934,7 +934,7 @@ define('views/fields/link-multiple', ['views/fields/base', 'helpers/record-modal
             }
 
             new Promise(resolve => {
-                if (!handler) {
+                if (!handler || this.isSearchMode()) {
                     resolve({});
 
                     return;

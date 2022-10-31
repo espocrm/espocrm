@@ -66,6 +66,13 @@
                 "accountName": "accountName"
             },
             "selectHandler": "handlers/select-related/same-account-many"
+        },
+        "contact": {
+            "createAttributeMap": {
+                "accountId": "accountId",
+                "accountName": "accountName"
+            },
+            "selectHandler": "handlers/select-related/same-account-many"
         }
     },
     "boolFilterList": ["onlyMy"],

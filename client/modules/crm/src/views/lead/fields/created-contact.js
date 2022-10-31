@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/lead/fields/created-contact', 'views/fields/link', function (Dep) {
+define('crm:views/lead/fields/created-contact', ['views/fields/link'], function (Dep) {
 
     return Dep.extend({
 
@@ -46,5 +46,4 @@ Espo.define('crm:views/lead/fields/created-contact', 'views/fields/link', functi
             }
         },
     });
-
 });

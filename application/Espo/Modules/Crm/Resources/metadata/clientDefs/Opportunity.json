@@ -82,6 +82,13 @@
             "createHandler": "crm:handlers/opportunity/contacts-create",
             "selectHandler": "handlers/select-related/same-account-many"
         },
+        "contact": {
+            "createAttributeMap": {
+                "accountId": "accountId",
+                "accountName": "accountName"
+            },
+            "selectHandler": "handlers/select-related/same-account-many"
+        },
         "documents": {
             "selectHandler": "handlers/select-related/same-account-many"
         }

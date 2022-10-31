@@ -109,6 +109,14 @@ define('views/fields/link', ['views/fields/base', 'helpers/record-modal'], funct
         createDisabled: false,
 
         /**
+         * Force create button even is disabled in clientDefs > relationshipPanels.
+         *
+         * @protected
+         * @type {boolean}
+         */
+        forceCreateButton: false,
+
+        /**
          * A search type list.
          *
          * @protected
@@ -295,7 +303,14 @@ define('views/fields/link', ['views/fields/base', 'helpers/record-modal'], funct
          * @return {Object.<string,*>|null}
          */
         getCreateAttributes: function () {
-            return null;
+            let attributeMap = this.getMetadata()
+                .get(['clientDefs', this.entityType, 'relationshipPanels', this.name, 'createAttributeMap']) || {};
+
+            let attributes = {};
+
+            Object.keys(attributeMap).forEach(attr => attributes[attributeMap[attr]] = this.model.get(attr));
+
+            return attributes;
         },
 
         /**
@@ -315,78 +330,15 @@ define('views/fields/link', ['views/fields/base', 'helpers/record-modal'], funct
             }
 
             if (!this.isListMode()) {
-                this.addActionHandler('selectLink', () => {
-                    Espo.Ui.notify(' ... ');
-
-                    let viewName = this.getMetadata()
-                            .get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
-                        this.selectRecordsView;
-
-                    let createButton = !this.createDisabled && this.isEditMode();
-
-                    this.createView('dialog', viewName, {
-                        scope: this.foreignScope,
-                        createButton: createButton,
-                        filters: this.getSelectFilters(),
-                        boolFilterList: this.getSelectBoolFilterList(),
-                        primaryFilterName: this.getSelectPrimaryFilterName(),
-                        createAttributes: createButton ? this.getCreateAttributes() : null,
-                        mandatorySelectAttributeList: this.mandatorySelectAttributeList,
-                        forceSelectAllAttributes: this.forceSelectAllAttributes,
-                        filterList: this.getSelectFilterList(),
-                    }, view => {
-                        view.render();
-
-                        Espo.Ui.notify(false);
-
-                        this.listenToOnce(view, 'select', model => {
-                            this.clearView('dialog');
-
-                            this.select(model);
-                        });
-                    });
-                });
-
-                this.addActionHandler('clearLink', () => {
-                    this.clearLink();
-                });
+                this.addActionHandler('selectLink', () => this.actionSelect());
+                this.addActionHandler('clearLink', () => this.clearLink());
             }
 
-            if (this.mode === 'search') {
-                this.addActionHandler('selectLinkOneOf', () => {
-                    this.notify('Loading...');
+            if (this.isSearchMode()) {
+                this.addActionHandler('selectLinkOneOf', () => this.actionSelectOneOf());
 
-                    var viewName = this.getMetadata()
-                            .get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
-                        this.selectRecordsView;
-
-                    this.createView('dialog', viewName, {
-                        scope: this.foreignScope,
-                        createButton: !this.createDisabled && this.mode !== 'search',
-                        filters: this.getSelectFilters(),
-                        boolFilterList: this.getSelectBoolFilterList(),
-                        primaryFilterName: this.getSelectPrimaryFilterName(),
-                        multiple: true,
-                    }, (view) => {
-                        view.render();
-                        this.notify(false);
-
-                        this.listenToOnce(view, 'select', (models) => {
-                            this.clearView('dialog');
-
-                            if (Object.prototype.toString.call(models) !== '[object Array]') {
-                                models = [models];
-                            }
-
-                            models.forEach((model) => {
-                                this.addLinkOneOf(model.id, model.get('name'));
-                            });
-                        });
-                    });
-                });
-
-                this.events['click a[data-action="clearLinkOneOf"]'] = function (e) {
-                    var id = $(e.currentTarget).data('id').toString();
+                this.events['click a[data-action="clearLinkOneOf"]'] = e =>{
+                    let id = $(e.currentTarget).data('id').toString();
 
                     this.deleteLinkOneOf(id);
                 };
@@ -985,6 +937,131 @@ define('views/fields/link', ['views/fields/base', 'helpers/record-modal'], funct
             helper.showDetail(this, {
                 id: id,
                 scope: entityType,
+            });
+        },
+
+        /**
+         * @protected
+         */
+        actionSelect: function () {
+            Espo.Ui.notify(' ... ');
+
+            /** @var {Object.<string, *>} */
+            let panelDefs = this.getMetadata()
+                .get(['clientDefs', this.entityType, 'relationshipPanels', this.name]) || {};
+
+            let viewName = panelDefs.selectModalView ||
+                this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'select']) ||
+                this.selectRecordsView;
+
+            let handler = panelDefs.selectHandler || null;
+
+            let createButton = this.isEditMode() &&
+                (!this.createDisabled && !panelDefs.createDisabled || this.forceCreateButton);
+
+            let createAttributesProvider = null;
+
+            if (createButton) {
+                createAttributesProvider = () => {
+                    let attributes = this.getCreateAttributes() || {};
+
+                    if (!panelDefs.createHandler) {
+                        return Promise.resolve(attributes);
+                    }
+
+                    return new Promise(resolve => {
+                        Espo.loader.requirePromise(panelDefs.createHandler)
+                            .then(Handler => new Handler(this.getHelper()))
+                            .then(handler => {
+                                handler.getAttributes(this.model)
+                                    .then(additionalAttributes => {
+                                        resolve({
+                                            ...attributes,
+                                            ...additionalAttributes,
+                                        });
+                                    });
+                            });
+                    });
+                };
+            }
+
+            new Promise(resolve => {
+                if (!handler || this.isSearchMode()) {
+                    resolve({});
+
+                    return;
+                }
+
+                Espo.loader.requirePromise(handler)
+                    .then(Handler => new Handler(this.getHelper()))
+                    .then(handler => {
+                        handler.getFilters(this.model)
+                            .then(filters => resolve(filters));
+                    });
+            }).then(filters => {
+                let advanced = {...(this.getSelectFilters() || {}), ...(filters.advanced || {})};
+                let boolFilterList = [
+                    ...(this.getSelectBoolFilterList() || []),
+                    ...(filters.bool || []),
+                    ...(panelDefs.selectBoolFilterList || []),
+                ];
+                let primaryFilter = this.getSelectPrimaryFilterName() ||
+                    filters.primary || panelDefs.selectPrimaryFilter;
+
+                this.createView('dialog', viewName, {
+                    scope: this.foreignScope,
+                    createButton: createButton,
+                    filters: advanced,
+                    boolFilterList: boolFilterList,
+                    primaryFilterName: primaryFilter,
+                    mandatorySelectAttributeList: this.mandatorySelectAttributeList,
+                    forceSelectAllAttributes: this.forceSelectAllAttributes,
+                    filterList: this.getSelectFilterList(),
+                    createAttributesProvider: createAttributesProvider,
+                }, view => {
+                    view.render();
+
+                    Espo.Ui.notify(false);
+
+                    this.listenToOnce(view, 'select', model => {
+                        this.clearView('dialog');
+
+                        this.select(model);
+                    });
+                });
+            });
+        },
+
+        actionSelectOneOf: function () {
+            Espo.Ui.notify(' ... ');
+
+            let viewName = this.getMetadata()
+                    .get(['clientDefs', this.foreignScope, 'modalViews', 'select']) ||
+                this.selectRecordsView;
+
+            this.createView('dialog', viewName, {
+                scope: this.foreignScope,
+                createButton: false,
+                filters: this.getSelectFilters(),
+                boolFilterList: this.getSelectBoolFilterList(),
+                primaryFilterName: this.getSelectPrimaryFilterName(),
+                multiple: true,
+            }, view => {
+                view.render();
+
+                Espo.Ui.notify(false);
+
+                this.listenToOnce(view, 'select', models => {
+                    this.clearView('dialog');
+
+                    if (Object.prototype.toString.call(models) !== '[object Array]') {
+                        models = [models];
+                    }
+
+                    models.forEach(model => {
+                        this.addLinkOneOf(model.id, model.get('name'));
+                    });
+                });
             });
         },
     });
