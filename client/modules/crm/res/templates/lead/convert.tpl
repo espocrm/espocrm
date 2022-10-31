@@ -8,11 +8,14 @@
 
 {{#each scopeList}}
 <div class="record">
-    <label style="user-select: none; cursor: pointer;"><h4><input
-        type="checkbox"
-        class="check-scope"
-        data-scope="{{./this}}"
-    > {{translate this category='scopeNames'}}</h4></label>
+    <label style="user-select: none; cursor: pointer;" class="text-large">
+        <input
+            type="checkbox"
+            class="check-scope form-checkbox"
+            data-scope="{{./this}}"
+        >
+        <span>{{translate this category='scopeNames'}}</span>
+    </label>
     <div class="edit-container-{{toDom this}} hide">
     {{{var this ../this}}}
     </div>

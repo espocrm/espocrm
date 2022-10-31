@@ -210,6 +210,19 @@ fieldset[disabled] .form-control {
     }
 }
 
+label {
+    > input[type="checkbox"].form-checkbox {
+        float: left;
+        margin-right: 7px;
+    }
+
+    &.text-large {
+        > input[type="checkbox"].form-checkbox {
+            margin-top: 3px;
+        }
+    }
+}
+
 input[type="checkbox"].form-checkbox {
     appearance: none;
     background-color: var(--input-bg);
@@ -223,6 +236,7 @@ input[type="checkbox"].form-checkbox {
     cursor: pointer;
     font-family: 'Font Awesome 5 Free';
     font-weight: 900;
+    font-size: 14px;
 
     &.form-checkbox-simple {
         border-width: 0;
