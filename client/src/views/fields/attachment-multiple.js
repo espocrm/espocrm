@@ -78,6 +78,8 @@ function (Dep, FileUpload) {
                 $div.parent().remove();
 
                 this.$el.find('input.file').val(null);
+
+                setTimeout(() => this.focusOnUploadButton(), 10);
             },
             'change input.file': function (e) {
                 let $file = $(e.currentTarget);
@@ -244,6 +246,10 @@ function (Dep, FileUpload) {
         },
 
         focusOnInlineEdit: function () {
+            this.focusOnUploadButton();
+        },
+
+        focusOnUploadButton: function () {
             this.$el.find('.attach-file-label').focus();
         },
 
@@ -568,6 +574,8 @@ function (Dep, FileUpload) {
                                 this.afterAttachmentsUploaded.call(this);
 
                                 this.isUploading = false;
+
+                                setTimeout(() => this.focusOnUploadButton(), 50);
                             }
                         })
                         .catch(() => {

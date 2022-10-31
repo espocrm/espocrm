@@ -64,13 +64,15 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
 
         events: {
             'click a.remove-attachment': function (e) {
-                var $div = $(e.currentTarget).parent();
+                let $div = $(e.currentTarget).parent();
 
                 this.deleteAttachment();
 
                 $div.parent().remove();
 
                 this.$el.find('input.file').val(null);
+
+                setTimeout(() => this.focusOnUploadButton(), 10);
             },
             'change input.file': function (e) {
                 let $file = $(e.currentTarget);
@@ -303,6 +305,10 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
         },
 
         focusOnInlineEdit: function () {
+            this.focusOnUploadButton();
+        },
+
+        focusOnUploadButton: function () {
             let $element = this.$el.find('.attach-file-label');
 
             if ($element.length) {
@@ -596,6 +602,11 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                             $attachmentBox.trigger('ready');
 
                             this.isUploading = false;
+
+                            setTimeout(() => {
+                                let $a = this.$el.find('.preview a');
+                                $a.focus();
+                            }, 50);
                         })
                         .catch(() => {
                             if (mediator.isCanceled) {
