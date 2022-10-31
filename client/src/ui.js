@@ -975,7 +975,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
             }
 
             if (sanitizedMessage === ' ... ') {
-                sanitizedMessage = '<span class="fas fa-spinner fa-spin">';
+                sanitizedMessage = ' <span class="fas fa-spinner fa-spin"> ';
             }
 
             let additionalClassName = closeButton ? ' alert-closable' : '';
