@@ -986,7 +986,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                 .css({
                     'position': 'fixed',
                     'top': '0',
-                    'left': '50%',
+                    'left': '50vw',
                     'transform': 'translate(-50%, 0)',
                     'z-index': 2000,
                 })
