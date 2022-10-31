@@ -40,6 +40,7 @@ use Espo\Entities\{
 };
 
 use Espo\Core\{
+    FileStorage\Manager,
     Mail\Account\Account,
     Mail\Account\SendingAccountProvider,
     Mail\EmailSender,
@@ -74,7 +75,8 @@ class EmailSenderTest extends \PHPUnit\Framework\TestCase
             $entityManager,
             $log,
             $transportFactory,
-            $accountProvider
+            $accountProvider,
+            $this->createMock(Manager::class)
         );
 
         $this->emailSender = $emailSender;
