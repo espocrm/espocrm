@@ -128,6 +128,47 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                     headerView.reRender();
                 }
             });
+
+            this.shortcutKeys['Control+Delete'] = e => {
+                let recordView = this.getRecordView();
+
+                if (!this.model.get('isUsers') || this.model.get('inTrash')) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                recordView.actionMoveToTrash();
+            };
+
+            this.shortcutKeys['Control+KeyI'] = e => {
+                let recordView = this.getRecordView();
+
+                if (!this.model.get('isUsers')) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.model.get('isImportant') ?
+                    recordView.actionMarkAsNotImportant() :
+                    recordView.actionMarkAsImportant();
+            };
+
+            this.shortcutKeys['Control+KeyM'] = e => {
+                let recordView = this.getRecordView();
+
+                if (!this.model.get('isUsers')) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                recordView.actionMoveToFolder();
+            };
         },
 
         actionCreateLead: function () {

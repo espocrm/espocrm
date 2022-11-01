@@ -87,6 +87,11 @@ define('views/detail', ['views/main'], function (Dep) {
         rootUrl: '',
 
         /**
+         * @inheritDoc
+         */
+        shortcutKeys: {},
+
+        /**
          * Add an un-follow button.
          */
         addUnfollowButtonToMenu: function () {
@@ -349,6 +354,13 @@ define('views/detail', ['views/main'], function (Dep) {
             }
 
             Dep.prototype.updatePageTitle.call(this);
+        },
+
+        /**
+         * @return {module:views/record/detail.Class}
+         */
+        getRecordView: function () {
+            return this.getView('record');
         },
 
         /**

@@ -169,7 +169,7 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
             Espo.Ajax
                 .postRequest('Email/action/moveToTrash', {ids: ids})
                 .then(() => {
-                    Espo.Ui.success(this.translate('Done'));
+                    Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
                 });
 
             if (this.collection.selectedFolderId === 'trash') {
@@ -429,6 +429,20 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
                     }
                 );
             });
+        },
+
+        toggleMassMarkAsImportant: function () {
+            let allImportant = !this.checkedList
+                .map(id => this.collection.get(id))
+                .find(m => !m.get('isImportant'));
+
+            if (allImportant) {
+                this.massActionMarkAsNotImportant();
+
+                return;
+            }
+
+            this.massActionMarkAsImportant();
         },
     });
 });

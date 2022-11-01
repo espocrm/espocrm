@@ -224,6 +224,8 @@ define('views/email/list', ['views/list'], function (Dep) {
             }
 
             this.applyFolder();
+
+            this.initEmailShortcuts();
         },
 
         data: function () {
@@ -231,6 +233,49 @@ define('views/email/list', ['views/list'], function (Dep) {
             data.foldersDisabled = this.foldersDisabled;
 
             return data;
+        },
+
+        initEmailShortcuts: function () {
+            this.shortcutKeys['Control+Delete'] = e => {
+                if (!this.hasSelectedRecords()) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.getRecordView().massActionMoveToTrash();
+            };
+
+            this.shortcutKeys['Control+KeyI'] = e => {
+                if (!this.hasSelectedRecords()) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.getRecordView().toggleMassMarkAsImportant();
+            };
+
+            this.shortcutKeys['Control+KeyM'] = e => {
+                if (!this.hasSelectedRecords()) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.getRecordView().massActionMoveToFolder();
+            };
+        },
+
+        hasSelectedRecords: function () {
+            let recordView = this.getRecordView();
+
+            return recordView.checkedList &&
+                recordView.checkedList.length &&
+                !recordView.allResultIsChecked;
         },
 
         /**
