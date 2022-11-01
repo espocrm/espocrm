@@ -338,7 +338,10 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
                     stop: () => {
                         this.fetchFromDom();
                         this.trigger('change');
-                    }
+                    },
+                    distance: 5,
+                    cancel: 'input,textarea,button,select,option,a',
+                    cursor: 'grabbing',
                 });
             }
 
