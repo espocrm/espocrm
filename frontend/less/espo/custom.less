@@ -606,15 +606,18 @@ div.list-kanban > div > table {
             margin-bottom: 0;
 
             .field span {
-                cursor: default;
+                user-select: none;
             }
         }
 
         margin-bottom: @padding-base-horizontal;
-    }
 
-    .item.ui-sortable-helper {
-        cursor: move;
+        &.ui-sortable-helper {
+            cursor: grabbing;
+            a {
+                cursor: grabbing;
+            }
+        }
     }
 }
 
