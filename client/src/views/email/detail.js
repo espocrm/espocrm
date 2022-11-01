@@ -143,6 +143,10 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             };
 
             this.shortcutKeys['Control+KeyI'] = e => {
+                if ($(e.target).hasClass('note-editable')) {
+                    return;
+                }
+
                 let recordView = this.getRecordView();
 
                 if (!this.model.get('isUsers')) {
