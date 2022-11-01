@@ -64,9 +64,13 @@ define('views/email-folder/modals/select-folder', ['views/modal'], function (Dep
         setup: function () {
             this.headerText = '';
 
+            Espo.Ui.notify(' ... ');
+
             this.wait(
                 Espo.Ajax.getRequest('EmailFolder/action/listAll')
                     .then(data => {
+                        Espo.Ui.notify(false);
+
                         this.folderDataList = data.list
                             .filter(item => {
                                 return ['inbox', 'important', 'sent', 'drafts', 'trash'].indexOf(item.id) === -1;
