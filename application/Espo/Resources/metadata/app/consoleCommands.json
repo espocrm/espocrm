@@ -34,5 +34,9 @@
     "populateArrayValues": {
         "className": "Espo\\Classes\\ConsoleCommands\\PopulateArrayValues",
         "listed": false
+    },
+    "populateNumbers": {
+        "className": "Espo\\Classes\\ConsoleCommands\\PopulateNumbers",
+        "listed": false
     }
 }

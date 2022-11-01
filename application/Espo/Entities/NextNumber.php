@@ -29,7 +29,9 @@
 
 namespace Espo\Entities;
 
-class NextNumber extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class NextNumber extends Entity
 {
     public const ENTITY_TYPE = 'NextNumber';
 }

@@ -29,20 +29,18 @@
 
 namespace Espo\Core\FieldProcessing\NextNumber;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Entities\NextNumber;
 
-use Espo\Core\{
-    ORM\Entity,
-    ORM\EntityManager,
-    Utils\Metadata,
-};
+use Espo\Core\ORM\Entity;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Metadata;
 
 use const STR_PAD_LEFT;
 
 class BeforeSaveProcessor
 {
     private Metadata $metadata;
-
     private EntityManager $entityManager;
 
     /**
@@ -54,6 +52,21 @@ class BeforeSaveProcessor
     {
         $this->metadata = $metadata;
         $this->entityManager = $entityManager;
+    }
+
+    /**
+     * For an existing record.
+     * @throws Error
+     */
+    public function processPopulate(Entity $entity, string $field): void
+    {
+        $fieldList = $this->getFieldList($entity->getEntityType());
+
+        if (!in_array($field, $fieldList)) {
+            throw new Error("Bad field.");
+        }
+
+        $this->processItem($entity, $field, [], true);
     }
 
     /**
@@ -71,7 +84,7 @@ class BeforeSaveProcessor
     /**
      * @param array<string,mixed> $options
      */
-    private function processItem(Entity $entity, string $field, array $options): void
+    private function processItem(Entity $entity, string $field, array $options, bool $populate = false): void
     {
         if (!empty($options['import'])) {
             if ($entity->has($field)) {
@@ -84,13 +97,15 @@ class BeforeSaveProcessor
                 $entity->set($field, $entity->getFetched($field));
             }
 
-            return;
+            if (!$populate) {
+                return;
+            }
         }
 
         $this->entityManager->getTransactionManager()->start();
 
         $nextNumber = $this->entityManager
-            ->getRDBRepository('NextNumber')
+            ->getRDBRepository(NextNumber::ENTITY_TYPE)
             ->where([
                 'fieldName' => $field,
                 'entityType' => $entity->getEntityType(),
@@ -99,7 +114,7 @@ class BeforeSaveProcessor
             ->findOne();
 
         if (!$nextNumber) {
-            $nextNumber = $this->entityManager->getNewEntity('NextNumber');
+            $nextNumber = $this->entityManager->getNewEntity(NextNumber::ENTITY_TYPE);
 
             $nextNumber->set('entityType', $entity->getEntityType());
             $nextNumber->set('fieldName', $field);
