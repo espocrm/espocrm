@@ -101,7 +101,7 @@ define('email-helper', [], function () {
          * @param {module:model.Class} model An email model.
          * @param {Object|null} [data=null] Action data. Unused.
          * @param {boolean} [cc=false] To include CC (reply-all).
-         * @returns {Object}
+         * @returns {Object.<string, *>}
          */
         getReplyAttributes: function (model, data, cc) {
             let attributes = {
@@ -111,71 +111,64 @@ define('email-helper', [], function () {
 
             let subject = model.get('name') || '';
 
-            if (subject.toUpperCase().indexOf('RE:') !== 0) {
-                attributes['name'] = 'Re: ' + subject;
-            }
-            else {
-                attributes['name'] = subject;
-            }
+            attributes['name'] = subject.toUpperCase().indexOf('RE:') !== 0 ?
+                'Re: ' + subject :
+                subject;
 
             let to = '';
-
-            let nameHash = model.get('nameHash') || {};
-
             let isReplyOnSent = false;
-
+            let nameHash = model.get('nameHash') || {};
             let replyToAddressString = model.get('replyTo') || null;
+            let replyToString = model.get('replyToString') || null;
+            let userEmailAddressList = this.getUser().get('emailAddressList') || [];
 
             if (replyToAddressString) {
                 let replyToAddressList = replyToAddressString.split(';');
 
                 to = replyToAddressList.join(';');
             }
-            else {
-                if (model.get('replyToString')) {
-                    let str = model.get('replyToString');
+            else if (replyToString) {
+                let a = [];
 
-                    let a = [];
+                replyToString.split(';').forEach(item => {
+                    let part = item.trim();
+                    let address = this.parseAddressFromStringAddress(item);
 
-                    str.split(';').forEach(item => {
-                        let part = item.trim();
-                        let address = this.parseAddressFromStringAddress(item);
+                    if (address) {
+                        a.push(address);
 
-                        if (address) {
-                            a.push(address);
+                        let name = this.parseNameFromStringAddress(part);
 
-                            let name = this.parseNameFromStringAddress(part);
-
-                            if (name && name !== address) {
-                                nameHash[address] = name;
-                            }
+                        if (name && name !== address) {
+                            nameHash[address] = name;
                         }
-                    });
+                    }
+                });
 
-                    to = a.join(';');
-                }
+                to = a.join(';');
             }
 
-            if (!to || !~to.indexOf('@')) {
-                if (model.get('from')) {
-                    if (!~(this.getUser().get('emailAddressList') || []).indexOf(model.get('from'))) {
-                        to = model.get('from');
+            if (
+                (!to || !to.includes('@')) &&
+                model.get('from')
+            ) {
+                if (!userEmailAddressList.includes(model.get('from'))) {
+                    to = model.get('from');
 
-                        if (!nameHash[to]) {
-                            let fromString = model.get('fromString') || model.get('fromName');
+                    if (!nameHash[to]) {
+                        let fromString = model.get('fromString') || model.get('fromName');
 
-                            if (fromString) {
-                                let name = this.parseNameFromStringAddress(fromString);
+                        if (fromString) {
+                            let name = this.parseNameFromStringAddress(fromString);
 
-                                if (name !== to) {
-                                    nameHash[to] = name;
-                                }
+                            if (name !== to) {
+                                nameHash[to] = name;
                             }
                         }
                     }
-                    else {
-                        isReplyOnSent = true;
-                    }
+                }
+                else {
+                    isReplyOnSent = true;
                 }
             }
 
