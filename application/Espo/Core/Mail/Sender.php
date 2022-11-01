@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Mail;
 
+use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Smtp\TransportFactory;
 use Espo\ORM\Collection;
@@ -39,7 +40,6 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 use Espo\Core\Mail\Account\SendingAccountProvider;
 use Espo\Core\Mail\Exceptions\SendingError;
-use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\ORM\EntityManager;
@@ -80,19 +80,22 @@ class Sender
     private Log $log;
     private TransportFactory $transportFactory;
     private SendingAccountProvider $accountProvider;
+    private FileStorageManager $fileStorageManager;
 
     public function __construct(
         Config $config,
         EntityManager $entityManager,
         Log $log,
         TransportFactory $transportFactory,
-        SendingAccountProvider $accountProvider
+        SendingAccountProvider $accountProvider,
+        FileStorageManager $fileStorageManager
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
         $this->log = $log;
         $this->transportFactory = $transportFactory;
         $this->accountProvider = $accountProvider;
+        $this->fileStorageManager = $fileStorageManager;
 
         $this->useGlobal();
     }
@@ -440,114 +443,100 @@ class Sender
             $attachmentCollection[] = $attachment;
         }
 
-        if (count($attachmentCollection)) {
-            /** @var AttachmentRepository $attachmentRepository */
-            $attachmentRepository = $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
+        foreach ($attachmentCollection as $a) {
+            $contents = $a->has('contents') ?
+                $a->get('contents') :
+                $this->fileStorageManager->getContents($a);
 
-            foreach ($attachmentCollection as $a) {
-                if ($a->get('contents')) {
-                    $contents = $a->get('contents');
-                }
-                else {
-                    $fileName = $attachmentRepository->getFilePath($a);
+            $attachment = new MimePart($contents);
 
-                    if (!is_file($fileName)) {
-                        continue;
-                    }
+            $attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
+            $attachment->encoding = Mime::ENCODING_BASE64;
+            $attachment->filename ='=?utf-8?B?' . base64_encode($a->getName() ?? '') . '?=';
 
-                    $contents = file_get_contents($fileName);
-                }
-
-                $attachment = new MimePart($contents);
-
-                $attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
-                $attachment->encoding = Mime::ENCODING_BASE64;
-                $attachment->filename ='=?utf-8?B?' . base64_encode($a->get('name')) . '?=';
-
-                if ($a->get('type')) {
-                    $attachment->type = $a->get('type');
-                }
-
-                $attachmentPartList[] = $attachment;
+            if ($a->getType()) {
+                $attachment->type = $a->getType();
             }
+
+            $attachmentPartList[] = $attachment;
         }
 
-        $attachmentInlineList = $email->getInlineAttachmentList();
+        $inlineAttachmentPartList = $this->getInlineAttachmentPartList($email);
 
-        if (!empty($attachmentInlineList)) {
-            /** @var AttachmentRepository $attachmentRepository */
-            $attachmentRepository = $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
-
-            foreach ($attachmentInlineList as $a) {
-                if ($a->get('contents')) {
-                    $contents = $a->get('contents');
-                }
-                else {
-                    $fileName = $attachmentRepository->getFilePath($a);
-
-                    if (!is_file($fileName)) {
-                        continue;
-                    }
-
-                    $contents = file_get_contents($fileName);
-                }
-
-                $attachment = new MimePart($contents);
-
-                $attachment->disposition = Mime::DISPOSITION_INLINE;
-                $attachment->encoding = Mime::ENCODING_BASE64;
-                $attachment->id = $a->id;
-
-                if ($a->getType()) {
-                    $attachment->type = $a->getType();
-                }
-
-                $attachmentPartList[] = $attachment;
-            }
-        }
-
-        $message->setSubject($email->get('name'));
+        $message->setSubject($email->getSubject() ?? '');
 
         $body = new MimeMessage();
 
-        $textPart = new MimePart($email->getBodyPlainForSending());
+        $textPart = (new MimePart($email->getBodyPlainForSending()))
+            ->setType('text/plain')
+            ->setEncoding(Mime::ENCODING_QUOTEDPRINTABLE)
+            ->setCharset('utf-8');
 
-        $textPart->type = 'text/plain';
-        $textPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
-        $textPart->charset = 'utf-8';
+        $htmlPart = $email->isHtml() ?
+            (new MimePart($email->getBodyForSending()))
+                ->setEncoding(Mime::ENCODING_QUOTEDPRINTABLE)
+                ->setType('text/html')
+                ->setCharset('utf-8') :
+            null;
 
-        $htmlPart = null;
+        $messageType = null;
 
-        $isHtml = $email->isHtml();
+        $hasAttachments = count($attachmentPartList) !== 0;
+        $hasInlineAttachments = count($inlineAttachmentPartList) !== 0;
 
-        if ($isHtml) {
-            $htmlPart = new MimePart($email->getBodyForSending());
-
-            $htmlPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
-            $htmlPart->type = 'text/html';
-            $htmlPart->charset = 'utf-8';
-        }
-
-        if (!empty($attachmentPartList)) {
-            $messageType = 'multipart/related';
-
-            if ($isHtml) {
-                $content = new MimeMessage();
-
-                $content->addPart($textPart);
-                $content->addPart($htmlPart);
-
+        if ($hasAttachments || $hasInlineAttachments) {
+            if ($htmlPart) {
                 $messageType = 'multipart/mixed';
 
-                $contentPart = new MimePart($content->generateMessage());
+                $alternative = (new MimeMessage())
+                    ->addPart($textPart)
+                    ->addPart($htmlPart);
 
-                $contentPart->type = "multipart/alternative;\n boundary=\"" .
-                    $content->getMime()->boundary() . '"';
+                $alternativePart = (new MimePart($alternative->generateMessage()))
+                    ->setType('multipart/alternative')
+                    ->setBoundary($alternative->getMime()->boundary());
 
-                $body->addPart($contentPart);
+                if ($hasInlineAttachments && $hasAttachments) {
+                    $related = (new MimeMessage())->addPart($alternativePart);
+
+                    foreach ($inlineAttachmentPartList as $attachmentPart) {
+                        $related->addPart($attachmentPart);
+                    }
+
+                    $body->addPart(
+                        (new MimePart($related->generateMessage()))
+                            ->setType('multipart/related')
+                            ->setBoundary($related->getMime()->boundary())
+                    );
+                }
+
+                if ($hasInlineAttachments && !$hasAttachments) {
+                    $messageType = 'multipart/related';
+
+                    $body->addPart($alternativePart);
+
+                    foreach ($inlineAttachmentPartList as $attachmentPart) {
+                        $body->addPart($attachmentPart);
+                    }
+                }
+
+                if (!$hasInlineAttachments) {
+                    $body->addPart(
+                        (new MimePart($alternative->generateMessage()))
+                            ->setType('multipart/related')
+                            ->setBoundary($alternative->getMime()->boundary())
+                    );
+                }
             }
-            else {
+
+            if (!$htmlPart) {
+                $messageType = 'multipart/related';
+
                 $body->addPart($textPart);
+
+                foreach ($inlineAttachmentPartList as $attachmentPart) {
+                    $body->addPart($attachmentPart);
+                }
             }
 
             foreach ($attachmentPartList as $attachmentPart) {
@@ -555,7 +544,7 @@ class Sender
             }
         }
         else {
-            if ($isHtml) {
+            if ($email->isHtml()) {
                 $body->setParts([$textPart, $htmlPart]);
 
                 $messageType = 'multipart/alternative';
@@ -569,7 +558,7 @@ class Sender
 
         $message->setBody($body);
 
-        if ($messageType == 'text/plain') {
+        if ($messageType === 'text/plain') {
             if ($message->getHeaders()->has('content-type')) {
                 $message->getHeaders()->removeHeader('content-type');
             }
@@ -590,7 +579,7 @@ class Sender
         $message->setEncoding('UTF-8');
 
         try {
-            $messageId = $email->get('messageId');
+            $messageId = $email->getMessageId();
 
             if (
                 empty($messageId) ||
@@ -610,11 +599,9 @@ class Sender
                 $messageId = substr($messageId, 1, strlen($messageId) - 2);
             }
 
-            $messageIdHeader = new MessageIdHeader();
-
-            $messageIdHeader->setId($messageId);
-
-            $message->getHeaders()->addHeader($messageIdHeader);
+            $message->getHeaders()->addHeader(
+                (new MessageIdHeader())->setId($messageId)
+            );
 
             assert($this->transport !== null);
 
@@ -632,6 +619,34 @@ class Sender
 
         $this->resetParams();
         $this->useGlobal();
+    }
+
+    /**
+     * @return MimePart[]
+     */
+    private function getInlineAttachmentPartList(Email $email): array
+    {
+        $list = [];
+
+        foreach ($email->getInlineAttachmentList() as $a) {
+            $contents = $a->has('contents') ?
+                $a->get('contents') :
+                $this->fileStorageManager->getContents($a);
+
+            $attachment = new MimePart($contents);
+
+            $attachment->disposition = Mime::DISPOSITION_INLINE;
+            $attachment->encoding = Mime::ENCODING_BASE64;
+            $attachment->id = $a->getId();
+
+            if ($a->getType()) {
+                $attachment->type = $a->getType();
+            }
+
+            $list[] = $attachment;
+        }
+
+        return $list;
     }
 
     /**
