@@ -481,7 +481,10 @@ class Sender
 
         $messageType = null;
 
-        if (count($attachmentPartList) || count($inlineAttachmentPartList)) {
+        $hasAttachments = count($attachmentPartList) !== 0;
+        $hasInlineAttachments = count($inlineAttachmentPartList) !== 0;
+
+        if ($hasAttachments || $hasInlineAttachments) {
             if ($htmlPart) {
                 $messageType = 'multipart/mixed';
 
@@ -489,13 +492,12 @@ class Sender
                     ->addPart($textPart)
                     ->addPart($htmlPart);
 
-                if (count($inlineAttachmentPartList)) {
-                    $related = (new MimeMessage())
-                        ->addPart(
-                            (new MimePart($alternative->generateMessage()))
-                                ->setType('multipart/alternative')
-                                ->setBoundary($alternative->getMime()->boundary())
-                        );
+                $alternativePart = (new MimePart($alternative->generateMessage()))
+                    ->setType('multipart/alternative')
+                    ->setBoundary($alternative->getMime()->boundary());
+
+                if ($hasInlineAttachments && $hasAttachments) {
+                    $related = (new MimeMessage())->addPart($alternativePart);
 
                     foreach ($inlineAttachmentPartList as $attachmentPart) {
                         $related->addPart($attachmentPart);
@@ -507,7 +509,18 @@ class Sender
                             ->setBoundary($related->getMime()->boundary())
                     );
                 }
-                else {
+
+                if ($hasInlineAttachments && !$hasAttachments) {
+                    $messageType = 'multipart/related';
+
+                    $body->addPart($alternativePart);
+
+                    foreach ($inlineAttachmentPartList as $attachmentPart) {
+                        $body->addPart($attachmentPart);
+                    }
+                }
+
+                if (!$hasInlineAttachments) {
                     $body->addPart(
                         (new MimePart($alternative->generateMessage()))
                             ->setType('multipart/related')
