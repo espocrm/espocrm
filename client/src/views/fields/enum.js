@@ -223,26 +223,31 @@ function (Dep, /** module:ui/multi-select*/MultiSelect) {
                 this.originalOptionList = this.params.options;
             }
 
-            this.params.options = Espo.Utils.clone(optionList);
+            let newOptions = Espo.Utils.clone(optionList) || [];
+
+            this.params.options = newOptions;
 
             let isChanged = !_(previousOptions).isEqual(optionList);
 
-            if (this.mode === 'edit' && isChanged) {
-                if (this.isRendered()) {
-                    this.reRender();
+            if (!this.isEditMode() || !isChanged) {
+                return;
+            }
 
-                    if (~(this.params.options || []).indexOf(this.model.get(this.name))) {
+            let triggerChange = false;
+            let currentValue = this.model.get(this.name);
+
+            if (!newOptions.includes(currentValue) && this.isReady) {
+                this.model.set(this.name, newOptions[0] ?? null, {silent: true});
+
+                triggerChange = true;
+            }
+
+            this.reRender()
+                .then(() => {
+                    if (triggerChange) {
                         this.trigger('change');
                     }
-                }
-                else {
-                    this.once('after:render', () => {
-                        if (~(this.params.options || []).indexOf(this.model.get(this.name))) {
-                            this.trigger('change');
-                        }
-                    });
-                }
-            }
+                });
         },
 
         /**
@@ -253,7 +258,7 @@ function (Dep, /** module:ui/multi-select*/MultiSelect) {
                 this.params.options = Espo.Utils.clone(this.originalOptionList);
             }
 
-            if (this.mode === 'edit') {
+            if (this.isEditMode()) {
                 if (this.isRendered()) {
                     this.reRender();
                 }
