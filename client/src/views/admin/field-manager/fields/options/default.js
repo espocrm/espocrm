@@ -33,11 +33,34 @@ define('views/admin/field-manager/fields/options/default', ['views/fields/enum']
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.validations.push('listed');
+
             this.setOptionList(this.model.get('options') || ['']);
 
             this.listenTo(this.model, 'change:options', () => {
                 this.setOptionList(this.model.get('options') || ['']);
             });
-        }
+        },
+
+        validateListed: function () {
+            let value = this.model.get(this.name) ?? '';
+
+            if (!this.params.options) {
+                return false;
+            }
+
+            let options = this.model.get('options') || [''];
+
+            if (options.indexOf(value) === -1) {
+                let msg = this.translate('fieldInvalid', 'messages')
+                    .replace('{field}', this.getLabelText());
+
+                this.showValidationMessage(msg);
+
+                return true;
+            }
+
+            return false;
+        },
     });
 });
