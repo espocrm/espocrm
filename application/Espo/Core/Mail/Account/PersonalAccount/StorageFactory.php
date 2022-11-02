@@ -80,7 +80,7 @@ class StorageFactory implements StorageFactoryInterface
         $imapParams = $account->getImapParams();
 
         if (!$imapParams) {
-            throw new NoImap();
+            throw new NoImap("No IMAP params.");
         }
 
         $params = Params::createBuilder()
