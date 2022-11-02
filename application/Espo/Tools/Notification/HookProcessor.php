@@ -104,7 +104,7 @@ class HookProcessor
         $notificator = $this->getNotificator($entityType);
 
         if (!$notificator instanceof AssignmentNotificator) {
-            // For backward compatiblity.
+            // For backward compatibility.
             $notificator->process($entity, $options);
 
             return;
