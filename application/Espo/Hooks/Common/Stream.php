@@ -48,6 +48,10 @@ class Stream
      */
     public function afterSave(Entity $entity, array $options): void
     {
+        if (!empty($options['silent'])) {
+            return;
+        }
+
         $this->processor->afterSave($entity, $options);
     }
 
