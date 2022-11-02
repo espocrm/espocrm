@@ -117,6 +117,8 @@ define('utils', [], function () {
 
             $dropdownToggle.dropdown('toggle');
 
+            $dropdownToggle.focus();
+
             if (isDisabled) {
                 $dropdownToggle.attr('disabled', 'disabled').addClass('disabled');
             }

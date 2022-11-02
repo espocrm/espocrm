@@ -632,6 +632,15 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 let action = $el.data('action');
                 let method = 'massAction' + Espo.Utils.upperCaseFirst(action);
 
+                e.preventDefault();
+                e.stopPropagation();
+
+                let $parent = $el.closest('.dropdown-menu').parent();
+
+                $parent.find('.actions-button[data-toggle="dropdown"]')
+                    .dropdown('toggle')
+                    .focus();
+
                 if (method in this) {
                     this[method]();
 
