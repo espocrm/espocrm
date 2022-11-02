@@ -130,6 +130,10 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             });
 
             this.shortcutKeys['Control+Delete'] = e => {
+                if ($(e.target).hasClass('note-editable')) {
+                    return;
+                }
+
                 let recordView = this.getRecordView();
 
                 if (!this.model.get('isUsers') || this.model.get('inTrash')) {
@@ -162,6 +166,10 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             };
 
             this.shortcutKeys['Control+KeyM'] = e => {
+                if ($(e.target).hasClass('note-editable')) {
+                    return;
+                }
+
                 let recordView = this.getRecordView();
 
                 if (!this.model.get('isUsers')) {
