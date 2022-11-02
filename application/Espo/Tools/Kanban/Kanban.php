@@ -179,6 +179,8 @@ class Kanban
 
         $repository = $this->entityManager->getRDBRepository($this->entityType);
 
+        $hasMore = false;
+
         foreach ($statusList as $status) {
             if (in_array($status, $statusIgnoreList)) {
                 continue;
@@ -248,6 +250,8 @@ class Kanban
                     $totalSub = -1;
 
                     unset($collectionSub[count($collectionSub) - 1]);
+
+                    $hasMore = true;
                 }
                 else {
                     $totalSub = -2;
@@ -277,14 +281,7 @@ class Kanban
             $total = $repository->clone($query)->count();
         }
         else {
-            if ($maxSize && count($collection) > $maxSize) {
-                $total = -1;
-
-                unset($collection[count($collection) - 1]);
-            }
-            else {
-                $total = -2;
-            }
+            $total = $hasMore ? -1 : -2;
         }
 
         return new Result($collection, $total, $additionalData);
@@ -310,7 +307,7 @@ class Kanban
     protected function getStatusList(): array
     {
         assert(is_string($this->entityType));
-        
+
         $statusField = $this->getStatusField();
 
         $statusList = $this->metadata->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']);

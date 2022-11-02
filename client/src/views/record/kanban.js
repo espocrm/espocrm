@@ -183,7 +183,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 topBar: this.displayTotalCount || this.buttonList.length && !this.buttonsDisabled,
                 showCount: this.showCount && this.collection.total > 0,
                 buttonList: this.buttonList,
-                displayTotalCount: this.displayTotalCount,
+                displayTotalCount: this.displayTotalCount && this.collection.total >= 0,
                 totalCount: this.collection.total,
                 statusList: this.statusList,
                 groupDataList: this.groupDataList,
