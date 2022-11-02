@@ -1,22 +1,23 @@
 {
   "fields": {
     "status": "Stato",
-    "executeTime": "Esegui a",
+    "executeTime": "Esegui il",
     "attempts": "Tentativi rimasti",
-    "failedAttempts": "Tentativo fallito",
+    "failedAttempts": "Tentativi falliti",
     "serviceName": "Servizio",
     "methodName": "Metodo",
     "scheduledJob": "Lavoro programmato",
     "method": "Metodo",
     "scheduledJobJob": "Nome lavoro programmato",
-    "executedAt": "Eseguito a",
+    "executedAt": "Eseguito il",
     "startedAt": "Iniziato alle",
-    "targetType": "Tipo di obiettivo",
+    "targetType": "Tipo di Obiettivo",
     "targetId": "ID target",
     "number": "Numero",
     "queue": "Coda",
     "job": "Lavoro",
-    "group": "Gruppo"
+    "group": "Gruppo",
+    "className": "Nome Classe"
   },
   "options": {
     "status": {

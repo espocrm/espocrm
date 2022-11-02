@@ -3,8 +3,8 @@
     "targetLists": "Liste di destinazione"
   },
   "fields": {
-    "acceptanceStatus": "Stato accettazione",
-    "acceptanceStatusMeetings": "Stato accettazione (riunioni)",
-    "acceptanceStatusCalls": "Stato accettazione (chiamate)"
+    "acceptanceStatus": "Stato Accettazione",
+    "acceptanceStatusMeetings": "Stato Accettazione (Riunioni)",
+    "acceptanceStatusCalls": "Stato Accettazione (Chiamate)"
   }
 }

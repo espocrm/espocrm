@@ -38,10 +38,10 @@
   "options": {
     "type": {
       "": "Nessuno",
-      "Person": "Persone",
+      "Person": "Persona",
       "CategoryTree": "Albero delle Categorie",
       "Event": "Evento",
-      "Company": "Compagnia"
+      "Company": "Azienda"
     },
     "linkType": {
       "manyToMany": "Molti-a-molti",
@@ -61,7 +61,7 @@
     "entityCreated": "L'Entità è stata creata",
     "linkAlreadyExists": "Nome del link in conflitto.",
     "linkConflict": "Conflitto: link o campo con lo stesso nome già esistente",
-    "confirmRemove": "Sei sicuro di voler rimuovere questo tipo di entita' dal sistema?"
+    "confirmRemove": "Sei sicuro di voler rimuovere questo tipo di entità dal sistema?"
   },
   "tooltips": {
     "statusField": "Gli aggiornamenti a questo campo verranno registrati nel flusso attività.",

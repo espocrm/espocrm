@@ -23,9 +23,9 @@
     "position": "Posizione nel team",
     "ipAddress": "Indirizzo IP",
     "passwordPreview": "Mostra password",
-    "isSuperAdmin": "E' super amministratore",
+    "isSuperAdmin": "È Super Amministratore",
     "lastAccess": "Ultimo accesso",
-    "type": "Genere",
+    "type": "Tipo",
     "secretKey": "Chiave segreta",
     "authMethod": "Metodo di autenticazione",
     "yourPassword": "La tua password attuale",
@@ -43,7 +43,8 @@
     "contact": "Contatti",
     "account": "Account (Primario}",
     "tasks": "Compiti",
-    "dashboardTemplate": "Modello di dashboard"
+    "dashboardTemplate": "Modello di dashboard",
+    "userData": "Dati Utente"
   },
   "labels": {
     "Create User": "Crea Utente",
@@ -114,7 +115,7 @@
     "passwordChangeRequestNotFound": "La richiesta di modifica della password non è stata trovata. Potrebbe essere scaduta. Prova ad avviare un nuovo recupero della password dalla [Pagina di Login]({url})."
   },
   "boolFilters": {
-    "onlyMyTeam": "Solo per il mio Team"
+    "onlyMyTeam": "Solo il mio Team"
   },
   "presetFilters": {
     "active": "Attivo",

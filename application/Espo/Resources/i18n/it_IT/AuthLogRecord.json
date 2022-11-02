@@ -8,14 +8,14 @@
     "denialReason": "Ragione Negazione",
     "portal": "Portale",
     "user": "Utente",
-    "authToken": "Token autorizzazione creato",
+    "authToken": "Token di Autorizzazione Creato",
     "requestUrl": "Url di richiesta",
     "requestMethod": "Metodo di richiesta",
     "authTokenIsActive": "Il token di autorizzazione è attivo",
     "authenticationMethod": "Metodo di autenticazione"
   },
   "links": {
-    "authToken": "Token di autorizzazione creato",
+    "authToken": "Token di Autorizzazione Creato",
     "user": "Utente",
     "portal": "Portale",
     "actionHistoryRecords": "Cronologia delle azioni"

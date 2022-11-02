@@ -18,7 +18,10 @@
       "contains": "Contiene",
       "has": "Contiene",
       "notContains": "Non contiene",
-      "notHas": "Non contiene"
+      "notHas": "Non contiene",
+      "startsWith": "Inizia Con",
+      "endsWith": "Finisce Con",
+      "matches": "Corrispondenze (regex)"
     }
   },
   "labels": {
