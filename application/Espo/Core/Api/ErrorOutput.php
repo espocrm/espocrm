@@ -215,8 +215,7 @@ class ErrorOutput
 
     private function clearPasswords(string $string): string
     {
-        /** @var string */
-        return preg_replace('/"(.*?password.*?)":".*?"/i', '"$1":"*****"', $string);
+        return preg_replace('/"(.*password.*)":".*"/i', '"$1":"*****"', $string) ?? $string;
     }
 
     private static function generateErrorBody(string $header, string $text): string
