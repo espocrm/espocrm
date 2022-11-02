@@ -5,7 +5,8 @@
     "body": "Corpo",
     "subject": "Oggetto",
     "attachments": "Allegato",
-    "category": "Categoria"
+    "category": "Categoria",
+    "insertField": "Segnaposti"
   },
   "labels": {
     "Create EmailTemplate": "Crea Modello email",
@@ -20,7 +21,7 @@
   "placeholderTexts": {
     "optOutLink": "Un link di cancellazione dell'iscrizione",
     "today": "Data odierna",
-    "now": "Data e ora attuali\n\n",
+    "now": "Data e ora attuali",
     "currentYear": "Anno corrente",
     "optOutUrl": "URL per un link di disiscrizione"
   },

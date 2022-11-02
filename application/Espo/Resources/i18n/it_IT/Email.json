@@ -48,7 +48,11 @@
     "fromEmailAddress": "Dall'indirizzo (collegamento)",
     "replyToName": "Rispondi a Nome",
     "replyToAddress": "Indirizzo di risposta",
-    "event": "Evento"
+    "icsContents": "Contenuti ICS",
+    "icsEventData": "Data Evento ICS",
+    "icsEventUid": "Evento ICS UID",
+    "event": "Evento",
+    "icsEventDateStart": "Data Inizio Evento ICS"
   },
   "links": {
     "replied": "Risposto",
@@ -75,8 +79,8 @@
     }
   },
   "labels": {
-    "Create Email": "Archivio email",
-    "Archive Email": "Archivio email",
+    "Create Email": "Archivia Email",
+    "Archive Email": "Archivia Email",
     "Compose": "Componi",
     "Reply": "Rispondi",
     "Reply to All": "Rispondi a tutti",
@@ -92,7 +96,7 @@
     "Mark Read": "Contrassegna come letto",
     "Sending...": "Invio...",
     "Save Draft": "Salva Bozza",
-    "Mark all as read": "Contrassegna tutti come letto",
+    "Mark all as read": "Contrassegna tutte come lette",
     "Show Plain Text": "Visualizza testo normale",
     "Mark as Important": "Contrassegna come Importante",
     "Unmark Importance": "Deselezione come Importante",
@@ -114,7 +118,7 @@
     "noSmtpSetup": "SMTP non configurato: {link}",
     "sendConfirm": "Invia email?",
     "removeSelectedRecordsConfirmation": "Sei sicuro di voler rimuovere le mail selezionate?\n\nSaranno rimosse anche per gli altri utenti.",
-    "removeRecordConfirmation": "Sei sicuro di voler rimuovere la mail selezionata?\n\nSara' rimossa anche per gli altri utenti."
+    "removeRecordConfirmation": "Sei sicuro di voler rimuovere la mail selezionata?\n\nSarà rimossa anche per gli altri utenti."
   },
   "presetFilters": {
     "sent": "Inviato",

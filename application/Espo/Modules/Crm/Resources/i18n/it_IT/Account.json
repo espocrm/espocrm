@@ -13,12 +13,12 @@
     "campaign": "Campagna",
     "targetLists": "Liste di destinazione",
     "targetList": "Lista di destinazione",
-    "originalLead": "Iniziativa originale",
+    "originalLead": "Lead Originale",
     "contactIsInactive": "Inattivo"
   },
   "links": {
     "contacts": "Contatti",
-    "opportunities": "Opportunita'",
+    "opportunities": "Opportunità",
     "cases": "Ticket",
     "documents": "Documenti",
     "meetingsPrimary": "Riunioni (ampliato)",
@@ -29,7 +29,7 @@
     "campaignLogRecords": "Log campagna",
     "campaign": "Campagna",
     "portalUsers": "Utenti portale",
-    "originalLead": "Iniziativa originale",
+    "originalLead": "Lead Originale",
     "contactsPrimary": "Contatti (primari)"
   },
   "options": {

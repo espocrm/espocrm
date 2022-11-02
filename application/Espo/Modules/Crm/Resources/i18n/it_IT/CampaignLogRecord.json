@@ -6,7 +6,7 @@
     "object": "Oggetto",
     "application": "Applicazione",
     "queueItem": "Articolo in coda",
-    "isTest": "E'Test"
+    "isTest": "È un Test"
   },
   "links": {
     "queueItem": "Articolo in coda",
