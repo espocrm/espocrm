@@ -1729,8 +1729,15 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 
     .ui-draggable-dragging {
         cursor: grabbing;
-        .panel-title .action {
-            cursor: grabbing;
+
+        .panel.dashlet > .panel-heading {
+            .panel-title {
+                .action {
+                    cursor: grabbing;
+                }
+
+                cursor: grabbing;
+            }
         }
     }
 
