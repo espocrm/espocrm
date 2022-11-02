@@ -39,6 +39,7 @@ define('views/notification/fields/container', ['views/fields/base'], function (D
         setup: function () {
             switch (this.model.get('type')) {
                 case 'Note':
+                    console.log(this.model.get('noteData'), this.model.attributes);
                     this.processNote(this.model.get('noteData'));
 
                     break;
@@ -54,7 +55,7 @@ define('views/notification/fields/container', ['views/fields/base'], function (D
         },
 
         process: function () {
-            var type = this.model.get('type');
+            let type = this.model.get('type');
 
             if (!type) {
                 return;
@@ -62,7 +63,7 @@ define('views/notification/fields/container', ['views/fields/base'], function (D
 
             type = type.replace(/ /g, '');
 
-            var viewName = this.getMetadata()
+            let viewName = this.getMetadata()
                 .get('clientDefs.Notification.itemViews.' + type) ||
                 'views/notification/items/' + Espo.Utils.camelCaseToHyphen(type);
 
@@ -73,12 +74,16 @@ define('views/notification/fields/container', ['views/fields/base'], function (D
         },
 
         processNote: function (data) {
+            if (!data) {
+                return;
+            }
+
             this.wait(true);
 
             this.getModelFactory().create('Note', model => {
                 model.set(data);
 
-                var viewName = this.getMetadata()
+                let viewName = this.getMetadata()
                     .get('clientDefs.Note.itemViews.' + data.type) ||
                     'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(data.type);
 
@@ -95,12 +100,16 @@ define('views/notification/fields/container', ['views/fields/base'], function (D
         },
 
         processMentionInPost: function (data) {
+            if (!data) {
+                return;
+            }
+
             this.wait(true);
 
             this.getModelFactory().create('Note', model => {
                 model.set(data);
 
-                var viewName = 'views/stream/notes/mention-in-post';
+                let viewName = 'views/stream/notes/mention-in-post';
 
                 this.createView('notification', viewName, {
                     model: model,

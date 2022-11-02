@@ -120,7 +120,7 @@ class RecordService
         $ids = [];
 
         foreach ($collection as $k => $entity) {
-            if ($k === $limit - 1) {
+            if ($k === $limit) {
                 break;
             }
 
