@@ -111,7 +111,7 @@ class QueueUtil
             $builder->limit(0, $limit);
         }
 
-        return $builder->find();
+        return $builder->sth()->find();
     }
 
     public function isScheduledJobRunning(
