@@ -39,7 +39,6 @@ define('views/notification/fields/container', ['views/fields/base'], function (D
         setup: function () {
             switch (this.model.get('type')) {
                 case 'Note':
-                    console.log(this.model.get('noteData'), this.model.attributes);
                     this.processNote(this.model.get('noteData'));
 
                     break;

@@ -36,7 +36,7 @@ define('views/stream/message', ['view'], function (Dep) {
 
         setup: function () {
             let template = this.options.messageTemplate;
-            let data = this.options.messageData || {};
+            let data = Espo.Utils.clone(this.options.messageData || {});
 
             this.dataForTemplate = {};
 

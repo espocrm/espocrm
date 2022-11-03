@@ -29,11 +29,10 @@
 
 namespace Espo\Modules\Crm\Entities;
 
-use Espo\Core\{
-    Field\Link,
-    Field\LinkMultiple,
-    ORM\Entity,
-    Field\DateTime};
+use Espo\Core\Field\DateTime;
+use Espo\Core\Field\Link;
+use Espo\Core\Field\LinkMultiple;
+use Espo\Core\ORM\Entity;
 
 class Call extends Entity
 {
@@ -42,6 +41,11 @@ class Call extends Entity
     public const STATUS_PLANNED = 'Planned';
     public const STATUS_HELD = 'Held';
     public const STATUS_NOT_HELD = 'Not Held';
+
+    public function getName(): ?string
+    {
+        return $this->get('name');
+    }
 
     public function getStatus(): ?string
     {
@@ -70,6 +74,18 @@ class Call extends Entity
         $this->setValueObject('dateEnd', $dateEnd);
     }
 
+    public function getCreatedBy(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('createdBy');
+    }
+
+    public function getModifiedBy(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('modifiedBy');
+    }
+
     public function getAssignedUser(): ?Link
     {
         /** @var ?Link */
@@ -80,5 +96,23 @@ class Call extends Entity
     {
         /** @var LinkMultiple */
         return $this->getValueObject('teams');
+    }
+
+    public function getUsers(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('users');
+    }
+
+    public function getContacts(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('contacts');
+    }
+
+    public function getLeads(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('leads');
     }
 }

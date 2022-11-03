@@ -26,20 +26,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/notification/items/email-received', ['views/notification/items/base'], function (Dep) {
+define('crm:views/notification/items/event-attendee', ['views/notification/items/base'], function (Dep) {
 
     return Dep.extend({
 
-        messageName: 'emailReceived',
+        messageName: 'eventAttendee',
 
-        template: 'notification/items/email-received',
-
-        data: function () {
-            return _.extend({
-                emailId: this.emailId,
-                emailName: this.emailName
-            }, Dep.prototype.data.call(this));
-        },
+        templateContent: `
+            <div class="stream-head-container">
+                <div class="pull-left">{{{avatar}}}</div>
+                <div class="stream-head-text-container">
+                    <span class="text-muted message">{{{message}}}</span>
+                </div>
+            </div>
+            <div class="stream-date-container">
+                <span class="text-muted small">{{{createdAt}}}</span>
+            </div>
+        `,
 
         setup: function () {
             let data = this.model.get('data') || {};
@@ -48,22 +51,19 @@ define('views/notification/items/email-received', ['views/notification/items/bas
 
             this.messageData['entityType'] = this.translateEntityType(data.entityType);
 
-            if (data.personEntityId) {
-                this.messageData['from'] =
-                    $('<a>')
-                        .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
-                        .attr('data-id', data.personEntityId)
-                        .attr('data-scope', data.personEntityType)
-                        .text(data.personEntityName);
-            }
-            else {
-                let text = data.fromString || this.translate('empty address');
+            this.messageData['entity'] =
+                $('<a>')
+                    .attr('href', '#' + data.entityType + '/view/' + data.entityId)
+                    .attr('data-id', data.entityId)
+                    .attr('data-scope', data.entityType)
+                    .text(data.entityName);
 
-                this.messageData['from'] = $('<span>').text(text);
-            }
-
-            this.emailId = data.emailId;
-            this.emailName = data.emailName;
+            this.messageData['user'] =
+                $('<a>')
+                    .attr('href', '#User/view/' + data.userId)
+                    .attr('data-id', data.userId)
+                    .attr('data-scope', 'User')
+                    .text(data.userName);
 
             this.createMessage();
         },

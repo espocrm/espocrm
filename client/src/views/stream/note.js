@@ -131,17 +131,13 @@ define('views/stream/note', ['view'], function (Dep) {
         },
 
         translateEntityType: function (entityType, isPlural) {
-            var string;
-
-            if (!isPlural) {
-                string = (this.translate(entityType, 'scopeNames') || '');
-            } else {
-                string = (this.translate(entityType, 'scopeNamesPlural') || '');
-            }
+            let string = isPlural ?
+                (this.translate(entityType, 'scopeNamesPlural') || '') :
+                (this.translate(entityType, 'scopeNames') || '');
 
             string = string.toLowerCase();
 
-            var language = this.getPreferences().get('language') || this.getConfig().get('language');
+            let language = this.getPreferences().get('language') || this.getConfig().get('language');
 
             if (~['de_DE', 'nl_NL'].indexOf(language)) {
                 string = Espo.Utils.upperCaseFirst(string);
@@ -202,6 +198,15 @@ define('views/stream/note', ['view'], function (Dep) {
                 if (!isTranslated) {
                     this.messageTemplate = this.translate(this.messageName, 'streamMessages', parentType) || '';
                 }
+            }
+
+            if (
+                this.messageTemplate.indexOf('{entityType}') === 0 &&
+                typeof this.messageData.entityType === 'string'
+            ) {
+                this.messageData.entityTypeUcFirst = Espo.Utils.upperCaseFirst(this.messageData.entityType);
+
+                this.messageTemplate = this.messageTemplate.replace('{entityType}', '{entityTypeUcFirst}');
             }
 
             this.createView('message', 'views/stream/message', {

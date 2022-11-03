@@ -1,0 +1,4 @@
+{
+    "assignmentNotificatorClassName": "Espo\\Modules\\Crm\\Classes\\AssignmentNotificators\\Meeting",
+    "forceAssignmentNotificator": true
+}

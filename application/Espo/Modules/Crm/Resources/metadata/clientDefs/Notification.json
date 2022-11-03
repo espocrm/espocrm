@@ -1,0 +1,5 @@
+{
+    "itemViews": {
+        "EventAttendee": "crm:views/notification/items/event-attendee"
+    }
+}

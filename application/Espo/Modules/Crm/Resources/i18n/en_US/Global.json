@@ -115,5 +115,8 @@
             "Popup": "Popup",
             "Email": "Email"
         }
+    },
+    "notificationMessages": {
+        "eventAttendee": "{user} added you to {entityType} {entity}"
     }
 }

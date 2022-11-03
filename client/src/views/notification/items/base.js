@@ -36,7 +36,7 @@ define('views/notification/items/base', ['view'], function (Dep) {
 
         messageData: null,
 
-        isSystemAvatar: true,
+        isSystemAvatar: false,
 
         data: function () {
             return {
@@ -71,6 +71,15 @@ define('views/notification/items/base', ['view'], function (Dep) {
                 this.messageTemplate = this.translate(this.messageName, 'notificationMessages', parentType) || '';
             }
 
+            if (
+                this.messageTemplate.indexOf('{entityType}') === 0 &&
+                typeof this.messageData.entityType === 'string'
+            ) {
+                this.messageData.entityTypeUcFirst = Espo.Utils.upperCaseFirst(this.messageData.entityType);
+
+                this.messageTemplate = this.messageTemplate.replace('{entityType}', '{entityTypeUcFirst}');
+            }
+
             this.createView('message', 'views/stream/message', {
                 messageTemplate: this.messageTemplate,
                 el: this.options.el + ' .message',
@@ -82,11 +91,32 @@ define('views/notification/items/base', ['view'], function (Dep) {
         getAvatarHtml: function () {
             let id = this.userId;
 
-            if (this.isSystemAvatar) {
+            if (this.isSystemAvatar || !id) {
                 id = 'system';
             }
 
             return this.getHelper().getAvatarHtml(id, 'small', 20);
+        },
+
+        /**
+         * @param {string} entityType
+         * @param {boolean} [isPlural]
+         * @return {string}
+         */
+        translateEntityType: function (entityType, isPlural) {
+            let string = isPlural ?
+                (this.translate(entityType, 'scopeNamesPlural') || '') :
+                (this.translate(entityType, 'scopeNames') || '');
+
+            string = string.toLowerCase();
+
+            let language = this.getPreferences().get('language') || this.getConfig().get('language');
+
+            if (~['de_DE', 'nl_NL'].indexOf(language)) {
+                string = Espo.Utils.upperCaseFirst(string);
+            }
+
+            return string;
         },
     });
 });
