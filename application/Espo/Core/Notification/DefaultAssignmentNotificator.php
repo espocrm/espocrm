@@ -99,18 +99,18 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
         }
 
         if ($entity->hasAttribute('createdById') && $entity->hasAttribute('modifiedById')) {
-            if ($entity->isNew()) {
-                $isNotSelfAssignment = $assignedUserId !== $entity->get('createdById');
+            $isSelfAssignment = $entity->isNew() ?
+                $assignedUserId === $entity->get('createdById') :
+                $assignedUserId === $entity->get('modifiedById');
+
+            if ($isSelfAssignment) {
+                return;
             }
-            else {
-                $isNotSelfAssignment = $assignedUserId !== $entity->get('modifiedById');
-            }
-        }
-        else {
-            $isNotSelfAssignment = $assignedUserId !== $this->user->getId();
         }
 
-        if (!$isNotSelfAssignment) {
+        $isSelfAssignment = $assignedUserId === $this->user->getId();
+
+        if (!$isSelfAssignment) {
             return;
         }
 
@@ -123,7 +123,7 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
                 'entityName' => $entity->get('name'),
                 'isNew' => $entity->isNew(),
                 'userId' => $this->user->getId(),
-                'userName' => $this->user->get('name'),
+                'userName' => $this->user->getName(),
             ],
             'relatedType' => $entity->getEntityType(),
             'relatedId' => $entity->getId(),
