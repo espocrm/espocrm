@@ -29,33 +29,23 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\{
-    Utils\Config,
-    ORM\EntityManager,
-    Utils\System,
-    Utils\DateTime as DateTimeUtil,
-};
-
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\System;
 use Espo\Core\Job\Job\Status;
-
 use Espo\Entities\Job as JobEntity;
-
 use Espo\ORM\Collection;
-
 use DateTime;
 
 class QueueUtil
 {
     private Config $config;
-
     private EntityManager $entityManager;
-
     private ScheduleUtil $scheduleUtil;
-
     private MetadataProvider $metadataProvider;
 
     private const NOT_EXISTING_PROCESS_PERIOD = 300;
-
     private const READY_NOT_STARTED_PERIOD = 60;
 
     public function __construct(
@@ -85,17 +75,16 @@ class QueueUtil
             return false;
         }
 
-        return $job->get('status') === Status::PENDING;
+        return $job->getStatus() === Status::PENDING;
     }
 
     /**
-     * @return JobEntity[]
-     * @phpstan-return Collection<JobEntity>
+     * @return Collection<JobEntity>
      */
     public function getPendingJobList(?string $queue = null, ?string $group = null, int $limit = 0): Collection
     {
         $builder = $this->entityManager
-            ->getRDBRepository(JobEntity::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(JobEntity::class)
             ->select([
                 'id',
                 'scheduledJobId',
@@ -122,10 +111,7 @@ class QueueUtil
             $builder->limit(0, $limit);
         }
 
-        /** @var Collection<JobEntity> $collection */
-        $collection = $builder->find();
-
-        return $collection;
+        return $builder->find();
     }
 
     public function isScheduledJobRunning(
@@ -150,7 +136,7 @@ class QueueUtil
         }
 
         return (bool) $this->entityManager
-            ->getRDBRepository(JobEntity::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(JobEntity::class)
             ->select(['id'])
             ->where($where)
             ->findOne();
@@ -164,7 +150,7 @@ class QueueUtil
         $list = [];
 
         $jobList = $this->entityManager
-            ->getRDBRepository(JobEntity::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(JobEntity::class)
             ->select(['scheduledJobId'])
             ->leftJoin('scheduledJob')
             ->where([
@@ -179,7 +165,13 @@ class QueueUtil
             ->find();
 
         foreach ($jobList as $job) {
-            $list[] = $job->get('scheduledJobId');
+            $scheduledJobId =  $job->getScheduledJobId();
+
+            if (!$scheduledJobId) {
+                continue;
+            }
+
+            $list[] = $scheduledJobId;
         }
 
         return $list;
@@ -193,7 +185,7 @@ class QueueUtil
         $toString = $dateObj->format('Y-m-d H:i:59');
 
         $job = $this->entityManager
-            ->getRDBRepository('Job')
+            ->getRDBRepositoryByClass(JobEntity::class)
             ->select(['id'])
             ->where([
                 'scheduledJobId' => $scheduledJobId,
@@ -213,15 +205,13 @@ class QueueUtil
 
     public function getPendingCountByScheduledJobId(string $scheduledJobId): int
     {
-        $countPending = $this->entityManager
-            ->getRDBRepository(JobEntity::ENTITY_TYPE)
+        return $this->entityManager
+            ->getRDBRepositoryByClass(JobEntity::class)
             ->where([
                 'scheduledJobId' => $scheduledJobId,
                 'status' => Status::PENDING,
             ])
             ->count();
-
-        return $countPending;
     }
 
     public function markJobsFailed(): void
@@ -232,7 +222,7 @@ class QueueUtil
         $this->markJobsFailedByPeriod();
     }
 
-    protected function markJobsFailedByNotExistingProcesses(): void
+    private function markJobsFailedByNotExistingProcesses(): void
     {
         $timeThreshold = time() - $this->config->get(
             'jobPeriodForNotExistingProcess',
@@ -242,7 +232,7 @@ class QueueUtil
         $dateTimeThreshold = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $timeThreshold);
 
         $runningJobList = $this->entityManager
-            ->getRDBRepository('Job')
+            ->getRDBRepositoryByClass(JobEntity::class)
             ->select([
                 'id',
                 'scheduledJobId',
@@ -261,7 +251,9 @@ class QueueUtil
         $failedJobList = [];
 
         foreach ($runningJobList as $job) {
-            if ($job->get('pid') && !System::isProcessActive($job->get('pid'))) {
+            $pid = $job->getPid();
+
+            if ($pid && !System::isProcessActive($pid)) {
                 $failedJobList[] = $job;
             }
         }
@@ -269,15 +261,15 @@ class QueueUtil
         $this->markJobListFailed($failedJobList);
     }
 
-    protected function markJobsFailedReadyNotStarted(): void
+    private function markJobsFailedReadyNotStarted(): void
     {
         $timeThreshold = time() -
-            $this->config->get('jobPeriodForReadyNotStarted', SELF::READY_NOT_STARTED_PERIOD);
+            $this->config->get('jobPeriodForReadyNotStarted', self::READY_NOT_STARTED_PERIOD);
 
         $dateTimeThreshold = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $timeThreshold);
 
         $failedJobList = $this->entityManager
-            ->getRDBRepository('Job')
+            ->getRDBRepositoryByClass(JobEntity::class)
             ->select([
                 'id',
                 'scheduledJobId',
@@ -309,7 +301,7 @@ class QueueUtil
         $dateTimeThreshold = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $timeThreshold);
 
         $runningJobList = $this->entityManager
-            ->getRDBRepository(JobEntity::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(JobEntity::class)
             ->select([
                 'id',
                 'scheduledJobId',
@@ -334,7 +326,9 @@ class QueueUtil
                 continue;
             }
 
-            if (!$job->get('pid') || !System::isProcessActive($job->get('pid'))) {
+            $pid = $job->getPid();
+
+            if (!$pid || !System::isProcessActive($pid)) {
                 $failedJobList[] = $job;
             }
         }
@@ -357,7 +351,8 @@ class QueueUtil
             $jobIdList[] = $job->getId();
         }
 
-        $updateQuery = $this->entityManager->getQueryBuilder()
+        $updateQuery = $this->entityManager
+            ->getQueryBuilder()
             ->update()
             ->in(JobEntity::ENTITY_TYPE)
             ->set([
@@ -372,16 +367,18 @@ class QueueUtil
         $this->entityManager->getQueryExecutor()->execute($updateQuery);
 
         foreach ($jobList as $job) {
-            if (!$job->get('scheduledJobId')) {
+            $scheduledJobId = $job->getScheduledJobId();
+
+            if (!$scheduledJobId) {
                 continue;
             }
 
             $this->scheduleUtil->addLogRecord(
-                $job->get('scheduledJobId'),
+                $scheduledJobId,
                 Status::FAILED,
-                $job->get('startedAt'),
-                $job->get('targetId'),
-                $job->get('targetType')
+                $job->getStartedAt(),
+                $job->getTargetId(),
+                $job->getTargetType()
             );
         }
     }
@@ -412,16 +409,18 @@ class QueueUtil
         $scheduledJobIdList = [];
 
         foreach ($duplicateJobList as $duplicateJob) {
-            if (!$duplicateJob->get('scheduledJobId')) {
+            $scheduledJobId = $duplicateJob->getScheduledJobId();
+
+            if (!$scheduledJobId) {
                 continue;
             }
 
-            $scheduledJobIdList[] = $duplicateJob->get('scheduledJobId');
+            $scheduledJobIdList[] = $scheduledJobId;
         }
 
         foreach ($scheduledJobIdList as $scheduledJobId) {
             $toRemoveJobList = $this->entityManager
-                ->getRDBRepository(JobEntity::ENTITY_TYPE)
+                ->getRDBRepositoryByClass(JobEntity::class)
                 ->select(['id'])
                 ->where([
                     'scheduledJobId' => $scheduledJobId,
@@ -460,7 +459,7 @@ class QueueUtil
     public function updateFailedJobAttempts(): void
     {
         $jobCollection = $this->entityManager
-            ->getRDBRepository(JobEntity::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(JobEntity::class)
             ->select([
                 'id',
                 'attempts',
@@ -474,8 +473,8 @@ class QueueUtil
             ->find();
 
          foreach ($jobCollection as $job) {
-            $failedAttempts = $job->get('failedAttempts') ?? 0;
-            $attempts = $job->get('attempts');
+            $failedAttempts = $job->getFailedAttempts();
+            $attempts = $job->getAttempts();
 
             $job->set([
                 'status' => Status::PENDING,

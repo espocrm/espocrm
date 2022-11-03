@@ -30,7 +30,6 @@
 namespace Espo\Entities;
 
 use Espo\Core\ORM\Entity;
-
 use stdClass;
 
 class Job extends Entity
@@ -147,5 +146,29 @@ class Job extends Entity
     public function getStartedAt(): ?string
     {
         return $this->get('startedAt');
+    }
+
+    /**
+     * Get a PID.
+     */
+    public function getPid(): ?int
+    {
+        return $this->get('pid');
+    }
+
+    /**
+     * Get a number of attempts left.
+     */
+    public function getAttempts(): int
+    {
+        return $this->get('attempts') ?? 0;
+    }
+
+    /**
+     * Get a number of failed attempts.
+     */
+    public function getFailedAttempts(): int
+    {
+        return $this->get('failedAttempts') ?? 0;
     }
 }

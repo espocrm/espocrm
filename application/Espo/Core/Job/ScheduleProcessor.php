@@ -30,19 +30,12 @@
 namespace Espo\Core\Job;
 
 use Espo\Core\Job\Preparator\Data as PreparatorData;
-
-use Espo\Core\{
-    ORM\EntityManager,
-    Utils\Log,
-    Utils\DateTime as DateTimeUtil,
-};
-
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\Log;
 use Espo\Core\Job\Job\Status;
-
-use Espo\Entities\{
-    ScheduledJob as ScheduledJobEntity,
-    Job as JobEntity,
-};
+use Espo\Entities\Job as JobEntity;
+use Espo\Entities\ScheduledJob as ScheduledJobEntity;
 
 use Cron\CronExpression;
 
@@ -55,9 +48,7 @@ use DateTimeImmutable;
  */
 class ScheduleProcessor
 {
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $asSoonAsPossibleSchedulingList = [
         '*',
         '* *',
@@ -67,17 +58,12 @@ class ScheduleProcessor
         '* * * * * *',
     ];
 
-    private $log;
-
-    private $entityManager;
-
-    private $queueUtil;
-
-    private $scheduleUtil;
-
-    private $metadataProvider;
-
-    private $preparatorFactory;
+    private Log $log;
+    private EntityManager $entityManager;
+    private QueueUtil $queueUtil;
+    private ScheduleUtil $scheduleUtil;
+    private PreparatorFactory $preparatorFactory;
+    private MetadataProvider $metadataProvider;
 
     public function __construct(
         Log $log,
@@ -98,7 +84,6 @@ class ScheduleProcessor
     public function process(): void
     {
         $activeScheduledJobList = $this->scheduleUtil->getActiveScheduledJobList();
-
         $runningScheduledJobIdList = $this->queueUtil->getRunningScheduledJobIdList();
 
         foreach ($activeScheduledJobList as $scheduledJob) {
@@ -206,9 +191,7 @@ class ScheduleProcessor
             return $cronExpression->getNextRunDate()->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         }
         catch (Exception $e) {
-            $this->log->error(
-                "Scheduled Job '{$id}': Unsupported scheduling expression '{$scheduling}'."
-            );
+            $this->log->error("Scheduled Job '{$id}': Unsupported scheduling expression '{$scheduling}'.");
 
             return null;
         }
