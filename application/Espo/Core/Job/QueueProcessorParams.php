@@ -32,19 +32,14 @@ namespace Espo\Core\Job;
 class QueueProcessorParams
 {
     private bool $useProcessPool = false;
-
     private bool $noLock = false;
-
     private ?string $queue = null;
-
     private ?string $group = null;
-
     private int $limit = 0;
 
     public function withUseProcessPool(bool $useProcessPool): self
     {
         $obj = clone $this;
-
         $obj->useProcessPool = $useProcessPool;
 
         return $obj;
@@ -53,7 +48,6 @@ class QueueProcessorParams
     public function withNoLock(bool $noLock): self
     {
         $obj = clone $this;
-
         $obj->noLock = $noLock;
 
         return $obj;
@@ -62,7 +56,6 @@ class QueueProcessorParams
     public function withQueue(?string $queue): self
     {
         $obj = clone $this;
-
         $obj->queue = $queue;
 
         return $obj;
@@ -71,7 +64,6 @@ class QueueProcessorParams
     public function withGroup(?string $group): self
     {
         $obj = clone $this;
-
         $obj->group = $group;
 
         return $obj;
@@ -80,7 +72,6 @@ class QueueProcessorParams
     public function withLimit(int $limit): self
     {
         $obj = clone $this;
-
         $obj->limit = $limit;
 
         return $obj;

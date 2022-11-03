@@ -29,20 +29,14 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\Job\MetadataProvider;
-
-use Espo\Core\{
-    Exceptions\Error,
-    Utils\ClassFinder,
-    InjectableFactory,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\ClassFinder;
 
 class JobFactory
 {
     private ClassFinder $classFinder;
-
     private InjectableFactory $injectableFactory;
-
     private MetadataProvider $metadataProvider;
 
     public function __construct(

@@ -29,19 +29,13 @@
 
 namespace Espo\Core\Job;
 
-use Espo\ORM\{
-    Collection,
-    EntityManager,
-};
+use Espo\ORM\Collection;
+use Espo\ORM\EntityManager;
 
-use Espo\Core\{
-    Utils\DateTime as DateTimeUtil,
-};
+use Espo\Core\Utils\DateTime as DateTimeUtil;
 
-use Espo\Entities\{
-    ScheduledJob as ScheduledJobEntity,
-    ScheduledJobLogRecord as ScheduledJobLogRecordEntity,
-};
+use Espo\Entities\ScheduledJob as ScheduledJobEntity;
+use Espo\Entities\ScheduledJobLogRecord as ScheduledJobLogRecordEntity;
 
 class ScheduleUtil
 {

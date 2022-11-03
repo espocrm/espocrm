@@ -29,9 +29,7 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\{
-    InjectableFactory,
-};
+use Espo\Core\InjectableFactory;
 
 class QueueProcessorFactory
 {

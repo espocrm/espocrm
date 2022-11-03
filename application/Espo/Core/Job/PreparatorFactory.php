@@ -35,7 +35,6 @@ use Espo\Core\Exceptions\Error;
 class PreparatorFactory
 {
     private MetadataProvider $metadataProvider;
-
     private InjectableFactory $injectableFactory;
 
     public function __construct(MetadataProvider $metadataProvider, InjectableFactory $injectableFactory)

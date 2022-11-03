@@ -29,14 +29,10 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\{
-    Utils\Config,
-    Utils\File\Manager as FileManager,
-    Utils\Log,
-};
-
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Log;
 use Espo\Entities\Job as JobEntity;
-
 use RuntimeException;
 use Throwable;
 
@@ -50,19 +46,12 @@ class JobManager
     protected string $lastRunTimeFile = 'data/cache/application/cronLastRunTime.php';
 
     private Config $config;
-
     private FileManager $fileManager;
-
     private JobRunner $jobRunner;
-
     private Log $log;
-
     private ScheduleProcessor $scheduleProcessor;
-
     private QueueUtil $queueUtil;
-
     private AsyncPoolFactory $asyncPoolFactory;
-
     private QueueProcessorFactory $queueProcessorFactory;
 
     public function __construct(
