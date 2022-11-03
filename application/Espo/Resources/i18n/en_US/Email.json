@@ -11,7 +11,7 @@
         "replyTo": "Reply To",
         "replyToString": "Reply To (String)",
         "personStringData": "Person String Data",
-        "isHtml": "Is Html",
+        "isHtml": "HTML",
         "body": "Body",
         "bodyPlain": "Body (Plain)",
         "subject": "Subject",
