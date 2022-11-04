@@ -111,6 +111,7 @@ class Attachment implements EntryPoint
         $response
             ->setHeader('Pragma', 'public')
             ->setHeader('Content-Length', (string) $size)
+            ->setHeader('Content-Security-Policy', "default-src 'self'")
             ->setBody($stream);
     }
 
