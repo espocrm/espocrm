@@ -859,9 +859,11 @@ define('views/record/panels-container', ['view'], function (Dep) {
             $tab.addClass('hidden');
 
             if (this.currentTab === tab) {
-                let firstVisibleTab = this.panelList
-                    .find(panel => panel.tabNumber > -1 && !panel.hidden)
-                    .tabNumber || 0;
+                let firstVisiblePanel = this.panelList
+                    .find(panel => panel.tabNumber > -1 && !panel.hidden);
+
+                let firstVisibleTab = firstVisiblePanel ?
+                    firstVisiblePanel.tabNumber : 0;
 
                 this.selectTab(firstVisibleTab);
 
