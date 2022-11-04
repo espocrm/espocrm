@@ -204,7 +204,9 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
         },
 
         massActionMoveToFolder: function () {
-            this.createView('dialog', 'views/email-folder/modals/select-folder', {}, view => {
+            this.createView('dialog', 'views/email-folder/modals/select-folder', {
+                headerText: this.translate('Move to Folder', 'labels', 'Email'),
+            }, view => {
                 view.render();
 
                 this.listenToOnce(view, 'select', folderId => {
@@ -381,7 +383,9 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
                 return;
             }
 
-            this.createView('dialog', 'views/email-folder/modals/select-folder', {}, view => {
+            this.createView('dialog', 'views/email-folder/modals/select-folder', {
+                headerText: this.translate('Move to Folder', 'labels', 'Email'),
+            }, view => {
                 view.render();
 
                 this.listenToOnce(view, 'select', folderId => {

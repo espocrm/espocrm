@@ -62,7 +62,7 @@ define('views/email-folder/modals/select-folder', ['views/modal'], function (Dep
         ],
 
         setup: function () {
-            this.headerText = '';
+            this.headerText = this.options.headerText || '';
 
             Espo.Ui.notify(' ... ');
 
