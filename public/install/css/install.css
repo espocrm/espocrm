@@ -145,6 +145,7 @@ span.ok {
 .main-header.panel-heading {
     background-color: var(--navbar-inverse-bg) !important;
     padding: 0 2px;
+    border-bottom-width: 0;
 }
 
 header.step-header {
