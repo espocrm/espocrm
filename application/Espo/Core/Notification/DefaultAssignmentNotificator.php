@@ -110,7 +110,7 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
 
         $isSelfAssignment = $assignedUserId === $this->user->getId();
 
-        if (!$isSelfAssignment) {
+        if ($isSelfAssignment) {
             return;
         }
 
