@@ -334,7 +334,7 @@ define('views/site/navbar', ['view'], function (Dep) {
             var companyLogoId = this.getConfig().get('companyLogoId');
 
             if (!companyLogoId) {
-                return this.getBasePath() + (this.getThemeManager().getParam('logo') || 'client/img/logo.png');
+                return this.getBasePath() + (this.getThemeManager().getParam('logo') || 'client/img/logo.svg');
             }
 
             return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId;

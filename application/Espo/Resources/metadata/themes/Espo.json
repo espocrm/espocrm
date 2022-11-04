@@ -22,8 +22,8 @@
         "logo": {
             "param": "navbar",
             "valueMap": {
-                "side": "client/img/logo-39.png",
-                "top": "client/img/logo-39.png"
+                "side": "client/img/logo.svg",
+                "top": "client/img/logo.svg"
             }
         }
     },

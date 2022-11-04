@@ -162,7 +162,7 @@ define('views/login', ['view'], function (Dep) {
             let companyLogoId = this.getConfig().get('companyLogoId');
 
             if (!companyLogoId) {
-                return this.getBasePath() + ('client/img/logo.png');
+                return this.getBasePath() + ('client/img/logo.svg');
             }
 
             return this.getBasePath() + '?entryPoint=LogoImage&id=' + companyLogoId;
