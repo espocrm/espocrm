@@ -36,6 +36,8 @@ define('views/email-folder/modals/select-folder', ['views/modal'], function (Dep
 
         fitHeight: true,
 
+        backdrop: true,
+
         data: function () {
             return {
                 folderDataList: this.folderDataList,
@@ -54,15 +56,15 @@ define('views/email-folder/modals/select-folder', ['views/modal'], function (Dep
             },
         },
 
-        buttonList: [
-            {
-                name: 'cancel',
-                label: 'Cancel',
-            },
-        ],
-
         setup: function () {
             this.headerText = this.options.headerText || '';
+
+            if (this.headerText === '') {
+                this.buttonList.push({
+                    name: 'cancel',
+                    label: 'Cancel',
+                });
+            }
 
             Espo.Ui.notify(' ... ');
 
