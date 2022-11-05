@@ -2761,6 +2761,8 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 Espo.Ui.notify(' ... ');
             }
 
+            let lengthBefore = collection.length;
+
             let final = () => {
                 $showMore.parent().append($showMore);
 
@@ -2795,6 +2797,8 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 if (callback) {
                     callback.call(this);
                 }
+
+                this.trigger('after:show-more', lengthBefore);
             };
 
             let initialCount = collection.length;

@@ -3518,9 +3518,20 @@ a.close:hover {
     }
 }
 
+.draggable-helper {
+    border-radius: var(--border-radius);
+    background-color: var(--state-info-bg);
+    border: 1px solid var(--state-info-bg-10);
+    color: var(--state-info-text);
+    padding: @padding-base-vertical 20px;
+    font-weight: 600;
+    opacity: 1;
+    position: absolute;
+    z-index: 10002;
+}
+
 @import "elements/site.less";
 @import "elements/modal.less";
 @import "elements/buttons.less";
 @import "elements/popup-notification.less";
 @import "elements/grid.less";
-

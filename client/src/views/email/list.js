@@ -70,79 +70,133 @@ define('views/email/list', ['views/list'], function (Dep) {
 
         /**
          * @private
-         * @type {?string}
+         * @type {string|true|null}
          */
-        draggedEmailId: null,
+        draggedId: null,
 
-        events: {
-            'mousedown .folders-container + .list-container a.link': function (e) {
-                $(e.target).attr('draggable', 'true');
-            },
-            'dragstart a.link': function (e) {
-                let $target = $(e.target);
-                let id = $target.attr('data-id');
+        /**
+         * @inheritDoc
+         */
+        createListRecordView: function (fetch) {
+            return Dep.prototype.createListRecordView.call(this, fetch)
+                .then(view => {
+                    this.listenTo(view, 'after:render', () => this.initDraggable(null));
+                    this.listenTo(view, 'after:show-more', fromIndex => this.initDraggable(fromIndex));
+                });
+        },
 
-                this.draggedEmailId = id;
+        /**
+         * @private
+         */
+        initDroppable: function () {
+            this.$el.find('.folders-container .folder-list > .droppable')
+                .droppable({
+                    accept: '.list-row',
+                    tolerance: 'pointer',
+                    over: (e) => {
+                        if (!this.isDroppable(e)) {
+                            return;
+                        }
 
-                e.originalEvent.dataTransfer.dropEffect = 'move';
-                e.originalEvent.dataTransfer.effectAllowed = 'move';
+                        let $target = $(e.target);
 
-                e.originalEvent.dataTransfer.setData('text/plain', id);
+                        $target.addClass('active');
+                        $target.find('a').css('pointer-events', 'none');
+                    },
+                    out: (e) => {
+                        if (!this.isDroppable(e)) {
+                            return;
+                        }
 
-                $target.closest('tr').addClass('active');
-            },
-            'dragend a.link': function (e) {
-                let $target = $(e.target);
-                let id = $target.attr('data-id');
+                        let $target = $(e.target);
 
-                if (!this.getRecordView().isIdChecked(id)) {
-                    $target.closest('tr').removeClass('active');
-                }
+                        $target.removeClass('active')
+                        $target.find('a').css('pointer-events', '');
+                    },
+                    drop: (e) => {
+                        if (!this.isDroppable(e)) {
+                            return;
+                        }
 
-                this.draggedEmailId = null;
-            },
-            'dragenter .folder-list > li.droppable': function (e) {
-                if (!this.isDroppable(e)) {
-                    return;
-                }
+                        let $target = $(e.target);
 
-                let $target = $(e.target);
+                        $target.removeClass('active')
+                        $target.find('a').css('pointer-events', '');
 
-                $target.addClass('active');
-                $target.find('a').css('pointer-events', 'none');
-            },
-            'dragleave .folder-list > li.droppable': function (e) {
-                if (!this.isDroppable(e)) {
-                    return;
-                }
+                        let folderId = $target.attr('data-id');
 
-                let $target = $(e.target);
+                        this.onDrop(folderId);
+                    },
+                });
+        },
 
-                $target.removeClass('active')
-                $target.find('a').css('pointer-events', '');
-            },
-            'drop .folder-list > li.droppable': function (e) {
-                if (!this.isDroppable(e)) {
-                    return;
-                }
+        /**
+         * @private
+         * @param {?Number} fromIndex
+         */
+        initDraggable: function (fromIndex) {
+            fromIndex = fromIndex || 0;
 
-                let $target = $(e.target);
-                let folderId = $target.attr('data-id');
-                let id = e.originalEvent.dataTransfer.getData('text/plain');
+            let $container = this.$el.find('.list-container > .list');
 
-                $target.removeClass('active');
-                $target.find('a').css('pointer-events', '');
+            this.draggedId = null;
 
-                this.onDrop(id, folderId);
-            },
-            ...Dep.prototype.events,
+            const recordView = this.getRecordView();
+
+            this.collection.models.slice(fromIndex).forEach(m => {
+                let $row = $container.find(`.list-row[data-id="${m.id}"]`).first();
+
+                $row.draggable({
+                    helper: () => {
+                        let text = this.translate('Move to Folder', 'labels', 'Email');
+
+                        if (
+                            recordView.isIdChecked(m.id) &&
+                            !recordView.allResultIsChecked &&
+                            recordView.checkedList.length > 1
+                        ) {
+                            text += ' · ' + recordView.checkedList.length;
+                        }
+
+                        return $('<div>')
+                            .css('cursor', 'grabbing')
+                            .addClass('draggable-helper')
+                            .text(text);
+                    },
+                    distance: 8,
+                    containment: this.$el,
+                    appendTo: 'body',
+                    cursor: 'grabbing',
+                    cursorAt: {
+                        top: 0,
+                        left: 0,
+                    },
+                    start: (e) => {
+                        let $target = $(e.target);
+
+                        this.draggedId = m.id;
+
+                        if (
+                            recordView.isIdChecked(m.id) &&
+                            !recordView.allResultIsChecked
+                        ) {
+                            this.draggedId = true;
+                        }
+
+                        $target.closest('tr').addClass('active');
+                    },
+                    stop: (e) => {
+                        if (!recordView.isIdChecked(m.id)) {
+                            $container.find(`.list-row[data-id="${m.id}"]`).first().removeClass('active');
+                        }
+
+                        this.draggedId = null;
+                    },
+                });
+            });
         },
 
         isDroppable: function (e) {
-            if (!this.draggedEmailId) {
-                return false;
-            }
-
             let $target = $(e.target);
             let folderId = $target.attr('data-id');
 
@@ -187,8 +241,6 @@ define('views/email/list', ['views/list'], function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
-
-            this.initDragoverEvent();
 
             this.once('remove', () => $(document).off('dragover.' + this.cid));
 
@@ -283,15 +335,7 @@ define('views/email/list', ['views/list'], function (Dep) {
          */
         setupReuse: function (params) {
             this.applyRoutingParams(params);
-            this.initDragoverEvent();
-        },
-
-        initDragoverEvent: function () {
-            $(document).on('dragover.' + this.cid, e => {
-                if (this.draggedEmailId) {
-                    e.preventDefault();
-                }
-            });
+            this.initDroppable();
         },
 
         /**
@@ -375,8 +419,9 @@ define('views/email/list', ['views/list'], function (Dep) {
                     el: this.options.el + ' .folders-container',
                     showEditLink: this.getAcl().check(this.folderScope, 'edit'),
                     selectedFolderId: this.selectedFolderId,
-                }, function (view) {
-                    view.render();
+                }, view => {
+                    view.render()
+                        .then(() => this.initDroppable());
 
                     this.listenTo(view, 'select', (id) => {
                         this.selectedFolderId = id;
@@ -386,11 +431,11 @@ define('views/email/list', ['views/list'], function (Dep) {
                             xhr.abort();
                         }
 
-                        this.notify(this.translate('pleaseWait', 'messages'));
+                        Espo.Ui.notify(' ... ');
 
                         xhr = this.collection
                             .fetch()
-                            .then(() => this.notify(false));
+                            .then(() => Espo.Ui.notify(false));
 
                         if (id !== this.defaultFolderId) {
                             this.getRouter().navigate('#Email/list/folder=' + id);
@@ -444,9 +489,17 @@ define('views/email/list', ['views/list'], function (Dep) {
             }
         },
 
-        onDrop: function (id, folderId) {
+        onDrop: function (folderId) {
+            let id = this.draggedId;
+
+            let recordView = this.getRecordView();
+
             if (folderId === this.FOLDER_IMPORTANT) {
-                setTimeout(() => this.getRecordView().actionMarkAsImportant({id: id}), 10);
+                setTimeout(() => {
+                    id === true ?
+                        recordView.massActionMarkAsImportant() :
+                        recordView.actionMarkAsImportant({id: id});
+                }, 10);
 
                 return;
             }
@@ -456,13 +509,17 @@ define('views/email/list', ['views/list'], function (Dep) {
                     return;
                 }
 
-                this.getRecordView().actionRetrieveFromTrashMoveToFolder({id: id, folderId: folderId});
+                id === true ?
+                    recordView.massRetrieveFromTrashMoveToFolder(folderId) :
+                    recordView.actionRetrieveFromTrashMoveToFolder({id: id, folderId: folderId});
 
                 return;
             }
 
             if (folderId === this.FOLDER_TRASH) {
-                this.getRecordView().actionMoveToTrash({id: id});
+                id === true ?
+                    recordView.massActionMoveToTrash() :
+                    recordView.actionMoveToTrash({id: id});
 
                 return;
             }
@@ -471,7 +528,9 @@ define('views/email/list', ['views/list'], function (Dep) {
                 folderId = this.FOLDER_INBOX;
             }
 
-            this.getRecordView().actionMoveToFolder({id: id, folderId: folderId});
+            id === true ?
+                recordView.massMoveToFolder(folderId) :
+                recordView.actionMoveToFolder({id: id, folderId: folderId});
         },
 
         /**

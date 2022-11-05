@@ -203,6 +203,46 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
             });
         },
 
+        massMoveToFolder: function (folderId) {
+            let params = this.getMassActionSelectionPostData();
+            let helper = new MassActionHelper(this);
+            let idle = !!params.searchParams && helper.checkIsIdle();
+
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
+            Espo.Ajax
+                .postRequest('MassAction', {
+                    entityType: this.entityType,
+                    action: 'moveToFolder',
+                    params: params,
+                    idle: idle,
+                    data: {
+                        folderId: folderId,
+                    },
+                })
+                .then(result => {
+                    Espo.Ui.notify(false);
+
+                    if (result.id) {
+                        helper
+                            .process(result.id, 'moveToFolder')
+                            .then(view => {
+                                this.listenToOnce(view, 'close:success', () => {
+                                    this.collection.fetch().then(() => {
+                                        Espo.Ui.success(this.translate('Done'));
+                                    });
+                                });
+                            });
+
+                        return;
+                    }
+
+                    this.collection.fetch().then(() => {
+                        Espo.Ui.success(this.translate('Done'));
+                    });
+                });
+        },
+
         massActionMoveToFolder: function () {
             this.createView('dialog', 'views/email-folder/modals/select-folder', {
                 headerText: this.translate('Move to Folder', 'labels', 'Email'),
@@ -212,43 +252,7 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
                 this.listenToOnce(view, 'select', folderId => {
                     this.clearView('dialog');
 
-                    let params = this.getMassActionSelectionPostData();
-                    let helper = new MassActionHelper(this);
-                    let idle = !!params.searchParams && helper.checkIsIdle();
-
-                    Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-
-                    Espo.Ajax
-                        .postRequest('MassAction', {
-                            entityType: this.entityType,
-                            action: 'moveToFolder',
-                            params: params,
-                            idle: idle,
-                            data: {
-                                folderId: folderId,
-                            },
-                        })
-                        .then(result => {
-                            Espo.Ui.notify(false);
-
-                            if (result.id) {
-                                helper
-                                    .process(result.id, 'moveToFolder')
-                                    .then(view => {
-                                        this.listenToOnce(view, 'close:success', () => {
-                                            this.collection.fetch().then(() => {
-                                                Espo.Ui.success(this.translate('Done'));
-                                            });
-                                        });
-                                    });
-
-                                return;
-                            }
-
-                            this.collection.fetch().then(() => {
-                                Espo.Ui.success(this.translate('Done'));
-                            });
-                        });
+                    this.massMoveToFolder(folderId);
                 });
             });
         },
@@ -331,6 +335,31 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
          */
         retrieveFromTrash: function (id) {
             return Espo.Ajax.postRequest('Email/action/retrieveFromTrash', {id: id});
+        },
+
+        massRetrieveFromTrashMoveToFolder: function (folderId) {
+            let ids = [];
+
+            for (let i in this.checkedList) {
+                ids.push(this.checkedList[i]);
+            }
+
+            Espo.Ajax
+                .postRequest('Email/action/retrieveFromTrash', {ids: ids})
+                .then(() => {
+                    ids.forEach(id => {
+                        this.collection.trigger('retrieving-from-trash', id, this.collection.get(id));
+                    });
+
+                    return Espo.Ajax
+                        .postRequest('Email/action/moveToFolder', {
+                            ids: ids,
+                            folderId: folderId,
+                        })
+                        .then(() => {
+                            Espo.Ui.success(this.translate('Done'));
+                        })
+                });
         },
 
         /**

@@ -551,6 +551,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
          * Create a record list view.
          *
          * @param {boolean} [fetch=false] To fetch after creation.
+         * @return {Promise<module:views/record/list.Class>}
          */
         createListRecordView: function (fetch) {
             let o = {
@@ -578,9 +579,9 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
 
             this.prepareRecordViewOptions(o);
 
-            var listViewName = this.getRecordViewName();
+            let listViewName = this.getRecordViewName();
 
-            this.createView('list', listViewName, o, view =>{
+            return this.createView('list', listViewName, o, view => {
                 if (!this.hasParentView()) {
                     view.undelegateEvents();
 
