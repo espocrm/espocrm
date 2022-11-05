@@ -115,12 +115,6 @@ define('views/record/panels-container', ['view'], function (Dep) {
          */
         currentTab: 0,
 
-        /**
-         * @private
-         * @type {?number}
-         */
-        tabToSelect: null,
-
         data: function () {
             let tabDataList = this.hasTabs ? this.getTabDataList() : [];
 
@@ -164,11 +158,6 @@ define('views/record/panels-container', ['view'], function (Dep) {
 
         afterRender: function () {
             this.adjustPanels();
-
-            if (this.tabToSelect) {
-                this.selectTab(this.tabToSelect);
-                this.tabToSelect = null;
-            }
         },
 
         adjustPanels: function () {
@@ -801,6 +790,8 @@ define('views/record/panels-container', ['view'], function (Dep) {
                     if (view) {
                         view.trigger('tab-show');
                     }
+
+                    item.tabHidden = false;
                 });
 
             this.panelList
@@ -810,6 +801,10 @@ define('views/record/panels-container', ['view'], function (Dep) {
 
                     if (view) {
                         view.trigger('tab-hide');
+                    }
+
+                    if (item.tabNumber > -1) {
+                        item.tabHidden = true;
                     }
                 });
         },
@@ -866,10 +861,6 @@ define('views/record/panels-container', ['view'], function (Dep) {
                     firstVisiblePanel.tabNumber : 0;
 
                 this.selectTab(firstVisibleTab);
-
-                if (firstVisibleTab > 0 && !this.isRendered()) {
-                    this.tabToSelect = firstVisibleTab;
-                }
             }
         },
     });
