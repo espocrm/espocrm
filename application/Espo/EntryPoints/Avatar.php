@@ -32,27 +32,23 @@ namespace Espo\EntryPoints;
 use Espo\Core\ApplicationUser;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
-
 use Espo\Core\EntryPoints\NotStrictAuth;
-use Espo\Core\Di;
-
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
-
 use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
+
+use Espo\Entities\User;
 use Identicon\Identicon;
 
-class Avatar extends Image implements Di\MetadataAware
+class Avatar extends Image
 {
-    use Di\MetadataSetter;
     use NotStrictAuth;
 
     protected string $systemColor = '#a4b5bd';
 
-    /**
-     * @var array<int,string|array{int,int,int}>
-     */
+    /** @var array<int, string|array{int, int, int}> */
     protected $colorList = [
         [111, 168, 214],
         [237, 197, 85],
@@ -66,9 +62,9 @@ class Avatar extends Image implements Di\MetadataAware
     ];
 
     /**
-     * @return string|array{int,int,int}
+     * @return string|array{int, int, int}
      */
-    protected function getColor(string $hash)
+    private function getColor(string $hash)
     {
         $length = strlen($hash);
 
@@ -96,6 +92,7 @@ class Avatar extends Image implements Di\MetadataAware
      * @throws Error
      * @throws NotFoundSilent
      * @throws ForbiddenSilent
+     * @throws NotFound
      */
     public function run(Request $request, Response $response): void
     {
@@ -106,7 +103,7 @@ class Avatar extends Image implements Di\MetadataAware
             throw new BadRequest();
         }
 
-        $user = $this->entityManager->getEntity('User', $userId);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             $this->renderBlank($response);
@@ -154,7 +151,7 @@ class Avatar extends Image implements Di\MetadataAware
     /**
      * @throws Error
      */
-    protected function renderBlank(Response $response): void
+    private function renderBlank(Response $response): void
     {
         ob_start();
 

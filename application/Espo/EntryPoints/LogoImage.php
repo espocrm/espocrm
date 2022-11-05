@@ -29,22 +29,16 @@
 
 namespace Espo\EntryPoints;
 
-use Espo\Core\{
-    Exceptions\NotFound,
-    EntryPoint\Traits\NoAuth,
-    Api\Request,
-    Api\Response,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\EntryPoint\Traits\NoAuth;
+use Espo\Core\Exceptions\NotFound;
 
-use Espo\Core\Di;
-
-class LogoImage extends Image implements Di\ConfigAware
+class LogoImage extends Image
 {
     use NoAuth;
-    use Di\ConfigSetter;
 
     protected $allowedRelatedTypeList = ['Settings', 'Portal'];
-
     protected $allowedFieldList = ['companyLogo'];
 
     public function run(Request $request, Response $response): void

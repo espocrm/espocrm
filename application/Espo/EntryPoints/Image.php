@@ -31,22 +31,20 @@ namespace Espo\EntryPoints;
 
 use Espo\Repositories\Attachment as AttachmentRepository;
 
-use Espo\Core\{
-    Exceptions\NotFound,
-    Exceptions\NotFoundSilent,
-    Exceptions\BadRequest,
-    Exceptions\ForbiddenSilent,
-    Exceptions\Error,
-    EntryPoint\EntryPoint,
-    Acl,
-    ORM\EntityManager,
-    Api\Request,
-    Api\Response,
-    FileStorage\Manager as FileStorageManager,
-    Utils\File\Manager as FileManager,
-    Utils\Config,
-    Utils\Metadata,
-};
+use Espo\Core\Acl;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\EntryPoint\EntryPoint;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\NotFoundSilent;
+use Espo\Core\FileStorage\Manager as FileStorageManager;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Metadata;
 
 use Espo\Entities\Attachment;
 
@@ -55,50 +53,40 @@ use Espo\Entities\Attachment;
  */
 class Image implements EntryPoint
 {
-    /**
-     * @var ?string[]
-     */
+    /** @var ?string[] */
     protected $allowedRelatedTypeList = null;
-
-    /**
-     * @var ?string[]
-     */
+    /** @var ?string[] */
     protected $allowedFieldList = null;
 
-    /** @var FileStorageManager */
-    protected $fileStorageManager;
-
-    /** @var Acl */
-    protected $acl;
-
-    /** @var EntityManager */
-    protected $entityManager;
-
-    /** @var FileManager */
-    protected $fileManager;
-
-    /** @var Config */
-    protected $config;
-
-    /** @var Metadata */
-    private $metadata;
+    private FileStorageManager $fileStorageManager;
+    private FileManager $fileManager;
+    protected Acl $acl;
+    protected EntityManager $entityManager;
+    protected Config $config;
+    protected Metadata $metadata;
 
     public function __construct(
         FileStorageManager $fileStorageManager,
+        FileManager $fileManager,
         Acl $acl,
         EntityManager $entityManager,
-        FileManager $fileManager,
         Config $config,
         Metadata $metadata
     ) {
         $this->fileStorageManager = $fileStorageManager;
+        $this->fileManager = $fileManager;
         $this->acl = $acl;
         $this->entityManager = $entityManager;
-        $this->fileManager = $fileManager;
         $this->config = $config;
         $this->metadata = $metadata;
     }
-
+    /**
+     * @throws BadRequest
+     * @throws Error
+     * @throws NotFoundSilent
+     * @throws NotFound
+     * @throws ForbiddenSilent
+     */
     public function run(Request $request, Response $response): void
     {
         $id = $request->getQueryParam('id');
@@ -111,9 +99,16 @@ class Image implements EntryPoint
         $this->show($response, $id, $size, false);
     }
 
+    /**
+     * @throws Error
+     * @throws NotFoundSilent
+     * @throws NotFound
+     * @throws ForbiddenSilent
+     */
     protected function show(Response $response, string $id, ?string $size, bool $disableAccessCheck = false): void
     {
-        $attachment = $this->entityManager->getEntity('Attachment', $id);
+        /** @var ?Attachment $attachment */
+        $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
 
         if (!$attachment) {
             throw new NotFoundSilent();
@@ -123,20 +118,20 @@ class Image implements EntryPoint
             throw new ForbiddenSilent("No access to attachment.");
         }
 
-        $fileType = $attachment->get('type');
+        $fileType = $attachment->getType();
 
         if (!in_array($fileType, $this->getAllowedFileTypeList())) {
             throw new ForbiddenSilent("Not allowed file type '{$fileType}'.");
         }
 
         if ($this->allowedRelatedTypeList) {
-            if (!in_array($attachment->get('relatedType'), $this->allowedRelatedTypeList)) {
+            if (!in_array($attachment->getRelatedType(), $this->allowedRelatedTypeList)) {
                 throw new NotFoundSilent();
             }
         }
 
         if ($this->allowedFieldList) {
-            if (!in_array($attachment->get('field'), $this->allowedFieldList)) {
+            if (!in_array($attachment->getTargetField(), $this->allowedFieldList)) {
                 throw new NotFoundSilent();
             }
         }
@@ -144,7 +139,7 @@ class Image implements EntryPoint
         $toResize = $size && in_array($fileType, $this->getResizableFileTypeList());
 
         if ($toResize) {
-            $fileName = $size . '-' . $attachment->get('name');
+            $fileName = $size . '-' . $attachment->getName();
 
             $contents = $this->getThumbContents($attachment, $size);
 
@@ -153,7 +148,7 @@ class Image implements EntryPoint
             $response->writeBody($contents);
         }
         else {
-            $fileName = $attachment->get('name');
+            $fileName = $attachment->getName();
 
             $stream = $this->fileStorageManager->getStream($attachment);
 
@@ -174,7 +169,11 @@ class Image implements EntryPoint
             ->setHeader('Content-Security-Policy', "default-src 'self'");
     }
 
-    protected function getThumbContents(Attachment $attachment, string $size): string
+    /**
+     * @throws Error
+     * @throws NotFound
+     */
+    private function getThumbContents(Attachment $attachment, string $size): string
     {
         if (!array_key_exists($size, $this->getSizes())) {
             throw new Error("Bad size.");
@@ -196,7 +195,7 @@ class Image implements EntryPoint
             throw new NotFound();
         }
 
-        $fileType = $attachment->get('type');
+        $fileType = $attachment->getType() ?? '';
 
         $targetImage = $this->createThumbImage($filePath, $fileType, $size);
 
@@ -242,7 +241,7 @@ class Image implements EntryPoint
      * @phpstan-ignore-next-line
      * @throws Error
      */
-    protected function createThumbImage(string $filePath, string $fileType, string $size)
+    private function createThumbImage(string $filePath, string $fileType, string $size)
     {
         if (!is_array(getimagesize($filePath))) {
             throw new Error();
@@ -279,9 +278,7 @@ class Image implements EntryPoint
         $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
 
         switch ($fileType) {
-
             case 'image/jpeg':
-
                 $sourceImage = imagecreatefromjpeg($filePath);
 
                 imagecopyresampled(
@@ -291,7 +288,6 @@ class Image implements EntryPoint
                 break;
 
             case 'image/png':
-
                 $sourceImage = imagecreatefrompng($filePath);
 
                 imagealphablending($targetImage, false); /** @phpstan-ignore-line */
@@ -310,7 +306,6 @@ class Image implements EntryPoint
                 break;
 
             case 'image/gif':
-
                 $sourceImage = imagecreatefromgif($filePath);
 
                 imagecopyresampled(
@@ -321,7 +316,6 @@ class Image implements EntryPoint
                 break;
 
             case 'image/webp':
-
                 $sourceImage = imagecreatefromwebp($filePath);
 
                 imagecopyresampled(
@@ -343,7 +337,7 @@ class Image implements EntryPoint
      * @param string $filePath
      * @return ?int
      */
-    protected function getOrientation(string $filePath)
+    private function getOrientation(string $filePath)
     {
         if (!function_exists('exif_read_data')) {
             return 0;
@@ -359,7 +353,7 @@ class Image implements EntryPoint
      * @return \GdImage
      * @phpstan-ignore-next-line
      */
-    protected function fixOrientation($targetImage, string $filePath)
+    private function fixOrientation($targetImage, string $filePath)
     {
         $orientation = $this->getOrientation($filePath);
 
@@ -398,14 +392,14 @@ class Image implements EntryPoint
     }
 
     /**
-     * @return array<string,array{int,int}>
+     * @return array<string, array{int, int}>
      */
     protected function getSizes(): array
     {
         return $this->metadata->get(['app', 'image', 'sizes']) ?? [];
     }
 
-    protected function getAttachmentRepository(): AttachmentRepository
+    private function getAttachmentRepository(): AttachmentRepository
     {
         /** @var AttachmentRepository */
         return $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
