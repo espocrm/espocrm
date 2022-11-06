@@ -2623,7 +2623,7 @@ table.table td.cell .html-container {
         border-bottom-right-radius: var(--border-radius);
 
         &.selected {
-            border-color: @brand-danger;
+            border-color: var(--brand-danger);
 
             .cell {
                 padding: 2px 0;
@@ -2643,7 +2643,9 @@ table.table td.cell .html-container {
 
         &.droppable {
             &.active {
-                border-left-color: var(--brand-warning);
+                &:not(.success) {
+                    border-left-color: var(--brand-warning);
+                }
                 background-color: var(--state-warning-bg);
             }
             &.success {
