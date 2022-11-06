@@ -100,6 +100,7 @@ define('views/email/list', ['views/list'], function (Dep) {
 
                         let $target = $(e.target);
 
+                        $target.removeClass('success');
                         $target.addClass('active');
                         $target.find('a').css('pointer-events', 'none');
                     },
@@ -191,7 +192,7 @@ define('views/email/list', ['views/list'], function (Dep) {
 
                         $target.closest('tr').addClass('active');
                     },
-                    stop: (e) => {
+                    stop: () => {
                         if (!recordView.isIdChecked(m.id)) {
                             $container.find(`.list-row[data-id="${m.id}"]`).first().removeClass('active');
                         }
