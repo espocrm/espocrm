@@ -91,7 +91,13 @@ define('session-storage', ['storage'], function (Dep) {
                 return;
             }
 
-            if (value instanceof Object || Array.isArray(value) || value === true || value === false) {
+            if (
+                value instanceof Object ||
+                Array.isArray(value) ||
+                value === true ||
+                value === false ||
+                typeof value === 'number'
+            ) {
                 value = '__JSON__:' + JSON.stringify(value);
             }
 
