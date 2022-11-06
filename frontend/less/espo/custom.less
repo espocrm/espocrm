@@ -3535,6 +3535,16 @@ a.close:hover {
     z-index: 10002;
 }
 
+.reminders-container {
+    > .reminder {
+        select[data-name="type"] {
+            @media screen and (min-width: @screen-desktop) {
+                min-width: 110px;
+            }
+        }
+    }
+}
+
 @import "elements/site.less";
 @import "elements/modal.less";
 @import "elements/buttons.less";

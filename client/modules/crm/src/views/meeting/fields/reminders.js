@@ -107,6 +107,7 @@ define('crm:views/meeting/fields/reminders', ['views/fields/base'], function (De
 
             let $type = $('<select>')
                 .attr('name', 'type')
+                .attr('data-name', 'type')
                 .addClass('form-control');
 
             this.typeList.forEach(type => {
@@ -125,6 +126,7 @@ define('crm:views/meeting/fields/reminders', ['views/fields/base'], function (De
 
             let $seconds = $('<select>')
                 .attr('name', 'seconds')
+                .attr('data-name', 'seconds')
                 .addClass('form-control radius-right');
 
             this.secondsList.forEach(seconds => {
