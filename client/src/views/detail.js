@@ -87,6 +87,13 @@ define('views/detail', ['views/main'], function (Dep) {
         rootUrl: '',
 
         /**
+         * Is return.
+         *
+         * @protected
+         */
+        isReturn: false,
+
+        /**
          * @inheritDoc
          */
         shortcutKeys: {},
@@ -131,6 +138,7 @@ define('views/detail', ['views/main'], function (Dep) {
             this.recordView = this.options.recordView || this.recordView;
 
             this.rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+            this.isReturn = this.options.isReturn || this.options.params.isReturn || false;
 
             this.setupHeader();
             this.setupRecord();
@@ -224,6 +232,7 @@ define('views/detail', ['views/main'], function (Dep) {
                 el: '#main > .record',
                 scope: this.scope,
                 shortcutKeysEnabled: true,
+                isReturn: this.isReturn,
             };
 
             this.optionsToPass.forEach((option) => {

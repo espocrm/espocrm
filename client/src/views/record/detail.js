@@ -3125,6 +3125,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 inlineEditDisabled: this.inlineEditDisabled,
                 recordHelper: this.recordHelper,
                 recordViewObject: this,
+                isReturn: this.options.isReturn,
             });
         },
 
@@ -3173,6 +3174,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 recordHelper: this.recordHelper,
                 recordViewObject: this,
                 portalLayoutDisabled: this.portalLayoutDisabled,
+                isReturn: this.options.isReturn,
             });
         },
 

@@ -115,6 +115,24 @@ define('views/record/panels-container', ['view'], function (Dep) {
          */
         currentTab: 0,
 
+        /**
+         * @protected
+         * @type {string}
+         */
+        scope: '',
+
+        /**
+         * @protected
+         * @type {string}
+         */
+        entityType: '',
+
+        /**
+         * @protected
+         * @type {string}
+         */
+        name: '',
+
         data: function () {
             let tabDataList = this.hasTabs ? this.getTabDataList() : [];
 
@@ -150,9 +168,9 @@ define('views/record/panels-container', ['view'], function (Dep) {
             'click .panels-show-more-delimiter [data-action="showMorePanels"]': 'actionShowMorePanels',
             /** @this module:views/record/panels-container.Class */
             'click .tabs > button': function (e) {
-                let tab = $(e.currentTarget).attr('data-tab');
+                let tab = parseInt($(e.currentTarget).attr('data-tab'));
 
-                this.selectTab(parseInt(tab));
+                this.selectTab(tab);
             },
         },
 
@@ -673,6 +691,14 @@ define('views/record/panels-container', ['view'], function (Dep) {
                     }
                 });
             }
+
+            if (
+                this.hasTabs &&
+                this.options.isReturn &&
+                this.isStoredTabForThisRecord()
+            ) {
+                this.selectStoredTab();
+            }
         },
 
         setupPanelsFinal: function () {
@@ -772,13 +798,17 @@ define('views/record/panels-container', ['view'], function (Dep) {
         selectTab: function (tab) {
             this.currentTab = tab;
 
-            $('body > .popover').remove();
+            console.log(tab);
 
-            this.$el.find('.tabs > button').removeClass('active');
-            this.$el.find(`.tabs > button[data-tab="${tab}"]`).addClass('active');
+            if (this.isRendered()) {
+                $('body > .popover').remove();
 
-            this.$el.find('.panel[data-tab]:not([data-tab="-1"])').addClass('tab-hidden');
-            this.$el.find(`.panel[data-tab="${tab}"]`).removeClass('tab-hidden');
+                this.$el.find('.tabs > button').removeClass('active');
+                this.$el.find(`.tabs > button[data-tab="${tab}"]`).addClass('active');
+
+                this.$el.find('.panel[data-tab]:not([data-tab="-1"])').addClass('tab-hidden');
+                this.$el.find(`.panel[data-tab="${tab}"]`).removeClass('tab-hidden');
+            }
 
             this.adjustPanels();
 
@@ -807,6 +837,41 @@ define('views/record/panels-container', ['view'], function (Dep) {
                         item.tabHidden = true;
                     }
                 });
+
+            this.storeTab();
+        },
+
+        /**
+         * @private
+         */
+        storeTab: function () {
+            let key = 'tab_' + this.name;
+            let keyRecord = 'tab_' + this.name + '_record';
+
+            this.getSessionStorage().set(key, this.currentTab);
+            this.getSessionStorage().set(keyRecord, this.entityType + '_' + this.model.id);
+        },
+
+        /**
+         * @private
+         */
+        isStoredTabForThisRecord: function () {
+            let keyRecord = 'tab_' + this.name + '_record';
+
+            return this.getSessionStorage().get(keyRecord) === this.entityType + '_' + this.model.id;
+        },
+
+        /**
+         * @private
+         */
+        selectStoredTab: function () {
+            let key = 'tab_' + this.name;
+
+            let tab = this.getSessionStorage().get(key);
+
+            if (tab > 0) {
+                this.selectTab(tab);
+            }
         },
 
         /**

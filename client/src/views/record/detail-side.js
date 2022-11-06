@@ -46,6 +46,8 @@ define('views/record/detail-side', ['views/record/panels-container'], function (
 
         inlineEditDisabled: false,
 
+        name: 'side',
+
         defaultPanel: true,
 
         /**

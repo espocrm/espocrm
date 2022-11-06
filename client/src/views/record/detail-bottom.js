@@ -50,6 +50,8 @@ define('views/record/detail-bottom', ['views/record/panels-container'], function
 
         portalLayoutDisabled: false,
 
+        name: 'bottom',
+
         /**
          * @inheritDoc
          */
