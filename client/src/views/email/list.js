@@ -120,12 +120,18 @@ define('views/email/list', ['views/list'], function (Dep) {
 
                         let $target = $(e.target);
 
-                        $target.removeClass('active')
                         $target.find('a').css('pointer-events', '');
 
                         let folderId = $target.attr('data-id');
 
                         this.onDrop(folderId);
+
+                        $target.addClass('success');
+
+                        setTimeout(() => {
+                            $target.removeClass('success');
+                            $target.removeClass('active');
+                        }, 1000);
                     },
                 });
         },
@@ -148,7 +154,7 @@ define('views/email/list', ['views/list'], function (Dep) {
 
                 $row.draggable({
                     helper: () => {
-                        let text = this.translate('Move to Folder', 'labels', 'Email');
+                        let text = this.translate('Moving to Folder', 'labels', 'Email');
 
                         if (
                             recordView.isIdChecked(m.id) &&

@@ -992,20 +992,6 @@ input.global-search-input {
     }
 }
 
-.list-group {
-    .list-group-item {
-        &.droppable.active {
-            background-color: var(--state-warning-bg);
-        }
-    }
-}
-
-.list-group-side {
-    > li.droppable.active {
-        border-left-color: var(--brand-warning);
-    }
-}
-
 .list-group-item {
     margin-bottom: 0;
     border-top-width: 0;
@@ -1222,6 +1208,14 @@ input.global-search-input {
 
 .list-row-buttons span.caret {
     border-top-color: var(--text-muted-color);
+}
+
+.list {
+    .list-row.ui-draggable {
+        .cell {
+            user-select: none;
+        }
+    }
 }
 
 .list > table {
@@ -2619,17 +2613,45 @@ table.table td.cell .html-container {
 
 .list-group-side {
     border: 0;
-}
 
-.list-group-side > li {
-    border: 0;
-    padding: 5px 3px 5px (@container-padding - 3px);
-    margin-left: -(@container-padding);
-    border-left: 3px solid transparent;
-}
+    > li {
+        border: 0;
+        padding: 5px 3px 5px (@container-padding - 3px);
+        margin-left: -(@container-padding);
+        border-left: 3px solid transparent;
+        border-top-right-radius: var(--border-radius);
+        border-bottom-right-radius: var(--border-radius);
 
-.list-group-side > li.selected {
-    border-color: @brand-danger;
+        &.selected {
+            border-color: @brand-danger;
+
+            .cell {
+                padding: 2px 0;
+            }
+
+            a {
+                &.side-link,
+                &:hover.side-link,
+                &:active.side-link,
+                &:visited.side-link,
+                &:focus.side-link {
+                    color: var(--brand-danger);
+                    font-weight: 600;
+                }
+            }
+        }
+
+        &.droppable {
+            &.active {
+                border-left-color: var(--brand-warning);
+                background-color: var(--state-warning-bg);
+            }
+            &.success {
+                background-color: transparent;
+                transition: 900ms linear background-color;
+            }
+        }
+    }
 }
 
 .list-group-side a:hover,
@@ -2637,23 +2659,6 @@ table.table td.cell .html-container {
 .list-group-tree a:hover,
 .list-group-tree a:focus {
     text-decoration: none;
-}
-
-.list-group-side > li .cell {
-    padding: 2px 0;
-}
-
-.list-group-side li.selected {
-    a {
-        &.side-link,
-        &:hover.side-link,
-        &:active.side-link,
-        &:visited.side-link,
-        &:focus.side-link {
-            color: var(--brand-danger);
-            font-weight: 600;
-        }
-    }
 }
 
 .email-address-create-dropdown .btn {
