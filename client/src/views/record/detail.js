@@ -388,7 +388,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         /**
          * @protected
          */
-        currentMiddleTab: 0,
+        currentTab: 0,
 
         /**
          * @protected
@@ -474,9 +474,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             },
             /** @this module:views/record/detail.Class */
             'click .middle-tabs > button': function (e) {
-                let tab = $(e.currentTarget).attr('data-tab');
+                let tab = parseInt($(e.currentTarget).attr('data-tab'));
 
-                this.selectMiddleTab(parseInt(tab));
+                this.selectTab(tab);
             },
         },
 
@@ -1137,7 +1137,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
 
             if (this.middlePanelDefs[name]) {
-                this.controlMiddleTabVisibilityShow(this.middlePanelDefs[name].tabNumber);
+                this.controlTabVisibilityShow(this.middlePanelDefs[name].tabNumber);
 
                 this.adjustMiddlePanels();
             }
@@ -1231,7 +1231,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             this.recordHelper.setPanelStateParam(name, 'hidden', true);
 
             if (this.middlePanelDefs[name]) {
-                this.controlMiddleTabVisibilityHide(this.middlePanelDefs[name].tabNumber);
+                this.controlTabVisibilityHide(this.middlePanelDefs[name].tabNumber);
 
                 this.adjustMiddlePanels();
             }
@@ -1651,7 +1651,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            let hasMiddleTabs = this.hasMiddleTabs();
+            let hasMiddleTabs = this.hasTabs();
             let middleTabDataList = hasMiddleTabs ? this.getMiddleTabDataList() : [];
 
             return {
@@ -3139,7 +3139,15 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             this.waitForView('middle');
 
-            this.getGridLayout((layout) => {
+            this.getGridLayout(layout => {
+                if (
+                    this.hasTabs() &&
+                    this.options.isReturn &&
+                    this.isStoredTabForThisRecord()
+                ) {
+                    this.selectStoredTab();
+                }
+
                 this.createView('middle', this.middleView, {
                     model: this.model,
                     scope: this.scope,
@@ -3364,8 +3372,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @protected
          * @return {Number}
          */
-        getMiddleTabCount: function () {
-            if (!this.hasMiddleTabs()) {
+        getTabCount: function () {
+            if (!this.hasTabs()) {
                 return 0;
             }
 
@@ -3384,7 +3392,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @protected
          * @return {boolean}
          */
-        hasMiddleTabs: function () {
+        hasTabs: function () {
             if (typeof this._hasMiddleTabs !== 'undefined') {
                 return this._hasMiddleTabs;
             }
@@ -3407,11 +3415,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         /**
-         * @protected
+         * @private
          * @return {{label: string}[]}
          */
         getMiddleTabDataList: function () {
-            let currentTab = this.currentMiddleTab;
+            let currentTab = this.currentTab;
 
             let panelDataList = this.middlePanelDefsList;
 
@@ -3454,27 +3462,67 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @protected
          * @param {Number} tab
          */
-        selectMiddleTab: function (tab) {
-            this.currentMiddleTab = tab;
+        selectTab: function (tab) {
+            this.currentTab = tab;
 
             $('.popover.in').removeClass('in');
 
-            this.$el.find('.middle-tabs > button').removeClass('active');
-            this.$el.find(`.middle-tabs > button[data-tab="${tab}"]`).addClass('active');
+            let processDom = () => {
+                this.$el.find('.middle-tabs > button').removeClass('active');
+                this.$el.find(`.middle-tabs > button[data-tab="${tab}"]`).addClass('active');
 
-            this.$el.find('.middle > .panel[data-tab]').addClass('tab-hidden');
-            this.$el.find(`.middle > .panel[data-tab="${tab}"]`).removeClass('tab-hidden');
+                this.$el.find('.middle > .panel[data-tab]').addClass('tab-hidden');
+                this.$el.find(`.middle > .panel[data-tab="${tab}"]`).removeClass('tab-hidden');
+            }
+
+            this.isRendered() ?
+                processDom() :
+                this.once('after:render', () => processDom());
 
             this.recordHelper.trigger('panel-show');
 
             this.adjustMiddlePanels();
+            this.storeTab();
+        },
+
+        /**
+         * @private
+         */
+        storeTab: function () {
+            let key = 'tab_middle';
+            let keyRecord = 'tab_middle_record';
+
+            this.getSessionStorage().set(key, this.currentTab);
+            this.getSessionStorage().set(keyRecord, this.entityType + '_' + this.model.id);
+        },
+
+        /**
+         * @private
+         */
+        selectStoredTab: function () {
+            let key = 'tab_middle';
+
+            let tab = this.getSessionStorage().get(key);
+
+            if (tab > 0) {
+                this.selectTab(tab);
+            }
+        },
+
+        /**
+         * @private
+         */
+        isStoredTabForThisRecord: function () {
+            let keyRecord = 'tab_middle_record';
+
+            return this.getSessionStorage().get(keyRecord) === this.entityType + '_' + this.model.id;
         },
 
         /**
          * @inheritDoc
           */
         onInvalid: function (invalidFieldList) {
-            if (!this.hasMiddleTabs()) {
+            if (!this.hasTabs()) {
                 return;
             }
 
@@ -3520,13 +3568,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         /**
          * @private
          */
-        controlMiddleTabVisibilityShow: function (tab) {
-            if (!this.hasMiddleTabs() || tab === 0) {
+        controlTabVisibilityShow: function (tab) {
+            if (!this.hasTabs() || tab === 0) {
                 return;
             }
 
             if (this.isBeingRendered()) {
-                this.once('after:render', () => this.controlMiddleTabVisibilityShow(tab));
+                this.once('after:render', () => this.controlTabVisibilityShow(tab));
 
                 return;
             }
@@ -3537,13 +3585,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         /**
          * @private
          */
-        controlMiddleTabVisibilityHide: function (tab) {
-            if (!this.hasMiddleTabs() || tab === 0) {
+        controlTabVisibilityHide: function (tab) {
+            if (!this.hasTabs() || tab === 0) {
                 return;
             }
 
             if (this.isBeingRendered()) {
-                this.once('after:render', () => this.controlMiddleTabVisibilityHide(tab));
+                this.once('after:render', () => this.controlTabVisibilityHide(tab));
 
                 return;
             }
@@ -3561,8 +3609,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             $tab.addClass('hidden');
 
-            if (this.currentMiddleTab === tab) {
-                this.selectMiddleTab(0);
+            if (this.currentTab === tab) {
+                this.selectTab(0);
             }
         },
 
@@ -3819,7 +3867,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {JQueryKeyEventObject} e
          */
         handleShortcutKeyControlBackslash: function (e) {
-            if (!this.hasMiddleTabs()) {
+            if (!this.hasTabs()) {
                 return;
             }
 
@@ -3844,7 +3892,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             let tab = parseInt($tab.attr('data-tab'));
 
-            this.selectMiddleTab(tab);
+            this.selectTab(tab);
 
             if (this.mode === this.MODE_EDIT) {
                 setTimeout(() => {
