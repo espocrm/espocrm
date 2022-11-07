@@ -397,7 +397,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                     disableResize: disableResize,
                     disableOneColumnMode: true,
                     draggable: {
-                        distance: 14,
+                        distance: 10,
                     },
                 },
                 $gridstack.get(0)
