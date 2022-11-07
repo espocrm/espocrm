@@ -5,8 +5,8 @@
             <div>
                 <p>{{message}}</p>
                 <form id="login-form">
-                    <div class="form-group">
-                        <label for="field-code" >{{translate 'Code' scope='User'}}</label>
+                    <div class="form-group cell">
+                        <label for="field-code">{{translate 'Code' scope='User'}}</label>
                         <input
                             type="text"
                             data-name="field-code"
