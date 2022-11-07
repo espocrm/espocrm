@@ -2,7 +2,7 @@
     <div class="container-centering">
     <div id="login" class="panel panel-default block-center-sm">
         <div class="panel-body">
-            <di>
+            <div>
                 <p>{{message}}</p>
                 <form id="login-form">
                     <div class="form-group">
@@ -33,7 +33,7 @@
                         >{{translate 'Submit'}}</button>
                     </div>
                 </form>
-            </di>
+            </div>
         </div>
     </div>
     </div>
