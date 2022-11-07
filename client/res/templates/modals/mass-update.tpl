@@ -1,5 +1,5 @@
 <div class="panel panel-default no-side-margin">
-<div class="panel-body">
+<div class="panel-body panel-body-form">
 
 {{#unless fieldList}}
     {{translate 'No fields available for Mass Update'}}
