@@ -3010,6 +3010,7 @@ table.table-admin-panel {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+
         .folder-icon {
             margin-right: 3px;
             left: 1px;
@@ -3025,6 +3026,12 @@ table.table-admin-panel {
                     text-decoration: underline;
                     color: @gray-soft;
                 }
+            }
+
+            user-select: none;
+
+            .category-item-name {
+                user-select: text;
             }
         }
     }
