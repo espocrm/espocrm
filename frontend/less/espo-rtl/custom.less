@@ -421,6 +421,20 @@ table.table-admin-panel tr > td:first-child > div > a {
     }
 }
 
+@media screen and (min-width: @screen-sm-min) {
+    .folders-container.sticked {
+        left: unset;
+        right: 15px;
+
+        .list-group-side {
+            > li {
+                //margin-left: -15px;
+                //margin-right: 0;
+            }
+        }
+    }
+}
+
 .list > table th[data-name="r-checkbox"] .select-all-container {
     float: right;
 }

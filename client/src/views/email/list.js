@@ -285,6 +285,11 @@ define('views/email/list', ['views/list'], function (Dep) {
             this.applyFolder();
 
             this.initEmailShortcuts();
+
+            this.on('remove', () => {
+                $(window).off('resize.email-folders');
+                $(window).off('scroll.email-folders');
+            });
         },
 
         data: function () {
@@ -343,6 +348,7 @@ define('views/email/list', ['views/list'], function (Dep) {
         setupReuse: function (params) {
             this.applyRoutingParams(params);
             this.initDroppable();
+            this.initStickableFolders();
         },
 
         /**
@@ -428,7 +434,8 @@ define('views/email/list', ['views/list'], function (Dep) {
                     selectedFolderId: this.selectedFolderId,
                 }, view => {
                     view.render()
-                        .then(() => this.initDroppable());
+                        .then(() => this.initDroppable())
+                        .then(() => this.initStickableFolders());
 
                     this.listenTo(view, 'select', (id) => {
                         this.selectedFolderId = id;
@@ -546,6 +553,77 @@ define('views/email/list', ['views/list'], function (Dep) {
          */
         getRecordView: function () {
             return this.getView('list');
+        },
+
+        /**
+         * @private
+         */
+        initStickableFolders: function () {
+            let $window = $(window);
+            let $list = this.$el.find('.list-container');
+            let $container = this.$el.find('.folders-container');
+            let $left = this.$el.find('.left-container').first();
+
+            let screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+            let isSmallScreen = $(window.document).width() < screenWidthXs;
+            let offset = this.getThemeManager().getParam('navbarHeight') +
+                (this.getThemeManager().getParam('buttonsContainerHeight') || 47);
+
+            let bottomSpaceHeight = parseInt(window.getComputedStyle($('#content').get(0)).paddingBottom, 10);
+
+            let getOffsetTop = (/** JQuery */$element) => {
+                let element = $element.get(0);
+
+                let value = 0;
+
+                while (element) {
+                    value += !isNaN(element.offsetTop) ? element.offsetTop : 0;
+
+                    element = element.offsetParent;
+                }
+
+                if (isSmallScreen) {
+                    return value;
+                }
+
+                return value - offset;
+            };
+
+            let start = getOffsetTop($list);
+
+            let control = () => {
+                let scrollTop = $window.scrollTop();
+
+                if (scrollTop <= start || isSmallScreen) {
+                    $container
+                        .removeClass('sticked')
+                        .width('')
+                        .scrollTop(0);
+
+                    $container.css({
+                        maxHeight: '',
+                    });
+
+                    return;
+                }
+
+                if (scrollTop > start) {
+                    let maxHeight = $window.height() - start - bottomSpaceHeight;
+
+                    let scroll = $window.scrollTop() - start;
+
+                    $container
+                        .addClass('sticked')
+                        .width($left.outerWidth(true))
+                        .scrollTop(scroll)
+                        .css({
+                            maxHeight: maxHeight,
+                        });
+                }
+            };
+
+            $window.on('resize.email-folders', () => control());
+            $window.on('scroll.email-folders', () => control());
         },
 
         /**

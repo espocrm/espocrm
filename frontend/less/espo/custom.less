@@ -1162,7 +1162,7 @@ input.global-search-input {
     }
 }
 
-#main > div > .folders-container + .list-container {
+#main > div > .left-container + .list-container {
     > .no-data {
         margin-top: 15px;
     }
@@ -1361,7 +1361,7 @@ section {
 
     .modal-body .categories-container + .list-container,
     .list-categories-column + .list-main-column .list-container,
-    .folders-container + .list-container {
+    .left-container + .list-container {
         .list {
             margin-right: -@container-padding;
             border-top-left-radius: var(--panel-border-radius);
@@ -2611,13 +2611,37 @@ table.table td.cell .html-container {
     }
 }
 
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    .folders-container {
+        margin-left: -(@container-padding);
+        margin-right: -(@container-padding);
+    }
+}
+
+@media screen and (min-width: @screen-sm-min) {
+    .folders-container {
+        margin-left: -(@container-padding);
+        margin-right: -1px; // Fix 1px shift on sticked.
+    }
+
+    .folders-container.sticked {
+        position: fixed;
+        margin-left: 0;
+
+        .list-group-side {
+            margin-bottom: 0;
+        }
+
+        overflow: hidden;
+    }
+}
+
 .list-group-side {
     border: 0;
 
     > li {
         border: 0;
-        padding: 5px 3px 5px (@container-padding - 3px);
-        margin-left: -(@container-padding);
+        padding: 5px 4px 5px (@container-padding - 3px);
         border-left: 3px solid transparent;
         border-top-right-radius: var(--border-radius);
         border-bottom-right-radius: var(--border-radius);
@@ -3002,7 +3026,7 @@ table.table-admin-panel {
     }
 }
 
-.folders-container > .list-group-side > .list-group-item,
+.left-container > .list-group-side > .list-group-item,
 .categories-container div.root-item,
 .categories-container .list-group-tree > .list-group-item > .cell {
     white-space: nowrap;
@@ -3010,13 +3034,13 @@ table.table-admin-panel {
     overflow: hidden;
 }
 
-.folders-container + .list-container > .list[data-scope="Email"] {
+.left-container + .list-container > .list[data-scope="Email"] {
     td.cell[data-name="subject"] {
         user-select: none;
     }
 }
 
-.folders-container {
+.left-container {
     user-select: none;
 }
 
@@ -3234,7 +3258,7 @@ table.table-admin-panel {
         }
     }
 
-    .folders-container + .list-container {
+    .left-container + .list-container {
         .list {
             margin-left: -@container-padding;
             margin-right: -@container-padding;
