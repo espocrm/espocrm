@@ -16,8 +16,7 @@
         "dateStartDate": "Date Start (all day)",
         "dateEndDate": "Date End (all day)",
         "isAllDay": "Is All-Day",
-        "sourceEmail": "Source Email",
-        "Acceptance": "Acceptance"
+        "sourceEmail": "Source Email"
     },
     "links": {
     },
@@ -45,7 +44,8 @@
         "Send Invitations": "Send Invitations",
         "on time": "on time",
         "before": "before",
-        "All-Day": "All-Day"
+        "All-Day": "All-Day",
+        "Acceptance": "Acceptance"
     },
     "presetFilters": {
         "planned": "Planned",
