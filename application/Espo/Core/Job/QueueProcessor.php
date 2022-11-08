@@ -82,7 +82,7 @@ class QueueProcessor
         }
     }
 
-    protected function processJob(JobEntity $job, ?AsyncPool $pool = null): void
+    private function processJob(JobEntity $job, ?AsyncPool $pool = null): void
     {
         $useProcessPool = $this->params->useProcessPool();
 
