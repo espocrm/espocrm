@@ -3473,11 +3473,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                 this.$el.find('.middle > .panel[data-tab]').addClass('tab-hidden');
                 this.$el.find(`.middle > .panel[data-tab="${tab}"]`).removeClass('tab-hidden');
-            })
 
-            this.recordHelper.trigger('panel-show');
+                this.adjustMiddlePanels();
+                this.recordHelper.trigger('panel-show');
+            });
 
-            this.adjustMiddlePanels();
             this.storeTab();
         },
 
