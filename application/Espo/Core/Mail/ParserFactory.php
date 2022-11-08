@@ -34,9 +34,9 @@ use Espo\Core\Mail\Parsers\MailMimeParser;
 
 class ParserFactory
 {
-    private $injectableFactory;
-
     protected const DEFAULT_PARSER_CLASS_NAME = MailMimeParser::class;
+
+    private InjectableFactory $injectableFactory;
 
     public function __construct(InjectableFactory $injectableFactory)
     {

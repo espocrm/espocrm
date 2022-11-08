@@ -37,15 +37,10 @@ use RuntimeException;
 class MessageWrapper implements Message
 {
     private int $id;
-
     private ?Storage $storage;
-
     private ?Parser $parser;
-
     private ?string $rawHeader = null;
-
     private ?string $rawContent = null;
-
     private ?string $fullRawContent = null;
 
     /**
