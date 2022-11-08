@@ -111,4 +111,22 @@ class Lead extends \Espo\Core\Entities\Person
         /** @var LinkMultiple */
         return $this->getValueObject('teams');
     }
+
+    public function getCreatedAccount(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('createdAccount');
+    }
+
+    public function getCreatedContact(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('createdContact');
+    }
+
+    public function getCreatedOpportunity(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('createdOpportunity');
+    }
 }

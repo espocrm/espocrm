@@ -240,6 +240,16 @@ class Binding implements BindingProcessor
                 'Espo\\Core\\Authentication\\Jwt\\SignatureVerifierFactory',
                 'Espo\\Core\\Authentication\\Oidc\\DefaultSignatureVerifierFactory'
             );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\Mail\\Importer\\ParentFinder',
+            'Espo\\Core\\Mail\\Importer\\DefaultParentFinder'
+        );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\Mail\\Importer\\DuplicateFinder',
+            'Espo\\Core\\Mail\\Importer\\DefaultDuplicateFinder'
+        );
     }
 
     private function bindAcl(Binder $binder): void

@@ -32,10 +32,9 @@ namespace Espo\Core\Mail;
 use Espo\Core\Job\Job\Data as JobData;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Mail\Importer\DuplicateFinder;
+use Espo\Core\Mail\Importer\ParentFinder;
 use Espo\Entities\Email;
 use Espo\Entities\EmailFilter;
-use Espo\Modules\Crm\Entities\Account;
-use Espo\Modules\Crm\Entities\Contact;
 use Espo\Repositories\Email as EmailRepository;
 
 use Espo\ORM\EntityManager;
@@ -52,8 +51,6 @@ use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
 use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
 use Espo\Core\Job\QueueName;
 use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Modules\Crm\Entities\Lead;
 
 use DateTime;
 use DateTimeZone;
@@ -77,6 +74,7 @@ class Importer
     private LinkMultipleSaver $linkMultipleSaver;
     private DuplicateFinder $duplicateFinder;
     private JobSchedulerFactory $jobSchedulerFactory;
+    private ParentFinder $parentFinder;
 
     public function __construct(
         EntityManager $entityManager,
@@ -85,7 +83,8 @@ class Importer
         ParserFactory $parserFactory,
         LinkMultipleSaver $linkMultipleSaver,
         DuplicateFinder $duplicateFinder,
-        JobSchedulerFactory $jobSchedulerFactory
+        JobSchedulerFactory $jobSchedulerFactory,
+        ParentFinder $parentFinder
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
@@ -93,6 +92,7 @@ class Importer
         $this->linkMultipleSaver = $linkMultipleSaver;
         $this->duplicateFinder = $duplicateFinder;
         $this->jobSchedulerFactory = $jobSchedulerFactory;
+        $this->parentFinder = $parentFinder;
 
         $this->notificator = $notificatorFactory->createByClass(Email::class);
         $this->filtersMatcher = new FiltersMatcher();
@@ -298,8 +298,6 @@ class Importer
             $email->set('isHtml', false);
         }
 
-        $replied = null;
-
         if (
             $parser->hasHeader($message, 'in-Reply-To') &&
             $parser->getHeader($message, 'in-Reply-To')
@@ -313,7 +311,7 @@ class Importer
                     $inReplyTo = '<' . $inReplyTo . '>';
                 }
 
-                /** @var Email|null $replied */
+                /** @var ?Email $replied */
                 $replied = $this->entityManager
                     ->getRDBRepository(Email::ENTITY_TYPE)
                     ->where(['messageId' => $inReplyTo])
@@ -332,47 +330,11 @@ class Importer
             }
         }
 
-        $parentFound = $this->processReferences($parser, $message, $email);
+        $parentFound = $this->parentFinder->find($email, $message);
 
-        if (
-            !$parentFound &&
-            $replied &&
-            $replied->getParentId() &&
-            $replied->getParentType()
-        ) {
-            /** @var string $parentId */
-            $parentId = $replied->getParentId();
-            /** @var string $parentType */
-            $parentType = $replied->getParentType();
-
-            $parentEntity = $this->entityManager->getEntityById($parentType, $parentId);
-
-            if ($parentEntity) {
-                $parentFound = true;
-
-                $email->set('parentType', $parentType);
-                $email->set('parentId', $parentId);
-            }
-        }
-
-        if (!$parentFound) {
-            $from = $email->getFromAddress();
-
-            if ($from) {
-                $parentFound = $this->findParentByAddress($email, $from);
-            }
-        }
-
-        if (!$parentFound) {
-            if (!empty($replyToArr)) {
-                $parentFound = $this->findParentByAddress($email, $replyToArr[0]);
-            }
-        }
-
-        if (!$parentFound) {
-            if (!empty($toArr)) {
-                $parentFound = $this->findParentByAddress($email, $toArr[0]);
-            }
+        if ($parentFound) {
+            $email->set('parentType', $parentFound->getEntityType());
+            $email->set('parentId', $parentFound->getId());
         }
 
         if (!$duplicate) {
@@ -507,165 +469,6 @@ class Importer
         foreach ($parentTeamIdList as $parentTeamId) {
             $email->addLinkMultipleId('teams', $parentTeamId);
         }
-    }
-
-    private function processReferences(Parser $parser, Message $message, Email $email): bool
-    {
-        if (
-            !$parser->hasHeader($message, 'references') ||
-            !$parser->getHeader($message, 'references')
-        ) {
-            return false;
-        }
-
-        $references = $parser->getHeader($message, 'references');
-
-        $delimiter = strpos($references, '>,') ? ',' : ' ';
-
-        foreach (explode($delimiter, $references) as $reference) {
-            $reference = str_replace(['/', '@'], ' ', trim(trim($reference), '<>'));
-
-            $parentFound = $this->processReferencesItem($email, $reference);
-
-            if ($parentFound) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function processReferencesItem(Email $email, string $reference): bool
-    {
-        $parentType = null;
-        $parentId = null;
-        $number = null;
-        $emailSent = PHP_INT_MAX;
-
-        $n = sscanf($reference, '%s %s %d %d espo', $parentType, $parentId, $emailSent, $number);
-
-        if ($n !== 4) {
-            $n = sscanf($reference, '%s %s %d %d espo-system', $parentType, $parentId, $emailSent, $number);
-        }
-
-        if ($n !== 4 || $emailSent >= time()) {
-            return false;
-        }
-
-        if (!$parentType || !$parentId) {
-            return false;
-        }
-
-        $email->set('parentType', $parentType);
-        $email->set('parentId', $parentId);
-
-        if ($parentType === Lead::ENTITY_TYPE) {
-            /** @var ?Lead $parent */
-            $parent = $this->entityManager->getEntityById(Lead::ENTITY_TYPE, $parentId);
-
-            if (!$parent) {
-                $email->set('parentType', null);
-                $email->set('parentId', null);
-
-                return false;
-            }
-
-            $this->processReferenceLead($email, $parent);
-        }
-
-        return true;
-    }
-
-    private function processReferenceLead(Email $email, Lead $lead): void
-    {
-        if ($lead->getStatus() !== Lead::STATUS_CONVERTED) {
-            return;
-        }
-
-        $createdAccountId = $lead->get('createdAccountId');
-
-        if ($createdAccountId) {
-            $account = $this->entityManager->getEntityById(Account::ENTITY_TYPE, $createdAccountId);
-
-            if (!$account) {
-                return;
-            }
-
-            $email->set('parentType', Account::ENTITY_TYPE);
-            $email->set('parentId', $account->getId());
-
-            return;
-        }
-
-        $createdContactId = $lead->get('createdContactId');
-
-        if (
-            $this->config->get('b2cMode') &&
-            $createdContactId
-        ) {
-            $contact = $this->entityManager->getEntityById(Contact::ENTITY_TYPE, $createdContactId);
-
-            if (!$contact) {
-                return;
-            }
-
-            $email->set('parentType', Contact::ENTITY_TYPE);
-            $email->set('parentId', $contact->getId());
-        }
-    }
-
-    private function findParentByAddress(Email $email, string $emailAddress): bool
-    {
-        $contact = $this->entityManager
-            ->getRDBRepository(Contact::ENTITY_TYPE)
-            ->where([
-                'emailAddress' => $emailAddress
-            ])
-            ->findOne();
-
-        if ($contact) {
-            if (!$this->config->get('b2cMode') && $contact->get('accountId')) {
-                $email->set('parentType', Account::ENTITY_TYPE);
-                $email->set('parentId', $contact->get('accountId'));
-
-                return true;
-            }
-
-            $email->set('parentType', Contact::ENTITY_TYPE);
-            $email->set('parentId', $contact->getId());
-
-            return true;
-        }
-
-        $account = $this->entityManager
-            ->getRDBRepository(Account::ENTITY_TYPE)
-            ->where([
-                'emailAddress' => $emailAddress
-            ])
-            ->findOne();
-
-        if ($account) {
-            $email->set('parentType', Account::ENTITY_TYPE);
-            $email->set('parentId', $account->getId());
-
-            return true;
-        }
-
-        $lead = $this->entityManager
-            ->getRDBRepository(Lead::ENTITY_TYPE)
-            ->where([
-                'emailAddress' => $emailAddress
-            ])
-            ->findOne();
-
-        if ($lead) {
-            $email->set('parentType', Lead::ENTITY_TYPE);
-            $email->set('parentId', $lead->getId());
-
-            return true;
-        }
-
-        return false;
     }
 
     private function findDuplicate(Email $email): ?Email

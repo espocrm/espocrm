@@ -30,11 +30,13 @@
 namespace Espo\Core\Mail\Importer;
 
 use Espo\Entities\Email;
+use Espo\Core\Mail\Message;
+use Espo\ORM\Entity;
 
 /**
- * Finds an existing duplicate of an email being imported.
+ * Finds a parent record for an email being imported.
  */
-interface DuplicateFinder
+interface ParentFinder
 {
-    public function find(Email $email): ?Email;
+    public function find(Email $email, Message $message): ?Entity;
 }

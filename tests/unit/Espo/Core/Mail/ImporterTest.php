@@ -36,20 +36,18 @@ use Espo\Core\Notification\AssignmentNotificator;
 
 use Espo\ORM\Value\ValueAccessor;
 use Espo\ORM\Value\ValueAccessorFactory;
-use Espo\Core\{
-    Job\JobSchedulerFactory,
-    Mail\Importer,
-    Mail\Importer\Data as ImporterData,
-    Mail\MessageWrapper,
-    Mail\ParserFactory,
-    Mail\Parsers\MailMimeParser,
-    Utils\Log,
-    ORM\EntityManager,
-    Utils\Config,
-    Repositories\Database,
-    Utils\Metadata,
-    Notification\AssignmentNotificatorFactory,
-    FieldProcessing\Relation\LinkMultipleSaver};
+use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
+use Espo\Core\Job\JobSchedulerFactory;
+use Espo\Core\Mail\Importer;
+use Espo\Core\Mail\Importer\Data as ImporterData;
+use Espo\Core\Mail\MessageWrapper;
+use Espo\Core\Mail\ParserFactory;
+use Espo\Core\Mail\Parsers\MailMimeParser;
+use Espo\Core\Notification\AssignmentNotificatorFactory;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Repositories\Database;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 
 use Espo\ORM\Repository\RDBSelectBuilder;
 
@@ -71,6 +69,8 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
         $this->assignmentNotificatorFactory = $this->createMock(AssignmentNotificatorFactory::class);
         $this->parserFactory = $this->createMock(ParserFactory::class);
         $this->linkMultipleSaver = $this->createMock(LinkMultipleSaver::class);
+
+        $this->parentFinder = $this->createMock(Importer\ParentFinder::class);
 
         $this->parserFactory
             ->expects($this->any())
@@ -186,7 +186,8 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
             $this->parserFactory,
             $this->linkMultipleSaver,
             $this->duplicateFinder,
-            $this->jobSchedulerFactory
+            $this->jobSchedulerFactory,
+            $this->parentFinder
         );
 
         $message = new MessageWrapper(0, null, null, $contents);
