@@ -798,8 +798,6 @@ define('views/record/panels-container', ['view'], function (Dep) {
         selectTab: function (tab) {
             this.currentTab = tab;
 
-            console.log(tab);
-
             if (this.isRendered()) {
                 $('body > .popover').remove();
 
