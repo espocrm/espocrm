@@ -3467,17 +3467,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             $('.popover.in').removeClass('in');
 
-            let processDom = () => {
+            this.whenRendered().then(() => {
                 this.$el.find('.middle-tabs > button').removeClass('active');
                 this.$el.find(`.middle-tabs > button[data-tab="${tab}"]`).addClass('active');
 
                 this.$el.find('.middle > .panel[data-tab]').addClass('tab-hidden');
                 this.$el.find(`.middle > .panel[data-tab="${tab}"]`).removeClass('tab-hidden');
-            }
-
-            this.isRendered() ?
-                processDom() :
-                this.once('after:render', () => processDom());
+            })
 
             this.recordHelper.trigger('panel-show');
 
