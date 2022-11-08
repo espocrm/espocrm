@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
- Espo.define('crm:views/call/detail', ['views/detail', 'crm:views/meeting/detail'], function (Dep, MeetingDetail) {
+ define('crm:views/call/detail', ['views/detail', 'crm:views/meeting/detail'], function (Dep, MeetingDetail) {
 
     return Dep.extend({
 
@@ -36,13 +36,13 @@
             this.controlSendInvitationsButton();
             this.controlAcceptanceStatusButton();
 
-            this.listenTo(this.model, 'sync', function () {
+            this.listenTo(this.model, 'sync', () => {
                 this.controlSendInvitationsButton();
-            }, this);
+            });
 
-            this.listenTo(this.model, 'sync', function () {
+            this.listenTo(this.model, 'sync', () => {
                 this.controlAcceptanceStatusButton();
-            }, this);
+            });
         },
 
         actionSendInvitations: function () {
@@ -60,6 +60,5 @@
         controlAcceptanceStatusButton: function () {
             MeetingDetail.prototype.controlAcceptanceStatusButton.call(this);
         },
-
     });
 });
