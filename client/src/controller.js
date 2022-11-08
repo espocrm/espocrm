@@ -44,7 +44,7 @@ define('controller', [], function () {
      * @param {Object} params
      * @param {Object} injections
      */
-    var Controller = function (params, injections) {
+    const Controller = function (params, injections) {
         this.params = params || {};
 
         this.baseController = injections.baseController;
@@ -279,7 +279,7 @@ define('controller', [], function () {
          * @param {string} key
          */
         clearStoredMainView: function (key) {
-            var view = this.getStoredMainView(key);
+            let view = this.getStoredMainView(key);
 
             if (view) {
                 view.remove(true);
@@ -384,7 +384,7 @@ define('controller', [], function () {
 
             action = action || this.defaultAction;
 
-            var method = 'action' + Espo.Utils.upperCaseFirst(action);
+            let method = 'action' + Espo.Utils.upperCaseFirst(action);
 
             if (!(method in this)) {
                 throw new Espo.Exceptions.NotFound("Action '" + this.name + "#" + action + "' is not found");
@@ -494,7 +494,7 @@ define('controller', [], function () {
                         this.set('storedScrollTop-' + master.currentViewKey, $(window).scrollTop());
 
                         if (this.hasStoredMainView(master.currentViewKey)) {
-                            var mainView = master.getView('main');
+                            let mainView = master.getView('main');
 
                             if (mainView) {
                                 mainView.propagateEvent('remove', {ignoreCleaning: true});
