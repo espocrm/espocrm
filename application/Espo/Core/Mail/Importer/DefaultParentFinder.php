@@ -229,7 +229,7 @@ class DefaultParentFinder implements ParentFinder
 
     private function getByReferences(Message $message): ?Entity
     {
-        $references = $message->getHeader('references');
+        $references = $message->getHeader('References');
 
         if (!$references) {
             return null;
