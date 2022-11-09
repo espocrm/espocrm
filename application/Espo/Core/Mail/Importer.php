@@ -238,7 +238,7 @@ class Importer
             catch (Exception $e) {}
         }
 
-        $duplicate = $this->findDuplicate($email);
+        $duplicate = $this->findDuplicate($email, $message);
 
         if ($duplicate && $duplicate->getStatus() !== Email::STATUS_BEING_IMPORTED) {
             /** @var Email $duplicate */
@@ -340,7 +340,7 @@ class Importer
         if (!$duplicate) {
             $this->entityManager->getLocker()->lockExclusive(Email::ENTITY_TYPE);
 
-            $duplicate = $this->findDuplicate($email);
+            $duplicate = $this->findDuplicate($email, $message);
 
             if ($duplicate) {
                 $this->entityManager->getLocker()->rollback();
@@ -471,9 +471,9 @@ class Importer
         }
     }
 
-    private function findDuplicate(Email $email): ?Email
+    private function findDuplicate(Email $email, Message $message): ?Email
     {
-        return $this->duplicateFinder->find($email);
+        return $this->duplicateFinder->find($email, $message);
     }
 
     /**
