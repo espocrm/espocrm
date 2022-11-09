@@ -370,7 +370,7 @@ class Installer
             'passwordSalt' => $this->getPasswordHash()->generateSalt(),
             'cryptKey' => Util::generateSecretKey(),
             'hashSecretKey' => Util::generateSecretKey(),
-            'theme' => $saveData['theme'] ?? 'Espo',
+            'theme' => $saveData['theme'] ?? 'Violet',
         ];
 
         if (empty($saveData['defaultPermissions']['user'])) {

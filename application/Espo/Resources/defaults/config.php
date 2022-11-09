@@ -136,7 +136,7 @@ return [
     'followCreatedEntities' => false,
     'b2cMode' => false,
     'restrictedMode' => false,
-    'theme' => 'Espo',
+    'theme' => 'Violet',
     'themeParams' => (object) ['navbar' => 'side'],
     'massEmailMaxPerHourCount' => 100,
     'massEmailVerp' => false,
