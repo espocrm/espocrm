@@ -857,7 +857,7 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
         /**
          * Calculate a content container height.
          *
-         * @param {$} $el Element.
+         * @param {JQuery} $el Element.
          * @returns {number}
          */
         calculateContentContainerHeight: function ($el) {

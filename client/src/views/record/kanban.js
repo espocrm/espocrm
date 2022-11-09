@@ -306,7 +306,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.buildRows();
 
             this.once('remove', () => {
-                $(window).off('resize.kanban');
+                $(window).off('resize.kanban-a-' + this.cid);
                 $(window).off('scroll.kanban-' + this.cid);
                 $(window).off('resize.kanban-' + this.cid);
             });
@@ -336,10 +336,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.$container = this.$el.find('.list-kanban-container');
 
-            $window.off('resize.kanban');
-            $window.on('resize.kanban', () => {
-                this.adjustMinHeight();
-            });
+            $window.off('resize.kanban-a-' + this.cid);
+            $window.on('resize.kanban-a-' + this.cid, () => this.adjustMinHeight());
 
             this.$container.on('scroll', () => this.syncHeadScroll());
 
@@ -379,15 +377,12 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 .insertAfter($container);
 
             $window.off('scroll.kanban-' + this.cid);
-
             $window.on('scroll.kanban-' + this.cid, () => {
                 controlSticking();
             });
 
             $window.off('resize.kanban-' + this.cid);
-            $window.on('resize.kanban-' + this.cid, () => {
-                controlSticking();
-            });
+            $window.on('resize.kanban-' + this.cid, () => controlSticking());
 
             let controlSticking = () => {
                 let width = $middle.width();
@@ -399,8 +394,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     $container.show();
 
                     $container.get(0).scrollLeft = 0;
-
-                    $container.childeren(0).css('width', '');
+                    $container.children(0).css('width', '');
 
                     return;
                 }
@@ -434,17 +428,17 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     $container.show();
 
                     this.syncHeadScroll();
+
+                    return;
                 }
-                else {
-                    $container.css('width', width + 'px');
-                    $container.hide();
 
-                    $block.show();
+                $container.css('width', width + 'px');
+                $container.hide();
 
-                    $container.get(0).scrollLeft = 0;
+                $block.show();
 
-                    $container.children().css('width', '');
-                }
+                $container.get(0).scrollLeft = 0;
+                $container.children().css('width', '');
             };
         },
 
@@ -651,7 +645,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         handleAttributesOnGroupChange: function (model, attributes, group) {},
 
         adjustMinHeight: function () {
-            if (this.collection.models.length === 0) {
+            if (
+                this.collection.models.length === 0 ||
+                !this.$container
+            ) {
                 return;
             }
 
