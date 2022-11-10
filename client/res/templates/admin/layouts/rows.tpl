@@ -8,7 +8,7 @@
 
 <div id="layout" class="row">
     <div class="col-sm-5">
-        <div class="well">
+        <div class="well enabled-well" tabindex="-1">
             <header>{{translate 'Enabled' scope='Admin'}}</header>
             <ul class="enabled connected">
                 {{#each layout}}

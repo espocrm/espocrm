@@ -229,6 +229,8 @@ function (Dep, styleCss) {
 
                         view.close();
 
+                        this.$el.find('.well').focus();
+
                         this.setIsChanged();
                     });
                 });
@@ -459,6 +461,8 @@ function (Dep, styleCss) {
 
         afterRender: function () {
             this.makeDraggable();
+
+            this.$el.find('.enabled-well').focus();
         },
 
         fetch: function () {

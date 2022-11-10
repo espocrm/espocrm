@@ -8,7 +8,7 @@
 
 <div id="layout" class="row">
     <div class="col-md-8">
-        <div class="well">
+        <div class="well enabled-well" tabindex="-1">
             <header>{{translate 'Layout' scope='LayoutManager'}}</header>
             <ul class="panels">
             {{#each panelDataList}}

@@ -92,6 +92,8 @@ function (Dep, styleCss) {
                     }
                 },
             });
+
+            this.$el.find('.enabled-well').focus();
         },
 
         onDrop: function (e) {},

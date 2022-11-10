@@ -1,180 +1,184 @@
-    #layout ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-    }
+#layout ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
 
-    #layout ul > li {
-        background-color: var(--select-item-bg);
-        border-radius: var(--border-radius);
-    }
+#layout ul > li {
+    background-color: var(--select-item-bg);
+    border-radius: var(--border-radius);
+}
 
-    #layout ul.panels > li {
-        padding: 5px 10px;
-        margin-bottom: 20px;
-        min-height: 80px;
-        border: 1px solid var(--select-item-border);
-        border-radius: var(--border-radius);
-        background-color: var(--panel-bg);
-        list-style: none;
-    }
+#layout ul.panels > li {
+    padding: 5px 10px;
+    margin-bottom: 20px;
+    min-height: 80px;
+    border: 1px solid var(--select-item-border);
+    border-radius: var(--border-radius);
+    background-color: var(--panel-bg);
+    list-style: none;
+}
 
-    #layout ul.rows {
-        min-height: 80px;
-    }
+#layout ul.rows {
+    min-height: 80px;
+}
 
-    #layout ul.rows > li  {
-        list-style: none;
-        border: 1px solid var(--select-item-border);
-        background-color: var(--panel-bg);
-        border-radius: var(--border-radius);
-        margin: 8px 0;
-        padding: 5px;
-        height: 72px;
-    }
+#layout ul.rows > li  {
+    list-style: none;
+    border: 1px solid var(--select-item-border);
+    background-color: var(--panel-bg);
+    border-radius: var(--border-radius);
+    margin: 8px 0;
+    padding: 5px;
+    height: 72px;
+}
 
-    #layout ul.cells  {
-        min-height: 30px;
-        margin-top: 12px;
-    }
+#layout ul.cells  {
+    min-height: 30px;
+    margin-top: 12px;
+}
 
-    #layout ul.panels ul.cells > li {
-        width: 46%;
-        float: left;
-    }
+#layout ul.panels ul.cells > li {
+    width: 46%;
+    float: left;
+}
 
-    #layout ul.panels ul.cells > li[data-full-width="true"] {
-        width: 94%;
-    }
+#layout ul.panels ul.cells > li[data-full-width="true"] {
+    width: 94%;
+}
 
-    #layout ul.panels ul.cells[data-cell-count="1"] > li {
-        width: 94%;
-        a[data-action="minusCell"] {
-            display: none;
-        }
-    }
-
-    #layout ul.panels ul.cells[data-cell-count="2"] > li {
-        width: 46%;
-    }
-
-    #layout ul.panels ul.cells[data-cell-count="3"] > li {
-        width: 30%;
-    }
-
-    #layout ul.panels ul.cells[data-cell-count="4"] > li {
-        width: 22%;
-    }
-
-    #layout ul.cells > li {
-        list-style: none;
-        border: 1px solid var(--select-item-border);
-        margin: 5px;
-        padding: 5px;
-        height: 34px;
-    }
-
-    #layout ul.cells > li.ui-state-hover {
-        border-color: var(--brand-primary);
-    }
-
-    #layout  ul.cells.disabled > li {
-        margin: 5px 0;
-    }
-
-    #layout ul.rows > li > div {
-
-    }
-
-    #layout ul.disabled {
-        min-height: 200px;
-        width: 100%;
-    }
-
-    #layout ul.disabled > li a {
+#layout ul.panels ul.cells[data-cell-count="1"] > li {
+    width: 94%;
+    a[data-action="minusCell"] {
         display: none;
     }
+}
 
-    #layout header {
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
+#layout ul.panels ul.cells[data-cell-count="2"] > li {
+    width: 46%;
+}
 
-    #layout ul.panels > li label {
-        display: inline;
-    }
+#layout ul.panels ul.cells[data-cell-count="3"] > li {
+    width: 30%;
+}
 
-    #layout ul.panels > li header a {
-        font-weight: normal;
-    }
+#layout ul.panels ul.cells[data-cell-count="4"] > li {
+    width: 22%;
+}
 
-    #layout ul.panels > li > div {
-        width: auto;
-        text-align: left;
-        margin-left: 5px;
-    }
+#layout ul.cells > li {
+    list-style: none;
+    border: 1px solid var(--select-item-border);
+    margin: 5px;
+    padding: 5px;
+    height: 34px;
+}
 
-    ul.cells li.cell a.remove-field {
-        display: none;
-    }
+#layout ul.cells > li.ui-state-hover {
+    border-color: var(--brand-primary);
+}
 
-    ul.cells li.cell:hover a.remove-field {
-        display: block;
-    }
+#layout  ul.cells.disabled > li {
+    margin: 5px 0;
+}
 
-    ul.cells[data-cell-count="1"] li.cell:hover a.remove-field[data-action="minusCell"] {
-        display: none;
-    }
+#layout ul.rows > li > div {
 
-    ul.panels > li a.remove-panel {
-        display: none;
-    }
+}
 
-    ul.panels > li:hover a.remove-panel {
-        display: block;
-    }
+#layout ul.disabled {
+    min-height: 200px;
+    width: 100%;
+}
 
-    ul.rows > li a.remove-row {
-        display: none;
-        width: 5px;
-        height: 5px;
-    }
+#layout ul.disabled > li a {
+    display: none;
+}
 
-    ul.rows > li:hover a.remove-row {
-        display: block;
-    }
+#layout header {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
 
-    ul.rows > li a.add-cell {
-        display: none;
-        position: relative;
-        width: 5px;
-        height: 5px;
-        top: 19px;
-        right: 7px;
-    }
+#layout ul.panels > li label {
+    display: inline;
+}
 
-    ul.rows > li:hover a.add-cell {
-        display: block;
-    }
+#layout ul.panels > li header a {
+    font-weight: normal;
+}
 
-    ul.rows > li[data-cell-count="4"]:hover a.add-cell {
-        display: none;
-    }
+#layout ul.panels > li > div {
+    width: auto;
+    text-align: left;
+    margin-left: 5px;
+}
 
-    ul.panels > li a.edit-panel-label {
-        display: none;
-    }
+ul.cells li.cell a.remove-field {
+    display: none;
+}
 
-    ul.panels > li:hover a.edit-panel-label {
-        display: inline-block;
-    }
+ul.cells li.cell:hover a.remove-field {
+    display: block;
+}
 
-    div.row-actions {
-        float: right;
-        height: 50px;
-        width: 12px;
-    }
+ul.cells[data-cell-count="1"] li.cell:hover a.remove-field[data-action="minusCell"] {
+    display: none;
+}
 
-    .cell.ui-draggable-dragging {
-        opacity: 0.7;
-    }
+ul.panels > li a.remove-panel {
+    display: none;
+}
+
+ul.panels > li:hover a.remove-panel {
+    display: block;
+}
+
+ul.rows > li a.remove-row {
+    display: none;
+    width: 5px;
+    height: 5px;
+}
+
+ul.rows > li:hover a.remove-row {
+    display: block;
+}
+
+ul.rows > li a.add-cell {
+    display: none;
+    position: relative;
+    width: 5px;
+    height: 5px;
+    top: 19px;
+    right: 7px;
+}
+
+ul.rows > li:hover a.add-cell {
+    display: block;
+}
+
+ul.rows > li[data-cell-count="4"]:hover a.add-cell {
+    display: none;
+}
+
+ul.panels > li a.edit-panel-label {
+    display: none;
+}
+
+ul.panels > li:hover a.edit-panel-label {
+    display: inline-block;
+}
+
+div.row-actions {
+    float: right;
+    height: 50px;
+    width: 12px;
+}
+
+.cell.ui-draggable-dragging {
+    opacity: 0.7;
+}
+
+#layout .well:focus-visible {
+    outline: 0;
+}

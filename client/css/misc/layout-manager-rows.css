@@ -1,57 +1,61 @@
-    #layout ul {
-        width: 100%;
-        min-height: 100px;
-        padding: 0;
-        list-style-type: none;
-        margin: 0;
-    }
+#layout ul {
+    width: 100%;
+    min-height: 100px;
+    padding: 0;
+    list-style-type: none;
+    margin: 0;
+}
 
-    #layout ul li {
-        list-style: none;
-        border: 1px solid var(--select-item-border);
-        margin: 5px 0;
-        padding: 5px;
-        height: 34px;
-    }
+#layout ul li {
+    list-style: none;
+    border: 1px solid var(--select-item-border);
+    margin: 5px 0;
+    padding: 5px;
+    height: 34px;
+}
 
-    #layout header {
-        font-weight: 600;
-    }
+#layout header {
+    font-weight: 600;
+}
 
-    #layout ul > li .left {
-        float: left;
-    }
+#layout ul > li .left {
+    float: left;
+}
 
-    #layout ul > li {
-        background-color: var(--select-item-bg);
-        color: var(--select-item-text-color);
-        border-radius: var(--border-radius);
-    }
+#layout ul > li {
+    background-color: var(--select-item-bg);
+    color: var(--select-item-text-color);
+    border-radius: var(--border-radius);
+}
 
-    #layout ul.enabled > li .right {
-        float: right;
-    }
+#layout ul.enabled > li .right {
+    float: right;
+}
 
-    #layout ul.disabled > li .right {
-        display: none;
-    }
+#layout ul.disabled > li .right {
+    display: none;
+}
 
-    #layout ul > li .width {
-        font-size: small;
-    }
+#layout ul > li .width {
+    font-size: small;
+}
 
-    #layout ul.disabled > li .width {
-        display: none;
-    }
+#layout ul.disabled > li .width {
+    display: none;
+}
 
-    #layout label {
-        font-weight: normal;
-    }
+#layout label {
+    font-weight: normal;
+}
 
-    .enabled li a.edit-field {
-        display: none;
-    }
+.enabled li a.edit-field {
+    display: none;
+}
 
-    .enabled li:hover a.edit-field {
-        display: block;
-    }
+.enabled li:hover a.edit-field {
+    display: block;
+}
+
+#layout .well:focus-visible {
+    outline: 0;
+}
