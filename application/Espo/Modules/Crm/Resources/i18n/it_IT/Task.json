@@ -3,11 +3,11 @@
     "name": "Nome",
     "parent": "Genitore",
     "status": "Stato",
-    "dateStart": "Data inizio",
+    "dateStart": "Data Inizio",
     "dateEnd": "Data di scadenza",
-    "dateStartDate": "Data inizio (tutto il giorno)",
-    "dateEndDate": "Data termine (tutto il giorno)",
-    "priority": "Priorita'",
+    "dateStartDate": "Data Inizio (tutto il giorno)",
+    "dateEndDate": "Data Fine (tutto il giorno)",
+    "priority": "Priorità",
     "description": "Descrizione",
     "isOverdue": "In ritardo",
     "dateCompleted": "Completato in data",
@@ -36,7 +36,7 @@
   },
   "labels": {
     "Create Task": "Crea Compito",
-    "Complete": "Completo",
+    "Complete": "Completato",
     "overdue": "in ritardo"
   },
   "presetFilters": {

@@ -2,14 +2,14 @@
   "fields": {
     "name": "Nome",
     "roles": "Ruoli",
-    "assignmentPermission": "Assegnazione permessi",
+    "assignmentPermission": "Permessi di Assegnazione",
     "userPermission": "Autorizzazioni utente",
     "portalPermission": "Autorizzazione portale",
     "groupEmailAccountPermission": "Permesso account email di gruppo",
-    "exportPermission": "Esporta permessi",
+    "exportPermission": "Permessi di Esportazione",
     "dataPrivacyPermission": "Autorizzazione privacy dati",
     "massUpdatePermission": "Autorizzazione per l'aggiornamento di massa",
-    "followerManagementPermission": "Permessi di Gestione dei Seguaci"
+    "followerManagementPermission": "Permessi di Gestione dei Follower"
   },
   "links": {
     "users": "Utenti"
@@ -22,7 +22,7 @@
     "dataPrivacyPermission": "Consente di visualizzare e cancellare i dati personali.",
     "exportPermission": "Definisce se gli utenti hanno la possibilità di esportare record.",
     "massUpdatePermission": "Definisce se gli utenti hanno la possibilità di eseguire aggiornamenti di massa dei record.",
-    "followerManagementPermission": "Permette di gestire i seguaci dei record."
+    "followerManagementPermission": "Permette di gestire i follower dei record."
   },
   "labels": {
     "Access": "Accesso",
@@ -40,7 +40,7 @@
       "all": "Tutti",
       "contact": "Contatto",
       "own": "proprio",
-      "yes": "Si",
+      "yes": "Sì",
       "not-set": "Non impostato"
     }
   },

@@ -18,7 +18,7 @@
     }
   },
   "tooltips": {
-    "url": "Il destinatario sara' reindirizzato a questa posizione dopo aver seguito il link.",
+    "url": "Il destinatario sarà reindirizzato a questa posizione dopo aver seguito il link.",
     "message": "Il messaggio verrà mostrato al destinatario dopo che avrà seguito il link. Il Markdown è supportato."
   }
 }

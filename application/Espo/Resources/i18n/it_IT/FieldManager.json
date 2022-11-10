@@ -62,7 +62,10 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 anno"
     },
     "globalRestrictions": {
-      "internal": "Interno"
+      "forbidden": "Vietato",
+      "internal": "Interno",
+      "onlyAdmin": "Solo Admin",
+      "readOnly": "Solo Lettura"
     }
   },
   "tooltips": {
@@ -102,7 +105,8 @@
     "personName": {
       "salutation": "Saluto",
       "first": "Primo",
-      "last": "Ultimo"
+      "last": "Ultimo",
+      "middle": "Secondo Nome"
     },
     "currency": {
       "converted": "(Convertito)",
@@ -132,7 +136,9 @@
     "number": "Un numero autoincrementante di tipo stringa con un possibile prefisso e una lunghezza specifica.",
     "autoincrement": "Un numero intero di sola lettura e autoincrementante.",
     "barcode": "Un codice a barre. Può essere stampato in PDF.",
+    "email": "Un insieme di indirizzi email con i relativi parametri: Opted-out, Invalido, Primario.",
+    "phone": "Un insieme di numeri di telefono con i relativi parametri: Tipo, Opted-out, Invalido, Primario.",
     "foreign": "Campo di un record correlato. Di Sola Lettura.",
-    "linkParent": "Un record collegato tramite una relazione Belongs-To-Parent. Puo' essere di tipi di entita' differenti."
+    "linkParent": "Un record collegato tramite una relazione Belongs-To-Parent. Può essere di tipi di entità differenti."
   }
 }

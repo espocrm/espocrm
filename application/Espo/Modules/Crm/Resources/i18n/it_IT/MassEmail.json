@@ -3,7 +3,7 @@
     "name": "Nome",
     "status": "Stato",
     "storeSentEmails": "Archivia email inviate",
-    "startAt": "Data inizio",
+    "startAt": "Data Inizio",
     "fromAddress": "Indirizzo mittente",
     "fromName": "Dal nome",
     "replyToAddress": "Rispondi aa Indirizzo",

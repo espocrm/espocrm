@@ -1,5 +1,7 @@
 {
   "fields": {
+    "type": "Tipo",
+    "import": "Importa",
     "lineNumber": "Linea Numero",
     "exportLineNumber": "Numero della linea di esportazione",
     "row": "Riga"

@@ -32,7 +32,6 @@
     "Currency": "Valuta",
     "Integrations": "Integrazioni",
     "Extensions": "Estensioni",
-    "Upload": "Caricamento",
     "Installing...": "Installazione...",
     "Upgrading...": "Aggiornamento...",
     "Upgraded successfully": "Aggiornamento completato",
@@ -64,14 +63,17 @@
     "Permissions": "Permessi",
     "Success": "Successo",
     "Fail": "Fallito",
-    "is recommended": "E' raccomandato",
+    "is recommended": "È consigliato",
     "extension is missing": "Manca l'estensione",
     "PDF Templates": "Modelli PDF",
     "Webhooks": "Webhooks\n",
     "Email Addresses": "Indirizzi Email",
-    "Phone Numbers": "Telefono",
+    "Phone Numbers": "Numeri di Telefono",
     "Messaging": "Messaggistica",
-    "Misc": "Varie"
+    "Misc": "Varie",
+    "Job Settings": "Impostazioni Job",
+    "Configuration Instructions": "Istruzioni di Configurazione",
+    "Formula Sandbox": "Sandbox Formule"
   },
   "layouts": {
     "list": "Elenco",
@@ -176,8 +178,10 @@
     "lastChar": "Ultimo Carattere",
     "listPreviewSize": "Dimensione Anteprima in Vista Elenco",
     "onlyDefaultCurrency": "Solo valuta predefinita",
+    "dynamicLogicInvalid": "Condizioni che rendono il campo non valido",
     "conversionDisabled": "Disattiva la Conversione",
-    "decimalPlaces": "Posizioni Decimali"
+    "decimalPlaces": "Posizioni Decimali",
+    "globalRestrictions": "Restrizioni Globali"
   },
   "messages": {
     "selectEntityType": "Scegli il tipo di entità dal menu di sinistra.",
@@ -196,7 +200,7 @@
     "upgradeDone": "EspoCRM è stato aggiornato alla versione **{version}**.",
     "downloadUpgradePackage": "Scarica i pacchetti di aggiornamento [qui]({url}).",
     "upgradeInfo": "Controlla la [documentazione]({url}) su come aggiornare l'istanza di EspoCRM.",
-    "upgradeRecommendation": "Questo modo di aggiornamento non è raccomandato. È meglio eseguire l'aggiornamento dalla CLI.",
+    "upgradeRecommendation": "Questo modo di aggiornamento non è consigliato. È meglio eseguire l'aggiornamento dalla CLI.",
     "newVersionIsAvailable": "È disponibile la nuova versione di EspoCRM {latestVersion}. Seguire le [istruzioni](https://www.espocrm.com/documentation/administration/upgrading/) per aggiornare l'istanza.",
     "formulaFunctions": "Più funzioni possono essere trovate nella [documentazione]({documentationUrl}).",
     "rebuildRequired": "È necessario eseguire la ricostruzione da CLI."
@@ -233,7 +237,7 @@
     "labelManager": "Personalizza etichette dell'applicazione",
     "authLog": "Cronologia login.",
     "leadCapture": "Punti di ingresso API per Web-to-Lead.",
-    "attachments": "Tutti gli allegati di file memorizzati nel sistema.",
+    "attachments": "Tutti gli allegati memorizzati nel sistema.",
     "templateManager": "Personalizza i modelli di messaggi.\n",
     "systemRequirements": "Requisiti di sistema per EspoCRM.\n",
     "apiUsers": "Utenti separati per integrazione.\n\n",
@@ -241,7 +245,7 @@
     "pdfTemplates": "Modelli per la stampa in PDF.",
     "webhooks": "Gestisci i webhook.",
     "dashboardTemplates": "Distribuire dashboard agli utenti.",
-    "phoneNumbers": "Tutti i numeri telefonici sono archiviati nel sistema.",
+    "phoneNumbers": "Tutti i numeri telefonici archiviati nel sistema.",
     "emailAddresses": "Tutti gli indirizzi email memorizzati nel sistema.",
     "layoutSets": "Raccolte di layout che possono essere assegnati a team e portali.",
     "sms": "Impostazioni SMS.",
@@ -273,7 +277,7 @@
     "twoFactorCode": "Codice 2FA"
   },
   "strings": {
-    "rebuildRequired": "E' richiesta la ricostruzione"
+    "rebuildRequired": "È richiesta la ricostruzione"
   },
   "keywords": {
     "userInterface": "ui,tema,schede,logo,dashboard",

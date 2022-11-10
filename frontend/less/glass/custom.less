@@ -261,3 +261,22 @@ select.form-control > option {
         background-color: transparent;
     }
 }
+
+.list-group-side li.selected {
+    a {
+        &.side-link,
+        &:hover.side-link,
+        &:active.side-link,
+        &:visited.side-link,
+        &:focus.side-link {
+            color: var(--state-danger-text);
+            font-weight: 600;
+        }
+    }
+}
+
+.table {
+    .text-bold {
+        font-weight: 700;
+    }
+}

@@ -9,7 +9,7 @@
     "Field Level": "Livello del campo"
   },
   "fields": {
-    "exportPermission": "Esporta permessi",
+    "exportPermission": "Permessi di Esportazione",
     "massUpdatePermission": "Autorizzazione per l'aggiornamento di massa"
   },
   "tooltips": {

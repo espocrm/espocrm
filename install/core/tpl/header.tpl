@@ -1,5 +1,5 @@
 <div class="panel-heading main-header">
-    <img src="../client/img/logo.png">
+    <img src="../client/img/logo.svg" style="height: 43px;">
 </div>
 <header class="step-header">
     <div class="row">

@@ -3,23 +3,23 @@
     "name": "Nome",
     "parent": "Genitore",
     "status": "Stato",
-    "dateStart": "Data inizio",
-    "dateEnd": "Data termine",
+    "dateStart": "Data Inizio",
+    "dateEnd": "Data Fine",
     "duration": "Durata",
     "description": "Descrizione",
     "users": "Utenti",
     "contacts": "Contatti",
     "leads": "Iniziative",
     "reminders": "Promemoria",
-    "acceptanceStatus": "Stato accettazione",
-    "dateStartDate": "Data inizio (tutto il giorno)",
-    "dateEndDate": "Data fine (tutto il giorno)",
+    "acceptanceStatus": "Stato Accettazione",
+    "dateStartDate": "Data Inizio (tutto il giorno)",
+    "dateEndDate": "Data Fine (tutto il giorno)",
     "isAllDay": "È tutto il giorno",
     "Acceptance": "Accettazione"
   },
   "options": {
     "status": {
-      "Planned": "Pianificato",
+      "Planned": "Pianificata",
       "Held": "Effettuata",
       "Not Held": "Non Effettuata"
     },
@@ -27,7 +27,7 @@
       "None": "Nessuno",
       "Accepted": "Accettato",
       "Declined": "Declinato",
-      "Tentative": "Tentativo"
+      "Tentative": "Provvisorio"
     }
   },
   "massActions": {
@@ -44,8 +44,8 @@
     "All-Day": "Tutto il giorno\n"
   },
   "presetFilters": {
-    "planned": "Pianificato",
-    "held": "Effettuata",
+    "planned": "Pianificate",
+    "held": "Effettuate",
     "todays": "Di oggi"
   },
   "messages": {

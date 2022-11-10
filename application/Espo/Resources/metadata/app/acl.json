@@ -54,7 +54,8 @@
             },
             "Role": false,
             "PortalRole": false,
-            "ImportError": "Import"
+            "ImportError": "Import",
+            "Stream": true
         },
         "fieldLevel": {
         },
@@ -136,7 +137,8 @@
                 "read": "all",
                 "edit": "no",
                 "delete": "all"
-            }
+            },
+            "Stream": true
         }
     },
     "valuePermissionList": [

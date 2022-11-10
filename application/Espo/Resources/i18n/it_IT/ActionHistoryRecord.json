@@ -1,6 +1,7 @@
 {
   "fields": {
     "createdAt": "Data",
+    "targetType": "Tipo di Obiettivo",
     "authToken": "Token di autenticazione",
     "authLogRecord": "Record di log auth",
     "userType": "Tipologia di utente"

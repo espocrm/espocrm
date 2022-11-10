@@ -73,7 +73,8 @@
   },
   "labels": {
     "Create InboundEmail": "Crea un Account Email",
-    "Actions": "Azioni"
+    "Actions": "Azioni",
+    "Main": "Principale"
   },
   "messages": {
     "couldNotConnectToImap": "Impossibile connettersi al server IMAP"

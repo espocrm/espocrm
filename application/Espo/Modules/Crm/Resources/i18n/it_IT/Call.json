@@ -3,15 +3,15 @@
     "name": "Nome",
     "parent": "Genitore",
     "status": "Stato",
-    "dateStart": "Data inizio",
-    "dateEnd": "Data termine",
+    "dateStart": "Data Inizio",
+    "dateEnd": "Data Fine",
     "direction": "Direzione",
     "duration": "Durata",
     "description": "Descrizione",
     "users": "Utenti",
     "contacts": "Contatti",
     "reminders": "Promemoria",
-    "acceptanceStatus": "Stato accettazione"
+    "acceptanceStatus": "Stato Accettazione"
   },
   "options": {
     "status": {

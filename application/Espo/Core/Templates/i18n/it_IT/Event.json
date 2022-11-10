@@ -1,13 +1,13 @@
 {
   "fields": {
     "parent": "Genitore",
-    "dateStart": "Data inizio",
-    "dateEnd": "Data termine",
+    "dateStart": "Data Inizio",
+    "dateEnd": "Data Fine",
     "duration": "Durata",
     "status": "Stato",
     "reminders": "Promemoria",
-    "dateStartDate": "Data inizio (tutto il giorno)",
-    "dateEndDate": "Data fine (tutto il giorno)",
+    "dateStartDate": "Data Inizio (tutto il giorno)",
+    "dateEndDate": "Data Fine (tutto il giorno)",
     "isAllDay": "È tutto il giorno"
   },
   "links": {

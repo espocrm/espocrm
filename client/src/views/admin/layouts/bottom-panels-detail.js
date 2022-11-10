@@ -36,10 +36,35 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
 
         TAB_BREAK_KEY: '_tabBreak_{n}',
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.on('update-item', (name, attributes) => {
+
+
+                if (this.isTabName(name)) {
+                    let $li = $("#layout ul > li[data-name='" + name + "']");
+
+                    $li.find('.left > span')
+                        .text(this.composeTabBreakLabel(attributes));
+                }
+            });
+        },
+
+        composeTabBreakLabel: function (item) {
+            let label = '. . . ' + this.translate('tabBreak', 'fields', 'LayoutManager');
+
+            if (item.tabLabel) {
+                label += ' : ' + item.tabLabel;
+            }
+
+            return label;
+        },
+
         readDataFromLayout: function (layout) {
-            var panelListAll = [];
-            var labels = {};
-            var params = {};
+            let panelListAll = [];
+            let labels = {};
+            let params = {};
 
             layout = Espo.Utils.cloneDeep(layout);
 
@@ -84,7 +109,7 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                 if (item.tabBreak) {
                     panelListAll.push(name);
 
-                    labels[name] = '. . . ' + this.translate('tabBreak', 'fields', 'LayoutManager');
+                    labels[name] = this.composeTabBreakLabel(item);
 
                     params[name] = {
                         name: item.name,
@@ -282,7 +307,11 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                 if (this.isTabName(name) && name === this.TAB_BREAK_KEY) {
                     $tabBreak = $li.clone();
 
-                    $li.attr('data-name', this.TAB_BREAK_KEY.slice(0, -3) + tabBreakIndex);
+                    let realName = this.TAB_BREAK_KEY.slice(0, -3) + tabBreakIndex;
+
+                    $li.attr('data-name', realName);
+
+                    delete this.itemsData[realName];
                 }
             });
 
