@@ -26,12 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:acl/meeting', 'acl', function (Dep) {
+define('crm:acl/meeting', ['acl'], function (Dep) {
 
     return Dep.extend({
 
         checkModelRead: function (model, data, precise) {
-            var result = this.checkModel(model, data, 'read', precise);
+            return this._checkModelCustom('read', model, data, precise);
+        },
+
+        checkModelStream: function (model, data, precise) {
+            return this._checkModelCustom('stream', model, data, precise);
+        },
+
+        _checkModelCustom: function (action, model, data, precise) {
+            let result = this.checkModel(model, data, action, precise);
 
             if (result) {
                 return true;
@@ -41,8 +49,9 @@ Espo.define('crm:acl/meeting', 'acl', function (Dep) {
                 return false;
             }
 
-            var d = data || {};
-            if (d.read === 'no') {
+            let d = data || {};
+
+            if (d[action] === 'no') {
                 return false;
             }
 
@@ -57,9 +66,7 @@ Espo.define('crm:acl/meeting', 'acl', function (Dep) {
             }
 
             return result;
-        }
-
+        },
     });
-
 });
 

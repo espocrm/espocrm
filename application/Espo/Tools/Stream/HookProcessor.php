@@ -359,15 +359,21 @@ class HookProcessor
     private function afterSaveStreamNew(CoreEntity $entity, array $options): void
     {
         $entityType = $entity->getEntityType();
-        $hasAssignedUsersField = $entity->hasLinkMultipleField('assignedUsers');
+
+        $multipleField = $this->metadata->get(['streamDefs', $entityType, 'followingUsersField']) ??
+            'assignedUsers';
+
+        $hasAssignedUsersField = $entity->hasLinkMultipleField($multipleField);
 
         $userIdList = [];
 
         $assignedUserId = $entity->get('assignedUserId');
         $createdById = $entity->get('createdById');
 
+
+
         /** @var string[] $assignedUserIdList */
-        $assignedUserIdList = $hasAssignedUsersField ? $entity->getLinkMultipleIdList('assignedUsers') : [];
+        $assignedUserIdList = $hasAssignedUsersField ? $entity->getLinkMultipleIdList($multipleField) : [];
 
         if (
             !$this->user->isSystem() &&
@@ -455,13 +461,16 @@ class HookProcessor
             $this->service->noteStatus($entity, $statusField, $options);
         }
 
-        if (!$entity->hasLinkMultipleField('assignedUsers')) {
+        $multipleField = $this->metadata->get(['streamDefs', $entity->getEntityType(), 'followingUsersField']) ??
+            'assignedUsers';
+
+        if (!$entity->hasLinkMultipleField($multipleField)) {
             return;
         }
 
         /** @var string[] $assignedUserIdList */
-        $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
-        $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds') ?? [];
+        $assignedUserIdList = $entity->getLinkMultipleIdList($multipleField);
+        $fetchedAssignedUserIdList = $entity->getFetched($multipleField . 'Ids') ?? [];
 
         foreach ($assignedUserIdList as $userId) {
             if (in_array($userId, $fetchedAssignedUserIdList)) {
