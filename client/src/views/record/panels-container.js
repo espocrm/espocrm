@@ -461,7 +461,7 @@ define('views/record/panels-container', ['view'], function (Dep) {
         },
 
         showPanelFinalize: function (name, callback, wasShown) {
-            if (this.isRendered()) {
+            let process = (wasRendered) => {
                 let view = this.getView(name);
 
                 if (view) {
@@ -469,8 +469,9 @@ define('views/record/panels-container', ['view'], function (Dep) {
 
                     view.disabled = false;
                     view.trigger('show');
+                    view.trigger('panel-show-propagated');
 
-                    if (!wasShown && view.getFieldViews) {
+                    if (wasRendered && !wasShown && view.getFieldViews) {
                         let fields = view.getFieldViews();
 
                         if (fields) {
@@ -484,6 +485,10 @@ define('views/record/panels-container', ['view'], function (Dep) {
                 if (typeof callback === 'function') {
                     callback.call(this);
                 }
+            };
+
+            if (this.isRendered()) {
+                process(true);
 
                 this.adjustPanels();
 
@@ -491,17 +496,7 @@ define('views/record/panels-container', ['view'], function (Dep) {
             }
 
             this.once('after:render', () => {
-                let view = this.getView(name);
-
-                if (view) {
-                    view.$el.closest('.panel').removeClass('hidden');
-                    view.disabled = false;
-                    view.trigger('show');
-                }
-
-                if (typeof callback === 'function') {
-                    callback.call(this);
-                }
+                process();
             });
         },
 
@@ -828,7 +823,7 @@ define('views/record/panels-container', ['view'], function (Dep) {
                     if (view) {
                         view.trigger('tab-show');
 
-                        view.propagateEvent('tab-show-propagated');
+                        view.propagateEvent('panel-show-propagated');
                     }
 
                     item.tabHidden = false;
