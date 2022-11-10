@@ -827,6 +827,8 @@ define('views/record/panels-container', ['view'], function (Dep) {
 
                     if (view) {
                         view.trigger('tab-show');
+
+                        view.propagateEvent('tab-show-propagated');
                     }
 
                     item.tabHidden = false;
