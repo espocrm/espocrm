@@ -146,19 +146,19 @@ define('views/record/panels-container', ['view'], function (Dep) {
 
         events: {
             'click .action': function (e) {
-                var $target = $(e.currentTarget);
-                var action = $target.data('action');
-                var panel = $target.data('panel');
-                var data = $target.data();
+                let $target = $(e.currentTarget);
+                let action = $target.data('action');
+                let panel = $target.data('panel');
+                let data = $target.data();
 
                 if (action && panel) {
-                    var method = 'action' + Espo.Utils.upperCaseFirst(action);
-                    var d = _.clone(data);
+                    let method = 'action' + Espo.Utils.upperCaseFirst(action);
+                    let d = _.clone(data);
 
                     delete d['action'];
                     delete d['panel'];
 
-                    var view = this.getView(panel);
+                    let view = this.getView(panel);
 
                     if (view && typeof view[method] == 'function') {
                         view[method].call(view, d, e);
@@ -272,7 +272,7 @@ define('views/record/panels-container', ['view'], function (Dep) {
                     this.applyAccessToActions(item.actionList);
 
                     if (this.isRendered()) {
-                        var actionsView = this.getView(item.actionsViewKey);
+                        let actionsView = this.getView(item.actionsViewKey);
 
                         if (actionsView) {
                             actionsView.reRender();
@@ -320,9 +320,9 @@ define('views/record/panels-container', ['view'], function (Dep) {
          */
         setupPanelViews: function () {
             this.panelList.forEach(p => {
-                var name = p.name;
+                let name = p.name;
 
-                var options = {
+                let options = {
                     model: this.model,
                     panelName: name,
                     el: this.options.el + ' .panel[data-name="' + name + '"] > .panel-body',
@@ -381,10 +381,10 @@ define('views/record/panels-container', ['view'], function (Dep) {
         setupPanels: function () {},
 
         getFieldViews: function (withHidden) {
-            var fields = {};
+            let fields = {};
 
             this.panelList.forEach(p => {
-                var panelView = this.getView(p.name);
+                let panelView = this.getView(p.name);
 
                 if ((!panelView.disabled || withHidden) && 'getFieldViews' in panelView) {
                     fields = _.extend(fields, panelView.getFieldViews());
@@ -399,10 +399,10 @@ define('views/record/panels-container', ['view'], function (Dep) {
         },
 
         fetch: function () {
-            var data = {};
+            let data = {};
 
             this.panelList.forEach((p) => {
-                var panelView = this.getView(p.name);
+                let panelView = this.getView(p.name);
 
                 if (!panelView.disabled && 'fetch' in panelView) {
                     data = _.extend(data, panelView.fetch());
@@ -491,7 +491,7 @@ define('views/record/panels-container', ['view'], function (Dep) {
             }
 
             this.once('after:render', () => {
-                var view = this.getView(name);
+                let view = this.getView(name);
 
                 if (view) {
                     view.$el.closest('.panel').removeClass('hidden');
@@ -627,7 +627,7 @@ define('views/record/panels-container', ['view'], function (Dep) {
                 let allowedInLayout = false;
 
                 if (item.name) {
-                    var itemData = layoutData[item.name] || {};
+                    let itemData = layoutData[item.name] || {};
 
                     if (itemData.disabled) {
                         return;
@@ -669,13 +669,23 @@ define('views/record/panels-container', ['view'], function (Dep) {
                     .filter(item => item.tabNumber !== -1 && item.tabNumber !== this.currentTab)
                     .forEach(item => {
                         item.tabHidden = true;
-                    })
+                    });
+
+                this.panelList
+                    .forEach((item, i) => {
+                        if (
+                            item.tabNumber !== -1 &&
+                            (i === 0 || this.panelList[i - 1].tabNumber !== item.tabNumber)
+                        ) {
+                            item.sticked = false;
+                        }
+                    });
             }
 
             this.panelList = newList;
 
             if (this.recordViewObject && this.recordViewObject.dynamicLogic) {
-                var dynamicLogic = this.recordViewObject.dynamicLogic;
+                let dynamicLogic = this.recordViewObject.dynamicLogic;
 
                 this.panelList.forEach(item => {
                     if (item.dynamicLogicVisible) {
@@ -702,10 +712,10 @@ define('views/record/panels-container', ['view'], function (Dep) {
         },
 
         setupPanelsFinal: function () {
-            var afterDelimiter = false;
-            var rightAfterDelimiter = false;
+            let afterDelimiter = false;
+            let rightAfterDelimiter = false;
 
-            var index = -1;
+            let index = -1;
 
             this.panelList.forEach((p, i) => {
                 if (p.name === '_delimiter_') {
