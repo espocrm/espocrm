@@ -61,7 +61,8 @@
             "Role": false,
             "PortalRole": false,
             "ImportError": "Import",
-            "WorkingTimeRange": "WorkingTimeCalendar"
+            "WorkingTimeRange": "WorkingTimeCalendar",
+            "Stream": true
         },
         "fieldLevel": {
         },
@@ -144,7 +145,8 @@
                 "read": "all",
                 "edit": "no",
                 "delete": "all"
-            }
+            },
+            "Stream": true
         }
     },
     "valuePermissionList": [
