@@ -141,8 +141,8 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                 {
                     x: 0 * this.WIDTH_MULTIPLIER,
                     y: 0,
-                    width: 2 * this.WIDTH_MULTIPLIER,
-                    height: 2,
+                    w: 2 * this.WIDTH_MULTIPLIER,
+                    h: 2,
                 }
             );
         },
@@ -180,9 +180,9 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
         },
 
         removeDashlet: function (id) {
-            var $item = this.$gridstack.find('.grid-stack-item[data-id="'+id+'"]');
+            let $item = this.$gridstack.find('.grid-stack-item[data-id="'+id+'"]');
 
-            this.grid.removeWidget($item, true);
+            this.grid.removeWidget($item.get(0), true);
 
             var layout = this.dashboardLayout[this.currentTab].layout;
 
@@ -307,17 +307,21 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                 return;
             }
 
-            var layout = _.map(this.$gridstack.find('.grid-stack-item'), (el) => {
+            let layout = _.map(this.$gridstack.find('.grid-stack-item'), el => {
                 var $el = $(el);
-                var node = $el.data('_gridstack_node') || {};
+
+                let x = $el.attr('gs-x');
+                let y = $el.attr('gs-y');
+                let h = $el.attr('gs-h');
+                let w = $el.attr('gs-w');
 
                 return {
                     id: $el.data('id'),
                     name: $el.data('name'),
-                    x: node.x / this.WIDTH_MULTIPLIER,
-                    y: node.y,
-                    width: node.width / this.WIDTH_MULTIPLIER,
-                    height: node.height,
+                    x: x / this.WIDTH_MULTIPLIER,
+                    y: y,
+                    width: w / this.WIDTH_MULTIPLIER,
+                    height: h,
                 };
             });
 
@@ -333,13 +337,14 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                 var grid = this.grid = GridStack.init({
                     minWidth: 4,
                     cellHeight: 60,
-                    verticalMargin: 10,
+                    margin: 10,
                     column: 12,
                     resizable: {
                         handles: 'se',
                         helper: false
                     },
                     disableOneColumnMode: true,
+                    animate: false,
                     staticGrid: this.mode !== 'edit',
                     disableResize: this.mode !== 'edit',
                     disableDrag: this.mode !== 'edit',
@@ -355,8 +360,8 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                         {
                             x: o.x * this.WIDTH_MULTIPLIER,
                             y: o.y,
-                            width: o.width * this.WIDTH_MULTIPLIER,
-                            height: o.height,
+                            w: o.width * this.WIDTH_MULTIPLIER,
+                            h: o.height,
                         }
                     );
                 });
@@ -371,7 +376,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
         },
 
         prepareGridstackItem: function (id, name) {
-            var $item = $('<div></div>');
+            var $item = $('<div>').addClass('grid-stack-item');
             var actionsHtml = '';
             var actions2Html = '';
 

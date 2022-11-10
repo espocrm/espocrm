@@ -389,16 +389,22 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
             let grid = this.grid = GridStack.init(
                 {
-                    cellHeight: this.getThemeManager().getParam('dashboardCellHeight'),
-                    verticalMargin: this.getThemeManager().getParam('dashboardCellMargin'),
+                    cellHeight: this.getThemeManager().getParam('dashboardCellHeight') * 1.14,
+                    margin: this.getThemeManager().getParam('dashboardCellMargin') / 2,
                     column: 12,
-                    handle: '.dashlet-container .panel-heading',
+                    handle: '.panel-heading',
                     disableDrag: disableDrag,
                     disableResize: disableResize,
                     disableOneColumnMode: true,
                     draggable: {
                         distance: 10,
                     },
+                    dragInOptions: {
+                        scroll: false,
+                    },
+                    float: false,
+                    animate: false,
+                    scroll: false,
                 },
                 $gridstack.get(0)
             );
@@ -417,13 +423,13 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                     {
                         x: o.x * this.WIDTH_MULTIPLIER,
                         y: o.y,
-                        width: o.width * this.WIDTH_MULTIPLIER,
-                        height: o.height,
+                        w: o.width * this.WIDTH_MULTIPLIER,
+                        h: o.height,
                     }
                 );
             });
 
-            $gridstack.find(' .grid-stack-item').css('position', 'absolute');
+            $gridstack.find('.grid-stack-item').css('position', 'absolute');
 
             this.currentTabLayout.forEach(o => {
                 if (!o.id || !o.name) {
@@ -447,19 +453,18 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
             this.clearPreservedDashlets();
 
-            this.grid.on('change', (e, itemList) => {
+            this.grid.on('change', () => {
                 this.fetchLayout();
                 this.saveLayout();
             });
 
-            this.grid.on('resizestop', (e, ui) => {
+            this.grid.on('resizestop', (e) => {
                 let id = $(e.target).data('id');
                 let view = this.getView('dashlet-' + id);
 
                 if (!view) {
                     return;
                 }
-
                 view.trigger('resize');
             });
         },
@@ -467,15 +472,19 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
         fetchLayout: function () {
             let layout = _.map(this.$gridstack.find('.grid-stack-item'), el => {
                 let $el = $(el);
-                let node = $el.data('_gridstack_node') || {};
+
+                let x = $el.attr('gs-x');
+                let y = $el.attr('gs-y');
+                let h = $el.attr('gs-h');
+                let w = $el.attr('gs-w');
 
                 return {
                     id: $el.data('id'),
                     name: $el.data('name'),
-                    x: node.x / this.WIDTH_MULTIPLIER,
-                    y: node.y,
-                    width: node.width / this.WIDTH_MULTIPLIER,
-                    height: node.height,
+                    x: x / this.WIDTH_MULTIPLIER,
+                    y: y,
+                    width: w / this.WIDTH_MULTIPLIER,
+                    height: h,
                 };
             });
 
@@ -483,7 +492,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
         },
 
         prepareGridstackItem: function (id, name) {
-            let $item = $('<div></div>');
+            let $item = $('<div>').addClass('grid-stack-item');
             let $container = $('<div class="grid-stack-item-content dashlet-container"></div>');
 
             $container.attr('data-id', id);
@@ -597,10 +606,10 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             this.grid.addWidget(
                 $item.get(0),
                 {
-                    x: 0 * this.WIDTH_MULTIPLIER,
+                    x: 0,
                     y: 0,
-                    width: 2 * this.WIDTH_MULTIPLIER,
-                    height: 2,
+                    w: 2 * this.WIDTH_MULTIPLIER,
+                    h: 2,
                 }
             );
 

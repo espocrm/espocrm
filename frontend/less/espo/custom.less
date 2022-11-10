@@ -1728,8 +1728,13 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     .dashlet-container {
         overflow-y: hidden;
     }
-    margin-left: -8px;
-    margin-right: -8px;
+
+    margin: -8px;
+
+    @media screen and (max-width: (@screen-sm-min - 1px)) {
+        margin-top: 0;
+        margin-bottom: 0
+    }
 
     .ui-draggable-dragging {
         cursor: grabbing;
@@ -2714,6 +2719,10 @@ table.table td.cell .html-container {
 
 #main > .calendar-container {
     margin-top: 10px;
+
+    > .button-container {
+        user-select: none;
+    }
 
     .calendar-type-button-group {
         margin-left: 6px;

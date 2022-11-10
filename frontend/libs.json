@@ -68,18 +68,6 @@
         "bundle": true
     },
     {
-        "name": "gridstack",
-        "files": [
-            {
-                "src": "node_modules/gridstack/dist/gridstack.js"
-            },
-            {
-                "src": "node_modules/gridstack/dist/gridstack.jQueryUI.js"
-            }
-        ],
-        "bundle": true
-    },
-    {
         "src": "node_modules/autobahn-espo/autobahn.js",
         "bundle": true
     },
@@ -89,6 +77,15 @@
     },
     {
         "src": "node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.js",
+        "bundle": true
+    },
+    {
+        "name": "gridstack",
+        "files": [
+            {
+                "src": "node_modules/gridstack/dist/gridstack-jq.js"
+            }
+        ],
         "bundle": true
     },
     {
