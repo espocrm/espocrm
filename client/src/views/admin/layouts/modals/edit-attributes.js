@@ -30,9 +30,13 @@ define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], f
 
     return Dep.extend({
 
-        _template: '<div class="panel panel-default no-side-margin"><div class="panel-body">' +
-            '<div class="edit-container">{{{edit}}}</div>' +
-            '</div></div>',
+        templateContent: `
+            <div class="panel panel-default no-side-margin">
+                <div class="panel-body">
+                    <div class="edit-container">{{{edit}}}</div>
+                </div>
+            </div>
+        `,
 
         className: 'dialog dialog-record',
 
@@ -41,15 +45,15 @@ define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], f
                 {
                     name: 'save',
                     text: this.translate('Apply'),
-                    style: 'primary'
+                    style: 'primary',
                 },
                 {
                     name: 'cancel',
-                    text: 'Cancel'
-                }
+                    text: 'Cancel',
+                },
             ];
 
-            var model = new Model();
+            let model = new Model();
 
             model.name = 'LayoutManager';
 
@@ -66,17 +70,17 @@ define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], f
                 this.header = false;
             }
 
-            var attributeList = Espo.Utils.clone(this.options.attributeList || []);
+            let attributeList = Espo.Utils.clone(this.options.attributeList || []);
 
-            var filteredAttributeList = [];
+            let filteredAttributeList = [];
 
-            attributeList.forEach(function (item) {
+            attributeList.forEach(item => {
                 if ((this.options.attributeDefs[item] || {}).readOnly) {
                     return;
                 }
 
                 filteredAttributeList.push(item);
-            }, this);
+            });
 
             attributeList = filteredAttributeList;
 
@@ -90,9 +94,9 @@ define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], f
         },
 
         actionSave: function () {
-            var editView = this.getView('edit');
+            let editView = this.getView('edit');
 
-            var attrs = editView.fetch();
+            let attrs = editView.fetch();
 
             editView.model.set(attrs, {silent: true});
 
@@ -100,8 +104,7 @@ define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], f
                 return;
             }
 
-            var attributes = {};
-            attributes = editView.model.attributes;
+            let attributes = editView.model.attributes;
 
             this.trigger('after:save', attributes);
 

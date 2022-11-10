@@ -30,9 +30,13 @@ define('views/admin/layouts/modals/panel-attributes', ['views/modal', 'model'], 
 
     return Dep.extend({
 
-        _template: '<div class="panel panel-default no-side-margin"><div class="panel-body">' +
-            '<div class="edit-container">{{{edit}}}</div>' +
-            '</div></div>',
+        templateContent: `
+            <div class="panel panel-default no-side-margin">
+                <div class="panel-body">
+                    <div class="edit-container">{{{edit}}}</div>
+                </div>
+            </div>
+        `,
 
         className: 'dialog dialog-record',
 
@@ -49,15 +53,13 @@ define('views/admin/layouts/modals/panel-attributes', ['views/modal', 'model'], 
                 },
             ];
 
-            var model = new Model();
+            let model = new Model();
 
             model.name = 'LayoutManager';
-
             model.set(this.options.attributes || {});
 
-            var attributeList = this.options.attributeList;
-
-            var attributeDefs = this.options.attributeDefs;
+            let attributeList = this.options.attributeList;
+            let attributeDefs = this.options.attributeDefs;
 
             this.createView('edit', 'views/admin/layouts/record/edit-attributes', {
                 el: this.options.el + ' .edit-container',
@@ -69,8 +71,8 @@ define('views/admin/layouts/modals/panel-attributes', ['views/modal', 'model'], 
         },
 
         actionSave: function () {
-            var editView = this.getView('edit');
-            var attrs = editView.fetch();
+            let editView = this.getView('edit');
+            let attrs = editView.fetch();
 
             editView.model.set(attrs, {silent: true});
 
@@ -78,9 +80,7 @@ define('views/admin/layouts/modals/panel-attributes', ['views/modal', 'model'], 
                 return;
             }
 
-            var attributes = {};
-
-            attributes = editView.model.attributes;
+            let attributes = editView.model.attributes;
 
             this.trigger('after:save', attributes);
 
