@@ -126,13 +126,13 @@ define('views/fields/text', ['views/fields/base'], function (Dep) {
                 data.isNotEmpty = true;
             }
 
-            if (this.mode === 'search') {
+            if (this.mode === this.MODE_SEARCH) {
                 if (typeof this.searchParams.value === 'string') {
                     this.searchData.value = this.searchParams.value;
                 }
             }
 
-            if (this.mode === 'edit') {
+            if (this.mode === this.MODE_EDIT) {
                 if (this.autoHeightDisabled) {
                     data.rows = this.params.rows;
                 } else {
@@ -246,14 +246,14 @@ define('views/fields/text', ['views/fields/base'], function (Dep) {
                 }
             }
 
-            if (this.mode === 'edit') {
+            if (this.mode === this.MODE_EDIT) {
                 var text = this.getValueForDisplay();
                 if (text) {
                     this.$element.val(text);
                 }
             }
 
-            if (this.mode === 'search') {
+            if (this.mode === this.MODE_SEARCH) {
                 var type = this.$el.find('select.search-type').val();
 
                 this.handleSearchType(type);
@@ -267,7 +267,7 @@ define('views/fields/text', ['views/fields/base'], function (Dep) {
                 });
             }
 
-            if (this.mode === 'edit' && !this.autoHeightDisabled) {
+            if (this.mode === this.MODE_EDIT && !this.autoHeightDisabled) {
                 this.controlTextareaHeight();
 
                 this.$element.on('input', () => {
