@@ -29,30 +29,25 @@
 
 namespace Espo\Tools\Kanban;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    Utils\Metadata,
-    Utils\Util,
-};
+use Espo\Entities\KanbanOrder;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Util;
 
 use LogicException;
 
 class OrdererProcessor
 {
     private const MAX_GROUP_LENGTH = 100;
-
     private const DEFAULT_MAX_NUMBER = 50;
 
     private ?string $entityType = null;
-
     private ?string $group = null;
-
     private ?string $userId = null;
 
     private int $maxNumber = self::DEFAULT_MAX_NUMBER;
 
     private EntityManager $entityManager;
-
     private Metadata $metadata;
 
     public function __construct(EntityManager $entityManager, Metadata $metadata)
@@ -115,7 +110,7 @@ class OrdererProcessor
         $deleteQuery1 = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from('KanbanOrder')
+            ->from(KanbanOrder::ENTITY_TYPE)
             ->where([
                 'entityType' => $this->entityType,
                 'userId' => $this->userId,
@@ -128,7 +123,7 @@ class OrdererProcessor
         $minOrder = null;
 
         $first = $this->entityManager
-            ->getRDBRepository('KanbanOrder')
+            ->getRDBRepository(KanbanOrder::ENTITY_TYPE)
             ->select(['id', 'order'])
             ->where([
                 'entityType' => $this->entityType,
@@ -148,7 +143,7 @@ class OrdererProcessor
             $updateQuery = $this->entityManager
                 ->getQueryBuilder()
                 ->update()
-                ->in('KanbanOrder')
+                ->in(KanbanOrder::ENTITY_TYPE)
                 ->where([
                     'entityType' => $this->entityType,
                     'group' => $this->group,
@@ -164,10 +159,10 @@ class OrdererProcessor
 
         $collection = $this->entityManager
             ->getCollectionFactory()
-            ->create('KanbanOrder');
+            ->create(KanbanOrder::ENTITY_TYPE);
 
         foreach ($ids as $i => $id) {
-            $item = $this->entityManager->getNewEntity('KanbanOrder');
+            $item = $this->entityManager->getNewEntity(KanbanOrder::ENTITY_TYPE);
 
             $item->set([
                 'id' => Util::generateId(),
@@ -186,7 +181,7 @@ class OrdererProcessor
         $deleteQuery2 = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from('KanbanOrder')
+            ->from(KanbanOrder::ENTITY_TYPE)
             ->where([
                 'entityType' => $this->entityType,
                 'group' => $this->group,
