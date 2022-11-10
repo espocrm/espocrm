@@ -98,6 +98,20 @@ define('views/admin/layouts/index', ['view'], function (Dep) {
                     $collapse.collapse('show');
                 }
             },
+            'keydown.shortcuts': function (e)  {
+                let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                if (!this.hasView('content')) {
+                    return;
+                }
+
+                if (key === 'Control+Enter' || key === 'Control+KeyS') {
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    this.getView('content').actionSave();
+                }
+            },
         },
 
         getLayoutScopeDataList: function () {

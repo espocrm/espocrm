@@ -36,9 +36,7 @@ define('views/admin/layouts/base', ['view'], function (Dep) {
 
         events: {
             'click button[data-action="save"]': function () {
-                this.disableButtons();
-                this.notify('Saving...');
-                this.save(this.enableButtons.bind(this));
+                this.actionSave();
             },
             'click button[data-action="cancel"]': function () {
                 this.cancel();
@@ -71,6 +69,12 @@ define('views/admin/layouts/base', ['view'], function (Dep) {
         dataAttributesDefs: null,
 
         dataAttributesDynamicLogicDefs: null,
+
+        actionSave: function () {
+            this.disableButtons();
+            this.notify('Saving...');
+            this.save(this.enableButtons.bind(this));
+        },
 
         disableButtons: function () {
             this.$el.find('.button-container button').attr('disabled', true);
@@ -144,10 +148,6 @@ define('views/admin/layouts/base', ['view'], function (Dep) {
                 this.dataAttributeList;
 
             this.dataAttributeList = Espo.Utils.clone(this.dataAttributeList);
-
-            this.once('remove', () => {
-                this.setIsNotChanged();
-            });
         },
 
         unescape: function (string) {

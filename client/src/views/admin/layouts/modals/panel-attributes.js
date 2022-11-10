@@ -40,6 +40,15 @@ define('views/admin/layouts/modals/panel-attributes', ['views/modal', 'model'], 
 
         className: 'dialog dialog-record',
 
+        shortcutKeys: {
+            'Control+Enter': function (e) {
+                this.actionSave();
+
+                e.preventDefault();
+                e.stopPropagation();
+            },
+        },
+
         setup: function () {
             this.buttonList = [
                 {
