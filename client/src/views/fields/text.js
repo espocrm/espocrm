@@ -239,6 +239,7 @@ define('views/fields/text', ['views/fields/base'], function (Dep) {
                     }
 
                     this.listenTo(this.recordHelper, 'panel-show', () => this.controlSeeMore());
+                    this.on('tab-show-propagated', () => this.controlSeeMore());
 
                     $(window).on('resize.see-more-' + this.cid, () => {
                         this.controlSeeMore();
