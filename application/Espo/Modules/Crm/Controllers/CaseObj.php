@@ -35,7 +35,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
 use Espo\Modules\Crm\Entities\CaseObj as CaseEntity;
-use Espo\Modules\Crm\Tools\CaseObj\Service;
+use Espo\Modules\Crm\Tools\Case\Service;
 use stdClass;
 
 class CaseObj extends Record

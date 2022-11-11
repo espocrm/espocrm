@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Tools\CaseObj;
+namespace Espo\Modules\Crm\Tools\Case;
 
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\ForbiddenSilent;
