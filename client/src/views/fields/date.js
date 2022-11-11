@@ -89,14 +89,13 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
             }
 
             if (this.isSearchMode()) {
-                var value = this.getSearchParamsData().value || this.searchParams.dateValue;
-                var valueTo = this.getSearchParamsData().valueTo || this.searchParams.dateValueTo;
+                let value = this.getSearchParamsData().value || this.searchParams.dateValue;
+                let valueTo = this.getSearchParamsData().valueTo || this.searchParams.dateValueTo;
 
                 data.dateValue = this.getDateTime().toDisplayDate(value);
                 data.dateValueTo = this.getDateTime().toDisplayDate(valueTo);
 
-                if (
-                    ~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays']
+                if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays']
                         .indexOf(this.getSearchType())
                 ) {
                     data.number = this.searchParams.value;
@@ -108,8 +107,9 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
 
         setupSearch: function () {
             this.events = _.extend({
-                'change select.search-type': function (e) {
-                    var type = $(e.currentTarget).val();
+                'change select.search-type': (e) => {
+                    let type = $(e.currentTarget).val();
+
                     this.handleSearchType(type);
                 },
             }, this.events || {});
@@ -118,10 +118,10 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
         stringifyDateValue: function (value) {
             if (!value) {
                 if (
-                    this.mode === 'edit' ||
-                    this.mode === 'search' ||
-                    this.mode === 'list' ||
-                    this.mode === 'listLink'
+                    this.mode === this.MODE_EDIT ||
+                    this.mode === this.MODE_SEARCH ||
+                    this.mode === this.MODE_LIST ||
+                    this.mode === this.MODE_LIST_LINK
                 ) {
                     return '';
                 }
@@ -129,7 +129,11 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
                 return null;
             }
 
-            if (this.mode === 'list' || this.mode === 'detail' || this.mode === 'listLink') {
+            if (
+                this.mode === this.MODE_LIST ||
+                this.mode === this.MODE_DETAIL ||
+                this.mode === this.MODE_LIST_LINK
+            ) {
                 return this.convertDateValueForDetail(value);
             }
 
@@ -141,13 +145,13 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
                 return this.getDateTime().toDisplayDate(value);
             }
 
-            var timezone = this.getDateTime().getTimeZone();
-            var internalDateTimeFormat = this.getDateTime().internalDateTimeFormat;
-            var readableFormat = this.getDateTime().getReadableDateFormat();
-            var valueWithTime = value + ' 00:00:00';
+            let timezone = this.getDateTime().getTimeZone();
+            let internalDateTimeFormat = this.getDateTime().internalDateTimeFormat;
+            let readableFormat = this.getDateTime().getReadableDateFormat();
+            let valueWithTime = value + ' 00:00:00';
 
-            var today = moment().tz(timezone).startOf('day');
-            var dateTime = moment.tz(valueWithTime, internalDateTimeFormat, timezone);
+            let today = moment().tz(timezone).startOf('day');
+            let dateTime = moment.tz(valueWithTime, internalDateTimeFormat, timezone);
 
             var temp = today.clone();
 
@@ -170,7 +174,7 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
             }
 
             // Need to use UTC, otherwise there's a DST issue with old dates.
-            var dateTime = moment.utc(valueWithTime, internalDateTimeFormat);
+            dateTime = moment.utc(valueWithTime, internalDateTimeFormat);
 
             if (dateTime.format('YYYY') === today.format('YYYY')) {
                 return dateTime.format(readableFormat);
@@ -180,7 +184,7 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
         },
 
         getDateStringValue: function () {
-            if (this.mode === 'detail' && !this.model.has(this.name)) {
+            if (this.mode === this.MODE_DETAIL && !this.model.has(this.name)) {
                 return -1;
             }
 
@@ -190,21 +194,22 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
         },
 
         afterRender: function () {
-            if (this.mode === 'edit' || this.mode === 'search') {
+            if (this.mode === this.MODE_EDIT || this.mode === this.MODE_SEARCH) {
                 this.$element = this.$el.find('[data-name="' + this.name + '"]');
 
-                var wait = false;
-                this.$element.on('change', function () {
+                let wait = false;
+
+                this.$element.on('change', () => {
                     if (!wait) {
                         this.trigger('change');
                         wait = true;
-                        setTimeout(function () {
+                        setTimeout(() => {
                             wait = false;
                         }, 100);
                     }
-                }.bind(this));
+                });
 
-                var options = {
+                let options = {
                     format: this.getDateTime().dateFormat.toLowerCase(),
                     weekStart: this.getDateTime().weekStart,
                     autoclose: true,
@@ -213,7 +218,7 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
                     todayBtn: this.getConfig().get('datepickerTodayButton') || false,
                 };
 
-                var language = this.getConfig().get('language');
+                let language = this.getConfig().get('language');
 
                 if (!(language in $.fn.datepicker.dates)) {
                     $.fn.datepicker.dates[language] = {
@@ -229,32 +234,33 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
 
                 options.language = language;
 
-                var $datePicker = this.$element.datepicker(options);
+                this.$element.datepicker(options);
 
-                if (this.mode === 'search') {
-                    var $elAdd = this.$el.find('input.additional');
+                if (this.mode === this.MODE_SEARCH) {
+                    let $elAdd = this.$el.find('input.additional');
 
                     $elAdd.datepicker(options);
-                    $elAdd.parent().find('button.date-picker-btn').on('click', function (e) {
+
+                    $elAdd.parent().find('button.date-picker-btn').on('click', () => {
                         $elAdd.datepicker('show');
                     });
 
-                    this.$el.find('select.search-type').on('change', function () {
+                    this.$el.find('select.search-type').on('change', () => {
                         this.trigger('change');
-                    }.bind(this));
+                    });
 
-                    $elAdd.on('change', function () {
+                    $elAdd.on('change', () => {
                         this.trigger('change');
-                    }.bind(this));
+                    });
                 }
 
-                this.$element.parent().find('button.date-picker-btn').on('click', function (e) {
+                this.$element.parent().find('button.date-picker-btn').on('click', () => {
                     this.$element.datepicker('show');
-                }.bind(this));
+                });
 
+                if (this.mode === this.MODE_SEARCH) {
+                    let $searchType = this.$el.find('select.search-type');
 
-                if (this.mode === 'search') {
-                    var $searchType = this.$el.find('select.search-type');
                     this.handleSearchType($searchType.val());
                 }
             }
@@ -286,7 +292,7 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
         },
 
         fetch: function () {
-            var data = {};
+            let data = {};
 
             data[this.name] = this.parse(this.$element.val());
 
@@ -294,17 +300,17 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
         },
 
         fetchSearch: function () {
-            var value = this.parseDate(this.$element.val());
+            let value = this.parseDate(this.$element.val());
 
-            var type = this.fetchSearchType();
-            var data;
+            let type = this.fetchSearchType();
+            let data;
 
             if (type === 'between') {
                 if (!value) {
                     return false;
                 }
 
-                var valueTo = this.parseDate(this.$el.find('input.additional').val());
+                let valueTo = this.parseDate(this.$el.find('input.additional').val());
 
                 if (!valueTo) {
                     return false;
@@ -316,39 +322,40 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
                     data: {
                         value: value,
                         valueTo: valueTo
-                    }
+                    },
                 };
             } else if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].indexOf(type)) {
-                var number = this.$el.find('input.number').val();
+                let number = this.$el.find('input.number').val();
 
                 data = {
                     type: type,
-                    value: number
+                    value: number,
                 };
             }
             else if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
                 if (!value) {
                     return false;
                 }
+
                 data = {
                     type: type,
                     value: value,
                     data: {
-                        value: value
-                    }
+                        value: value,
+                    },
                 };
             }
             else if (type === 'isEmpty') {
                 data = {
                     type: 'isNull',
                     data: {
-                        type: type
-                    }
+                        type: type,
+                    },
                 };
             }
             else {
                 data = {
-                    type: type
+                    type: type,
                 };
             }
 
@@ -362,7 +369,7 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.name) === null) {
-                    var msg = this.translate('fieldIsRequired', 'messages')
+                    let msg = this.translate('fieldIsRequired', 'messages')
                         .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg);
@@ -374,7 +381,7 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
 
         validateDate: function () {
             if (this.model.get(this.name) === -1) {
-                var msg = this.translate('fieldShouldBeDate', 'messages')
+                let msg = this.translate('fieldShouldBeDate', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg);
@@ -384,43 +391,47 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
         },
 
         validateAfter: function () {
-            var field = this.model.getFieldParam(this.name, 'after');
+            let field = this.model.getFieldParam(this.name, 'after');
 
-            if (field) {
-                var value = this.model.get(this.name);
-                var otherValue = this.model.get(field);
+            if (!field) {
+                return false;
+            }
 
-                if (value && otherValue) {
-                    if (moment(value).unix() <= moment(otherValue).unix()) {
-                        var msg = this.translate('fieldShouldAfter', 'messages')
-                            .replace('{field}', this.getLabelText())
-                            .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+            let value = this.model.get(this.name);
+            let otherValue = this.model.get(field);
 
-                        this.showValidationMessage(msg);
+            if (value && otherValue) {
+                if (moment(value).unix() <= moment(otherValue).unix()) {
+                    var msg = this.translate('fieldShouldAfter', 'messages')
+                        .replace('{field}', this.getLabelText())
+                        .replace('{otherField}', this.translate(field, 'fields', this.model.name));
 
-                        return true;
-                    }
+                    this.showValidationMessage(msg);
+
+                    return true;
                 }
             }
         },
 
         validateBefore: function () {
-            var field = this.model.getFieldParam(this.name, 'before');
+            let field = this.model.getFieldParam(this.name, 'before');
 
-            if (field) {
-                var value = this.model.get(this.name);
-                var otherValue = this.model.get(field);
+            if (!field) {
+                return false;
+            }
 
-                if (value && otherValue) {
-                    if (moment(value).unix() >= moment(otherValue).unix()) {
-                        var msg = this.translate('fieldShouldBefore', 'messages')
-                            .replace('{field}', this.getLabelText())
-                            .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+            let value = this.model.get(this.name);
+            let otherValue = this.model.get(field);
 
-                        this.showValidationMessage(msg);
+            if (value && otherValue) {
+                if (moment(value).unix() >= moment(otherValue).unix()) {
+                    var msg = this.translate('fieldShouldBefore', 'messages')
+                        .replace('{field}', this.getLabelText())
+                        .replace('{otherField}', this.translate(field, 'fields', this.model.name));
 
-                        return true;
-                    }
+                    this.showValidationMessage(msg);
+
+                    return true;
                 }
             }
         },
