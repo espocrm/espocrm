@@ -29,6 +29,7 @@
 
 namespace Espo\ORM\Query;
 
+use Espo\ORM\Query\Part\Expression;
 use RuntimeException;
 
 class UpdateBuilder implements Builder
@@ -78,11 +79,25 @@ class UpdateBuilder implements Builder
     /**
      * Values to set. Column => Value map.
      *
-     * @param array<string,mixed> $set
+     * @param array<string, scalar|Expression|null> $set
      */
     public function set(array $set): self
     {
-        $this->params['set'] = $set;
+        $modified = [];
+
+        foreach ($set as $key => $value) {
+            if (!$value instanceof Expression) {
+                $modified[$key] = $value;
+
+                continue;
+            }
+
+            $newKey = rtrim($key, ':')  . ':';
+
+            $modified[$newKey] = $value->getValue();
+        }
+
+        $this->params['set'] = $modified;
 
         return $this;
     }

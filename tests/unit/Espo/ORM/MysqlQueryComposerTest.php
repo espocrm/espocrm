@@ -339,6 +339,27 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testUpdateQueryWithSetExpression()
+    {
+        $query = $this->queryBuilder
+            ->update()
+            ->in('Comment')
+            ->join('post')
+            ->set([
+                'name' => Expression::column('post.name'),
+            ])
+            ->build();
+
+        $sql = $this->query->composeUpdate($query);
+
+        $expectedSql =
+            "UPDATE `comment` " .
+            "JOIN `post` AS `post` ON comment.post_id = post.id ".
+            "SET comment.name = post.name";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testInsertQuery1()
     {
         $sql = $this->query->compose(Insert::fromRaw([

@@ -29,15 +29,14 @@
 
 namespace tests\unit\Espo\ORM;
 
-use Espo\ORM\{
-    QueryBuilder,
-    Query\Select,
-    Query\Insert,
-    Query\Update,
-    Query\Delete,
-    Query\Union,
-    Query\Part\Selection,
-};
+use Espo\ORM\Query\Delete;
+use Espo\ORM\Query\Insert;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Selection;
+use Espo\ORM\Query\Select;
+use Espo\ORM\Query\Union;
+use Espo\ORM\Query\Update;
+use Espo\ORM\QueryBuilder;
 
 use RuntimeException;
 
@@ -216,6 +215,23 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
             ->where(['col1' => '1'])
             ->limit(1)
             ->build();
+    }
+
+    public function testUpdate2()
+    {
+        $update = $this->queryBuilder
+            ->update()
+            ->in('Test')
+            ->set(['col' => Expression::add(1, 2)])
+            ->build();
+
+        $this->assertInstanceOf(Update::class, $update);
+
+
+        $this->assertEquals(
+            ['col:' => 'ADD:(1, 2)'],
+            $update->getRaw()['set']
+        );
     }
 
     public function testUnion1()
