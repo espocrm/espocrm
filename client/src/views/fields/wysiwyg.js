@@ -505,6 +505,9 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             let toolbar = this.toolbar;
 
+            let lastChangeKeydown = new Date();
+            const changeKeydownInterval = 5 * 1000;
+
             let options = {
                 espoView: this,
                 lang: this.getConfig().get('language'),
@@ -525,6 +528,12 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                     },
                     onBlur: () => {
                         this.trigger('change');
+                    },
+                    onKeydown: () => {
+                        if (Date.now() - lastChangeKeydown > changeKeydownInterval) {
+                            this.trigger('change');
+                            lastChangeKeydown = Date.now();
+                        }
                     },
                 },
                 onCreateLink: function (link) {
