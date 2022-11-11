@@ -40,7 +40,6 @@ use Espo\Core\Authentication\Result;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Json;
 
-use Espo\Core\Utils\Metadata;
 use Exception;
 
 /**
