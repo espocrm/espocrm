@@ -133,6 +133,7 @@ define('views/fields/user',[ 'views/fields/link'], function (Dep) {
                     onSelect: (s) => {
                         this.addLinkTeams(s.id, s.name);
                         $elemeneTeams.val('');
+                        $elemeneTeams.focus();
                     },
                 });
 

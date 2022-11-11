@@ -324,6 +324,7 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
                     },
                     onSelect: (s) => {
                         this.$element.val(s.emailAddress);
+                        this.$element.focus();
                     },
                 });
             }

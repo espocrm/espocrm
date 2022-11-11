@@ -574,6 +574,7 @@ function (Dep, RegExpPattern) {
                             onSelect: () => {
                                 this.trigger('change');
                                 $element.trigger('change');
+                                $element.focus();
                             },
                         });
 

@@ -242,6 +242,8 @@ define('views/fields/varchar', ['views/fields/base', 'helpers/reg-exp-pattern'],
                     },
                     onSelect: () => {
                         this.trigger('change');
+
+                        this.$element.focus();
                     },
                 };
 

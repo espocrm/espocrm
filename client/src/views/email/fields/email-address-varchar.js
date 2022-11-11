@@ -244,6 +244,7 @@ function (Dep, From, EmailAddress) {
                         this.addAddress(s.emailAddress, s.entityName, s.entityType, s.entityId);
 
                         this.$input.val('');
+                        this.$input.focus();
                     },
                 });
 

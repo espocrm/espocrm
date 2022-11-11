@@ -554,6 +554,7 @@ define('views/fields/link-parent', ['views/fields/base', 'helpers/record-modal']
                                 model.set(s.attributes);
 
                                 this.select(model);
+                                this.$elementName.focus();
                             });
                         },
                     });

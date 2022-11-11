@@ -497,7 +497,7 @@ define('views/fields/link', ['views/fields/base', 'helpers/record-modal'], funct
                     }
                 });
 
-                var $elementName = this.$elementName;
+                let $elementName = this.$elementName;
 
                 if (!this.autocompleteDisabled) {
                     let isEmptyQueryResult = false;
@@ -552,6 +552,8 @@ define('views/fields/link', ['views/fields/base', 'helpers/record-modal'], funct
                                 model.set(s.attributes);
 
                                 this.select(model);
+
+                                this.$elementName.focus();
                             });
                         },
                     });
@@ -598,6 +600,7 @@ define('views/fields/link', ['views/fields/base', 'helpers/record-modal'], funct
                                 this.addLinkOneOf(s.id, s.name);
 
                                 $elementOneOf.val('');
+                                setTimeout(() => $elementOneOf.focus(), 50);
                             },
                         });
 

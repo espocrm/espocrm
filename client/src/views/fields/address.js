@@ -417,7 +417,11 @@ define('views/fields/address', ['views/fields/base', 'views/fields/varchar'], fu
 
                             return false;
                         },
-                        onSelect: () => this.trigger('change'),
+                        onSelect: () => {
+                            this.trigger('change');
+
+                            this.$country.focus();
+                        },
                     });
 
                     this.$country.on('focus', () => {
@@ -462,6 +466,8 @@ define('views/fields/address', ['views/fields/base', 'views/fields/varchar'], fu
                         },
                         onSelect: () => {
                             this.trigger('change');
+
+                            this.$city.focus();
                         },
                     });
 
@@ -507,6 +513,8 @@ define('views/fields/address', ['views/fields/base', 'views/fields/varchar'], fu
                         },
                         onSelect: () => {
                             this.trigger('change');
+
+                            this.$state.focus();
                         },
                     });
 

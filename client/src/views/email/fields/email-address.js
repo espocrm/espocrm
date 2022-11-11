@@ -94,6 +94,7 @@ define('views/email/fields/email-address', ['views/fields/base'], function (Dep)
                 },
                 onSelect: (s) => {
                     this.$input.val(s.emailAddress);
+                    this.$input.focus();
                 },
             });
 

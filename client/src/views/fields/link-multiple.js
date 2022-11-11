@@ -494,6 +494,7 @@ define('views/fields/link-multiple', ['views/fields/base', 'helpers/record-modal
                             this.addLink(s.id, s.name);
 
                             this.$element.val('');
+                            this.$element.focus();
                         },
                     });
 
