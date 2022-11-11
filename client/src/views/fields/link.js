@@ -355,7 +355,7 @@ define('views/fields/link', ['views/fields/base', 'helpers/record-modal'], funct
             this.$elementName.val(model.get('name') || model.id);
             this.$elementId.val(model.get('id'));
 
-            if (this.mode === 'search') {
+            if (this.mode === this.MODE_SEARCH) {
                 this.searchData.idValue = model.get('id');
                 this.searchData.nameValue = model.get('name') || model.id;
             }
@@ -487,7 +487,7 @@ define('views/fields/link', ['views/fields/base', 'helpers/record-modal'], funct
 
                 this.$elementName.on('blur', e => {
                     setTimeout(() => {
-                        if (this.mode === 'edit' && this.model.has(this.nameName)) {
+                        if (this.mode === this.MODE_EDIT && this.model.has(this.nameName)) {
                             e.currentTarget.value = this.model.get(this.nameName);
                         }
                     }, 100);
