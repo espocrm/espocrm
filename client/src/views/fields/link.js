@@ -729,19 +729,23 @@ define('views/fields/link', ['views/fields/base', 'helpers/record-modal'], funct
          * @return {JQuery}
          */
         addLinkOneOfHtml: function (id, name) {
-            id = Handlebars.Utils.escapeExpression(id);
+            let $container = this.$el.find('.link-one-of-container');
 
-            name = this.getHelper().escapeString(name);
+            let $el = $('<div>')
+                .addClass('link-' + id)
+                .addClass('list-group-item');
 
-            var $container = this.$el.find('.link-one-of-container');
-
-            var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
-
-            $el.html(name + '&nbsp');
-
-            $el.prepend(
-                '<a role="button" class="pull-right" data-id="' + id + '" ' +
-                'data-action="clearLinkOneOf"><span class="fas fa-times"></a>'
+            $el.append(
+                $('<a>')
+                    .attr('role', 'button')
+                    .addClass('pull-right')
+                    .attr('data-id', id)
+                    .attr('data-action', 'clearLinkOneOf')
+                    .append(
+                        $('<span>').addClass('fas fa-times')
+                    ),
+                $('<span>').text(name),
+                ' '
             );
 
             $container.append($el);
