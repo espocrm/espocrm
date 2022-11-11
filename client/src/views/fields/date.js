@@ -199,13 +199,17 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
 
                 let wait = false;
 
-                this.$element.on('change', () => {
+                this.$element.on('change', (e) => {
                     if (!wait) {
                         this.trigger('change');
                         wait = true;
-                        setTimeout(() => {
-                            wait = false;
-                        }, 100);
+                        setTimeout(() => wait = false, 100);
+                    }
+
+                    if (e.isTrigger) {
+                        if (document.activeElement !== this.$element.get(0)) {
+                            this.$element.focus();
+                        }
                     }
                 });
 
@@ -249,8 +253,14 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
                         this.trigger('change');
                     });
 
-                    $elAdd.on('change', () => {
+                    $elAdd.on('change', e => {
                         this.trigger('change');
+
+                        if (e.isTrigger) {
+                            if (document.activeElement !== $elAdd.get(0)) {
+                                $elAdd.focus();
+                            }
+                        }
                     });
                 }
 
