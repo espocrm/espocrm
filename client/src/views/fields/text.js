@@ -72,6 +72,8 @@ define('views/fields/text', ['views/fields/base'], function (Dep) {
 
         noResize: false,
 
+        changeInterval: 5,
+
         events: {
             'click a[data-action="seeMoreText"]': function (e) {
                 this.seeMoreText = true;
@@ -273,6 +275,16 @@ define('views/fields/text', ['views/fields/base'], function (Dep) {
 
                 this.$element.on('input', () => {
                     this.controlTextareaHeight();
+                });
+
+                let lastChangeKeydown = new Date();
+                const changeKeydownInterval = this.changeInterval * 1000;
+
+                this.$element.on('keydown', () => {
+                    if (Date.now() - lastChangeKeydown > changeKeydownInterval) {
+                        this.trigger('change');
+                        lastChangeKeydown = Date.now();
+                    }
                 });
             }
         },
