@@ -124,11 +124,9 @@ class Auth
             return $this->processWithAuthData($authenticationData, $request, $response);
         }
 
-        $showDialog = $this->isEntryPoint;
-
-        if (!$this->isXMLHttpRequest($request)) {
-            $showDialog = true;
-        }
+        $showDialog =
+            ($this->isEntryPoint || !$this->isXMLHttpRequest($request)) &&
+            !$request->getHeader('Referer');
 
         $this->handleUnauthorized($response, $showDialog);
 
@@ -169,8 +167,6 @@ class Auth
         Response $response
     ): AuthResult {
 
-        $showDialog = $this->isEntryPoint;
-
         try {
             $result = $this->authentication->login($data, $request, $response);
         }
@@ -185,6 +181,10 @@ class Auth
         }
 
         if ($result->isFail()) {
+            $showDialog =
+                $this->isEntryPoint &&
+                !$request->getHeader('Referer');
+
             $this->handleUnauthorized($response, $showDialog);
         }
 
@@ -199,7 +199,7 @@ class Auth
      * @return array{string,string}
      * @throws BadRequest
      */
-    protected function decodeAuthorizationString(string $string): array
+    private function decodeAuthorizationString(string $string): array
     {
         /** @var string $stringDecoded */
         $stringDecoded = base64_decode($string);
@@ -254,7 +254,7 @@ class Auth
         throw $e;
     }
 
-    protected function handleUnauthorized(Response $response, bool $showDialog): void
+    private function handleUnauthorized(Response $response, bool $showDialog): void
     {
         if ($showDialog) {
             $response->setHeader('WWW-Authenticate', 'Basic realm=""');
@@ -263,7 +263,7 @@ class Auth
         $response->setStatus(401);
     }
 
-    protected function isXMLHttpRequest(Request $request): bool
+    private function isXMLHttpRequest(Request $request): bool
     {
         if (strtolower($request->getHeader('X-Requested-With') ?? '') == 'xmlhttprequest') {
             return true;
@@ -272,7 +272,7 @@ class Auth
         return false;
     }
 
-    protected function obtainAuthenticationMethodFromRequest(Request $request): ?string
+    private function obtainAuthenticationMethodFromRequest(Request $request): ?string
     {
         if ($request->hasHeader(self::HEADER_ESPO_AUTHORIZATION)) {
             return null;
@@ -302,7 +302,7 @@ class Auth
      * @return array{?string,?string}
      * @throws BadRequest
      */
-    protected function obtainUsernamePasswordFromRequest(Request $request): array
+    private function obtainUsernamePasswordFromRequest(Request $request): array
     {
         if ($request->hasHeader(self::HEADER_ESPO_AUTHORIZATION)) {
             list($username, $password) = $this->decodeAuthorizationString(
