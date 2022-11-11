@@ -353,7 +353,7 @@ define('router', [], function () {
             }
 
             if (!callback) {
-                callback = this[name];
+                callback = this['_' + name];
             }
 
             let router = this;
@@ -393,9 +393,9 @@ define('router', [], function () {
          * @private
          */
         execute: function (callback, args, name, routeOriginal, options) {
-            this.checkConfirmLeaveOut(function () {
+            this.checkConfirmLeaveOut(() => {
                 if (name === 'defaultRoute') {
-                    this.defaultRoute(this.routeParams[routeOriginal], options);
+                    this._defaultRoute(this.routeParams[routeOriginal], options);
 
                     return;
                 }
@@ -466,7 +466,7 @@ define('router', [], function () {
         /**
          * @private
          */
-        defaultRoute: function (params, options) {
+        _defaultRoute: function (params, options) {
             let controller = params.controller || options.controller;
             let action = params.action || options.action;
 
@@ -476,7 +476,7 @@ define('router', [], function () {
         /**
          * @private
          */
-        record: function (controller, action, id, options) {
+        _record: function (controller, action, id, options) {
             options = this._parseOptionsParams(options);
 
             options.id = id;
@@ -487,21 +487,21 @@ define('router', [], function () {
         /**
          * @private
          */
-        view: function (controller, id, options) {
-            this.record(controller, 'view', id, options);
+        _view: function (controller, id, options) {
+            this._record(controller, 'view', id, options);
         },
 
         /**
          * @private
          */
-        edit: function (controller, id, options) {
-            this.record(controller, 'edit', id, options);
+        _edit: function (controller, id, options) {
+            this._record(controller, 'edit', id, options);
         },
 
         /**
          * @private
          */
-        related: function (controller, id, link, options) {
+        _related: function (controller, id, link, options) {
             options = this._parseOptionsParams(options);
 
             options.id = id;
@@ -513,29 +513,36 @@ define('router', [], function () {
         /**
          * @private
          */
-        create: function (controller, options) {
-            this.record(controller, 'create', null, options);
+        _create: function (controller, options) {
+            this._record(controller, 'create', null, options);
         },
 
         /**
          * @private
          */
-        action: function (controller, action, options) {
+        _action: function (controller, action, options) {
             this.dispatch(controller, action, this._parseOptionsParams(options));
         },
 
         /**
          * @private
          */
-        defaultAction: function (controller) {
+        _defaultAction: function (controller) {
             this.dispatch(controller, null);
         },
 
         /**
          * @private
          */
-        home: function () {
+        _home: function () {
             this.dispatch('Home', null);
+        },
+
+        /**
+         * @private
+         */
+        _clearCache: function () {
+            this.dispatch(null, 'clearCache');
         },
 
         /**
@@ -545,13 +552,6 @@ define('router', [], function () {
             this.dispatch(null, 'logout');
 
             this.navigate('', {trigger: false});
-        },
-
-        /**
-         * @private
-         */
-        clearCache: function () {
-            this.dispatch(null, 'clearCache');
         },
 
         /**
