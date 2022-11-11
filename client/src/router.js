@@ -48,6 +48,40 @@ define('router', [], function () {
      */
 
     /**
+     * Subscribe.
+     *
+     * @function on
+     * @memberof module:router.Class#
+     * @param {string} event An event.
+     * @param {function(): void} callback A callback.
+     */
+
+    /**
+     * Subscribe once.
+     *
+     * @function once
+     * @memberof module:router.Class#
+     * @param {string} event An event.
+     * @param {function(): void} callback A callback.
+     */
+
+    /**
+     * Unsubscribe.
+     *
+     * @function off
+     * @memberof module:router.Class#
+     * @param {string} event An event.
+     */
+
+    /**
+     * Trigger an event.
+     *
+     * @function trigger
+     * @memberof module:router.Class#
+     * @param {string} event An event.
+     */
+
+    /**
      * A router.
      *
      * @class

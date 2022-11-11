@@ -56,7 +56,7 @@ define('broadcast-channel', [], function () {
         /**
          * @callback module:broadcast-channel.Class~callback
          *
-         * @param {Event} event An event. A message can be obtained from the `data` property.
+         * @param {MessageEvent} event An event. A message can be obtained from the `data` property.
          */
 
         /**

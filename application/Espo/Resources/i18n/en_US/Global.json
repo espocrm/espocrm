@@ -364,6 +364,8 @@
         "extensionLicenseExpired": "The '{name}' extension license subscription has expired.",
         "extensionLicenseSoftExpired": "The '{name}' extension license subscription has expired.",
         "confirmAppRefresh": "The application has been updated. It is recommended to refresh the page to ensure the proper functioning.",
+        "loggedOutLeaveOut": "Logged out. The session is inactive. You may lose unsaved form data after page refresh. You may need to make a copy.",
+        "moreThanOnceInstances": "More than one Espo instances under the same domain are opened in the browser. Use the incognito mode for this instance or log out from the other instance.",
         "error404": "The url you requested can't be handled.",
         "error403": "You don't have an access to this area."
     },

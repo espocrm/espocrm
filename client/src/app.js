@@ -248,7 +248,7 @@ function (
          * An auth credentials string.
          *
          * @private
-         * @type {string|null}
+         * @type {?string}
          */
         auth: null,
 
@@ -436,6 +436,8 @@ function (
             this.metadata = new Metadata(this.cache);
             this.fieldManager = new FieldManager();
 
+            this.initBroadcastChannel();
+
             Promise
             .all([
                 this.settings.load(),
@@ -517,8 +519,6 @@ function (
                     this.webSocketManager.connect(this.auth, this.user.id);
                 }
 
-                this.initBroadcastChannel();
-
                 let promiseList = [];
                 let aclImplementationClassMap = {};
 
@@ -546,6 +546,7 @@ function (
 
                 if (!this.themeManager.isApplied() && this.themeManager.isUserTheme()) {
                     promiseList.push(
+                        // @todo Refactor.
                         new Promise(resolve => {
                             (function check (i) {
                                 i = i || 0;
@@ -575,6 +576,8 @@ function (
 
                         this.initRouter();
                     });
+
+                this.broadcastChannel.postMessage('logged-in');
             });
         },
 
@@ -801,6 +804,7 @@ function (
             helper.pageTitle = new PageTitle(this.settings);
             helper.basePath = this.basePath;
             helper.appParams = this.appParams;
+            helper.broadcastChannel = this.broadcastChannel;
 
             this.viewLoader = (viewName, callback) => {
                 require(Utils.composeViewClassName(viewName), callback);
@@ -925,13 +929,12 @@ function (
         /**
          * @private
          */
-        logout: function () {
-            if (this.auth) {
+        logout: function (afterFail) {
+            if (this.auth && !afterFail) {
                 let arr = Base64.decode(this.auth).split(':');
 
                 if (arr.length > 1) {
-                    Ajax
-                        .postRequest('App/action/destroyAuthToken', {token: arr[1]}, {fullResponse: true})
+                    Ajax.postRequest('App/action/destroyAuthToken', {token: arr[1]}, {fullResponse: true})
                         .then(xhr => {
                             let redirectUrl = xhr.getResponseHeader('X-Logout-Redirect-Url');
 
@@ -946,35 +949,51 @@ function (
                 this.webSocketManager.close();
             }
 
+            let silent = afterFail &&
+                this.auth &&
+                this.auth !== this.storage.get('user', 'auth');
+
             this.auth = null;
             this.anotherUser = null;
 
             this.user.clear();
             this.preferences.clear();
-
             this.acl.clear();
 
-            this.storage.clear('user', 'auth');
-            this.storage.clear('user', 'anotherUser');
+            if (!silent) {
+                this.storage.clear('user', 'auth');
+                this.storage.clear('user', 'anotherUser');
+            }
 
             this.doAction({action: 'login'});
 
-            this.unsetCookieAuth();
-
-            if (this.broadcastChannel && this.broadcastChannel.object) {
-                this.broadcastChannel.object.close();
+            if (!silent) {
+                this.unsetCookieAuth();
             }
 
-            this.broadcastChannel = null;
+            if (this.broadcastChannel.object) {
+                if (!silent) {
+                    this.broadcastChannel.postMessage('logged-out');
+                }
+            }
 
+            if (!silent) {
+                this.sendLogoutRequest();
+            }
+
+            this.loadStylesheet();
+        },
+
+        /**
+         * @private
+         */
+        sendLogoutRequest: function () {
             let xhr = new XMLHttpRequest;
 
             xhr.open('GET', this.basePath + this.apiUrl + '/');
             xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));
             xhr.send('');
             xhr.abort();
-
-            this.loadStylesheet();
         },
 
         /**
@@ -1181,15 +1200,29 @@ function (
                             break;
 
                         case 401:
-                            if (!options.login) {
-                                if (this.auth) {
-                                    this.logout();
-
-                                    break
-                                }
-
-                                console.error('Error 401: Unauthorized.');
+                            if (options.login) {
+                                break;
                             }
+
+                            if (this.auth && this.router && !this.router.confirmLeaveOut) {
+                                this.logout(true);
+
+                                break;
+                            }
+
+                            if (this.auth && this.router && this.router.confirmLeaveOut) {
+                                Ui.error(this.language.translate('loggedOutLeaveOut', 'messages'), true);
+
+                                this.router.trigger('logout');
+
+                                break;
+                            }
+
+                            if (!this.router) {
+                                Ui.error(this.language.translate('moreThanOnceInstances', 'messages'), true);
+                            }
+
+                            console.error('Error 401: Unauthorized.');
 
                             break;
 
@@ -1303,35 +1336,65 @@ function (
             this.broadcastChannel = new BroadcastChannel();
 
             this.broadcastChannel.subscribe(event => {
+                if (!this.auth) {
+                    if (event.data === 'logged-in') {
+                        window.location.reload();
+                    }
+
+                    return;
+                }
+
                 if (event.data === 'update:all') {
                     this.metadata.loadSkipCache();
                     this.settings.loadSkipCache();
                     this.language.loadSkipCache();
                     this.viewHelper.layoutManager.clearLoadedData();
+
+                    return;
                 }
 
                 if (event.data === 'update:metadata') {
                     this.metadata.loadSkipCache();
+
+                    return;
                 }
 
                 if (event.data === 'update:config') {
                     this.settings.load();
+
+                    return;
                 }
 
                 if (event.data === 'update:language') {
                     this.language.loadSkipCache();
+
+                    return;
                 }
 
                 if (event.data === 'update:layout') {
                     this.viewHelper.layoutManager.clearLoadedData();
+
+                    return;
                 }
 
                 if (event.data === 'reload') {
                     window.location.reload();
+
+                    return;
+                }
+
+                if (event.data === 'logged-out') {
+                    if (this.auth && this.router.confirmLeaveOut) {
+                        Ui.error(this.language.translate('loggedOutLeaveOut', 'messages'), true);
+
+                        this.router.trigger('logout');
+
+                        return;
+                    }
+
+                    this.logout(true);
                 }
             });
-
-            this.viewHelper.broadcastChannel = this.broadcastChannel;
         },
 
         initDomEventListeners: function () {

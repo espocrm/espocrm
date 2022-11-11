@@ -53,15 +53,18 @@ define('views/notification/badge', ['view'], function (Dep) {
 
             this.useWebSocket = !!this.getHelper().webSocketManager;
 
-            this.once('remove', () => {
+            let clearTimeouts = () => {
                 if (this.timeout) {
                     clearTimeout(this.timeout);
                 }
 
-                for (var name in this.popupTimeouts) {
+                for (let name in this.popupTimeouts) {
                     clearTimeout(this.popupTimeouts[name]);
                 }
-            });
+            }
+
+            this.once('remove', () => clearTimeouts());
+            this.listenToOnce(this.getHelper().router, 'logout', () => clearTimeouts());
 
             this.notificationsCheckInterval = this.getConfig().get('notificationsCheckInterval') ||
                 this.notificationsCheckInterval;

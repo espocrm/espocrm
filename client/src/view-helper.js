@@ -146,6 +146,13 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
         collectionFactory: null,
 
         /**
+         * A router.
+         *
+         * @type {module:router.Class}
+         */
+        router: null,
+
+        /**
          * A storage.
          *
          * @type {module:storage.Class}
