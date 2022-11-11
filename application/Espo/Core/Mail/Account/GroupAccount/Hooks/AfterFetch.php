@@ -66,8 +66,8 @@ use Espo\Repositories\Attachment as AttachmentRepository;
 
 use Espo\ORM\EntityManager;
 
-use Espo\Modules\Crm\Business\Distribution\CaseObj\RoundRobin;
-use Espo\Modules\Crm\Business\Distribution\CaseObj\LeastBusy;
+use Espo\Modules\Crm\Tools\Case\Distribution\RoundRobin;
+use Espo\Modules\Crm\Tools\Case\Distribution\LeastBusy;
 
 use Throwable;
 use DateTime;

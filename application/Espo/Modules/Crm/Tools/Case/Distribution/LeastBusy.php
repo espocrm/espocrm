@@ -27,8 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Business\Distribution\CaseObj;
+namespace Espo\Modules\Crm\Tools\Case\Distribution;
 
+use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\EntityManager;
 use Espo\Core\Utils\Metadata;
 
@@ -38,7 +39,6 @@ use Espo\Entities\Team;
 class LeastBusy
 {
     private EntityManager $entityManager;
-
     private Metadata $metadata;
 
     public function __construct(EntityManager $entityManager, Metadata $metadata)
@@ -75,7 +75,7 @@ class LeastBusy
 
         foreach ($userList as $user) {
             $count = $this->entityManager
-                ->getRDBRepository('Case')
+                ->getRDBRepository(CaseObj::ENTITY_TYPE)
                 ->where([
                     'assignedUserId' => $user->getId(),
                     'status!=' => $notActualStatusList,
@@ -100,7 +100,8 @@ class LeastBusy
         }
 
         if ($foundUserId !== false) {
-            return $this->entityManager->getEntity('User', $foundUserId);
+            /** @var ?User */
+            return $this->entityManager->getEntityById(User::ENTITY_TYPE, $foundUserId);
         }
 
         return null;

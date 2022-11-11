@@ -27,11 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Business\Distribution\CaseObj;
+namespace Espo\Modules\Crm\Tools\Case\Distribution;
 
 use Espo\Entities\User;
 use Espo\Entities\Team;
 
+use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\EntityManager;
 
 class RoundRobin
@@ -70,8 +71,9 @@ class RoundRobin
             $userIdList[] = $user->getId();
         }
 
+        /** @var ?CaseObj $case */
         $case = $this->entityManager
-            ->getRDBRepository('Case')
+            ->getRDBRepository(CaseObj::ENTITY_TYPE)
             ->where([
                 'assignedUserId' => $userIdList,
             ])
@@ -82,7 +84,7 @@ class RoundRobin
             $num = 0;
         }
         else {
-            $num = array_search($case->get('assignedUserId'), $userIdList);
+            $num = array_search($case->getAssignedUser()?->getId(), $userIdList);
 
             if ($num === false || $num == count($userIdList) - 1) {
                 $num = 0;
@@ -94,6 +96,7 @@ class RoundRobin
 
         $id = $userIdList[$num];
 
-        return $this->entityManager->getEntity('User', $id);
+        /** @var User */
+        return $this->entityManager->getEntityById(User::ENTITY_TYPE, $id);
     }
 }
