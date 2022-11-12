@@ -29,59 +29,52 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
-use Espo\Core\{
-    Exceptions\NotFound,
-    Exceptions\BadRequest,
-    Exceptions\Error,
-    EntryPoint\EntryPoint,
-    EntryPoint\Traits\NoAuth,
-    Api\Request,
-    Api\Response,
-    ORM\EntityManager,
-    Utils\ClientManager,
-    HookManager,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\EntryPoint\EntryPoint;
+use Espo\Core\EntryPoint\Traits\NoAuth;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\HookManager;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Client\ActionRenderer;
+use Espo\Entities\UniqueId;
+use Espo\Modules\Crm\Entities\Meeting;
 
 class EventConfirmation implements EntryPoint
 {
     use NoAuth;
 
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+    private const ACTION_ACCEPT = 'accept';
+    private const ACTION_DECLINE = 'decline';
+    private const ACTION_TENTATIVE = 'tentative';
+
+    public function __construct(
+        private EntityManager $entityManager,
+        private HookManager $hookManager,
+        private ActionRenderer $actionRenderer
+    ) {}
 
     /**
-     * @var ClientManager
+     * @throws BadRequest
+     * @throws NotFound
      */
-    protected $clientManager;
-
-    /**
-     * @var HookManager
-     */
-    protected $hookManager;
-
-    public function __construct(EntityManager $entityManager, ClientManager $clientManager, HookManager $hookManager) {
-        $this->entityManager = $entityManager;
-        $this->clientManager = $clientManager;
-        $this->hookManager = $hookManager;
-    }
-
     public function run(Request $request, Response $response): void
     {
         $uid = $request->getQueryParam('uid') ?? null;
         $action = $request->getQueryParam('action') ?? null;
 
-        if (empty($uid) || empty($action)) {
+        if (!$uid) {
             throw new BadRequest();
         }
 
-        if (!in_array($action, ['accept', 'decline', 'tentative'])) {
+        if (!in_array($action, [self::ACTION_ACCEPT, self::ACTION_DECLINE, self::ACTION_TENTATIVE])) {
             throw new BadRequest();
         }
 
+        /** @var ?UniqueId $uniqueId */
         $uniqueId = $this->entityManager
-            ->getRDBRepository('UniqueId')
+            ->getRDBRepositoryByClass(UniqueId::class)
             ->where(['name' => $uid])
             ->findOne();
 
@@ -89,72 +82,74 @@ class EventConfirmation implements EntryPoint
             throw new NotFound();
         }
 
-        $data = $uniqueId->get('data');
+        $data = $uniqueId->getData();
 
-        $eventType = $data->eventType;
-        $eventId = $data->eventId;
-        $inviteeType = $data->inviteeType;
-        $inviteeId = $data->inviteeId;
-        $link = $data->link;
+        $eventType = $data->eventType ?? null;
+        $eventId = $data->eventId ?? null;
+        $inviteeType = $data->inviteeType ?? null;
+        $inviteeId = $data->inviteeId ?? null;
+        $link = $data->link ?? null;
 
-        if (!empty($eventType) && !empty($eventId) && !empty($inviteeType) && !empty($inviteeId) && !empty($link)) {
-            $event = $this->entityManager->getEntity($eventType, $eventId);
-            $invitee = $this->entityManager->getEntity($inviteeType, $inviteeId);
+        $toProcess =
+            $eventType &&
+            $eventId &&
+            $inviteeType &&
+            $inviteeId &&
+            $link;
 
-            if (!$event || !$invitee) {
-                throw new NotFound();
-            }
-
-            if ($event->get('status') === 'Held' || $event->get('status') === 'Not Held') {
-                throw new NotFound();
-            }
-
-            $status = 'None';
-            $hookMethodName = 'afterConfirmation';
-
-            if ($action == 'accept') {
-                $status = 'Accepted';
-            } else if ($action == 'decline') {
-                $status = 'Declined';
-            } else if ($action == 'tentative') {
-                $status = 'Tentative';
-            }
-
-            $data = (object) [
-                'status' => $status
-            ];
-
-            $this->entityManager
-                ->getRDBRepository($eventType)
-                ->updateRelation($event, $link, $invitee->getId(), $data);
-
-            $actionData = [
-                'eventName' => $event->get('name'),
-                'eventType' => $event->getEntityType(),
-                'eventId' => $event->getId(),
-                'dateStart' => $event->get('dateStart'),
-                'action' => $action,
-                'status' => $status,
-                'link' => $link,
-                'inviteeType' => $invitee->getEntityType(),
-                'inviteeId' => $invitee->getId(),
-            ];
-
-            $this->hookManager->process($event->getEntityType(), $hookMethodName, $event, [], $actionData);
-
-            $runScript = "
-                Espo.require('crm:controllers/event-confirmation', function (Controller) {
-                    var controller = new Controller(app.baseController.params, app.getControllerInjection());
-                    controller.masterView = app.masterView;
-                    controller.doAction('confirmEvent', ".json_encode($actionData).");
-                });
-            ";
-
-            $this->clientManager->display($runScript);
-
-            return;
+        if (!$toProcess) {
+            throw new BadRequest();
         }
 
-        throw new Error();
+        $event = $this->entityManager->getEntityById($eventType, $eventId);
+        $invitee = $this->entityManager->getEntityById($inviteeType, $inviteeId);
+
+        if (!$event || !$invitee) {
+            throw new NotFound();
+        }
+
+        $eventStatus = $event->get('status');
+
+        if (in_array($eventStatus, [Meeting::STATUS_HELD, Meeting::STATUS_NOT_HELD])) {
+            throw new NotFound();
+        }
+
+        $status = match($action) {
+            self::ACTION_ACCEPT => Meeting::ATTENDEE_STATUS_ACCEPTED,
+            self::ACTION_DECLINE => Meeting::ATTENDEE_STATUS_DECLINED,
+            self::ACTION_TENTATIVE => Meeting::ATTENDEE_STATUS_TENTATIVE,
+            default => Meeting::ATTENDEE_STATUS_NONE,
+        };
+
+        $this->entityManager
+            ->getRDBRepository($eventType)
+            ->getRelation($event, $link)
+            ->updateColumns($invitee, ['status' => $status]);
+
+        $actionData = [
+            'eventName' => $event->get('name'),
+            'eventType' => $event->getEntityType(),
+            'eventId' => $event->getId(),
+            'dateStart' => $event->get('dateStart'),
+            'action' => $action,
+            'status' => $status,
+            'link' => $link,
+            'inviteeType' => $invitee->getEntityType(),
+            'inviteeId' => $invitee->getId(),
+        ];
+
+        $this->hookManager->process(
+            $event->getEntityType(),
+            'afterConfirmation',
+            $event,
+            [],
+            $actionData
+        );
+
+        $this->actionRenderer->write(
+            $response,
+            ActionRenderer\Params
+                ::create('crm:controllers/event-confirmation', 'confirmEvent', $actionData)
+        );
     }
 }

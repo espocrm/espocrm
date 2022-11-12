@@ -36,17 +36,25 @@ class Params
 {
     private string $controller;
     private string $action;
-    /** @var ?array<string,mixed> */
+    /** @var ?array<string, mixed> */
     private ?array $data;
 
     /**
-     * @param ?array<string,mixed> $data
+     * @param ?array<string, mixed> $data
      */
     public function __construct(string $controller, string $action, ?array $data = null)
     {
         $this->controller = $controller;
         $this->action = $action;
         $this->data = $data;
+    }
+
+    /**
+     * @param ?array<string, mixed> $data
+     */
+    public static function create(string $controller, string $action, ?array $data = null): self
+    {
+        return new self($controller, $action, $data);
     }
 
     public function getController(): string
@@ -60,7 +68,7 @@ class Params
     }
 
     /**
-     * @return ?array<string,mixed>
+     * @return ?array<string, mixed>
      */
     public function getData(): ?array
     {
