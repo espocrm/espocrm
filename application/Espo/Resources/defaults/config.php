@@ -180,6 +180,7 @@ return [
     'cleanupJobPeriod' => '1 month',
     'cleanupActionHistoryPeriod' => '15 days',
     'cleanupAuthTokenPeriod' => '1 month',
+    'cleanupSubscribers' => true,
     'currencyFormat' => 2,
     'currencyDecimalPlaces' => 2,
     'aclAllowDeleteCreated' => false,

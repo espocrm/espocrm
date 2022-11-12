@@ -179,6 +179,8 @@ return [
         'cronDisabled',
         'defaultPortalId',
         'cleanupDeletedRecords',
+        'cleanupSubscribers',
+        'cleanupSubscribersPeriod',
         'authTokenPreventConcurrent',
         'emailParser',
         'passwordRecoveryDisabled',

@@ -33,6 +33,8 @@ use Espo\Core\ORM\Entity;
 
 class ActionHistoryRecord extends Entity
 {
+    public const ENTITY_TYPE = 'ActionHistoryRecord';
+
     public const ACTION_READ = 'read';
     public const ACTION_UPDATE = 'update';
     public const ACTION_CREATE = 'create';

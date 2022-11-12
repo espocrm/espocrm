@@ -18,5 +18,8 @@
     },
     "passwordChangeRequests": {
         "className": "Espo\\Classes\\Cleanup\\PasswordChangeRequests"
+    },
+    "subscribers": {
+        "className": "Espo\\Classes\\Cleanup\\Subscribers"
     }
 }
