@@ -310,6 +310,7 @@ class Cleanup implements JobDataLess
 
         $collection = $this->entityManager
             ->getRDBRepository(Attachment::ENTITY_TYPE)
+            ->sth()
             ->where([
                 'OR' => [
                     [
@@ -344,6 +345,7 @@ class Cleanup implements JobDataLess
             $collection = $this->entityManager
                 ->getRDBRepository(Attachment::ENTITY_TYPE)
                 ->clone($orphanQueryBuilder->build())
+                ->sth()
                 ->limit(0, 5000)
                 ->find();
 
@@ -426,11 +428,13 @@ class Cleanup implements JobDataLess
 
             $deletedEntityList = $repository
                 ->clone($query)
+                ->sth()
                 ->find();
 
             foreach ($deletedEntityList as $deletedEntity) {
                 $attachmentToRemoveList = $this->entityManager
                     ->getRDBRepository(Attachment::ENTITY_TYPE)
+                    ->sth()
                     ->where([
                         'OR' => [
                             [
@@ -491,6 +495,7 @@ class Cleanup implements JobDataLess
         $emailList = $this->entityManager
             ->getRDBRepository(Email::ENTITY_TYPE)
             ->clone($query)
+            ->sth()
             ->select(['id'])
             ->where([
                 'createdAt<' => $dateBefore,
@@ -547,6 +552,7 @@ class Cleanup implements JobDataLess
 
         $notificationList = $this->entityManager
             ->getRDBRepository(Notification::ENTITY_TYPE)
+            ->sth()
             ->where([
                 'DATE:createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ])
@@ -663,6 +669,7 @@ class Cleanup implements JobDataLess
         $noteList = $this->entityManager
             ->getRDBRepository(Note::ENTITY_TYPE)
             ->clone($query)
+            ->sth()
             ->where([
                 'OR' => [
                     [
@@ -704,6 +711,7 @@ class Cleanup implements JobDataLess
 
         $arrayValueList = $this->entityManager
             ->getRDBRepository(ArrayValue::ENTITY_TYPE)
+            ->sth()
             ->where([
                 'entityType' => $entity->getEntityType(),
                 'entityId' => $entity->getId(),
