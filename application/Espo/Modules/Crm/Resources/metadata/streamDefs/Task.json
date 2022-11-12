@@ -1,5 +1,6 @@
 {
     "subscribersCleanup": {
+        "enabled": true,
         "statusList": ["Completed", "Canceled"]
     }
 }

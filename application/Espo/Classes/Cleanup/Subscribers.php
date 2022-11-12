@@ -77,11 +77,17 @@ class Subscribers implements Cleanup
 
     private function processEntityType(string $entityType): void
     {
+        /** @var ?array<string, mixed> $data */
+        $data = $this->metadata->get(['streamDefs', $entityType, 'subscribersCleanup']);
+
+        if (!($data['enabled'] ?? false)) {
+            return;
+        }
+
         /** @var string $dateField */
-        $dateField = $this->metadata->get(['streamDefs', $entityType, 'subscribersCleanup', 'dateField']) ??
-            'createdAt';
+        $dateField = $data['dateField'] ?? 'createdAt';
         /** @var ?string[] $statusList */
-        $statusList = $this->metadata->get(['streamDefs', $entityType, 'subscribersCleanup', 'statusList']);
+        $statusList = $data['statusList'] ?? null;
         /** @var ?string $statusField */
         $statusField = $this->metadata->get(['scopes', $entityType, 'statusField']);
 
@@ -125,6 +131,8 @@ class Subscribers implements Cleanup
                 )
             )
             ->build();
+
+        print_r($query);
 
         $this->entityManager->getQueryExecutor()->execute($query);
     }
