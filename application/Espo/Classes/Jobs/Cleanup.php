@@ -29,22 +29,31 @@
 
 namespace Espo\Classes\Jobs;
 
+use Espo\Core\Job\Job\Status as JobStatus;
 use Espo\Core\Record\ServiceContainer;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Entities\ActionHistoryRecord;
+use Espo\Entities\ArrayValue;
 use Espo\Entities\Attachment;
+use Espo\Entities\AuthLogRecord;
+use Espo\Entities\AuthToken;
+use Espo\Entities\Email;
+use Espo\Entities\Job;
+use Espo\Entities\Note;
+use Espo\Entities\Notification;
+use Espo\Entities\ScheduledJob;
+use Espo\Entities\ScheduledJobLogRecord;
+use Espo\Entities\UniqueId;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Core\{
-    Utils\Config,
-    ORM\EntityManager,
-    Job\JobDataLess,
-    Utils\Metadata,
-    Utils\File\Manager as FileManager,
-    InjectableFactory,
-    Select\SelectBuilderFactory,
-    Utils\Log,
-};
-
+use Espo\Core\InjectableFactory;
+use Espo\Core\Job\JobDataLess;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Select\SelectBuilderFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
 use DateTime;
@@ -55,38 +64,23 @@ use Throwable;
 class Cleanup implements JobDataLess
 {
     private string $cleanupJobPeriod = '10 days';
-
     private string $cleanupActionHistoryPeriod = '15 days';
-
     private string $cleanupAuthTokenPeriod = '1 month';
-
     private string $cleanupAuthLogPeriod = '2 months';
-
     private string $cleanupNotificationsPeriod = '2 months';
-
     private string $cleanupAttachmentsPeriod = '15 days';
-
     private string $cleanupAttachmentsFromPeriod = '3 months';
-
     private string $cleanupBackupPeriod = '2 month';
-
     private string $cleanupDeletedRecordsPeriod = '3 months';
 
-    private $config;
-
-    private $entityManager;
-
-    private $metadata;
-
-    private $fileManager;
-
-    private $injectableFactory;
-
-    private $selectBuilderFactory;
-
-    private $recordServiceContainer;
-
-    private $log;
+    private Config $config;
+    private EntityManager $entityManager;
+    private Metadata $metadata;
+    private FileManager $fileManager;
+    private InjectableFactory $injectableFactory;
+    private SelectBuilderFactory $selectBuilderFactory;
+    private ServiceContainer $recordServiceContainer;
+    private Log $log;
 
     public function __construct(
         Config $config,
@@ -151,20 +145,20 @@ class Cleanup implements JobDataLess
     private function cleanupJobs(): void
     {
         $delete = $this->entityManager->getQueryBuilder()->delete()
-            ->from('Job')
+            ->from(Job::ENTITY_TYPE)
             ->where([
                 'DATE:modifiedAt<' => $this->getCleanupJobFromDate(),
-                'status!=' => 'Pending',
+                'status!=' => JobStatus::PENDING,
             ])
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($delete);
 
         $delete = $this->entityManager->getQueryBuilder()->delete()
-            ->from('Job')
+            ->from(Job::ENTITY_TYPE)
             ->where([
                 'DATE:modifiedAt<' => $this->getCleanupJobFromDate(),
-                'status=' => 'Pending',
+                'status=' => JobStatus::PENDING,
                 'deleted' => true,
             ])
             ->build();
@@ -177,10 +171,10 @@ class Cleanup implements JobDataLess
         $delete = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from('UniqueId')
+            ->from(UniqueId::ENTITY_TYPE)
             ->where([
                 'terminateAt!=' => null,
-                'terminateAt<' => date('Y-m-d H:i:s')
+                'terminateAt<' => date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
             ])
             ->build();
 
@@ -190,7 +184,7 @@ class Cleanup implements JobDataLess
     private function cleanupScheduledJobLog(): void
     {
         $scheduledJobList = $this->entityManager
-            ->getRDBRepository('ScheduledJob')
+            ->getRDBRepository(ScheduledJob::ENTITY_TYPE)
             ->select(['id'])
             ->find();
 
@@ -198,7 +192,7 @@ class Cleanup implements JobDataLess
             $scheduledJobId = $scheduledJob->get('id');
 
             $ignoreLogRecordList = $this->entityManager
-                ->getRDBRepository('ScheduledJobLogRecord')
+                ->getRDBRepository(ScheduledJobLogRecord::ENTITY_TYPE)
                 ->select(['id'])
                 ->where([
                     'scheduledJobId' => $scheduledJobId,
@@ -224,7 +218,7 @@ class Cleanup implements JobDataLess
             $delete = $this->entityManager
                 ->getQueryBuilder()
                 ->delete()
-                ->from('ScheduledJobLogRecord')
+                ->from(ScheduledJobLogRecord::ENTITY_TYPE)
                 ->where([
                     'scheduledJobId' => $scheduledJobId,
                     'DATE:createdAt<' => $this->getCleanupJobFromDate(),
@@ -244,10 +238,12 @@ class Cleanup implements JobDataLess
 
         $datetime->modify($period);
 
-        $delete = $this->entityManager->getQueryBuilder()->delete()
-            ->from('ActionHistoryRecord')
+        $delete = $this->entityManager
+            ->getQueryBuilder()
+            ->delete()
+            ->from(ActionHistoryRecord::ENTITY_TYPE)
             ->where([
-                'DATE:createdAt<' => $datetime->format('Y-m-d'),
+                'DATE:createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ])
             ->build();
 
@@ -264,9 +260,9 @@ class Cleanup implements JobDataLess
         $delete = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from('AuthToken')
+            ->from(AuthToken::ENTITY_TYPE)
             ->where([
-                'DATE:modifiedAt<' => $datetime->format('Y-m-d'),
+                'DATE:modifiedAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
                 'isActive' => false,
             ])
             ->build();
@@ -285,9 +281,9 @@ class Cleanup implements JobDataLess
         $delete = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from('AuthLogRecord')
+            ->from(AuthLogRecord::ENTITY_TYPE)
             ->where([
-                'DATE:createdAt<' => $datetime->format('Y-m-d'),
+                'DATE:createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ])
             ->build();
 
@@ -301,7 +297,7 @@ class Cleanup implements JobDataLess
         $datetime = new DateTime();
         $datetime->modify($period);
 
-        return $datetime->format('Y-m-d');
+        return $datetime->format(DateTimeUtil::SYSTEM_DATE_FORMAT);
     }
 
     private function cleanupAttachments(): void
@@ -324,7 +320,7 @@ class Cleanup implements JobDataLess
                         ]
                     ]
                 ],
-                'createdAt<' => $datetime->format('Y-m-d H:i:s'),
+                'createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
             ])
             ->limit(0, 5000)
             ->find();
@@ -336,17 +332,17 @@ class Cleanup implements JobDataLess
         if ($this->config->get('cleanupOrphanAttachments')) {
             $orphanQueryBuilder = $this->selectBuilderFactory
                 ->create()
-                ->from('Attachment')
+                ->from(Attachment::ENTITY_TYPE)
                 ->withPrimaryFilter('orphan')
                 ->buildQueryBuilder();
 
             $orphanQueryBuilder->where([
-                'createdAt<' => $datetime->format('Y-m-d H:i:s'),
+                'createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
                 'createdAt>' => '2018-01-01 00:00:00',
             ]);
 
             $collection = $this->entityManager
-                ->getRDBRepository('Attachment')
+                ->getRDBRepository(Attachment::ENTITY_TYPE)
                 ->clone($orphanQueryBuilder->build())
                 ->limit(0, 5000)
                 ->find();
@@ -370,7 +366,7 @@ class Cleanup implements JobDataLess
                 continue;
             }
 
-            if (!$this->metadata->get(['scopes', $scope, 'object']) && $scope !== 'Note') {
+            if (!$this->metadata->get(['scopes', $scope, 'object']) && $scope !== Note::ENTITY_TYPE) {
                 continue;
             }
 
@@ -385,7 +381,7 @@ class Cleanup implements JobDataLess
             }
 
             if (!$hasAttachmentField) {
-                foreach ($this->metadata->get(['entityDefs', $scope, 'fields']) as $field => $defs) {
+                foreach ($this->metadata->get(['entityDefs', $scope, 'fields']) as $defs) {
                     if (empty($defs['type'])) {
                         continue;
                     }
@@ -423,8 +419,8 @@ class Cleanup implements JobDataLess
                 ->withDeleted()
                 ->where([
                     'deleted' => 1,
-                    'modifiedAt<' => $datetime->format('Y-m-d H:i:s'),
-                    'modifiedAt>' => $datetimeFrom->format('Y-m-d H:i:s'),
+                    'modifiedAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
+                    'modifiedAt>' => $datetimeFrom->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
                 ])
                 ->build();
 
@@ -434,7 +430,7 @@ class Cleanup implements JobDataLess
 
             foreach ($deletedEntityList as $deletedEntity) {
                 $attachmentToRemoveList = $this->entityManager
-                    ->getRDBRepository('Attachment')
+                    ->getRDBRepository(Attachment::ENTITY_TYPE)
                     ->where([
                         'OR' => [
                             [
@@ -456,11 +452,11 @@ class Cleanup implements JobDataLess
         }
 
         $isBeingUploadedCollection = $this->entityManager
-            ->getRDBRepository('Attachment')
+            ->getRDBRepository(Attachment::ENTITY_TYPE)
             ->sth()
             ->where([
                 'isBeingUploaded' => true,
-                'createdAt<' => $datetime->format('Y-m-d H:i:s'),
+                'createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
             ])
             ->find();
 
@@ -471,10 +467,10 @@ class Cleanup implements JobDataLess
         $delete = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from('Attachment')
+            ->from(Attachment::ENTITY_TYPE)
             ->where([
                 'deleted' => true,
-                'createdAt<' => $datetime->format('Y-m-d H:i:s'),
+                'createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
             ])
             ->build();
 
@@ -483,17 +479,17 @@ class Cleanup implements JobDataLess
 
     private function cleanupEmails(): void
     {
-        $dateBefore = date('Y-m-d H:i:s', time() - 3600 * 24 * 20);
+        $dateBefore = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, time() - 3600 * 24 * 20);
 
         $query = $this->entityManager
             ->getQueryBuilder()
             ->select()
-            ->from('Email')
+            ->from(Email::ENTITY_TYPE)
             ->withDeleted()
             ->build();
 
         $emailList = $this->entityManager
-            ->getRDBRepository('Email')
+            ->getRDBRepository(Email::ENTITY_TYPE)
             ->clone($query)
             ->select(['id'])
             ->where([
@@ -506,10 +502,10 @@ class Cleanup implements JobDataLess
             $id = $email->get('id');
 
             $attachments = $this->entityManager
-                ->getRDBRepository('Attachment')
+                ->getRDBRepository(Attachment::ENTITY_TYPE)
                 ->where([
                     'parentId' => $id,
-                    'parentType' => 'Email'
+                    'parentType' => Email::ENTITY_TYPE,
                 ])
                 ->find();
 
@@ -520,7 +516,7 @@ class Cleanup implements JobDataLess
             $delete = $this->entityManager
                 ->getQueryBuilder()
                 ->delete()
-                ->from('Email')
+                ->from(Email::ENTITY_TYPE)
                 ->where([
                     'deleted' => true,
                     'id' => $id,
@@ -532,7 +528,7 @@ class Cleanup implements JobDataLess
             $delete = $this->entityManager
                 ->getQueryBuilder()
                 ->delete()
-                ->from('EmailUser')
+                ->from(Email::RELATIONSHIP_EMAIL_USER)
                 ->where([
                     'emailId' => $id,
                 ])
@@ -550,15 +546,15 @@ class Cleanup implements JobDataLess
         $datetime->modify($period);
 
         $notificationList = $this->entityManager
-            ->getRDBRepository('Notification')
+            ->getRDBRepository(Notification::ENTITY_TYPE)
             ->where([
-                'DATE:createdAt<' => $datetime->format('Y-m-d'),
+                'DATE:createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ])
             ->find();
 
         foreach ($notificationList as $notification) {
             $this->entityManager
-                ->getRDBRepository('Notification')
+                ->getRDBRepository(Notification::ENTITY_TYPE)
                 ->deleteFromDb($notification->get('id'));
         }
     }
@@ -660,12 +656,12 @@ class Cleanup implements JobDataLess
         $query = $this->entityManager
             ->getQueryBuilder()
             ->select()
-            ->from('Note')
+            ->from(Note::ENTITY_TYPE)
             ->withDeleted()
             ->build();
 
         $noteList = $this->entityManager
-            ->getRDBRepository('Note')
+            ->getRDBRepository(Note::ENTITY_TYPE)
             ->clone($query)
             ->where([
                 'OR' => [
@@ -689,25 +685,25 @@ class Cleanup implements JobDataLess
             $this->cleanupDeletedEntity($note);
         }
 
-        if ($scope === 'Note') {
+        if ($scope === Note::ENTITY_TYPE) {
             $attachmentList = $this->entityManager
-                ->getRDBRepository('Attachment')
+                ->getRDBRepository(Attachment::ENTITY_TYPE)
                 ->where([
                     'parentId' => $entity->getId(),
-                    'parentType' => 'Note',
+                    'parentType' => Note::ENTITY_TYPE,
                 ])
                 ->find();
 
             foreach ($attachmentList as $attachment) {
                 $this->entityManager->removeEntity($attachment);
                 $this->entityManager
-                    ->getRDBRepository('Attachment')
+                    ->getRDBRepository(Attachment::ENTITY_TYPE)
                     ->deleteFromDb($attachment->getId());
             }
         }
 
         $arrayValueList = $this->entityManager
-            ->getRDBRepository('ArrayValue')
+            ->getRDBRepository(ArrayValue::ENTITY_TYPE)
             ->where([
                 'entityType' => $entity->getEntityType(),
                 'entityId' => $entity->getId(),
@@ -716,7 +712,7 @@ class Cleanup implements JobDataLess
 
         foreach ($arrayValueList as $arrayValue) {
             $this->entityManager
-                ->getRDBRepository('ArrayValue')
+                ->getRDBRepository(ArrayValue::ENTITY_TYPE)
                 ->deleteFromDb($arrayValue->getId());
         }
     }
@@ -739,7 +735,7 @@ class Cleanup implements JobDataLess
                 continue;
             }
 
-            if ($scope === 'Attachment') {
+            if ($scope === Attachment::ENTITY_TYPE) {
                 continue;
             }
 
@@ -760,10 +756,10 @@ class Cleanup implements JobDataLess
             ];
 
             if ($this->metadata->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) {
-                $whereClause['modifiedAt<'] = $datetime->format('Y-m-d H:i:s');
+                $whereClause['modifiedAt<'] = $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
             }
             else if ($this->metadata->get(['entityDefs', $scope, 'fields', 'createdAt'])) {
-                $whereClause['createdAt<'] = $datetime->format('Y-m-d H:i:s');
+                $whereClause['createdAt<'] = $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
             }
 
             $query = $this->entityManager
