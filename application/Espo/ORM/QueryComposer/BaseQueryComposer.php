@@ -305,7 +305,7 @@ abstract class BaseQueryComposer implements QueryComposer
      */
     protected function createDeleteQuery(?array $params = null): string
     {
-        $params = $this->normilizeParams(self::DELETE_METHOD, $params);
+        $params = $this->normalizeParams(self::DELETE_METHOD, $params);
 
         $entityType = $params['from'];
 
@@ -340,7 +340,7 @@ abstract class BaseQueryComposer implements QueryComposer
      */
     protected function createUpdateQuery(?array $params = null): string
     {
-        $params = $this->normilizeParams(self::UPDATE_METHOD, $params);
+        $params = $this->normalizeParams(self::UPDATE_METHOD, $params);
 
         $entityType = $params['from'];
 
@@ -563,7 +563,7 @@ abstract class BaseQueryComposer implements QueryComposer
      * @param array<string,mixed>|null $params
      * @return array<string,mixed>
      */
-    protected function normilizeParams(string $method, ?array $params): array
+    protected function normalizeParams(string $method, ?array $params): array
     {
         $params = $params ?? [];
 
@@ -605,7 +605,7 @@ abstract class BaseQueryComposer implements QueryComposer
      */
     protected function createSelectQueryInternal(?array $params = null): string
     {
-        $params = $this->normilizeParams(self::SELECT_METHOD, $params);
+        $params = $this->normalizeParams(self::SELECT_METHOD, $params);
 
         $entityType = $params['from'] ?? null;
         $fromQuery = $params['fromQuery'] ?? null;
