@@ -29,26 +29,26 @@
 
 namespace Espo\Modules\Crm\Business\Event;
 
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Mail\Exceptions\SendingError;
+use Espo\Entities\Attachment;
+use Espo\Entities\Email;
+use Espo\Entities\UniqueId;
 use Laminas\Mail\Message;
 
 use Espo\ORM\Entity;
-
 use Espo\Entities\User;
-
 use Espo\Core\Utils\Util;
-
-use Espo\Core\{
-    ORM\EntityManager,
-    Mail\EmailSender,
-    Mail\SmtpParams,
-    Utils\Config,
-    Utils\File\Manager as FileManager,
-    Utils\DateTime as DateTimeUtil,
-    Utils\NumberUtil,
-    Utils\Language,
-    Utils\TemplateFileManager,
-    Htmlizer\HtmlizerFactory as HtmlizerFactory,
-};
+use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
+use Espo\Core\Mail\EmailSender;
+use Espo\Core\Mail\SmtpParams;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\NumberUtil;
+use Espo\Core\Utils\TemplateFileManager;
 
 use DateTime;
 
@@ -92,9 +92,14 @@ class Invitations
         $this->htmlizerFactory = $htmlizerFactory;
     }
 
+    /**
+     * @throws SendingError
+     * @throws Error
+     */
     public function sendInvitation(Entity $entity, Entity $invitee, string $link): void
     {
-        $uid = $this->entityManager->getNewEntity('UniqueId');
+        /** @var UniqueId $uid */
+        $uid = $this->entityManager->getNewEntity(UniqueId::ENTITY_TYPE);
 
         $uid->set('data', [
             'eventType' => $entity->getEntityType(),
@@ -111,7 +116,7 @@ class Invitations
             $dt = new DateTime();
             $dt->modify('+1 month');
 
-            $terminateAt = $dt->format('Y-m-d H:i:s');
+            $terminateAt = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         }
 
         $uid->set([
@@ -128,7 +133,8 @@ class Invitations
             return;
         }
 
-        $email = $this->entityManager->getNewEntity('Email');
+        /** @var Email $email */
+        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
         $email->set('to', $emailAddress);
 
@@ -184,7 +190,8 @@ class Invitations
 
         $attachmentName = ucwords($this->language->translateLabel($entity->getEntityType(), 'scopeNames')) . '.ics';
 
-        $attachment = $this->entityManager->getNewEntity('Attachment');
+        /** @var Attachment $attachment */
+        $attachment = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
 
         $attachment->set([
             'name' => $attachmentName,
@@ -208,6 +215,7 @@ class Invitations
 
     protected function getIcsContents(Entity $entity): string
     {
+        /** @var ?User $user */
         $user = $this->entityManager
             ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, 'assignedUser')
@@ -217,8 +225,8 @@ class Invitations
         $email = '';
 
         if ($user) {
-            $who = $user->get('name');
-            $email = $user->get('emailAddress');
+            $who = $user->getName();
+            $email = $user->getEmailAddress();
         }
 
         $ics = new Ics('//EspoCRM//EspoCRM Calendar//EN', [
