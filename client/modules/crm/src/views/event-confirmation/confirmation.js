@@ -26,18 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/event-confirmation/confirmation', 'view', function (Dep) {
+define('crm:views/event-confirmation/confirmation', ['view'], function (Dep) {
 
     return Dep.extend({
 
         template: 'crm:event-confirmation/confirmation',
 
         data: function () {
-            var data = {
-                actionData: this.options.actionData
-            };
-            return data;
-        }
+            let style = 'warning';
 
+            let action = this.options.actionData.action;
+
+            if (action === 'accept') {
+                style = 'success';
+            }
+            else if (action === 'decline') {
+                style = 'danger';
+            }
+
+            return {
+                actionData: this.options.actionData,
+                style: style,
+            };
+        },
     });
 });
