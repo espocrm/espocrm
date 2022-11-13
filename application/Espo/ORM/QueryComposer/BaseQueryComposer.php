@@ -2578,7 +2578,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $leftPart = null;
 
-        if (substr($field, -1) === ':') {
+        if (str_ends_with($field, ':')) {
             $field = substr($field, 0, strlen($field) - 1);
 
             $isNotValue = true;
@@ -2586,7 +2586,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if (!preg_match('/^[a-z0-9]+$/i', $field)) {
             foreach ($this->comparisonOperators as $op => $opDb) {
-                if (substr($field, -strlen($op)) === $op) {
+                if (str_ends_with($field, $op)) {
                     $field = trim(substr($field, 0, -strlen($op)));
 
                     $operatorOrm = $op;
@@ -3043,15 +3043,16 @@ abstract class BaseQueryComposer implements QueryComposer
         $operator = '=';
 
         $isNotValue = false;
+        $isComplex = false;
 
-        if (substr($left, -1) === ':') {
+        if (str_ends_with($left, ':')) {
             $left = substr($left, 0, strlen($left) - 1);
             $isNotValue = true;
         }
 
         if (!preg_match('/^[a-z0-9]+$/i', $left)) {
             foreach ($this->comparisonOperators as $op => $opDb) {
-                if (substr($left, -strlen($op)) === $op) {
+                if (str_ends_with($left, $op)) {
                     $left = trim(substr($left, 0, -strlen($op)));
                     $operator = $opDb;
 
@@ -3060,17 +3061,27 @@ abstract class BaseQueryComposer implements QueryComposer
             }
         }
 
-        if (strpos($left, '.') > 0) {
-            list($alias, $attribute) = explode('.', $left);
+        if (Util::isComplexExpression($left)) {
+            $stub = [];
 
-            $alias = $this->sanitize($alias);
-            $column = $this->toDb($this->sanitize($attribute));
-        }
-        else {
-            $column = $this->toDb($this->sanitize($left));
+            $sql .= $this->convertComplexExpression($entity, $left, false, $stub);
+
+            $isComplex = true;
         }
 
-        $sql .= "{$alias}.{$column}";
+        if (!$isComplex) {
+            if (strpos($left, '.') > 0) {
+                list($alias, $attribute) = explode('.', $left);
+
+                $alias = $this->sanitize($alias);
+                $column = $this->toDb($this->sanitize($attribute));
+            }
+            else {
+                $column = $this->toDb($this->sanitize($left));
+            }
+
+            $sql .= "{$alias}.{$column}";
+        }
 
         if (is_array($right)) {
             $arr = [];

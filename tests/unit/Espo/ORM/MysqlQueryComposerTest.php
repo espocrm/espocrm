@@ -44,12 +44,12 @@ use Espo\ORM\{
 };
 
 use Espo\ORM\Query\{
+    Part\Condition,
     Select,
     Insert,
     Update,
     Delete,
-    LockTableBuilder,
-};
+    LockTableBuilder};
 
 use RuntimeException;
 
@@ -828,6 +828,29 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql = "SELECT note.id AS `id` FROM `note` LEFT JOIN `post` AS `post` ON post.name IS NULL ".
             "AND (post.name = 'test' OR post.name IS NULL)";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testJoinConditions5(): void
+    {
+        $query = $this->queryBuilder
+            ->select('id')
+            ->from('Note')
+            ->leftJoin(
+                'Post',
+                'post',
+                Condition::notEqual(
+                    Expression::value('TEST'),
+                    Expression::column('post.id')
+                )
+            )
+            ->withDeleted()
+            ->build();
+
+        $sql = $this->query->composeSelect($query);
+
+        $expectedSql = "SELECT note.id AS `id` FROM `note` LEFT JOIN `post` AS `post` ON 'TEST' <> post.id";
 
         $this->assertEquals($expectedSql, $sql);
     }
