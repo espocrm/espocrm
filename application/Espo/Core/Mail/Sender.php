@@ -521,11 +521,7 @@ class Sender
                 }
 
                 if (!$hasInlineAttachments) {
-                    $body->addPart(
-                        (new MimePart($alternative->generateMessage()))
-                            ->setType('multipart/related')
-                            ->setBoundary($alternative->getMime()->boundary())
-                    );
+                    $body->addPart($alternativePart);
                 }
             }
 
