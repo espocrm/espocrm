@@ -26,12 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('collections/tree', 'collection', function (Dep) {
+define('collections/tree', ['collection'], function (Dep) {
 
     return Dep.extend({
 
         createSeed: function () {
-            var seed = new this.constructor();
+            let seed = new this.constructor();
 
             seed.url = this.url;
             seed.model = this.model;
@@ -42,9 +42,9 @@ define('collections/tree', 'collection', function (Dep) {
         },
 
         parse: function (response) {
-            var list = Dep.prototype.parse.call(this, response);
+            let list = Dep.prototype.parse.call(this, response);
 
-            var seed = this.clone();
+            let seed = this.clone();
 
             seed.reset();
 
@@ -52,30 +52,36 @@ define('collections/tree', 'collection', function (Dep) {
 
             this.categoryData = response.data || null;
 
-            var f = function (l, depth) {
-                l.forEach(function (d) {
+            let f = (l, depth) => {
+                l.forEach((d) => {
                     d.depth = depth;
 
-                    var c = this.createSeed();
+                    let c = this.createSeed();
 
                     if (d.childList) {
                         if (d.childList.length) {
                             f(d.childList, depth + 1);
                             c.set(d.childList);
                             d.childCollection = c;
+
+                            return;
                         }
-                        else {
-                            d.childCollection = c;
-                        }
-                    }
-                    else if (d.childList === null) {
-                        d.childCollection = null;
-                    }
-                    else {
+
                         d.childCollection = c;
+
+                        return;
                     }
-                }, this);
-            }.bind(this);
+
+                    if (d.childList === null) {
+                        d.childCollection = null;
+
+                        return;
+                    }
+
+                    d.childCollection = c;
+
+                });
+            };
 
             f(list, 0);
 
@@ -83,8 +89,7 @@ define('collections/tree', 'collection', function (Dep) {
         },
 
         fetch: function (options) {
-            var options = options || {};
-
+            options = options || {};
             options.data = options.data || {};
 
             if (this.parentId) {
@@ -95,6 +100,5 @@ define('collections/tree', 'collection', function (Dep) {
 
             return Dep.prototype.fetch.call(this, options);
         },
-
     });
 });
