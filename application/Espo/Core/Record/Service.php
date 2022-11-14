@@ -62,6 +62,7 @@ use Espo\Core\Di;
 use stdClass;
 use InvalidArgumentException;
 use LogicException;
+use tests\unit\testData\DB\TEntity;
 
 /**
  * The layer between a controller and ORM repository. For CRUD and other operations with records.
@@ -1001,7 +1002,7 @@ class Service implements Crud,
         }
 
         if (empty($id) || empty($link) || empty($foreignId)) {
-            throw new BadRequest;
+            throw new BadRequest();
         }
 
         $this->processForbiddenLinkEditCheck($link);
@@ -1013,17 +1014,10 @@ class Service implements Crud,
         }
 
         if (!$entity instanceof CoreEntity) {
-            throw new LogicException("Only core entities are supported");
+            throw new LogicException("Only core entities are supported.");
         }
 
-        if ($this->noEditAccessRequiredForLink) {
-            if (!$this->acl->check($entity, AclTable::ACTION_READ)) {
-                throw new Forbidden();
-            }
-        }
-        else if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
-            throw new Forbidden();
-        }
+        $this->linkAccessCheck($entity, $link);
 
         $methodName = 'link' . ucfirst($link);
 
@@ -1039,25 +1033,19 @@ class Service implements Crud,
             throw new LogicException("Entity '{$this->entityType}' has not relation '{$link}'.");
         }
 
-        $foreignEntity = $this->entityManager->getEntity($foreignEntityType, $foreignId);
+        $foreignEntity = $this->entityManager->getEntityById($foreignEntityType, $foreignId);
 
         if (!$foreignEntity) {
             throw new NotFound();
         }
 
-        $accessActionRequired = AclTable::ACTION_EDIT;
-
-        if (in_array($link, $this->noEditAccessRequiredLinkList)) {
-            $accessActionRequired = AclTable::ACTION_READ;
-        }
-
-        if (!$this->acl->check($foreignEntity, $accessActionRequired)) {
-            throw new Forbidden();
-        }
+        $this->linkForeignAccessCheck($link, $foreignEntity);
 
         $this->recordHookManager->processBeforeLink($entity, $link, $foreignEntity);
 
-        $this->getRepository()->relate($entity, $link, $foreignEntity);
+        $this->getRepository()
+            ->getRelation($entity, $link)
+            ->relate($foreignEntity);
     }
 
     /**
@@ -1074,7 +1062,7 @@ class Service implements Crud,
         }
 
         if (empty($id) || empty($link) || empty($foreignId)) {
-            throw new BadRequest;
+            throw new BadRequest();
         }
 
         $this->processForbiddenLinkEditCheck($link);
@@ -1086,17 +1074,10 @@ class Service implements Crud,
         }
 
         if (!$entity instanceof CoreEntity) {
-            throw new LogicException("Only core entities are supported");
+            throw new LogicException("Only core entities are supported.");
         }
 
-        if ($this->noEditAccessRequiredForLink) {
-            if (!$this->acl->check($entity, AclTable::ACTION_READ)) {
-                throw new Forbidden();
-            }
-        }
-        else if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
-            throw new Forbidden();
-        }
+        $this->linkAccessCheck($entity, $link);
 
         $methodName = 'unlink' . ucfirst($link);
 
@@ -1112,25 +1093,71 @@ class Service implements Crud,
             throw new LogicException("Entity '{$this->entityType}' has not relation '{$link}'.");
         }
 
-        $foreignEntity = $this->entityManager->getEntity($foreignEntityType, $foreignId);
+        $foreignEntity = $this->entityManager->getEntityById($foreignEntityType, $foreignId);
 
         if (!$foreignEntity) {
             throw new NotFound();
         }
 
-        $accessActionRequired = AclTable::ACTION_EDIT;
-
-        if (in_array($link, $this->noEditAccessRequiredLinkList)) {
-            $accessActionRequired = AclTable::ACTION_READ;
-        }
-
-        if (!$this->acl->check($foreignEntity, $accessActionRequired)) {
-            throw new Forbidden();
-        }
+        $this->linkForeignAccessCheck($link, $foreignEntity);
 
         $this->recordHookManager->processBeforeUnlink($entity, $link, $foreignEntity);
 
-        $this->getRepository()->unrelate($entity, $link, $foreignEntity);
+        $this->getRepository()
+            ->getRelation($entity, $link)
+            ->unrelate($foreignEntity);
+    }
+
+    /**
+     * @param TEntity $entity
+     * @throws Forbidden
+     */
+    private function linkAccessCheck(Entity $entity, string $link): void
+    {
+        /** @var AclTable::ACTION_*|null $action */
+        $action = $this->metadata
+            ->get(['recordDefs', $this->entityType, 'relationships', $link, 'linkRequiredAccess']) ??
+            null;
+
+        if (!$action) {
+            $action = $this->noEditAccessRequiredForLink ?
+                AclTable::ACTION_READ :
+                AclTable::ACTION_EDIT;
+        }
+
+        if (!$this->acl->check($entity, $action)) {
+            throw ForbiddenSilent::createWithBody(
+                "No record access for link operation ({$this->entityType}:{$link}).",
+                ErrorBody::create()
+                    ->withMessageTranslation('noAccessToRecord', null, ['action' => $action])
+                    ->encode()
+            );
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function linkForeignAccessCheck(string $link, Entity $foreignEntity): void
+    {
+        $action = in_array($link, $this->noEditAccessRequiredLinkList) ?
+            AclTable::ACTION_READ : null;
+
+        if (!$action) {
+            /** @var AclTable::ACTION_* $action */
+            $action = $this->metadata
+                ->get(['recordDefs', $this->entityType, 'relationships', $link, 'linkRequiredForeignAccess']) ??
+                AclTable::ACTION_EDIT;
+        }
+
+        if (!$this->acl->check($foreignEntity, $action)) {
+            throw ForbiddenSilent::createWithBody(
+                "No foreign record access for link operation ({$this->entityType}:{$link}).",
+                ErrorBody::create()
+                    ->withMessageTranslation('noAccessToForeignRecord', null, ['action' => $action])
+                    ->encode()
+            );
+        }
     }
 
     /**

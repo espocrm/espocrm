@@ -1,0 +1,8 @@
+{
+    "relationships": {
+        "articles": {
+            "linkRequiredAccess": "edit",
+            "linkRequiredForeignAccess": "read"
+        }
+    }
+}

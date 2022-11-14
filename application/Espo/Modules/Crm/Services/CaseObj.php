@@ -40,10 +40,6 @@ use Espo\Services\Record;
  */
 class CaseObj extends Record
 {
-    protected $noEditAccessRequiredLinkList = [
-        'articles',
-    ];
-
     /**
      * @param CaseEntity $entity
      */
