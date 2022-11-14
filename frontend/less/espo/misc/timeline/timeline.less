@@ -103,6 +103,13 @@
     border-bottom-right-radius: var(--panel-border-radius);
 }
 
+.panel.first,
+.panel.in-middle {
+    .timeline > .vis-timeline {
+        border-bottom-right-radius: 0;
+    }
+}
+
 @media screen and (max-width: (@screen-sm-min - 1px)) {
     .vis-timeline {
         font-size: 93%;
