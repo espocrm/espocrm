@@ -191,7 +191,7 @@ class ClassMap
                 continue;
             }
 
-            $name = Util::normilizeScopeName(ucfirst($fileName));
+            $name = Util::normalizeScopeName(ucfirst($fileName));
 
             $name = $category . $name;
 

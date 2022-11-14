@@ -49,7 +49,7 @@ trait SelectingBuilderTrait
      * * `where(array $clause)`
      * * `where(string $key, string $value)`
      *
-     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<mixed, mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Omitted if the first argument is not string.
      */
     public function where($clause, $value = null): self
@@ -60,7 +60,7 @@ trait SelectingBuilderTrait
     }
 
     /**
-     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<mixed, mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Omitted if the first argument is not string.
      */
     private function applyWhereClause(string $type, $clause, $value): void
@@ -99,8 +99,6 @@ trait SelectingBuilderTrait
         }
 
         $this->params[$type] = $new + $original;
-
-        return;
     }
 
     /**
@@ -186,7 +184,7 @@ trait SelectingBuilderTrait
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
+     * @param WhereItem|array<mixed, mixed>|null $conditions Join conditions.
      */
     private function joinInternal(string $type, $target, ?string $alias = null, $conditions = null): self
     {
@@ -308,8 +306,6 @@ trait SelectingBuilderTrait
             /** @var array{0:string,1?:string} $newItem */
 
             $resultList[] = $newItem;
-
-            continue;
         }
 
         return $resultList;

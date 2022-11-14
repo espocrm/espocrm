@@ -94,7 +94,7 @@ function (Dep, styleCss) {
                     this.panels.splice(index, 1);
                 }
 
-                this.normilizeDisabledItemList();
+                this.normalizeDisabledItemList();
 
                 this.setIsChanged();
             },
@@ -116,7 +116,7 @@ function (Dep, styleCss) {
 
                 $(e.target).closest('ul.rows > li').remove();
 
-                this.normilizeDisabledItemList();
+                this.normalizeDisabledItemList();
 
                 this.setIsChanged();
             },
@@ -237,7 +237,7 @@ function (Dep, styleCss) {
             }
         }, Dep.prototype.events),
 
-        normilizeDisabledItemList: function () {
+        normalizeDisabledItemList: function () {
             $('#layout ul.cells.disabled > li').each((i, el) => {
             });
         },

@@ -140,7 +140,7 @@ class NameUtil
             return true;
         }
 
-        if ($name !== Util::normilizeScopeName($name)) {
+        if ($name !== Util::normalizeScopeName($name)) {
             return true;
         }
 
@@ -178,7 +178,7 @@ class NameUtil
 
     private function controllerExists(string $name): bool
     {
-        $controllerClassName = 'Espo\\Custom\\Controllers\\' . Util::normilizeClassName($name);
+        $controllerClassName = 'Espo\\Custom\\Controllers\\' . Util::normalizeClassName($name);
 
         if (class_exists($controllerClassName)) {
             return true;
@@ -186,14 +186,14 @@ class NameUtil
 
         foreach ($this->metadata->getModuleList() as $moduleName) {
             $controllerClassName =
-                'Espo\\Modules\\' . $moduleName . '\\Controllers\\' . Util::normilizeClassName($name);
+                'Espo\\Modules\\' . $moduleName . '\\Controllers\\' . Util::normalizeClassName($name);
 
             if (class_exists($controllerClassName)) {
                 return true;
             }
         }
 
-        $controllerClassName = 'Espo\\Controllers\\' . Util::normilizeClassName($name);
+        $controllerClassName = 'Espo\\Controllers\\' . Util::normalizeClassName($name);
 
         if (class_exists($controllerClassName)) {
             return true;

@@ -356,11 +356,12 @@ class Util
      * @param string $name
      * @return string
      */
-    public static function normilizeClassName($name)
+    public static function normalizeClassName($name)
     {
         if (in_array($name, self::$reservedWordList)) {
             $name .= 'Obj';
         }
+
         return $name;
     }
 
@@ -370,7 +371,7 @@ class Util
      * @param string $name
      * @return string
      */
-    public static function normilizeScopeName($name)
+    public static function normalizeScopeName($name)
     {
         foreach (self::$reservedWordList as $reservedWord) {
             if ($reservedWord.'Obj' == $name) {
@@ -1004,5 +1005,27 @@ class Util
         }
 
         return implode('', $shuffle($array));
+    }
+
+    /**
+     * @deprecated Use `normalizeScopeName`.
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function normilizeScopeName($name)
+    {
+        return self::normalizeScopeName($name);
+    }
+
+    /**
+     * @deprecated Use `normalizeClassName`.
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function normilizeClassName($name)
+    {
+        return self::normalizeClassName($name);
     }
 }

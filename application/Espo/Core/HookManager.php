@@ -223,7 +223,7 @@ class HookManager
 
         foreach ($fileList as $scopeName => $hookFiles) {
             $hookScopeDirPath = Util::concatPath($hookDir, $scopeName);
-            $normalizedScopeName = Util::normilizeScopeName($scopeName);
+            $normalizedScopeName = Util::normalizeScopeName($scopeName);
 
             foreach ($hookFiles as $hookFile) {
                 $hookFilePath = Util::concatPath($hookScopeDirPath, $hookFile);

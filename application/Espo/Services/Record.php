@@ -93,7 +93,7 @@ class Record extends RecordService implements
                 $name = $matches[1];
             }
 
-            $this->entityType = Util::normilizeScopeName($name);
+            $this->entityType = Util::normalizeScopeName($name);
         }
 
         // to be removed

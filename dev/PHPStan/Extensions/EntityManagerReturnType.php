@@ -151,7 +151,7 @@ class EntityManagerReturnType implements DynamicMethodReturnTypeExtension
     private function findEntityClassName(string $entityType): ?string
     {
         foreach ($this->entityNamespaceList as $namespace) {
-            $className = $namespace . '\\' . Util::normilizeClassName($entityType);
+            $className = $namespace . '\\' . Util::normalizeClassName($entityType);
 
             if (class_exists($className)) {
                 return $className;

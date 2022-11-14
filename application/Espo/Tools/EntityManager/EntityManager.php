@@ -150,7 +150,7 @@ class EntityManager
             throw new Conflict("Entity name '{$name}' is not allowed.");
         }
 
-        $normalizedName = Util::normilizeClassName($name);
+        $normalizedName = Util::normalizeClassName($name);
 
         $templateNamespace = "\Espo\Core\Templates";
 
@@ -160,7 +160,7 @@ class EntityManager
         if (!empty($templateDefs['module'])) {
             $templateModuleName = $templateDefs['module'];
 
-            $normalizedTemplateModuleName = Util::normilizeClassName($templateModuleName);
+            $normalizedTemplateModuleName = Util::normalizeClassName($templateModuleName);
 
             $templateNamespace = "\Espo\Modules\\{$normalizedTemplateModuleName}\Core\Templates";
 
@@ -600,7 +600,7 @@ class EntityManager
             throw new Forbidden;
         }
 
-        $normalizedName = Util::normilizeClassName($name);
+        $normalizedName = Util::normalizeClassName($name);
 
         $type = $this->metadata->get(['scopes', $name, 'type']);
 
@@ -1582,7 +1582,7 @@ class EntityManager
         if (!empty($templateDefs['module'])) {
             $templateModuleName = $templateDefs['module'];
 
-            $normalizedTemplateModuleName = Util::normilizeClassName($templateModuleName);
+            $normalizedTemplateModuleName = Util::normalizeClassName($templateModuleName);
 
             $className =
                 'Espo\\Modules\\' . $normalizedTemplateModuleName .
