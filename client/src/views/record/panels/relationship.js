@@ -153,7 +153,6 @@ function (Dep, SearchManager, RecordModal) {
                         title: 'Create',
                         action: this.defs.createAction || 'createRelated',
                         link: this.link,
-                        acl: 'edit',
                         html: '<span class="fas fa-plus"></span>',
                         data: {
                             link: this.link,
