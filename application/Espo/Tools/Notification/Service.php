@@ -40,6 +40,7 @@ use Espo\Core\AclManager;
 use Espo\Core\WebSocket\Submission;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 
+use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\EntityManager;
 
 class Service
@@ -96,7 +97,7 @@ class Service
             ->create();
 
         $userList = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->select(['id', 'type'])
             ->where([
                 'isActive' => true,
@@ -164,7 +165,9 @@ class Service
         if ($user->isPortal()) {
             if ($note->getRelatedType()) {
                 /** @todo Revise. */
-                return $note->getRelatedType() === Email::ENTITY_TYPE && $note->getParentType() === 'Case';
+                return
+                    $note->getRelatedType() === Email::ENTITY_TYPE &&
+                    $note->getParentType() === CaseObj::ENTITY_TYPE;
             }
 
             return true;
