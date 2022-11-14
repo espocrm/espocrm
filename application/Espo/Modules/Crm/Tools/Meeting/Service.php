@@ -35,6 +35,8 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\HookManager;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\Note;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\EntityManager;
@@ -42,22 +44,15 @@ use LogicException;
 
 class Service
 {
-    private User $user;
-    private EntityManager $entityManager;
-    private HookManager $hookManager;
-    private Acl $acl;
+    private const NOTE_TYPE_EVENT_CONFIRMATION = 'EventConfirmation';
 
     public function __construct(
-        User $user,
-        EntityManager $entityManager,
-        HookManager $hookManager,
-        Acl $acl
-    ) {
-        $this->user = $user;
-        $this->entityManager = $entityManager;
-        $this->hookManager = $hookManager;
-        $this->acl = $acl;
-    }
+        private User $user,
+        private EntityManager $entityManager,
+        private HookManager $hookManager,
+        private Acl $acl,
+        private Metadata $metadata
+    ) {}
 
     /**
      * Set an acceptance for a current user.
@@ -75,7 +70,7 @@ class Service
             ->getField('acceptanceStatus')
             ->getParam('options') ?? [];
 
-        if (!in_array($status, $statusList)) {
+        if (!in_array($status, $statusList) || $status === Meeting::ATTENDEE_STATUS_NONE) {
             throw new BadRequest("Acceptance status not allowed.");
         }
 
@@ -93,10 +88,23 @@ class Service
             throw new Forbidden();
         }
 
+        $currentStatus = $this->entityManager
+            ->getRDBRepository($entityType)
+            ->getRelation($entity, 'users')
+            ->getColumn($this->user, 'status');
+
+        if ($currentStatus === $status) {
+            return;
+        }
+
         $this->entityManager
             ->getRDBRepository($entityType)
             ->getRelation($entity, 'users')
             ->updateColumnsById($this->user->getId(), ['status' => $status]);
+
+        if ($this->metadata->get(['scopes', $entityType, 'stream'])) {
+            $this->createEventConfirmationNote($entity, $status);
+        }
 
         $actionData = [
             'eventName' => $entity->get('name'),
@@ -110,6 +118,26 @@ class Service
         ];
 
         $this->hookManager->process($entityType, 'afterConfirmation', $entity, [], $actionData);
+    }
+
+    private function createEventConfirmationNote(CoreEntity $entity, string $status): void
+    {
+        $options = ['createdById' => $this->user->getId()];
+
+        $style = $this->metadata
+            ->get(['entityDefs', $entity->getEntityType(), 'fields', 'acceptanceStatus', 'style', $status]);
+
+        $this->entityManager->createEntity(Note::ENTITY_TYPE, [
+            'type' => self::NOTE_TYPE_EVENT_CONFIRMATION,
+            'parentId' => $entity->getId(),
+            'parentType' => $entity->getEntityType(),
+            'relatedId' => $this->user->getId(),
+            'relatedType' => $this->user->getEntityType(),
+            'data' => [
+                'status' => $status,
+                'style' => $style,
+            ],
+        ], $options);
     }
 
     /**
