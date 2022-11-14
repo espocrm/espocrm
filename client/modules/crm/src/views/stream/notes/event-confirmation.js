@@ -42,7 +42,6 @@ define('crm:views/stream/notes/event-confirmation', ['views/stream/note'], funct
                     {{{avatar}}}
                 </div>
                 <div class="stream-head-text-container">
-                    <span class="label label-{{style}}">{{statusText}}</span>
                     <span class="text-muted message">{{{message}}}</span>
                 </div>
             </div>
