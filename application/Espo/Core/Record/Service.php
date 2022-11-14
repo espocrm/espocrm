@@ -30,52 +30,38 @@
 namespace Espo\Core\Record;
 
 use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\Error\Body as ErrorBody;
-
-use Espo\Core\Exceptions\{
-    BadRequest,
-    NotFound,
-    Forbidden,
-    NotFoundSilent,
-    ForbiddenSilent,
-    ConflictSilent,
-};
-
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\ConflictSilent;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\WhereClause;
-
 use Espo\Entities\User;
-
 use Espo\Tools\Stream\Service as StreamService;
-
-use Espo\Core\{
-    Acl,
-    Acl\Table as AclTable,
-    Select\SearchParams,
-    Select\SelectBuilderFactory,
-    Record\Collection as RecordCollection,
-    Record\HookManager as RecordHookManager,
-    Record\Select\ApplierClassNameListProvider,
-    Record\Duplicator\EntityDuplicator,
-    FieldValidation\FieldValidationParams as FieldValidationParams,
-    FieldProcessing\ReadLoadProcessor,
-    FieldProcessing\ListLoadProcessor,
-    FieldProcessing\Loader\Params as FieldLoaderParams,
-    Duplicate\Finder as DuplicateFinder,
-};
-
+use Espo\Core\Utils\Json;
+use Espo\Core\Acl;
+use Espo\Core\Acl\Table as AclTable;
+use Espo\Core\Duplicate\Finder as DuplicateFinder;
+use Espo\Core\FieldProcessing\ListLoadProcessor;
+use Espo\Core\FieldProcessing\Loader\Params as FieldLoaderParams;
+use Espo\Core\FieldProcessing\ReadLoadProcessor;
+use Espo\Core\FieldValidation\FieldValidationParams as FieldValidationParams;
+use Espo\Core\Record\Collection as RecordCollection;
+use Espo\Core\Record\Duplicator\EntityDuplicator;
+use Espo\Core\Record\HookManager as RecordHookManager;
+use Espo\Core\Record\Select\ApplierClassNameListProvider;
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Di;
-
 use stdClass;
-use ArrayAccess;
 use InvalidArgumentException;
 use LogicException;
-use tests\unit\testData\DB\TEntity;
 
 /**
  * The layer between a controller and ORM repository. For CRUD and other operations with records.
