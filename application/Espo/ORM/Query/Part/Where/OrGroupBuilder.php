@@ -49,7 +49,7 @@ class OrGroupBuilder
         $value = $item->getRawValue();
 
         if ($item instanceof AndGroup) {
-            $this->raw = self::normilizeRaw($this->raw);
+            $this->raw = self::normalizeRaw($this->raw);
 
             $this->raw[] = $value;
 
@@ -62,7 +62,7 @@ class OrGroupBuilder
             return $this;
         }
 
-        $this->raw = self::normilizeRaw($this->raw);
+        $this->raw = self::normalizeRaw($this->raw);
 
         $this->raw[] = [$key => $value];
 
@@ -75,8 +75,8 @@ class OrGroupBuilder
     public function merge(OrGroup $orGroup): self
     {
         $this->raw = array_merge(
-            self::normilizeRaw($this->raw),
-            self::normilizeRaw($orGroup->getRawValue())
+            self::normalizeRaw($this->raw),
+            self::normalizeRaw($orGroup->getRawValue())
         );
 
         return $this;
@@ -86,7 +86,7 @@ class OrGroupBuilder
      * @param array<mixed,mixed> $raw
      * @return array<mixed,mixed>
      */
-    private static function normilizeRaw(array $raw): array
+    private static function normalizeRaw(array $raw): array
     {
         if (count($raw) === 1 && array_keys($raw)[0] !== 0) {
             return [$raw];

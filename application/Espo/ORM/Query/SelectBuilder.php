@@ -152,7 +152,7 @@ class SelectBuilder implements Builder
         /** @phpstan-var mixed $select */
 
         if (is_array($select)) {
-            $this->params['select'] = $this->normilizeSelectExpressionArray($select);
+            $this->params['select'] = $this->normalizeSelectExpressionArray($select);
 
             return $this;
         }
@@ -194,7 +194,7 @@ class SelectBuilder implements Builder
         /** @phpstan-var mixed $groupBy */
 
         if (is_array($groupBy)) {
-            $this->params['groupBy'] = $this->normilizeExpressionItemArray($groupBy);
+            $this->params['groupBy'] = $this->normalizeExpressionItemArray($groupBy);
 
             return $this;
         }
@@ -295,7 +295,7 @@ class SelectBuilder implements Builder
      * @param array<Expression|Selection|mixed[]> $itemList
      * @return array<array{0:string,1?:string}|string>
      */
-    private function normilizeSelectExpressionArray(array $itemList): array
+    private function normalizeSelectExpressionArray(array $itemList): array
     {
         $resultList = [];
 

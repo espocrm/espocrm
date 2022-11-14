@@ -124,7 +124,7 @@ trait SelectingBuilderTrait
         }
 
         if (is_array($orderBy)) {
-            $this->params['orderBy'] = $this->normilizeOrderExpressionItemArray(
+            $this->params['orderBy'] = $this->normalizeOrderExpressionItemArray(
                 $orderBy,
                 $direction ?? Order::ASC
             );
@@ -160,61 +160,12 @@ trait SelectingBuilderTrait
      *
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
-     * @param string|null $alias An alias.
-     * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
+     * @param ?string $alias An alias.
+     * @param WhereItem|array<mixed, mixed>|null $conditions Join conditions.
      */
     public function join($target, ?string $alias = null, $conditions = null): self
     {
-        if ($target instanceof Join) {
-            $alias = $alias ?? $target->getAlias();
-            $conditions = $conditions ?? $target->getConditions();
-            $target = $target->getTarget();
-        }
-
-        /** @phpstan-var mixed $conditions */
-        /** @phpstan-var mixed $target */
-
-        if ($conditions !== null && !is_array($conditions) && !$conditions instanceof WhereItem) {
-            throw new InvalidArgumentException("Conditions must be WhereItem or array.");
-        }
-
-        if ($conditions instanceof WhereItem) {
-            $conditions = $conditions->getRaw();
-        }
-
-        if (empty($this->params['joins'])) {
-            $this->params['joins'] = [];
-        }
-
-        if (is_array($target)) {
-            $joinList = $target;
-
-            foreach ($joinList as $item) {
-                $this->params['joins'][] = $item;
-            }
-
-            return $this;
-        }
-
-        if (is_null($alias) && is_null($conditions) && $this->hasJoinAlias($target)) {
-            return $this;
-        }
-
-        if (is_null($alias) && is_null($conditions)) {
-            $this->params['joins'][] = $target;
-
-            return $this;
-        }
-
-        if (is_null($conditions)) {
-            $this->params['joins'][] = [$target, $alias];
-
-            return $this;
-        }
-
-        $this->params['joins'][] = [$target, $alias, $conditions];
-
-        return $this;
+        return $this->joinInternal('joins', $target, $alias, $conditions);
     }
 
     /**
@@ -222,10 +173,22 @@ trait SelectingBuilderTrait
      *
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
+     * @param ?string $alias An alias.
+     * @param WhereItem|array<mixed, mixed>|null $conditions Join conditions.
+     */
+    public function leftJoin($target, ?string $alias = null, $conditions = null): self
+    {
+        return $this->joinInternal('leftJoins', $target, $alias, $conditions);
+    }
+
+    /**
+     * @param 'leftJoins'|'joins' $type
+     * @param Join|string $target
+     * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
      * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
      */
-    public function leftJoin($target, ?string $alias = null, $conditions = null): self
+    private function joinInternal(string $type, $target, ?string $alias = null, $conditions = null): self
     {
         if ($target instanceof Join) {
             $alias = $alias ?? $target->getAlias();
@@ -244,69 +207,44 @@ trait SelectingBuilderTrait
             $conditions = $conditions->getRaw();
         }
 
-        if (empty($this->params['leftJoins'])) {
-            $this->params['leftJoins'] = [];
+        if (empty($this->params[$type])) {
+            $this->params[$type] = [];
         }
 
         if (is_array($target)) {
             $joinList = $target;
 
             foreach ($joinList as $item) {
-                $this->params['leftJoins'][] = $item;
+                $this->params[$type][] = $item;
             }
 
             return $this;
         }
 
-        if (is_null($alias) && is_null($conditions) && $this->hasLeftJoinAlias($target)) {
+        if (is_null($alias) && is_null($conditions) && $this->hasJoinAliasInternal($type, $target)) {
             return $this;
         }
 
         if (is_null($alias) && is_null($conditions)) {
-            $this->params['leftJoins'][] = $target;
+            $this->params[$type][] = $target;
 
             return $this;
         }
 
         if (is_null($conditions)) {
-            $this->params['leftJoins'][] = [$target, $alias];
+            $this->params[$type][] = [$target, $alias];
 
             return $this;
         }
 
-        $this->params['leftJoins'][] = [$target, $alias, $conditions];
+        $this->params[$type][] = [$target, $alias, $conditions];
 
         return $this;
     }
 
-    /**
-     * Whether an alias is in left joins.
-     */
-    public function hasLeftJoinAlias(string $alias): bool
+    private function hasJoinAliasInternal(string $type, string $alias): bool
     {
-        $leftJoins = $this->params['leftJoins'] ?? [];
-
-        if (in_array($alias, $leftJoins)) {
-            return true;
-        }
-
-        foreach ($leftJoins as $item) {
-            if (is_array($item) && count($item) > 1) {
-                if ($item[1] === $alias) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Whether an alias is in joins.
-     */
-    public function hasJoinAlias(string $alias): bool
-    {
-        $joins = $this->params['joins'] ?? [];
+        $joins = $this->params[$type] ?? [];
 
         if (in_array($alias, $joins)) {
             return true;
@@ -324,10 +262,26 @@ trait SelectingBuilderTrait
     }
 
     /**
+     * Whether an alias is in left joins.
+     */
+    public function hasLeftJoinAlias(string $alias): bool
+    {
+        return $this->hasJoinAliasInternal('leftJoins', $alias);
+    }
+
+    /**
+     * Whether an alias is in joins.
+     */
+    public function hasJoinAlias(string $alias): bool
+    {
+        return $this->hasJoinAliasInternal('joins', $alias);
+    }
+
+    /**
      * @param array<Expression|mixed[]> $itemList
      * @return array<array{0:string,1?:string}|string>
      */
-    private function normilizeExpressionItemArray(array $itemList): array
+    private function normalizeExpressionItemArray(array $itemList): array
     {
         $resultList = [];
 
@@ -364,9 +318,9 @@ trait SelectingBuilderTrait
     /**
      * @param array<Order|mixed[]|string> $itemList
      * @param string|bool|null $direction
-     * @return array<array{string,string|bool}>
+     * @return array<array{string, string|bool}>
      */
-    private function normilizeOrderExpressionItemArray(array $itemList, $direction): array
+    private function normalizeOrderExpressionItemArray(array $itemList, $direction): array
     {
         $resultList = [];
 

@@ -371,7 +371,7 @@ abstract class BaseQueryComposer implements QueryComposer
      */
     protected function createInsertQuery(?array $params): string
     {
-        $params = $this->normilizeInsertParams($params ?? []);
+        $params = $this->normalizeInsertParams($params ?? []);
 
         $entityType = $params['into'];
 
@@ -498,7 +498,7 @@ abstract class BaseQueryComposer implements QueryComposer
      * @param array<string,mixed> $params
      * @return array<string,mixed>
      */
-    protected function normilizeInsertParams(array $params): array
+    protected function normalizeInsertParams(array $params): array
     {
         $columns = $params['columns'] ?? null;
 
