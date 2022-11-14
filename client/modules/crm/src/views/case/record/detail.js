@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/case/record/detail', 'views/record/detail', function (Dep) {
+define('crm:views/case/record/detail', ['views/record/detail'], function (Dep) {
 
     return Dep.extend({
 
@@ -73,41 +73,35 @@ define('crm:views/case/record/detail', 'views/record/detail', function (Dep) {
         },
 
         actionClose: function () {
-            this.model.save({
-                status: 'Closed'
-            }, {
-                patch: true,
-                success: function () {
+            this.model.save({status: 'Closed'}, {patch: true})
+                .then(() => {
                     Espo.Ui.success(this.translate('Closed', 'labels', 'Case'));
+
                     this.removeButton('close');
                     this.removeButton('reject');
-                }.bind(this),
-            });
+                });
         },
 
         actionReject: function () {
-            this.model.save({
-                status: 'Rejected'
-            }, {
-                patch: true,
-                success: function () {
+            this.model.save({status: 'Rejected'}, {patch: true})
+                .then(() => {
                     Espo.Ui.success(this.translate('Rejected', 'labels', 'Case'));
+
                     this.removeButton('close');
                     this.removeButton('reject');
-                }.bind(this),
-            });
+                });
         },
 
         getSelfAssignAttributes: function () {
             if (this.model.get('status') === 'New') {
-                if (~(this.getMetadata().get(['entityDefs', 'Case', 'fields', 'status', 'options']) || []).indexOf('Assigned')) {
+                if (~(this.getMetadata().get(['entityDefs', 'Case', 'fields', 'status', 'options']) || [])
+                    .indexOf('Assigned')
+                ) {
                     return {
-                        'status': 'Assigned'
+                        'status': 'Assigned',
                     };
                 }
             }
-        }
-
+        },
     });
 });
-
