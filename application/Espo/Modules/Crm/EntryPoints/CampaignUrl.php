@@ -47,32 +47,21 @@ use Espo\Core\Utils\ClientManager;
 use Espo\Core\Utils\Hasher;
 use Espo\Core\Utils\Metadata;
 
+/**
+ * @todo Use ActionRenderer.
+ */
 class CampaignUrl implements EntryPoint
 {
     use NoAuth;
 
-    private EntityManager $entityManager;
-    private LogService $service;
-    private Hasher $hasher;
-    private HookManager $hookManager;
-    private ClientManager $clientManager;
-    private Metadata $metadata;
-
     public function __construct(
-        EntityManager $entityManager,
-        LogService $service,
-        Hasher $hasher,
-        HookManager $hookManager,
-        ClientManager $clientManager,
-        Metadata $metadata
-    ) {
-        $this->entityManager = $entityManager;
-        $this->service = $service;
-        $this->hasher = $hasher;
-        $this->hookManager = $hookManager;
-        $this->clientManager = $clientManager;
-        $this->metadata = $metadata;
-    }
+        private EntityManager $entityManager,
+        private LogService $service,
+        private Hasher $hasher,
+        private HookManager $hookManager,
+        private ClientManager $clientManager,
+        private Metadata $metadata
+    ) {}
 
     /**
      * @throws BadRequest

@@ -45,14 +45,10 @@ class CampaignTrackOpened implements EntryPoint
 {
     use NoAuth;
 
-    private EntityManager $entityManager;
-    private LogService $service;
-
-    public function __construct(EntityManager $entityManager, LogService $service)
-    {
-        $this->entityManager = $entityManager;
-        $this->service = $service;
-    }
+    public function __construct(
+        private EntityManager $entityManager,
+        private LogService $service
+    ) {}
 
     /**
      * @throws BadRequest

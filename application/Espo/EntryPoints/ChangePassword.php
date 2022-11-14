@@ -30,36 +30,24 @@
 namespace Espo\EntryPoints;
 
 use Espo\Core\Exceptions\BadRequest;
-
 use Espo\Entities\PasswordChangeRequest;
-
 use Espo\Core\Utils\Client\ActionRenderer;
-
 use Espo\Core\EntryPoint\EntryPoint;
 use Espo\Core\EntryPoint\Traits\NoAuth;
 use Espo\Core\Utils\Config;
-
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
-
 use Espo\ORM\EntityManager;
 
 class ChangePassword implements EntryPoint
 {
     use NoAuth;
 
-    private Config $config;
-
-    private EntityManager $entityManager;
-
-    private ActionRenderer $actionRenderer;
-
-    public function __construct(Config $config, EntityManager $entityManager, ActionRenderer $actionRenderer)
-    {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->actionRenderer = $actionRenderer;
-    }
+    public function __construct(
+        private Config $config,
+        private EntityManager $entityManager,
+        private ActionRenderer $actionRenderer
+    ) {}
 
     public function run(Request $request, Response $response): void
     {

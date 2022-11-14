@@ -41,12 +41,7 @@ class LoginAs implements EntryPoint
 {
     use NoAuth;
 
-    private ClientManager $clientManager;
-
-    public function __construct(ClientManager $clientManager)
-    {
-        $this->clientManager = $clientManager;
-    }
+    public function __construct(private ClientManager $clientManager) {}
 
     /**
      * @throws BadRequest

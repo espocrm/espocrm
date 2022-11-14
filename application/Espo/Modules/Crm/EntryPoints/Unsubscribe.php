@@ -51,35 +51,22 @@ use Espo\Core\Utils\ClientManager;
 use Espo\Core\Utils\Hasher;
 use Espo\Core\Utils\Metadata;
 
+/**
+ * @todo Use ActionRenderer.
+ */
 class Unsubscribe implements EntryPoint
 {
     use NoAuth;
 
-    private EntityManager $entityManager;
-    private ClientManager $clientManager;
-    private HookManager $hookManager;
-    private Metadata $metadata;
-    private Hasher $hasher;
-    private LogService $service;
-    private MassEmailUtil $util;
-
     public function __construct(
-        EntityManager $entityManager,
-        ClientManager $clientManager,
-        HookManager $hookManager,
-        Metadata $metadata,
-        Hasher $hasher,
-        LogService $service,
-        MassEmailUtil $util
-    ) {
-        $this->entityManager = $entityManager;
-        $this->clientManager = $clientManager;
-        $this->hookManager = $hookManager;
-        $this->metadata = $metadata;
-        $this->hasher = $hasher;
-        $this->service = $service;
-        $this->util = $util;
-    }
+        private EntityManager $entityManager,
+        private ClientManager $clientManager,
+        private HookManager $hookManager,
+        private Metadata $metadata,
+        private Hasher $hasher,
+        private LogService $service,
+        private MassEmailUtil $util
+    ) {}
 
     /**
      * @throws BadRequest
