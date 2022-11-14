@@ -33,16 +33,7 @@ define('crm:views/event-confirmation/confirmation', ['view'], function (Dep) {
         template: 'crm:event-confirmation/confirmation',
 
         data: function () {
-            let style = 'warning';
-
-            let action = this.options.actionData.action;
-
-            if (action === 'accept') {
-                style = 'success';
-            }
-            else if (action === 'decline') {
-                style = 'danger';
-            }
+            let style = this.options.actionData.style || 'default';
 
             return {
                 actionData: this.options.actionData,

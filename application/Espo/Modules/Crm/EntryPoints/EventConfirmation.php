@@ -38,6 +38,7 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\HookManager;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Client\ActionRenderer;
+use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Note;
 use Espo\Entities\UniqueId;
@@ -59,7 +60,8 @@ class EventConfirmation implements EntryPoint
         private EntityManager $entityManager,
         private HookManager $hookManager,
         private ActionRenderer $actionRenderer,
-        private Metadata $metadata
+        private Metadata $metadata,
+        private Language $language
     ) {}
 
     /**
@@ -122,7 +124,18 @@ class EventConfirmation implements EntryPoint
         $eventStatus = $event->get('status');
 
         if (in_array($eventStatus, [Meeting::STATUS_HELD, Meeting::STATUS_NOT_HELD])) {
-            $this->actionRenderer->write($response, ActionRenderer\Params::create('controllers/base', 'error404'));
+            $actionData = [
+                'eventName' => $event->get('name'),
+                'translatedEntityType' => $this->language->translateLabel($eventType, 'scopeNames'),
+                'translatedStatus' => $this->language->translateOption($eventStatus, 'status', $eventType),
+                'style' => $this->metadata->get(['entityDefs', $eventType, 'fields', 'status', 'style', $eventStatus]),
+            ];
+
+            $this->actionRenderer->write(
+                $response,
+                ActionRenderer\Params
+                    ::create('crm:controllers/event-confirmation', 'confirmEvent', $actionData)
+            );
 
             return;
         }
@@ -169,6 +182,11 @@ class EventConfirmation implements EntryPoint
                 $actionData
             );
         }
+
+        $actionData['translatedEntityType'] = $this->language->translateLabel($eventType, 'scopeNames');
+        $actionData['translatedStatus'] = $this->language->translateOption($status, 'acceptanceStatus', $eventType);
+        $actionData['style'] = $this->metadata
+            ->get(['entityDefs', $eventType, 'fields', 'acceptanceStatus', 'style', $status]);
 
         $this->actionRenderer->write(
             $response,
