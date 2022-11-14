@@ -29,11 +29,14 @@
 
 namespace Espo\Modules\Crm\Services;
 
+use Espo\Entities\Email;
+use Espo\Modules\Crm\Entities\CaseObj as CaseEntity;
+use Espo\Modules\Crm\Entities\Contact as ContactEntity;
 use Espo\ORM\Entity;
 use Espo\Services\Record;
 
 /**
- * @extends Record<\Espo\Modules\Crm\Entities\CaseObj>
+ * @extends Record<CaseEntity>
  */
 class CaseObj extends Record
 {
@@ -41,23 +44,29 @@ class CaseObj extends Record
         'articles',
     ];
 
+    /**
+     * @param CaseEntity $entity
+     */
     public function beforeCreateEntity(Entity $entity, $data)
     {
         parent::beforeCreateEntity($entity, $data);
 
         if ($this->user->isPortal()) {
             if (!$entity->has('accountId')) {
-                if ($this->user->get('contactId')) {
-                    $contact = $this->entityManager->getEntity('Contact', $this->user->get('contactId'));
+                if ($this->user->getContactId()) {
+                    /** @var ?ContactEntity $contact */
+                    $contact = $this->entityManager
+                        ->getEntityById(ContactEntity::ENTITY_TYPE, $this->user->getContactId());
 
-                    if ($contact && $contact->get('accountId')) {
-                        $entity->set('accountId', $contact->get('accountId'));
+                    if ($contact && $contact->getAccount()) {
+                        $entity->set('accountId', $contact->getAccount()->getId());
                     }
                 }
             }
+
             if (!$entity->has('contactId')) {
-                if ($this->user->get('contactId')) {
-                    $entity->set('contactId', $this->user->get('contactId'));
+                if ($this->user->getContactId()) {
+                    $entity->set('contactId', $this->user->getContactId());
                 }
             }
         }
@@ -68,11 +77,12 @@ class CaseObj extends Record
         parent::afterCreateEntity($entity, $data);
 
         if (!empty($data->emailId)) {
-            $email = $this->entityManager->getEntity('Email', $data->emailId);
+            /** @var ?Email $email */
+            $email = $this->entityManager->getEntityById(Email::ENTITY_TYPE, $data->emailId);
 
-            if ($email && !$email->get('parentId') && $this->getAcl()->check($email)) {
+            if ($email && !$email->getParentId() && $this->acl->check($email)) {
                 $email->set([
-                    'parentType' => 'Case',
+                    'parentType' => CaseEntity::ENTITY_TYPE,
                     'parentId' => $entity->getId(),
                 ]);
 
