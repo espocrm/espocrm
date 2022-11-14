@@ -495,8 +495,9 @@ function (
 
         /**
          * @private
+         * @param {boolean} [afterLogin]
          */
-        onAuth: function () {
+        onAuth: function (afterLogin) {
             this.metadata.load().then(() => {
                 this.fieldManager.defs = this.metadata.get('fields');
                 this.fieldManager.metadata = this.metadata;
@@ -577,7 +578,9 @@ function (
                         this.initRouter();
                     });
 
-                this.broadcastChannel.postMessage('logged-in');
+                if (afterLogin) {
+                    this.broadcastChannel.postMessage('logged-in');
+                }
             });
         },
 
@@ -893,8 +896,6 @@ function (
          * @public
          */
         initAuth: function () {
-            this.on('auth', this.onAuth, this);
-
             this.auth = this.storage.get('user', 'auth') || null;
             this.anotherUser = this.storage.get('user', 'anotherUser') || null;
 
@@ -920,7 +921,7 @@ function (
 
                 this.setCookieAuth(userName, token);
 
-                this.initUserData(data, () => this.trigger('auth'));
+                this.initUserData(data, () => this.onAuth(true));
             });
 
             this.baseController.on('logout', () => this.logout());
@@ -1081,12 +1082,10 @@ function (
                 let xhr = new XMLHttpRequest();
 
                 xhr.open('GET', this.basePath + this.apiUrl + '/');
-
                 xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
 
                 xhr.onreadystatechange = () => {
                     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-
                         let arr = Base64.decode(this.auth).split(':');
 
                         this.setCookieAuth(arr[0], arr[1]);
