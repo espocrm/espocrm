@@ -437,7 +437,7 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
                 collection.setOrder(null, null);
 
                 collection.url = collection.name + '/action/listTree';
-                collection.maxDepth = 1;
+                collection.maxDepth = null;
                 collection.data.checkIfEmpty = true;
 
                 if (!this.getAcl().checkScope(this.scope, 'create')) {

@@ -221,7 +221,7 @@ define('views/record/list-tree-item', 'view', function (Dep) {
                 this.getCollectionFactory().create(this.scope, function (collection) {
                     collection.url = this.collection.url;
                     collection.parentId = this.model.id;
-                    collection.maxDepth = 1;
+                    collection.maxDepth = null;
 
                     Espo.Ui.notify(' ... ');
 
