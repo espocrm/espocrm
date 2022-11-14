@@ -691,7 +691,7 @@ function (Dep, SearchManager, RecordModal) {
                 message: this.translate('unlinkRecordConfirmation', 'messages'),
                 confirmText: this.translate('Unlink'),
             }, () => {
-                this.notify('Unlinking...');
+                Espo.Ui.notify(' ... ');
 
                 Espo.Ajax
                     .deleteRequest(this.collection.url, {
@@ -719,9 +719,9 @@ function (Dep, SearchManager, RecordModal) {
                 message: this.translate('removeRecordConfirmation', 'messages'),
                 confirmText: this.translate('Remove'),
             }, () => {
-                var model = this.collection.get(id);
+                let model = this.collection.get(id);
 
-                this.notify('Removing...');
+                Espo.Ui.notify(' ... ');
 
                 model
                     .destroy()
@@ -743,7 +743,7 @@ function (Dep, SearchManager, RecordModal) {
          */
         actionUnlinkAllRelated: function (data) {
             this.confirm(this.translate('unlinkAllConfirmation', 'messages'), () => {
-                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+                Espo.Ui.notify(' ... ');
 
                 Espo.Ajax
                     .postRequest(this.model.name + '/action/unlinkAll', {
