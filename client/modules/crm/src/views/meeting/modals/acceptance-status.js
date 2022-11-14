@@ -57,11 +57,11 @@ define('crm:views/meeting/modals/acceptance-status', ['views/modal'], function (
             Dep.prototype.setup.call(this);
 
             this.$header = $('<span>').append(
-                this.translate(this.model.entityType, 'scopeNames'),
+                $('<span>').text(this.translate(this.model.entityType, 'scopeNames')),
                 ' <span class="chevron-right"></span> ',
-                this.model.get('name'),
+                $('<span>').text(this.model.get('name')),
                 ' <span class="chevron-right"></span> ',
-                this.translate('Acceptance', 'labels', 'Meeting')
+                $('<span>').text(this.translate('Acceptance', 'labels', 'Meeting'))
             );
 
             let statusList = this.getMetadata()
