@@ -102,128 +102,83 @@ class Service implements Crud,
 
     /** @var bool */
     protected $getEntityBeforeUpdate = false;
-
     /** @var string */
     protected $entityType;
-
     /** @var ?StreamService */
     private $streamService = null;
-
     /**
      * @var string[]
      * @todo Maybe remove it?
      */
     protected $notFilteringAttributeList = [];
-
     /** @var string[] */
     protected $forbiddenAttributeList = [];
-
     /** @var string[] */
     protected $internalAttributeList = [];
-
     /** @var string[] */
     protected $onlyAdminAttributeList = [];
-
     /** @var string[] */
     protected $readOnlyAttributeList = [];
-
     /** @var string[] */
     protected $nonAdminReadOnlyAttributeList = [];
-
     /** @var string[] */
     protected $forbiddenLinkList = [];
-
     /** @var string[] */
     protected $internalLinkList = [];
-
     /** @var string[] */
     protected $readOnlyLinkList = [];
-
     /** @var string[] */
     protected $nonAdminReadOnlyLinkList = [];
-
     /** @var string[] */
     protected $onlyAdminLinkList = [];
-
-    /** @var array<string,array<string,mixed>> */
+    /** @var array<string,array<string, mixed>> */
     protected $linkParams = [];
-
     /** @var array<string,string[]> */
     protected $linkMandatorySelectAttributeList = [];
-
     /** @var string[] */
     protected $noEditAccessRequiredLinkList = [];
-
     /** @var bool */
     protected $noEditAccessRequiredForLink = false;
-
     /** @var bool */
     protected $checkForDuplicatesInUpdate = false;
-
     /** @var bool */
     protected $actionHistoryDisabled = false;
-
     /** @var string[] */
     protected $duplicatingLinkList = [];
-
     /** @var bool */
     protected $listCountQueryDisabled = false;
-
     /** @var ?int */
     protected $maxSelectTextAttributeLength = null;
-
     /** @var bool */
     protected $maxSelectTextAttributeLengthDisabled = false;
-
     /** @var ?string[] */
     protected $selectAttributeList = null;
-
     /** @var string[] */
     protected $mandatorySelectAttributeList = [];
-
     /** @var bool */
     protected $forceSelectAllAttributes = false;
-
     /** @var string[] */
     protected $validateSkipFieldList = [];
-
     /**
      * @todo Move to metadata.
      * @var string[]
      */
     protected $validateRequiredSkipFieldList = [];
-
     /** @var string[] */
     protected $duplicateIgnoreAttributeList = [];
 
-    /**
-     * @var Acl
-     */
+    /** @var Acl */
     protected $acl = null;
-
-    /**
-     * @var User
-     */
+    /** @var User */
     protected $user = null;
-
-    /**
-     * @var EntityManager
-     */
+    /** @var EntityManager */
     protected $entityManager;
-
-    /**
-     * @var SelectBuilderFactory
-     */
+    /** @var SelectBuilderFactory */
     protected $selectBuilderFactory;
-
-    /**
-     * @var RecordHookManager
-     */
+    /** @var RecordHookManager */
     protected $recordHookManager;
-
     /** @var ?ListLoadProcessor */
     private $listLoadProcessor = null;
-
     /** @var ?DuplicateFinder */
     private $duplicateFinder = null;
 
