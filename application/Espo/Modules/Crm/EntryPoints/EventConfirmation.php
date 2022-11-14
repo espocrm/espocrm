@@ -86,7 +86,9 @@ class EventConfirmation implements EntryPoint
             ->findOne();
 
         if (!$uniqueId) {
-            throw new NotFound();
+            $this->actionRenderer->write($response, ActionRenderer\Params::create('controllers/base', 'error404'));
+
+            return;
         }
 
         $data = $uniqueId->getData();
@@ -112,13 +114,17 @@ class EventConfirmation implements EntryPoint
         $invitee = $this->entityManager->getEntityById($inviteeType, $inviteeId);
 
         if (!$event || !$invitee) {
-            throw new NotFound();
+            $this->actionRenderer->write($response, ActionRenderer\Params::create('controllers/base', 'error404'));
+
+            return;
         }
 
         $eventStatus = $event->get('status');
 
         if (in_array($eventStatus, [Meeting::STATUS_HELD, Meeting::STATUS_NOT_HELD])) {
-            throw new NotFound();
+            $this->actionRenderer->write($response, ActionRenderer\Params::create('controllers/base', 'error404'));
+
+            return;
         }
 
         $status = match($action) {
