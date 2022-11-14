@@ -855,6 +855,60 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testJoinConditions6(): void
+    {
+        $query = $this->queryBuilder
+            ->select('id')
+            ->from('Note')
+            ->leftJoin(
+                'Post',
+                'post',
+                Condition::equal(
+                    Expression::column('id'),
+                    Expression::column('post.id')
+                )
+            )
+            ->withDeleted()
+            ->build();
+
+        $sql = $this->query->composeSelect($query);
+
+        $expectedSql = "SELECT note.id AS `id` FROM `note` LEFT JOIN `post` AS `post` ON note.id = post.id";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testJoinConditions7(): void
+    {
+        $query = $this->queryBuilder
+            ->select('id')
+            ->from('Note')
+            ->leftJoin(
+                'Post',
+                'post',
+                Condition::or(
+                    Condition::equal(
+                        Expression::column('id'),
+                        Expression::column('post.id')
+                    ),
+                    Condition::equal(
+                        Expression::column('post.id'),
+                        Expression::column('id')
+                    )
+                )
+            )
+            ->withDeleted()
+            ->build();
+
+        $sql = $this->query->composeSelect($query);
+
+        $expectedSql =
+            "SELECT note.id AS `id` FROM `note` ".
+            "LEFT JOIN `post` AS `post` ON (note.id = post.id OR post.id = note.id)";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testJoinTable1()
     {
         $sql = $this->query->compose(Select::fromRaw([

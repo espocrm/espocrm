@@ -3013,7 +3013,8 @@ abstract class BaseQueryComposer implements QueryComposer
         string $alias,
         $left,
         $right,
-        array $params
+        array $params,
+        bool $noLeftAlias = false
     ): string {
 
         $sql = '';
@@ -3028,7 +3029,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $sqlList = [];
 
             foreach ($right as $k => $v) {
-                $sqlList[] = $this->buildJoinConditionStatement($entity, $alias, $k, $v, $params);
+                $sqlList[] = $this->buildJoinConditionStatement($entity, $alias, $k, $v, $params, $noLeftAlias);
             }
 
             $sql = implode(' ' .$logicalOperator . ' ', $sqlList);
@@ -3071,16 +3072,20 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if (!$isComplex) {
             if (strpos($left, '.') > 0) {
-                list($alias, $attribute) = explode('.', $left);
+                list($leftAlias, $attribute) = explode('.', $left);
 
-                $alias = $this->sanitize($alias);
+                $leftAlias = $this->sanitize($leftAlias);
                 $column = $this->toDb($this->sanitize($attribute));
             }
             else {
                 $column = $this->toDb($this->sanitize($left));
+
+                $leftAlias = $noLeftAlias ?
+                    $this->getFromAlias($params, $entity->getEntityType()) :
+                    $this->sanitize($alias);
             }
 
-            $sql .= "{$alias}.{$column}";
+            $sql .= "{$leftAlias}.{$column}";
         }
 
         if (is_array($right)) {
@@ -3161,7 +3166,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
             $table = $this->toDb($this->sanitize($name));
 
-            $sql = $prefix . "JOIN " . $this->quoteIdentifier($table) . " AS " . $this->quoteIdentifier($alias) . "";
+            $sql = $prefix . "JOIN " . $this->quoteIdentifier($table) . " AS " . $this->quoteIdentifier($alias);
 
             if (empty($conditions)) {
                 return $sql;
@@ -3177,7 +3182,8 @@ abstract class BaseQueryComposer implements QueryComposer
                     $alias,
                     $left,
                     $right,
-                    $params
+                    $params,
+                    $joinParams['noLeftAlias'] ?? false,
                 );
             }
 

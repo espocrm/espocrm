@@ -185,6 +185,8 @@ trait SelectingBuilderTrait
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
      * @param WhereItem|array<mixed, mixed>|null $conditions Join conditions.
+     *
+     * @todo Support USE INDEX in Join.
      */
     private function joinInternal(string $type, $target, ?string $alias = null, $conditions = null): self
     {
@@ -201,8 +203,12 @@ trait SelectingBuilderTrait
             throw new InvalidArgumentException("Conditions must be WhereItem or array.");
         }
 
+        $noLeftAlias = false;
+
         if ($conditions instanceof WhereItem) {
             $conditions = $conditions->getRaw();
+
+            $noLeftAlias = true;
         }
 
         if (empty($this->params[$type])) {
@@ -235,7 +241,13 @@ trait SelectingBuilderTrait
             return $this;
         }
 
-        $this->params[$type][] = [$target, $alias, $conditions];
+        $item = [$target, $alias, $conditions];
+
+        if ($noLeftAlias) {
+            $item[] = ['noLeftAlias' => true];
+        }
+
+        $this->params[$type][] = $item;
 
         return $this;
     }

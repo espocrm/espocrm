@@ -511,12 +511,11 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
 
     public function testJoin5()
     {
-        $paramsExpected = Select::fromRaw([
-            'from' => 'Test',
-            'joins' => [
-                ['Test1', 'test1', ['k=' => 'v']],
-            ],
-        ]);
+        $paramsExpected = $this->queryBuilder
+            ->select()
+            ->from('Test')
+            ->join('Test1', 'test1', Cond::equal(Expr::column('k'), 'v'))
+            ->build();
 
         $this->mapper
             ->expects($this->once())
@@ -549,12 +548,11 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
 
     public function testLeftJoin2()
     {
-        $paramsExpected = Select::fromRaw([
-            'from' => 'Test',
-            'leftJoins' => [
-                ['Test1', 'test1', ['k=' => 'v']],
-            ],
-        ]);
+        $paramsExpected = $this->queryBuilder
+            ->select()
+            ->from('Test')
+            ->leftJoin('Test1', 'test1', Cond::equal(Expr::column('k'), 'v'))
+            ->build();
 
         $this->mapper
             ->expects($this->once())
@@ -1434,7 +1432,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->select(['id'])
             ->distinct()
             ->where(Cond::equal(Expr::column('name'), 'test'))
-            ->join('Test', 'test', ['id=:' => 'id'])
+            ->join('Test', 'test', Cond::equal(Expr::column('test.id'), Expr::column('id')))
             ->order('id', 'DESC')
             ->build();
 
@@ -1451,7 +1449,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->join(
                 'Test',
                 'test',
-                Cond::equal(Expr::column('id'), Expr::column('id'))
+                Cond::equal(Expr::column('test.id'), Expr::column('id'))
             )
             ->order('id', 'DESC')
             ->find();

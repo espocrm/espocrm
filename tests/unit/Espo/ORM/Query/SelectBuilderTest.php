@@ -616,7 +616,8 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
                 'table1',
                 [
                     'table1.testId=:' => 'id'
-                ]
+                ],
+                ['noLeftAlias' => true]
             ]
         ];
 
@@ -626,7 +627,8 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
                 'table2',
                 [
                     'table2.testId=:' => 'id'
-                ]
+                ],
+                ['noLeftAlias' => true]
             ]
         ];
 
