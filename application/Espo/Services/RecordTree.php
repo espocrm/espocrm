@@ -113,7 +113,7 @@ class RecordTree extends Record
             $maxDepth = self::MAX_DEPTH;
         }
 
-        if ($level === self::MAX_DEPTH) {
+        if ($level === $maxDepth) {
             return null;
         }
 
