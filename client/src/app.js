@@ -358,6 +358,11 @@ function (
         /**
          * @private
          */
+        started: false,
+
+        /**
+         * @private
+         */
         initCache: function (options) {
             let cacheTimestamp = options.cacheTimestamp || null;
             let storedCacheTimestamp = null;
@@ -483,6 +488,8 @@ function (
          */
         start: function () {
             this.initAuth();
+
+            this.started = true;
 
             if (!this.auth) {
                 this.baseController.login();
@@ -1335,7 +1342,7 @@ function (
             this.broadcastChannel = new BroadcastChannel();
 
             this.broadcastChannel.subscribe(event => {
-                if (!this.auth) {
+                if (!this.auth && this.started) {
                     if (event.data === 'logged-in') {
                         window.location.reload();
                     }
@@ -1382,7 +1389,7 @@ function (
                     return;
                 }
 
-                if (event.data === 'logged-out') {
+                if (event.data === 'logged-out' && this.started) {
                     if (this.auth && this.router.confirmLeaveOut) {
                         Ui.error(this.language.translate('loggedOutLeaveOut', 'messages'), true);
 
