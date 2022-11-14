@@ -62,7 +62,6 @@ use Espo\Core\Di;
 use stdClass;
 use InvalidArgumentException;
 use LogicException;
-use tests\unit\testData\DB\TEntity;
 
 /**
  * The layer between a controller and ORM repository. For CRUD and other operations with records.
