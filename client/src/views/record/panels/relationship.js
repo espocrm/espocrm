@@ -109,11 +109,12 @@ function (Dep, SearchManager, RecordModal) {
             let linkReadOnly = this.getMetadata()
                 .get(['entityDefs', this.model.entityType, 'links', this.link, 'readOnly']) || false;
 
-            var url = this.url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
+            let url = this.url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
 
             if (!('create' in this.defs)) {
                 this.defs.create = true;
             }
+
             if (!('select' in this.defs)) {
                 this.defs.select = true;
             }
@@ -138,17 +139,22 @@ function (Dep, SearchManager, RecordModal) {
             if (this.defs.createDisabled) {
                 this.defs.create = false;
             }
+
             if (this.defs.selectDisabled) {
                 this.defs.select = false;
             }
+
             if (this.defs.viewDisabled) {
                 this.defs.view = false;
             }
 
-            var hasCreate = false;
+            let hasCreate = false;
 
             if (this.defs.create) {
-                if (this.getAcl().check(this.scope, 'create') && !~this.noCreateScopeList.indexOf(this.scope)) {
+                if (
+                    this.getAcl().check(this.scope, 'create') &&
+                    !~this.noCreateScopeList.indexOf(this.scope)
+                ) {
                     this.buttonList.push({
                         title: 'Create',
                         action: this.defs.createAction || 'createRelated',
@@ -157,6 +163,7 @@ function (Dep, SearchManager, RecordModal) {
                         data: {
                             link: this.link,
                         },
+                        acl: this.defs.createRequiredAccess || null,
                     });
 
                     hasCreate = true;
@@ -164,7 +171,7 @@ function (Dep, SearchManager, RecordModal) {
             }
 
             if (this.defs.select) {
-                var data = {link: this.link};
+                let data = {link: this.link};
 
                 if (this.defs.selectPrimaryFilterName) {
                     data.primaryFilterName = this.defs.selectPrimaryFilterName;
@@ -181,14 +188,14 @@ function (Dep, SearchManager, RecordModal) {
                     label: 'Select',
                     action: this.defs.selectAction || 'selectRelated',
                     data: data,
-                    acl: 'edit'
+                    acl: this.defs.selectRequiredAccess || 'edit',
                 });
             }
 
             if (this.defs.view) {
                 this.actionList.unshift({
                     label: 'View List',
-                    action: this.defs.viewAction || 'viewRelatedList'
+                    action: this.defs.viewAction || 'viewRelatedList',
                 });
             }
 
@@ -201,9 +208,9 @@ function (Dep, SearchManager, RecordModal) {
                 layoutName = this.listLayoutName;
             }
 
-            var listLayout = null;
+            let listLayout = null;
 
-            var layout = this.defs.layout || null;
+            let layout = this.defs.layout || null;
 
             if (layout) {
                 if (typeof layout === 'string') {
@@ -221,11 +228,11 @@ function (Dep, SearchManager, RecordModal) {
 
             this.wait(true);
 
-            this.getCollectionFactory().create(this.scope, (collection) => {
+            this.getCollectionFactory().create(this.scope, collection => {
                 collection.maxSize = this.recordsPerPage || this.getConfig().get('recordsPerPageSmall') || 5;
 
                 if (this.defs.filters) {
-                    var searchManager = new SearchManager(collection, 'listRelationship', false, this.getDateTime());
+                    let searchManager = new SearchManager(collection, 'listRelationship', false, this.getDateTime());
                     searchManager.setAdvanced(this.defs.filters);
                     collection.where = searchManager.getWhere();
                 }
@@ -243,16 +250,12 @@ function (Dep, SearchManager, RecordModal) {
                 this.setFilter(this.filter);
 
                 if (this.fetchOnModelAfterRelate) {
-                    this.listenTo(this.model, 'after:relate', () => {
-                        collection.fetch();
-                    });
+                    this.listenTo(this.model, 'after:relate', () => collection.fetch());
                 }
 
-                this.listenTo(this.model, 'update-all', () => {
-                    collection.fetch();
-                });
+                this.listenTo(this.model, 'update-all', () => collection.fetch());
 
-                var viewName =
+                let viewName =
                     this.defs.recordListView ||
                     this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'listRelated']) ||
                     this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
@@ -274,7 +277,7 @@ function (Dep, SearchManager, RecordModal) {
                         rowActionsOptions: {
                             unlinkDisabled: this.defs.unlinkDisabled,
                         },
-                    }, (view) =>{
+                    }, view => {
                         view.getSelectAttributeList((selectAttributeList) => {
                             if (selectAttributeList) {
                                 collection.data.select = selectAttributeList.join(',');
@@ -282,11 +285,11 @@ function (Dep, SearchManager, RecordModal) {
 
                             if (!this.defs.hidden) {
                                 collection.fetch();
-                            } else {
-                                this.once('show', () => {
-                                    collection.fetch();
-                                });
+
+                                return;
                             }
+
+                            this.once('show', () => collection.fetch());
                         });
                     });
                 });
