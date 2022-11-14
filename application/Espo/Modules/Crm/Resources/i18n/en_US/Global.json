@@ -118,5 +118,13 @@
     },
     "notificationMessages": {
         "eventAttendee": "{user} added you to {entityType} {entity}"
+    },
+    "streamMessages": {
+        "eventConfirmationAccepted": "{invitee} accepted participation in {entityType} {entity}",
+        "eventConfirmationDeclined": "{invitee} declined participation in {entityType} {entity}",
+        "eventConfirmationTentative": "{invitee} is tentative about participation in {entityType} {entity}",
+        "eventConfirmationAcceptedThis": "{invitee} accepted participation",
+        "eventConfirmationDeclinedThis": "{invitee} declined participation",
+        "eventConfirmationTentativeThis": "{invitee} is tentative about participation"
     }
 }

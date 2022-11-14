@@ -38,12 +38,18 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\HookManager;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Client\ActionRenderer;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\Note;
 use Espo\Entities\UniqueId;
+use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Meeting;
+use Espo\ORM\Entity;
 
 class EventConfirmation implements EntryPoint
 {
     use NoAuth;
+
+    private const NOTE_TYPE = 'EventConfirmation';
 
     private const ACTION_ACCEPT = 'accept';
     private const ACTION_DECLINE = 'decline';
@@ -52,7 +58,8 @@ class EventConfirmation implements EntryPoint
     public function __construct(
         private EntityManager $entityManager,
         private HookManager $hookManager,
-        private ActionRenderer $actionRenderer
+        private ActionRenderer $actionRenderer,
+        private Metadata $metadata
     ) {}
 
     /**
@@ -121,11 +128,6 @@ class EventConfirmation implements EntryPoint
             default => Meeting::ATTENDEE_STATUS_NONE,
         };
 
-        $this->entityManager
-            ->getRDBRepository($eventType)
-            ->getRelation($event, $link)
-            ->updateColumns($invitee, ['status' => $status]);
-
         $actionData = [
             'eventName' => $event->get('name'),
             'eventType' => $event->getEntityType(),
@@ -138,18 +140,55 @@ class EventConfirmation implements EntryPoint
             'inviteeId' => $invitee->getId(),
         ];
 
-        $this->hookManager->process(
-            $event->getEntityType(),
-            'afterConfirmation',
-            $event,
-            [],
-            $actionData
-        );
+        $currentStatus = $this->entityManager
+            ->getRDBRepository($eventType)
+            ->getRelation($event, $link)
+            ->getColumn($invitee, 'status');
+
+        if ($currentStatus !== $status) {
+            $this->entityManager
+                ->getRDBRepository($eventType)
+                ->getRelation($event, $link)
+                ->updateColumns($invitee, ['status' => $status]);
+
+            if ($this->metadata->get(['scopes', $eventType, 'stream'])) {
+                $this->createNote($event, $invitee, $status);
+            }
+
+            $this->hookManager->process(
+                $event->getEntityType(),
+                'afterConfirmation',
+                $event,
+                [],
+                $actionData
+            );
+        }
 
         $this->actionRenderer->write(
             $response,
             ActionRenderer\Params
                 ::create('crm:controllers/event-confirmation', 'confirmEvent', $actionData)
         );
+    }
+
+    private function createNote(Entity $entity, Entity $invitee, string $status): void
+    {
+        $options = $invitee->getEntityType() === User::ENTITY_TYPE ?
+            ['createdById' => $invitee->getId()] : [];
+
+        $style = $this->metadata
+            ->get(['entityDefs', $entity->getEntityType(), 'fields', 'acceptanceStatus', 'style', $status]);
+
+        $this->entityManager->createEntity(Note::ENTITY_TYPE, [
+            'type' => self::NOTE_TYPE,
+            'parentId' => $entity->getId(),
+            'parentType' => $entity->getEntityType(),
+            'relatedId' => $invitee->getId(),
+            'relatedType' => $invitee->getEntityType(),
+            'data' => [
+                'status' => $status,
+                'style' => $style,
+            ],
+        ], $options);
     }
 }

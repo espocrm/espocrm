@@ -503,7 +503,8 @@ class RecordService
      */
     private function getUserStreamSubscriptionIgnoreWhereClause(User $user): array
     {
-        $ignoreScopeList = $this->getIgnoreScopeList($user);
+        $ignoreScopeList = $this->getIgnoreScopeList($user, true);
+        $ignoreRelatedScopeList = $this->getIgnoreScopeList($user);
 
         if (empty($ignoreScopeList)) {
             return [];
@@ -514,7 +515,7 @@ class RecordService
         $whereClause[] = [
             'OR' => [
                 'relatedType' => null,
-                'relatedType!=' => $ignoreScopeList,
+                'relatedType!=' => $ignoreRelatedScopeList,
             ]
         ];
 
@@ -525,7 +526,7 @@ class RecordService
             ]
         ];
 
-        if (in_array(Email::ENTITY_TYPE, $ignoreScopeList)) {
+        if (in_array(Email::ENTITY_TYPE, $ignoreRelatedScopeList)) {
             $whereClause[] = [
                 'type!=' => [
                     Note::TYPE_EMAIL_RECEIVED,
@@ -695,13 +696,14 @@ class RecordService
             ];
         }
 
-        $ignoreScopeList = $this->getIgnoreScopeList($this->user);
+        $ignoreScopeList = $this->getIgnoreScopeList($this->user, true);
+        $ignoreRelatedScopeList = $this->getIgnoreScopeList($this->user);
 
-        if ($ignoreScopeList !== []) {
+        if ($ignoreRelatedScopeList !== []) {
             $where[] = [
                 'OR' => [
                     'relatedType' => null,
-                    'relatedType!=' => $ignoreScopeList,
+                    'relatedType!=' => $ignoreRelatedScopeList,
                 ]
             ];
 
@@ -712,7 +714,7 @@ class RecordService
                 ]
             ];
 
-            if (in_array(Email::ENTITY_TYPE, $ignoreScopeList)) {
+            if (in_array(Email::ENTITY_TYPE, $ignoreRelatedScopeList)) {
                 $where[] = [
                     'type!=' => [
                         Note::TYPE_EMAIL_RECEIVED,
@@ -922,7 +924,7 @@ class RecordService
     /**
      * @return string[]
      */
-    private function getIgnoreScopeList(User $user): array
+    private function getIgnoreScopeList(User $user, bool $forParent = false): array
     {
         $ignoreScopeList = [];
 
@@ -943,7 +945,7 @@ class RecordService
                 $hasAccess =
                     $aclManager &&
                     $aclManager->checkScope($user, $scope, Table::ACTION_READ) &&
-                    $aclManager->checkScope($user, $scope, Table::ACTION_STREAM);
+                    (!$forParent || $aclManager->checkScope($user, $scope, Table::ACTION_STREAM));
             }
             catch (AclNotImplemented $e) {
                 $hasAccess = false;
