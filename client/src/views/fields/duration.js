@@ -33,9 +33,7 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
         type: 'duration',
 
         listTemplate: 'fields/base/detail',
-
         detailTemplate: 'fields/varchar/detail',
-
         editTemplate: 'fields/duration/edit',
 
         data: function () {
@@ -50,10 +48,10 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
         calculateSeconds: function () {
             this.seconds = 0;
 
-            var start = this.model.get(this.startField);
-            var end = this.model.get(this.endField);
+            let start = this.model.get(this.startField);
+            let end = this.model.get(this.endField);
 
-            if (this.mode === 'edit' || this.mode === 'detail') {
+            if (this.isEditMode() || this.isDetailMode()) {
                 if (this.model.isNew()) {
                     this.seconds = this.model.getFieldParam(this.name, 'default') || 0;
                 }
@@ -78,7 +76,7 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
             }
 
             if (start) {
-                var end = this._getDateEnd();
+                end = this._getDateEnd();
 
                 this.model.set(this.endField, end, {silent: true});
             }
@@ -90,9 +88,9 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
             this.listenTo(this, 'render', () => {
                 this.calculateSeconds();
 
-                var durationOptions = '';
+                let durationOptions = '';
 
-                var options = this.defaultOptions = _.clone(this.model.getFieldParam(this.name, 'options'));
+                let options = this.defaultOptions = _.clone(this.model.getFieldParam(this.name, 'options'));
 
                 if (!this.model.get('isAllDay') && options.indexOf(this.seconds) === -1) {
                     options.push(this.seconds);
@@ -131,8 +129,8 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
                     return;
                 }
 
-                var start = this.model.get(this.startField);
-                var end = this.model.get(this.endField);
+                let start = this.model.get(this.startField);
+                let end = this.model.get(this.endField);
 
                 if (!end || !start) {
                     return;
