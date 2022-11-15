@@ -937,7 +937,7 @@ function (
         /**
          * @private
          */
-        logout: function (afterFail) {
+        logout: function (afterFail, silent) {
             if (this.auth && !afterFail) {
                 let arr = Base64.decode(this.auth).split(':');
 
@@ -957,7 +957,7 @@ function (
                 this.webSocketManager.close();
             }
 
-            let silent = afterFail &&
+            silent = silent || afterFail &&
                 this.auth &&
                 this.auth !== this.storage.get('user', 'auth');
 
@@ -1224,8 +1224,8 @@ function (
                                 break;
                             }
 
-                            if (!this.router) {
-                                Ui.error(this.language.translate('moreThanOnceInstances', 'messages'), true);
+                            if (this.auth) {
+                                this.logout(true, true);
                             }
 
                             console.error('Error 401: Unauthorized.');
