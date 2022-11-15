@@ -58,8 +58,8 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
             }
 
             if (this.model.get('isAllDay')) {
-                var startDate = this.model.get(this.startField + 'Date');
-                var endDate = this.model.get(this.endField + 'Date');
+                let startDate = this.model.get(this.startField + 'Date');
+                let endDate = this.model.get(this.endField + 'Date');
 
                 if (startDate && endDate) {
                     this.seconds = moment(endDate).add(1,'days').unix() - moment(startDate).unix();
@@ -180,19 +180,15 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
                 return '0';
             }
 
-            var d = secondsTotal;
-
-            var days = Math.floor(d / (86400));
-
+            let d = secondsTotal;
+            let days = Math.floor(d / (86400));
             d = d % (86400);
 
-            var hours = Math.floor(d / (3600));
-
+            let hours = Math.floor(d / (3600));
             d = d % (3600);
+            let minutes = Math.floor(d / (60));
 
-            var minutes = Math.floor(d / (60));
-
-            var parts = [];
+            let parts = [];
 
             if (days) {
                 parts.push(days + '' + this.getLanguage().translate('d', 'durationUnits'));
@@ -210,14 +206,14 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
         },
 
         afterRender: function () {
-            var parentView = this.getParentView();
+            let parentView = this.getParentView();
 
             if (parentView && 'getView' in parentView) {
                 this.startFieldView = parentView.getView(this.startField);
                 this.endFieldView = parentView.getView(this.endField);
             }
 
-            if (this.mode === 'edit') {
+            if (this.isEditMode()) {
                 this.$duration = this.$el.find('.main-element');
 
                 this.$duration.on('change', () => {
@@ -227,13 +223,11 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
 
                     this.$duration.find('option.custom').remove();
                 });
-            }
 
-            if (this.mode === 'edit') {
-                var start = this.model.get(this.startField);
-                var end = this.model.get(this.endField);
+                let start = this.model.get(this.startField);
+                let end = this.model.get(this.endField);
 
-                var seconds = this.$duration.val();
+                let seconds = this.$duration.val();
 
                 if (!end && start && seconds) {
                     if (this.endFieldView) {
@@ -252,7 +246,6 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
 
         _getDateEndDate: function () {
             let seconds = this.seconds;
-
             let start = this.model.get(this.startField + 'Date');
 
             if (!start) {
@@ -265,25 +258,22 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
 
             let endUnix = moment.utc(start).unix() + seconds;
 
-            let end = moment.unix(endUnix)
+            return moment.unix(endUnix)
                 .utc()
                 .add(-1, 'day')
                 .format(this.getDateTime().internalDateFormat);
-
-            return end;
         },
 
         _getDateEnd: function () {
-            var seconds = this.seconds;
-
-            var start = this.model.get(this.startField);
+            let seconds = this.seconds;
+            let start = this.model.get(this.startField);
 
             if (!start) {
                 return;
             }
 
-            var endUnix;
-            var end;
+            let endUnix;
+            let end;
 
             if (seconds) {
                 endUnix = moment.utc(start).unix() + seconds;
@@ -298,8 +288,10 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
         },
 
         updateDateEnd: function () {
+            let end;
+
             if (this.model.get('isAllDay')) {
-                var end = this._getDateEndDate();
+                end = this._getDateEndDate();
 
                 setTimeout(() => {
                     this.model.set(this.endField + 'Date', end, {updatedByDuration: true});
@@ -308,7 +300,7 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
                 return;
             }
 
-            var end = this._getDateEnd();
+            end = this._getDateEnd();
 
             setTimeout(() => {
                 this.model.set(this.endField, end, {updatedByDuration: true});
@@ -317,7 +309,7 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
         },
 
         updateDuration: function () {
-            var seconds = this.seconds;
+            let seconds = this.seconds;
 
             if (seconds < 0) {
                 if (this.mode === 'edit') {
@@ -332,15 +324,15 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
                 return;
             }
 
-            if (this.mode === 'edit' && this.$duration && this.$duration.length) {
+            if (this.isEditMode() && this.$duration && this.$duration.length) {
                 this.$duration.find('option.custom').remove();
 
-                var $o = $('<option>')
+                let $o = $('<option>')
                     .val(seconds)
                     .text(this.stringifyDuration(seconds))
                     .addClass('custom');
 
-                var $found = this.$duration.find('option')
+                let $found = this.$duration.find('option')
                     .filter((i, el) => {
                         return $(el).val() >= seconds;
                     })
@@ -349,7 +341,7 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
                 if ($found.length) {
                     if (parseInt($found.val()) !== seconds) {
                         $o.insertBefore($found);
-                    };
+                    }
                 }
                 else {
                     $o.appendTo(this.$duration);
