@@ -178,15 +178,15 @@ define('crm:views/meeting/fields/reminders', ['views/fields/base'], function (De
             let parts = [];
 
             if (days) {
-                parts.push(days + ' ' + this.getLanguage().translate('d'));
+                parts.push(days + ' ' + this.getLanguage().translate('d', 'durationUnits'));
             }
 
             if (hours) {
-                parts.push(hours + ' ' + this.getLanguage().translate('h'));
+                parts.push(hours + ' ' + this.getLanguage().translate('h', 'durationUnits'));
             }
 
             if (minutes) {
-                parts.push(minutes + ' ' + this.getLanguage().translate('m'));
+                parts.push(minutes + ' ' + this.getLanguage().translate('m', 'durationUnits'));
             }
 
             return parts.join(' ') + ' ' + this.translate('before', 'labels', 'Meeting');
