@@ -74,6 +74,7 @@ define('crm:views/calendar/modals/edit', ['views/modals/edit'], function (Dep) {
                     this.handleAccess(model);
                 });
             },
+            ...Dep.prototype.events,
         },
 
         filterAttributesForEntityType: function (attributes, entityType) {
@@ -215,7 +216,12 @@ define('crm:views/calendar/modals/edit', ['views/modals/edit'], function (Dep) {
             Dep.prototype.setup.call(this);
 
             if (!this.id) {
-                this.headerText = this.translate('Create', 'labels', 'Calendar');
+                this.$header = $('<a>')
+                    .attr('title', this.translate('Full Form'))
+                    .attr('role', 'button')
+                    .attr('data-action', 'fullForm')
+                    .addClass('action')
+                    .text(this.translate('Create', 'labels', 'Calendar'));
             }
 
             if (this.id) {
