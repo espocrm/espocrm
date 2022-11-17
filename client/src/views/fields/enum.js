@@ -61,6 +61,8 @@ function (Dep, /** module:ui/multi-select*/MultiSelect, /** module:ui/select*/Se
             'isNotEmpty',
         ],
 
+        validationElementSelector: '.selectize-control',
+
         data: function () {
             let data = Dep.prototype.data.call(this);
 
