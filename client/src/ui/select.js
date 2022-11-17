@@ -37,6 +37,9 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
 
     /**
      * @module ui/select
+     *
+     * Important. Selectize library is heavily customized to fix multitude of UIX issues.
+     * Upgrading is not advisable. Consider forking.
      */
     let Select = {
         /**
@@ -227,6 +230,19 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
             Selectize.define('espo_select', function () {
                 let self = this;
 
+                this.setup = (function () {
+                    let original = self.setup;
+
+                    return function () {
+                        original.apply(this, arguments);
+
+                        self.$dropdown
+                            .on('mouseup', '[data-selectable]', function() {
+                                return self.onOptionSelect.apply(self, arguments);
+                            });
+                    };
+                })();
+
                 this.positionDropdown = (function () {
                     let original = self.positionDropdown;
 
@@ -250,10 +266,57 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                     };
                 })();
 
+                this.blur = (function () {
+                    let original = self.blur;
+
+                    return function () {
+                        // Prevent closing on mouse down.
+                        if (self.preventClose) {
+                            return;
+                        }
+
+                        original.apply(this, arguments);
+                    };
+                })();
+
+                this.close = (function () {
+                    let original = self.close;
+
+                    return function () {
+                        if (self.preventClose) {
+                            return;
+                        }
+
+                        original.apply(this, arguments);
+                    };
+                })();
+
                 this.onOptionSelect = (function () {
                     let original = self.onOptionSelect;
 
                     return function (e) {
+                        if (e.type === 'mousedown' || e.type === 'click') {
+                            self.preventClose = true;
+                            setTimeout(() => self.preventClose = false, 100);
+
+                            return;
+                        }
+
+                        self.preventClose = false;
+
+                        if (e.type === 'mouseup') {
+                            self.preventClose = false;
+
+
+                            setTimeout(() => {
+                                self.preventReOpenOnFocus = true;
+
+                                self.$control_input[0].focus();
+
+                                self.preventReOpenOnFocus = false;
+                            }, 50);
+                        }
+
                         original.apply(this, arguments);
 
                         self.selectedValue = $(e.currentTarget).attr('data-value');
@@ -302,6 +365,10 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                     return function (e) {
                         self.selectedValue = self.getValue();
 
+                        if (self.preventReOpenOnFocus) {
+                            return;
+                        }
+
                         if (self.closedByMouseDown) {
                             self.closedByMouseDown = false;
 
@@ -326,6 +393,11 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                     let original = self.onBlur;
 
                     return function () {
+                        // Prevent closing on mouse down.
+                        if (self.preventClose) {
+                            return;
+                        }
+
                         self.revertValue();
 
                         self.$control_input.css({width: '4px'});
