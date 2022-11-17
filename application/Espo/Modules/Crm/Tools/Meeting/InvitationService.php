@@ -30,15 +30,15 @@
 namespace Espo\Modules\Crm\Tools\Meeting;
 
 use Espo\Core\Acl;
-use Espo\Core\Acl\Table;
 use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\InjectableFactory;
+use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Mail\SmtpParams;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 use Espo\Core\Utils\Config;
-use Espo\Entities\Email;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Business\Event\Invitations;
 use Espo\Modules\Crm\Entities\Contact;
@@ -82,9 +82,10 @@ class InvitationService
      * Send invitations for a meeting (or call). Checks access. Uses user's SMTP if available.
      *
      * @return Entity[] Entities an invitation was sent to.
-     *
-     * @throws Forbidden
      * @throws NotFound
+     * @throws Forbidden
+     * @throws Error
+     * @throws SendingError
      */
     public function send(string $entityType, string $id): array
     {
@@ -98,10 +99,6 @@ class InvitationService
 
         if (!$this->acl->checkEntityEdit($entity)) {
             throw new Forbidden("No edit access.");
-        }
-
-        if (!$this->acl->checkScope(Email::ENTITY_TYPE, Table::ACTION_CREATE)) {
-            throw new Forbidden("No email create access.");
         }
 
         $sender = $this->getSender();
