@@ -29,16 +29,14 @@
 
 namespace Espo\Core\FieldProcessing\Reminder;
 
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Modules\Crm\Entities\Reminder;
 use Espo\ORM\Entity;
-
 use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Core\{
-    ORM\EntityManager,
-    FieldProcessing\Saver as SaverInterface,
-    FieldProcessing\Saver\Params,
-    Utils\Util,
-};
+use Espo\Core\FieldProcessing\Saver as SaverInterface;
+use Espo\Core\FieldProcessing\Saver\Params;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Util;
 
 use stdClass;
 use DateInterval;
@@ -51,12 +49,8 @@ class Saver implements SaverInterface
 {
     protected string $dateAttribute = 'dateStart';
 
-    private EntityManager $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     public function process(Entity $entity, Params $params): void
     {
@@ -94,7 +88,7 @@ class Saver implements SaverInterface
 
         $reminderTypeList = $this->entityManager
             ->getDefs()
-            ->getEntity('Reminder')
+            ->getEntity(Reminder::ENTITY_TYPE)
             ->getField('type')
             ->getParam('options') ?? [];
 
@@ -106,7 +100,7 @@ class Saver implements SaverInterface
             $query = $this->entityManager
                 ->getQueryBuilder()
                 ->delete()
-                ->from('Reminder')
+                ->from(Reminder::ENTITY_TYPE)
                 ->where([
                     'entityId' => $entity->getId(),
                     'entityType' => $entityType,
@@ -172,7 +166,7 @@ class Saver implements SaverInterface
                 $query = $this->entityManager
                     ->getQueryBuilder()
                     ->insert()
-                    ->into('Reminder')
+                    ->into(Reminder::ENTITY_TYPE)
                     ->columns([
                         'id',
                         'entityId',
@@ -189,7 +183,7 @@ class Saver implements SaverInterface
                         'entityType' => $entityType,
                         'type' => $type,
                         'userId' => $userId,
-                        'remindAt' => $remindAt->format('Y-m-d H:i:s'),
+                        'remindAt' => $remindAt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
                         'startAt' => $dateValue,
                         'seconds' => $seconds,
                     ])
@@ -208,7 +202,7 @@ class Saver implements SaverInterface
         $reminderDataList = [];
 
         $reminderCollection = $this->entityManager
-            ->getRDBRepository('Reminder')
+            ->getRDBRepository(Reminder::ENTITY_TYPE)
             ->select(['seconds', 'type'])
             ->where([
                 'entityType' => $entity->getEntityType(),

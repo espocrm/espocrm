@@ -66,7 +66,11 @@
             "type": "jsonArray",
             "notStorable": true,
             "view": "crm:views/meeting/fields/reminders",
-            "dateField": "dateEnd"
+            "dateField": "dateEnd",
+            "validatorClassNameList": [
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\Valid",
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\MaxCount"
+            ]
         },
         "description": {
             "type": "text"
