@@ -26,10 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/fields/reminders', ['views/fields/base', 'ui/select'],
-function (Dep, /** module:ui/select*/Select) {
+define('crm:views/meeting/fields/reminders', ['views/fields/base', 'ui/select', 'lib!moment'],
+function (Dep, /** module:ui/select*/Select, moment) {
 
     return Dep.extend({
+
+        dateField: 'dateStart',
 
         detailTemplate: 'crm:meeting/fields/reminders/detail',
         listTemplate: 'crm:meeting/fields/reminders/detail',
@@ -80,6 +82,14 @@ function (Dep, /** module:ui/select*/Select) {
 
             this.typeList = this.getMetadata().get('entityDefs.Reminder.fields.type.options') || [];
             this.secondsList = this.getMetadata().get('entityDefs.Reminder.fields.seconds.options') || [];
+
+            this.dateField = this.model.getFieldParam(this.name, 'dateField') || this.dateField;
+
+            this.listenTo(this.model, 'change:' + this.dateField, (m, v, o) => {
+                if (this.isEditMode()) {
+                    this.reRender();
+                }
+            });
         },
 
         afterRender: function () {
@@ -129,13 +139,24 @@ function (Dep, /** module:ui/select*/Select) {
                 .attr('data-name', 'seconds')
                 .addClass('form-control radius-right');
 
-            this.secondsList.forEach(seconds => {
-                let $o = $('<option>')
-                    .attr('value', seconds)
-                    .text(this.stringifySeconds(seconds));
+            let limitDate = this.model.get(this.dateField) ?
+                this.getDateTime().toMoment(this.model.get(this.dateField)) : null;
 
-                $seconds.append($o);
-            });
+            this.secondsList
+                .filter(seconds => {
+                    if (seconds === item.seconds || !limitDate) {
+                        return true;
+                    }
+
+                    return moment.utc().add(seconds, 'seconds').isBefore(limitDate);
+                })
+                .forEach(seconds => {
+                    let $o = $('<option>')
+                        .attr('value', seconds)
+                        .text(this.stringifySeconds(seconds));
+
+                    $seconds.append($o);
+                });
 
             $seconds.val(item.seconds);
 
