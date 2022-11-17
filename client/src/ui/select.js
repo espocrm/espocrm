@@ -49,8 +49,9 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
             let plugins = [];
 
             Select.loadEspoSelectPlugin();
-            plugins.push('espo_select');
+
             plugins.push('auto_position');
+            plugins.push('espo_select');
 
             let itemClasses = {};
 
@@ -225,6 +226,16 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
 
             Selectize.define('espo_select', function () {
                 let self = this;
+
+                this.positionDropdown = (function () {
+                    let original = self.positionDropdown;
+
+                    return function () {
+                        original.apply(this, arguments);
+
+                        this.$dropdown.css({margin: 'unset'});
+                    };
+                })();
 
                 this.refreshOptions = (function () {
                     let original = self.refreshOptions;
