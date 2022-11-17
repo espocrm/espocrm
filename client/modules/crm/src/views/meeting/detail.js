@@ -84,10 +84,25 @@ define('crm:views/meeting/detail', ['views/detail'], function (Dep) {
 
             this.removeMenuItem('setAcceptanceStatus');
 
+            let iconHtml = '';
+
+            if (style) {
+                let iconClass = ({
+                    'success': 'fas fa-check-circle',
+                    'danger': 'fas fa-times-circle',
+                    'warning': 'fas fa-question-circle',
+                })[style];
+
+                iconHtml = $('<span>')
+                    .addClass(iconClass)
+                    .addClass('text-' + style)
+                    .get(0).outerHTML;
+            }
+
             this.addMenuItem('buttons', {
                 text: text,
                 action: 'setAcceptanceStatus',
-                style: style,
+                iconHtml: iconHtml,
             });
         },
 
