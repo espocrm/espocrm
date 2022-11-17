@@ -42,6 +42,7 @@ define('crm:views/stream/notes/event-confirmation', ['views/stream/note'], funct
                     {{{avatar}}}
                 </div>
                 <div class="stream-head-text-container">
+                    <span class="{{iconClass}} text-{{style}}"></span>
                     <span class="text-muted message">{{{message}}}</span>
                 </div>
             </div>
@@ -51,9 +52,16 @@ define('crm:views/stream/notes/event-confirmation', ['views/stream/note'], funct
         `,
 
         data: function () {
+            let iconClass = ({
+                'success': 'fas fa-check fa-sm',
+                'danger': 'fas fa-times fa-sm',
+                'warning': 'fas fa-question fa-sm',
+            })[this.style] || '';
+
             return _.extend({
                 statusText: this.statusText,
                 style: this.style,
+                iconClass: iconClass,
             }, Dep.prototype.data.call(this));
         },
 
