@@ -117,7 +117,11 @@ define('dynamic-logic', [], function () {
             let options = this.defs.options || {};
 
             Object.keys(options).forEach(field => {
-                let itemList = options[field] || [];
+                let itemList = options[field];
+
+                if (!options[field]) {
+                    return;
+                }
 
                 let isMet = false;
 

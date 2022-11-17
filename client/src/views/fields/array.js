@@ -272,14 +272,22 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
         },
 
         resetOptionList: function () {
-            if (this.originalOptionList) {
-                this.params.options = Espo.Utils.clone(this.originalOptionList);
+            if (!this.originalOptionList) {
+                return;
             }
 
-            if (this.isEditMode()) {
-                if (this.isRendered()) {
-                    this.reRender();
-                }
+            let previousOptions = this.params.options;
+
+            this.params.options = Espo.Utils.clone(this.originalOptionList);
+
+            let isChanged = !_(previousOptions).isEqual(this.originalOptionList);
+
+            if (!this.isEditMode() || !isChanged) {
+                return;
+            }
+
+            if (this.isRendered()) {
+                this.reRender();
             }
         },
 
