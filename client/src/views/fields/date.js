@@ -199,6 +199,8 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
 
                 let wait = false;
 
+                // @todo Introduce ui/date-picker.
+
                 this.$element.on('change', (e) => {
                     if (!wait) {
                         this.trigger('change');
@@ -213,6 +215,10 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
                     }
                 });
 
+                this.$element.on('click', () => {
+                    this.$element.datepicker('show');
+                });
+
                 let options = {
                     format: this.getDateTime().dateFormat.toLowerCase(),
                     weekStart: this.getDateTime().weekStart,
@@ -220,6 +226,11 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
                     todayHighlight: true,
                     keyboardNavigation: true,
                     todayBtn: this.getConfig().get('datepickerTodayButton') || false,
+                    orientation: 'bottom auto',
+                    templates: {
+                        leftArrow: '<span class="fas fa-chevron-left fa-sm"></span>',
+                        rightArrow: '<span class="fas fa-chevron-right fa-sm"></span>',
+                    },
                 };
 
                 let language = this.getConfig().get('language');
@@ -261,6 +272,10 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
                                 $elAdd.focus();
                             }
                         }
+                    });
+
+                    $elAdd.on('click', () => {
+                        $elAdd.datepicker('show');
                     });
                 }
 

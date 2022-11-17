@@ -1,3 +1,19 @@
+.datepicker.datepicker-dropdown {
+    &:before,
+    &:after {
+        display: none;
+    }
+
+    &.datepicker-orient-bottom {
+        margin-top: 0;
+    }
+
+    .next,
+    .prev {
+        color: var(--gray-soft);
+    }
+}
+
 .datepicker {
   border-radius: @border-radius-base;
   &-inline {
