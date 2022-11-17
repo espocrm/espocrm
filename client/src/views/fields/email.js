@@ -33,9 +33,7 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
         type: 'email',
 
         editTemplate: 'fields/email/edit',
-
         detailTemplate: 'fields/email/detail',
-
         listTemplate: 'fields/email/list',
 
         validations: ['required', 'emailData'],
@@ -94,7 +92,7 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
         validateRequired: function () {
             if (this.isRequired()) {
                 if (!this.model.get(this.name)) {
-                    var msg = this.translate('fieldIsRequired', 'messages')
+                    let msg = this.translate('fieldIsRequired', 'messages')
                         .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg, 'div.email-address-block:nth-child(1) input');
@@ -105,28 +103,29 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
         },
 
         data: function () {
-            var emailAddressData;
+            let emailAddressData;
 
-            if (this.mode === 'edit') {
+            if (this.mode === this.MODE_EDIT) {
                 emailAddressData = Espo.Utils.clone(this.model.get(this.dataFieldName));
 
                 if (this.model.isNew() || !this.model.get(this.name)) {
                     if (!emailAddressData || !emailAddressData.length) {
-                        var optOut = false;
+                        let optOut;
+
                         if (this.model.isNew()) {
                             optOut = this.emailAddressOptedOutByDefault && this.model.name !== 'User';
                         } else {
                             optOut = this.model.get(this.isOptedOutFieldName)
                         }
+
                         emailAddressData = [{
                             emailAddress: this.model.get(this.name) || '',
                             primary: true,
                             optOut: optOut,
-                            invalid: false
+                            invalid: false,
                         }];
                     }
                 }
-
             } else {
                 emailAddressData = this.model.get(this.dataFieldName) || false;
             }
@@ -136,7 +135,7 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
                     emailAddress: this.model.get(this.name),
                     primary: true,
                     optOut: false,
-                    invalid: false
+                    invalid: false,
                 }];
             }
 
@@ -183,10 +182,9 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
                 this.mailTo($(e.currentTarget).data('email-address'));
             },
             'click [data-action="switchEmailProperty"]': function (e) {
-                var $target = $(e.currentTarget);
-                var $block = $(e.currentTarget).closest('div.email-address-block');
-                var property = $target.data('property-type');
-
+                let $target = $(e.currentTarget);
+                let $block = $(e.currentTarget).closest('div.email-address-block');
+                let property = $target.data('property-type');
 
                 if (property === 'primary') {
                     if (!$target.hasClass('active')) {
@@ -209,7 +207,7 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
             },
 
             'click [data-action="removeEmailAddress"]': function (e) {
-                var $block = $(e.currentTarget).closest('div.email-address-block');
+                let $block = $(e.currentTarget).closest('div.email-address-block');
 
                 if ($block.parent().children().length === 1) {
                     $block.find('input.email-address').val('');
@@ -221,8 +219,8 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
             },
 
             'change input.email-address': function (e) {
-                var $input = $(e.currentTarget);
-                var $block = $input.closest('div.email-address-block');
+                let $input = $(e.currentTarget);
+                let $block = $input.closest('div.email-address-block');
 
                 if ($input.val() === '') {
                     if ($block.parent().children().length === 1) {
@@ -246,11 +244,11 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
                 }.bind(this), 10);
             },
             'click [data-action="addEmailAddress"]': function () {
-                var data = Espo.Utils.cloneDeep(this.fetchEmailAddressData());
+                let data = Espo.Utils.cloneDeep(this.fetchEmailAddressData());
 
                 let o = {
                     emailAddress: '',
-                    primary: data.length ? false : true,
+                    primary: !data.length,
                     optOut: this.emailAddressOptedOutByDefault,
                     invalid: false,
                     lower: '',
@@ -264,7 +262,7 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
         },
 
         removeEmailAddressBlock: function ($block) {
-            var changePrimary = false;
+            let changePrimary = false;
 
             if ($block.find('button[data-property-type="primary"]').hasClass('active')) {
                 changePrimary = true;
@@ -287,7 +285,7 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
             this.manageButtonsVisibility();
             this.manageAddButton();
 
-            if (this.mode === 'search' && this.getAcl().check('Email', 'create')) {
+            if (this.mode === this.MODE_SEARCH && this.getAcl().check('Email', 'create')) {
                 this.$element.autocomplete({
                     serviceUrl: (q) => {
                         return 'EmailAddress/action/searchInAddressBook?maxSize=' +
@@ -302,8 +300,8 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
                             this.getHelper().escapeString(suggestion.id) + '&#62;';
                     },
                     transformResult: (response) => {
-                        var response = JSON.parse(response);
-                        var list = [];
+                        response = JSON.parse(response);
+                        let list = [];
 
                         response.forEach(item => {
                             list.push({
@@ -314,13 +312,11 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
                                 entityName: item.entityName,
                                 entityType: item.entityType,
                                 data: item.emailAddress,
-                                value: item.emailAddress
+                                value: item.emailAddress,
                             });
                         });
 
-                        return {
-                            suggestions: list
-                        };
+                        return {suggestions: list};
                     },
                     onSelect: (s) => {
                         this.$element.val(s.emailAddress);
@@ -354,8 +350,9 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
         },
 
         manageButtonsVisibility: function () {
-            var $primary = this.$el.find('button[data-property-type="primary"]');
-            var $remove = this.$el.find('button[data-action="removeEmailAddress"]');
+            let $primary = this.$el.find('button[data-property-type="primary"]');
+            let $remove = this.$el.find('button[data-action="removeEmailAddress"]');
+
             if ($primary.length > 1) {
                 $primary.removeClass('hidden');
                 $remove.removeClass('hidden');
@@ -366,12 +363,12 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
         },
 
         mailTo: function (emailAddress) {
-            var attributes = {
+            let attributes = {
                 status: 'Draft',
                 to: emailAddress
             };
 
-            var scope = this.model.name;
+            let scope = this.model.name;
 
             switch (scope) {
                 case 'Account':
@@ -428,19 +425,17 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
                 this.getPreferences().get('emailUseExternalClient') ||
                 !this.getAcl().checkScope('Email', 'create')
             ) {
-                require('email-helper', function (EmailHelper) {
-                    var emailHelper = new EmailHelper();
+                require('email-helper', EmailHelper => {
+                    let emailHelper = new EmailHelper();
 
-                    var link = emailHelper
+                    document.location.href = emailHelper
                         .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
-
-                    document.location.href = link;
-                }.bind(this));
+                });
 
                 return;
             }
 
-            var viewName = this.getMetadata()
+            let viewName = this.getMetadata()
                 .get('clientDefs.' + this.scope + '.modalViews.compose') || 'views/modals/compose-email';
 
             Espo.Ui.notify(' ... ');
@@ -471,24 +466,28 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
         },
 
         fetchEmailAddressData: function () {
-            var data = [];
+            let data = [];
 
-            var $list = this.$el.find('div.email-address-block');
+            let $list = this.$el.find('div.email-address-block');
 
             if ($list.length) {
-                $list.each(function (i, d) {
-                    var row = {};
-                    var $d = $(d);
+                $list.each((i, d) => {
+                    let row = {};
+                    let $d = $(d);
+
                     row.emailAddress = $d.find('input.email-address').val().trim();
-                    if (row.emailAddress == '') {
+
+                    if (row.emailAddress === '') {
                         return;
                     }
+
                     row.primary = $d.find('button[data-property-type="primary"]').hasClass('active');
                     row.optOut = $d.find('button[data-property-type="optOut"]').hasClass('active');
                     row.invalid = $d.find('button[data-property-type="invalid"]').hasClass('active');
-                    row.lower = row.emailAddress.toLowerCase()
+                    row.lower = row.emailAddress.toLowerCase();
+
                     data.push(row);
-                }.bind(this));
+                });
             }
 
             return data;
@@ -496,15 +495,17 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
 
 
         fetch: function () {
-            var data = {};
+            let data = {};
 
-            var addressData = this.fetchEmailAddressData() || [];
+            let addressData = this.fetchEmailAddressData() || [];
+
             data[this.dataFieldName] = addressData;
             data[this.name] = null;
             data[this.isOptedOutFieldName] = false;
 
-            var primaryIndex = 0;
-            addressData.forEach(function (item, i) {
+            let primaryIndex = 0;
+
+            addressData.forEach((item, i) => {
                 if (item.primary) {
                     primaryIndex = i;
 
@@ -512,10 +513,11 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
                         data[this.isOptedOutFieldName] = true;
                     }
                 }
-            }, this);
+            });
 
             if (addressData.length && primaryIndex > 0) {
-                var t = addressData[0];
+                let t = addressData[0];
+
                 addressData[0] = addressData[primaryIndex];
                 addressData[primaryIndex] = t;
             }
