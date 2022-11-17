@@ -26,16 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
+define('views/fields/phone', ['views/fields/varchar', 'ui/select'],
+function (Dep, /** module:ui/select*/Select) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @memberOf module:views/fields/phone
+     * @extends module:views/fields/varchar.Class
+     */
+    return Dep.extend(/** @lends module:views/fields/phone.Class */{
 
         type: 'phone',
 
         editTemplate: 'fields/phone/edit',
-
         detailTemplate: 'fields/phone/detail',
-
         listTemplate: 'fields/phone/list',
 
         validations: ['required', 'phoneData'],
@@ -43,7 +48,7 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
         validateRequired: function () {
             if (this.isRequired()) {
                 if (!this.model.get(this.name)) {
-                    var msg = this.translate('fieldIsRequired', 'messages')
+                    let msg = this.translate('fieldIsRequired', 'messages')
                         .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg, 'div.phone-number-block:nth-child(1) input');
@@ -103,14 +108,14 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
         },
 
         data: function () {
-            var phoneNumberData;
+            let phoneNumberData;
 
-            if (this.mode === 'edit') {
+            if (this.mode === this.MODE_EDIT) {
                 phoneNumberData = Espo.Utils.cloneDeep(this.model.get(this.dataFieldName));
 
                 if (this.model.isNew() || !this.model.get(this.name)) {
                     if (!phoneNumberData || !phoneNumberData.length) {
-                        var optOut = false;
+                        let optOut;
 
                         if (this.model.isNew()) {
                             optOut = this.phoneNumberOptedOutByDefault && this.model.name !== 'User';
@@ -135,7 +140,7 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
                 phoneNumberData = Espo.Utils.cloneDeep(phoneNumberData);
 
                 phoneNumberData.forEach((item) => {
-                    var number = item.phoneNumber || '';
+                    let number = item.phoneNumber || '';
 
                     item.erased = number.indexOf(this.erasedPlaceholder) === 0;
 
@@ -148,9 +153,9 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
             }
 
             if ((!phoneNumberData || phoneNumberData.length === 0) && this.model.get(this.name)) {
-                var number = this.model.get(this.name);
+                let number = this.model.get(this.name);
 
-                var o = {
+                let o = {
                     phoneNumber: number,
                     primary: true,
                     valueForLink: number.replace(/ /g, ''),
@@ -163,7 +168,7 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
                 phoneNumberData = [o];
             }
 
-            var data = _.extend({
+            let data = _.extend({
                 phoneNumberData: phoneNumberData,
                 doNotCall: this.model.get('doNotCall'),
                 lineThrough: this.model.get('doNotCall') || this.model.get(this.isOptedOutFieldName),
@@ -190,9 +195,9 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
 
         events: {
             'click [data-action="switchPhoneProperty"]': function (e) {
-                var $target = $(e.currentTarget);
-                var $block = $(e.currentTarget).closest('div.phone-number-block');
-                var property = $target.data('property-type');
+                let $target = $(e.currentTarget);
+                let $block = $(e.currentTarget).closest('div.phone-number-block');
+                let property = $target.data('property-type');
 
                 if (property === 'primary') {
                     if (!$target.hasClass('active')) {
@@ -216,7 +221,7 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
             },
 
             'click [data-action="removePhoneNumber"]': function (e) {
-                var $block = $(e.currentTarget).closest('div.phone-number-block');
+                let $block = $(e.currentTarget).closest('div.phone-number-block');
 
                 if ($block.parent().children().length === 1) {
                     $block.find('input.phone-number').val('');
@@ -228,10 +233,10 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
             },
 
             'change input.phone-number': function (e) {
-                var $input = $(e.currentTarget);
-                var $block = $input.closest('div.phone-number-block');
+                let $input = $(e.currentTarget);
+                let $block = $input.closest('div.phone-number-block');
 
-                if ($input.val() == '') {
+                if ($input.val() === '') {
                     if ($block.parent().children().length === 1) {
                         $block.find('input.phone-number').val('');
                     } else {
@@ -249,13 +254,11 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
             },
 
             'paste input.phone-number': function (e) {
-                setTimeout(function () {
-                    this.manageAddButton();
-                }.bind(this), 10);
+                setTimeout(() => this.manageAddButton(), 10);
             },
 
             'click [data-action="addPhoneNumber"]': function () {
-                var data = Espo.Utils.cloneDeep(this.fetchPhoneNumberData());
+                let data = Espo.Utils.cloneDeep(this.fetchPhoneNumberData());
 
                 let o = {
                     phoneNumber: '',
@@ -268,21 +271,31 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
                 data.push(o);
 
                 this.model.set(this.dataFieldName, data, {silent: true});
-                this.render();
+
+                this.reRender();
             },
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
             this.manageButtonsVisibility();
             this.manageAddButton();
+
+            if (this.mode === this.MODE_EDIT) {
+                this.$el.find('select').toArray().forEach(selectElement => {
+                    Select.init($(selectElement));
+                });
+            }
         },
 
         removePhoneNumberBlock: function ($block) {
-            var changePrimary = false;
+            let changePrimary = false;
+
             if ($block.find('button[data-property-type="primary"]').hasClass('active')) {
                 changePrimary = true;
             }
+
             $block.remove();
 
             if (changePrimary) {
@@ -321,16 +334,21 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
         },
 
         manageButtonsVisibility: function () {
-            var $primary = this.$el.find('button[data-property-type="primary"]');
-            var $remove = this.$el.find('button[data-action="removePhoneNumber"]');
+            let $primary = this.$el.find('button[data-property-type="primary"]');
+            let $remove = this.$el.find('button[data-action="removePhoneNumber"]');
+            let $container = this.$el.find('.phone-number-block-container');
 
             if ($primary.length > 1) {
                 $primary.removeClass('hidden');
                 $remove.removeClass('hidden');
-            } else {
-                $primary.addClass('hidden');
-                $remove.addClass('hidden');
+                $container.addClass('many')
+
+                return;
             }
+
+            $container.removeClass('many')
+            $primary.addClass('hidden');
+            $remove.addClass('hidden');
         },
 
         setup: function () {
@@ -364,18 +382,18 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
         },
 
         fetchPhoneNumberData: function () {
-            var data = [];
+            let data = [];
 
-            var $list = this.$el.find('div.phone-number-block');
+            let $list = this.$el.find('div.phone-number-block');
 
             if ($list.length) {
                 $list.each((i, d) => {
-                    var row = {};
-                    var $d = $(d);
+                    let row = {};
+                    let $d = $(d);
 
                     row.phoneNumber = $d.find('input.phone-number').val().trim();
 
-                    if (row.phoneNumber == '') {
+                    if (row.phoneNumber === '') {
                         return;
                     }
 
@@ -392,14 +410,15 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
         },
 
         fetch: function () {
-            var data = {};
+            let data = {};
 
-            var addressData = this.fetchPhoneNumberData() || [];
+            let addressData = this.fetchPhoneNumberData() || [];
+
             data[this.dataFieldName] = addressData;
             data[this.name] = null;
             data[this.isOptedOutFieldName] = false;
 
-            var primaryIndex = 0;
+            let primaryIndex = 0;
 
             addressData.forEach((item, i) => {
                 if (item.primary) {
@@ -412,7 +431,7 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
             });
 
             if (addressData.length && primaryIndex > 0) {
-                var t = addressData[0];
+                let t = addressData[0];
 
                 addressData[0] = addressData[primaryIndex];
                 addressData[primaryIndex] = t;

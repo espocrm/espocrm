@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/theme', ['views/fields/enum', 'theme-manager'], function (Dep, ThemeManager) {
+define('views/settings/fields/theme', ['views/fields/enum', 'theme-manager', 'ui/select'],
+function (Dep, ThemeManager, /** module:ui/select*/Select) {
 
     return Dep.extend({
 
@@ -78,7 +79,7 @@ define('views/settings/fields/theme', ['views/fields/enum', 'theme-manager'], fu
 
                 if (o.ui) {
                     this.reRender()
-                        .then(() => this.$element.get(0).focus({preventScroll: true}));
+                        .then(() => Select.focus(this.$element, {noTrigger: true}));
                 }
             })
         },
@@ -87,6 +88,8 @@ define('views/settings/fields/theme', ['views/fields/enum', 'theme-manager'], fu
             this.$navbar = this.$el.find('[data-name="themeNavbar"]');
 
             this.$navbar.on('change', () => this.trigger('change'));
+
+            Select.init(this.$navbar);
         },
 
         getNavbarValue: function () {

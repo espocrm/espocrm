@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
+define('views/fields/person-name', ['views/fields/varchar', 'ui/select'],
+function (Dep, /** module:ui/select*/Select) {
 
     /**
      * @class
@@ -39,13 +40,9 @@ define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
         type: 'personName',
 
         detailTemplate: 'fields/person-name/detail',
-
         editTemplate: 'fields/person-name/edit',
-
         editTemplateLastFirst: 'fields/person-name/edit-last-first',
-
         editTemplateLastFirstMiddle: 'fields/person-name/edit-last-first-middle',
-
         editTemplateFirstMiddleLast: 'fields/person-name/edit-first-middle-last',
 
         /**
@@ -57,7 +54,7 @@ define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
         ],
 
         data: function () {
-            var data = Dep.prototype.data.call(this);
+            let data = Dep.prototype.data.call(this);
 
             data.ucName = Espo.Utils.upperCaseFirst(this.name);
             data.salutationValue = this.model.get(this.salutationField);
@@ -125,6 +122,8 @@ define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
                 this.$last.on('change', () => {
                     this.trigger('change');
                 });
+
+                Select.init(this.$salutation);
             }
         },
 

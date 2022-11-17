@@ -26,8 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple', 'helpers/reg-exp-pattern'],
-function (Dep, RegExpPattern) {
+define('views/fields/link-multiple-with-columns',
+['views/fields/link-multiple', 'helpers/reg-exp-pattern', 'ui/select'],
+function (Dep, RegExpPattern, /** module:ui/select*/Select) {
 
     /**
      * A link-multiple field with relation column(s).
@@ -317,7 +318,7 @@ function (Dep, RegExpPattern) {
             let options = this.columnsDefs[column].options || [];
 
             let $select = $('<select>')
-                .addClass('role form-control input-sm pull-right')
+                .addClass('role form-control input-sm')
                 .attr('data-id', id)
                 .attr('data-column', column);
 
@@ -354,7 +355,7 @@ function (Dep, RegExpPattern) {
             let text = this.translate(field, 'fields', scope);
 
             let $input = $('<input>')
-                .addClass('role form-control input-sm pull-right')
+                .addClass('role form-control input-sm')
                 .attr('data-column', column)
                 .attr('placeholder', text)
                 .attr('data-id', id)
@@ -466,7 +467,12 @@ function (Dep, RegExpPattern) {
             let $left = $('<div>');
             let $right = $('<div>');
 
-            $columnList.forEach($item => $left.append($item));
+            $columnList.forEach($item => $left.append(
+                $('<span>')
+                    .addClass('link-item-column')
+                    .addClass('link-item-column-' + $item.get(0).tagName.toLowerCase())
+                    .append($item)
+            ));
 
             if ($liList.length) {
                 let $ul = $('<ul>').addClass('dropdown-menu');
@@ -499,6 +505,11 @@ function (Dep, RegExpPattern) {
 
             if (this.isEditMode()) {
                 $columnList.forEach($column => {
+
+                    if ($column.get(0).tagName === 'SELECT') {
+                        Select.init($column);
+                    }
+
                     let fetch = ($target) => {
                         if (!$target || !$target.length) {
                             return;

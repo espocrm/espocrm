@@ -1,8 +1,56 @@
-.filter > .form-group .field {
-    .selectize-control {
+.filter > .form-group .field .selectize-control,
+.selectize-control.input-sm.form-control {
+    &.multi {
         .selectize-input {
             font-size: @font-size-small;
-            padding: 4px 5px 0;
+            padding: 4px 7px 0;
+        }
+    }
+
+    &.single {
+        .selectize-input {
+            font-size: @font-size-small;
+            padding: 4px 19px 4px 10px;
+            min-height: @input-height-small;
+        }
+
+        height: @input-height-small;
+    }
+
+    .selectize-dropdown-content {
+        max-height: 198px;
+    }
+}
+
+.selectize-input {
+    min-width: 80px;
+}
+
+.selectize-dropdown {
+    min-width: 80px;
+}
+
+.form-control.selectize-control.single {
+    height: @input-height-base;
+}
+
+.selectize-control {
+    .selectize-dropdown-content {
+        > .option {
+            cursor: default;
+        }
+    }
+
+    &.single {
+        > .selectize-input {
+            > .item {
+                width: 100%;
+                height: @line-height-computed;
+                overflow: hidden;
+                vertical-align: top;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
         }
     }
 }
@@ -10,4 +58,65 @@
 .selectize-control.multi .selectize-input > div {
     border-radius: var(--border-radius);
     padding: 1px 4px;
+}
+
+.selectize-control.single {
+    .selectize-dropdown {
+        position: absolute;
+    }
+
+    .selectize-input {
+        padding-right: 19px;
+
+        &.dropdown-active:after,
+        &:after {
+            color: var(--text-muted-color);
+            display: inline-block;
+            width: 0;
+            height: 0;
+            top: 15px;
+            right: 8px;
+            margin-left: 2px;
+            vertical-align: middle;
+            border-top: 4px dashed;
+            border-right: 4px solid transparent;
+            border-left: 4px solid transparent;
+            position: absolute;
+        }
+
+        > .item + input {
+            caret-color: transparent;
+            margin-right: -4px !important; // Prevent select changing width on focus.
+        }
+    }
+
+    &.input-sm {
+        .selectize-input {
+            &.dropdown-active:after,
+            &:after {
+                top: 13px;
+            }
+        }
+    }
+}
+
+.selectize-dropdown .active {
+    &.text-success {
+        color: var(--state-success-text);
+    }
+    &.text-danger {
+        color: var(--state-danger-text);
+    }
+    &.text-warning {
+        color: var(--state-warning-text);
+    }
+    &.text-warning {
+        color: var(--state-warning-text);
+    }
+    &.text-info {
+        color: var(--state-info-text);
+    }
+    &.text-primary {
+        color: var(--state-primary-text);
+    }
 }

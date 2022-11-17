@@ -26,9 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/duration', ['views/fields/enum'], function (Dep) {
+define('views/fields/duration', ['views/fields/enum', 'ui/select'],
+function (Dep, /** module:ui/select*/Select) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @memberOf module:views/fields/duration
+     * @extends module:views/fields/enum.Class
+     */
+    return Dep.extend(/** @lends module:views/fields/duration.Class# */{
 
         type: 'duration',
 
@@ -39,10 +46,11 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
         data: function () {
             let valueIsSet = this.model.has(this.startField) && this.model.has(this.endField);
 
-            return _.extend({
+            return {
                 valueIsSet: valueIsSet,
                 durationOptions: this.durationOptions,
-            }, Dep.prototype.data.call(this));
+                ...Dep.prototype.data.call(this),
+            };
         },
 
         calculateSeconds: function () {
@@ -88,28 +96,37 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
             this.listenTo(this, 'render', () => {
                 this.calculateSeconds();
 
-                let durationOptions = '';
+                this.durationOptions = '';
 
-                let options = this.defaultOptions = _.clone(this.model.getFieldParam(this.name, 'options'));
+                this.getOptions().forEach(d => {
+                    let $o = $('<option>')
+                        .val(d)
+                        .text(this.stringifyDuration(d));
 
-                if (!this.model.get('isAllDay') && options.indexOf(this.seconds) === -1) {
-                    options.push(this.seconds);
-                }
+                    if (d === this.seconds) {
+                        $o.attr('selected', 'selected')
+                    }
 
-                options.sort((a, b) => {
-                    return a - b;
+                    this.durationOptions += $o.get(0).outerHTML;
                 });
-
-                options.forEach((d) => {
-                    durationOptions += '<option value="' + d + '" ' +
-                        (d === this.seconds ? 'selected' : '') + '>' +
-                        this.stringifyDuration(d) + '</option>';
-                });
-
-                this.durationOptions = durationOptions;
 
                 this.stringValue = this.stringifyDuration(this.seconds);
             });
+        },
+
+        /**
+         * @return {Number[]}
+         */
+        getOptions: function () {
+            let options = Espo.Utils.clone(this.model.getFieldParam(this.name, 'options') ?? []);
+
+            if (!this.model.get('isAllDay') && options.indexOf(this.seconds) === -1) {
+                options.push(this.seconds);
+            }
+
+            options.sort((a, b) => a - b);
+
+            return options;
         },
 
         setup: function () {
@@ -124,7 +141,7 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
 
             this.blockDateEndChangeListener = false;
 
-            this.listenTo(this.model, 'change:' + this.endField, () => {
+            this.listenTo(this.model, 'change:' + this.endField, (m, v, o) => {
                 if (this.blockDateEndChangeListener) {
                     return;
                 }
@@ -137,6 +154,10 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
                 }
 
                 this.seconds = moment(end).unix() - moment(start).unix();
+
+                if (o.updatedByDuration) {
+                    return;
+                }
 
                 this.updateDuration();
             });
@@ -205,11 +226,14 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
             return parts.join(' ');
         },
 
+        focusOnInlineEdit: function () {
+            Select.focus(this.$duration);
+        },
+
         afterRender: function () {
             let parentView = this.getParentView();
 
             if (parentView && 'getView' in parentView) {
-                this.startFieldView = parentView.getView(this.startField);
                 this.endFieldView = parentView.getView(this.endField);
             }
 
@@ -220,8 +244,6 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
                     this.seconds = parseInt(this.$duration.val());
 
                     this.updateDateEnd();
-
-                    this.$duration.find('option.custom').remove();
                 });
 
                 let start = this.model.get(this.startField);
@@ -241,6 +263,8 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
                         }
                     }
                 }
+
+                Select.init(this.$duration, {});
             }
         },
 
@@ -311,49 +335,23 @@ define('views/fields/duration', ['views/fields/enum'], function (Dep) {
         updateDuration: function () {
             let seconds = this.seconds;
 
-            if (seconds < 0) {
-                if (this.mode === 'edit') {
-                    this.$duration.val('');
-
-                    return;
-                }
-
-                this.setup();
-                this.render();
-
-                return;
-            }
-
             if (this.isEditMode() && this.$duration && this.$duration.length) {
-                this.$duration.find('option.custom').remove();
+                let options = this.getOptions().map(value => {
+                    return {
+                        value: value.toString(),
+                        label: this.stringifyDuration(value),
+                    };
+                });
 
-                let $o = $('<option>')
-                    .val(seconds)
-                    .text(this.stringifyDuration(seconds))
-                    .addClass('custom');
-
-                let $found = this.$duration.find('option')
-                    .filter((i, el) => {
-                        return $(el).val() >= seconds;
-                    })
-                    .first();
-
-                if ($found.length) {
-                    if (parseInt($found.val()) !== seconds) {
-                        $o.insertBefore($found);
-                    }
-                }
-                else {
-                    $o.appendTo(this.$duration);
-                }
-
-                this.$duration.val(seconds);
+                Select.setValue(this.$duration, '');
+                Select.setOptions(this.$duration, options);
+                Select.setValue(this.$duration, seconds.toString());
 
                 return;
             }
 
-            this.setup();
-            this.render();
+            //this.setup();
+            this.reRender();
         },
 
         fetch: function () {

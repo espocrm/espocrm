@@ -26,14 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/fields/reminders', ['views/fields/base'], function (Dep) {
+define('crm:views/meeting/fields/reminders', ['views/fields/base', 'ui/select'],
+function (Dep, /** module:ui/select*/Select) {
 
     return Dep.extend({
 
         detailTemplate: 'crm:meeting/fields/reminders/detail',
-
         listTemplate: 'crm:meeting/fields/reminders/detail',
-
         editTemplate: 'crm:meeting/fields/reminders/edit',
 
         events: {
@@ -118,7 +117,8 @@ define('crm:views/meeting/fields/reminders', ['views/fields/base'], function (De
                 $type.append($o);
             });
 
-            $type.val(item.type);
+            $type.val(item.type)
+                .addClass('radius-left');
 
             $type.on('change', () => {
                 this.updateType($type.val(), $type.closest('.reminder').index());
@@ -152,11 +152,14 @@ define('crm:views/meeting/fields/reminders', ['views/fields/base'], function (De
                 .html('<span class="fas fa-times"></span>');
 
             $item
-                .append($('<div class="input-group-btn">').append($type))
-                .append($seconds)
+                .append($('<div class="input-group-item">').append($type))
+                .append($('<div class="input-group-item">').append($seconds))
                 .append($('<div class="input-group-btn">').append($remove));
 
             this.$container.append($item);
+
+            Select.init($type, {});
+            Select.init($seconds, {});
         },
 
         stringifySeconds: function (seconds) {

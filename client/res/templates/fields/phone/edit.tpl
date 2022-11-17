@@ -1,20 +1,21 @@
-
-<div>
+<div class="phone-number-block-container">
 {{#each phoneNumberData}}
     <div class="input-group phone-number-block">
-        <span class="input-group-btn">
+        <span class="input-group-item">
             <select
                 data-property-type="type"
-                class="form-control"
+                class="form-control radius-left"
             >{{options ../params.typeList type scope=../scope field=../name}}</select>
         </span>
-        <input
-            type="input"
-            class="form-control phone-number no-margin-shifting"
-            value="{{phoneNumber}}"
-            autocomplete="espo-{{../name}}"
-            maxlength={{../itemMaxLength}}
-        >
+        <span class="input-group-item input-group-item-middle">
+            <input
+                type="input"
+                class="form-control phone-number no-margin-shifting"
+                value="{{phoneNumber}}"
+                autocomplete="espo-{{../name}}"
+                maxlength={{../itemMaxLength}}
+            >
+        </span>
         <span class="input-group-btn">
             <button
                 class="btn btn-default btn-icon phone-property{{#if primary}} active{{/if}} hidden"

@@ -1,19 +1,21 @@
 <div class="input-group input-group-link-parent">
     {{#if foreignScopeList.length}}
-    <span class="input-group-btn">
-        <select class="form-control" data-name="{{typeName}}">
+    <span class="input-group-item">
+        <select class="form-control radius-left" data-name="{{typeName}}">
             {{options foreignScopeList foreignScope category='scopeNames'}}
         </select>
     </span>
-    <input
-        class="main-element form-control middle-element"
-        type="text"
-        data-name="{{nameName}}"
-        value="{{nameValue}}"
-        autocomplete="espo-{{name}}"
-        placeholder="{{translate 'Select'}}"
-        spellcheck="false"
-    >
+    <span class="input-group-item input-group-item-middle">
+        <input
+            class="main-element form-control"
+            type="text"
+            data-name="{{nameName}}"
+            value="{{nameValue}}"
+            autocomplete="espo-{{name}}"
+            placeholder="{{translate 'Select'}}"
+            spellcheck="false"
+        >
+    </span>
     <span class="input-group-btn">
         <button
             data-action="selectLink"

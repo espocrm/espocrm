@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/link-parent', ['views/fields/base', 'helpers/record-modal'], function (Dep, RecordModal) {
+define('views/fields/link-parent', ['views/fields/base', 'helpers/record-modal', 'ui/select'],
+function (Dep, RecordModal, /** module:ui/select*/Select) {
 
     /**
      * A link-parent field (belongs-to-parent relation).
@@ -41,13 +42,9 @@ define('views/fields/link-parent', ['views/fields/base', 'helpers/record-modal']
         type: 'linkParent',
 
         listTemplate: 'fields/link-parent/list',
-
         detailTemplate: 'fields/link-parent/detail',
-
         editTemplate: 'fields/link-parent/edit',
-
         searchTemplate: 'fields/link-parent/search',
-
         listLinkTemplate: 'fields/link-parent/list-link',
 
         /**
@@ -211,8 +208,8 @@ define('views/fields/link-parent', ['views/fields/base', 'helpers/record-modal']
 
             if (
                 (
-                    this.mode === 'detail' ||
-                    this.mode === 'list' && this.displayScopeColorInListMode
+                    this.mode === this.MODE_DETAIL ||
+                    this.mode === this.MODE_LIST && this.displayScopeColorInListMode
                 ) &&
                 this.foreignScope
             ) {
@@ -345,7 +342,7 @@ define('views/fields/link-parent', ['views/fields/base', 'helpers/record-modal']
                 this.addActionHandler('clearLink', () => {
                     if (this.foreignScopeList.length) {
                         this.foreignScope = this.foreignScopeList[0];
-                        this.$elementType.val(this.foreignScope);
+                        Select.setValue(this.$elementType, this.foreignScope);
                     }
 
                     this.$elementName.val('');
@@ -505,7 +502,7 @@ define('views/fields/link-parent', ['views/fields/base', 'helpers/record-modal']
 
                 this.$elementName.on('blur', e => {
                     setTimeout(() => {
-                        if (this.mode === 'edit') {
+                        if (this.mode === this.MODE_EDIT) {
                             e.currentTarget.value = this.model.get(this.nameName) || '';
                         }
                     }, 100);
@@ -563,6 +560,8 @@ define('views/fields/link-parent', ['views/fields/base', 'helpers/record-modal']
                     this.$elementName.on('focus', () => this.$elementName.get(0).select());
 
                     this.$elementName.attr('autocomplete', 'espo-' + this.name);
+
+                    Select.init(this.$elementType, {});
                 }
 
                 var $elementName = this.$elementName;

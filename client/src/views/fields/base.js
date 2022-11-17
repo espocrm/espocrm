@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/base', ['view'], function (Dep) {
+define('views/fields/base', ['view', 'ui/select'], function (Dep, /** module:ui/select*/Select) {
 
     /**
      * A base field view. Can be in different modes. Each mode uses a separate template.
@@ -779,6 +779,14 @@ define('views/fields/base', ['view'], function (Dep) {
 
                 if (this.hasRequiredMarker()) {
                     this.hideRequiredSign();
+                }
+
+                if (this.isSearchMode()) {
+                    let $searchType = this.$el.find('select.search-type');
+
+                    if ($searchType.length) {
+                        Select.init($searchType, {matchAnyWord: true});
+                    }
                 }
             });
 

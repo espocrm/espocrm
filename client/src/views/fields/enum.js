@@ -26,8 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/enum', ['views/fields/base', 'ui/multi-select'],
-function (Dep, /** module:ui/multi-select*/MultiSelect) {
+define('views/fields/enum', ['views/fields/base', 'ui/multi-select', 'ui/select'],
+function (Dep, /** module:ui/multi-select*/MultiSelect, /** module:ui/select*/Select) {
 
     /**
      * An enum field (select-box).
@@ -42,13 +42,9 @@ function (Dep, /** module:ui/multi-select*/MultiSelect) {
         type: 'enum',
 
         listTemplate: 'fields/enum/list',
-
         listLinkTemplate: 'fields/enum/list-link',
-
         detailTemplate: 'fields/enum/detail',
-
         editTemplate: 'fields/enum/edit',
-
         searchTemplate: 'fields/enum/search',
 
         translatedOptions: null,
@@ -330,6 +326,14 @@ function (Dep, /** module:ui/multi-select*/MultiSelect) {
                 this.$el.find('select.search-type').on('change', () => this.trigger('change'));
                 this.$element.on('change', () => this.trigger('change'));
             }
+
+            if (this.isEditMode() || this.isSearchMode()) {
+                Select.init(this.$element, {matchAnyWord: true});
+            }
+        },
+
+        focusOnInlineEdit: function () {
+            Select.focus(this.$element);
         },
 
         validateRequired: function () {

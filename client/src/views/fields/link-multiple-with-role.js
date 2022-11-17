@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], function (Dep) {
+define('views/fields/link-multiple-with-role', ['views/fields/link-multiple', 'ui/select'],
+function (Dep, /** module:ui/select*/Select) {
 
     /**
      * A link-multiple field with a relation column.
@@ -247,7 +248,7 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
             // Do not use the `html` method to avoid XSS.
 
             let $role = $('<select>')
-                .addClass('role form-control input-sm pull-right')
+                .addClass('role form-control input-sm')
                 .attr('data-id', id);
 
             this.roleList.forEach(role => {
@@ -315,7 +316,7 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
                 let text = this.rolePlaceholderText || this.translate(this.roleField, 'fields', this.roleFieldScope);
 
                 $role = $('<input>')
-                    .addClass('role form-control input-sm pull-right')
+                    .addClass('role form-control input-sm')
                     .attr('maxlength', this.roleMaxLength) // @todo Get the value from metadata.
                     .attr('placeholder', text)
                     .attr('data-id', id)
@@ -323,14 +324,20 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
             }
 
             if ($role) {
-                $left.append($role);
+                $left.append($('<span>')
+                    .addClass('link-item-column')
+                    .addClass('link-item-column-' + $role.get(0).tagName.toLowerCase())
+                    .append($role)
+                );
             }
 
             $left.append($name);
-
             $el.append($left).append($right);
-
             $container.append($el);
+
+            if ($role && $role.get(0).tagName === 'SELECT') {
+                Select.init($role);
+            }
 
             if (this.isEditMode() && $role) {
                 let fetch = ($target) => {

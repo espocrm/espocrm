@@ -58,6 +58,62 @@
     border-bottom-right-radius: var(--border-radius) !important;
 }
 
+.input-group > .input-group-item {
+    position: relative;
+    display: table-cell;
+    vertical-align: middle;
+
+    + .input-group-item {
+        > .selectize-control {
+            > .selectize-input {
+                margin-left: -1px;
+            }
+        }
+    }
+
+    + input.form-control {
+        margin-left: -1px;
+    }
+
+    &.input-group-item-middle {
+        > input {
+            margin-left: -2px;
+            right: -1px;
+            width: calc(100% + 1px);
+        }
+    }
+}
+
+.input-group > .input-group-item,
+.input-group {
+    > .selectize-control {
+        position: unset;
+
+        > .selectize-input {
+            border-radius: 0;
+            float: left;
+
+            &.focus {
+                z-index: 4;
+            }
+        }
+
+        &.radius-right {
+            > .selectize-input {
+                border-top-right-radius: var(--border-radius);
+                border-bottom-right-radius: var(--border-radius);
+            }
+        }
+
+        &.radius-left {
+            > .selectize-input {
+                border-top-left-radius: var(--border-radius);
+                border-bottom-left-radius: var(--border-radius);
+            }
+        }
+    }
+}
+
 .list-group:not(:empty) + div,
 .list-group:not(:empty) + div > div.input-group {
     > .form-control,
@@ -100,8 +156,12 @@
     margin-left: 0 !important;
 }
 
-.input-group .form-control:focus {
-    z-index: 3;
+.input-group .form-control {
+    z-index: unset;
+
+    &:focus {
+        z-index: 3;
+    }
 }
 
 .input-group-container-2 {

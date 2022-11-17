@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/currency', ['views/fields/float'], function (Dep) {
+define('views/fields/currency', ['views/fields/float', 'ui/select'],
+function (Dep, /** module:ui/select*/Select) {
 
     /**
      * @class
@@ -39,23 +40,14 @@ define('views/fields/currency', ['views/fields/float'], function (Dep) {
         type: 'currency',
 
         editTemplate: 'fields/currency/edit',
-
         detailTemplate: 'fields/currency/detail',
-
         detailTemplate1: 'fields/currency/detail-1',
-
         detailTemplate2: 'fields/currency/detail-2',
-
         detailTemplate3: 'fields/currency/detail-3',
-
         listTemplate: 'fields/currency/list',
-
         listTemplate1: 'fields/currency/list-1',
-
         listTemplate2: 'fields/currency/list-2',
-
         listTemplate3: 'fields/currency/list-3',
-
         detailTemplateNoCurrency: 'fields/currency/detail-no-currency',
 
         maxDecimalPlaces: 3,
@@ -64,7 +56,7 @@ define('views/fields/currency', ['views/fields/float'], function (Dep) {
          * @inheritDoc
          */
         data: function () {
-            var currencyValue = this.model.get(this.currencyFieldName) ||
+            let currencyValue = this.model.get(this.currencyFieldName) ||
                 this.getPreferences().get('defaultCurrency') ||
                 this.getConfig().get('defaultCurrency');
 
@@ -93,7 +85,7 @@ define('views/fields/currency', ['views/fields/float'], function (Dep) {
 
             this.isSingleCurrency = this.currencyList.length <= 1;
 
-            var currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) ||
+            let currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) ||
                 this.defaultCurrency;
 
             if (!~this.currencyList.indexOf(currencyValue)) {
@@ -107,10 +99,10 @@ define('views/fields/currency', ['views/fields/float'], function (Dep) {
         },
 
         _getTemplateName: function () {
-            if (this.mode === 'detail' || this.mode === 'list') {
+            if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
                 var prop;
 
-                if (this.mode === 'list') {
+                if (this.mode === this.MODE_LIST) {
                     prop = 'listTemplate' + this.getCurrencyFormat().toString();
                 }
                 else {
@@ -138,7 +130,7 @@ define('views/fields/currency', ['views/fields/float'], function (Dep) {
         },
 
         formatNumberEdit: function (value) {
-            var currencyDecimalPlaces = this.getConfig().get('currencyDecimalPlaces');
+            let currencyDecimalPlaces = this.getConfig().get('currencyDecimalPlaces');
 
             if (value !== null) {
                 var parts = value.toString().split(".");
@@ -163,7 +155,7 @@ define('views/fields/currency', ['views/fields/float'], function (Dep) {
 
         formatNumberDetail: function (value) {
             if (value !== null) {
-                var currencyDecimalPlaces = this.getConfig().get('currencyDecimalPlaces');
+                let currencyDecimalPlaces = this.getConfig().get('currencyDecimalPlaces');
 
                 if (currencyDecimalPlaces === 0) {
                     value = Math.round(value);
@@ -179,7 +171,7 @@ define('views/fields/currency', ['views/fields/float'], function (Dep) {
                     );
                 }
 
-                var parts = value.toString().split(".");
+                let parts = value.toString().split(".");
 
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
 
@@ -187,7 +179,7 @@ define('views/fields/currency', ['views/fields/float'], function (Dep) {
                     return parts[0];
                 }
                 else if (currencyDecimalPlaces) {
-                    var decimalPartLength = 0;
+                    let decimalPartLength = 0;
 
                     if (parts.length > 1) {
                         decimalPartLength = parts[1].length;
@@ -196,9 +188,9 @@ define('views/fields/currency', ['views/fields/float'], function (Dep) {
                     }
 
                     if (currencyDecimalPlaces && decimalPartLength < currencyDecimalPlaces) {
-                        var limit = currencyDecimalPlaces - decimalPartLength;
+                        let limit = currencyDecimalPlaces - decimalPartLength;
 
-                        for (var i = 0; i < limit; i++) {
+                        for (let i = 0; i < limit; i++) {
                             parts[1] += '0';
                         }
                     }
@@ -213,23 +205,25 @@ define('views/fields/currency', ['views/fields/float'], function (Dep) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'edit') {
+            if (this.mode === this.MODE_EDIT) {
                 this.$currency = this.$el.find('[data-name="' + this.currencyFieldName + '"]');
 
                 this.$currency.on('change', () => {
                     this.model.set(this.currencyFieldName, this.$currency.val(), {ui: true});
                 });
+
+                Select.init(this.$currency);
             }
         },
 
         fetch: function () {
-            var value = this.$element.val();
+            let value = this.$element.val();
 
             value = this.parse(value);
 
-            var data = {};
+            let data = {};
 
-            var currencyValue = this.$currency.val();
+            let currencyValue = this.$currency.val();
 
             if (value === null) {
                 currencyValue = null;

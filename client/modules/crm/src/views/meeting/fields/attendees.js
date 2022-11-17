@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/meeting/fields/attendees', 'views/fields/link-multiple-with-role', function (Dep) {
+define('crm:views/meeting/fields/attendees', ['views/fields/link-multiple-with-role'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,8 +34,6 @@ Espo.define('crm:views/meeting/fields/attendees', 'views/fields/link-multiple-wi
 
         roleFieldIsForeign: false,
 
-        emptyRoleValue: 'None'
-
+        emptyRoleValue: 'None',
     });
-
 });
