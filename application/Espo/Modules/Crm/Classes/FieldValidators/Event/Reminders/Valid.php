@@ -36,6 +36,9 @@ use Espo\Modules\Crm\Entities\Reminder;
 use Espo\ORM\Entity;
 use stdClass;
 
+/**
+ * @implements Validator<Entity>
+ */
 class Valid implements Validator
 {
     public function validate(Entity $entity, string $field, Data $data): ?Failure

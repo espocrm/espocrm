@@ -34,6 +34,9 @@ use Espo\Core\FieldValidation\Validator\Data;
 use Espo\Core\FieldValidation\Validator\Failure;
 use Espo\ORM\Entity;
 
+/**
+ * @implements Validator<Entity>
+ */
 class MaxCount implements Validator
 {
     private const MAX_COUNT = 10;
