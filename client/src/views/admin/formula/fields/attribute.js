@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', function (Dep) {
+define('views/admin/formula/fields/attribute', ['views/fields/multi-enum', 'ui/multi-select'],
+function (Dep, /** module:ui/multi-select */MultiSelect) {
 
     return Dep.extend({
 
@@ -39,14 +40,14 @@ define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', functi
                 return;
             }
 
-            var attributeList = this.getFieldManager()
+            let attributeList = this.getFieldManager()
                 .getEntityTypeAttributeList(this.options.scope)
                 .concat(['id'])
                 .sort();
 
-            var links = this.getMetadata().get(['entityDefs', this.options.scope, 'links']) || {};
+            let links = this.getMetadata().get(['entityDefs', this.options.scope, 'links']) || {};
 
-            var linkList = [];
+            let linkList = [];
 
             Object.keys(links).forEach(link => {
                 var type = links[link].type;
@@ -63,7 +64,7 @@ define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', functi
             linkList.sort();
 
             linkList.forEach(link => {
-                var scope = links[link].entity;
+                let scope = links[link].entity;
 
                 if (!scope) {
                     return;
@@ -73,7 +74,7 @@ define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', functi
                     return;
                 }
 
-                var linkAttributeList = this.getFieldManager()
+                let linkAttributeList = this.getFieldManager()
                     .getEntityTypeAttributeList(scope)
                     .sort();
 
@@ -88,11 +89,9 @@ define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', functi
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.$element && this.$element[0] && this.$element[0].selectize) {
-                this.$element[0].selectize.focus();
+            if (this.$element) {
+                MultiSelect.focus(this.$element);
             }
         },
-
     });
 });
-

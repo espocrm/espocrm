@@ -134,7 +134,14 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
         focus: function ($el, options) {
             options = options || {};
 
-            let selectize = $el.get(0).selectize;
+            if (
+                !$el[0] ||
+                !$el[0].selectize
+            ) {
+                return;
+            }
+
+            let selectize = $el[0].selectize;
 
             if (options.noTrigger) {
                 selectize.focusNoTrigger = true;
@@ -142,7 +149,9 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
 
             selectize.focus();
 
-            setTimeout(() => selectize.focusNoTrigger = false, 100);
+            if (options.noTrigger) {
+                setTimeout(() => selectize.focusNoTrigger = false, 100);
+            }
         },
 
         /**

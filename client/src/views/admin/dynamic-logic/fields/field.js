@@ -26,18 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/fields/field', ['views/fields/multi-enum'], function (Dep) {
+define('views/admin/dynamic-logic/fields/field', ['views/fields/multi-enum', 'ui/multi-select'],
+function (Dep, /** module:ui/multi-select */MultiSelect) {
 
     return Dep.extend({
 
         getFieldList: function () {
-            var fields = this.getMetadata().get('entityDefs.' + this.options.scope + '.fields');
+            let fields = this.getMetadata().get('entityDefs.' + this.options.scope + '.fields');
 
-            var filterList = Object.keys(fields).filter(field => {
-                var fieldType = fields[field].type || null;
-                if (fields[field].disabled) return;
-                if (!fieldType) return;
-                if (!this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType])) return;
+            let filterList = Object.keys(fields).filter(field => {
+                let fieldType = fields[field].type || null;
+
+                if (fields[field].disabled) {
+                    return;
+                }
+
+                if (!fieldType) {
+                    return;
+                }
+
+                if (!this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType])) {
+                    return;
+                }
 
                 return true;
             });
@@ -70,8 +80,8 @@ define('views/admin/dynamic-logic/fields/field', ['views/fields/multi-enum'], fu
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.$element && this.$element[0] && this.$element[0].selectize) {
-                this.$element[0].selectize.focus();
+            if (this.$element) {
+                MultiSelect.focus(this.$element);
             }
         },
     });

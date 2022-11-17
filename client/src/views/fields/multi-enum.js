@@ -197,7 +197,7 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
         },
 
         focusOnInlineEdit: function () {
-            this.$element[0].selectize.focus();
+            MultiSelect.focus(this.$element);
         },
 
         fetch: function () {

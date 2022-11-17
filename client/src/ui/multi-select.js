@@ -121,6 +121,24 @@ define('ui/multi-select', ['lib!Selectize'], (Selectize) => {
         },
 
         /**
+         * Focus.
+         *
+         * @param {JQuery} $el An element.
+         */
+        focus: function ($el) {
+            if (
+                !$el[0] ||
+                !$el[0].selectize
+            ) {
+                return;
+            }
+
+            let selectize = $el[0].selectize;
+
+            selectize.focus();
+        },
+
+        /**
          * @private
          * @param {module:ui/multi-select~Options} options
          * @return {module:ui/multi-select~Options}
