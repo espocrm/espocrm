@@ -205,60 +205,107 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
 
                 this.trigger('change');
             },
-
             'click [data-action="removeEmailAddress"]': function (e) {
                 let $block = $(e.currentTarget).closest('div.email-address-block');
 
-                if ($block.parent().children().length === 1) {
-                    $block.find('input.email-address').val('');
-                } else {
-                    this.removeEmailAddressBlock($block);
-                }
-
-                this.trigger('change');
+                this.removeEmailAddress($block);
             },
-
             'change input.email-address': function (e) {
                 let $input = $(e.currentTarget);
                 let $block = $input.closest('div.email-address-block');
 
-                if ($input.val() === '') {
-                    if ($block.parent().children().length === 1) {
-                        $block.find('input.email-address').val('');
-                    } else {
-                        this.removeEmailAddressBlock($block);
-                    }
+                if (this._itemJustRemoved) {
+                    return;
+                }
+
+                if ($input.val() === '' && $block.length) {
+                    this.removeEmailAddress($block);
+                }
+                else {
+                    this.trigger('change');
                 }
 
                 this.trigger('change');
 
                 this.manageAddButton();
             },
-
-            'keypress input.email-address': function (e) {
+            'keypress input.email-address': function () {
                 this.manageAddButton();
             },
-            'paste input.email-address': function (e) {
-                setTimeout(function () {
-                    this.manageAddButton();
-                }.bind(this), 10);
+            'paste input.email-address': function () {
+                setTimeout(() => this.manageAddButton(), 10);
             },
             'click [data-action="addEmailAddress"]': function () {
-                let data = Espo.Utils.cloneDeep(this.fetchEmailAddressData());
-
-                let o = {
-                    emailAddress: '',
-                    primary: !data.length,
-                    optOut: this.emailAddressOptedOutByDefault,
-                    invalid: false,
-                    lower: '',
-                };
-
-                data.push(o);
-
-                this.model.set(this.dataFieldName, data, {silent: true});
-                this.render();
+                this.addEmailAddress();
             },
+            'keydown input.email-address': function (e) {
+                let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                let $target = $(e.currentTarget);
+
+                if (key === 'Enter') {
+                    if (!this.$el.find('[data-action="addEmailAddress"]').hasClass('disabled')) {
+                        this.addEmailAddress();
+
+                        e.stopPropagation();
+                    }
+
+                    return;
+                }
+
+                if (key === 'Backspace' && $target.val() === '') {
+                    let $block = $target.closest('div.email-address-block');
+
+                    this._itemJustRemoved = true;
+                    setTimeout(() => this._itemJustRemoved = false, 100);
+
+                    e.stopPropagation();
+
+                    this.removeEmailAddress($block);
+
+                    setTimeout(() => this.focusOnLast(true), 50);
+                }
+            },
+        },
+
+        focusOnLast: function (cursorAtEnd) {
+            let $item = this.$el.find('input.form-control').last();
+
+            $item.focus();
+
+            if (cursorAtEnd && $item[0]) {
+                // Not supported for email inputs.
+                // $item[0].setSelectionRange($item[0].value.length, $item[0].value.length);
+            }
+        },
+
+        removeEmailAddress: function ($block) {
+            if ($block.parent().children().length === 1) {
+                $block.find('input.email-address').val('');
+            } else {
+                this.removeEmailAddressBlock($block);
+            }
+
+            this.trigger('change');
+        },
+
+        addEmailAddress: function () {
+            let data = Espo.Utils.cloneDeep(this.fetchEmailAddressData());
+
+            let o = {
+                emailAddress: '',
+                primary: !data.length,
+                optOut: this.emailAddressOptedOutByDefault,
+                invalid: false,
+                lower: '',
+            };
+
+            data.push(o);
+
+            this.model.set(this.dataFieldName, data, {silent: true});
+
+            this.reRender()
+                .then(() => this.focusOnLast());
         },
 
         removeEmailAddressBlock: function ($block) {

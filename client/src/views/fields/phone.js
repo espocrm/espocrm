@@ -219,61 +219,106 @@ function (Dep, /** module:ui/select*/Select) {
 
                 this.trigger('change');
             },
-
             'click [data-action="removePhoneNumber"]': function (e) {
                 let $block = $(e.currentTarget).closest('div.phone-number-block');
 
-                if ($block.parent().children().length === 1) {
-                    $block.find('input.phone-number').val('');
-                } else {
-                    this.removePhoneNumberBlock($block);
-                }
+                this.removePhoneNumber($block);
 
                 this.trigger('change');
             },
-
             'change input.phone-number': function (e) {
                 let $input = $(e.currentTarget);
                 let $block = $input.closest('div.phone-number-block');
 
-                if ($input.val() === '') {
-                    if ($block.parent().children().length === 1) {
-                        $block.find('input.phone-number').val('');
-                    } else {
-                        this.removePhoneNumberBlock($block);
-                    }
+                if (this._itemJustRemoved) {
+                    return;
                 }
 
-                this.trigger('change');
+                if ($input.val() === '' && $block.length) {
+                    this.removePhoneNumber($block);
+                }
+                else {
+                    this.trigger('change');
+                }
 
                 this.manageAddButton();
             },
-
             'keypress input.phone-number': function (e) {
                 this.manageAddButton();
             },
-
-            'paste input.phone-number': function (e) {
+            'paste input.phone-number': function () {
                 setTimeout(() => this.manageAddButton(), 10);
             },
-
             'click [data-action="addPhoneNumber"]': function () {
-                let data = Espo.Utils.cloneDeep(this.fetchPhoneNumberData());
-
-                let o = {
-                    phoneNumber: '',
-                    primary: !data.length,
-                    type: false,
-                    optOut: this.emailAddressOptedOutByDefault,
-                    invalid: false,
-                };
-
-                data.push(o);
-
-                this.model.set(this.dataFieldName, data, {silent: true});
-
-                this.reRender();
+                this.addPhoneNumber();
             },
+            'keydown input.phone-number': function (e) {
+                let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                let $target = $(e.currentTarget);
+
+                if (key === 'Enter') {
+                    if (!this.$el.find('[data-action="addPhoneNumber"]').hasClass('disabled')) {
+                        this.addPhoneNumber();
+
+                        e.stopPropagation();
+                    }
+
+                    return;
+                }
+
+                if (key === 'Backspace' && $target.val() === '') {
+                    let $block = $target.closest('div.phone-number-block');
+
+                    this._itemJustRemoved = true;
+                    setTimeout(() => this._itemJustRemoved = false, 100);
+
+                    e.stopPropagation();
+
+                    this.removePhoneNumber($block);
+
+                    setTimeout(() => this.focusOnLast(true), 50);
+                }
+            },
+        },
+
+        focusOnLast: function (cursorAtEnd) {
+            let $item = this.$el.find('input.form-control').last();
+
+            $item.focus();
+
+            if (cursorAtEnd && $item[0]) {
+                $item[0].setSelectionRange($item[0].value.length, $item[0].value.length);
+            }
+        },
+
+        removePhoneNumber: function ($block) {
+            if ($block.parent().children().length === 1) {
+                $block.find('input.phone-number').val('');
+            } else {
+                this.removePhoneNumberBlock($block);
+            }
+
+            this.trigger('change');
+        },
+
+        addPhoneNumber: function () {
+            let data = Espo.Utils.cloneDeep(this.fetchPhoneNumberData());
+
+            let o = {
+                phoneNumber: '',
+                primary: !data.length,
+                type: false,
+                optOut: this.emailAddressOptedOutByDefault,
+                invalid: false,
+            };
+
+            data.push(o);
+
+            this.model.set(this.dataFieldName, data, {silent: true});
+
+            this.reRender()
+                .then(() => this.focusOnLast());
         },
 
         afterRender: function () {
