@@ -264,7 +264,41 @@ function (Dep, /** module:ui/select*/Select) {
                     }
                 }
 
-                Select.init(this.$duration, {});
+                Select.init(this.$duration, {
+                    /**
+                     * @param {string} search
+                     * @param {string} value
+                     * @return {number}
+                     */
+                    score: (search, value) => {
+                        let num = parseInt(value);
+                        let searchNum = parseInt(search);
+
+                        if (isNaN(searchNum)) {
+                            return 0;
+                        }
+
+                        let numOpposite = Number.MAX_SAFE_INTEGER - num;
+
+                        if (searchNum === 0 && num === 0) {
+                            return numOpposite;
+                        }
+
+                        if (searchNum * 60 === num) {
+                            return numOpposite;
+                        }
+
+                        if (searchNum * 60 * 60 === num) {
+                            return numOpposite;
+                        }
+
+                        if (searchNum * 60 * 60 * 24 === num) {
+                            return numOpposite;
+                        }
+
+                        return 0;
+                    },
+                });
             }
         },
 
