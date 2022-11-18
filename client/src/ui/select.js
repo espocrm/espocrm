@@ -31,8 +31,23 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
     /**
      * @typedef module:ui/select~Options
      * @type {Object}
-     * @property {boolean} [selectOnTab=false]
-     * @property {boolean} [matchAnyWord=false]
+     * @property {boolean} [selectOnTab=false] To select on tab.
+     * @property {boolean} [matchAnyWord=false] To match any word when searching.
+     * @property {function(string, module:ui/select~OptionItemsCallback): void} [load] Loads additional items
+     *   when typing in search.
+     * @property {function(string, string, string): Number} [score] A score function scoring searched items.
+     */
+
+    /**
+     * @callback  module:ui/select~OptionItemsCallback
+     * @param {module:ui/select~OptionItem[]} list An option item list.
+     */
+
+    /**
+     * @typedef module:ui/select~OptionItem
+     * @type {Object}
+     * @property {string} value A value.
+     * @property {string} text A label.
      */
 
     /**
@@ -69,6 +84,7 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
             });
 
             let selectizeOptions = {
+                load: options.load,
                 plugins: plugins,
                 highlight: false,
                 selectOnTab: options.selectOnTab,
@@ -122,6 +138,16 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                         }
 
                         return 0;
+                    };
+                };
+            }
+
+            if (options.score) {
+                let score = options.score;
+
+                selectizeOptions.score = function (search) {
+                    return function (item) {
+                        return score(search, item.value, item.text);
                     };
                 };
             }

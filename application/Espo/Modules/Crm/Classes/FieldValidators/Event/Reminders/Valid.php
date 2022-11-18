@@ -62,6 +62,10 @@ class Valid implements Validator
                 return Failure::create();
             }
 
+            if ($seconds < 0) {
+                return Failure::create();
+            }
+
             if (!in_array($type, [Reminder::TYPE_POPUP, Reminder::TYPE_EMAIL])) {
                 return Failure::create();
             }

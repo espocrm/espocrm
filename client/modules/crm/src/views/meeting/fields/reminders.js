@@ -40,7 +40,7 @@ function (Dep, /** module:ui/select*/Select, moment) {
         events: {
             'click [data-action="addReminder"]': function () {
                 let type = this.getMetadata().get('entityDefs.Reminder.fields.type.default');
-                let seconds = this.getMetadata().get('entityDefs.Reminder.fields.seconds.default');
+                let seconds = this.getMetadata().get('entityDefs.Reminder.fields.seconds.default') || 0;
 
                 let item = {
                     type: type,
@@ -80,8 +80,10 @@ function (Dep, /** module:ui/select*/Select, moment) {
                     .cloneDeep(this.model.get(this.name) || []);
             });
 
-            this.typeList = this.getMetadata().get('entityDefs.Reminder.fields.type.options') || [];
-            this.secondsList = this.getMetadata().get('entityDefs.Reminder.fields.seconds.options') || [];
+            this.typeList = Espo.Utils
+                .clone(this.getMetadata().get('entityDefs.Reminder.fields.type.options') || []);
+            this.secondsList = Espo.Utils
+                .clone(this.getMetadata().get('entityDefs.Reminder.fields.seconds.options') || []);
 
             this.dateField = this.model.getFieldParam(this.name, 'dateField') || this.dateField;
 
@@ -95,6 +97,7 @@ function (Dep, /** module:ui/select*/Select, moment) {
         afterRender: function () {
             if (this.isEditMode()) {
                 this.$container = this.$el.find('.reminders-container');
+
                 this.reminderList.forEach(item => {
                     this.addItemHtml(item);
                 });
@@ -142,14 +145,19 @@ function (Dep, /** module:ui/select*/Select, moment) {
             let limitDate = this.model.get(this.dateField) ?
                 this.getDateTime().toMoment(this.model.get(this.dateField)) : null;
 
-            this.secondsList
-                .filter(seconds => {
-                    if (seconds === item.seconds || !limitDate) {
-                        return true;
-                    }
+            /** @var {Number[]} secondsList */
+            let secondsList = Espo.Utils.clone(this.secondsList);
 
-                    return moment.utc().add(seconds, 'seconds').isBefore(limitDate);
+            if (!secondsList.includes(item.seconds)) {
+                secondsList.push(item.seconds);
+            }
+
+            secondsList
+                .filter(seconds => {
+                    return seconds === item.seconds || !limitDate ||
+                        this.isBefore(seconds, limitDate);
                 })
+                .sort((a, b) => a - b)
                 .forEach(seconds => {
                     let $o = $('<option>')
                         .attr('value', seconds)
@@ -161,7 +169,10 @@ function (Dep, /** module:ui/select*/Select, moment) {
             $seconds.val(item.seconds);
 
             $seconds.on('change', () => {
-                this.updateSeconds(parseInt($seconds.val()), $seconds.closest('.reminder').index());
+                let seconds = parseInt($seconds.val());
+                let index = $seconds.closest('.reminder').index();
+
+                this.updateSeconds(seconds, index);
             });
 
             let $remove = $('<button>')
@@ -180,24 +191,107 @@ function (Dep, /** module:ui/select*/Select, moment) {
             this.$container.append($item);
 
             Select.init($type, {});
-            Select.init($seconds, {});
+            Select.init($seconds, {
+                /**
+                 * @param {string} search
+                 * @param {string} value
+                 * @return {number}
+                 */
+                score: (search, value) => {
+                    let num = parseInt(value);
+                    let searchNum = parseInt(search);
+
+                    if (isNaN(searchNum)) {
+                        return 0;
+                    }
+
+                    let numOpposite = Number.MAX_SAFE_INTEGER - num;
+
+                    if (searchNum === 0 && num === 0) {
+                        return numOpposite;
+                    }
+
+                    if (searchNum * 60 === num) {
+                        return numOpposite;
+                    }
+
+                    if (searchNum * 60 * 60 === num) {
+                        return numOpposite;
+                    }
+
+                    if (searchNum * 60 * 60 * 24 === num) {
+                        return numOpposite;
+                    }
+
+                    return 0;
+                },
+                load: (item, callback) => {
+                    let num = parseInt(item);
+
+                    if (isNaN(num) || num < 0) {
+                        return;
+                    }
+
+                    if (num > 59) {
+                        return;
+                    }
+
+                    let list = [];
+
+                    let mSeconds = num * 60;
+
+                    if (!this.isBefore(mSeconds, limitDate)) {
+                        return;
+                    }
+
+                    list.push({
+                        value: mSeconds.toString(),
+                        text: this.stringifySeconds(mSeconds),
+                    });
+
+                    if (num <= 24) {
+                        let hSeconds = num * 3600;
+
+                        if (this.isBefore(hSeconds, limitDate)) {
+                            list.push({
+                                value: hSeconds.toString(),
+                                text: this.stringifySeconds(hSeconds),
+                            });
+                        }
+                    }
+
+                    if (num <= 30) {
+                        let dSeconds = num * 3600 * 24;
+
+                        if (this.isBefore(dSeconds, limitDate)) {
+                            list.push({
+                                value: dSeconds.toString(),
+                                text: this.stringifySeconds(dSeconds),
+                            });
+                        }
+                    }
+
+                    callback(list);
+                }
+            });
         },
 
-        stringifySeconds: function (seconds) {
-            if (!seconds) {
+        isBefore: function (seconds, limitDate) {
+            return moment.utc().add(seconds, 'seconds').isBefore(limitDate);
+        },
+
+        stringifySeconds: function (totalSeconds) {
+            if (!totalSeconds) {
                 return this.translate('on time', 'labels', 'Meeting');
             }
 
-            let d = seconds;
-            let days = Math.floor(d / (86400));
-
-            d = d % (86400);
-
-            let hours = Math.floor(d / (3600));
-
-            d = d % (3600);
-
-            let minutes = Math.floor(d / (60));
+            let d = totalSeconds;
+            let days = Math.floor(d / 86400);
+            d = d % 86400;
+            let hours = Math.floor(d / 3600);
+            d = d % 3600;
+            let minutes = Math.floor(d / 60);
+            let seconds = d % 60;
 
             let parts = [];
 
@@ -211,6 +305,10 @@ function (Dep, /** module:ui/select*/Select, moment) {
 
             if (minutes) {
                 parts.push(minutes + '' + this.getLanguage().translate('m', 'durationUnits'));
+            }
+
+            if (seconds) {
+                parts.push(seconds + '' + this.getLanguage().translate('s', 'durationUnits'));
             }
 
             return parts.join(' ') + ' ' + this.translate('before', 'labels', 'Meeting');
