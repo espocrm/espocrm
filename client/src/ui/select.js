@@ -263,11 +263,27 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                         original.apply(this, arguments);
 
                         self.$dropdown
-                            .on('mouseup', '[data-selectable]', function() {
+                            .on('mouseup', '[data-selectable]', function () {
+                                $(document).off('mouseup.select');
+
                                 return self.onOptionSelect.apply(self, arguments);
+                            });
+
+                        self.$dropdown
+                            .on('mousedown', '[data-selectable]', function () {
+                                // Prevent issue when down inside, up outside.
+                                $(document).one('mouseup.select', function () {
+                                    self.focusOnControlSilently();
+                                });
                             });
                     };
                 })();
+
+                this.focusOnControlSilently = function () {
+                    self.preventReOpenOnFocus = true;
+                    self.$control_input[0].focus();
+                    self.preventReOpenOnFocus = false;
+                };
 
                 this.positionDropdown = (function () {
                     let original = self.positionDropdown;
@@ -331,16 +347,7 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                         self.preventClose = false;
 
                         if (e.type === 'mouseup') {
-                            self.preventClose = false;
-
-
-                            setTimeout(() => {
-                                self.preventReOpenOnFocus = true;
-
-                                self.$control_input[0].focus();
-
-                                self.preventReOpenOnFocus = false;
-                            }, 50);
+                            setTimeout(() => self.focusOnControlSilently(), 50);
                         }
 
                         original.apply(this, arguments);
@@ -466,11 +473,7 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                             ) {
                                 let keyCode = e.keyCode;
                                 e.keyCode = KEY_BACKSPACE;
-
                                 self.deleteSelection(e);
-
-                                //self.clear();
-
                                 e.keyCode = keyCode;
                             }
                         }
