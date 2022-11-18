@@ -85,6 +85,7 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
 
             let selectizeOptions = {
                 load: options.load,
+                loadThrottle: 1,
                 plugins: plugins,
                 highlight: false,
                 selectOnTab: options.selectOnTab,
