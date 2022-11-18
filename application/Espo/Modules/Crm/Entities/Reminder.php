@@ -29,7 +29,9 @@
 
 namespace Espo\Modules\Crm\Entities;
 
-class Reminder extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class Reminder extends Entity
 {
     public const ENTITY_TYPE = 'Reminder';
 
@@ -49,5 +51,15 @@ class Reminder extends \Espo\Core\ORM\Entity
     public function getTargetEntityType(): ?string
     {
         return $this->get('entityType');
+    }
+
+    public function getType(): ?string
+    {
+        return $this->get('type');
+    }
+
+    public function getSeconds(): int
+    {
+        return (int) $this->get('seconds');
     }
 }

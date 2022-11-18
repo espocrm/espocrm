@@ -29,12 +29,12 @@
 
 namespace Espo\Core\Repositories;
 
+use Espo\Modules\Crm\Entities\Meeting;
+use Espo\Modules\Crm\Entities\Reminder;
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    Di,
-    Utils\DateTime as DateTimeUtil,
-};
+use Espo\Core\Di;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
 
 use DateTime;
 use DateTimeZone;
@@ -55,7 +55,10 @@ class Event extends Database implements
     /**
      * @var string[]
      */
-    protected $reminderSkippingStatusList = ['Held', 'Not Held'];
+    protected $reminderSkippingStatusList = [
+        Meeting::STATUS_HELD,
+        Meeting::STATUS_NOT_HELD,
+    ];
 
     /**
      * @param array<string,mixed> $options
@@ -93,13 +96,13 @@ class Event extends Database implements
                     $dt = new DateTime(
                         $this->convertDateTimeToDefaultTimezone($dateEndDate . ' 00:00:00')
                     );
-                } catch (Exception $e) {
+                } catch (Exception) {
                     throw new RuntimeException("Bad date-time.");
                 }
 
                 $dt->modify('+1 day');
 
-                $dateEnd = $dt->format('Y-m-d H:i:s');
+                $dateEnd = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
                 $entity->set('dateEnd', $dateEnd);
             }
             else {
@@ -120,7 +123,7 @@ class Event extends Database implements
 
         $delete = $this->entityManager->getQueryBuilder()
             ->delete()
-            ->from('Reminder')
+            ->from(Reminder::ENTITY_TYPE)
             ->where([
                 'entityId' => $entity->getId(),
                 'entityType' => $entity->getEntityType(),
@@ -140,11 +143,7 @@ class Event extends Database implements
 
         $tz = new DateTimeZone($timeZone);
 
-        $dt = DateTime::createFromFormat(
-            DateTimeUtil::SYSTEM_DATE_TIME_FORMAT,
-            $string,
-            $tz
-        );
+        $dt = DateTime::createFromFormat(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $string, $tz);
 
         if ($dt === false) {
             throw new RuntimeException("Could not parse date-time `{$string}`.");

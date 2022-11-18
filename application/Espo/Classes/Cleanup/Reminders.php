@@ -31,17 +31,18 @@ namespace Espo\Classes\Cleanup;
 
 use Espo\Core\Cleanup\Cleanup;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Modules\Crm\Entities\Reminder;
 use Espo\ORM\EntityManager;
 
 use DateTime;
 
 class Reminders implements Cleanup
 {
-    private $config;
-
-    private $entityManager;
-
     private string $cleanupRemindersPeriod = '15 days';
+
+    private Config $config;
+    private EntityManager $entityManager;
 
     public function __construct(Config $config, EntityManager $entityManager)
     {
@@ -60,9 +61,9 @@ class Reminders implements Cleanup
         $delete = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from('Reminder')
+            ->from(Reminder::ENTITY_TYPE)
             ->where([
-                'remindAt<' => $dt->format('Y-m-d'),
+                'remindAt<' => $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
             ])
             ->build();
 

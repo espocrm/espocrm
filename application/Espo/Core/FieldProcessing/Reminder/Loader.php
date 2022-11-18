@@ -29,13 +29,13 @@
 
 namespace Espo\Core\FieldProcessing\Reminder;
 
+use Espo\Modules\Crm\Entities\Reminder;
+use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    FieldProcessing\Loader as LoaderInterface,
-    FieldProcessing\Loader\Params,
-};
+use Espo\Core\FieldProcessing\Loader as LoaderInterface;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\ORM\EntityManager;
 
 /**
  * @internal This class should not be removed as it's used by custom entities.
@@ -43,12 +43,8 @@ use Espo\Core\{
  */
 class Loader implements LoaderInterface
 {
-    private $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     public function process(Entity $entity, Params $params): void
     {
@@ -75,8 +71,9 @@ class Loader implements LoaderInterface
     {
         $list = [];
 
+        /** @var Collection<Reminder> $collection */
         $collection = $this->entityManager
-            ->getRDBRepository('Reminder')
+            ->getRDBRepository(Reminder::ENTITY_TYPE)
             ->select(['seconds', 'type'])
             ->where([
                 'entityType' => $entity->getEntityType(),
@@ -88,8 +85,8 @@ class Loader implements LoaderInterface
 
         foreach ($collection as $reminder) {
             $list[] = (object) [
-                'seconds' => $reminder->get('seconds'),
-                'type' => $reminder->get('type'),
+                'seconds' => $reminder->getSeconds(),
+                'type' => $reminder->getType(),
             ];
         }
 

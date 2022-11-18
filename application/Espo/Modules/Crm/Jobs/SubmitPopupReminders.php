@@ -30,16 +30,14 @@
 namespace Espo\Modules\Crm\Jobs;
 
 use Espo\Core\ORM\Entity as CoreEntity;
-
+use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Reminder;
-
-use Espo\Core\{
-    ORM\EntityManager,
-    Utils\Config,
-    WebSocket\Submission as WebSocketSubmission,
-    Job\JobDataLess,
-    Utils\Log,
-};
+use Espo\Core\Job\JobDataLess;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\Log;
+use Espo\Core\WebSocket\Submission as WebSocketSubmission;
 
 use Throwable;
 use DateTime;
@@ -48,25 +46,12 @@ class SubmitPopupReminders implements JobDataLess
 {
     private const REMINDER_PAST_HOURS = 24;
 
-    private $entityManager;
-
-    private $config;
-
-    private $webSocketSubmission;
-
-    private $log;
-
     public function __construct(
-        EntityManager $entityManager,
-        Config $config,
-        WebSocketSubmission $webSocketSubmission,
-        Log $log
-    ) {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->webSocketSubmission = $webSocketSubmission;
-        $this->log = $log;
-    }
+        private EntityManager $entityManager,
+        private Config $config,
+        private WebSocketSubmission $webSocketSubmission,
+        private Log $log
+    ) {}
 
     public function run(): void
     {
@@ -75,17 +60,18 @@ class SubmitPopupReminders implements JobDataLess
         }
 
         $dt = new DateTime();
-
-        $now = $dt->format('Y-m-d H:i:s');
+        $now = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
         $pastHours = $this->config->get('reminderPastHours', self::REMINDER_PAST_HOURS);
 
-        $nowShifted = $dt->modify('-' . $pastHours . ' hours')->format('Y-m-d H:i:s');
+        $nowShifted = $dt
+            ->modify('-' . $pastHours . ' hours')
+            ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
         $reminderList = $this->entityManager
-            ->getRDBRepository('Reminder')
+            ->getRDBRepository(Reminder::ENTITY_TYPE)
             ->where([
-                'type' => 'Popup',
+                'type' => Reminder::TYPE_POPUP,
                 'remindAt<=' => $now,
                 'startAt>' => $nowShifted,
                 'isSubmitted' => false,
@@ -99,13 +85,18 @@ class SubmitPopupReminders implements JobDataLess
             $entityType = $reminder->getTargetEntityType();
             $entityId = $reminder->getTargetEntityId();
 
-            if (!$userId || !$entityType || !$entityId) {
+            if (
+                !$userId ||
+                !$entityType ||
+                !$entityId ||
+                !$this->entityManager->hasRepository($entityType)
+            ) {
                 $this->deleteReminder($reminder);
 
                 continue;
             }
 
-            $entity = $this->entityManager->getEntity($entityType, $entityId);
+            $entity = $this->entityManager->getEntityById($entityType, $entityId);
 
             if (!$entity) {
                 $this->deleteReminder($reminder);
@@ -121,7 +112,7 @@ class SubmitPopupReminders implements JobDataLess
 
                 $status = $entity->getLinkMultipleColumn('users', 'status', $userId);
 
-                if ($status === 'Declined') {
+                if ($status === Meeting::ATTENDEE_STATUS_DECLINED) {
                     $this->deleteReminder($reminder);
 
                     continue;
@@ -130,36 +121,34 @@ class SubmitPopupReminders implements JobDataLess
 
             $dateAttribute = 'dateStart';
 
-            if ($entityType === 'Task') {
-                $dateAttribute = 'dateEnd';
+            $entityDefs = $this->entityManager->getDefs()->getEntity($entityType);
+
+            if ($entityDefs->hasField('reminders')) {
+                $dateAttribute = $entityDefs
+                    ->getField('reminders')
+                    ->getParam('dateField') ?? $dateAttribute;
             }
 
-            $data = [
+            $submitData[$userId] ??= [];
+
+            $submitData[$userId][] = [
                 'id' => $reminder->getId(),
-                'data' => [
+                'data' => (object) [
                     'id' => $entity->getId(),
                     'entityType' => $entityType,
                     $dateAttribute => $entity->get($dateAttribute),
                     'name' => $entity->get('name'),
                 ],
-            ];
-
-            if (!array_key_exists($userId, $submitData)) {
-                $submitData[$userId] = [];
-            }
-
-            $submitData[$userId][] = $data;
+            ];;
 
             $reminder->set('isSubmitted', true);
-
             $this->entityManager->saveEntity($reminder);
         }
 
         foreach ($submitData as $userId => $list) {
             try {
-                $this->webSocketSubmission->submit('popupNotifications.event', $userId, (object) [
-                    'list' => $list
-                ]);
+                $this->webSocketSubmission
+                    ->submit('popupNotifications.event', $userId, (object) ['list' => $list]);
             }
             catch (Throwable $e) {
                 $this->log->error('Job SubmitPopupReminders: [' . $e->getCode() . '] ' .$e->getMessage());
@@ -167,8 +156,10 @@ class SubmitPopupReminders implements JobDataLess
         }
     }
 
-    protected function deleteReminder(Reminder $reminder): void
+    private function deleteReminder(Reminder $reminder): void
     {
-        $this->entityManager->getRDBRepository('Reminder')->deleteFromDb($reminder->getId());
+        $this->entityManager
+            ->getRDBRepository(Reminder::ENTITY_TYPE)
+            ->deleteFromDb($reminder->getId());
     }
 }

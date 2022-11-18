@@ -29,16 +29,14 @@
 
 namespace Espo\Modules\Crm\Jobs;
 
-use Espo\Core\{
-    InjectableFactory,
-    ORM\EntityManager,
-    Utils\Config,
-    Job\JobDataLess,
-    Utils\Log,
-};
-
+use Espo\Core\InjectableFactory;
+use Espo\Core\Job\JobDataLess;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\Log;
 use Espo\Modules\Crm\Business\Reminder\EmailReminder;
-
+use Espo\Modules\Crm\Entities\Reminder;
 use Throwable;
 use DateTime;
 use DateInterval;
@@ -47,40 +45,29 @@ class SendEmailReminders implements JobDataLess
 {
     private const MAX_PORTION_SIZE = 10;
 
-    private $injectableFactory;
-
-    private $entityManager;
-
-    private $config;
-
-    private $log;
-
     public function __construct(
-        InjectableFactory $injectableFactory,
-        EntityManager $entityManager,
-        Config $config,
-        Log $log
-    ) {
-        $this->injectableFactory = $injectableFactory;
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->log = $log;
-    }
+        private InjectableFactory $injectableFactory,
+        private EntityManager $entityManager,
+        private Config $config,
+        private Log $log
+    ) {}
 
     public function run(): void
     {
         $dt = new DateTime();
 
-        $now = $dt->format('Y-m-d H:i:s');
+        $now = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
-        $nowShifted = $dt->sub(new DateInterval('PT1H'))->format('Y-m-d H:i:s');
+        $nowShifted = $dt
+            ->sub(new DateInterval('PT1H'))
+            ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
         $maxPortionSize = $this->config->get('emailReminderPortionSize') ?? self::MAX_PORTION_SIZE;
 
         $collection = $this->entityManager
-            ->getRDBRepository('Reminder')
+            ->getRDBRepository(Reminder::ENTITY_TYPE)
             ->where([
-                'type' => 'Email',
+                'type' => Reminder::TYPE_EMAIL,
                 'remindAt<=' => $now,
                 'startAt>' => $nowShifted,
             ])
@@ -98,13 +85,11 @@ class SendEmailReminders implements JobDataLess
                 $emailReminder->send($entity);
             }
             catch (Throwable $e) {
-                $this->log->error(
-                    "Email reminder '{$entity->getId()}': " . $e->getMessage()
-                );
+                $this->log->error("Email reminder '{$entity->getId()}': " . $e->getMessage());
             }
 
             $this->entityManager
-                ->getRDBRepository('Reminder')
+                ->getRDBRepository(Reminder::ENTITY_TYPE)
                 ->deleteFromDb($entity->getId());
         }
     }
