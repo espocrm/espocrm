@@ -262,6 +262,8 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                     return function () {
                         original.apply(this, arguments);
 
+                        self.selectedValue = self.items[0];
+
                         self.$dropdown
                             .on('mouseup', '[data-selectable]', function () {
                                 $(document).off('mouseup.select');
@@ -384,6 +386,10 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                     let original = self.onMouseDown;
 
                     return function (e) {
+                        // @todo Prevent flicking when clicking on input.
+                        if (!self.isOpen && !self.isInputHidden) {
+                        }
+
                         if (self.isOpen) {
                             self.closedByMouseDown = true;
                         }
@@ -396,8 +402,6 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                     let original = self.onFocus;
 
                     return function (e) {
-                        self.selectedValue = self.getValue();
-
                         if (self.preventReOpenOnFocus) {
                             return;
                         }
@@ -414,12 +418,15 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                     };
                 })();
 
-                this.revertValue = function () {
-                    if (this.selectedValue !== null) {
-                        this.setValue(this.selectedValue, true);
+                this.restoreSelectedValue = function () {
+                    if (this.preventRevertLoop) {
+                        return;
                     }
 
-                    this.selectedValue = null;
+                    this.preventRevertLoop = true;
+                    setTimeout(() => this.preventRevertLoop = false, 10);
+
+                    this.setValue(this.selectedValue, true);
                 };
 
                 this.onBlur = (function() {
@@ -431,7 +438,7 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                             return;
                         }
 
-                        self.revertValue();
+                        self.restoreSelectedValue();
 
                         self.$control_input.css({width: '4px'});
 
