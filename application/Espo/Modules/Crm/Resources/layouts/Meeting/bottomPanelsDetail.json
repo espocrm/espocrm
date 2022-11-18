@@ -1,0 +1,14 @@
+{
+    "_delimiter_": {
+        "disabled": true
+    },
+    "scheduler": {
+        "index": 0
+    },
+    "stream": {
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "sticked": false,
+        "index": 1
+    }
+}
