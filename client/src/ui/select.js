@@ -482,6 +482,8 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                                 e.keyCode = KEY_BACKSPACE;
                                 self.deleteSelection(e);
                                 e.keyCode = keyCode;
+
+                                self.$control_input.width(11);
                             }
                         }
 
