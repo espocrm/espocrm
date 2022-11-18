@@ -36,6 +36,8 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
      * @property {function(string, module:ui/select~OptionItemsCallback): void} [load] Loads additional items
      *   when typing in search.
      * @property {function(string, string, string): Number} [score] A score function scoring searched items.
+     * @property {'value'|'text'|'$order'|'$score'} [sortBy='$order'] Item sorting.
+     * @property {'asc'|'desc'} [sortDirection='asc'] Sort direction.
      */
 
     /**
@@ -84,6 +86,7 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
             });
 
             let selectizeOptions = {
+                sortField: [{field: options.sortBy, direction: options.sortDirection}],
                 load: options.load,
                 loadThrottle: 1,
                 plugins: plugins,
@@ -230,6 +233,8 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
             let defaults = {
                 selectOnTab: false,
                 matchAnyWord: false,
+                sortBy: '$order',
+                sortDirection: 'asc',
             };
 
             for (let key in defaults) {

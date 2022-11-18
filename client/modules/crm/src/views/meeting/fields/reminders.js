@@ -192,6 +192,8 @@ function (Dep, /** module:ui/select*/Select, moment) {
 
             Select.init($type, {});
             Select.init($seconds, {
+                sortBy: '$score',
+                sortDirection: 'desc',
                 /**
                  * @param {string} search
                  * @param {string} value

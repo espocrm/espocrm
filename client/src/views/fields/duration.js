@@ -265,6 +265,8 @@ function (Dep, /** module:ui/select*/Select) {
                 }
 
                 Select.init(this.$duration, {
+                    sortBy: '$score',
+                    sortDirection: 'desc',
                     /**
                      * @param {string} search
                      * @param {string} value
