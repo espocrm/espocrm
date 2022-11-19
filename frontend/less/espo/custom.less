@@ -3659,11 +3659,16 @@ a.close:hover {
 }
 
 .input-group-currency {
-    table-layout: fixed;
-    width: 100%;
+    display: flex;
+
+    > .input-group-item:first-child {
+        flex-grow: 1;
+    }
 
     > .input-group-item:last-child {
-        width: 25%;
+        flex-grow: 1;
+        min-width: 70px;
+        max-width: 22%;
     }
 }
 
