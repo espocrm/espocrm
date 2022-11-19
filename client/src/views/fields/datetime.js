@@ -121,7 +121,7 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
                     return this.getDateTime().toDisplayDateTime(value);
                 }
 
-                var timeFormat = this.getDateTime().timeFormat;
+                let timeFormat = this.getDateTime().timeFormat;
 
                 if (this.params.hasSeconds) {
                     timeFormat = timeFormat.replace(/:mm/, ':mm:ss');
@@ -246,20 +246,6 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
                     setTimeout(() => isTimeFormatError = false, 50);
                 });
             }
-        },
-
-        update: function (value) {
-            if (this.mode === this.MODE_EDIT) {
-                let pair = this.splitDatetime(value);
-
-                this.$date.val(pair[0]);
-                this.$time.val(pair[1]);
-
-                return;
-            }
-
-            this.setup();
-            this.render();
         },
 
         parse: function (string) {
