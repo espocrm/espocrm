@@ -385,15 +385,19 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                             return;
                         }
 
-                        let $selected = self.$dropdown.find('.selected');
+                        let $dropdownContent = self.$dropdown.children().first();
+                        let $selected = $dropdownContent.find('.selected');
 
                         if (!$selected.length) {
                             return;
                         }
 
-                        self.$dropdown
+                        let scrollTo = $selected.get(0).offsetTop - $dropdownContent.get(0).clientHeight;
+                        scrollTo = scrollTo >= 0 ? scrollTo : 0;
+
+                        $dropdownContent
                             .find('.selectize-dropdown-content')
-                            .scrollTop($selected.get(0).offsetTop);
+                            .scrollTop(scrollTo);
                     };
                 })();
 
