@@ -405,8 +405,9 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                     let original = self.onMouseDown;
 
                     return function (e) {
-                        // @todo Prevent flicking when clicking on input.
-                        if (!self.isOpen && !self.isInputHidden) {
+                        // Prevent flicking when clicking on input.
+                        if (!self.isOpen && !self.isInputHidden && self.$control_input.val()) {
+                            return;
                         }
 
                         if (self.isOpen) {
