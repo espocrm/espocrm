@@ -191,16 +191,24 @@ a.btn {
     color: @gray-light;
 }
 
-.btn-default > .fas,
-.btn-default > .far {
-    &.text-success {
-        color: var(--state-success-text);
-    }
-    &.text-danger {
-        color: var(--state-danger-text);
-    }
-    &.text-warning {
-        color: var(--state-warning-text);
+.btn-default,
+.btn-text {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+        > .fas,
+        > .far {
+            &.text-success {
+                color: var(--state-success-text);
+            }
+            &.text-danger {
+                color: var(--state-danger-text);
+            }
+            &.text-warning {
+                color: var(--state-warning-text);
+            }
+        }
     }
 }
 

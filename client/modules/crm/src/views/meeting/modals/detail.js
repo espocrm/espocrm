@@ -35,11 +35,11 @@ define('crm:views/meeting/modals/detail', ['views/modals/detail'], function (Dep
         setupAfterModelCreated: function () {
             Dep.prototype.setupAfterModelCreated.call(this);
 
-            var buttonData = this.getAcceptanceButtonData();
+            let buttonData = this.getAcceptanceButtonData();
 
             this.addButton({
                 name: 'setAcceptanceStatus',
-                text: buttonData.text,
+                html: buttonData.html,
                 hidden: this.hasAcceptanceStatusButton(),
                 style: buttonData.style,
                 className: 'btn-text',
@@ -152,26 +152,48 @@ define('crm:views/meeting/modals/detail', ['views/modals/detail'], function (Dep
             let text;
             let style = 'default';
 
+            let iconHtml = null;
+
             if (acceptanceStatus && acceptanceStatus !== 'None') {
                 text = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
 
                 style = this.getMetadata()
                     .get(['entityDefs', this.model.entityType,
                         'fields', 'acceptanceStatus', 'style', acceptanceStatus]);
+
+                if (style) {
+                    let iconClass = ({
+                        'success': 'fas fa-check-circle',
+                        'danger': 'fas fa-times-circle',
+                        'warning': 'fas fa-question-circle',
+                    })[style];
+
+                    iconHtml = $('<span>')
+                        .addClass(iconClass)
+                        .addClass('text-' + style)
+                        .get(0).outerHTML;
+                }
             } else {
                 text = typeof acceptanceStatus !== 'undefined' ?
                     this.translate('Acceptance', 'labels', 'Meeting') :
                     ' ';
             }
 
+            let html = this.getHelper().escapeString(text);
+
+            if (iconHtml) {
+                html = iconHtml + ' ' + html;
+            }
+
             return {
                 style: style,
                 text: text,
+                html: html,
             };
         },
 
         showAcceptanceButton: function () {
-            this.showButton('setAcceptanceStatus');
+            this.showActionItem('setAcceptanceStatus');
 
             if (!this.isRendered()) {
                 this.once('after:render', this.showAcceptanceButton, this);
@@ -183,7 +205,7 @@ define('crm:views/meeting/modals/detail', ['views/modals/detail'], function (Dep
 
             let $button = this.$el.find('.modal-footer [data-name="setAcceptanceStatus"]');
 
-            $button.text(data.text);
+            $button.html(data.html);
 
             $button.removeClass('btn-default');
             $button.removeClass('btn-success');
@@ -195,37 +217,25 @@ define('crm:views/meeting/modals/detail', ['views/modals/detail'], function (Dep
         },
 
         hideAcceptanceButton: function () {
-            this.hideButton('setAcceptanceStatus');
+            this.hideActionItem('setAcceptanceStatus');
         },
 
         hasAcceptanceStatusButton: function () {
             if (!this.model.has('status')) {
-                return;
+                return false;
             }
 
             if (!this.model.has('usersIds')) {
-                return;
+                return false;
             }
 
             if (~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
-                return;
+                return false;
             }
 
             if (!~this.model.getLinkMultipleIdList('users').indexOf(this.getUser().id)) {
-                return;
+                return false;
             }
-
-            var acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
-
-            var html;
-
-            if (acceptanceStatus && acceptanceStatus !== 'None') {
-                html = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
-            }
-            else {
-                html = this.translate('Acceptance', 'labels', 'Meeting');
-            }
-
             return true;
         },
 
