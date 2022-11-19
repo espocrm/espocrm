@@ -196,6 +196,19 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
             return [dateValue, timeValue];
         },
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.on('remove', () => this.destroyTimepicker());
+            this.on('mode-changed', () => this.destroyTimepicker());
+        },
+
+        destroyTimepicker: function () {
+            if (this.$time && this.$time[0]) {
+                this.$time.timepicker('remove');
+            }
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
