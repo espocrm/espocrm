@@ -66,7 +66,7 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
      */
     private $user3;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -83,6 +83,12 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
     {
         /* @var $configWriter ConfigWriter */
         $configWriter = $this->getContainer()->get('injectableFactory')->create(ConfigWriter::class);
+
+        $this->getMetadata()->set('scopes', 'Meeting', [
+            'stream' => false,
+        ]);
+
+        $this->getMetadata()->save();
 
         $configWriter->set('assignmentNotificationsEntityList', [
             'Email',
