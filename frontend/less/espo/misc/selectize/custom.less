@@ -24,6 +24,15 @@
 
 .selectize-dropdown {
     min-width: 80px;
+
+    .selectize-dropdown-content {
+        > .option {
+            cursor: default;
+        }
+    }
+
+    margin-top: 0;
+    user-select: none;
 }
 
 .form-control.selectize-control.single {
@@ -31,12 +40,6 @@
 }
 
 .selectize-control {
-    .selectize-dropdown-content {
-        > .option {
-            cursor: default;
-        }
-    }
-
     &.single {
         > .selectize-input {
             > .item {
@@ -50,11 +53,6 @@
 
             cursor: default;
         }
-    }
-
-    .selectize-dropdown {
-        margin-top: 0;
-        user-select: none;
     }
 }
 
