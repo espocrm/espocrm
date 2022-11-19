@@ -269,11 +269,11 @@ function (Dep, /** module:ui/select*/Select) {
                     sortDirection: 'desc',
                     /**
                      * @param {string} search
-                     * @param {string} value
+                     * @param {{value: string}} item
                      * @return {number}
                      */
-                    score: (search, value) => {
-                        let num = parseInt(value);
+                    score: (search, item) => {
+                        let num = parseInt(item.value);
                         let searchNum = parseInt(search);
 
                         if (isNaN(searchNum)) {

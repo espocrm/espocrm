@@ -35,7 +35,8 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
      * @property {boolean} [matchAnyWord=false] To match any word when searching.
      * @property {function(string, module:ui/select~OptionItemsCallback): void} [load] Loads additional items
      *   when typing in search.
-     * @property {function(string, string, string): Number} [score] A score function scoring searched items.
+     * @property {function(string, module:ui/select~OptionItemFull): Number} [score] A score function scoring
+     *   searched items.
      * @property {'value'|'text'|'$order'|'$score'} [sortBy='$order'] Item sorting.
      * @property {'asc'|'desc'} [sortDirection='asc'] Sort direction.
      */
@@ -50,6 +51,14 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
      * @type {Object}
      * @property {string} value A value.
      * @property {string} text A label.
+     */
+
+    /**
+     * @typedef module:ui/select~OptionItemFull
+     * @type {Object}
+     * @property {string} value A value.
+     * @property {string} text A label.
+     * @property {Number} $order An order index.
      */
 
     /**
@@ -151,7 +160,7 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
 
                 selectizeOptions.score = function (search) {
                     return function (item) {
-                        return score(search, item.value, item.text);
+                        return score(search, item);
                     };
                 };
             }
