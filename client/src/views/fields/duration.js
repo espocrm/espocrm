@@ -300,6 +300,37 @@ function (Dep, /** module:ui/select*/Select) {
 
                         return 0;
                     },
+                    load: (item, callback) => {
+                        let num = parseInt(item);
+
+                        if (isNaN(num) || num <= 0) {
+                            return;
+                        }
+
+                        if (num > 59) {
+                            return;
+                        }
+
+                        let list = [];
+
+                        let mSeconds = num * 60;
+
+                        list.push({
+                            value: mSeconds.toString(),
+                            text: this.stringifyDuration(mSeconds),
+                        });
+
+                        if (num <= 9) {
+                            let hSeconds = num * 3600;
+
+                            list.push({
+                                value: hSeconds.toString(),
+                                text: this.stringifyDuration(hSeconds),
+                            });
+                        }
+
+                        callback(list);
+                    },
                 });
             }
         },
