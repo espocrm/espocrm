@@ -39,6 +39,8 @@ define('views/fields/datetime-optional', ['views/fields/datetime'], function (De
         type: "datetimeOptional",
 
         setup: function () {
+            Dep.prototype.setup.call(this);
+
             this.noneOption = this.translate('None');
             this.nameDate = this.name + 'Date';
         },
