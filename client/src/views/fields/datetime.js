@@ -76,11 +76,11 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
         },
 
         data: function () {
-            var data = Dep.prototype.data.call(this);
+            let data = Dep.prototype.data.call(this);
 
             data.date = data.time = '';
 
-            var value = this.getDateTime().toDisplay(this.model.get(this.name));
+            let value = this.getDateTime().toDisplay(this.model.get(this.name));
 
             if (value) {
                 let pair = this.splitDatetime(value);
@@ -93,18 +93,18 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
         },
 
         getDateStringValue: function () {
-            if (this.mode === 'detail' && !this.model.has(this.name)) {
+            if (this.mode === this.MODE_DETAIL && !this.model.has(this.name)) {
                 return -1;
             }
 
-            var value = this.model.get(this.name);
+            let value = this.model.get(this.name);
 
             if (!value) {
                 if (
-                    this.mode === 'edit' |
-                    this.mode === 'search' |
-                    this.mode === 'list' ||
-                    this.mode === 'listLink'
+                    this.mode === this.MODE_EDIT |
+                    this.mode === this.MODE_SEARCH |
+                    this.mode === this.MODE_LIST ||
+                    this.mode === this.MODE_LIST_LINK
                 ) {
                     return '';
                 }
@@ -112,7 +112,11 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
                 return null;
             }
 
-            if (this.mode === 'list' || this.mode === 'detail' || this.mode === 'listLink') {
+            if (
+                this.mode === this.MODE_LIST ||
+                this.mode === this.MODE_DETAIL ||
+                this.mode === this.MODE_LIST_LINK
+            ) {
                 if (this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat) {
                     return this.getDateTime().toDisplayDateTime(value);
                 }
@@ -123,11 +127,11 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
                     timeFormat = timeFormat.replace(/:mm/, ':mm:ss');
                 }
 
-                var d = this.getDateTime().toMoment(value);
-                var now = moment().tz(this.getDateTime().timeZone || 'UTC');
-                var dt = now.clone().startOf('day');
+                let d = this.getDateTime().toMoment(value);
+                let now = moment().tz(this.getDateTime().timeZone || 'UTC');
+                let dt = now.clone().startOf('day');
 
-                var ranges = {
+                let ranges = {
                     'today': [dt.unix(), dt.add(1, 'days').unix()],
                     'tomorrow': [dt.unix(), dt.add(1, 'days').unix()],
                     'yesterday': [dt.add(-3, 'days').unix(), dt.add(1, 'days').unix()]
@@ -143,7 +147,7 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
                     return this.translate('Yesterday') + ' ' + d.format(timeFormat);
                 }
 
-                var readableFormat = this.getDateTime().getReadableDateFormat();
+                let readableFormat = this.getDateTime().getReadableDateFormat();
 
                 if (d.format('YYYY') === now.format('YYYY')) {
                     return d.format(readableFormat) + ' ' + d.format(timeFormat);
@@ -157,7 +161,7 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
         },
 
         initTimepicker: function () {
-            var $time = this.$time;
+            let $time = this.$time;
 
             $time.timepicker({
                 step: this.params.minuteStep || 30,
@@ -174,9 +178,9 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
         },
 
         setDefaultTime: function () {
-            var dtString = moment('2014-01-01 00:00').format(this.getDateTime().getDateTimeFormat()) || '';
+            let dtString = moment('2014-01-01 00:00').format(this.getDateTime().getDateTimeFormat()) || '';
 
-            var pair = this.splitDatetime(dtString);
+            let pair = this.splitDatetime(dtString);
 
             if (pair.length === 2) {
                 this.$time.val(pair[1]);
@@ -187,7 +191,6 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
             let m = moment(value, this.getDateTime().getDateTimeFormat());
 
             let dateValue = m.format(this.getDateTime().getDateFormat());
-
             let timeValue = value.substr(dateValue.length + 1);
 
             return [dateValue, timeValue];
@@ -196,9 +199,9 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'edit') {
+            if (this.mode === this.MODE_EDIT) {
                 this.$date = this.$element;
-                var $time = this.$time = this.$el.find('input.time-part');
+                let $time = this.$time = this.$el.find('input.time-part');
 
                 this.initTimepicker();
 
@@ -246,8 +249,8 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
         },
 
         update: function (value) {
-            if (this.mode === 'edit') {
-                var pair = this.splitDatetime(value);
+            if (this.mode === this.MODE_EDIT) {
+                let pair = this.splitDatetime(value);
 
                 this.$date.val(pair[0]);
                 this.$time.val(pair[1]);
@@ -264,12 +267,12 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
         },
 
         fetch: function () {
-            var data = {};
+            let data = {};
 
-            var date = this.$date.val();
-            var time = this.$time.val();
+            let date = this.$date.val();
+            let time = this.$time.val();
 
-            var value = null;
+            let value = null;
 
             if (date !== '' && time !== '') {
                 value = this.parse(date + ' ' + time);
@@ -282,7 +285,7 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
 
         validateDatetime: function () {
             if (this.model.get(this.name) === -1) {
-                var msg = this.translate('fieldShouldBeDatetime', 'messages')
+                let msg = this.translate('fieldShouldBeDatetime', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg);
@@ -292,7 +295,7 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
         },
 
         fetchSearch: function () {
-            var data = Dep.prototype.fetchSearch.call(this);
+            let data = Dep.prototype.fetchSearch.call(this);
 
             if (data) {
                 data.dateTime = true;
