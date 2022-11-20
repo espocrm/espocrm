@@ -34,20 +34,13 @@ use LogicException;
 class Binding
 {
     public const IMPLEMENTATION_CLASS_NAME = 1;
-
     public const CONTAINER_SERVICE = 2;
-
     public const VALUE = 3;
-
     public const CALLBACK = 4;
-
     public const FACTORY_CLASS_NAME = 5;
 
     private int $type;
-
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $value;
 
     /**
@@ -72,6 +65,9 @@ class Binding
         return $this->value;
     }
 
+    /**
+     * @param class-string<object> $implementationClassName
+     */
     public static function createFromImplementationClassName(string $implementationClassName): self
     {
         if (!$implementationClassName) {
@@ -103,6 +99,9 @@ class Binding
         return new self(self::CALLBACK, $callback);
     }
 
+    /**
+     * @param class-string<Factory<object>> $factoryClassName
+     */
     public static function createFromFactoryClassName(string $factoryClassName): self
     {
         if (!$factoryClassName) {

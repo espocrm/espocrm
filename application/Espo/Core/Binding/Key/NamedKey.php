@@ -27,38 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Account\PersonalAccount;
-
-use Espo\Core\Binding\Factory;
-use Espo\Core\Binding\BindingContainerBuilder;
-use Espo\Core\InjectableFactory;
-
-use Espo\Core\Mail\Account\Hook\AfterFetch;
-use Espo\Core\Mail\Account\PersonalAccount\Hooks\AfterFetch as PersonalAccountAfterFetch;
-
-use Espo\Core\Mail\Account\Fetcher;
-use Espo\Core\Mail\Account\StorageFactory;
-use Espo\Core\Mail\Account\PersonalAccount\StorageFactory as PersonalAccountStorageFactory;
+namespace Espo\Core\Binding\Key;
 
 /**
- * @implements Factory<Fetcher>
+ * A parameter-name-only key.
  */
-class FetcherFactory implements Factory
+class NamedKey
 {
-    private InjectableFactory $injectableFactory;
+    private function __construct(private string $parameterName)
+    {}
 
-    public function __construct(InjectableFactory $injectableFactory)
+    /**
+     * Create.
+     *
+     * @param string $parameterName A constructor parameter name (w/o '$').
+     */
+    public static function create(string $parameterName): self
     {
-        $this->injectableFactory = $injectableFactory;
+        return new self($parameterName);
     }
 
-    public function create(): Fetcher
+    public function toString(): string
     {
-        $binding = BindingContainerBuilder::create()
-            ->bindImplementation(StorageFactory::class, PersonalAccountStorageFactory::class)
-            ->bindImplementation(AfterFetch::class, PersonalAccountAfterFetch::class)
-            ->build();
-
-        return $this->injectableFactory->createWithBinding(Fetcher::class, $binding);
+        return '$' . $this->parameterName;
     }
 }

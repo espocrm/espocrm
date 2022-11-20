@@ -36,12 +36,13 @@ use Espo\Core\Binding\Factory;
 
 use RuntimeException;
 
+/**
+ * @implements Factory<Sender>
+ */
 class SenderFactory implements Factory
 {
     private $injectableFactory;
-
     private $config;
-
     private $metadata;
 
     private const DEFAULT_MESSAGER = 'ZeroMQ';

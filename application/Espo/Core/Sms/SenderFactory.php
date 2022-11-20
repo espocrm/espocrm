@@ -30,19 +30,18 @@
 namespace Espo\Core\Sms;
 
 use Espo\Core\Binding\Factory;
-
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\InjectableFactory;
-
 use RuntimeException;
 
+/**
+ * @implements Factory<Sender>
+ */
 class SenderFactory implements Factory
 {
     private Config $config;
-
     private Metadata $metadata;
-
     private InjectableFactory $injectableFactory;
 
     public function __construct(

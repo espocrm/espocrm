@@ -297,8 +297,8 @@ class InjectableFactory
         }
 
         if ($type === Binding::FACTORY_CLASS_NAME) {
-            /** @var class-string $value */
-            /** @var Factory $factory */
+            /** @var class-string<object> $value */
+            /** @var Factory<object> $factory */
             $factory = $this->createInternal($value, null, $bindingContainer);
 
             return $factory->create();

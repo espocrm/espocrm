@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Binding;
 
+use Closure;
+use Espo\Core\Binding\Key\NamedClassKey;
+use Espo\Core\Binding\Key\NamedKey;
 use LogicException;
 
 class ContextualBinder
@@ -49,11 +52,13 @@ class ContextualBinder
     /**
      * Bind an interface to an implementation.
      *
-     * @param string $key An interface or interface with a parameter name (`Interface $name`).
-     * @param class-string<object> $implementationClassName An implementation class name.
+     * @template T of object
+     * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
+     * @param class-string<T> $implementationClassName An implementation class name.
      */
-    public function bindImplementation(string $key, string $implementationClassName): self
+    public function bindImplementation(string|NamedClassKey $key, string $implementationClassName): self
     {
+        $key = self::keyToString($key);
         $this->validateBindingKeyNoParameterName($key);
 
         $this->data->addContext(
@@ -68,11 +73,13 @@ class ContextualBinder
     /**
      * Bind an interface to a specific service.
      *
-     * @param string $key An interface or interface with a parameter name (`Interface $name`).
-     * @param string $serviceName A service name.
+     * @template T of object
+     * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
+     * @param class-string<T> $serviceName A service name.
      */
-    public function bindService(string $key, string $serviceName): self
+    public function bindService(string|NamedClassKey $key, string $serviceName): self
     {
+        $key = self::keyToString($key);
         $this->validateBindingKeyNoParameterName($key);
 
         $this->data->addContext(
@@ -87,11 +94,12 @@ class ContextualBinder
     /**
      * Bind an interface or parameter name to a specific value.
      *
-     * @param string $key Parameter name (`$name`) or interface with a parameter name (`Interface $name`).
+     * @param string|NamedKey|NamedClassKey<object> $key Parameter name (`$name`) or interface with a parameter name.
      * @param mixed $value A value of any type.
      */
-    public function bindValue(string $key, $value): self
+    public function bindValue(string|NamedKey|NamedClassKey $key, $value): self
     {
+        $key = self::keyToString($key);
         $this->validateBindingKeyParameterName($key);
 
         $this->data->addContext(
@@ -106,11 +114,13 @@ class ContextualBinder
     /**
      * Bind an interface to a specific instance.
      *
-     * @param string $key An interface or interface with a parameter name (`Interface $name`).
-     * @param object $instance An instance.
+     * @template T of object
+     * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
+     * @param T $instance An instance.
      */
-    public function bindInstance(string $key, object $instance): self
+    public function bindInstance(string|NamedClassKey $key, object $instance): self
     {
+        $key = self::keyToString($key);
         $this->validateBindingKeyNoParameterName($key);
 
         $this->data->addContext(
@@ -125,12 +135,13 @@ class ContextualBinder
     /**
      * Bind an interface or parameter name to a callback.
      *
-     * @param string $key An interface, parameter name (`$name`) or
-     * interface with a parameter name (`Interface $name`).
-     * @param callable $callback A callback that will resolve a dependency.
+     * @param class-string<object>|NamedClassKey<object>|NamedKey $key An interface, parameter name or both.
+     * @param Closure $callback A callback that will resolve a dependency.
+     * @todo Change to Closure(...): mixed Once https://github.com/phpstan/phpstan/issues/8214 is implemented.
      */
-    public function bindCallback(string $key, callable $callback): self
+    public function bindCallback(string|NamedClassKey|NamedKey $key, Closure $callback): self
     {
+        $key = self::keyToString($key);
         $this->validateBinding($key);
 
         $this->data->addContext(
@@ -145,11 +156,13 @@ class ContextualBinder
     /**
      * Bind an interface to a factory.
      *
-     * @param string $key An interface or interface with a parameter name (`Interface $name`).
-     * @param class-string<Factory> $factoryClassName A factory class name.
+     * @template T of object
+     * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
+     * @param class-string<Factory<T>> $factoryClassName A factory class name.
      */
-    public function bindFactory(string $key, string $factoryClassName): self
+    public function bindFactory(string|NamedClassKey $key, string $factoryClassName): self
     {
+        $key = self::keyToString($key);
         $this->validateBindingKeyNoParameterName($key);
 
         $this->data->addContext(
@@ -181,8 +194,16 @@ class ContextualBinder
     {
         $this->validateBinding($key);
 
-        if (strpos($key, '$') === false) {
+        if (!str_contains($key, '$')) {
             throw new LogicException("Can't bind w/o a parameter name.");
         }
+    }
+
+    /**
+     * @param string|NamedKey|NamedClassKey<object> $key
+     */
+    private static function keyToString(string|NamedKey|NamedClassKey $key): string
+    {
+        return is_string($key) ? $key : $key->toString();
     }
 }

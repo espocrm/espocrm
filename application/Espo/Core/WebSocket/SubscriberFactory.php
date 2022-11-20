@@ -33,25 +33,20 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Binding\Factory;
-
 use RuntimeException;
 
+/**
+ * @implements Factory<Subscriber>
+ */
 class SubscriberFactory implements Factory
 {
-    private $injectableFactory;
-
-    private $config;
-
-    private $metadata;
-
     private const DEFAULT_MESSAGER = 'ZeroMQ';
 
-    public function __construct(InjectableFactory $injectableFactory, Config $config, Metadata $metadata)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->config = $config;
-        $this->metadata = $metadata;
-    }
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private Config $config,
+        private Metadata $metadata
+    ) {}
 
     public function create(): Subscriber
     {

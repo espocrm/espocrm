@@ -27,38 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Account\PersonalAccount;
-
-use Espo\Core\Binding\Factory;
-use Espo\Core\Binding\BindingContainerBuilder;
-use Espo\Core\InjectableFactory;
-
-use Espo\Core\Mail\Account\Hook\AfterFetch;
-use Espo\Core\Mail\Account\PersonalAccount\Hooks\AfterFetch as PersonalAccountAfterFetch;
-
-use Espo\Core\Mail\Account\Fetcher;
-use Espo\Core\Mail\Account\StorageFactory;
-use Espo\Core\Mail\Account\PersonalAccount\StorageFactory as PersonalAccountStorageFactory;
+namespace Espo\Core\Binding\Key;
 
 /**
- * @implements Factory<Fetcher>
+ * A key for a class-type-hinted constructor parameter with a parameter name.
+ *
+ * @template-covariant T of object
  */
-class FetcherFactory implements Factory
+class NamedClassKey
 {
-    private InjectableFactory $injectableFactory;
+    /**
+     * @param class-string<T> $className
+     */
+    private function __construct(private string $className, private string $parameterName)
+    {}
 
-    public function __construct(InjectableFactory $injectableFactory)
+    /**
+     * Create.
+     *
+     * @template TC of object
+     * @param class-string<TC> $className An interface.
+     * @param string $parameterName A constructor parameter name (w/o '$').
+     * @return self<TC>
+     */
+    public static function create(string $className, string $parameterName): self
     {
-        $this->injectableFactory = $injectableFactory;
+        return new self($className, $parameterName);
     }
 
-    public function create(): Fetcher
+    public function toString(): string
     {
-        $binding = BindingContainerBuilder::create()
-            ->bindImplementation(StorageFactory::class, PersonalAccountStorageFactory::class)
-            ->bindImplementation(AfterFetch::class, PersonalAccountAfterFetch::class)
-            ->build();
-
-        return $this->injectableFactory->createWithBinding(Fetcher::class, $binding);
+        return $this->className . ' $' . $this->parameterName;
     }
 }

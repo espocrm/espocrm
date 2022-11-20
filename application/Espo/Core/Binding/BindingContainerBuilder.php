@@ -30,6 +30,7 @@
 namespace Espo\Core\Binding;
 
 use Closure;
+use Espo\Core\Binding\Key\NamedClassKey;
 
 class BindingContainerBuilder
 {
@@ -45,10 +46,11 @@ class BindingContainerBuilder
     /**
      * Bind an interface to an implementation.
      *
-     * @param string $key An interface or interface with a parameter name (`Interface $name`).
-     * @param class-string<object> $implementationClassName An implementation class name.
+     * @template T of object
+     * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
+     * @param class-string<T> $implementationClassName An implementation class name.
      */
-    public function bindImplementation(string $key, string $implementationClassName): self
+    public function bindImplementation(string|NamedClassKey $key, string $implementationClassName): self
     {
         $this->binder->bindImplementation($key, $implementationClassName);
 
@@ -58,10 +60,10 @@ class BindingContainerBuilder
     /**
      * Bind an interface to a specific service.
      *
-     * @param string $key An interface or interface with a parameter name (`Interface $name`).
+     * @param class-string<object>|NamedClassKey<object> $key An interface or interface with a parameter name.
      * @param string $serviceName A service name.
      */
-    public function bindService(string $key, string $serviceName): self
+    public function bindService(string|NamedClassKey $key, string $serviceName): self
     {
         $this->binder->bindService($key, $serviceName);
 
@@ -71,10 +73,12 @@ class BindingContainerBuilder
     /**
      * Bind an interface to a callback.
      *
-     * @param string $key An interface or interface with a parameter name (`Interface $name`).
-     * @param callable $callback A callback that will resolve a dependency.
+     * @template T of object
+     * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
+     * @param Closure $callback A callback that will resolve a dependency.
+     * @todo Change to Closure(...): T Once https://github.com/phpstan/phpstan/issues/8214 is implemented.
      */
-    public function bindCallback(string $key, callable $callback): self
+    public function bindCallback(string|NamedClassKey $key, Closure $callback): self
     {
         $this->binder->bindCallback($key, $callback);
 
@@ -84,10 +88,11 @@ class BindingContainerBuilder
     /**
      * Bind an interface to a specific instance.
      *
-     * @param string $key An interface or interface with a parameter name (`Interface $name`).
-     * @param object $instance An instance.
+     * @template T of object
+     * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
+     * @param T $instance An instance.
      */
-    public function bindInstance(string $key, object $instance): self
+    public function bindInstance(string|NamedClassKey $key, object $instance): self
     {
         $this->binder->bindInstance($key, $instance);
 
@@ -97,10 +102,11 @@ class BindingContainerBuilder
     /**
      * Bind an interface to a factory.
      *
-     * @param string $key An interface or interface with a parameter name (`Interface $name`).
-     * @param class-string<Factory> $factoryClassName A factory class name.
+     * @template T of object
+     * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
+     * @param class-string<Factory<T>> $factoryClassName A factory class name.
      */
-    public function bindFactory(string $key, string $factoryClassName): self
+    public function bindFactory(string|NamedClassKey $key, string $factoryClassName): self
     {
         $this->binder->bindFactory($key, $factoryClassName);
 

@@ -31,6 +31,7 @@ namespace Espo;
 
 use Espo\Core\Binding\Binder;
 use Espo\Core\Binding\BindingProcessor;
+use Espo\Core\Binding\Key\NamedClassKey;
 
 /**
  * Default binding for the dependency injection framework. Custom binding should be set up in
@@ -117,7 +118,7 @@ class Binding implements BindingProcessor
         );
 
         $binder->bindService(
-            'Espo\\Core\\SelectBuilderFactory',
+            'Espo\\Core\\Select\\SelectBuilderFactory',
             'selectBuilderFactory'
         );
 
@@ -137,7 +138,7 @@ class Binding implements BindingProcessor
         );
 
         $binder->bindService(
-            'Espo\\Core\\Utils\\HookManager',
+            'Espo\\Core\\HookManager',
             'hookManager'
         );
 
@@ -162,12 +163,12 @@ class Binding implements BindingProcessor
         );
 
         $binder->bindService(
-            'Espo\\Core\\Utils\\Language $baseLanguage',
+            NamedClassKey::create('Espo\\Core\\Utils\\Language', 'baseLanguage'),
             'baseLanguage'
         );
 
         $binder->bindService(
-            'Espo\\Core\\Utils\\Language $defaultLanguage',
+            NamedClassKey::create('Espo\\Core\\Utils\\Language', 'defaultLanguage'),
             'defaultLanguage'
         );
 
@@ -182,7 +183,7 @@ class Binding implements BindingProcessor
         );
 
         $binder->bindService(
-            'Espo\\Core\\AclManager $internalAclManager',
+            NamedClassKey::create('Espo\\Core\\AclManager', 'internalAclManager'),
             'internalAclManager'
         );
 

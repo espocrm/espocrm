@@ -29,15 +29,15 @@
 
 namespace tests\unit\Espo\Core\Binding;
 
-use Espo\Core\{
-    Binding\BindingContainer,
-    Binding\BindingLoader,
-    Binding\BindingData,
-    Binding\Binder,
-    Binding\Binding,
-    Binding\BindingContainerBuilder,
-    Binding\ContextualBinder,
-};
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\Binding;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\Binding\BindingLoader;
+use Espo\Core\Binding\ContextualBinder;
+use Espo\Core\Binding\Key\NamedClassKey;
+use Espo\Core\Binding\Key\NamedKey;
 
 use ReflectionClass;
 use ReflectionParameter;
@@ -225,6 +225,35 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testHasContextTrue3()
+    {
+        $this->binder
+            ->for('Espo\\Context')
+            ->bindValue(NamedKey::create('test'), 'Test Value');
+
+        $class = $this->createClassMock('Espo\\Context');
+
+        $param = $this->createParamMock('test');
+
+        $this->assertTrue(
+            $this->createContainer()->has($class, $param)
+        );
+    }
+
+    public function testHasContextTrue4()
+    {
+        $this->binder
+            ->for('Espo\\Context')
+            ->bindService(NamedClassKey::create('Espo\\Test', 'test'), 'service');
+
+        $class = $this->createClassMock('Espo\\Context');
+        $param = $this->createParamMock('test', 'Espo\\Test');
+
+        $this->assertTrue(
+            $this->createContainer()->has($class, $param)
+        );
+    }
+
     public function testHasContextFalse1()
     {
         $this->binder
@@ -232,7 +261,6 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
             ->bindService('Espo\\Test', 'test');
 
         $class = $this->createClassMock('Espo\\Context');
-
         $param = $this->createParamMock('test', 'Espo\\Hello');
 
         $this->assertFalse(
@@ -524,7 +552,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Test Value', $binding->getValue());
     }
 
-    public function testGetContextInterfaceValue()
+    public function testGetContextInterfaceValue1()
     {
         $instance = (object) [];
 
@@ -533,13 +561,28 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
             ->bindValue('Espo\\SomeClass $test', $instance);
 
         $class = $this->createClassMock('Espo\\Context');
-
         $param = $this->createParamMock('test', 'Espo\\SomeClass');
 
         $binding = $this->createContainer()->get($class, $param);
 
         $this->assertEquals(Binding::VALUE, $binding->getType());
+        $this->assertEquals($instance, $binding->getValue());
+    }
 
+    public function testGetContextInterfaceValue2()
+    {
+        $instance = (object) [];
+
+        $this->binder
+            ->for('Espo\\Context')
+            ->bindValue(NamedClassKey::create('Espo\\SomeClass', 'test'), $instance);
+
+        $class = $this->createClassMock('Espo\\Context');
+        $param = $this->createParamMock('test', 'Espo\\SomeClass');
+
+        $binding = $this->createContainer()->get($class, $param);
+
+        $this->assertEquals(Binding::VALUE, $binding->getType());
         $this->assertEquals($instance, $binding->getValue());
     }
 

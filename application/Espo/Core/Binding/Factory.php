@@ -29,7 +29,13 @@
 
 namespace Espo\Core\Binding;
 
+/**
+ * @template T of object
+ */
 interface Factory
 {
+    /**
+     * @return T
+     */
     public function create(): object;
 }
