@@ -32,38 +32,29 @@ namespace Espo\Core\ORM;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Binding\ContextualBinder;
 
-use Espo\Core\{
-    InjectableFactory,
-    Utils\ClassFinder,
-    Repositories\Database as DatabaseRepository,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Repositories\Database as DatabaseRepository;
+use Espo\Core\Utils\ClassFinder;
 
-use Espo\ORM\{
-    Repository\RepositoryFactory as RepositoryFactoryInterface,
-    Repository\Repository,
-    EntityFactory as EntityFactoryInteface,
-};
+use Espo\ORM\EntityFactory as EntityFactoryInterface;
+use Espo\ORM\Repository\Repository;
+use Espo\ORM\Repository\RepositoryFactory as RepositoryFactoryInterface;
 
 class RepositoryFactory implements RepositoryFactoryInterface
 {
-    /**
-     * @var class-string<Repository<\Espo\ORM\Entity>>
-     */
+    /** @var class-string<Repository<\Espo\ORM\Entity>> */
     protected $defaultClassName = DatabaseRepository::class;
 
-    protected EntityFactoryInteface $entityFactory;
-
+    protected EntityFactoryInterface $entityFactory;
     protected InjectableFactory $injectableFactory;
-
     protected ClassFinder $classFinder;
 
     public function __construct(
-        EntityFactoryInteface $entityFactory,
+        EntityFactoryInterface $entityFactory,
         InjectableFactory $injectableFactory,
         ClassFinder $classFinder
     ) {
         $this->entityFactory = $entityFactory;
-
         $this->injectableFactory = $injectableFactory;
         $this->classFinder = $classFinder;
     }
@@ -88,7 +79,7 @@ class RepositoryFactory implements RepositoryFactoryInterface
         return $this->injectableFactory->createWithBinding(
             $className,
             BindingContainerBuilder::create()
-                ->bindInstance(EntityFactoryInteface::class, $this->entityFactory)
+                ->bindInstance(EntityFactoryInterface::class, $this->entityFactory)
                 ->bindInstance(EntityFactory::class, $this->entityFactory)
                 ->inContext(
                     $className,
