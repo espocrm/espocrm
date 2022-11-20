@@ -271,6 +271,10 @@ class DefaultParentFinder implements ParentFinder
             return null;
         }
 
+        if (!is_string($parentType) || !is_string($parentId)) {
+            return null;
+        }
+
         if (!$this->entityManager->hasRepository($parentType)) {
             return null;
         }

@@ -442,7 +442,7 @@ abstract class Base
         /** @var string $errorMessage */
         $errorMessage = preg_replace('/\{version\}/', $currentVersion, $errorMessage);
         /** @var string $errorMessage */
-        $errorMessage = preg_replace('/\{requiredVersion\}/', $version ?? '', $errorMessage);
+        $errorMessage = preg_replace('/\{requiredVersion\}/', $version, $errorMessage);
 
         $this->throwErrorAndRemovePackage($errorMessage);
 
