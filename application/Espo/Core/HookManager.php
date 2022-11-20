@@ -29,16 +29,13 @@
 
 namespace Espo\Core;
 
-use Espo\Core\{
-    InjectableFactory,
-    Utils\File\Manager as FileManager,
-    Utils\Metadata,
-    Utils\Config,
-    Utils\Util,
-    Utils\DataCache,
-    Utils\Log,
-    Utils\Module\PathProvider,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Module\PathProvider;
+use Espo\Core\Utils\Util;
 
 /**
  * Runs hooks. E.g. beforeSave, afterSave. Hooks can be located in a folder
@@ -49,65 +46,30 @@ class HookManager
 {
     private const DEFAULT_ORDER = 9;
 
-    /**
-     * @var ?array<string,array<string,mixed>>
-     */
+    /** @var ?array<string, array<string, mixed>> */
     private $data = null;
-
     private bool $isDisabled = false;
-
-    /**
-     * @var array<string,class-string[]>
-     */
+    /** @var array<string, class-string[]> */
     private $hookListHash = [];
-
-    /**
-     * @var array<class-string,object>
-     */
+    /** @var array<class-string, object> */
     private $hooks;
-
     private string $cacheKey = 'hooks';
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $ignoredMethodList = [
         '__construct',
         'getDependencyList',
         'inject',
     ];
 
-    private $injectableFactory;
-
-    private $fileManager;
-
-    private $metadata;
-
-    private $config;
-
-    private $dataCache;
-
-    private $log;
-
-    private $pathProvider;
-
     public function __construct(
-        InjectableFactory $injectableFactory,
-        FileManager $fileManager,
-        Metadata $metadata,
-        Config $config,
-        DataCache $dataCache,
-        Log $log,
-        PathProvider $pathProvider
-    ) {
-        $this->injectableFactory = $injectableFactory;
-        $this->fileManager = $fileManager;
-        $this->metadata = $metadata;
-        $this->config = $config;
-        $this->dataCache = $dataCache;
-        $this->log = $log;
-        $this->pathProvider = $pathProvider;
-    }
+        private InjectableFactory $injectableFactory,
+        private FileManager $fileManager,
+        private Metadata $metadata,
+        private Config $config,
+        private DataCache $dataCache,
+        private Log $log,
+        private PathProvider $pathProvider
+    ) {}
 
     /**
      * @param mixed $injection
