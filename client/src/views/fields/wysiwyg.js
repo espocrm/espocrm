@@ -41,9 +41,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
         type: 'wysiwyg',
 
         listTemplate: 'fields/wysiwyg/detail',
-
         detailTemplate: 'fields/wysiwyg/detail',
-
         editTemplate: 'fields/wysiwyg/edit',
 
         height: 250,
@@ -145,7 +143,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
         },
 
         data: function () {
-            var data = Dep.prototype.data.call(this);
+            let data = Dep.prototype.data.call(this);
 
             data.useIframe = this.useIframe;
             data.isPlain = this.isPlain();
@@ -214,8 +212,8 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             $('body > .note-popover').removeClass('hidden');
         },
 
-         getValueForDisplay: function () {
-            var value = Dep.prototype.getValueForDisplay.call(this);
+        getValueForDisplay: function () {
+            let value = Dep.prototype.getValueForDisplay.call(this);
 
             if (this.isPlain()) {
                 return value;
@@ -241,7 +239,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
         },
 
         getValueForEdit: function () {
-            var value = this.model.get(this.name) || '';
+            let value = this.model.get(this.name) || '';
 
             if (this.htmlPurificationForEditDisabled) {
                 return this.sanitizeHtmlLight(value);
@@ -257,7 +255,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 this.$summernote = this.$el.find('.summernote');
             }
 
-            var language = this.getConfig().get('language');
+            let language = this.getConfig().get('language');
 
             if (!(language in $.summernote.lang)) {
                 $.summernote.lang[language] = this.getLanguage().translate('summernote', 'sets');
@@ -293,9 +291,9 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             this.$el.find('iframe').removeClass('hidden');
 
-            var $iframe = this.$el.find('iframe');
+            let $iframe = this.$el.find('iframe');
 
-            var iframeElement = this.iframe = $iframe.get(0);
+            let iframeElement = this.iframe = $iframe.get(0);
 
             if (!iframeElement) {
                 return;
@@ -305,9 +303,9 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 $iframe.contents().find('a').attr('target', '_blank');
             });
 
-            var documentElement = iframeElement.contentWindow.document;
+            let documentElement = iframeElement.contentWindow.document;
 
-            var body = this.sanitizeHtml(this.model.get(this.name) || '');
+            let body = this.sanitizeHtml(this.model.get(this.name) || '');
 
             let useFallbackStylesheet = this.getThemeManager().getParam('isDark') && this.htmlHasColors(body);
 
@@ -317,7 +315,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 $iframeContainer.addClass('fallback') :
                 $iframeContainer.removeClass('fallback');
 
-            var linkElement = iframeElement.contentWindow.document.createElement('link');
+            let linkElement = iframeElement.contentWindow.document.createElement('link');
 
             linkElement.type = 'text/css';
             linkElement.rel = 'stylesheet';
@@ -332,7 +330,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             documentElement.write(body);
             documentElement.close();
 
-            var $body = $iframe.contents().find('html body');
+            let $body = $iframe.contents().find('html body');
 
             $body.find('img').each((i, img) => {
                 let $img = $(img);
@@ -345,10 +343,11 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             });
 
 
-            var $document = $(documentElement);
+            let $document = $(documentElement);
 
-            var processWidth = function () {
-                var bodyElement = $body.get(0);
+            let processWidth = function () {
+                let bodyElement = $body.get(0);
+
                 if (bodyElement) {
                     if (bodyElement.clientWidth !== iframeElement.scrollWidth) {
                         iframeElement.style.height = (iframeElement.scrollHeight + 20) + 'px';
@@ -364,9 +363,9 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 });
             }
 
-            var increaseHeightStep = 10;
+            let increaseHeightStep = 10;
 
-            var processIncreaseHeight = function (iteration, previousDiff) {
+            let processIncreaseHeight = function (iteration, previousDiff) {
                 $body.css('height', '');
 
                 iteration = iteration || 0;
@@ -377,7 +376,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
                 iteration ++;
 
-                var diff = $document.height() - iframeElement.scrollHeight;
+                let diff = $document.height() - iframeElement.scrollHeight;
 
                 if (typeof previousDiff !== 'undefined') {
                     if (diff === previousDiff) {
@@ -389,7 +388,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 }
 
                 if (diff) {
-                    var height = iframeElement.scrollHeight + increaseHeightStep;
+                    let height = iframeElement.scrollHeight + increaseHeightStep;
 
                     iframeElement.style.height = height + 'px';
                     processIncreaseHeight(iteration, diff);
@@ -407,7 +406,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 });
             };
 
-            var processHeight = function (isOnLoad) {
+            let processHeight = function (isOnLoad) {
                 if (!isOnLoad) {
                     $iframe.css({
                         overflowY: 'hidden',
@@ -422,8 +421,8 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                     }
                 }
 
-                var $body = $iframe.contents().find('html body');
-                var height = $body.height();
+                let $body = $iframe.contents().find('html body');
+                let height = $body.height();
 
                 if (height === 0) {
                     height = $body.children(0).height() + 100;
@@ -465,7 +464,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 $iframe.addClass('hidden');
             }
 
-            var windowWidth = $(window).width();
+            let windowWidth = $(window).width();
 
             $(window).off('resize.' + this.cid);
             $(window).on('resize.' + this.cid, () => {
@@ -549,7 +548,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 options.height = this.height;
             }
             else {
-                var $scrollable = this.$el.closest('.modal-body');
+                let $scrollable = this.$el.closest('.modal-body');
 
                 if (!$scrollable.length) {
                     $scrollable = $(window);
@@ -628,19 +627,18 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
         plainToHtml: function (html) {
             html = html || '';
-            var value = html.replace(/\n/g, '<br>');
 
-            return value;
+            return html.replace(/\n/g, '<br>');
         },
 
         htmlToPlain: function (text) {
             text = text || '';
 
-            var value = text.replace(/<br\s*\/?>/mg, '\n');
+            let value = text
+                .replace(/<br\s*\/?>/mg, '\n')
+                .replace(/<\/p\s*\/?>/mg, '\n\n');
 
-            value = value.replace(/<\/p\s*\/?>/mg, '\n\n');
-
-            var $div = $('<div>').html(value);
+            let $div = $('<div>').html(value);
 
             $div.find('style').remove();
             $div.find('link[ref="stylesheet"]').remove();
@@ -667,16 +665,16 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
         },
 
         fetch: function () {
-            var data = {};
+            let data = {};
 
             if (!this.model.has('isHtml') || this.model.get('isHtml')) {
-                var code = this.$summernote.summernote('code');
+                let code = this.$summernote.summernote('code');
 
                 if (code === '<p><br></p>') {
                     code = '';
                 }
 
-                var imageTagString = '<img src="' + window.location.origin + window.location.pathname +
+                let imageTagString = '<img src="' + window.location.origin + window.location.pathname +
                     '?entryPoint=attachment';
 
                 code = code.replace(
@@ -708,10 +706,10 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
         },
 
         onScrollEdit: function (e) {
-            var $target = $(e.target);
-            var toolbarHeight = this.$toolbar.height();
-            var toolbarWidth = this.$toolbar.parent().width();
-            var edgeTop, edgeTopAbsolute;
+            let $target = $(e.target);
+            let toolbarHeight = this.$toolbar.height();
+            let toolbarWidth = this.$toolbar.parent().width();
+            let edgeTop, edgeTopAbsolute;
 
             if ($target.get(0) === window.document) {
                 let $buttonContainer = $target.find('.detail-button-container:not(.hidden)');
@@ -743,7 +741,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             if (toStick) {
                 this.$toolbar.css({
                     top: edgeTopAbsolute + 'px',
-                    width: toolbarWidth + 'px'
+                    width: toolbarWidth + 'px',
                 });
 
                 this.$toolbar.addClass('sticked');
@@ -764,17 +762,18 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             this.$toolbar.removeClass('sticked');
 
             this.$area.css({
-                marginTop: ''
+                marginTop: '',
             });
         },
 
         attachFile: function () {
-            var $form = this.$el.closest('.record');
+            let $form = this.$el.closest('.record');
+
             $form.find('.field[data-name="' + this.params.attachmentField + '"] input.file').click();
         },
 
        initEspoPlugin: function () {
-            var langSets = this.getLanguage().get('Global', 'sets', 'summernote') || {
+           let langSets = this.getLanguage().get('Global', 'sets', 'summernote') || {
                 image: {},
                 link: {},
                 video: {},
@@ -793,20 +792,20 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             $.extend($.summernote.plugins, {
                 'espoImage': function (context) {
-                    var ui = $.summernote.ui;
-                    var options = context.options;
-                    var self = options.espoView;
-                    var lang = options.langInfo;
+                    let ui = $.summernote.ui;
+                    let options = context.options;
+                    let self = options.espoView;
+                    let lang = options.langInfo;
 
                     if (!self) {
                         return;
                     }
 
                     context.memo('button.espoImage', () => {
-                        var button = ui.button({
+                        let button = ui.button({
                             contents: options.espoImage.icon,
                             tooltip: options.espoImage.tooltip,
-                            click: function (e) {
+                            click: function () {
                                 context.invoke('espoImage.show');
                             },
                         });
@@ -831,7 +830,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                                 url: lang.image.url,
                                 selectFromFiles: lang.image.selectFromFiles,
                             },
-                        }, (view) => {
+                        }, view => {
                             view.render();
 
                             self.listenToOnce(view, 'upload', (target) => {
@@ -851,16 +850,16 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 },
 
                 'linkDialog': function (context) {
-                    var options = context.options;
-                    var self = options.espoView;
-                    var lang = options.langInfo;
+                    let options = context.options;
+                    let self = options.espoView;
+                    let lang = options.langInfo;
 
                     if (!self) {
                         return;
                     }
 
                     this.show = function () {
-                        var linkInfo = context.invoke('editor.getLinkInfo');
+                        let linkInfo = context.invoke('editor.getLinkInfo');
 
                         self.createView('dialogInsertLink', 'views/wysiwyg/modals/insert-link', {
                             labels: {
@@ -870,35 +869,35 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                                 textToDisplay: lang.link.textToDisplay,
                             },
                             linkInfo: linkInfo,
-                        }, function (view) {
+                        }, view => {
                             view.render();
 
-                            self.listenToOnce(view, 'insert', function (data) {
+                            self.listenToOnce(view, 'insert', (data) => {
                                 self.$summernote.summernote('createLink', data);
                             });
 
-                            self.listenToOnce(view, 'close', function () {
+                            self.listenToOnce(view, 'close', () => {
                                 self.clearView('dialogInsertLink');
                                 self.fixPopovers();
-                            }, self);
+                            });
                         });
                     };
                 },
 
                 'espoLink': function (context) {
-                    var ui = $.summernote.ui;
-                    var options = context.options;
-                    var self = options.espoView;
-                    var lang = options.langInfo;
+                    let ui = $.summernote.ui;
+                    let options = context.options;
+                    let self = options.espoView;
+                    let lang = options.langInfo;
 
                     if (!self) {
                         return;
                     }
 
-                    var isMacLike = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
+                    let isMacLike = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
 
                     context.memo('button.espoLink', function () {
-                        var button = ui.button({
+                        let button = ui.button({
                             contents: options.espoLink.icon,
                             tooltip: options.espoLink.tooltip + ' (' + (isMacLike ? 'CMD+K': 'CTRL+K') +')',
                             click: function (e) {
@@ -924,7 +923,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                     };
 
                     this.show = function () {
-                        var linkInfo = context.invoke('editor.getLinkInfo');
+                        let linkInfo = context.invoke('editor.getLinkInfo');
 
                         let container = this.isInModal ? this.$modalBody.get(0) : window;
 
@@ -936,10 +935,10 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                                 textToDisplay: lang.link.textToDisplay,
                             },
                             linkInfo: linkInfo,
-                        }, function (view) {
+                        }, (view) => {
                             view.render();
 
-                            self.listenToOnce(view, 'insert', function (data) {
+                            self.listenToOnce(view, 'insert', (data) => {
                                 let scrollY = ('scrollY' in container) ?
                                     container.scrollY :
                                     container.scrollTop;
@@ -949,19 +948,19 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                                 setTimeout(() => container.scroll(0, scrollY), 20);
                             });
 
-                            self.listenToOnce(view, 'close', function () {
+                            self.listenToOnce(view, 'close', () => {
                                 self.clearView('dialogInsertLink');
                                 self.fixPopovers();
-                            }, self);
+                            });
                         });
                     };
                 },
 
                 'fullscreen': function (context) {
-                    var ui = $.summernote.ui;
-                    var options = context.options;
-                    var self = options.espoView;
-                    var lang = options.langInfo;
+                    let ui = $.summernote.ui;
+                    let options = context.options;
+                    let self = options.espoView;
+                    let lang = options.langInfo;
 
                     if (!self) {
                         return;
@@ -1011,6 +1010,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
                     this.toggle = function () {
                         this.$editor.toggleClass('fullscreen');
+
                         if (this.isFullscreen()) {
                             this.$editable.data('orgHeight', this.$editable.css('height'));
                             this.$editable.data('orgMaxHeight', this.$editable.css('maxHeight'));
@@ -1046,7 +1046,6 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                         context.invoke('toolbar.updateFullscreen', this.isFullscreen());
                     };
                 },
-
             });
         },
 
