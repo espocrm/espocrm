@@ -142,6 +142,10 @@ class ClientManager
 
     private function writeStrictTransportSecurityHeader(Response $response): void
     {
+        if ($this->config->get('clientStrictTransportSecurityHeaderDisabled')) {
+            return;
+        }
+
         $siteUrl = $this->config->get('siteUrl') ?? '';
 
         if (strpos($siteUrl, 'https://') === 0) {
