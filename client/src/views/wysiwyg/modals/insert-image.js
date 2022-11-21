@@ -39,10 +39,18 @@ define('views/wysiwyg/modals/insert-image', ['views/modal'], function (Dep) {
                 this.actionInsert();
             },
             'input [data-name="url"]': function () {
-                this.toggleInsertButton();
+                this.controlInsertButton();
             },
             'paste [data-name="url"]': function () {
-                this.toggleInsertButton();
+                this.controlInsertButton();
+            },
+        },
+
+        shortcutKeys: {
+            'Control+Enter': function () {
+                if (!this.$el.find('[data-name="insert"]').hasClass('disabled')) {
+                    this.actionInsert();
+                }
             },
         },
 
@@ -53,7 +61,7 @@ define('views/wysiwyg/modals/insert-image', ['views/modal'], function (Dep) {
         },
 
         setup: function () {
-            var labels = this.options.labels || {};
+            let labels = this.options.labels || {};
 
             this.headerText = labels.insert;
 
@@ -61,20 +69,22 @@ define('views/wysiwyg/modals/insert-image', ['views/modal'], function (Dep) {
         },
 
         afterRender: function () {
-            var $files = this.$el.find('[data-name="files"]');
+            let $files = this.$el.find('[data-name="files"]');
 
             $files.replaceWith(
-                $files.clone().on('change', (e) => {
-                  this.trigger('upload', e.target.files || e.target.value);
-                  this.close();
-                }).val('')
+                $files.clone()
+                    .on('change', (e) => {
+                      this.trigger('upload', e.target.files || e.target.value);
+                      this.close();
+                    })
+                    .val('')
             );
         },
 
-        toggleInsertButton: function () {
-            var value = this.$el.find('[data-name="url"]').val().trim();
+        controlInsertButton: function () {
+            let value = this.$el.find('[data-name="url"]').val().trim();
 
-            var $button = this.$el.find('[data-name="insert"]');
+            let $button = this.$el.find('[data-name="insert"]');
 
             if (value) {
                 $button.removeClass('disabled').removeAttr('disabled');
@@ -84,7 +94,7 @@ define('views/wysiwyg/modals/insert-image', ['views/modal'], function (Dep) {
         },
 
         actionInsert: function () {
-            var url = this.$el.find('[data-name="url"]').val().trim();
+            let url = this.$el.find('[data-name="url"]').val().trim();
 
             this.trigger('insert', url);
             this.close();

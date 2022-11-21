@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/wysiwyg/modals/insert-link', 'views/modal', function (Dep) {
+define('views/wysiwyg/modals/insert-link', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -43,6 +43,14 @@ define('views/wysiwyg/modals/insert-link', 'views/modal', function (Dep) {
             },
         },
 
+        shortcutKeys: {
+            'Control+Enter': function () {
+                if (this.hasAvailableActionItem('insert')) {
+                    this.actionInsert();
+                }
+            },
+        },
+
         data: function () {
             return {
                 labels: this.options.labels || {},
@@ -50,7 +58,7 @@ define('views/wysiwyg/modals/insert-link', 'views/modal', function (Dep) {
         },
 
         setup: function () {
-            var labels = this.options.labels || {};
+            let labels = this.options.labels || {};
 
             this.headerText = labels.insert;
 
@@ -75,7 +83,7 @@ define('views/wysiwyg/modals/insert-link', 'views/modal', function (Dep) {
             this.$text = this.$el.find('[data-name="text"]');
             this.$openInNewWindow = this.$el.find('[data-name="openInNewWindow"]');
 
-            var linkInfo = this.linkInfo;
+            let linkInfo = this.linkInfo;
 
             this.$url.val(linkInfo.url || '');
             this.$text.val(linkInfo.text || '');
@@ -86,7 +94,7 @@ define('views/wysiwyg/modals/insert-link', 'views/modal', function (Dep) {
         },
 
         controlInputs: function () {
-            var url = this.$url.val().trim();
+            let url = this.$url.val().trim();
 
             if (url) {
                 this.enableButton('insert');
@@ -96,11 +104,11 @@ define('views/wysiwyg/modals/insert-link', 'views/modal', function (Dep) {
         },
 
         actionInsert: function () {
-            var url = this.$url.val().trim();
-            var text = this.$text.val().trim();
-            var openInNewWindow = this.$openInNewWindow.get(0).checked;
+            let url = this.$url.val().trim();
+            let text = this.$text.val().trim();
+            let openInNewWindow = this.$openInNewWindow.get(0).checked;
 
-            var data = {
+            let data = {
                 url: url,
                 text: text || url,
                 isNewWindow: openInNewWindow,
