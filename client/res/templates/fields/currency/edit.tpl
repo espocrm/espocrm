@@ -10,10 +10,14 @@
             {{#if params.maxLength}} maxlength="{{params.maxLength}}"{{/if}}
         >
     </span>
+    {{#if multipleCurrencies}}
     <span class="input-group-item">
         <select
             data-name="{{currencyFieldName}}"
             class="form-control radius-right"
         >{{{options currencyList currencyValue}}}</select>
     </span>
+    {{else}}
+    <span class="input-group-addon radius-right">{{defaultCurrency}}</span>
+    {{/if}}
 </div>

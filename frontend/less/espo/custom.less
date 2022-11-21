@@ -3663,12 +3663,21 @@ a.close:hover {
 
     > .input-group-item:first-child {
         flex-grow: 1;
+        display: block;
     }
 
     > .input-group-item:last-child {
         flex-grow: 1;
+        display: block;
         min-width: 70px;
-        max-width: 22%;
+        max-width: 80px;
+    }
+
+    > .input-group-addon:last-child {
+        flex-grow: 1;
+        display: block;
+        min-width: fit-content;
+        max-width: fit-content;
     }
 }
 

@@ -60,12 +60,16 @@ function (Dep, /** module:ui/select*/Select) {
                 this.getPreferences().get('defaultCurrency') ||
                 this.getConfig().get('defaultCurrency');
 
+            let multipleCurrencies = !this.isSingleCurrency || currencyValue !== this.defaultCurrency;
+
             return _.extend({
                 currencyFieldName: this.currencyFieldName,
                 currencyValue: currencyValue,
                 currencyOptions: this.currencyOptions,
                 currencyList: this.currencyList,
                 currencySymbol: this.getMetadata().get(['app', 'currency', 'symbolMap', currencyValue]) || '',
+                multipleCurrencies: multipleCurrencies,
+                defaultCurrency: this.defaultCurrency,
             }, Dep.prototype.data.call(this));
         },
 
@@ -223,7 +227,9 @@ function (Dep, /** module:ui/select*/Select) {
 
             let data = {};
 
-            let currencyValue = this.$currency.val();
+            let currencyValue = this.$currency.length ?
+                this.$currency.val() :
+                this.defaultCurrency;
 
             if (value === null) {
                 currencyValue = null;
