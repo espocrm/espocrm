@@ -29,15 +29,32 @@
 
 namespace Espo\Classes\FieldValidators;
 
+use Espo\Core\Utils\Config;
 use Espo\ORM\Entity;
 
 class CurrencyType extends FloatType
 {
+    public function __construct(private Config $config) {}
+
     protected function isNotEmpty(Entity $entity, string $field): bool
     {
         return
             $entity->has($field) && $entity->get($field) !== null &&
             $entity->has($field . 'Currency') && $entity->get($field . 'Currency') !== null &&
             $entity->get($field . 'Currency') !== '';
+    }
+
+    public function checkValidCurrency(Entity $entity, string $field): bool
+    {
+        $attribute = $field . 'Currency';
+
+        if (!$entity->has($attribute)) {
+            return true;
+        }
+
+        $currency = $entity->get($attribute);
+        $currencyList = $this->config->get('currencyList') ?? [$this->config->get('defaultCurrency')];
+
+        return in_array($currency, $currencyList);
     }
 }
