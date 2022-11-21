@@ -31,6 +31,7 @@ namespace tests\integration\Espo\Core\Acl;
 
 use Espo\Core\AclManager;
 use Espo\Core\Acl;
+use Espo\Entities\User;
 
 class AclTest extends \tests\integration\Core\BaseTestCase
 {
@@ -66,5 +67,33 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $acl = $this->getContainer()->get('acl');
 
         $this->assertFalse($acl->tryCheck('NonExistingEntityType'));
+    }
+
+    public function testCheckField(): void
+    {
+        $user = $this->createUser('tester', [
+            'fieldData' => [
+                'Call' => [
+                    'direction' => [
+                        'read' => Acl\Table::LEVEL_NO,
+                        'edit' => Acl\Table::LEVEL_NO,
+                    ],
+                    'contacts' => [
+                        'read' => Acl\Table::LEVEL_YES,
+                        'edit' => Acl\Table::LEVEL_NO,
+                    ],
+                ],
+            ],
+        ]);
+
+        /** @var User $user */
+        $user = $this->getEntityManager()->getEntityById(User::ENTITY_TYPE, $user->getId());
+
+        /* @var $aclManager AclManager */
+        $aclManager = $this->getContainer()->get('aclManager');
+
+        $this->assertFalse($aclManager->checkField($user, 'Call', 'direction'));
+        $this->assertTrue($aclManager->checkField($user, 'Call', 'contacts'));
+        $this->assertFalse($aclManager->checkField($user, 'Call', 'contacts', Acl\Table::ACTION_EDIT));
     }
 }
