@@ -557,6 +557,20 @@ class AclManager
     }
 
     /**
+     * Check access to a field.
+     *
+     * @param User $user A user.
+     * @param string $scope A scope (entity type).
+     * @param string $field A field to check.
+     * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
+     * @return bool
+     */
+    public function checkField(User $user, string $scope, string $field, string $action = Table::ACTION_READ): bool
+    {
+        return !in_array($field, $this->getScopeForbiddenFieldList($user, $scope, $action));
+    }
+
+    /**
      * Whether a user has access to another user over a specific permission.
      *
      * @param User|string $target User entity or user ID.

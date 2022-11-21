@@ -249,6 +249,19 @@ class Acl
     }
 
     /**
+     * Check access to a field.
+     *
+     * @param string $scope A scope (entity type).
+     * @param string $field A field to check.
+     * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
+     * @return bool
+     */
+    public function checkField(string $scope, string $field, string $action = Table::ACTION_READ): bool
+    {
+        return $this->aclManager->checkField($this->user, $scope, $field, $action);
+    }
+
+    /**
      * Get links forbidden for a user.
      *
      * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
