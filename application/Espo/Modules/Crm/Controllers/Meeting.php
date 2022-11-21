@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use Espo\Core\Api\Response;
 use Espo\Core\Controllers\Record;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
@@ -37,6 +38,7 @@ use Espo\Core\Exceptions\NotFound;
 
 use Espo\Core\Api\Request;
 
+use Espo\Core\Utils\Json;
 use Espo\Modules\Crm\Entities\Meeting as MeetingEntity;
 use Espo\Modules\Crm\Tools\Meeting\InvitationService;
 use Espo\Modules\Crm\Tools\Meeting\Service;
@@ -120,5 +122,27 @@ class Meeting extends Record
             ->setAcceptance(MeetingEntity::ENTITY_TYPE, $data->id, $data->status);
 
         return true;
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     */
+    public function getActionAttendees(Request $request, Response $response): void
+    {
+        $id = $request->getRouteParam('id');
+
+        if (!$id) {
+            throw new BadRequest();
+        }
+
+        $collection = $this->injectableFactory
+            ->create(Service::class)
+            ->getAttendees(MeetingEntity::ENTITY_TYPE, $id);
+
+        $response->writeBody(
+            Json::encode(['list' => $collection->getValueMapList()])
+        );
     }
 }

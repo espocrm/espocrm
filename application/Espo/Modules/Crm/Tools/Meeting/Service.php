@@ -35,10 +35,14 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\HookManager;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Note;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Call;
 use Espo\Modules\Crm\Entities\Meeting;
+use Espo\ORM\Collection;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use LogicException;
 
@@ -180,5 +184,71 @@ class Service
                 $this->entityManager->saveEntity($entity);
             }
         }
+    }
+
+    /**
+     * Get all attendees.
+     *
+     * @throws Forbidden
+     * @throws NotFound
+     * @return RecordCollection<Entity>
+     */
+    public function getAttendees(string $entityType, string $id): RecordCollection
+    {
+        $entity = $this->entityManager->getEntityById($entityType, $id);
+
+        if (!in_array($entityType, [Meeting::ENTITY_TYPE, Call::ENTITY_TYPE])) {
+            throw new LogicException();
+        }
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        if (!$this->acl->checkEntityRead($entity)) {
+            throw new Forbidden();
+        }
+
+        $linkList = [
+            'users',
+            'contacts',
+            'leads',
+        ];
+
+        $linkList = array_filter($linkList, function ($item) use ($entityType) {
+            return $this->acl->checkField($item, $entityType);
+        });
+
+        $linkList = array_values($linkList);
+
+        $list = [];
+
+        foreach ($linkList as $link) {
+            $itemCollection = $this->entityManager
+                ->getRDBRepository($entityType)
+                ->getRelation($entity, $link)
+                ->select(['id', 'name', 'acceptanceStatus', 'emailAddress'])
+                ->order('name')
+                ->find();
+
+            $list = array_merge($list, [...$itemCollection]);
+        }
+
+        /** @var Collection<Entity> $collection */
+        $collection = $this->entityManager->getCollectionFactory()->create(null, $list);
+
+        foreach ($collection as $e) {
+            if ($this->acl->checkEntityRead($e) && $this->acl->checkField($entityType, 'emailAddress')) {
+                continue;
+            }
+
+            if (!$e->get('emailAddress')) {
+                continue;
+            }
+
+            $e->set('emailAddress', 'dummy@dummy.dummy');
+        }
+
+        return RecordCollection::create($collection);
     }
 }

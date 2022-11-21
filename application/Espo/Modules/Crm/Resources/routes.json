@@ -37,5 +37,21 @@
             "name": ":name",
             "entityType": ":entityType"
         }
+    },
+    {
+        "route": "/Meeting/:id/attendees",
+        "method": "get",
+        "params": {
+            "controller": "Meeting",
+            "action": "attendees"
+        }
+    },
+    {
+        "route": "/Call/:id/attendees",
+        "method": "get",
+        "params": {
+            "controller": "Call",
+            "action": "attendees"
+        }
     }
 ]
