@@ -342,8 +342,25 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 $img.css('max-width', '100%');
             });
 
-
             let $document = $(documentElement);
+
+            // Make dropdowns closed.
+            $document.on('click', () => {
+                let event = new MouseEvent('click', {
+                    bubbles: true,
+                });
+
+                $iframe[0].dispatchEvent(event);
+            });
+
+            // Make notifications & global-search popup closed.
+            $document.on('mouseup', () => {
+                let event = new MouseEvent('mouseup', {
+                    bubbles: true,
+                });
+
+                $iframe[0].dispatchEvent(event);
+            });
 
             let processWidth = function () {
                 let bodyElement = $body.get(0);
