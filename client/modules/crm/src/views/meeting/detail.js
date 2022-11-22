@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/detail', ['views/detail'], function (Dep) {
+define('crm:views/meeting/detail', ['views/detail', 'lib!moment'], function (Dep, moment) {
 
     return Dep.extend({
 
@@ -107,33 +107,44 @@ define('crm:views/meeting/detail', ['views/detail'], function (Dep) {
         },
 
         controlSendInvitationsButton: function () {
-            var show = true;
+            let show = true;
 
-            if (
-                ~['Held', 'Not Held'].indexOf(this.model.get('status'))
-            ) {
+            if (['Held', 'Not Held'].includes(this.model.get('status'))) {
                 show = false;
             }
 
             if (
                 show &&
-                (!this.getAcl().checkModel(this.model, 'edit') || !this.getAcl().checkScope('Email', 'create'))
+                !this.getAcl().checkModel(this.model, 'edit')
             ) {
                 show = false;
             }
 
             if (show) {
-                var userIdList = this.model.getLinkMultipleIdList('users');
-                var contactIdList = this.model.getLinkMultipleIdList('contacts');
-                var leadIdList = this.model.getLinkMultipleIdList('leads');
+                let userIdList = this.model.getLinkMultipleIdList('users');
+                let contactIdList = this.model.getLinkMultipleIdList('contacts');
+                let leadIdList = this.model.getLinkMultipleIdList('leads');
 
                 if (!contactIdList.length && !leadIdList.length && !userIdList.length) {
                     show = false;
                 }
                 else if (
-                    !contactIdList.length && !leadIdList.length &&
-                    userIdList.length === 1 && userIdList[0] === this.getUser().id &&
+                    !contactIdList.length &&
+                    !leadIdList.length &&
+                    userIdList.length === 1 &&
+                    userIdList[0] === this.getUser().id &&
                     this.model.getLinkMultipleColumn('users', 'status', this.getUser().id) === 'Accepted'
+                ) {
+                    show = false;
+                }
+            }
+
+            if (show) {
+                let dateEnd = this.model.get('dateEnd');
+
+                if (
+                    dateEnd &&
+                    this.getDateTime().toMoment(dateEnd).isBefore(moment.now())
                 ) {
                     show = false;
                 }
@@ -145,9 +156,11 @@ define('crm:views/meeting/detail', ['views/detail'], function (Dep) {
                     action: 'sendInvitations',
                     acl: 'edit',
                 });
-            } else {
-                this.removeMenuItem('sendInvitations');
+
+                return;
             }
+
+            this.removeMenuItem('sendInvitations');
         },
 
         actionSendInvitations: function () {
