@@ -128,12 +128,23 @@ define('crm:views/meeting/detail', ['views/detail', 'lib!moment'], function (Dep
                 if (!contactIdList.length && !leadIdList.length && !userIdList.length) {
                     show = false;
                 }
-                else if (
+                /*else if (
                     !contactIdList.length &&
                     !leadIdList.length &&
                     userIdList.length === 1 &&
                     userIdList[0] === this.getUser().id &&
                     this.model.getLinkMultipleColumn('users', 'status', this.getUser().id) === 'Accepted'
+                ) {
+                    show = false;
+                }*/
+            }
+
+            if (show) {
+                let dateEnd = this.model.get('dateEnd');
+
+                if (
+                    dateEnd &&
+                    this.getDateTime().toMoment(dateEnd).isBefore(moment.now())
                 ) {
                     show = false;
                 }
@@ -164,30 +175,17 @@ define('crm:views/meeting/detail', ['views/detail', 'lib!moment'], function (Dep
         },
 
         actionSendInvitations: function () {
-            this.confirm({
-                    message: this.translate('sendInvitationsConfirmation', 'messages', 'Meeting'),
-                })
-                .then(() => {
-                    this.disableMenuItem('sendInvitations');
-                    this.notify('Sending...');
+            Espo.Ui.notify(' ... ');
 
-                    Espo.Ajax
-                        .postRequest(this.model.entityType + '/action/sendInvitations', {
-                            id: this.model.id,
-                        })
-                        .then(result => {
-                            if (result) {
-                                this.notify('Sent', 'success');
-                            } else {
-                                Espo.Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
-                            }
+            this.createView('dialog', 'crm:views/meeting/modals/send-invitations', {
+                model: this.model,
+            }).then(view => {
+                Espo.Ui.notify(false);
 
-                            this.enableMenuItem('sendInvitations');
-                        })
-                        .catch(() => {
-                            this.enableMenuItem('sendInvitations');
-                        });
-                });
+                view.render();
+
+                this.listenToOnce(view, 'sent', () => this.model.fetch());
+            });
         },
 
         actionSetAcceptanceStatus: function () {

@@ -224,6 +224,20 @@ a.text-muted {
     }
 }
 
+a.text-soft {
+    &:hover,
+    &:focus {
+        color: var(--gray-soft);
+    }
+
+    &:hover {
+        > .fas,
+        > .far {
+            color: var(--gray-soft);
+        }
+    }
+}
+
 .text-primary {
     .text-emphasis-variant-espo(var(--state-primary-text), var(--brand-primary-10));
 }

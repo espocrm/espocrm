@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Controllers;
 
 use Espo\Core\Api\Response;
 use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ForbiddenSilent;
@@ -38,17 +39,21 @@ use Espo\Core\Exceptions\NotFound;
 
 use Espo\Core\Api\Request;
 
+use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Utils\Json;
 use Espo\Modules\Crm\Entities\Meeting as MeetingEntity;
 use Espo\Modules\Crm\Tools\Meeting\InvitationService;
+use Espo\Modules\Crm\Tools\Meeting\Invitee;
 use Espo\Modules\Crm\Tools\Meeting\Service;
+use stdClass;
 
 class Meeting extends Record
 {
     /**
      * @throws BadRequest
      * @throws Forbidden
-     * @throws ForbiddenSilent
+     * @throws Error
+     * @throws SendingError
      * @throws NotFound
      */
     public function postActionSendInvitations(Request $request): bool
@@ -59,11 +64,50 @@ class Meeting extends Record
             throw new BadRequest();
         }
 
+        $invitees = $this->fetchInvitees($request);
+
         $resultList = $this->injectableFactory
             ->create(InvitationService::class)
-            ->send(MeetingEntity::ENTITY_TYPE, $id);
+            ->send(MeetingEntity::ENTITY_TYPE, $id, $invitees);
 
         return $resultList !== 0;
+    }
+
+    /**
+     * @param Request $request
+     * @return ?Invitee[]
+     * @throws BadRequest
+     */
+    private function fetchInvitees(Request $request): ?array
+    {
+        $targets = $request->getParsedBody()->targets ?? null;
+
+        if ($targets === null) {
+            return null;
+        }
+
+        if (!is_array($targets)) {
+            throw new BadRequest();
+        }
+
+        $invitees = [];
+
+        foreach ($targets as $target) {
+            if (!$target instanceof stdClass) {
+                throw new BadRequest();
+            }
+
+            $targetEntityType = $target->entityType ?? null;
+            $targetId = $target->id ?? null;
+
+            if (!is_string($targetEntityType) || !is_string($targetId)) {
+                throw new BadRequest();
+            }
+
+            $invitees[] = new Invitee($targetEntityType, $targetId);
+        }
+
+        return $invitees;
     }
 
     /**

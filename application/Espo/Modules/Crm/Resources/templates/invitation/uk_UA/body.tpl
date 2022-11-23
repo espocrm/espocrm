@@ -6,7 +6,9 @@
     {{/if}}
 {{/if}}
 <p>
-<a href="{{acceptLink}}">Прийняти</a>, <a href="{{declineLink}}">Відхилити</a>, <a href="{{tentativeLink}}">Не впевнений</a>
+    <a href="{{acceptLink}}" style="font-size: 1.2em">Прийняти</a> &middot;
+    <a href="{{tentativeLink}}" style="font-size: 1.2em">Не впевнений</a> &middot;
+    <a href="{{declineLink}}" style="font-size: 1.2em">Відхилити</a>
 </p>
 {{#if isUser}}
 <p><a href="{{recordUrl}}">Відкрити запис</a></p>

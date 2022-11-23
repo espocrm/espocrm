@@ -115,7 +115,7 @@ function (Dep, /** module:ui/multi-select*/MultiSelect, /** module:ui/select*/Se
                 );
             }
 
-            this.styleMap = this.model.getFieldParam(this.name, 'style') || {};
+            this.styleMap = this.params.style || this.model.getFieldParam(this.name, 'style') || {};
 
             this.setupOptions();
 

@@ -39,7 +39,10 @@ define('multi-collection', ['collection'], function (Collection) {
     return Collection.extend(/** @lends module:multi-collection.Class# */{
 
         /**
-         * @private
+         * A model seed map.
+         *
+         * @public
+         * @type {Object.<string, module:model.Class>}
          */
         seeds: null,
 

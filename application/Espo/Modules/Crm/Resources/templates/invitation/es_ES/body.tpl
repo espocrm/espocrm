@@ -6,7 +6,9 @@
     {{/if}}
 {{/if}}
 <p>
-<a href="{{acceptLink}}">Aceptar</a>, <a href="{{declineLink}}">Declinar</a>, <a href="{{tentativeLink}}">Provisional</a>
+    <a href="{{acceptLink}}" style="font-size: 1.2em">Aceptar</a> &middot;
+    <a href="{{tentativeLink}}" style="font-size: 1.2em">Provisional</a> &middot;
+    <a href="{{declineLink}}" style="font-size: 1.2em">Declinar</a>
 </p>
 {{#if isUser}}
 <p><a href="{{recordUrl}}">Ver registro</a></p>

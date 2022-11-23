@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('collection', [], function () {
+define('collection', ['model'], function (Model) {
 
     /**
      * On sync with backend.
@@ -204,6 +204,8 @@ define('collection', [], function () {
             this.defaultOrderBy = this.orderBy;
 
             this.data = {};
+
+            this.model = options.model || Model;
         },
 
         /**

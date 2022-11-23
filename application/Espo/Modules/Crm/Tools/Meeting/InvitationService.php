@@ -41,10 +41,7 @@ use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 use Espo\Core\Utils\Config;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Business\Event\Invitations;
-use Espo\Modules\Crm\Entities\Contact;
-use Espo\Modules\Crm\Entities\Lead;
 use Espo\Modules\Crm\Entities\Meeting;
-use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\Tools\Email\SendService;
@@ -81,13 +78,14 @@ class InvitationService
     /**
      * Send invitations for a meeting (or call). Checks access. Uses user's SMTP if available.
      *
+     * @param ?Invitee[] $targets
      * @return Entity[] Entities an invitation was sent to.
      * @throws NotFound
      * @throws Forbidden
      * @throws Error
      * @throws SendingError
      */
-    public function send(string $entityType, string $id): array
+    public function send(string $entityType, string $id, ?array $targets = null): array
     {
         $entity = $this->recordServiceContainer
             ->get($entityType)
@@ -101,53 +99,50 @@ class InvitationService
             throw new Forbidden("No edit access.");
         }
 
+        $linkList = [
+            'users',
+            'contacts',
+            'leads',
+        ];
+
         $sender = $this->getSender();
 
         $sentAddressList = [];
         $resultEntityList = [];
 
-        foreach ($this->getUsers($entity) as $user) {
-            $emailAddress = $user->getEmailAddress();
+        foreach ($linkList as $link) {
+            $builder = $this->entityManager
+                ->getRDBRepository($entityType)
+                ->getRelation($entity, $link);
 
-            if ($emailAddress) {
-                $sender->sendInvitation($entity, $user, 'users');
-
-                $sentAddressList[] = $emailAddress;
-                $resultEntityList[] = $user;
+            if ($targets === null) {
+                $builder->where([
+                    '@relation.status=' => Meeting::ATTENDEE_STATUS_NONE,
+                ]);
             }
-        }
 
-        /** @var Collection<Contact> $contacts */
-        $contacts = $this->entityManager
-            ->getRDBRepository($entity->getEntityType())
-            ->getRelation($entity, 'contacts')
-            ->find();
+            $collection = $builder->find();
 
-        /** @var Collection<Lead> $leads */
-        $leads = $this->entityManager
-            ->getRDBRepository($entity->getEntityType())
-            ->getRelation($entity, 'leads')
-            ->find();
+            foreach ($collection as $attendee) {
+                if ($targets && !self::isInTargets($attendee, $targets)) {
+                    continue;
+                }
 
-        foreach ($contacts as $contact) {
-            $emailAddress = $contact->getEmailAddress();
+                $emailAddress = $attendee->get('emailAddress');
 
-            if ($emailAddress && !in_array($emailAddress, $sentAddressList)) {
-                $sender->sendInvitation($entity, $contact, 'contacts');
+                if (!$emailAddress || in_array($emailAddress, $sentAddressList)) {
+                    continue;
+                }
+
+                $sender->sendInvitation($entity, $attendee, $link);
 
                 $sentAddressList[] = $emailAddress;
-                $resultEntityList[] = $contact;
-            }
-        }
+                $resultEntityList[] = $attendee;
 
-        foreach ($leads as $lead) {
-            $emailAddress = $lead->getEmailAddress();
-
-            if ($emailAddress && !in_array($emailAddress, $sentAddressList)) {
-                $sender->sendInvitation($entity, $lead, 'leads');
-
-                $sentAddressList[] = $emailAddress;
-                $resultEntityList[] = $lead;
+                $this->entityManager
+                    ->getRDBRepository($entityType)
+                    ->getRelation($entity, $link)
+                    ->updateColumns($attendee, ['status' => Meeting::ATTENDEE_STATUS_NONE]);
             }
         }
 
@@ -155,26 +150,20 @@ class InvitationService
     }
 
     /**
-     * @return Collection<User>
+     * @param Invitee[] $targets
      */
-    private function getUsers(Entity $entity): Collection
+    private static function isInTargets(Entity $entity, array $targets): bool
     {
-        /** @var Collection<User> */
-        return $this->entityManager
-            ->getRDBRepository($entity->getEntityType())
-            ->getRelation($entity, 'users')
-            ->where([
-                'OR' => [
-                    [
-                        'id=' => $this->user->getId(),
-                        '@relation.status!=' => Meeting::ATTENDEE_STATUS_ACCEPTED,
-                    ],
-                    [
-                        'id!=' => $this->user->getId(),
-                    ]
-                ]
-            ])
-            ->find();
+        foreach ($targets as $target) {
+            if (
+                $entity->getEntityType() === $target->getEntityType() &&
+                $entity->getId() === $target->getId()
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function getSender(): Invitations

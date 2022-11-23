@@ -107,6 +107,7 @@ class Invitations
             'inviteeId' => $invitee->getId(),
             'inviteeType' => $invitee->getEntityType(),
             'link' => $link,
+            'dateStart' => $entity->get('dateStart'),
         ]);
 
         if ($entity->get('dateEnd')) {

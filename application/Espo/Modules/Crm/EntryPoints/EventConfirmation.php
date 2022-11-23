@@ -34,6 +34,7 @@ use Espo\Core\Api\Response;
 use Espo\Core\EntryPoint\EntryPoint;
 use Espo\Core\EntryPoint\Traits\NoAuth;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\HookManager;
 use Espo\Core\ORM\EntityManager;
@@ -67,6 +68,7 @@ class EventConfirmation implements EntryPoint
     /**
      * @throws BadRequest
      * @throws NotFound
+     * @throws Error
      */
     public function run(Request $request, Response $response): void
     {
@@ -100,6 +102,7 @@ class EventConfirmation implements EntryPoint
         $inviteeType = $data->inviteeType ?? null;
         $inviteeId = $data->inviteeId ?? null;
         $link = $data->link ?? null;
+        $sentDateStart = $data->dateStart ?? null;
 
         $toProcess =
             $eventType &&
@@ -109,7 +112,11 @@ class EventConfirmation implements EntryPoint
             $link;
 
         if (!$toProcess) {
-            throw new BadRequest();
+            throw new Error();
+        }
+
+        if ($sentDateStart !== null && !is_string($sentDateStart)) {
+            throw new Error();
         }
 
         $event = $this->entityManager->getEntityById($eventType, $eventId);
@@ -187,6 +194,8 @@ class EventConfirmation implements EntryPoint
         $actionData['translatedStatus'] = $this->language->translateOption($status, 'acceptanceStatus', $eventType);
         $actionData['style'] = $this->metadata
             ->get(['entityDefs', $eventType, 'fields', 'acceptanceStatus', 'style', $status]);
+        $actionData['sentDateStart'] = $sentDateStart;
+        $actionData['statusTranslation'] = $this->language->get([Meeting::ENTITY_TYPE, 'options', 'acceptanceStatus']);
 
         $this->actionRenderer->write(
             $response,
