@@ -734,14 +734,14 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            if (this.type === 'detail' && this.getMetadata().get(['scopes', this.scope, 'stream'])) {
+            if (this.type === this.TYPE_DETAIL && this.getMetadata().get(['scopes', this.scope, 'stream'])) {
                 this.addDropdownItem({
                     label: 'View Followers',
                     name: 'viewFollowers'
                 });
             }
 
-            if (this.type === 'detail') {
+            if (this.type === this.TYPE_DETAIL) {
                 /** @var {module:helpers/action-item-setup.Class} */
                 let actionItemSetup = new ActionItemSetup(
                     this.getMetadata(),
@@ -1914,7 +1914,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     return;
                 }
 
-                if (this.mode === 'edit' || this.inlineEditModeIsOn) {
+                if (this.mode === this.MODE_EDIT || this.inlineEditModeIsOn) {
                     this.setIsChanged();
                 }
             });
@@ -3328,11 +3328,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return;
             }
 
-            if (this.inlineEditModeIsOn || this.mode === 'edit') {
+            if (this.inlineEditModeIsOn || this.mode === this.MODE_EDIT) {
                 let m = this.model.clone();
 
                 m.fetch().then(() => {
-                    if (this.inlineEditModeIsOn || this.mode === 'edit') {
+                    if (this.inlineEditModeIsOn || this.mode === this.MODE_EDIT) {
                         this.updatedAttributes = Espo.Utils.cloneDeep(m.attributes);
                     }
                 });

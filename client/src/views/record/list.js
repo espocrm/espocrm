@@ -890,16 +890,15 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
          * @inheritDoc
          */
         data: function () {
-            var paginationTop = this.pagination === 'both' ||
+            let paginationTop = this.pagination === 'both' ||
                 this.pagination === 'top';
 
-            var paginationBottom = this.pagination === 'both' ||
+            let paginationBottom = this.pagination === 'both' ||
                 this.pagination === true ||
                 this.pagination === 'bottom';
 
-            var moreCount = this.collection.total - this.collection.length;
-
-            var checkAllResultDisabled = this.checkAllResultDisabled;
+            let moreCount = this.collection.total - this.collection.length;
+            let checkAllResultDisabled = this.checkAllResultDisabled;
 
             if (!this.massActionsDisabled) {
                 if (!this.checkAllResultMassActionList.length) {
@@ -907,7 +906,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 }
             }
 
-            var topBar =
+            let topBar =
                 paginationTop ||
                 this.checkboxes ||
                 (this.buttonList.length && !this.buttonsDisabled) ||
@@ -1096,15 +1095,15 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
             url = url || 'Export';
 
-            var o = {
-                scope: this.entityType
+            let o = {
+                scope: this.entityType,
             };
 
             if (fieldList) {
                 o.fieldList = fieldList;
             }
             else {
-                var layoutFieldList = [];
+                let layoutFieldList = [];
 
                 (this.listLayout || []).forEach((item) => {
                     if (item.name) {
@@ -1171,21 +1170,21 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
          * @param {string} name An action.
          */
         massAction: function (name) {
-            var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name]) || {};
+            let defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name]) || {};
 
-            var handler = defs.handler;
+            let handler = defs.handler;
 
             if (handler) {
-                var method = 'action' + Espo.Utils.upperCaseFirst(name);
+                let method = 'action' + Espo.Utils.upperCaseFirst(name);
 
-                var data = {
+                let data = {
                     entityType: this.entityType,
                     action: name,
                     params: this.getMassActionSelectionPostData(),
                 };
 
-                require(handler, (Handler) => {
-                    var handler = new Handler(this);
+                require(handler, Handler => {
+                    let handler = new Handler(this);
 
                     handler[method].call(handler, data);
                 });
@@ -1193,12 +1192,12 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 return;
             }
 
-            var bypassConfirmation = defs.bypassConfirmation || false;
-            var confirmationMsg = defs.confirmationMessage || 'confirmation';
-            var acl = defs.acl;
-            var aclScope = defs.aclScope;
+            let bypassConfirmation = defs.bypassConfirmation || false;
+            let confirmationMsg = defs.confirmationMessage || 'confirmation';
+            let acl = defs.acl;
+            let aclScope = defs.aclScope;
 
-            var proceed = function () {
+            let proceed = () => {
                 if (acl || aclScope) {
                     if (!this.getAcl().check(aclScope || this.scope, acl)) {
                         this.notify('Access denied', 'error');
@@ -1207,8 +1206,8 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                     }
                 }
 
-                var idList = [];
-                var data = {};
+                let idList = [];
+                let data = {};
 
                 if (this.allResultIsChecked) {
                     data.where = this.collection.getWhere();
@@ -1221,31 +1220,29 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                     data.ids = idList;
                 }
 
-                for (var i in this.checkedList) {
+                for (let i in this.checkedList) {
                     idList.push(this.checkedList[i]);
                 }
 
                 data.entityType = this.entityType;
 
-                var waitMessage = this.getMetadata().get(
-                    ['clientDefs', this.scope, 'massActionDefs', name, 'waitMessage']
-                ) || 'pleaseWait';
+                let waitMessage = this.getMetadata()
+                    .get(['clientDefs', this.scope, 'massActionDefs', name, 'waitMessage']) || 'pleaseWait';
 
                 Espo.Ui.notify(this.translate(waitMessage, 'messages', this.scope));
 
-                var url = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'url']);
+                let url = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'url']);
 
-                this.ajaxPostRequest(url, data)
-                    .then((result)=> {
-                        var successMessage = result.successMessage ||
-                            this.getMetadata().get(
-                            ['clientDefs', this.scope, 'massActionDefs', name, 'successMessage']
-                        ) || 'done';
+                Espo.Ajax.postRequest(url, data)
+                    .then(result=> {
+                        let successMessage = result.successMessage ||
+                            this.getMetadata()
+                                .get(['clientDefs', this.scope, 'massActionDefs', name, 'successMessage']) || 'done';
 
                         this.collection
                             .fetch()
                             .then(() => {
-                                var message = this.translate(successMessage, 'messages', this.scope);
+                                let message = this.translate(successMessage, 'messages', this.scope);
 
                                 if ('count' in result) {
                                     message = message.replace('{count}', result.count);
@@ -1265,7 +1262,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         },
 
         getMassActionSelectionPostData: function () {
-            var data = {};
+            let data = {};
 
             if (this.allResultIsChecked) {
                 data.where = this.collection.getWhere();
@@ -1276,7 +1273,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             else {
                 data.ids = [];
 
-                for (var i in this.checkedList) {
+                for (let i in this.checkedList) {
                     data.ids.push(this.checkedList[i]);
                 }
             }
@@ -1285,9 +1282,9 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         },
 
         massActionRecalculateFormula: function () {
-            var ids = false;
+            let ids = false;
 
-            var allResultIsChecked = this.allResultIsChecked;
+            let allResultIsChecked = this.allResultIsChecked;
 
             if (!allResultIsChecked) {
                 ids = this.checkedList;
@@ -1441,11 +1438,11 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         },
 
         massActionPrintPdf: function () {
-            var maxCount = this.getConfig().get('massPrintPdfMaxCount');
+            let maxCount = this.getConfig().get('massPrintPdfMaxCount');
 
             if (maxCount) {
                 if (this.checkedList.length > maxCount) {
-                    var msg = this.translate('massPrintPdfMaxCountError', 'messages')
+                    let msg = this.translate('massPrintPdfMaxCountError', 'messages')
                         .replace('{maxCount}', maxCount.toString());
 
                     Espo.Ui.error(msg);
@@ -1454,9 +1451,9 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 }
             }
 
-            var idList = [];
+            let idList = [];
 
-            for (var i in this.checkedList) {
+            for (let i in this.checkedList) {
                 idList.push(this.checkedList[i]);
             }
 
@@ -1489,9 +1486,9 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         },
 
         massActionFollow: function () {
-            var count = this.checkedList.length;
+            let count = this.checkedList.length;
 
-            var confirmMsg = this.translate('confirmMassFollow', 'messages')
+            let confirmMsg = this.translate('confirmMassFollow', 'messages')
                 .replace('{count}', count.toString());
 
             this.confirm({
@@ -1500,38 +1497,40 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             }, () => {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-                this.ajaxPostRequest('MassAction', {
-                    action: 'follow',
-                    entityType: this.entityType,
-                    params: this.getMassActionSelectionPostData(),
-                })
-                    .then((result) => {
-                            var resultCount = result.count || 0;
+                Espo.Ajax
+                    .postRequest('MassAction', {
+                        action: 'follow',
+                        entityType: this.entityType,
+                        params: this.getMassActionSelectionPostData(),
+                    })
+                    .then(result => {
+                        let resultCount = result.count || 0;
 
-                            var msg = 'massFollowResult';
+                        let msg = 'massFollowResult';
 
-                            if (resultCount) {
-                                if (resultCount === 1) {
-                                    msg += 'Single';
-                                }
-
-                                Espo.Ui.success(
-                                    this.translate(msg, 'messages').replace('{count}', resultCount)
-                                );
+                        if (resultCount) {
+                            if (resultCount === 1) {
+                                msg += 'Single';
                             }
-                            else {
-                                Espo.Ui.warning(
-                                    this.translate('massFollowZeroResult', 'messages')
-                                );
-                            }
+
+                            Espo.Ui.success(
+                                this.translate(msg, 'messages').replace('{count}', resultCount)
+                            );
+
+                            return;
+                        }
+
+                        Espo.Ui.warning(
+                            this.translate('massFollowZeroResult', 'messages')
+                        );
                     });
             });
         },
 
         massActionUnfollow: function () {
-            var count = this.checkedList.length;
+            let count = this.checkedList.length;
 
-            var confirmMsg = this.translate('confirmMassUnfollow', 'messages')
+            let confirmMsg = this.translate('confirmMassUnfollow', 'messages')
                 .replace('{count}', count.toString());
 
             this.confirm({
@@ -1544,15 +1543,16 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 let helper = new MassActionHelper(this);
                 let idle = !!params.searchParams && helper.checkIsIdle(this.collection.total);
 
-                this.ajaxPostRequest('MassAction', {
-                    action: 'unfollow',
-                    entityType: this.entityType,
-                    params: params,
-                    idle: idle,
-                })
+                Espo.Ajax
+                    .postRequest('MassAction', {
+                        action: 'unfollow',
+                        entityType: this.entityType,
+                        params: params,
+                        idle: idle,
+                    })
                     .then(result => {
                         let final = (count) => {
-                            var msg = 'massUnfollowResult';
+                            let msg = 'massUnfollowResult';
 
                             if (!count) {
                                 Espo.Ui.warning(
@@ -1603,7 +1603,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             }
             this.checkedList.sort();
 
-            var url = '#' + this.entityType + '/merge/ids=' + this.checkedList.join(',');
+            let url = '#' + this.entityType + '/merge/ids=' + this.checkedList.join(',');
 
             this.getRouter().navigate(url, {trigger: false});
 
@@ -1622,16 +1622,16 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
             Espo.Ui.notify(' ... ');
 
-            var ids = false;
+            let ids = false;
 
-            var allResultIsChecked = this.allResultIsChecked;
+            let allResultIsChecked = this.allResultIsChecked;
 
             if (!allResultIsChecked) {
                 ids = this.checkedList;
             }
 
-            var viewName = this.getMetadata()
-                    .get(['clientDefs', this.entityType, 'modalViews', 'massUpdate']) ||
+            let viewName = this.getMetadata()
+                .get(['clientDefs', this.entityType, 'modalViews', 'massUpdate']) ||
                 'views/modals/mass-update';
 
             this.createView('massUpdate', viewName, {
@@ -1676,7 +1676,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                         .fetch()
                         .then(() => {
                             if (count) {
-                                var msg = 'massUpdateResult';
+                                let msg = 'massUpdateResult';
 
                                 if (count === 1) {
                                     msg = 'massUpdateResultSingle';
@@ -1728,9 +1728,9 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         },
 
         massActionConvertCurrency: function () {
-            var ids = false;
+            let ids = false;
 
-            var allResultIsChecked = this.allResultIsChecked;
+            let allResultIsChecked = this.allResultIsChecked;
 
             if (!allResultIsChecked) {
                 ids = this.checkedList;
@@ -1773,7 +1773,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                         .fetch()
                         .then(() => {
                             if (count) {
-                                var msg = 'massUpdateResult';
+                                let msg = 'massUpdateResult';
 
                                 if (count === 1) {
                                     msg = 'massUpdateResultSingle';
@@ -1890,7 +1890,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 );
 
             metadataMassActionList.forEach(item => {
-                var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
+                let defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
 
                 if (!Espo.Utils.checkActionAvailability(this.getHelper(), defs)) {
                     return;
@@ -1950,12 +1950,12 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                         return;
                     }
 
-                    var viewObject = this;
+                    let viewObject = this;
 
                     this.wait(
                         new Promise((resolve) => {
                             require(defs.handler, (Handler) => {
-                                var handler = new Handler(viewObject);
+                                let handler = new Handler(viewObject);
 
                                 handler[defs.initFunction].call(handler);
 
@@ -2043,7 +2043,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             }
 
             Espo.Utils.clone(this.massActionList).forEach((item) => {
-                var propName = 'massAction' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
+                let propName = 'massAction' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
 
                 if (this[propName] || this.options[propName]) {
                     this.removeMassAction(item);
@@ -2054,13 +2054,13 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 this.events['click .list a.link'] = (e) => {
                     e.preventDefault();
 
-                    var id = $(e.target).attr('data-id');
+                    let id = $(e.target).attr('data-id');
 
                     if (id) {
-                        var model = this.collection.get(id);
+                        let model = this.collection.get(id);
 
                         if (this.checkboxes) {
-                            var list = [];
+                            let list = [];
 
                             list.push(model);
 
@@ -2178,7 +2178,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 return this._cachedFilteredListLayout;
             }
 
-            var forbiddenFieldList = this._cachedScopeForbiddenFieldList =
+            let forbiddenFieldList = this._cachedScopeForbiddenFieldList =
                 this._cachedScopeForbiddenFieldList ||
                 this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
 
@@ -2192,10 +2192,10 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 return this._cachedFilteredListLayout;
             }
 
-            var filteredListLayout = Espo.Utils.clone(listLayout);
+            let filteredListLayout = Espo.Utils.clone(listLayout);
 
-            for (var i in listLayout) {
-                var name = listLayout[i].name;
+            for (let i in listLayout) {
+                let name = listLayout[i].name;
 
                 if (name && ~forbiddenFieldList.indexOf(name)) {
                     filteredListLayout[i].customLabel = '';
@@ -2222,12 +2222,11 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
             this.layoutIsBeingLoaded = true;
 
-            var layoutName = this.layoutName;
-
-            var layoutScope = this.layoutScope || this.collection.name;
+            let layoutName = this.layoutName;
+            let layoutScope = this.layoutScope || this.collection.name;
 
             this._helper.layoutManager.get(layoutScope, layoutName, (listLayout) => {
-                var filteredListLayout = this.filterListLayout(listLayout);
+                let filteredListLayout = this.filterListLayout(listLayout);
 
                 this.layoutLoadCallbackList.forEach((callbackItem) => {
                     callbackItem(filteredListLayout);
@@ -2252,7 +2251,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             }
 
             if (this.listLayout) {
-                var attributeList = this.fetchAttributeListFromLayout();
+                let attributeList = this.fetchAttributeListFromLayout();
 
                 callback(attributeList);
 
@@ -2277,16 +2276,16 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
          * @return {Object[]}
          */
         fetchAttributeListFromLayout: function () {
-            var list = [];
+            let list = [];
 
             this.listLayout.forEach((item) => {
                 if (!item.name) {
                     return;
                 }
 
-                var field = item.name;
+                let field = item.name;
 
-                var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
+                let fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
 
                 if (!fieldType) {
                     return;
@@ -2306,10 +2305,10 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
          * @protected
          */
         _getHeaderDefs: function () {
-            var defs = [];
+            let defs = [];
 
-            for (var i in this.listLayout) {
-                var width = false;
+            for (let i in this.listLayout) {
+                let width = false;
 
                 if ('width' in this.listLayout[i] && this.listLayout[i].width !== null) {
                     width = this.listLayout[i].width + '%';
@@ -2318,9 +2317,9 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                     width = this.listLayout[i].widthPx;
                 }
 
-                var itemName = this.listLayout[i].name;
+                let itemName = this.listLayout[i].name;
 
-                var item = {
+                let item = {
                     name: itemName,
                     isSortable: !(this.listLayout[i].notSortable || false),
                     width: width,
@@ -2387,7 +2386,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         _convertLayout: function (listLayout, model) {
             model = model || this.collection.model.prototype;
 
-            var layout = [];
+            let layout = [];
 
             if (this.checkboxes) {
                 layout.push({
@@ -2397,15 +2396,15 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 });
             }
 
-            for (var i in listLayout) {
-                var col = listLayout[i];
-                var type = col.type || model.getFieldType(col.name) || 'base';
+            for (let i in listLayout) {
+                let col = listLayout[i];
+                let type = col.type || model.getFieldType(col.name) || 'base';
 
                 if (!col.name) {
                     continue;
                 }
 
-                var item = {
+                let item = {
                     columnName: col.name,
                     name: col.name + 'Field',
                     view: col.view ||
@@ -2416,8 +2415,8 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                             name: col.name,
                             params: col.params || {}
                         },
-                        mode: 'list'
-                    }
+                        mode: 'list',
+                    },
                 };
 
                 if (col.width) {
@@ -2532,14 +2531,14 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
          * @return {Object}
          */
         getRowActionsDefs: function () {
-            var options = {
+            let options = {
                 defs: {
                     params: {}
-                }
+                },
             };
 
             if (this.options.rowActionsOptions) {
-                for (var item in this.options.rowActionsOptions) {
+                for (let item in this.options.rowActionsOptions) {
                     options[item] = this.options.rowActionsOptions[item];
                 }
             }
@@ -2558,13 +2557,11 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
          * @return {module:model[]}
          */
         getSelected: function () {
-            var list = [];
+            let list = [];
 
             this.$el.find('input.record-checkbox:checked').each((i, el) => {
-
-                var id = $(el).attr('data-id');
-
-                var model = this.collection.get(id);
+                let id = $(el).attr('data-id');
+                let model = this.collection.get(id);
 
                 list.push(model);
             });
@@ -2576,7 +2573,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
          * @protected
          */
         getInternalLayoutForModel: function (callback, model) {
-            var scope = model.name;
+            let scope = model.name;
 
             if (this._internalLayout === null) {
                 this._internalLayout = {};
@@ -2656,7 +2653,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
          * @param {function(module:view):void} [callback] A callback.
          */
         buildRow: function (i, model, callback) {
-            var key = model.id;
+            let key = model.id;
 
             this.rowList.push(key);
 
@@ -2665,7 +2662,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
                 this.prepareInternalLayout(internalLayout, model);
 
-                var acl =  {
+                let acl =  {
                     edit: this.getAcl().checkModel(model, 'edit') && !this.editDisabled,
                     delete: this.getAcl().checkModel(model, 'delete') && !this.removeDisabled,
                 };
@@ -2706,10 +2703,10 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 return;
             }
 
-            var iteration = 0;
-            var repeatCount = !this.pagination ? 1 : 2;
+            let iteration = 0;
+            let repeatCount = !this.pagination ? 1 : 2;
 
-            var callbackWrapped = function () {
+            let callbackWrapped = () => {
                 iteration++;
 
                 if (iteration === repeatCount) {
@@ -2717,15 +2714,13 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                         callback();
                     }
                 }
-            };
+            }
 
             this.wait(true);
 
-            var modelList = this.collection.models;
-
-            var count = modelList.length;
-
-            var builtCount = 0;
+            let modelList = this.collection.models;
+            let count = modelList.length;
+            let builtCount = 0;
 
             modelList.forEach((model) => {
                 this.buildRow(iteration, model, () => {
@@ -2836,7 +2831,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
                             $row.append(html);
 
-                            var $existingRowItem = this.getDomRowItem(model.id);
+                            let $existingRowItem = this.getDomRowItem(model.id);
 
                             if ($existingRowItem && $existingRowItem.length) {
                                 $existingRowItem.remove();
@@ -3024,7 +3019,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                     });
 
                     this.listenToOnce(view, 'after:save', (m) => {
-                        var model = this.collection.get(m.id);
+                        let model = this.collection.get(m.id);
 
                         if (model) {
                             model.set(m.getClonedAttributes());
@@ -3168,10 +3163,10 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 return;
             }
 
-            var totalWidth = 0;
-            var totalWidthPx = 0;
-            var emptyCount = 0;
-            var columnCount = 0;
+            let totalWidth = 0;
+            let totalWidthPx = 0;
+            let emptyCount = 0;
+            let columnCount = 0;
 
             this.listLayout.forEach((item) => {
                 columnCount ++;
@@ -3199,7 +3194,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 totalWidthPx += this.checkboxColumnWidth;
             }
 
-            var minWidth;
+            let minWidth;
 
             if (totalWidth >= 100) {
                 minWidth = columnCount * this.minColumnWidth;
