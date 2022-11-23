@@ -1061,7 +1061,7 @@ define('views/site/navbar', ['view'], function (Dep) {
             }
 
             if (color && !iconClass) {
-                o.colorIconClass = 'color-icon fas fa-square-full';
+                o.colorIconClass = 'color-icon fas fa-square';
             }
 
             return o;

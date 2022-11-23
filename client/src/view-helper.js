@@ -731,7 +731,7 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
             let html = '';
 
             if (color) {
-                let $span = $('<span class="color-icon fas fa-square-full">');
+                let $span = $('<span class="color-icon fas fa-square">');
 
                 $span.css('color', color);
 
