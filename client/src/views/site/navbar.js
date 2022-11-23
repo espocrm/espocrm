@@ -49,8 +49,9 @@ define('views/site/navbar', ['view'], function (Dep) {
 
         events: {
             'click .navbar-collapse.in a.nav-link': function (e) {
-                var $a = $(e.currentTarget);
-                var href = $a.attr('href');
+                let $a = $(e.currentTarget);
+                let href = $a.attr('href');
+
                 if (href) {
                     this.xsCollapse();
                 }
@@ -65,7 +66,9 @@ define('views/site/navbar', ['view'], function (Dep) {
             },
             'click a[data-action="quick-create"]': function (e) {
                 e.preventDefault();
-                var scope = $(e.currentTarget).data('name');
+
+                let scope = $(e.currentTarget).data('name');
+
                 this.quickCreate(scope);
             },
             'click a.minimizer': function () {
@@ -75,14 +78,16 @@ define('views/site/navbar', ['view'], function (Dep) {
                 this.switchSideMenu();
             },
             'click a.action': function (e) {
-                var $el = $(e.currentTarget);
+                let $el = $(e.currentTarget);
 
-                var action = $el.data('action');
-                var method = 'action' + Espo.Utils.upperCaseFirst(action);
+                let action = $el.data('action');
+                let method = 'action' + Espo.Utils.upperCaseFirst(action);
 
                 if (typeof this[method] === 'function') {
-                    var data = $el.data();
+                    let data = $el.data();
+
                     this[method](data, e);
+
                     e.preventDefault();
                 }
             },
@@ -102,7 +107,7 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         handleGroupDropdownClick: function (e) {
-            var $target = $(e.currentTarget).parent();
+            let $target = $(e.currentTarget).parent();
 
             if ($target.parent().hasClass('more-dropdown-menu')) {
                 e.stopPropagation();
@@ -132,11 +137,11 @@ define('views/site/navbar', ['view'], function (Dep) {
                 return;
             }
 
-            var rectItem = $target.get(0).getBoundingClientRect();
+            let rectItem = $target.get(0).getBoundingClientRect();
 
-            var windowHeight = window.innerHeight;
+            let windowHeight = window.innerHeight;
 
-            var isSide = this.isSide();
+            let isSide = this.isSide();
 
             if (
                 !isSide &&
@@ -149,15 +154,15 @@ define('views/site/navbar', ['view'], function (Dep) {
                 return;
             }
 
-            var itemCount = $menu.children().length;
+            let itemCount = $menu.children().length;
 
             let tabHeight = isSide ?
                 this.$tabs.find('> .tab').height() :
                 this.$tabs.find('.tab-group > ul > li:visible').height();
 
-            var menuHeight = tabHeight * itemCount;
+            let menuHeight = tabHeight * itemCount;
 
-            var top = rectItem.top - 1;
+            let top = rectItem.top - 1;
 
             if (top + menuHeight > windowHeight) {
                 top = windowHeight - menuHeight - 2;
@@ -179,7 +184,7 @@ define('views/site/navbar', ['view'], function (Dep) {
                 maxHeight: maxHeight + 'px',
             });
 
-            var $window = $(window);
+            let $window = $(window);
 
             $window.off('scroll.navbar-tab-group');
 
@@ -197,7 +202,7 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         handleGroupDropdownOpen: function ($target) {
-            var $menu = $target.find('.dropdown-menu');
+            let $menu = $target.find('.dropdown-menu');
 
             this.handleGroupMenuPosition($menu, $target);
 
@@ -215,15 +220,15 @@ define('views/site/navbar', ['view'], function (Dep) {
         handleGroupDropdownInMoreOpen: function ($target) {
             this.$el.find('.tab-group.tab.dropdown').removeClass('open');
 
-            var $parentDropdown = this.$el.find('.more-dropdown-menu');
+            let $parentDropdown = this.$el.find('.more-dropdown-menu');
 
             $target.addClass('open');
 
-            var $menu = $target.find('.dropdown-menu');
+            let $menu = $target.find('.dropdown-menu');
 
-            var rectDropdown = $parentDropdown.get(0).getBoundingClientRect();
+            let rectDropdown = $parentDropdown.get(0).getBoundingClientRect();
 
-            var left = rectDropdown.right;
+            let left = rectDropdown.right;
 
             $menu.css({
                 left: left + 'px',
@@ -306,7 +311,7 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         switchMinimizer: function () {
-            var $body = this.$body;
+            let $body = this.$body;
 
             if (this.isMinimized()) {
                 if (this.isSideMenuOpened) {
@@ -331,7 +336,7 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         getLogoSrc: function () {
-            var companyLogoId = this.getConfig().get('companyLogoId');
+            let companyLogoId = this.getConfig().get('companyLogoId');
 
             if (!companyLogoId) {
                 return this.getBasePath() + (this.getThemeManager().getParam('logo') || 'client/img/logo.svg');
@@ -341,7 +346,7 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         getTabList: function () {
-            var tabList = this.getPreferences().get('useCustomTabList') ?
+            let tabList = this.getPreferences().get('useCustomTabList') ?
                 this.getPreferences().get('tabList') :
                 this.getConfig().get('tabList');
 
@@ -403,7 +408,7 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         setupQuickCreateList: function () {
-            var scopes = this.getMetadata().get('scopes') || {};
+            let scopes = this.getMetadata().get('scopes') || {};
 
             this.quickCreateList = this.getQuickCreateList().filter(scope =>{
                 if (!scopes[scope]) {
@@ -427,13 +432,13 @@ define('views/site/navbar', ['view'], function (Dep) {
                 return true;
             }
 
-            var scopes = this.getMetadata().get('scopes') || {};
+            let scopes = this.getMetadata().get('scopes') || {};
 
             if (!scopes[scope]) {
                 return false;
             }
 
-            var defs = scopes[scope] || {};
+            let defs = scopes[scope] || {};
 
             if (defs.disabled) {
                 return;
@@ -443,7 +448,7 @@ define('views/site/navbar', ['view'], function (Dep) {
                 return this.getAcl().check(scope);
             }
             if (defs.tabAclPermission) {
-                var level = this.getAcl().getPermissionLevel(defs.tabAclPermission);
+                let level = this.getAcl().getPermissionLevel(defs.tabAclPermission);
 
                 return level && level !== 'no';
             }
@@ -472,14 +477,14 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         adjustTop: function () {
-            var smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
-            var navbarHeight = this.getNavbarHeight();
+            let smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
+            let navbarHeight = this.getNavbarHeight();
 
-            var $window = $(window);
+            let $window = $(window);
 
-            var $tabs = this.$tabs;
-            var $more = this.$more;
-            var $moreDropdown = this.$moreDropdown;
+            let $tabs = this.$tabs;
+            let $more = this.$more;
+            let $moreDropdown = this.$moreDropdown;
 
             $window.on('resize.navbar', () => updateWidth());
 
@@ -499,9 +504,9 @@ define('views/site/navbar', ['view'], function (Dep) {
                 $more.scrollTop($window.scrollTop());
             });
 
-            var updateMoreHeight = () => {
-                var windowHeight = window.innerHeight;
-                var windowWidth = window.innerWidth;
+            let updateMoreHeight = () => {
+                let windowHeight = window.innerHeight;
+                let windowWidth = window.innerWidth;
 
                 if (windowWidth < smallScreenWidth) {
                     $more.css('max-height', '');
@@ -518,27 +523,27 @@ define('views/site/navbar', ['view'], function (Dep) {
 
             updateMoreHeight();
 
-            var hideOneTab = () => {
-                var count = $tabs.children().length;
+            let hideOneTab = () => {
+                let count = $tabs.children().length;
 
                 if (count <= 1) {
                     return;
                 }
 
-                var $one = $tabs.children().eq(count - 2);
+                let $one = $tabs.children().eq(count - 2);
 
                 $one.prependTo($more);
             };
 
-            var unhideOneTab = () => {
-                var $one = $more.children().eq(0);
+            let unhideOneTab = () => {
+                let $one = $more.children().eq(0);
 
                 if ($one.length) {
                     $one.insertBefore($moreDropdown);
                 }
             };
 
-            var $navbar = $('#navbar .navbar');
+            let $navbar = $('#navbar .navbar');
 
             if (window.innerWidth >= smallScreenWidth) {
                 $tabs.children('li').each(() => {
@@ -549,20 +554,20 @@ define('views/site/navbar', ['view'], function (Dep) {
                 $navbar.css('overflow', 'visible');
             }
 
-            var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 555;
+            let navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 555;
 
-            var tabCount = this.tabList.length;
+            let tabCount = this.tabList.length;
 
-            var navbarNeededHeight = navbarHeight + 1;
+            let navbarNeededHeight = navbarHeight + 1;
 
             this.adjustBodyMinHeightMethodName = 'adjustBodyMinHeightTop';
 
             let $moreDd = $('#nav-more-tabs-dropdown');
             let $moreLi = $moreDd.closest('li');
 
-            var updateWidth = () => {
-                var windowWidth = window.innerWidth;
-                var moreWidth = $moreLi.width();
+            let updateWidth = () => {
+                let windowWidth = window.innerWidth;
+                let moreWidth = $moreLi.width();
 
                 $more.children('li.not-in-more').each(() => {
                     unhideOneTab();
@@ -577,12 +582,12 @@ define('views/site/navbar', ['view'], function (Dep) {
 
                 $more.parent().addClass('hidden');
 
-                var headerWidth = this.$el.width();
+                let headerWidth = this.$el.width();
 
-                var maxWidth = headerWidth - navbarBaseWidth - moreWidth;
-                var width = $tabs.width();
+                let maxWidth = headerWidth - navbarBaseWidth - moreWidth;
+                let width = $tabs.width();
 
-                var i = 0;
+                let i = 0;
 
                 while (width > maxWidth) {
                     hideOneTab();
@@ -604,7 +609,7 @@ define('views/site/navbar', ['view'], function (Dep) {
                 }
             };
 
-            var processUpdateWidth = isRecursive => {
+            let processUpdateWidth = isRecursive => {
                 if ($navbar.height() > navbarNeededHeight) {
                     updateWidth();
                     setTimeout(() => processUpdateWidth(true), 200);
@@ -664,8 +669,8 @@ define('views/site/navbar', ['view'], function (Dep) {
             });
 
             let updateSizeForSide = () => {
-                var windowHeight = window.innerHeight;
-                var windowWidth = window.innerWidth;
+                let windowHeight = window.innerHeight;
+                let windowWidth = window.innerWidth;
 
                 this.$minimizer.removeClass('hidden');
 
@@ -710,34 +715,34 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         adjustBodyMinHeightSide: function () {
-            var minHeight = this.$tabs.get(0).scrollHeight + this.getStaticItemsHeight();
+            let minHeight = this.$tabs.get(0).scrollHeight + this.getStaticItemsHeight();
 
-            var moreHeight = 0;
+            let moreHeight = 0;
 
             this.$more.find('> li:visible').each((i, el) => {
-                var $el = $(el);
+                let $el = $(el);
 
                 moreHeight += $el.height();
             });
 
             minHeight = Math.max(minHeight, moreHeight);
 
-            var tabHeight = this.$tabs.find('> .tab').height();
+            let tabHeight = this.$tabs.find('> .tab').height();
 
             this.tabList.forEach((item, i) => {
                 if (typeof item !== 'object') {
                     return;
                 }
 
-                var $li = this.$el.find('li.tab[data-name="group-'+i+'"]');
+                let $li = this.$el.find('li.tab[data-name="group-'+i+'"]');
 
                 if (!$li.hasClass('open')) {
                     return;
                 }
 
-                var tabCount = (item.itemList || []).length;
+                let tabCount = (item.itemList || []).length;
 
-                var menuHeight = tabHeight * tabCount;
+                let menuHeight = tabHeight * tabCount;
 
                 if (menuHeight > minHeight) {
                     minHeight = menuHeight;
@@ -748,10 +753,10 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         adjustBodyMinHeightTop: function () {
-            var minHeight = this.getNavbarHeight();
+            let minHeight = this.getNavbarHeight();
 
             this.$more.find('> li').each((i, el) => {
-                var $el = $(el);
+                let $el = $(el);
 
                 if (!this.isMoreTabsShown) {
                     if ($el.hasClass('after-show-more')) {
@@ -767,22 +772,22 @@ define('views/site/navbar', ['view'], function (Dep) {
                 minHeight += $el.height();
             });
 
-            var tabHeight = this.$tabs.find('.tab-group > ul > li:visible').height();
+            let tabHeight = this.$tabs.find('.tab-group > ul > li:visible').height();
 
             this.tabList.forEach((item, i) => {
                 if (typeof item !== 'object') {
                     return;
                 }
 
-                var $li = this.$el.find('li.tab[data-name="group-'+i+'"]');
+                let $li = this.$el.find('li.tab[data-name="group-'+i+'"]');
 
                 if (!$li.hasClass('open')) {
                     return;
                 }
 
-                var tabCount = (item.itemList || []).length;
+                let tabCount = (item.itemList || []).length;
 
-                var menuHeight = tabHeight * tabCount;
+                let menuHeight = tabHeight * tabCount;
 
                 if (menuHeight > minHeight) {
                     minHeight = menuHeight;
@@ -911,7 +916,7 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         setupTabDefsList: function () {
-            var tabList = this.getTabList();
+            let tabList = this.getTabList();
 
             this.tabList = tabList.filter(item => {
                 if (!item) {
@@ -931,22 +936,22 @@ define('views/site/navbar', ['view'], function (Dep) {
                 return this.filterTabItem(item);
             });
 
-            var tabDefsList = [];
+            let tabDefsList = [];
 
-            var colorsDisabled =
+            let colorsDisabled =
                 this.getPreferences().get('scopeColorsDisabled') ||
                 this.getPreferences().get('tabColorsDisabled') ||
                 this.getConfig().get('scopeColorsDisabled') ||
                 this.getConfig().get('tabColorsDisabled');
 
-            var tabIconsDisabled = this.getConfig().get('tabIconsDisabled');
+            let tabIconsDisabled = this.getConfig().get('tabIconsDisabled');
 
-            var params = {
+            let params = {
                 colorsDisabled: colorsDisabled,
                 tabIconsDisabled: tabIconsDisabled,
             };
 
-            var vars = {
+            let vars = {
                 moreIsMet: false,
                 isHidden: false,
             };
@@ -1063,13 +1068,13 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         getMenuDataList: function () {
-            var avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 16, 'avatar-link');
+            let avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 16, 'avatar-link');
 
             if (avatarHtml) {
                 avatarHtml += ' ';
             }
 
-            var list = [
+            let list = [
                 {
                     link: '#User/view/' + this.getUser().id,
                     html: avatarHtml + this.getHelper().escapeString(this.getUser().get('name')),
@@ -1119,8 +1124,8 @@ define('views/site/navbar', ['view'], function (Dep) {
         quickCreate: function (scope) {
             Espo.Ui.notify(' ... ');
 
-            var type = this.getMetadata().get(['clientDefs', scope, 'quickCreateModalType']) || 'edit';
-            var viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', type]) || 'views/modals/edit';
+            let type = this.getMetadata().get(['clientDefs', scope, 'quickCreateModalType']) || 'edit';
+            let viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', type]) || 'views/modals/edit';
 
             this.createView('quickCreate', viewName , {scope: scope}, (view) => {
                 view.once('after:render', () => Espo.Ui.notify(false));
