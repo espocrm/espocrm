@@ -33,25 +33,27 @@ use RuntimeException;
 
 class Ics
 {
+    public const STATUS_CONFIRMED = 'CONFIRMED';
+    public const STATUS_TENTATIVE = 'TENTATIVE';
+    public const STATUS_CANCELLED = 'CANCELLED';
+
+    public const METHOD_REQUEST = 'REQUEST';
+    public const METHOD_CANCEL = 'CANCEL';
+
+    /** @var self::METHOD_* string  */
+    private string $method;
     private ?string $output = null;
-
     private string $prodid;
-
     private ?int $startDate = null;
-
     private ?int $endDate = null;
-
     private ?string $summary = null;
-
     private ?string $address = null;
-
     private ?string $email = null;
-
     private ?string $who = null;
-
     private ?string $description = null;
-
     private ?string $uid = null;
+    /** @var self::STATUS_* string */
+    private string $status;
 
     /**
      * @param array<string,string|int|null> $attributes
@@ -63,6 +65,8 @@ class Ics
             throw new RuntimeException('PRODID is required');
         }
 
+        $this->status = self::STATUS_CONFIRMED;
+        $this->method = self::METHOD_REQUEST;
         $this->prodid = $prodid;
 
         foreach ($attributes as $key => $value) {
@@ -90,7 +94,7 @@ class Ics
             "BEGIN:VCALENDAR\r\n".
             "VERSION:2.0\r\n".
             "PRODID:-" . $this->prodid . "\r\n".
-            "METHOD:REQUEST\r\n".
+            "METHOD:" . $this->method . "\r\n".
             "BEGIN:VEVENT\r\n".
             "DTSTART:" . $this->formatTimestamp($this->startDate) . "\r\n".
             "DTEND:" . $this->formatTimestamp($this->endDate) . "\r\n".
@@ -100,7 +104,8 @@ class Ics
             "DESCRIPTION:" . $this->escapeString($this->formatMultiline($this->description)) . "\r\n".
             "UID:" . $this->uid . "\r\n".
             "SEQUENCE:0\r\n".
-            "DTSTAMP:" . $this->formatTimestamp(time())."\r\n".
+            "DTSTAMP:" . $this->formatTimestamp(time()) . "\r\n".
+            "STATUS:" . $this->status . "\r\n" .
             "END:VEVENT\r\n".
             "END:VCALENDAR";
     }

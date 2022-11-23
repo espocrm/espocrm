@@ -34,7 +34,6 @@ use Espo\Core\Controllers\Record;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Api\Request;
 use Espo\Core\Mail\Exceptions\SendingError;
@@ -67,6 +66,30 @@ class Call extends Record
         $resultList = $this->injectableFactory
             ->create(InvitationService::class)
             ->send(CallEntity::ENTITY_TYPE, $id, $invitees);
+
+        return $resultList !== 0;
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws SendingError
+     * @throws NotFound
+     */
+    public function postActionSendCancellation(Request $request): bool
+    {
+        $id = $request->getParsedBody()->id ?? null;
+
+        if (!$id) {
+            throw new BadRequest();
+        }
+
+        $invitees = $this->fetchInvitees($request);
+
+        $resultList = $this->injectableFactory
+            ->create(InvitationService::class)
+            ->sendCancellation(CallEntity::ENTITY_TYPE, $id, $invitees);
 
         return $resultList !== 0;
     }

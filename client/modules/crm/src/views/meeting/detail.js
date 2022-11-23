@@ -30,19 +30,41 @@ define('crm:views/meeting/detail', ['views/detail', 'lib!moment'], function (Dep
 
     return Dep.extend({
 
+        cancellationPeriod: '8 hours',
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
             this.controlSendInvitationsButton();
             this.controlAcceptanceStatusButton();
+            this.controlSendCancellationButton();
 
             this.listenTo(this.model, 'sync', () => {
                 this.controlSendInvitationsButton();
+                this.controlSendCancellationButton();
             });
 
             this.listenTo(this.model, 'sync', () => {
                 this.controlAcceptanceStatusButton();
             });
+
+            this.setupCancellationPeriod();
+        },
+
+        setupCancellationPeriod: function () {
+            this.cancellationPeriodAmount = 0;
+            this.cancellationPeriodUnits = 'hours';
+
+            let cancellationPeriod = this.getConfig().get('eventCancellationPeriod') || this.cancellationPeriod;
+
+            if (!cancellationPeriod) {
+                return;
+            }
+
+            let arr = cancellationPeriod.split(' ');
+
+            this.cancellationPeriodAmount = parseInt(arr[0]);
+            this.cancellationPeriodUnits = arr[1] ?? 'hours';
         },
 
         controlAcceptanceStatusButton: function () {
@@ -174,10 +196,64 @@ define('crm:views/meeting/detail', ['views/detail', 'lib!moment'], function (Dep
             this.removeMenuItem('sendInvitations');
         },
 
+        controlSendCancellationButton: function () {
+            let show = this.model.get('status') === 'Not Held';
+
+            if (show) {
+                let dateEnd = this.model.get('dateEnd');
+
+                if (
+                    dateEnd &&
+                    this.getDateTime()
+                        .toMoment(dateEnd)
+                        .subtract(this.cancellationPeriodAmount, this.cancellationPeriodUnits)
+                        .isBefore(moment.now())
+                ) {
+                    show = false;
+                }
+            }
+
+            if (show) {
+                let userIdList = this.model.getLinkMultipleIdList('users');
+                let contactIdList = this.model.getLinkMultipleIdList('contacts');
+                let leadIdList = this.model.getLinkMultipleIdList('leads');
+
+                if (!contactIdList.length && !leadIdList.length && !userIdList.length) {
+                    show = false;
+                }
+            }
+
+            if (show) {
+                this.addMenuItem('dropdown', {
+                    text: this.translate('Send Cancellation', 'labels', 'Meeting'),
+                    action: 'sendCancellation',
+                    acl: 'edit',
+                });
+
+                return;
+            }
+
+            this.removeMenuItem('sendCancellation');
+        },
+
         actionSendInvitations: function () {
             Espo.Ui.notify(' ... ');
 
             this.createView('dialog', 'crm:views/meeting/modals/send-invitations', {
+                model: this.model,
+            }).then(view => {
+                Espo.Ui.notify(false);
+
+                view.render();
+
+                this.listenToOnce(view, 'sent', () => this.model.fetch());
+            });
+        },
+
+        actionSendCancellation: function () {
+            Espo.Ui.notify(' ... ');
+
+            this.createView('dialog', 'crm:views/meeting/modals/send-cancellation', {
                 model: this.model,
             }).then(view => {
                 Espo.Ui.notify(false);

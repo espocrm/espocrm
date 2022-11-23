@@ -74,6 +74,30 @@ class Meeting extends Record
     }
 
     /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws SendingError
+     * @throws NotFound
+     */
+    public function postActionSendCancellation(Request $request): bool
+    {
+        $id = $request->getParsedBody()->id ?? null;
+
+        if (!$id) {
+            throw new BadRequest();
+        }
+
+        $invitees = $this->fetchInvitees($request);
+
+        $resultList = $this->injectableFactory
+            ->create(InvitationService::class)
+            ->sendCancellation(MeetingEntity::ENTITY_TYPE, $id, $invitees);
+
+        return $resultList !== 0;
+    }
+
+    /**
      * @param Request $request
      * @return ?Invitee[]
      * @throws BadRequest

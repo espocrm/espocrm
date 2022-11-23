@@ -46,9 +46,11 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\Tools\Email\SendService;
 
-
 class InvitationService
 {
+    private const TYPE_INVITATION = 'invitation';
+    private const TYPE_CANCELLATION = 'cancellation';
+
     private RecordServiceContainer $recordServiceContainer;
     private SendService $sendService;
     private User $user;
@@ -76,7 +78,7 @@ class InvitationService
     }
 
     /**
-     * Send invitations for a meeting (or call). Checks access. Uses user's SMTP if available.
+     * Send invitation emails for a meeting (or call). Checks access. Uses user's SMTP if available.
      *
      * @param ?Invitee[] $targets
      * @return Entity[] Entities an invitation was sent to.
@@ -87,6 +89,39 @@ class InvitationService
      */
     public function send(string $entityType, string $id, ?array $targets = null): array
     {
+        return $this->sendInternal($entityType, $id, $targets);
+    }
+
+    /**
+     * Send cancellation emails for a meeting (or call). Checks access. Uses user's SMTP if available.
+     *
+     * @param ?Invitee[] $targets
+     * @return Entity[] Entities a cancellation was sent to.
+     * @throws NotFound
+     * @throws Forbidden
+     * @throws Error
+     * @throws SendingError
+     */
+    public function sendCancellation(string $entityType, string $id, ?array $targets = null): array
+    {
+        return $this->sendInternal($entityType, $id, $targets, self::TYPE_CANCELLATION);
+    }
+
+    /**
+     * @param ?Invitee[] $targets
+     * @return Entity[]
+     * @throws NotFound
+     * @throws Forbidden
+     * @throws Error
+     * @throws SendingError
+     */
+    private function sendInternal(
+        string $entityType,
+        string $id,
+        ?array $targets = null,
+        string $type = self::TYPE_INVITATION
+    ): array {
+
         $entity = $this->recordServiceContainer
             ->get($entityType)
             ->getEntity($id);
@@ -115,7 +150,7 @@ class InvitationService
                 ->getRDBRepository($entityType)
                 ->getRelation($entity, $link);
 
-            if ($targets === null) {
+            if ($targets === null && $type === self::TYPE_INVITATION) {
                 $builder->where([
                     '@relation.status=' => Meeting::ATTENDEE_STATUS_NONE,
                 ]);
@@ -134,7 +169,13 @@ class InvitationService
                     continue;
                 }
 
-                $sender->sendInvitation($entity, $attendee, $link);
+                if ($type === self::TYPE_INVITATION) {
+                    $sender->sendInvitation($entity, $attendee, $link);
+                }
+
+                if ($type === self::TYPE_CANCELLATION) {
+                    $sender->sendCancellation($entity, $attendee, $link);
+                }
 
                 $sentAddressList[] = $emailAddress;
                 $resultEntityList[] = $attendee;

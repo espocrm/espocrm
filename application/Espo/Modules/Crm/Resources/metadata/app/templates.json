@@ -3,6 +3,10 @@
         "scopeList": ["Meeting", "Call"],
         "module": "Crm"
     },
+    "cancellation": {
+        "scopeList": ["Meeting", "Call"],
+        "module": "Crm"
+    },
     "reminder": {
         "scopeList": ["Meeting", "Call", "Task"],
         "module": "Crm"

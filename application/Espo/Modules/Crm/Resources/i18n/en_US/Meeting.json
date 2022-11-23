@@ -42,6 +42,7 @@
         "Set Held": "Set Held",
         "Set Not Held": "Set Not Held",
         "Send Invitations": "Send Invitations",
+        "Send Cancellation": "Send Cancellation",
         "on time": "on time",
         "before": "before",
         "All-Day": "All-Day",
@@ -54,6 +55,7 @@
     },
     "messages": {
         "sendInvitationsToSelectedAttendees": "Invitation emails will be sent to the selected attendees.",
+        "sendCancellationsToSelectedAttendees": "Cancellation emails will be sent to the selected attendees.",
         "selectAcceptanceStatus": "Set your acceptance status.",
         "nothingHasBeenSent": "Nothing were sent"
     }

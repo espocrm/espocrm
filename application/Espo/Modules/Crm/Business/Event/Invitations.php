@@ -54,6 +54,9 @@ use DateTime;
 
 class Invitations
 {
+    private const TYPE_INVITATION = 'invitation';
+    private const TYPE_CANCELLATION = 'cancellation';
+
     private $smtpParams;
     private $entityManager;
     private $emailSender;
@@ -98,6 +101,125 @@ class Invitations
      */
     public function sendInvitation(Entity $entity, Entity $invitee, string $link): void
     {
+        $this->sendInternal($entity, $invitee, $link);
+    }
+
+    /**
+     * @throws SendingError
+     * @throws Error
+     */
+    public function sendCancellation(Entity $entity, Entity $invitee, string $link): void
+    {
+        $this->sendInternal($entity, $invitee, $link, self::TYPE_CANCELLATION);
+    }
+
+    /**
+     * @throws SendingError
+     * @throws Error
+     */
+    private function sendInternal(
+        Entity $entity,
+        Entity $invitee,
+        string $link,
+        string $type = self::TYPE_INVITATION
+    ): void {
+
+        $uid = $type === self::TYPE_INVITATION ?
+            $this->createUniqueId($entity, $invitee, $link) : null;
+
+        $emailAddress = $invitee->get('emailAddress');
+
+        if (empty($emailAddress)) {
+            return;
+        }
+
+        /** @var Email $email */
+        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
+
+        $email->set('to', $emailAddress);
+
+        $subjectTpl = $this->templateFileManager->getTemplate($type, 'subject', $entity->getEntityType(), 'Crm');
+        $bodyTpl = $this->templateFileManager->getTemplate($type, 'body', $entity->getEntityType(), 'Crm');
+
+        $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
+
+        $data = [];
+
+        $siteUrl = rtrim($this->config->get('siteUrl'), '/');
+        $recordUrl = $siteUrl . '/#' . $entity->getEntityType() . '/view/' . $entity->getId();
+
+        $data['recordUrl'] = $recordUrl;
+
+        if ($uid) {
+            $part = $siteUrl . '?entryPoint=eventConfirmation&action=';
+
+            $data['acceptLink'] = $part . 'accept&uid=' . $uid->getIdValue();
+            $data['declineLink'] = $part . 'decline&uid=' . $uid->getIdValue();
+            $data['tentativeLink'] = $part . 'tentative&uid=' . $uid->getIdValue();
+        }
+
+        if ($invitee instanceof User) {
+            $data['isUser'] = true;
+
+            $htmlizer = $this->htmlizerFactory->createForUser($invitee);
+        }
+        else {
+            $htmlizer = $this->htmlizerFactory->createNoAcl();
+        }
+
+        $data['inviteeName'] = $invitee->get('name');
+        $data['entityType'] = $this->language->translateLabel($entity->getEntityType(), 'scopeNames');
+        $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
+
+        $subject = $htmlizer->render(
+            $entity,
+            $subjectTpl,
+            $type . '-email-subject-' . $entity->getEntityType(),
+            $data,
+            true,
+            true
+        );
+
+        $body = $htmlizer->render(
+            $entity,
+            $bodyTpl,
+            $type . '-email-body-' . $entity->getEntityType(),
+            $data,
+            false,
+            true
+        );
+
+        $email->set('subject', $subject);
+        $email->set('body', $body);
+        $email->set('isHtml', true);
+
+        $attachmentName = ucwords($this->language->translateLabel($entity->getEntityType(), 'scopeNames')) . '.ics';
+
+        /** @var Attachment $attachment */
+        $attachment = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
+
+        $attachment->set([
+            'name' => $attachmentName,
+            'type' => 'text/calendar',
+            'contents' => $this->getIcsContents($entity, $type),
+        ]);
+
+        $message = new Message();
+
+        $sender = $this->emailSender->create();
+
+        if ($this->smtpParams) {
+            $sender->withSmtpParams($this->smtpParams);
+        }
+
+        $sender
+            ->withMessage($message)
+            ->withAttachments([$attachment])
+            ->send($email);
+    }
+
+    private function createUniqueId(Entity $entity, Entity $invitee, string $link): UniqueId
+    {
         /** @var UniqueId $uid */
         $uid = $this->entityManager->getNewEntity(UniqueId::ENTITY_TYPE);
 
@@ -128,93 +250,10 @@ class Invitations
 
         $this->entityManager->saveEntity($uid);
 
-        $emailAddress = $invitee->get('emailAddress');
-
-        if (empty($emailAddress)) {
-            return;
-        }
-
-        /** @var Email $email */
-        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
-
-        $email->set('to', $emailAddress);
-
-        $subjectTpl = $this->templateFileManager->getTemplate('invitation', 'subject', $entity->getEntityType(), 'Crm');
-        $bodyTpl = $this->templateFileManager->getTemplate('invitation', 'body', $entity->getEntityType(), 'Crm');
-
-        $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
-
-        $data = [];
-
-        $siteUrl = rtrim($this->config->get('siteUrl'), '/');
-        $recordUrl = $siteUrl . '/#' . $entity->getEntityType() . '/view/' . $entity->getId();
-
-        $data['recordUrl'] = $recordUrl;
-        $data['acceptLink'] = $siteUrl . '?entryPoint=eventConfirmation&action=accept&uid=' . $uid->get('name');
-        $data['declineLink'] = $siteUrl . '?entryPoint=eventConfirmation&action=decline&uid=' . $uid->get('name');
-        $data['tentativeLink'] = $siteUrl . '?entryPoint=eventConfirmation&action=tentative&uid=' . $uid->get('name');
-
-        if ($invitee instanceof User) {
-            $data['isUser'] = true;
-
-            $htmlizer = $this->htmlizerFactory->createForUser($invitee);
-        }
-        else {
-            $htmlizer = $this->htmlizerFactory->createNoAcl();
-        }
-
-        $data['inviteeName'] = $invitee->get('name');
-        $data['entityType'] = $this->language->translateLabel($entity->getEntityType(), 'scopeNames');
-        $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
-
-        $subject = $htmlizer->render(
-            $entity,
-            $subjectTpl,
-            'invitation-email-subject-' . $entity->getEntityType(),
-            $data,
-            true,
-            true
-        );
-
-        $body = $htmlizer->render(
-            $entity,
-            $bodyTpl,
-            'invitation-email-body-' . $entity->getEntityType(),
-            $data,
-            false,
-            true
-        );
-
-        $email->set('subject', $subject);
-        $email->set('body', $body);
-        $email->set('isHtml', true);
-
-        $attachmentName = ucwords($this->language->translateLabel($entity->getEntityType(), 'scopeNames')) . '.ics';
-
-        /** @var Attachment $attachment */
-        $attachment = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
-
-        $attachment->set([
-            'name' => $attachmentName,
-            'type' => 'text/calendar',
-            'contents' => $this->getIcsContents($entity),
-        ]);
-
-        $message = new Message();
-
-        $sender = $this->emailSender->create();
-
-        if ($this->smtpParams) {
-            $sender->withSmtpParams($this->smtpParams);
-        }
-
-        $sender
-            ->withMessage($message)
-            ->withAttachments([$attachment])
-            ->send($email);
+        return $uid;
     }
 
-    protected function getIcsContents(Entity $entity): string
+    protected function getIcsContents(Entity $entity, string $type): string
     {
         /** @var ?User $user */
         $user = $this->entityManager
@@ -230,7 +269,16 @@ class Invitations
             $email = $user->getEmailAddress();
         }
 
+        $status = $type === self::TYPE_CANCELLATION ?
+            Ics::STATUS_CANCELLED :
+            Ics::STATUS_CONFIRMED;
+
+        $method = $type === self::TYPE_CANCELLATION ?
+            Ics::METHOD_CANCEL :
+            Ics::METHOD_REQUEST;
+
         $ics = new Ics('//EspoCRM//EspoCRM Calendar//EN', [
+            'method' => $method,
             'startDate' => strtotime($entity->get('dateStart')),
             'endDate' => strtotime($entity->get('dateEnd')),
             'uid' => $entity->getId(),
@@ -238,6 +286,7 @@ class Invitations
             'who' => $who,
             'email' => $email,
             'description' => $entity->get('description'),
+            'status' => $status,
         ]);
 
         return $ics->get();
