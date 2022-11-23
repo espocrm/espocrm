@@ -1,1 +1,1 @@
-邀请{{{entityTypeLowerFirst}}}'{{{name}}}'
+邀请{{entityTypeLowerFirst}} '{{name}}'

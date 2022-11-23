@@ -1,1 +1,1 @@
-Assigned to you: [{{{entityType}}}] {{{name}}}
+Assigned to you: [{{entityType}}] {{name}}

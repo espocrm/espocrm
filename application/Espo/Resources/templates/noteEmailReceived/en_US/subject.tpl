@@ -1,1 +1,1 @@
-Email received: [{{{entityType}}}] {{{name}}}
+Email received: [{{entityType}}] {{name}}

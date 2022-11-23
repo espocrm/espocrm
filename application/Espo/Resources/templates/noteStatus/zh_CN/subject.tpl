@@ -1,1 +1,1 @@
-{{{valueTranslated}}}: {{{entityType}}} {{{name}}}
+{{valueTranslated}}: {{entityType}} {{name}}

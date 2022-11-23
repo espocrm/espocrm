@@ -1,1 +1,1 @@
-Запрошення на {{{entityTypeLowerFirst}}} '{{{name}}}'
+Запрошення на {{entityTypeLowerFirst}} '{{name}}'

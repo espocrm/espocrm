@@ -1,1 +1,1 @@
-Post: [{{{entityType}}}] {{{name}}}
+Post: [{{entityType}}] {{name}}

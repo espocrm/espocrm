@@ -1,1 +1,1 @@
-分配{{{entityType}}}:{{{name}}}
+分配{{entityType}}:{{name}}

@@ -1,1 +1,1 @@
-Приглашение на {{{entityTypeLowerFirst}}} '{{{name}}}'
+Приглашение на {{entityTypeLowerFirst}} '{{name}}'
