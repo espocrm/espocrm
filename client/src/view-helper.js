@@ -493,7 +493,7 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                     return '';
                 }
 
-                var translationHash = options.hash.translatedOptions || null;
+                let translationHash = options.hash.translatedOptions || null;
 
                 if (translationHash === null) {
                     translationHash = this.language.translate(field, 'options', scope) || {};
@@ -726,12 +726,12 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                 return '';
             }
 
-            var color = this.metadata.get(['clientDefs', scope, 'color']);
+            let color = this.metadata.get(['clientDefs', scope, 'color']);
 
-            var html = '';
+            let html = '';
 
             if (color) {
-                var $span = $('<span class="color-icon fas fa-square-full">');
+                let $span = $('<span class="color-icon fas fa-square-full">');
 
                 $span.css('color', color);
 
@@ -819,14 +819,14 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                 return str.match(/[a-z?\\\/!]/i);
             }
 
-            var strip = false;
-            var lastQuote = false;
+            let strip = false;
+            let lastQuote = false;
 
-            for (var i = 0; i < html.length; i++){
+            for (let i = 0; i < html.length; i++){
                 if (html[i] === "<" && html[i + 1] && isValidTagChar(html[i + 1])) {
                     i++;
 
-                    for (var j = i; j<html.length; j++){
+                    for (let j = i; j<html.length; j++){
                         if (!lastQuote && html[j] === ">"){
                             if (strip) {
                                 stripHTML();
@@ -868,19 +868,19 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
          * @returns {number}
          */
         calculateContentContainerHeight: function ($el) {
-            var smallScreenWidth = this.themeManager.getParam('screenWidthXs');
+            let smallScreenWidth = this.themeManager.getParam('screenWidthXs');
 
-            var $window = $(window);
+            let $window = $(window);
 
-            var footerHeight = $('#footer').height() || 26;
-            var top = 0;
-            var element = $el.get(0);
+            let footerHeight = $('#footer').height() || 26;
+            let top = 0;
+            let element = $el.get(0);
 
             if (element) {
                 top = element.getBoundingClientRect().top;
 
                 if ($window.width() < smallScreenWidth) {
-                    var $navbarCollapse = $('#navbar .navbar-body');
+                    let $navbarCollapse = $('#navbar .navbar-body');
 
                     if ($navbarCollapse.hasClass('in') || $navbarCollapse.hasClass('collapsing')) {
                         top -= $navbarCollapse.height();
@@ -888,7 +888,7 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                 }
             }
 
-            var spaceHeight = top + footerHeight;
+            let spaceHeight = top + footerHeight;
 
             return $window.height() - spaceHeight - 20;
         },
