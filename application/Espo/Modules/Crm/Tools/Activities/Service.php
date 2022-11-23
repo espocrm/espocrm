@@ -535,7 +535,7 @@ class Service
                 ],
             ]);
         }
-        else if ($entityType == 'Lead' && $entity->get('createdAccountId')) {
+        else if ($entityType == Lead::ENTITY_TYPE && $entity->get('createdAccountId')) {
             $builder->where([
                 'OR' => [
                     [
