@@ -67,7 +67,6 @@ class EventConfirmation implements EntryPoint
 
     /**
      * @throws BadRequest
-     * @throws NotFound
      * @throws Error
      */
     public function run(Request $request, Response $response): void
@@ -128,7 +127,16 @@ class EventConfirmation implements EntryPoint
             return;
         }
 
+        $isRelated =  $this->entityManager
+            ->getRDBRepository($eventType)
+            ->getRelation($event, $link)
+            ->isRelated($invitee);
+
         $eventStatus = $event->get('status');
+
+        if (!$isRelated) {
+            $eventStatus = Meeting::STATUS_NOT_HELD;
+        }
 
         if (in_array($eventStatus, [Meeting::STATUS_HELD, Meeting::STATUS_NOT_HELD])) {
             $actionData = [

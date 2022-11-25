@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/event-confirmation/confirmation', ['view', 'lib!moment'], function (Dep, moment) {
+define('crm:views/event-confirmation/confirmation', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -61,10 +61,15 @@ define('crm:views/event-confirmation/confirmation', ['view', 'lib!moment'], func
 
             let statusList = ['Accepted', 'Tentative', 'Declined'];
 
+            if (!statusList.includes(this.actionData.status)) {
+                return null;
+            }
+
             let url = window.location.href.replace('action=' + actionMap[this.actionData.status], 'action={action}');
 
             return statusList.map(item => {
                 let active = item === this.actionData.status;
+
                 return {
                     active: active,
                     link: active ? '' : url.replace('{action}', actionMap[item]),
