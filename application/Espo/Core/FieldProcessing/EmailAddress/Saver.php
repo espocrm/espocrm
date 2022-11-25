@@ -145,14 +145,31 @@ class Saver implements SaverInterface
                     $entity->hasFetched('emailAddressIsOptedOut') &&
                     $entity->get('emailAddressIsOptedOut') !== $entity->getFetched('emailAddressIsOptedOut')
                 )
-            )
+            ) &&
+            $emailAddressValue
         ) {
-            if ($emailAddressValue) {
-                $key = strtolower($emailAddressValue);
+            $key = strtolower($emailAddressValue);
 
-                if ($key && isset($hash->$key)) {
-                    $hash->{$key}['optOut'] = $entity->get('emailAddressIsOptedOut');
-                }
+            if ($key && isset($hash->$key)) {
+                $hash->{$key}['optOut'] = $entity->get('emailAddressIsOptedOut');
+            }
+        }
+
+        if (
+            $entity->has('emailAddressIsInvalid') &&
+            (
+                $entity->isNew() ||
+                (
+                    $entity->hasFetched('emailAddressIsInvalid') &&
+                    $entity->get('emailAddressIsInvalid') !== $entity->getFetched('emailAddressIsInvalid')
+                )
+            ) &&
+            $emailAddressValue
+        ) {
+            $key = strtolower($emailAddressValue);
+
+            if ($key && isset($hash->$key)) {
+                $hash->{$key}['invalid'] = $entity->get('emailAddressIsInvalid');
             }
         }
 
@@ -421,6 +438,19 @@ class Saver implements SaverInterface
                 $this->markAddressOptedOut($emailAddressValue, (bool) $entity->get('emailAddressIsOptedOut'));
             }
 
+            if (
+                $entity->has('emailAddressIsInvalid') &&
+                (
+                    $entity->isNew() ||
+                    (
+                        $entity->hasFetched('emailAddressIsInvalid') &&
+                        $entity->get('emailAddressIsInvalid') !== $entity->getFetched('emailAddressIsInvalid')
+                    )
+                )
+            ) {
+                $this->markAddressInvalid($emailAddressValue, (bool) $entity->get('emailAddressIsInvalid'));
+            }
+
             return;
         }
 
@@ -442,6 +472,10 @@ class Saver implements SaverInterface
 
             if ($entity->has('emailAddressIsOptedOut')) {
                 $emailAddressNew->set('optOut', (bool) $entity->get('emailAddressIsOptedOut'));
+            }
+
+            if ($entity->has('emailAddressIsInvalid')) {
+                $emailAddressNew->set('invalid', (bool) $entity->get('emailAddressIsInvalid'));
             }
 
             $this->entityManager->saveEntity($emailAddressNew);
@@ -467,6 +501,10 @@ class Saver implements SaverInterface
 
         if ($entity->has('emailAddressIsOptedOut')) {
             $this->markAddressOptedOut($emailAddressValue, (bool) $entity->get('emailAddressIsOptedOut'));
+        }
+
+        if ($entity->has('emailAddressIsInvalid')) {
+            $this->markAddressInvalid($emailAddressValue, (bool) $entity->get('emailAddressIsInvalid'));
         }
 
         $updateQuery = $this->entityManager
@@ -498,6 +536,14 @@ class Saver implements SaverInterface
         $repository = $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
 
         $repository->markAddressOptedOut($address, $isOptedOut);
+    }
+
+    private function markAddressInvalid(string $address, bool $isInvalid = true): void
+    {
+        /** @var EmailAddressRepository $repository */
+        $repository = $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
+
+        $repository->markAddressInvalid($address, $isInvalid);
     }
 
     private function checkChangeIsForbidden(EmailAddress $emailAddress, Entity $entity): bool

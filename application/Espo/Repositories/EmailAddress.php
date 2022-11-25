@@ -376,4 +376,17 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
         $this->save($emailAddress);
     }
+
+    public function markAddressInvalid(string $address, bool $isInvalid = true): void
+    {
+        $emailAddress = $this->getByAddress($address);
+
+        if (!$emailAddress) {
+            return;
+        }
+
+        $emailAddress->set('invalid', $isInvalid);
+
+        $this->save($emailAddress);
+    }
 }

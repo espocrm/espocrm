@@ -233,6 +233,61 @@ class Email extends Base
                             'additionalSelect' => ['emailAddresses.optOut'],
                         ],
                     ],
+                    $fieldName .'IsInvalid' => [
+                        'type' => 'bool',
+                        'notStorable' => true,
+                        'select' => [
+                            'select' => "emailAddresses.invalid",
+                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                        ],
+                        'selectForeign' => [
+                            'select' => "{$foreignJoinAlias}.invalid",
+                            'leftJoins' => [
+                                [
+                                    'EntityEmailAddress',
+                                    $foreignJoinMiddleAlias,
+                                    [
+                                        "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
+                                        "{$foreignJoinMiddleAlias}.primary" => 1,
+                                        "{$foreignJoinMiddleAlias}.deleted" => 0,
+                                    ]
+                                ],
+                                [
+                                    'EmailAddress',
+                                    $foreignJoinAlias,
+                                    [
+                                        "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.emailAddressId",
+                                        "{$foreignJoinAlias}.deleted" => 0,
+                                    ]
+                                ]
+                            ],
+                        ],
+                        'where' => [
+                            '= TRUE' => [
+                                'whereClause' => [
+                                    ['emailAddresses.invalid=' => true],
+                                    ['emailAddresses.invalid!=' => null],
+                                ],
+                                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                            ],
+                            '= FALSE' => [
+                                'whereClause' => [
+                                    'OR' => [
+                                        ['emailAddresses.invalid=' => false],
+                                        ['emailAddresses.invalid=' => null],
+                                    ]
+                                ],
+                                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                            ]
+                        ],
+                        'order' => [
+                            'order' => [
+                                ['emailAddresses.invalid', '{direction}'],
+                            ],
+                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                            'additionalSelect' => ['emailAddresses.invalid'],
+                        ],
+                    ],
                 ],
                 'relations' => [
                     'emailAddresses' => [

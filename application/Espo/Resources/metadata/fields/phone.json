@@ -30,6 +30,7 @@
     ],
     "actualFields": [
         "isOptedOut",
+        "isInvalid",
         "",
         "data"
     ],
@@ -42,7 +43,18 @@
             "layoutDefaultSidePanelDisabled": true,
             "mergeDisabled": true,
             "customizationDefaultDisabled": true,
-            "customizationReadOnlyDisabled": true
+            "customizationReadOnlyDisabled": true,
+            "customizationInlineEditDisabledDisabled": true
+        },
+        "isInvalid": {
+            "type": "bool",
+            "notStorable": true,
+            "layoutDetailDisabled": true,
+            "layoutDefaultSidePanelDisabled": true,
+            "mergeDisabled": true,
+            "customizationDefaultDisabled": true,
+            "customizationReadOnlyDisabled": true,
+            "customizationInlineEditDisabledDisabled": true
         }
     },
     "validationList": [

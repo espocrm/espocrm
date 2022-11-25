@@ -329,6 +329,61 @@ class Phone extends Base
                             'additionalSelect' => ['phoneNumbers.optOut'],
                         ],
                     ],
+                    $fieldName .'IsInvalid' => [
+                        'type' => 'bool',
+                        'notStorable' => true,
+                        'select' => [
+                            'select' => 'phoneNumbers.invalid',
+                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                        ],
+                        'selectForeign' => [
+                            'select' => "{$foreignJoinAlias}.invalid",
+                            'leftJoins' => [
+                                [
+                                    'EntityPhoneNumber',
+                                    $foreignJoinMiddleAlias,
+                                    [
+                                        "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
+                                        "{$foreignJoinMiddleAlias}.primary" => 1,
+                                        "{$foreignJoinMiddleAlias}.deleted" => 0,
+                                    ]
+                                ],
+                                [
+                                    'PhoneNumber',
+                                    $foreignJoinAlias,
+                                    [
+                                        "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.phoneNumberId",
+                                        "{$foreignJoinAlias}.deleted" => 0,
+                                    ]
+                                ]
+                            ],
+                        ],
+                        'where' => [
+                            '= TRUE' => [
+                                'whereClause' => [
+                                    ['phoneNumbers.invalid=' => true],
+                                    ['phoneNumbers.invalid!=' => null],
+                                ],
+                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                            ],
+                            '= FALSE' => [
+                                'whereClause' => [
+                                    'OR' => [
+                                        ['phoneNumbers.invalid=' => false],
+                                        ['phoneNumbers.invalid=' => null],
+                                    ]
+                                ],
+                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                            ]
+                        ],
+                        'order' => [
+                            'order' => [
+                                ['phoneNumbers.invalid', '{direction}'],
+                            ],
+                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                            'additionalSelect' => ['phoneNumbers.invalid'],
+                        ],
+                    ],
                     $fieldName . 'Numeric' => $numbericFieldDefs,
                 ],
                 'relations' => [

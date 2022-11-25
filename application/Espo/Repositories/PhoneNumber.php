@@ -280,4 +280,17 @@ class PhoneNumber extends Database implements
 
         $this->save($phoneNumber);
     }
+
+    public function markNumberInvalid(string $number, bool $isInvalid = true): void
+    {
+        $phoneNumber = $this->getByNumber($number);
+
+        if (!$phoneNumber) {
+            return;
+        }
+
+        $phoneNumber->set('invalid', $isInvalid);
+
+        $this->save($phoneNumber);
+    }
 }

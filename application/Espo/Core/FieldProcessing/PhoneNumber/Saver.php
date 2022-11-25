@@ -150,24 +150,36 @@ class Saver implements SaverInterface
         }
 
         if (
-            $entity->has('phoneNumberIsOptedOut')
-            &&
-            (
-                $entity->isNew()
-                ||
+            $entity->has('phoneNumberIsOptedOut') && (
+                $entity->isNew() ||
                 (
-                    $entity->hasFetched('phoneNumberIsOptedOut')
-                    &&
+                    $entity->hasFetched('phoneNumberIsOptedOut') &&
                     $entity->get('phoneNumberIsOptedOut') !== $entity->getFetched('phoneNumberIsOptedOut')
                 )
-            )
+            ) &&
+            $phoneNumberValue
         ) {
-            if ($phoneNumberValue) {
-                $key = $phoneNumberValue;
+            $key = $phoneNumberValue;
 
-                if (isset($hash->$key)) {
-                    $hash->{$key}['optOut'] = $entity->get('phoneNumberIsOptedOut');
-                }
+            if (isset($hash->$key)) {
+                $hash->{$key}['optOut'] = $entity->get('phoneNumberIsOptedOut');
+            }
+        }
+
+        if (
+            $entity->has('phoneNumberIsInvalid') && (
+                $entity->isNew() ||
+                (
+                    $entity->hasFetched('phoneNumberIsInvalid') &&
+                    $entity->get('phoneNumberIsInvalid') !== $entity->getFetched('phoneNumberIsInvalid')
+                )
+            ) &&
+            $phoneNumberValue
+        ) {
+            $key = $phoneNumberValue;
+
+            if (isset($hash->$key)) {
+                $hash->{$key}['invalid'] = $entity->get('phoneNumberIsInvalid');
             }
         }
 
@@ -423,6 +435,10 @@ class Saver implements SaverInterface
                         $phoneNumberNew->set('optOut', (bool) $entity->get('phoneNumberIsOptedOut'));
                     }
 
+                    if ($entity->has('phoneNumberIsInvalid')) {
+                        $phoneNumberNew->set('invalid', (bool) $entity->get('phoneNumberIsInvalid'));
+                    }
+
                     $defaultType = $this->metadata
                         ->get('entityDefs.' .  $entity->getEntityType() . '.fields.phoneNumber.defaultType');
 
@@ -453,6 +469,10 @@ class Saver implements SaverInterface
                     $this->markNumberOptedOut($phoneNumberValue, (bool) $entity->get('phoneNumberIsOptedOut'));
                 }
 
+                if ($entity->has('phoneNumberIsInvalid')) {
+                    $this->markNumberInvalid($phoneNumberValue, (bool) $entity->get('phoneNumberIsInvalid'));
+                }
+
                 $update = $this->entityManager
                     ->getQueryBuilder()
                     ->update()
@@ -472,21 +492,29 @@ class Saver implements SaverInterface
             }
 
             if (
-                $entity->has('phoneNumberIsOptedOut')
-                &&
+                $entity->has('phoneNumberIsOptedOut') &&
                 (
-                    $entity->isNew()
-                    ||
+                    $entity->isNew() ||
                     (
-                        $entity->hasFetched('phoneNumberIsOptedOut')
-                        &&
+                        $entity->hasFetched('phoneNumberIsOptedOut') &&
                         $entity->get('phoneNumberIsOptedOut') !== $entity->getFetched('phoneNumberIsOptedOut')
                     )
                 )
             ) {
                 $this->markNumberOptedOut($phoneNumberValue, (bool) $entity->get('phoneNumberIsOptedOut'));
+            }
 
-                return;
+            if (
+                $entity->has('phoneNumberIsInvalid') &&
+                (
+                    $entity->isNew() ||
+                    (
+                        $entity->hasFetched('phoneNumberIsInvalid') &&
+                        $entity->get('phoneNumberIsInvalid') !== $entity->getFetched('phoneNumberIsInvalid')
+                    )
+                )
+            ) {
+                $this->markNumberInvalid($phoneNumberValue, (bool) $entity->get('phoneNumberIsInvalid'));
             }
 
             return;
@@ -519,6 +547,14 @@ class Saver implements SaverInterface
         $repository = $this->entityManager->getRepository(PhoneNumber::ENTITY_TYPE);
 
         $repository->markNumberOptedOut($number, $isOptedOut);
+    }
+
+    private function markNumberInvalid(string $number, bool $isInvalid = true): void
+    {
+        /** @var PhoneNumberRepository $repository */
+        $repository = $this->entityManager->getRepository(PhoneNumber::ENTITY_TYPE);
+
+        $repository->markNumberInvalid($number, $isInvalid);
     }
 
     private function checkChangeIsForbidden(PhoneNumber $phoneNumber, Entity $entity): bool
