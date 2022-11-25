@@ -31,12 +31,13 @@ namespace Espo\Core\FieldProcessing\Wysiwyg;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    FieldProcessing\Saver as SaverInterface,
-    FieldProcessing\Saver\Params,
-};
+use Espo\Core\FieldProcessing\Saver as SaverInterface;
+use Espo\Core\FieldProcessing\Saver\Params;
+use Espo\Core\ORM\EntityManager;
 
+/**
+ * @implements SaverInterface<Entity>
+ */
 class Saver implements SaverInterface
 {
     private EntityManager $entityManager;

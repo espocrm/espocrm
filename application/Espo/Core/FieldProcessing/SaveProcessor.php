@@ -30,13 +30,9 @@
 namespace Espo\Core\FieldProcessing;
 
 use Espo\Core\ORM\Entity;
-
 use Espo\Core\FieldProcessing\Saver\Params;
-
-use Espo\Core\{
-    InjectableFactory,
-    Utils\Metadata,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 
 /**
  * Processes saving special fields.
@@ -44,12 +40,9 @@ use Espo\Core\{
 class SaveProcessor
 {
     private InjectableFactory $injectableFactory;
-
     private Metadata $metadata;
 
-    /**
-     * @var array<string,Saver[]>
-     */
+    /** @var array<string, Saver<Entity>[]> */
     private $saverListMapCache = [];
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
@@ -59,7 +52,7 @@ class SaveProcessor
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function process(Entity $entity, array $options): void
     {
@@ -71,7 +64,7 @@ class SaveProcessor
     }
 
     /**
-     * @return Saver[]
+     * @return Saver<Entity>[]
      */
     private function getSaverList(string $entityType): array
     {
@@ -91,7 +84,7 @@ class SaveProcessor
     }
 
     /**
-     * @return class-string<Saver>[]
+     * @return class-string<Saver<Entity>>[]
      */
     private function getSaverClassNameList(string $entityType): array
     {
@@ -101,12 +94,13 @@ class SaveProcessor
         $additionalList = $this->metadata
             ->get(['recordDefs', $entityType, 'saverClassNameList']) ?? [];
 
-        /** @var class-string<Saver>[] */
+        /** @var class-string<Saver<Entity>>[] */
         return array_merge($list, $additionalList);
     }
 
     /**
-     * @param class-string<Saver> $className
+     * @param class-string<Saver<Entity>> $className
+     * @return Saver<Entity>
      */
     private function createSaver(string $className): Saver
     {

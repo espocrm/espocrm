@@ -31,36 +31,22 @@ namespace Espo\Core\FieldProcessing\EmailAddress;
 
 use Espo\Entities\EmailAddress;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
-
 use Espo\ORM\Entity;
+use Espo\Core\ApplicationState;
+use Espo\Core\FieldProcessing\Saver as SaverInterface;
+use Espo\Core\FieldProcessing\Saver\Params;
+use Espo\Core\ORM\EntityManager;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    ApplicationState,
-    FieldProcessing\Saver as SaverInterface,
-    FieldProcessing\Saver\Params,
-};
-
+/**
+ * @implements SaverInterface<Entity>
+ */
 class Saver implements SaverInterface
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    private $applicationState;
-
-    private $accessChecker;
-
     public function __construct(
-        EntityManager $entityManager,
-        ApplicationState $applicationState,
-        AccessChecker $accessChecker
-    ) {
-        $this->entityManager = $entityManager;
-        $this->applicationState = $applicationState;
-        $this->accessChecker = $accessChecker;
-    }
+        private EntityManager $entityManager,
+        private ApplicationState $applicationState,
+        private AccessChecker $accessChecker
+    ) {}
 
     public function process(Entity $entity, Params $params): void
     {
@@ -124,7 +110,7 @@ class Saver implements SaverInterface
 
         if (!$entity->isNew()) {
             /** @var EmailAddressRepository $repository */
-            $repository = $this->entityManager->getRepository('EmailAddress');
+            $repository = $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
 
             $previousEmailAddressData = $repository->getEmailAddressData($entity);
         }
@@ -152,14 +138,11 @@ class Saver implements SaverInterface
         }
 
         if (
-            $entity->has('emailAddressIsOptedOut')
-            &&
+            $entity->has('emailAddressIsOptedOut') &&
             (
-                $entity->isNew()
-                ||
+                $entity->isNew() ||
                 (
-                    $entity->hasFetched('emailAddressIsOptedOut')
-                    &&
+                    $entity->hasFetched('emailAddressIsOptedOut') &&
                     $entity->get('emailAddressIsOptedOut') !== $entity->getFetched('emailAddressIsOptedOut')
                 )
             )
@@ -199,8 +182,6 @@ class Saver implements SaverInterface
         $revertData = [];
 
         foreach ($keyList as $key) {
-            $data = $hash->$key;
-
             $new = true;
             $changed = false;
 
@@ -287,7 +268,7 @@ class Saver implements SaverInterface
             $emailAddress = $this->getByAddress($address);
 
             if (!$emailAddress) {
-                $emailAddress = $this->entityManager->getNewEntity('EmailAddress');
+                $emailAddress = $this->entityManager->getNewEntity(EmailAddress::ENTITY_TYPE);
 
                 $emailAddress->set([
                     'name' => $hash->{$address}['emailAddress'],
@@ -446,7 +427,7 @@ class Saver implements SaverInterface
         $entityRepository = $this->entityManager->getRDBRepository($entity->getEntityType());
 
         $emailAddressNew = $this->entityManager
-            ->getRDBRepository('EmailAddress')
+            ->getRDBRepository(EmailAddress::ENTITY_TYPE)
             ->where([
                 'lower' => strtolower($emailAddressValue),
             ])
@@ -455,7 +436,7 @@ class Saver implements SaverInterface
         $isNewEmailAddress = false;
 
         if (!$emailAddressNew) {
-            $emailAddressNew = $this->entityManager->getNewEntity('EmailAddress');
+            $emailAddressNew = $this->entityManager->getNewEntity(EmailAddress::ENTITY_TYPE);
 
             $emailAddressNew->set('name', $emailAddressValue);
 
@@ -506,7 +487,7 @@ class Saver implements SaverInterface
     private function getByAddress(string $address): ?EmailAddress
     {
         /** @var EmailAddressRepository $repository */
-        $repository = $this->entityManager->getRepository('EmailAddress');
+        $repository = $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
 
         return $repository->getByAddress($address);
     }
@@ -514,7 +495,7 @@ class Saver implements SaverInterface
     private function markAddressOptedOut(string $address, bool $isOptedOut = true): void
     {
         /** @var EmailAddressRepository $repository */
-        $repository = $this->entityManager->getRepository('EmailAddress');
+        $repository = $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
 
         $repository->markAddressOptedOut($address, $isOptedOut);
     }
@@ -527,7 +508,7 @@ class Saver implements SaverInterface
 
         $user = $this->applicationState->getUser();
 
-        // @todo Check if not modifed by system.
+        // @todo Check if not modified by system.
 
         return !$this->accessChecker->checkEdit($user, $emailAddress, $entity);
     }

@@ -41,7 +41,7 @@ use Espo\Core\FieldProcessing\Loader\Params;
 interface Loader
 {
     /**
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
      */
     public function process(Entity $entity, Params $params): void;
 }

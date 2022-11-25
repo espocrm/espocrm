@@ -36,37 +36,22 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Mapper\BaseMapper;
 
-use Espo\Core\{
-    ApplicationState,
-    Utils\Metadata,
-    FieldProcessing\Saver as SaverInterface,
-    FieldProcessing\Saver\Params,
-};
+use Espo\Core\ApplicationState;
+use Espo\Core\FieldProcessing\Saver as SaverInterface;
+use Espo\Core\FieldProcessing\Saver\Params;
+use Espo\Core\Utils\Metadata;
 
+/**
+ * @implements SaverInterface<Entity>
+ */
 class Saver implements SaverInterface
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    private $applicationState;
-
-    private $accessChecker;
-
-    private $metadata;
-
     public function __construct(
-        EntityManager $entityManager,
-        ApplicationState $applicationState,
-        AccessChecker $accessChecker,
-        Metadata $metadata
-    ) {
-        $this->entityManager = $entityManager;
-        $this->applicationState = $applicationState;
-        $this->accessChecker = $accessChecker;
-        $this->metadata = $metadata;
-    }
+        private EntityManager $entityManager,
+        private ApplicationState $applicationState,
+        private AccessChecker $accessChecker,
+        private Metadata $metadata
+    ) {}
 
     public function process(Entity $entity, Params $params): void
     {
@@ -131,7 +116,7 @@ class Saver implements SaverInterface
 
         if (!$entity->isNew()) {
             /** @var PhoneNumberRepository $repository */
-            $repository = $this->entityManager->getRepository('PhoneNumber');
+            $repository = $this->entityManager->getRepository(PhoneNumber::ENTITY_TYPE);
 
             $previousPhoneNumberData = $repository->getPhoneNumberData($entity);
         }
@@ -299,7 +284,7 @@ class Saver implements SaverInterface
             $phoneNumber = $this->getByNumber($number);
 
             if (!$phoneNumber) {
-                $phoneNumber = $this->entityManager->getNewEntity('PhoneNumber');
+                $phoneNumber = $this->entityManager->getNewEntity(PhoneNumber::ENTITY_TYPE);
 
                 $phoneNumber->set([
                     'name' => $number,
@@ -430,7 +415,7 @@ class Saver implements SaverInterface
                 $isNewPhoneNumber = false;
 
                 if (!$phoneNumberNew) {
-                    $phoneNumberNew = $this->entityManager->getNewEntity('PhoneNumber');
+                    $phoneNumberNew = $this->entityManager->getNewEntity(PhoneNumber::ENTITY_TYPE);
 
                     $phoneNumberNew->set('name', $phoneNumberValue);
 
@@ -523,7 +508,7 @@ class Saver implements SaverInterface
     private function getByNumber(string $number): ?PhoneNumber
     {
         /** @var PhoneNumberRepository $repository */
-        $repository = $this->entityManager->getRepository('PhoneNumber');
+        $repository = $this->entityManager->getRepository(PhoneNumber::ENTITY_TYPE);
 
         return $repository->getByNumber($number);
     }
@@ -531,7 +516,7 @@ class Saver implements SaverInterface
     private function markNumberOptedOut(string $number, bool $isOptedOut = true): void
     {
         /** @var PhoneNumberRepository $repository */
-        $repository = $this->entityManager->getRepository('PhoneNumber');
+        $repository = $this->entityManager->getRepository(PhoneNumber::ENTITY_TYPE);
 
         $repository->markNumberOptedOut($number, $isOptedOut);
     }
@@ -544,7 +529,7 @@ class Saver implements SaverInterface
 
         $user = $this->applicationState->getUser();
 
-        // @todo Check if not modifed by system.
+        // @todo Check if not modified by system.
 
         return !$this->accessChecker->checkEdit($user, $phoneNumber, $entity);
     }

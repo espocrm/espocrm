@@ -44,6 +44,8 @@ use DateTime;
 
 /**
  * @internal This class should not be removed as it's used by custom entities.
+ *
+ * @implements SaverInterface<Entity>
  */
 class Saver implements SaverInterface
 {

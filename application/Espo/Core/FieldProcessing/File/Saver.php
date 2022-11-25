@@ -31,19 +31,18 @@ namespace Espo\Core\FieldProcessing\File;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    FieldProcessing\Saver as SaverInterface,
-    FieldProcessing\Saver\Params,
-};
+use Espo\Core\FieldProcessing\Saver as SaverInterface;
+use Espo\Core\FieldProcessing\Saver\Params;
+use Espo\Core\ORM\EntityManager;
 
+/**
+ * @implements SaverInterface<Entity>
+ */
 class Saver implements SaverInterface
 {
     private EntityManager $entityManager;
 
-    /**
-     * @var array<string,string[]>
-     */
+    /** @var array<string, string[]>*/
     private $fieldListMapCache = [];
 
     public function __construct(EntityManager $entityManager)

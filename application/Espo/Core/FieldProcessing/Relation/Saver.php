@@ -31,31 +31,23 @@ namespace Espo\Core\FieldProcessing\Relation;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    FieldProcessing\Saver as SaverInterface,
-    FieldProcessing\Saver\Params,
-};
+use Espo\Core\FieldProcessing\Saver as SaverInterface;
+use Espo\Core\FieldProcessing\Saver\Params;
+use Espo\Core\ORM\EntityManager;
 
+/**
+ * @implements SaverInterface<Entity>
+ */
 class Saver implements SaverInterface
 {
     private EntityManager $entityManager;
-
     private LinkMultipleSaver $linkMultipleSaver;
 
-    /**
-     * @var array<string,string[]>
-     */
+    /** @var array<string, string[]> */
     private $manyRelationListMapCache = [];
-
-    /**
-     * @var array<string,string[]>
-     */
+    /** @var array<string, string[]> */
     private $hasOneRelationListMapCache = [];
-
-    /**
-     * @var array<string,string[]>
-     */
+    /** @var array<string, string[]> */
     private $belongsToHasOneRelationListMapCache = [];
 
     public function __construct(

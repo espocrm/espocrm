@@ -34,8 +34,13 @@ use Espo\Core\FieldProcessing\Saver\Params;
 
 /**
  * Processes saving special fields.
+ *
+ * @template TEntity of Entity
  */
 interface Saver
 {
+    /**
+     * @param TEntity $entity
+     */
     public function process(Entity $entity, Params $params): void;
 }

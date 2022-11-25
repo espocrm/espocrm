@@ -29,24 +29,27 @@
 
 namespace Espo\Modules\Crm\Classes\FieldProcessing\Meeting;
 
+use Espo\Entities\Email;
+use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
-
 use Espo\Core\FieldProcessing\Saver;
 use Espo\Core\FieldProcessing\Saver\Params;
 use Espo\Core\Mail\Event\EventFactory;
 
 use ICal\ICal;
 
+/**
+ * @implements Saver<Meeting>
+ */
 class SourceEmailSaver implements Saver
 {
-    private $entityManager;
+    public function __construct(private EntityManager $entityManager)
+    {}
 
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
+    /**
+     * @param Meeting $entity
+     */
     public function process(Entity $entity, Params $params): void
     {
         if (!$entity->isNew()) {
@@ -59,7 +62,7 @@ class SourceEmailSaver implements Saver
             return;
         }
 
-        $email = $this->entityManager->getEntity('Email', $emailId);
+        $email = $this->entityManager->getEntityById(Email::ENTITY_TYPE, $emailId);
 
         if (!$email) {
             return;
