@@ -511,6 +511,30 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
             });
         },
 
+        actionRemoveRelated: function (data) {
+            let id = data.id;
+
+            this.confirm({
+                message: this.translate('removeRecordConfirmation', 'messages'),
+                confirmText: this.translate('Remove'),
+            }, () => {
+                let model = this.collection.get(id);
+
+                Espo.Ui.notify(' ... ');
+
+                model
+                    .destroy()
+                    .then(() => {
+                        Espo.Ui.success(this.translate('Removed'));
+
+                        this.collection.fetch();
+
+                        this.model.trigger('after:unrelate');
+                        this.model.trigger('after:unrelate:' + this.link);
+                    });
+            });
+        },
+
         /**
          * @protected
          * @param {JQueryKeyEventObject} e
