@@ -36,43 +36,32 @@ use Espo\ORM\EntityManager;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\Email;
+use Espo\Core\FieldProcessing\Loader;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\Mail\Event\Event as EspoEvent;
+use Espo\Core\Mail\Event\EventFactory;
+use Espo\Core\Utils\Log;
 
-use Espo\Core\{
-    FieldProcessing\Loader,
-    FieldProcessing\Loader\Params,
-    Mail\Event\Event as EspoEvent,
-    Mail\Event\EventFactory,
-    Utils\Log,
-};
-
+use ICal\Event;
 use ICal\ICal;
 
 use Throwable;
 use stdClass;
 
 /**
- * @implements Loader<\Espo\Entities\Email>
+ * @implements Loader<Email>
  */
 class IcsDataLoader implements Loader
 {
-    private $entityManager;
-
-    private $log;
-
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string, string> */
     private $entityTypeLinkMap = [
         'User' => 'users',
         'Contact' => 'contacts',
         'Lead' => 'leads',
     ];
 
-    public function __construct(EntityManager $entityManager, Log $log)
-    {
-        $this->entityManager = $entityManager;
-        $this->log = $log;
-    }
+    public function __construct(private EntityManager $entityManager, private Log $log)
+    {}
 
     public function process(Entity $entity, Params $params): void
     {
@@ -86,7 +75,7 @@ class IcsDataLoader implements Loader
 
         $ical->initString($icsContents);
 
-        /* @var \ICal\Event|null $event */
+        /* @var ?Event $event */
         $event = $ical->events()[0] ?? null;
 
         if ($event === null) {
