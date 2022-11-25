@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/bool', ['views/fields/base'], function (Dep) {
+define('views/fields/bool', ['views/fields/base', 'ui/select'], function (Dep, /** module:ui/select*/Select) {
 
     /**
      * A boolean field (checkbox).
@@ -41,11 +41,8 @@ define('views/fields/bool', ['views/fields/base'], function (Dep) {
         type: 'bool',
 
         listTemplate: 'fields/bool/list',
-
         detailTemplate: 'fields/bool/detail',
-
         editTemplate: 'fields/bool/edit',
-
         searchTemplate: 'fields/bool/search',
 
         validations: [],
@@ -63,17 +60,19 @@ define('views/fields/bool', ['views/fields/base'], function (Dep) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'search') {
+            if (this.mode === this.MODE_SEARCH) {
                 this.$element.on('change', () => {
                     this.trigger('change');
                 });
+
+                Select.init(this.$element);
             }
         },
 
         fetch: function () {
-            var value = this.$element.get(0).checked;
+            let value = this.$element.get(0).checked;
 
-            var data = {};
+            let data = {};
 
             data[this.name] = value;
 
@@ -81,7 +80,7 @@ define('views/fields/bool', ['views/fields/base'], function (Dep) {
         },
 
         fetchSearch: function () {
-            var type = this.$element.val();
+            let type = this.$element.val();
 
             if (!type) {
                 return;
@@ -107,14 +106,12 @@ define('views/fields/bool', ['views/fields/base'], function (Dep) {
                 };
             }
 
-            var data = {
+            return {
                 type: type,
                 data: {
                     type: type,
                 },
             };
-
-            return data;
         },
 
         getSearchType: function () {
