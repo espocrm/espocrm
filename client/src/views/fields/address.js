@@ -41,19 +41,12 @@ define('views/fields/address', ['views/fields/base', 'views/fields/varchar'], fu
         type: 'address',
 
         listTemplate: 'fields/address/detail',
-
         detailTemplate: 'fields/address/detail',
-
         editTemplate: 'fields/address/edit',
-
         editTemplate1: 'fields/address/edit-1',
-
         editTemplate2: 'fields/address/edit-2',
-
         editTemplate3: 'fields/address/edit-3',
-
         editTemplate4: 'fields/address/edit-4',
-
         searchTemplate: 'fields/address/search',
 
         /**
@@ -82,12 +75,10 @@ define('views/fields/address', ['views/fields/base', 'views/fields/varchar'], fu
             data.ucName = Espo.Utils.upperCaseFirst(this.name);
 
             this.addressPartList.forEach(item => {
-                var value = this.model.get(this[item + 'Field']);
-
-                data[item + 'Value'] = value;
+                data[item + 'Value'] = this.model.get(this[item + 'Field']);
             });
 
-            if (this.mode === 'detail' || this.mode === 'list') {
+            if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
                 data.formattedAddress = this.getFormattedAddress();
 
                 data.isNone = data.formattedAddress === null;
@@ -138,7 +129,7 @@ define('views/fields/address', ['views/fields/base', 'views/fields/varchar'], fu
             var isEmpty = !isNotEmpty;
 
             if (isEmpty) {
-                if (this.mode === 'list') {
+                if (this.mode === this.MODE_LIST) {
                     return '';
                 }
 
@@ -353,7 +344,7 @@ define('views/fields/address', ['views/fields/base', 'views/fields/varchar'], fu
         },
 
         _getTemplateName: function () {
-            if (this.mode === 'edit') {
+            if (this.mode === this.MODE_EDIT) {
                 var prop = 'editTemplate' + this.getAddressFormat().toString();
 
                 if (prop in this) {
@@ -369,7 +360,7 @@ define('views/fields/address', ['views/fields/base', 'views/fields/varchar'], fu
         },
 
         afterRender: function () {
-            if (this.mode === 'edit') {
+            if (this.mode === this.MODE_EDIT) {
                 this.$street = this.$el.find('[data-name="' + this.streetField + '"]');
                 this.$postalCode = this.$el.find('[data-name="' + this.postalCodeField + '"]');
                 this.$state = this.$el.find('[data-name="' + this.stateField + '"]');
