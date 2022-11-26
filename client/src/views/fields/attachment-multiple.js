@@ -152,7 +152,7 @@ function (Dep, FileUpload) {
                 acceptAttribute: this.acceptAttribute,
             }, Dep.prototype.data.call(this));
 
-            if (this.mode === 'edit') {
+            if (this.mode === this.MODE_EDIT) {
                 data.fileSystem = ~this.sourceList.indexOf('FileSystem');
                 data.sourceList = this.sourceList;
             }
@@ -604,7 +604,7 @@ function (Dep, FileUpload) {
         afterAttachmentsUploaded: function () {},
 
         afterRender: function () {
-            if (this.mode === 'edit') {
+            if (this.mode === this.MODE_EDIT) {
                 this.$attachments = this.$el.find('div.attachments');
 
                 let ids = this.model.get(this.idsName) || [];
@@ -649,13 +649,13 @@ function (Dep, FileUpload) {
                 });
             }
 
-            if (this.mode === 'search') {
+            if (this.mode === this.MODE_SEARCH) {
                 let type = this.$el.find('select.search-type').val();
 
                 this.handleSearchType(type);
             }
 
-            if (this.mode === 'detail') {
+            if (this.mode === this.MODE_DETAIL) {
                 if (this.previewSize === 'large') {
                     this.handleResize();
                     this.resizeIsBeingListened = true;
