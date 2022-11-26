@@ -390,7 +390,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
 
                 let rgb = this.hexToRgb(color);
 
-                o.style += '; background-color: rgba('+rgb.r+', '+rgb.g+', '+rgb.b+', 0.05)';
+                o.style += '; background-color: rgba('+rgb.r+', '+rgb.g+', '+rgb.b+', 0.01)';
             }
 
             this.userIdList.forEach(id => {
