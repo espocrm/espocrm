@@ -6,7 +6,8 @@
     },
     "recordViews":{
         "list":"crm:views/meeting/record/list",
-        "detail": "crm:views/meeting/record/detail"
+        "detail": "crm:views/meeting/record/detail",
+        "editSmall": "crm:views/meeting/record/edit-small"
     },
     "modalViews": {
         "detail":"crm:views/meeting/modals/detail"
@@ -76,6 +77,14 @@
                 "view": "crm:views/meeting/record/panels/scheduler",
                 "order": 1
             }
+        ],
+        "editSmall": [
+            {
+                "name": "scheduler",
+                "label": "Scheduler",
+                "view": "crm:views/meeting/record/panels/scheduler",
+                "order": 1
+            }
         ]
     },
     "filterList": [
@@ -103,6 +112,11 @@
     "relationshipPanels": {
         "contacts": {
             "selectHandler": "handlers/select-related/same-account-many"
+        }
+    },
+    "additionalLayouts": {
+        "bottomPanelsEditSmall": {
+            "type": "bottomPanelsEditSmall"
         }
     },
     "dynamicLogic":{
