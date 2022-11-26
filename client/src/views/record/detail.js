@@ -92,7 +92,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          *
          * @typedef module:views/record/detail~cellDefs
          * @type Object
-         * @property {string} [name] A name.
+         * @property {string} [name] A name (usually a field name).
          * @property {string} [view] An overridden field view name.
          * @property {string} [type] An overridden field type.
          * @property {boolean} [readOnly] Read-only.

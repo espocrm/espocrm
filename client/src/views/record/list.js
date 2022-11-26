@@ -316,11 +316,27 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         quickEditDisabled: false,
 
         /**
+         * Column definitions.
+         *
+         * @typedef module:views/record/list~columnDefs
+         * @type {Object}
+         * @property {string} name A name (usually a field name).
+         * @property {string} [view] An overridden field view name.
+         * @property {number} [width] A width in percents.
+         * @property {number} [widthPx] A width in pixels.
+         * @property {boolean} [link] To use `listLink` mode (link to the detail view).
+         * @property {'left'|'right'} [align] An alignment.
+         * @property {string} [type] An overridden field type.
+         * @property {Object.<string, *>} [params] Overridden field parameters.
+         * @property {Object.<string, *>} [options] Field view options.
+         */
+
+        /**
          * A list layout. Can be overridden by an option parameter.
          * If null, then will be loaded from the backend (using the `layoutName` value).
          *
          * @protected
-         * @type {Object[]|null}
+         * @type {module:views/record/list~columnDefs[]|null}
          */
         listLayout: null,
 
