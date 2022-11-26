@@ -66,12 +66,51 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         layoutName: 'detail',
 
         /**
+         * Panel definitions.
+         *
+         * @typedef module:views/record/detail~panelDefs
+         * @type Object
+         * @property {string} [label] A translatable label.
+         * @property {string} [customLabel] A custom label.
+         * @property {string} [name] A name. Useful to be able to show/hide by a name.
+         * @property {'default'|'success'|'danger'|'warning'} [style] A style.
+         * @property {boolean} [tabBreak] Is a tab-break.
+         * @property {string} [tabLabel] A tab label. If starts with `$`, a translation
+         *   with the `tabs` category is used.
+         * @property {module:views/record/detail~rowDefs[]} [rows] Rows.
+         */
+
+        /**
+         * A row.
+         *
+         * @typedef module:views/record/detail~rowDefs
+         * @type Array<module:views/record/detail~cellDefs|false>
+         */
+
+        /**
+         * Cell definitions.
+         *
+         * @typedef module:views/record/detail~cellDefs
+         * @type Object
+         * @property {string} [name] A name.
+         * @property {string} [view] An overridden field view name.
+         * @property {string} [type] An overridden field type.
+         * @property {boolean} [readOnly] Read-only.
+         * @property {boolean} [inlineEditDisabled ] Disable inline edit.
+         * @property {Object.<string, *>} [params] Overridden field parameters.
+         * @property {Object.<string, *>} [options] Field view options.
+         * @property {string} [labelText] A label text (not-translatable).
+         * @property {boolean} [noLabel] No label.
+         * @property {string} [label] A translatable label (using the `fields` category).
+         * @property {1|2|3|4} [span] A width.
+         */
+
+        /**
          * A layout. If null, then will be loaded from the backend (using the `layoutName` value).
          * Can be overridden by an option parameter.
          *
          * @protected
-         * @type {Object[]|null}
-         * @todo Define panelDefs type.
+         * @type {module:views/record/detail~panelDefs[]|null}
          */
         detailLayout: null,
 
