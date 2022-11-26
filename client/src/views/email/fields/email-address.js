@@ -43,11 +43,11 @@ define('views/email/fields/email-address', ['views/fields/base'], function (Dep)
 
             this.$input = this.$el.find('input');
 
-            if (this.mode === 'search' && this.getAcl().check('Email', 'create')) {
+            if (this.mode === this.MODE_SEARCH && this.getAcl().check('Email', 'create')) {
                 this.initSearchAutocomplete();
             }
 
-            if (this.mode === 'search') {
+            if (this.mode === this.MODE_SEARCH) {
                 this.$input.on('input', () => {
                     this.trigger('change');
                 });
