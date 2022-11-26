@@ -121,7 +121,7 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                 acceptAttribute: this.acceptAttribute,
             }, Dep.prototype.data.call(this));
 
-            if (this.mode === 'edit') {
+            if (this.mode === this.MODE_EDIT) {
                 data.sourceList = this.sourceList;
             }
 
@@ -247,7 +247,7 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
         },
 
         afterRender: function () {
-            if (this.mode === 'edit') {
+            if (this.mode === this.MODE_EDIT) {
                 this.$attachment = this.$el.find('div.attachment');
 
                 let name = this.model.get(this.nameName);
@@ -286,13 +286,13 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                 });
             }
 
-            if (this.mode === 'search') {
+            if (this.mode === this.MODE_SEARCH) {
                 let type = this.$el.find('select.search-type').val();
 
                 this.handleSearchType(type);
             }
 
-            if (this.mode === 'detail') {
+            if (this.mode === this.MODE_DETAIL) {
                 if (this.previewSize === 'large') {
                     this.handleResize();
                     this.resizeIsBeingListened = true;
@@ -356,7 +356,7 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                     maxHeight: maxHeight,
                 });
 
-            if (this.mode === 'listLink') {
+            if (this.mode === this.MODE_LIST_LINK) {
                 let link = '#' + this.model.entityType + '/view/' + this.model.id;
 
                 return $('<a>')
