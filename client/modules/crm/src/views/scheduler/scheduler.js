@@ -30,17 +30,17 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
 
     return Dep.extend({
 
-        templateContent: '<div class="timeline"></div>' +
-            '<link href="{{basePath}}client/modules/crm/css/vis.css" rel="stylesheet">',
+        templateContent: `
+            <div class="timeline"></div>
+            <link href="{{basePath}}client/modules/crm/css/vis.css" rel="stylesheet">
+        `,
 
         rangeMarginThreshold: 12 * 3600,
 
         leftMargin: 24 * 3600,
-
         rightMargin: 48 * 3600,
 
         rangeMultiplierLeft: 3,
-
         rangeMultiplierRight: 3,
 
         setup: function () {
@@ -48,15 +48,15 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             this.endField = this.options.endField || 'dateEnd';
             this.assignedUserField = this.options.assignedUserField || 'assignedUser';
 
-            this.colors = Espo.Utils
-                .clone(this.getMetadata().get('clientDefs.Calendar.colors') || {});
+            this.colors = Espo.Utils.clone(
+                this.getMetadata().get('clientDefs.Calendar.colors') || {});
 
             this.colors = _.extend(
                 this.colors,
                 Espo.Utils.clone(this.getHelper().themeManager.getParam('calendarColors') || {}),
             );
 
-            var usersFieldDefault = 'users';
+            let usersFieldDefault = 'users';
 
             if (!this.model.hasLink('users') && this.model.hasLink('assignedUsers')) {
                 usersFieldDefault = 'assignedUsers';
@@ -71,8 +71,8 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
 
             this.Vis = Vis;
 
-            this.listenTo(this.model, 'change', function (m, o) {
-                var isChanged =
+            this.listenTo(this.model, 'change', (m) => {
+                let isChanged =
                     m.hasChanged('isAllDay') ||
                     m.hasChanged(this.startField) ||
                     m.hasChanged(this.endField) ||
@@ -92,7 +92,6 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                         }
 
                         this.showNoData();
-
                         this.trigger('no-data');
 
                         return;
@@ -112,20 +111,21 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                     if (this.noDataShown) {
                         this.reRender();
                     }
-                } else {
-                    if (this.isRemoved()) {
-                        return;
-                    }
 
-                    this.trigger('has-data');
-
-                    this.reRender();
+                    return;
                 }
-            }, this);
 
-            this.once('remove', function () {
+                if (this.isRemoved()) {
+                    return;
+                }
+
+                this.trigger('has-data');
+                this.reRender();
+            });
+
+            this.once('remove', () => {
                 this.destroyTimeline();
-            }, this);
+            });
         },
 
         destroyTimeline: function () {
@@ -149,7 +149,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
         },
 
         afterRender: function () {
-            var $timeline = this.$timeline = this.$el.find('.timeline');
+            let $timeline = this.$timeline = this.$el.find('.timeline');
 
             this.noDataShown = false;
 
@@ -179,14 +179,14 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             }
 
             this.fetch(this.start, this.end, eventList => {
-                var itemsDataSet = new Vis.DataSet(eventList);
+                let itemsDataSet = new Vis.DataSet(eventList);
 
-                var timeline = this.timeline =new Vis.Timeline($timeline.get(0), itemsDataSet, this.groupsDataSet, {
+                let timeline = this.timeline =new Vis.Timeline($timeline.get(0), itemsDataSet, this.groupsDataSet, {
                     dataAttributes: 'all',
                     start: this.start.toDate(),
                     end: this.end.toDate(),
                     moment: date => {
-                        var m = moment(date);
+                        let m = moment(date);
 
                         if (date && date.noTimeZone) {
                             return m;
@@ -243,12 +243,12 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
         },
 
         updateEvent: function () {
-            var eventList = Espo.Utils.cloneDeep(this.busyEventList);
+            let eventList = Espo.Utils.cloneDeep(this.busyEventList);
 
-            var convertedEventList = this.convertEventList(eventList);
+            let convertedEventList = this.convertEventList(eventList);
             this.addEvent(convertedEventList);
 
-            var itemsDataSet = new this.Vis.DataSet(convertedEventList);
+            let itemsDataSet = new this.Vis.DataSet(convertedEventList);
 
             this.timeline.setItems(itemsDataSet);
         },
@@ -266,8 +266,8 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             this.start = null;
             this.end = null;
 
-            var startS = this.model.get(this.startField);
-            var endS = this.model.get(this.endField);
+            let startS = this.model.get(this.startField);
+            let endS = this.model.get(this.endField);
 
             if (this.model.get('isAllDay')) {
                 startS = this.model.get(this.startField + 'Date');
@@ -287,7 +287,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                 this.eventEnd = moment.utc(endS).tz(this.getDateTime().getTimeZone());
             }
 
-            var diff = this.eventEnd.diff(this.eventStart, 'hours');
+            let diff = this.eventEnd.diff(this.eventStart, 'hours');
 
             this.start = this.eventStart.clone();
             this.end = this.eventEnd.clone();
@@ -314,7 +314,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
 
         runFetch: function () {
             this.fetch(this.start, this.end, eventList => {
-                var itemsDataSet = new this.Vis.DataSet(eventList);
+                let itemsDataSet = new this.Vis.DataSet(eventList);
 
                 this.timeline.setItems(itemsDataSet);
             });
@@ -324,10 +324,10 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             from = from.clone().add((-1) * this.leftMargin, 'seconds');
             to = to.clone().add(this.rightMargin, 'seconds');
 
-            var fromString = from.utc().format(this.getDateTime().internalDateTimeFormat);
-            var toString = to.utc().format(this.getDateTime().internalDateTimeFormat);
+            let fromString = from.utc().format(this.getDateTime().internalDateTimeFormat);
+            let toString = to.utc().format(this.getDateTime().internalDateTimeFormat);
 
-            var url =
+            let url =
                 'Activities/action/busyRanges?from=' + fromString + '&to=' + toString +
                 '&userIdList=' + encodeURIComponent(this.userIdList.join(',')) +
                 '&entityType=' + this.model.entityType;
@@ -373,9 +373,9 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
         },
 
         getCurrentItemList: function () {
-            var list = [];
+            let list = [];
 
-            var o = {
+            let o = {
                 start: this.eventStart.clone(),
                 end: this.eventEnd.clone(),
                 type: 'background',
@@ -383,18 +383,18 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                 className: 'event-range',
             };
 
-            var color = this.getColorFromScopeName(this.model.entityType);
+            let color = this.getColorFromScopeName(this.model.entityType);
 
             if (color) {
                 o.style += '; border-color: ' + color;
 
-                var rgb = this.hexToRgb(color);
+                let rgb = this.hexToRgb(color);
 
                 o.style += '; background-color: rgba('+rgb.r+', '+rgb.g+', '+rgb.b+', 0.05)';
             }
 
             this.userIdList.forEach(id => {
-                var c = Espo.Utils.clone(o);
+                let c = Espo.Utils.clone(o);
                 c.group = id;
                 c.id = 'event-' + id;
 
@@ -405,10 +405,10 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
         },
 
         convertEventList: function (list) {
-            var resultList = [];
+            let resultList = [];
 
             list.forEach(item => {
-                var event = this.convertEvent(item);
+                let event = this.convertEvent(item);
 
                 if (!event) {
                     return;
@@ -421,7 +421,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
         },
 
         convertEvent: function (o) {
-            var event;
+            let event;
 
             if (o.isBusyRange) {
                 event = {
@@ -476,12 +476,12 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
         },
 
         initGroupsDataSet: function () {
-            var list = [];
+            let list = [];
 
-            var userIdList = Espo.Utils.clone(this.model.get(this.usersField + 'Ids') || []);
-            var assignedUserId = this.model.get(this.assignedUserField + 'Id');
+            let userIdList = Espo.Utils.clone(this.model.get(this.usersField + 'Ids') || []);
+            let assignedUserId = this.model.get(this.assignedUserField + 'Id');
 
-            var names = this.model.get(this.usersField + 'Names') || {};
+            let names = this.model.get(this.usersField + 'Names') || {};
 
             if (!this.eventAssignedUserIsAttendeeDisabled && assignedUserId) {
                 if (!~userIdList.indexOf(assignedUserId)) {
@@ -511,7 +511,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                     .get(0).outerHTML;
             }
 
-            var avatarHtml = this.getAvatarHtml(id);
+            let avatarHtml = this.getAvatarHtml(id);
 
             if (avatarHtml) {
                 avatarHtml += ' ';
@@ -533,8 +533,8 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                 return '';
             }
 
-            var t;
-            var cache = this.getCache();
+            let t;
+            let cache = this.getCache();
 
             if (cache) {
                 t = cache.get('app', 'timestamp');
@@ -575,14 +575,12 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
         },
 
         getColorFromScopeName: function (scope) {
-            var color = this.getMetadata().get(['clientDefs', scope, 'color']) ||
+            return this.getMetadata().get(['clientDefs', scope, 'color']) ||
                 this.getMetadata().get(['clientDefs', 'Calendar', 'colors', scope]);
-
-            return color;
         },
 
         hexToRgb: function (hex) {
-            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 
             return result ? {
                 r: parseInt(result[1], 16),
