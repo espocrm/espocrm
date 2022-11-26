@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/call/record/row-actions/dashlet', ['views/record/row-actions/view-and-edit'], function (Dep) {
+define('crm:views/call/record/row-actions/dashlet', ['views/record/row-actions/view-and-edit'], function (Dep) {
 
     return Dep.extend({
 
@@ -41,6 +41,7 @@ Espo.define('crm:views/call/record/row-actions/dashlet', ['views/record/row-acti
                         id: this.model.id
                     }
                 });
+
                 actionList.push({
                     action: 'setNotHeld',
                     label: 'Set Not Held',
@@ -49,6 +50,7 @@ Espo.define('crm:views/call/record/row-actions/dashlet', ['views/record/row-acti
                     }
                 });
             }
+
             if (this.options.acl.delete) {
                 actionList.push({
                     action: 'quickRemove',
@@ -63,5 +65,4 @@ Espo.define('crm:views/call/record/row-actions/dashlet', ['views/record/row-acti
             return actionList;
         }
     });
-
 });

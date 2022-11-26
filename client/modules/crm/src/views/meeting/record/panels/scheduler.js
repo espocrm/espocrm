@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/record/panels/scheduler', 'views/record/panels/bottom', function (Dep) {
+define('crm:views/meeting/record/panels/scheduler', ['views/record/panels/bottom'], function (Dep) {
 
     return Dep.extend({
 
@@ -44,23 +44,25 @@ define('crm:views/meeting/record/panels/scheduler', 'views/record/panels/bottom'
                 model: this.model,
             });
 
-            this.once('after:render', function () {
-                if (this.disabled) return;
+            this.once('after:render', () => {
+                if (this.disabled) {
+                    return;
+                }
+
                 this.getView('scheduler').render();
                 this.getView('scheduler').notToRender = false;
-            }, this);
+            });
 
             if (this.defs.disabled) {
-                this.once('show', function () {
+                this.once('show', () => {
                     this.getView('scheduler').render();
                     this.getView('scheduler').notToRender = false;
-                }, this);
+                });
             }
         },
 
         actionRefresh: function () {
             this.getView('scheduler').reRender();
         },
-
     });
 });

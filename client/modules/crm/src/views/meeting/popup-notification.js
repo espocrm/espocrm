@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/popup-notification', 'views/popup-notification', function (Dep) {
+define('crm:views/meeting/popup-notification', ['views/popup-notification'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,9 +42,9 @@ define('crm:views/meeting/popup-notification', 'views/popup-notification', funct
             if (this.notificationData.entityType) {
                 this.wait(true);
 
-                this.getModelFactory().create(this.notificationData.entityType, function (model) {
-
+                this.getModelFactory().create(this.notificationData.entityType, (model) => {
                     var dateAttribute = 'dateStart';
+
                     if (this.notificationData.entityType === 'Task') {
                         dateAttribute = 'dateEnd';
                     }
@@ -58,32 +58,25 @@ define('crm:views/meeting/popup-notification', 'views/popup-notification', funct
                         mode: 'detail',
                         el: this.options.el + ' .field[data-name="'+dateAttribute+'"]',
                         defs: {
-                            name: dateAttribute
+                            name: dateAttribute,
                         },
-                        readOnly: true
+                        readOnly: true,
                     });
 
                     this.wait(false);
-                }, this);
+                });
             }
         },
 
         data: function () {
             return _.extend({
                 header: this.translate(this.notificationData.entityType, 'scopeNames'),
-                dateAttribute: this.dateAttribute
+                dateAttribute: this.dateAttribute,
             }, Dep.prototype.data.call(this));
         },
 
         onCancel: function () {
-            $.ajax({
-                url: 'Activities/action/removePopupNotification',
-                type: 'POST',
-                data: JSON.stringify({
-                    id: this.notificationId
-                })
-            });
+            Espo.Ajax.postRequest('Activities/action/removePopupNotification', {id: this.notificationId});
         },
-
     });
 });
