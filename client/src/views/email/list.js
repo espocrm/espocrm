@@ -244,8 +244,6 @@ define('views/email/list', ['views/list'], function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.once('remove', () => $(document).off('dragover.' + this.cid));
-
             this.addMenuItem('dropdown', false);
 
             if (this.getAcl().checkScope('EmailAccountScope')) {
