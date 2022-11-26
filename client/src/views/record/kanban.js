@@ -305,7 +305,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.buildRows();
 
-            this.once('remove', () => {
+            this.on('remove', () => {
                 $(window).off('resize.kanban-a-' + this.cid);
                 $(window).off('scroll.kanban-' + this.cid);
                 $(window).off('resize.kanban-' + this.cid);

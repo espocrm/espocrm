@@ -224,7 +224,7 @@ function (Dep, FileUpload) {
                 this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};
             });
 
-            this.once('remove', () => {
+            this.on('remove', () => {
                 if (this.resizeIsBeingListened) {
                     $(window).off('resize.' + this.cid);
                 }

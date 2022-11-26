@@ -790,7 +790,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 controlSticking();
             });
 
-            this.once('remove', () => {
+            this.on('remove', () => {
                 $scrollable.off('scroll.list-' + this.cid);
                 $window.off('resize.list-' + this.cid);
             });

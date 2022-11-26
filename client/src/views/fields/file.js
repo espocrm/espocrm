@@ -235,7 +235,7 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                 this.acceptAttribute = this.accept.join(', ');
             }
 
-            this.once('remove', () => {
+            this.on('remove', () => {
                 if (this.resizeIsBeingListened) {
                     $(window).off('resize.' + this.cid);
                 }

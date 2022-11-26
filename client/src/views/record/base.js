@@ -591,7 +591,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
 
             this.dynamicLogicDefs = this.options.dynamicLogicDefs || this.dynamicLogicDefs;
 
-            this.once('remove', () => {
+            this.on('remove', () => {
                 if (this.isChanged) {
                     this.resetModelChanges();
                 }
