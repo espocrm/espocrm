@@ -59,6 +59,9 @@
         "ext-pcntl": "*",
         "ext-posix": "*"
     },
+    "replace": {
+        "phpspec/prophecy": "*"
+    },
     "autoload": {
         "psr-4": {
             "Espo\\": "application/Espo/",
