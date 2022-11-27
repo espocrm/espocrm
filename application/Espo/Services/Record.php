@@ -30,25 +30,15 @@
 namespace Espo\Services;
 
 use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\ORM\{
-    Entity,
-    Collection,
-};
-
-use Espo\Core\{
-    Exceptions\ForbiddenSilent,
-    Acl\Table as AclTable,
-    Utils\Util,
-    Record\Service as RecordService,
-};
-
+use Espo\ORM\Collection;
+use Espo\ORM\Entity;
+use Espo\Core\Acl\Table as AclTable;
+use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\Record\Service as RecordService;
+use Espo\Core\Utils\Util;
+use Espo\Tools\Export\Export as ExportTool;
+use Espo\Tools\Export\Params as ExportParams;
 use Espo\Core\Di;
-
-use Espo\Tools\{
-    Export\Export as ExportTool,
-    Export\Params as ExportParams,
-};
 
 use stdClass;
 

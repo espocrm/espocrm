@@ -31,13 +31,9 @@ namespace Espo\Core\Api;
 
 use Espo\Core\Exceptions\HasBody;
 
-use Espo\Core\{
-    Api\Request,
-    Api\Response,
-    Exceptions\HasLogMessage,
-    Utils\Log,
-    Utils\Config,
-};
+use Espo\Core\Exceptions\HasLogMessage;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
 
 use Throwable;
 
@@ -46,9 +42,7 @@ use Throwable;
  */
 class ErrorOutput
 {
-    /**
-     * @var array<int,string>
-     */
+    /** @var array<int, string> */
     private $errorDescriptions = [
         400 => 'Bad Request',
         401 => 'Unauthorized',
@@ -59,9 +53,7 @@ class ErrorOutput
         503 => 'Service Unavailable',
     ];
 
-    /**
-     * @var int[]
-     */
+    /** @var int[] */
     private $allowedStatusCodeList = [
         200,
         201,
@@ -81,15 +73,8 @@ class ErrorOutput
         'PDOException',
     ];
 
-    private Log $log;
-
-    private Config $config;
-
-    public function __construct(Log $log, Config $config)
-    {
-        $this->log = $log;
-        $this->config = $config;
-    }
+    public function __construct(private Log $log, private Config $config)
+    {}
 
     public function process(
         Request $request,
