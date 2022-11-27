@@ -255,6 +255,18 @@ define('email-helper', [], function () {
             attributes.repliedId = model.id;
             attributes.inReplyTo = model.get('messageId');
 
+
+            let toAddressList = (model.get('to') || '').split(';');
+            let userPersonalEmailAddressList = this.getUser().get('userEmailAddressList') || [];
+
+            for (let address of userPersonalEmailAddressList) {
+                if (toAddressList.includes(address)) {
+                    attributes.from = address;
+
+                    break;
+                }
+            }
+
             this.addReplyBodyAttributes(model, attributes);
 
             return attributes;
