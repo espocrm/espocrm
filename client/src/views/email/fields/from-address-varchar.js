@@ -43,7 +43,7 @@ define(
             this.erasedPlaceholder = 'ERASED:';
 
             this.on('render', () => {
-                if (this.mode === 'search') {
+                if (this.mode === this.MODE_SEARCH) {
                     return;
                 }
 
@@ -108,15 +108,15 @@ define(
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'search' && this.getAcl().check('Email', 'create')) {
+            if (this.mode === this.MODE_SEARCH && this.getAcl().check('Email', 'create')) {
                 EmailAddress.prototype.initSearchAutocomplete.call(this);
             }
 
-            if (this.mode === 'edit' && this.getAcl().check('Email', 'create')) {
+            if (this.mode === this.MODE_EDIT && this.getAcl().check('Email', 'create')) {
                 EmailAddress.prototype.initSearchAutocomplete.call(this);
             }
 
-            if (this.mode === 'search') {
+            if (this.mode === this.MODE_SEARCH) {
                 this.$input.on('input', () => {
                     this.trigger('change');
                 });
@@ -146,7 +146,7 @@ define(
         },
 
         getValueForDisplay: function () {
-            if (this.mode === 'detail') {
+            if (this.mode === this.MODE_DETAIL) {
                 var address = this.model.get(this.name);
 
                 return this.getDetailAddressHtml(address);
