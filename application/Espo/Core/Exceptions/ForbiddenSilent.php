@@ -29,10 +29,12 @@
 
 namespace Espo\Core\Exceptions;
 
-class ForbiddenSilent extends Forbidden
+use Espo\Core\Utils\Log;
+
+class ForbiddenSilent extends Forbidden implements HasLogLevel
 {
-    /**
-     * @var string
-     */
-    public $logLevel = 'notice';
+    public function getLogLevel(): string
+    {
+        return Log::LEVEL_NOTICE;
+    }
 }

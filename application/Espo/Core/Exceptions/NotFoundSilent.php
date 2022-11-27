@@ -29,10 +29,12 @@
 
 namespace Espo\Core\Exceptions;
 
-class NotFoundSilent extends NotFound
+use Espo\Core\Utils\Log;
+
+class NotFoundSilent extends NotFound implements HasLogLevel
 {
-    /**
-     * @var string
-     */
-    public $logLevel = 'notice';
+    public function getLogLevel(): string
+    {
+        return Log::LEVEL_NOTICE;
+    }
 }

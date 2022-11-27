@@ -29,10 +29,12 @@
 
 namespace Espo\Core\Exceptions;
 
-class ConflictSilent extends Conflict
+use Espo\Core\Utils\Log;
+
+class ConflictSilent extends Conflict implements HasLogLevel
 {
-    /**
-     * @var string
-     */
-    public $logLevel = 'notice';
+    public function getLogLevel(): string
+    {
+        return Log::LEVEL_NOTICE;
+    }
 }

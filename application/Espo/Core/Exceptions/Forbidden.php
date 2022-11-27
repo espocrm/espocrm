@@ -39,10 +39,7 @@ class Forbidden extends Exception implements HasBody
      */
     protected $code = 403;
 
-    /**
-     * @var ?string
-     */
-    private $body = null;
+    private ?string $body = null;
 
     final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
     {

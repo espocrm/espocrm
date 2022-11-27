@@ -29,10 +29,12 @@
 
 namespace Espo\Core\Exceptions;
 
-class ErrorSilent extends Error
+use Espo\Core\Utils\Log;
+
+class ErrorSilent extends Error implements HasLogLevel
 {
-    /**
-     * @var string
-     */
-    public $logLevel = 'notice';
+    public function getLogLevel(): string
+    {
+        return Log::LEVEL_NOTICE;
+    }
 }

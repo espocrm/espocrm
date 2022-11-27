@@ -31,6 +31,7 @@ namespace Espo\Core\Api;
 
 use Espo\Core\Exceptions\HasBody;
 
+use Espo\Core\Exceptions\HasLogLevel;
 use Espo\Core\Exceptions\HasLogMessage;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
@@ -115,15 +116,13 @@ class ErrorOutput
             $this->processRoute($route, $request, $exception);
         }
 
-        $logLevel = 'error';
+        $logLevel = $exception instanceof HasLogLevel ?
+            $exception->getLogLevel() :
+            Log::LEVEL_ERROR;
 
         $messageLineFile =
             'line: ' . $exception->getLine() . ', ' .
             'file: ' . $exception->getFile();
-
-        if (property_exists($exception, 'logLevel') && $exception->logLevel) {
-            $logLevel = $exception->logLevel;
-        }
 
         $logMessageItemList = [];
 

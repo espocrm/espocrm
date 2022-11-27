@@ -33,10 +33,7 @@ use Throwable;
 
 class Error extends InternalServerError implements HasBody
 {
-    /**
-     * @var ?string
-     */
-    private $body = null;
+    private ?string $body = null;
 
     final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
     {

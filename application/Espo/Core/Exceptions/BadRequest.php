@@ -34,15 +34,9 @@ use Exception;
 
 class BadRequest extends Exception implements HasBody
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $code = 400;
-
-    /**
-     * @var ?string
-     */
-    protected $body = null;
+    protected ?string $body = null;
 
     final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
     {

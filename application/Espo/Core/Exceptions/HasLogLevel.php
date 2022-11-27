@@ -27,14 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils;
+namespace Espo\Core\Exceptions;
 
-use Monolog\Logger as MonologLogger;
-
-class Log extends MonologLogger
+interface HasLogLevel
 {
-    public const LEVEL_DEBUG = 'debug';
-    public const LEVEL_NOTICE = 'notice';
-    public const LEVEL_WARNING = 'warning';
-    public const LEVEL_ERROR = 'error';
+    public function getLogLevel(): string;
 }
