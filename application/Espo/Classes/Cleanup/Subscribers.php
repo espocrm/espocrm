@@ -132,8 +132,6 @@ class Subscribers implements Cleanup
             )
             ->build();
 
-        print_r($query);
-
         $this->entityManager->getQueryExecutor()->execute($query);
     }
 }
