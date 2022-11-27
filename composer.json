@@ -25,7 +25,6 @@
         "laminas/laminas-ldap": "2.*",
         "laminas/laminas-servicemanager": "^3.11",
         "laminas/laminas-crypt": "^3.8",
-        "laminas/laminas-zendframework-bridge": "^1.4",
         "monolog/monolog": "2.*",
         "yzalis/identicon": "*",
         "zordius/lightncandy": "dev-espo#v1.2.5e",
@@ -69,7 +68,8 @@
             "Espo\\Modules\\": "custom/Espo/Modules/"
         },
         "files": [
-            "application/Espo/Resources/defaults/tcpdf-config.php"
+            "application/Espo/Resources/defaults/tcpdf-config.php",
+            "application/Espo/Resources/defaults/class-aliases.php"
         ]
     },
     "autoload-dev": {
