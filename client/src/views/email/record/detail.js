@@ -80,6 +80,10 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            if (this.model.get('status') === 'Archived') {
+                this.shortcutKeyCtrlEnterAction = 'save';
+            }
+
             this.addButtonEdit({
                 name: 'send',
                 action: 'send',
