@@ -1,6 +1,5 @@
 [
     {
-        "label": "Main",
         "rows": [
             [
                 {"name":"emailAddress"},
@@ -18,10 +17,11 @@
                 {"name":"addAllTeamUsers"},
                 false
             ]
-        ]
+        ],
+        "tabBreak": true,
+        "tabLabel": "$label:Main"
     },
     {
-        "label": "IMAP",
         "rows": [
             [{"name": "useImap"}, {"name":"fetchSince"}],
             [
@@ -40,7 +40,9 @@
                 {"name":"groupEmailFolder"}, {"name":"sentFolder"}
             ],
             [{"name": "testConnection", "customLabel": null, "view": "views/inbound-email/fields/test-connection"}, false]
-        ]
+        ],
+        "tabBreak": true,
+        "tabLabel": "$label:IMAP"
     },
     {
         "label": "Actions",
@@ -68,7 +70,6 @@
         ]
     },
     {
-        "label": "SMTP",
         "rows": [
             [{"name": "useSmtp"}, false],
             [{"name": "smtpIsShared"}, {"name": "smtpIsForMassEmail"}],
@@ -80,6 +81,8 @@
             [
                 {"name": "smtpTestSend", "customLabel": null, "view": "views/inbound-email/fields/test-send"}, false
             ]
-        ]
+        ],
+        "tabBreak": true,
+        "tabLabel": "$label:SMTP"
     }
 ]

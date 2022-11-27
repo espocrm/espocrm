@@ -1,6 +1,5 @@
 [
     {
-        "label":"Main",
         "rows":[
             [
                 {"name":"emailAddress"},
@@ -10,10 +9,11 @@
                 {"name":"name"},
                 false
             ]
-        ]
+        ],
+        "tabBreak": true,
+        "tabLabel": "$label:Main"
     },
     {
-        "label":"IMAP",
         "rows":[
             [{"name": "useImap"}, {"name":"fetchSince"}],
             [
@@ -37,10 +37,11 @@
             [
                 {"name": "testConnection", "customLabel": null, "view": "views/email-account/fields/test-connection"}, false
             ]
-        ]
+        ],
+        "tabBreak": true,
+        "tabLabel": "$label:IMAP"
     },
     {
-        "label":"SMTP",
         "rows": [
             [{"name": "useSmtp"}, false],
             [{"name": "smtpHost"}, {"name": "smtpSecurity"}],
@@ -51,6 +52,8 @@
             [
                 {"name": "smtpTestSend", "customLabel": null, "view": "views/email-account/fields/test-send"}, false
             ]
-        ]
+        ],
+        "tabBreak": true,
+        "tabLabel": "$label:SMTP"
     }
 ]
