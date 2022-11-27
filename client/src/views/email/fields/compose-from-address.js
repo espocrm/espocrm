@@ -26,12 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/compose-from-address', ['views/fields/base'], function (Dep) {
+define('views/email/fields/compose-from-address', ['views/fields/base', 'ui/select'],
+function (Dep, /** module:ui/select*/Select) {
 
     return Dep.extend({
 
         detailTemplate: 'email/fields/email-address-varchar/detail',
-
         editTemplate: 'email/fields/compose-from-address/edit',
 
         data: function () {
@@ -59,6 +59,10 @@ define('views/email/fields/compose-from-address', ['views/fields/base'], functio
             this.idHash = this.model.get('idHash') || {};
 
             this.list = this.getUser().get('emailAddressList') || [];
+        },
+
+        afterRenderEdit: function () {
+            Select.init(this.$element);
         },
 
         getValueForDisplay: function () {
