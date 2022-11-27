@@ -21,7 +21,7 @@
         "slim/slim": "^4.7",
         "slim/psr7": "^1",
         "dragonmantank/cron-expression": "3.0.*",
-        "laminas/laminas-mail": "2.15.*",
+        "laminas/laminas-mail": "2.20.*",
         "laminas/laminas-ldap": "2.*",
         "laminas/laminas-servicemanager": "^3.11",
         "laminas/laminas-crypt": "^3.8",
@@ -55,7 +55,9 @@
         "ext-bcmath": "*",
         "ext-zmq": "*",
         "ext-ldap": "*",
-        "ext-fileinfo": "*"
+        "ext-fileinfo": "*",
+        "ext-pcntl": "*",
+        "ext-posix": "*"
     },
     "autoload": {
         "psr-4": {
