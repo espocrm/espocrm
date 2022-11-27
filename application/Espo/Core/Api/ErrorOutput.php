@@ -121,7 +121,7 @@ class ErrorOutput
             'line: ' . $exception->getLine() . ', ' .
             'file: ' . $exception->getFile();
 
-        if (!empty($exception->logLevel)) {
+        if (property_exists($exception, 'logLevel') && $exception->logLevel) {
             $logLevel = $exception->logLevel;
         }
 

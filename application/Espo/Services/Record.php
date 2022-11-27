@@ -330,10 +330,6 @@ class Record extends RecordService implements
      */
     protected function getConvertCurrencyFieldList()
     {
-        if (isset($this->convertCurrencyFieldList)) {
-            return $this->convertCurrencyFieldList;
-        }
-
         $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($this->entityType, 'edit');
 
         $list = [];
