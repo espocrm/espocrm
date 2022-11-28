@@ -225,6 +225,12 @@ function (Dep, /** module:ui/select*/Select) {
                 this.removePhoneNumber($block);
 
                 this.trigger('change');
+
+                let $last = this.$el.find('.phone-number').last();
+
+                if ($last.length) {
+                    $last[0].focus({preventScroll: true});
+                }
             },
             'change input.phone-number': function (e) {
                 let $input = $(e.currentTarget);

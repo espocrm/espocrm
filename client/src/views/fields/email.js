@@ -209,6 +209,12 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
                 let $block = $(e.currentTarget).closest('div.email-address-block');
 
                 this.removeEmailAddress($block);
+
+                let $last = this.$el.find('.email-address').last();
+
+                if ($last.length) {
+                    $last[0].focus({preventScroll: true});
+                }
             },
             'change input.email-address': function (e) {
                 let $input = $(e.currentTarget);

@@ -346,6 +346,8 @@ define('views/fields/link-multiple', ['views/fields/base', 'helpers/record-modal
                     let id = $(e.currentTarget).attr('data-id');
 
                     this.deleteLink(id);
+
+                    this.$element.get(0).focus({preventScroll: true});
                 };
             }
         },
