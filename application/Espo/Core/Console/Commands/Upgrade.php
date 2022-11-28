@@ -359,7 +359,7 @@ class Upgrade implements Command
         foreach ($stepList as $stepName) {
             $this->displayStep($stepName);
 
-            $command = $phpExecutablePath . " command.php upgrade-step --step=". ucfirst($stepName) .
+            $command = $phpExecutablePath . " command.php upgrade-step --step=" . ucfirst($stepName) .
                 " --id=" . $upgradeId;
 
             /** @var string $shellResult */
@@ -369,9 +369,9 @@ class Upgrade implements Command
                 try {
                     $this->log->error('Upgrade Error: ' . $shellResult);
                 }
-                catch (Throwable $t) {}
+                catch (Throwable) {}
 
-                throw new Error($shellResult);
+                throw new Error($shellResult ?? 'Unknown error on shell_exec.');
             }
         }
     }
