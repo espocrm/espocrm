@@ -62,7 +62,9 @@ function (Dep, /** module:ui/select*/Select) {
         },
 
         afterRenderEdit: function () {
-            Select.init(this.$element);
+            if (this.$element.length) {
+                Select.init(this.$element);
+            }
         },
 
         getValueForDisplay: function () {
