@@ -51,6 +51,8 @@ function (Dep, /** module:ui/select*/Select, moment) {
 
                 this.addItemHtml(item);
                 this.trigger('change');
+
+                this.focusOnButton();
             },
             'click [data-action="removeReminder"]': function (e) {
                 let $reminder = $(e.currentTarget).closest('.reminder');
@@ -59,6 +61,8 @@ function (Dep, /** module:ui/select*/Select, moment) {
                 $reminder.remove();
 
                 this.reminderList.splice(index, 1);
+
+                this.focusOnButton();
             },
         },
 
@@ -102,6 +106,12 @@ function (Dep, /** module:ui/select*/Select, moment) {
                     this.addItemHtml(item);
                 });
             }
+        },
+
+        focusOnButton: function () {
+            this.$el.find('button[data-action="addReminder"]')
+                .get(0)
+                .focus({preventScroll: true});
         },
 
         updateType: function (type, index) {
