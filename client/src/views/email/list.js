@@ -142,6 +142,12 @@ define('views/email/list', ['views/list'], function (Dep) {
         initDraggable: function (fromIndex) {
             fromIndex = fromIndex || 0;
 
+            let isTouchDevise =  ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+
+            if (isTouchDevise) {
+                return;
+            }
+
             let $container = this.$el.find('.list-container > .list');
 
             const recordView = this.getRecordView();
