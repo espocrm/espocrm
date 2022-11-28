@@ -29,18 +29,16 @@
 
 namespace Espo\Core\Console\Commands;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Application,
-    Upgrades\UpgradeManager,
-    Utils\Util,
-    Utils\File\Manager as FileManager,
-    Utils\Config,
-    Utils\Log,
-    Console\Command,
-    Console\Command\Params,
-    Console\IO,
-};
+use Espo\Core\Application;
+use Espo\Core\Console\Command;
+use Espo\Core\Console\Command\Params;
+use Espo\Core\Console\IO;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Upgrades\UpgradeManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Util;
 
 use Symfony\Component\Process\PhpExecutableFinder;
 
@@ -84,9 +82,7 @@ class Upgrade implements Command
     ];
 
     private FileManager $fileManager;
-
     private Config $config;
-
     private Log $log;
 
     public function __construct(FileManager $fileManager, Config $config, Log $log)
