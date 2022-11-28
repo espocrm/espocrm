@@ -371,7 +371,7 @@ class Upgrade implements Command
                 }
                 catch (Throwable) {}
 
-                throw new Error($shellResult ?? 'Unknown error on shell_exec.');
+                throw new Error($shellResult ?: 'Unknown error on shell_exec.');
             }
         }
     }
