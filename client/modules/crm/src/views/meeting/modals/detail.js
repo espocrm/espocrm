@@ -278,23 +278,15 @@ define('crm:views/meeting/modals/detail', ['views/modals/detail'], function (Dep
                 return false;
             }
 
-            if (!this.getAcl().checkModel(this.model, 'edit') || !this.getAcl().checkScope('Email', 'create')) {
+            if (!this.getAcl().checkModel(this.model, 'edit')) {
                 return false;
             }
 
-            var userIdList = this.model.getLinkMultipleIdList('users');
-            var contactIdList = this.model.getLinkMultipleIdList('contacts');
-            var leadIdList = this.model.getLinkMultipleIdList('leads');
+            let userIdList = this.model.getLinkMultipleIdList('users');
+            let contactIdList = this.model.getLinkMultipleIdList('contacts');
+            let leadIdList = this.model.getLinkMultipleIdList('leads');
 
             if (!contactIdList.length && !leadIdList.length && !userIdList.length) {
-                return false;
-            }
-
-            if (
-                !contactIdList.length && !leadIdList.length &&
-                userIdList.length === 1 && userIdList[0] === this.getUser().id &&
-                this.model.getLinkMultipleColumn('users', 'status', this.getUser().id) === 'Accepted'
-            ) {
                 return false;
             }
 
@@ -302,26 +294,16 @@ define('crm:views/meeting/modals/detail', ['views/modals/detail'], function (Dep
         },
 
         actionSendInvitations: function () {
-            this.confirm(this.translate('confirmation', 'messages'), () => {
-                this.hideActionItem('sendInvitations');
-                this.notify('Sending...');
+            Espo.Ui.notify(' ... ');
 
-                Espo.Ajax
-                    .postRequest(this.model.entityType + '/action/sendInvitations', {
-                        id: this.model.id,
-                    })
-                    .then(result => {
-                        if (result) {
-                            this.notify('Sent', 'success');
-                        } else {
-                            Espo.Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
-                        }
+            this.createView('dialog', 'crm:views/meeting/modals/send-invitations', {
+                model: this.model,
+            }).then(view => {
+                Espo.Ui.notify(false);
 
-                        this.showActionItem('sendInvitations');
-                    })
-                    .catch(() => {
-                        this.showActionItem('sendInvitations');
-                    });
+                view.render();
+
+                this.listenToOnce(view, 'sent', () => this.model.fetch());
             });
         },
     });
