@@ -115,6 +115,8 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
                 let value = $(e.currentTarget).attr('data-value').toString();
 
                 this.removeValue(value);
+
+                this.focusOnElement();
             },
             'click [data-action="showAddModal"]': function () {
                 this.actionAddItem();
@@ -174,6 +176,22 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
 
             if (this.params.allowCustomOptions || !this.params.options) {
                 this.allowCustomOptions = true;
+            }
+        },
+
+        focusOnElement: function () {
+            let $button = this.$el.find('button[data-action="showAddModal"]');
+
+            if ($button[0]) {
+                $button[0].focus({preventScroll: true});
+
+                return;
+            }
+
+            let $input = this.$el.find('input');
+
+            if ($input[0]) {
+                $input[0].focus({preventScroll: true});
             }
         },
 
@@ -325,6 +343,8 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
                         let value = $select.val().toString();
 
                         this.addValueFromUi(value);
+
+                        this.focusOnElement();
                     });
 
                     $select.on('input', () => this.controlAddItemButton());
