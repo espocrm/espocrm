@@ -105,7 +105,7 @@ define('views/email/list', ['views/list'], function (Dep) {
 
                         let $target = $(e.target);
 
-                        $target.removeClass('active')
+                        $target.removeClass('active');
                         $target.find('a').css('pointer-events', '');
                     },
                     drop: (e, ui) => {
@@ -125,11 +125,11 @@ define('views/email/list', ['views/list'], function (Dep) {
 
                         this.onDrop(folderId, id);
 
+                        $target.removeClass('active');
                         $target.addClass('success');
 
                         setTimeout(() => {
                             $target.removeClass('success');
-                            $target.removeClass('active');
                         }, 1000);
                     },
                 });
