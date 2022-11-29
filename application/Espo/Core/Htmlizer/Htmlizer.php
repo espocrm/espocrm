@@ -30,6 +30,7 @@
 namespace Espo\Core\Htmlizer;
 
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Entities\Attachment;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Json;
@@ -187,14 +188,14 @@ class Htmlizer
 
                     assert($this->entityManager !== null);
 
-                    $attachment = $this->entityManager->getEntityById('Attachment', $id);
+                    $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
 
                     if (!$attachment) {
                         return '';
                     }
 
                     /** @var AttachmentRepository $repository */
-                    $repository = $this->entityManager->getRepository('Attachment');
+                    $repository = $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
 
                     return $repository->getFilePath($attachment);
                 },
@@ -461,8 +462,8 @@ class Htmlizer
                 $relationType = $entity->getRelationType($relation);
 
                 if (
-                    $relationType === 'belongsTo' ||
-                    $relationType === 'belongsToParent'
+                    $relationType === Entity::BELONGS_TO ||
+                    $relationType === Entity::BELONGS_TO_PARENT
                 ) {
                     $relatedEntity = $this->entityManager
                         ->getRDBRepository($entity->getEntityType())
