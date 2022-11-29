@@ -30,31 +30,22 @@
 namespace Espo\Core\Htmlizer;
 
 use Espo\Core\ORM\Entity as CoreEntity;
-
 use Espo\Repositories\Attachment as AttachmentRepository;
-
 use Espo\Core\Exceptions\Error;
-
 use Espo\Core\Utils\Json;
-
-use Espo\Core\{
-    Utils\File\Manager as FileManager,
-    Utils\DateTime,
-    Utils\NumberUtil,
-    Utils\Config,
-    Utils\Language,
-    Utils\Metadata,
-    Utils\Log,
-    ServiceFactory,
-    Acl,
-    InjectableFactory,
-};
-
-use Espo\ORM\{
-    Entity,
-    EntityManager,
-    Collection,
-};
+use Espo\Core\Acl;
+use Espo\Core\InjectableFactory;
+use Espo\Core\ServiceFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\NumberUtil;
+use Espo\ORM\Collection;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
 use LightnCandy\LightnCandy as LightnCandy;
 
@@ -73,25 +64,15 @@ class Htmlizer
      * @phpstan-ignore-next-line
      */
     private $fileManager;
-
     private $dateTime;
-
     private $number;
-
     private $config;
-
     private $acl;
-
     private $entityManager;
-
     private $metadata;
-
     private $language;
-
     private $serviceFactory;
-
     private $log;
-
     private $injectableFactory;
 
     public function __construct(
@@ -275,7 +256,7 @@ class Htmlizer
 
         if ($this->acl) {
             $forbiddenAttributeList = array_merge(
-                $this->acl->getScopeForbiddenAttributeList($entityType, 'read'),
+                $this->acl->getScopeForbiddenAttributeList($entityType),
                 $this->acl->getScopeRestrictedAttributeList(
                     $entityType,
                     ['forbidden', 'internal', 'onlyAdmin']
@@ -493,7 +474,7 @@ class Htmlizer
                     }
 
                     if ($this->acl) {
-                        if (!$this->acl->check($relatedEntity, 'read')) {
+                        if (!$this->acl->checkEntityRead($relatedEntity)) {
                             continue;
                         }
                     }
@@ -802,7 +783,7 @@ class Htmlizer
     }
 
     /**
-     * @return array<int,array{string,string}>
+     * @return array<int, array{string, string}>
      */
     private function getRelationOrder(string $entityType, string $relation): array
     {
