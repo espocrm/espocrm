@@ -52,12 +52,6 @@ class Pdf implements EntryPoint
         $this->service = $service;
     }
 
-    /**
-     * @throws BadRequest
-     * @throws Forbidden
-     * @throws Error
-     * @throws NotFound
-     */
     public function run(Request $request, Response $response): void
     {
         $entityId = $request->getQueryParam('entityId');

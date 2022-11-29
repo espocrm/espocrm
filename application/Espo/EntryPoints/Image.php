@@ -80,13 +80,7 @@ class Image implements EntryPoint
         $this->config = $config;
         $this->metadata = $metadata;
     }
-    /**
-     * @throws BadRequest
-     * @throws Error
-     * @throws NotFoundSilent
-     * @throws NotFound
-     * @throws ForbiddenSilent
-     */
+
     public function run(Request $request, Response $response): void
     {
         $id = $request->getQueryParam('id');

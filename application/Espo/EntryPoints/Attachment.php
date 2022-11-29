@@ -58,8 +58,8 @@ class Attachment implements EntryPoint
             throw new BadRequest();
         }
 
-        /** @var AttachmentEntity|null $attachment */
-        $attachment = $this->entityManager->getEntity('Attachment', $id);
+        /** @var ?AttachmentEntity $attachment */
+        $attachment = $this->entityManager->getEntityById(AttachmentEntity::ENTITY_TYPE, $id);
 
         if (!$attachment) {
             throw new NotFound();
