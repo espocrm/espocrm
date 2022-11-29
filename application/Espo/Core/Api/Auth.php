@@ -191,7 +191,7 @@ class Auth
         /** @var string $stringDecoded */
         $stringDecoded = base64_decode($string);
 
-        if (strpos($stringDecoded, ':') === false) {
+        if (!str_contains($stringDecoded, ':')) {
             throw new BadRequest("Auth: Bad authorization string provided.");
         }
 
