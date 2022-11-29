@@ -105,7 +105,7 @@ class Htmlizer
     /**
      * Generate an HTML for entity by a given template.
      *
-     * @param ?string $cacheId @deprecated To be skipped..
+     * @param ?string $cacheId @deprecated To be skipped.
      * @param ?array<string,mixed> $additionalData Data will be passed to the template.
      * @param bool $skipLinks Do not process related records.
      * @throws Error
