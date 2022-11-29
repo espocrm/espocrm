@@ -29,55 +29,36 @@
 
 namespace Espo\Core\MassAction;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\EntityManager;
-
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ForbiddenSilent;
-use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
-
 use Espo\Core\Acl;
 use Espo\Core\MassAction\Jobs\Process;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Job\Job\Data as JobData;
-
 use Espo\Entities\User;
-
 use Espo\Entities\MassAction as MassActionEntity;
 
 use stdClass;
 
 class Service
 {
-    private $factory;
-
-    private $acl;
-
-    private JobSchedulerFactory $jobSchedulerFactory;
-
-    private $entityManager;
-
-    private $user;
-
     public function __construct(
-        MassActionFactory $factory,
-        Acl $acl,
-        JobSchedulerFactory $jobSchedulerFactory,
-        EntityManager $entityManager,
-        User $user
-    ) {
-        $this->factory = $factory;
-        $this->acl = $acl;
-        $this->jobSchedulerFactory = $jobSchedulerFactory;
-        $this->entityManager = $entityManager;
-        $this->user = $user;
-    }
+        private MassActionFactory $factory,
+        private Acl $acl,
+        private JobSchedulerFactory $jobSchedulerFactory,
+        private EntityManager $entityManager,
+        private User $user
+    ) {}
 
     /**
      * Perform a mass action.
      *
      * @throws Forbidden
      * @throws NotFound
+     * @throws BadRequest
      */
     public function process(
         string $entityType,
@@ -122,8 +103,8 @@ class Service
      */
     public function getStatusData(string $id): stdClass
     {
-        /** @var MassActionEntity|null $entity */
-        $entity = $this->entityManager->getEntity(MassActionEntity::ENTITY_TYPE, $id);
+        /** @var ?MassActionEntity $entity */
+        $entity = $this->entityManager->getEntityById(MassActionEntity::ENTITY_TYPE, $id);
 
         if (!$entity) {
             throw new NotFound();
