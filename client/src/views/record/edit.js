@@ -124,7 +124,13 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
             let isNew = this.isNew;
 
             this.save(data.options)
-                .then(() => this.exit(isNew ? 'create' : 'save'))
+                .then(() => {
+                    if (this.options.duplicateSourceId) {
+                        this.returnUrl = null;
+                    }
+
+                    this.exit(isNew ? 'create' : 'save');
+                })
                 .catch(() => {});
         },
 
