@@ -142,9 +142,9 @@ define('views/email/list', ['views/list'], function (Dep) {
         initDraggable: function (fromIndex) {
             fromIndex = fromIndex || 0;
 
-            let isTouchDevise =  ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+            let isTouchDevice =  ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
 
-            if (isTouchDevise) {
+            if (isTouchDevice) {
                 return;
             }
 
