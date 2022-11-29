@@ -26,41 +26,77 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-Espo.define('crm:views/campaign-log-record/fields/data', 'views/fields/base', function (Dep) {
+define('crm:views/campaign-log-record/fields/data', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
         listTemplate: 'crm:campaign-log-record/fields/data/detail',
 
     	getValueForDisplay: function () {
-    		var action = this.model.get('action');
+    		let action = this.model.get('action');
 
     		switch (action) {
     			case 'Sent':
                 case 'Opened':
-                    if (this.model.get('objectId') && this.model.get('objectType') && this.model.get('objectName')) {
-                        return '<a href="#'+this.model.get('objectType')+'/view/'+this.model.get('objectId')+'">'+this.model.get('objectName')+'</a>';
+                    if (
+                        this.model.get('objectId') &&
+                        this.model.get('objectType') &&
+                        this.model.get('objectName')
+                    ) {
+                        return $('<a>')
+                            .attr('href', '#' + this.model.get('objectType') + '/view/' + this.model.get('objectId'))
+                            .text(this.model.get('objectName'))
+                            .get(0).outerHTML;
                     }
-                    return this.model.get('stringData') || '';
-    			case 'Clicked':
-                    if (this.model.get('objectId') && this.model.get('objectType') && this.model.get('objectName')) {
-                        return '<a href="#'+this.model.get('objectType')+'/view/'+this.model.get('objectId')+'">'+this.model.get('objectName')+'</a>';
-                    }
-    				return '<span>' + (this.model.get('stringData') || '') + '</span>';
-                case 'Opted Out':
-                    return '<span class="text-danger">' + this.model.get('stringData') + '</span>';
-                case 'Bounced':
-                    var emailAddress = this.model.get('stringData');
-                    var type = this.model.get('stringAdditionalData');
-                    if (type == 'Hard') {
-                        return '<s class="text-danger">' + emailAddress + '</s>';
-                    } else {
-                        return '<s class="">' + emailAddress + '</s>';
-                    }
-    		}
-    		return '';
-    	}
 
+                    return $('<span>')
+                        .text(this.model.get('stringData') || '')
+                        .get(0).outerHTML;
+
+    			case 'Clicked':
+                    if (
+                        this.model.get('objectId') &&
+                        this.model.get('objectType') &&
+                        this.model.get('objectName')
+                    ) {
+                        return $('<a>')
+                            .attr('href', '#' + this.model.get('objectType') + '/view/' + this.model.get('objectId'))
+                            .text(this.model.get('objectName'))
+                            .get(0).outerHTML;
+                    }
+
+                    return $('<span>')
+                        .text(this.model.get('stringData') || '')
+                        .get(0).outerHTML;
+
+                case 'Opted Out':
+                    return $('<span>')
+                        .text(this.model.get('stringData') || '')
+                        .addClass('text-danger')
+                        .get(0).outerHTML;
+
+                case 'Bounced':
+                    let emailAddress = this.model.get('stringData');
+                    let type = this.model.get('stringAdditionalData');
+
+                    let typeLabel = type === 'Hard' ?
+                        this.translate('hard', 'labels', 'Campaign') :
+                        this.translate('soft', 'labels', 'Campaign')
+
+                    return $('<span>')
+                        .append(
+                            $('<span>')
+                                .addClass('label label-default')
+                                .text(typeLabel),
+                            ' ',
+                            $('<s>')
+                                .text(emailAddress)
+                                .addClass(type === 'Hard' ? 'text-danger' : '')
+                        )
+                        .get(0).outerHTML;
+    		}
+
+    		return '';
+    	},
     });
 });
