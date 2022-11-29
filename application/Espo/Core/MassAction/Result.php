@@ -34,10 +34,7 @@ use RuntimeException;
 class Result
 {
     private ?int $count = null;
-
-    /**
-     * @var ?string[]
-     */
+    /** @var ?string[] */
     private $ids = null;
 
     /**
@@ -84,9 +81,7 @@ class Result
 
     public function withNoIds(): self
     {
-        return self::fromArray([
-            'count' => $this->count,
-        ]);
+        return new self($this->count);
     }
 
     /**
@@ -98,11 +93,9 @@ class Result
      */
     public static function fromArray(array $data): self
     {
-        $obj = new self(
+        return new self(
             $data['count'] ?? null,
             $data['ids'] ?? null
         );
-
-        return $obj;
     }
 }

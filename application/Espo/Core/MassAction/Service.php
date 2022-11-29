@@ -126,8 +126,8 @@ class Service
      */
     public function subscribeToNotificationOnSuccess(string $id): void
     {
-        /** @var MassActionEntity|null $entity */
-        $entity = $this->entityManager->getEntity(MassActionEntity::ENTITY_TYPE, $id);
+        /** @var ?MassActionEntity $entity */
+        $entity = $this->entityManager->getEntityById(MassActionEntity::ENTITY_TYPE, $id);
 
         if (!$entity) {
             throw new NotFound();
