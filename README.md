@@ -10,7 +10,7 @@ It's a web application with a frontend designed as a single page application and
 
 ### Requirements
 
-* PHP 7.4 and later (with pdo, json, gd, openssl, zip, imap, mbstring, curl extensions);
+* PHP 8.0 and later;
 * MySQL 5.7 (and later), or MariaDB 10.1 (and later).
 
 For more information about server configuration see [this article](https://docs.espocrm.com/administration/server-configuration/).
