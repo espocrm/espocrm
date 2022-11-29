@@ -29,25 +29,22 @@
 
 namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\{
-    Application\RunnerParameterized,
-    Application\Runner\Params,
-    Exceptions\BadRequest,
-    Exceptions\NotFound,
-    Utils\ClientManager,
-    Utils\Config,
-    Portal\Application as PortalApplication,
-    Portal\ApplicationRunners\Client as PortalPortalClient,
-    Portal\Utils\Url,
-    Api\ErrorOutput,
-    Api\RequestWrapper,
-    Api\ResponseWrapper};
+use Espo\Core\Api\ErrorOutput;
+use Espo\Core\Api\RequestWrapper;
+use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\Application\Runner\Params;
+use Espo\Core\Application\RunnerParameterized;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Portal\Application as PortalApplication;
+use Espo\Core\Portal\ApplicationRunners\Client as PortalPortalClient;
+use Espo\Core\Portal\Utils\Url;
+use Espo\Core\Utils\ClientManager;
+use Espo\Core\Utils\Config;
 
-use Slim\{
-    ResponseEmitter,
-    Factory\ServerRequestCreatorFactory,
-    Psr7\Response,
-};
+use Slim\Factory\ServerRequestCreatorFactory;
+use Slim\Psr7\Response;
+use Slim\ResponseEmitter;
 
 use Exception;
 
@@ -56,21 +53,12 @@ use Exception;
  */
 class PortalClient implements RunnerParameterized
 {
-    private $clientManager;
-
-    private $config;
-
-    private $errorOutput;
 
     public function __construct(
-        ClientManager $clientManager,
-        Config $config,
-        ErrorOutput $errorOutput
-    ) {
-        $this->clientManager = $clientManager;
-        $this->config = $config;
-        $this->errorOutput = $errorOutput;
-    }
+        private ClientManager $clientManager,
+        private Config $config,
+        private ErrorOutput $errorOutput
+    ) {}
 
     public function run(Params $params): void
     {

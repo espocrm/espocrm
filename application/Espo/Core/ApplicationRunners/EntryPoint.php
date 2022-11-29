@@ -38,12 +38,8 @@ use Espo\Core\EntryPoint\Starter;
  */
 class EntryPoint implements RunnerParameterized
 {
-    private $starter;
-
-    public function __construct(Starter $starter)
-    {
-        $this->starter = $starter;
-    }
+    public function __construct(private Starter $starter)
+    {}
 
     public function run(Params $params): void
     {

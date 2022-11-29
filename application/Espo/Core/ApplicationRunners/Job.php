@@ -29,11 +29,9 @@
 
 namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\{
-    Application\RunnerParameterized,
-    Application\Runner\Params,
-    Job\JobManager,
-};
+use Espo\Core\Application\Runner\Params;
+use Espo\Core\Application\RunnerParameterized;
+use Espo\Core\Job\JobManager;
 
 /**
  * Runs a job by ID. A job record should exist in database.
@@ -43,12 +41,8 @@ class Job implements RunnerParameterized
     use Cli;
     use SetupSystemUser;
 
-    private JobManager $jobManager;
-
-    public function __construct(JobManager $jobManager)
-    {
-        $this->jobManager = $jobManager;
-    }
+    public function __construct(private JobManager $jobManager)
+    {}
 
     public function run(Params $params): void
     {

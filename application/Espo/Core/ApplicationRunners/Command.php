@@ -42,12 +42,8 @@ class Command implements Runner
     use Cli;
     use SetupSystemUser;
 
-    private ConsoleCommandManager $commandManager;
-
-    public function __construct(ConsoleCommandManager $commandManager)
-    {
-        $this->commandManager = $commandManager;
-    }
+    public function __construct(private ConsoleCommandManager $commandManager)
+    {}
 
     public function run(): void
     {

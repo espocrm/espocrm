@@ -29,12 +29,10 @@
 
 namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\{
-    Application\Runner,
-    Job\JobManager,
-    Utils\Config,
-    Utils\Log,
-};
+use Espo\Core\Application\Runner;
+use Espo\Core\Job\JobManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
 
 /**
  * Runs Cron.
@@ -44,18 +42,8 @@ class Cron implements Runner
     use Cli;
     use SetupSystemUser;
 
-    private $jobManager;
-
-    private $config;
-
-    private $log;
-
-    public function __construct(JobManager $jobManager, Config $config, Log $log)
-    {
-        $this->jobManager = $jobManager;
-        $this->config = $config;
-        $this->log = $log;
-    }
+    public function __construct(private JobManager $jobManager, private Config $config, private Log $log)
+    {}
 
     public function run(): void
     {

@@ -31,15 +31,10 @@ namespace Espo\Core;
 
 use Espo\Core\Application\Runner;
 use Espo\Core\Application\RunnerParameterized;
-use Espo\Core\Container;
 use Espo\Core\Container\ContainerBuilder;
-use Espo\Core\InjectableFactory;
-
 use Espo\Core\Application\RunnerRunner;
 use Espo\Core\Application\Runner\Params as RunnerParams;
 use Espo\Core\Application\Exceptions\RunnerException;
-use Espo\Core\ApplicationUser;
-
 use Espo\Core\Utils\Autoload;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;

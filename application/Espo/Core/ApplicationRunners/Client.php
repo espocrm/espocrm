@@ -29,20 +29,17 @@
 
 namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\{
-    Application\Runner,
-    Utils\ClientManager,
-    Utils\Config,
-};
+use Espo\Core\Application\Runner;
+use Espo\Core\Utils\ClientManager;
+use Espo\Core\Utils\Config;
 
 /**
  * Displays the main HTML page.
  */
 class Client implements Runner
 {
-    private $clientManager;
-
-    private $config;
+    private ClientManager $clientManager;
+    private Config $config;
 
     public function __construct(ClientManager $clientManager, Config $config)
     {

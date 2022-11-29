@@ -29,16 +29,12 @@
 
 namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\{
-    Application\Runner,
-    Utils\Config,
-    Utils\Log,
-};
+use Espo\Core\Application\Runner;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
 
-use Symfony\Component\Process\{
-    PhpExecutableFinder,
-    Process,
-};
+use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Process\Process;
 
 /**
  * Runs daemon. The daemon runs the cron more often than once a minute.
@@ -47,15 +43,8 @@ class Daemon implements Runner
 {
     use Cli;
 
-    private $config;
-
-    private $log;
-
-    public function __construct(Config $config, Log $log)
-    {
-        $this->config = $config;
-        $this->log = $log;
-    }
+    public function __construct(private Config $config, private Log $log)
+    {}
 
     public function run(): void
     {

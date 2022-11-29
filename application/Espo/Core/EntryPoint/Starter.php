@@ -31,7 +31,6 @@ namespace Espo\Core\EntryPoint;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Application\Runner\Params as RunnerParams;
-use Espo\Core\EntryPoint\EntryPointManager;
 use Espo\Core\ApplicationUser;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Portal\Application as PortalApplication;
@@ -56,37 +55,15 @@ use Exception;
  */
 class Starter
 {
-    private $authenticationFactory;
-
-    private $entryPointManager;
-
-    private $clientManager;
-
-    private $applicationUser;
-
-    private $authTokenManager;
-
-    private $authBuilderFactory;
-
-    private $errorOutput;
-
     public function __construct(
-        AuthenticationFactory $authenticationFactory,
-        EntryPointManager $entryPointManager,
-        ClientManager $clientManager,
-        ApplicationUser $applicationUser,
-        AuthTokenManager $authTokenManager,
-        AuthBuilderFactory $authBuilderFactory,
-        ErrorOutput $errorOutput
-    ) {
-        $this->authenticationFactory = $authenticationFactory;
-        $this->entryPointManager = $entryPointManager;
-        $this->clientManager = $clientManager;
-        $this->applicationUser = $applicationUser;
-        $this->authTokenManager = $authTokenManager;
-        $this->authBuilderFactory = $authBuilderFactory;
-        $this->errorOutput = $errorOutput;
-    }
+        private AuthenticationFactory $authenticationFactory,
+        private EntryPointManager $entryPointManager,
+        private ClientManager $clientManager,
+        private ApplicationUser $applicationUser,
+        private AuthTokenManager $authTokenManager,
+        private AuthBuilderFactory $authBuilderFactory,
+        private ErrorOutput $errorOutput
+    ) {}
 
     /**
      * @throws BadRequest

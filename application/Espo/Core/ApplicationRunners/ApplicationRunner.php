@@ -29,14 +29,11 @@
 
 namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\{
-    Application\Runner,
-};
+use Espo\Core\Application\Runner;
 
 /**
  * @deprecated For backward compatibility.
  */
 interface ApplicationRunner extends Runner
 {
-
 }

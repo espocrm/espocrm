@@ -29,10 +29,8 @@
 
 namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\{
-    Application\Runner,
-    DataManager,
-};
+use Espo\Core\Application\Runner;
+use Espo\Core\DataManager;
 use Exception;
 
 /**
@@ -42,12 +40,8 @@ class Rebuild implements Runner
 {
     use Cli;
 
-    private DataManager $dataManager;
-
-    public function __construct(DataManager $dataManager)
-    {
-        $this->dataManager = $dataManager;
-    }
+    public function __construct(private DataManager $dataManager)
+    {}
 
     public function run(): void
     {

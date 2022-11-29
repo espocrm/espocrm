@@ -29,10 +29,8 @@
 
 namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\{
-    Application\Runner,
-    WebSocket\ServerStarter,
-};
+use Espo\Core\Application\Runner;
+use Espo\Core\WebSocket\ServerStarter;
 
 /**
  * Runs WebSocket.
@@ -41,12 +39,8 @@ class WebSocket implements Runner
 {
     use Cli;
 
-    private $serverStarter;
-
-    public function __construct(ServerStarter $serverStarter)
-    {
-        $this->serverStarter = $serverStarter;
-    }
+    public function __construct(private ServerStarter $serverStarter)
+    {}
 
     public function run(): void
     {

@@ -37,12 +37,8 @@ use Espo\Core\Api\Starter;
  */
 class Api implements Runner
 {
-    private $starter;
-
-    public function __construct(Starter $starter)
-    {
-        $this->starter = $starter;
-    }
+    public function __construct(private Starter $starter)
+    {}
 
     public function run(): void
     {

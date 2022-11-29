@@ -29,10 +29,8 @@
 
 namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\{
-    Application\Runner,
-    Utils\Preload as PreloadUtil,
-};
+use Espo\Core\Application\Runner;
+use Espo\Core\Utils\Preload as PreloadUtil;
 
 use Throwable;
 
