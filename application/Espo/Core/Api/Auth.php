@@ -29,11 +29,10 @@
 
 namespace Espo\Core\Api;
 
-use Espo\Core\Authentication\ConfigDataProvider;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ServiceUnavailable;
 use Espo\Core\Exceptions\Forbidden;
-
+use Espo\Core\Authentication\ConfigDataProvider;
 use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Authentication\Result;
@@ -50,25 +49,13 @@ class Auth
 {
     private const HEADER_ESPO_AUTHORIZATION = 'Espo-Authorization';
 
-    private Log $log;
-    private Authentication $authentication;
-    private ConfigDataProvider $configDataProvider;
-    private bool $authRequired;
-    private bool $isEntryPoint;
-
     public function __construct(
-        Log $log,
-        Authentication $authentication,
-        ConfigDataProvider $configDataProvider,
-        bool $authRequired = true,
-        bool $isEntryPoint = false
-    ) {
-        $this->log = $log;
-        $this->authentication = $authentication;
-        $this->authRequired = $authRequired;
-        $this->isEntryPoint = $isEntryPoint;
-        $this->configDataProvider = $configDataProvider;
-    }
+        private Log $log,
+        private Authentication $authentication,
+        private ConfigDataProvider $configDataProvider,
+        private bool $authRequired = true,
+        private bool $isEntryPoint = false
+    ) {}
 
     /**
      * @throws BadRequest

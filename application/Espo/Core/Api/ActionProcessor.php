@@ -29,15 +29,10 @@
 
 namespace Espo\Core\Api;
 
-use Espo\Core\{
-    InjectableFactory,
-    Utils\ClassFinder,
-    Utils\Json,
-    Api\Request,
-    Api\Response,
-    Api\RequestWrapper,
-    Exceptions\NotFound,
-};
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\ClassFinder;
+use Espo\Core\Utils\Json;
 
 use ReflectionClass;
 use ReflectionNamedType;
@@ -48,15 +43,14 @@ use stdClass;
  */
 class ActionProcessor
 {
-    private InjectableFactory $injectableFactory;
-    private ClassFinder $classFinder;
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private ClassFinder $classFinder
+    ) {}
 
-    public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->classFinder = $classFinder;
-    }
-
+    /**
+     * @throws NotFound
+     */
     public function process(
         string $controllerName,
         string $actionName,
@@ -81,21 +75,16 @@ class ActionProcessor
 
         $fullActionMethodName = strtolower($requestMethod) . ucfirst($actionMethodName);
 
-        if (method_exists($controller, $fullActionMethodName)) {
-            $primaryActionMethodName = $fullActionMethodName;
-        } else {
-            $primaryActionMethodName = $actionMethodName;
-        }
+        $primaryActionMethodName = method_exists($controller, $fullActionMethodName) ?
+            $fullActionMethodName :
+            $actionMethodName;
 
         if (!method_exists($controller, $primaryActionMethodName)) {
             throw new NotFound(
-                "Action {$requestMethod} '{$actionName}' does not exist in controller '{$controllerName}'."
-            );
+                "Action {$requestMethod} '{$actionName}' does not exist in controller '{$controllerName}'.");
         }
 
-        if (
-            $this->useShortParamList($controller, $primaryActionMethodName)
-        ) {
+        if ($this->useShortParamList($controller, $primaryActionMethodName)) {
             $result = $controller->$primaryActionMethodName($request, $response) ?? null;
 
             $this->handleResult($response, $result);
@@ -128,13 +117,10 @@ class ActionProcessor
         }
 
         $this->handleResult($response, $result);
-
-        return;
     }
 
     /**
      * @param mixed $result
-     * @throws \JsonException
      */
     private function handleResult(Response $response, $result): void
     {
@@ -160,7 +146,6 @@ class ActionProcessor
         $class = new ReflectionClass($controller);
 
         $method = $class->getMethod($methodName);
-
         $params = $method->getParameters();
 
         if (count($params) === 0) {
@@ -211,6 +196,9 @@ class ActionProcessor
         return $className;
     }
 
+    /**
+     * @throws NotFound
+     */
     private function createController(string $name): object
     {
         return $this->injectableFactory->createWith($this->getControllerClassName($name), [

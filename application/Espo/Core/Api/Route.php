@@ -33,12 +33,12 @@ class Route
 {
     private string $method;
     private string $route;
-    /** @var array<string,string> */
+    /** @var array<string, string> */
     private array $params;
     private bool $noAuth;
 
     /**
-     * @param array<string,string> $params
+     * @param array<string, string> $params
      */
     public function __construct(
         string $method,

@@ -44,22 +44,12 @@ use Psr\Http\Message\ServerRequestInterface as Psr7Request;
  */
 class Starter
 {
-    private RequestProcessor $requestProcessor;
-    private RouteUtil $routeUtil;
-    private RouteParamsFetcher $routeParamsFetcher;
-    private Log $log;
-
     public function __construct(
-        RequestProcessor $requestProcessor,
-        RouteUtil $routeUtil,
-        RouteParamsFetcher $routeParamsFetcher,
-        Log $log
-    ) {
-        $this->requestProcessor = $requestProcessor;
-        $this->routeUtil = $routeUtil;
-        $this->routeParamsFetcher = $routeParamsFetcher;
-        $this->log = $log;
-    }
+        private RequestProcessor $requestProcessor,
+        private RouteUtil $routeUtil,
+        private RouteParamsFetcher $routeParamsFetcher,
+        private Log $log
+    ) {}
 
     public function start(): void
     {

@@ -31,6 +31,7 @@ namespace Espo\Core\Api;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Authentication\AuthenticationFactory;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 use Espo\Core\ApplicationUser;
@@ -45,31 +46,15 @@ use LogicException;
  */
 class RequestProcessor
 {
-    private AuthenticationFactory $authenticationFactory;
-    private ActionProcessor $actionProcessor;
-    private AuthBuilderFactory $authBuilderFactory;
-    private ErrorOutput $errorOutput;
-    private Config $config;
-    private Log $log;
-    private ApplicationUser $applicationUser;
-
     public function __construct(
-        AuthenticationFactory $authenticationFactory,
-        ActionProcessor $actionProcessor,
-        AuthBuilderFactory $authBuilderFactory,
-        ErrorOutput $errorOutput,
-        Config $config,
-        Log $log,
-        ApplicationUser $applicationUser
-    ) {
-        $this->authenticationFactory = $authenticationFactory;
-        $this->actionProcessor = $actionProcessor;
-        $this->authBuilderFactory = $authBuilderFactory;
-        $this->errorOutput = $errorOutput;
-        $this->config = $config;
-        $this->log = $log;
-        $this->applicationUser = $applicationUser;
-    }
+        private AuthenticationFactory $authenticationFactory,
+        private ActionProcessor $actionProcessor,
+        private AuthBuilderFactory $authBuilderFactory,
+        private ErrorOutput $errorOutput,
+        private Config $config,
+        private Log $log,
+        private ApplicationUser $applicationUser
+    ) {}
 
     public function process(Route $route, Request $request, Response $response): void
     {
@@ -81,6 +66,10 @@ class RequestProcessor
         }
     }
 
+    /**
+     * @throws BadRequest
+     * @throws NotFound
+     */
     private function processInternal(Route $route, Request $request, Response $response): void
     {
         $authRequired = !$route->noAuth();
@@ -109,7 +98,7 @@ class RequestProcessor
     }
 
     /**
-     * @throws \Espo\Core\Exceptions\NotFound
+     * @throws NotFound
      * @throws BadRequest
      */
     private function proceed(Request $request, Response $response): void

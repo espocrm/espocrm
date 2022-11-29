@@ -45,12 +45,8 @@ class AuthBuilder
     private bool $isEntryPoint = false;
     private ?Authentication $authentication = null;
 
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private InjectableFactory $injectableFactory)
+    {}
 
     public function setAuthentication(Authentication $authentication): self
     {
