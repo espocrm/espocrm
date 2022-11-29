@@ -35,7 +35,7 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Utils\ClientManager;
 
 /**
- * Renders a font-end page that executes a controller action. Utilized by entry points.
+ * Renders a front-end page that executes a controller action. Utilized by entry points.
  */
 class ActionRenderer
 {
