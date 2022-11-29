@@ -55,6 +55,14 @@ class CurrencyType extends FloatType
         $currency = $entity->get($attribute);
         $currencyList = $this->config->get('currencyList') ?? [$this->config->get('defaultCurrency')];
 
+        if (
+            $currency === null &&
+            $entity->has($field) &&
+            $entity->get($field) === null
+        ) {
+            return true;
+        }
+
         return in_array($currency, $currencyList);
     }
 }
