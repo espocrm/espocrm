@@ -29,14 +29,10 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\{
-    Api\Response,
-    Api\ResponseWrapper,
-    Utils\File\Manager as FileManager,
-    Utils\Client\DevModeJsFileListProvider,
-    Utils\Module,
-    Utils\Json,
-};
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\Utils\Client\DevModeJsFileListProvider;
+use Espo\Core\Utils\File\Manager as FileManager;
 
 use Slim\Psr7\Response as Psr7Response;
 use Slim\ResponseEmitter;
@@ -47,28 +43,20 @@ use Slim\ResponseEmitter;
 class ClientManager
 {
     protected string $mainHtmlFilePath = 'html/main.html';
-
     protected string $runScript = "app.start();";
-
     private string $basePath = '';
-
     private string $libsConfigPath = 'client/cfg/libs.json';
-
-    private Config $config;
-
-    private ThemeManager $themeManager;
-
-    private Metadata $metadata;
-
-    private FileManager $fileManager;
-
-    private DevModeJsFileListProvider $devModeJsFileListProvider;
-
-    private Module $module;
 
     private string $nonce;
 
     private const APP_DESCRIPTION = "EspoCRM - Open Source CRM application.";
+
+    private Config $config;
+    private ThemeManager $themeManager;
+    private Metadata $metadata;
+    private FileManager $fileManager;
+    private DevModeJsFileListProvider $devModeJsFileListProvider;
+    private Module $module;
 
     public function __construct(
         Config $config,

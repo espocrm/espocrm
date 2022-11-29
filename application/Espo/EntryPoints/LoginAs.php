@@ -34,14 +34,13 @@ use Espo\Core\EntryPoint\EntryPoint;
 use Espo\Core\EntryPoint\Traits\NoAuth;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
-use Espo\Core\Utils\ClientManager;
-use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Client\ActionRenderer;
 
 class LoginAs implements EntryPoint
 {
     use NoAuth;
 
-    public function __construct(private ClientManager $clientManager) {}
+    public function __construct(private ActionRenderer $actionRenderer) {}
 
     /**
      * @throws BadRequest
@@ -54,24 +53,14 @@ class LoginAs implements EntryPoint
             throw new BadRequest("No anotherUser.");
         }
 
-        $data = [
-            'anotherUser' => $anotherUser,
-            'username' => $request->getQueryParam('username'),
-        ];
-
-        $encodedData = Json::encode($data);
-
-        $script =
-            "
-                app.initAuth();
-                app.doAction({
-                    controllerClassName: 'controllers/login-as',
-                    action: 'login',
-                    options: {$encodedData},
-                });
-            ";
-
-        $this->clientManager->writeHeaders($response);
-        $response->writeBody($this->clientManager->render($script));
+        $this->actionRenderer->write(
+            $response,
+            ActionRenderer\Params::create('controllers/login-as', 'login')
+                ->withData([
+                    'anotherUser' => $anotherUser,
+                    'username' => $request->getQueryParam('username'),
+                ])
+                ->withInitAuth()
+        );
     }
 }

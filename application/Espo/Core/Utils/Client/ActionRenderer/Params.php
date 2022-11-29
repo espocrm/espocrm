@@ -38,6 +38,7 @@ class Params
     private string $action;
     /** @var ?array<string, mixed> */
     private ?array $data;
+    private bool $initAuth = false;
 
     /**
      * @param ?array<string, mixed> $data
@@ -57,6 +58,25 @@ class Params
         return new self($controller, $action, $data);
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function withData(array $data): self
+    {
+        $obj = clone $this;
+        $obj->data = $data;
+
+        return $obj;
+    }
+
+    public function withInitAuth(bool $initAuth = true): self
+    {
+        $obj = clone $this;
+        $obj->initAuth = $initAuth;
+
+        return $obj;
+    }
+
     public function getController(): string
     {
         return $this->controller;
@@ -73,5 +93,10 @@ class Params
     public function getData(): ?array
     {
         return $this->data;
+    }
+
+    public function initAuth(): bool
+    {
+        return $this->initAuth;
     }
 }

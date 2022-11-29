@@ -51,7 +51,12 @@ class ActionRenderer
      */
     public function write(Response $response, Params $params): void
     {
-        $body = $this->render($params->getController(), $params->getAction(), $params->getData());
+        $body = $this->render(
+            $params->getController(),
+            $params->getAction(),
+            $params->getData(),
+            $params->initAuth()
+        );
 
         $this->clientManager->writeHeaders($response);
         $response->writeBody($body);
@@ -61,12 +66,15 @@ class ActionRenderer
      * @deprecated Use`write`.
      * @param ?array<string,mixed> $data
      */
-    public function render(string $controller, string $action, ?array $data = null): string
+    public function render(string $controller, string $action, ?array $data = null, bool $initAuth = false): string
     {
         $encodedData = Json::encode($data);
 
+        $initAuthPart = $initAuth ? "app.initAuth();" : '';
+
         $script =
             "
+                {$initAuthPart}
                 app.doAction({
                     controllerClassName: '{$controller}',
                     action: '{$action}',
