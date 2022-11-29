@@ -29,61 +29,39 @@
 
 namespace Espo\Core\Action\Actions;
 
-use Espo\Core\{
-    Exceptions\Forbidden,
-    Exceptions\BadRequest,
-    Exceptions\NotFound,
-    Action\Action,
-    Action\Params,
-    Action\Data,
-    Acl,
-    ORM\EntityManager,
-    Utils\FieldUtil,
-    Utils\Metadata,
-    Field\Currency,
-    Currency\ConfigDataProvider as CurrencyConfigDataProvider,
-    Currency\Converter as CurrencyConverter,
-    Currency\Rates as CurrencyRates,
-};
-
+use Espo\Core\Acl;
+use Espo\Core\Action\Action;
+use Espo\Core\Action\Data;
+use Espo\Core\Action\Params;
+use Espo\Core\Currency\ConfigDataProvider as CurrencyConfigDataProvider;
+use Espo\Core\Currency\Converter as CurrencyConverter;
+use Espo\Core\Currency\Rates as CurrencyRates;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Field\Currency;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\FieldUtil;
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
 class ConvertCurrency implements Action
 {
-    private $acl;
-
-    private $entityManager;
-
-    private $fieldUtil;
-
-    private $metadata;
-
-    private $configDataProvider;
-
-    private $currencyConverter;
-
     public function __construct(
-        Acl $acl,
-        EntityManager $entityManager,
-        FieldUtil $fieldUtil,
-        Metadata $metadata,
-        CurrencyConfigDataProvider $configDataProvider,
-        CurrencyConverter $currencyConverter
-    ) {
-        $this->acl = $acl;
-        $this->entityManager = $entityManager;
-        $this->fieldUtil = $fieldUtil;
-        $this->metadata = $metadata;
-        $this->configDataProvider = $configDataProvider;
-        $this->currencyConverter = $currencyConverter;
-    }
+        private Acl $acl,
+        private EntityManager $entityManager,
+        private FieldUtil $fieldUtil,
+        private Metadata $metadata,
+        private CurrencyConfigDataProvider $configDataProvider,
+        private CurrencyConverter $currencyConverter
+    ) {}
 
     public function process(Params $params, Data $data): void
     {
         $entityType = $params->getEntityType();
         $id = $params->getId();
 
-        if (!$this->acl->checkScope($entityType, 'edit')) {
+        if (!$this->acl->checkScope($entityType, Acl\Table::ACTION_EDIT)) {
             throw new Forbidden();
         }
 
@@ -109,13 +87,13 @@ class ConvertCurrency implements Action
             throw new BadRequest("Target currency rate is not specified.");
         }
 
-        $entity = $this->entityManager->getEntity($entityType, $id);
+        $entity = $this->entityManager->getEntityById($entityType, $id);
 
         if (!$entity) {
             throw new NotFound();
         }
 
-        if (!$this->acl->checkEntity($entity, 'edit')) {
+        if (!$this->acl->checkEntityEdit($entity)) {
             throw new Forbidden();
         }
 

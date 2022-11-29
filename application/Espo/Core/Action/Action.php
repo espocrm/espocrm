@@ -29,7 +29,16 @@
 
 namespace Espo\Core\Action;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+
 interface Action
 {
+    /**
+     * @throws Forbidden
+     * @throws BadRequest
+     * @throws NotFound
+     */
     public function process(Params $params, Data $data): void;
 }

@@ -30,68 +30,38 @@
 namespace Espo\Core\MassAction\Actions;
 
 use Espo\Entities\User;
-
 use Espo\Core\Acl\Table;
-
-use Espo\Core\{
-    Exceptions\Forbidden,
-    Exceptions\BadRequest,
-    MassAction\QueryBuilder,
-    MassAction\Params,
-    MassAction\Result,
-    MassAction\Data,
-    MassAction\MassAction,
-    Acl,
-    ORM\EntityManager,
-    Utils\FieldUtil,
-    Utils\Metadata,
-    Field\Currency,
-    Currency\ConfigDataProvider as CurrencyConfigDataProvider,
-    Currency\Converter as CurrencyConverter,
-    Currency\Rates as CurrencyRates,
-};
-
+use Espo\Core\Acl;
+use Espo\Core\Currency\ConfigDataProvider as CurrencyConfigDataProvider;
+use Espo\Core\Currency\Converter as CurrencyConverter;
+use Espo\Core\Currency\Rates as CurrencyRates;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Field\Currency;
+use Espo\Core\MassAction\Data;
+use Espo\Core\MassAction\MassAction;
+use Espo\Core\MassAction\Params;
+use Espo\Core\MassAction\QueryBuilder;
+use Espo\Core\MassAction\Result;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\FieldUtil;
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
 class MassConvertCurrency implements MassAction
 {
-    protected QueryBuilder $queryBuilder;
-
-    protected Acl $acl;
-
-    protected EntityManager $entityManager;
-
-    protected FieldUtil $fieldUtil;
-
-    protected Metadata $metadata;
-
-    protected CurrencyConfigDataProvider $configDataProvider;
-
-    protected CurrencyConverter $currencyConverter;
-
-    private User $user;
-
     public function __construct(
-        QueryBuilder $queryBuilder,
-        Acl $acl,
-        EntityManager $entityManager,
-        FieldUtil $fieldUtil,
-        Metadata $metadata,
-        CurrencyConfigDataProvider $configDataProvider,
-        CurrencyConverter $currencyConverter,
-        User $user
-    ) {
-        $this->queryBuilder = $queryBuilder;
-        $this->acl = $acl;
-        $this->entityManager = $entityManager;
-        $this->fieldUtil = $fieldUtil;
-        $this->metadata = $metadata;
-        $this->configDataProvider = $configDataProvider;
-        $this->currencyConverter = $currencyConverter;
-        $this->user = $user;
-    }
+        private QueryBuilder $queryBuilder,
+        private Acl $acl,
+        private EntityManager $entityManager,
+        private FieldUtil $fieldUtil,
+        private Metadata $metadata,
+        private CurrencyConfigDataProvider $configDataProvider,
+        private CurrencyConverter $currencyConverter,
+        private User $user
+    ) {}
 
-    public function process(Params $params, Data $dataWrapped): Result
+    public function process(Params $params, Data $data): Result
     {
         $entityType = $params->getEntityType();
 
@@ -99,21 +69,21 @@ class MassConvertCurrency implements MassAction
             throw new Forbidden("No edit access for '{$entityType}'.");
         }
 
-        if ($this->acl->get('massUpdatePermission') !== Table::LEVEL_YES) {
+        if ($this->acl->getPermissionLevel('massUpdate') !== Table::LEVEL_YES) {
             throw new Forbidden("No mass-update permission.");
         }
 
-        $data = $dataWrapped->getRaw();
+        $dataRaw = $data->getRaw();
 
-        if (empty($data->targetCurrency)) {
+        if (empty($dataRaw->targetCurrency)) {
             throw new BadRequest("No target currency.");
         }
 
-        if (isset($data->rates) && !is_object($data->rates)) {
+        if (isset($dataRaw->rates) && !is_object($dataRaw->rates)) {
             throw new BadRequest();
         }
 
-        $fieldList = $this->getFieldList($entityType, $dataWrapped);
+        $fieldList = $this->getFieldList($entityType, $data);
 
         if (empty($fieldList)) {
             throw new Forbidden("No fields to convert.");
@@ -121,10 +91,10 @@ class MassConvertCurrency implements MassAction
 
         $baseCurrency = $this->configDataProvider->getBaseCurrency();
 
-        $targetCurrency = $data->targetCurrency;
+        $targetCurrency = $dataRaw->targetCurrency;
 
         $rates =
-            $this->getRatesFromData($dataWrapped) ??
+            $this->getRatesFromData($data) ??
             $this->configDataProvider->getCurrencyRates();
 
         if ($targetCurrency !== $baseCurrency && !$rates->hasRate($targetCurrency)) {

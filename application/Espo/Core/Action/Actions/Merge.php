@@ -29,30 +29,22 @@
 
 namespace Espo\Core\Action\Actions;
 
-use Espo\Core\{
-    Exceptions\Forbidden,
-    Exceptions\BadRequest,
-    Action\Actions\Merge\Merger,
-    Action\Action,
-    Action\Params,
-    Action\Data,
-    Acl,
-    Acl\Table,
-};
+use Espo\Core\Acl;
+use Espo\Core\Acl\Table;
+use Espo\Core\Action\Action;
+use Espo\Core\Action\Actions\Merge\Merger;
+use Espo\Core\Action\Data;
+use Espo\Core\Action\Params;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 
 use stdClass;
 
 class Merge implements Action
 {
-    private $acl;
 
-    private $merger;
-
-    public function __construct(Acl $acl, Merger $merger)
-    {
-        $this->acl = $acl;
-        $this->merger = $merger;
-    }
+    public function __construct(private Acl $acl, private Merger $merger)
+    {}
 
     public function process(Params $params, Data $data): void
     {

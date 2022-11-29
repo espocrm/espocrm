@@ -30,39 +30,23 @@
 namespace Espo\Core\MassAction\Actions;
 
 use Espo\Tools\Stream\Service as StreamService;
-
-use Espo\Core\{
-    MassAction\QueryBuilder,
-    MassAction\Params,
-    MassAction\Result,
-    MassAction\Data,
-    MassAction\MassAction,
-    ORM\EntityManager,
-    Exceptions\Forbidden,
-};
-
-use Espo\{
-    Entities\User,
-};
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\MassAction\Data;
+use Espo\Core\MassAction\MassAction;
+use Espo\Core\MassAction\Params;
+use Espo\Core\MassAction\QueryBuilder;
+use Espo\Core\MassAction\Result;
+use Espo\Core\ORM\EntityManager;
+use Espo\Entities\User;
 
 class MassUnfollow implements MassAction
 {
-    private QueryBuilder $queryBuilder;
-    private StreamService $streamService;
-    private EntityManager $entityManager;
-    private User $user;
-
     public function __construct(
-        QueryBuilder $queryBuilder,
-        StreamService $streamService,
-        EntityManager $entityManager,
-        User $user
-    ) {
-        $this->queryBuilder = $queryBuilder;
-        $this->streamService = $streamService;
-        $this->entityManager = $entityManager;
-        $this->user = $user;
-    }
+        private QueryBuilder $queryBuilder,
+        private StreamService $streamService,
+        private EntityManager $entityManager,
+        private User $user
+    ) {}
 
     public function process(Params $params, Data $data): Result
     {
@@ -95,15 +79,9 @@ class MassUnfollow implements MassAction
             $id = $entity->getId();
 
             $ids[] = $id;
-
             $count++;
         }
 
-        $result = [
-            'count' => $count,
-            'ids' => $ids,
-        ];
-
-        return Result::fromArray($result);
+        return new Result($count, $ids);
     }
 }

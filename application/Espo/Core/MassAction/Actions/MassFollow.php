@@ -30,21 +30,15 @@
 namespace Espo\Core\MassAction\Actions;
 
 use Espo\Tools\Stream\Service as StreamService;
-
-use Espo\Core\{
-    MassAction\QueryBuilder,
-    MassAction\Params,
-    MassAction\Result,
-    MassAction\Data,
-    MassAction\MassAction,
-    Acl,
-    ORM\EntityManager,
-    Exceptions\Forbidden,
-};
-
-use Espo\{
-    Entities\User,
-};
+use Espo\Core\Acl;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\MassAction\Data;
+use Espo\Core\MassAction\MassAction;
+use Espo\Core\MassAction\Params;
+use Espo\Core\MassAction\QueryBuilder;
+use Espo\Core\MassAction\Result;
+use Espo\Core\ORM\EntityManager;
+use Espo\Entities\User;
 
 class MassFollow implements MassAction
 {
@@ -78,9 +72,9 @@ class MassFollow implements MassAction
             throw new Forbidden();
         }
 
-        $userId = $passedUserId ?? $this->user->id;
+        $userId = $passedUserId ?? $this->user->getId();
 
-        if (!$this->acl->check($entityType, 'stream')) {
+        if (!$this->acl->check($entityType, Acl\Table::ACTION_STREAM)) {
             throw new Forbidden("No stream access for '{$entityType}'.");
         }
 
@@ -98,8 +92,8 @@ class MassFollow implements MassAction
 
         foreach ($collection as $entity) {
             if (
-                !$this->acl->check($entity, 'stream') ||
-                !$this->acl->check($entity, 'read')
+                !$this->acl->checkEntityStream($entity) ||
+                !$this->acl->checkEntityRead($entity)
             ) {
                 continue;
             }
@@ -114,15 +108,9 @@ class MassFollow implements MassAction
             $id = $entity->getId();
 
             $ids[] = $id;
-
             $count++;
         }
 
-        $result = [
-            'count' => $count,
-            'ids' => $ids,
-        ];
-
-        return Result::fromArray($result);
+        return new Result($count, $ids);
     }
 }

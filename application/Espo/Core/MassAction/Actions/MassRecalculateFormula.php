@@ -29,34 +29,20 @@
 
 namespace Espo\Core\MassAction\Actions;
 
-use Espo\Core\{
-    MassAction\QueryBuilder,
-    MassAction\Params,
-    MassAction\Result,
-    MassAction\Data,
-    MassAction\MassAction,
-    ORM\EntityManager,
-    Exceptions\Forbidden,
-};
-
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\MassAction\Data;
+use Espo\Core\MassAction\MassAction;
+use Espo\Core\MassAction\Params;
+use Espo\Core\MassAction\QueryBuilder;
+use Espo\Core\MassAction\Result;
+use Espo\Core\ORM\EntityManager;
 use Espo\Entities\User;
 
 class MassRecalculateFormula implements MassAction
 {
-    /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
-
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var User
-     */
-    protected $user;
+    private QueryBuilder $queryBuilder;
+    private EntityManager $entityManager;
+    private User $user;
 
     public function __construct(
         QueryBuilder $queryBuilder,
@@ -97,15 +83,9 @@ class MassRecalculateFormula implements MassAction
             $id = $entity->getId();
 
             $ids[] = $id;
-
             $count++;
         }
 
-        $result = [
-            'count' => $count,
-            'ids' => $ids,
-        ];
-
-        return Result::fromArray($result);
+        return new Result($count, $ids);
     }
 }

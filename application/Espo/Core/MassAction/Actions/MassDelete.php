@@ -30,69 +30,38 @@
 namespace Espo\Core\MassAction\Actions;
 
 use Espo\Entities\User;
-
-use Espo\Core\{
-    MassAction\QueryBuilder,
-    MassAction\Params,
-    MassAction\Result,
-    MassAction\Data,
-    MassAction\MassAction,
-    Acl,
-    Record\ServiceFactory,
-    ORM\EntityManager,
-    Exceptions\Forbidden,
-};
+use Espo\Core\Acl;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\MassAction\Data;
+use Espo\Core\MassAction\MassAction;
+use Espo\Core\MassAction\Params;
+use Espo\Core\MassAction\QueryBuilder;
+use Espo\Core\MassAction\Result;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Record\ServiceFactory;
 
 class MassDelete implements MassAction
 {
-    /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
-
-    /**
-     * @var Acl
-     */
-    protected $acl;
-
-    /**
-     * @var ServiceFactory
-     */
-    protected $serviceFactory;
-
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var User
-     */
-    private $user;
-
     public function __construct(
-        QueryBuilder $queryBuilder,
-        Acl $acl,
-        ServiceFactory $serviceFactory,
-        EntityManager $entityManager,
-        User $user
-    ) {
-        $this->queryBuilder = $queryBuilder;
-        $this->acl = $acl;
-        $this->serviceFactory = $serviceFactory;
-        $this->entityManager = $entityManager;
-        $this->user = $user;
-    }
+        private QueryBuilder $queryBuilder,
+        private Acl $acl,
+        private ServiceFactory $serviceFactory,
+        private EntityManager $entityManager,
+        private User $user
+    ) {}
 
     public function process(Params $params, Data $data): Result
     {
         $entityType = $params->getEntityType();
 
-        if (!$this->acl->check($entityType, 'delete')) {
+        if (!$this->acl->check($entityType, Acl\Table::ACTION_DELETE)) {
             throw new Forbidden("No delete access for '{$entityType}'.");
         }
 
-        if (!$params->hasIds() && $this->acl->get('massUpdatePermission') !== 'yes') {
+        if (
+            !$params->hasIds() &&
+            $this->acl->getPermissionLevel('massUpdate') !== Acl\Table::LEVEL_YES
+        ) {
             throw new Forbidden("No mass-update permission.");
         }
 
@@ -112,7 +81,7 @@ class MassDelete implements MassAction
         $count = 0;
 
         foreach ($collection as $entity) {
-            if (!$this->acl->check($entity, 'delete')) {
+            if (!$this->acl->checkEntityDelete($entity)) {
                 continue;
             }
 
