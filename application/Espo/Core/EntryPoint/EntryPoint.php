@@ -29,10 +29,12 @@
 
 namespace Espo\Core\EntryPoint;
 
-use Espo\Core\{
-    Api\Request,
-    Api\Response,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 
 /**
  * An entry point to the application by `?entryPoint={entityPointName}` URI.
@@ -40,5 +42,11 @@ use Espo\Core\{
  */
 interface EntryPoint
 {
+    /**
+     * @throws Error
+     * @throws Forbidden
+     * @throws BadRequest
+     * @throws NotFound
+     */
     public function run(Request $request, Response $response): void;
 }

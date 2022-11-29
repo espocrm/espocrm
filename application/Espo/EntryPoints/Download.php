@@ -30,18 +30,16 @@
 namespace Espo\EntryPoints;
 
 use Espo\Entities\Attachment as AttachmentEntity;
-
-use Espo\Core\{
-    Exceptions\BadRequest,
-    Exceptions\Forbidden,
-    Exceptions\NotFoundSilent,
-    EntryPoint\EntryPoint,
-    Acl,
-    ORM\EntityManager,
-    Api\Request,
-    Api\Response,
-    FileStorage\Manager as FileStorageManager,
-    Utils\Metadata};
+use Espo\Core\Acl;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\EntryPoint\EntryPoint;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFoundSilent;
+use Espo\Core\FileStorage\Manager as FileStorageManager;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Metadata;
 
 class Download implements EntryPoint
 {
@@ -70,8 +68,8 @@ class Download implements EntryPoint
             throw new BadRequest();
         }
 
-        /** @var AttachmentEntity|null $attachment */
-        $attachment = $this->entityManager->getEntityById('Attachment', $id);
+        /** @var ?AttachmentEntity $attachment */
+        $attachment = $this->entityManager->getEntityById(AttachmentEntity::ENTITY_TYPE, $id);
 
         if (!$attachment) {
             throw new NotFoundSilent();
@@ -89,7 +87,7 @@ class Download implements EntryPoint
 
         $outputFileName = str_replace("\"", "\\\"", $attachment->get('name'));
 
-        $type = $attachment->get('type');
+        $type = $attachment->getType();
 
         $disposition = 'attachment';
 
