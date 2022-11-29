@@ -322,12 +322,23 @@ body {
                 }
             }
 
-            .btn-group,
-            .btn-group.open {
-                > .dropdown-toggle.btn {
-                    color: var(--panel-default-text);
-                    background-color: transparent;
-                    border-color: transparent;
+            .btn-group {                
+                &,
+                &.open {
+                    > .dropdown-toggle.btn {
+                        color: var(--btn-default-color);
+                        background-color: transparent;
+                        border-color: transparent;
+                    }
+                }
+
+                &.open {
+                    > .dropdown-toggle.btn {
+                        > .fas,
+                        > .far {
+                            color: var(--btn-text-color);
+                        }
+                    }
                 }
             }
         }
