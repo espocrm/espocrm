@@ -26,12 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/inbound-email/record/detail', 'views/record/detail', function (Dep) {
+define('views/inbound-email/record/detail', ['views/record/detail'], function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.setupFieldsBehaviour();
             this.initSslFieldListening();
         },
@@ -40,6 +41,7 @@ define('views/inbound-email/record/detail', 'views/record/detail', function (Dep
             if (!this.model.isNew()) {
                 return !!((this.model.get('fetchData') || {}).lastUID);
             }
+
             return false;
         },
 
@@ -67,35 +69,39 @@ define('views/inbound-email/record/detail', 'views/record/detail', function (Dep
                 this.setFieldRequired('smtpPort');
 
                 this.controlSmtpAuthField();
-            } else {
-                this.hideField('smtpHost');
-                this.hideField('smtpPort');
-                this.hideField('smtpAuth');
-                this.hideField('smtpUsername');
-                this.hideField('smtpPassword');
-                this.hideField('smtpAuthMechanism');
-                this.hideField('smtpSecurity');
-                this.hideField('smtpTestSend');
-                this.hideField('fromName');
-                this.hideField('smtpIsShared');
-                this.hideField('smtpIsForMassEmail');
-                this.hideField('storeSentEmails');
-                this.hideField('sentFolder');
 
-                this.setFieldNotRequired('smtpHost');
-                this.setFieldNotRequired('smtpPort');
-                this.setFieldNotRequired('smtpUsername');
+                return;
             }
+
+            this.hideField('smtpHost');
+            this.hideField('smtpPort');
+            this.hideField('smtpAuth');
+            this.hideField('smtpUsername');
+            this.hideField('smtpPassword');
+            this.hideField('smtpAuthMechanism');
+            this.hideField('smtpSecurity');
+            this.hideField('smtpTestSend');
+            this.hideField('fromName');
+            this.hideField('smtpIsShared');
+            this.hideField('smtpIsForMassEmail');
+            this.hideField('storeSentEmails');
+            this.hideField('sentFolder');
+
+            this.setFieldNotRequired('smtpHost');
+            this.setFieldNotRequired('smtpPort');
+            this.setFieldNotRequired('smtpUsername');
         },
 
         controlSentFolderField: function () {
             if (this.model.get('useSmtp') && this.model.get('storeSentEmails')) {
                 this.showField('sentFolder');
                 this.setFieldRequired('sentFolder');
-            } else {
-                this.hideField('sentFolder');
-                this.setFieldNotRequired('sentFolder');
+
+                return;
             }
+
+            this.hideField('sentFolder');
+            this.setFieldNotRequired('sentFolder');
         },
 
         controlSmtpAuthField: function () {
@@ -104,39 +110,46 @@ define('views/inbound-email/record/detail', 'views/record/detail', function (Dep
                 this.showField('smtpPassword');
                 this.showField('smtpAuthMechanism');
                 this.setFieldRequired('smtpUsername');
-            } else {
-                this.hideField('smtpUsername');
-                this.hideField('smtpPassword');
-                this.hideField('smtpAuthMechanism');
-                this.setFieldNotRequired('smtpUsername');
+
+                return;
             }
+
+            this.hideField('smtpUsername');
+            this.hideField('smtpPassword');
+            this.hideField('smtpAuthMechanism');
+            this.setFieldNotRequired('smtpUsername');
         },
 
         controlStatusField: function () {
-            var list = ['username', 'port', 'host', 'monitoredFolders'];
+            let list = ['username', 'port', 'host', 'monitoredFolders'];
+
             if (this.model.get('status') === 'Active' && this.model.get('useImap')) {
-                list.forEach(function (item) {
+                list.forEach(item => {
                     this.setFieldRequired(item);
-                }, this);
-            } else {
-                list.forEach(function (item) {
-                    this.setFieldNotRequired(item);
-                }, this);
+                });
+
+                return;
             }
+
+            list.forEach(item => {
+                this.setFieldNotRequired(item);
+            });
         },
 
         setupFieldsBehaviour: function () {
             this.controlStatusField();
-            this.listenTo(this.model, 'change:status', function (model, value, o) {
+
+            this.listenTo(this.model, 'change:status', (model, value, o) => {
                 if (o.ui) {
                     this.controlStatusField();
                 }
-            }, this);
-            this.listenTo(this.model, 'change:useImap', function (model, value, o) {
+            });
+
+            this.listenTo(this.model, 'change:useImap', (model, value, o) => {
                 if (o.ui) {
                     this.controlStatusField();
                 }
-            }, this);
+            });
 
             if (this.wasFetched()) {
                 this.setFieldReadOnly('fetchSince');
@@ -146,20 +159,24 @@ define('views/inbound-email/record/detail', 'views/record/detail', function (Dep
 
             this.initSmtpFieldsControl();
 
-            var handleRequirement = function (model) {
+            let handleRequirement = (model) => {
                 if (model.get('createCase')) {
                     this.showField('caseDistribution');
                 } else {
                     this.hideField('caseDistribution');
                 }
 
-                if (model.get('createCase') && ['Round-Robin', 'Least-Busy'].indexOf(model.get('caseDistribution')) != -1) {
+                if (
+                    model.get('createCase') &&
+                    ['Round-Robin', 'Least-Busy'].indexOf(model.get('caseDistribution')) !== -1
+                ) {
                     this.setFieldRequired('team');
                     this.showField('targetUserPosition');
                 } else {
                     this.setFieldNotRequired('team');
                     this.hideField('targetUserPosition');
                 }
+
                 if (model.get('createCase') && 'Direct-Assignment' === model.get('caseDistribution')) {
                     this.setFieldRequired('assignToUser');
                     this.showField('assignToUser');
@@ -167,17 +184,20 @@ define('views/inbound-email/record/detail', 'views/record/detail', function (Dep
                     this.setFieldNotRequired('assignToUser');
                     this.hideField('assignToUser');
                 }
+
                 if (model.get('createCase') && model.get('createCase') !== '') {
                     this.showField('team');
                 } else {
                     this.hideField('team');
                 }
-            }.bind(this);
+            };
 
-            this.listenTo(this.model, 'change:createCase', function (model, value, o) {
+            this.listenTo(this.model, 'change:createCase', (model, value, o) => {
                 handleRequirement(model);
 
-                if (!o.ui) return;
+                if (!o.ui) {
+                    return;
+                }
 
                 if (!model.get('createCase')) {
                     this.model.set({
@@ -186,55 +206,63 @@ define('views/inbound-email/record/detail', 'views/record/detail', function (Dep
                         teamName: null,
                         assignToUserId: null,
                         assignToUserName: null,
-                        targetUserPosition: ''
+                        targetUserPosition: '',
                     });
                 }
-            }, this);
+            });
 
             handleRequirement(this.model);
 
-            this.listenTo(this.model, 'change:caseDistribution', function (model, value, o) {
+            this.listenTo(this.model, 'change:caseDistribution', (model, value, o) => {
                 handleRequirement(model);
 
-                if (!o.ui) return;
+                if (!o.ui) {
+                    return;
+                }
 
-                setTimeout(function () {
+                setTimeout(() => {
                     if (!this.model.get('caseDistribution')) {
                         this.model.set({
                             assignToUserId: null,
                             assignToUserName: null,
                             targetUserPosition: ''
                         });
-                    } else if (this.model.get('caseDistribution') === 'Direct-Assignment') {
+
+                        return;
+                    }
+
+                    if (this.model.get('caseDistribution') === 'Direct-Assignment') {
                         this.model.set({
-                            targetUserPosition: ''
-                        });
-                    } else {
-                        this.model.set({
-                            assignToUserId: null,
-                            assignToUserName: null
+                            targetUserPosition: '',
                         });
                     }
-                }.bind(this), 10);
+
+                    this.model.set({
+                        assignToUserId: null,
+                        assignToUserName: null,
+                    });
+                }, 10);
             });
         },
 
         initSslFieldListening: function () {
-            this.listenTo(this.model, 'change:security', function (model, value, o) {
+            this.listenTo(this.model, 'change:security', (model, value, o) => {
                 if (!o.ui) {
                     return;
                 }
+
                 if (value) {
                     this.model.set('port', 993);
                 } else {
                     this.model.set('port', 143);
                 }
-            }, this);
+            });
 
-            this.listenTo(this.model, 'change:smtpSecurity', function (model, value, o) {
+            this.listenTo(this.model, 'change:smtpSecurity', (model, value, o) => {
                 if (!o.ui) {
                     return;
                 }
+
                 if (value === 'SSL') {
                     this.model.set('smtpPort', 465);
                 } else if (value === 'TLS') {
@@ -242,7 +270,7 @@ define('views/inbound-email/record/detail', 'views/record/detail', function (Dep
                 } else {
                     this.model.set('smtpPort', 25);
                 }
-            }, this);
-        }
+            });
+        },
     });
 });

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-account/record/detail', 'views/record/detail', function (Dep) {
+define('views/email-account/record/detail', ['views/record/detail'], function (Dep) {
 
     return Dep.extend({
 
@@ -46,16 +46,18 @@ define('views/email-account/record/detail', 'views/record/detail', function (Dep
 
         setupFieldsBehaviour: function () {
             this.controlStatusField();
-            this.listenTo(this.model, 'change:status', function (model, value, o) {
+
+            this.listenTo(this.model, 'change:status', (model, value, o) => {
                 if (o.ui) {
                     this.controlStatusField();
                 }
-            }, this);
-            this.listenTo(this.model, 'change:useImap', function (model, value, o) {
+            });
+
+            this.listenTo(this.model, 'change:useImap', (model, value, o) => {
                 if (o.ui) {
                     this.controlStatusField();
                 }
-            }, this);
+            });
 
             if (this.wasFetched()) {
                 this.setFieldReadOnly('fetchSince');
@@ -65,38 +67,43 @@ define('views/email-account/record/detail', 'views/record/detail', function (Dep
         },
 
         controlStatusField: function () {
-            var list = ['username', 'port', 'host', 'monitoredFolders'];
+            let list = ['username', 'port', 'host', 'monitoredFolders'];
+
             if (this.model.get('status') === 'Active' && this.model.get('useImap')) {
-                list.forEach(function (item) {
+                list.forEach(item => {
                     this.setFieldRequired(item);
-                }, this);
-            } else {
-                list.forEach(function (item) {
-                    this.setFieldNotRequired(item);
-                }, this);
+                });
+
+                return;
             }
+
+            list.forEach(item => {
+                this.setFieldNotRequired(item);
+            });
         },
 
         wasFetched: function () {
             if (!this.model.isNew()) {
                 return !!((this.model.get('fetchData') || {}).lastUID);
             }
+
             return false;
         },
 
         initSslFieldListening: function () {
-            this.listenTo(this.model, 'change:security', function (model, value, o) {
+            this.listenTo(this.model, 'change:security', (model, value, o) => {
                 if (!o.ui) {
                     return;
                 }
+
                 if (value) {
                     this.model.set('port', 993);
                 } else {
                     this.model.set('port', 143);
                 }
-            }, this);
+            });
 
-            this.listenTo(this.model, 'change:smtpSecurity', function (model, value, o) {
+            this.listenTo(this.model, 'change:smtpSecurity', (model, value, o) => {
                 if (o.ui) {
                     if (value === 'SSL') {
                         this.model.set('smtpPort', 465);
@@ -106,11 +113,12 @@ define('views/email-account/record/detail', 'views/record/detail', function (Dep
                         this.model.set('smtpPort', 25);
                     }
                 }
-            }, this);
+            });
         },
 
         initSmtpFieldsControl: function () {
             this.controlSmtpFields();
+
             this.listenTo(this.model, 'change:useSmtp', this.controlSmtpFields, this);
             this.listenTo(this.model, 'change:smtpAuth', this.controlSmtpFields, this);
         },
@@ -127,20 +135,22 @@ define('views/email-account/record/detail', 'views/record/detail', function (Dep
                 this.setFieldRequired('smtpPort');
 
                 this.controlSmtpAuthField();
-            } else {
-                this.hideField('smtpHost');
-                this.hideField('smtpPort');
-                this.hideField('smtpAuth');
-                this.hideField('smtpUsername');
-                this.hideField('smtpPassword');
-                this.hideField('smtpAuthMechanism');
-                this.hideField('smtpSecurity');
-                this.hideField('smtpTestSend');
 
-                this.setFieldNotRequired('smtpHost');
-                this.setFieldNotRequired('smtpPort');
-                this.setFieldNotRequired('smtpUsername');
+                return;
             }
+
+            this.hideField('smtpHost');
+            this.hideField('smtpPort');
+            this.hideField('smtpAuth');
+            this.hideField('smtpUsername');
+            this.hideField('smtpPassword');
+            this.hideField('smtpAuthMechanism');
+            this.hideField('smtpSecurity');
+            this.hideField('smtpTestSend');
+
+            this.setFieldNotRequired('smtpHost');
+            this.setFieldNotRequired('smtpPort');
+            this.setFieldNotRequired('smtpUsername');
         },
 
         controlSmtpAuthField: function () {
@@ -149,13 +159,14 @@ define('views/email-account/record/detail', 'views/record/detail', function (Dep
                 this.showField('smtpPassword');
                 this.showField('smtpAuthMechanism');
                 this.setFieldRequired('smtpUsername');
-            } else {
-                this.hideField('smtpUsername');
-                this.hideField('smtpPassword');
-                this.hideField('smtpAuthMechanism');
-                this.setFieldNotRequired('smtpUsername');
-            }
-        },
 
+                return;
+            }
+
+            this.hideField('smtpUsername');
+            this.hideField('smtpPassword');
+            this.hideField('smtpAuthMechanism');
+            this.setFieldNotRequired('smtpUsername');
+        },
     });
 });
