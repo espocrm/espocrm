@@ -118,7 +118,7 @@ define('views/admin/authentication', ['views/settings/record/edit'], function (D
                     .forEach(item => {
                         let labelText = this.translate(item.name, 'fields', 'Settings');
 
-                        if (labelText.toLowerCase().indexOf(method.toLowerCase() + ' ') === 0) {
+                        if (labelText && labelText.toLowerCase().indexOf(method.toLowerCase() + ' ') === 0) {
                             item.labelText = labelText.substring(method.length + 1);
                         }
                     });

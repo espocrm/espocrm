@@ -42,6 +42,10 @@ function (Dep, Detail) {
             }
         },
 
+        modifyDetailLayout: function (layout) {
+            Detail.prototype.modifyDetailLayout.call(this, layout);
+        },
+
         controlStatusField: function () {
             Detail.prototype.controlStatusField.call(this);
         },

@@ -44,6 +44,20 @@ define('views/email-account/record/detail', ['views/record/detail'], function (D
             }
         },
 
+        modifyDetailLayout: function (layout) {
+            layout.filter(panel => panel.tabLabel === '$label:SMTP').forEach(panel => {
+                panel.rows.forEach(row => {
+                    row.forEach(item => {
+                        let labelText = this.translate(item.name, 'fields', 'EmailAccount');
+
+                        if (labelText && labelText.indexOf('SMTP ') === 0) {
+                            item.labelText = Espo.Utils.upperCaseFirst(labelText.substring(5));
+                        }
+                    });
+                })
+            });
+        },
+
         setupFieldsBehaviour: function () {
             this.controlStatusField();
 

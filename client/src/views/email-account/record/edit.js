@@ -45,6 +45,10 @@ function (Dep, Detail) {
             }
         },
 
+        modifyDetailLayout: function (layout) {
+            Detail.prototype.modifyDetailLayout.call(this, layout);
+        },
+
         setupFieldsBehaviour: function () {
             Detail.prototype.setupFieldsBehaviour.call(this);
         },
