@@ -104,11 +104,20 @@ class ClientManager
             return;
         }
 
-        $response->setHeader('X-Frame-Options', 'SAMEORIGIN');
         $response->setHeader('X-Content-Type-Options', 'nosniff');
 
+        $this->writeXFrameOptionsHeader($response);
         $this->writeContentSecurityPolicyHeader($response);
         $this->writeStrictTransportSecurityHeader($response);
+    }
+
+    private function writeXFrameOptionsHeader(Response $response): void
+    {
+        if ($this->config->get('clientXFrameOptionsHeaderDisabled')) {
+            return;
+        }
+
+        $response->setHeader('X-Frame-Options', 'SAMEORIGIN');
     }
 
     private function writeContentSecurityPolicyHeader(Response $response): void
