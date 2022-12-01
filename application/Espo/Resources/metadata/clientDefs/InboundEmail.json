@@ -39,7 +39,7 @@
                             "value": [
                                 {
                                     "type": "isTrue",
-                                    "attribute": "useImap"
+                                    "attribute": "useSmtp"
                                 },
                                 {
                                     "type": "isTrue",
