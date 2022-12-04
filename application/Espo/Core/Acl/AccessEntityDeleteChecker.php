@@ -40,7 +40,7 @@ interface AccessEntityDeleteChecker extends AccessDeleteChecker
     /**
      * Check 'delete' access for an entity.
      *
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
      */
     public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool;
 }

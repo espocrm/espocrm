@@ -40,7 +40,7 @@ interface AccessEntityReadChecker extends AccessReadChecker
     /**
      * Check 'read' access for entity.
      *
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
      */
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool;
 }

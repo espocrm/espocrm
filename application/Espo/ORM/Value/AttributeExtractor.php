@@ -39,7 +39,7 @@ use stdClass;
 interface AttributeExtractor
 {
     /**
-     * @phpstan-param T $value
+     * @param T $value
      */
     public function extract(object $value, string $field): stdClass;
 

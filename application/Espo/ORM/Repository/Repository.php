@@ -55,7 +55,7 @@ interface Repository
     /**
      * Store an entity.
      *
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
      * @param array<string,mixed> $options
      */
     public function save(Entity $entity, array $options = []): void;
@@ -63,7 +63,7 @@ interface Repository
     /**
      * Remove an entity.
      *
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
      * @param array<string,mixed> $options
      */
     public function remove(Entity $entity, array $options = []): void;

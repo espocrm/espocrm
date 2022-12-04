@@ -40,7 +40,7 @@ interface AccessEntityEditChecker extends AccessEditChecker
     /**
      * Check 'edit' access for an entity.
      *
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
      */
     public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool;
 }

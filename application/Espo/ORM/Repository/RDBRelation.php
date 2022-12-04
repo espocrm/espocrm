@@ -50,19 +50,12 @@ use RuntimeException;
 class RDBRelation
 {
     private EntityManager $entityManager;
-
     private HookMediator $hookMediator;
-
     private Entity $entity;
-
     private string $entityType;
-
     private ?string $foreignEntityType = null;
-
     private string $relationName;
-
     private ?string $relationType = null;
-
     private bool $noBuilder = false;
 
     public function __construct(
@@ -84,9 +77,7 @@ class RDBRelation
         }
 
         $this->relationName = $relationName;
-
         $this->relationType = $entity->getRelationType($relationName);
-
         $this->entityType = $entity->getEntityType();
 
         if ($entity instanceof BaseEntity) {
@@ -180,7 +171,10 @@ class RDBRelation
             return $this->getMapper()->selectRelated($this->entity, $this->relationName);
         }
 
-        $collection = $this->sth()->limit(0, 1)->find();
+        $collection = $this
+            ->sth()
+            ->limit(0, 1)
+            ->find();
 
         foreach ($collection as $entity) {
             return $entity;
@@ -203,7 +197,7 @@ class RDBRelation
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
+     * @param WhereItem|array<mixed, mixed>|null $conditions Join conditions.
      */
     public function join($target, ?string $alias = null, $conditions = null): Builder
     {
@@ -216,7 +210,7 @@ class RDBRelation
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
+     * @param WhereItem|array<mixed, mixed>|null $conditions Join conditions.
      */
     public function leftJoin($target, ?string $alias = null, $conditions = null): Builder
     {
@@ -280,12 +274,10 @@ class RDBRelation
      * * `order([$expr1, $expr2, ...])
      * * `order(string $expression, string $direction)
      *
-     * @param Order|Order[]|Expression|string $orderBy
-     * An attribute to order by or an array or order items.
-     * Passing an array will reset a previously set order.
+     * @param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
+     *   An attribute to order by or an array or order items.
+     *   Passing an array will reset a previously set order.
      * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.
-     *
-     * @phpstan-param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
      */
     public function order($orderBy = 'id', $direction = null): Builder
     {
@@ -311,7 +303,7 @@ class RDBRelation
      * * `select(string $expression, string $alias)`
      *
      * @param Selection|Selection[]|Expression|Expression[]|string[]|string|array<int, string[]|string> $select
-     * An array of expressions or one expression.
+     *   An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is not an array.
      */
     public function select($select = [], ?string $alias = null): Builder
@@ -517,7 +509,6 @@ class RDBRelation
     public function relate(Entity $entity, ?array $columnData = null, array $options = []): void
     {
         $this->processCheckForeignEntity($entity);
-
         $this->beforeRelate($entity, $columnData, $options);
 
         $result = $this->getMapper()->relate($this->entity, $this->relationName, $entity, $columnData);
@@ -537,18 +528,15 @@ class RDBRelation
     public function unrelate(Entity $entity, array $options = []): void
     {
         $this->processCheckForeignEntity($entity);
-
         $this->beforeUnrelate($entity, $options);
-
         $this->getMapper()->unrelate($this->entity, $this->relationName, $entity);
-
         $this->afterUnrelate($entity, $options);
     }
 
     /**
      * Mass-relate.
      *
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function massRelate(Select $query, array $options = []): void
     {
@@ -561,16 +549,14 @@ class RDBRelation
         }
 
         $this->beforeMassRelate($query, $options);
-
         $this->getMapper()->massRelate($this->entity, $this->relationName, $query);
-
         $this->afterMassRelate($query, $options);
     }
 
     /**
      * Update relationship columns. For many-to-many relationships.
      *
-     * @param array<string,mixed> $columnData Role values.
+     * @param array<string, mixed> $columnData Role values.
      */
     public function updateColumns(Entity $entity, array $columnData): void
     {
@@ -612,8 +598,8 @@ class RDBRelation
     }
 
     /**
-     * @param array<string,mixed>|null $columnData Role values.
-     * @param array<string,mixed> $options
+     * @param array<string, mixed>|null $columnData Role values.
+     * @param array<string, mixed> $options
      */
     private function beforeRelate(Entity $entity, ?array $columnData, array $options): void
     {
@@ -621,8 +607,8 @@ class RDBRelation
     }
 
     /**
-     * @param array<string,mixed>|null $columnData Role values.
-     * @param array<string,mixed> $options
+     * @param array<string, mixed>|null $columnData Role values.
+     * @param array<string, mixed> $options
      */
     private function afterRelate(Entity $entity, ?array $columnData, array $options): void
     {
@@ -630,7 +616,7 @@ class RDBRelation
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function beforeUnrelate(Entity $entity, array $options): void
     {
@@ -638,7 +624,7 @@ class RDBRelation
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function afterUnrelate(Entity $entity, array $options): void
     {
@@ -646,7 +632,7 @@ class RDBRelation
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function beforeMassRelate(Select $query, array $options): void
     {
@@ -654,7 +640,7 @@ class RDBRelation
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function afterMassRelate(Select $query, array $options): void
     {

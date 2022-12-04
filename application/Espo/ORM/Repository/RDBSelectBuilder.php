@@ -30,6 +30,7 @@
 namespace Espo\ORM\Repository;
 
 use Espo\ORM\Collection;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\SthCollection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -53,12 +54,8 @@ use RuntimeException;
 class RDBSelectBuilder
 {
     private EntityManager $entityManager;
-
     private SelectBuilder $builder;
-
-    /**
-     * @var RDBRepository<TEntity>
-     */
+    /** @var RDBRepository<TEntity> */
     private RDBRepository $repository;
 
     private bool $returnSthCollection = false;
@@ -107,8 +104,7 @@ class RDBSelectBuilder
     }
 
     /**
-     * @param ?array<string,mixed> $params @deprecated
-     *
+     * @param ?array<string, mixed> $params @deprecated
      * @return ?TEntity
      */
     public function findOne(?array $params = null): ?Entity
@@ -205,11 +201,10 @@ class RDBSelectBuilder
      * Add JOIN.
      *
      * @param Join|string $target
-     * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
+     *   A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
-     *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @param WhereItem|array<mixed, mixed>|null $conditions Join conditions.
+     * @return RDBSelectBuilder<TEntity>
      */
     public function join($target, ?string $alias = null, $conditions = null): self
     {
@@ -222,11 +217,11 @@ class RDBSelectBuilder
      * Add LEFT JOIN.
      *
      * @param Join|string $target
-     * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
+     *   A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
      * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
      *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function leftJoin($target, ?string $alias = null, $conditions = null): self
     {
@@ -238,7 +233,7 @@ class RDBSelectBuilder
     /**
      * Set DISTINCT parameter.
      *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function distinct(): self
     {
@@ -250,7 +245,7 @@ class RDBSelectBuilder
     /**
      * Lock selected rows. To be used within a transaction.
      *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function forUpdate(): self
     {
@@ -263,8 +258,7 @@ class RDBSelectBuilder
      * Set to return STH collection. Recommended for fetching large number of records.
      *
      * @todo Remove.
-     *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function sth(): self
     {
@@ -281,10 +275,9 @@ class RDBSelectBuilder
      * * `where(array $clause)`
      * * `where(string $key, string $value)`
      *
-     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<mixed, mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
-     *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function where($clause = [], $value = null): self
     {
@@ -301,10 +294,9 @@ class RDBSelectBuilder
      * * `having(array $clause)`
      * * `having(string $key, string $value)`
      *
-     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<mixed, mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
-     *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function having($clause = [], $value = null): self
     {
@@ -322,13 +314,11 @@ class RDBSelectBuilder
      * * `order([$expr1, $expr2, ...])
      * * `order(string $expression, string $direction)
      *
-     * @param Order|Order[]|Expression|string $orderBy
+     * @param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
      * An attribute to order by or an array or order items.
      * Passing an array will reset a previously set order.
      * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.
-     *
-     * @phpstan-param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function order($orderBy = 'id', $direction = null): self
     {
@@ -340,7 +330,7 @@ class RDBSelectBuilder
     /**
      * Apply OFFSET and LIMIT.
      *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function limit(?int $offset = null, ?int $limit = null): self
     {
@@ -365,8 +355,7 @@ class RDBSelectBuilder
      * @param Selection|Selection[]|Expression|Expression[]|string[]|string|array<int, string[]|string> $select
      * An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is a string.
-     *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function select($select, ?string $alias = null): self
     {
@@ -385,8 +374,7 @@ class RDBSelectBuilder
      * * `groupBy([$expr1, $expr2, ...])`
      *
      * @param Expression|Expression[]|string|string[] $groupBy
-     *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function group($groupBy): self
     {
@@ -398,7 +386,7 @@ class RDBSelectBuilder
     /**
      * @deprecated Use `group` method.
      *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      * @param Expression|Expression[]|string|string[] $groupBy
      */
     public function groupBy($groupBy): self
@@ -421,7 +409,7 @@ class RDBSelectBuilder
         }
 
         /**
-         * @var \Espo\ORM\EntityCollection<TEntity>
+         * @var EntityCollection<TEntity>
          */
         return $this->entityManager->getCollectionFactory()->createFromSthCollection($collection);
     }
@@ -429,7 +417,7 @@ class RDBSelectBuilder
     /**
      * For backward compatibility.
      * @todo Remove.
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function getMergedParams(?array $params = null): Select
     {

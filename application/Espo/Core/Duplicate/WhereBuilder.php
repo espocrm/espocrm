@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Duplicate;
 
-use Espo\ORM\{
-    Query\Part\WhereItem,
-    Entity,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\Query\Part\WhereItem;
 
 /**
  * @template TEntity of Entity
@@ -40,7 +38,7 @@ use Espo\ORM\{
 interface WhereBuilder
 {
     /**
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
      */
     public function build(Entity $entity): ?WhereItem;
 }

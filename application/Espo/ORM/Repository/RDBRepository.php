@@ -916,12 +916,10 @@ class RDBRepository implements Repository
      * * `order([$expr1, $expr2, ...])
      * * `order(string $expression, string $direction)
      *
-     * @param Order|Order[]|Expression|string $orderBy
-     * An attribute to order by or an array or order items.
-     * Passing an array will reset a previously set order.
+     * @param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
+     *   An attribute to order by or an array or order items.
+     *   Passing an array will reset a previously set order.
      * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.
-     *
-     * @phpstan-param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
      * @return RDBSelectBuilder<TEntity>
      */
     public function order($orderBy = 'id', $direction = null): RDBSelectBuilder
@@ -950,7 +948,7 @@ class RDBRepository implements Repository
      * * `select(string $expression, string $alias)`
      *
      * @param Selection|Selection[]|Expression|Expression[]|string[]|string|array<int, string[]|string> $select
-     * An array of expressions or one expression.
+     *   An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is not an array.
      * @return RDBSelectBuilder<TEntity>
      */

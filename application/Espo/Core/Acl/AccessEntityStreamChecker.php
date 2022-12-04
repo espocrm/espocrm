@@ -40,7 +40,7 @@ interface AccessEntityStreamChecker extends AccessStreamChecker
     /**
      * Check 'stream' access for an entity.
      *
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
      */
     public function checkEntityStream(User $user, Entity $entity, ScopeData $data): bool;
 }

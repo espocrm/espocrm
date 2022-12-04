@@ -52,19 +52,12 @@ use InvalidArgumentException;
 class RDBRelationSelectBuilder
 {
     private EntityManager $entityManager;
-
     private Entity $entity;
-
     private string $foreignEntityType;
-
     private string $relationName;
-
     private ?string $relationType = null;
-
     private SelectBuilder $builder;
-
     private ?string $middleTableAlias = null;
-
     private bool $returnSthCollection = false;
 
     public function __construct(
@@ -74,13 +67,9 @@ class RDBRelationSelectBuilder
         ?Select $query = null
     ) {
         $this->entityManager = $entityManager;
-
         $this->entity = $entity;
-
         $this->relationName = $relationName;
-
         $this->relationType = $entity->getRelationType($relationName);
-
         $entityType = $entity->getEntityType();
 
         if ($entity instanceof BaseEntity) {
@@ -132,7 +121,7 @@ class RDBRelationSelectBuilder
      * Usage example:
      * `->columnsWhere(['column' => $value])`
      *
-     * @param WhereItem|array<mixed,mixed> $clause Where clause.
+     * @param WhereItem|array<mixed, mixed> $clause Where clause.
      */
     public function columnsWhere($clause): self
     {
@@ -300,7 +289,7 @@ class RDBRelationSelectBuilder
      * * `where(array $clause)`
      * * `where(string $key, string $value)`
      *
-     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<mixed, mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
      */
     public function where($clause = [], $value = null): self
@@ -330,7 +319,7 @@ class RDBRelationSelectBuilder
      * * `having(array $clause)`
      * * `having(string $key, string $value)`
      *
-     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<mixed, mixed>|string $clause A key or where clause.
      * @param mixed[]|string|null $value A value. Should be omitted if the first argument is not string.
      */
     public function having($clause = [], $value = null): self
@@ -349,12 +338,10 @@ class RDBRelationSelectBuilder
      * * `order([$expr1, $expr2, ...])
      * * `order(string $expression, string $direction)
      *
-     * @param Order|Order[]|Expression|string $orderBy
-     * An attribute to order by or an array or order items.
-     * Passing an array will reset a previously set order.
+     * @param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
+     *   An attribute to order by or an array or order items.
+     *   Passing an array will reset a previously set order.
      * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.
-     *
-     * @phpstan-param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
      */
     public function order($orderBy = 'id', $direction = null): self
     {
@@ -384,7 +371,7 @@ class RDBRelationSelectBuilder
      * * `select(string $expression, string $alias)`
      *
      * @param Selection|Selection[]|Expression|Expression[]|string[]|string|array<int, string[]|string> $select
-     * An array of expressions or one expression.
+     *   An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is not an array.
      */
     public function select($select, ?string $alias = null): self
@@ -452,8 +439,8 @@ class RDBRelationSelectBuilder
     }
 
     /**
-     * @param array<mixed,mixed> $where
-     * @return array<mixed,mixed>
+     * @param array<mixed, mixed> $where
+     * @return array<mixed, mixed>
      */
     protected function applyRelationAliasToWhereClause(array $where): array
     {
@@ -492,7 +479,7 @@ class RDBRelationSelectBuilder
 
     /**
      * @param Collection<Entity> $collection
-     * @phpstan-return Collection<Entity>
+     * @return Collection<Entity>
      */
     protected function handleReturnCollection(Collection $collection): Collection
     {

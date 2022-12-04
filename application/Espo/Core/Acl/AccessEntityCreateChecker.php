@@ -40,7 +40,7 @@ interface AccessEntityCreateChecker extends AccessCreateChecker
     /**
      * Check 'create' access for an entity.
      *
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
      */
     public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool;
 }
