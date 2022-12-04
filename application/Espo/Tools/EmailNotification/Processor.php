@@ -32,15 +32,14 @@ namespace Espo\Tools\EmailNotification;
 use Espo\Core\Notification\EmailNotificationHandler;
 use Espo\Core\Mail\SenderParams;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Entities\Note;
+use Espo\ORM\Collection;
 use Espo\Repositories\Portal as PortalRepository;
 use Espo\Entities\Email;
-use Espo\Entities\Note;
-use Espo\Entities\Note as NoteEntity;
 use Espo\Entities\Notification;
 use Espo\Entities\Portal;
 use Espo\Entities\Preferences;
 use Espo\Entities\User;
-use Espo\Entities\User as UserEntity;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\SelectBuilder as SelectBuilder;
@@ -70,49 +69,23 @@ class Processor
 
     private ?Htmlizer $htmlizer = null;
 
-    /**
-     * @var array<string,?EmailNotificationHandler>
-     */
+    /** @var array<string,?EmailNotificationHandler>  */
     private $emailNotificationEntityHandlerHash = [];
-
-    /**
-     * @var array<string,?\Espo\Entities\Portal>
-     */
+    /** @var array<string,?Portal> */
     private $userIdPortalCacheMap = [];
-    private $entityManager;
-    private $htmlizerFactory;
-    private $emailSender;
-    private $config;
-    private $injectableFactory;
-    private $templateFileManager;
-    private $metadata;
-    private $language;
-    private $log;
-    private $noteAccessControl;
 
     public function __construct(
-        EntityManager $entityManager,
-        HtmlizerFactory $htmlizerFactory,
-        EmailSender $emailSender,
-        Config $config,
-        InjectableFactory $injectableFactory,
-        TemplateFileManager $templateFileManager,
-        Metadata $metadata,
-        Language $language,
-        Log $log,
-        NoteAccessControl $noteAccessControl
-    ) {
-        $this->entityManager = $entityManager;
-        $this->htmlizerFactory = $htmlizerFactory;
-        $this->emailSender = $emailSender;
-        $this->config = $config;
-        $this->injectableFactory = $injectableFactory;
-        $this->templateFileManager = $templateFileManager;
-        $this->metadata = $metadata;
-        $this->language = $language;
-        $this->log = $log;
-        $this->noteAccessControl = $noteAccessControl;
-    }
+        private EntityManager $entityManager,
+        private HtmlizerFactory $htmlizerFactory,
+        private EmailSender $emailSender,
+        private Config $config,
+        private InjectableFactory $injectableFactory,
+        private TemplateFileManager $templateFileManager,
+        private Metadata $metadata,
+        private Language $language,
+        private Log $log,
+        private NoteAccessControl $noteAccessControl
+    ) {}
 
     public function process(): void
     {
@@ -155,9 +128,19 @@ class Processor
         $queryList = [];
 
         foreach ($typeList as $type) {
-            $methodName = 'getNotificationQueryBuilder' . $type;
+            $itemBuilder = null;
 
-            $itemBuilder = $this->$methodName();
+            if ($type === Notification::TYPE_MENTION_IN_POST) {
+                $itemBuilder = $this->getNotificationQueryBuilderMentionInPost();
+            }
+
+            if ($type === Notification::TYPE_NOTE) {
+                $itemBuilder = $this->getNotificationQueryBuilderNote();
+            }
+
+            if (!$itemBuilder) {
+                continue;
+            }
 
             $itemBuilder->where($where);
 
@@ -176,8 +159,11 @@ class Processor
 
         $unionQuery = $builder->build();
 
-        $sql = $this->entityManager->getQueryComposer()->compose($unionQuery);
+        $sql = $this->entityManager
+            ->getQueryComposer()
+            ->compose($unionQuery);
 
+        /** @var Collection<Notification> $notificationList */
         $notificationList = $this->entityManager
             ->getRDBRepository(Notification::ENTITY_TYPE)
             ->findBySql($sql);
@@ -185,19 +171,25 @@ class Processor
         foreach ($notificationList as $notification) {
             $notification->set('emailIsProcessed', true);
 
-            $type = $notification->get('type');
-
-            $methodName = 'processNotification' . ucfirst($type);
-
-            if (!method_exists($this, $methodName)) {
-                continue;
-            }
+            $type = $notification->getType();
 
             try {
-                $this->$methodName($notification);
+                if ($type === Notification::TYPE_NOTE) {
+                    $this->processNotificationNote($notification);
+                }
+                else if ($type === Notification::TYPE_MENTION_IN_POST) {
+                    $this->processNotificationMentionInPost($notification);
+                }
+                else {
+                    // For bc.
+                    $methodName = 'processNotification' . ucfirst($type ?? 'Dummy');
+
+                    if (method_exists($this, $methodName)) {
+                        $this->$methodName($notification);
+                    }
+                }
             }
-            catch (Throwable $e)
-            {
+            catch (Throwable $e) {
                 $this->log->error("Email Notification: " . $e->getMessage());
             }
 
@@ -396,6 +388,7 @@ class Processor
             return;
         }
 
+        /** @var ?Note $note */
         $note = $this->entityManager->getEntity(Note::ENTITY_TYPE, $notification->get('relatedId'));
 
         if (!$note) {
@@ -413,6 +406,8 @@ class Processor
         }
 
         $userId = $notification->get('userId');
+
+        /** @var ?User $user */
         $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
@@ -435,13 +430,32 @@ class Processor
             return;
         }
 
-        $methodName = 'processNotificationNote' . $note->get('type');
+        $type = $note->getType();
 
-        if (!method_exists($this, $methodName)) {
+        if ($type === Note::TYPE_POST) {
+            $this->processNotificationNotePost($note, $user);
+
             return;
         }
 
-        $this->$methodName($note, $user);
+        if ($type === Note::TYPE_STATUS) {
+            $this->processNotificationNoteStatus($note, $user);
+
+            return;
+        }
+
+        if ($type === Note::TYPE_EMAIL_RECEIVED) {
+            $this->processNotificationNoteEmailReceived($note, $user);
+
+            return;
+        }
+
+        /** For bc. */
+        $methodName = 'processNotificationNote' . $type;
+
+        if (method_exists($this, $methodName)) {
+            $this->$methodName($note, $user);
+        }
     }
 
     protected function getHandler(string $type, string $entityType): ?EmailNotificationHandler
@@ -465,7 +479,7 @@ class Processor
         return $this->emailNotificationEntityHandlerHash[$key];
     }
 
-    protected function processNotificationNotePost(NoteEntity $note, UserEntity $user): void
+    protected function processNotificationNotePost(Note $note, User $user): void
     {
         $parentId = $note->get('parentId');
         $parentType = $note->getParentType();
@@ -577,7 +591,7 @@ class Processor
         }
     }
 
-    private function getSiteUrl(UserEntity $user): string
+    private function getSiteUrl(User $user): string
     {
         $portal = null;
 
@@ -623,7 +637,7 @@ class Processor
         return $this->config->getSiteUrl();
     }
 
-    protected function processNotificationNoteStatus(NoteEntity $note, UserEntity $user): void
+    protected function processNotificationNoteStatus(Note $note, User $user): void
     {
         $this->noteAccessControl->apply($note, $user);
 
@@ -734,7 +748,7 @@ class Processor
         }
     }
 
-    protected function processNotificationNoteEmailReceived(NoteEntity $note, UserEntity $user): void
+    protected function processNotificationNoteEmailReceived(Note $note, User $user): void
     {
         $parentId = $note->get('parentId');
         $parentType = $note->getParentType();
@@ -764,7 +778,7 @@ class Processor
             return;
         }
 
-        $emailSubject = $this->entityManager->getEntity(Email::ENTITY_TYPE, $noteData->emailId);
+        $emailSubject = $this->entityManager->getEntityById(Email::ENTITY_TYPE, $noteData->emailId);
 
         if (!$emailSubject) {
             return;
