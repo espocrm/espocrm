@@ -29,22 +29,20 @@
 
 namespace Espo\Tools\Import;
 
-use Espo\Core\ORM\Repository\SaveOption;
 use GuzzleHttp\Psr7\Utils as Psr7Utils;
 
+use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Entities\ImportEntity as ImportEntityEntity;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
-
 use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
-
 use Espo\Entities\ImportError;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\Import as ImportEntity;
 use Espo\Entities\Attachment;
 
@@ -56,29 +54,13 @@ class Service
 {
     private const REVERT_PERMANENTLY_REMOVE_PERIOD_DAYS = 2;
 
-    private $factory;
-
-    private $recordServiceContainer;
-
-    private $entityManager;
-
-    private $acl;
-
-    private FileStorageManager $fileStorageManager;
-
     public function __construct(
-        ImportFactory $factory,
-        ServiceContainer $recordServiceContainer,
-        EntityManager $entityManager,
-        Acl $acl,
-        FileStorageManager $fileStorageManager
-    ) {
-        $this->factory = $factory;
-        $this->recordServiceContainer = $recordServiceContainer;
-        $this->entityManager = $entityManager;
-        $this->acl = $acl;
-        $this->fileStorageManager = $fileStorageManager;
-    }
+        private ImportFactory $factory,
+        private ServiceContainer $recordServiceContainer,
+        private EntityManager $entityManager,
+        private Acl $acl,
+        private FileStorageManager $fileStorageManager
+    ) {}
 
     /**
      * @param string[] $attributeList
@@ -222,7 +204,7 @@ class Service
         }
 
         $importEntityList = $this->entityManager
-            ->getRDBRepository('ImportEntity')
+            ->getRDBRepository(ImportEntityEntity::ENTITY_TYPE)
             ->sth()
             ->where([
                 'importId' => $import->getId(),
@@ -322,7 +304,7 @@ class Service
         }
 
         $importEntityList = $this->entityManager
-            ->getRDBRepository('ImportEntity')
+            ->getRDBRepository(ImportEntityEntity::ENTITY_TYPE)
             ->sth()
             ->where([
                 'importId' => $import->getId(),
@@ -371,7 +353,7 @@ class Service
     public function unmarkAsDuplicate(string $importId, string $entityType, string $entityId): void
     {
         $entity = $this->entityManager
-            ->getRDBRepository('ImportEntity')
+            ->getRDBRepository(ImportEntityEntity::ENTITY_TYPE)
             ->where([
                 'importId' => $importId,
                 'entityType' => $entityType,

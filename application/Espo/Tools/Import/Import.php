@@ -30,33 +30,26 @@
 namespace Espo\Tools\Import;
 
 use Espo\Core\Job\JobSchedulerFactory;
-
 use Espo\Entities\Attachment;
 use Espo\Entities\ImportError;
 use Espo\Tools\Import\Jobs\RunIdle;
-
 use Espo\ORM\Entity;
-
 use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Core\{
-    Acl\Table,
-    Exceptions\Error,
-    Exceptions\Forbidden,
-    FieldValidation\Failure,
-    FieldValidation\FieldValidationManager,
-    ORM\Repository\SaveOption,
-    Utils\Json,
-    AclManager,
-    Utils\Metadata,
-    Utils\Config,
-    FileStorage\Manager as FileStorageManager,
-    Record\ServiceContainer as RecordServiceContainer,
-    Utils\DateTime as DateTimeUtil,
-    Utils\Log};
-
+use Espo\Core\Acl\Table;
+use Espo\Core\AclManager;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\FieldValidation\Failure;
+use Espo\Core\FieldValidation\FieldValidationManager;
+use Espo\Core\FileStorage\Manager as FileStorageManager;
+use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\User;
 use Espo\Entities\Import as ImportEntity;
 use Espo\Entities\ImportEntity as ImportEntityEntity;
@@ -71,74 +64,34 @@ use PDOException;
 class Import
 {
     private const DEFAULT_DELIMITER = ',';
-
     private const DEFAULT_TEXT_QUALIFIER = '"';
-
     private const DEFAULT_ACTION = Params::ACTION_CREATE;
-
     private const DEFAULT_DECIMAL_MARK = '.';
-
     private const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD';
-
     private const DEFAULT_TIME_FORMAT = 'HH:mm';
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $attributeList = [];
-
     private Params $params;
 
     private ?string $id = null;
-
     private ?string $attachmentId = null;
-
     private ?string $entityType = null;
 
-    private $aclManager;
-
-    private $entityManager;
-
-    private $metadata;
-
-    private $config;
-
-    private $user;
-
-    private $fileStorageManager;
-
-    private $jobSchedulerFactory;
-
-    private $recordServiceContainer;
-
-    private $log;
-
-    private FieldValidationManager $fieldValidationManager;
-
     public function __construct(
-        AclManager $aclManager,
-        EntityManager $entityManager,
-        Metadata $metadata,
-        Config $config,
-        User $user,
-        FileStorageManager $fileStorageManager,
-        RecordServiceContainer $recordServiceContainer,
-        JobSchedulerFactory $jobSchedulerFactory,
-        Log $log,
-        FieldValidationManager $fieldValidationManager
+        private AclManager $aclManager,
+        private EntityManager $entityManager,
+        private Metadata $metadata,
+        private Config $config,
+        private User $user,
+        private FileStorageManager $fileStorageManager,
+        private RecordServiceContainer $recordServiceContainer,
+        private JobSchedulerFactory $jobSchedulerFactory,
+        private Log $log,
+        private FieldValidationManager $fieldValidationManager
     ) {
-        $this->aclManager = $aclManager;
-        $this->entityManager = $entityManager;
-        $this->metadata = $metadata;
-        $this->config = $config;
-        $this->user = $user;
-        $this->fileStorageManager = $fileStorageManager;
-        $this->recordServiceContainer = $recordServiceContainer;
-        $this->jobSchedulerFactory = $jobSchedulerFactory;
-        $this->log = $log;
 
         $this->params = Params::create();
-        $this->fieldValidationManager = $fieldValidationManager;
     }
 
     /**
