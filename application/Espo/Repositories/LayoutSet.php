@@ -29,12 +29,15 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\Repositories\Database;
+use Espo\Entities\LayoutRecord;
+use Espo\Entities\LayoutSet as LayoutSetEntity;
 use Espo\ORM\Entity;
 
 /**
- * @extends \Espo\Core\Repositories\Database<\Espo\Entities\LayoutSet>
+ * @extends Database<LayoutSetEntity>
  */
-class LayoutSet extends \Espo\Core\Repositories\Database
+class LayoutSet extends Database
 {
     protected function afterSave(Entity $entity, array $options = [])
     {
@@ -47,7 +50,7 @@ class LayoutSet extends \Espo\Core\Repositories\Database
             foreach ($listBefore as $name) {
                 if (!in_array($name, $listNow)) {
                     $layout = $this->entityManager
-                        ->getRDBRepository('LayoutRecord')
+                        ->getRDBRepository(LayoutRecord::ENTITY_TYPE)
                         ->where([
                             'layoutSetId' => $entity->getId(),
                             'name' => $name,
@@ -67,7 +70,7 @@ class LayoutSet extends \Espo\Core\Repositories\Database
         parent::afterRemove($entity);
 
         $layoutList = $this->entityManager
-            ->getRDBRepository('LayoutRecord')
+            ->getRDBRepository(LayoutRecord::ENTITY_TYPE)
             ->where([
                 'layoutSetId' => $entity->getId(),
             ])

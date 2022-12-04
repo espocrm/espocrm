@@ -33,6 +33,7 @@ use Espo\Core\Console\Command;
 use Espo\Core\Console\Command\Params;
 use Espo\Core\Console\IO;
 
+use Espo\Entities\Extension as ExtensionEntity;
 use Espo\ORM\EntityManager;
 
 use Espo\Core\Upgrades\ExtensionManager;
@@ -43,11 +44,9 @@ use Throwable;
 
 class Extension implements Command
 {
-    private $container;
-
-    private $entityManager;
-
-    private $fileManager;
+    private Container $container;
+    private EntityManager $entityManager;
+    private FileManager $fileManager;
 
     public function __construct(Container $container, EntityManager $entityManager, FileManager $fileManager)
     {
@@ -103,8 +102,6 @@ class Extension implements Command
         }
 
         $this->runInstall($file, $io);
-
-        return;
     }
 
     private function runInstall(string $file, IO $io): void
@@ -169,7 +166,7 @@ class Extension implements Command
 
         if ($id) {
             $record = $this->entityManager
-                ->getRDBRepository('Extension')
+                ->getRDBRepository(ExtensionEntity::ENTITY_TYPE)
                 ->where([
                     'id' => $id,
                     'isInstalled' => true,
@@ -194,7 +191,7 @@ class Extension implements Command
             }
 
             $record = $this->entityManager
-                ->getRDBRepository('Extension')
+                ->getRDBRepository(ExtensionEntity::ENTITY_TYPE)
                 ->where([
                     'name' => $name,
                     'isInstalled' => true,
@@ -253,7 +250,7 @@ class Extension implements Command
     private function printList(IO $io): void
     {
         $collection = $this->entityManager
-            ->getRDBRepository('Extension')
+            ->getRDBRepository(ExtensionEntity::ENTITY_TYPE)
             ->find();
 
         $count = is_countable($collection) ? count($collection) : iterator_count($collection);

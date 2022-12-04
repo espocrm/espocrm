@@ -31,30 +31,29 @@ namespace Espo\Tools\EmailNotification;
 
 use Espo\Core\Notification\EmailNotificationHandler;
 use Espo\Core\Mail\SenderParams;
-
+use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Repositories\Portal as PortalRepository;
-
-use Espo\{
-    ORM\Entity,
-    ORM\EntityManager,
-    ORM\Query\SelectBuilder as SelectBuilder,
-    Entities\User as UserEntity,
-    Entities\Note as NoteEntity,
-};
-
-use Espo\Core\{
-    Htmlizer\HtmlizerFactory as HtmlizerFactory,
-    Htmlizer\Htmlizer,
-    Utils\Config,
-    Utils\Metadata,
-    Utils\Language,
-    InjectableFactory,
-    Utils\TemplateFileManager,
-    Mail\EmailSender as EmailSender,
-    Utils\Util,
-    Utils\Log,
-};
-
+use Espo\Entities\Email;
+use Espo\Entities\Note;
+use Espo\Entities\Note as NoteEntity;
+use Espo\Entities\Notification;
+use Espo\Entities\Portal;
+use Espo\Entities\Preferences;
+use Espo\Entities\User;
+use Espo\Entities\User as UserEntity;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Query\SelectBuilder as SelectBuilder;
+use Espo\Core\Htmlizer\Htmlizer;
+use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Mail\EmailSender as EmailSender;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\TemplateFileManager;
+use Espo\Core\Utils\Util;
 use Espo\Tools\Stream\NoteAccessControl;
 
 use Michelf\Markdown;
@@ -66,8 +65,7 @@ use Throwable;
 
 class Processor
 {
-    private const HOURS_THERSHOLD = 5;
-
+    private const HOURS_THRESHOLD = 5;
     private const PROCESS_MAX_COUNT = 200;
 
     private ?Htmlizer $htmlizer = null;
@@ -81,25 +79,15 @@ class Processor
      * @var array<string,?\Espo\Entities\Portal>
      */
     private $userIdPortalCacheMap = [];
-
     private $entityManager;
-
     private $htmlizerFactory;
-
     private $emailSender;
-
     private $config;
-
     private $injectableFactory;
-
     private $templateFileManager;
-
     private $metadata;
-
     private $language;
-
     private $log;
-
     private $noteAccessControl;
 
     public function __construct(
@@ -135,11 +123,11 @@ class Processor
         $typeList = [];
 
         if ($mentionEmailNotifications) {
-            $typeList[] = 'MentionInPost';
+            $typeList[] = Notification::TYPE_MENTION_IN_POST;
         }
 
         if ($streamEmailNotifications || $portalStreamEmailNotifications) {
-            $typeList[] = 'Note';
+            $typeList[] = Notification::TYPE_NOTE;
         }
 
         if (empty($typeList)) {
@@ -147,10 +135,10 @@ class Processor
         }
 
         $fromDt = new DateTime();
-        $fromDt->modify('-' . self::HOURS_THERSHOLD . ' hours');
+        $fromDt->modify('-' . self::HOURS_THRESHOLD . ' hours');
 
         $where = [
-            'createdAt>' => $fromDt->format('Y-m-d H:i:s'),
+            'createdAt>' => $fromDt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
             'read' => false,
             'emailIsProcessed' => false,
         ];
@@ -161,7 +149,7 @@ class Processor
             $delayDt = new DateTime();
             $delayDt->modify('-' . $delay . ' seconds');
 
-            $where[] = ['createdAt<' => $delayDt->format('Y-m-d H:i:s')];
+            $where[] = ['createdAt<' => $delayDt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT)];
         }
 
         $queryList = [];
@@ -191,7 +179,7 @@ class Processor
         $sql = $this->entityManager->getQueryComposer()->compose($unionQuery);
 
         $notificationList = $this->entityManager
-            ->getRDBRepository('Notification')
+            ->getRDBRepository(Notification::ENTITY_TYPE)
             ->findBySql($sql);
 
         foreach ($notificationList as $notification) {
@@ -222,9 +210,9 @@ class Processor
         return $this->entityManager
             ->getQueryBuilder()
             ->select()
-            ->from('Notification')
+            ->from(Notification::ENTITY_TYPE)
             ->where([
-                'type' => 'MentionInPost',
+                'type' => Notification::TYPE_MENTION_IN_POST,
             ]);
     }
 
@@ -235,11 +223,11 @@ class Processor
         $builder = $this->entityManager
             ->getQueryBuilder()
             ->select()
-            ->from('Notification')
-            ->join('Note', 'note', ['note.id:' => 'relatedId'])
+            ->from(Notification::ENTITY_TYPE)
+            ->join(Note::ENTITY_TYPE, 'note', ['note.id:' => 'relatedId'])
             ->where([
-                'type' => 'Note',
-                'relatedType' => 'Note',
+                'type' => Notification::TYPE_NOTE,
+                'relatedType' => Note::ENTITY_TYPE,
                 'note.type' => $noteNotificationTypeList,
             ]);
 
@@ -268,12 +256,12 @@ class Processor
 
         if ($forInternal && !$forPortal) {
             $builder->where([
-                'user.type!=' => 'portal',
+                'user.type!=' => User::TYPE_PORTAL,
             ]);
         }
         else if (!$forInternal && $forPortal) {
             $builder->where([
-                'user.type' => 'portal',
+                'user.type' => User::TYPE_PORTAL,
             ]);
         }
 
@@ -288,7 +276,7 @@ class Processor
 
         $userId = $notification->get('userId');
 
-        $user = $this->entityManager->getEntity('User', $userId);
+        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             return;
@@ -300,7 +288,7 @@ class Processor
             return;
         }
 
-        $preferences = $this->entityManager->getEntity('Preferences', $userId);
+        $preferences = $this->entityManager->getEntity(Preferences::ENTITY_TYPE, $userId);
 
         if (!$preferences) {
             return;
@@ -310,11 +298,11 @@ class Processor
             return;
         }
 
-        if ($notification->get('relatedType') !== 'Note' || !$notification->get('relatedId')) {
+        if ($notification->get('relatedType') !== Note::ENTITY_TYPE || !$notification->get('relatedId')) {
             return;
         }
 
-        $note = $this->entityManager->getEntity('Note', $notification->get('relatedId'));
+        $note = $this->entityManager->getEntity(Note::ENTITY_TYPE, $notification->get('relatedId'));
 
         if (!$note) {
             return;
@@ -359,7 +347,7 @@ class Processor
         $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'mention-email-subject', $data, true);
         $body = $this->getHtmlizer()->render($note, $bodyTpl, 'mention-email-body', $data, true);
 
-        $email = $this->entityManager->getNewEntity('Email');
+        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
         $email->set([
             'subject' => $subject,
@@ -400,7 +388,7 @@ class Processor
 
     protected function processNotificationNote(Entity $notification): void
     {
-        if ($notification->get('relatedType') !== 'Note') {
+        if ($notification->get('relatedType') !== Note::ENTITY_TYPE) {
             return;
         }
 
@@ -408,7 +396,7 @@ class Processor
             return;
         }
 
-        $note = $this->entityManager->getEntity('Note', $notification->get('relatedId'));
+        $note = $this->entityManager->getEntity(Note::ENTITY_TYPE, $notification->get('relatedId'));
 
         if (!$note) {
             return;
@@ -425,7 +413,7 @@ class Processor
         }
 
         $userId = $notification->get('userId');
-        $user = $this->entityManager->getEntity('User', $userId);
+        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             return;
@@ -437,7 +425,7 @@ class Processor
             return;
         }
 
-        $preferences = $this->entityManager->getEntity('Preferences', $userId);
+        $preferences = $this->entityManager->getEntity(Preferences::ENTITY_TYPE, $userId);
 
         if (!$preferences) {
             return;
@@ -615,7 +603,7 @@ class Processor
             }
 
             if ($portalId) {
-                $portal = $this->entityManager->getEntityById('Portal', $portalId);
+                $portal = $this->entityManager->getEntityById(Portal::ENTITY_TYPE, $portalId);
             }
 
             if ($portal) {
@@ -714,7 +702,7 @@ class Processor
             true
         );
 
-        $email = $this->entityManager->getNewEntity('Email');
+        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
         $email->set([
             'subject' => $subject,
@@ -776,13 +764,14 @@ class Processor
             return;
         }
 
-        $emailSubject = $this->entityManager->getEntity('Email', $noteData->emailId);
+        $emailSubject = $this->entityManager->getEntity(Email::ENTITY_TYPE, $noteData->emailId);
 
         if (!$emailSubject) {
             return;
         }
 
-        $emailRepository = $this->entityManager->getRDBRepository('Email');
+        $emailRepository = $this->entityManager->getRDBRepository(Email::ENTITY_TYPE);
+
         $eaList = $user->get('emailAddresses');
 
         foreach ($eaList as $ea) {
@@ -854,7 +843,7 @@ class Processor
             true
         );
 
-        $email = $this->entityManager->getNewEntity('Email');
+        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
         $email->set([
             'subject' => $subject,
@@ -898,6 +887,6 @@ class Processor
     private function getPortalRepository(): PortalRepository
     {
         /** @var PortalRepository */
-        return $this->entityManager->getRepository('Portal');
+        return $this->entityManager->getRepository(Portal::ENTITY_TYPE);
     }
 }

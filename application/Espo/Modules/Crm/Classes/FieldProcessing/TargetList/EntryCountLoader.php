@@ -29,28 +29,24 @@
 
 namespace Espo\Modules\Crm\Classes\FieldProcessing\TargetList;
 
+use Espo\Modules\Crm\Entities\TargetList;
 use Espo\ORM\Entity;
 
 use Espo\Core\Utils\Metadata;
 
-use Espo\Core\{
-    FieldProcessing\Loader,
-    FieldProcessing\Loader\Params,
-    ORM\EntityManager,
-};
+use Espo\Core\FieldProcessing\Loader;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\ORM\EntityManager;
 
 /**
- * @implements Loader<\Espo\Modules\Crm\Entities\TargetList>
+ * @implements Loader<TargetList>
  */
 class EntryCountLoader implements Loader
 {
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private array $targetLinkList;
 
     private EntityManager $entityManager;
-
     private Metadata $metadata;
 
     public function __construct(EntityManager $entityManager, Metadata $metadata)
@@ -74,7 +70,7 @@ class EntryCountLoader implements Loader
 
         foreach ($this->targetLinkList as $link) {
             $count += $this->entityManager
-                ->getRDBRepository('TargetList')
+                ->getRDBRepository(TargetList::ENTITY_TYPE)
                 ->getRelation($entity, $link)
                 ->count();
         }

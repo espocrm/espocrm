@@ -31,13 +31,9 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\Job\MetadataProvider;
 
-use Espo\Core\{
-    Utils\ClassFinder,
-    Utils\Language,
-    Utils\System,
-    Utils\DateTime as DateTimeUtil,
-    ORM\EntityManager,
-};
+use Espo\Entities\Job;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
 
 use Exception;
 use RuntimeException;
@@ -46,15 +42,11 @@ use DateTime;
 class ScheduledJob
 {
     protected string $cronFile = 'cron.php';
-
     /**
      * Period to check if crontab is configured properly.
      */
     protected string $checkingCronPeriod = '25 hours';
-
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string,string> */
     protected $cronSetup = [
         'linux' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BINARY} -f {CRON-FILE} > /dev/null 2>&1',
         'windows' => '{PHP-BINARY} -f {FULL-CRON-PATH}',
@@ -63,13 +55,9 @@ class ScheduledJob
     ];
 
     private ClassFinder $classFinder;
-
     private Language $language;
-
     private EntityManager $entityManager;
-
     private MetadataProvider $metadataProvider;
-
     private System $systemUtil;
 
     public function __construct(
@@ -184,6 +172,6 @@ class ScheduledJob
             ]
         ];
 
-        return (bool) $this->entityManager->getRDBRepository('Job')->findOne($selectParams);
+        return (bool) $this->entityManager->getRDBRepository(Job::ENTITY_TYPE)->findOne($selectParams);
     }
 }

@@ -419,7 +419,7 @@ class Saver implements SaverInterface
             if ($phoneNumberValue !== $entity->getFetched('phoneNumber')) {
 
                 $phoneNumberNew = $this->entityManager
-                    ->getRDBRepository('PhoneNumber')
+                    ->getRDBRepository(PhoneNumber::ENTITY_TYPE)
                     ->where([
                         'name' => $phoneNumberValue,
                     ])

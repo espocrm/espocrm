@@ -252,7 +252,7 @@ class Note extends Record
         if ($targetType === NoteEntity::TARGET_USERS) {
             /** @var iterable<UserEntity> $targetUserList */
             $targetUserList = $this->entityManager
-                ->getRDBRepository('User')
+                ->getRDBRepository(UserEntity::ENTITY_TYPE)
                 ->select(['id', 'type'])
                 ->where([
                     'id' => $userIdList,

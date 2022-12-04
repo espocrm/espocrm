@@ -29,6 +29,8 @@
 
 namespace Espo\Modules\Crm\Repositories;
 
+use Espo\Modules\Crm\Entities\Account as AccountEntity;
+use Espo\Modules\Crm\Entities\Lead as LeadEntity;
 use Espo\ORM\Entity;
 use Espo\Core\Repositories\Event as EventRepository;
 use Espo\Core\Di;
@@ -107,7 +109,7 @@ class Meeting extends EventRepository implements
 
             }
 
-            if ($parentType === 'Lead') {
+            if ($parentType === LeadEntity::ENTITY_TYPE) {
                 $columnList[] = 'status';
                 $columnList[] = 'createdAccountId';
                 $columnList[] = 'createdAccountName';
@@ -124,13 +126,13 @@ class Meeting extends EventRepository implements
         $accountName = null;
 
         if ($parent) {
-            if ($parent->getEntityType() == 'Account') {
+            if ($parent instanceof AccountEntity) {
                 $accountId = $parent->getId();
                 $accountName = $parent->get('name');
             }
             else if (
-                $parent->getEntityType() == 'Lead' &&
-                $parent->get('status') == 'Converted' &&
+                $parent instanceof LeadEntity &&
+                $parent->getStatus() === LeadEntity::STATUS_CONVERTED &&
                 $parent->get('createdAccountId')
             ) {
                 $accountId = $parent->get('createdAccountId');
@@ -140,7 +142,7 @@ class Meeting extends EventRepository implements
             if (
                 !$accountId && $parent->get('accountId') &&
                 $parent instanceof CoreEntity &&
-                $parent->getRelationParam('account', 'entity') == 'Account'
+                $parent->getRelationParam('account', 'entity') === AccountEntity::ENTITY_TYPE
             ) {
                 $accountId = $parent->get('accountId');
             }
@@ -156,7 +158,7 @@ class Meeting extends EventRepository implements
             !$entity->get('accountName')
         ) {
             $account = $this->entityManager
-                ->getRDBRepository('Account')
+                ->getRDBRepository(AccountEntity::ENTITY_TYPE)
                 ->select(['id', 'name'])
                 ->where(['id' => $entity->get('accountId')])
                 ->findOne();

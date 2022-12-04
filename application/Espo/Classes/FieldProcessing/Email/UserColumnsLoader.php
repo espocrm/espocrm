@@ -29,24 +29,20 @@
 
 namespace Espo\Classes\FieldProcessing\Email;
 
+use Espo\Entities\Email;
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    FieldProcessing\Loader,
-    FieldProcessing\Loader\Params,
-    ORM\EntityManager,
-};
-
+use Espo\Core\FieldProcessing\Loader;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\ORM\EntityManager;
 use Espo\Entities\User;
 
 /**
- * @implements Loader<\Espo\Entities\Email>
+ * @implements Loader<Email>
  */
 class UserColumnsLoader implements Loader
 {
-    private $entityManager;
-
-    private $user;
+    private EntityManager $entityManager;
+    private User $user;
 
     public function __construct(EntityManager $entityManager, User $user)
     {
@@ -57,8 +53,12 @@ class UserColumnsLoader implements Loader
     public function process(Entity $entity, Params $params): void
     {
         $emailUser = $this->entityManager
-            ->getRDBRepository('EmailUser')
-            ->select(['isRead', 'isImportant', 'inTrash'])
+            ->getRDBRepository(Email::RELATIONSHIP_EMAIL_USER)
+            ->select([
+                Email::USERS_COLUMN_IS_READ,
+                Email::USERS_COLUMN_IS_IMPORTANT,
+                Email::USERS_COLUMN_IN_TRASH,
+            ])
             ->where([
                 'deleted' => false,
                 'userId' => $this->user->getId(),
@@ -67,17 +67,17 @@ class UserColumnsLoader implements Loader
             ->findOne();
 
         if (!$emailUser) {
-            $entity->set('isRead', null);
-            $entity->clear('isImportant');
-            $entity->clear('inTrash');
+            $entity->set(Email::USERS_COLUMN_IS_READ, null);
+            $entity->clear(Email::USERS_COLUMN_IS_IMPORTANT);
+            $entity->clear(Email::USERS_COLUMN_IN_TRASH);
 
             return;
         }
 
         $entity->set([
-            'isRead' => $emailUser->get('isRead'),
-            'isImportant' => $emailUser->get('isImportant'),
-            'inTrash' => $emailUser->get('inTrash'),
+            Email::USERS_COLUMN_IS_READ => $emailUser->get(Email::USERS_COLUMN_IS_READ),
+            Email::USERS_COLUMN_IS_IMPORTANT => $emailUser->get(Email::USERS_COLUMN_IS_IMPORTANT),
+            Email::USERS_COLUMN_IN_TRASH => $emailUser->get(Email::USERS_COLUMN_IN_TRASH),
         ]);
     }
 }

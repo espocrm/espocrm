@@ -30,6 +30,7 @@
 namespace Espo\Tools\FieldManager\Hooks;
 
 use Espo\Core\Di;
+use Espo\Entities\NextNumber;
 
 class NumberType implements Di\EntityManagerAware
 {
@@ -42,7 +43,7 @@ class NumberType implements Di\EntityManagerAware
     public function onRead(string $scope, string $name, &$defs, $options): void
     {
         $number = $this->entityManager
-            ->getRDBRepository('NextNumber')
+            ->getRDBRepository(NextNumber::ENTITY_TYPE)
             ->where([
                 'entityType' => $scope,
                 'fieldName' => $name,
@@ -77,7 +78,7 @@ class NumberType implements Di\EntityManagerAware
         }
 
         $number = $this->entityManager
-            ->getRDBRepository('NextNumber')
+            ->getRDBRepository(NextNumber::ENTITY_TYPE)
             ->where([
                 'entityType' => $scope,
                 'fieldName' => $name
@@ -85,7 +86,7 @@ class NumberType implements Di\EntityManagerAware
             ->findOne();
 
         if (!$number) {
-            $number = $this->entityManager->getNewEntity('NextNumber');
+            $number = $this->entityManager->getNewEntity(NextNumber::ENTITY_TYPE);
 
             $number->set('entityType', $scope);
             $number->set('fieldName', $name);
@@ -103,7 +104,7 @@ class NumberType implements Di\EntityManagerAware
     public function afterRemove(string $scope, string $name, $defs, $options): void
     {
         $number = $this->entityManager
-            ->getRDBRepository('NextNumber')
+            ->getRDBRepository(NextNumber::ENTITY_TYPE)
             ->where([
                 'entityType' => $scope,
                 'fieldName' => $name

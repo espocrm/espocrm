@@ -29,16 +29,16 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\Repositories\Database;
+use Espo\Entities\User as UserEntity;
 use Espo\ORM\Entity;
-
 use Espo\Entities\EmailAddress as EmailAddressEntity;
-
 use Espo\Core\Di;
 
 /**
- * @extends \Espo\Core\Repositories\Database<\Espo\Entities\EmailAddress>
+ * @extends Database<EmailAddressEntity>
  */
-class EmailAddress extends \Espo\Core\Repositories\Database implements
+class EmailAddress extends Database implements
     Di\ApplicationStateAware,
     Di\AclManagerAware
 {
@@ -74,9 +74,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
             $eaCollection = $this
                 ->where([
-                    [
-                        'lower' => $lowerAddressList
-                    ]
+                    ['lower' => $lowerAddressList]
                 ])
                 ->find();
 
@@ -124,7 +122,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
         $emailAddressList = $this
             ->select(['name', 'lower', 'invalid', 'optOut', ['ee.primary', 'primary']])
             ->join(
-                'EntityEmailAddress',
+                EmailAddressEntity::RELATION_ENTITY_EMAIL_ADDRESS,
                 'ee',
                 [
                     'ee.emailAddressId:' => 'id',
@@ -191,7 +189,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
         }
 
         $itemList = $this->entityManager
-            ->getRDBRepository('EntityEmailAddress')
+            ->getRDBRepository(EmailAddressEntity::RELATION_ENTITY_EMAIL_ADDRESS)
             ->sth()
             ->select(['entityType', 'entityId'])
             ->where($where)
@@ -212,7 +210,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
             if ($onlyName) {
                 $select = ['id', 'name'];
 
-                if ($itemEntityType === 'User') {
+                if ($itemEntityType === UserEntity::ENTITY_TYPE) {
                     $select[] = 'isActive';
                 }
 
@@ -230,7 +228,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                 continue;
             }
 
-            if ($entity->getEntityType() === 'User' && !$entity->get('isActive')) {
+            if ($entity instanceof UserEntity && !$entity->isActive()) {
                 continue;
             }
 
@@ -255,7 +253,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
         }
 
         $itemList = $this->entityManager
-            ->getRDBRepository('EntityEmailAddress')
+            ->getRDBRepository(EmailAddressEntity::RELATION_ENTITY_EMAIL_ADDRESS)
             ->sth()
             ->select(['entityType', 'entityId'])
             ->where($where)
@@ -281,7 +279,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
             if ($onlyName) {
                 $select = ['id', 'name'];
 
-                if ($itemEntityType === 'User') {
+                if ($itemEntityType === UserEntity::ENTITY_TYPE) {
                     $select[] = 'isActive';
                 }
 
@@ -296,8 +294,8 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
             }
 
             if ($entity) {
-                if ($entity->getEntityType() === 'User') {
-                    if (!$entity->get('isActive')) {
+                if ($entity instanceof UserEntity) {
+                    if (!$entity->isActive()) {
                         continue;
                     }
                 }
@@ -315,17 +313,26 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
     public function getEntityByAddress(
         string $address,
         ?string $entityType = null,
-        array $order = ['User', 'Contact', 'Lead', 'Account']
+        array $order = [
+            'User',
+            'Contact',
+            'Lead',
+            'Account',
+        ]
     ): ?Entity {
 
         $selectBuilder = $this->entityManager
-            ->getRDBRepository('EntityEmailAddress')
+            ->getRDBRepository(EmailAddressEntity::RELATION_ENTITY_EMAIL_ADDRESS)
             ->select();
 
         $selectBuilder
             ->select(['entityType', 'entityId'])
             ->sth()
-            ->join('EmailAddress', 'ea', ['ea.id:' => 'emailAddressId', 'ea.deleted' => 0])
+            ->join(
+                EmailAddressEntity::ENTITY_TYPE,
+                'ea',
+                ['ea.id:' => 'emailAddressId', 'ea.deleted' => 0]
+            )
             ->where('ea.lower=', strtolower($address))
             ->order([
                 ['LIST:entityType:' . implode(',', $order)],
@@ -351,8 +358,8 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
             $entity = $this->entityManager->getEntity($itemEntityType, $itemEntityId);
 
             if ($entity) {
-                if ($entity->getEntityType() === 'User') {
-                    if (!$entity->get('isActive')) {
+                if ($entity instanceof UserEntity) {
+                    if (!$entity->isActive()) {
                         continue;
                     }
                 }

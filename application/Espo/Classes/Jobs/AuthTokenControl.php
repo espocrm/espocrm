@@ -29,19 +29,18 @@
 
 namespace Espo\Classes\Jobs;
 
-use Espo\Core\{
-    Utils\Config,
-    ORM\EntityManager,
-    Job\JobDataLess,
-};
+use Espo\Entities\AuthToken;
+use Espo\Core\Job\JobDataLess;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
 
 use DateTime;
 
 class AuthTokenControl implements JobDataLess
 {
-    private $config;
-
-    private $entityManager;
+    private Config $config;
+    private EntityManager $entityManager;
 
     public function __construct(Config $config, EntityManager $entityManager)
     {
@@ -67,7 +66,7 @@ class AuthTokenControl implements JobDataLess
 
             $dt->modify('-' . $authTokenLifetime . ' hours');
 
-            $authTokenLifetimeThreshold = $dt->format('Y-m-d H:i:s');
+            $authTokenLifetimeThreshold = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
             $whereClause['createdAt<'] = $authTokenLifetimeThreshold;
         }
@@ -77,13 +76,13 @@ class AuthTokenControl implements JobDataLess
 
             $dt->modify('-' . $authTokenMaxIdleTime . ' hours');
 
-            $authTokenMaxIdleTimeThreshold = $dt->format('Y-m-d H:i:s');
+            $authTokenMaxIdleTimeThreshold = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
             $whereClause['lastAccess<'] = $authTokenMaxIdleTimeThreshold;
         }
 
         $tokenList = $this->entityManager
-            ->getRDBRepository('AuthToken')
+            ->getRDBRepository(AuthToken::ENTITY_TYPE)
             ->where($whereClause)
             ->limit(0, 500)
             ->find();

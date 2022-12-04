@@ -29,18 +29,16 @@
 
 namespace Espo\ORM\Mapper;
 
-use Espo\ORM\{
-    Entity,
-    Collection,
-    Query\Select,
-};
+use Espo\ORM\Collection;
+use Espo\ORM\Entity;
+use Espo\ORM\Query\Select;
 
 interface RDBMapper extends Mapper
 {
     /**
      * Relate an entity with another entity.
      *
-     * @param array<string,mixed>|null $columnData
+     * @param array<string, mixed>|null $columnData
      */
     public function relate(Entity $entity, string $relationName, Entity $foreignEntity, ?array $columnData): bool;
 
@@ -52,7 +50,7 @@ interface RDBMapper extends Mapper
     /**
      * Unrelate an entity from another entity by a given ID.
      *
-     * @param array<string,mixed>|null $columnData
+     * @param array<string, mixed>|null $columnData
      */
     public function relateById(Entity $entity, string $relationName, string $id, ?array $columnData = null): bool;
 
@@ -69,7 +67,7 @@ interface RDBMapper extends Mapper
     /**
      * Update relationship columns.
      *
-     * @param array<string,mixed> $columnData
+     * @param array<string, mixed> $columnData
      */
     public function updateRelationColumns(
         Entity $entity,

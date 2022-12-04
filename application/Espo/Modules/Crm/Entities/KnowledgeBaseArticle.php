@@ -37,6 +37,9 @@ class KnowledgeBaseArticle extends Entity
 {
     public const ENTITY_TYPE = 'KnowledgeBaseArticle';
 
+    public const STATUS_PUBLISHED = 'Published';
+    public const STATUS_ARCHIVED = 'Archived';
+
     public function getOrder(): ?int
     {
         return $this->get('order');

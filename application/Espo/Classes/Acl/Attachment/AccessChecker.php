@@ -29,22 +29,18 @@
 
 namespace Espo\Classes\Acl\Attachment;
 
-use Espo\Entities\{
-    User,
-    Note,
-    Attachment,
-};
+use Espo\Entities\Attachment;
+use Espo\Entities\Note;
+use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    AclManager,
-    Acl\ScopeData,
-    Acl\DefaultAccessChecker,
-    Acl\AccessEntityCREDChecker,
-    Acl\Traits\DefaultAccessCheckerDependency,
-};
+use Espo\Core\Acl\AccessEntityCREDChecker;
+use Espo\Core\Acl\DefaultAccessChecker;
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\Acl\Traits\DefaultAccessCheckerDependency;
+use Espo\Core\AclManager;
+use Espo\Core\ORM\EntityManager;
 
 /**
  * @implements AccessEntityCREDChecker<Attachment>
@@ -53,9 +49,8 @@ class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;
 
-    private $aclManager;
-
-    private $entityManager;
+    private AclManager $aclManager;
+    private EntityManager $entityManager;
 
     public function __construct(
         DefaultAccessChecker $defaultAccessChecker,
@@ -145,7 +140,7 @@ class AccessChecker implements AccessEntityCREDChecker
 
         if ($note->getTargetType() === Note::TARGET_USERS) {
             $isRelated = $this->entityManager
-                ->getRDBRepository('Note')
+                ->getRDBRepository(Note::ENTITY_TYPE)
                 ->getRelation($note, 'users')
                 ->isRelated($user);
 

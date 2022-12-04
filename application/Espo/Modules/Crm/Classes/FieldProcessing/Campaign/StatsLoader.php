@@ -29,29 +29,30 @@
 
 namespace Espo\Modules\Crm\Classes\FieldProcessing\Campaign;
 
+use Espo\Modules\Crm\Entities\Campaign;
+use Espo\Modules\Crm\Entities\CampaignLogRecord;
+use Espo\Modules\Crm\Entities\Lead;
+use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    FieldProcessing\Loader,
-    FieldProcessing\Loader\Params,
-    ORM\EntityManager,
-    Acl,
-    Currency\ConfigDataProvider as CurrencyConfigDataProvider,
-};
+use Espo\Core\Acl;
+use Espo\Core\Currency\ConfigDataProvider as CurrencyConfigDataProvider;
+use Espo\Core\FieldProcessing\Loader;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\ORM\EntityManager;
 
+use Espo\ORM\Query\SelectBuilder;
 use PDO;
 
 use const PHP_ROUND_HALF_EVEN;
 
 /**
- * @implements Loader<\Espo\Modules\Crm\Entities\Campaign>
+ * @implements Loader<Campaign>
  */
 class StatsLoader implements Loader
 {
     private EntityManager $entityManager;
-
     private Acl $acl;
-
     private CurrencyConfigDataProvider $currencyDataProvider;
 
     public function __construct(
@@ -67,10 +68,10 @@ class StatsLoader implements Loader
     public function process(Entity $entity, Params $params): void
     {
         $sentCount = $this->entityManager
-            ->getRDBRepository('CampaignLogRecord')
+            ->getRDBRepository(CampaignLogRecord::ENTITY_TYPE)
             ->where([
                 'campaignId' => $entity->getId(),
-                'action' => 'Sent',
+                'action' => CampaignLogRecord::ACTION_SENT,
                 'isTest' => false,
             ])
             ->count();
@@ -82,10 +83,10 @@ class StatsLoader implements Loader
         $entity->set('sentCount', $sentCount);
 
         $openedCount = $this->entityManager
-            ->getRDBRepository('CampaignLogRecord')
+            ->getRDBRepository(CampaignLogRecord::ENTITY_TYPE)
             ->where([
                 'campaignId' => $entity->getId(),
-                'action' => 'Opened',
+                'action' => CampaignLogRecord::ACTION_OPENED,
                 'isTest' => false,
             ])
             ->count();
@@ -95,32 +96,28 @@ class StatsLoader implements Loader
         $openedPercentage = null;
 
         if ($sentCount > 0) {
-            $openedPercentage = round(
-                $openedCount / $sentCount * 100, 2,
-                PHP_ROUND_HALF_EVEN
-            );
+            $openedPercentage = round($openedCount / $sentCount * 100, 2, PHP_ROUND_HALF_EVEN);
         }
 
         $entity->set('openedPercentage', $openedPercentage);
 
         $clickedCount = $this->entityManager
-            ->getRDBRepository('CampaignLogRecord')
+            ->getRDBRepository(CampaignLogRecord::ENTITY_TYPE)
             ->where([
                 'campaignId' => $entity->getId(),
-                'action' => 'Clicked',
+                'action' => CampaignLogRecord::ACTION_CLICKED,
                 'isTest' => false,
-                'id=s' => [
-                    'entityType' => 'CampaignLogRecord',
-                    'selectParams' => [
-                        'select' => ['MIN:id'],
-                        'whereClause' => [
-                            'action' => 'Clicked',
-                            'isTest' => false,
-                            'campaignId' => $entity->getId(),
-                        ],
-                        'groupBy' => ['queueItemId'],
-                    ],
-                ],
+                'id=s' => SelectBuilder::create()
+                    ->select('MIN:id')
+                    ->from(CampaignLogRecord::ENTITY_TYPE)
+                    ->where([
+                        'action' => CampaignLogRecord::ACTION_CLICKED,
+                        'isTest' => false,
+                        'campaignId' => $entity->getId(),
+                    ])
+                    ->group('queueItemId')
+                    ->build()
+                    ->getRaw(),
             ])
             ->count();
 
@@ -138,10 +135,10 @@ class StatsLoader implements Loader
         $entity->set('clickedPercentage', $clickedPercentage);
 
         $optedInCount = $this->entityManager
-            ->getRDBRepository('CampaignLogRecord')
+            ->getRDBRepository(CampaignLogRecord::ENTITY_TYPE)
             ->where([
                 'campaignId' => $entity->getId(),
-                'action' => 'Opted In',
+                'action' => CampaignLogRecord::ACTION_OPTED_IN,
                 'isTest' => false,
             ])
             ->count();
@@ -153,10 +150,10 @@ class StatsLoader implements Loader
         $entity->set('optedInCount', $optedInCount);
 
         $optedOutCount = $this->entityManager
-            ->getRDBRepository('CampaignLogRecord')
+            ->getRDBRepository(CampaignLogRecord::ENTITY_TYPE)
             ->where([
                 'campaignId' => $entity->getId(),
-                'action' => 'Opted Out',
+                'action' => CampaignLogRecord::ACTION_OPTED_OUT,
                 'isTest' => false,
             ])
             ->count();
@@ -175,10 +172,10 @@ class StatsLoader implements Loader
         $entity->set('optedOutPercentage', $optedOutPercentage);
 
         $bouncedCount = $this->entityManager
-            ->getRDBRepository('CampaignLogRecord')
+            ->getRDBRepository(CampaignLogRecord::ENTITY_TYPE)
             ->where([
                 'campaignId' => $entity->getId(),
-                'action' => 'Bounced',
+                'action' => CampaignLogRecord::ACTION_BOUNCED,
                 'isTest' => false,
             ])
             ->count();
@@ -196,9 +193,9 @@ class StatsLoader implements Loader
 
         $entity->set('bouncedPercentage', $bouncedPercentage);
 
-        if ($this->acl->check('Lead')) {
+        if ($this->acl->check(Lead::ENTITY_TYPE)) {
             $leadCreatedCount = $this->entityManager
-                ->getRDBRepository('Lead')
+                ->getRDBRepository(Lead::ENTITY_TYPE)
                 ->where([
                     'campaignId' => $entity->getId(),
                 ])
@@ -211,16 +208,16 @@ class StatsLoader implements Loader
             $entity->set('leadCreatedCount', $leadCreatedCount);
         }
 
-        if ($this->acl->check('Opportunity')) {
+        if ($this->acl->check(Opportunity::ENTITY_TYPE)) {
             $entity->set('revenueCurrency', $this->currencyDataProvider->getDefaultCurrency());
 
             $query = $this->entityManager
                 ->getQueryBuilder()
                 ->select()
-                ->from('Opportunity')
+                ->from(Opportunity::ENTITY_TYPE)
                 ->select(['SUM:amountConverted'])
                 ->where([
-                    'stage' => 'Closed Won',
+                    'stage' => Opportunity::STAGE_CLOSED_WON,
                     'campaignId' => $entity->getId(),
                 ])
                 ->group('opportunity.campaignId')

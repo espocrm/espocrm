@@ -29,12 +29,10 @@
 
 namespace Espo\Repositories;
 
+use Espo\Entities\User as UserEntity;
 use Espo\ORM\Entity;
-
 use Espo\Entities\PhoneNumber as PhoneNumberEntity;
-
 use Espo\Core\Repositories\Database;
-
 use Espo\Core\Di;
 
 /**
@@ -114,7 +112,7 @@ class PhoneNumber extends Database implements
         $numberList = $this
             ->select(['name', 'type', 'invalid', 'optOut', ['en.primary', 'primary']])
             ->join(
-                'EntityPhoneNumber',
+                PhoneNumberEntity::RELATION_ENTITY_PHONE_NUMBER,
                 'en',
                 [
                     'en.phoneNumberId:' => 'id',
@@ -170,7 +168,7 @@ class PhoneNumber extends Database implements
         }
 
         $itemList = $this->entityManager
-            ->getRDBRepository('EntityPhoneNumber')
+            ->getRDBRepository(PhoneNumberEntity::RELATION_ENTITY_PHONE_NUMBER)
             ->sth()
             ->select(['entityType', 'entityId'])
             ->where($where)
@@ -211,7 +209,7 @@ class PhoneNumber extends Database implements
         }
 
         $itemList = $this->entityManager
-            ->getRDBRepository('EntityPhoneNumber')
+            ->getRDBRepository(PhoneNumberEntity::RELATION_ENTITY_PHONE_NUMBER)
             ->sth()
             ->select(['entityType', 'entityId'])
             ->where($where)
@@ -237,8 +235,8 @@ class PhoneNumber extends Database implements
             $entity = $this->entityManager->getEntity($itemEntityType, $itemEntityId);
 
             if ($entity) {
-                if ($entity->getEntityType() === 'User') {
-                    if (!$entity->get('isActive')) {
+                if ($entity instanceof UserEntity) {
+                    if (!$entity->isActive()) {
                         continue;
                     }
                 }

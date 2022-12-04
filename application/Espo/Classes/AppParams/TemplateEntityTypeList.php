@@ -29,11 +29,10 @@
 
 namespace Espo\Classes\AppParams;
 
-use Espo\Core\{
-    Acl,
-    Select\SelectBuilderFactory,
-    ORM\EntityManager,
-};
+use Espo\Core\Acl;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Select\SelectBuilderFactory;
+use Espo\Entities\Template;
 use Espo\Tools\App\AppParam;
 
 /**
@@ -42,9 +41,7 @@ use Espo\Tools\App\AppParam;
 class TemplateEntityTypeList implements AppParam
 {
     private Acl $acl;
-
     private SelectBuilderFactory $selectBuilderFactory;
-
     private EntityManager $entityManager;
 
     public function __construct(
@@ -62,7 +59,7 @@ class TemplateEntityTypeList implements AppParam
      */
     public function get(): array
     {
-        if (!$this->acl->checkScope('Template')) {
+        if (!$this->acl->checkScope(Template::ENTITY_TYPE)) {
             return [];
         }
 
@@ -70,7 +67,7 @@ class TemplateEntityTypeList implements AppParam
 
         $query = $this->selectBuilderFactory
             ->create()
-            ->from('Template')
+            ->from(Template::ENTITY_TYPE)
             ->withAccessControlFilter()
             ->buildQueryBuilder()
             ->select(['entityType'])
@@ -78,12 +75,12 @@ class TemplateEntityTypeList implements AppParam
             ->build();
 
         $templateCollection = $this->entityManager
-            ->getRDBRepository('Template')
+            ->getRDBRepositoryByClass(Template::class)
             ->clone($query)
             ->find();
 
         foreach ($templateCollection as $template) {
-            $list[] = $template->get('entityType');
+            $list[] = $template->getTargetEntityType();
         }
 
         return $list;

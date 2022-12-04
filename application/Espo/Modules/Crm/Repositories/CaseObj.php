@@ -29,17 +29,19 @@
 
 namespace Espo\Modules\Crm\Repositories;
 
+use Espo\Core\Repositories\Database;
+use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\Tools\Stream\Service as StreamService;
 use Espo\Core\Di;
 
 /**
- * @extends \Espo\Core\Repositories\Database<\Espo\Modules\Crm\Entities\CaseObj>
+ * @extends Database<\Espo\Modules\Crm\Entities\CaseObj>
  */
-class CaseObj extends \Espo\Core\Repositories\Database implements
-    Di\ServiceFactoryAware
+class CaseObj extends Database implements
+    Di\InjectableFactoryAware
 {
-    use Di\ServiceFactorySetter;
+    use Di\InjectableFactorySetter;
 
     protected ?StreamService $streamService = null;
 
@@ -53,15 +55,15 @@ class CaseObj extends \Espo\Core\Repositories\Database implements
     protected function getStreamService(): StreamService
     {
         if (!$this->streamService) {
-            /** @var StreamService $service */
-            $service = $this->serviceFactory->create('Stream');
-
-            $this->streamService = $service;
+            $this->streamService = $this->injectableFactory->create(StreamService::class);
         }
 
         return $this->streamService;
     }
 
+    /**
+     * @todo Move to hooks.
+     */
     protected function handleAfterSaveContacts(Entity $entity): void
     {
         if (!$entity->isAttributeChanged('contactId')) {
@@ -74,11 +76,11 @@ class CaseObj extends \Espo\Core\Repositories\Database implements
 
         if ($fetchedContactId) {
             $previousPortalUser = $this->entityManager
-                ->getRDBRepository('User')
+                ->getRDBRepository(User::ENTITY_TYPE)
                 ->select(['id'])
                 ->where([
                     'contactId' => $fetchedContactId,
-                    'type' => 'portal',
+                    'type' => User::TYPE_PORTAL,
                 ])
                 ->findOne();
 
@@ -96,11 +98,11 @@ class CaseObj extends \Espo\Core\Repositories\Database implements
         }
 
         $portalUser = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->select(['id'])
             ->where([
                 'contactId' => $contactId,
-                'type' => 'portal',
+                'type' => User::TYPE_PORTAL,
                 'isActive' => true,
             ])
             ->findOne();

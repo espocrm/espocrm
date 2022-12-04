@@ -37,6 +37,8 @@ class PhoneNumber extends Entity
 {
     public const ENTITY_TYPE = 'PhoneNumber';
 
+    public const RELATION_ENTITY_PHONE_NUMBER = 'EntityPhoneNumber';
+
     /**
      * @param string $value
      * @return void

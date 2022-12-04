@@ -29,19 +29,30 @@
 
 namespace Espo\Modules\Crm\Repositories;
 
+use Espo\Core\Utils\DateTime;
+use Espo\Modules\Crm\Entities\Account as AccountEntity;
+use Espo\Modules\Crm\Entities\Contact as ContactEntity;
+use Espo\Modules\Crm\Entities\Lead as LeadEntity;
+use Espo\Modules\Crm\Entities\Task as TaskEntity;
 use Espo\ORM\Entity;
 use Espo\Core\Repositories\Event as EventRepository;
 use Espo\Core\ORM\Entity as CoreEntity;
 
 class Task extends EventRepository
 {
-    protected $reminderSkippingStatusList = ['Completed', 'Canceled'];
+    protected $reminderSkippingStatusList = [
+        TaskEntity::STATUS_COMPLETED,
+        TaskEntity::STATUS_CANCELED,
+    ];
 
+    /**
+     * @todo Move to hooks.
+     */
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isAttributeChanged('status')) {
-            if ($entity->get('status') == 'Completed') {
-                $entity->set('dateCompleted', date('Y-m-d H:i:s'));
+            if ($entity->get('status') == TaskEntity::STATUS_COMPLETED) {
+                $entity->set('dateCompleted', date(DateTime::SYSTEM_DATE_TIME_FORMAT));
             } else {
                 $entity->set('dateCompleted', null);
             }
@@ -81,7 +92,7 @@ class Task extends EventRepository
                 $columnList[] = 'contactId';
             }
 
-            if ($parentType === 'Lead') {
+            if ($parentType === LeadEntity::ENTITY_TYPE) {
                 $columnList[] = 'status';
                 $columnList[] = 'createdAccountId';
                 $columnList[] = 'createdAccountName';
@@ -102,11 +113,14 @@ class Task extends EventRepository
         $contactName = null;
 
         if ($parent) {
-            if ($parent->getEntityType() == 'Account') {
+            if ($parent instanceof AccountEntity) {
                 $accountId = $parent->getId();
                 $accountName = $parent->get('name');
             }
-            else if ($parent->getEntityType() == 'Lead' && $parent->get('status') == 'Converted') {
+            else if (
+                $parent instanceof LeadEntity &&
+                $parent->getStatus() == LeadEntity::STATUS_CONVERTED
+            ) {
                 if ($parent->get('createdAccountId')) {
                     $accountId = $parent->get('createdAccountId');
                     $accountName = $parent->get('createdAccountName');
@@ -117,7 +131,7 @@ class Task extends EventRepository
                     $contactName = $parent->get('createdContactName');
                 }
             }
-            else if ($parent->getEntityType() == 'Contact') {
+            else if ($parent instanceof ContactEntity) {
                 $contactId = $parent->getId();
                 $contactName = $parent->get('name');
             }
@@ -126,7 +140,7 @@ class Task extends EventRepository
                 !$accountId &&
                 $parent->get('accountId') &&
                 $parent instanceof CoreEntity &&
-                $parent->getRelationParam('account', 'entity') == 'Account'
+                $parent->getRelationParam('account', 'entity') === AccountEntity::ENTITY_TYPE
             ) {
                 $accountId = $parent->get('accountId');
             }
@@ -135,7 +149,7 @@ class Task extends EventRepository
                 !$contactId &&
                 $parent->get('contactId') &&
                 $parent instanceof CoreEntity &&
-                $parent->getRelationParam('contact', 'entity') == 'Contact'
+                $parent->getRelationParam('contact', 'entity') === ContactEntity::ENTITY_TYPE
             ) {
                 $contactId = $parent->get('contactId');
             }
@@ -152,7 +166,7 @@ class Task extends EventRepository
             !$entity->get('accountName')
         ) {
             $account = $this->entityManager
-                ->getRDBRepository('Account')
+                ->getRDBRepository(AccountEntity::ENTITY_TYPE)
                 ->select(['id', 'name'])
                 ->where(['id' => $entity->get('accountId')])
                 ->findOne();
@@ -167,7 +181,7 @@ class Task extends EventRepository
             !$entity->get('contactName')
         ) {
             $contact = $this->entityManager
-                ->getRDBRepository('Contact')
+                ->getRDBRepository(ContactEntity::ENTITY_TYPE)
                 ->select(['id', 'name'])
                 ->where(['id' => $entity->get('contactId')])
                 ->findOne();

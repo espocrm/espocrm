@@ -29,10 +29,10 @@
 
 namespace Espo\Modules\Crm\Classes\FormulaFunctions\ExtGroup\AccountGroup;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Functions\BaseFunction;
 
 use Espo\Core\Di;
 
@@ -73,7 +73,7 @@ class FindByEmailAddressType extends BaseFunction implements
 
         $em = $this->entityManager;
 
-        $account = $em->getRDBRepository('Account')
+        $account = $em->getRDBRepository(Account::ENTITY_TYPE)
             ->where([
                 'emailAddress' => $emailAddress,
             ])
@@ -84,12 +84,11 @@ class FindByEmailAddressType extends BaseFunction implements
         }
 
         $ignoreList = json_decode(
-            $this->fileManager->getContents(
-                'application/Espo/Modules/Crm/Resources/data/freeEmailProviderDomains.json'
-            )
+            $this->fileManager
+                ->getContents('application/Espo/Modules/Crm/Resources/data/freeEmailProviderDomains.json')
         ) ?? [];
 
-        $contact = $em->getRDBRepository('Contact')
+        $contact = $em->getRDBRepository(Contact::ENTITY_TYPE)
             ->where([
                 'emailAddress' => $emailAddress,
             ])
@@ -97,7 +96,7 @@ class FindByEmailAddressType extends BaseFunction implements
 
         if ($contact) {
             if (!in_array($domain, $ignoreList)) {
-                $account = $em->getRDBRepository('Account')
+                $account = $em->getRDBRepository(Account::ENTITY_TYPE)
                     ->join('contacts')
                     ->where([
                         'emailAddress*' => '%@' . $domain,
@@ -120,7 +119,7 @@ class FindByEmailAddressType extends BaseFunction implements
             return null;
         }
 
-        $account = $em->getRDBRepository('Account')
+        $account = $em->getRDBRepository(Account::ENTITY_TYPE)
             ->where([
                 'emailAddress*' => '%@' . $domain,
             ])

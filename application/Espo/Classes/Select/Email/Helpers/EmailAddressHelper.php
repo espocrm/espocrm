@@ -29,13 +29,12 @@
 
 namespace Espo\Classes\Select\Email\Helpers;
 
-use Espo\{
-    ORM\EntityManager,
-};
+use Espo\Entities\EmailAddress;
+use Espo\ORM\EntityManager;
 
 class EmailAddressHelper
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {
@@ -45,7 +44,7 @@ class EmailAddressHelper
     public function getEmailAddressIdByValue(string $value): ?string
     {
         $emailAddress = $this->entityManager
-            ->getRDBRepository('EmailAddress')
+            ->getRDBRepository(EmailAddress::ENTITY_TYPE)
             ->where([
                 'lower' => strtolower($value),
             ])

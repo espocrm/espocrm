@@ -33,14 +33,14 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 
+use Espo\Entities\ExternalAccount as ExternalAccountEntity;
+use Espo\Entities\Integration as IntegrationEntity;
 use Espo\Services\ExternalAccount as Service;
 
-use Espo\Core\{
-    Controllers\RecordBase,
-    Api\Request,
-    Api\Response,
-    Record\ReadParams,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Controllers\RecordBase;
+use Espo\Core\Record\ReadParams;
 
 use stdClass;
 
@@ -50,13 +50,13 @@ class ExternalAccount extends RecordBase
 
     protected function checkAccess(): bool
     {
-        return $this->acl->checkScope('ExternalAccount');
+        return $this->acl->checkScope(ExternalAccountEntity::ENTITY_TYPE);
     }
 
     public function getActionList(Request $request, Response $response): stdClass
     {
         $integrations = $this->entityManager
-            ->getRDBRepository('Integration')
+            ->getRDBRepository(IntegrationEntity::ENTITY_TYPE)
             ->find();
 
         $list = [];
@@ -103,7 +103,7 @@ class ExternalAccount extends RecordBase
             throw new Forbidden();
         }
 
-        $entity = $this->entityManager->getEntity('Integration', $integration);
+        $entity = $this->entityManager->getEntityById(IntegrationEntity::ENTITY_TYPE, $integration);
 
         if ($entity) {
             return (object) [
@@ -147,7 +147,7 @@ class ExternalAccount extends RecordBase
             $data->data = null;
         }
 
-        $entity = $this->entityManager->getEntity('ExternalAccount', $id);
+        $entity = $this->entityManager->getEntityById(ExternalAccountEntity::ENTITY_TYPE, $id);
 
         if (!$entity) {
             throw new NotFound();

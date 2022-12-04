@@ -67,7 +67,7 @@ class RoleListProvider implements RoleListProviderInterface
 
         /** @var iterable<PortalRole> $userRoleList */
         $userRoleList = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->getRelation($this->user, 'portalRoles')
             ->find();
 
@@ -77,7 +77,7 @@ class RoleListProvider implements RoleListProviderInterface
 
         /** @var iterable<PortalRole> $portalRoleList */
         $portalRoleList = $this->entityManager
-            ->getRDBRepository('Portal')
+            ->getRDBRepository(Portal::ENTITY_TYPE)
             ->getRelation($this->portal, 'portalRoles')
             ->find();
 

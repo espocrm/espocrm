@@ -37,6 +37,8 @@ class EmailAddress extends Entity
 {
     public const ENTITY_TYPE = 'EmailAddress';
 
+    public const RELATION_ENTITY_EMAIL_ADDRESS = 'EntityEmailAddress';
+
     /**
      * @param string $value
      * @return void

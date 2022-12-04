@@ -32,6 +32,7 @@ namespace Espo\Core\Rebuild\Actions;
 use Espo\Core\Rebuild\RebuildAction;
 
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\ScheduledJob;
 use Espo\ORM\EntityManager;
 
 /**
@@ -39,9 +40,8 @@ use Espo\ORM\EntityManager;
  */
 class ScheduledJobs implements RebuildAction
 {
-    private $metadata;
-
-    private $entityManager;
+    private Metadata $metadata;
+    private EntityManager $entityManager;
 
     public function __construct(Metadata $metadata, EntityManager $entityManager)
     {
@@ -70,10 +70,10 @@ class ScheduledJobs implements RebuildAction
             $systemJobNameList[] = $jobName;
 
             $sj = $this->entityManager
-                ->getRDBRepository('ScheduledJob')
+                ->getRDBRepository(ScheduledJob::ENTITY_TYPE)
                 ->where([
                     'job' => $jobName,
-                    'status' => 'Active',
+                    'status' => ScheduledJob::STATUS_ACTIVE,
                     'scheduling' => $defs['scheduling'],
                 ])
                 ->findOne();
@@ -83,7 +83,7 @@ class ScheduledJobs implements RebuildAction
             }
 
             $existingJob = $this->entityManager
-                ->getRDBRepository('ScheduledJob')
+                ->getRDBRepository(ScheduledJob::ENTITY_TYPE)
                 ->where([
                     'job' => $jobName,
                 ])
@@ -99,9 +99,9 @@ class ScheduledJobs implements RebuildAction
                 $name = $defs['name'];
             }
 
-            $this->entityManager->createEntity('ScheduledJob', [
+            $this->entityManager->createEntity(ScheduledJob::ENTITY_TYPE, [
                 'job' => $jobName,
-                'status' => 'Active',
+                'status' => ScheduledJob::STATUS_ACTIVE,
                 'scheduling' => $defs['scheduling'],
                 'isInternal' => true,
                 'name' => $name,
@@ -109,7 +109,7 @@ class ScheduledJobs implements RebuildAction
         }
 
         $internalScheduledJobList = $this->entityManager
-            ->getRDBRepository('ScheduledJob')
+            ->getRDBRepository(ScheduledJob::ENTITY_TYPE)
             ->where([
                 'isInternal' => true,
             ])
@@ -120,7 +120,7 @@ class ScheduledJobs implements RebuildAction
 
             if (!in_array($jobName, $systemJobNameList)) {
                 $this->entityManager
-                    ->getRDBRepository('ScheduledJob')
+                    ->getRDBRepository(ScheduledJob::ENTITY_TYPE)
                     ->deleteFromDb($scheduledJob->getId());
             }
         }

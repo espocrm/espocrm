@@ -29,26 +29,22 @@
 
 namespace Espo\Modules\Crm\Services;
 
+use Espo\Core\Acl\Table;
+use Espo\Modules\Crm\Entities\Campaign;
+use Espo\Modules\Crm\Entities\CampaignLogRecord as CampaignLogRecordEntity;
 use Espo\ORM\Entity;
-
 use Espo\ORM\Query\Select;
-
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Error;
-
 use Espo\Modules\Crm\Entities\TargetList as TargetListEntity;
-
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Services\Record;
-
 use Espo\Core\Select\SearchParams;
-
 use Espo\Core\Utils\Metadata;
 
 use PDO;
-
 use Espo\Core\Di;
 
 /**
@@ -64,11 +60,8 @@ class TargetList extends Record implements
      * @var string[]
      */
     protected $targetLinkList = [];
-
     protected $noEditAccessRequiredLinkList = [];
-
     protected $duplicatingLinkList = [];
-
     protected $linkMandatorySelectAttributeList = [];
 
     /**
@@ -138,20 +131,20 @@ class TargetList extends Record implements
             throw new BadRequest();
         }
 
-        $campaign = $this->entityManager->getEntity('Campaign', $sourceCampaignId);
+        $campaign = $this->entityManager->getEntity(Campaign::ENTITY_TYPE, $sourceCampaignId);
 
         if (!$campaign) {
             throw new NotFound();
         }
 
-        if (!$this->acl->check($campaign, 'read')) {
+        if (!$this->acl->check($campaign, Table::ACTION_READ)) {
             throw new Forbidden();
         }
 
         $queryBuilder = $this->entityManager
             ->getQueryBuilder()
             ->select()
-            ->from('CampaignLogRecord')
+            ->from(CampaignLogRecordEntity::ENTITY_TYPE)
             ->where([
                 'isTest' => false,
                 'campaignId' => $sourceCampaignId,
@@ -177,7 +170,7 @@ class TargetList extends Record implements
         $notQueryBuilder->select(['id']);
 
         $list = $this->entityManager
-            ->getRDBRepository('CampaignLogRecord')
+            ->getRDBRepository(CampaignLogRecordEntity::ENTITY_TYPE)
             ->clone($queryBuilder->build())
             ->find();
 
@@ -201,7 +194,7 @@ class TargetList extends Record implements
                 ]);
 
                 $existing = $this->entityManager
-                    ->getRDBRepository('CampaignLogRecord')
+                    ->getRDBRepository(CampaignLogRecordEntity::ENTITY_TYPE)
                     ->clone($cloneQueryBuilder->build())
                     ->findOne();
             }
@@ -227,7 +220,7 @@ class TargetList extends Record implements
             throw new NotFound();
         }
 
-        if (!$this->acl->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, Table::ACTION_EDIT)) {
             throw new Forbidden();
         }
 
@@ -438,7 +431,7 @@ class TargetList extends Record implements
         $link = $map[$targetType];
 
         $this->entityManager
-            ->getRDBRepository('TargetList')
+            ->getRDBRepository(TargetListEntity::ENTITY_TYPE)
             ->getRelation($targetList, $link)
             ->updateColumnsById($targetId, ['optedOut' => false]);
 

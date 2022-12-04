@@ -29,27 +29,26 @@
 
 namespace Espo\Classes\FieldProcessing\User;
 
+use Espo\Entities\AuthLogRecord;
+use Espo\Entities\AuthToken;
+use Espo\Entities\User;
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    FieldProcessing\Loader,
-    FieldProcessing\Loader\Params,
-    ORM\EntityManager,
-    Acl,
-    Acl\Table,
-};
+use Espo\Core\Acl;
+use Espo\Core\Acl\Table;
+use Espo\Core\FieldProcessing\Loader;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\ORM\EntityManager;
 
 use DateTime;
 use Exception;
 
 /**
- * @implements Loader<\Espo\Entities\User>
+ * @implements Loader<User>
  */
 class LastAccessLoader implements Loader
 {
-    private $entityManager;
-
-    private $acl;
+    private EntityManager $entityManager;
+    private Acl $acl;
 
     public function __construct(EntityManager $entityManager, Acl $acl)
     {
@@ -67,7 +66,7 @@ class LastAccessLoader implements Loader
         }
 
         $authToken = $this->entityManager
-            ->getRDBRepository('AuthToken')
+            ->getRDBRepository(AuthToken::ENTITY_TYPE)
             ->select(['id', 'lastAccess'])
             ->where([
                 'userId' => $entity->getId(),
@@ -87,7 +86,7 @@ class LastAccessLoader implements Loader
             try {
                 $dt = new DateTime($lastAccess);
             }
-            catch (Exception $e) {}
+            catch (Exception) {}
         }
 
         $where = [
@@ -100,7 +99,7 @@ class LastAccessLoader implements Loader
         }
 
         $authLogRecord = $this->entityManager
-            ->getRDBRepository('AuthLogRecord')
+            ->getRDBRepository(AuthLogRecord::ENTITY_TYPE)
             ->select(['id', 'createdAt'])
             ->where($where)
             ->order('requestTime', true)

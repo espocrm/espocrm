@@ -151,7 +151,7 @@ class AccessChecker implements AccessEntityCREDChecker
 
         if ($note->getTargetType() === Note::TARGET_USERS) {
             $isRelated = $this->entityManager
-                ->getRDBRepository('Note')
+                ->getRDBRepository(Note::ENTITY_TYPE)
                 ->getRelation($note, 'users')
                 ->isRelated($user);
 

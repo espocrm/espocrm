@@ -29,19 +29,17 @@
 
 namespace Espo\Core\Console\Commands;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    Authentication\AuthToken\Manager as AuthTokenManager,
-    Console\Command,
-    Console\Command\Params,
-    Console\IO,
-};
+use Espo\Entities\User;
+use Espo\Core\Authentication\AuthToken\Manager as AuthTokenManager;
+use Espo\Core\Console\Command;
+use Espo\Core\Console\Command\Params;
+use Espo\Core\Console\IO;
+use Espo\Core\ORM\EntityManager;
 
 class AuthTokenCheck implements Command
 {
-    private $entityManager;
-
-    private $authTokenManager;
+    private EntityManager $entityManager;
+    private AuthTokenManager $authTokenManager;
 
     public function __construct(EntityManager $entityManager, AuthTokenManager $authTokenManager)
     {
@@ -74,7 +72,7 @@ class AuthTokenCheck implements Command
         $userId = $authToken->getUserId();
 
         $user = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->select('id')
             ->where([
                 'id' => $userId,

@@ -107,7 +107,7 @@ class RecoveryService
         }
 
         $request = $this->entityManager
-            ->getRDBRepository('PasswordChangeRequest')
+            ->getRDBRepository(PasswordChangeRequest::ENTITY_TYPE)
             ->where([
                 'requestId' => $id,
             ])
@@ -129,7 +129,7 @@ class RecoveryService
     public function removeRequest(string $id): void
     {
         $request = $this->entityManager
-            ->getRDBRepository('PasswordChangeRequest')
+            ->getRDBRepository(PasswordChangeRequest::ENTITY_TYPE)
             ->where([
                 'requestId' => $id,
             ])
@@ -211,7 +211,7 @@ class RecoveryService
         }
 
         $existingRequest = $this->entityManager
-            ->getRDBRepository('PasswordChangeRequest')
+            ->getRDBRepository(PasswordChangeRequest::ENTITY_TYPE)
             ->where([
                 'userId' => $user->getId(),
             ])

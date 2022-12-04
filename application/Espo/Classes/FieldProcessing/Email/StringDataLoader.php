@@ -30,30 +30,22 @@
 namespace Espo\Classes\FieldProcessing\Email;
 
 use Espo\ORM\Entity;
-
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
-
-use Espo\Core\{
-    FieldProcessing\Loader,
-    FieldProcessing\Loader\Params,
-    ORM\EntityManager,
-};
-
+use Espo\Core\FieldProcessing\Loader;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\ORM\EntityManager;
 use Espo\Entities\Email;
 use Espo\Entities\User;
 
 /**
- * @implements Loader<\Espo\Entities\Email>
+ * @implements Loader<Email>
  */
 class StringDataLoader implements Loader
 {
-    private $entityManager;
+    private EntityManager $entityManager;
+    private User $user;
 
-    private $user;
-
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string, string> */
     private $fromEmailAddressNameCache = [];
 
     public function __construct(EntityManager $entityManager, User $user)
@@ -66,21 +58,22 @@ class StringDataLoader implements Loader
     {
         /** @var Email $entity */
 
-        $userEmailAdddressIdList = [];
+        $userEmailAddressIdList = [];
 
         $emailAddressCollection = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->getRelation($this->user, 'emailAddresses')
             ->select(['id'])
             ->find();
 
         foreach ($emailAddressCollection as $emailAddress) {
-            $userEmailAdddressIdList[] = $emailAddress->getId();
+            $userEmailAddressIdList[] = $emailAddress->getId();
         }
 
         if (
-            in_array($entity->get('fromEmailAddressId'), $userEmailAdddressIdList) ||
-            $entity->get('createdById') === $this->user->getId() && $entity->get('status') === Email::STATUS_SENT
+            in_array($entity->get('fromEmailAddressId'), $userEmailAddressIdList) ||
+            $entity->get('createdById') === $this->user->getId() &&
+            $entity->getStatus() === Email::STATUS_SENT
         ) {
             $entity->loadLinkMultipleField('toEmailAddresses');
 
@@ -114,7 +107,7 @@ class StringDataLoader implements Loader
         if (!array_key_exists($fromEmailAddressId, $this->fromEmailAddressNameCache)) {
             $person = $this->getEmailAddressRepository()->getEntityByAddressId($fromEmailAddressId, null, true);
 
-            $fromName = $person ? $person->get('name') : null;
+            $fromName = $person?->get('name');
 
             $this->fromEmailAddressNameCache[$fromEmailAddressId] = $fromName;
         }

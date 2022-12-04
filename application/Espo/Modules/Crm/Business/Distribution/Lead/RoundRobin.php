@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Business\Distribution\Lead;
 
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\EntityManager;
 
 use Espo\Entities\User;
@@ -82,7 +83,7 @@ class RoundRobin
         }
 
         $lead = $this->entityManager
-            ->getRDBRepository('Lead')
+            ->getRDBRepository(Lead::ENTITY_TYPE)
             ->where([
                 'assignedUserId' => $userIdList
             ])
@@ -102,6 +103,6 @@ class RoundRobin
             }
         }
 
-        return $this->entityManager->getEntity('User', $userIdList[$num]);
+        return $this->entityManager->getEntity(User::ENTITY_TYPE, $userIdList[$num]);
     }
 }

@@ -29,21 +29,18 @@
 
 namespace Espo\Core\Portal;
 
+use Espo\Entities\Portal;
 use Espo\ORM\EntityManager;
 
-use Espo\Core\Exceptions\{
-    Error,
-    NotFound,
-    Forbidden,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 
-use Espo\Core\{
-    Container\ContainerBuilder,
-    Portal\Container as PortalContainer,
-    Portal\Container\ContainerConfiguration as PortalContainerConfiguration,
-    Portal\Utils\Config,
-    Application as BaseApplication,
-};
+use Espo\Core\Application as BaseApplication;
+use Espo\Core\Container\ContainerBuilder;
+use Espo\Core\Portal\Container as PortalContainer;
+use Espo\Core\Portal\Container\ContainerConfiguration as PortalContainerConfiguration;
+use Espo\Core\Portal\Utils\Config;
 
 class Application extends BaseApplication
 {
@@ -91,11 +88,11 @@ class Application extends BaseApplication
         /** @var EntityManager $entityManager */
         $entityManager = $this->container->get('entityManager');
 
-        $portal = $entityManager->getEntity('Portal', $portalId);
+        $portal = $entityManager->getEntity(Portal::ENTITY_TYPE, $portalId);
 
         if (!$portal) {
             $portal = $entityManager
-                ->getRDBRepository('Portal')
+                ->getRDBRepository(Portal::ENTITY_TYPE)
                 ->where(['customId' => $portalId])
                 ->findOne();
         }

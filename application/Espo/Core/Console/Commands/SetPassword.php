@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Console\Commands;
 
+use Espo\Entities\User;
 use Espo\Core\{
     ORM\EntityManager,
     Utils\PasswordHash,
@@ -62,7 +63,7 @@ class SetPassword implements Command
 
         $em = $this->entityManager;
 
-        $user = $em->getRDBRepository('User')
+        $user = $em->getRDBRepository(User::ENTITY_TYPE)
             ->where(['userName' => $userName])
             ->findOne();
 

@@ -29,10 +29,9 @@
 
 namespace Espo\Repositories;
 
+use Espo\Entities\Job as JobEntity;
 use Espo\ORM\Entity;
-
 use Espo\Core\Job\Job\Status;
-
 use Espo\Core\Repositories\Database;
 
 /**
@@ -48,7 +47,7 @@ class ScheduledJob extends Database
 
         if ($entity->isAttributeChanged('scheduling')) {
             $jobList = $this->entityManager
-                ->getRDBRepository('Job')
+                ->getRDBRepository(JobEntity::ENTITY_TYPE)
                 ->where([
                     'scheduledJobId' => $entity->getId(),
                     'status' => Status::PENDING,

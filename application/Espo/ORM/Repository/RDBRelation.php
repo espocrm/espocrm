@@ -241,7 +241,7 @@ class RDBRelation
      * * `where(array $clause)`
      * * `where(string $key, string $value)`
      *
-     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<mixed, mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
      */
     public function where($clause = [], $value = null): Builder
@@ -257,7 +257,7 @@ class RDBRelation
      * * `having(array $clause)`
      * * `having(string $key, string $value)`
      *
-     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<mixed, mixed>|string $clause A key or where clause.
      * @param mixed[]|string|null $value A value. Should be omitted if the first argument is not string.
      */
     public function having($clause = [], $value = null): Builder

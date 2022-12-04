@@ -31,6 +31,7 @@ namespace Espo\Tools\Stream;
 
 use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\Autofollow;
 use Espo\Tools\Stream\Service as Service;
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
@@ -316,7 +317,7 @@ class HookProcessor
         $userIdList = [];
 
         $autofollowList = $this->entityManager
-            ->getRDBRepository('Autofollow')
+            ->getRDBRepository(Autofollow::ENTITY_TYPE)
             ->select(['userId'])
             ->where([
                 'entityType' => $entityType,

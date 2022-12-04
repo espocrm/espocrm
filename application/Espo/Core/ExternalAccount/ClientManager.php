@@ -36,12 +36,12 @@ use Espo\Entities\ExternalAccount as ExternalAccountEntity;
 
 use Espo\ORM\EntityManager;
 
-use Espo\Core\{
-    ORM\Repository\SaveOption,
-    Utils\Metadata,
-    Utils\Config,
-    InjectableFactory,
-    ExternalAccount\OAuth2\Client as OAuth2Client};
+use Espo\Core\ExternalAccount\Clients\IClient;
+use Espo\Core\ExternalAccount\OAuth2\Client as OAuth2Client;
+use Espo\Core\InjectableFactory;
+use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 
 use Espo\ORM\Entity;
 
@@ -111,7 +111,7 @@ class ClientManager
             $externalAccountEntity->set('refreshToken', $data['refreshToken']);
         }
 
-        $copy = $this->entityManager->getEntity('ExternalAccount', $externalAccountEntity->getId());
+        $copy = $this->entityManager->getEntity(ExternalAccountEntity::ENTITY_TYPE, $externalAccountEntity->getId());
 
         if (!$copy) {
             return;
@@ -150,10 +150,11 @@ class ClientManager
         }
 
         /** @var IntegrationEntity|null $integrationEntity */
-        $integrationEntity = $this->entityManager->getEntity('Integration', $integration);
+        $integrationEntity = $this->entityManager->getEntity(IntegrationEntity::ENTITY_TYPE, $integration);
 
         /** @var ExternalAccountEntity|null $externalAccountEntity */
-        $externalAccountEntity = $this->entityManager->getEntity('ExternalAccount', $integration . '__' . $userId);
+        $externalAccountEntity = $this->entityManager
+            ->getEntity(ExternalAccountEntity::ENTITY_TYPE, $integration . '__' . $userId);
 
         if (!$externalAccountEntity) {
             throw new Error("External Account {$integration} not found for {$userId}.");
@@ -195,10 +196,11 @@ class ClientManager
     protected function createOAuth2(string $integration, string $userId): ?object
     {
         /** @var IntegrationEntity|null $integrationEntity */
-        $integrationEntity = $this->entityManager->getEntity('Integration', $integration);
+        $integrationEntity = $this->entityManager->getEntity(IntegrationEntity::ENTITY_TYPE, $integration);
 
         /** @var ExternalAccountEntity|null $externalAccountEntity */
-        $externalAccountEntity = $this->entityManager->getEntity('ExternalAccount', $integration . '__' . $userId);
+        $externalAccountEntity = $this->entityManager
+            ->getEntity(ExternalAccountEntity::ENTITY_TYPE, $integration . '__' . $userId);
 
         /** @var class-string $className */
         $className = $this->metadata->get("integrations.{$integration}.clientClassName");
@@ -317,7 +319,7 @@ class ClientManager
         $id = $externalAccountEntity->getId();
 
         $e = $this->entityManager
-            ->getRDBRepository('ExternalAccount')
+            ->getRDBRepository(ExternalAccountEntity::ENTITY_TYPE)
             ->select(['id', 'isLocked'])
             ->where(['id' => $id])
             ->findOne();
@@ -336,7 +338,7 @@ class ClientManager
         $id = $externalAccountEntity->getId();
 
         $e = $this->entityManager
-            ->getRDBRepository('ExternalAccount')
+            ->getRDBRepository(ExternalAccountEntity::ENTITY_TYPE)
             ->select(['id', 'isLocked'])
             ->where(['id' => $id])
             ->findOne();
@@ -360,7 +362,7 @@ class ClientManager
         $id = $externalAccountEntity->getId();
 
         $e = $this->entityManager
-            ->getRDBRepository('ExternalAccount')
+            ->getRDBRepository(ExternalAccountEntity::ENTITY_TYPE)
             ->select(['id', 'isLocked'])
             ->where(['id' => $id])
             ->findOne();
@@ -378,7 +380,7 @@ class ClientManager
     }
 
     /**
-     * @param \Espo\Core\ExternalAccount\Clients\IClient $client
+     * @param IClient $client
      * @throws Error
      */
     public function reFetchClient(object $client): void
@@ -387,7 +389,7 @@ class ClientManager
 
         $id = $externalAccountEntity->getId();
 
-        $e = $this->entityManager->getEntity('ExternalAccount', $id);
+        $e = $this->entityManager->getEntityById(ExternalAccountEntity::ENTITY_TYPE, $id);
 
         if (!$e) {
             throw new Error("External Account Client Manager: Client {$id} not found in DB.");

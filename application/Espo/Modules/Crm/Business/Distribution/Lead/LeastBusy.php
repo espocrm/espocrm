@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Business\Distribution\Lead;
 
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\EntityManager;
 
 use Espo\Entities\User;
@@ -49,7 +50,7 @@ class LeastBusy
     /**
      * @param Team $team
      * @param ?string $targetUserPosition
-     * @return User|null
+     * @return ?User
      */
     public function getUser($team, $targetUserPosition = null)
     {
@@ -80,11 +81,15 @@ class LeastBusy
         foreach ($userList as $user) {
             $where = [
                 'assignedUserId' => $user->getId(),
-                'status<>' => ['Converted', 'Recycled', 'Dead'],
+                'status<>' => [
+                    Lead::STATUS_CONVERTED,
+                    Lead::STATUS_RECYCLED,
+                    Lead::STATUS_DEAD,
+                ],
             ];
 
             $count = $this->entityManager
-                ->getRDBRepository('Lead')
+                ->getRDBRepository(Lead::ENTITY_TYPE)
                 ->where($where)
                 ->count();
 
@@ -108,7 +113,7 @@ class LeastBusy
         }
 
         if ($foundUserId !== false) {
-            return $this->entityManager->getEntity('User', $foundUserId);
+            return $this->entityManager->getEntityById(User::ENTITY_TYPE, $foundUserId);
         }
 
         return null;

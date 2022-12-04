@@ -29,22 +29,15 @@
 
 namespace Espo\Core\Acl\Table;
 
+use Espo\Entities\Team;
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\User;
 use Espo\Entities\Role as RoleEntity;
 
 class DefaultRoleListProvider implements RoleListProvider
 {
-    private $user;
-
-    private $entityManager;
-
-    public function __construct(User $user, EntityManager $entityManager)
-    {
-        $this->user = $user;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private User $user, private EntityManager $entityManager)
+    {}
 
     /**
      * @return Role[]
@@ -55,7 +48,7 @@ class DefaultRoleListProvider implements RoleListProvider
 
         /** @var iterable<RoleEntity> $userRoleList */
         $userRoleList = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->getRelation($this->user, 'roles')
             ->find();
 
@@ -63,16 +56,16 @@ class DefaultRoleListProvider implements RoleListProvider
             $roleList[] = $role;
         }
 
-        /** @var iterable<\Espo\Entities\Team> $teamList */
+        /** @var iterable<Team> $teamList */
         $teamList = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->getRelation($this->user, 'teams')
             ->find();
 
         foreach ($teamList as $team) {
             /** @var iterable<RoleEntity> $teamRoleList */
             $teamRoleList = $this->entityManager
-                ->getRDBRepository('Team')
+                ->getRDBRepository(Team::ENTITY_TYPE)
                 ->getRelation($team, 'roles')
                 ->find();
 

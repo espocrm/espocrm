@@ -22,17 +22,14 @@
 
 namespace Espo\Modules\Crm\Jobs;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    Job\JobDataLess,
-};
+use Espo\Core\Utils\DateTime;
+use Espo\Modules\Crm\Entities\KnowledgeBaseArticle;
+use Espo\Core\Job\JobDataLess;
+use Espo\Core\ORM\EntityManager;
 
 class ControlKnowledgeBaseArticleStatus implements JobDataLess
 {
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {
@@ -42,15 +39,15 @@ class ControlKnowledgeBaseArticleStatus implements JobDataLess
     public function run(): void
     {
         $list = $this->entityManager
-            ->getRDBRepository('KnowledgeBaseArticle')
+            ->getRDBRepository(KnowledgeBaseArticle::ENTITY_TYPE)
             ->where([
-                'expirationDate<=' => date('Y-m-d'),
-                'status' => 'Published',
+                'expirationDate<=' => date(DateTime::SYSTEM_DATE_FORMAT),
+                'status' => KnowledgeBaseArticle::STATUS_PUBLISHED,
             ])
             ->find();
 
         foreach ($list as $e) {
-            $e->set('status', 'Archived');
+            $e->set('status', KnowledgeBaseArticle::STATUS_ARCHIVED);
 
             $this->entityManager->saveEntity($e);
         }
