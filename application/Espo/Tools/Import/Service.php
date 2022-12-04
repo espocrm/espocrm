@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Import;
 
+use Espo\Core\ORM\Repository\SaveOption;
 use GuzzleHttp\Psr7\Utils as Psr7Utils;
 
 use Espo\Core\Exceptions\Error;
@@ -269,8 +270,8 @@ class Service
             $this->entityManager->removeEntity($entity, [
                 'noStream' => true,
                 'noNotifications' => true,
-                'import' => true,
-                'silent' => true,
+                SaveOption::SILENT => true,
+                SaveOption::IMPORT => true,
             ]);
 
             if ($removeFromDb) {
@@ -354,8 +355,8 @@ class Service
             $this->entityManager->removeEntity($entity, [
                 'noStream' => true,
                 'noNotifications' => true,
-                'import' => true,
-                'silent' => true,
+                SaveOption::SILENT => true,
+                SaveOption::IMPORT => true,
             ]);
 
             $this->entityManager

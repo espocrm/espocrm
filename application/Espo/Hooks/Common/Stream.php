@@ -29,6 +29,7 @@
 
 namespace Espo\Hooks\Common;
 
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\ORM\Entity;
 use Espo\Tools\Stream\HookProcessor;
 
@@ -48,7 +49,7 @@ class Stream
      */
     public function afterSave(Entity $entity, array $options): void
     {
-        if (!empty($options['silent'])) {
+        if (!empty($options[SaveOption::SILENT])) {
             return;
         }
 

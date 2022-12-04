@@ -29,13 +29,11 @@
 
 namespace Espo\Core\ORM\Repository;
 
-use Espo\ORM\{
-    Entity,
-    Repository\EmptyHookMediator,
-    Query\Select,
-};
-
+use Espo\ORM\Entity;
+use Espo\ORM\Query\Select;
+use Espo\ORM\Repository\EmptyHookMediator;
 use Espo\Core\HookManager;
+use Espo\Core\ORM\Repository\SaveOption;
 
 class HookMediator extends EmptyHookMediator
 {
@@ -58,7 +56,7 @@ class HookMediator extends EmptyHookMediator
         array $options
     ): void {
 
-        if (!empty($options['skipHooks'])) {
+        if (!empty($options[SaveOption::SKIP_HOOKS])) {
             return;
         }
 
@@ -83,7 +81,7 @@ class HookMediator extends EmptyHookMediator
      */
     public function afterUnrelate(Entity $entity, string $relationName, Entity $foreignEntity, array $options): void
     {
-        if (!empty($options['skipHooks'])) {
+        if (!empty($options[SaveOption::SKIP_HOOKS])) {
             return;
         }
 
@@ -107,7 +105,7 @@ class HookMediator extends EmptyHookMediator
      */
     public function afterMassRelate(Entity $entity, string $relationName, Select $query, array $options): void
     {
-        if (!empty($options['skipHooks'])) {
+        if (!empty($options[SaveOption::SKIP_HOOKS])) {
             return;
         }
 

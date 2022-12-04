@@ -37,11 +37,11 @@ use Espo\Entities\ExternalAccount as ExternalAccountEntity;
 use Espo\ORM\EntityManager;
 
 use Espo\Core\{
+    ORM\Repository\SaveOption,
     Utils\Metadata,
     Utils\Config,
     InjectableFactory,
-    ExternalAccount\OAuth2\Client as OAuth2Client,
-};
+    ExternalAccount\OAuth2\Client as OAuth2Client};
 
 use Espo\ORM\Entity;
 
@@ -131,7 +131,7 @@ class ClientManager
 
         $this->entityManager->saveEntity($copy, [
             'isTokenRenewal' => true,
-            'skipHooks' => true,
+            SaveOption::SKIP_HOOKS => true,
         ]);
     }
 
@@ -348,8 +348,8 @@ class ClientManager
         $e->set('isLocked', true);
 
         $this->entityManager->saveEntity($e, [
-            'skipHooks' => true,
-            'silent' => true,
+            SaveOption::SKIP_HOOKS => true,
+            SaveOption::SILENT => true,
         ]);
     }
 
@@ -372,8 +372,8 @@ class ClientManager
         $e->set('isLocked', false);
 
         $this->entityManager->saveEntity($e, [
-            'skipHooks' => true,
-            'silent' => true,
+            SaveOption::SKIP_HOOKS => true,
+            SaveOption::SILENT => true,
         ]);
     }
 

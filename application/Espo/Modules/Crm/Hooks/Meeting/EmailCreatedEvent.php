@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Hooks\Meeting;
 
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Entities\Email;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
@@ -47,7 +48,7 @@ class EmailCreatedEvent
      */
     public function afterRemove(Entity $entity, array $options): void
     {
-        if (!empty($options['silent'])) {
+        if (!empty($options[SaveOption::SILENT])) {
             return;
         }
 

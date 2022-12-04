@@ -51,6 +51,7 @@ use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Mail\SenderParams;
 use Espo\Core\Mail\Smtp\HandlerProcessor;
 use Espo\Core\Mail\SmtpParams;
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Log;
@@ -153,7 +154,7 @@ class SendService
         if (!$this->fieldValidationManager->check($entity, 'to', 'required')) {
             $entity->setStatus(Email::STATUS_DRAFT);
 
-            $this->entityManager->saveEntity($entity, ['silent' => true]);
+            $this->entityManager->saveEntity($entity, [SaveOption::SILENT => true]);
 
             throw new BadRequest("Empty To address.");
         }
@@ -264,7 +265,7 @@ class SendService
         catch (Exception $e) {
             $entity->setStatus(Email::STATUS_DRAFT);
 
-            $this->entityManager->saveEntity($entity, ['silent' => true]);
+            $this->entityManager->saveEntity($entity, [SaveOption::SILENT => true]);
 
             $this->log->error("Email sending:" . $e->getMessage() . "; " . $e->getCode());
 

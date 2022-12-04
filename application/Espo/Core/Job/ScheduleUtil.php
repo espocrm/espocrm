@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Job;
 
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
 
@@ -94,7 +95,7 @@ class ScheduleUtil
 
         $scheduledJob->set('lastRun', $runTime);
 
-        $this->entityManager->saveEntity($scheduledJob, ['silent' => true]);
+        $this->entityManager->saveEntity($scheduledJob, [SaveOption::SILENT => true]);
 
         $scheduledJobLog = $this->entityManager->getNewEntity(ScheduledJobLogRecordEntity::ENTITY_TYPE);
 

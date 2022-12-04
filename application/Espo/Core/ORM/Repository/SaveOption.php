@@ -27,33 +27,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Hooks\Common;
+namespace Espo\Core\ORM\Repository;
 
-use Espo\Core\ORM\Repository\SaveOption;
-use Espo\ORM\Entity;
-use Espo\Tools\EmailNotification\HookProcessor;
+use Espo\ORM\Repository\SaveOption as BaseSaveOption;
 
-class AssignmentEmailNotification
+/**
+ * Save options.
+ */
+class SaveOption
 {
-    private HookProcessor $processor;
-
-    public function __construct(HookProcessor $processor)
-    {
-        $this->processor = $processor;
-    }
-
     /**
-     * @param array<string,mixed> $options
+     * Silent. Boolean.
      */
-    public function afterSave(Entity $entity, array $options): void
-    {
-        if (
-            !empty($options[SaveOption::SILENT]) ||
-            !empty($options['noNotifications'])
-        ) {
-            return;
-        }
-
-        $this->processor->afterSave($entity);
-    }
+    public const SILENT = 'silent';
+    /**
+     * Import. Boolean.
+     */
+    public const IMPORT = 'import';
+    /**
+     * Skip all additional processing. Boolean.
+     */
+    public const SKIP_ALL = BaseSaveOption::SKIP_ALL;
+    /**
+     * Keep new. Boolean.
+     */
+    public const KEEP_NEW = BaseSaveOption::KEEP_NEW;
+    /**
+     * Keep dirty. Boolean.
+     */
+    public const KEEP_DIRTY = BaseSaveOption::KEEP_DIRTY;
+    /**
+     * Skip hooks. Boolean.
+     */
+    public const SKIP_HOOKS = 'skipHooks';
+    /**
+     * Skip setting created-by. Boolean.
+     */
+    public const SKIP_CREATED_BY = 'skipCreatedBy';
+    /**
+     * Skip setting modified-by. Boolean.
+     */
+    public const SKIP_MODIFIED_BY = 'skipModifiedBy';
+    /**
+     * Override created-by. String.
+     */
+    public const CREATED_BY_ID = 'createdById';
+    /**
+     * Override modified-by. String.
+     */
+    public const MODIFIED_BY_ID = 'modifiedById';
 }

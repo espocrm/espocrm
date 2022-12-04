@@ -29,6 +29,7 @@
 
 namespace Espo\Hooks\Common;
 
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Tools\Notification\HookProcessor;
 use Espo\ORM\Entity;
 
@@ -48,7 +49,7 @@ class Notifications
      */
     public function afterSave(Entity $entity, array $options): void
     {
-        if (!empty($options['silent']) || !empty($options['noNotifications'])) {
+        if (!empty($options[SaveOption::SILENT]) || !empty($options['noNotifications'])) {
             return;
         }
 
@@ -60,7 +61,7 @@ class Notifications
      */
     public function beforeRemove(Entity $entity, array $options): void
     {
-        if (!empty($options['silent']) || !empty($options['noNotifications'])) {
+        if (!empty($options[SaveOption::SILENT]) || !empty($options['noNotifications'])) {
             return;
         }
 
@@ -72,7 +73,7 @@ class Notifications
      */
     public function afterRemove(Entity $entity, array $options): void
     {
-        if (!empty($options['silent'])) {
+        if (!empty($options[SaveOption::SILENT])) {
             return;
         }
 

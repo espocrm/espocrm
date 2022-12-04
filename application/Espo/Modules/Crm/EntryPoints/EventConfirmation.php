@@ -38,6 +38,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\HookManager;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Core\Utils\Client\ActionRenderer;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
@@ -215,7 +216,8 @@ class EventConfirmation implements EntryPoint
     private function createNote(Entity $entity, Entity $invitee, string $status): void
     {
         $options = $invitee->getEntityType() === User::ENTITY_TYPE ?
-            ['createdById' => $invitee->getId()] : [];
+            [SaveOption::CREATED_BY_ID => $invitee->getId()] :
+            [];
 
         $style = $this->metadata
             ->get(['entityDefs', $entity->getEntityType(), 'fields', 'acceptanceStatus', 'style', $status]);

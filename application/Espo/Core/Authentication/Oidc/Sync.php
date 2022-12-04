@@ -35,6 +35,7 @@ use Espo\Core\FieldProcessing\EmailAddress\Saver as EmailAddressSaver;
 use Espo\Core\FieldProcessing\PhoneNumber\Saver as PhoneNumberSaver;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
 use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Core\Utils\Util;
@@ -128,9 +129,9 @@ class Sync
     {
         $this->entityManager->saveEntity($user, [
             // Prevent `user` service being loaded by hooks.
-            'skipHooks' => true,
-            'keepNew' => true,
-            'keepDirty' => true,
+            SaveOption::SKIP_HOOKS => true,
+            SaveOption::KEEP_NEW => true,
+            SaveOption::KEEP_DIRTY => true,
         ]);
 
         $saverParams = SaverParams::create()->withRawOptions(['skipLinkMultipleHooks' => true]);

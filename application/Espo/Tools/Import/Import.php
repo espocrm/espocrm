@@ -45,6 +45,7 @@ use Espo\Core\{
     Exceptions\Forbidden,
     FieldValidation\Failure,
     FieldValidation\FieldValidationManager,
+    ORM\Repository\SaveOption,
     Utils\Json,
     AclManager,
     Utils\Metadata,
@@ -52,8 +53,7 @@ use Espo\Core\{
     FileStorage\Manager as FileStorageManager,
     Record\ServiceContainer as RecordServiceContainer,
     Utils\DateTime as DateTimeUtil,
-    Utils\Log,
-};
+    Utils\Log};
 
 use Espo\ORM\EntityManager;
 
@@ -374,8 +374,8 @@ class Import
                 $import->set('lastIndex', $i);
 
                 $this->entityManager->saveEntity($import, [
-                    'skipHooks' => true,
-                    'silent' => true,
+                    SaveOption::SKIP_HOOKS => true,
+                    SaveOption::SILENT => true,
                 ]);
 
                 if ($rowResult['isError'] ?? false) {
@@ -636,8 +636,8 @@ class Import
             $this->entityManager->saveEntity($entity, [
                 'noStream' => true,
                 'noNotifications' => true,
-                'import' => true,
-                'silent' => $params->isSilentMode(),
+                SaveOption::IMPORT => true,
+                SaveOption::SILENT => $params->isSilentMode(),
             ]);
 
             $result['id'] = $entity->getId();

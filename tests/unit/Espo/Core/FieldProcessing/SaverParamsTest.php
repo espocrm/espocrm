@@ -31,14 +31,14 @@ namespace tests\unit\Espo\Core\FieldProcessing;
 
 use Espo\Core\{
     FieldProcessing\Saver\Params,
-};
+    ORM\Repository\SaveOption};
 
 class SaverParamsTest extends \PHPUnit\Framework\TestCase
 {
     public function testOne(): void
     {
         $options = [
-            'silent' => true,
+            SaveOption::SILENT => true,
         ];
 
         $params = Params

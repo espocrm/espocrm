@@ -29,17 +29,14 @@
 
 namespace tests\unit\Espo\Core\Notification;
 
-use Espo\Core\{
-    Notification\AssignmentNotificator\Params,
-};
+use Espo\Core\Notification\AssignmentNotificator\Params;
+use Espo\Core\ORM\Repository\SaveOption;
 
 class AssignmentNotificatorParamsTest extends \PHPUnit\Framework\TestCase
 {
     public function testOne(): void
     {
-        $options = [
-            'silent' => true,
-        ];
+        $options = [SaveOption::SILENT => true];
 
         $params = Params
             ::create()

@@ -37,6 +37,7 @@ use Espo\Core\Console\IO;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\FieldProcessing\NextNumber\BeforeSaveProcessor;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Order;
 
@@ -97,7 +98,7 @@ class PopulateNumbers implements Command
             }
 
             $this->beforeSaveProcessor->processPopulate($entity, $field);
-            $this->entityManager->saveEntity($entity, ['import' => true]);
+            $this->entityManager->saveEntity($entity, [SaveOption::IMPORT => true]);
 
             if ($i % 1000 === 0) {
                 $io->write('.');

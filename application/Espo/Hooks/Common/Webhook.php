@@ -33,9 +33,9 @@ use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\{
+    ORM\Repository\SaveOption,
     Utils\Metadata,
-    Webhook\Manager as WebhookManager,
-};
+    Webhook\Manager as WebhookManager};
 
 class Webhook
 {
@@ -56,7 +56,7 @@ class Webhook
      */
     public function afterSave(Entity $entity, array $options): void
     {
-        if (!empty($options['silent'])) {
+        if (!empty($options[SaveOption::SILENT])) {
             return;
         }
 
@@ -81,7 +81,7 @@ class Webhook
      */
     public function afterRemove(Entity $entity, array $options): void
     {
-        if (!empty($options['silent'])) {
+        if (!empty($options[SaveOption::SILENT])) {
             return;
         }
 

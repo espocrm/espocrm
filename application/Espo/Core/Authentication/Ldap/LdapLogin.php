@@ -44,6 +44,7 @@ use Espo\Core\Authentication\Logins\Espo;
 use Espo\Core\Authentication\Result;
 use Espo\Core\Authentication\Result\FailReason;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Log;
@@ -371,8 +372,8 @@ class LdapLogin implements Login
 
         $this->entityManager->saveEntity($user, [
             // Prevent `user` service being loaded by hooks.
-            'skipHooks' => true,
-            'keepNew' => true,
+            SaveOption::SKIP_HOOKS => true,
+            SaveOption::KEEP_NEW => true,
         ]);
 
         $saverParams = SaverParams::create()

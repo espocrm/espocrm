@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Repositories;
 
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\RDBRepository;
@@ -145,7 +146,7 @@ class Database extends RDBRepository
             $entity->set('id', $this->recordIdGenerator->generate());
         }
 
-        if (empty($options['skipAll'])) {
+        if (empty($options[SaveOption::SKIP_ALL])) {
             $this->processCreatedAndModifiedFieldsSave($entity, $options);
         }
 
@@ -163,7 +164,7 @@ class Database extends RDBRepository
     {
         parent::beforeRemove($entity, $options);
 
-        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
+        if (!$this->hooksDisabled && empty($options[SaveOption::SKIP_HOOKS])) {
             $this->hookManager->process($this->entityType, 'beforeRemove', $entity, $options);
         }
 
@@ -174,7 +175,7 @@ class Database extends RDBRepository
         }
 
         if ($entity->hasAttribute('modifiedById')) {
-            $modifiedById = $options['modifiedById'] ?? null;
+            $modifiedById = $options[SaveOption::MODIFIED_BY_ID] ?? null;
 
             if (!$modifiedById && $this->applicationState->hasUser()) {
                 $modifiedById = $this->applicationState->getUser()->getId();
@@ -195,7 +196,7 @@ class Database extends RDBRepository
     {
         parent::afterRemove($entity, $options);
 
-        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
+        if (!$this->hooksDisabled && empty($options[SaveOption::SKIP_HOOKS])) {
             $this->hookManager->process($this->entityType, 'afterRemove', $entity, $options);
         }
     }
@@ -209,7 +210,7 @@ class Database extends RDBRepository
      */
     protected function afterMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {
-        if ($this->hooksDisabled || !empty($options['skipHooks'])) {
+        if ($this->hooksDisabled || !empty($options[SaveOption::SKIP_HOOKS])) {
             return;
         }
 
@@ -239,7 +240,7 @@ class Database extends RDBRepository
     {
         parent::afterRelate($entity, $relationName, $foreign, $data, $options);
 
-        if ($this->hooksDisabled || !empty($options['skipHooks'])) {
+        if ($this->hooksDisabled || !empty($options[SaveOption::SKIP_HOOKS])) {
             return;
         }
 
@@ -276,7 +277,7 @@ class Database extends RDBRepository
     {
         parent::afterUnrelate($entity, $relationName, $foreign, $options);
 
-        if ($this->hooksDisabled || !empty($options['skipHooks'])) {
+        if ($this->hooksDisabled || !empty($options[SaveOption::SKIP_HOOKS])) {
             return;
         }
 
@@ -307,7 +308,7 @@ class Database extends RDBRepository
     {
         parent::beforeSave($entity, $options);
 
-        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
+        if (!$this->hooksDisabled && empty($options[SaveOption::SKIP_HOOKS])) {
             $this->hookManager->process($this->entityType, 'beforeSave', $entity, $options);
         }
     }
@@ -327,7 +328,7 @@ class Database extends RDBRepository
 
         parent::afterSave($entity, $options);
 
-        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
+        if (!$this->hooksDisabled && empty($options[SaveOption::SKIP_HOOKS])) {
             $this->hookManager->process($this->entityType, 'afterSave', $entity, $options);
         }
     }
@@ -346,7 +347,10 @@ class Database extends RDBRepository
 
         $nowString = DateTimeUtil::getSystemNowString();
 
-        if (!empty($options['silent']) || !empty($options['skipModifiedBy'])) {
+        if (
+            !empty($options[SaveOption::SILENT]) ||
+            !empty($options[SaveOption::SKIP_MODIFIED_BY])
+        ) {
             return;
         }
 
@@ -355,8 +359,8 @@ class Database extends RDBRepository
         }
 
         if ($entity->hasAttribute('modifiedById')) {
-            if (!empty($options['modifiedById'])) {
-                $entity->set('modifiedById', $options['modifiedById']);
+            if (!empty($options[SaveOption::MODIFIED_BY_ID])) {
+                $entity->set('modifiedById', $options[SaveOption::MODIFIED_BY_ID]);
             }
             else if ($this->applicationState->hasUser()) {
                 $entity->set('modifiedById', $this->applicationState->getUser()->getId());
@@ -375,7 +379,7 @@ class Database extends RDBRepository
 
         if (
             $entity->hasAttribute('createdAt') &&
-            (empty($options['import']) || !$entity->has('createdAt'))
+            (empty($options[SaveOption::IMPORT]) || !$entity->has('createdAt'))
         ) {
             $entity->set('createdAt', $nowString);
         }
@@ -385,12 +389,12 @@ class Database extends RDBRepository
         }
 
         if ($entity->hasAttribute('createdById')) {
-            if (!empty($options['createdById'])) {
-                $entity->set('createdById', $options['createdById']);
+            if (!empty($options[SaveOption::CREATED_BY_ID])) {
+                $entity->set('createdById', $options[SaveOption::CREATED_BY_ID]);
             }
             else if (
-                empty($options['skipCreatedBy']) &&
-                (empty($options['import']) || !$entity->has('createdById')) &&
+                empty($options[SaveOption::SKIP_CREATED_BY]) &&
+                (empty($options[SaveOption::IMPORT]) || !$entity->has('createdById')) &&
                 $this->applicationState->hasUser()
             ) {
                 $entity->set('createdById', $this->applicationState->getUser()->getId());

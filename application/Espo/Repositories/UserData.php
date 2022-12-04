@@ -29,6 +29,8 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Entities\User as UserEntity;
 use Espo\Entities\UserData as UserDataEntity;
 use Espo\Core\Repositories\Database;
 
@@ -49,7 +51,7 @@ class UserData extends Database
         }
 
         $user = $this->entityManager
-            ->getRepository('User')
+            ->getRepository(UserEntity::ENTITY_TYPE)
             ->getById($userId);
 
         if (!$user) {
@@ -61,8 +63,8 @@ class UserData extends Database
         $userData->set('userId', $userId);
 
         $this->save($userData, [
-            'silent' => true,
-            'skipHooks' => true,
+            SaveOption::SILENT => true,
+            SaveOption::SKIP_HOOKS => true,
         ]);
 
         return $userData;

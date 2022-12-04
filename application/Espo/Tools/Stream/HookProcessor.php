@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Stream;
 
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Core\Utils\Metadata;
 use Espo\Tools\Stream\Service as Service;
 use Espo\Entities\User;
@@ -95,7 +96,7 @@ class HookProcessor
         if (
             $entity->isNew() &&
             empty($options['noStream']) &&
-            empty($options['silent']) &&
+            empty($options[SaveOption::SILENT]) &&
             $this->metadata->get(['scopes', $entity->getEntityType(), 'object'])
         ) {
             $this->handleCreateRelated($entity, $options);
@@ -403,7 +404,7 @@ class HookProcessor
             $this->service->followEntityMass($entity, $userIdList);
         }
 
-        if (empty($options['noStream']) && empty($options['silent'])) {
+        if (empty($options['noStream']) && empty($options[SaveOption::SILENT])) {
             $this->service->noteCreate($entity, $options);
         }
 
@@ -441,7 +442,7 @@ class HookProcessor
      */
     private function afterSaveStreamNotNew1(CoreEntity $entity, array $options): void
     {
-        if (!empty($options['noStream']) || !empty($options['silent'])) {
+        if (!empty($options['noStream']) || !empty($options[SaveOption::SILENT])) {
             return;
         }
 
@@ -581,7 +582,7 @@ class HookProcessor
 
         if (
             !empty($options['noStream']) ||
-            !empty($options['silent']) ||
+            !empty($options[SaveOption::SILENT]) ||
             !$this->metadata->get(['scopes', $entityType, 'object'])
         ) {
             return;
@@ -614,7 +615,7 @@ class HookProcessor
 
         if (
             !empty($options['noStream']) ||
-            !empty($options['silent']) ||
+            !empty($options[SaveOption::SILENT]) ||
             !$this->metadata->get(['scopes', $entityType, 'object'])
         ) {
             return;

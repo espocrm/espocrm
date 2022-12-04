@@ -34,7 +34,7 @@ use Espo\ORM\Entity;
 use Espo\Core\{
     ORM\EntityManager,
     FieldProcessing\Saver\Params,
-};
+    ORM\Repository\SaveOption};
 
 class LinkMultipleSaver
 {
@@ -185,13 +185,13 @@ class LinkMultipleSaver
             }
 
             $repository->getRelation($entity, $name)->relateById($id, $data, [
-                'skipHooks' => $skipHooks,
+                SaveOption::SKIP_HOOKS => $skipHooks,
             ]);
         }
 
         foreach ($toRemoveIdList as $id) {
             $repository->getRelation($entity, $name)->unrelateById($id, [
-                'skipHooks' => $skipHooks,
+                SaveOption::SKIP_HOOKS => $skipHooks,
             ]);
         }
 

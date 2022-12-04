@@ -29,6 +29,7 @@
 
 namespace Espo\Hooks\Common;
 
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\ORM\Entity;
 
 use Espo\Tools\Stream\Service as Service;
@@ -61,7 +62,7 @@ class StreamNotesAcl
             return;
         }
 
-        if (!empty($options['silent'])) {
+        if (!empty($options[SaveOption::SILENT])) {
             return;
         }
 

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\EmailAddress;
 
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Entities\EmailAddress;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\ORM\Entity;
@@ -416,7 +417,7 @@ class Saver implements SaverInterface
                 $this->entityManager
                     ->getRDBRepository($entity->getEntityType())
                     ->unrelate($entity, 'emailAddresses', $emailAddressOld, [
-                        'skipHooks' => true,
+                        SaveOption::SKIP_HOOKS => true,
                     ]);
             }
         }
@@ -490,13 +491,13 @@ class Saver implements SaverInterface
 
             if ($emailAddressOld) {
                 $entityRepository->unrelate($entity, 'emailAddresses', $emailAddressOld, [
-                    'skipHooks' => true,
+                    SaveOption::SKIP_HOOKS => true,
                 ]);
             }
         }
 
         $entityRepository->relate($entity, 'emailAddresses', $emailAddressNew, null, [
-            'skipHooks' => true,
+            SaveOption::SKIP_HOOKS => true,
         ]);
 
         if ($entity->has('emailAddressIsOptedOut')) {

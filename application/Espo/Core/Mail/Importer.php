@@ -33,6 +33,7 @@ use Espo\Core\Job\Job\Data as JobData;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Mail\Importer\DuplicateFinder;
 use Espo\Core\Mail\Importer\ParentFinder;
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Entities\Email;
 use Espo\Entities\EmailFilter;
 use Espo\Repositories\Email as EmailRepository;
@@ -406,8 +407,8 @@ class Importer
         $email->set('status', Email::STATUS_BEING_IMPORTED);
 
         $this->entityManager->saveEntity($email, [
-            'skipAll' => true,
-            'keepNew' => true,
+            SaveOption::SKIP_ALL => true,
+            SaveOption::KEEP_NEW => true,
         ]);
 
         $this->entityManager->getLocker()->commit();

@@ -36,6 +36,7 @@ use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Account\ImapParams;
 use Espo\Core\Mail\Smtp\HandlerProcessor;
 use Espo\Core\Mail\SmtpParams;
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Core\Utils\Config;
 
 use Espo\Core\Utils\Crypt;
@@ -77,7 +78,7 @@ class Account implements AccountInterface
     {
         $this->entity->set('fetchData', $fetchData->getRaw());
 
-        $this->entityManager->saveEntity($this->entity, ['silent' => true]);
+        $this->entityManager->saveEntity($this->entity, [SaveOption::SILENT => true]);
     }
 
     public function relateEmail(Email $email): void

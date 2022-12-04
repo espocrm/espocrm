@@ -29,6 +29,7 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Entities\EmailFilter;
 use Espo\Entities\InboundEmail;
 use Espo\Entities\User as UserEntity;
@@ -517,7 +518,7 @@ class Email extends Database implements
                 ) {
                     $replied->set('isReplied', true);
 
-                    $this->entityManager->saveEntity($replied, ['silent' => true]);
+                    $this->entityManager->saveEntity($replied, [SaveOption::SILENT => true]);
                 }
             }
         }

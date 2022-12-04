@@ -34,6 +34,7 @@ use Espo\ORM\Entity;
 use Espo\Core\FieldProcessing\Saver as SaverInterface;
 use Espo\Core\FieldProcessing\Saver\Params;
 use Espo\Core\ORM\EntityManager;
+use Espo\ORM\Repository\SaveOption;
 
 /**
  * @implements SaverInterface<Entity>
@@ -135,7 +136,7 @@ class Saver implements SaverInterface
                 $previousForeignEntity->set($foreignKey, null);
 
                 $this->entityManager->saveEntity($previousForeignEntity, [
-                    'skipAll' => true,
+                    SaveOption::SKIP_ALL => true,
                 ]);
             }
         }
@@ -190,7 +191,7 @@ class Saver implements SaverInterface
         $anotherEntity->set($idAttribute, null);
 
         $this->entityManager->saveEntity($anotherEntity, [
-            'skipAll' => true,
+            SaveOption::SKIP_ALL => true,
         ]);
     }
 

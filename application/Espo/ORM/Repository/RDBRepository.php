@@ -55,13 +55,9 @@ use PDO;
 class RDBRepository implements Repository
 {
     protected string $entityType;
-
     protected EntityManager $entityManager;
-
     protected EntityFactory $entityFactory;
-
     protected HookMediator $hookMediator;
-
     protected RDBTransactionManager $transactionManager;
 
     public function __construct(
@@ -156,7 +152,7 @@ class RDBRepository implements Repository
             $entity->setAsBeingSaved();
         }
 
-        if (empty($options['skipBeforeSave']) && empty($options['skipAll'])) {
+        if (empty($options['skipBeforeSave']) && empty($options[SaveOption::SKIP_ALL])) {
             $this->beforeSave($entity, $options);
         }
 
@@ -177,19 +173,22 @@ class RDBRepository implements Repository
             $entity->setAsSaved();
         }
 
-        if (empty($options['skipAfterSave']) && empty($options['skipAll'])) {
+        if (
+            empty($options['skipAfterSave']) &&
+            empty($options[SaveOption::SKIP_ALL])
+        ) {
             $this->afterSave($entity, $options);
         }
 
         if ($entity->isNew()) {
-            if (empty($options['keepNew'])) {
+            if (empty($options[SaveOption::KEEP_NEW])) {
                 $entity->setAsNotNew();
 
                 $entity->updateFetchedValues();
             }
         }
         else {
-            if (empty($options['keepDirty'])) {
+            if (empty($options[SaveOption::KEEP_DIRTY])) {
                 $entity->updateFetchedValues();
             }
         }

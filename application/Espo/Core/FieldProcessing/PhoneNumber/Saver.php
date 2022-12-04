@@ -29,6 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\PhoneNumber;
 
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Entities\PhoneNumber;
 use Espo\Repositories\PhoneNumber as PhoneNumberRepository;
 
@@ -456,13 +457,13 @@ class Saver implements SaverInterface
 
                     if ($phoneNumberOld) {
                         $entityRepository->unrelate($entity, 'phoneNumbers', $phoneNumberOld, [
-                            'skipHooks' => true,
+                            SaveOption::SKIP_HOOKS => true,
                         ]);
                     }
                 }
 
                 $entityRepository->relate($entity, 'phoneNumbers', $phoneNumberNew, null, [
-                    'skipHooks' => true,
+                    SaveOption::SKIP_HOOKS => true,
                 ]);
 
                 if ($entity->has('phoneNumberIsOptedOut')) {
@@ -527,7 +528,7 @@ class Saver implements SaverInterface
 
             if ($phoneNumberOld) {
                 $entityRepository->unrelate($entity, 'phoneNumbers', $phoneNumberOld, [
-                    'skipHooks' => true,
+                    SaveOption::SKIP_HOOKS => true,
                 ]);
             }
         }

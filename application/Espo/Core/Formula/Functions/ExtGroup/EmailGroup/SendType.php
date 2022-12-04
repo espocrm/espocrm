@@ -30,6 +30,7 @@
 namespace Espo\Core\Formula\Functions\ExtGroup\EmailGroup;
 
 use Espo\Core\ApplicationUser;
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Entities\Email;
 use Espo\Tools\Email\SendService;
 use Exception;
@@ -109,8 +110,8 @@ class SendType extends BaseFunction implements
 
         if ($toSave) {
             $em->saveEntity($email, [
-                'modifiedById' => ApplicationUser::SYSTEM_USER_ID,
-                'silent' => true,
+                SaveOption::SILENT => true,
+                SaveOption::MODIFIED_BY_ID => ApplicationUser::SYSTEM_USER_ID,
             ]);
         }
 

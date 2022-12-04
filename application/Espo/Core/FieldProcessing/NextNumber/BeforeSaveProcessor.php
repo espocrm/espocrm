@@ -30,6 +30,7 @@
 namespace Espo\Core\FieldProcessing\NextNumber;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Entities\NextNumber;
 
 use Espo\Core\ORM\Entity;
@@ -86,7 +87,7 @@ class BeforeSaveProcessor
      */
     private function processItem(Entity $entity, string $field, array $options, bool $populate = false): void
     {
-        if (!empty($options['import'])) {
+        if (!empty($options[SaveOption::IMPORT])) {
             if ($entity->has($field)) {
                 return;
             }

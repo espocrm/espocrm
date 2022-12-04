@@ -32,10 +32,10 @@ namespace Espo\Hooks\Common;
 use Espo\ORM\Entity;
 
 use Espo\Core\{
+    ORM\Repository\SaveOption,
     Utils\Metadata,
     Utils\Config,
-    WebSocket\Submission as WebSocketSubmission,
-};
+    WebSocket\Submission as WebSocketSubmission};
 
 class WebSocketSubmit
 {
@@ -59,7 +59,7 @@ class WebSocketSubmit
      */
     public function afterSave(Entity $entity, array $options): void
     {
-        if ($options['silent'] ?? false) {
+        if ($options[SaveOption::SILENT] ?? false) {
             return;
         }
 
