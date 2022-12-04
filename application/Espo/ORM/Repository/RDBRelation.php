@@ -578,7 +578,7 @@ class RDBRelation
     /**
      * Get a relationship column value. For many-to-many relationships.
      *
-     * @return mixed
+     * @return string|int|float|bool|null
      */
     public function getColumn(Entity $entity, string $column)
     {
