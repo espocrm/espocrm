@@ -201,7 +201,7 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
          * Set options.
          *
          * @param {JQuery} $el An element.
-         * @param {{value: string, label: string}[]} options Options.
+         * @param {{value: string, text: string}[]} options Options.
          */
         setOptions: function ($el, options) {
             let selectize = $el.get(0).selectize;
@@ -212,7 +212,7 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                     options.map(item => {
                         return {
                             value: item.value,
-                            text: item.label,
+                            text: item.text || item.label,
                         };
                     })
                 );
@@ -229,6 +229,19 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
             let selectize = $el.get(0).selectize;
 
             selectize.setValue(value, true);
+        },
+
+        /**
+         * Destroy.
+         *
+         * @param {JQuery} $el An element.
+         */
+        destroy: function ($el) {
+            if (!$el.length || !$el[0].selectize) {
+                return;
+            }
+
+            $el[0].selectize.destroy();
         },
 
         /**

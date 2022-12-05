@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-template/fields/insert-field', ['views/fields/base'], function (Dep) {
+define('views/email-template/fields/insert-field', ['views/fields/base', 'ui/select'],
+function (Dep, /** module:ui/select */Select) {
 
     return Dep.extend({
 
@@ -43,6 +44,10 @@ define('views/email-template/fields/insert-field', ['views/fields/base'], functi
             'click [data-action="insert"]': function () {
                 var entityType = this.$entityType.val();
                 var field = this.$field.val();
+
+                if (!field) {
+                    return;
+                }
 
                 this.insert(entityType, field);
             },
@@ -273,7 +278,7 @@ define('views/email-template/fields/insert-field', ['views/fields/base'], functi
 
                 var $entityType = this.$entityType = this.$el.find('[data-name="entityType"]');
 
-                var $field = this.$field = this.$el.find('[data-name="field"]');
+                this.$field = this.$el.find('[data-name="field"]');
 
                 $entityType.on('change', () => {
                     this.changeEntityType();
@@ -293,23 +298,26 @@ define('views/email-template/fields/insert-field', ['views/fields/base'], functi
                     );
                 });
 
+                Select.init(this.$field);
+
                 this.changeEntityType();
             }
+
+            Select.init(this.$entityType);
         },
 
         changeEntityType: function () {
             var entityType = this.$entityType.val();
             var fieldList = this.entityFields[entityType];
 
-            this.$field.html('');
+            Select.setValue(this.$field, '');
 
-            fieldList.forEach((field) => {
-                this.$field.append(
-                    $('<option>')
-                        .val(field)
-                        .text(this.translateItem(entityType, field))
-                );
-            });
+            Select.setOptions(this.$field, fieldList.map(field => {
+                return {
+                    value: field,
+                    label: this.translateItem(entityType, field),
+                };
+            }));
         },
 
         translateItem: function (entityType, item) {

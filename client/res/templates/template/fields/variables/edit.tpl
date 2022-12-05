@@ -1,6 +1,11 @@
-<div class="input-group">
-    <span class="input-group-btn">
-        <select data-name="variables" class="main-element form-control">{{{options attributeList '' translatedOptions=translatedOptions}}}</select>
+<div class="input-group" style="table-layout: fixed; width: 100%;">
+    <span class="input-group-item" style="width: 40%;">
+        <select
+            data-name="variables"
+            class="main-element form-control radius-left"
+        >{{{options attributeList '' translatedOptions=translatedOptions}}}</select>
     </span>
-    <input data-name="copy" class="form-control" readonly="true">
+    <span class="input-group-item">
+        <input data-name="copy" class="form-control" readonly="true">
+    </span>
 </div>

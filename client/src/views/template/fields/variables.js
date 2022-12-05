@@ -26,14 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/template/fields/variables', ['views/fields/base'], function (Dep) {
+define('views/template/fields/variables', ['views/fields/base', 'ui/select'],
+function (Dep, /** module:ui/select */Select) {
 
     return Dep.extend({
 
         inlineEditDisabled: true,
 
         detailTemplate: 'template/fields/variables/detail',
-
         editTemplate: 'template/fields/variables/edit',
 
         data: function () {
@@ -411,6 +411,10 @@ define('views/template/fields/variables', ['views/fields/base'], function (Dep) 
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
+            if (this.mode === this.MODE_EDIT) {
+                Select.init(this.$el.find('[data-name="variables"]'));
+            }
         },
 
         fetch: function () {},

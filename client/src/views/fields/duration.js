@@ -406,7 +406,7 @@ function (Dep, /** module:ui/select*/Select) {
                 let options = this.getOptions().map(value => {
                     return {
                         value: value.toString(),
-                        label: this.stringifyDuration(value),
+                        text: this.stringifyDuration(value),
                     };
                 });
 
