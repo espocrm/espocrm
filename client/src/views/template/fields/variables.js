@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/template/fields/variables', 'views/fields/base', function (Dep) {
+define('views/template/fields/variables', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -49,6 +49,7 @@ define('views/template/fields/variables', 'views/fields/base', function (Dep) {
                 var attribute = this.$el.find('[data-name="variables"]').val();
 
                 var $copy = this.$el.find('[data-name="copy"]');
+
                 if (attribute !== '') {
                     if (this.textVariables[attribute]) {
                         $copy.val('{{{' + attribute + '}}}');
@@ -65,11 +66,11 @@ define('views/template/fields/variables', 'views/fields/base', function (Dep) {
             this.setupAttributeList();
             this.setupTranslatedOptions();
 
-            this.listenTo(this.model, 'change:entityType', function () {
+            this.listenTo(this.model, 'change:entityType', () => {
                 this.setupAttributeList();
                 this.setupTranslatedOptions();
                 this.reRender();
-            }, this);
+            });
         },
 
         setupAttributeList: function () {
@@ -80,7 +81,8 @@ define('views/template/fields/variables', 'views/fields/base', function (Dep) {
             var fieldList = this.getFieldManager().getEntityTypeFieldList(entityType);
 
             var ignoreFieldList = [];
-            fieldList.forEach(function (field) {
+
+            fieldList.forEach((field) => {
                 if (
                     this.getMetadata().get(['entityAcl', entityType, 'fields', field, 'onlyAdmin'])
                     ||
@@ -93,51 +95,60 @@ define('views/template/fields/variables', 'views/fields/base', function (Dep) {
                     this.getMetadata().get(['entityDefs', entityType, 'fields', field, 'directAccessDisabled'])
                     ||
                     this.getMetadata().get(['entityDefs', entityType, 'fields', field, 'templatePlaceholderDisabled'])
-                ) ignoreFieldList.push(field);
-            }, this);
+                ) {
+                    ignoreFieldList.push(field);
+                }
+            });
 
             var attributeList = this.getFieldManager().getEntityTypeAttributeList(entityType) || [];
 
             var forbiddenList = Espo.Utils.clone(this.getAcl().getScopeForbiddenAttributeList(entityType));
 
-            ignoreFieldList.forEach(function (field) {
+            ignoreFieldList.forEach((field) => {
                 this.getFieldManager().getEntityTypeFieldAttributeList(entityType, field).forEach(function (attribute) {
                     forbiddenList.push(attribute);
                 });
-            }, this);
+            });
 
-            attributeList = attributeList.filter(function (item) {
+            attributeList = attributeList.filter((item) => {
                 if (~forbiddenList.indexOf(item)) return;
 
                 var fieldType = this.getMetadata().get(['entityDefs', entityType, 'fields', item, 'type']);
-                if (fieldType === 'map') return;
+
+                if (fieldType === 'map') {
+                    return;
+                }
 
                 return true;
-            }, this);
+            });
 
 
             attributeList.push('id');
-            if (this.getMetadata().get('entityDefs.' + entityType + '.fields.name.type') == 'personName') {
+
+            if (this.getMetadata().get('entityDefs.' + entityType + '.fields.name.type') === 'personName') {
                 if (!~attributeList.indexOf('name')) {
                     attributeList.unshift('name');
                 }
-            };
+            }
 
             this.addAdditionalPlaceholders(entityType, attributeList);
 
-            attributeList = attributeList.sort(function (v1, v2) {
+            attributeList = attributeList.sort((v1, v2) => {
                 return this.translate(v1, 'fields', entityType).localeCompare(this.translate(v2, 'fields', entityType));
-            }.bind(this));
+            });
 
             this.attributeList = attributeList;
 
             this.textVariables = {};
 
-            this.attributeList.forEach(function (item) {
-                if (~['text', 'wysiwyg'].indexOf(this.getMetadata().get(['entityDefs', entityType, 'fields', item, 'type']))) {
+            this.attributeList.forEach((item) => {
+                if (
+                    ~['text', 'wysiwyg']
+                        .indexOf(this.getMetadata().get(['entityDefs', entityType, 'fields', item, 'type']))
+                ) {
                     this.textVariables[item] = true;
                 }
-            }, this);
+            });
 
             if (!~this.attributeList.indexOf('now')) {
                 this.attributeList.unshift('now');
@@ -153,17 +164,23 @@ define('views/template/fields/variables', 'views/fields/base', function (Dep) {
 
             var links = this.getMetadata().get('entityDefs.' + entityType + '.links') || {};
 
-            var linkList = Object.keys(links).sort(function (v1, v2) {
+            var linkList = Object.keys(links).sort((v1, v2) => {
                 return this.translate(v1, 'links', entityType).localeCompare(this.translate(v2, 'links', entityType));
-            }.bind(this));
+            });
 
-            linkList.forEach(function (link) {
-                var type = links[link].type
-                if (type != 'belongsTo') return;
+            linkList.forEach((link) => {
+                var type = links[link].type;
+
+                if (type !== 'belongsTo') {
+                    return;
+                }
+
                 var scope = links[link].entity;
                 if (!scope) return;
 
-                if (links[link].disabled) return;
+                if (links[link].disabled) {
+                    return;
+                }
 
                 if (
                     this.getMetadata().get(['entityAcl', entityType, 'links', link, 'onlyAdmin'])
@@ -171,12 +188,15 @@ define('views/template/fields/variables', 'views/fields/base', function (Dep) {
                     this.getMetadata().get(['entityAcl', entityType, 'links', link, 'forbidden'])
                     ||
                     this.getMetadata().get(['entityAcl', entityType, 'links', link, 'internal'])
-                ) return;
+                ) {
+                    return;
+                }
 
                 var fieldList = this.getFieldManager().getEntityTypeFieldList(scope);
 
                 var ignoreFieldList = [];
-                fieldList.forEach(function (field) {
+
+                fieldList.forEach((field) => {
                     if (
                         this.getMetadata().get(['entityAcl', scope, 'fields', field, 'onlyAdmin'])
                         ||
@@ -189,30 +209,38 @@ define('views/template/fields/variables', 'views/fields/base', function (Dep) {
                         this.getMetadata().get(['entityDefs', scope, 'fields', field, 'directAccessDisabled'])
                         ||
                         this.getMetadata().get(['entityDefs', scope, 'fields', field, 'templatePlaceholderDisabled'])
-                    ) ignoreFieldList.push(field);
-                }, this);
+                    ) {
+                        ignoreFieldList.push(field);
+                    }
+                });
 
                 var attributeList = this.getFieldManager().getEntityTypeAttributeList(scope) || [];
 
                 var forbiddenList = Espo.Utils.clone(this.getAcl().getScopeForbiddenAttributeList(scope));
 
-                ignoreFieldList.forEach(function (field) {
-                    this.getFieldManager().getEntityTypeFieldAttributeList(scope, field).forEach(function (attribute) {
+                ignoreFieldList.forEach((field) => {
+                    this.getFieldManager().getEntityTypeFieldAttributeList(scope, field).forEach((attribute) => {
                         forbiddenList.push(attribute);
                     });
-                }, this);
+                });
 
-                attributeList = attributeList.filter(function (item) {
-                    if (~forbiddenList.indexOf(item)) return;
+                attributeList = attributeList.filter((item) => {
+                    if (~forbiddenList.indexOf(item)) {
+                        return;
+                    }
 
                     var fieldType = this.getMetadata().get(['entityDefs', scope, 'fields', item, 'type']);
-                    if (fieldType === 'map') return;
+
+                    if (fieldType === 'map') {
+                        return;
+                    }
 
                     return true;
-                }, this);
+                });
 
                 attributeList.push('id');
-                if (this.getMetadata().get('entityDefs.' + scope + '.fields.name.type') == 'personName') {
+
+                if (this.getMetadata().get('entityDefs.' + scope + '.fields.name.type') === 'personName') {
                     attributeList.unshift('name');
                 }
 
@@ -220,41 +248,44 @@ define('views/template/fields/variables', 'views/fields/base', function (Dep) {
 
                 this.addAdditionalPlaceholders(scope, attributeList, link, entityType);
 
-                attributeList.sort(function (v1, v2) {
+                attributeList.sort((v1, v2) => {
                     return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
-                }.bind(this));
+                });
 
-                attributeList.forEach(function (item) {
+                attributeList.forEach((item) => {
                     if (~originalAttributeList.indexOf(item)) {
                         this.attributeList.push(link + '.' + item);
                     } else {
                         this.attributeList.push(item);
                     }
-                }, this);
+                });
 
-                attributeList.forEach(function (item) {
+                attributeList.forEach((item) => {
                     var variable = link + '.' + item;
-                    if (~['text', 'wysiwyg'].indexOf(this.getMetadata().get(['entityDefs', scope, 'fields', item, 'type']))) {
+
+                    if (
+                        ~['text', 'wysiwyg']
+                            .indexOf(this.getMetadata().get(['entityDefs', scope, 'fields', item, 'type']))
+                    ) {
                         this.textVariables[variable] = true;
                     }
-                }, this);
-
-            }, this);
+                });
+            });
 
             return this.attributeList;
         },
 
         addAdditionalPlaceholders: function (entityType, attributeList, link, superEntityType) {
-
             function removeItem(attributeList, item) {
                 for (var i = 0; i < attributeList.length; i++) {
-                    if (attributeList[i] == item) {
+                    if (attributeList[i] === item) {
                         attributeList.splice(i, 1);
                     }
                 }
             }
 
             var fieldDefs = this.getMetadata().get(['entityDefs', entityType, 'fields']) || {};
+
             for (var field in fieldDefs) {
                 var fieldType = fieldDefs[field].type;
 
@@ -294,16 +325,21 @@ define('views/template/fields/variables', 'views/fields/base', function (Dep) {
 
         setupTranslatedOptions: function () {
             var entityType = this.model.get('entityType');
-            this.attributeList.forEach(function (item) {
+
+            this.attributeList.forEach((item) => {
                 if (~['today', 'now', 'pagebreak'].indexOf(item)) {
                     if (!this.getMetadata().get(['entityDefs', entityType, 'fields', item])) {
-                        this.translatedOptions[item] = this.getLanguage().translateOption(item, 'placeholders', 'Template');
+                        this.translatedOptions[item] = this.getLanguage()
+                            .translateOption(item, 'placeholders', 'Template');
+
                         return;
                     }
                 }
+
                 var field = item;
                 var scope = entityType;
                 var isForeign = false;
+
                 if (~item.indexOf('.')) {
                     isForeign = true;
                     field = item.split('.')[1];
@@ -311,48 +347,66 @@ define('views/template/fields/variables', 'views/fields/base', function (Dep) {
                     scope = this.getMetadata().get('entityDefs.' + entityType + '.links.' + link + '.entity');
                 }
 
-                if (this.translatedOptions[item]) return;
+                if (this.translatedOptions[item]) {
+                    return;
+                }
 
                 this.translatedOptions[item] = this.translate(field, 'fields', scope);
 
                 if (field.indexOf('Id') === field.length - 2) {
                     var baseField = field.substr(0, field.length - 2);
+
                     if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
-                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('id', 'fields') + ')';
+                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) +
+                            ' (' + this.translate('id', 'fields') + ')';
                     }
-                } else if (field.indexOf('Name') === field.length - 4) {
+                }
+                else if (field.indexOf('Name') === field.length - 4) {
                     var baseField = field.substr(0, field.length - 4);
+
                     if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
-                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('name', 'fields') + ')';
+                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) +
+                            ' (' + this.translate('name', 'fields') + ')';
                     }
-                } else if (field.indexOf('Type') === field.length - 4) {
+                }
+                else if (field.indexOf('Type') === field.length - 4) {
                     var baseField = field.substr(0, field.length - 4);
+
                     if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
-                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('type', 'fields') + ')';
+                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) +
+                            ' (' + this.translate('type', 'fields') + ')';
                     }
                 }
 
                 if (field.indexOf('Ids') === field.length - 3) {
                     var baseField = field.substr(0, field.length - 3);
+
                     if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
-                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('ids', 'fields') + ')';
+                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) +
+                            ' (' + this.translate('ids', 'fields') + ')';
                     }
-                } else if (field.indexOf('Names') === field.length - 5) {
+                }
+                else if (field.indexOf('Names') === field.length - 5) {
                     var baseField = field.substr(0, field.length - 5);
                     if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
-                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('names', 'fields') + ')';
+                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) +
+                            ' (' + this.translate('names', 'fields') + ')';
                     }
-                } else if (field.indexOf('Types') === field.length - 5) {
+                }
+                else if (field.indexOf('Types') === field.length - 5) {
                     var baseField = field.substr(0, field.length - 5);
+
                     if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
-                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('types', 'fields') + ')';
+                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) +
+                            ' (' + this.translate('types', 'fields') + ')';
                     }
                 }
 
                 if (isForeign) {
-                    this.translatedOptions[item] =  this.translate(link, 'links', entityType) + '.' + this.translatedOptions[item];
+                    this.translatedOptions[item] =  this.translate(link, 'links', entityType) + '.' +
+                        this.translatedOptions[item];
                 }
-            }, this);
+            });
         },
 
         afterRender: function () {
@@ -362,5 +416,4 @@ define('views/template/fields/variables', 'views/fields/base', function (Dep) {
         fetch: function () {},
 
     });
-
 });

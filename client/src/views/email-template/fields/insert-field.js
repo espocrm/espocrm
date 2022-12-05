@@ -26,86 +26,104 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-template/fields/insert-field', 'views/fields/base', function (Dep) {
+define('views/email-template/fields/insert-field', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
         inlineEditDisabled: true,
 
         detailTemplate: 'email-template/fields/insert-field/detail',
-
         editTemplate: 'email-template/fields/insert-field/edit',
 
         data: function () {
-            return {
-            };
+            return {};
         },
 
         events: {
             'click [data-action="insert"]': function () {
                 var entityType = this.$entityType.val();
                 var field = this.$field.val();
+
                 this.insert(entityType, field);
             },
         },
 
         setup: function () {
-            if (this.mode != 'list') {
+            if (this.mode !== this.MODE_LIST) {
                 var entityList = [];
+
                 var defs = this.getMetadata().get('scopes');
-                entityList = Object.keys(defs).filter(function (scope) {
-                    if (scope === 'Email') return;
-                    if (!this.getAcl().checkScope(scope)) return;
+
+                entityList = Object.keys(defs).filter(scope => {
+                    if (scope === 'Email') {
+                        return;
+                    }
+
+                    if (!this.getAcl().checkScope(scope)) {
+                        return;
+                    }
+
                     return (defs[scope].entity && (defs[scope].object));
-                }, this);
+                });
 
                 this.translatedOptions = {};
 
                 var entityPlaceholders = {};
-                entityList.forEach(function (scope) {
+
+                entityList.forEach(scope => {
                     this.translatedOptions[scope] = {};
 
                     entityPlaceholders[scope] = this.getScopeAttributeList(scope);
 
-                    entityPlaceholders[scope].forEach(function (item) {
+                    entityPlaceholders[scope].forEach(item => {
                         this.translatedOptions[scope][item] = this.translatePlaceholder(scope, item);
-                    }, this);
+                    });
 
                     var links = this.getMetadata().get('entityDefs.' + scope + '.links') || {};
 
-                    var linkList = Object.keys(links).sort(function (v1, v2) {
+                    var linkList = Object.keys(links).sort((v1, v2) => {
                         return this.translate(v1, 'links', scope).localeCompare(this.translate(v2, 'links', scope));
-                    }.bind(this));
+                    });
 
-                    linkList.forEach(function (link) {
+                    linkList.forEach((link) => {
                         var type = links[link].type
-                        if (type != 'belongsTo') return;
-                        var foreignScope = links[link].entity;
-                        if (!foreignScope) return;
 
-                        if (links[link].disabled) return;
+                        if (type !== 'belongsTo') {
+                            return;
+                        }
+
+                        var foreignScope = links[link].entity;
+
+                        if (!foreignScope) {
+                            return;
+                        }
+
+                        if (links[link].disabled) {
+                            return;
+                        }
 
                         if (
-                            this.getMetadata().get(['entityAcl', scope, 'links', link, 'onlyAdmin'])
-                            ||
-                            this.getMetadata().get(['entityAcl', scope, 'links', link, 'forbidden'])
-                            ||
+                            this.getMetadata().get(['entityAcl', scope, 'links', link, 'onlyAdmin']) ||
+                            this.getMetadata().get(['entityAcl', scope, 'links', link, 'forbidden']) ||
                             this.getMetadata().get(['entityAcl', scope, 'links', link, 'internal'])
-                        ) return;
+                        ) {
+                            return;
+                        }
 
                         var attributeList = this.getScopeAttributeList(foreignScope);
 
-                        attributeList.forEach(function (item) {
+                        attributeList.forEach((item) => {
                             entityPlaceholders[scope].push(link + '.' + item);
 
-                            this.translatedOptions[scope][link + '.' + item] = this.translatePlaceholder(scope, link + '.' + item);
+                            this.translatedOptions[scope][link + '.' + item] =
+                                this.translatePlaceholder(scope, link + '.' + item);
+                        });
+                    });
+                });
 
-                        }, this);
-                    }, this);
+                entityPlaceholders['Person'] =
+                    ['name', 'firstName', 'lastName', 'salutationName', 'emailAddress', 'assignedUserName'];
 
-                }, this);
-
-                entityPlaceholders['Person'] = ['name', 'firstName', 'lastName', 'salutationName', 'emailAddress', 'assignedUserName'];
                 this.translatedOptions['Person'] = {};
 
                 this.entityList = entityList;
@@ -118,12 +136,13 @@ define('views/email-template/fields/insert-field', 'views/fields/base', function
 
             var list = [];
 
-            fieldList = fieldList.sort(function (v1, v2) {
+            fieldList = fieldList.sort((v1, v2) => {
                 return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
-            }.bind(this));
+            });
 
-            fieldList.forEach(function (field) {
+            fieldList.forEach((field) => {
                 var fieldType = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']);
+
                 if (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'disabled'])) return;
                 if (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'directAccessDisabled'])) return;
                 if (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'templatePlaceholderDisabled'])) return;
@@ -133,29 +152,37 @@ define('views/email-template/fields/insert-field', 'views/fields/base', function
                 if (fieldType === 'attachmentMultiple') return;
 
                 if (
-                    this.getMetadata().get(['entityAcl', scope, 'fields', field, 'onlyAdmin'])
-                    ||
-                    this.getMetadata().get(['entityAcl', scope, 'fields', field, 'forbidden'])
-                    ||
+                    this.getMetadata().get(['entityAcl', scope, 'fields', field, 'onlyAdmin']) ||
+                    this.getMetadata().get(['entityAcl', scope, 'fields', field, 'forbidden']) ||
                     this.getMetadata().get(['entityAcl', scope, 'fields', field, 'internal'])
-                ) return;
+                ) {
+                    return;
+                }
 
                 var fieldAttributeList = this.getFieldManager().getAttributeList(fieldType, field);
 
-                fieldAttributeList.forEach(function (attribute) {
-                    if (~list.indexOf(attribute)) return;
+                fieldAttributeList.forEach((attribute) => {
+                    if (~list.indexOf(attribute)) {
+                        return;
+                    }
+
                     list.push(attribute);
-                }, this);
-            }, this);
+                });
+            });
 
             var forbiddenList = this.getAcl().getScopeForbiddenAttributeList(scope);
-            list = list.filter(function (item) {
-                if (~forbiddenList.indexOf(item)) return;
+
+            list = list.filter((item) => {
+                if (~forbiddenList.indexOf(item)) {
+                    return;
+                }
+
                 return true;
-            }, this);
+            });
 
             list.push('id');
-            if (this.getMetadata().get('entityDefs.' + scope + '.fields.name.type') == 'personName') {
+
+            if (this.getMetadata().get('entityDefs.' + scope + '.fields.name.type') === 'personName') {
                 list.unshift('name');
             }
 
@@ -166,10 +193,12 @@ define('views/email-template/fields/insert-field', 'views/fields/base', function
             var field = item;
             var scope = entityType;
             var isForeign = false;
+
             if (~item.indexOf('.')) {
                 isForeign = true;
                 field = item.split('.')[1];
                 var link = item.split('.')[0];
+
                 scope = this.getMetadata().get('entityDefs.' + entityType + '.links.' + link + '.entity');
             }
 
@@ -179,16 +208,21 @@ define('views/email-template/fields/insert-field', 'views/fields/base', function
 
             if (field.indexOf('Id') === field.length - 2) {
                 var baseField = field.substr(0, field.length - 2);
+
                 if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                     label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('id', 'fields') + ')';
                 }
-            } else if (field.indexOf('Name') === field.length - 4) {
+            }
+            else if (field.indexOf('Name') === field.length - 4) {
                 var baseField = field.substr(0, field.length - 4);
+
                 if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                     label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('name', 'fields') + ')';
                 }
-            } else if (field.indexOf('Type') === field.length - 4) {
+            }
+            else if (field.indexOf('Type') === field.length - 4) {
                 var baseField = field.substr(0, field.length - 4);
+
                 if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                     label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('type', 'fields') + ')';
                 }
@@ -196,16 +230,21 @@ define('views/email-template/fields/insert-field', 'views/fields/base', function
 
             if (field.indexOf('Ids') === field.length - 3) {
                 var baseField = field.substr(0, field.length - 3);
+
                 if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                     label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('ids', 'fields') + ')';
                 }
-            } else if (field.indexOf('Names') === field.length - 5) {
+            }
+            else if (field.indexOf('Names') === field.length - 5) {
                 var baseField = field.substr(0, field.length - 5);
+
                 if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                     label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('names', 'fields') + ')';
                 }
-            } else if (field.indexOf('Types') === field.length - 5) {
+            }
+            else if (field.indexOf('Types') === field.length - 5) {
                 var baseField = field.substr(0, field.length - 5);
+
                 if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                     label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('types', 'fields') + ')';
                 }
@@ -221,28 +260,38 @@ define('views/email-template/fields/insert-field', 'views/fields/base', function
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode == 'edit') {
+            if (this.mode === this.MODE_EDIT) {
                 var entityTranslation = {};
-                this.entityList.forEach(function (scope) {
-                    entityTranslation[scope] = this.translate(scope, 'scopeNames');
-                }, this);
 
-                this.entityList.sort(function (a, b) {
+                this.entityList.forEach((scope) => {
+                    entityTranslation[scope] = this.translate(scope, 'scopeNames');
+                });
+
+                this.entityList.sort((a, b) => {
                     return a.localeCompare(b);
-                }, this);
+                });
 
                 var $entityType = this.$entityType = this.$el.find('[data-name="entityType"]');
+
                 var $field = this.$field = this.$el.find('[data-name="field"]');
 
-                $entityType.on('change', function () {
+                $entityType.on('change', () => {
                     this.changeEntityType();
-                }.bind(this));
+                });
 
-                $entityType.append('<option value="Person">' + this.translate('Person') + '</option>');
+                $entityType.append(
+                    $('<option>')
+                        .val('Person')
+                        .text(this.translate('Person'))
+                );
 
-                this.entityList.forEach(function (scope) {
-                    $entityType.append('<option value="' + scope + '">' + entityTranslation[scope] + '</option>');
-                }, this);
+                this.entityList.forEach(scope => {
+                    $entityType.append(
+                        $('<option>')
+                            .val(scope)
+                            .text(entityTranslation[scope])
+                    );
+                });
 
                 this.changeEntityType();
             }
@@ -254,23 +303,27 @@ define('views/email-template/fields/insert-field', 'views/fields/base', function
 
             this.$field.html('');
 
-            fieldList.forEach(function (field) {
-                this.$field.append('<option value="' + field + '">' + this.translateItem(entityType, field) + '</option>');
-            }, this);
+            fieldList.forEach((field) => {
+                this.$field.append(
+                    $('<option>')
+                        .val(field)
+                        .text(this.translateItem(entityType, field))
+                );
+            });
         },
 
         translateItem: function (entityType, item) {
             if (this.translatedOptions[entityType][item]) {
                 return this.translatedOptions[entityType][item];
-            } else {
-                return this.translate(item, 'fields');
             }
+
+            return this.translate(item, 'fields');
         },
 
         insert: function (entityType, field) {
             this.model.trigger('insert-field', {
                 entityType: entityType,
-                field: field
+                field: field,
             });
         }
     });
