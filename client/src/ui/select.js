@@ -509,7 +509,7 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                                 (
                                     e.code.match(/Key[A-Z]/i) ||
                                     e.key.match(/[0-9]/) ||
-                                    RegExp(/^\p{L}/,'u').test(e.key) // is letter
+                                    RegExp(/^\p{L}/, 'u').test(e.key) // is letter
                                 )
                             ) {
                                 let keyCode = e.keyCode;
