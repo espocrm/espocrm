@@ -32,7 +32,6 @@ namespace Espo\Tools\Currency;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
-
 use Espo\Core\Acl;
 use Espo\Core\DataManager;
 use Espo\Core\Utils\Config;
@@ -42,33 +41,25 @@ use stdClass;
 
 class RateService
 {
-    private Config $config;
-    private ConfigWriter $configWriter;
-    private DataManager $dataManager;
-    private Acl $acl;
+    private const SCOPE = 'Currency';
 
     public function __construct(
-        Config $config,
-        ConfigWriter $configWriter,
-        DataManager $dataManager,
-        Acl $acl
-    ) {
-        $this->config = $config;
-        $this->configWriter = $configWriter;
-        $this->dataManager = $dataManager;
-        $this->acl = $acl;
-    }
+        private Config $config,
+        private ConfigWriter $configWriter,
+        private DataManager $dataManager,
+        private Acl $acl
+    ) {}
 
     /**
      * @throws Forbidden
      */
     public function get(): stdClass
     {
-        if (!$this->acl->check('Currency')) {
+        if (!$this->acl->check(self::SCOPE)) {
             throw new Forbidden();
         }
 
-        if ($this->acl->getLevel('Currency', 'read') !== 'yes') {
+        if ($this->acl->getLevel(self::SCOPE, Acl\Table::ACTION_READ) !== Acl\Table::LEVEL_YES) {
             throw new Forbidden();
         }
 
@@ -84,11 +75,11 @@ class RateService
      */
     public function set(stdClass $rates): stdClass
     {
-        if (!$this->acl->check('Currency')) {
+        if (!$this->acl->check(self::SCOPE)) {
             throw new Forbidden();
         }
 
-        if ($this->acl->getLevel('Currency', 'edit') !== 'yes') {
+        if ($this->acl->getLevel(self::SCOPE, Acl\Table::ACTION_EDIT) !== Acl\Table::LEVEL_YES) {
             throw new Forbidden();
         }
 
