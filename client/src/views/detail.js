@@ -99,36 +99,6 @@ define('views/detail', ['views/main'], function (Dep) {
         shortcutKeys: {},
 
         /**
-         * Add an un-follow button.
-         */
-        addUnfollowButtonToMenu: function () {
-            this.removeMenuItem('follow', true);
-
-            this.addMenuItem('buttons', {
-                name: 'unfollow',
-                label: 'Followed',
-                style: 'success',
-                action: 'unfollow',
-            }, true);
-        },
-
-        /**
-         * Add a follow button.
-         */
-        addFollowButtonToMenu: function () {
-            this.removeMenuItem('unfollow', true);
-
-            this.addMenuItem('buttons', {
-                name: 'follow',
-                label: 'Follow',
-                style: 'default',
-                iconHtml: '<span class="fas fa-rss fa-sm"></span>',
-                text: this.translate('Follow'),
-                action: 'follow',
-            }, true);
-        },
-
-        /**
          * @inheritDoc
          */
         setup: function () {
@@ -142,19 +112,8 @@ define('views/detail', ['views/main'], function (Dep) {
 
             this.setupHeader();
             this.setupRecord();
-
             this.setupPageTitle();
-
-            if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
-                if (this.model.has('isFollowed')) {
-                    this.handleFollowButton();
-                }
-
-                this.listenTo(this.model, 'change:isFollowed', () => {
-                    this.handleFollowButton();
-                });
-            }
-
+            this.initFollowButtons();
             this.initRedirect();
         },
 
@@ -265,17 +224,64 @@ define('views/detail', ['views/main'], function (Dep) {
         },
 
         /**
-         * Control follow/unfollow buttons visibility.
+         * @private
          */
-        handleFollowButton: function () {
-            if (this.model.get('isFollowed')) {
-                this.addUnfollowButtonToMenu();
+        initFollowButtons: function () {
+            if (!this.getMetadata().get(['scopes', this.scope, 'stream'])) {
+                return;
+            }
+
+            this.addFollowButtons();
+
+            this.listenTo(this.model, 'change:isFollowed', () => {
+                this.controlFollowButtons();
+            });
+        },
+
+        /**
+         * @private
+         */
+        addFollowButtons: function () {
+            let isFollowed = this.model.get('isFollowed');
+
+            this.addMenuItem('buttons', {
+                name: 'unfollow',
+                label: 'Followed',
+                style: 'success',
+                action: 'unfollow',
+                hidden: !isFollowed,
+            }, true);
+
+            this.addMenuItem('buttons', {
+                name: 'follow',
+                label: 'Follow',
+                style: 'default',
+                iconHtml: '<span class="fas fa-rss fa-sm"></span>',
+                text: this.translate('Follow'),
+                action: 'follow',
+                hidden: isFollowed ||
+                    !this.model.has('isFollowed') ||
+                    !this.getAcl().checkModel(this.model, 'stream'),
+            }, true);
+        },
+
+        /**
+         * @private
+         */
+        controlFollowButtons: function () {
+            let isFollowed = this.model.get('isFollowed');
+
+            if (isFollowed) {
+                this.hideHeaderActionItem('follow');
+                this.showHeaderActionItem('unfollow');
 
                 return;
             }
 
+            this.hideHeaderActionItem('unfollow');
+
             if (this.getAcl().checkModel(this.model, 'stream')) {
-                this.addFollowButtonToMenu();
+                this.showHeaderActionItem('follow');
             }
         },
 
@@ -288,9 +294,11 @@ define('views/detail', ['views/main'], function (Dep) {
             Espo.Ajax
                 .putRequest(this.model.name + '/' + this.model.id + '/subscription')
                 .then(() => {
-                    this.removeMenuItem('follow', true);
+                    this.hideHeaderActionItem('follow');
 
                     this.model.set('isFollowed', true, {sync: true});
+
+                    this.enableMenuItem('follow');
                 })
                 .catch(() => {
                     this.enableMenuItem('follow');
@@ -306,9 +314,11 @@ define('views/detail', ['views/main'], function (Dep) {
             Espo.Ajax
                 .deleteRequest(this.model.name + '/' + this.model.id + '/subscription')
                 .then(() => {
-                    this.removeMenuItem('unfollow', true);
+                    this.hideHeaderActionItem('unfollow');
 
                     this.model.set('isFollowed', false, {sync: true});
+
+                    this.enableMenuItem('unfollow');
                 })
                 .catch(() => {
                     this.enableMenuItem('unfollow');
