@@ -100,6 +100,10 @@ define('views/edit', ['views/main'], function (Dep) {
 
             this.setupHeader();
             this.setupRecord();
+        },
+
+        setupFinal: function () {
+            Dep.prototype.setupFinal.call(this);
 
             this.getHelper().processSetupHandlers(this, 'edit');
         },

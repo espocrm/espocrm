@@ -239,6 +239,10 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
             if (this.options.params && this.options.params.fromAdmin) {
                 this.keepCurrentRootUrl = true;
             }
+        },
+
+        setupFinal: function () {
+            Dep.prototype.setupFinal.call(this);
 
             this.getHelper().processSetupHandlers(this, 'list');
         },

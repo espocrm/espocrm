@@ -155,9 +155,13 @@ define('views/detail', ['views/main'], function (Dep) {
                 });
             }
 
-            this.getHelper().processSetupHandlers(this, 'detail');
-
             this.initRedirect();
+        },
+
+        setupFinal: function () {
+            Dep.prototype.setupFinal.call(this);
+
+            this.getHelper().processSetupHandlers(this, 'detail');
         },
 
         /**
