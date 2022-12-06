@@ -37,6 +37,8 @@ define('dynamic-logic', [], function () {
      *
      * @param {Object} defs Definitions.
      * @param {module:views/record/base.Class} recordView A record view.
+     *
+     * @internal Instantiated in advanced-pack.
      */
     let DynamicLogic = function (defs, recordView) {
         /**

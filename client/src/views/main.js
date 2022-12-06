@@ -71,6 +71,12 @@ define('views/main', ['view'], function (Dep) {
          * @property {string} [html] An HTML.
          * @property {string} [text] A text.
          * @property {string} [className] An additional class name. Only for buttons.
+         * @property {'read'|'edit'|'stream'|'delete'} [acl] Access to a record (or a scope if `aclScope` specified)
+         *   required for a menu item.
+         * @property {string} [aclScope] A scope to check access to with the `acl` parameter.
+         * @property {string} [configCheck] A config parameter defining a menu item availability.
+         *   If starts with `!`, then the result is negated.
+         * @property {module:utils~AccessDefs[]} [accessDataList] Access definitions.
          */
 
         /**
