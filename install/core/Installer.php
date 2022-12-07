@@ -50,19 +50,12 @@ use Espo\Core\ORM\EntityManager;
 class Installer
 {
     private $app = null;
-
     private $language = null;
-
     private $systemHelper = null;
-
     private $databaseHelper = null;
-
     private $installerConfig;
-
     private $isAuth = false;
-
     private $passwordHash;
-
     private $defaultSettings;
 
     private $permittedSettingList = [
