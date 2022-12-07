@@ -33,13 +33,26 @@ define('crm:views/lead/detail', ['views/detail'], function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            if (['Converted', 'Dead'].indexOf(this.model.get('status')) === -1) {
-                this.menu.buttons.push({
-                    label: 'Convert',
-                    action: 'convert',
-                    acl: 'edit',
+            this.addMenuItem('buttons', {
+                name: 'convert',
+                action: 'convert',
+                label: 'Convert',
+                acl: 'edit',
+                hidden: !this.isConvertable(),
+            });
+
+            if (!this.model.has('status')) {
+                this.listenToOnce(this.model, 'sync', () => {
+                    if (this.isConvertable()) {
+                        this.showHeaderActionItem('convert');
+                    }
                 });
             }
+        },
+
+        isConvertable: function () {
+            return !['Converted', 'Dead'].includes(this.model.get('status')) ||
+                !this.model.has('status');
         },
 
         actionConvert: function () {
