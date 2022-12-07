@@ -28,7 +28,12 @@
                             {$langs['fields']['Is Shared']}
                         </label>
                         <div class="field field-outboundEmailIsShared">
-                            <input type="checkbox" {if $fields['outboundEmailIsShared'].value} checked {/if} name="outboundEmailIsShared" class="main-element">
+                            <input
+                                type="checkbox"
+                                {if $fields['outboundEmailIsShared'].value} checked {/if}
+                                name="outboundEmailIsShared"
+                                class="main-element form-checkbox"
+                            >
                         </div>
                     </div>
                 </div>
@@ -60,7 +65,11 @@
                             {$langs['fields']['smtpAuth']}
                         </label>
                         <div class="field field-smtpAuth">
-                            <input type="checkbox" name="smtpAuth" class="main-element" {if $fields['smtpAuth'].value} checked {/if}>
+                            <input
+                                type="checkbox"
+                                name="smtpAuth"
+                                class="main-element form-checkbox" {if $fields['smtpAuth'].value} checked {/if}
+                            >
                         </div>
                     </div>
 

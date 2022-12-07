@@ -13,8 +13,17 @@
             </div>
         </div>
         <div class="cell cell-website form-group">
-            <input class="btn btn-default" type="checkbox" name="license-agree" id="license-agree" class="input-checkbox" value="1" {if $fields['license-agree'].value}checked="checked"{/if}>
-            <label class="point-lbl" for="license-agree">{$langs['labels']['I accept the agreement']}</label>
+            <label class="point-lbl" for="license-agree" style="user-select: none;">
+                <input
+                    type="checkbox"
+                    name="license-agree"
+                    id="license-agree"
+                    class="input-checkbox form-checkbox"
+                    value="1"
+                    {if $fields['license-agree'].value}checked="checked"{/if}
+                >
+                {$langs['labels']['I accept the agreement']}
+            </label>
         </div>
     </form>
 
