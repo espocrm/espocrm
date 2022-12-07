@@ -60,5 +60,3 @@ define('crm:views/lead/detail', ['views/detail'], function (Dep) {
         },
     });
 });
-
-
