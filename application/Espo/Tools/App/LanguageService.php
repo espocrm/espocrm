@@ -70,7 +70,7 @@ class LanguageService
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getDataForFrontend(bool $default = false): array
     {
@@ -152,62 +152,13 @@ class LanguageService
                             unset($data[$scope]['links'][$field]);
                         }
                     }
+
+                    $this->unsetEmpty($data, $scope);
                 }
             }
 
             if (!$this->user->isAdmin()) {
-                unset($data['Admin']);
-                unset($data['LayoutManager']);
-                unset($data['EntityManager']);
-                unset($data['FieldManager']);
-                unset($data['Settings']);
-                unset($data['ApiUser']);
-                unset($data['DynamicLogic']);
-
-                $data['Settings'] = [
-                    'options' => [
-                        'auth2FAMethodList' => $languageObj->get(['Settings', 'options', 'auth2FAMethodList']),
-                    ],
-                ];
-                $data['Admin'] = [
-                    'messages' => [
-                        'userHasNoEmailAddress' => $languageObj
-                            ->translate('userHasNoEmailAddress', 'messages', 'Admin'),
-                    ],
-                ];
-
-                foreach (($this->metadata->get(['app', 'language', 'aclDependencies']) ?? []) as $target => $item) {
-                    $targetArr = explode('.', $target);
-
-                    $aclScope = $item['scope'] ?? null;;
-                    $aclField = $item['field'] ?? null;
-
-                    if (!$aclScope) {
-                        continue;
-                    }
-                    if (!$this->acl->tryCheck($aclScope)) {
-                        continue;
-                    }
-
-                    if ($aclField && in_array($aclField, $this->acl->getScopeForbiddenFieldList($aclScope))) {
-                        continue;
-                    }
-
-                    $pointer =& $data;
-
-                    foreach ($targetArr as $i => $k) {
-                        if ($i === count($targetArr) - 1) {
-                            $pointer[$k] = $languageObj->get($targetArr);
-                            break;
-                        }
-
-                        if (!isset($pointer[$k])) {
-                            $pointer[$k] = [];
-                        }
-
-                        $pointer =& $pointer[$k];
-                    }
-                }
+                $this->prepareDataNonAdmin($data, $languageObj);
             }
         }
 
@@ -219,5 +170,111 @@ class LanguageService
         $data['User']['fields']['newPasswordConfirm'] = $languageObj->translate('newPasswordConfirm', 'fields', 'User');
 
         return $data;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function unsetEmpty(array &$data, string $scope): void
+    {
+        if ($data[$scope]['options'] === []) {
+            unset($data[$scope]['options']);
+        }
+
+        if ($data[$scope]['fields'] === []) {
+            unset($data[$scope]['fields']);
+        }
+
+        if ($data[$scope]['links'] === []) {
+            unset($data[$scope]['links']);
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function prepareDataNonAdmin(array &$data, LanguageUtil $languageObj): void
+    {
+        unset($data['Admin']);
+        unset($data['LayoutManager']);
+        unset($data['EntityManager']);
+        unset($data['FieldManager']);
+        unset($data['Settings']);
+        unset($data['ApiUser']);
+        unset($data['DynamicLogic']);
+
+        $data['Settings'] = [
+            'options' => [
+                'auth2FAMethodList' => $languageObj->get(['Settings', 'options', 'auth2FAMethodList']),
+            ],
+        ];
+
+        $data['Admin'] = [
+            'messages' => [
+                'userHasNoEmailAddress' => $languageObj->translate('userHasNoEmailAddress', 'messages', 'Admin'),
+            ],
+        ];
+
+        $aclDependencies = $this->metadata->get(['app', 'language', 'aclDependencies']) ?? [];
+
+        foreach ($aclDependencies as $target => $item) {
+            $targetArr = explode('.', $target);
+
+            $isFullScope = !str_contains($target, '.');
+
+            if ($isFullScope && isset($data[$target])) {
+                continue;
+            }
+
+            $aclScope = $item['scope'] ?? null;;
+            $aclField = $item['field'] ?? null;
+            $anyScopeList = $item['anyScopeList'] ?? null;
+
+            if ($anyScopeList) {
+                $skip = true;
+
+                foreach ($anyScopeList as $itemScope) {
+                    if ($this->acl->tryCheck($itemScope)) {
+                        $skip = false;
+
+                        break;
+                    }
+                }
+
+                if ($skip) {
+                    continue;
+                }
+            }
+
+            if ($aclScope) {
+                if (!$this->acl->tryCheck($aclScope)) {
+                    continue;
+                }
+
+                if ($aclField && in_array($aclField, $this->acl->getScopeForbiddenFieldList($aclScope))) {
+                    continue;
+                }
+            }
+
+            $pointer =& $data;
+
+            foreach ($targetArr as $i => $k) {
+                if ($i === count($targetArr) - 1) {
+                    $pointer[$k] = $languageObj->get($targetArr);
+
+                    break;
+                }
+
+                if (!isset($pointer[$k])) {
+                    $pointer[$k] = [];
+                }
+
+                $pointer =& $pointer[$k];
+            }
+
+            if ($isFullScope) {
+                $this->unsetEmpty($data, $target);
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@
             "field": "industry"
         },
         "Meeting": {
-            "scope": "Call"
+            "anyScopeList": ["Call"]
         }
     }
 }
