@@ -120,7 +120,7 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
                     if (!~(this.params.options || []).indexOf(value)) {
                         items.push({
                             value: value,
-                            label: this.translateValueToEditLabel(originalValue),
+                            text: this.translateValueToEditLabel(originalValue),
                         });
                     }
                 }
@@ -136,7 +136,7 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
 
                     items.push({
                         value: value,
-                        label: this.translateValueToEditLabel(originalValue),
+                        text: this.translateValueToEditLabel(originalValue),
                     });
                 });
 
@@ -165,7 +165,7 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
         /**
          * @protected
          * @param {string} input
-         * @return {{label: string, value: string}|null}
+         * @return {{text: string, value: string}|null}
          */
         createCustomOptionCallback: function (input) {
             if (input.length > this.MAX_ITEM_LENGTH) {
@@ -192,7 +192,7 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
 
             return {
                 value: input,
-                label: input,
+                text: input,
             };
         },
 

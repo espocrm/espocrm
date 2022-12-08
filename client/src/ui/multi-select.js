@@ -31,7 +31,7 @@ define('ui/multi-select', ['lib!Selectize'], (Selectize) => {
     /**
      * @typedef module:ui/multi-select~Options
      * @type {Object}
-     * @property {{value: string, label: string}[]} items
+     * @property {{value: string, text: string}[]} items
      * @property {string} [delimiter=':,:']
      * @property {boolean} [restoreOnBackspace=false]
      * @property {boolean} [removeButton=true]
@@ -39,7 +39,7 @@ define('ui/multi-select', ['lib!Selectize'], (Selectize) => {
      * @property {boolean} [selectOnTab=false]
      * @property {boolean} [matchAnyWord=false]
      * @property {boolean} [allowCustomOptions=false]
-     * @property {function (string): {value: string, label: string}|null} create
+     * @property {function (string): {value: string, text: string}|null} create
      */
 
     /**
@@ -75,9 +75,9 @@ define('ui/multi-select', ['lib!Selectize'], (Selectize) => {
                 options: options.items,
                 plugins: plugins,
                 delimiter: options.delimiter,
-                labelField: 'label',
+                labelField: 'text',
                 valueField: 'value',
-                searchField: ['label'],
+                searchField: ['text'],
                 highlight: false,
                 selectOnTab: options.selectOnTab,
             };
@@ -90,7 +90,7 @@ define('ui/multi-select', ['lib!Selectize'], (Selectize) => {
                     search = search.toLowerCase();
 
                     return function (item) {
-                        if (item.label.toLowerCase().indexOf(search) === 0) {
+                        if (item.text.toLowerCase().indexOf(search) === 0) {
                             return score(item);
                         }
 
@@ -107,7 +107,7 @@ define('ui/multi-select', ['lib!Selectize'], (Selectize) => {
                     search = search.toLowerCase();
 
                     return function (item) {
-                        let text = item.label.toLowerCase();
+                        let text = item.text.toLowerCase();
 
                         if (
                             !text.split(' ').find(item => item.startsWith(search)) &&
@@ -249,7 +249,7 @@ define('ui/multi-select', ['lib!Selectize'], (Selectize) => {
                                 option = {
                                     value: option.value,
                                     $order: option.$order,
-                                    label: option.value,
+                                    text: option.value,
                                 };
 
                                 if (this.deleteSelection(e)) {

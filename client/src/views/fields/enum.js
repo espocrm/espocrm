@@ -320,7 +320,7 @@ function (Dep, /** module:ui/multi-select*/MultiSelect, /** module:ui/select*/Se
 
                     items.push({
                         value: value,
-                        label: label,
+                        text: label,
                     });
                 });
 

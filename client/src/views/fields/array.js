@@ -77,7 +77,7 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
          * @protected
          * @type {boolean}
          */
-        matchAnyWord: false,
+        matchAnyWord: true,
 
         /**
          * @protected
@@ -417,7 +417,7 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
 
             let items = [];
 
-            (this.params.options || []).forEach((value) => {
+            (this.params.options || []).forEach(value => {
                 let label = this.getLanguage().translateOption(value, this.name, this.scope);
 
                 if (this.translatedOptions) {
@@ -432,7 +432,7 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
 
                 items.push({
                     value: value,
-                    label: label,
+                    text: label,
                 });
             });
 
@@ -445,7 +445,7 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
                 create: input => {
                     return {
                         value: input,
-                        label: input,
+                        text: input,
                     };
                 },
             };

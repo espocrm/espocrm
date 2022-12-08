@@ -132,7 +132,7 @@ function (Dep, /** module:ui/multi-select*/MultiSelect) {
             fieldList.forEach(item => {
                 dataList.push({
                     value: item,
-                    label: this.translate(item, 'fields', scope),
+                    text: this.translate(item, 'fields', scope),
                 });
             });
 
