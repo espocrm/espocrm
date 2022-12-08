@@ -506,6 +506,11 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
 
                     return function (e) {
                         if (IS_MAC ? e.metaKey : e.ctrlKey) {
+                            if (!self.items.length) {
+                                self.restoreSelectedValue();
+                                self.focus();
+                            }
+
                             return;
                         }
 
