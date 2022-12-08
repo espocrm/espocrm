@@ -505,7 +505,7 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                     let original = self.onKeyDown;
 
                     return function (e) {
-                        if (e.code === 'Enter' && (IS_MAC ? e.metaKey : e.ctrlKey)) {
+                        if (IS_MAC ? e.metaKey : e.ctrlKey) {
                             return;
                         }
 
