@@ -99,6 +99,28 @@ define('ui/multi-select', ['lib!Selectize'], (Selectize) => {
                 };
             }
 
+            if (options.matchAnyWord) {
+                /** @this Selectize */
+                selectizeOptions.score = function (search) {
+                    let score = this.getScoreFunction(search);
+
+                    search = search.toLowerCase();
+
+                    return function (item) {
+                        let text = item.label.toLowerCase();
+
+                        if (
+                            !text.split(' ').find(item => item.startsWith(search)) &&
+                            !text.startsWith(search)
+                        ) {
+                            return 0;
+                        }
+
+                        return score(item);
+                    };
+                };
+            }
+
             if (options.allowCustomOptions) {
                 selectizeOptions.persist = false;
                 selectizeOptions.create = options.create;

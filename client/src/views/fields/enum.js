@@ -328,6 +328,7 @@ function (Dep, /** module:ui/multi-select*/MultiSelect, /** module:ui/select*/Se
                 let multiSelectOptions = {
                     items: items,
                     delimiter: ':,:',
+                    matchAnyWord: true,
                 };
 
                 MultiSelect.init(this.$element, multiSelectOptions);

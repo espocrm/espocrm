@@ -155,6 +155,28 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                 };
             }
 
+            if (options.matchAnyWord) {
+                /** @this Selectize */
+                selectizeOptions.score = function (search) {
+                    let score = this.getScoreFunction(search);
+
+                    search = search.toLowerCase();
+
+                    return function (item) {
+                        let text = item.text.toLowerCase();
+
+                        if (
+                            !text.split(' ').find(item => item.startsWith(search)) &&
+                            !text.startsWith(search)
+                        ) {
+                            return 0;
+                        }
+
+                        return score(item);
+                    };
+                };
+            }
+
             if (options.score) {
                 let score = options.score;
 
