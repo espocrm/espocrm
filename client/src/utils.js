@@ -595,7 +595,7 @@ define('utils', [], function () {
         /**
          * Key a key from a key-event.
          *
-         * @param {JQueryKeyEventObject} e A key event.
+         * @param {JQueryKeyEventObject|KeyboardEvent} e A key event.
          * @return {string}
          */
         getKeyFromKeyEvent: function (e) {
