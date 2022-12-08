@@ -67,6 +67,7 @@ define('views/admin/field-manager/fields/options', ['views/fields/array'], funct
                                 .attr('data-value', value)
                                 .addClass('role form-control input-sm pull-right')
                                 .attr('value', text)
+                                .css('width', 'auto')
                         )
                         .append(
                             $('<div>')
