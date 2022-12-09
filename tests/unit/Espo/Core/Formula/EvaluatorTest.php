@@ -29,6 +29,7 @@
 
 namespace tests\unit\Espo\Core\Formula;
 
+use Espo\Core\Formula\AttributeFetcher;
 use Espo\Core\Formula\Evaluator;
 use Espo\Core\InjectableFactory;
 
@@ -36,6 +37,7 @@ use Espo\Core\Formula\Exceptions\SyntaxError;
 
 use Espo\Core\Utils\Log;
 
+use Espo\ORM\EntityManager;
 use tests\unit\ContainerMocker;
 
 class EvaluatorTest extends \PHPUnit\Framework\TestCase
@@ -47,15 +49,17 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $log = $this->getMockBuilder(Log::class)->disableOriginalConstructor()->getMock();
+        $log = $this->createMock(Log::class);
+        $entityManager = $this->createMock(EntityManager::class);
 
         $containerMocker = new ContainerMocker($this);
 
         $container = $containerMocker->create([
             'log' => $log,
+            'entityManager' => $entityManager,
         ]);
 
-        $injectableFactory = $injectableFactory = new InjectableFactory($container);
+        $injectableFactory = new InjectableFactory($container);
 
         $this->evaluator = new Evaluator($injectableFactory);
     }

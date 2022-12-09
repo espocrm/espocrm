@@ -44,13 +44,11 @@ use stdClass;
 class Processor
 {
     private FunctionFactory $functionFactory;
-
     private ?Entity $entity;
-
     private stdClass $variables;
 
     /**
-     * @param ?array<string,class-string> $functionClassNameMap
+     * @param ?array<string, class-string> $functionClassNameMap
      */
     public function __construct(
         InjectableFactory $injectableFactory,

@@ -29,11 +29,8 @@
 
 namespace Espo\Core\Formula;
 
-use Espo\Core\{
-    InjectableFactory,
-    Utils\Metadata,
-};
-
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
 use stdClass;
@@ -43,7 +40,7 @@ use stdClass;
  */
 class Manager
 {
-    private $evaluator;
+    private Evaluator $evaluator;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {

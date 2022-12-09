@@ -31,8 +31,9 @@ namespace Espo\Core\Formula;
 
 use Espo\Core\Formula\Exceptions\UnknownFunction;
 
+use Espo\Core\Formula\Functions\Base;
+use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\ORM\Entity;
-
 use Espo\Core\InjectableFactory;
 
 use stdClass;
@@ -40,14 +41,9 @@ use stdClass;
 class FunctionFactory
 {
     private Processor $processor;
-
     private InjectableFactory $injectableFactory;
-
     private AttributeFetcher $attributeFetcher;
-
-    /**
-     * @var array<string,class-string>
-     */
+    /** @var array<string, class-string> */
     private $classNameMap;
 
     /**
@@ -66,7 +62,7 @@ class FunctionFactory
     }
 
     /**
-     * @return \Espo\Core\Formula\Functions\BaseFunction|\Espo\Core\Formula\Functions\Base
+     * @return BaseFunction|Base
      * @throws UnknownFunction
      */
     public function create(string $name, ?Entity $entity = null, ?stdClass $variables = null): object
@@ -81,12 +77,13 @@ class FunctionFactory
                 if ($i < count($arr) - 1) {
                     $part = $part . 'Group';
                 }
+
                 $arr[$i] = ucfirst($part);
             }
 
             $typeName = implode('\\', $arr);
 
-            /** @var class-string $className */
+            /** @var class-string<BaseFunction|Base> $className */
             $className = 'Espo\\Core\\Formula\\Functions\\' . $typeName . 'Type';
         }
 
@@ -102,13 +99,11 @@ class FunctionFactory
             'attributeFetcher' => $this->attributeFetcher,
         ]);
 
-        if (
-            method_exists($object, 'setAttributeFetcher')
-        ) {
+        if (method_exists($object, 'setAttributeFetcher')) {
             $object->setAttributeFetcher($this->attributeFetcher);
         }
 
-        /** @var \Espo\Core\Formula\Functions\BaseFunction|\Espo\Core\Formula\Functions\Base */
+        /** @var BaseFunction|Base */
         return $object;
     }
 }

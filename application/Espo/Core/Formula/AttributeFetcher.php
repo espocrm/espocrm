@@ -31,37 +31,41 @@ namespace Espo\Core\Formula;
 
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\ORM\EntityManager;
 
 /**
  * Fetches attributes from an entity.
  */
 class AttributeFetcher
 {
-    /**
-     * @var array<string,mixed>
-     */
+    /** @var array<string, mixed> */
     private $relatedEntitiesCacheMap = [];
 
-    /**
-     * @return mixed
-     */
-    public function fetch(Entity $entity, string $attribute, bool $getFetchedAttribute = false)
+    public function __construct(private EntityManager $entityManager) {}
+
+    public function fetch(Entity $entity, string $attribute, bool $getFetchedAttribute = false): mixed
     {
-        if (strpos($attribute, '.') !== false) {
+        if (str_contains($attribute, '.')) {
             $arr = explode('.', $attribute);
 
-            $key = $this->buildKey($entity, $arr[0]);
+            $relationName = $arr[0];
 
-            if (!array_key_exists($key, $this->relatedEntitiesCacheMap)) {
-                // @todo Use getRelation.
-                $this->relatedEntitiesCacheMap[$key] = $entity->get($arr[0]);
-            }
-
-            $relatedEntity = $this->relatedEntitiesCacheMap[$key];
+            $key = $this->buildKey($entity, $relationName);
 
             if (
-                $relatedEntity &&
-                ($relatedEntity instanceof Entity) &&
+                !array_key_exists($key, $this->relatedEntitiesCacheMap) &&
+                $entity->hasRelation($relationName)
+            ) {
+                $this->relatedEntitiesCacheMap[$key] = $this->entityManager
+                    ->getRDBRepository($entity->getEntityType())
+                    ->getRelation($entity, $relationName)
+                    ->findOne();
+            }
+
+            $relatedEntity = $this->relatedEntitiesCacheMap[$key] ?? null;
+
+            if (
+                $relatedEntity instanceof Entity &&
                 count($arr) > 1
             ) {
                 return $this->fetch($relatedEntity, $arr[1]);
@@ -70,42 +74,43 @@ class AttributeFetcher
             return null;
         }
 
-        $methodName = 'get';
-
         if ($getFetchedAttribute) {
-            $methodName = 'getFetched';
+            return $entity->getFetched($attribute);
         }
 
         if (
             $entity instanceof CoreEntity &&
-            $entity->getAttributeParam($attribute, 'isParentName') &&
-            $methodName == 'get'
+            !$entity->has($attribute)
         ) {
-            $relationName = $entity->getAttributeParam($attribute, 'relation');
-
-            $parent = $parent = $entity->get($relationName);
-
-            if ($parent) {
-                return $parent->get('name');
-            }
-        }
-        else if (
-            $entity instanceof CoreEntity &&
-            $entity->getAttributeParam($attribute, 'isLinkMultipleIdList') &&
-            $methodName == 'get'
-        ) {
-            $relationName = $entity->getAttributeParam($attribute, 'relation');
-
-            if (!$entity->has($attribute)) {
-                $entity->loadLinkMultipleField($relationName);
-            }
-        }
-
-        if ($methodName === 'getFetched') {
-            return $entity->getFetched($attribute);
+            $this->load($entity, $attribute);
         }
 
         return $entity->get($attribute);
+    }
+
+    private function load(CoreEntity $entity, string $attribute): void
+    {
+        if ($entity->getAttributeParam($attribute, 'isParentName')) {
+            /** @var ?string $relationName */
+            $relationName = $entity->getAttributeParam($attribute, 'relation');
+
+            if ($relationName) {
+                $entity->loadParentNameField($relationName);
+            }
+
+            return;
+        }
+
+        if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) {
+            /** @var ?string $relationName */
+            $relationName = $entity->getAttributeParam($attribute, 'relation');
+
+            if ($relationName) {
+                $entity->loadLinkMultipleField($relationName);
+            }
+
+            return;
+        }
     }
 
     public function resetRuntimeCache(): void

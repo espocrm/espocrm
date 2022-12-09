@@ -39,34 +39,23 @@ use stdClass;
  */
 class Evaluator
 {
-    /**
-     * @var array<string,class-string>
-     */
+    /** @var array<string, class-string> */
     private $functionClassNameMap;
-
     private Parser $parser;
-
     private AttributeFetcher $attributeFetcher;
-
     private InjectableFactory $injectableFactory;
-
-    /**
-     * @var array<string,stdClass>
-     */
+    /** @var array<string, stdClass> */
     private $parsedHash;
 
     /**
-     * @param array<string,class-string> $functionClassNameMap
+     * @param array<string, class-string> $functionClassNameMap
      */
     public function __construct(InjectableFactory $injectableFactory, array $functionClassNameMap = [])
     {
-        $this->attributeFetcher = new AttributeFetcher();
-
+        $this->attributeFetcher = $injectableFactory->create(AttributeFetcher::class);
         $this->injectableFactory = $injectableFactory;
         $this->functionClassNameMap = $functionClassNameMap;
-
         $this->parser = new Parser();
-
         $this->parsedHash = [];
     }
 

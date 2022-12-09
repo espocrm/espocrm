@@ -49,6 +49,8 @@ use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\InjectableFactory;
 
+use Espo\ORM\Repository\RDBRelation;
+use Espo\ORM\Repository\RDBRepository;
 use tests\unit\ContainerMocker;
 
 class FormulaTest extends \PHPUnit\Framework\TestCase
@@ -111,7 +113,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
     protected function createProcessor($variables = null, ?Entity $entity = null)
     {
         $injectableFactory = new InjectableFactory($this->container);
-        $attributeFetcher = new AttributeFetcher();
+        $attributeFetcher = new AttributeFetcher($this->entityManager);
 
         return new Processor(
             $injectableFactory,
@@ -994,14 +996,35 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
         $parent = $this->getEntityMock();
 
-        $this->setEntityAttributes($parent, array(
+        $this->setEntityAttributes($parent, [
             'amount' => 3
-        ));
+        ]);
 
-        $this->setEntityAttributes($this->entity, array(
-            'parent' => $parent
-        ));
+        $repository = $this->createMock(RDBRepository::class);
+        $relation = $this->createMock(RDBRelation::class);
 
+        $this->entityManager
+            ->expects($this->once())
+            ->method('getRDBRepository')
+            ->with($this->entity->getEntityType())
+            ->willReturn($repository);
+
+        $repository
+            ->expects($this->once())
+            ->method('getRelation')
+            ->with($this->entity, 'parent')
+            ->willReturn($relation);
+
+        $relation
+            ->expects($this->once())
+            ->method('findOne')
+            ->willReturn($parent);
+
+        $this->entity
+            ->expects($this->any())
+            ->method('hasRelation')
+            ->with('parent')
+            ->willReturn(true);
 
         $result = $this->createProcessor()->process($item);
 
