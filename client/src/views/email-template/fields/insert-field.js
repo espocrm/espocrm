@@ -301,9 +301,9 @@ function (Dep, /** module:ui/select */Select) {
                 Select.init(this.$field);
 
                 this.changeEntityType();
-            }
 
-            Select.init(this.$entityType);
+                Select.init(this.$entityType);
+            }
         },
 
         changeEntityType: function () {
