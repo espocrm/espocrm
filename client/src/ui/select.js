@@ -79,7 +79,6 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
 
             Select.loadEspoSelectPlugin();
 
-            plugins.push('auto_position');
             plugins.push('espo_select');
 
             let itemClasses = {};
@@ -337,7 +336,7 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                     self.preventReOpenOnFocus = false;
                 };
 
-                this.positionDropdown = (function () {
+                /*this.positionDropdown = (function () {
                     let original = self.positionDropdown;
 
                     return function () {
@@ -345,7 +344,7 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
 
                         this.$dropdown.css({margin: 'unset'});
                     };
-                })();
+                })();*/
 
                 this.refreshOptions = (function () {
                     let original = self.refreshOptions;
@@ -550,6 +549,60 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
 
                         return original.apply(this, arguments);
                     };
+                })();
+
+                this.positionDropdown = (function() {
+                    const POSITION = {
+                        top: 'top',
+                        bottom: 'bottom',
+                    };
+
+                    return function() {
+                        let $control = self.$control;
+
+                        let offset = this.settings.dropdownParent === 'body' ?
+                            $control.offset() :
+                            $control.position();
+
+                        offset.top += $control.outerHeight(true);
+
+                        let dropdownHeight = self.$dropdown.prop('scrollHeight') + 5;
+                        let controlPosTop = self.$control.get(0).getBoundingClientRect().top;
+                        let wrapperHeight = self.$wrapper.height();
+
+                        let controlPosBottom = self.$control.get(0).getBoundingClientRect().bottom
+
+                        let position =
+                            controlPosTop + dropdownHeight + wrapperHeight > window.innerHeight &&
+                            controlPosBottom - dropdownHeight - wrapperHeight >= 0 ?
+                                POSITION.top :
+                                POSITION.bottom;
+
+                        let styles = {
+                            width: $control.outerWidth(),
+                            left: offset.left,
+                        };
+
+                        if (position === POSITION.top) {
+                            Object.assign(styles, {
+                                bottom: offset.top,
+                                top: 'unset',
+                                margin: '0 0 0 0',
+                            });
+
+                            self.$dropdown.addClass('selectize-position-top');
+                        } else {
+                            Object.assign(styles, {
+                                top: offset.top,
+                                bottom: 'unset',
+                                margin: '0 0 0 0',
+                            });
+
+                            self.$dropdown.removeClass('selectize-position-top');
+                        }
+
+                        self.$dropdown.css(styles);
+                    }
                 })();
             });
         },
