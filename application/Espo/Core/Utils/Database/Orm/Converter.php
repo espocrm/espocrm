@@ -394,11 +394,13 @@ class Converter
     }
 
     /**
-     * @param array<string,mixed> $entityMetadata
-     * @return array<string,mixed>
+     * @param array<string, mixed> $entityMetadata
+     * @return array<string, mixed>
      */
     protected function convertFields(string $entityType, array &$entityMetadata): array
     {
+        $entityMetadata['fields'] ??= [];
+
         // List of unmerged fields with default field definitions in $output.
         $unmergedFields = [
             'name',
