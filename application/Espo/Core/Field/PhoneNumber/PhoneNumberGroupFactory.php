@@ -29,21 +29,19 @@
 
 namespace Espo\Core\Field\PhoneNumber;
 
+use Espo\Entities\PhoneNumber as PhoneNumberEntity;
 use Espo\Repositories\PhoneNumber as Repository;
 
-use Espo\ORM\{
-    EntityManager,
-    Entity,
-    Value\ValueFactory,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Value\ValueFactory;
 
-use Espo\Core\{
-    Utils\Metadata,
-    Field\PhoneNumberGroup,
-    Field\PhoneNumber,
-};
+use Espo\Core\Field\PhoneNumber;
+use Espo\Core\Field\PhoneNumberGroup;
+use Espo\Core\Utils\Metadata;
 
 use RuntimeException;
+use stdClass;
 
 /**
  * A phone number group factory.
@@ -51,7 +49,6 @@ use RuntimeException;
 class PhoneNumberGroupFactory implements ValueFactory
 {
     private Metadata $metadata;
-
     private EntityManager $entityManager;
 
     /**
@@ -65,9 +62,7 @@ class PhoneNumberGroupFactory implements ValueFactory
 
     public function isCreatableFromEntity(Entity $entity, string $field): bool
     {
-        $type = $this->metadata->get([
-            'entityDefs', $entity->getEntityType(), 'fields', $field, 'type'
-        ]);
+        $type = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
 
         if ($type !== 'phone') {
             return false;
@@ -102,7 +97,7 @@ class PhoneNumberGroupFactory implements ValueFactory
 
         if (!$dataList) {
             /** @var Repository $repository */
-            $repository = $this->entityManager->getRepository('PhoneNumber');
+            $repository = $this->entityManager->getRepository(PhoneNumberEntity::ENTITY_TYPE);
 
             $dataList = $repository->getPhoneNumberData($entity);
         }
@@ -139,8 +134,8 @@ class PhoneNumberGroupFactory implements ValueFactory
     }
 
     /**
-     * @param array<int,array<string,mixed>|\stdClass> $dataList
-     * @return \stdClass[]
+     * @param array<int,array<string,mixed>|stdClass> $dataList
+     * @return stdClass[]
      */
     private function sanitizeDataList(array $dataList): array
     {

@@ -29,21 +29,19 @@
 
 namespace Espo\Core\Field\EmailAddress;
 
+use Espo\Entities\EmailAddress as EmailAddressEntity;
 use Espo\Repositories\EmailAddress as Repository;
 
-use Espo\ORM\{
-    EntityManager,
-    Entity,
-    Value\ValueFactory,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Value\ValueFactory;
 
-use Espo\Core\{
-    Utils\Metadata,
-    Field\EmailAddressGroup,
-    Field\EmailAddress,
-};
+use Espo\Core\Field\EmailAddress;
+use Espo\Core\Field\EmailAddressGroup;
+use Espo\Core\Utils\Metadata;
 
 use RuntimeException;
+use stdClass;
 
 /**
  * An email address group factory.
@@ -51,7 +49,6 @@ use RuntimeException;
 class EmailAddressGroupFactory implements ValueFactory
 {
     private Metadata $metadata;
-
     private EntityManager $entityManager;
 
     /**
@@ -65,9 +62,7 @@ class EmailAddressGroupFactory implements ValueFactory
 
     public function isCreatableFromEntity(Entity $entity, string $field): bool
     {
-        $type = $this->metadata->get([
-            'entityDefs', $entity->getEntityType(), 'fields', $field, 'type'
-        ]);
+        $type = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
 
         if ($type !== 'email') {
             return false;
@@ -102,7 +97,7 @@ class EmailAddressGroupFactory implements ValueFactory
 
         if (!$dataList) {
             /** @var Repository $repository */
-            $repository = $this->entityManager->getRepository('EmailAddress');
+            $repository = $this->entityManager->getRepository(EmailAddressEntity::ENTITY_TYPE);
 
             $dataList = $repository->getEmailAddressData($entity);
         }
@@ -135,8 +130,8 @@ class EmailAddressGroupFactory implements ValueFactory
     }
 
     /**
-     * @param array<int,array<string,mixed>|\stdClass> $dataList
-     * @return \stdClass[]
+     * @param array<int,array<string,mixed>|stdClass> $dataList
+     * @return stdClass[]
      */
     private function sanitizeDataList(array $dataList): array
     {
