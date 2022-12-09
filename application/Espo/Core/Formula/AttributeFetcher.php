@@ -29,9 +29,13 @@
 
 namespace Espo\Core\Formula;
 
+use Espo\Entities\EmailAddress;
+use Espo\Entities\PhoneNumber;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\ORM\EntityManager;
+use Espo\Repositories\EmailAddress as EmailAddressRepository;
+use Espo\Repositories\PhoneNumber as PhoneNumberRepository;
 
 /**
  * Fetches attributes from an entity.
@@ -108,6 +112,44 @@ class AttributeFetcher
             if ($relationName) {
                 $entity->loadLinkMultipleField($relationName);
             }
+
+            return;
+        }
+
+        if ($entity->getAttributeParam($attribute, 'isEmailAddressData')) {
+            /** @var ?string $fieldName */
+            $fieldName = $entity->getAttributeParam($attribute, 'field');
+
+            if (!$fieldName) {
+                return;
+            }
+
+            /** @var EmailAddressRepository $emailAddressRepository */
+            $emailAddressRepository = $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
+
+            $data = $emailAddressRepository->getEmailAddressData($entity);
+
+            $entity->set($attribute, $data);
+            $entity->setFetched($attribute, $data);;
+
+            return;
+        }
+
+        if ($entity->getAttributeParam($attribute, 'isPhoneNumberData')) {
+            /** @var ?string $fieldName */
+            $fieldName = $entity->getAttributeParam($attribute, 'field');
+
+            if (!$fieldName) {
+                return;
+            }
+
+            /** @var PhoneNumberRepository $phoneNumberRepository */
+            $phoneNumberRepository = $this->entityManager->getRepository(PhoneNumber::ENTITY_TYPE);
+
+            $data = $phoneNumberRepository->getPhoneNumberData($entity);
+
+            $entity->set($attribute, $data);
+            $entity->setFetched($attribute, $data);;
 
             return;
         }

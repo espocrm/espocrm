@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
+use Espo\ORM\Entity;
+
 class Phone extends Base
 {
     /**
@@ -270,9 +272,11 @@ class Phone extends Base
                 'fields' => [
                     $fieldName => $mainFieldDefs,
                     $fieldName . 'Data' => [
-                        'type' => 'text',
+                        'type' => Entity::JSON_ARRAY,
                         'notStorable' => true,
                         'notExportable' => true,
+                        'isPhoneNumberData' => true,
+                        'field' => $fieldName,
                     ],
                     $fieldName .'IsOptedOut' => [
                         'type' => 'bool',

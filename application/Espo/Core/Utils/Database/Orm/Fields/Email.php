@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
+use Espo\ORM\Entity;
+
 class Email extends Base
 {
     /**
@@ -174,9 +176,11 @@ class Email extends Base
                 'fields' => [
                     $fieldName => $mainFieldDefs,
                     $fieldName . 'Data' => [
-                        'type' => 'text',
+                        'type' => Entity::JSON_ARRAY,
                         'notStorable' => true,
                         'notExportable' => true,
+                        'isEmailAddressData' => true,
+                        'field' => $fieldName,
                     ],
                     $fieldName .'IsOptedOut' => [
                         'type' => 'bool',
