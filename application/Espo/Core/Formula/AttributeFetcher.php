@@ -58,7 +58,11 @@ class AttributeFetcher
 
             if (
                 !array_key_exists($key, $this->relatedEntitiesCacheMap) &&
-                $entity->hasRelation($relationName)
+                $entity->hasRelation($relationName) &&
+                !in_array(
+                    $entity->getRelationType($relationName),
+                    [Entity::MANY_MANY, Entity::HAS_MANY, Entity::HAS_CHILDREN]
+                )
             ) {
                 $this->relatedEntitiesCacheMap[$key] = $this->entityManager
                     ->getRDBRepository($entity->getEntityType())
