@@ -326,7 +326,7 @@ class Xlsx implements Processor
     }
 
     /**
-     * @param mixed[] $row
+     * @param array<string, mixed> $row
      * @param string[] $fieldList
      * @param string[] $azRange
      * @param array<string,string> $typesCache
@@ -879,8 +879,8 @@ class Xlsx implements Processor
     }
 
     /**
-     * @param mixed[] $row
-     * @return mixed[]
+     * @param array<string, mixed> $row
+     * @return array<string, mixed>
      */
     private function sanitizeRow(array $row): array
     {

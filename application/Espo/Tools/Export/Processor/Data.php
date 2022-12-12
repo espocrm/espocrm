@@ -46,7 +46,7 @@ class Data
 
     /**
      *
-     * @return ?mixed[]
+     * @return ?array<string, mixed>
      */
     public function readRow(): ?array
     {
