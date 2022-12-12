@@ -379,26 +379,13 @@ class Xlsx implements Processor
         $value = $preparator->prepare($entityType, $name, $row);
 
         if ($type === 'image') {
-            $attachmentId = $row[$name . 'Id'] ?? null;
-
-            if ($attachmentId) {
-                /** @var ?Attachment $attachment */
-                $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $attachmentId);
-
-                if ($attachment) {
-                    $objDrawing = new Drawing();
-                    $filePath = $this->fileStorageManager->getLocalFilePath($attachment);
-
-                    if ($filePath && file_exists($filePath)) {
-                        $objDrawing->setPath($filePath);
-                        $objDrawing->setHeight(100);
-                        $objDrawing->setCoordinates($coordinate);
-                        $objDrawing->setWorksheet($sheet);
-
-                        $sheet->getRowDimension($rowNumber)->setRowHeight(100);
-                    }
-                }
-            }
+            $this->applyImage(
+                $row,
+                $coordinate,
+                $sheet,
+                $rowNumber,
+                $name
+            );
 
             $value = null;
         }
@@ -436,6 +423,67 @@ class Xlsx implements Processor
                 ->setFormatCode($this->getCurrencyFormatCode($value->getCode()));
         }
 
+        $this->applyLinks(
+            $type,
+            $entityType,
+            $row,
+            $sheet,
+            $coordinate,
+            $name
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     * @throws SpreadsheetException
+     */
+    private function applyImage(
+        array $row,
+        string $coordinate,
+        Worksheet $sheet,
+        int $rowNumber,
+        string $name
+    ): void {
+        $attachmentId = $row[$name . 'Id'] ?? null;
+
+        if (!$attachmentId) {
+            return;
+        }
+
+        /** @var ?Attachment $attachment */
+        $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $attachmentId);
+
+        if (!$attachment) {
+            return;
+        }
+
+        $objDrawing = new Drawing();
+        $filePath = $this->fileStorageManager->getLocalFilePath($attachment);
+
+        if (!$filePath || !file_exists($filePath)) {
+            return;
+        }
+
+        $objDrawing->setPath($filePath);
+        $objDrawing->setHeight(100);
+        $objDrawing->setCoordinates($coordinate);
+        $objDrawing->setWorksheet($sheet);
+
+        $sheet->getRowDimension($rowNumber)->setRowHeight(100);
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     * @throws SpreadsheetException
+     */
+    private function applyLinks(
+        string $type,
+        string $entityType,
+        array $row,
+        Worksheet $sheet,
+        string $coordinate,
+        string $name
+    ): void {
         $link = null;
 
         $foreignLink = null;
@@ -445,9 +493,11 @@ class Xlsx implements Processor
             list($foreignLink, $foreignField) = explode('_', $name);
         }
 
+        $siteUrl = $this->config->getSiteUrl();
+
         if ($name === 'name') {
             if (array_key_exists('id', $row)) {
-                $link = $this->config->getSiteUrl() . "/#" . $entityType . "/view/" . $row['id'];
+                $link = $siteUrl . "/#" . $entityType . "/view/" . $row['id'];
             }
         }
         else if ($type === 'url') {
@@ -456,7 +506,9 @@ class Xlsx implements Processor
             }
         }
         else if ($type === 'link') {
-            if (array_key_exists($name . 'Id', $row) && $foreignField) {
+            $idKey = $name . 'Id';
+
+            if (array_key_exists($idKey, $row) && $foreignField) {
                 if (!$foreignLink) {
                     $foreignEntity = $this->metadata->get(['entityDefs', $entityType, 'links', $name, 'entity']);
                 }
@@ -469,20 +521,23 @@ class Xlsx implements Processor
                 }
 
                 if ($foreignEntity) {
-                    $link =
-                        $this->config->getSiteUrl() .
-                        "/#" . $foreignEntity. "/view/". $row[$name.'Id'];
+                    $link = $siteUrl . "/#" . $foreignEntity . "/view/" . $row[$idKey];
                 }
             }
         }
         else if ($type === 'file') {
-            if (array_key_exists($name . 'Id', $row)) {
-                $link = $this->config->getSiteUrl() . "/?entryPoint=download&id=" . $row[$name.'Id'];
+            $idKey = $name . 'Id';
+
+            if (array_key_exists($idKey, $row)) {
+                $link = $siteUrl . "/?entryPoint=download&id=" . $row[$idKey];
             }
         }
         else if ($type === 'linkParent') {
-            if (array_key_exists($name . 'Id', $row) && array_key_exists($name . 'Type', $row)) {
-                $link = $this->config->getSiteUrl() . "/#" . $row[$name.'Type'] . "/view/" . $row[$name.'Id'];
+            $idKey = $name . 'Id';
+            $typeKey = $name . 'Type';
+
+            if (array_key_exists($idKey, $row) && array_key_exists($typeKey, $row)) {
+                $link = $siteUrl . "/#" . $typeKey . "/view/" . $idKey;
             }
         }
         else if ($type === 'phone') {
@@ -497,16 +552,18 @@ class Xlsx implements Processor
             }
         }
 
-        if ($link) {
-            $cell = $sheet->getCell($coordinate);
-
-            assert($cell !== null);
-
-            $hyperLink = $cell->getHyperlink();
-
-            $hyperLink->setUrl($link);
-            $hyperLink->setTooltip($link);
+        if (!$link) {
+            return;
         }
+
+        $cell = $sheet->getCell($coordinate);
+
+        assert($cell !== null);
+
+        $hyperLink = $cell->getHyperlink();
+
+        $hyperLink->setUrl($link);
+        $hyperLink->setTooltip($link);
     }
 
     private function getPreparator(string $type): CellValuePreparator
