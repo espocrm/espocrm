@@ -30,22 +30,14 @@
 namespace Espo\Tools\Export\Processors;
 
 use Espo\ORM\Entity;
-
 use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Core\{
-    Utils\Config,
-    Utils\Metadata,
-    Utils\Json,
-};
-
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\Preferences;
-
-use Espo\Tools\Export\{
-    Processor\Params,
-    Processor\Data,
-    Processor,
-};
+use Espo\Tools\Export\Processor;
+use Espo\Tools\Export\Processor\Data;
+use Espo\Tools\Export\Processor\Params;
 
 use Psr\Http\Message\StreamInterface;
 
@@ -55,11 +47,9 @@ use RuntimeException;
 
 class Csv implements Processor
 {
-    private $config;
-
-    private $preferences;
-
-    private $metadata;
+    private Config $config;
+    private Preferences $preferences;
+    private Metadata $metadata;
 
     public function __construct(Config $config, Preferences $preferences, Metadata $metadata)
     {
@@ -99,10 +89,10 @@ class Csv implements Processor
     }
 
     /**
-     * @param mixed[] $row
+     * @param array<string, mixed> $row
      * @return mixed[]
      */
-    protected function prepareRow(array $row): array
+    private function prepareRow(array $row): array
     {
         $preparedRow = [];
 
