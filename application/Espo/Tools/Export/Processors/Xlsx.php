@@ -29,26 +29,20 @@
 
 namespace Espo\Tools\Export\Processors;
 
+use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
-
 use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Core\{
-    Utils\Config,
-    Utils\Metadata,
-    Utils\Language,
-    Utils\DateTime as DateTimeUtil,
-    FileStorage\Manager as FileStorageManager,
-    ORM\EntityManager,
-    Field\Address,
-    Field\Address\AddressFormatterFactory,
-};
-
-use Espo\Tools\Export\{
-    Processor\Params,
-    Processor\Data,
-    Processor,
-};
+use Espo\Core\Field\Address;
+use Espo\Core\Field\Address\AddressFormatterFactory;
+use Espo\Core\FileStorage\Manager as FileStorageManager;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Metadata;
+use Espo\Tools\Export\Processor;
+use Espo\Tools\Export\Processor\Data;
+use Espo\Tools\Export\Processor\Params;
 
 use Psr\Http\Message\StreamInterface;
 
@@ -72,40 +66,13 @@ use RuntimeException;
  */
 class Xlsx implements Processor
 {
-    /**
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * @var Metadata
-     */
-    protected $metadata;
-
-    /**
-     * @var Language
-     */
-    protected $language;
-
-    /**
-     * @var DateTimeUtil
-     */
-    protected $dateTime;
-
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var FileStorageManager
-     */
-    protected $fileStorageManager;
-
-    /**
-     * @var AddressFormatterFactory
-     */
-    protected $addressFormatterFactory;
+    private Config $config;
+    private Metadata $metadata;
+    private Language $language;
+    private DateTimeUtil $dateTime;
+    private EntityManager $entityManager;
+    private FileStorageManager $fileStorageManager;
+    private AddressFormatterFactory $addressFormatterFactory;
 
     public function __construct(
         Config $config,
@@ -165,17 +132,19 @@ class Xlsx implements Processor
         ];
 
         $now = new DateTime();
-
         $now->setTimezone(new DateTimeZone($this->config->get('timeZone', 'UTC')));
 
         $sheet->setCellValue('A1', $this->sanitizeCell($exportName));
-        $sheet->setCellValue('B1', SharedDate::PHPToExcel(strtotime($now->format('Y-m-d H:i:s'))));
+        $sheet->setCellValue('B1',
+            SharedDate::PHPToExcel(strtotime($now->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT)))
+        );
 
         $sheet->getStyle('A1')->applyFromArray($titleStyle);
         $sheet->getStyle('B1')->applyFromArray($dateStyle);
 
-        $sheet->getStyle('B1')->getNumberFormat()
-                            ->setFormatCode($this->dateTime->getDateTimeFormat());
+        $sheet->getStyle('B1')
+            ->getNumberFormat()
+            ->setFormatCode($this->dateTime->getDateTimeFormat());
 
         $azRange = range('A', 'Z');
         $azRangeCopied = $azRange;
@@ -191,9 +160,7 @@ class Xlsx implements Processor
         }
 
         $rowNumber = 3;
-
         $linkColList = [];
-
         $lastIndex = 0;
 
         foreach ($fieldList as $i => $name) {
@@ -209,7 +176,7 @@ class Xlsx implements Processor
 
             $label = $name;
 
-            if (strpos($name, '_') !== false) {
+            if (str_contains($name, '_')) {
                 list($linkName, $foreignField) = explode('_', $name);
 
                 $foreignScope = $this->metadata->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
@@ -238,7 +205,7 @@ class Xlsx implements Processor
             $lastIndex = $i;
         }
 
-        $col = $azRange[$i];
+        $col = $azRange[$lastIndex];
 
         $headerStyle = [
             'font'  => [
@@ -254,11 +221,7 @@ class Xlsx implements Processor
 
         $rowNumber++;
 
-        $lineIndex = -1;
-
         while (true) {
-            $lineIndex++;
-
             $row = $data->readRow();
 
             if ($row === null) {
@@ -317,13 +280,8 @@ class Xlsx implements Processor
                         ->setFormatCode($this->dateTime->getDateFormat());
                 } break;
 
+                case 'datetimeOptional':
                 case 'datetime': {
-                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
-                        ->getNumberFormat()
-                        ->setFormatCode($this->dateTime->getDateTimeFormat());
-                } break;
-
-                case 'datetimeOptional': {
                     $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode($this->dateTime->getDateTimeFormat());
@@ -384,8 +342,6 @@ class Xlsx implements Processor
         array &$typesCache
     ): void {
 
-        $i = 0;
-
         foreach ($fieldList as $i => $name) {
             $col = $azRange[$i];
 
@@ -402,7 +358,7 @@ class Xlsx implements Processor
 
             $foreignScope = null;
 
-            if (strpos($name, '_') !== false) {
+            if (str_contains($name, '_')) {
                 list($linkName, $foreignField) = explode('_', $name);
 
                 $foreignScope = $this->metadata
@@ -524,12 +480,11 @@ class Xlsx implements Processor
                         $timeZone = $this->config->get('timeZone');
 
                         $dt = new DateTime($value);
-
                         $dt->setTimezone(new DateTimeZone($timeZone));
 
                         $value = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
                     }
-                    catch (Exception $e) {
+                    catch (Exception) {
                         $value = '';
                     }
                 }
@@ -539,8 +494,11 @@ class Xlsx implements Processor
                 }
             }
             else if ($type === 'image') {
-                if (isset($row[$name . 'Id']) && $row[$name . 'Id']) {
-                    $attachment = $this->entityManager->getEntity('Attachment', $row[$name . 'Id']);
+                $attachmentId = $row[$name . 'Id'] ?? null;
+
+                if ($attachmentId) {
+                    /** @var ?Attachment $attachment */
+                    $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $attachmentId);
 
                     if ($attachment) {
                         $objDrawing = new Drawing();
@@ -620,7 +578,7 @@ class Xlsx implements Processor
                     $value = '';
 
                     if ($days) {
-                        $value .= (string) $days . $this->language->translateLabel('d', 'durationUnits');
+                        $value .= $days . $this->language->translateLabel('d', 'durationUnits');
 
                         if ($minutes || $hours) {
                             $value .= ' ';
@@ -628,7 +586,7 @@ class Xlsx implements Processor
                     }
 
                     if ($hours) {
-                        $value .= (string) $hours . $this->language->translateLabel('h', 'durationUnits');
+                        $value .= $hours . $this->language->translateLabel('h', 'durationUnits');
 
                         if ($minutes) {
                             $value .= ' ';
@@ -636,7 +594,7 @@ class Xlsx implements Processor
                     }
 
                     if ($minutes) {
-                        $value .= (string) $minutes . $this->language->translateLabel('m', 'durationUnits');
+                        $value .= $minutes . $this->language->translateLabel('m', 'durationUnits');
                     }
 
                     $sheet->setCellValue("$col$rowNumber", $value);
@@ -650,7 +608,7 @@ class Xlsx implements Processor
                         $array = [];
                     }
 
-                    foreach ($array as $i => $item) {
+                    foreach ($array as $item) {
                         if ($linkName) {
                             $itemValue = $this->language
                                 ->translateOption($item, $foreignField, $foreignScope);
@@ -721,13 +679,13 @@ class Xlsx implements Processor
                 }
             }
             else if ($type === 'file') {
-                if (array_key_exists($name.'Id', $row)) {
+                if (array_key_exists($name . 'Id', $row)) {
                     $link = $this->config->getSiteUrl() . "/?entryPoint=download&id=" . $row[$name.'Id'];
                 }
             }
             else if ($type === 'linkParent') {
-                if (array_key_exists($name.'Id', $row) && array_key_exists($name.'Type', $row)) {
-                    $link = $this->config->getSiteUrl() . "/#" . $row[$name.'Type']."/view/" . $row[$name.'Id'];
+                if (array_key_exists($name . 'Id', $row) && array_key_exists($name . 'Type', $row)) {
+                    $link = $this->config->getSiteUrl() . "/#" . $row[$name.'Type'] . "/view/" . $row[$name.'Id'];
                 }
             }
             else if ($type === 'phone') {
@@ -736,7 +694,7 @@ class Xlsx implements Processor
                 }
             }
 
-            else if ($type === 'email' && array_key_exists($name, $row)) {
+            else if ($type === 'email') {
                 if (array_key_exists($name, $row)) {
                     $link = "mailto:" . $row[$name];
                 }
@@ -782,7 +740,7 @@ class Xlsx implements Processor
                 continue;
             }
 
-            if ($entity->getRelationType($link) === 'belongsToParent') {
+            if ($entity->getRelationType($link) === Entity::BELONGS_TO_PARENT) {
                 if (!$entity->get($link . 'Name')) {
                     $entity->loadParentNameField($link);
                 }
@@ -790,10 +748,10 @@ class Xlsx implements Processor
             else if (
                 (
                     (
-                        $entity->getRelationType($link) === 'belongsTo' &&
+                        $entity->getRelationType($link) === Entity::BELONGS_TO &&
                         $entity->getRelationParam($link, 'noJoin')
                     ) ||
-                    $entity->getRelationType($link) === 'hasOne'
+                    $entity->getRelationType($link) === Entity::HAS_ONE
                 ) &&
                 $entity->hasAttribute($link . 'Name')
             ) {
@@ -850,14 +808,16 @@ class Xlsx implements Processor
 
         if (is_array($linkDefs)) {
             foreach ($linkDefs as $link => $defs) {
-                if (empty($defs['type'])) {
+                $linkType = $defs['type'] ?? null;
+
+                if (!$linkType) {
                     continue;
                 }
 
-                if ($defs['type'] === 'belongsToParent') {
+                if ($linkType === Entity::BELONGS_TO_PARENT) {
                     $linkList[] = $link;
                 }
-                else if ($defs['type'] === 'belongsTo' && !empty($defs['noJoin'])) {
+                else if ($linkType === Entity::BELONGS_TO && !empty($defs['noJoin'])) {
                     if ($this->metadata->get(['entityDefs', $entityType, 'fields', $link])) {
                         $linkList[] = $link;
                     }
@@ -891,9 +851,7 @@ class Xlsx implements Processor
         $badCharList = ['*', ':', '/', '\\', '?', '[', ']'];
 
         $sheetName = mb_substr($exportName, 0, 30, 'utf-8');
-
         $sheetName = str_replace($badCharList, ' ', $sheetName);
-
         $sheetName = str_replace('\'', '', $sheetName);
 
         return $sheetName;
