@@ -66,9 +66,6 @@ use DateTime;
 use DateTimeZone;
 use RuntimeException;
 
-/**
- * @todo Refactor.
- */
 class Xlsx implements Processor
 {
     /** @var array<string, CellValuePreparator> */
@@ -96,7 +93,7 @@ class Xlsx implements Processor
         $fieldList = $params->getFieldList();
 
         if ($fieldList === null) {
-            throw new RuntimeException("Field list is required");
+            throw new RuntimeException("Field list is required.");
         }
 
         $phpExcel = new Spreadsheet();
