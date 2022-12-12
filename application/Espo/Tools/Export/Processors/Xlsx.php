@@ -457,8 +457,6 @@ class Xlsx implements Processor
         }
         else if ($type === 'link') {
             if (array_key_exists($name . 'Id', $row) && $foreignField) {
-                $foreignEntity = null;
-
                 if (!$foreignLink) {
                     $foreignEntity = $this->metadata->get(['entityDefs', $entityType, 'links', $name, 'entity']);
                 }
