@@ -166,6 +166,9 @@ define('collection', ['model'], function (Model) {
          */
         where: null,
 
+        /**
+         * @deprecated
+         */
         whereAdditional: null,
 
         /**
@@ -454,6 +457,33 @@ define('collection', ['model'], function (Model) {
                 this.defaultOrderBy = orderBy;
                 this.defaultOrder = order;
             }
+        },
+
+        /**
+         * Clone.
+         *
+         * @return {module:collection.Class}
+         */
+        clone: function () {
+            /** @type {module:collection.Class} */
+            let collection = Backbone.Collection.prototype.clone.call(this);
+
+            collection.name = this.name;
+            collection.urlRoot = this.urlRoot;
+            collection.url = this.url;
+            collection.orderBy = this.orderBy;
+            collection.order = this.order;
+            collection.defaultOrder = this.defaultOrder;
+            collection.defaultOrderBy = this.defaultOrderBy;
+            collection.data = Espo.Utils.cloneDeep(this.data);
+            collection.where = Espo.Utils.cloneDeep(this.where);
+            collection.whereAdditional = Espo.Utils.cloneDeep(this.whereAdditional);
+            collection.total = this.total;
+            collection.offset = this.offset;
+            collection.maxSize = this.maxSize;
+            collection.maxMaxSize = this.maxMaxSize;
+
+            return collection;
         },
     });
 });

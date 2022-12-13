@@ -71,5 +71,16 @@ define('multi-collection', ['collection'], function (Collection) {
                 return new this.seeds[attributes._scope](a, options);
             });
         },
+
+        /**
+         * @inheritDoc
+         */
+        clone: function () {
+            let collection = Collection.prototype.clone.call(this);
+
+            collection.seeds = this.seeds;
+
+            return collection;
+        },
     });
 });

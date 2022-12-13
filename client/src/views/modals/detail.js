@@ -199,7 +199,7 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                 }
 
                 this.model = this.sourceModel.clone();
-                this.model.collection = this.sourceModel.collection;
+                this.model.collection = this.sourceModel.collection.clone();
 
                 this.setupAfterModelCreated();
 
@@ -491,7 +491,7 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
             this.scope = this.sourceModel.name;
 
             this.model = this.sourceModel.clone();
-            this.model.collection = this.sourceModel.collection;
+            this.model.collection = this.sourceModel.collection.clone();
 
             this.stopListening(previousModel, 'change');
             this.stopListening(previousModel, 'sync');
