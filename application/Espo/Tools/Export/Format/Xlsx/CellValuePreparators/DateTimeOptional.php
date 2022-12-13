@@ -27,29 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Xlsx\CellValuePreparators;
+namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
-use Espo\Tools\Export\Processors\Xlsx\CellValuePreparator;
+use Espo\Core\Field\DateTime as DateTimeValue;
+use Espo\Core\Field\Date as DateValue;
+use Espo\Core\Utils\Config;
+use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
 
-class PersonName implements CellValuePreparator
+use DateTimeZone;
+
+class DateTimeOptional implements CellValuePreparator
 {
-    public function prepare(string $entityType, string $name, array $data): ?string
+    private string $timezone;
+
+    public function __construct(Config $config)
     {
-        $name = $data[$name] ?? null;
+        $this->timezone = $config->get('timeZone') ?? 'UTC';
+    }
 
-        $arr = [];
+    public function prepare(string $entityType, string $name, array $data): DateTimeValue|DateValue|null
+    {
+        $dateValue = $data[$name . 'Date'] ?? null;
 
-        $firstName = $data['first' . ucfirst($name)];
-        $lastName = $data['last' . ucfirst($name)];
-
-        if ($firstName) {
-            $arr[] = $firstName;
+        if ($dateValue !== null) {
+            return DateValue::fromString($dateValue);
         }
 
-        if ($lastName) {
-            $arr[] = $lastName;
+        $value = $data[$name] ?? null;
+
+        if (!$value) {
+            return null;
         }
 
-        return implode(' ', $arr) ?: null;
+        return DateTimeValue::fromString($value)
+            ->withTimezone(
+                new DateTimeZone($this->timezone)
+            );
     }
 }

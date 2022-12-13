@@ -27,14 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Xlsx\CellValuePreparators;
+namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
-use Espo\Tools\Export\Processors\Xlsx\CellValuePreparator;
+use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
 
-class Boolean implements CellValuePreparator
+class General implements CellValuePreparator
 {
-    public function prepare(string $entityType, string $name, array $data): bool
+    public function prepare(string $entityType, string $name, array $data): string|bool|int|float|null
     {
-        return (bool) ($data[$name] ?? false);
+        $value = $data[$name] ?? null;
+
+        if ($value === null) {
+            return null;
+        }
+
+        if (
+            !is_string($value) &&
+            !is_int($value) &&
+            !is_float($value) &&
+            !is_bool($value)
+        ) {
+            return null;
+        }
+
+        return $value;
     }
 }

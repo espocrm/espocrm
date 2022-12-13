@@ -27,34 +27,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Xlsx;
+namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
-class FieldData
+use Espo\Core\Utils\Language;
+use Espo\ORM\Defs;
+use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
+use Espo\Tools\Export\Format\Xlsx\FieldHelper;
+
+class Enumeration implements CellValuePreparator
 {
     public function __construct(
-        private string $entityType,
-        private string $field,
-        private string $type,
-        private ?string $link
+        private Defs $ormDefs,
+        private Language $language,
+        private FieldHelper $fieldHelper
     ) {}
 
-    public function getEntityType(): string
+    public function prepare(string $entityType, string $name, array $data): ?string
     {
-        return $this->entityType;
-    }
+        if (!array_key_exists($name, $data)) {
+            return null;
+        }
 
-    public function getField(): string
-    {
-        return $this->field;
-    }
+        $value = $data[$name];
 
-    public function getType(): string
-    {
-        return $this->type;
-    }
+        $fieldData = $this->fieldHelper->getData($entityType, $name);
 
-    public function getLink(): ?string
-    {
-        return $this->link;
+        if (!$fieldData) {
+            return $value;
+        }
+
+        $entityType = $fieldData->getEntityType();
+        $field = $fieldData->getField();
+
+        $translation = $this->ormDefs
+            ->getEntity($entityType)
+            ->getField($field)
+            ->getParam('translation');
+
+        if (!$translation) {
+            return $this->language->translateOption($value, $field, $entityType);
+        }
+
+        $map = $this->language->get($translation);
+
+        if (!is_array($map)) {
+            return $value;
+        }
+
+        return $map[$value] ?? $value;
     }
 }

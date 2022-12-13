@@ -27,35 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Csv;
+namespace Espo\Tools\Export\Format\Xlsx;
 
-use Espo\Core\ORM\Entity as CoreEntity;
-use Espo\Core\Utils\Metadata;
-use Espo\ORM\Entity;
-use Espo\Tools\Export\AdditionalFieldsLoader as AdditionalFieldsLoaderInterface;
-
-class AdditionalFieldsLoader implements AdditionalFieldsLoaderInterface
+class FieldData
 {
-    public function __construct(private Metadata $metadata) {}
+    public function __construct(
+        private string $entityType,
+        private string $field,
+        private string $type,
+        private ?string $link
+    ) {}
 
-    public function load(Entity $entity, array $fieldList): void
+    public function getEntityType(): string
     {
-        if (!$entity instanceof CoreEntity) {
-            return;
-        }
+        return $this->entityType;
+    }
 
-        foreach ($fieldList as $field) {
-            $fieldType = $this->metadata
-                ->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
+    public function getField(): string
+    {
+        return $this->field;
+    }
 
-            if (
-                $fieldType === 'linkMultiple' ||
-                $fieldType === 'attachmentMultiple'
-            ) {
-                if (!$entity->has($field . 'Ids')) {
-                    $entity->loadLinkMultipleField($field);
-                }
-            }
-        }
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function getLink(): ?string
+    {
+        return $this->link;
     }
 }

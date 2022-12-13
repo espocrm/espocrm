@@ -27,54 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Xlsx\CellValuePreparators;
+namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
-use Espo\Core\Utils\Language;
-use Espo\Tools\Export\Processors\Xlsx\CellValuePreparator;
+use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
 
-class Duration implements CellValuePreparator
+class Floating implements CellValuePreparator
 {
-    public function __construct(private Language $language)
-    {}
-
-    public function prepare(string $entityType, string $name, array $data): ?string
+    public function prepare(string $entityType, string $name, array $data): float
     {
-        $value = $data[$name] ?? null;
-
-        if (!$value) {
-            return null;
-        }
-
-        $seconds = intval($value);
-
-        $days = intval(floor($seconds / 86400));
-        $seconds = $seconds - $days * 86400;
-        $hours = intval(floor($seconds / 3600));
-        $seconds = $seconds - $hours * 3600;
-        $minutes = intval(floor($seconds / 60));
-
-        $value = '';
-
-        if ($days) {
-            $value .= $days . $this->language->translateLabel('d', 'durationUnits');
-
-            if ($minutes || $hours) {
-                $value .= ' ';
-            }
-        }
-
-        if ($hours) {
-            $value .= $hours . $this->language->translateLabel('h', 'durationUnits');
-
-            if ($minutes) {
-                $value .= ' ';
-            }
-        }
-
-        if ($minutes) {
-            $value .= $minutes . $this->language->translateLabel('m', 'durationUnits');
-        }
-
-        return $value;
+        return $data[$name] ?? 0;
     }
 }

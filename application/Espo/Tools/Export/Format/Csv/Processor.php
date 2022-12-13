@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Csv;
+namespace Espo\Tools\Export\Format\Csv;
 
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;

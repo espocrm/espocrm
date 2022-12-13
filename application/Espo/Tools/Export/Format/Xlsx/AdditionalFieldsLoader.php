@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Xlsx;
+namespace Espo\Tools\Export\Format\Xlsx;
 
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Metadata;

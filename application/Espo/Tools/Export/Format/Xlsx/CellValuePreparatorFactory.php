@@ -27,31 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Xlsx\CellValuePreparators;
+namespace Espo\Tools\Export\Format\Xlsx;
 
-use Espo\Tools\Export\Processors\Xlsx\CellValuePreparator;
-use stdClass;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
+use Espo\Tools\Export\Format\Xlsx\CellValuePreparators\General;
 
-class LinkMultiple implements CellValuePreparator
+class CellValuePreparatorFactory
 {
-    public function prepare(string $entityType, string $name, array $data): ?string
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata
+    ) {}
+
+    public function create(string $fieldType): CellValuePreparator
     {
-        if (
-            !array_key_exists($name . 'Ids', $data) ||
-            !array_key_exists($name . 'Names', $data)
-        ) {
-            return null;
-        }
+        /** @var class-string<CellValuePreparator> $className */
+        $className = $this->metadata
+            ->get(['app', 'export', 'formatDefs', 'xlsx', 'cellValuePreparatorClassNameMap', $fieldType]) ??
+            General::class;
 
-        /** @var string[] $ids */
-        $ids = $data[$name . 'Ids'];
-        /** @var ?stdClass $names */
-        $names = $data[$name . 'Names'];
-
-        $nameList = array_map(function ($id) use ($names) {
-            return $names->$id ?? $id;
-        }, $ids);
-
-        return implode(',', $nameList);
+        return $this->injectableFactory->create($className);
     }
 }

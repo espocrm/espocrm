@@ -27,14 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Xlsx\CellValuePreparators;
+namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
-use Espo\Tools\Export\Processors\Xlsx\CellValuePreparator;
+use Espo\Core\Field\DateTime as DateTimeValue;
+use Espo\Core\Utils\Config;
+use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
 
-class Floating implements CellValuePreparator
+use DateTimeZone;
+
+class DateTime implements CellValuePreparator
 {
-    public function prepare(string $entityType, string $name, array $data): float
+    private string $timezone;
+
+    public function __construct(Config $config)
     {
-        return $data[$name] ?? 0;
+        $this->timezone = $config->get('timeZone') ?? 'UTC';
+    }
+
+    public function prepare(string $entityType, string $name, array $data): ?DateTimeValue
+    {
+        $value = $data[$name] ?? null;
+
+        if (!$value) {
+            return null;
+        }
+
+        return DateTimeValue::fromString($value)
+            ->withTimezone(
+                new DateTimeZone($this->timezone)
+            );
     }
 }

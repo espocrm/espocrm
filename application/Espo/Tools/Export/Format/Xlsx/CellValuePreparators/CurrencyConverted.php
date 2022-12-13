@@ -27,53 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Xlsx\CellValuePreparators;
+namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
-use Espo\Core\Utils\Language;
-use Espo\ORM\Defs;
-use Espo\Tools\Export\Processors\Xlsx\CellValuePreparator;
-use Espo\Tools\Export\Processors\Xlsx\FieldHelper;
+use Espo\Core\Field\Currency as CurrencyValue;
+use Espo\Core\Utils\Config;
+use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
 
-class Enumeration implements CellValuePreparator
+class CurrencyConverted implements CellValuePreparator
 {
-    public function __construct(
-        private Defs $ormDefs,
-        private Language $language,
-        private FieldHelper $fieldHelper
-    ) {}
+    private string $code;
 
-    public function prepare(string $entityType, string $name, array $data): ?string
+    public function __construct(Config $config)
     {
-        if (!array_key_exists($name, $data)) {
+        $this->code = $config->get('defaultCurrency');
+    }
+
+    public function prepare(string $entityType, string $name, array $data): ?CurrencyValue
+    {
+        $value = $data[$name] ?? null;
+
+        if ($value === null) {
             return null;
         }
 
-        $value = $data[$name];
-
-        $fieldData = $this->fieldHelper->getData($entityType, $name);
-
-        if (!$fieldData) {
-            return $value;
-        }
-
-        $entityType = $fieldData->getEntityType();
-        $field = $fieldData->getField();
-
-        $translation = $this->ormDefs
-            ->getEntity($entityType)
-            ->getField($field)
-            ->getParam('translation');
-
-        if (!$translation) {
-            return $this->language->translateOption($value, $field, $entityType);
-        }
-
-        $map = $this->language->get($translation);
-
-        if (!is_array($map)) {
-            return $value;
-        }
-
-        return $map[$value] ?? $value;
+        return CurrencyValue::create($value, $this->code);
     }
 }

@@ -27,41 +27,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Xlsx\CellValuePreparators;
+namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
-use Espo\Core\Field\DateTime as DateTimeValue;
-use Espo\Core\Field\Date as DateValue;
-use Espo\Core\Utils\Config;
-use Espo\Tools\Export\Processors\Xlsx\CellValuePreparator;
+use Espo\Core\Field\Currency as CurrencyValue;
+use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
 
-use DateTimeZone;
-
-class DateTimeOptional implements CellValuePreparator
+class Currency implements CellValuePreparator
 {
-    private string $timezone;
-
-    public function __construct(Config $config)
+    public function prepare(string $entityType, string $name, array $data): ?CurrencyValue
     {
-        $this->timezone = $config->get('timeZone') ?? 'UTC';
-    }
-
-    public function prepare(string $entityType, string $name, array $data): DateTimeValue|DateValue|null
-    {
-        $dateValue = $data[$name . 'Date'] ?? null;
-
-        if ($dateValue !== null) {
-            return DateValue::fromString($dateValue);
-        }
-
+        $code = $data[$name . 'Currency'] ?? null;
         $value = $data[$name] ?? null;
 
-        if (!$value) {
+        if (!$code || $value === null) {
             return null;
         }
 
-        return DateTimeValue::fromString($value)
-            ->withTimezone(
-                new DateTimeZone($this->timezone)
-            );
+        return CurrencyValue::create($value, $code);
     }
 }

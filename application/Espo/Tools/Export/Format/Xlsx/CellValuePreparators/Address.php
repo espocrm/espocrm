@@ -27,21 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Xlsx;
+namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
-use Espo\Core\Field\Currency;
-use Espo\Core\Field\Date;
-use Espo\Core\Field\DateTime;
+use Espo\Core\Field\Address as AddressValue;
+use Espo\Core\Field\Address\AddressFormatterFactory;
+use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
 
-interface CellValuePreparator
+class Address implements CellValuePreparator
 {
-    /**
-     * @param string $name A field name.
-     * @param array<string, mixed> $data An attribute-value map.
-     */
-    public function prepare(
-        string $entityType,
-        string $name,
-        array $data
-    ): string|bool|int|float|Date|DateTime|Currency|null;
+    public function __construct(
+        private AddressFormatterFactory $formatterFactory
+    ) {}
+
+    public function prepare(string $entityType, string $name, array $data): ?string
+    {
+        $address = AddressValue::createBuilder()
+            ->setStreet($data[$name . 'Street'] ?? null)
+            ->setCity($data[$name . 'City'] ?? null)
+            ->setState($data[$name . 'State'] ?? null)
+            ->setCountry($data[$name . 'Country'] ?? null)
+            ->setPostalCode($data[$name . 'PostalCode'] ?? null)
+            ->build();
+
+        $formatter = $this->formatterFactory->createDefault();
+
+        return $formatter->format($address) ?: null;
+    }
 }
