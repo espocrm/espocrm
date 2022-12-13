@@ -27,31 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Xlsx\CellValuePreparators;
+namespace Espo\Tools\Export;
 
-use Espo\Tools\Export\Processors\Xlsx\CellValuePreparator;
-use stdClass;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 
-class LinkMultiple implements CellValuePreparator
+use LogicException;
+
+class AdditionalFieldsLoaderFactory
 {
-    public function prepare(string $entityType, string $name, array $data): ?string
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata
+    ) {}
+
+    public function create(string $format): AdditionalFieldsLoader
     {
-        if (
-            !array_key_exists($name . 'Ids', $data) ||
-            !array_key_exists($name . 'Names', $data)
-        ) {
-            return null;
+        $className = $this->getClassName($format);
+
+        if (!$className) {
+            throw new LogicException();
         }
 
-        /** @var string[] $ids */
-        $ids = $data[$name . 'Ids'];
-        /** @var ?stdClass $names */
-        $names = $data[$name . 'Names'];
+        return $this->injectableFactory->create($className);
+    }
 
-        $nameList = array_map(function ($id) use ($names) {
-            return $names->$id ?? $id;
-        }, $ids);
+    public function isCreatable(string $format): bool
+    {
+        return (bool) $this->getClassName($format);
+    }
 
-        return implode(',', $nameList);
+    /**
+     * @return ?class-string<AdditionalFieldsLoader>
+     */
+    private function getClassName(string $format): ?string
+    {
+        return $this->metadata->get(['app', 'export', 'formatDefs', $format, 'additionalFieldsLoaderClassName']);
     }
 }

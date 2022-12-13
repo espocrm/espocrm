@@ -64,6 +64,7 @@ class Export
     public function __construct(
         private ProcessorFactory $processorFactory,
         private ProcessorParamsHandlerFactory $processorParamsHandlerFactory,
+        private AdditionalFieldsLoaderFactory $additionalFieldsLoaderFactory,
         private SelectBuilderFactory $selectBuilderFactory,
         private ServiceContainer $serviceContainer,
         private Acl $acl,
@@ -130,6 +131,9 @@ class Export
 
         $recordService = $this->serviceContainer->get($entityType);
 
+        $loader = $this->additionalFieldsLoaderFactory->isCreatable($format) ?
+            $this->additionalFieldsLoaderFactory->create($format) : null;
+
         foreach ($collection as $entity) {
             $this->listLoadProcessor->process($entity, $loaderParams);
 
@@ -138,10 +142,8 @@ class Export
                 $recordService->loadAdditionalFieldsForExport($entity);
             }
 
-            // @todo Move to class.
-            $fieldList = $processorParams->getFieldList();
-            if (method_exists($processor, 'loadAdditionalFields') && $fieldList !== null) {
-                $processor->loadAdditionalFields($entity, $fieldList);
+            if ($loader && $processorParams->getFieldList()) {
+                $loader->load($entity, $processorParams->getFieldList());
             }
 
             $row = [];

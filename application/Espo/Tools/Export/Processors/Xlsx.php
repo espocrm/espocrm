@@ -33,8 +33,6 @@ use Espo\Core\Field\Currency;
 use Espo\Core\Field\Date;
 use Espo\Core\Field\DateTime as DateTimeValue;
 use Espo\Entities\Attachment;
-use Espo\ORM\Entity;
-use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
@@ -590,53 +588,6 @@ class Xlsx implements Processor
         }
 
         return '[$'.$currencySymbol.'-409]#,##0.00;-[$'.$currencySymbol.'-409]#,##0.00';
-    }
-
-    /**
-     * @param string[] $fieldList
-     */
-    public function loadAdditionalFields(Entity $entity, array $fieldList): void
-    {
-        if (!$entity instanceof CoreEntity) {
-            return;
-        }
-
-        foreach ($entity->getRelationList() as $link) {
-            if (!in_array($link, $fieldList)) {
-                continue;
-            }
-
-            if ($entity->getRelationType($link) === Entity::BELONGS_TO_PARENT) {
-                if (!$entity->get($link . 'Name')) {
-                    $entity->loadParentNameField($link);
-                }
-            }
-            else if (
-                (
-                    (
-                        $entity->getRelationType($link) === Entity::BELONGS_TO &&
-                        $entity->getRelationParam($link, 'noJoin')
-                    ) ||
-                    $entity->getRelationType($link) === Entity::HAS_ONE
-                ) &&
-                $entity->hasAttribute($link . 'Name')
-            ) {
-                if (!$entity->get($link . 'Name') || !$entity->get($link . 'Id')) {
-                    $entity->loadLinkField($link);
-                }
-            }
-        }
-
-        foreach ($fieldList as $field) {
-            $fieldType = $this->metadata
-                ->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
-
-            if ($fieldType === 'linkMultiple' || $fieldType === 'attachmentMultiple') {
-                if (!$entity->has($field . 'Ids')) {
-                    $entity->loadLinkMultipleField($field);
-                }
-            }
-        }
     }
 
     private function getSheetNameFromParams(Params $params): string

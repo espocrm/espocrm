@@ -27,31 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Xlsx\CellValuePreparators;
+namespace Espo\Tools\Export\Processors\Csv;
 
-use Espo\Tools\Export\Processors\Xlsx\CellValuePreparator;
-use stdClass;
+use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\Entity;
+use Espo\Tools\Export\AdditionalFieldsLoader as AdditionalFieldsLoaderInterface;
 
-class LinkMultiple implements CellValuePreparator
+class AdditionalFieldsLoader implements AdditionalFieldsLoaderInterface
 {
-    public function prepare(string $entityType, string $name, array $data): ?string
+    public function __construct(private Metadata $metadata) {}
+
+    public function load(Entity $entity, array $fieldList): void
     {
-        if (
-            !array_key_exists($name . 'Ids', $data) ||
-            !array_key_exists($name . 'Names', $data)
-        ) {
-            return null;
+        if (!$entity instanceof CoreEntity) {
+            return;
         }
 
-        /** @var string[] $ids */
-        $ids = $data[$name . 'Ids'];
-        /** @var ?stdClass $names */
-        $names = $data[$name . 'Names'];
+        foreach ($fieldList as $field) {
+            $fieldType = $this->metadata
+                ->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
 
-        $nameList = array_map(function ($id) use ($names) {
-            return $names->$id ?? $id;
-        }, $ids);
-
-        return implode(',', $nameList);
+            if (
+                $fieldType === 'linkMultiple' ||
+                $fieldType === 'attachmentMultiple'
+            ) {
+                if (!$entity->has($field . 'Ids')) {
+                    $entity->loadLinkMultipleField($field);
+                }
+            }
+        }
     }
 }

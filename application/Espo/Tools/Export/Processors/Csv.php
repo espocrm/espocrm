@@ -29,11 +29,8 @@
 
 namespace Espo\Tools\Export\Processors;
 
-use Espo\ORM\Entity;
-use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Metadata;
 use Espo\Entities\Preferences;
 use Espo\Tools\Export\Processor;
 use Espo\Tools\Export\Processor\Data;
@@ -48,8 +45,7 @@ class Csv implements Processor
 {
     public function __construct(
         private Config $config,
-        private Preferences $preferences,
-        private Metadata $metadata
+        private Preferences $preferences
     ) {}
 
     public function process(Params $params, Data $data): StreamInterface
@@ -99,30 +95,6 @@ class Csv implements Processor
         }
 
         return $preparedRow;
-    }
-
-    /**
-     * @param string[] $fieldList
-     */
-    public function loadAdditionalFields(Entity $entity, array $fieldList): void
-    {
-        if (!$entity instanceof CoreEntity) {
-            return;
-        }
-
-        foreach ($fieldList as $field) {
-            $fieldType = $this->metadata
-                ->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
-
-            if (
-                $fieldType === 'linkMultiple' ||
-                $fieldType === 'attachmentMultiple'
-            ) {
-                if (!$entity->has($field . 'Ids')) {
-                    $entity->loadLinkMultipleField($field);
-                }
-            }
-        }
     }
 
     private function sanitizeCell(mixed $value): mixed

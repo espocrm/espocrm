@@ -27,31 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Xlsx\CellValuePreparators;
+namespace Espo\Tools\Export;
 
-use Espo\Tools\Export\Processors\Xlsx\CellValuePreparator;
-use stdClass;
+use Espo\ORM\Entity;
 
-class LinkMultiple implements CellValuePreparator
+interface AdditionalFieldsLoader
 {
-    public function prepare(string $entityType, string $name, array $data): ?string
-    {
-        if (
-            !array_key_exists($name . 'Ids', $data) ||
-            !array_key_exists($name . 'Names', $data)
-        ) {
-            return null;
-        }
-
-        /** @var string[] $ids */
-        $ids = $data[$name . 'Ids'];
-        /** @var ?stdClass $names */
-        $names = $data[$name . 'Names'];
-
-        $nameList = array_map(function ($id) use ($names) {
-            return $names->$id ?? $id;
-        }, $ids);
-
-        return implode(',', $nameList);
-    }
+    /**
+     * @param string[] $fieldList
+     */
+    public function load(Entity $entity, array $fieldList): void;
 }
