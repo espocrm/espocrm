@@ -40,23 +40,17 @@ use Espo\Tools\Export\Processor\Data;
 use Espo\Tools\Export\Processor\Params;
 
 use Psr\Http\Message\StreamInterface;
-
 use GuzzleHttp\Psr7\Stream;
 
 use RuntimeException;
 
 class Csv implements Processor
 {
-    private Config $config;
-    private Preferences $preferences;
-    private Metadata $metadata;
-
-    public function __construct(Config $config, Preferences $preferences, Metadata $metadata)
-    {
-        $this->config = $config;
-        $this->preferences = $preferences;
-        $this->metadata = $metadata;
-    }
+    public function __construct(
+        private Config $config,
+        private Preferences $preferences,
+        private Metadata $metadata
+    ) {}
 
     public function process(Params $params, Data $data): StreamInterface
     {
@@ -131,11 +125,7 @@ class Csv implements Processor
         }
     }
 
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    private function sanitizeCell($value)
+    private function sanitizeCell(mixed $value): mixed
     {
         if (!is_string($value)) {
             return $value;

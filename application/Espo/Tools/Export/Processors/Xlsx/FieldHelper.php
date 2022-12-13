@@ -37,9 +37,14 @@ class FieldHelper
         private Defs $ormDefs
     ) {}
 
-    public function isForeign(string $entityType, string $name): bool
+    public function isForeignReference(string $name): bool
     {
-        if (str_contains($name, '_')) {
+        return str_contains($name, '_');
+    }
+
+    private function isForeign(string $entityType, string $name): bool
+    {
+        if ($this->isForeignReference($name)) {
             return true;
         }
 
@@ -63,7 +68,7 @@ class FieldHelper
                 ->getField($name)
                 ->getType();
 
-            return new FieldData($entityType, $name, $type);
+            return new FieldData($entityType, $name, $type, null);
         }
 
         $link = null;
@@ -105,6 +110,6 @@ class FieldHelper
             ->getField($field)
             ->getType();
 
-        return new FieldData($foreignEntityType, $field, $type);
+        return new FieldData($foreignEntityType, $field, $type, $link);
     }
 }

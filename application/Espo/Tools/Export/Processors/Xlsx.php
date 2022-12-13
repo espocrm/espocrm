@@ -44,12 +44,10 @@ use Espo\Core\Utils\Metadata;
 use Espo\Tools\Export\Processor;
 use Espo\Tools\Export\Processor\Data;
 use Espo\Tools\Export\Processor\Params;
-
 use Espo\Tools\Export\Processors\Xlsx\CellValuePreparator;
 use Espo\Tools\Export\Processors\Xlsx\CellValuePreparatorFactory;
 use Espo\Tools\Export\Processors\Xlsx\FieldHelper;
-use PhpOffice\PhpSpreadsheet\Exception as SpreadsheetException;
-use PhpOffice\PhpSpreadsheet\Writer\Exception as WriterException;
+
 use Psr\Http\Message\StreamInterface;
 
 use GuzzleHttp\Psr7\Stream;
@@ -61,6 +59,8 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Exception as SpreadsheetException;
+use PhpOffice\PhpSpreadsheet\Writer\Exception as WriterException;
 
 use DateTime;
 use DateTimeZone;
@@ -70,6 +70,34 @@ class Xlsx implements Processor
 {
     /** @var array<string, CellValuePreparator> */
     private array $preparatorsCache = [];
+
+    /** @var array<string, mixed>  */
+    private array $titleStyle = [
+        'font' => [
+            'bold' => true,
+            'size' => 12,
+        ]
+    ];
+    /** @var array<string, mixed>  */
+    private array $dateStyle = [
+        'font'  => [
+            'size' => 12,
+        ]
+    ];
+    /** @var array<string, mixed>  */
+    private array $headerStyle = [
+        'font' => [
+            'bold' => true,
+            'size' => 12,
+        ]
+    ];
+    /** @var array<string, mixed>  */
+    private array $linkStyle = [
+        'font' => [
+            'color' => ['rgb' => '345b7c'],
+            'underline' => 'single',
+        ]
+    ];
 
     public function __construct(
         private Config $config,
@@ -89,37 +117,20 @@ class Xlsx implements Processor
     public function process(Params $params, Data $data): StreamInterface
     {
         $entityType = $params->getEntityType();
-
         $fieldList = $params->getFieldList();
 
         if ($fieldList === null) {
             throw new RuntimeException("Field list is required.");
         }
 
-        $phpExcel = new Spreadsheet();
-
-        $sheet = $phpExcel->setActiveSheetIndex(0);
-
         $sheetName = $this->getSheetNameFromParams($params);
-
         $exportName =
             $params->getName() ??
             $this->language->translate($entityType, 'scopeNamesPlural');
 
+        $phpExcel = new Spreadsheet();
+        $sheet = $phpExcel->setActiveSheetIndex(0);
         $sheet->setTitle($sheetName);
-
-        $titleStyle = [
-            'font' => [
-               'bold' => true,
-               'size' => 12,
-            ],
-        ];
-
-        $dateStyle = [
-            'font'  => [
-               'size' => 12,
-            ],
-        ];
 
         $now = new DateTime();
         $now->setTimezone(new DateTimeZone($this->config->get('timeZone', 'UTC')));
@@ -129,25 +140,13 @@ class Xlsx implements Processor
             SharedDate::PHPToExcel(strtotime($now->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT)))
         );
 
-        $sheet->getStyle('A1')->applyFromArray($titleStyle);
-        $sheet->getStyle('B1')->applyFromArray($dateStyle);
-
+        $sheet->getStyle('A1')->applyFromArray($this->titleStyle);
+        $sheet->getStyle('B1')->applyFromArray($this->dateStyle);
         $sheet->getStyle('B1')
             ->getNumberFormat()
             ->setFormatCode($this->dateTime->getDateTimeFormat());
 
-        $azRange = range('A', 'Z');
-        $azRangeCopied = $azRange;
-
-        foreach ($azRangeCopied as $i => $char1) {
-            foreach ($azRangeCopied as $j => $char2) {
-                $azRange[] = $char1 . $char2;
-
-                if ($i * count($azRangeCopied) + $j === count($fieldList)) {
-                    break 2;
-                }
-            }
-        }
+        $azRange = $this->getColumnsRange($fieldList);
 
         $rowNumber = 3;
         $linkColList = [];
@@ -155,40 +154,33 @@ class Xlsx implements Processor
 
         foreach ($fieldList as $i => $name) {
             $col = $azRange[$i];
-
-            $defs = $this->metadata->get(['entityDefs', $entityType, 'fields', $name]);
-
-            if (!$defs) {
-                $defs = [
-                    'type' => 'base',
-                ];
-            }
-
             $label = $name;
+            $type = 'base';
 
-            if (str_contains($name, '_')) {
-                list($linkName, $foreignField) = explode('_', $name);
+            $fieldData = $this->fieldHelper->getData($entityType, $name);
+            $isForeignReference = $this->fieldHelper->isForeignReference($name);
 
-                $foreignScope = $this->metadata->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
-
-                if ($foreignScope) {
-                    $label =
-                        $this->language->translateLabel($linkName, 'links', $entityType) . '.' .
-                        $this->language->translateLabel($foreignField, 'fields', $foreignScope);
-                }
+            if ($isForeignReference && $fieldData && $fieldData->getLink()) {
+                $label =
+                    $this->language->translateLabel($fieldData->getLink(), 'links', $entityType) . '.' .
+                    $this->language->translateLabel($fieldData->getField(), 'fields', $fieldData->getEntityType());
             }
-            else {
-                $label = $this->language->translate($name, 'fields', $entityType);
+
+            if (!$isForeignReference) {
+                $label = $this->language->translateLabel($name, 'fields', $entityType);
+            }
+
+            if ($fieldData) {
+                $type = $fieldData->getType();
             }
 
             $sheet->setCellValue($col . $rowNumber, $this->sanitizeCell($label));
-
             $sheet->getColumnDimension($col)->setAutoSize(true);
 
-            if (in_array($defs['type'], ['phone', 'email', 'url', 'link', 'linkParent'])) {
-                $linkColList[] = $col;
-            }
-            else if ($name == 'name') {
+            if (
+                in_array($type, ['phone', 'email', 'url', 'link', 'linkParent']) ||
+                $name === 'name'
+            ) {
                 $linkColList[] = $col;
             }
 
@@ -197,15 +189,8 @@ class Xlsx implements Processor
 
         $col = $azRange[$lastIndex];
 
-        $headerStyle = [
-            'font'  => [
-                'bold'  => true,
-                'size'  => 12,
-            ]
-        ];
-
-        $sheet->getStyle("A$rowNumber:$col$rowNumber")->applyFromArray($headerStyle);
-        $sheet->setAutoFilter("A$rowNumber:$col$rowNumber");
+        $sheet->getStyle("A{$rowNumber}:{$col}{$rowNumber}")->applyFromArray($this->headerStyle);
+        $sheet->setAutoFilter("A{$rowNumber}:{$col}{$rowNumber}");
 
         $typesCache = [];
 
@@ -231,7 +216,7 @@ class Xlsx implements Processor
             $rowNumber++;
         }
 
-        $sheet->getStyle("A2:A$rowNumber")
+        $sheet->getStyle("A2:A{$rowNumber}")
             ->getNumberFormat()
             ->setFormatCode(NumberFormat::FORMAT_TEXT);
 
@@ -246,56 +231,54 @@ class Xlsx implements Processor
 
             $type = $typesCache[$name];
 
+            $coordinate = $col . $startingRowNumber . ':' . $col . $rowNumber;
+
             switch ($type) {
                 case 'currency':
-                case 'currencyConverted': {
+                case 'currencyConverted':
+                    break;
 
-                } break;
-
-                case 'int': {
-                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                case 'int':
+                    $sheet->getStyle($coordinate)
                         ->getNumberFormat()
                         ->setFormatCode('0');
-                } break;
 
-                case 'float': {
-                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                    break;
+
+                case 'float':
+                    $sheet->getStyle($coordinate)
                         ->getNumberFormat()
                         ->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-                } break;
+                    break;
 
-                case 'date': {
-                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                case 'date':
+                    $sheet->getStyle($coordinate)
                         ->getNumberFormat()
                         ->setFormatCode($this->dateTime->getDateFormat());
-                } break;
+
+                    break;
 
                 case 'datetimeOptional':
-                case 'datetime': {
-                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                case 'datetime':
+                    $sheet->getStyle($coordinate)
                         ->getNumberFormat()
                         ->setFormatCode($this->dateTime->getDateTimeFormat());
-                } break;
 
-                default: {
-                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                    break;
+
+                default:
+                    $sheet->getStyle($coordinate)
                         ->getNumberFormat()
                         ->setFormatCode('@');
-                } break;
+
+                    break;
             }
         }
 
-        $linkStyle = [
-            'font'  => [
-                'color' => ['rgb' => '345b7c'],
-                'underline' => 'single',
-            ]
-        ];
-
         foreach ($linkColList as $linkColumn) {
             $sheet
-                ->getStyle($linkColumn.$startingRowNumber . ':' . $linkColumn.$rowNumber)
-                ->applyFromArray($linkStyle);
+                ->getStyle($linkColumn . $startingRowNumber . ':' . $linkColumn . $rowNumber)
+                ->applyFromArray($this->linkStyle);
         }
 
         $objWriter = IOFactory::createWriter($phpExcel, 'Xlsx');
@@ -309,10 +292,31 @@ class Xlsx implements Processor
         $objWriter->save($resource);
 
         $stream = new Stream($resource);
-
         $stream->seek(0);
 
         return $stream;
+    }
+
+    /**
+     * @param string[] $fieldList
+     * @return string[]
+     */
+    private function getColumnsRange(array $fieldList): array
+    {
+        $azRange = range('A', 'Z');
+        $azRangeCopied = $azRange;
+
+        foreach ($azRangeCopied as $i => $char1) {
+            foreach ($azRangeCopied as $j => $char2) {
+                $azRange[] = $char1 . $char2;
+
+                if ($i * count($azRangeCopied) + $j === count($fieldList)) {
+                    break 2;
+                }
+            }
+        }
+
+        return $azRange;
     }
 
     /**
@@ -635,75 +639,6 @@ class Xlsx implements Processor
         }
     }
 
-    /**
-     * @param string[] $fieldList
-     * @return string[]
-     */
-    public function filterFieldList(string $entityType, array $fieldList, bool $exportAllFields): array
-    {
-        if ($exportAllFields) {
-            foreach ($fieldList as $i => $field) {
-                $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
-
-                if (in_array($type, ['linkMultiple', 'attachmentMultiple'])) {
-                    unset($fieldList[$i]);
-                }
-            }
-        }
-
-        return array_values($fieldList);
-    }
-
-    /**
-     * @param string[] $attributeList
-     * @param string[] $fieldList
-     */
-    public function addAdditionalAttributes(string $entityType, array &$attributeList, array $fieldList): void
-    {
-        $linkList = [];
-
-        if (!in_array('id', $attributeList)) {
-            $attributeList[] = 'id';
-        }
-
-        $linkDefs = $this->metadata->get(['entityDefs', $entityType, 'links']);
-
-        if (is_array($linkDefs)) {
-            foreach ($linkDefs as $link => $defs) {
-                $linkType = $defs['type'] ?? null;
-
-                if (!$linkType) {
-                    continue;
-                }
-
-                if ($linkType === Entity::BELONGS_TO_PARENT) {
-                    $linkList[] = $link;
-                }
-                else if ($linkType === Entity::BELONGS_TO && !empty($defs['noJoin'])) {
-                    if ($this->metadata->get(['entityDefs', $entityType, 'fields', $link])) {
-                        $linkList[] = $link;
-                    }
-                }
-            }
-        }
-
-        foreach ($linkList as $item) {
-            if (in_array($item, $fieldList) && !in_array($item . 'Name', $attributeList)) {
-                $attributeList[] = $item . 'Name';
-            }
-        }
-
-        foreach ($fieldList as $field) {
-            $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
-
-            if ($type === 'currencyConverted') {
-                if (!in_array($field, $attributeList)) {
-                    $attributeList[] = $field;
-                }
-            }
-        }
-    }
-
     private function getSheetNameFromParams(Params $params): string
     {
         $exportName =
@@ -714,16 +649,11 @@ class Xlsx implements Processor
 
         $sheetName = mb_substr($exportName, 0, 30, 'utf-8');
         $sheetName = str_replace($badCharList, ' ', $sheetName);
-        $sheetName = str_replace('\'', '', $sheetName);
 
-        return $sheetName;
+        return str_replace('\'', '', $sheetName);
     }
 
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    private function sanitizeCell($value)
+    private function sanitizeCell(mixed $value): mixed
     {
         if (!is_string($value)) {
             return $value;

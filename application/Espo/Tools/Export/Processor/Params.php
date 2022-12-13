@@ -37,14 +37,10 @@ use RuntimeException;
 class Params
 {
     private string $fileName;
-    /**
-     * @var string[]
-     */
-    private $attributeList;
-    /**
-     * @var ?string[]
-     */
-    private $fieldList = null;
+    /** @var string[] */
+    private array $attributeList;
+    /** @var ?string[] */
+    private ?array $fieldList = null;
     private ?string $name = null;
     private ?string $entityType = null;
 
@@ -62,7 +58,6 @@ class Params
     public function withEntityType(string $entityType): self
     {
         $obj = clone $this;
-
         $obj->entityType = $entityType;
 
         return $obj;
@@ -71,8 +66,29 @@ class Params
     public function withName(?string $name): self
     {
         $obj = clone $this;
-
         $obj->name = $name;
+
+        return $obj;
+    }
+
+    /**
+     * @param ?string[] $fieldList
+     */
+    public function withFieldList(?array $fieldList): self
+    {
+        $obj = clone $this;
+        $obj->fieldList = $fieldList;
+
+        return $obj;
+    }
+
+    /**
+     * @param string[] $attributeList
+     */
+    public function withAttributeList(array $attributeList): self
+    {
+        $obj = clone $this;
+        $obj->attributeList = $attributeList;
 
         return $obj;
     }

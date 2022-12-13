@@ -27,34 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Xlsx;
+namespace Espo\Tools\Export;
 
-class FieldData
+interface ProcessorParamsHandler
 {
-    public function __construct(
-        private string $entityType,
-        private string $field,
-        private string $type,
-        private ?string $link
-    ) {}
-
-    public function getEntityType(): string
-    {
-        return $this->entityType;
-    }
-
-    public function getField(): string
-    {
-        return $this->field;
-    }
-
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    public function getLink(): ?string
-    {
-        return $this->link;
-    }
+    public function handle(Params $params, Processor\Params $processorParams): Processor\Params;
 }

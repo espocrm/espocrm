@@ -9,9 +9,10 @@
             "fileExtension": "csv"
         },
         "xlsx": {
+            "processorParamsHandler": "Espo\\Tools\\Export\\Processors\\Xlsx\\ParamsHandler",
             "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             "fileExtension": "xlsx",
-            "preparatorClassNameMap": {
+            "cellValuePreparatorClassNameMap": {
                 "link": "Espo\\Tools\\Export\\Processors\\Xlsx\\CellValuePreparators\\Link",
                 "linkOne": "Espo\\Tools\\Export\\Processors\\Xlsx\\CellValuePreparators\\Link",
                 "linkParent": "Espo\\Tools\\Export\\Processors\\Xlsx\\CellValuePreparators\\Link",

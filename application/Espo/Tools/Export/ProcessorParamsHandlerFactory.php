@@ -27,34 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors\Xlsx;
+namespace Espo\Tools\Export;
 
-class FieldData
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
+
+use LogicException;
+
+class ProcessorParamsHandlerFactory
 {
     public function __construct(
-        private string $entityType,
-        private string $field,
-        private string $type,
-        private ?string $link
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata
     ) {}
 
-    public function getEntityType(): string
+    public function create(string $format): ProcessorParamsHandler
     {
-        return $this->entityType;
+        $className = $this->getClassName($format);
+
+        if (!$className) {
+            throw new LogicException();
+        }
+
+        return $this->injectableFactory->create($className);
     }
 
-    public function getField(): string
+    public function isCreatable(string $format): bool
     {
-        return $this->field;
+        return (bool) $this->getClassName($format);
     }
 
-    public function getType(): string
+    /**
+     * @return ?class-string<ProcessorParamsHandler>
+     */
+    private function getClassName(string $format): ?string
     {
-        return $this->type;
-    }
-
-    public function getLink(): ?string
-    {
-        return $this->link;
+        return $this->metadata->get(['app', 'export', 'formatDefs', $format, 'processorParamsHandler']);
     }
 }

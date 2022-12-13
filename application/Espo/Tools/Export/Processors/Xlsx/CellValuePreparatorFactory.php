@@ -44,7 +44,7 @@ class CellValuePreparatorFactory
     {
         /** @var class-string<CellValuePreparator> $className */
         $className = $this->metadata
-            ->get(['app', 'export', 'formatDefs', 'xlsx', 'preparatorClassNameMap', $fieldType]) ??
+            ->get(['app', 'export', 'formatDefs', 'xlsx', 'cellValuePreparatorClassNameMap', $fieldType]) ??
             General::class;
 
         return $this->injectableFactory->create($className);
