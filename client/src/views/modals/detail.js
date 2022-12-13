@@ -316,8 +316,8 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
         },
 
         createRecordView: function (callback) {
-            var model = this.model;
-            var scope = this.getScope();
+            let model = this.model;
+            let scope = this.getScope();
 
             this.headerHtml = '';
 
@@ -353,7 +353,7 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
             this.headerHtml = this.getHelper().getScopeColorIconHtml(this.scope) + this.headerHtml;
 
             if (!this.editDisabled) {
-                var editAccess = this.getAcl().check(model, 'edit', true);
+                let editAccess = this.getAcl().check(model, 'edit', true);
 
                 if (editAccess) {
                     this.showButton('edit');
@@ -389,7 +389,7 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                 }
             }
 
-            var viewName =
+            let viewName =
                 this.detailViewName ||
                 this.detailView ||
                 this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'detailSmall']) ||
@@ -431,16 +431,16 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
         },
 
         controlNavigationButtons: function () {
-            var recordView = this.getView('record');
+            let recordView = this.getView('record');
 
             if (!recordView) {
                 return;
             }
 
-            var indexOfRecord = this.indexOfRecord;
+            let indexOfRecord = this.indexOfRecord;
 
-            var previousButtonEnabled = false;
-            var nextButtonEnabled = false;
+            let previousButtonEnabled = false;
+            let nextButtonEnabled = false;
 
             if (indexOfRecord > 0) {
                 previousButtonEnabled = true;
@@ -526,7 +526,8 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                 return;
             }
 
-            var indexOfRecord = this.indexOfRecord - 1;
+            let indexOfRecord = this.indexOfRecord - 1;
+
             this.switchToModelByIndex(indexOfRecord);
         },
 
@@ -543,9 +544,9 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                 return;
             }
 
-            var collection = this.model.collection;
+            let collection = this.model.collection;
 
-            var indexOfRecord = this.indexOfRecord + 1;
+            let indexOfRecord = this.indexOfRecord + 1;
 
             if (indexOfRecord <= collection.length - 1) {
                 this.switchToModelByIndex(indexOfRecord);
@@ -553,16 +554,12 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                 return;
             }
 
-            var initialCount = collection.length;
-
             collection
                 .fetch({
                     more: true,
                     remove: false,
                 })
                 .then(() => {
-                    var model = collection.at(indexOfRecord);
-
                     this.switchToModelByIndex(indexOfRecord);
                 });
         },
@@ -629,10 +626,10 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
         },
 
         actionRemove: function () {
-            var model = this.getView('record').model;
+            let model = this.getView('record').model;
 
             this.confirm(this.translate('removeRecordConfirmation', 'messages'), () => {
-                var $buttons = this.dialog.$el.find('.modal-footer button');
+                let $buttons = this.dialog.$el.find('.modal-footer button');
 
                 $buttons.addClass('disabled').attr('disabled', 'disabled');
 
@@ -648,10 +645,10 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
         },
 
         actionFullForm: function () {
-            var url;
-            var router = this.getRouter();
+            let url;
+            let router = this.getRouter();
 
-            var scope = this.getScope();
+            let scope = this.getScope();
 
             url = '#' + scope + '/view/' + this.id;
 
