@@ -5,13 +5,13 @@
     ],
     "formatDefs": {
         "csv": {
-            "processorClassName": "Espo\\Tools\\Export\\Processors\\Csv",
+            "processorClassName": "Espo\\Tools\\Export\\Processors\\Csv\\Processor",
             "additionalFieldsLoaderClassName": "Espo\\Tools\\Export\\Processors\\Csv\\AdditionalFieldsLoader",
             "mimeType": "text/csv",
             "fileExtension": "csv"
         },
         "xlsx": {
-            "processorClassName": "Espo\\Tools\\Export\\Processors\\Xlsx",
+            "processorClassName": "Espo\\Tools\\Export\\Processors\\Xlsx\\Processor",
             "processorParamsHandler": "Espo\\Tools\\Export\\Processors\\Xlsx\\ParamsHandler",
             "additionalFieldsLoaderClassName": "Espo\\Tools\\Export\\Processors\\Xlsx\\AdditionalFieldsLoader",
             "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

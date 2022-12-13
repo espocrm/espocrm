@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors;
+namespace Espo\Tools\Export\Processors\Xlsx;
 
 use Espo\Core\Field\Currency;
 use Espo\Core\Field\Date;
@@ -39,15 +39,11 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
-use Espo\Tools\Export\Processor;
+use Espo\Tools\Export\Processor as ProcessorInterface;
 use Espo\Tools\Export\Processor\Data;
 use Espo\Tools\Export\Processor\Params;
-use Espo\Tools\Export\Processors\Xlsx\CellValuePreparator;
-use Espo\Tools\Export\Processors\Xlsx\CellValuePreparatorFactory;
-use Espo\Tools\Export\Processors\Xlsx\FieldHelper;
 
 use Psr\Http\Message\StreamInterface;
-
 use GuzzleHttp\Psr7\Stream;
 
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
@@ -64,7 +60,7 @@ use DateTime;
 use DateTimeZone;
 use RuntimeException;
 
-class Xlsx implements Processor
+class Processor implements ProcessorInterface
 {
     /** @var array<string, CellValuePreparator> */
     private array $preparatorsCache = [];

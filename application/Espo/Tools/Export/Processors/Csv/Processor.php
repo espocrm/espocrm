@@ -27,12 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors;
+namespace Espo\Tools\Export\Processors\Csv;
 
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Espo\Entities\Preferences;
-use Espo\Tools\Export\Processor;
+use Espo\Tools\Export\Processor as ProcessorInterface;
 use Espo\Tools\Export\Processor\Data;
 use Espo\Tools\Export\Processor\Params;
 
@@ -41,7 +41,7 @@ use GuzzleHttp\Psr7\Stream;
 
 use RuntimeException;
 
-class Csv implements Processor
+class Processor implements ProcessorInterface
 {
     public function __construct(
         private Config $config,
