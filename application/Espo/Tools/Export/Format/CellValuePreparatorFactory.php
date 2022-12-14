@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Format\Xlsx;
+namespace Espo\Tools\Export\Format;
 
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
@@ -40,11 +40,11 @@ class CellValuePreparatorFactory
         private Metadata $metadata
     ) {}
 
-    public function create(string $fieldType): CellValuePreparator
+    public function create(string $format, string $fieldType): CellValuePreparator
     {
         /** @var class-string<CellValuePreparator> $className */
         $className = $this->metadata
-            ->get(['app', 'export', 'formatDefs', 'xlsx', 'cellValuePreparatorClassNameMap', $fieldType]) ??
+            ->get(['app', 'export', 'formatDefs', $format, 'cellValuePreparatorClassNameMap', $fieldType]) ??
             General::class;
 
         return $this->injectableFactory->create($className);

@@ -20,7 +20,7 @@
                 "link": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Link",
                 "linkOne": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Link",
                 "linkParent": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Link",
-                "file": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\File",
+                "file": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Link",
                 "bool": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Boolean",
                 "int": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Integer",
                 "float": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Floating",

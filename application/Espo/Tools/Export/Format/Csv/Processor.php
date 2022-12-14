@@ -32,14 +32,17 @@ namespace Espo\Tools\Export\Format\Csv;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Espo\Entities\Preferences;
+use Espo\ORM\Entity;
+use Espo\Tools\Export\Collection;
 use Espo\Tools\Export\Processor as ProcessorInterface;
-use Espo\Tools\Export\Processor\Data;
 use Espo\Tools\Export\Processor\Params;
 
 use Psr\Http\Message\StreamInterface;
 use GuzzleHttp\Psr7\Stream;
 
 use RuntimeException;
+
+use const JSON_UNESCAPED_UNICODE;
 
 class Processor implements ProcessorInterface
 {
@@ -48,7 +51,7 @@ class Processor implements ProcessorInterface
         private Preferences $preferences
     ) {}
 
-    public function process(Params $params, Data $data): StreamInterface
+    public function process(Params $params, Collection $collection): StreamInterface
     {
         $attributeList = $params->getAttributeList();
 
@@ -67,8 +70,8 @@ class Processor implements ProcessorInterface
 
         fputcsv($fp, $attributeList, $delimiter);
 
-        while (($row = $data->readRow()) !== null) {
-            $preparedRow = $this->prepareRow($row);
+        foreach ($collection as $entity) {
+            $preparedRow = $this->prepareRow($entity, $attributeList);
 
             fputcsv($fp, $preparedRow, $delimiter, '"' , "\0");
         }
@@ -79,30 +82,30 @@ class Processor implements ProcessorInterface
     }
 
     /**
-     * @param array<string, mixed> $row
-     * @return mixed[]
+     * @param string[] $attributeList
+     * @return string[]
      */
-    private function prepareRow(array $row): array
+    private function prepareRow(Entity $entity, array $attributeList): array
     {
         $preparedRow = [];
 
-        foreach ($row as $item) {
-            if (is_array($item) || is_object($item)) {
-                $item = Json::encode($item);
+        foreach ($attributeList as $attribute) {
+            $value = $entity->get($attribute);
+
+            if (is_array($value) || is_object($value)) {
+                $value = Json::encode($value, JSON_UNESCAPED_UNICODE);
             }
 
-            $preparedRow[] = $this->sanitizeCell($item);
+            $value = (string) $value;
+
+            $preparedRow[] = $this->sanitizeCellValue($value);
         }
 
         return $preparedRow;
     }
 
-    private function sanitizeCell(mixed $value): mixed
+    private function sanitizeCellValue(string $value): string
     {
-        if (!is_string($value)) {
-            return $value;
-        }
-
         if ($value === '') {
             return $value;
         }

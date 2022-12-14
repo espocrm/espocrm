@@ -29,13 +29,14 @@
 
 namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
-use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
+use Espo\ORM\Entity;
+use Espo\Tools\Export\Format\CellValuePreparator;
 
 class Link implements CellValuePreparator
 {
-    public function prepare(string $entityType, string $name, array $data): ?string
+    public function prepare(Entity $entity, string $name): ?string
     {
         /** @var ?string */
-        return $data[$name . 'Name'] ?? null;
+        return $entity->get($name . 'Name');
     }
 }

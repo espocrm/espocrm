@@ -30,7 +30,7 @@
 namespace Espo\Tools\Export;
 
 use Espo\Core\ORM\Repository\SaveOption;
-use Espo\Tools\Export\Processor\Data as ProcessorData;
+use Espo\Tools\Export\Collection as ExportCollection;
 use Espo\Tools\Export\Processor\Params as ProcessorParams;
 use Espo\ORM\Entity;
 use Espo\ORM\BaseEntity;
@@ -44,7 +44,6 @@ use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\FieldUtil;
-use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
@@ -120,12 +119,6 @@ class Export
                 ->handle($params, $processorParams);
         }
 
-        $dataResource = fopen('php://temp', 'w');
-
-        if ($dataResource === false) {
-            throw new RuntimeException("Could not open temp.");
-        }
-
         $loaderParams = LoaderParams::create()
             ->withSelect($processorParams->getAttributeList());
 
@@ -134,45 +127,27 @@ class Export
         $loader = $this->additionalFieldsLoaderFactory->isCreatable($format) ?
             $this->additionalFieldsLoaderFactory->create($format) : null;
 
-        foreach ($collection as $entity) {
-            $this->listLoadProcessor->process($entity, $loaderParams);
+        $exportCollection = new ExportCollection(
+            collection: $collection,
+            listLoadProcessor: $this->listLoadProcessor,
+            loaderParams: $loaderParams,
+            additionalFieldsLoader: $loader,
+            recordService: $recordService,
+            processorParams: $processorParams
+        ) ;
 
-            /** For bc. */
-            if (method_exists($recordService, 'loadAdditionalFieldsForExport')) {
-                $recordService->loadAdditionalFieldsForExport($entity);
-            }
-
-            if ($loader && $processorParams->getFieldList()) {
-                $loader->load($entity, $processorParams->getFieldList());
-            }
-
-            $row = [];
-
-            foreach ($processorParams->getAttributeList() as $attribute) {
-                $row[$attribute] = $this->getAttributeFromEntity($entity, $attribute);
-            }
-
-            $line = base64_encode(serialize($row)) . \PHP_EOL;
-
-            fwrite($dataResource, $line);
-        }
-
-        rewind($dataResource);
-
-        $processorData = new ProcessorData($dataResource);
-
-        $stream = $processor->process($processorParams, $processorData);
-
-        fclose($dataResource);
+        $stream = $processor->process($processorParams, $exportCollection);
 
         $mimeType = $this->metadata->get(['app', 'export', 'formatDefs', $format, 'mimeType']);
 
+        /** @var Attachment $attachment */
         $attachment = $this->entityManager->getRepositoryByClass(Attachment::class)->getNew();
 
-        $attachment->set('name', $processorParams->getFileName());
-        $attachment->set('role', Attachment::ROLE_EXPORT_FILE);
-        $attachment->set('type', $mimeType);
-        $attachment->set('size', $stream->getSize());
+        $attachment
+            ->setName($processorParams->getFileName())
+            ->setRole(Attachment::ROLE_EXPORT_FILE)
+            ->setType($mimeType)
+            ->setSize($stream->getSize());
 
         $this->entityManager->saveEntity($attachment, [
             SaveOption::CREATED_BY_ID => $this->user->getId(),
@@ -206,52 +181,17 @@ class Export
             ->withEntityType($params->getEntityType());
     }
 
-    private function getAttributeFromEntity(Entity $entity, string $attribute): mixed
-    {
-        $type = $entity->getAttributeType($attribute);
-
-        if ($type === Entity::FOREIGN) {
-            $type = $this->getForeignAttributeType($entity, $attribute) ?? $type;
-        }
-
-        switch ($type) {
-            case Entity::JSON_OBJECT:
-                if ($this->getAttributeParam($entity, $attribute, 'isLinkMultipleNameMap')) {
-                    break;
-                }
-
-                $value = $entity->get($attribute);
-
-                return Json::encode($value, \JSON_UNESCAPED_UNICODE);
-
-            case Entity::JSON_ARRAY:
-                if ($this->getAttributeParam($entity, $attribute, 'isLinkMultipleIdList')) {
-                    break;
-                }
-
-                $value = $entity->get($attribute);
-
-                if (is_array($value)) {
-                    return Json::encode($value, \JSON_UNESCAPED_UNICODE);
-                }
-
-                return null;
-
-            case Entity::PASSWORD:
-                return null;
-        }
-
-        return $entity->get($attribute);
-    }
-
     private function getForeignAttributeType(Entity $entity, string $attribute): ?string
     {
         $defs = $this->entityManager->getDefs();
-
         $entityDefs = $defs->getEntity($entity->getEntityType());
 
-        $relation = $this->getAttributeParam($entity, $attribute, 'relation');
-        $foreign = $this->getAttributeParam($entity, $attribute, 'foreign');
+        [$relation, $foreign] = str_contains($attribute, '_') ?
+            explode('_', $attribute) :
+            [
+                $this->getAttributeParam($entity, $attribute, 'relation'),
+                $this->getAttributeParam($entity, $attribute, 'foreign')
+            ];
 
         if (!$relation) {
             return null;
@@ -263,6 +203,10 @@ class Export
 
         if (!is_string($foreign)) {
             return Entity::VARCHAR;
+        }
+
+        if (!$entityDefs->hasRelation($relation)) {
+            return null;
         }
 
         if (!$entityDefs->getRelation($relation)->hasForeignEntityType()) {
@@ -289,6 +233,16 @@ class Export
         string $attribute,
         bool $exportAllFields = false
     ): bool {
+
+        $type = $entity->getAttributeType($attribute);
+
+        if ($type === Entity::FOREIGN || str_contains($attribute, '_')) {
+            $type = $this->getForeignAttributeType($entity, $attribute) ?? $type;
+        }
+
+        if ($type === Entity::PASSWORD) {
+            return false;
+        }
 
         if ($this->getAttributeParam($entity, $attribute, 'notExportable')) {
             return false;

@@ -29,12 +29,13 @@
 
 namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
-use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
+use Espo\ORM\Entity;
+use Espo\Tools\Export\Format\CellValuePreparator;
 
 class Boolean implements CellValuePreparator
 {
-    public function prepare(string $entityType, string $name, array $data): bool
+    public function prepare(Entity $entity, string $name): bool
     {
-        return (bool) ($data[$name] ?? false);
+        return (bool) $entity->get($name);
     }
 }

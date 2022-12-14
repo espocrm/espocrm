@@ -29,12 +29,13 @@
 
 namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
-use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
+use Espo\ORM\Entity;
+use Espo\Tools\Export\Format\CellValuePreparator;
 
 class Floating implements CellValuePreparator
 {
-    public function prepare(string $entityType, string $name, array $data): float
+    public function prepare(Entity $entity, string $name): float
     {
-        return $data[$name] ?? 0;
+        return $entity->get($name) ?? 0.0;
     }
 }

@@ -39,8 +39,11 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Entity;
+use Espo\Tools\Export\Collection;
+use Espo\Tools\Export\Format\CellValuePreparator;
+use Espo\Tools\Export\Format\CellValuePreparatorFactory;
 use Espo\Tools\Export\Processor as ProcessorInterface;
-use Espo\Tools\Export\Processor\Data;
 use Espo\Tools\Export\Processor\Params;
 
 use Psr\Http\Message\StreamInterface;
@@ -62,6 +65,8 @@ use RuntimeException;
 
 class Processor implements ProcessorInterface
 {
+    private const FORMAT = 'xlsx';
+
     /** @var array<string, CellValuePreparator> */
     private array $preparatorsCache = [];
 
@@ -108,7 +113,7 @@ class Processor implements ProcessorInterface
      * @throws SpreadsheetException
      * @throws WriterException
      */
-    public function process(Params $params, Data $data): StreamInterface
+    public function process(Params $params, Collection $collection): StreamInterface
     {
         $entityType = $params->getEntityType();
         $fieldList = $params->getFieldList();
@@ -129,7 +134,7 @@ class Processor implements ProcessorInterface
         $now = new DateTime();
         $now->setTimezone(new DateTimeZone($this->config->get('timeZone', 'UTC')));
 
-        $sheet->setCellValue('A1', $this->sanitizeCell($exportName));
+        $sheet->setCellValue('A1', $this->sanitizeCellValue($exportName));
         $sheet->setCellValue('B1',
             SharedDate::PHPToExcel(strtotime($now->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT)))
         );
@@ -168,7 +173,7 @@ class Processor implements ProcessorInterface
                 $type = $fieldData->getType();
             }
 
-            $sheet->setCellValue($col . $rowNumber, $this->sanitizeCell($label));
+            $sheet->setCellValue($col . $rowNumber, $this->sanitizeCellValue($label));
             $sheet->getColumnDimension($col)->setAutoSize(true);
 
             if (
@@ -190,16 +195,9 @@ class Processor implements ProcessorInterface
 
         $rowNumber++;
 
-        while (true) {
-            $row = $data->readRow();
-
-            if ($row === null) {
-                break;
-            }
-
+        foreach ($collection as $entity) {
             $this->processRow(
-                $entityType,
-                $this->sanitizeRow($row),
+                $entity,
                 $sheet,
                 $rowNumber,
                 $fieldList,
@@ -314,15 +312,13 @@ class Processor implements ProcessorInterface
     }
 
     /**
-     * @param array<string, mixed> $row
      * @param string[] $fieldList
      * @param string[] $azRange
      * @param array<string, string> $typesCache
      * @throws SpreadsheetException
      */
     private function processRow(
-        string $entityType,
-        array $row,
+        Entity $entity,
         Worksheet $sheet,
         int $rowNumber,
         array $fieldList,
@@ -336,8 +332,7 @@ class Processor implements ProcessorInterface
             $coordinate = $col . $rowNumber;
 
             $this->processCell(
-                $entityType,
-                $row,
+                $entity,
                 $sheet,
                 $rowNumber,
                 $coordinate,
@@ -348,19 +343,19 @@ class Processor implements ProcessorInterface
     }
 
     /**
-     * @param array<string, mixed> $row
      * @param array<string, string> $typesCache
      * @throws SpreadsheetException
      */
     private function processCell(
-        string $entityType,
-        array $row,
+        Entity $entity,
         Worksheet $sheet,
         int $rowNumber,
         string $coordinate,
         string $name,
         array &$typesCache
     ): void {
+
+        $entityType = $entity->getEntityType();
 
         $type = $typesCache[$name] ?? null;
 
@@ -374,11 +369,11 @@ class Processor implements ProcessorInterface
 
         $preparator = $this->getPreparator($type);
 
-        $value = $preparator->prepare($entityType, $name, $row);
+        $value = $preparator->prepare($entity, $name);
 
         if ($type === 'image') {
             $this->applyImage(
-                $row,
+                $entity,
                 $coordinate,
                 $sheet,
                 $rowNumber,
@@ -387,6 +382,8 @@ class Processor implements ProcessorInterface
 
             $value = null;
         }
+
+        $value = $this->sanitizeCellValue($value);
 
         if (is_string($value)) {
             $sheet->setCellValueExplicit($coordinate, $value, DataType::TYPE_STRING);
@@ -423,8 +420,7 @@ class Processor implements ProcessorInterface
 
         $this->applyLinks(
             $type,
-            $entityType,
-            $row,
+            $entity,
             $sheet,
             $coordinate,
             $name
@@ -432,17 +428,17 @@ class Processor implements ProcessorInterface
     }
 
     /**
-     * @param array<string, mixed> $row
      * @throws SpreadsheetException
      */
     private function applyImage(
-        array $row,
+        Entity $entity,
         string $coordinate,
         Worksheet $sheet,
         int $rowNumber,
         string $name
     ): void {
-        $attachmentId = $row[$name . 'Id'] ?? null;
+
+        $attachmentId = $entity->get($name . 'Id');
 
         if (!$attachmentId) {
             return;
@@ -471,17 +467,18 @@ class Processor implements ProcessorInterface
     }
 
     /**
-     * @param array<string, mixed> $row
      * @throws SpreadsheetException
      */
     private function applyLinks(
         string $type,
-        string $entityType,
-        array $row,
+        Entity $entity,
         Worksheet $sheet,
         string $coordinate,
         string $name
     ): void {
+
+        $entityType = $entity->getEntityType();
+
         $link = null;
 
         $foreignLink = null;
@@ -494,19 +491,21 @@ class Processor implements ProcessorInterface
         $siteUrl = $this->config->getSiteUrl();
 
         if ($name === 'name') {
-            if (array_key_exists('id', $row)) {
-                $link = $siteUrl . "/#" . $entityType . "/view/" . $row['id'];
+            if ($entity->hasId()) {
+                $link = $siteUrl . '/#' . $entityType . '/view/' . $entity->getId();
             }
         }
         else if ($type === 'url') {
-            if (array_key_exists($name, $row) && filter_var($row[$name], FILTER_VALIDATE_URL)) {
-                $link = $row[$name];
+            $value = $entity->get($name);
+
+            if ($value && filter_var($value, FILTER_VALIDATE_URL)) {
+                $link = $value;
             }
         }
         else if ($type === 'link') {
-            $idKey = $name . 'Id';
+            $idValue = $entity->get($name . 'Id');
 
-            if (array_key_exists($idKey, $row) && $foreignField) {
+            if ($idValue && $foreignField) {
                 if (!$foreignLink) {
                     $foreignEntity = $this->metadata->get(['entityDefs', $entityType, 'links', $name, 'entity']);
                 }
@@ -519,34 +518,38 @@ class Processor implements ProcessorInterface
                 }
 
                 if ($foreignEntity) {
-                    $link = $siteUrl . "/#" . $foreignEntity . "/view/" . $row[$idKey];
+                    $link = $siteUrl . '/#' . $foreignEntity . '/view/' . $idValue;
                 }
             }
         }
         else if ($type === 'file') {
-            $idKey = $name . 'Id';
+            $idValue = $entity->get($name . 'Id');
 
-            if (array_key_exists($idKey, $row)) {
-                $link = $siteUrl . "/?entryPoint=download&id=" . $row[$idKey];
+            if ($idValue) {
+                $link = $siteUrl . '/?entryPoint=download&id=' . $idValue;
             }
         }
         else if ($type === 'linkParent') {
-            $idKey = $name . 'Id';
-            $typeKey = $name . 'Type';
+            $idValue = $entity->get($name . 'Id');
+            $typeValue = $entity->get($name . 'Type');;
 
-            if (array_key_exists($idKey, $row) && array_key_exists($typeKey, $row)) {
-                $link = $siteUrl . "/#" . $typeKey . "/view/" . $idKey;
+            if ($idValue && $typeValue) {
+                $link = $siteUrl . '/#' . $typeValue . '/view/' . $idValue;
             }
         }
         else if ($type === 'phone') {
-            if (array_key_exists($name, $row)) {
-                $link = "tel:" . $row[$name];
+            $value = $entity->get($name);
+
+            if ($value) {
+                $link = 'tel:' . $value;
             }
         }
 
         else if ($type === 'email') {
-            if (array_key_exists($name, $row)) {
-                $link = "mailto:" . $row[$name];
+            $value = $entity->get($name);
+
+            if ($value) {
+                $link = 'mailto:' . $value;
             }
         }
 
@@ -567,7 +570,7 @@ class Processor implements ProcessorInterface
     private function getPreparator(string $type): CellValuePreparator
     {
         if (!array_key_exists($type, $this->preparatorsCache)) {
-            $this->preparatorsCache[$type] = $this->cellValuePreparatorFactory->create($type);
+            $this->preparatorsCache[$type] = $this->cellValuePreparatorFactory->create(self::FORMAT, $type);
         }
 
         return $this->preparatorsCache[$type];
@@ -600,7 +603,7 @@ class Processor implements ProcessorInterface
         return str_replace('\'', '', $sheetName);
     }
 
-    private function sanitizeCell(mixed $value): mixed
+    private function sanitizeCellValue(mixed $value): mixed
     {
         if (!is_string($value)) {
             return $value;
@@ -615,19 +618,5 @@ class Processor implements ProcessorInterface
         }
 
         return $value;
-    }
-
-    /**
-     * @param array<string, mixed> $row
-     * @return array<string, mixed>
-     */
-    private function sanitizeRow(array $row): array
-    {
-        return array_map(
-            function ($item) {
-                return $this->sanitizeCell($item);
-            },
-            $row
-        );
     }
 }

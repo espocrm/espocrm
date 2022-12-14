@@ -30,19 +30,20 @@
 namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
 use Espo\Core\Field\Currency as CurrencyValue;
-use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
+use Espo\Core\Field\Currency\CurrencyFactory;
+use Espo\ORM\Entity;
+use Espo\Tools\Export\Format\CellValuePreparator;
 
 class Currency implements CellValuePreparator
 {
-    public function prepare(string $entityType, string $name, array $data): ?CurrencyValue
+    public function prepare(Entity $entity, string $name): ?CurrencyValue
     {
-        $code = $data[$name . 'Currency'] ?? null;
-        $value = $data[$name] ?? null;
+        $factory = new CurrencyFactory();
 
-        if (!$code || $value === null) {
+        if (!$factory->isCreatableFromEntity($entity, $name)) {
             return null;
         }
 
-        return CurrencyValue::create($value, $code);
+        return $factory->createFromEntity($entity, $name);
     }
 }

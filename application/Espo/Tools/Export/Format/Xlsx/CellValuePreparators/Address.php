@@ -29,9 +29,10 @@
 
 namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
-use Espo\Core\Field\Address as AddressValue;
+use Espo\Core\Field\Address\AddressFactory;
 use Espo\Core\Field\Address\AddressFormatterFactory;
-use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
+use Espo\ORM\Entity;
+use Espo\Tools\Export\Format\CellValuePreparator;
 
 class Address implements CellValuePreparator
 {
@@ -39,15 +40,9 @@ class Address implements CellValuePreparator
         private AddressFormatterFactory $formatterFactory
     ) {}
 
-    public function prepare(string $entityType, string $name, array $data): ?string
+    public function prepare(Entity $entity, string $name): ?string
     {
-        $address = AddressValue::createBuilder()
-            ->setStreet($data[$name . 'Street'] ?? null)
-            ->setCity($data[$name . 'City'] ?? null)
-            ->setState($data[$name . 'State'] ?? null)
-            ->setCountry($data[$name . 'Country'] ?? null)
-            ->setPostalCode($data[$name . 'PostalCode'] ?? null)
-            ->build();
+        $address = (new AddressFactory())->createFromEntity($entity, $name);
 
         $formatter = $this->formatterFactory->createDefault();
 

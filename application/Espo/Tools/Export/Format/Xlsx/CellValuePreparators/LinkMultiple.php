@@ -29,24 +29,25 @@
 
 namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
-use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
+use Espo\ORM\Entity;
+use Espo\Tools\Export\Format\CellValuePreparator;
 use stdClass;
 
 class LinkMultiple implements CellValuePreparator
 {
-    public function prepare(string $entityType, string $name, array $data): ?string
+    public function prepare(Entity $entity, string $name): ?string
     {
         if (
-            !array_key_exists($name . 'Ids', $data) ||
-            !array_key_exists($name . 'Names', $data)
+            !$entity->has($name . 'Ids') ||
+            !$entity->has($name . 'Names')
         ) {
             return null;
         }
 
         /** @var string[] $ids */
-        $ids = $data[$name . 'Ids'];
+        $ids = $entity->get($name . 'Ids');
         /** @var ?stdClass $names */
-        $names = $data[$name . 'Names'];
+        $names = $entity->get($name . 'Names');
 
         $nameList = array_map(function ($id) use ($names) {
             return $names->$id ?? $id;

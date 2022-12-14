@@ -31,7 +31,8 @@ namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
 use Espo\Core\Field\Currency as CurrencyValue;
 use Espo\Core\Utils\Config;
-use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
+use Espo\ORM\Entity;
+use Espo\Tools\Export\Format\CellValuePreparator;
 
 class CurrencyConverted implements CellValuePreparator
 {
@@ -42,9 +43,9 @@ class CurrencyConverted implements CellValuePreparator
         $this->code = $config->get('defaultCurrency');
     }
 
-    public function prepare(string $entityType, string $name, array $data): ?CurrencyValue
+    public function prepare(Entity $entity, string $name): ?CurrencyValue
     {
-        $value = $data[$name] ?? null;
+        $value = $entity->get($name);
 
         if ($value === null) {
             return null;

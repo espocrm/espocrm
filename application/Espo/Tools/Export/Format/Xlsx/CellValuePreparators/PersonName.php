@@ -29,18 +29,23 @@
 
 namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
-use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
+use Espo\ORM\Entity;
+use Espo\Tools\Export\Format\CellValuePreparator;
 
 class PersonName implements CellValuePreparator
 {
-    public function prepare(string $entityType, string $name, array $data): ?string
+    public function prepare(Entity $entity, string $name): ?string
     {
-        $name = $data[$name] ?? null;
+        $value = $entity->get($name);
+
+        if ($value) {
+            return $value;
+        }
 
         $arr = [];
 
-        $firstName = $data['first' . ucfirst($name)];
-        $lastName = $data['last' . ucfirst($name)];
+        $firstName = $entity->get('first' . ucfirst($name));
+        $lastName = $entity->get('last' . ucfirst($name));
 
         if ($firstName) {
             $arr[] = $firstName;

@@ -31,7 +31,8 @@ namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
 use Espo\Core\Field\DateTime as DateTimeValue;
 use Espo\Core\Utils\Config;
-use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
+use Espo\ORM\Entity;
+use Espo\Tools\Export\Format\CellValuePreparator;
 
 use DateTimeZone;
 
@@ -44,9 +45,9 @@ class DateTime implements CellValuePreparator
         $this->timezone = $config->get('timeZone') ?? 'UTC';
     }
 
-    public function prepare(string $entityType, string $name, array $data): ?DateTimeValue
+    public function prepare(Entity $entity, string $name): ?DateTimeValue
     {
-        $value = $data[$name] ?? null;
+        $value = $entity->get($name);
 
         if (!$value) {
             return null;

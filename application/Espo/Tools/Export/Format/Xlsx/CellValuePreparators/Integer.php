@@ -29,13 +29,14 @@
 
 namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
-use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
+use Espo\ORM\Entity;
+use Espo\Tools\Export\Format\CellValuePreparator;
 
 class Integer implements CellValuePreparator
 {
-    public function prepare(string $entityType, string $name, array $data): int
+    public function prepare(Entity $entity, string $name): int
     {
         /** @var int */
-        return $data[$name] ?? 0;
+        return $entity->get($name) ?? 0;
     }
 }

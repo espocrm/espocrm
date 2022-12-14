@@ -27,35 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processor;
+namespace Espo\Tools\Export\Format;
 
-class Data
+use Espo\Core\Field\Currency;
+use Espo\Core\Field\Date;
+use Espo\Core\Field\DateTime;
+use Espo\ORM\Entity;
+
+interface CellValuePreparator
 {
     /**
-     * @var resource
+     * @param string $name A field name.
      */
-    private $resource;
-
-    /**
-     * @param resource $resource
-     */
-    public function __construct($resource)
-    {
-        $this->resource = $resource;
-    }
-
-    /**
-     *
-     * @return ?array<string, mixed>
-     */
-    public function readRow(): ?array
-    {
-        $line = fgets($this->resource);
-
-        if ($line === false) {
-            return null;
-        }
-
-        return unserialize(base64_decode($line));
-    }
+    public function prepare(
+        Entity $entity,
+        string $name
+    ): string|bool|int|float|Date|DateTime|Currency|null;
 }

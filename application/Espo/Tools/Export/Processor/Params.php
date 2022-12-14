@@ -93,12 +93,17 @@ class Params
         return $obj;
     }
 
+    /**
+     * An export file name.
+     */
     public function getFileName(): string
     {
         return $this->fileName;
     }
 
     /**
+     * Attributes to export.
+     *
      * @return string[]
      */
     public function getAttributeList(): array
@@ -107,6 +112,8 @@ class Params
     }
 
     /**
+     * Fields to export.
+     *
      * @return ?string[]
      */
     public function getFieldList(): ?array
@@ -114,11 +121,17 @@ class Params
         return $this->fieldList;
     }
 
+    /**
+     * An export name.
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * An entity type.
+     */
     public function getEntityType(): string
     {
         if ($this->entityType === null) {

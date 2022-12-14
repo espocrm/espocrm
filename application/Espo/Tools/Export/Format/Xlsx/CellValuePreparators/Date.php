@@ -30,13 +30,14 @@
 namespace Espo\Tools\Export\Format\Xlsx\CellValuePreparators;
 
 use Espo\Core\Field\Date as DateValue;
-use Espo\Tools\Export\Format\Xlsx\CellValuePreparator;
+use Espo\ORM\Entity;
+use Espo\Tools\Export\Format\CellValuePreparator;
 
 class Date implements CellValuePreparator
 {
-    public function prepare(string $entityType, string $name, array $data): ?DateValue
+    public function prepare(Entity $entity, string $name): ?DateValue
     {
-        $value = $data[$name] ?? null;
+        $value = $entity->get($name);
 
         if (!$value) {
             return null;
