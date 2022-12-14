@@ -206,14 +206,8 @@ class Export
             ->withEntityType($params->getEntityType());
     }
 
-    protected function getAttributeFromEntity(Entity $entity, string $attribute): mixed
+    private function getAttributeFromEntity(Entity $entity, string $attribute): mixed
     {
-        $methodName = 'getAttribute' . ucfirst($attribute). 'FromEntity';
-
-        if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity);
-        }
-
         $type = $entity->getAttributeType($attribute);
 
         if ($type === Entity::FOREIGN) {
@@ -290,7 +284,7 @@ class Export
         return $foreignEntityDefs->getAttribute($foreign)->getType();
     }
 
-    protected function checkAttributeIsAllowedForExport(
+    private function checkAttributeIsAllowedForExport(
         Entity $entity,
         string $attribute,
         bool $exportAllFields = false
