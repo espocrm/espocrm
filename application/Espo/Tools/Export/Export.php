@@ -424,6 +424,10 @@ class Export
             }
         }
 
+        $fieldList = array_filter($fieldList, function ($item) use ($params) {
+            return $this->acl->checkField($params->getEntityType(), $item);
+        });
+
         return array_values($fieldList);
     }
 
