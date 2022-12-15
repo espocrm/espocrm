@@ -40,6 +40,11 @@
             },
             "params": {
                 "fields": {
+                    "lite": {
+                        "type": "bool",
+                        "default": false,
+                        "tooltip": true
+                    },
                     "recordLinks": {
                         "type": "bool",
                         "default": false
@@ -52,10 +57,33 @@
                 },
                 "layout": [
                     [
+                        {"name": "lite"},
                         {"name": "recordLinks"},
                         {"name": "titleRow"}
                     ]
-                ]
+                ],
+                "dynamicLogic": {
+                    "recordLinks": {
+                        "visible": {
+                            "conditionGroup": [
+                                {
+                                    "type": "isFalse",
+                                    "attribute": "xlsxLite"
+                                }
+                            ]
+                        }
+                    },
+                    "titleRow": {
+                        "visible": {
+                            "conditionGroup": [
+                                {
+                                    "type": "isFalse",
+                                    "attribute": "xlsxLite"
+                                }
+                            ]
+                        }
+                    }
+                }
             }
         }
     }

@@ -4,6 +4,7 @@
         "fieldList": "Field List",
         "format": "Format",
         "status": "Status",
+        "xlsxLite": "Lite",
         "xlsxRecordLinks": "Record Links",
         "xlsxTitleRow": "Title Row"
     },
@@ -20,6 +21,7 @@
         }
     },
     "tooltips": {
+        "xlsxLite": "Consumes much less memory. Recommended if a big number of records is exported.",
         "xlsxTitleRow": "Title and date in the first row."
     },
     "messages": {
