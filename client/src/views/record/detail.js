@@ -1583,7 +1583,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this.trigger('before:delete');
                 this.trigger('delete');
 
-                this.notify('Removing...');
+                Espo.Ui.notify(' ... ');
 
                 let collection = this.model.collection;
 
@@ -1596,7 +1596,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                             }
                         }
 
-                        this.notify('Removed', 'success');
+                        this.model.set('deleted', true, {silent: true});
+
+                        Espo.Ui.success(this.translate('Removed'));
+
                         this.trigger('after:delete');
                         this.exit('delete');
                     });

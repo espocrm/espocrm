@@ -159,6 +159,10 @@ define('controllers/record', ['controller'], function (Dep) {
             if (isReturn) {
                 if (this.lastViewActionOptions && this.lastViewActionOptions.id === id) {
                     options = Espo.Utils.clone(this.lastViewActionOptions);
+
+                    if (options.model && options.model.get('deleted')) {
+                        delete options.model;
+                    }
                 }
 
                 options.isReturn = true;
