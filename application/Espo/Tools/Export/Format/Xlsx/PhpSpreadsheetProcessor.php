@@ -125,33 +125,37 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
         }
 
         $sheetName = $this->getSheetNameFromParams($params);
-        $exportName =
-            $params->getName() ??
+        $exportName = $params->getName() ??
             $this->language->translate($entityType, 'scopeNamesPlural');
 
         $phpExcel = new Spreadsheet();
-        $sheet = $phpExcel->setActiveSheetIndex(0);
-        $sheet->setTitle($sheetName);
+
+        $headerRowNumber = $params->getParam(self::PARAM_TITLE_ROW) ? 3 : 1;
+
+        $sheet = $phpExcel->setActiveSheetIndex(0)
+            ->setTitle($sheetName)
+            ->freezePane('A' . ($headerRowNumber + 1));
 
         $now = new DateTime();
         $now->setTimezone(new DateTimeZone($this->config->get('timeZone', 'UTC')));
 
         if ($params->getParam(self::PARAM_TITLE_ROW)) {
-            $sheet->setCellValue('A1', $this->sanitizeCellValue($exportName));
-            $sheet->setCellValue('B1',
-                SharedDate::PHPToExcel(strtotime($now->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT)))
-            );
+            $sheet
+                ->setCellValue('A1', $this->sanitizeCellValue($exportName))
+                ->setCellValue('A2',
+                    SharedDate::PHPToExcel(strtotime($now->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT)))
+                );
 
             $sheet->getStyle('A1')->applyFromArray($this->titleStyle);
-            $sheet->getStyle('B1')->applyFromArray($this->dateStyle);
-            $sheet->getStyle('B1')
+            $sheet->getStyle('A2')->applyFromArray($this->dateStyle);
+            $sheet->getStyle('A2')
                 ->getNumberFormat()
                 ->setFormatCode($this->dateTime->getDateTimeFormat());
         }
 
         $azRange = $this->getColumnsRange($fieldList);
 
-        $rowNumber = $params->getParam(self::PARAM_TITLE_ROW) ? 3 : 1;
+        $rowNumber = $headerRowNumber;
         $linkColList = [];
         $lastIndex = 0;
 
@@ -206,7 +210,7 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
             $rowNumber++;
         }
 
-        $sheet->getStyle("A2:A{$rowNumber}")
+        $sheet->getStyle("A{$headerRowNumber}:A{$rowNumber}")
             ->getNumberFormat()
             ->setFormatCode(NumberFormat::FORMAT_TEXT);
 

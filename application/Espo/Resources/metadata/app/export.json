@@ -51,7 +51,7 @@
                     },
                     "titleRow": {
                         "type": "bool",
-                        "default": true,
+                        "default": false,
                         "tooltip": true
                     }
                 },
