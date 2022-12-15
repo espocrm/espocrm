@@ -38,9 +38,7 @@ use stdClass;
  */
 class Parser
 {
-    /**
-     * @var array<int,string[]>
-     */
+    /** @var array<int, string[]> */
     private $priorityList = [
         ['='],
         ['??'],
@@ -51,9 +49,7 @@ class Parser
         ['*', '/', '%'],
     ];
 
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string, string> */
     private $operatorMap = [
         '=' => 'assign',
         '??' => 'comparison\\nullCoalescing',
@@ -73,16 +69,20 @@ class Parser
     ];
 
     private string $variableNameRegExp = "/^[a-zA-Z0-9_\$]+$/";
-
     private string $functionNameRegExp = "/^[a-zA-Z0-9_\\\\]+$/";
-
     private string $attributeNameRegExp = "/^[a-zA-Z0-9.]+$/";
 
+    /**
+     * @throws SyntaxError
+     */
     public function parse(string $expression): stdClass
     {
         return $this->split($expression);
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function applyOperator(string $operator, string $firstPart, string $secondPart): stdClass
     {
         if ($operator === '=') {
@@ -94,7 +94,7 @@ class Parser
                 $variable = substr($firstPart, 1);
 
                 if ($variable === '' || !preg_match($this->variableNameRegExp, $variable)) {
-                    throw new SyntaxError("Bad varable name `{$variable}`.");
+                    throw new SyntaxError("Bad variable name `{$variable}`.");
                 }
 
                 return (object) [
@@ -173,7 +173,8 @@ class Parser
                             $isString = false;
                         }
                     }
-                } else if ($string[$i] === "\"" && ($i === 0 || $string[$i - 1] !== "\\")) {
+                }
+                else if ($string[$i] === "\"" && ($i === 0 || $string[$i - 1] !== "\\")) {
                     if (!$isString) {
                         $isString = true;
                         $isStringStart = true;
@@ -193,52 +194,53 @@ class Parser
                 else if (!$isStringStart) {
                     $modifiedString[$i] = ' ';
                 }
+
+                continue;
             }
-            else {
-                if (!$isLineComment && !$isComment) {
-                    if ($i && $string[$i] === '/' && $string[$i - 1] === '/') {
-                        $isLineComment = true;
-                    }
 
-                    if (!$isLineComment) {
-                        if ($i && $string[$i] === '*' && $string[$i - 1] === '/') {
-                            $isComment = true;
-                        }
-                    }
+            if (!$isLineComment && !$isComment) {
+                if ($i && $string[$i] === '/' && $string[$i - 1] === '/') {
+                    $isLineComment = true;
+                }
 
-                    if ($string[$i] === '(') {
-                        $braceCounter++;
-                    }
-
-                    if ($string[$i] === ')') {
-                        $braceCounter--;
-                    }
-
-                    if ($braceCounter === 0) {
-                        if (!is_null($splitterIndexList)) {
-                            if ($string[$i] === ';') {
-                                $splitterIndexList[] = $i;
-                            }
-                        }
-
-                        if ($intoOneLine) {
-                            if ($string[$i] === "\r" || $string[$i] === "\n" || $string[$i] === "\t") {
-                                $string[$i] = ' ';
-                            }
-                        }
+                if (!$isLineComment) {
+                    if ($i && $string[$i] === '*' && $string[$i - 1] === '/') {
+                        $isComment = true;
                     }
                 }
 
-                if ($isLineComment) {
-                    if ($string[$i] === "\n") {
-                        $isLineComment = false;
-                    }
+                if ($string[$i] === '(') {
+                    $braceCounter++;
                 }
 
-                if ($isComment) {
-                    if ($string[$i - 1] === "*" && $string[$i] === "/") {
-                        $isComment = false;
+                if ($string[$i] === ')') {
+                    $braceCounter--;
+                }
+
+                if ($braceCounter === 0) {
+                    if (!is_null($splitterIndexList)) {
+                        if ($string[$i] === ';') {
+                            $splitterIndexList[] = $i;
+                        }
                     }
+
+                    if ($intoOneLine) {
+                        if ($string[$i] === "\r" || $string[$i] === "\n" || $string[$i] === "\t") {
+                            $string[$i] = ' ';
+                        }
+                    }
+                }
+            }
+
+            if ($isLineComment) {
+                if ($string[$i] === "\n") {
+                    $isLineComment = false;
+                }
+            }
+
+            if ($isComment) {
+                if ($string[$i - 1] === "*" && $string[$i] === "/") {
+                    $isComment = false;
                 }
             }
         }
@@ -246,6 +248,9 @@ class Parser
         return $isString;
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function split(string $expression): stdClass
     {
         $expression = trim($expression);
@@ -336,6 +341,7 @@ class Parser
 
                 $parsedPartList[] = $this->parse($part);
             }
+
             return (object) [
                 'type' => 'bundle',
                 'value' => $parsedPartList,
@@ -492,7 +498,7 @@ class Parser
             $value = substr($expression, 1);
 
             if ($value === '' || !preg_match($this->variableNameRegExp, $value)) {
-                throw new SyntaxError("Bad varable name `{$value}`.");
+                throw new SyntaxError("Bad variable name `{$value}`.");
             }
 
             return (object) [
@@ -563,7 +569,7 @@ class Parser
             throw SyntaxError::create("Attribute name `$expression` contains not allowed characters.");
         }
 
-        if (substr($expression, -1) === '.') {
+        if (str_ends_with($expression, '.')) {
             throw SyntaxError::create("Attribute ends with dot.");
         }
 
