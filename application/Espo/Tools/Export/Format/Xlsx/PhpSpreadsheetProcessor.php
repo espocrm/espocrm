@@ -67,7 +67,7 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
 {
     private const FORMAT = 'xlsx';
     private const PARAM_RECORD_LINKS = 'recordLinks';
-    private const PARAM_TITLE_ROW = 'titleRow';
+    private const PARAM_TITLE = 'title';
 
     /** @var array<string, CellValuePreparator> */
     private array $preparatorsCache = [];
@@ -130,7 +130,7 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
 
         $phpExcel = new Spreadsheet();
 
-        $headerRowNumber = $params->getParam(self::PARAM_TITLE_ROW) ? 3 : 1;
+        $headerRowNumber = $params->getParam(self::PARAM_TITLE) ? 3 : 1;
 
         $sheet = $phpExcel->setActiveSheetIndex(0)
             ->setTitle($sheetName)
@@ -139,7 +139,7 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
         $now = new DateTime();
         $now->setTimezone(new DateTimeZone($this->config->get('timeZone', 'UTC')));
 
-        if ($params->getParam(self::PARAM_TITLE_ROW)) {
+        if ($params->getParam(self::PARAM_TITLE)) {
             $sheet
                 ->setCellValue('A1', $this->sanitizeCellValue($exportName))
                 ->setCellValue('A2',

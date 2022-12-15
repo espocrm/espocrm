@@ -49,7 +49,7 @@
                         "type": "bool",
                         "default": false
                     },
-                    "titleRow": {
+                    "title": {
                         "type": "bool",
                         "default": false,
                         "tooltip": true
@@ -59,7 +59,7 @@
                     [
                         {"name": "lite"},
                         {"name": "recordLinks"},
-                        {"name": "titleRow"}
+                        {"name": "title"}
                     ]
                 ],
                 "dynamicLogic": {
@@ -73,7 +73,7 @@
                             ]
                         }
                     },
-                    "titleRow": {
+                    "title": {
                         "visible": {
                             "conditionGroup": [
                                 {

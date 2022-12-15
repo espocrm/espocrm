@@ -6,7 +6,7 @@
         "status": "Status",
         "xlsxLite": "Lite",
         "xlsxRecordLinks": "Record Links",
-        "xlsxTitleRow": "Title Row"
+        "xlsxTitle": "Title"
     },
     "options": {
         "format": {
@@ -22,7 +22,7 @@
     },
     "tooltips": {
         "xlsxLite": "Consumes much less memory. Recommended if a big number of records is exported.",
-        "xlsxTitleRow": "Title and date in the first row."
+        "xlsxTitle": "Print a title and current date in the header."
     },
     "messages": {
         "exportProcessed": "Export has been processed. Download the [file]({url}).",
