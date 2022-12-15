@@ -40,19 +40,16 @@ use RuntimeException;
 class Params
 {
     private string $entityType;
-    /**
-     * @var ?string[]
-     */
+    /** @var ?string[] */
     private $attributeList = null;
-    /**
-     * @var ?string[]
-     */
+    /** @var ?string[] */
     private $fieldList = null;
     private ?string $fileName = null;
     private ?string $format = null;
     private ?string $name = null;
+    /** @var array<string, mixed> */
+    private array $params = [];
     private ?SearchParams $searchParams = null;
-
     private bool $applyAccessControl = true;
 
     public function __construct(string $entityType)
@@ -61,7 +58,7 @@ class Params
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @throws RuntimeException
      */
     public static function fromRaw(array $params): self
@@ -144,7 +141,6 @@ class Params
     public function withFormat(?string $format): self
     {
         $obj = clone $this;
-
         $obj->format = $format;
 
         return $obj;
@@ -153,7 +149,6 @@ class Params
     public function withFileName(?string $fileName): self
     {
         $obj = clone $this;
-
         $obj->fileName = $fileName;
 
         return $obj;
@@ -162,7 +157,6 @@ class Params
     public function withName(?string $name): self
     {
         $obj = clone $this;
-
         $obj->name = $name;
 
         return $obj;
@@ -171,8 +165,15 @@ class Params
     public function withSearchParams(?SearchParams $searchParams): self
     {
         $obj = clone $this;
-
         $obj->searchParams = $searchParams;
+
+        return $obj;
+    }
+
+    public function withParam(string $name, mixed $value): self
+    {
+        $obj = clone $this;
+        $obj->params[$name] = $value;
 
         return $obj;
     }
@@ -183,7 +184,6 @@ class Params
     public function withFieldList(?array $fieldList): self
     {
         $obj = clone $this;
-
         $obj->fieldList = $fieldList;
 
         return $obj;
@@ -195,7 +195,6 @@ class Params
     public function withAttributeList(?array $attributeList): self
     {
         $obj = clone $this;
-
         $obj->attributeList = $attributeList;
 
         return $obj;
@@ -204,7 +203,6 @@ class Params
     public function withAccessControl(bool $applyAccessControl = true): self
     {
         $obj = clone $this;
-
         $obj->applyAccessControl = $applyAccessControl;
 
         return $obj;
@@ -272,6 +270,32 @@ class Params
     public function getFieldList(): ?array
     {
         return $this->fieldList;
+    }
+
+    /**
+     * Get a parameter list.
+     *
+     * @return string[]
+     */
+    public function getParamList(): array
+    {
+        return array_keys($this->params);
+    }
+
+    /**
+     * Get a parameter value.
+     */
+    public function getParam(string $name): mixed
+    {
+        return $this->params[$name] ?? null;
+    }
+
+    /**
+     * Has a parameter.
+     */
+    public function hasParam(string $name): bool
+    {
+        return array_key_exists($name, $this->params);
     }
 
     /**

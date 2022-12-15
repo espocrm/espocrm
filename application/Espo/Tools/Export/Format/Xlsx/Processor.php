@@ -66,6 +66,8 @@ use RuntimeException;
 class Processor implements ProcessorInterface
 {
     private const FORMAT = 'xlsx';
+    private const PARAM_RECORD_LINKS = 'recordLinks';
+    private const PARAM_TITLE_ROW = 'titleRow';
 
     /** @var array<string, CellValuePreparator> */
     private array $preparatorsCache = [];
@@ -134,20 +136,22 @@ class Processor implements ProcessorInterface
         $now = new DateTime();
         $now->setTimezone(new DateTimeZone($this->config->get('timeZone', 'UTC')));
 
-        $sheet->setCellValue('A1', $this->sanitizeCellValue($exportName));
-        $sheet->setCellValue('B1',
-            SharedDate::PHPToExcel(strtotime($now->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT)))
-        );
+        if ($params->getParam(self::PARAM_TITLE_ROW)) {
+            $sheet->setCellValue('A1', $this->sanitizeCellValue($exportName));
+            $sheet->setCellValue('B1',
+                SharedDate::PHPToExcel(strtotime($now->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT)))
+            );
 
-        $sheet->getStyle('A1')->applyFromArray($this->titleStyle);
-        $sheet->getStyle('B1')->applyFromArray($this->dateStyle);
-        $sheet->getStyle('B1')
-            ->getNumberFormat()
-            ->setFormatCode($this->dateTime->getDateTimeFormat());
+            $sheet->getStyle('A1')->applyFromArray($this->titleStyle);
+            $sheet->getStyle('B1')->applyFromArray($this->dateStyle);
+            $sheet->getStyle('B1')
+                ->getNumberFormat()
+                ->setFormatCode($this->dateTime->getDateTimeFormat());
+        }
 
         $azRange = $this->getColumnsRange($fieldList);
 
-        $rowNumber = 3;
+        $rowNumber = $params->getParam(self::PARAM_TITLE_ROW) ? 3 : 1;
         $linkColList = [];
         $lastIndex = 0;
 
@@ -176,9 +180,13 @@ class Processor implements ProcessorInterface
             $sheet->setCellValue($col . $rowNumber, $this->sanitizeCellValue($label));
             $sheet->getColumnDimension($col)->setAutoSize(true);
 
+            $linkTypeList = $params->getParam(self::PARAM_RECORD_LINKS) ?
+                ['url', 'phone', 'email', 'link', 'linkParent'] :
+                ['url'];
+
             if (
-                in_array($type, ['phone', 'email', 'url', 'link', 'linkParent']) ||
-                $name === 'name'
+                in_array($type, $linkTypeList) ||
+                $params->getParam(self::PARAM_RECORD_LINKS) && $name === 'name'
             ) {
                 $linkColList[] = $col;
             }

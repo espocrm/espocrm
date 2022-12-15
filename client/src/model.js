@@ -248,7 +248,10 @@ define('model', [], function () {
         /**
          * Set defs.
          *
-         * @param {Object} defs
+         * @param {{
+         *   fields?: Object.<string, *>,
+         *   links?: Object.<string, *>,
+         * }} defs
          */
         setDefs: function (defs) {
             this.defs = defs || {};

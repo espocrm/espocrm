@@ -31,18 +31,14 @@ namespace Espo\Tools\Export;
 
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFoundSilent;
-
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Job\Job\Data as JobData;
-
 use Espo\Tools\Export\Jobs\Process;
-
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\Export as ExportEntity;
 use Espo\Entities\User;
 
@@ -50,37 +46,15 @@ use stdClass;
 
 class Service
 {
-    private Factory $factory;
-
-    private Config $config;
-
-    private Acl $acl;
-
-    private User $user;
-
-    private Metadata $metadata;
-
-    private EntityManager $entityManager;
-
-    private JobSchedulerFactory $jobSchedulerFactory;
-
     public function __construct(
-        Factory $factory,
-        Config $config,
-        Acl $acl,
-        User $user,
-        Metadata $metadata,
-        EntityManager $entityManager,
-        JobSchedulerFactory $jobSchedulerFactory
-    ) {
-        $this->factory = $factory;
-        $this->config = $config;
-        $this->acl = $acl;
-        $this->user = $user;
-        $this->metadata = $metadata;
-        $this->entityManager = $entityManager;
-        $this->jobSchedulerFactory = $jobSchedulerFactory;
-    }
+        private Factory $factory,
+        private Config $config,
+        private Acl $acl,
+        private User $user,
+        private Metadata $metadata,
+        private EntityManager $entityManager,
+        private JobSchedulerFactory $jobSchedulerFactory
+    ) {}
 
     public function process(Params $params, ServiceParams $serviceParams): ServiceResult
     {
@@ -121,8 +95,8 @@ class Service
 
     public function getStatusData(string $id): stdClass
     {
-        /** @var ExportEntity|null $entity */
-        $entity = $this->entityManager->getEntity(ExportEntity::ENTITY_TYPE, $id);
+        /** @var ?ExportEntity $entity */
+        $entity = $this->entityManager->getEntityById(ExportEntity::ENTITY_TYPE, $id);
 
         if (!$entity) {
             throw new NotFoundSilent();
@@ -140,8 +114,8 @@ class Service
 
     public function subscribeToNotificationOnSuccess(string $id): void
     {
-        /** @var ExportEntity|null $entity */
-        $entity = $this->entityManager->getEntity(ExportEntity::ENTITY_TYPE, $id);
+        /** @var ?ExportEntity $entity */
+        $entity = $this->entityManager->getEntityById(ExportEntity::ENTITY_TYPE, $id);
 
         if (!$entity) {
             throw new NotFoundSilent();

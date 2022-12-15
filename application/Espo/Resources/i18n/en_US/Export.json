@@ -3,7 +3,9 @@
         "exportAllFields": "Export all fields",
         "fieldList": "Field List",
         "format": "Format",
-        "status": "Status"
+        "status": "Status",
+        "xlsxRecordLinks": "Record Links",
+        "xlsxTitleRow": "Title Row"
     },
     "options": {
         "format": {
@@ -16,6 +18,9 @@
             "Success": "Success",
             "Failed": "Failed"
         }
+    },
+    "tooltips": {
+        "xlsxTitleRow": "Title and date in the first row."
     },
     "messages": {
         "exportProcessed": "Export has been processed. Download the [file]({url}).",

@@ -43,6 +43,8 @@ class Params
     private ?array $fieldList = null;
     private ?string $name = null;
     private ?string $entityType = null;
+    /** @var array<string, mixed> */
+    private array $params = [];
 
     /**
      * @param string[] $attributeList
@@ -93,6 +95,14 @@ class Params
         return $obj;
     }
 
+    public function withParam(string $name, mixed $value): self
+    {
+        $obj = clone $this;
+        $obj->params[$name] = $value;
+
+        return $obj;
+    }
+
     /**
      * An export file name.
      */
@@ -139,5 +149,13 @@ class Params
         }
 
         return $this->entityType;
+    }
+
+    /**
+     * Get a parameter value.
+     */
+    public function getParam(string $name): mixed
+    {
+        return $this->params[$name] ?? null;
     }
 }

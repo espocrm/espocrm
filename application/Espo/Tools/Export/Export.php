@@ -176,9 +176,15 @@ class Export
             $fileName . '.' . $fileExtension :
             "Export_{$entityType}.{$fileExtension}";
 
-        return (new ProcessorParams($fileName, $attributeList, $fieldList))
+        $processorParams = (new ProcessorParams($fileName, $attributeList, $fieldList))
             ->withName($params->getName())
             ->withEntityType($params->getEntityType());
+
+        foreach ($params->getParamList() as $n) {
+            $processorParams = $processorParams->withParam($n, $params->getParam($n));
+        }
+
+        return $processorParams;
     }
 
     private function getForeignAttributeType(Entity $entity, string $attribute): ?string

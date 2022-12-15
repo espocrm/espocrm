@@ -1148,6 +1148,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
                     data.idle = idle;
                     data.format = dialogData.format;
+                    data.params = dialogData.params;
 
                     Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
