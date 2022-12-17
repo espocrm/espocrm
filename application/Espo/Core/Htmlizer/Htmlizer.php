@@ -480,9 +480,15 @@ class Htmlizer
 
         $orderData = $this->getRelationOrder($entity->getEntityType(), $relation);
 
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType());
+
         if (
             $entity instanceof CoreEntity &&
-            $entity->hasLinkMultipleField($relation)
+            $entity->hasLinkMultipleField($relation) &&
+            $entityDefs->hasField($relation) &&
+            !$entityDefs->getField($relation)->getParam('noLoad')
         ) {
             return $this->entityManager
                 ->getRDBRepository($entity->getEntityType())
