@@ -61,9 +61,9 @@ use const JSON_PRESERVE_ZERO_FRACTION;
  */
 class Htmlizer
 {
-    /**
-     * @phpstan-ignore-next-line
-     */
+    private const LINK_LIMIT = 100;
+
+    /** @phpstan-ignore-next-line */
     private $fileManager;
     private $dateTime;
     private $number;
@@ -228,8 +228,8 @@ class Htmlizer
     }
 
     /**
-     * @param ?array<string,mixed> $additionalData
-     * @return array<string,mixed>
+     * @param ?array<string, mixed> $additionalData
+     * @return array<string, mixed>
      */
     private function getDataFromEntity(
         Entity $entity,
@@ -270,52 +270,17 @@ class Htmlizer
             );
         }
 
-        $relationList = $entity->getRelationList();
-
-        if (!$skipLinks && $level === 0 && $this->entityManager && $entity->hasId()) {
-            foreach ($relationList as $relation) {
-                $collection = null;
-
-                $orderData = $this->getRelationOrder($entity->getEntityType(), $relation);
-
-                if ($entity instanceof CoreEntity && $entity->hasLinkMultipleField($relation)) {
-                    $collection = $this->entityManager
-                        ->getRDBRepository($entity->getEntityType())
-                        ->getRelation($entity, $relation)
-                        ->order($orderData)
-                        ->find();
-                }
-                else if (
-                    $template &&
-                    in_array(
-                        $entity->getRelationType($relation),
-                        ['hasMany', 'manyMany', 'hasChildren']
-                    ) &&
-                    mb_stripos($template, '{{#each '.$relation.'}}') !== false
-                ) {
-                    $limit = 100;
-
-                    if ($this->config) {
-                        $limit = $this->config->get('htmlizerLinkLimit') ?? $limit;
-                    }
-
-                    $collection = $this->entityManager
-                        ->getRDBRepository($entity->getEntityType())
-                        ->getRelation($entity, $relation)
-                        ->limit(0, $limit)
-                        ->order($orderData)
-                        ->find();
-                }
-
-                if ($collection) {
-                    $data[$relation] = $collection;
-                }
-            }
+        if (
+            !$skipLinks &&
+            $level === 0 &&
+            $this->entityManager &&
+            $entity->hasId()
+        ) {
+            $this->loadRelatedCollections($entity, $template, $data);
         }
 
         foreach ($data as $key => $value) {
             if ($value instanceof Collection) {
-
                 $skipAttributeList[] = $key;
 
                 /** @var iterable<Entity> $collection */
@@ -486,6 +451,68 @@ class Htmlizer
         }
 
         return $data;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function loadRelatedCollections(Entity $entity, ?string $template, array &$data): void
+    {
+        foreach ($entity->getRelationList() as $relation) {
+            $collection = $this->loadRelatedCollection($entity, $relation, $template);
+
+            if ($collection) {
+                $data[$relation] = $collection;
+            }
+        }
+    }
+
+    /**
+     * @return ?Collection<Entity>
+     */
+    private function loadRelatedCollection(Entity $entity, string $relation, ?string $template): ?Collection
+    {
+        assert($this->entityManager !== null);
+
+        $limit = $this->config ?
+            $this->config->get('htmlizerLinkLimit', self::LINK_LIMIT) :
+            self::LINK_LIMIT;
+
+        $orderData = $this->getRelationOrder($entity->getEntityType(), $relation);
+
+        if (
+            $entity instanceof CoreEntity &&
+            $entity->hasLinkMultipleField($relation)
+        ) {
+            return $this->entityManager
+                ->getRDBRepository($entity->getEntityType())
+                ->getRelation($entity, $relation)
+                ->limit(0, $limit)
+                ->order($orderData)
+                ->find();
+        }
+
+        if (
+            $template &&
+            in_array(
+                $entity->getRelationType($relation),
+                [
+                    Entity::HAS_MANY,
+                    Entity::MANY_MANY,
+                    Entity::HAS_CHILDREN,
+                ]
+            ) &&
+            mb_stripos($template, '{{#each ' . $relation . '}}') !== false
+        ) {
+            return $this->entityManager
+                ->getRDBRepository($entity->getEntityType())
+                ->getRelation($entity, $relation)
+                ->limit(0, $limit)
+                ->order($orderData)
+                ->find();
+        }
+
+        return null;
     }
 
     /**
