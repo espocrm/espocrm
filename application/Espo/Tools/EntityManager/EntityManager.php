@@ -995,11 +995,14 @@ class EntityManager
                 $dataLeft = [
                     'fields' => [
                         $link => [
-                            "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleField,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleField,
-                            "noLoad"  => !$linkMultipleField,
-                            "importDisabled" => !$linkMultipleField,
+                            'type' => 'linkMultiple',
+                            'layoutDetailDisabled' => !$linkMultipleField,
+                            'layoutMassUpdateDisabled'  => !$linkMultipleField,
+                            'layoutListDisabled' => !$linkMultipleField,
+                            'noLoad' => !$linkMultipleField,
+                            'importDisabled' => !$linkMultipleField,
+                            'exportDisabled' => !$linkMultipleField,
+                            'customizationDisabled' => !$linkMultipleField,
                             'isCustom' => true,
                         ],
                     ],
@@ -1067,11 +1070,14 @@ class EntityManager
                 $dataRight = [
                     'fields' => [
                         $linkForeign => [
-                            "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleFieldForeign,
-                            "noLoad"  => !$linkMultipleFieldForeign,
-                            "importDisabled" => !$linkMultipleFieldForeign,
+                            'type' => 'linkMultiple',
+                            'layoutDetailDisabled' => !$linkMultipleFieldForeign,
+                            'layoutMassUpdateDisabled' => !$linkMultipleFieldForeign,
+                            'layoutListDisabled' => !$linkMultipleFieldForeign,
+                            'noLoad' => !$linkMultipleFieldForeign,
+                            'importDisabled' => !$linkMultipleFieldForeign,
+                            'exportDisabled' => !$linkMultipleFieldForeign,
+                            'customizationDisabled' => !$linkMultipleField,
                             'isCustom' => true,
                         ]
                     ],
@@ -1092,11 +1098,14 @@ class EntityManager
                 $dataLeft = [
                     'fields' => [
                         $link => [
-                            "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleField,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleField,
-                            "importDisabled" => !$linkMultipleField,
-                            "noLoad"  => !$linkMultipleField,
+                            'type' => 'linkMultiple',
+                            'layoutDetailDisabled' => !$linkMultipleField,
+                            'layoutMassUpdateDisabled' => !$linkMultipleField,
+                            'layoutListDisabled' => !$linkMultipleField,
+                            'noLoad' => !$linkMultipleField,
+                            'importDisabled' => !$linkMultipleField,
+                            'exportDisabled' => !$linkMultipleField,
+                            'customizationDisabled' => !$linkMultipleField,
                             'isCustom' => true,
                         ]
                     ],
@@ -1115,11 +1124,14 @@ class EntityManager
                 $dataRight = [
                     'fields' => [
                         $linkForeign => [
-                            "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleFieldForeign,
-                            "importDisabled" => !$linkMultipleFieldForeign,
-                            "noLoad"  => !$linkMultipleFieldForeign,
+                            'type' => 'linkMultiple',
+                            'layoutDetailDisabled' => !$linkMultipleFieldForeign,
+                            'layoutMassUpdateDisabled' => !$linkMultipleFieldForeign,
+                            'layoutListDisabled' => !$linkMultipleFieldForeign,
+                            'noLoad'  => !$linkMultipleFieldForeign,
+                            'importDisabled' => !$linkMultipleFieldForeign,
+                            'exportDisabled' => !$linkMultipleFieldForeign,
+                            'customizationDisabled' => !$linkMultipleField,
                             'isCustom' => true,
                         ]
                     ],
@@ -1267,11 +1279,14 @@ class EntityManager
                 $dataLeft = [
                     'fields' => [
                         $link => [
-                            "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleField,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleField,
-                            "noLoad"  => !$linkMultipleField,
-                            "importDisabled" => !$linkMultipleField,
+                            'type' => 'linkMultiple',
+                            'layoutDetailDisabled' => !$linkMultipleField,
+                            'layoutMassUpdateDisabled' => !$linkMultipleField,
+                            'layoutListDisabled' => !$linkMultipleField,
+                            'noLoad' => !$linkMultipleField,
+                            'importDisabled' => !$linkMultipleField,
+                            'exportDisabled' => !$linkMultipleField,
+                            'customizationDisabled' => !$linkMultipleField,
                             'isCustom' => true,
                         ]
                     ]
@@ -1295,11 +1310,14 @@ class EntityManager
                 $dataRight = [
                     'fields' => [
                         $linkForeign => [
-                            "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleFieldForeign,
-                            "noLoad"  => !$linkMultipleFieldForeign,
-                            "importDisabled" => !$linkMultipleFieldForeign,
+                            'type' => 'linkMultiple',
+                            'layoutDetailDisabled' => !$linkMultipleFieldForeign,
+                            'layoutMassUpdateDisabled' => !$linkMultipleFieldForeign,
+                            'layoutListDisabled' => !$linkMultipleFieldForeign,
+                            'noLoad' => !$linkMultipleFieldForeign,
+                            'importDisabled' => !$linkMultipleFieldForeign,
+                            'exportDisabled' => !$linkMultipleFieldForeign,
+                            'customizationDisabled' => !$linkMultipleFieldForeign,
                             'isCustom' => true,
                         ]
                     ]

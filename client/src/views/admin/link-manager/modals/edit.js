@@ -148,31 +148,22 @@ define('views/admin/link-manager/modals/edit',
                 this.model.set('label', label);
                 this.model.set('labelForeign', labelForeign);
 
-                let linkMultipleField = false;
+                let linkMultipleField =
+                    this.getMetadata().get(['entityDefs', scope, 'fields', link, 'type']) === 'linkMultiple' &&
+                    !this.getMetadata().get(['entityDefs', scope, 'fields', link, 'noLoad']);
 
-                if (this.getMetadata().get('entityDefs.' + scope + '.fields.' + link + '.type') === 'linkMultiple') {
-                    if (!this.getMetadata().get('entityDefs.' + scope + '.fields.' + link + '.noLoad')) {
-                        linkMultipleField = true;
-                    }
-                }
+                let linkMultipleFieldForeign =
+                    this.getMetadata()
+                        .get(['entityDefs', entityForeign, 'fields', linkForeign, 'type']) === 'linkMultiple' &&
+                    !this.getMetadata().get(['entityDefs', entityForeign, 'fields', linkForeign, 'noLoad']);
 
                 this.model.set('linkMultipleField', linkMultipleField);
-
-                let linkMultipleFieldForeign = false;
-
-                if (
-                    this.getMetadata().get('entityDefs.' + entityForeign + '.fields.' + linkForeign + '.type') ===
-                    'linkMultiple'
-                ) {
-                    if (!this.getMetadata().get('entityDefs.' + entityForeign + '.fields.' + linkForeign + '.noLoad')) {
-                        linkMultipleFieldForeign = true;
-                    }
-                }
-
                 this.model.set('linkMultipleFieldForeign', linkMultipleFieldForeign);
 
                 if (linkType === 'manyToMany') {
-                    var relationName = this.getMetadata().get('entityDefs.' + entity + '.links.' + link + '.relationName');
+                    let relationName = this.getMetadata()
+                        .get('entityDefs.' + entity + '.links.' + link + '.relationName');
+
                     this.model.set('relationName', relationName);
                 }
 
