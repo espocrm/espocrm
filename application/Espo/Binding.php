@@ -242,6 +242,13 @@ class Binding implements BindingProcessor
                 'Espo\\Core\\Authentication\\Oidc\\DefaultSignatureVerifierFactory'
             );
 
+        $binder
+            ->for('Espo\\Core\\Authentication\\Oidc\\Login')
+            ->bindImplementation(
+                'Espo\\Core\\Authentication\\Oidc\\UserProvider',
+                'Espo\\Core\\Authentication\\Oidc\\DefaultUserProvider'
+            );
+
         $binder->bindImplementation(
             'Espo\\Core\\Mail\\Importer\\ParentFinder',
             'Espo\\Core\\Mail\\Importer\\DefaultParentFinder'

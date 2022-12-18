@@ -36,15 +36,12 @@ use Espo\Core\Authentication\Jwt\Token;
 use Espo\Core\Authentication\Logins\Espo;
 use Espo\Core\Authentication\Jwt\Exceptions\Invalid;
 use Espo\Core\Authentication\Jwt\Exceptions\SignatureNotVerified;
-use Espo\Core\Authentication\Jwt\Token\Payload;
 use Espo\Core\Authentication\Jwt\Validator;
 use Espo\Core\Authentication\Result;
 use Espo\Core\Authentication\Result\FailReason;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Log;
-use Espo\Entities\User;
-use Espo\ORM\EntityManager;
 use JsonException;
 use LogicException;
 use RuntimeException;
@@ -58,31 +55,14 @@ class Login implements LoginInterface
     private const REQUEST_TIMEOUT = 10;
     private const NONCE_HEADER = 'X-Oidc-Authorization-Nonce';
 
-    private Espo $espoLogin;
-    private Config $config;
-    private Log $log;
-    private EntityManager $entityManager;
-    private Sync $sync;
-    private Validator $validator;
-    private TokenValidator $tokenValidator;
-
     public function __construct(
-        Espo $espoLogin,
-        Config $config,
-        Log $log,
-        EntityManager $entityManager,
-        Sync $sync,
-        Validator $validator,
-        TokenValidator $tokenValidator
-    ) {
-        $this->espoLogin = $espoLogin;
-        $this->config = $config;
-        $this->log = $log;
-        $this->entityManager = $entityManager;
-        $this->sync = $sync;
-        $this->validator = $validator;
-        $this->tokenValidator = $tokenValidator;
-    }
+        private Espo $espoLogin,
+        private Config $config,
+        private Log $log,
+        private Validator $validator,
+        private TokenValidator $tokenValidator,
+        private UserProvider $userProvider
+    ) {}
 
     public function login(Data $data, Request $request): Result
     {
@@ -162,7 +142,7 @@ class Login implements LoginInterface
             return Result::fail(FailReason::DENIED);
         }
 
-        $user = $this->obtainUser($tokenPayload);
+        $user = $this->userProvider->get($tokenPayload);
 
         if (!$user) {
             return Result::fail(FailReason::USER_NOT_FOUND);
@@ -277,94 +257,6 @@ class Login implements LoginInterface
         }
 
         return "OIDC: {$text}; Status: {$status}; Response: {$response}";
-    }
-
-    private function obtainUser(Payload $payload): ?User
-    {
-        $user = $this->findUser($payload);
-
-        if ($user) {
-            $this->syncUser($user, $payload);
-
-            return $user;
-        }
-
-        return $this->tryToCreateUser($payload);
-    }
-
-    private function findUser(Payload $payload): ?User
-    {
-        $usernameClaim = $this->config->get('oidcUsernameClaim');
-
-        if (!$usernameClaim) {
-            throw new RuntimeException("No username claim in config.");
-        }
-
-        $username = $payload->get($usernameClaim);
-
-        if (!$username) {
-            throw new RuntimeException("No username claim `{$usernameClaim}` in token.");
-        }
-
-        $username = $this->sync->normalizeUsername($username);
-
-        /** @var ?User $user */
-        $user = $this->entityManager
-            ->getRDBRepositoryByClass(User::class)
-            ->where(['userName' => $username])
-            ->findOne();
-
-        if (!$user) {
-            return null;
-        }
-
-        if (!$user->isActive()) {
-            return null;
-        }
-
-        if (!$user->isRegular() && !$user->isAdmin()) {
-            return null;
-        }
-
-        if ($user->isSuperAdmin()) {
-            return null;
-        }
-
-        if ($user->isAdmin() && !$this->config->get('oidcAllowAdminUser')) {
-            return null;
-        }
-
-        return $user;
-    }
-
-    private function tryToCreateUser(Payload $payload): ?User
-    {
-        if (!$this->config->get('oidcCreateUser')) {
-            return null;
-        }
-
-        $usernameClaim = $this->config->get('oidcUsernameClaim');
-
-        if (!$usernameClaim) {
-            throw new RuntimeException("Could not create a user. No OIDC username claim in config.");
-        }
-
-        $username = $payload->get($usernameClaim);
-
-        if (!$username) {
-            throw new RuntimeException("Could not create a user. No username claim returned in token.");
-        }
-
-        return $this->sync->createUser($payload);
-    }
-
-    private function syncUser(User $user, Payload $payload): void
-    {
-        if (!$this->config->get('oidcSync') && !$this->config->get('oidcSyncTeams')) {
-            return;
-        }
-
-        $this->sync->syncUser($user, $payload);
     }
 
     /**
