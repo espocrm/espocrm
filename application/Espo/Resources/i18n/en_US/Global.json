@@ -281,7 +281,9 @@
         "Resolution": "Resolution",
         "Resolve Conflict": "Resolve Conflict",
         "Download": "Download",
-        "Global Search": "Global Search"
+        "Global Search": "Global Search",
+        "Show Navigation Panel": "Show Navigation Panel",
+        "Hide Navigation Panel": "Hide Navigation Panel"
     },
     "messages": {
         "pleaseWait": "Please wait...",
