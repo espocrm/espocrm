@@ -47,7 +47,7 @@
         "emails": {
             "type": "hasMany",
             "entity": "Email",
-            "foreign": "groupEmailFolder"
+            "foreign": "groupFolder"
         }
     },
     "collection": {
