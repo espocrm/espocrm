@@ -29,16 +29,13 @@
 
 namespace Espo\Classes\Acl\ActionHistoryRecord;
 
+use Espo\Entities\ActionHistoryRecord;
 use Espo\Entities\User;
-
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Acl\OwnershipOwnChecker,
-};
+use Espo\Core\Acl\OwnershipOwnChecker;
 
 /**
- * @implements OwnershipOwnChecker<\Espo\Entities\ActionHistoryRecord>
+ * @implements OwnershipOwnChecker<ActionHistoryRecord>
  */
 class OwnershipChecker implements OwnershipOwnChecker
 {

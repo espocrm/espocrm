@@ -29,22 +29,17 @@
 
 namespace Espo\Classes\AclPortal\Attachment;
 
-use Espo\Entities\{
-    User,
-    Note,
-    Attachment,
-};
-
+use Espo\Entities\Attachment;
+use Espo\Entities\Note;
+use Espo\Entities\Settings;
+use Espo\Entities\User;
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    ORM\EntityManager,
-    Portal\AclManager,
-    Acl\ScopeData,
-    Acl\AccessEntityCREDChecker,
-    Portal\Acl\DefaultAccessChecker,
-    Portal\Acl\Traits\DefaultAccessCheckerDependency,
-};
+use Espo\Core\Acl\AccessEntityCREDChecker;
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Portal\Acl\DefaultAccessChecker;
+use Espo\Core\Portal\Acl\Traits\DefaultAccessCheckerDependency;
+use Espo\Core\Portal\AclManager;
 
 /**
  * @implements AccessEntityCREDChecker<Attachment>
@@ -53,11 +48,9 @@ class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;
 
-    private $defaultAccessChecker;
-
-    private $aclManager;
-
-    private $entityManager;
+    private DefaultAccessChecker $defaultAccessChecker;
+    private AclManager $aclManager;
+    private EntityManager $entityManager;
 
     public function __construct(
         DefaultAccessChecker $defaultAccessChecker,
@@ -73,7 +66,7 @@ class AccessChecker implements AccessEntityCREDChecker
     {
         /** @var Attachment $entity */
 
-        if ($entity->get('parentType') === 'Settings') {
+        if ($entity->get('parentType') === Settings::ENTITY_TYPE) {
             // Allow the logo.
             return true;
         }
@@ -101,7 +94,7 @@ class AccessChecker implements AccessEntityCREDChecker
             return false;
         }
 
-        if ($parent->getEntityType() === 'Note') {
+        if ($parent->getEntityType() === Note::ENTITY_TYPE) {
             /** @var Note $parent */
             $result = $this->checkEntityReadNoteParent($user, $parent);
 

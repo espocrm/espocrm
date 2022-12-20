@@ -30,12 +30,8 @@
 namespace Espo\Classes\Acl\Email;
 
 use Espo\Entities\User;
-
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Acl\DefaultAssignmentChecker,
-};
+use Espo\Core\Acl\DefaultAssignmentChecker;
 
 class AssignmentChecker extends DefaultAssignmentChecker
 {

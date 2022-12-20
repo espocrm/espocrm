@@ -32,15 +32,12 @@ namespace Espo\Classes\Acl\User;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Core\{
-    Acl\OwnershipOwnChecker,
-    Acl\OwnershipTeamChecker,
-};
+use Espo\Core\Acl\OwnershipOwnChecker;
+use Espo\Core\Acl\OwnershipTeamChecker;
 
 /**
- * @implements OwnershipOwnChecker<\Espo\Entities\User>
- * @implements OwnershipTeamChecker<\Espo\Entities\User>
+ * @implements OwnershipOwnChecker<User>
+ * @implements OwnershipTeamChecker<User>
  */
 class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 {

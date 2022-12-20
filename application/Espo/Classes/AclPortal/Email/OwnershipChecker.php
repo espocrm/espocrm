@@ -29,16 +29,13 @@
 
 namespace Espo\Classes\AclPortal\Email;
 
+use Espo\Entities\Email;
 use Espo\Entities\User;
-
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Acl\OwnershipOwnChecker,
-};
+use Espo\Core\Acl\OwnershipOwnChecker;
 
 /**
- * @implements OwnershipOwnChecker<\Espo\Entities\Email>
+ * @implements OwnershipOwnChecker<Email>
  */
 class OwnershipChecker implements OwnershipOwnChecker
 {

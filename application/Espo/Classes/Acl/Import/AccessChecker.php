@@ -29,19 +29,16 @@
 
 namespace Espo\Classes\Acl\Import;
 
+use Espo\Entities\Import;
 use Espo\Entities\User;
-
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Acl\ScopeData,
-    Acl\AccessEntityReadChecker,
-    Acl\AccessEntityDeleteChecker,
-};
+use Espo\Core\Acl\AccessEntityDeleteChecker;
+use Espo\Core\Acl\AccessEntityReadChecker;
+use Espo\Core\Acl\ScopeData;
 
 /**
- * @implements AccessEntityReadChecker<\Espo\Entities\Import>
- * @implements AccessEntityDeleteChecker<\Espo\Entities\Import>
+ * @implements AccessEntityReadChecker<Import>
+ * @implements AccessEntityDeleteChecker<Import>
  */
 class AccessChecker implements AccessEntityReadChecker, AccessEntityDeleteChecker
 {

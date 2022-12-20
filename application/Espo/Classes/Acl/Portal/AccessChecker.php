@@ -29,27 +29,24 @@
 
 namespace Espo\Classes\Acl\Portal;
 
+use Espo\Entities\Portal;
 use Espo\Entities\User;
-
-use Espo\Core\{
-    Acl\ScopeData,
-    Acl\DefaultAccessChecker,
-    Acl\AccessEntityCREDChecker,
-    Acl\Traits\DefaultAccessCheckerDependency,
-    Acl\Table,
-    AclManager,
-};
+use Espo\Core\Acl\AccessEntityCREDChecker;
+use Espo\Core\Acl\DefaultAccessChecker;
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\Acl\Table;
+use Espo\Core\Acl\Traits\DefaultAccessCheckerDependency;
+use Espo\Core\AclManager;
 
 /**
- * @implements AccessEntityCREDChecker<\Espo\Entities\Portal>
+ * @implements AccessEntityCREDChecker<Portal>
  */
 class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;
 
-    private $defaultAccessChecker;
-
-    private $aclManager;
+    private DefaultAccessChecker $defaultAccessChecker;
+    private AclManager $aclManager;
 
     public function __construct(DefaultAccessChecker $defaultAccessChecker, AclManager $aclManager)
     {

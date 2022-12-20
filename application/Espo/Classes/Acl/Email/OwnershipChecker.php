@@ -34,15 +34,13 @@ use Espo\Entities\Email;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    Acl\DefaultOwnershipChecker,
-    Acl\OwnershipOwnChecker,
-    Acl\OwnershipTeamChecker,
-};
+use Espo\Core\Acl\DefaultOwnershipChecker;
+use Espo\Core\Acl\OwnershipOwnChecker;
+use Espo\Core\Acl\OwnershipTeamChecker;
 
 /**
- * @implements OwnershipOwnChecker<\Espo\Entities\Email>
- * @implements OwnershipTeamChecker<\Espo\Entities\Email>
+ * @implements OwnershipOwnChecker<Email>
+ * @implements OwnershipTeamChecker<Email>
  */
 class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 {

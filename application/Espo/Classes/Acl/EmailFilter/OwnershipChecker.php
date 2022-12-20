@@ -32,13 +32,9 @@ namespace Espo\Classes\Acl\EmailFilter;
 use Espo\Entities\EmailAccount;
 use Espo\Entities\User;
 use Espo\Entities\EmailFilter;
-
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Acl\OwnershipOwnChecker,
-    ORM\EntityManager,
-};
+use Espo\Core\Acl\OwnershipOwnChecker;
+use Espo\Core\ORM\EntityManager;
 
 /**
  * @implements OwnershipOwnChecker<EmailFilter>
