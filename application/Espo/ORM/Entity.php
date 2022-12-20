@@ -36,27 +36,27 @@ use stdClass;
  */
 interface Entity
 {
-    const ID = 'id';
-    const VARCHAR = 'varchar';
-    const INT = 'int';
-    const FLOAT = 'float';
-    const TEXT = 'text';
-    const BOOL = 'bool';
-    const FOREIGN_ID = 'foreignId';
-    const FOREIGN = 'foreign';
-    const FOREIGN_TYPE = 'foreignType';
-    const DATE = 'date';
-    const DATETIME = 'datetime';
-    const JSON_ARRAY = 'jsonArray';
-    const JSON_OBJECT = 'jsonObject';
-    const PASSWORD = 'password';
+    public const ID = 'id';
+    public const VARCHAR = 'varchar';
+    public const INT = 'int';
+    public const FLOAT = 'float';
+    public const TEXT = 'text';
+    public const BOOL = 'bool';
+    public const FOREIGN_ID = 'foreignId';
+    public const FOREIGN = 'foreign';
+    public const FOREIGN_TYPE = 'foreignType';
+    public const DATE = 'date';
+    public const DATETIME = 'datetime';
+    public const JSON_ARRAY = 'jsonArray';
+    public const JSON_OBJECT = 'jsonObject';
+    public const PASSWORD = 'password';
 
-    const MANY_MANY = 'manyMany';
-    const HAS_MANY = 'hasMany';
-    const BELONGS_TO = 'belongsTo';
-    const HAS_ONE = 'hasOne';
-    const BELONGS_TO_PARENT = 'belongsToParent';
-    const HAS_CHILDREN = 'hasChildren';
+    public const MANY_MANY = 'manyMany';
+    public const HAS_MANY = 'hasMany';
+    public const BELONGS_TO = 'belongsTo';
+    public const HAS_ONE = 'hasOne';
+    public const BELONGS_TO_PARENT = 'belongsToParent';
+    public const HAS_CHILDREN = 'hasChildren';
 
     /**
      * Get an entity ID.

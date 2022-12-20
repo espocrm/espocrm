@@ -32,6 +32,9 @@ namespace Espo\Core\Exceptions;
 use Throwable;
 use Exception;
 
+/**
+ * A bad request exception. Main purpose is for the 400 Bad Request HTTP error.
+ */
 class BadRequest extends Exception implements HasBody
 {
     /** @var int */
@@ -43,10 +46,12 @@ class BadRequest extends Exception implements HasBody
         parent::__construct($message, $code, $previous);
     }
 
+    /**
+     * Create with a body (supposed to be sent to the frontend).
+     */
     public static function createWithBody(string $reason, string $body): self
     {
         $exception = new static($reason);
-
         $exception->body = $body;
 
         return $exception;

@@ -31,40 +31,32 @@ namespace Espo\Classes\AclPortal\Note;
 
 use Espo\Entities\Note;
 use Espo\Entities\User;
-
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Portal\AclManager,
-    Acl\ScopeData,
-    Acl\AccessEntityCREDChecker,
-    Portal\Acl\DefaultAccessChecker,
-    Portal\Acl\Traits\DefaultAccessCheckerDependency,
-    ORM\EntityManager,
-    Utils\Config,
-};
+use Espo\Core\Acl\AccessEntityCREDChecker;
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Portal\Acl\DefaultAccessChecker;
+use Espo\Core\Portal\Acl\Traits\DefaultAccessCheckerDependency;
+use Espo\Core\Portal\AclManager;
+use Espo\Core\Utils\Config;
 
 use DateTime;
 use Exception;
 
 /**
- * @implements AccessEntityCREDChecker<\Espo\Entities\Note>
+ * @implements AccessEntityCREDChecker<Note>
  */
 class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;
 
     private const EDIT_PERIOD = '7 days';
-
     private const DELETE_PERIOD = '1 month';
 
-    private $defaultAccessChecker;
-
-    private $aclManager;
-
-    private $entityManager;
-
-    private $config;
+    private DefaultAccessChecker $defaultAccessChecker;
+    private AclManager $aclManager;
+    private EntityManager $entityManager;
+    private Config $config;
 
     public function __construct(
         DefaultAccessChecker $defaultAccessChecker,

@@ -29,16 +29,13 @@
 
 namespace Espo\Classes\Acl\Team;
 
+use Espo\Entities\Team;
 use Espo\Entities\User;
-
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Acl\OwnershipOwnChecker,
-};
+use Espo\Core\Acl\OwnershipOwnChecker;
 
 /**
- * @implements OwnershipOwnChecker<\Espo\Entities\Team>
+ * @implements OwnershipOwnChecker<Team>
  */
 class OwnershipChecker implements OwnershipOwnChecker
 {

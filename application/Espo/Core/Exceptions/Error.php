@@ -31,6 +31,9 @@ namespace Espo\Core\Exceptions;
 
 use Throwable;
 
+/**
+ * An exception for 500 Internal Server Error.
+ */
 class Error extends InternalServerError implements HasBody
 {
     private ?string $body = null;
@@ -40,6 +43,9 @@ class Error extends InternalServerError implements HasBody
         parent::__construct($message, $code, $previous);
     }
 
+    /**
+     * Create with a body (supposed to be sent to the frontend).
+     */
     public static function createWithBody(string $message, string $body): self
     {
         $exception = new static($message);

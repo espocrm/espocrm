@@ -32,13 +32,13 @@ namespace Espo\Core\Exceptions;
 use Throwable;
 use Exception;
 
+/**
+ * A forbidden exception. Main purpose is for the 403 Forbidden HTTP error.
+ */
 class Forbidden extends Exception implements HasBody
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $code = 403;
-
     private ?string $body = null;
 
     final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
@@ -46,6 +46,9 @@ class Forbidden extends Exception implements HasBody
         parent::__construct($message, $code, $previous);
     }
 
+    /**
+     * Create with a body (supposed to be sent to the frontend).
+     */
     public static function createWithBody(string $message, string $body): self
     {
         $exception = new static($message);

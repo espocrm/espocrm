@@ -30,15 +30,11 @@
 namespace Espo\Classes\AclPortal\User;
 
 use Espo\Entities\User;
-
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Acl\OwnershipOwnChecker,
-};
+use Espo\Core\Acl\OwnershipOwnChecker;
 
 /**
- * @implements OwnershipOwnChecker<\Espo\Entities\User>
+ * @implements OwnershipOwnChecker<User>
  */
 class OwnershipChecker implements OwnershipOwnChecker
 {

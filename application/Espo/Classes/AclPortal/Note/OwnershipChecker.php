@@ -31,13 +31,11 @@ namespace Espo\Classes\AclPortal\Note;
 
 use Espo\Entities\Note;
 use Espo\Entities\User;
-
 use Espo\ORM\Entity;
-
 use Espo\Core\Acl\OwnershipOwnChecker;
 
 /**
- * @implements OwnershipOwnChecker<\Espo\Entities\Note>
+ * @implements OwnershipOwnChecker<Note>
  */
 class OwnershipChecker implements OwnershipOwnChecker
 {

@@ -29,28 +29,22 @@
 
 namespace Espo\Classes\AclPortal\Email;
 
+use Espo\Entities\Email;
 use Espo\Entities\User;
-
 use Espo\ORM\Entity;
-
 use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Core\{
-    Acl\Table,
-    Acl\ScopeData,
-    Acl\AccessEntityCREDSChecker,
-    Portal\Acl\DefaultAccessChecker,
-    Portal\Acl\Traits\DefaultAccessCheckerDependency,
-};
+use Espo\Core\Acl\AccessEntityCREDSChecker;
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\Acl\Table;
+use Espo\Core\Portal\Acl\DefaultAccessChecker;
+use Espo\Core\Portal\Acl\Traits\DefaultAccessCheckerDependency;
 
 /**
- * @implements AccessEntityCREDSChecker<\Espo\Entities\Email>
+ * @implements AccessEntityCREDSChecker<Email>
  */
 class AccessChecker implements AccessEntityCREDSChecker
 {
     use DefaultAccessCheckerDependency;
-
-    private $defaultAccessChecker;
 
     public function __construct(
         DefaultAccessChecker $defaultAccessChecker

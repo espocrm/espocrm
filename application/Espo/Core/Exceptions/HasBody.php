@@ -29,7 +29,13 @@
 
 namespace Espo\Core\Exceptions;
 
+/**
+ * Has a body supposed to be sent to the frontend.
+ */
 interface HasBody
 {
+    /**
+     * Get a body (supposed to be sent to the frontend).
+     */
     public function getBody(): ?string;
 }

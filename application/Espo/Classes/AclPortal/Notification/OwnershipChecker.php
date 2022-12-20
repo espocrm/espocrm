@@ -29,16 +29,13 @@
 
 namespace Espo\Classes\AclPortal\Notification;
 
+use Espo\Entities\Notification;
 use Espo\Entities\User;
-
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Acl\OwnershipOwnChecker,
-};
+use Espo\Core\Acl\OwnershipOwnChecker;
 
 /**
- * @implements OwnershipOwnChecker<\Espo\Entities\Notification>
+ * @implements OwnershipOwnChecker<Notification>
  */
 class OwnershipChecker implements OwnershipOwnChecker
 {

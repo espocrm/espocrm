@@ -30,17 +30,13 @@
 namespace Espo\Classes\Acl\User;
 
 use Espo\Entities\User;
-
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Acl\Table,
-    Acl\ScopeData,
-    Acl\DefaultAccessChecker,
-    Acl\AccessEntityCREDSChecker,
-    Acl\Traits\DefaultAccessCheckerDependency,
-    AclManager,
-};
+use Espo\Core\Acl\AccessEntityCREDSChecker;
+use Espo\Core\Acl\DefaultAccessChecker;
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\Acl\Table;
+use Espo\Core\Acl\Traits\DefaultAccessCheckerDependency;
+use Espo\Core\AclManager;
 
 /**
  * @implements AccessEntityCREDSChecker<User>
@@ -49,9 +45,8 @@ class AccessChecker implements AccessEntityCREDSChecker
 {
     use DefaultAccessCheckerDependency;
 
-    private $defaultAccessChecker;
-
-    private $aclManager;
+    private DefaultAccessChecker $defaultAccessChecker;
+    private AclManager $aclManager;
 
     public function __construct(DefaultAccessChecker $defaultAccessChecker, AclManager $aclManager)
     {

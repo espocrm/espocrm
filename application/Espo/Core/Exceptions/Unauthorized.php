@@ -29,10 +29,10 @@
 
 namespace Espo\Core\Exceptions;
 
-class Unauthorized extends \Exception
+use Exception;
+
+class Unauthorized extends Exception
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $code = 401;
 }

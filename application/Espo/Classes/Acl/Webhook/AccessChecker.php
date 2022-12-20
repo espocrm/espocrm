@@ -30,24 +30,19 @@
 namespace Espo\Classes\Acl\Webhook;
 
 use Espo\Entities\User;
-
+use Espo\Entities\Webhook;
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Acl\ScopeData,
-    Acl\DefaultAccessChecker,
-    Acl\AccessEntityCREDChecker,
-    Acl\Traits\DefaultAccessCheckerDependency,
-};
+use Espo\Core\Acl\AccessEntityCREDChecker;
+use Espo\Core\Acl\DefaultAccessChecker;
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\Acl\Traits\DefaultAccessCheckerDependency;
 
 /**
- * @implements AccessEntityCREDChecker<\Espo\Entities\Webhook>
+ * @implements AccessEntityCREDChecker<Webhook>
  */
 class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;
-
-    private $defaultAccessChecker;
 
     public function __construct(DefaultAccessChecker $defaultAccessChecker)
     {

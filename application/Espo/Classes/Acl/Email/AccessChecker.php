@@ -31,19 +31,15 @@ namespace Espo\Classes\Acl\Email;
 
 use Espo\Entities\User;
 use Espo\Entities\Email;
-
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Acl\Table,
-    Acl\ScopeData,
-    Acl\DefaultAccessChecker,
-    Acl\AccessEntityCREDSChecker,
-    Acl\Traits\DefaultAccessCheckerDependency,
-};
+use Espo\Core\Acl\AccessEntityCREDSChecker;
+use Espo\Core\Acl\DefaultAccessChecker;
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\Acl\Table;
+use Espo\Core\Acl\Traits\DefaultAccessCheckerDependency;
 
 /**
- * @implements AccessEntityCREDSChecker<\Espo\Entities\Email>
+ * @implements AccessEntityCREDSChecker<Email>
  */
 class AccessChecker implements AccessEntityCREDSChecker
 {
@@ -129,7 +125,10 @@ class AccessChecker implements AccessEntityCREDSChecker
             return false;
         }
 
-        if ($entity->get('status') !== 'Sent' && $entity->get('status') !== 'Archived') {
+        if (
+            $entity->getStatus() !== Email::STATUS_SENT &&
+            $entity->getStatus() !== Email::STATUS_ARCHIVED
+        ) {
             return true;
         }
 

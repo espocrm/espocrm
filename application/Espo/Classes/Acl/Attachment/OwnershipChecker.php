@@ -29,16 +29,13 @@
 
 namespace Espo\Classes\Acl\Attachment;
 
+use Espo\Entities\Attachment;
 use Espo\Entities\User;
-
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Acl\OwnershipOwnChecker,
-};
+use Espo\Core\Acl\OwnershipOwnChecker;
 
 /**
- * @implements OwnershipOwnChecker<\Espo\Entities\Attachment>
+ * @implements OwnershipOwnChecker<Attachment>
  */
 class OwnershipChecker implements OwnershipOwnChecker
 {

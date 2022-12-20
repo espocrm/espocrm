@@ -29,23 +29,19 @@
 
 namespace Espo\Classes\Acl\AuthToken;
 
+use Espo\Entities\AuthToken;
 use Espo\Entities\User;
-
-use Espo\Core\{
-    Acl\ScopeData,
-    Acl\DefaultAccessChecker,
-    Acl\AccessEntityCREDChecker,
-    Acl\Traits\DefaultAccessCheckerDependency,
-};
+use Espo\Core\Acl\AccessEntityCREDChecker;
+use Espo\Core\Acl\DefaultAccessChecker;
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\Acl\Traits\DefaultAccessCheckerDependency;
 
 /**
- * @implements AccessEntityCREDChecker<\Espo\Entities\AuthToken>
+ * @implements AccessEntityCREDChecker<AuthToken>
  */
 class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;
-
-    private $defaultAccessChecker;
 
     public function __construct(DefaultAccessChecker $defaultAccessChecker)
     {

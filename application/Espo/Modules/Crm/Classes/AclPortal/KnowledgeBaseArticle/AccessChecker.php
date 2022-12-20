@@ -30,26 +30,20 @@
 namespace Espo\Modules\Crm\Classes\AclPortal\KnowledgeBaseArticle;
 
 use Espo\Entities\User;
-
+use Espo\Modules\Crm\Entities\KnowledgeBaseArticle;
 use Espo\ORM\Entity;
-
 use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Core\{
-    Acl\ScopeData,
-    Acl\AccessEntityCREDChecker,
-    Portal\Acl\DefaultAccessChecker,
-    Portal\Acl\Traits\DefaultAccessCheckerDependency,
-};
+use Espo\Core\Acl\AccessEntityCREDChecker;
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\Portal\Acl\DefaultAccessChecker;
+use Espo\Core\Portal\Acl\Traits\DefaultAccessCheckerDependency;
 
 /**
- * @implements AccessEntityCREDChecker<\Espo\Modules\Crm\Entities\KnowledgeBaseArticle>
+ * @implements AccessEntityCREDChecker<KnowledgeBaseArticle>
  */
 class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;
-
-    private $defaultAccessChecker;
 
     public function __construct(DefaultAccessChecker $defaultAccessChecker)
     {
@@ -62,7 +56,7 @@ class AccessChecker implements AccessEntityCREDChecker
             return false;
         }
 
-        if ($entity->get('status') !== 'Published') {
+        if ($entity->get('status') !== KnowledgeBaseArticle::STATUS_PUBLISHED) {
             return false;
         }
 

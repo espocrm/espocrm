@@ -191,6 +191,7 @@ return [
         'thumbImageCacheDisabled',
         'emailReminderPortionSize',
         'outboundSmsFromNumber',
+        'currencyNoJoinMode',
         'latestVersion',
     ],
     'superAdminItems' => [
