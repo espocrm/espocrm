@@ -30,11 +30,9 @@
 namespace Espo\Modules\Crm\Classes\Acl\Meeting;
 
 use Espo\Entities\User;
-
+use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Entity;
-
 use Espo\Core\ORM\Entity as CoreEntity;
-
 use Espo\Core\Acl\AccessEntityCREDSChecker;
 use Espo\Core\Acl\DefaultAccessChecker;
 use Espo\Core\Acl\ScopeData;
@@ -42,13 +40,11 @@ use Espo\Core\Acl\Table;
 use Espo\Core\Acl\Traits\DefaultAccessCheckerDependency;
 
 /**
- * @implements AccessEntityCREDSChecker<\Espo\Modules\Crm\Entities\Meeting>
+ * @implements AccessEntityCREDSChecker<Meeting>
  */
 class AccessChecker implements AccessEntityCREDSChecker
 {
     use DefaultAccessCheckerDependency;
-
-    private $defaultAccessChecker;
 
     public function __construct(DefaultAccessChecker $defaultAccessChecker)
     {

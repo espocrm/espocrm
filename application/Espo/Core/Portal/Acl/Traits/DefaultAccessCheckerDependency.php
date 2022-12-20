@@ -30,20 +30,13 @@
 namespace Espo\Core\Portal\Acl\Traits;
 
 use Espo\ORM\Entity;
-
 use Espo\Entities\User;
-
-use Espo\Core\{
-    Acl\ScopeData,
-    Portal\Acl\DefaultAccessChecker,
-};
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\Portal\Acl\DefaultAccessChecker;
 
 trait DefaultAccessCheckerDependency
 {
-    /**
-     * @var DefaultAccessChecker
-     */
-    private $defaultAccessChecker;
+    private DefaultAccessChecker $defaultAccessChecker;
 
     public function check(User $user, ScopeData $data): bool
     {
