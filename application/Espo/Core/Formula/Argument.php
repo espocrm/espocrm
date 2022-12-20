@@ -30,70 +30,75 @@
 namespace Espo\Core\Formula;
 
 use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Parser\Ast\Attribute;
+use Espo\Core\Formula\Parser\Ast\Node;
+use Espo\Core\Formula\Parser\Ast\Value;
+use Espo\Core\Formula\Parser\Ast\Variable;
 
 /**
  * A function argument.
  */
 class Argument implements Evaluatable
 {
-    /**
-     * @var mixed
-     */
-    private $data;
-
-    /**
-     * @param mixed $data
-     */
-    public function __construct($data)
-    {
-        $this->data = $data;
-    }
+    public function __construct(private mixed $data)
+    {}
 
     /**
      * Get an argument type (function name).
+     *
+     * @throws Error
      */
-    public function getType(): ?string
+    public function getType(): string
     {
-        if (!is_object($this->data)) {
-            return null;
+        if ($this->data instanceof Node) {
+            return $this->data->getType();
         }
 
-        if (!property_exists($this->data, 'type')) {
-            return null;
+        if ($this->data instanceof Value) {
+            return 'value';
         }
 
-        return $this->data->type ?? null;
+        if ($this->data instanceof Variable) {
+            return 'variable';
+        }
+
+        if ($this->data instanceof Attribute) {
+            return 'attribute';
+        }
+
+        throw new Error("Can't get type from scalar.");
     }
 
     /**
      * Get a nested argument list.
+     *
      * @throws Error
      */
     public function getArgumentList(): ArgumentList
     {
-        if (!is_object($this->data)) {
-            throw new Error("Can't get an argument list from a scalar value item.");
+        if ($this->data instanceof Node) {
+            return new ArgumentList($this->data->getChildNodes());
         }
 
-        if (!property_exists($this->data, 'value')) {
-            $argumentList = new ArgumentList([]);
-        }
-        else if (is_array($this->data->value)) {
-            $argumentList = new ArgumentList($this->data->value);
-        }
-        else {
-            $argumentList = new ArgumentList([$this->data->value]);
+        if ($this->data instanceof Value) {
+            return new ArgumentList([$this->data->getValue()]);
         }
 
-        return $argumentList;
+        if ($this->data instanceof Variable) {
+            return new ArgumentList([$this->data->getName()]);
+        }
+
+        if ($this->data instanceof Attribute) {
+            return new ArgumentList([$this->data->getName()]);
+        }
+
+        throw new Error("Can't get argument list from a non-node item.");
     }
 
     /**
-     * Get RAW data.
-     *
-     * @return mixed
+     * Get data.
      */
-    public function getData()
+    public function getData(): mixed
     {
         return $this->data;
     }

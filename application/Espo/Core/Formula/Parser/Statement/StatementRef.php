@@ -27,33 +27,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions;
+namespace Espo\Core\Formula\Parser\Statement;
 
-use Espo\Core\Formula\Exceptions\Error;
-use Espo\Core\Formula\ArgumentList;
-
-class VariableType extends BaseFunction
+class StatementRef
 {
-    public function process(ArgumentList $args)
+    private bool $endedWithSemicolon = false;
+
+    public function __construct(private int $start, private ?int $end = null)
+    {}
+
+    public function setEnd(int $end, bool $endedWithSemicolon = false): void
     {
-        if (!count($args)) {
-            throw new Error("No variable name.");
-        }
+        $this->end = $end;
+        $this->endedWithSemicolon = $endedWithSemicolon;
+    }
 
-        $name = $args[0]->getData();
+    public function getStart(): int
+    {
+        return $this->start;
+    }
 
-        if (!is_string($name)) {
-            throw new Error("Bad variable name.");
-        }
+    public function getEnd(): ?int
+    {
+        return $this->end;
+    }
 
-        if ($name === '') {
-            throw new Error("Empty variable name.");
-        }
+    public function isReady(): bool
+    {
+        return $this->end !== null;
+    }
 
-        if (!property_exists($this->getVariables(), $name)) {
-            return null;
-        }
-
-        return $this->getVariables()->$name;
+    public function isEndedWithSemicolon(): bool
+    {
+        return $this->endedWithSemicolon;
     }
 }

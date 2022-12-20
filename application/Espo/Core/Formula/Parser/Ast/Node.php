@@ -27,33 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions;
+namespace Espo\Core\Formula\Parser\Ast;
 
-use Espo\Core\Formula\Exceptions\Error;
-use Espo\Core\Formula\ArgumentList;
-
-class VariableType extends BaseFunction
+/**
+ * An AST node.
+ */
+class Node
 {
-    public function process(ArgumentList $args)
+    /**
+     * @param (Node|Value|Attribute|Variable)[] $childNodes
+     */
+    public function __construct(private string $type, private array $childNodes)
+    {}
+
+    public function getType(): string
     {
-        if (!count($args)) {
-            throw new Error("No variable name.");
-        }
+        return $this->type;
+    }
 
-        $name = $args[0]->getData();
-
-        if (!is_string($name)) {
-            throw new Error("Bad variable name.");
-        }
-
-        if ($name === '') {
-            throw new Error("Empty variable name.");
-        }
-
-        if (!property_exists($this->getVariables(), $name)) {
-            return null;
-        }
-
-        return $this->getVariables()->$name;
+    /**
+     * @return (Node|Value|Attribute|Variable)[]
+     */
+    public function getChildNodes(): array
+    {
+        return $this->childNodes;
     }
 }

@@ -320,7 +320,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['0', '1'], $actual);
     }
 
-    public function testWhile()
+    public function testWhileFunction()
     {
         $expression = "
             \$source = list(0, 1, 2);
@@ -1007,5 +1007,108 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $expression = " // test";
 
         $this->assertNull($this->evaluator->process($expression, null));
+    }
+
+    public function testIfWithComment1(): void
+    {
+        $expression = "if (true) {\$a = '1';} /* test */";
+
+        $vars = (object) [
+            'a' => '0'
+        ];
+
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals('1', $vars->a);
+    }
+
+    public function testIfWithComment2(): void
+    {
+        $expression = "if (true) {\$a = '1';} ";
+
+        $vars = (object) [
+            'a' => '0'
+        ];
+
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals('1', $vars->a);
+    }
+
+    public function testIfWithComment3(): void
+    {
+        $expression = "
+            if (true /*test */) {
+                /*
+                  test
+                */
+                \$a = '1';
+                /*
+                  \$a = '3'
+                */
+            } // test";
+
+        $vars = (object) [
+            'a' => '0',
+        ];
+
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals('1', $vars->a);
+    }
+
+    public function testIfWithComment4(): void
+    {
+        $expression = "
+            if (0)
+            {}//
+            else if (1) {
+                \$a = 1;
+            }
+            else {}
+        ";
+
+        $vars = (object) [
+            'a' => '0',
+        ];
+
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals(1, $vars->a);
+    }
+
+    public function testWhileStatement1(): void
+    {
+        $expression = "
+            while (\$i < 5) {
+                \$i = \$i + 1;
+            }
+        ";
+
+        $vars = (object) [
+            'i' => 0,
+        ];
+
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals(5, $vars->i);
+    }
+
+    public function testPlus1(): void
+    {
+        $expression = "+2";
+
+        $value = $this->evaluator->process($expression);
+
+        $this->assertEquals(2, $value);
+    }
+
+    public function testPlus2(): void
+    {
+        $expression = "+ 2";
+
+        $value = $this->evaluator->process($expression);
+
+        $this->assertEquals(2, $value);
     }
 }
