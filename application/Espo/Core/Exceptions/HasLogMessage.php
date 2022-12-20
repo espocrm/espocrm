@@ -29,7 +29,13 @@
 
 namespace Espo\Core\Exceptions;
 
+/**
+ * Has a log message (for the logger).
+ */
 interface HasLogMessage
 {
+    /**
+     * Get a log message.
+     */
     public function getLogMessage(): string;
 }

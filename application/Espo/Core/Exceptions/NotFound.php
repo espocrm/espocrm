@@ -29,10 +29,13 @@
 
 namespace Espo\Core\Exceptions;
 
-class NotFound extends \Exception
+use Exception;
+
+/**
+ * A not-found exception. Main purpose is for the 404 Not Found HTTP error.
+ */
+class NotFound extends Exception
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $code = 404;
 }

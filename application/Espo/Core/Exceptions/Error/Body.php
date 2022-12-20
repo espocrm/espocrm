@@ -31,15 +31,15 @@ namespace Espo\Core\Exceptions\Error;
 
 use Espo\Core\Utils\Json;
 
+/**
+ * A wrapper for error message data for the frontend. Supposed to be passed encoded to `createWithBody`
+ * methods of exceptions.
+ */
 class Body
 {
     private ?string $messageTranslationLabel = null;
-
     private ?string $messageTranslationScope = null;
-
-    /**
-     * @var ?array<string,string>
-     */
+    /** @var ?array<string, string> */
     private ?array $messageTranslationData = null;
 
     public static function create(): self
@@ -50,7 +50,7 @@ class Body
     /**
      * A translatable message to display in frontend. Labels should be in the `messages` category.
      *
-     * @param ?array<string,string> $data
+     * @param ?array<string, string> $data
      */
     public function withMessageTranslation(string $label, ?string $scope = null, ?array $data = null): self
     {

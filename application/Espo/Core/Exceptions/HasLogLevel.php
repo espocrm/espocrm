@@ -29,7 +29,13 @@
 
 namespace Espo\Core\Exceptions;
 
+/**
+ * Has a specific log level (for the logger).
+ */
 interface HasLogLevel
 {
+    /**
+     * Get a log level.
+     */
     public function getLogLevel(): string;
 }
