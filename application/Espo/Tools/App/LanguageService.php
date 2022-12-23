@@ -177,15 +177,15 @@ class LanguageService
      */
     private function unsetEmpty(array &$data, string $scope): void
     {
-        if ($data[$scope]['options'] === []) {
+        if (($data[$scope]['options'] ?? null) === []) {
             unset($data[$scope]['options']);
         }
 
-        if ($data[$scope]['fields'] === []) {
+        if (($data[$scope]['fields'] ?? null) === []) {
             unset($data[$scope]['fields']);
         }
 
-        if ($data[$scope]['links'] === []) {
+        if (($data[$scope]['links'] ?? null) === []) {
             unset($data[$scope]['links']);
         }
     }
