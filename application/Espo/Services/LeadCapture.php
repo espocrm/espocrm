@@ -73,6 +73,8 @@ class LeadCapture extends Record
         $attributeIgnoreList = [
             'emailAddressIsOptedOut',
             'phoneNumberIsOptedOut',
+            'emailAddressIsInvalid',
+            'phoneNumberIsInvalid',
             'emailAddressData',
             'phoneNumberData',
         ];
