@@ -30,7 +30,7 @@
 namespace Espo\Core\Formula\Functions\ExtGroup\EmailGroup;
 
 use Espo\Core\ApplicationUser;
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Entities\Email;
 use Espo\Tools\Email\SendService;
 use Exception;

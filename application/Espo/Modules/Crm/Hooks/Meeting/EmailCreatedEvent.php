@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\Hooks\Meeting;
 
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Entities\Email;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;

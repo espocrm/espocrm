@@ -30,7 +30,7 @@
 namespace Espo\Modules\Crm\Hooks\Task;
 
 use Espo\Core\Field\DateTime;
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Modules\Crm\Entities\Task;
 use Espo\ORM\Entity;
 

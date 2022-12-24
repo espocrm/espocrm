@@ -29,7 +29,7 @@
 
 namespace Espo\Hooks\Note;
 
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Tools\Notification\NoteMentionHookProcessor;
 use Espo\ORM\Entity;
 use Espo\Entities\Note;

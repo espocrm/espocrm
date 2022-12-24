@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\FieldProcessing;
 
 use Espo\Core\{
     FieldProcessing\Saver\Params,
-    ORM\Repository\SaveOption};
+    ORM\Repository\Option\SaveOption};
 
 class SaverParamsTest extends \PHPUnit\Framework\TestCase
 {

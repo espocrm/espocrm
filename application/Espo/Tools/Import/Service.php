@@ -31,7 +31,7 @@ namespace Espo\Tools\Import;
 
 use GuzzleHttp\Psr7\Utils as Psr7Utils;
 
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Entities\ImportEntity as ImportEntityEntity;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;

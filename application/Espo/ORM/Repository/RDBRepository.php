@@ -32,6 +32,7 @@ namespace Espo\ORM\Repository;
 use Espo\ORM\EntityManager;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\Collection;
+use Espo\ORM\Repository\Option\SaveOption;
 use Espo\ORM\SthCollection;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Entity;

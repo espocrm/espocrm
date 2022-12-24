@@ -33,7 +33,7 @@ use Espo\Core\Job\Job\Data as JobData;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Mail\Importer\DuplicateFinder;
 use Espo\Core\Mail\Importer\ParentFinder;
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Entities\Email;
 use Espo\Entities\EmailFilter;
 use Espo\Repositories\Email as EmailRepository;

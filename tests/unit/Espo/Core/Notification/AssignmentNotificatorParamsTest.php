@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Notification;
 
 use Espo\Core\Notification\AssignmentNotificator\Params;
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 
 class AssignmentNotificatorParamsTest extends \PHPUnit\Framework\TestCase
 {

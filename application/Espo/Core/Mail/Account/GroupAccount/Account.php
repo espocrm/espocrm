@@ -36,7 +36,7 @@ use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Account\ImapParams;
 use Espo\Core\Mail\Smtp\HandlerProcessor;
 use Espo\Core\Mail\SmtpParams;
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Config;
 
 use Espo\Core\Utils\Crypt;

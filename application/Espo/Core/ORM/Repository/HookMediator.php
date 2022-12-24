@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Repository\EmptyHookMediator;
 use Espo\Core\HookManager;
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 
 class HookMediator extends EmptyHookMediator
 {
@@ -81,7 +81,7 @@ class HookMediator extends EmptyHookMediator
      */
     public function afterUnrelate(Entity $entity, string $relationName, Entity $foreignEntity, array $options): void
     {
-        if (!empty($options[SaveOption::SKIP_HOOKS])) {
+        if (!empty($options[Option\SaveOption::SKIP_HOOKS])) {
             return;
         }
 

@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Repositories;
 
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\RDBRepository;

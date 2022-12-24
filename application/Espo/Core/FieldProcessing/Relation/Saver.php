@@ -34,7 +34,7 @@ use Espo\ORM\Entity;
 use Espo\Core\FieldProcessing\Saver as SaverInterface;
 use Espo\Core\FieldProcessing\Saver\Params;
 use Espo\Core\ORM\EntityManager;
-use Espo\ORM\Repository\SaveOption;
+use Espo\ORM\Repository\Option\SaveOption;
 
 /**
  * @implements SaverInterface<Entity>

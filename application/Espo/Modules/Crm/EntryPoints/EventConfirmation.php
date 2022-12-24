@@ -38,7 +38,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\HookManager;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Client\ActionRenderer;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;

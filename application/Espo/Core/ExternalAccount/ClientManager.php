@@ -39,7 +39,7 @@ use Espo\ORM\EntityManager;
 use Espo\Core\ExternalAccount\Clients\IClient;
 use Espo\Core\ExternalAccount\OAuth2\Client as OAuth2Client;
 use Espo\Core\InjectableFactory;
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 

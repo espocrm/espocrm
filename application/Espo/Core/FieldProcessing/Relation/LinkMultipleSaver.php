@@ -34,7 +34,7 @@ use Espo\ORM\Entity;
 use Espo\Core\{
     ORM\EntityManager,
     FieldProcessing\Saver\Params,
-    ORM\Repository\SaveOption};
+    ORM\Repository\Option\SaveOption};
 
 class LinkMultipleSaver
 {

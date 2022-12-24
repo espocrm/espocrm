@@ -29,7 +29,7 @@
 
 namespace Espo\Repositories;
 
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Entities\EmailFilter;
 use Espo\Entities\InboundEmail;
 use Espo\Entities\User as UserEntity;

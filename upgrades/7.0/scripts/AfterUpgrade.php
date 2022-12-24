@@ -28,7 +28,6 @@
  ************************************************************************/
 
 use Espo\Core\Container;
-use Espo\Core\ORM\Repository\SaveOption;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Json;
@@ -84,7 +83,7 @@ class AfterUpgrade
             $template->set('body', $body);
             $template->set('header', null);
 
-            $entityManager->saveEntity($template, [SaveOption::SKIP_HOOKS => true]);
+            $entityManager->saveEntity($template, ['skipHooks' => true]);
         }
     }
 
