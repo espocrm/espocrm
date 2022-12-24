@@ -29,7 +29,7 @@
 
 namespace Espo\Tools\Export;
 
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Tools\Export\Collection as ExportCollection;
 use Espo\Tools\Export\Processor\Params as ProcessorParams;
 use Espo\ORM\Entity;
