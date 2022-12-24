@@ -29,7 +29,6 @@
 
 namespace Espo\Modules\Crm\Repositories;
 
-use Espo\Core\Utils\DateTime;
 use Espo\Modules\Crm\Entities\Account as AccountEntity;
 use Espo\Modules\Crm\Entities\Contact as ContactEntity;
 use Espo\Modules\Crm\Entities\Lead as LeadEntity;
@@ -50,14 +49,6 @@ class Task extends EventRepository
      */
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->isAttributeChanged('status')) {
-            if ($entity->get('status') == TaskEntity::STATUS_COMPLETED) {
-                $entity->set('dateCompleted', date(DateTime::SYSTEM_DATE_TIME_FORMAT));
-            } else {
-                $entity->set('dateCompleted', null);
-            }
-        }
-
         if (!$entity->isNew() && $entity->isAttributeChanged('parentId')) {
             $entity->set('accountId', null);
             $entity->set('contactId', null);
