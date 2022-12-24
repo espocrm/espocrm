@@ -630,6 +630,12 @@ class Import
 
     private function processForeignName(CoreEntity $entity, string $attribute): void
     {
+        $nameValue = $entity->get($attribute);
+
+        if ($nameValue === null) {
+            return;
+        }
+
         $relation = $entity->getAttributeParam($attribute, 'relation');
 
         if (!$relation) {
@@ -670,8 +676,6 @@ class Import
         if ($relationType !== Entity::BELONGS_TO) {
             return;
         }
-
-        $nameValue = $entity->get($attribute);
 
         if ($isPerson) {
             $where = $this->parsePersonName($nameValue, $this->params->getPersonNameFormat() ?? '');

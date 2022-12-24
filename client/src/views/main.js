@@ -410,14 +410,18 @@ define('views/main', ['view'], function (Dep) {
             this.menu[type][method](item);
 
             if (!doNotReRender && this.isRendered()) {
-                this.getHeaderView().reRender();
+                this.getHeaderView()
+                    .reRender()
+                    .then(() => this.adjustButtons());
 
                 return;
             }
 
             if (!doNotReRender && this.isBeingRendered()) {
                 this.once('after:render', () => {
-                    this.getHeaderView().reRender();
+                    this.getHeaderView()
+                        .reRender()
+                        .then(() => this.adjustButtons());
                 });
             }
         },
@@ -448,14 +452,20 @@ define('views/main', ['view'], function (Dep) {
             }
 
             if (!doNotReRender && this.isRendered()) {
-                this.getHeaderView().reRender();
+                this.getHeaderView()
+                    .reRender()
+                    .reRender()
+                    .then(() => this.adjustButtons());
 
                 return;
             }
 
             if (!doNotReRender && this.isBeingRendered()) {
                 this.once('after:render', () => {
-                    this.getHeaderView().reRender();
+                    this.getHeaderView()
+                        .reRender()
+                        .then(() => this.adjustButtons());
+
                 });
 
                 return;
