@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\{
-    ORM\Repository\SaveOption,
+    ORM\Repository\Option\SaveOption,
     Utils\Metadata,
     Webhook\Manager as WebhookManager};
 

@@ -42,7 +42,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\FieldValidation\Failure;
 use Espo\Core\FieldValidation\FieldValidationManager;
 use Espo\Core\FileStorage\Manager as FileStorageManager;
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;

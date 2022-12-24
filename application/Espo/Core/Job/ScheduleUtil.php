@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
 

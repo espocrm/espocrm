@@ -29,7 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\PhoneNumber;
 
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Entities\PhoneNumber;
 use Espo\Repositories\PhoneNumber as PhoneNumberRepository;
 

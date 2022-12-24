@@ -51,7 +51,7 @@ use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Mail\SenderParams;
 use Espo\Core\Mail\Smtp\HandlerProcessor;
 use Espo\Core\Mail\SmtpParams;
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Log;

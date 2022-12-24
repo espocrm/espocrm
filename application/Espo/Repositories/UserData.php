@@ -29,7 +29,7 @@
 
 namespace Espo\Repositories;
 
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Entities\User as UserEntity;
 use Espo\Entities\UserData as UserDataEntity;
 use Espo\Core\Repositories\Database;

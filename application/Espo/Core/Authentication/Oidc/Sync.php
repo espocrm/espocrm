@@ -35,7 +35,7 @@ use Espo\Core\FieldProcessing\EmailAddress\Saver as EmailAddressSaver;
 use Espo\Core\FieldProcessing\PhoneNumber\Saver as PhoneNumberSaver;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
 use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Core\Utils\Util;

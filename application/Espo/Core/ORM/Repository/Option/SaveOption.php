@@ -27,9 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\ORM\Repository;
+namespace Espo\Core\ORM\Repository\Option;
 
-use Espo\ORM\Repository\SaveOption as BaseSaveOption;
+use Espo\ORM\Repository\Option\SaveOption as BaseSaveOption;
 
 /**
  * Save options.

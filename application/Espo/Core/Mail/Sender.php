@@ -32,7 +32,7 @@ namespace Espo\Core\Mail;
 use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Smtp\TransportFactory;
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityCollection;
 

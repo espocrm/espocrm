@@ -32,7 +32,7 @@ namespace Espo\Hooks\Common;
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    ORM\Repository\SaveOption,
+    ORM\Repository\Option\SaveOption,
     Utils\Metadata,
     Utils\Config,
     WebSocket\Submission as WebSocketSubmission};

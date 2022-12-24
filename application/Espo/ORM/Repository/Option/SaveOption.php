@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\Repository;
+namespace Espo\ORM\Repository\Option;
 
 class SaveOption
 {

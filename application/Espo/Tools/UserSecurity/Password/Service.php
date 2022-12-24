@@ -36,7 +36,7 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\FieldValidation\FieldValidationManager;
 use Espo\Core\Mail\EmailSender;
 use Espo\Core\Mail\Exceptions\SendingError;
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\PasswordHash;

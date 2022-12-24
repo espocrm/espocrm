@@ -29,7 +29,7 @@
 
 namespace Espo\Tools\Stream;
 
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Autofollow;
 use Espo\Tools\Stream\Service as Service;

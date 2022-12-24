@@ -30,7 +30,7 @@
 namespace Espo\Core\FieldProcessing\NextNumber;
 
 use Espo\Core\Exceptions\Error;
-use Espo\Core\ORM\Repository\SaveOption;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Entities\NextNumber;
 
 use Espo\Core\ORM\Entity;
