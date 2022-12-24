@@ -171,8 +171,8 @@ class HookManager
 
     /**
      * @param string $hookDir
-     * @param array<string,array<string,mixed>> $hookData
-     * @return array<string,array<string,mixed>>
+     * @param array<string, array<string, mixed>> $hookData
+     * @return array<string, array<string, mixed>>
      */
     private function readHookData(string $hookDir, array $hookData = []): array
     {
@@ -180,7 +180,7 @@ class HookManager
             return $hookData;
         }
 
-        /** @var array<string,string[]> $fileList */
+        /** @var array<string, string[]> $fileList */
         $fileList = $this->fileManager->getFileList($hookDir, 1, '\.php$', true);
 
         foreach ($fileList as $scopeName => $hookFiles) {
@@ -197,7 +197,7 @@ class HookManager
 
                 /** @var string[] $hookMethods */
                 $hookMethods = array_filter($hookMethods, function ($item) {
-                    if (strpos($item, 'set') === 0) {
+                    if (str_starts_with($item, 'set')) {
                         return false;
                     }
 
@@ -211,6 +211,10 @@ class HookManager
                         continue;
                     }
 
+                    if ($this->hookClassIsSuppressed($className)) {
+                        continue;
+                    }
+
                     $hookData[$normalizedScopeName][$hookType][] = [
                         'className' => $className,
                         'order' => $className::$order ?? self::DEFAULT_ORDER,
@@ -220,6 +224,16 @@ class HookManager
         }
 
         return $hookData;
+    }
+
+    /**
+     * @param class-string $className
+     */
+    private function hookClassIsSuppressed(string $className): bool
+    {
+        $suppressList = $this->metadata->get(['app', 'hook', 'suppressClassNameList']) ?? [];
+
+        return in_array($className, $suppressList);
     }
 
     /**

@@ -28,6 +28,7 @@
         ["app", "smsProviders", "__ANY__", "senderClassName"],
         ["app", "orm"],
         ["app", "linkManager"],
+        ["app", "hook"],
         ["selectDefs"],
         ["recordDefs"],
         ["pdfDefs"],

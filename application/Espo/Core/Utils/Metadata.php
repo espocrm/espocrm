@@ -76,6 +76,7 @@ class Metadata
         ['app', 'fieldProcessing', 'readLoaderClassNameList'],
         ['app', 'fieldProcessing', 'listLoaderClassNameList'],
         ['app', 'fieldProcessing', 'saverClassNameList'],
+        ['app', 'hook', 'suppressClassNameList'],
         ['recordDefs', self::ANY_KEY, 'readLoaderClassNameList'],
         ['recordDefs', self::ANY_KEY, 'listLoaderClassNameList'],
         ['recordDefs', self::ANY_KEY, 'saverClassNameList'],
