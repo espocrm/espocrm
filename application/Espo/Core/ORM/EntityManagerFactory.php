@@ -46,7 +46,6 @@ use Espo\ORM\EntityFactory as EntityFactoryInterface;
 use Espo\ORM\Value\ValueFactoryFactory as ValueFactoryFactoryInterface;
 use Espo\ORM\Value\AttributeExtractorFactory as AttributeExtractorFactoryInterface;
 use Espo\ORM\PDO\PDOProvider;
-use Espo\ORM\PDO\DefaultPDOProvider;
 use Espo\ORM\QueryComposer\Part\FunctionConverterFactory as FunctionConverterFactoryInterface;
 
 use RuntimeException;
@@ -105,8 +104,8 @@ class EntityManagerFactory
 
         $pdoFactory = $this->pdoFactoryFactory->create($databaseParams->getPlatform() ?? '');
 
-        $pdoProvider = $this->injectableFactory->createWithBinding(
-            DefaultPDOProvider::class,
+        $pdoProvider = $this->injectableFactory->createResolved(
+            PDOProvider::class,
             BindingContainerBuilder::create()
                 ->bindInstance(DatabaseParams::class, $databaseParams)
                 ->bindInstance(PDOFactory::class, $pdoFactory)
