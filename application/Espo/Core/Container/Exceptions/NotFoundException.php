@@ -27,56 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal;
-
-use Espo\Core\Container\Exceptions\NotSettableException;
-use Espo\Entities\Portal as PortalEntity;
-use Espo\Core\Portal\Utils\Config;
-use Espo\Core\Container as BaseContainer;
+namespace Espo\Core\Container\Exceptions;
 
 use Psr\Container\NotFoundExceptionInterface;
+use RuntimeException;
 
-use LogicException;
-
-class Container extends BaseContainer
-{
-    private const ID_PORTAL = 'portal';
-    private const ID_CONFIG = 'config';
-    private const ID_ACL_MANAGER = 'aclManager';
-
-    private bool $portalIsSet = false;
-
-    /**
-     * @throws NotSettableException
-     */
-    public function setPortal(PortalEntity $portal): void
-    {
-        if ($this->portalIsSet) {
-            throw new NotSettableException("Can't set portal second time.");
-        }
-
-        $this->portalIsSet = true;
-
-        $this->setForced(self::ID_PORTAL, $portal);
-
-        $data = [];
-
-        foreach ($portal->getSettingsAttributeList() as $attribute) {
-            $data[$attribute] = $portal->get($attribute);
-        }
-
-        try {
-            /** @var Config $config */
-            $config = $this->get(self::ID_CONFIG);
-            $config->setPortalParameters($data);
-
-            /** @var AclManager $aclManager */
-            $aclManager = $this->get(self::ID_ACL_MANAGER);
-        }
-        catch (NotFoundExceptionInterface) {
-            throw new LogicException();
-        }
-
-        $aclManager->setPortal($portal);
-    }
-}
+/**
+ * @internal
+ */
+class NotFoundException extends RuntimeException implements NotFoundExceptionInterface
+{}
