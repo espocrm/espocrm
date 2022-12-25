@@ -91,7 +91,7 @@ class Installer
 
         $this->systemHelper = new SystemHelper();
 
-        $this->databaseHelper = new DatabaseHelper($this->getConfig());
+        $this->databaseHelper = $this->getInjectableFactory()->create(DatabaseHelper::class);
     }
 
     private function initialize(): void
@@ -160,6 +160,11 @@ class Installer
     public function getMetadata(): Metadata
     {
         return $this->app->getContainer()->get('metadata');
+    }
+
+    public function getInjectableFactory(): InjectableFactory
+    {
+        return $this->app->getContainer()->get('injectableFactory');
     }
 
     public function getConfig(): Config

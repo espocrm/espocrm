@@ -35,8 +35,12 @@ use Espo\Core\Utils\Database\Schema\BaseRebuildActions;
 use Exception;
 use RuntimeException;
 
-class FulltextIndex extends BaseRebuildActions
+use Espo\Core\Di;
+
+class FulltextIndex extends BaseRebuildActions implements Di\InjectableFactoryAware
 {
+    use Di\InjectableFactorySetter;
+
     /**
      * @return void
      * @throws \Doctrine\DBAL\Exception
@@ -55,7 +59,7 @@ class FulltextIndex extends BaseRebuildActions
             return;
         }
 
-        $databaseHelper = new Helper($this->getConfig());
+        $databaseHelper = $this->injectableFactory->create(Helper::class);
 
         $connection = $databaseHelper->getDbalConnection();
 

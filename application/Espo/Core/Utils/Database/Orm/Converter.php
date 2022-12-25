@@ -32,45 +32,20 @@ namespace Espo\Core\Utils\Database\Orm;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
-
 use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Config;
-
 use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
 use Espo\Core\Utils\Database\Helper as DatabaseHelper;
 
 class Converter
 {
-    private $metadata;
-
-    private $fileManager;
-
-    private $config;
-
-    private $metadataHelper;
-
-    private $databaseHelper;
-
-    private $relationManager;
-
-    /**
-     * @var ?array<string,mixed>
-     */
+    /** @var ?array<string, mixed> */
     private $entityDefs = null;
 
-    /**
-     * @var string
-     */
-    protected $defaultFieldType = 'varchar';
+    protected string $defaultFieldType = 'varchar';
 
     /**
-     * @var string
-     */
-    protected $defaultNaming = 'postfix';
-
-    /**
-     * @var array<string,int>
+     * @var array<string, int>
      */
     protected $defaultLength = [
         'varchar' => 255,
@@ -78,7 +53,7 @@ class Converter
     ];
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     protected $defaultValue = [
         'bool' => false,
@@ -87,7 +62,7 @@ class Converter
     /**
      * Mapping entityDefs => ORM.
      *
-     * @var array<string,string>
+     * @var array<string, string>
      */
     protected $fieldAccordances = [
         'type' => 'type',
@@ -113,7 +88,7 @@ class Converter
     ];
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     protected $idParams = [
         'dbType' => 'varchar',
@@ -130,65 +105,31 @@ class Converter
         'additionalTables',
     ];
 
-    public function __construct(Metadata $metadata, FileManager $fileManager, Config $config)
-    {
-        $this->metadata = $metadata;
-        $this->fileManager = $fileManager;
-        $this->config = $config;
-
-        $this->relationManager = new RelationManager($this->metadata, $config);
-
-        $this->metadataHelper = new MetadataHelper($this->metadata);
-        $this->databaseHelper = new DatabaseHelper($this->config);
-    }
-
-    protected function getMetadata(): Metadata
-    {
-        return $this->metadata;
-    }
-
-    protected function getConfig(): Config
-    {
-        return $this->config;
-    }
+    public function __construct(
+        private Metadata $metadata,
+        private Config $config,
+        private DatabaseHelper $databaseHelper,
+        private RelationManager $relationManager,
+        private MetadataHelper $metadataHelper
+    ) {}
 
     /**
      * @param bool $reload
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
-    protected function getEntityDefs($reload = false)
+    private function getEntityDefs($reload = false)
     {
         if (empty($this->entityDefs) || $reload) {
-            $this->entityDefs = $this->getMetadata()->get('entityDefs');
+            $this->entityDefs = $this->metadata->get('entityDefs');
         }
 
         return $this->entityDefs;
     }
 
-    protected function getFileManager(): FileManager
-    {
-        return $this->fileManager;
-    }
-
-    protected function getRelationManager(): RelationManager
-    {
-        return $this->relationManager;
-    }
-
-    protected function getMetadataHelper(): MetadataHelper
-    {
-        return $this->metadataHelper;
-    }
-
-    protected function getDatabaseHelper(): DatabaseHelper
-    {
-        return $this->databaseHelper;
-    }
-
     /**
      * Covert metadata > entityDefs to ORM metadata.
      *
-     * @return array<string,array<string,mixed>>
+     * @return array<string, array<string, mixed>>
      */
     public function process(): array
     {
@@ -431,7 +372,7 @@ class Converter
                 continue;
             }
 
-            $fieldTypeMetadata = $this->getMetadataHelper()->getFieldDefsByType($attributeParams);
+            $fieldTypeMetadata = $this->metadataHelper->getFieldDefsByType($attributeParams);
 
             $fieldDefs = $this->convertField($entityType, $attribute, $attributeParams, $fieldTypeMetadata);
 
@@ -447,7 +388,7 @@ class Converter
             }
 
             if (isset($fieldTypeMetadata['linkDefs'])) {
-                $linkDefs = $this->getMetadataHelper()->getLinkDefsInFieldMeta(
+                $linkDefs = $this->metadataHelper->getLinkDefsInFieldMeta(
                     $entityType,
                     $attributeParams
                 );
@@ -538,7 +479,7 @@ class Converter
         }
 
         // @todo move to separate file
-        $scopeDefs = $this->getMetadata()->get('scopes.'.$entityType);
+        $scopeDefs = $this->metadata->get('scopes.'.$entityType);
 
         if (isset($scopeDefs['stream']) && $scopeDefs['stream']) {
             if (!isset($entityMetadata['fields']['isFollowed'])) {
@@ -585,7 +526,7 @@ class Converter
         ?array $fieldTypeMetadata = null
     ) {
         if (!isset($fieldTypeMetadata)) {
-            $fieldTypeMetadata = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
+            $fieldTypeMetadata = $this->metadataHelper->getFieldDefsByType($fieldParams);
         }
 
         $this->prepareFieldParamsBeforeConvert($fieldParams);
@@ -658,7 +599,7 @@ class Converter
                 continue;
             }
 
-            $convertedLink = $this->getRelationManager()->convert($linkName, $linkParams, $entityType, $ormMetadata);
+            $convertedLink = $this->relationManager->convert($linkName, $linkParams, $entityType, $ormMetadata);
 
             if (isset($convertedLink)) {
                 /** @var array<string,mixed> $relationships */
@@ -713,21 +654,21 @@ class Converter
      */
     protected function applyFullTextSearch(array &$ormMetadata, string $entityType)
     {
-        if (!$this->getDatabaseHelper()->doesTableSupportFulltext(Util::toUnderScore($entityType))) {
+        if (!$this->databaseHelper->doesTableSupportFulltext(Util::toUnderScore($entityType))) {
             return;
         }
 
-        if (!$this->getMetadata()->get(['entityDefs', $entityType, 'collection', 'fullTextSearch'])) {
+        if (!$this->metadata->get(['entityDefs', $entityType, 'collection', 'fullTextSearch'])) {
             return;
         }
 
-        $fieldList = $this->getMetadata()
+        $fieldList = $this->metadata
             ->get(['entityDefs', $entityType, 'collection', 'textFilterFields'], ['name']);
 
         $fullTextSearchColumnList = [];
 
         foreach ($fieldList as $field) {
-            $defs = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field], []);
+            $defs = $this->metadata->get(['entityDefs', $entityType, 'fields', $field], []);
 
             if (empty($defs['type'])) {
                 continue;
@@ -739,14 +680,14 @@ class Converter
                 continue;
             }
 
-            if (!$this->getMetadata()->get(['fields', $fieldType, 'fullTextSearch'])) {
+            if (!$this->metadata->get(['fields', $fieldType, 'fullTextSearch'])) {
                 continue;
             }
 
-            $partList = $this->getMetadata()->get(['fields', $fieldType, 'fullTextSearchColumnList']);
+            $partList = $this->metadata->get(['fields', $fieldType, 'fullTextSearchColumnList']);
 
             if ($partList) {
-                if ($this->getMetadata()->get(['fields', $fieldType, 'naming']) === 'prefix') {
+                if ($this->metadata->get(['fields', $fieldType, 'naming']) === 'prefix') {
                     foreach ($partList as $part) {
                         $fullTextSearchColumnList[] = $part . ucfirst($field);
                     }
@@ -777,7 +718,7 @@ class Converter
     }
 
     /**
-     * @param array<string,mixed> $ormMetadata
+     * @param array<string, mixed> $ormMetadata
      * @param string $entityType
      * @return void
      */

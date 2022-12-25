@@ -27,33 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\PDO;
+namespace Espo\Core\ORM\PDO;
 
-use Espo\ORM\DatabaseParams;
-use PDO;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\PDO\PDOFactory;
+use RuntimeException;
 
-class DefaultPDOProvider implements PDOProvider
+class PDOFactoryFactory
 {
-    private ?PDO $pdo = null;
-
     public function __construct(
-        private DatabaseParams $databaseParams,
-        private PDOFactory $pdoFactory
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory
     ) {}
 
-    public function get(): PDO
+    public function create(string $platform): PDOFactory
     {
-        if (!$this->pdo) {
-            $this->intPDO();
+        /** @var ?class-string<PDOFactory> $className */
+        $className = $this->metadata->get(['app', 'orm', 'pdoFactoryClassNameMap', $platform]);
+
+        if (!$className) {
+            throw new RuntimeException("Could not create PDOFactory.");
         }
 
-        assert($this->pdo !== null);
-
-        return $this->pdo;
-    }
-
-    private function intPDO(): void
-    {
-        $this->pdo = $this->pdoFactory->create($this->databaseParams);
+        return $this->injectableFactory->create($className);
     }
 }

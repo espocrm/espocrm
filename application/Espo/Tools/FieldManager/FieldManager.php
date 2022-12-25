@@ -33,14 +33,11 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Language;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Json;
-
-use Espo\Core\{
-    Exceptions\BadRequest,
-    Exceptions\Error,
-    Exceptions\Conflict,
-    Utils\Metadata\Helper as MetadataHelper,
-    Utils\Util,
-};
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
+use Espo\Core\Utils\Util;
 
 use stdClass;
 
@@ -49,12 +46,6 @@ use stdClass;
  */
 class FieldManager
 {
-    private InjectableFactory $injectableFactory;
-    private $metadata;
-    private $language;
-    private $baseLanguage;
-    private $metadataHelper;
-
     protected bool $isChanged = false;
 
     /**
@@ -85,18 +76,12 @@ class FieldManager
     const MAX_NAME_LENGTH = 100;
 
     public function __construct(
-        InjectableFactory $injectableFactory,
-        Metadata $metadata,
-        Language $language,
-        Language $baseLanguage
-    ) {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
-        $this->language = $language;
-        $this->baseLanguage = $baseLanguage;
-
-        $this->metadataHelper = new MetadataHelper($this->metadata);
-    }
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata,
+        private Language $language,
+        private Language $baseLanguage,
+        private MetadataHelper $metadataHelper
+    ) {}
 
     /**
      * @return array<string,mixed>

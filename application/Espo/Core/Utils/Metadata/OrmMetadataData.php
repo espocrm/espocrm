@@ -29,41 +29,34 @@
 
 namespace Espo\Core\Utils\Metadata;
 
-use Espo\Core\{
-    Utils\Util,
-    Utils\Metadata,
-    Utils\File\Manager as FileManager,
-    Utils\Config,
-    Utils\Database\Converter,
-    Utils\DataCache,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Database\Converter;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Util;
 
 class OrmMetadataData
 {
-    /**
-     * @var ?array<string,array<string,mixed>>
-     */
+    /** @var ?array<string, array<string, mixed>> */
     protected $data = null;
 
     protected string $cacheKey = 'ormMetadata';
 
     protected bool $useCache;
-
     protected Metadata $metadata;
-
     protected FileManager $fileManager;
-
     protected DataCache $dataCache;
-
     protected Config $config;
-
     private ?Converter $converter = null;
 
     public function __construct(
         Metadata $metadata,
         FileManager $fileManager,
         DataCache $dataCache,
-        Config $config
+        Config $config,
+        private InjectableFactory $injectableFactory
     ) {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
@@ -76,14 +69,14 @@ class OrmMetadataData
     protected function getConverter(): Converter
     {
         if (!isset($this->converter)) {
-            $this->converter = new Converter($this->metadata, $this->fileManager, $this->config);
+            $this->converter = $this->injectableFactory->create(Converter::class);
         }
 
         return $this->converter;
     }
 
     /**
-     * @return array<string,array<string,mixed>>
+     * @return array<string, array<string, mixed>>
      */
     public function getData(bool $reload = false): array
     {
@@ -92,7 +85,7 @@ class OrmMetadataData
         }
 
         if ($this->useCache && $this->dataCache->has($this->cacheKey) && !$reload) {
-            /** @var array<string,array<string,mixed>> $data */
+            /** @var array<string, array<string, mixed>> $data */
             $data = $this->dataCache->get($this->cacheKey);
 
             $this->data = $data;

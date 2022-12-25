@@ -29,47 +29,18 @@
 
 namespace Espo\Core\Utils\Database;
 
-use Espo\Core\{
-    Utils\Metadata,
-    Utils\File\Manager as FileManager,
-    Utils\Config,
-};
-
+/**
+ * ORM converter wrapper.
+ */
 class Converter
 {
-    private $metadata;
-
-    private $fileManager;
-
-    private $config;
-
-    private Orm\Converter $ormConverter;
-
-    public function __construct(Metadata $metadata, FileManager $fileManager, Config $config)
-    {
-        $this->metadata = $metadata;
-        $this->fileManager = $fileManager;
-        $this->config = $config;
-        $this->ormConverter = new Orm\Converter($this->metadata, $this->fileManager, $this->config);
-    }
-
-    protected function getMetadata(): Metadata
-    {
-        return $this->metadata;
-    }
-
-    protected function getOrmConverter(): Orm\Converter
-    {
-        return $this->ormConverter;
-    }
+    public function __construct(private Orm\Converter $ormConverter) {}
 
     /**
-     * @return array<string,array<string,mixed>>
+     * @return array<string, array<string, mixed>>
      */
     public function process()
     {
-        $data = $this->getOrmConverter()->process();
-
-        return $data;
+        return $this->ormConverter->process();
     }
 }

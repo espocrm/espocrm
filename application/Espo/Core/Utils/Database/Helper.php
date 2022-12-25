@@ -29,20 +29,15 @@
 
 namespace Espo\Core\Utils\Database;
 
-use Espo\Core\{
-    Utils\Config,
-};
+use Espo\Core\ORM\PDO\PDOFactoryFactory;
+use Espo\Core\Utils\Config;
+use Espo\ORM\DatabaseParams;
+use Espo\ORM\PDO\Options as PdoOptions;
 
-use Doctrine\DBAL\{
-    Connection as DbalConnection,
-    Platforms\AbstractPlatform as DbalPlatform,
-};
-
-use Espo\ORM\{
-    DatabaseParams,
-    PDO\DefaultPDOProvider,
-    PDO\Options as PdoOptions,
-};
+use Doctrine\DBAL\Connection as DbalConnection;
+use Doctrine\DBAL\Platforms\AbstractPlatform as DbalPlatform;
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\VersionAwarePlatformDriver as Driver;
 
 use PDO;
 use ReflectionClass;
@@ -50,31 +45,19 @@ use RuntimeException;
 
 class Helper
 {
-    private ?Config $config;
-
-    private ?DbalConnection $dbalConnection = null;
-
-    private ?PDO $pdoConnection = null;
-
-    /**
-     * @var array<string,mixed>
-     */
+    /** @var array<string, mixed> */
     private $driverPlatformMap = [
         'pdo_mysql' => 'Mysql',
         'mysqli' => 'Mysql',
     ];
 
-    /**
-     * @var array<string,mixed>
-     */
+    /** @var array<string, mixed> */
     protected $dbalDrivers = [
         'mysqli' => 'Doctrine\\DBAL\\Driver\\Mysqli\\Driver',
         'pdo_mysql' => 'Espo\\Core\\Utils\\Database\\DBAL\\Driver\\PDO\\MySQL\\Driver',
     ];
 
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string, string> */
     protected $dbalPlatforms = [
         'MariaDb1027Platform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MariaDb1027Platform',
         'MySQL57Platform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQL57Platform',
@@ -82,13 +65,16 @@ class Helper
         'MySQLPlatform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQLPlatform',
     ];
 
-    public function __construct(?Config $config = null)
-    {
-        $this->config = $config;
-    }
+    private ?DbalConnection $dbalConnection = null;
+    private ?PDO $pdoConnection = null;
+
+    public function __construct(
+        private Config $config,
+        private PDOFactoryFactory $pdoFactoryFactory
+    ) {}
 
     /**
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function getDbalConnection(): DbalConnection
     {
@@ -108,6 +94,9 @@ class Helper
         return $this->pdoConnection;
     }
 
+    /**
+     * @deprecated
+     */
     public function setDbalConnection(DbalConnection $dbalConnection): void
     {
         $this->dbalConnection = $dbalConnection;
@@ -119,26 +108,23 @@ class Helper
     }
 
     /**
-     * @param array<string,mixed> $params
-     * @throws RuntimeException
-     * @throws \Doctrine\DBAL\Exception
+     * @param array<string, mixed> $params
+     * @throws Exception
      */
     public function createDbalConnection(array $params = []): DbalConnection
     {
-        if (empty($params) && isset($this->config)) {
+        if (empty($params)) {
             $params = $this->config->get('database');
         }
 
         if (empty($params)) {
-            throw new RuntimeException('Params cannot be empty for Dbal connection.');
+            throw new RuntimeException('Database params cannot be empty for DBAL connection.');
         }
 
         $databaseParams = $this->createDatabaseParams($params);
 
         $driver = $this->createDbalDriver($params);
-
         $version = $this->getFullDatabaseVersion() ?? '';
-
         $platform = $driver->createDatabasePlatformForVersion($version);
 
         return new DbalConnection(
@@ -158,9 +144,8 @@ class Helper
 
     /**
      *
-     * @param array<string,mixed> $params
-     * @return \Doctrine\DBAL\VersionAwarePlatformDriver
-     * @throws RuntimeException
+     * @param array<string, mixed> $params
+     * @return Driver
      */
     private function createDbalDriver(array $params)
     {
@@ -170,21 +155,19 @@ class Helper
             throw new RuntimeException('Unknown database driver.');
         }
 
-        /** @var class-string<\Doctrine\DBAL\VersionAwarePlatformDriver> $driverClass */
+        /** @var class-string<Driver> $driverClass */
         $driverClass = $this->dbalDrivers[$driverName];
 
         if (!class_exists($driverClass)) {
             throw new RuntimeException('Unknown database class.');
         }
 
-        $driver = new $driverClass();
-
-        return $driver;
+        return new $driverClass();
     }
 
     /**
      * @param DbalPlatform $platform
-     * @return \Doctrine\DBAL\Platforms\AbstractPlatform
+     * @return DbalPlatform
      */
     private function createDbalPlatform(DbalPlatform $platform)
     {
@@ -193,7 +176,7 @@ class Helper
         $platformClass = $reflect->getShortName();
 
         if (isset($this->dbalPlatforms[$platformClass])) {
-            /** @var class-string<\Doctrine\DBAL\Platforms\AbstractPlatform> $className */
+            /** @var class-string<DbalPlatform> $className */
             $className = $this->dbalPlatforms[$platformClass];
 
             return new $className();
@@ -216,12 +199,10 @@ class Helper
             'driver' => 'pdo_mysql',
         ];
 
-        if (isset($this->config) && $this->config instanceof Config) {
-            $defaultParams = array_merge(
-                $defaultParams,
-                $this->config->get('database')
-            );
-        }
+        $defaultParams = array_merge(
+            $defaultParams,
+            $this->config->get('database')
+        );
 
         $params = array_merge(
             $defaultParams,
@@ -232,15 +213,17 @@ class Helper
             unset($params['dbname']);
         }
 
-        $pdoProvider = new DefaultPDOProvider(
-            $this->createDatabaseParams($params)
-        );
+        $databaseParams = $this->createDatabaseParams($params);
 
-        return $pdoProvider->get();
+        $platform = $databaseParams->getPlatform();
+
+        $pdoFactory = $this->pdoFactoryFactory->create($platform ?? '');
+
+        return $pdoFactory->create($databaseParams);
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @throws RuntimeException
      */
     private function createDatabaseParams(array $params): DatabaseParams

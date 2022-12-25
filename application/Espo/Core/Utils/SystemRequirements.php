@@ -29,36 +29,19 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\{
-    Utils\Config,
-    Utils\File\Manager as FileManager,
-    Utils\System,
-    Utils\Database\Helper as DatabaseHelper,
-};
+use Espo\Core\Utils\Database\Helper as DatabaseHelper;
+use Espo\Core\Utils\File\Manager as FileManager;
 
 use PDO;
 
 class SystemRequirements
 {
-    private Config $config;
-
-    private FileManager $fileManager;
-
-    private System $systemHelper;
-
-    private DatabaseHelper $databaseHelper;
-
     public function __construct(
-        Config $config,
-        FileManager $fileManager,
-        System $systemHelper,
-        DatabaseHelper $databaseHelper
-    ) {
-        $this->config = $config;
-        $this->fileManager = $fileManager;
-        $this->systemHelper = $systemHelper;
-        $this->databaseHelper = $databaseHelper;
-    }
+        private Config $config,
+        private FileManager $fileManager,
+        private System $systemHelper,
+        private DatabaseHelper $databaseHelper
+    ) {}
 
     /**
      * @return array{

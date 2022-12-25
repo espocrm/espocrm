@@ -29,34 +29,24 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
-use \Doctrine\DBAL\Schema\Schema as DbalSchema;
+use Doctrine\DBAL\Schema\Schema as DbalSchema;
 
-use Espo\Core\{
-    Utils\Metadata,
-    Utils\Config,
-    ORM\EntityManager,
-    Utils\Log,
-};
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
 
 abstract class BaseRebuildActions
 {
-    protected Metadata $metadata;
-
-    protected Config $config;
-
-    protected EntityManager $entityManager;
-
-    protected Log $log;
-
-    /**
-     * @var ?DbalSchema
-     */
+    /** @var ?DbalSchema  */
     protected $currentSchema = null;
-
-    /**
-     * @var ?DbalSchema
-     */
+    /** @var ?DbalSchema */
     protected $metadataSchema = null;
+
+    protected Metadata $metadata;
+    protected Config $config;
+    protected EntityManager $entityManager;
+    protected Log $log;
 
     public function __construct(
         Metadata $metadata,

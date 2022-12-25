@@ -30,26 +30,21 @@
 namespace tests\integration\Espo\Core\Utils\Database;
 
 use tests\unit\ReflectionHelper;
-
 use Espo\Core\Utils\Database\Helper;
-
 use Doctrine\DBAL\Connection;
-
 use Espo\Core\Exceptions\Error;
-
 use PDO;
 
 use RuntimeException;
 
 class HelperTest extends \tests\integration\Core\BaseTestCase
 {
+    protected $helper;
     protected $reflection;
 
-    protected function initTest(bool $noConfig = false)
+    protected function initTest()
     {
-        $config = $noConfig ? null : $this->getContainer()->get('config');
-
-        $this->helper = new Helper($config);
+        $this->helper =  $this->getInjectableFactory()->create(Helper::class);
 
         $this->reflection = new ReflectionHelper($this->helper);
     }
@@ -78,29 +73,11 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
         ];
     }
 
-    public function testGetDbalConnectionWithNoConfig()
-    {
-        $this->initTest(true);
-
-        $this->expectException(RuntimeException::class);
-
-        $this->helper->getDbalConnection();
-    }
-
     public function testGetDbalConnectionWithConfig()
     {
         $this->initTest();
 
         $this->assertInstanceOf(Connection::class, $this->helper->getDbalConnection());
-    }
-
-    public function testGetPdoConnection()
-    {
-        $this->initTest(true);
-
-        $this->expectException(RuntimeException::class);
-
-        $this->helper->getPdoConnection();
     }
 
     public function testGetPdoConnectionWithConfig()
