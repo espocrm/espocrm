@@ -34,6 +34,7 @@ use Espo\Core\Binding\Binding;
 use Espo\Core\Binding\Factory;
 use Espo\Core\Interfaces\Injectable;
 
+use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
 use ReflectionParameter;
 use ReflectionFunction;
@@ -64,7 +65,7 @@ class InjectableFactory
      * Create an instance by a class name.
      *
      * @template T of object
-     * @param class-string<T> $className
+     * @param class-string<T> $className An instantiatable class.
      * @return T
      */
     public function create(string $className): object
@@ -77,8 +78,8 @@ class InjectableFactory
      * defined in an associative array. A key should match the parameter name.
      *
      * @template T of object
-     * @param class-string<T> $className
-     * @param array<string,mixed> $with
+     * @param class-string<T> $className An instantiatable class.
+     * @param array<string, mixed> $with Constructor parameter values.
      * @return T
      */
     public function createWith(string $className, array $with): object
@@ -90,7 +91,8 @@ class InjectableFactory
      * Create an instance by a class name with a specific binding.
      *
      * @template T of object
-     * @param class-string<T> $className
+     * @param class-string<T> $className An instantiatable class.
+     * @param BindingContainer $bindingContainer A binding container.
      * @return T
      */
     public function createWithBinding(string $className, BindingContainer $bindingContainer): object
@@ -99,9 +101,61 @@ class InjectableFactory
     }
 
     /**
+     * Create an instance by an interface with an optional additional binding.
+     * An interface will be resolved by the global binding. If a class is provided, it will be tried to
+     * be resolved (if it's bound to an extended class). If class is not bound, it will be instantiated
+     * (with the same behavior as with the `createWithBinding` method).
+     *
+     * @template T of object
+     * @param class-string<T> $interfaceName An interface or class.
+     * @param ?BindingContainer $bindingContainer A binding container.
+     * @return T
+     */
+    public function createResolved(string $interfaceName, ?BindingContainer $bindingContainer = null): object
+    {
+        $binding = $this->bindingContainer && $this->bindingContainer->hasByInterface($interfaceName) ?
+            $this->bindingContainer->getByInterface($interfaceName) :
+            null;
+
+        if (!$binding) {
+            $class = new ReflectionClass($interfaceName);
+
+            if ($class->isInterface()) {
+                throw new RuntimeException("Could not resolve interface `{$interfaceName}`.");
+            }
+
+            $obj = $this->createInternal($interfaceName, null, $bindingContainer);
+
+            if (!$obj instanceof $interfaceName) {
+                throw new RuntimeException("Class `{$interfaceName}` resolved to another type.");
+            }
+
+            return $obj;
+        }
+
+        $typeList = [
+            Binding::IMPLEMENTATION_CLASS_NAME,
+            Binding::FACTORY_CLASS_NAME,
+            Binding::CALLBACK,
+        ];
+
+        if (!in_array($binding->getType(), $typeList)) {
+            throw new RuntimeException("Bad resolution for interface `{$interfaceName}`.");
+        }
+
+        $obj = $this->resolveBinding($binding, $bindingContainer);
+
+        if (!$obj instanceof $interfaceName) {
+            throw new RuntimeException("Class `{$interfaceName}` resolved to another type.");
+        }
+
+        return $obj;
+    }
+
+    /**
      * @template T of object
      * @param class-string<T> $className
-     * @param ?array<string,mixed> $with
+     * @param ?array<string, mixed> $with
      * @return T
      */
     private function createInternal(
@@ -203,14 +257,14 @@ class InjectableFactory
             }
         }
 
-        if ($bindingContainer && $bindingContainer->has($class, $param)) {
-            $binding = $bindingContainer->get($class, $param);
+        if ($bindingContainer && $bindingContainer->hasByParam($class, $param)) {
+            $binding = $bindingContainer->getByParam($class, $param);
 
             return $this->resolveBinding($binding, $bindingContainer);
         }
 
-        if ($this->bindingContainer && $this->bindingContainer->has($class, $param)) {
-            $binding = $this->bindingContainer->get($class, $param);
+        if ($this->bindingContainer && $this->bindingContainer->hasByParam($class, $param)) {
+            $binding = $this->bindingContainer->getByParam($class, $param);
 
             return $this->resolveBinding($binding, $bindingContainer);
         }
@@ -267,16 +321,18 @@ class InjectableFactory
         return $injectionList;
     }
 
-    /**
-     * @return mixed
-     */
-    private function resolveBinding(Binding $binding, ?BindingContainer $bindingContainer)
+    private function resolveBinding(Binding $binding, ?BindingContainer $bindingContainer): mixed
     {
         $type = $binding->getType();
         $value = $binding->getValue();
 
         if ($type === Binding::CONTAINER_SERVICE) {
-            return $this->container->get($value);
+            try {
+                return $this->container->get($value);
+            }
+            catch (NotFoundExceptionInterface $e) {
+                throw new RuntimeException($e->getMessage());
+            }
         }
 
         if ($type === Binding::IMPLEMENTATION_CLASS_NAME) {
