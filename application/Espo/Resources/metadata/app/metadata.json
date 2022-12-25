@@ -29,6 +29,7 @@
         ["app", "orm"],
         ["app", "linkManager"],
         ["app", "hook"],
+        ["app", "api"],
         ["selectDefs"],
         ["recordDefs"],
         ["pdfDefs"],

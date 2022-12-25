@@ -41,7 +41,7 @@ class Route extends BaseRoute
         $newRouteList = [];
 
         foreach ($originalRouteList as $route) {
-            $path = $route->getRoute();
+            $path = $route->getAdjustedRoute();
 
             if ($path[0] !== '/') {
                 $path = '/' . $path;
@@ -51,6 +51,7 @@ class Route extends BaseRoute
 
             $newRoute = new RouteItem(
                 $route->getMethod(),
+                $route->getRoute(),
                 $path,
                 $route->getParams(),
                 $route->noAuth()

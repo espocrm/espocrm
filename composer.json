@@ -18,7 +18,7 @@
         "ext-pdo": "*",
         "psr/log": "1.1.*",
         "psr/http-message": "^1.0",
-        "slim/slim": "^4.7",
+        "slim/slim": "^4.11",
         "slim/psr7": "^1",
         "dragonmantank/cron-expression": "3.0.*",
         "laminas/laminas-mail": "2.20.*",

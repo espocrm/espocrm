@@ -30,42 +30,29 @@
 namespace Espo\Core\Utils;
 
 use Espo\Core\Api\Route as RouteItem;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Resource\PathProvider;
 
-use Espo\Core\{
-    Utils\Config,
-    Utils\Metadata,
-    Utils\File\Manager as FileManager,
-    Utils\DataCache,
-    Utils\Resource\PathProvider,
-};
-
+/**
+ * @phpstan-type RouteArrayShape array{
+ *     route: string,
+ *     adjustedRoute: string,
+ *     method: string,
+ *     noAuth?: bool,
+ *     params?: array<string, mixed>,
+ *   }
+ */
 class Route
 {
-    /**
-     * @var ?array<
-     *   int,
-     *   array{
-     *     route:string,
-     *     method:string,
-     *     noAuth?:bool,
-     *     params?:array<string,mixed>,
-     *   }
-     * >
-     */
+    /** @var ?(RouteArrayShape[]) */
     private $data = null;
-
     private string $cacheKey = 'routes';
-
     private string $routesFileName = 'routes.json';
 
     private Config $config;
-
     private Metadata $metadata;
-
     private FileManager $fileManager;
-
     private DataCache $dataCache;
-
     private PathProvider $pathProvider;
 
     public function __construct(
@@ -100,6 +87,7 @@ class Route
                 return new RouteItem(
                     $item['method'],
                     $item['route'],
+                    $item['adjustedRoute'],
                     $item['params'] ?? [],
                     $item['noAuth'] ?? false
                 );
@@ -113,17 +101,7 @@ class Route
         $useCache = $this->config->get('useCache');
 
         if ($this->dataCache->has($this->cacheKey) && $useCache) {
-            /**
-             * @var ?array<
-             *   int,
-             *   array{
-             *     route:string,
-             *     method:string,
-             *     noAuth?:bool,
-             *     params?:array<string,mixed>,
-             *   }
-             * > $data
-             */
+            /** @var ?(RouteArrayShape[]) $data  */
             $data = $this->dataCache->get($this->cacheKey);
 
             $this->data = $data;
@@ -139,15 +117,7 @@ class Route
     }
 
     /**
-     * @return array<
-     *   int,
-     *   array{
-     *     route:string,
-     *     method:string,
-     *     noAuth?:bool,
-     *     params?:array<string,mixed>,
-     *   }
-     * >
+     * @return RouteArrayShape[]
      */
     private function unify(): array
     {
@@ -174,24 +144,8 @@ class Route
     }
 
     /**
-     * @param array<
-     *   int,
-     *   array{
-     *     route:string,
-     *     method:string,
-     *     noAuth?:bool,
-     *     params?:array<string,mixed>,
-     *   }
-     * > $currentData
-     * @return array<
-     *   int,
-     *   array{
-     *     route:string,
-     *     method:string,
-     *     noAuth?:bool,
-     *     params?:array<string,mixed>,
-     *   }
-     * >
+     * @param RouteArrayShape[] $currentData
+     * @return RouteArrayShape[]
      */
     private function addDataFromFile(array $currentData, string $routeFile): array
     {
@@ -208,38 +162,14 @@ class Route
 
     /**
      *
-     * @param array<
-     *   int,
-     *   array{
-     *     route:string,
-     *     method:string,
-     *     noAuth?:bool,
-     *     conditions?: array<string,mixed>,
-     *   }
-     * > $data
-     * @param array<
-     *   int,
-     *   array{
-     *     route:string,
-     *     method:string,
-     *     noAuth?:bool,
-     *     conditions?: array<string,mixed>,
-     *   }
-     * > $newData
-     * @return array<
-     *   int,
-     *   array{
-     *     route:string,
-     *     method:string,
-     *     noAuth?:bool,
-     *     conditions?: array<string,mixed>,
-     *   }
-     * >
+     * @param RouteArrayShape[] $data
+     * @param RouteArrayShape[] $newData
+     * @return RouteArrayShape[]
      */
     private function appendRoutesToData(array $data, array $newData): array
     {
         foreach ($newData as $route) {
-            $route['route'] = $this->adjustPath($route['route']);
+            $route['adjustedRoute'] = $this->adjustPath($route['route']);
 
             if (isset($route['conditions'])) {
                 $route['noAuth'] = !($route['conditions']['auth'] ?? true);
@@ -266,7 +196,7 @@ class Route
         /** @var string $pathFormatted */
         $pathFormatted = preg_replace('/\:([a-zA-Z0-9]+)/', '{${1}}', trim($path));
 
-        if (substr($pathFormatted, 0, 1) !== '/') {
+        if (!str_starts_with($pathFormatted, '/')) {
             return '/' . $pathFormatted;
         }
 

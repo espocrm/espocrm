@@ -29,54 +29,30 @@
 
 namespace Espo\Core\Api;
 
-class Route
-{
-    private string $method;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
+class RouteHandler implements RequestHandlerInterface
+{
     /**
-     * @param array<string, string> $params
+     * @param array<string, mixed> $routeParams
      */
     public function __construct(
-        string $method,
-        private string $route,
-        private string $adjustedRoute,
-        private array $params,
-        private bool $noAuth
-    ) {
-        $this->method = strtoupper($method);
-    }
+        private Route $route,
+        private array $routeParams,
+        private string $basePath,
+        private ResponseInterface $response,
+        private RequestProcessor $requestProcessor
+    ) {}
 
-    public function getMethod(): string
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->method;
-    }
+        $requestWrapped = new RequestWrapper($request, $this->basePath, $this->routeParams);
+        $responseWrapped = new ResponseWrapper($this->response);
 
-    /**
-     * Get a route.
-     */
-    public function getRoute(): string
-    {
-        return $this->route;
-    }
+        $this->requestProcessor->process($this->route, $requestWrapped, $responseWrapped);
 
-    /**
-     * Get an adjusted route for FastRoute.
-     */
-    public function getAdjustedRoute(): string
-    {
-        return $this->adjustedRoute;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    public function getParams(): array
-    {
-        return $this->params;
-    }
-
-    public function noAuth(): bool
-    {
-        return $this->noAuth;
+        return $responseWrapped->getResponse();
     }
 }

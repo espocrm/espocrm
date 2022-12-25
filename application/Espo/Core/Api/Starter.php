@@ -38,6 +38,7 @@ use Slim\Factory\AppFactory as SlimAppFactory;
 
 use Psr\Http\Message\ResponseInterface as Psr7Response;
 use Psr\Http\Message\ServerRequestInterface as Psr7Request;
+use Slim\MiddlewareDispatcher;
 
 /**
  * API request processing entry point.
@@ -48,6 +49,7 @@ class Starter
         private RequestProcessor $requestProcessor,
         private RouteUtil $routeUtil,
         private RouteParamsFetcher $routeParamsFetcher,
+        private MiddlewareProvider $middlewareProvider,
         private Log $log
     ) {}
 
@@ -56,10 +58,18 @@ class Starter
         $slim = SlimAppFactory::create();
 
         $slim->setBasePath(RouteUtil::detectBasePath());
+        $this->addGlobalMiddlewares($slim);
         $slim->addRoutingMiddleware();
         $this->addRoutes($slim);
         $slim->addErrorMiddleware(false, true, true, $this->log);
         $slim->run();
+    }
+
+    private function addGlobalMiddlewares(SlimApp $slim): void
+    {
+        foreach ($this->middlewareProvider->getGlobalMiddlewareList() as $middleware) {
+            $slim->add($middleware);
+        }
     }
 
     private function addRoutes(SlimApp $slim): void
@@ -73,20 +83,62 @@ class Starter
 
     private function addRoute(SlimApp $slim, Route $item): void
     {
-        $slim->map(
+        $slimRoute = $slim->map(
             [$item->getMethod()],
-            $item->getRoute(),
+            $item->getAdjustedRoute(),
             function (Psr7Request $request, Psr7Response $response, array $args) use ($slim, $item)
             {
                 $routeParams = $this->routeParamsFetcher->fetch($item, $args);
 
-                $requestWrapped = new RequestWrapper($request, $slim->getBasePath(), $routeParams);
-                $responseWrapped = new ResponseWrapper($response);
+                $routeHandler = new RouteHandler(
+                    $item,
+                    $routeParams,
+                    $slim->getBasePath(),
+                    $response,
+                    $this->requestProcessor
+                );
 
-                $this->requestProcessor->process($item, $requestWrapped, $responseWrapped);
+                $dispatcher = new MiddlewareDispatcher($routeHandler);
 
-                return $responseWrapped->getResponse();
+                $this->addControllerMiddlewares($dispatcher, $item, $routeParams);
+
+                return $dispatcher->handle($request);
             }
         );
+
+        $middlewareList = $this->middlewareProvider->getRouteMiddlewareList($item);
+
+        foreach ($middlewareList as $middleware) {
+            $slimRoute->addMiddleware($middleware);
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $routeParams
+     */
+    private function addControllerMiddlewares(MiddlewareDispatcher $dispatcher, Route $route, array $routeParams): void
+    {
+        $controller = $routeParams['controller'] ?? null;
+        $action = $routeParams['action'] ?? null;
+
+        if (!$controller) {
+            return;
+        }
+
+        if ($action) {
+            $controllerActionMiddlewareList = $this->middlewareProvider
+                ->getControllerActionMiddlewareList($route->getMethod(), $controller, $action);
+
+            foreach ($controllerActionMiddlewareList as $middleware) {
+                $dispatcher->addMiddleware($middleware);
+            }
+        }
+
+        $controllerMiddlewareList = $this->middlewareProvider
+            ->getControllerMiddlewareList($controller);
+
+        foreach ($controllerMiddlewareList as $middleware) {
+            $dispatcher->addMiddleware($middleware);
+        }
     }
 }

@@ -62,7 +62,7 @@ class RequestProcessor
             $this->processInternal($route, $request, $response);
         }
         catch (Exception $exception) {
-            $this->handleException($exception, $request, $response, $route->getRoute());
+            $this->handleException($exception, $request, $response, $route->getAdjustedRoute());
         }
     }
 
