@@ -357,6 +357,7 @@
         "massFollowZeroResult": "Nothing got followed",
         "massUnfollowZeroResult": "Nothing got unfollowed",
         "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
+        "maintenanceModeError": "The application currently is in maintenance mode.",
         "maintenanceMode": "The application currently is in maintenance mode. Only admin users have access.\n\nMaintenance mode can be disabled at Administration → Settings.",
         "resolveSaveConflict": "The record has been modified. You need to resolve the conflict before you can save the record.",
         "massPrintPdfMaxCountError": "Can't print more that {maxCount} records.",
