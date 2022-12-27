@@ -29,30 +29,38 @@
 
 namespace Espo\Core\Api;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-
-class RouteHandler implements RequestHandlerInterface
+class ProcessData
 {
     /**
-     * @param array<string, mixed> $routeParams
+     * @param array<string, string> $routeParams
      */
     public function __construct(
         private Route $route,
-        private array $routeParams,
         private string $basePath,
-        private ResponseInterface $response,
-        private RequestProcessor $requestProcessor
+        private array $routeParams
     ) {}
 
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    /**
+     * @return Route
+     */
+    public function getRoute(): Route
     {
-        $requestWrapped = new RequestWrapper($request, $this->basePath, $this->routeParams);
-        $responseWrapped = new ResponseWrapper($this->response);
+        return $this->route;
+    }
 
-        $this->requestProcessor->process($this->route, $requestWrapped, $responseWrapped);
+    /**
+     * @return string
+     */
+    public function getBasePath(): string
+    {
+        return $this->basePath;
+    }
 
-        return $responseWrapped->getResponse();
+    /**
+     * @return array<string, string>
+     */
+    public function getRouteParams(): array
+    {
+        return $this->routeParams;
     }
 }
