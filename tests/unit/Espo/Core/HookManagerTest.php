@@ -32,6 +32,7 @@ namespace tests\unit\Espo\Core;
 use tests\unit\ReflectionHelper;
 
 use Espo\Core\{
+    Hook\GeneralInvoker,
     HookManager,
     InjectableFactory,
     Utils\Metadata,
@@ -39,8 +40,7 @@ use Espo\Core\{
     Utils\File\Manager as FileManager,
     Utils\DataCache,
     Utils\Log,
-    Utils\Module\PathProvider,
-};
+    Utils\Module\PathProvider};
 
 class HookManagerTest extends \PHPUnit\Framework\TestCase
 {
@@ -56,12 +56,10 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
         $this->config = $this->createMock(Config::class);
 
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
-
         $this->dataCache = $this->createMock(DataCache::class);
-
         $this->fileManager = new FileManager();
-
         $this->pathProvider = $this->createMock(PathProvider::class);
+        $this->generalInvoker = $this->createMock(GeneralInvoker::class);
 
         $this->hookManager = new HookManager(
             $this->injectableFactory,
@@ -70,7 +68,8 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
             $this->config,
             $this->dataCache,
             $this->createMock(Log::class),
-            $this->pathProvider
+            $this->pathProvider,
+            $this->generalInvoker
         );
 
         $this->reflection = new ReflectionHelper($this->hookManager);
