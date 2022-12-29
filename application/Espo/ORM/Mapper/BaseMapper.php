@@ -684,7 +684,7 @@ class BaseMapper implements RDBMapper
             }
 
             if ($columnType == Entity::FLOAT) {
-                return (int) $value;
+                return (float) $value;
             }
 
             return $value;
