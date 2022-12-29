@@ -89,15 +89,6 @@ define('model', [], function () {
     return Dep.extend(/** @lends module:model.Class.prototype */{
 
         /**
-         * An entity type.
-         *
-         * @name entityType
-         * @property {string}
-         * @public
-         * @memberof module:model.Class.prototype
-         */
-
-        /**
          * A record ID.
          *
          * @name cid
@@ -135,10 +126,17 @@ define('model', [], function () {
         /**
          * A name.
          *
-         * @type {string}
+         * @type {string|null}
          * @public
          */
         name: null,
+
+        /**
+         * An entity type.
+         *
+         * @type {string|null}
+         */
+        entityType: null,
 
         /**
          * @private

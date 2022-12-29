@@ -94,14 +94,6 @@ define('collection', ['model'], function (Model) {
     return Backbone.Collection.extend(/** @lends module:collection.Class# */ {
 
         /**
-         * An entity type.
-         *
-         * @name entityType
-         * @type {string}
-         * @memberof module:collection.Class#
-         */
-
-        /**
          * A number of records.
          *
          * @name length
@@ -123,6 +115,13 @@ define('collection', ['model'], function (Model) {
          * @type {string|null}
          */
         name: null,
+
+        /**
+         * An entity type.
+         *
+         * @type {string|null}
+         */
+        entityType: null,
 
         /**
          * A total number of records.
