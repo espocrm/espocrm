@@ -110,6 +110,15 @@ define('collection', ['model'], function (Model) {
          */
 
         /**
+         * An API URL.
+         *
+         * @name url
+         * @type {string|null}
+         * @public
+         * @memberof module:collection.Class.prototype
+         */
+
+        /**
          * A name.
          *
          * @type {string|null}
