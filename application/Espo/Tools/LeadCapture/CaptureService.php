@@ -462,8 +462,7 @@ class CaptureService
 
         return new ConfirmResult(
             ConfirmResult::STATUS_SUCCESS,
-            $this->defaultLanguage
-                ->translateLabel('optInConfirmationExpired', 'messages', LeadCaptureEntity::ENTITY_TYPE),
+            $leadCapture->getOptInConfirmationSuccessMessage(),
             $leadCapture->getId(),
             $leadCapture->getName()
         );
