@@ -189,7 +189,7 @@ class SelectManager
         return $this->entityType;
     }
 
-    protected function limit(?int $offset = null, ?int $maxSize = null, array &$result)
+    protected function limit(?int $offset, ?int $maxSize, array &$result)
     {
         if (!is_null($offset)) {
             $result['offset'] = $offset;
