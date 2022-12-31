@@ -155,12 +155,6 @@ abstract class Base
         $this->zipUtil = new ZipArchive($fileManager);
     }
 
-    public function __destruct()
-    {
-        $this->processId = null;
-        $this->data = null;
-    }
-
     /**
      * @return \Espo\Core\Container
      */
