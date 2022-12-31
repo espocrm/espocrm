@@ -56,10 +56,8 @@ class LoginFactory
         if (!$className) {
             $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
 
-            if (!class_exists($className)) {
-                /** @var class-string<Login> $className */
-                $className = "Espo\\Core\\Authentication\\Logins\\" . $sanitizedName;
-            }
+            /** @var class-string<Login> $className */
+            $className = "Espo\\Core\\Authentication\\Logins\\" . $sanitizedName;
         }
 
         return $this->injectableFactory->createWith($className, [

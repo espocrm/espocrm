@@ -626,6 +626,7 @@ class Converter
             switch ($espoType) {
                 case 'default':
                     if (
+                        is_null($attributeParams[$espoType]) ||
                         is_array($attributeParams[$espoType]) ||
                         !preg_match('/^javascript:/i', $attributeParams[$espoType])
                     ) {
