@@ -214,11 +214,6 @@ class Binding implements BindingProcessor
         );
 
         $binder->bindService(
-            'Espo\\Core\\Acl',
-            'acl'
-        );
-
-        $binder->bindService(
             'Espo\\Core\\ExternalAccount\\ClientManager',
             'externalAccountClientManager'
         );
