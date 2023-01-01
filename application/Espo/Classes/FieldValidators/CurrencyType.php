@@ -37,7 +37,6 @@ use Espo\ORM\Entity;
 class CurrencyType extends FloatType
 {
     private const DEFAULT_PRECISION = 13;
-    private const DEFAULT_SCALE = 4;
 
     public function __construct(private Config $config) {}
 
