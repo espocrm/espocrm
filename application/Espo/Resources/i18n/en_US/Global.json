@@ -309,6 +309,7 @@
         "fieldShouldBeEmail": "{field} should be a valid email",
         "fieldShouldBeFloat": "{field} should be a valid float",
         "fieldShouldBeInt": "{field} should be a valid integer",
+        "fieldShouldBeNumber": "{field} should be a valid number",
         "fieldShouldBeDate": "{field} should be a valid date",
         "fieldShouldBeDatetime": "{field} should be a valid date/time",
         "fieldShouldAfter": "{field} should be after {otherField}",

@@ -29,12 +29,28 @@
             "tooltip": true
         },
         {
+            "name": "decimal",
+            "type": "bool",
+            "readOnlyNotNew": true,
+            "tooltip": "currencyDecimal"
+        },
+        {
             "name": "audited",
             "type": "bool"
         },
         {
             "name": "readOnly",
             "type": "bool"
+        },
+        {
+            "name": "precision",
+            "type": "int",
+            "hidden": true
+        },
+        {
+            "name": "scale",
+            "type": "int",
+            "hidden": true
         }
     ],
     "actualFields": [
@@ -70,7 +86,9 @@
         "max"
     ],
     "mandatoryValidationList": [
-        "validCurrency"
+        "valid",
+        "validCurrency",
+        "inPermittedRange"
     ],
     "filter": true,
     "personalData": true,

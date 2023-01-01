@@ -244,4 +244,19 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase
                 Currency::create(2.1, 'USD')
             );
     }
+
+    public function testIsNegative1(): void
+    {
+        $this->assertTrue(Currency::create(-1.0, 'USD')->isNegative());
+    }
+
+    public function testIsNegative2(): void
+    {
+        $this->assertFalse(Currency::create(1.0, 'USD')->isNegative());
+    }
+
+    public function testIsNegative3(): void
+    {
+        $this->assertFalse(Currency::create(0.0, 'USD')->isNegative());
+    }
 }

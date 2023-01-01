@@ -611,7 +611,7 @@ class Htmlizer
                 $decimalPoint = $context['hash']['decimalPoint'] ?? '.';
                 $thousandsSeparator = $context['hash']['thousandsSeparator'] ?? ',';
 
-                return number_format($number, $decimals, $decimalPoint, $thousandsSeparator);
+                return number_format((float) $number, $decimals, $decimalPoint, $thousandsSeparator);
             },
             'dateFormat' => function () {
                 $args = func_get_args();

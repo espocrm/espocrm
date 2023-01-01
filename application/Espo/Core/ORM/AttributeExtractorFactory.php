@@ -29,16 +29,12 @@
 
 namespace Espo\Core\ORM;
 
-use Espo\Core\{
-    Utils\Metadata,
-    InjectableFactory,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 
-use Espo\ORM\{
-    Value\AttributeExtractorFactory as AttributeExtractorFactoryInterface,
-    Value\AttributeExtractor,
-    Metadata as OrmMetadata,
-};
+use Espo\ORM\Metadata as OrmMetadata;
+use Espo\ORM\Value\AttributeExtractor;
+use Espo\ORM\Value\AttributeExtractorFactory as AttributeExtractorFactoryInterface;
 
 use RuntimeException;
 
@@ -48,18 +44,11 @@ use RuntimeException;
  */
 class AttributeExtractorFactory implements AttributeExtractorFactoryInterface
 {
-    private Metadata $metadata;
-
-    private OrmMetadata $ormMetadata;
-
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(Metadata $metadata, OrmMetadata $ormMetadata, InjectableFactory $injectableFactory)
-    {
-        $this->metadata = $metadata;
-        $this->ormMetadata = $ormMetadata;
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(
+        private Metadata $metadata,
+        private OrmMetadata $ormMetadata,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     /**
      * @return AttributeExtractor<T>
@@ -69,12 +58,10 @@ class AttributeExtractorFactory implements AttributeExtractorFactoryInterface
         $className = $this->getClassName($entityType, $field);
 
         if (!$className) {
-            throw new RuntimeException(
-                "Could not get AttributeExtractor for '{$entityType}.{$field}'."
-            );
+            throw new RuntimeException("Could not get AttributeExtractor for '{$entityType}.{$field}'.");
         }
 
-        return $this->injectableFactory->create($className);
+        return $this->injectableFactory->createWith($className, ['entityType' => $entityType]);
     }
 
     /**

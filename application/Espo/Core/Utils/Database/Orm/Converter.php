@@ -85,6 +85,8 @@ class Converter
         'storeArrayValues' => 'storeArrayValues',
         'binary' => 'binary',
         'dependeeAttributeList' => 'dependeeAttributeList',
+        'precision' => 'precision',
+        'scale' => 'scale',
     ];
 
     /**

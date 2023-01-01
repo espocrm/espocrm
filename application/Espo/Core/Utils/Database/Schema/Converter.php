@@ -67,6 +67,8 @@ class Converter
         'default' => 'default',
         'notNull' => 'notnull',
         'autoincrement' => 'autoincrement',
+        'precision' => 'precision',
+        'scale' => 'scale',
     ];
 
     /**

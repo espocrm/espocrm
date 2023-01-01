@@ -29,10 +29,11 @@
 
 namespace tests\integration\Espo\Currency;
 
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\Tools\Currency\RateService;
 use Espo\Core\{
-    Utils\Config\ConfigWriter,
-};
+    Field\Currency,
+    Utils\Config\ConfigWriter};
 
 class CurrencyTest extends \tests\integration\Core\BaseTestCase
 {
@@ -61,5 +62,38 @@ class CurrencyTest extends \tests\integration\Core\BaseTestCase
         );
 
         $this->assertEquals(1.3, $newRates->EUR);
+    }
+
+    public function testDecimal1(): void
+    {
+        $this->getMetadata()->set('entityDefs', 'Lead', [
+            'fields' => [
+                'testCurrency' => [
+                    'type' => 'currency',
+                    'decimal' => true,
+                ]
+            ]
+        ]);
+
+        $this->getMetadata()->save();
+        $this->getDataManager()->rebuild();
+        $this->reCreateApplication();
+
+        $value = Currency::create('10.1', 'USD')
+            ->add(Currency::create('0.1', 'USD'));
+
+        /** @var Lead $lead */
+        $lead = $this->getEntityManager()->getNewEntity(Lead::ENTITY_TYPE);
+        $lead->setValueObject('testCurrency', $value);
+        $this->getEntityManager()->saveEntity($lead);
+
+        /** @var Lead $lead */
+        $lead = $this->getEntityManager()->getEntityById(Lead::ENTITY_TYPE, $lead->getId());
+
+        $value = $lead->getValueObject('testCurrency');
+
+        $this->assertInstanceOf(Currency::class, $value);
+        $this->assertEquals('10.2000', $value->getAmountAsString());
+        $this->assertEquals(0, $value->compare(Currency::create('10.2', 'USD')));
     }
 }
