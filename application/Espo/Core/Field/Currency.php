@@ -131,7 +131,7 @@ class Currency
     /**
      * Multiply by a multiplier.
      */
-    public function multiply(float $multiplier): self
+    public function multiply(float|int $multiplier): self
     {
         $amount = CalculatorUtil::multiply(
             $this->getAmountAsString(),
@@ -144,7 +144,7 @@ class Currency
     /**
      * Divide by a divider.
      */
-    public function divide(float $divider): self
+    public function divide(float|int $divider): self
     {
         $amount = CalculatorUtil::divide(
             $this->getAmountAsString(),
@@ -182,6 +182,14 @@ class Currency
             $this->getAmountAsString(),
             $value->getAmountAsString()
         );
+    }
+
+    /**
+     * Check whether the value is negative.
+     */
+    public function isNegative(): bool
+    {
+        return $this->compare(self::create(0.0, $this->code)) === -1;
     }
 
     /**
