@@ -45,20 +45,31 @@ use RuntimeException;
 
 class Helper
 {
-    /** @var array<string, mixed> */
+    public const TYPE_MYSQL = 'MySQL';
+    public const TYPE_MARIADB = 'MariaDB';
+    public const TYPE_POSTGRESQL = 'PostgreSQL';
+
+    private const DEFAULT_INDEX_LIMIT = 1000;
+
+    /** @var array<string, string> */
     private $driverPlatformMap = [
         'pdo_mysql' => 'Mysql',
         'mysqli' => 'Mysql',
     ];
 
-    /** @var array<string, mixed> */
-    protected $dbalDrivers = [
-        'mysqli' => 'Doctrine\\DBAL\\Driver\\Mysqli\\Driver',
+    /** @var array<string, class-string<Driver>> */
+    private array $platformNameDriverClassNameMap = [
+        'postgresql' => 'Doctrine\\DBAL\\Driver\\PDO\\PgSQL\\Driver',
+    ];
+
+    /** @var array<string, class-string<Driver>> */
+    protected $driverClassNameMap = [
+        'mysqli' => 'Doctrine\\DBAL\\Driver\\Mysqli\\Driver', // @todo Revise usage.
         'pdo_mysql' => 'Espo\\Core\\Utils\\Database\\DBAL\\Driver\\PDO\\MySQL\\Driver',
     ];
 
-    /** @var array<string, string> */
-    protected $dbalPlatforms = [
+    /** @var array<string, class-string<DbalPlatform>> */
+    protected $customPlatformClassNameMap = [
         'MariaDb1027Platform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MariaDb1027Platform',
         'MySQL57Platform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQL57Platform',
         'MySQL80Platform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQL80Platform',
@@ -85,21 +96,13 @@ class Helper
         return $this->dbalConnection;
     }
 
-    public function getPdoConnection(): ?PDO
+    public function getPdoConnection(): PDO
     {
         if (!isset($this->pdoConnection)) {
             $this->pdoConnection = $this->createPdoConnection();
         }
 
         return $this->pdoConnection;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function setDbalConnection(DbalConnection $dbalConnection): void
-    {
-        $this->dbalConnection = $dbalConnection;
     }
 
     public function setPdoConnection(PDO $pdoConnection): void
@@ -123,7 +126,7 @@ class Helper
 
         $databaseParams = $this->createDatabaseParams($params);
 
-        $driver = $this->createDbalDriver($params);
+        $driver = $this->createDbalDriver($params['driver'] ?? null, $databaseParams);
         $version = $this->getFullDatabaseVersion() ?? '';
         $platform = $driver->createDatabasePlatformForVersion($version);
 
@@ -143,23 +146,26 @@ class Helper
     }
 
     /**
-     *
-     * @param array<string, mixed> $params
      * @return Driver
      */
-    private function createDbalDriver(array $params)
+    private function createDbalDriver(?string $driverName, DatabaseParams $databaseParams)
     {
-        $driverName = $params['driver'] ?? 'pdo_mysql';
+        $platformName = $databaseParams->getPlatform();
 
-        if (!isset($this->dbalDrivers[$driverName])) {
-            throw new RuntimeException('Unknown database driver.');
+        if ($platformName) {
+            $driverClass = $this->platformNameDriverClassNameMap[strtolower($platformName)] ?? null;
+
+            if ($driverClass) {
+                return new $driverClass();
+            }
         }
 
-        /** @var class-string<Driver> $driverClass */
-        $driverClass = $this->dbalDrivers[$driverName];
+        $driverName ??= 'pdo_mysql';
 
-        if (!class_exists($driverClass)) {
-            throw new RuntimeException('Unknown database class.');
+        $driverClass = $this->driverClassNameMap[$driverName] ?? null;
+
+        if (!$driverClass) {
+            throw new RuntimeException('Unknown database driver.');
         }
 
         return new $driverClass();
@@ -175,9 +181,8 @@ class Helper
 
         $platformClass = $reflect->getShortName();
 
-        if (isset($this->dbalPlatforms[$platformClass])) {
-            /** @var class-string<DbalPlatform> $className */
-            $className = $this->dbalPlatforms[$platformClass];
+        if (isset($this->customPlatformClassNameMap[$platformClass])) {
+            $className = $this->customPlatformClassNameMap[$platformClass];
 
             return new $className();
         }
@@ -188,13 +193,10 @@ class Helper
     /**
      * Create PDO connection.
      *
-     * @param array<string,mixed> $params
-     * @return ?PDO
+     * @param array<string, mixed> $params
      */
-    public function createPdoConnection(
-        array $params = [],
-        bool $skipDatabaseName = false
-    ) {
+    public function createPdoConnection(array $params = [], bool $skipDatabaseName = false): PDO
+    {
         $defaultParams = [
             'driver' => 'pdo_mysql',
         ];
@@ -263,18 +265,20 @@ class Helper
     }
 
     /**
-     * Get maximum index length. If $tableName is empty get a value for all database tables.
-     *
-     * @param ?string $tableName
-     * @param int $default
-     * @return int
+     * Get maximum index length. If a table name is null, then get a value for all database tables.
      */
-    public function getMaxIndexLength($tableName = null, $default = 1000)
+    public function getMaxIndexLength(?string $tableName = null): int
     {
+        $databaseType = $this->getDatabaseType();
+
+        if ($databaseType === self::TYPE_POSTGRESQL) {
+            return 2704; // @todo Revise.
+        }
+
         $tableEngine = $this->getTableEngine($tableName);
 
         if (!$tableEngine) {
-            return $default;
+            return self::DEFAULT_INDEX_LIMIT;
         }
 
         switch ($tableEngine) {
@@ -283,64 +287,44 @@ class Helper
                 $version = $this->getDatabaseVersion() ?? '';
 
                 switch ($databaseType) {
-                    case 'MariaDB':
+                    case self::TYPE_MARIADB:
                         if (version_compare($version, '10.2.2') >= 0) {
-                            return 3072; //InnoDB, MariaDB 10.2.2+
+                            return 3072; // InnoDB, MariaDB 10.2.2+
                         }
 
                         break;
 
-                    case 'MySQL':
-                        if (version_compare($version, '5.7.0') >= 0) {
-                            return 3072; //InnoDB, MySQL 5.7+
-                        }
-
-                        break;
+                    case self::TYPE_MYSQL:
+                        return 3072;
                 }
 
-                return 767; //InnoDB
+                return 767; // InnoDB
         }
 
-        return 1000; //MyISAM
+        return 1000; // MyISAM
     }
 
     /**
-     * @param string $tableName
-     * @param int $default
-     * @return int
+     * Get a database type (MySQL, MariaDB).
      */
-    public function getTableMaxIndexLength($tableName, $default = 1000)
-    {
-        return $this->getMaxIndexLength($tableName, $default);
-    }
-
-    /**
-     * Get database type (MySQL, MariaDB)
-     *
-     * @param string $default
-     * @return string
-     */
-    public function getDatabaseType($default = 'MySQL')
+    public function getDatabaseType(): string
     {
         $version = $this->getFullDatabaseVersion() ?? '';
 
         if (preg_match('/mariadb/i', $version)) {
-            return 'MariaDB';
+            return self::TYPE_MARIADB;
         }
 
-        return $default;
+        if (preg_match('/postgresql/i', $version)) {
+            return self::TYPE_POSTGRESQL;
+        }
+
+        return self::TYPE_MYSQL;
     }
 
-    /**
-     * @return ?string
-     */
-    protected function getFullDatabaseVersion()
+    private function getFullDatabaseVersion(): ?string
     {
         $connection = $this->getPdoConnection();
-
-        if (!$connection) {
-            return null;
-        }
 
         $sth = $connection->prepare("select version()");
 
@@ -357,11 +341,9 @@ class Helper
     }
 
     /**
-     * Get database version.
-     *
-     * @return ?string
+     * Get a database version.
      */
-    public function getDatabaseVersion()
+    public function getDatabaseVersion(): ?string
     {
         $fullVersion = $this->getFullDatabaseVersion() ?? '';
 
@@ -373,27 +355,28 @@ class Helper
     }
 
     /**
-     * Get table/database tables engine. If $tableName is empty get a value for all database tables.
-     *
-     * @param ?string $tableName
-     * @param ?string $default
-     * @return ?string
+     * Get a table or default engine. If a table name is null, get a value for all database tables.
      */
-    protected function getTableEngine($tableName = null, $default = null)
+    private function getTableEngine(?string $tableName = null): ?string
     {
-        $connection = $this->getPdoConnection();
+        $databaseType = $this->getDatabaseType();
 
-        if (!$connection) {
-            return $default;
+        if (!in_array($databaseType, [self::TYPE_MYSQL, self::TYPE_MARIADB])) {
+            return null;
         }
 
-        $query = "SHOW TABLE STATUS WHERE Engine = 'MyISAM'";
-        if (!empty($tableName)) {
-            $query = "SHOW TABLE STATUS WHERE Engine = 'MyISAM' AND Name = '" . $tableName . "'";
+        $query = $tableName ?
+            "SHOW TABLE STATUS WHERE Engine = 'MyISAM' AND Name = :tableName" :
+            "SHOW TABLE STATUS WHERE Engine = 'MyISAM'";
+
+        $vars = [];
+
+        if ($tableName) {
+            $vars[':tableName'] = $tableName;
         }
 
-        $sth = $connection->prepare($query);
-        $sth->execute();
+        $sth = $this->getPdoConnection()->prepare($query);
+        $sth->execute($vars);
 
         $result = $sth->fetchColumn();
 
@@ -404,71 +387,51 @@ class Helper
         return 'InnoDB';
     }
 
-    /**
-     * Check if full text is supported. If $tableName is empty get a value for all database tables.
-     *
-     * @param ?string $tableName
-     * @param bool $default
-     * @return bool
-     */
-    public function doesSupportFulltext($tableName = null, $default = false)
+    public function getDatabaseParam(string $name): ?string
     {
-        $tableEngine = $this->getTableEngine($tableName);
+        $databaseType = $this->getDatabaseType();
 
-        if (!$tableEngine) {
-            return $default;
+        if ($databaseType === self::TYPE_POSTGRESQL) {
+            $sql = "SHOW :param";
+
+            $sth = $this->getPdoConnection()->prepare($sql);
+            $sth->execute([':param' => $name]);
+
+            $row = $sth->fetch(PDO::FETCH_NUM);
+
+            $value = $row[0] ?: null;
+
+            if ($value === null) {
+                return null;
+            }
+
+            return (string) $value;
         }
 
-        switch ($tableEngine) {
-            case 'InnoDB':
-                $version = $this->getFullDatabaseVersion() ?? '';
+        $sql = "SHOW VARIABLES LIKE :param";
 
-                if (version_compare($version, '5.6.4') >= 0) {
-                    return true; //InnoDB, MySQL 5.6.4+
-                }
+        $sth = $this->getPdoConnection()->prepare($sql);
+        $sth->execute([':param' => $name]);
 
-                return false; //InnoDB
-        }
+        $row = $sth->fetch(PDO::FETCH_NUM);
 
-        return true; //MyISAM
-    }
+        $value = $row[1] ?: null;
 
-    /**
-     * @param ?string $tableName
-     * @param bool $default
-     * @return bool
-     */
-    public function doesTableSupportFulltext($tableName, $default = false)
-    {
-        return $this->doesSupportFulltext($tableName, $default);
-    }
-
-    /**
-     * @param string $name
-     * @return mixed
-     */
-    public function getPdoDatabaseParam($name, PDO $pdoConnection)
-    {
-        if (!method_exists($pdoConnection, 'prepare')) {
+        if ($value === null) {
             return null;
         }
 
-        $sth = $pdoConnection->prepare("SHOW VARIABLES LIKE '" . $name . "'");
-
-        $sth->execute();
-
-        $res = $sth->fetch(PDO::FETCH_NUM);
-
-        $version = empty($res[1]) ? null : $res[1];
-
-        return $version;
+        return (string) $value;
     }
 
-    /**
-     * @return string
-     */
-    public function getPdoDatabaseVersion(PDO $pdoConnection)
+    public function getDatabaseServerVersion(): string
     {
-        return $this->getPdoDatabaseParam('version', $pdoConnection);
+        $databaseType = $this->getDatabaseType();
+
+        $param = $databaseType === self::TYPE_POSTGRESQL ?
+            'server_version' :
+            'version';
+
+        return (string) $this->getDatabaseParam($param);
     }
 }

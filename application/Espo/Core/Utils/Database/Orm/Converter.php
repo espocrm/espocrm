@@ -110,7 +110,6 @@ class Converter
     public function __construct(
         private Metadata $metadata,
         private Config $config,
-        private DatabaseHelper $databaseHelper,
         private RelationManager $relationManager,
         private MetadataHelper $metadataHelper
     ) {}
@@ -657,10 +656,6 @@ class Converter
      */
     protected function applyFullTextSearch(array &$ormMetadata, string $entityType)
     {
-        if (!$this->databaseHelper->doesTableSupportFulltext(Util::toUnderScore($entityType))) {
-            return;
-        }
-
         if (!$this->metadata->get(['entityDefs', $entityType, 'collection', 'fullTextSearch'])) {
             return;
         }

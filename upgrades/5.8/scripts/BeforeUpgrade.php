@@ -39,7 +39,7 @@ class BeforeUpgrade
         $pdo = $this->container->get('entityManager')->getPDO();
 
         $databaseType = $databaseHelper->getDatabaseType();
-        $fullVersion = $databaseHelper->getPdoDatabaseVersion($pdo);
+        $fullVersion = $databaseHelper->getDatabaseServerVersion($pdo);
 
         if (preg_match('/[0-9]+\.[0-9]+\.[0-9]+/', $fullVersion, $match)) {
             $version = $match[0];

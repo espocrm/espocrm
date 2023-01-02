@@ -133,10 +133,7 @@ class Converter
         return $this->databaseSchema;
     }
 
-    /**
-     * @return int
-     */
-    protected function getMaxIndexLength()
+    protected function getMaxIndexLength(): int
     {
         if (!isset($this->maxIndexLength)) {
             $this->maxIndexLength = $this->getDatabaseSchema()->getDatabaseHelper()->getMaxIndexLength();

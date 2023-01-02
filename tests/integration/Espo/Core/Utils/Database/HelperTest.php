@@ -134,39 +134,6 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals($databaseInfo['version'], $this->helper->getDatabaseVersion());
     }
 
-    public function testIsSupportsFulltext()
-    {
-        $this->initTest();
-
-        $databaseInfo = $this->getDatabaseInfo();
-        if (empty($databaseInfo)) {
-            return;
-        }
-
-        switch ($databaseInfo['type']) {
-            case 'mysql':
-                if (version_compare($databaseInfo['version'], '5.7.0', '<')) {
-                    throw new Error('You have to upgrade your MySQL to use EspoCRM.');
-                }
-                break;
-
-            case 'mariadb':
-                if (version_compare($databaseInfo['version'], '10.1.0', '<')) {
-                    throw new Error('You have to upgrade your MariaDB to use EspoCRM.');
-                }
-                break;
-
-            default:
-                throw new Error('Uknown database type.');
-                break;
-        }
-
-        $this->assertTrue($this->helper->doesSupportFulltext());
-        $this->assertTrue($this->helper->doesSupportFulltext('dummy_table', false));
-        $this->assertTrue($this->helper->doesTableSupportFulltext('account'));
-        $this->assertTrue($this->helper->doesTableSupportFulltext('account', true));
-    }
-
     public function testGetDatabaseType()
     {
         $this->initTest();
