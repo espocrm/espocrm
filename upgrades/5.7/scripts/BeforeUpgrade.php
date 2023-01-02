@@ -44,7 +44,7 @@ class BeforeUpgrade
         $databaseHelper = new \Espo\Core\Utils\Database\Helper($this->container->get('config'));
 
         $databaseType = $databaseHelper->getDatabaseType();
-        $fullVersion = $databaseHelper->getDatabaseServerVersion($this->container->get('entityManager')->getPDO());
+        $fullVersion = $databaseHelper->getPdoDatabaseVersion($this->container->get('entityManager')->getPDO());
 
         if (preg_match('/[0-9]+\.[0-9]+\.[0-9]+/', $fullVersion, $match)) {
             $version = $match[0];
