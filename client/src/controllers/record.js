@@ -203,6 +203,7 @@ define('controllers/record', ['controller'], function (Dep) {
 
                 this.listenToOnce(this.baseController, 'action', () => {
                     model.abortLastFetch();
+                    this.hideLoadingNotification();
                 });
 
                 return;
