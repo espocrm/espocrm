@@ -327,6 +327,9 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                                     self.focusOnControlSilently();
                                 });
                             });
+
+
+                        self.$control_input.css({'width': '4px'});
                     };
                 })();
 
