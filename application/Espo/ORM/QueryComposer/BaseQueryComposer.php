@@ -101,6 +101,10 @@ abstract class BaseQueryComposer implements QueryComposer
      * @var array<string,string>
      */
     protected array $comparisonOperators = [
+		'>=s' => '>=',
+        '<=s' => '<=',
+        '>s' => '>',
+        '<s' => '<',
         '!=s' => 'NOT IN',
         '=s' => 'IN',
         '!=' => '<>',
@@ -2754,7 +2758,12 @@ abstract class BaseQueryComposer implements QueryComposer
             return '0';
         }
 
-        if ($operatorOrm === '=s' || $operatorOrm === '!=s') {
+        $subQueryOperators = array_filter(
+            array_keys($this->comparisonOperators),
+            fn($op) => str_ends_with($op, 's')
+        );
+
+        if (in_array($operatorOrm, $subQueryOperators)) {
             if (!is_array($value)) {
                 return '0';
             }
@@ -2763,8 +2772,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
             if (!empty($value['selectParams'])) {
                 $subQuerySelectParams = $value['selectParams'];
-            }
-            else {
+            } else {
                 $subQuerySelectParams = $value;
             }
 
