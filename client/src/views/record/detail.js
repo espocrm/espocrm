@@ -1912,7 +1912,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this.subscribeToWebSocket();
 
                 this.once('remove', () => {
-                    if (this.isSubscribedToWebSocked) {
+                    if (this.isSubscribedToWebSocket) {
                         this.unsubscribeFromWebSocket();
                     }
                 });
@@ -3350,7 +3350,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             let topic = 'recordUpdate.' + this.entityType + '.' + this.model.id;
 
             this.recordUpdateWebSocketTopic = topic;
-            this.isSubscribedToWebSocked = true;
+            this.isSubscribedToWebSocket = true;
 
             this.getHelper().webSocketManager.subscribe(topic, (t, data) => {
                 this.handleRecordUpdate();
@@ -3358,7 +3358,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         unsubscribeFromWebSocket: function () {
-            if (!this.isSubscribedToWebSocked) {
+            if (!this.isSubscribedToWebSocket) {
                 return;
             }
 
