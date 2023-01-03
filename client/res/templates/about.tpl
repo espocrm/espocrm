@@ -8,7 +8,7 @@
             <div class="panel-body">
                 <h5>Version {{version}}</h5>
                 <p>
-                    Copyright &copy; 2014-2022 EspoCRM: Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko.
+                    Copyright &copy; 2014-2023 EspoCRM: Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko.
                 </p>
                 <p>
                     Website: <a href="https://www.espocrm.com" target="_BLANK">www.espocrm.com</a>.
