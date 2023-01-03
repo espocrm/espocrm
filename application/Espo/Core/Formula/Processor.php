@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Formula;
 
+use Espo\Core\Formula\Exceptions\ExecutionException;
 use Espo\Core\Formula\Parser\Ast\Attribute;
 use Espo\Core\Formula\Parser\Ast\Node;
 use Espo\Core\Formula\Parser\Ast\Value;
@@ -77,6 +78,7 @@ class Processor
      *
      * @return mixed A result of evaluation. An array if an argument list was passed.
      * @throws Error
+     * @throws ExecutionException
      */
     public function process(Evaluatable $item)
     {

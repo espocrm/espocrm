@@ -27,30 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions;
+namespace Espo\Core\Formula\Exceptions;
 
-use Espo\Core\Formula\ArgumentList;
-use Espo\Core\Formula\Exceptions\BreakLoop;
-use Espo\Core\Formula\Exceptions\ContinueLoop;
-
-class WhileType extends BaseFunction
-{
-    public function process(ArgumentList $args)
-    {
-        if (count($args) < 2) {
-            $this->throwTooFewArguments(2);
-        }
-
-        while ($this->evaluate($args[0])) {
-            try {
-                $this->evaluate($args[1]);
-            }
-            catch (BreakLoop) {
-                break;
-            }
-            catch (ContinueLoop) {
-                continue;
-            }
-        }
-    }
-}
+class ExecutionException extends \Exception
+{}

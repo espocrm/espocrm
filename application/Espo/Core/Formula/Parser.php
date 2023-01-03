@@ -1005,6 +1005,14 @@ class Parser
             return new Value(null);
         }
 
+        if ($expression === 'break') {
+            return new Node('break', []);
+        }
+
+        if ($expression === 'continue') {
+            return new Node('continue', []);
+        }
+
         if ($expression[strlen($expression) - 1] === ')') {
             $firstOpeningBraceIndex = strpos($expression, '(');
 
