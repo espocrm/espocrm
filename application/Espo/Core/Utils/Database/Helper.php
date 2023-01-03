@@ -31,16 +31,12 @@ namespace Espo\Core\Utils\Database;
 
 use Espo\Core\ORM\PDO\PDOFactoryFactory;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Database\DBAL\ConnectionFactoryFactory as DBALConnectionFactoryFactory;
 use Espo\ORM\DatabaseParams;
-use Espo\ORM\PDO\Options as PdoOptions;
 
-use Doctrine\DBAL\Connection as DbalConnection;
-use Doctrine\DBAL\Platforms\AbstractPlatform as DbalPlatform;
-use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\VersionAwarePlatformDriver as Driver;
+use Doctrine\DBAL\Connection as DBALConnection;
 
 use PDO;
-use ReflectionClass;
 use RuntimeException;
 
 class Helper
@@ -49,45 +45,20 @@ class Helper
     public const TYPE_MARIADB = 'MariaDB';
     public const TYPE_POSTGRESQL = 'PostgreSQL';
 
+    private const DEFAULT_PLATFORM = 'Mysql';
+
     private const DEFAULT_INDEX_LIMIT = 1000;
 
-    /** @var array<string, string> */
-    private $driverPlatformMap = [
-        'pdo_mysql' => 'Mysql',
-        'mysqli' => 'Mysql',
-    ];
-
-    /** @var array<string, class-string<Driver>> */
-    private array $platformNameDriverClassNameMap = [
-        'postgresql' => 'Doctrine\\DBAL\\Driver\\PDO\\PgSQL\\Driver',
-    ];
-
-    /** @var array<string, class-string<Driver>> */
-    protected $driverClassNameMap = [
-        'mysqli' => 'Doctrine\\DBAL\\Driver\\Mysqli\\Driver', // @todo Revise usage.
-        'pdo_mysql' => 'Espo\\Core\\Utils\\Database\\DBAL\\Driver\\PDO\\MySQL\\Driver',
-    ];
-
-    /** @var array<string, class-string<DbalPlatform>> */
-    protected $customPlatformClassNameMap = [
-        'MariaDb1027Platform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MariaDb1027Platform',
-        'MySQL57Platform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQL57Platform',
-        'MySQL80Platform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQL80Platform',
-        'MySQLPlatform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQLPlatform',
-    ];
-
-    private ?DbalConnection $dbalConnection = null;
+    private ?DBALConnection $dbalConnection = null;
     private ?PDO $pdoConnection = null;
 
     public function __construct(
         private Config $config,
-        private PDOFactoryFactory $pdoFactoryFactory
+        private PDOFactoryFactory $pdoFactoryFactory,
+        private DBALConnectionFactoryFactory $dbalConnectionFactoryFactory
     ) {}
 
-    /**
-     * @throws Exception
-     */
-    public function getDbalConnection(): DbalConnection
+    public function getDbalConnection(): DBALConnection
     {
         if (!isset($this->dbalConnection)) {
             $this->dbalConnection = $this->createDbalConnection();
@@ -110,15 +81,10 @@ class Helper
         $this->pdoConnection = $pdoConnection;
     }
 
-    /**
-     * @param array<string, mixed> $params
-     * @throws Exception
-     */
-    public function createDbalConnection(array $params = []): DbalConnection
+    public function createDbalConnection(): DBALConnection
     {
-        if (empty($params)) {
-            $params = $this->config->get('database');
-        }
+        /** @var ?array<string, mixed> $params */
+        $params = $this->config->get('database');
 
         if (empty($params)) {
             throw new RuntimeException('Database params cannot be empty for DBAL connection.');
@@ -126,68 +92,11 @@ class Helper
 
         $databaseParams = $this->createDatabaseParams($params);
 
-        $driver = $this->createDbalDriver($params['driver'] ?? null, $databaseParams);
-        $version = $this->getFullDatabaseVersion() ?? '';
-        $platform = $driver->createDatabasePlatformForVersion($version);
+        $platform = $databaseParams->getPlatform() ?? self::DEFAULT_PLATFORM;
 
-        return new DbalConnection(
-            [
-                'platform' => $this->createDbalPlatform($platform),
-                'host' => $databaseParams->getHost(),
-                'port' => $databaseParams->getPort(),
-                'dbname' => $databaseParams->getName(),
-                'charset' => $databaseParams->getCharset(),
-                'user' => $databaseParams->getUsername(),
-                'password' => $databaseParams->getPassword(),
-                'driverOptions' => PdoOptions::getOptionsFromDatabaseParams($databaseParams),
-            ],
-            $driver
-        );
-    }
-
-    /**
-     * @return Driver
-     */
-    private function createDbalDriver(?string $driverName, DatabaseParams $databaseParams)
-    {
-        $platformName = $databaseParams->getPlatform();
-
-        if ($platformName) {
-            $driverClass = $this->platformNameDriverClassNameMap[strtolower($platformName)] ?? null;
-
-            if ($driverClass) {
-                return new $driverClass();
-            }
-        }
-
-        $driverName ??= 'pdo_mysql';
-
-        $driverClass = $this->driverClassNameMap[$driverName] ?? null;
-
-        if (!$driverClass) {
-            throw new RuntimeException('Unknown database driver.');
-        }
-
-        return new $driverClass();
-    }
-
-    /**
-     * @param DbalPlatform $platform
-     * @return DbalPlatform
-     */
-    private function createDbalPlatform(DbalPlatform $platform)
-    {
-        $reflect = new ReflectionClass($platform);
-
-        $platformClass = $reflect->getShortName();
-
-        if (isset($this->customPlatformClassNameMap[$platformClass])) {
-            $className = $this->customPlatformClassNameMap[$platformClass];
-
-            return new $className();
-        }
-
-        return $platform;
+        return $this->dbalConnectionFactoryFactory
+            ->create($platform, $this->getPdoConnection())
+            ->create($databaseParams);
     }
 
     /**
@@ -246,19 +155,7 @@ class Helper
             ->withSslVerifyDisabled($params['sslVerifyDisabled'] ?? false);
 
         if (!$databaseParams->getPlatform()) {
-            $driver = $params['driver'] ?? null;
-
-            if (!$driver) {
-                throw new RuntimeException('No database driver specified.');
-            }
-
-            $platform = $this->driverPlatformMap[$driver] ?? null;
-
-            if (!$platform) {
-                throw new RuntimeException("Database driver '{$driver}' is not supported.");
-            }
-
-            $databaseParams = $databaseParams->withPlatform($platform);
+            $databaseParams = $databaseParams->withPlatform(self::DEFAULT_PLATFORM);
         }
 
         return $databaseParams;
@@ -305,7 +202,7 @@ class Helper
     }
 
     /**
-     * Get a database type (MySQL, MariaDB).
+     * Get a database type (MySQL, MariaDB, PostgreSQL).
      */
     public function getDatabaseType(): string
     {
@@ -342,6 +239,8 @@ class Helper
 
     /**
      * Get a database version.
+     *
+     * @todo Add PostgreSQL support.
      */
     public function getDatabaseVersion(): ?string
     {
@@ -391,31 +290,18 @@ class Helper
     {
         $databaseType = $this->getDatabaseType();
 
-        if ($databaseType === self::TYPE_POSTGRESQL) {
-            $sql = "SHOW :param";
+        $sql = $databaseType === self::TYPE_POSTGRESQL ?
+            "SHOW :param" :
+            "SHOW VARIABLES LIKE :param";
 
-            $sth = $this->getPdoConnection()->prepare($sql);
-            $sth->execute([':param' => $name]);
-
-            $row = $sth->fetch(PDO::FETCH_NUM);
-
-            $value = $row[0] ?: null;
-
-            if ($value === null) {
-                return null;
-            }
-
-            return (string) $value;
-        }
-
-        $sql = "SHOW VARIABLES LIKE :param";
+        $index = $databaseType === self::TYPE_POSTGRESQL ? 0 : 1;
 
         $sth = $this->getPdoConnection()->prepare($sql);
         $sth->execute([':param' => $name]);
 
         $row = $sth->fetch(PDO::FETCH_NUM);
 
-        $value = $row[1] ?: null;
+        $value = $row[$index] ?: null;
 
         if ($value === null) {
             return null;
