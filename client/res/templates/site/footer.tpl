@@ -1,4 +1,4 @@
-<p class="credit small">&copy; 2022
+<p class="credit small">&copy; 2023
 <a
     href="https://www.espocrm.com"
     title="Powered by EspoCRM"
