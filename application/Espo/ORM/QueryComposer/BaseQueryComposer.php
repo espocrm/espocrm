@@ -776,6 +776,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         foreach ($indexList as $indexName) {
             $indexKey = $this->metadata->get($entityType, ['indexes', $indexName, 'key']);
+
             if ($indexKey) {
                 $indexKeyList[] = $indexKey;
             }
@@ -880,11 +881,13 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if (!empty($params['extraAdditionalSelect'])) {
             $extraSelect = [];
+
             foreach ($params['extraAdditionalSelect'] as $item) {
                 if (!in_array($item, $params['select'])) {
                     $extraSelect[] = $item;
                 }
             }
+
             if (count($extraSelect)) {
                 $newParams = ['select' => $extraSelect];
                 $extraSelectPart = $this->getSelectPart($entity, $newParams);
@@ -895,12 +898,13 @@ abstract class BaseQueryComposer implements QueryComposer
             }
         }
 
-        if (!empty($params['additionalSelectColumns']) && is_array($params['additionalSelectColumns'])) {
+        /*if (!empty($params['additionalSelectColumns']) && is_array($params['additionalSelectColumns'])) {
             foreach ($params['additionalSelectColumns'] as $column => $field) {
                 $itemAlias = $this->sanitizeSelectAlias($field);
+
                 $selectPart .= ", " . $column . " AS " . $this->quoteIdentifier($itemAlias);
             }
-        }
+        }*/
 
         if ($selectPart === '') {
             return null;
@@ -2197,7 +2201,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
             $list = array_reverse(explode(',', $list));
 
-            foreach ($list as $i => $listItem) {
+            foreach ($list as $listItem) {
                 $listItem = str_replace('_COMMA_', ',', $listItem);
 
                 $listQuoted[] = $this->quote($listItem);
@@ -2283,19 +2287,15 @@ abstract class BaseQueryComposer implements QueryComposer
             return null;
         }
 
-        $aggregation = strtoupper($aggregation);
+        $aggregationPart = $this->sanitize(strtoupper($aggregation));
 
-        $distinctPart = '';
-        if ($distinct) {
-            $distinctPart = 'DISTINCT ';
-        }
+        $distinctPart = $distinct ? 'DISTINCT ' : '';
 
         $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
 
-        $selectPart = "{$aggregation}({$distinctPart}{$fromAlias}." .
-            $this->toDb($this->sanitize($aggregationBy)) . ") AS " . $this->quoteIdentifier('value') . "";
+        $columnPart = "{$fromAlias}." . $this->toDb($this->sanitize($aggregationBy));
 
-        return $selectPart;
+        return "{$aggregationPart}({$distinctPart}{$columnPart}) AS " . $this->quoteIdentifier('value');
     }
 
     protected function quoteIdentifier(string $string): string
