@@ -281,16 +281,19 @@ class Helper
     {
         $databaseType = $this->getDatabaseType();
 
-        $sql = $databaseType === self::TYPE_POSTGRESQL ?
-            "SHOW :param" :
-            "SHOW VARIABLES LIKE :param";
+        if ($databaseType === self::TYPE_POSTGRESQL) {
+            // @todo Implement.
+            return null;
+        }
 
-        $index = $databaseType === self::TYPE_POSTGRESQL ? 0 : 1;
+        $sql = "SHOW VARIABLES LIKE :param";;
 
         $sth = $this->getPdoConnection()->prepare($sql);
         $sth->execute([':param' => $name]);
 
         $row = $sth->fetch(PDO::FETCH_NUM);
+
+        $index = 1;
 
         $value = $row[$index] ?: null;
 

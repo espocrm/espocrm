@@ -78,10 +78,10 @@ class PostgresqlConnectionFactory implements ConnectionFactory
 
     private function getDatabaseVersion(): ?string
     {
-        $sql = "SHOW :param";
+        $sql = "SHOW server_version";
 
         $sth = $this->pdo->prepare($sql);
-        $sth->execute([':param' => 'server_version']);
+        $sth->execute();
 
         $row = $sth->fetch(PDO::FETCH_NUM);
 
