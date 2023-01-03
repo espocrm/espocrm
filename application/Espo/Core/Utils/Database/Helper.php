@@ -106,17 +106,8 @@ class Helper
      */
     public function createPdoConnection(array $params = [], bool $skipDatabaseName = false): PDO
     {
-        $defaultParams = [
-            'driver' => 'pdo_mysql',
-        ];
-
-        $defaultParams = array_merge(
-            $defaultParams,
-            $this->config->get('database')
-        );
-
         $params = array_merge(
-            $defaultParams,
+            $this->config->get('database') ?? [],
             $params
         );
 
