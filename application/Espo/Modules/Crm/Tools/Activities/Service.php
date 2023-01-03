@@ -603,7 +603,7 @@ class Service
                 [
                     'eea.emailAddressId:' => 'em.emailAddressId',
                     'eea.entityType' => $entityType,
-                    'eea.deleted' => 0,
+                    'eea.deleted' => false,
                 ]
             )
             ->where([
