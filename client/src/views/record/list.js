@@ -456,6 +456,12 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         $selectAllCheckbox: null,
 
         /**
+         * @protected
+         * @type {?Object.<string, Object.<string, *>>}
+         */
+        massActionDefs: null,
+
+        /**
          * @inheritDoc
          */
         events: {
@@ -1896,18 +1902,16 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             ) {
                 this.removeMassAction('merge');
             }
-            
-            this.massActionDefs = _.extend(
-                {},
-                this.getMetadata().get(['clientDefs', 'Global', 'massActionDefs']) || {},
-                this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs']) || {}
-            );
 
-            let metadataMassActionList = (
-                    this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []
-                ).concat(
-                    this.getMetadata().get(['clientDefs', 'Global', 'massActionList']) || []
-                );
+            this.massActionDefs = {
+                ...this.getMetadata().get(['clientDefs', 'Global', 'massActionDefs']) || {},
+                ...this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs']) || {},
+            };
+
+            let metadataMassActionList = [
+                ...this.getMetadata().get(['clientDefs', 'Global', 'massActionList']) || [],
+                ...this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || [],
+            ];
 
             metadataMassActionList.forEach(item => {
                 let defs = this.massActionDefs[item] || {};
