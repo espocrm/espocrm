@@ -88,6 +88,7 @@ function (Dep, /** module:ui/select*/Select) {
             this.currencyFieldName = this.name + 'Currency';
             this.defaultCurrency = this.getConfig().get('defaultCurrency');
             this.currencyList = this.getConfig().get('currencyList') || [this.defaultCurrency];
+            this.decimalPlaces = this.getConfig().get('currencyDecimalPlaces');
 
             if (this.params.onlyDefaultCurrency) {
                 this.currencyList = [this.defaultCurrency];
@@ -102,6 +103,22 @@ function (Dep, /** module:ui/select*/Select) {
                 this.currencyList = Espo.Utils.clone(this.currencyList);
                 this.currencyList.push(currencyValue);
             }
+        },
+
+        /**
+         * @inheritDoc
+         */
+        setupAutoNumericOptions: function () {
+            this.autoNumericOptions = {
+                digitGroupSeparator: this.thousandSeparator,
+                decimalCharacter: this.decimalMark,
+                modifyValueOnWheel: false,
+                selectOnFocus: false,
+                decimalPlaces: this.decimalPlaces,
+                allowDecimalPadding: true,
+                showWarnings: false,
+                formulaMode: true,
+            };
         },
 
         getCurrencyFormat: function () {
@@ -140,7 +157,7 @@ function (Dep, /** module:ui/select*/Select) {
         },
 
         formatNumberEdit: function (value) {
-            let currencyDecimalPlaces = this.getConfig().get('currencyDecimalPlaces');
+            let currencyDecimalPlaces = this.decimalPlaces;
 
             if (value !== null) {
                 var parts = value.toString().split(".");
@@ -186,15 +203,15 @@ function (Dep, /** module:ui/select*/Select) {
 
         formatNumberDetail: function (value) {
             if (value !== null) {
-                let currencyDecimalPlaces = this.getConfig().get('currencyDecimalPlaces');
+                let currencyDecimalPlaces = this.decimalPlaces;
 
                 if (currencyDecimalPlaces === 0) {
                     value = Math.round(value);
                 }
                 else if (currencyDecimalPlaces) {
-                     value = Math.round(
-                         value * Math.pow(10, currencyDecimalPlaces)) / (Math.pow(10, currencyDecimalPlaces)
-                        );
+                    value = Math.round(
+                        value * Math.pow(10, currencyDecimalPlaces)) / (Math.pow(10, currencyDecimalPlaces)
+                    );
                 }
                 else {
                     value = Math.round(

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/int', ['views/fields/base'], function (Dep) {
+define('views/fields/int', ['views/fields/base', 'lib!autonumeric'], function (Dep, AutoNumeric) {
 
     /**
      * An integer field.
@@ -41,13 +41,9 @@ define('views/fields/int', ['views/fields/base'], function (Dep) {
         type: 'int',
 
         listTemplate: 'fields/int/list',
-
         detailTemplate: 'fields/int/detail',
-
         editTemplate: 'fields/int/edit',
-
         searchTemplate: 'fields/int/search',
-
         validations: ['required', 'int', 'range'],
 
         thousandSeparator: ',',
@@ -64,6 +60,18 @@ define('views/fields/int', ['views/fields/base'], function (Dep) {
             'between',
         ],
 
+        /**
+         * @type {?Object.<string, *>}
+         * @protected
+         */
+        autoNumericOptions: null,
+
+        /**
+         * @type {?AutoNumeric}
+         * @protected
+         */
+        autoNumericInstance: null,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -72,10 +80,8 @@ define('views/fields/int', ['views/fields/base'], function (Dep) {
             if (this.getPreferences().has('thousandSeparator')) {
                 this.thousandSeparator = this.getPreferences().get('thousandSeparator');
             }
-            else {
-                if (this.getConfig().has('thousandSeparator')) {
-                    this.thousandSeparator = this.getConfig().get('thousandSeparator');
-                }
+            else if (this.getConfig().has('thousandSeparator')) {
+                this.thousandSeparator = this.getConfig().get('thousandSeparator');
             }
 
             if (this.params.disableFormatting) {
@@ -83,10 +89,36 @@ define('views/fields/int', ['views/fields/base'], function (Dep) {
             }
         },
 
+        setupFinal: function () {
+            Dep.prototype.setupFinal.call(this);
+
+            this.setupAutoNumericOptions();
+        },
+
+        /**
+         * @protected
+         */
+        setupAutoNumericOptions: function () {
+            this.autoNumericOptions = {
+                digitGroupSeparator: !this.disableFormatting ? this.thousandSeparator : null,
+                modifyValueOnWheel: false,
+                decimalPlaces: 0,
+                selectOnFocus: false,
+                formulaMode: true,
+            };
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'search') {
+            if (this.mode === this.MODE_EDIT) {
+
+                if (this.autoNumericOptions) {
+                    this.autoNumericInstance = new AutoNumeric(this.$element.get(0), this.autoNumericOptions);
+                }
+            }
+
+            if (this.mode === this.MODE_SEARCH) {
                 var $searchType = this.$el.find('select.search-type');
 
                 this.handleSearchType($searchType.val());
@@ -99,9 +131,16 @@ define('views/fields/int', ['views/fields/base'], function (Dep) {
                     this.trigger('change');
                 });
 
-                this.$el.find('input.additional').on('input', () => {
+                let $inputAdditional = this.$el.find('input.additional');
+
+                $inputAdditional.on('input', () => {
                     this.trigger('change');
                 });
+
+                if (this.autoNumericOptions) {
+                    new AutoNumeric(this.$element.get(0), this.autoNumericOptions);
+                    new AutoNumeric($inputAdditional.get(0), this.autoNumericOptions);
+                }
             }
         },
 
@@ -309,18 +348,19 @@ define('views/fields/int', ['views/fields/base'], function (Dep) {
         parse: function (value) {
             value = (value !== '') ? value : null;
 
-            if (value !== null) {
-                value = value.split(this.thousandSeparator).join('');
-
-                if (value.indexOf('.') !== -1 || value.indexOf(',') !== -1) {
-                    value = NaN;
-                }
-                else {
-                    value = parseInt(value);
-                }
+            if (value === null) {
+                return null;
             }
 
-            return value;
+            value = value
+                .split(this.thousandSeparator)
+                .join('');
+
+            if (value.indexOf('.') !== -1 || value.indexOf(',') !== -1) {
+                return NaN;
+            }
+
+            return parseInt(value);
         },
 
         fetch: function () {
