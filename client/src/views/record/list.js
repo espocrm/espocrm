@@ -1187,7 +1187,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
          * @param {string} name An action.
          */
         massAction: function (name) {
-            let defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name]) || {};
+            let defs = this.massActionDefs[name] || {};
 
             let handler = defs.handler;
 
@@ -1243,18 +1243,15 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
                 data.entityType = this.entityType;
 
-                let waitMessage = this.getMetadata()
-                    .get(['clientDefs', this.scope, 'massActionDefs', name, 'waitMessage']) || 'pleaseWait';
+                let waitMessage = defs.waitMessage || 'pleaseWait';
 
                 Espo.Ui.notify(this.translate(waitMessage, 'messages', this.scope));
 
-                let url = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'url']);
+                let url = defs.url;
 
                 Espo.Ajax.postRequest(url, data)
                     .then(result=> {
-                        let successMessage = result.successMessage ||
-                            this.getMetadata()
-                                .get(['clientDefs', this.scope, 'massActionDefs', name, 'successMessage']) || 'done';
+                        let successMessage = result.successMessage || defs.successMessage || 'done';
 
                         this.collection
                             .fetch()
@@ -1899,6 +1896,12 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             ) {
                 this.removeMassAction('merge');
             }
+            
+            this.massActionDefs = _.extend(
+                {},
+                this.getMetadata().get(['clientDefs', 'Global', 'massActionDefs']) || {},
+                this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs']) || {}
+            );
 
             let metadataMassActionList = (
                     this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []
@@ -1907,7 +1910,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 );
 
             metadataMassActionList.forEach(item => {
-                let defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
+                let defs = this.massActionDefs[item] || {};
 
                 if (!Espo.Utils.checkActionAvailability(this.getHelper(), defs)) {
                     return;
@@ -1942,8 +1945,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 }
 
                 if (~this.massActionList.indexOf(item)) {
-                    let defs = this.getMetadata()
-                        .get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
+                    let defs = this.massActionDefs[item] || {};
 
                     if (!Espo.Utils.checkActionAvailability(this.getHelper(), defs)) {
                         return;
@@ -1960,8 +1962,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             metadataMassActionList
                 .concat(metadataCheckAllMassActionList)
                 .forEach(action => {
-                    let defs = this.getMetadata()
-                           .get(['clientDefs', this.scope, 'massActionDefs', action]) || {};
+                    let defs = this.massActionDefs[action] || {};
 
                     if (!defs.initFunction || !defs.handler) {
                         return;
