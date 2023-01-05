@@ -85,6 +85,14 @@ define(() => {
                     item.html = this.language.translate(name, 'actions', scope);
                 }
 
+                item.data = item.data || {};
+
+                let handlerName = item.handler || item.data.handler;
+
+                if (handlerName && !item.data.handler) {
+                    item.data.handler = handlerName;
+                }
+
                 addFunc(item);
 
                 if (!Espo.Utils.checkActionAvailability(this.viewHelper, item)) {
@@ -96,9 +104,6 @@ define(() => {
                 }
 
                 actionList.push(item);
-
-                let data = item.data || {};
-                let handlerName = item.handler || data.handler;
 
                 if (!handlerName) {
                     return;
