@@ -2031,6 +2031,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         setupMassActions: function () {
             if (this.massActionsDisabled) {
                 this.massActionList = [];
+                this.checkAllResultMassActionList = [];
 
                 return;
             }
