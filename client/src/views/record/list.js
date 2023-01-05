@@ -2041,7 +2041,10 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 this.removeMassAction('merge');
             }
 
-            if (this.removeDisabled) {
+            if (
+                this.removeDisabled ||
+                this.getMetadata().get(['clientDefs', this.scope, 'massRemoveDisabled'])
+            ) {
                 this.removeMassAction('remove');
             }
 
