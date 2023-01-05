@@ -123,6 +123,11 @@ class SmtpParams
             }
         }
 
+        if (isset($params['smtpAuthClassName'])) {
+            // For bc.
+            $obj->authClassName = $params['smtpAuthClassName'];
+        }
+
         return $obj;
     }
 
