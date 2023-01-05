@@ -67,9 +67,10 @@ define(() => {
                 throw new Error();
             }
 
-            let actionDefsList = (this.metadata
-                .get(['clientDefs', scope, type + 'ActionList']) || [])
-                .concat(this.metadata.get(['clientDefs', 'Global', type + 'ActionList']) || []);
+            let actionDefsList = [
+                ...this.metadata.get(['clientDefs', 'Global', type + 'ActionList']) || [],
+                ...this.metadata.get(['clientDefs', scope, type + 'ActionList']) || [],
+            ];
 
             actionDefsList.forEach(item => {
                 if (typeof item === 'string') {
