@@ -445,8 +445,7 @@
             "fieldManagerParamList": []
         },
         "campaign": {
-            "type": "link",
-            "layoutListDisabled": true
+            "type": "link"
         },
         "createdAt": {
             "type": "datetime",

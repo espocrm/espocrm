@@ -200,8 +200,7 @@
             "view": "views/fields/teams"
         },
         "campaign": {
-            "type": "link",
-            "layoutListDisabled": true
+            "type": "link"
         },
         "createdAccount": {
             "type": "link",
