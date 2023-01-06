@@ -37,7 +37,7 @@ define('views/import-error/fields/validation-failures', ['views/fields/base'], (
     return Dep.extend(/** @lends module:views/import-error/fields/validation-failures.Class# */{
 
         detailTemplateContent: `
-            {{#if value}}
+            {{#if itemList.length}}
             <table class="table">
                 <thead>
                     <tr>
@@ -46,10 +46,20 @@ define('views/import-error/fields/validation-failures', ['views/fields/base'], (
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each value}}
+                    {{#each itemList}}
                     <tr>
                         <td>{{translate field category='fields' scope=entityType}}</td>
-                        <td>{{translate type category='fieldValidations'}}</td>
+                        <td>
+                            {{translate type category='fieldValidations'}}
+                            {{#if popoverText}}
+                            <a
+                                role="button"
+                                tabindex="-1"
+                                class="text-muted popover-anchor"
+                                data-text="{{popoverText}}"
+                            ><span class="fas fa-info-circle"></span></a>
+                            {{/if}}
+                        </td>
                     </tr>
                     {{/each}}
                 </tbody>
@@ -58,5 +68,55 @@ define('views/import-error/fields/validation-failures', ['views/fields/base'], (
             <span class="none-value">{{translate 'None'}}</span>
             {{/if}}
         `,
+
+        data: function () {
+            let data = Dep.prototype.data.call(this);
+
+            data.itemList = this.getDataList();
+
+            return data;
+        },
+
+        afterRenderDetail: function () {
+            this.$el.find('.popover-anchor').each((i, el) => {
+                let text = this.getHelper().transformMarkdownText(el.dataset.text);
+
+                Espo.Ui.popover($(el), {content: text}, this);
+            });
+        },
+
+        /**
+         * @return {Object[]}
+         */
+        getDataList: function () {
+            let itemList = Espo.Utils.cloneDeep(this.model.get(this.name)) || [];
+
+            let entityType = this.model.get('entityType');
+
+            if (Array.isArray(itemList)) {
+                itemList.forEach(item => {
+                    /** @var {module:field-manager.Class} */
+                    let fieldManager = this.getFieldManager();
+                    /** @var {module:language.Class} */
+                    let language = this.getLanguage();
+
+                    let fieldType = fieldManager.getEntityTypeFieldParam(entityType, item.field, 'type');
+
+                    if (!fieldType) {
+                        return;
+                    }
+
+                    let key = fieldType + '_' + item.type;
+
+                    if (!language.has(key, 'fieldValidationExplanations', 'Global')) {
+                        return;
+                    }
+
+                    item.popoverText = language.translate(key, 'fieldValidationExplanations');
+                });
+            }
+
+            return itemList;
+        },
     });
 });

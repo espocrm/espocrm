@@ -856,5 +856,18 @@
         "noEmptyString": "No Empty String",
         "max": "Max Value",
         "min": "Min Value"
+    },
+    "fieldValidationExplanations": {
+        "url_valid": "Invalid URL value.",
+        "currency_valid": "Invalid amount value.",
+        "currency_validCurrency": "The currency code value is invalid or not allowed.",
+        "varchar_pattern": "Likely, the value contains not allowed characters.",
+        "email_emailAddress": "Invalid email address value.",
+        "phone_phoneNumber": "Invalid phone number value.",
+        "dateTimeOptional_valid": "Invalid date-time value.",
+        "dateTime_valid": "Invalid date-time value.",
+        "date_valid": "Invalid date value.",
+        "enum_valid": "Invalid enum value. The value must be one of defined enum options. An empty value is allowed only if the field has an empty option.",
+        "multiEnum_valid": "Invalid multi-enum value. Values must be one of defined field options."
     }
 }
