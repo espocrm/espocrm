@@ -32,6 +32,15 @@ define('views/email/fields/subject', ['views/fields/varchar'], function (Dep) {
 
         listLinkTemplate: 'email/fields/subject/list-link',
 
+        events: {
+            'click [data-action="showAttachments"]': function (e) {
+                e.stopPropagation();
+
+                this.showAttachments();
+            },
+            ...Dep.prototype.events,
+        },
+
         data: function () {
             var data = Dep.prototype.data.call(this);
 
@@ -81,11 +90,21 @@ define('views/email/fields/subject', ['views/fields/varchar'], function (Dep) {
             Dep.prototype.afterRender.call(this);
         },
 
-
         fetch: function () {
             var data = Dep.prototype.fetch.call(this);
             data.name = data.subject;
             return data;
+        },
+
+        showAttachments: function () {
+            Espo.Ui.notify(' ... ');
+
+            this.createView('dialog', 'views/email/modals/attachments', {model: this.model})
+                .then(view => {
+                    view.render();
+
+                    Espo.Ui.notify(false);
+                });
         },
     });
 });
