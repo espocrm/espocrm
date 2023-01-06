@@ -26,44 +26,51 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/has-attachment', ['views/fields/base'], function (Dep) {
+define('views/email/modals/attachments', ['views/modal'], function (Dep) {
 
     /**
      * @class
      * @name Class
-     * @extends module:views/fields/base.Class
-     * @memberOf module:views/email/fields/has-attachment
+     * @extends module:views/modal.Class
+     * @memberOf module:views/email/modals/attachments
      */
-    return Dep.extend(/** @lends module:views/email/fields/has-attachment.Class# */{
+    return Dep.extend(/** @lends module:views/email/modals/attachments.Class# */{
 
-        listTemplate: 'email/fields/has-attachment/detail',
-        detailTemplate: 'email/fields/has-attachment/detail',
+        backdrop: true,
 
-        events: {
-            'click [data-action="show"]': function (e) {
-                e.stopPropagation();
+        templateContent: `<div class="record">{{{record}}}</div>`,
 
-                this.show();
-            },
-        },
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-        data: function () {
-            let data = Dep.prototype.data.call(this);
+            this.headerText = this.translate('attachments', 'fields', 'Email');
 
-            data.isSmall = this.mode === this.MODE_LIST;
+            this.createView('record', 'views/record/detail', {
+                model: this.model,
+                selector: '.record',
+                readOnly: true,
+                sideView: null,
+                buttonsDisabled: true,
+                detailLayout: [
+                    {
+                        rows: [
+                            [
+                                {
+                                    name: 'attachments',
+                                    noLabel: true,
+                                },
+                                false,
+                            ]
+                        ]
+                    }
+                ],
+            });
 
-            return data;
-        },
-
-        show: function () {
-            Espo.Ui.notify(' ... ');
-
-            this.createView('dialog', 'views/email/modals/attachments', {model: this.model})
-                .then(view => {
-                    view.render();
-
-                    Espo.Ui.notify(false);
-                });
+            if (!this.model.has('attachmentsIds')) {
+                this.wait(
+                    this.model.fetch()
+                );
+            }
         },
     });
 });
