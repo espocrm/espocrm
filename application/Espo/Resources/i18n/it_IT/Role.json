@@ -32,24 +32,25 @@
   },
   "options": {
     "accessList": {
-      "not-set": "Non impostato",
-      "enabled": "abilitato",
+      "not-set": "Non Impostato",
+      "enabled": "Abilitato",
       "disabled": "Disabilitato"
     },
     "levelList": {
       "all": "Tutti",
       "contact": "Contatto",
       "own": "proprio",
+      "no": "No",
       "yes": "Sì",
-      "not-set": "Non impostato"
+      "not-set": "Non Impostato"
     }
   },
   "actions": {
     "read": "Visualizzazione",
     "edit": "Modifica",
-    "delete": "Elimina",
-    "stream": "Flusso attività",
-    "create": "Crea"
+    "delete": "Eliminazione",
+    "stream": "Flusso Attività",
+    "create": "Creazione"
   },
   "messages": {
     "changesAfterClearCache": "Verranno applicate tutte le modifiche del controllo di accesso dopo la cancellazione della cache."

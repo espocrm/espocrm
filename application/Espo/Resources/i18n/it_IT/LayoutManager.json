@@ -39,6 +39,7 @@
     "dynamicLogicVisible": "Se impostato, il pannello sarà nascosto a meno che la condizione non sia soddisfatta.",
     "dynamicLogicStyled": "Un colore verrà applicato se viene soddisfatta una condizione specifica. Il colore è definito dal parametro *Stile*.",
     "tabBreak": "Una scheda separata per il pannello e per tutti i pannelli successivi fino alla successiva interruzione di scheda.",
+    "noLabel": "Non visualizzare l'etichetta della colonna nell'intestazione.",
     "notSortable": "Disabilita la possibilità di ordinare per colonna.",
     "width": "Larghezza della colonna in percentuale. Si consiglia di avere una colonna con la larghezza non impostata, di solito è il campo *Nome*.",
     "widthPx": "Larghezza della colonna in pixel. Ha effetto solo se il valore (%) non è impostato. Rende fissa la larghezza della colonna."

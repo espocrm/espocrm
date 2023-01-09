@@ -9,13 +9,12 @@
     "description": "Descrizione",
     "users": "Utenti",
     "contacts": "Contatti",
-    "leads": "Iniziative",
     "reminders": "Promemoria",
     "acceptanceStatus": "Stato Accettazione",
     "dateStartDate": "Data Inizio (tutto il giorno)",
     "dateEndDate": "Data Fine (tutto il giorno)",
     "isAllDay": "È tutto il giorno",
-    "Acceptance": "Accettazione"
+    "sourceEmail": "Sorgente Email"
   },
   "options": {
     "status": {
@@ -38,7 +37,7 @@
     "Create Meeting": "Crea Riunione",
     "Set Held": "Effettuata",
     "Set Not Held": "Non Effettuata",
-    "Send Invitations": "Inviare inviti",
+    "Send Invitations": "Invia Inviti",
     "on time": "Puntuale",
     "before": "prima",
     "All-Day": "Tutto il giorno\n"
@@ -50,7 +49,6 @@
   },
   "messages": {
     "nothingHasBeenSent": "Nulla è stato inviato",
-    "selectAcceptanceStatus": "Imposta il tuo stato di accettazione.",
-    "sendInvitationsConfirmation": "Invia email di invito ai partecipanti?"
+    "selectAcceptanceStatus": "Imposta il tuo stato di accettazione."
   }
 }

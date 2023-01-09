@@ -32,7 +32,8 @@
     "dashboardTemplate": "Modello di dashboard",
     "auth2FAEnable": "Abilita autenticazione a 2 fattori",
     "auth2FAMethod": "Metodo 2FA",
-    "auth2FATotpSecret": "2FA TOTP Secret\n"
+    "auth2FATotpSecret": "2FA TOTP Secret\n",
+    "workingTimeCalendar": "Calendario Lavorativo"
   },
   "links": {
     "teams": "Team",
@@ -44,7 +45,9 @@
     "account": "Account (Primario}",
     "tasks": "Compiti",
     "dashboardTemplate": "Modello di dashboard",
-    "userData": "Dati Utente"
+    "userData": "Dati Utente",
+    "workingTimeCalendar": "Calendario Lavorativo",
+    "workingTimeRanges": "Intervalli di Lavoro"
   },
   "labels": {
     "Create User": "Crea Utente",
@@ -54,9 +57,10 @@
     "Change Password": "Cambia password",
     "Teams and Access Control": "Controllo Teams e Accessi",
     "Forgot Password?": "Password dimenticata?",
-    "Password Change Request": "Richiesta di cambio password",
+    "Password Change Request": "Richiesta di Cambio Password",
     "Email Address": "Indirizzo email",
     "External Accounts": "Account Esterni",
+    "Email Accounts": "Account Email",
     "Portal": "Portale",
     "Create Portal User": "Crea Utente Portale",
     "Proceed w/o Contact": "Procedi senza contatto",
@@ -69,7 +73,8 @@
     "Reset 2FA": "Ripristina 2FA",
     "Secret": "Segreto",
     "Send Password Change Link": "Invia Link per il Cambio Password",
-    "Send Code": "Invia Codice"
+    "Send Code": "Invia Codice",
+    "Login Link": "Link di Accesso"
   },
   "tooltips": {
     "defaultTeam": "Tutti i record creati da questo utente saranno inseriti di default in questo Team.",
@@ -104,6 +109,7 @@
     "generateAndSendNewPassword": "Una nuova password verrà generata e inviata all'indirizzo e-mail dell'utente.",
     "security2FaResetConfirmation": "Sei sicuro di voler ripristinare le attuali impostazioni 2FA?",
     "ldapUserInEspoNotFound": "Utente non trovato in EspoCRM. Contatta l’amministratore di sistema per creare un utente.",
+    "passwordRecoverySentIfMatched": "Supponendo che i dati inseriti corrispondano ad un account utente.",
     "auth2FARequiredHeader": "Autenticazione a 2 fattori richiesta",
     "auth2FARequired": "È necessario impostare l'autenticazione a due fattori. Usa un'applicazione di autenticazione sul tuo cellulare (ad esempio, Google Authenticator).",
     "sendPasswordChangeLinkConfirmation": "Verrà inviata una mail con un link univoco che consentirà all'utente di modificare la propria password. Il link scadrà dopo un determinato periodo di tempo.",
@@ -112,7 +118,9 @@
     "choose2FaEmailAddress": "Seleziona un indirizzo email che verrà utilizzato per la 2FA. Si consiglia di utilizzare un indirizzo email non principale.",
     "enterCodeSentInEmail": "Inserisci il codice inviato al tuo indirizzo email.",
     "enterCodeSentBySms": "Inserisci il codice inviato via SMS al tuo numero di telefono.",
-    "passwordChangeRequestNotFound": "La richiesta di modifica della password non è stata trovata. Potrebbe essere scaduta. Prova ad avviare un nuovo recupero della password dalla [Pagina di Login]({url})."
+    "passwordChangeRequestNotFound": "La richiesta di modifica della password non è stata trovata. Potrebbe essere scaduta. Prova ad avviare un nuovo recupero della password dalla [Pagina di Login]({url}).",
+    "loginAs": "Apri il link di accesso in una finestra in incognito per preservare la sessione corrente. Per accedere, utilizza le tue credenziali di amministratore.",
+    "failedToLogIn": "Accesso non riuscito"
   },
   "boolFilters": {
     "onlyMyTeam": "Solo il mio Team"
@@ -124,7 +132,7 @@
   },
   "options": {
     "gender": {
-      "": "Non impostato",
+      "": "Non Impostato",
       "Male": "Maschio",
       "Female": "Femmina",
       "Neutral": "Neutro"

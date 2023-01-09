@@ -1,7 +1,7 @@
 {
   "fields": {
     "status": "Stato",
-    "executeTime": "Esegui il",
+    "executeTime": "Eseguito il",
     "attempts": "Tentativi rimasti",
     "failedAttempts": "Tentativi falliti",
     "serviceName": "Servizio",
@@ -17,7 +17,8 @@
     "queue": "Coda",
     "job": "Lavoro",
     "group": "Gruppo",
-    "className": "Nome Classe"
+    "className": "Nome Classe",
+    "targetGroup": "Gruppo di Destinazione"
   },
   "options": {
     "status": {

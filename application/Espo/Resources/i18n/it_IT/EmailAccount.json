@@ -22,7 +22,8 @@
     "security": "Sicurezza"
   },
   "links": {
-    "filters": "Filtri"
+    "filters": "Filtri",
+    "emails": "Email"
   },
   "options": {
     "status": {

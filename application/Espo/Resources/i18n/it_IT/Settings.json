@@ -1,9 +1,9 @@
 {
   "fields": {
     "useCache": "Usa Cache",
-    "dateFormat": "Formato data",
-    "timeFormat": "Formato ora",
-    "timeZone": "Fuso orario",
+    "dateFormat": "Formato Data",
+    "timeFormat": "Formato Ora",
+    "timeZone": "Fuso Orario",
     "weekStart": "Primo giorno della settimana",
     "thousandSeparator": "Separatore delle migliaia",
     "decimalMark": "Segno decimale",
@@ -12,7 +12,7 @@
     "currencyRates": "Rapporti di cambio",
     "currencyList": "Elenco valute",
     "language": "Lingua",
-    "companyLogo": "Logo della Compagnia",
+    "companyLogo": "Logo Aziendale",
     "smtpPort": "Porta",
     "ldapPort": "Porta",
     "smtpAuth": "Autenticazione",
@@ -25,7 +25,7 @@
     "recordsPerPage": "Elementi per pagina",
     "recordsPerPageSmall": "Elementi per pagina (ridotto)",
     "tabList": "Elenco schede",
-    "quickCreateList": "Elenco creazione rapida",
+    "quickCreateList": "Elenco Creazione Rapida",
     "exportDelimiter": "Delimitatore esportazione",
     "globalSearchEntityList": "Elenco Entità Ricerca Globale",
     "authenticationMethod": "Metodo di autenticazione",
@@ -89,7 +89,7 @@
     "tabColorsDisabled": "Disabilita tabella colori",
     "tabIconsDisabled": "Disabilita tabella icone",
     "textFilterUseContainsForVarchar": "Utilizza l'operatore ' Contains ' quando si filtrano i campi varchar",
-    "emailAddressIsOptedOutByDefault": "Contrassegni i nuovi indirizzi del email come cancellati dall'iscrizione",
+    "emailAddressIsOptedOutByDefault": "Contrassegnare i nuovi indirizzi email come esclusi",
     "outboundEmailBccAddress": "CCN indirizzi per client esterni",
     "adminNotificationsNewExtensionVersion": "Mostra una notifica quando sono disponibili nuove versioni delle estensioni",
     "cleanupDeletedRecords": "Pulisci i record eliminati",
@@ -123,6 +123,8 @@
     "personNameFormat": "Formato nome persona",
     "newNotificationCountInTitle": "Visualizza il numero delle nuove notifiche nel titolo della pagina",
     "massEmailVerp": "Usa VERP",
+    "emailAddressLookupEntityTypeList": "Entità Ricerca Indirizzo Email",
+    "busyRangesEntityList": "Elenco delle entità Libero/Occupato",
     "passwordRecoveryForInternalUsersDisabled": "Disabilita il recupero della password per gli utenti interni",
     "passwordRecoveryNoExposure": "Evita l'esposizione dell'indirizzo email nel modulo di recupero della password",
     "auth2FAForced": "Forza gli utenti normali a impostare la 2FA",
@@ -130,7 +132,12 @@
     "outboundSmsFromNumber": "SMS Dal Numero",
     "recordsPerPageSelect": "Elementi per pagina (Selezione)",
     "attachmentUploadMaxSize": "Dimensione Massima di Upload (Mb)",
-    "attachmentUploadChunkSize": "Dimensione del blocco di Upload (Mb)"
+    "attachmentUploadChunkSize": "Dimensione del blocco di Upload (Mb)",
+    "workingTimeCalendar": "Calendario Lavorativo",
+    "oidcCreateUser": "Crea Utente OIDC",
+    "oidcTeams": "Team OIDC",
+    "oidcAllowRegularUserFallback": "OIDC Consente il fallback del login per gli utenti normali",
+    "oidcAllowAdminUser": "OIDC Consente l'accesso a OIDC per gli utenti admin"
   },
   "tooltips": {
     "recordsPerPage": "Numero di records inizialmente mostrati in vista elenco .",
@@ -167,7 +174,7 @@
     "textFilterUseContainsForVarchar": "Se non selezionata, viene utilizzato l'operatore ' inizia con '. È possibile utilizzare il carattere jolly '%'.",
     "streamEmailNotificationsEntityList": "Notifiche via Email sugli aggiornamenti del flusso attività dei record seguiti. Gli utenti riceveranno notifiche via e-mail solo per i tipi di entità specificati.",
     "authTokenPreventConcurrent": "Gli utenti non potranno essere collegati simultaneamente su più dispositivi.",
-    "emailAddressIsOptedOutByDefault": "Quando si crea un nuovo record di email addess sarà contrassegnato come opt-out.",
+    "emailAddressIsOptedOutByDefault": "Quando si crea un nuovo record, l'indirizzo e-mail sarà contrassegnato come escluso.",
     "cleanupDeletedRecords": "I record rimossi verranno eliminati dal database dopo un po' di tempo.",
     "ldapPortalUserLdapAuth": "Consentire agli utenti del portale di utilizzare l'autenticazione LDAP anziché l'autenticazione Espo.",
     "ldapPortalUserPortals": "Portali predefiniti per l'utente del portale creato",
@@ -202,10 +209,20 @@
     "outboundEmailFromAddress": "L'indirizzo email del sistema.",
     "smtpServer": "Se vuoto, verrà utilizzato l'account e-mail di gruppo con l'indirizzo email corrispondente.",
     "busyRangesEntityList": "Cosa viene preso in considerazione quando vengono mostrati gli intervalli di tempo occupati nello scheduler e nella timeline.",
-    "recordsPerPageSelect": "Numero di record visualizzati inizialmente quando si selezionano i record."
+    "recordsPerPageSelect": "Numero di record visualizzati inizialmente quando si selezionano i record.",
+    "workingTimeCalendar": "Un Calendario Lavorativo che sarà applicato a tutti gli utenti per impostazione predefinita.",
+    "oidcGroupClaim": "Una richiesta all'utente per la mappatura del team.",
+    "oidcFallback": "Consente l'accesso tramite nome utente/password.",
+    "oidcCreateUser": "Crea un nuovo utente in Espo quando non viene trovato nessun utente corrispondente.",
+    "oidcSync": "Sincronizza dati utenti (a ogni accesso).",
+    "oidcSyncTeams": "Sincronizza team utenti (a ogni accesso).",
+    "oidcUsernameClaim": "Una richiesta da utilizzare per il nome utente (per la corrispondenza e la creazione di utenti).",
+    "oidcTeams": "Team Espo mappati rispetto a gruppi/team/ruoli del fornitore di identità. I team con un valore di mappatura vuoto saranno sempre assegnati a un utente (al momento della creazione o della sincronizzazione).",
+    "oidcLogoutUrl": "Un URL a cui il browser reindirizzerà dopo il logout da Espo. È progettato per cancellare le informazioni della sessione nel browser e per effettuare il logout lato provider. Di solito l'URL contiene un parametro Redirect-URL, per tornare a Espo.\n\nSegnaposti disponibili:\n* `{siteUrl}`\n* `{clientId}`"
   },
   "labels": {
     "System": "Sistema",
+    "Locale": "Formato Dati",
     "Configuration": "Configurazione",
     "In-app Notifications": "Notifiche In-app",
     "Email Notifications": "Notifiche Email",
@@ -220,7 +237,8 @@
     "Misc": "Varie",
     "2-Factor Authentication": "Autenticazione a 2 fattori",
     "Group Tab": "Gruppo Schede",
-    "Attachments": "Allegati"
+    "Attachments": "Allegati",
+    "IdP Group": "Gruppo IDP"
   },
   "messages": {
     "ldapTestConnection": "La connessione è stata stabilita con successo"

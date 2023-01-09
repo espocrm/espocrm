@@ -65,7 +65,8 @@
       "forbidden": "Vietato",
       "internal": "Interno",
       "onlyAdmin": "Solo Admin",
-      "readOnly": "Solo Lettura"
+      "readOnly": "Solo Lettura",
+      "nonAdminReadOnly": "Solo lettura per i non amministratori"
     }
   },
   "tooltips": {
@@ -132,13 +133,17 @@
     "address": "Un indirizzo con via, città, regione, codice postale e nazione.",
     "url": "Per la memorizzazione dei link.",
     "wysiwyg": "Un testo con supporto HTML.",
+    "file": "Per il caricamento dei file.",
+    "image": "Per il caricamento delle immagini.",
     "attachmentMultiple": "Consente il caricamento di più file.",
     "number": "Un numero autoincrementante di tipo stringa con un possibile prefisso e una lunghezza specifica.",
     "autoincrement": "Un numero intero di sola lettura e autoincrementante.",
     "barcode": "Un codice a barre. Può essere stampato in PDF.",
-    "email": "Un insieme di indirizzi email con i relativi parametri: Opted-out, Invalido, Primario.",
-    "phone": "Un insieme di numeri di telefono con i relativi parametri: Tipo, Opted-out, Invalido, Primario.",
+    "email": "Un insieme di indirizzi email con i relativi parametri: Escluso, Invalido, Primario.",
+    "phone": "Un insieme di numeri di telefono con i relativi parametri: Tipo, Escluso, Invalido, Primario.",
     "foreign": "Campo di un record correlato. Di Sola Lettura.",
-    "linkParent": "Un record collegato tramite una relazione Belongs-To-Parent. Può essere di tipi di entità differenti."
+    "link": "Un record correlato attraverso la relazione Belongs-To (many-to-one o one-to-one).",
+    "linkParent": "Un record collegato tramite una relazione Belongs-To-Parent. Può essere di tipi di entità differenti.",
+    "linkMultiple": "Un insieme di record correlati attraverso una relazione Has-Many (molti-a-molti o uno-a-molti). Non tutte le relazioni hanno i loro campi multipli. Lo sono solo quelle in cui il parametro Collegamento multiplo è abilitato."
   }
 }

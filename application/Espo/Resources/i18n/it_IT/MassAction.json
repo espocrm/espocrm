@@ -1,11 +1,13 @@
 {
   "fields": {
-    "status": "Stato"
+    "status": "Stato",
+    "processedCount": "Elaborazioni Effettuate"
   },
   "options": {
     "status": {
       "Pending": "In corso",
       "Running": "In esecuzione",
+      "Success": "Successo",
       "Failed": "Fallito"
     }
   },

@@ -4,6 +4,7 @@
   },
   "labels": {
     "Create EmailFolder": "Crea Cartella",
-    "Manage Folders": "Gestione cartelle"
+    "Manage Folders": "Gestione cartelle",
+    "Emails": "Email"
   }
 }

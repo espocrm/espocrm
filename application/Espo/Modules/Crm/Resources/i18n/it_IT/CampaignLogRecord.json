@@ -17,7 +17,7 @@
     "action": {
       "Sent": "Inviato",
       "Opened": "Aperto",
-      "Opted Out": "Rinuncia",
+      "Opted Out": "Escluso",
       "Clicked": "Cliccato",
       "Lead Created": "Lead Creato",
       "Opted In": "Iscritto"
@@ -29,7 +29,7 @@
   "presetFilters": {
     "sent": "Inviato",
     "opened": "Aperto",
-    "optedOut": "Rinuncia",
+    "optedOut": "Escluso",
     "clicked": "Cliccato",
     "optedIn": "Iscritto"
   }

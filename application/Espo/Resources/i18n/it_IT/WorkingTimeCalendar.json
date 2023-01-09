@@ -1,0 +1,27 @@
+{
+  "labels": {
+    "Create WorkingTimeCalendar": "Crea Calendario",
+    "Ranges": "Intervalli"
+  },
+  "fields": {
+    "timeZone": "Fuso Orario",
+    "timeRanges": "Orario di Lavoro",
+    "weekday0": "Dom",
+    "weekday1": "Lun",
+    "weekday2": "Mar",
+    "weekday3": "Mer",
+    "weekday4": "Gio",
+    "weekday5": "Ven",
+    "weekday6": "Sab",
+    "weekday0TimeRanges": "Orario Dom",
+    "weekday1TimeRanges": "Orario Lun",
+    "weekday2TimeRanges": "Orario Mar",
+    "weekday3TimeRanges": "Orario Mer",
+    "weekday4TimeRanges": "Orario Gio",
+    "weekday5TimeRanges": "Orario Ven",
+    "weekday6TimeRanges": "Orario Sab"
+  },
+  "links": {
+    "ranges": "Intervalli"
+  }
+}

@@ -16,7 +16,8 @@
     "accountIsInactive": "Account inattivo",
     "acceptanceStatusMeetings": "Stato Accettazione (Riunioni)",
     "acceptanceStatusCalls": "Stato Accettazione (Chiamate)",
-    "title": "Titolo Account"
+    "title": "Titolo Account",
+    "hasPortalUser": "Ha un Utente Portale"
   },
   "links": {
     "opportunities": "Opportunità",

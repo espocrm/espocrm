@@ -1,7 +1,10 @@
 {
   "fields": {
     "type": "Tipo",
+    "validationFailures": "Errori di Convalida",
     "import": "Importa",
+    "rowIndex": "Riga Indice",
+    "exportRowIndex": "Riga Indice Esportazione",
     "lineNumber": "Linea Numero",
     "exportLineNumber": "Numero della linea di esportazione",
     "row": "Riga"
@@ -12,5 +15,9 @@
       "Access": "Accesso",
       "Not-Found": "Non Trovato"
     }
+  },
+  "tooltips": {
+    "lineNumber": "Un numero di riga nel CSV originale.",
+    "exportLineNumber": "Un numero di riga nel CSV di esportazione."
   }
 }

@@ -29,7 +29,7 @@
   },
   "options": {
     "status": {
-      "In Review": "In revisione",
+      "In Review": "In Revisione",
       "Draft": "Bozza",
       "Archived": "Archiviato",
       "Published": "Pubblicato"

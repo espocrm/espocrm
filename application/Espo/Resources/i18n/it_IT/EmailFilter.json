@@ -9,7 +9,8 @@
     "emailFolder": "Cartella"
   },
   "labels": {
-    "Create EmailFilter": "Crea un filtro per le email"
+    "Create EmailFilter": "Crea un filtro per le email",
+    "Emails": "Email"
   },
   "tooltips": {
     "from": "Messaggi di posta elettronica inviati dall'indirizzo specificato. Lascia vuoto se non necessario. È possibile utilizzare caratteri jolly *.",

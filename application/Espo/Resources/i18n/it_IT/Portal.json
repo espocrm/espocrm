@@ -8,9 +8,9 @@
     "quickCreateList": "Elenco creazione rapida",
     "theme": "Tema",
     "language": "Lingua",
-    "dateFormat": "Formato data",
-    "timeFormat": "Formato ora",
-    "timeZone": "Fuso orario",
+    "dateFormat": "Formato Data",
+    "timeFormat": "Formato Ora",
+    "timeZone": "Fuso Orario",
     "weekStart": "Primo giorno della settimana",
     "defaultCurrency": "Valuta di default",
     "customUrl": "URL personalizzato",
@@ -29,7 +29,7 @@
   },
   "labels": {
     "Create Portal": "Crea Portale",
-    "User Interface": "Interfaccia utente",
+    "User Interface": "Interfaccia Utente",
     "General": "Generale",
     "Settings": "Impostazioni"
   }

@@ -1,0 +1,27 @@
+{
+  "labels": {
+    "Create WorkingTimeRange": "Crea Intervallo",
+    "Calendars": "Calendari"
+  },
+  "fields": {
+    "timeRanges": "Orario",
+    "dateStart": "Data Inizio",
+    "dateEnd": "Data Fine",
+    "type": "Tipo",
+    "calendars": "Calendari",
+    "users": "Utenti"
+  },
+  "links": {
+    "calendars": "Calendari",
+    "users": "Utenti"
+  },
+  "options": {
+    "type": {
+      "Non-working": "Non lavorativo",
+      "Working": "Lavorativo"
+    }
+  },
+  "presetFilters": {
+    "actual": "Attivo"
+  }
+}

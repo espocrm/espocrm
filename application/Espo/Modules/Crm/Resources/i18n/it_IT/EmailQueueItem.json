@@ -14,14 +14,14 @@
   "options": {
     "status": {
       "Pending": "In attesa",
-      "Sent": "Inviato",
+      "Sent": "Inviata",
       "Failed": "Fallito",
       "Sending": "Invio"
     }
   },
   "presetFilters": {
     "pending": "In attesa",
-    "sent": "Inviato",
+    "sent": "Inviata",
     "failed": "Fallito"
   }
 }

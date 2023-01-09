@@ -1,6 +1,6 @@
 {
   "insertFromSourceLabels": {
-    "Document": "Inserisci documento"
+    "Document": "Inserisci Documento"
   },
   "fields": {
     "role": "Ruolo",
@@ -9,7 +9,8 @@
     "field": "Campo",
     "sourceId": "Sorgente ID",
     "storage": "Memorizzazione",
-    "size": "Dimensione (byte)"
+    "size": "Dimensione (byte)",
+    "isBeingUploaded": "Upload in Corso"
   },
   "options": {
     "role": {

@@ -24,11 +24,11 @@
     "meetingsPrimary": "Riunioni (ampliato)",
     "callsPrimary": "Chiamate (ampliato)",
     "tasksPrimary": "Compiti (ampliato)",
-    "emailsPrimary": "Emails (ampliato)",
+    "emailsPrimary": "Email (ampliato)",
     "targetLists": "Liste di destinazione",
     "campaignLogRecords": "Log campagna",
     "campaign": "Campagna",
-    "portalUsers": "Utenti portale",
+    "portalUsers": "Utenti Portale",
     "originalLead": "Lead Originale",
     "contactsPrimary": "Contatti (primari)"
   },
@@ -97,6 +97,6 @@
   "presetFilters": {
     "customers": "Clienti",
     "partners": "Partner",
-    "recentlyCreated": "Recentemente creato"
+    "recentlyCreated": "Recentemente Creato"
   }
 }

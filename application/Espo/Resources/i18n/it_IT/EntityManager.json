@@ -32,7 +32,8 @@
     "iconClass": "Icona",
     "fullTextSearch": "Ricerca tutto il testo",
     "countDisabled": "Disabilita il conteggio dei record",
-    "parentEntityTypeList": "Tipo genitore entità",
+    "parentEntityTypeList": "Tipo Genitore Entità",
+    "foreignLinkEntityTypeList": "Collegamenti Esterni",
     "entity": "Entità"
   },
   "options": {
@@ -70,8 +71,9 @@
     "disabled": "Spunta, se non hai bisogno di questa entità nel tuo sistema.",
     "linkAudited": "La creazione di record correlati ed il collegamento con il record esistente verranno registrati nelle attività.",
     "linkMultipleField": "Collegare un campo multiplo è una via pratica per modificare le relazioni. Non utilizzarlo se prevedi un elevato numero di record correlati.",
-    "entityType": "Base Plus - dispone di pannelli Attività, Storia e Compiti.\n\nEvento - disponibile nei pannelli Calendario ed Attività.",
+    "entityType": "Base Plus - dispone di pannelli Attività, Storico e Compiti.\n\nEvento - disponibile nei pannelli Calendario ed Attività.",
     "fullTextSearch": "È necessario eseguire la ricostruzione.",
-    "countDisabled": "Il numero totale non verrà visualizzato nella visualizzazione elenco. Può ridurre il tempo di caricamento quando la tabella DB è grande."
+    "countDisabled": "Il numero totale non verrà visualizzato nella visualizzazione elenco. Può ridurre il tempo di caricamento quando la tabella DB è grande.",
+    "optimisticConcurrencyControl": "Previene i conflitti."
   }
 }

@@ -8,9 +8,9 @@
     "targetLists": "Lista di destinazione",
     "includingActionList": "Include",
     "excludingActionList": "Esclude",
-    "optedOutCount": "Conteggio cancellazioni",
+    "optedOutCount": "Conteggio Cancellazioni",
     "targetStatus": "Stato target",
-    "isOptedOut": "È stato cancellato"
+    "isOptedOut": "È Stato Cancellato"
   },
   "links": {
     "accounts": "Account",
@@ -28,8 +28,8 @@
     }
   },
   "labels": {
-    "Create TargetList": "Crea lista di destinazione",
-    "Opted Out": "Rinunciato",
+    "Create TargetList": "Crea Lista di Destinazione",
+    "Opted Out": "Escluso",
     "Cancel Opt-Out": "Cancella rinuncia",
     "Opt-Out": "Rinuncia"
   }

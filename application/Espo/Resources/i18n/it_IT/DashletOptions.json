@@ -1,9 +1,9 @@
 {
   "fields": {
     "title": "Titolo",
-    "dateFrom": "Data da",
-    "dateTo": "Data a",
-    "autorefreshInterval": "Intervallo di aggiornamento automatico",
+    "dateFrom": "Data Da",
+    "dateTo": "Data A",
+    "autorefreshInterval": "Intervallo di Aggiornamento Automatico",
     "displayRecords": "Record da Visualizzare",
     "isDoubleHeight": "Altezza 2x",
     "mode": "Modalità",
@@ -11,7 +11,7 @@
     "users": "Utenti",
     "entityType": "Tipo di entità",
     "primaryFilter": "Filtro primario",
-    "boolFilterList": "Filtri ulteriori",
+    "boolFilterList": "Filtri Aggiuntivi",
     "sortBy": "Ordina (campo)",
     "sortDirection": "Ordina (direzione)",
     "dateFilter": "Filtro data",
