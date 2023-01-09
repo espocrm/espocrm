@@ -85,7 +85,10 @@
             },
             "User": {
                 "dashboardTemplate": false,
-                "workingTimeCalendar": false,
+                "workingTimeCalendar": {
+                    "read": "yes",
+                    "edit": "no"
+                },
                 "password": false,
                 "passwordConfirm": false,
                 "auth2FA": false,

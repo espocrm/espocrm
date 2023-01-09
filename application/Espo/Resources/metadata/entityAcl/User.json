@@ -48,7 +48,7 @@
             "nonAdminReadOnly": true
         },
         "workingTimeCalendar": {
-            "onlyAdmin": true
+            "nonAdminReadOnly": true
         },
         "accounts": {
             "nonAdminReadOnly": true
