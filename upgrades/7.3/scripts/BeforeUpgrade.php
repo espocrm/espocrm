@@ -83,7 +83,7 @@ class BeforeUpgrade
                 'assignedUserId' => $user->getId(),
                 'emailAddress' => $emailAddress,
                 'useSmtp' => true,
-                'status' => EmailAccount::STATUS_ACTIVE,
+                'status' => 'Active',
             ])
             ->findOne();
 
@@ -100,7 +100,7 @@ class BeforeUpgrade
             'name' => $emailAddress . ' (auto-created)',
             'emailAddress' => $emailAddress,
             'useSmtp' => true,
-            'status' => EmailAccount::STATUS_ACTIVE,
+            'status' => 'Active',
             'smtpHost' => $smtpServer,
             'smtpPort' => $preferences->get('smtpPort'),
             'smtpAuth' => $preferences->get('smtpAuth'),
