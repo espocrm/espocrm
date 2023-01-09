@@ -302,6 +302,14 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         ],
 
         /**
+         * A forced mass-action list.
+         *
+         * @protected
+         * @type {?string[]}
+         */
+        forcedCheckAllResultMassActionList: null,
+
+        /**
          * Disable quick-detail (viewing a record in modal)
          *
          * @protected
@@ -454,6 +462,12 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
          * @type {?JQuery}
          */
         $selectAllCheckbox: null,
+
+        /**
+         * @protected
+         * @type {?Object.<string, Object.<string, *>>}
+         */
+        massActionDefs: null,
 
         /**
          * @inheritDoc
@@ -1148,6 +1162,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
                     data.idle = idle;
                     data.format = dialogData.format;
+                    data.params = dialogData.params;
 
                     Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
@@ -1186,7 +1201,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
          * @param {string} name An action.
          */
         massAction: function (name) {
-            let defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name]) || {};
+            let defs = this.massActionDefs[name] || {};
 
             let handler = defs.handler;
 
@@ -1242,18 +1257,15 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
                 data.entityType = this.entityType;
 
-                let waitMessage = this.getMetadata()
-                    .get(['clientDefs', this.scope, 'massActionDefs', name, 'waitMessage']) || 'pleaseWait';
+                let waitMessage = defs.waitMessage || 'pleaseWait';
 
                 Espo.Ui.notify(this.translate(waitMessage, 'messages', this.scope));
 
-                let url = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'url']);
+                let url = defs.url;
 
                 Espo.Ajax.postRequest(url, data)
                     .then(result=> {
-                        let successMessage = result.successMessage ||
-                            this.getMetadata()
-                                .get(['clientDefs', this.scope, 'massActionDefs', name, 'successMessage']) || 'done';
+                        let successMessage = result.successMessage || defs.successMessage || 'done';
 
                         this.collection
                             .fetch()
@@ -1617,6 +1629,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
                 return;
             }
+
             this.checkedList.sort();
 
             let url = '#' + this.entityType + '/merge/ids=' + this.checkedList.join(',');
@@ -1710,7 +1723,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                                 return;
                             }
 
-                            ids.forEach((id) => {
+                            ids.forEach(id => {
                                 this.checkRecord(id);
                             });
                         });
@@ -1719,9 +1732,11 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         },
 
         massActionExport: function () {
-            if (!this.getConfig().get('exportDisabled') || this.getUser().isAdmin()) {
-                this.export();
+            if (this.getConfig().get('exportDisabled') && !this.getUser().isAdmin()) {
+                return;
             }
+
+            this.export();
         },
 
         massActionUnlink: function () {
@@ -1729,17 +1744,16 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 message: this.translate('unlinkSelectedRecordsConfirmation', 'messages'),
                 confirmText: this.translate('Unlink'),
             }, () => {
-                this.notify('Unlinking...');
+                Espo.Ui.notify(' ... ');
 
-                Espo.Ajax.deleteRequest(this.collection.url, {
-                    ids: this.checkedList,
-                }).then(() => {
-                    this.notify('Unlinked', 'success');
+                Espo.Ajax.deleteRequest(this.collection.url, {ids: this.checkedList})
+                    .then(() => {
+                        this.notify('Unlinked', 'success');
 
-                    this.collection.fetch();
+                        this.collection.fetch();
 
-                    this.model.trigger('after:unrelate');
-                });
+                        this.model.trigger('after:unrelate');
+                    });
             });
         },
 
@@ -1807,7 +1821,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                                 return;
                             }
 
-                            ids.forEach((id) => {
+                            ids.forEach(id => {
                                 this.checkRecord(id);
                             });
                         });
@@ -1815,6 +1829,36 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             });
         },
 
+        /**
+         * Add a mass action.
+         *
+         * @protected
+         * @param {string} item An action.
+         * @param {boolean} [allResult] To make available for all-result.
+         * @param {boolean} [toBeginning] Add to the beginning of the list.
+         */
+        addMassAction: function (item, allResult, toBeginning) {
+            toBeginning ?
+                this.massActionList.unshift(item) :
+                this.massActionList.push(item);
+
+            if (allResult && this.collection.url === this.entityType) {
+                toBeginning ?
+                    this.checkAllResultMassActionList.unshift(item) :
+                    this.checkAllResultMassActionList.push(item);
+            }
+
+            if (!this.checkboxesDisabled) {
+                this.checkboxes = true;
+            }
+        },
+
+        /**
+         * Remove a mass action.
+         *
+         * @protected
+         * @param {string} item An action.
+         */
         removeMassAction: function (item) {
             let index = this.massActionList.indexOf(item);
 
@@ -1829,20 +1873,12 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             }
         },
 
-        addMassAction: function (item, allResult, toBeginning) {
-            let method = toBeginning ? 'unshift' : 'push';
-
-            this.massActionList[method](item);
-
-            if (allResult && this.collection.url === this.entityType) {
-                this.checkAllResultMassActionList[method](item);
-            }
-
-            if (!this.checkboxesDisabled) {
-                this.checkboxes = true;
-            }
-        },
-
+        /**
+         * Remove an all-result mass action.
+         *
+         * @protected
+         * @param {string} item An action.
+         */
         removeAllResultMassAction: function (item) {
             let index = this.checkAllResultMassActionList.indexOf(item);
 
@@ -1878,193 +1914,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             this.removeDisabled = this.options.removeDisabled || this.removeDisabled ||
                 this.getMetadata().get(['clientDefs', this.scope, 'removeDisabled']);
 
-            if (!this.getAcl().checkScope(this.entityType, 'delete')) {
-                this.removeMassAction('remove');
-                this.removeMassAction('merge');
-            }
-
-            if (this.removeDisabled) {
-                this.removeMassAction('remove');
-            }
-
-            if (!this.getAcl().checkScope(this.entityType, 'edit')) {
-                this.removeMassAction('massUpdate');
-                this.removeMassAction('merge');
-            }
-
-            if (
-                this.getMetadata().get(['clientDefs', this.scope, 'mergeDisabled']) ||
-                this.mergeDisabled
-            ) {
-                this.removeMassAction('merge');
-            }
-
-            let metadataMassActionList = (
-                    this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []
-                ).concat(
-                    this.getMetadata().get(['clientDefs', 'Global', 'massActionList']) || []
-                );
-
-            metadataMassActionList.forEach(item => {
-                let defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
-
-                if (!Espo.Utils.checkActionAvailability(this.getHelper(), defs)) {
-                    return;
-                }
-
-                if (!Espo.Utils.checkActionAccess(this.getAcl(), null, defs)) {
-                    return;
-                }
-
-                this.massActionList.push(item);
-            });
-
-            let checkAllResultMassActionList = [];
-
-            this.checkAllResultMassActionList.forEach(item => {
-                if (~this.massActionList.indexOf(item)) {
-                    checkAllResultMassActionList.push(item);
-                }
-            });
-
-            this.checkAllResultMassActionList = checkAllResultMassActionList;
-
-            let metadataCheckAllMassActionList = (
-                    this.getMetadata().get(['clientDefs', this.scope, 'checkAllResultMassActionList']) || []
-                ).concat(
-                    this.getMetadata().get(['clientDefs', 'Global', 'checkAllResultMassActionList']) || []
-                );
-
-            metadataCheckAllMassActionList.forEach(item => {
-                if (this.collection.url !== this.entityType) {
-                    return;
-                }
-
-                if (~this.massActionList.indexOf(item)) {
-                    let defs = this.getMetadata()
-                        .get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
-
-                    if (!Espo.Utils.checkActionAvailability(this.getHelper(), defs)) {
-                        return;
-                    }
-
-                    if (!Espo.Utils.checkActionAccess(this.getAcl(), null, defs)) {
-                        return;
-                    }
-
-                    this.checkAllResultMassActionList.push(item);
-                }
-            });
-
-            metadataMassActionList
-                .concat(metadataCheckAllMassActionList)
-                .forEach(action => {
-                    let defs = this.getMetadata()
-                           .get(['clientDefs', this.scope, 'massActionDefs', action]) || {};
-
-                    if (!defs.initFunction || !defs.handler) {
-                        return;
-                    }
-
-                    let viewObject = this;
-
-                    this.wait(
-                        new Promise((resolve) => {
-                            require(defs.handler, (Handler) => {
-                                let handler = new Handler(viewObject);
-
-                                handler[defs.initFunction].call(handler);
-
-                                resolve();
-                            });
-                        })
-                    );
-                });
-
-            if (
-                this.getConfig().get('exportDisabled') && !this.getUser().isAdmin() ||
-                this.getAcl().get('exportPermission') === 'no' ||
-                this.getMetadata().get(['clientDefs', this.scope, 'exportDisabled']) ||
-                this.exportDisabled
-            ) {
-                this.removeMassAction('export');
-            }
-
-            if (
-                this.getAcl().get('massUpdatePermission') !== 'yes' ||
-                this.editDisabled ||
-                this.massUpdateDisabled ||
-                this.getMetadata().get(['clientDefs', this.scope, 'massUpdateDisabled'])
-            ) {
-                this.removeMassAction('massUpdate');
-            }
-
-            if (
-                !this.massFollowDisabled &&
-                this.getMetadata().get(['scopes', this.entityType, 'stream']) &&
-                this.getAcl().check(this.entityType, 'stream') ||
-                this.getMetadata().get(['clientDefs', this.scope, 'massFollowDisabled'])
-            ) {
-                this.addMassAction('follow');
-                this.addMassAction('unfollow', true);
-            }
-
-            if (
-                !this.massPrintPdfDisabled &&
-                ~(this.getHelper().getAppParam('templateEntityTypeList') || []).indexOf(this.entityType)
-            ) {
-                this.addMassAction('printPdf');
-            }
-
-            if (this.options.unlinkMassAction && this.collection) {
-                this.addMassAction('unlink', false, true);
-            }
-
-            if (
-                !this.massConvertCurrencyDisabled &&
-                !this.getMetadata().get(['clientDefs', this.scope, 'convertCurrencyDisabled']) &&
-                this.getConfig().get('currencyList').length > 1 &&
-                this.getAcl().checkScope(this.scope, 'edit') &&
-                this.getAcl().get('massUpdatePermission') === 'yes'
-            ) {
-                let currencyFieldList = this.getFieldManager().getEntityTypeFieldList(this.entityType, {
-                    type: 'currency',
-                    acl: 'edit',
-                });
-
-                if (currencyFieldList.length)
-                    this.addMassAction('convertCurrency', true);
-            }
-
-            this.setupMassActionItems();
-
-            if (this.getUser().isAdmin()) {
-                if (this.getMetadata().get(['formula', this.entityType, 'beforeSaveCustomScript'])) {
-                    this.addMassAction('recalculateFormula', true);
-                }
-            }
-
-            if (this.collection.url !== this.entityType) {
-                Espo.Utils.clone(this.checkAllResultMassActionList).forEach((item) => {
-                    this.removeAllResultMassAction(item);
-                });
-            }
-
-            if (this.forcedCheckAllResultMassActionList) {
-                this.checkAllResultMassActionList = this.forcedCheckAllResultMassActionList;
-            }
-
-            if (this.getAcl().get('massUpdatePermission') !== 'yes') {
-                this.removeAllResultMassAction('remove');
-            }
-
-            Espo.Utils.clone(this.massActionList).forEach((item) => {
-                let propName = 'massAction' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
-
-                if (this[propName] || this.options[propName]) {
-                    this.removeMassAction(item);
-                }
-            });
+            this.setupMassActions();
 
             if (this.selectable) {
                 this.events['click .list a.link'] = (e) => {
@@ -2103,20 +1953,16 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
             this.forceDisplayTopBar = this.options.forceDisplayTopBar || this.forceDisplayTopBar;
 
-            if (this.massActionsDisabled) {
-                this.massActionList = [];
-            }
-
             if (!this.massActionList.length && !this.selectable) {
                 this.checkboxes = false;
             }
 
-            if (this.getUser().isPortal() && !this.portalLayoutDisabled) {
-                if (this.getMetadata().get(
-                    ['clientDefs', this.scope, 'additionalLayouts', this.layoutName + 'Portal'])
-                ) {
-                    this.layoutName += 'Portal';
-                }
+            if (
+                this.getUser().isPortal() &&
+                !this.portalLayoutDisabled &&
+                this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts', this.layoutName + 'Portal'])
+            ) {
+                this.layoutName += 'Portal';
             }
 
             this.getHelper().processSetupHandlers(this, this.setupHandlerType);
@@ -2172,13 +2018,207 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             if (this.allResultIsChecked) {
                 this.selectAllResult();
             }
-            else {
-                if (this.checkedList.length) {
-                    this.checkedList.forEach((id) => {
-                        this.checkRecord(id);
-                    });
+            else if (this.checkedList.length) {
+                this.checkedList.forEach(id => {
+                    this.checkRecord(id);
+                });
+            }
+        },
+
+        /**
+         * @private
+         */
+        setupMassActions: function () {
+            if (this.massActionsDisabled) {
+                this.massActionList = [];
+                this.checkAllResultMassActionList = [];
+
+                return;
+            }
+
+            if (!this.getAcl().checkScope(this.entityType, 'delete')) {
+                this.removeMassAction('remove');
+                this.removeMassAction('merge');
+            }
+
+            if (
+                this.removeDisabled ||
+                this.getMetadata().get(['clientDefs', this.scope, 'massRemoveDisabled'])
+            ) {
+                this.removeMassAction('remove');
+            }
+
+            if (!this.getAcl().checkScope(this.entityType, 'edit')) {
+                this.removeMassAction('massUpdate');
+                this.removeMassAction('merge');
+            }
+
+            if (
+                this.getMetadata().get(['clientDefs', this.scope, 'mergeDisabled']) ||
+                this.mergeDisabled
+            ) {
+                this.removeMassAction('merge');
+            }
+
+            this.massActionDefs = {
+                ...this.getMetadata().get(['clientDefs', 'Global', 'massActionDefs']) || {},
+                ...this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs']) || {},
+            };
+
+            let metadataMassActionList = [
+                ...this.getMetadata().get(['clientDefs', 'Global', 'massActionList']) || [],
+                ...this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || [],
+            ];
+
+            let metadataCheckAllMassActionList = [
+                ...this.getMetadata().get(['clientDefs', 'Global', 'checkAllResultMassActionList']) || [],
+                ...this.getMetadata().get(['clientDefs', this.scope, 'checkAllResultMassActionList']) || [],
+            ];
+
+            metadataMassActionList.forEach(item => {
+                let defs = this.massActionDefs[item] || {};
+
+                if (
+                    !Espo.Utils.checkActionAvailability(this.getHelper(), defs) ||
+                    !Espo.Utils.checkActionAccess(this.getAcl(), null, defs)
+                ) {
+                    return;
+                }
+
+                this.massActionList.push(item);
+            });
+
+            this.checkAllResultMassActionList = this.checkAllResultMassActionList
+                .filter(item => this.massActionList.includes(item));
+
+            metadataCheckAllMassActionList.forEach(item => {
+                if (this.collection.url !== this.entityType) {
+                    return;
+                }
+
+                if (~this.massActionList.indexOf(item)) {
+                    let defs = this.massActionDefs[item] || {};
+
+                    if (
+                        !Espo.Utils.checkActionAvailability(this.getHelper(), defs) ||
+                        !Espo.Utils.checkActionAccess(this.getAcl(), null, defs)
+                    ) {
+                        return;
+                    }
+
+                    this.checkAllResultMassActionList.push(item);
+                }
+            });
+
+            metadataMassActionList
+                .concat(metadataCheckAllMassActionList)
+                .forEach(action => {
+                    let defs = this.massActionDefs[action] || {};
+
+                    if (!defs.initFunction || !defs.handler) {
+                        return;
+                    }
+
+                    let viewObject = this;
+
+                    this.wait(
+                        new Promise((resolve) => {
+                            require(defs.handler, (Handler) => {
+                                let handler = new Handler(viewObject);
+
+                                handler[defs.initFunction].call(handler);
+
+                                resolve();
+                            });
+                        })
+                    );
+                });
+
+            if (
+                this.getConfig().get('exportDisabled') && !this.getUser().isAdmin() ||
+                this.getAcl().getPermissionLevel('exportPermission') === 'no' ||
+                this.getMetadata().get(['clientDefs', this.scope, 'exportDisabled']) ||
+                this.exportDisabled
+            ) {
+                this.removeMassAction('export');
+            }
+
+            if (
+                this.getAcl().getPermissionLevel('massUpdatePermission') !== 'yes' ||
+                this.editDisabled ||
+                this.massUpdateDisabled ||
+                this.getMetadata().get(['clientDefs', this.scope, 'massUpdateDisabled'])
+            ) {
+                this.removeMassAction('massUpdate');
+            }
+
+            if (
+                !this.massFollowDisabled &&
+                this.getMetadata().get(['scopes', this.entityType, 'stream']) &&
+                this.getAcl().check(this.entityType, 'stream') ||
+                this.getMetadata().get(['clientDefs', this.scope, 'massFollowDisabled'])
+            ) {
+                this.addMassAction('follow');
+                this.addMassAction('unfollow', true);
+            }
+
+            if (
+                !this.massPrintPdfDisabled &&
+                (this.getHelper().getAppParam('templateEntityTypeList') || []).includes(this.entityType)
+            ) {
+                this.addMassAction('printPdf');
+            }
+
+            if (this.options.unlinkMassAction && this.collection) {
+                this.addMassAction('unlink', false, true);
+            }
+
+            if (
+                !this.massConvertCurrencyDisabled &&
+                !this.getMetadata().get(['clientDefs', this.scope, 'convertCurrencyDisabled']) &&
+                this.getConfig().get('currencyList').length > 1 &&
+                this.getAcl().checkScope(this.scope, 'edit') &&
+                this.getAcl().getPermissionLevel('massUpdatePermission') === 'yes'
+            ) {
+                let currencyFieldList = this.getFieldManager().getEntityTypeFieldList(this.entityType, {
+                    type: 'currency',
+                    acl: 'edit',
+                });
+
+                if (currencyFieldList.length) {
+                    this.addMassAction('convertCurrency', true);
                 }
             }
+
+            this.setupMassActionItems();
+
+            if (this.getUser().isAdmin()) {
+                if (this.getMetadata().get(['formula', this.entityType, 'beforeSaveCustomScript'])) {
+                    this.addMassAction('recalculateFormula', true);
+                }
+            }
+
+            if (this.collection.url !== this.entityType) {
+                Espo.Utils.clone(this.checkAllResultMassActionList).forEach((item) => {
+                    this.removeAllResultMassAction(item);
+                });
+            }
+
+            if (this.forcedCheckAllResultMassActionList) {
+                this.checkAllResultMassActionList = Espo.Utils.clone(this.forcedCheckAllResultMassActionList);
+            }
+
+            if (this.getAcl().getPermissionLevel('massUpdatePermission') !== 'yes') {
+                this.removeAllResultMassAction('remove');
+            }
+
+            Espo.Utils.clone(this.massActionList).forEach(item => {
+                let propName = 'massAction' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
+
+                if (this[propName] || this.options[propName]) {
+                    this.removeMassAction(item);
+                }
+            });
         },
 
         /**

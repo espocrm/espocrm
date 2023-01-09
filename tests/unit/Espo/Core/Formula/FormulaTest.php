@@ -30,6 +30,10 @@
 namespace tests\unit\Espo\Core\Formula;
 
 use Espo\Core\Formula\AttributeFetcher;
+use Espo\Core\Formula\Parser\Ast\Attribute;
+use Espo\Core\Formula\Parser\Ast\Node;
+use Espo\Core\Formula\Parser\Ast\Value;
+use Espo\Core\Formula\Parser\Ast\Variable;
 use Espo\Core\Formula\Processor;
 use Espo\Core\Formula\Argument;
 
@@ -51,6 +55,7 @@ use Espo\Core\InjectableFactory;
 
 use Espo\ORM\Repository\RDBRelation;
 use Espo\ORM\Repository\RDBRepository;
+use stdClass;
 use tests\unit\ContainerMocker;
 
 class FormulaTest extends \PHPUnit\Framework\TestCase
@@ -101,13 +106,30 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         ]);
     }
 
-    protected function tearDown() : void
+    private static function stringToNode(string $string): mixed
     {
-        $this->container = null;
-        $this->entity = null;
-        $this->entityManager = null;
-        $this->repository = null;
-        $this->config = null;
+        $obj = json_decode($string);
+
+        return self::stdClassToNode($obj);
+    }
+
+    private static function stdClassToNode(stdClass $obj): mixed
+    {
+        if ($obj->type === 'value') {
+            return new Value($obj->value);
+        }
+
+        if ($obj->type === 'variable') {
+            return new Variable($obj->value);
+        }
+
+        if ($obj->type === 'attribute') {
+            return new Attribute($obj->value);
+        }
+
+        $childNodes = array_map(fn ($item) => self::stdClassToNode($item), $obj->value ?? []);
+
+        return new Node($obj->type, $childNodes);
     }
 
     protected function createProcessor($variables = null, ?Entity $entity = null)
@@ -157,7 +179,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testAttribute()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "attribute",
                 "value": "name"
@@ -175,7 +197,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testEntityAttribute()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "entity\\\\attribute",
                 "value": [
@@ -198,7 +220,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testEntityAttributeFetched()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "entity\\\\attributeFetched",
                 "value": [
@@ -221,7 +243,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testIsAttributeChanged()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "entity\\\\isAttributeChanged",
                 "value": [
@@ -249,7 +271,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testIsAttributeNotChanged()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "entity\\\\isAttributeNotChanged",
                 "value": [
@@ -277,7 +299,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testHasValue()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "entity\\\\isRelated",
                 "value": [
@@ -317,7 +339,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testAddLinkMultipleId()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "entity\\\\addLinkMultipleId",
                 "value": [
@@ -351,7 +373,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testRemoveLinkMultipleId()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "entity\\\\removeLinkMultipleId",
                 "value": [
@@ -385,7 +407,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testAnd()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "logical\\\\and",
                 "value": [
@@ -430,7 +452,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testOr()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "logical\\\\or",
                 "value": [
@@ -453,7 +475,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testAndFalse()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "logical\\\\and",
                 "value": [
@@ -480,10 +502,10 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testNot()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "logical\\\\not",
-                "value": {
+                "value": [{
                     "type": "logical\\\\or",
                     "value": [
                         {
@@ -513,7 +535,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                             ]
                         }
                     ]
-                }
+                }]
             }
         '));
 
@@ -528,7 +550,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testConcatenation()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "string\\\\concatenation",
                 "value": [
@@ -576,7 +598,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testStringLength()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "string\\\\length",
                 "value": [
@@ -593,7 +615,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testStringContains()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "string\\\\contains",
                 "value": [
@@ -611,7 +633,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertTrue($actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "string\\\\contains",
                 "value": [
@@ -629,7 +651,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertTrue($actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "string\\\\contains",
                 "value": [
@@ -650,7 +672,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testStringTest()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "string\\\\test",
                 "value": [
@@ -668,7 +690,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertTrue($actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "string\\\\test",
                 "value": [
@@ -689,7 +711,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testSummationAndDivision()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "numeric\\\\summation",
                 "value": [
@@ -733,7 +755,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testMultiplication()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "numeric\\\\multiplication",
                 "value": [
@@ -764,7 +786,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDivision()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "numeric\\\\division",
                 "value": [
@@ -787,7 +809,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testModulo()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "numeric\\\\modulo",
                 "value": [
@@ -810,30 +832,32 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testIfThenElse1()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "ifThenElse",
                 "value": [
                     {
                         "type": "condition",
-                        "value": {
-                            "type": "logical\\\\and",
-                            "value": [
-                                {
-                                    "type": "comparison\\\\equals",
-                                    "value": [
-                                        {
-                                            "type": "attribute",
-                                            "value": "test"
-                                        },
-                                        {
-                                            "type": "value",
-                                            "value": true
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
+                        "value": [
+                            {
+                                "type": "logical\\\\and",
+                                "value": [
+                                    {
+                                        "type": "comparison\\\\equals",
+                                        "value": [
+                                            {
+                                                "type": "attribute",
+                                                "value": "test"
+                                            },
+                                            {
+                                                "type": "value",
+                                                "value": true
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
                         "type": "value",
@@ -858,30 +882,32 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testIfThenElse2()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "ifThenElse",
                 "value": [
                     {
                         "type": "condition",
-                        "value": {
-                            "type": "logical\\\\and",
-                            "value": [
-                                {
-                                    "type": "comparison\\\\equals",
-                                    "value": [
-                                        {
-                                            "type": "attribute",
-                                            "value": "test"
-                                        },
-                                        {
-                                            "type": "value",
-                                            "value": true
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
+                        "value": [
+                            {
+                                "type": "logical\\\\and",
+                                "value": [
+                                    {
+                                        "type": "comparison\\\\equals",
+                                        "value": [
+                                            {
+                                                "type": "attribute",
+                                                "value": "test"
+                                            },
+                                            {
+                                                "type": "value",
+                                                "value": true
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
                         "type": "value",
@@ -907,30 +933,32 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testIfThen1()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "ifThen",
                 "value": [
                     {
                         "type": "condition",
-                        "value": {
-                            "type": "logical\\\\and",
-                            "value": [
-                                {
-                                    "type": "comparison\\\\equals",
-                                    "value": [
-                                        {
-                                            "type": "attribute",
-                                            "value": "test"
-                                        },
-                                        {
-                                            "type": "value",
-                                            "value": true
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
+                        "value": [
+                            {
+                                "type": "logical\\\\and",
+                                "value": [
+                                    {
+                                        "type": "comparison\\\\equals",
+                                        "value": [
+                                            {
+                                                "type": "attribute",
+                                                "value": "test"
+                                            },
+                                            {
+                                                "type": "value",
+                                                "value": true
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
                         "type": "value",
@@ -951,7 +979,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testComparisonEquals()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "comparison\\\\equals",
                 "value": [
@@ -978,7 +1006,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testComparisonEqualsRelated()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "comparison\\\\equals",
                 "value": [
@@ -1033,7 +1061,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testComparisonEqualsFalse()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "comparison\\\\equals",
                 "value": [
@@ -1060,7 +1088,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testComparisonNotEquals()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "comparison\\\\notEquals",
                 "value": [
@@ -1087,7 +1115,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testComparisonNotEqualsNull()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "comparison\\\\notEquals",
                 "value": [
@@ -1112,7 +1140,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testComparisonEqualsArray()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "comparison\\\\equals",
                 "value": [
@@ -1158,7 +1186,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testComparisonGreaterThan()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "comparison\\\\greaterThan",
                 "value": [
@@ -1185,7 +1213,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testComparisonLessThan()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "comparison\\\\lessThan",
                 "value": [
@@ -1212,7 +1240,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testComparisonGreaterThanOrEquals()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "comparison\\\\greaterThanOrEquals",
                 "value": [
@@ -1239,7 +1267,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testComparisonLessThanOrEquals()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "comparison\\\\lessThanOrEquals",
                 "value": [
@@ -1266,7 +1294,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testStringNewLine()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "value",
                 "value": "test\\ntest"
@@ -1280,7 +1308,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testVariable()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "comparison\\\\equals",
                 "value": [
@@ -1305,7 +1333,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testAssign()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "assign",
                 "value": [
@@ -1331,7 +1359,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testSetAttribute()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "setAttribute",
                 "value": [
@@ -1361,7 +1389,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testCompareDates()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "comparison\\\\equals",
                 "value": [
@@ -1382,7 +1410,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $result = $this->createProcessor()->process($item);
         $this->assertTrue($result);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "comparison\\\\greaterThan",
                 "value": [
@@ -1403,7 +1431,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $result = $this->createProcessor()->process($item);
         $this->assertTrue($result);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "comparison\\\\greaterThanOrEquals",
                 "value": [
@@ -1427,7 +1455,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testNumberAbs()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "number\\\\abs",
                 "value": [
@@ -1444,7 +1472,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testNumberCeil()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "number\\\\ceil",
                 "value": [
@@ -1461,7 +1489,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testNumberFloor()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "number\\\\floor",
                 "value": [
@@ -1478,7 +1506,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testNumberFormat()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "number\\\\format",
                 "value": [
@@ -1496,7 +1524,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('20.00', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "number\\\\format",
                 "value": [
@@ -1521,7 +1549,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testNumberRound()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "number\\\\round",
                 "value": [
@@ -1539,7 +1567,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(1.1, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "number\\\\round",
                 "value": [
@@ -1556,7 +1584,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testNumberRandomInt()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "number\\\\randomInt",
                 "value": [
@@ -1578,7 +1606,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetime()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\now"
             }
@@ -1586,7 +1614,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(date('Y-m-d H:i:s'), $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\today"
             }
@@ -1597,7 +1625,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetimeFormat()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\format",
                 "value": [
@@ -1622,7 +1650,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetimeYear()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\year",
                 "value": [
@@ -1636,7 +1664,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(2017, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\year",
                 "value": [
@@ -1650,7 +1678,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(2017, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\year",
                 "value": [
@@ -1664,7 +1692,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(0, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\year",
                 "value": [
@@ -1685,7 +1713,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetimeMonth()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\month",
                 "value": [
@@ -1699,7 +1727,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(10, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\month",
                 "value": [
@@ -1713,7 +1741,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(10, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\month",
                 "value": [
@@ -1734,7 +1762,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetimeDate()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\date",
                 "value": [
@@ -1748,7 +1776,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(2, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\date",
                 "value": [
@@ -1762,7 +1790,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(20, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\date",
                 "value": [
@@ -1783,7 +1811,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetimeHour()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\hour",
                 "value": [
@@ -1797,7 +1825,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(14, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\hour",
                 "value": [
@@ -1811,7 +1839,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(0, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\hour",
                 "value": [
@@ -1832,7 +1860,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetimeMinute()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\minute",
                 "value": [
@@ -1846,7 +1874,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(5, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\hour",
                 "value": [
@@ -1860,7 +1888,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(0, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\minute",
                 "value": [
@@ -1881,7 +1909,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetimeDayOfWeek()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\dayOfWeek",
                 "value": [
@@ -1895,7 +1923,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(5, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\dayOfWeek",
                 "value": [
@@ -1909,7 +1937,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(0, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\dayOfWeek",
                 "value": [
@@ -1923,7 +1951,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(-1, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\dayOfWeek",
                 "value": [
@@ -1937,7 +1965,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(5, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\dayOfWeek",
                 "value": [
@@ -1955,7 +1983,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(6, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\dayOfWeek",
                 "value": [
@@ -1969,7 +1997,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(5, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\dayOfWeek",
                 "value": [
@@ -1986,7 +2014,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetimeDiff()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\diff",
                 "value": [
@@ -2008,7 +2036,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(-5, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\diff",
                 "value": [
@@ -2030,7 +2058,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(3, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\diff",
                 "value": [
@@ -2052,7 +2080,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(1, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\diff",
                 "value": [
@@ -2077,7 +2105,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetimeOperations()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\addDays",
                 "value": [
@@ -2095,7 +2123,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-01-03', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\addDays",
                 "value": [
@@ -2113,7 +2141,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-01-03 10:00:05', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\addMonths",
                 "value": [
@@ -2131,7 +2159,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2016-12-01 10:00:05', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\addWeeks",
                 "value": [
@@ -2149,7 +2177,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-01-08 10:00:05', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\addYears",
                 "value": [
@@ -2167,7 +2195,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2018-01-01', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\addHours",
                 "value": [
@@ -2185,7 +2213,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-01-01 02:00:00', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\addMinutes",
                 "value": [
@@ -2206,7 +2234,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetimeClosestTime()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2228,7 +2256,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-11-16 16:15', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2250,7 +2278,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-11-17 12:00', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2276,7 +2304,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-11-15 16:15', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2302,7 +2330,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-11-15 16:15', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2328,7 +2356,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-11-16 00:00', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2354,7 +2382,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-11-15 12:00', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2383,7 +2411,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetimeClosestHour()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2405,7 +2433,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-11-17 10:00', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2434,7 +2462,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetimeClosestMinute()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2460,7 +2488,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-11-16 15:10', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2482,7 +2510,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-11-16 15:10', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2504,7 +2532,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-11-16 16:10', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2529,7 +2557,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetimeClosestDayOfWeek()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2551,7 +2579,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-11-20 00:00', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2577,7 +2605,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-11-13', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2602,7 +2630,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetimeClosestDate()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2624,7 +2652,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-11-30 00:00', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2650,7 +2678,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-10-31', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2675,7 +2703,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testDatetimeClosestMonth()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2697,7 +2725,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2018-01-01', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2719,7 +2747,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-11-01', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2741,7 +2769,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2018-11-01 00:00', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\closest",
                 "value": [
@@ -2770,7 +2798,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testList()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "list",
                 "value": [
@@ -2788,7 +2816,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(["Test", "Hello"], $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "list",
                 "value": []
@@ -2800,7 +2828,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testArrayIncludes()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "array\\\\includes",
                 "value": [
@@ -2827,7 +2855,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertTrue($actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "array\\\\includes",
                 "value": [
@@ -2845,7 +2873,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertFalse($actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "array\\\\includes",
                 "value": [
@@ -2875,7 +2903,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testArrayPush()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "array\\\\push",
                 "value": [
@@ -2909,7 +2937,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testArrayLength()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "array\\\\length",
                 "value": [
@@ -2935,7 +2963,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testEnvUserAttribute()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "env\\\\userAttribute",
                 "value": [
@@ -2952,7 +2980,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testTrim()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "string\\\\trim",
                 "value": [
@@ -2969,7 +2997,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testLowerCase()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "string\\\\lowerCase",
                 "value": [
@@ -2986,7 +3014,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testUpperCase()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "string\\\\upperCase",
                 "value": [
@@ -3003,7 +3031,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testSubstring()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "string\\\\substring",
                 "value": [
@@ -3021,7 +3049,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('234', $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "string\\\\substring",
                 "value": [
@@ -3046,7 +3074,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testPos()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "string\\\\pos",
                 "value": [
@@ -3065,7 +3093,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(1, $actual);
 
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "string\\\\pos",
                 "value": [
@@ -3087,7 +3115,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     function testBundle()
     {
-        $item = new Argument(json_decode('
+        $item = new Argument(self::stringToNode('
             {
                 "type": "bundle",
                 "value": [

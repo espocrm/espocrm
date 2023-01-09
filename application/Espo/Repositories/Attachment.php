@@ -32,9 +32,7 @@ namespace Espo\Repositories;
 use Espo\ORM\Entity;
 use Espo\Entities\Attachment as AttachmentEntity;
 use Espo\Core\Repositories\Database;
-
 use Espo\Core\FileStorage\Storages\EspoUploadDir;
-
 use Espo\Core\Di;
 
 use Psr\Http\Message\StreamInterface;
@@ -43,38 +41,15 @@ use Psr\Http\Message\StreamInterface;
  * @extends Database<AttachmentEntity>
  */
 class Attachment extends Database implements
-    Di\FileManagerAware,
     Di\FileStorageManagerAware,
     Di\ConfigAware
 {
-    use Di\FileManagerSetter;
     use Di\FileStorageManagerSetter;
     use Di\ConfigSetter;
 
     /**
-     * @var string[]
+     * @param AttachmentEntity $entity
      */
-    protected $imageTypeList = [
-        'image/jpeg',
-        'image/png',
-        'image/gif',
-        'image/webp',
-    ];
-
-    /**
-     * @var string[]
-     */
-    protected $imageThumbList = [
-        'xxx-small',
-        'xx-small',
-        'x-small',
-        'small',
-        'medium',
-        'large',
-        'x-large',
-        'xx-large',
-    ];
-
     protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
@@ -90,7 +65,7 @@ class Attachment extends Database implements
             $entity->set('storage', EspoUploadDir::NAME);
         }
 
-        if (!$entity->get('storage')) {
+        if (!$entity->getStorage()) {
             $defaultStorage = $this->config->get('defaultFileStorage');
 
             $entity->set('storage', $defaultStorage);
@@ -107,46 +82,6 @@ class Attachment extends Database implements
         }
 
         $this->fileStorageManager->putContents($entity, $contents);
-    }
-
-    /**
-     * @param AttachmentEntity $entity
-     */
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        parent::afterRemove($entity, $options);
-
-        $duplicateCount = $this
-            ->where([
-                'OR' => [
-                    [
-                        'sourceId' => $entity->getSourceId()
-                    ],
-                    [
-                        'id' => $entity->getSourceId()
-                    ]
-                ],
-            ])
-            ->count();
-
-        if ($duplicateCount === 0) {
-            $this->fileStorageManager->unlink($entity);
-
-            if (in_array($entity->get('type'), $this->imageTypeList)) {
-                $this->removeImageThumbs($entity);
-            }
-        }
-    }
-
-    public function removeImageThumbs(AttachmentEntity $entity): void
-    {
-        foreach ($this->imageThumbList as $suffix) {
-            $filePath = "data/upload/thumbs/" . $entity->getSourceId() . "_{$suffix}";
-
-            if ($this->fileManager->isFile($filePath)) {
-                $this->fileManager->removeFile($filePath);
-            }
-        }
     }
 
     /**

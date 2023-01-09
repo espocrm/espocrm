@@ -44,6 +44,7 @@ class Binding implements BindingProcessor
     public function process(Binder $binder): void
     {
         $this->bindServices($binder);
+        $this->bindCore($binder);
         $this->bindMisc($binder);
         $this->bindAcl($binder);
         $this->bindWebSocket($binder);
@@ -63,7 +64,12 @@ class Binding implements BindingProcessor
         );
 
         $binder->bindService(
-            'Espo\\Core\\Container\\Container',
+            'Espo\\Core\\Container',
+            'container'
+        );
+
+        $binder->bindService(
+            'Psr\\Container\\ContainerInterface',
             'container'
         );
 
@@ -208,13 +214,16 @@ class Binding implements BindingProcessor
         );
 
         $binder->bindService(
-            'Espo\\Core\\Acl',
-            'acl'
-        );
-
-        $binder->bindService(
             'Espo\\Core\\ExternalAccount\\ClientManager',
             'externalAccountClientManager'
+        );
+    }
+
+    private function bindCore(Binder $binder): void
+    {
+        $binder->bindImplementation(
+            'Espo\\ORM\\PDO\\PDOProvider',
+            'Espo\\ORM\\PDO\\DefaultPDOProvider'
         );
     }
 

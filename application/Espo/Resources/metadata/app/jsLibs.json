@@ -32,6 +32,10 @@
         "exportsTo": "window",
         "exportsAs": "Selectize"
     },
+    "autonumeric": {
+        "exportsTo": "window",
+        "exportsAs": "AutoNumeric"
+    },
     "cronstrue": {
         "path": "client/lib/cronstrue-i18n.js",
         "devPath": "client/lib/original/cronstrue-i18n.js",

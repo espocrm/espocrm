@@ -32,6 +32,7 @@ namespace Espo\Core\Formula\Functions;
 use Espo\ORM\Entity;
 
 use Espo\Core\Formula\{
+    Exceptions\ExecutionException,
     Processor,
     ArgumentList,
     Evaluatable,
@@ -39,8 +40,7 @@ use Espo\Core\Formula\{
     Exceptions\BadArgumentType,
     Exceptions\BadArgumentValue,
     Exceptions\NotPassedEntity,
-    Exceptions\Error,
-};
+    Exceptions\Error};
 
 use Espo\Core\Utils\Log;
 
@@ -90,7 +90,8 @@ abstract class BaseFunction
      * Evaluates a function.
      *
      * @return mixed A result of the function.
-     * @throws \Espo\Core\Formula\Exceptions\Error
+     * @throws Error
+     * @throws ExecutionException
      */
     public abstract function process(ArgumentList $args);
 
@@ -100,6 +101,7 @@ abstract class BaseFunction
      * @param Evaluatable $item Argument or ArgumentList.
      * @return mixed A result of evaluation. An array if an argument list was passed.
      * @throws Error
+     * @throws ExecutionException
      */
     protected function evaluate(Evaluatable $item)
     {

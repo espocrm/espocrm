@@ -3,7 +3,10 @@
         "exportAllFields": "Export all fields",
         "fieldList": "Field List",
         "format": "Format",
-        "status": "Status"
+        "status": "Status",
+        "xlsxLite": "Lite",
+        "xlsxRecordLinks": "Record Links",
+        "xlsxTitle": "Title"
     },
     "options": {
         "format": {
@@ -16,6 +19,10 @@
             "Success": "Success",
             "Failed": "Failed"
         }
+    },
+    "tooltips": {
+        "xlsxLite": "Consumes much less memory. Recommended if a big number of records is exported.",
+        "xlsxTitle": "Print a title and current date in the header."
     },
     "messages": {
         "exportProcessed": "Export has been processed. Download the [file]({url}).",

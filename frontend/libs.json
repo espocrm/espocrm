@@ -93,6 +93,10 @@
         "bundle": true
     },
     {
+        "src": "node_modules/autonumeric/dist/autoNumeric.js",
+        "bundle": true
+    },
+    {
         "src": "node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"
     },
     {

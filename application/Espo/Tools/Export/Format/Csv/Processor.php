@@ -27,38 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processors;
+namespace Espo\Tools\Export\Format\Csv;
 
-use Espo\ORM\Entity;
-use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Metadata;
 use Espo\Entities\Preferences;
-use Espo\Tools\Export\Processor;
-use Espo\Tools\Export\Processor\Data;
+use Espo\ORM\Entity;
+use Espo\Tools\Export\Collection;
+use Espo\Tools\Export\Processor as ProcessorInterface;
 use Espo\Tools\Export\Processor\Params;
 
 use Psr\Http\Message\StreamInterface;
-
 use GuzzleHttp\Psr7\Stream;
 
 use RuntimeException;
 
-class Csv implements Processor
+use const JSON_UNESCAPED_UNICODE;
+
+class Processor implements ProcessorInterface
 {
-    private Config $config;
-    private Preferences $preferences;
-    private Metadata $metadata;
+    public function __construct(
+        private Config $config,
+        private Preferences $preferences
+    ) {}
 
-    public function __construct(Config $config, Preferences $preferences, Metadata $metadata)
-    {
-        $this->config = $config;
-        $this->preferences = $preferences;
-        $this->metadata = $metadata;
-    }
-
-    public function process(Params $params, Data $data): StreamInterface
+    public function process(Params $params, Collection $collection): StreamInterface
     {
         $attributeList = $params->getAttributeList();
 
@@ -77,8 +70,8 @@ class Csv implements Processor
 
         fputcsv($fp, $attributeList, $delimiter);
 
-        while (($row = $data->readRow()) !== null) {
-            $preparedRow = $this->prepareRow($row);
+        foreach ($collection as $entity) {
+            $preparedRow = $this->prepareRow($entity, $attributeList);
 
             fputcsv($fp, $preparedRow, $delimiter, '"' , "\0");
         }
@@ -89,58 +82,30 @@ class Csv implements Processor
     }
 
     /**
-     * @param array<string, mixed> $row
-     * @return mixed[]
+     * @param string[] $attributeList
+     * @return string[]
      */
-    private function prepareRow(array $row): array
+    private function prepareRow(Entity $entity, array $attributeList): array
     {
         $preparedRow = [];
 
-        foreach ($row as $item) {
-            if (is_array($item) || is_object($item)) {
-                $item = Json::encode($item);
+        foreach ($attributeList as $attribute) {
+            $value = $entity->get($attribute);
+
+            if (is_array($value) || is_object($value)) {
+                $value = Json::encode($value, JSON_UNESCAPED_UNICODE);
             }
 
-            $preparedRow[] = $this->sanitizeCell($item);
+            $value = (string) $value;
+
+            $preparedRow[] = $this->sanitizeCellValue($value);
         }
 
         return $preparedRow;
     }
 
-    /**
-     * @param string[] $fieldList
-     */
-    public function loadAdditionalFields(Entity $entity, array $fieldList): void
+    private function sanitizeCellValue(string $value): string
     {
-        if (!$entity instanceof CoreEntity) {
-            return;
-        }
-
-        foreach ($fieldList as $field) {
-            $fieldType = $this->metadata
-                ->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
-
-            if (
-                $fieldType === 'linkMultiple' ||
-                $fieldType === 'attachmentMultiple'
-            ) {
-                if (!$entity->has($field . 'Ids')) {
-                    $entity->loadLinkMultipleField($field);
-                }
-            }
-        }
-    }
-
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    private function sanitizeCell($value)
-    {
-        if (!is_string($value)) {
-            return $value;
-        }
-
         if ($value === '') {
             return $value;
         }

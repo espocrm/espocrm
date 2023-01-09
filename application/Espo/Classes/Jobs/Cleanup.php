@@ -420,7 +420,7 @@ class Cleanup implements JobDataLess
                 ->from($scope)
                 ->withDeleted()
                 ->where([
-                    'deleted' => 1,
+                    'deleted' => true,
                     'modifiedAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
                     'modifiedAt>' => $datetimeFrom->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
                 ])
@@ -760,7 +760,7 @@ class Cleanup implements JobDataLess
             $service = $this->recordServiceContainer->get($scope);
 
             $whereClause = [
-                'deleted' => 1,
+                'deleted' => true,
             ];
 
             if ($this->metadata->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) {

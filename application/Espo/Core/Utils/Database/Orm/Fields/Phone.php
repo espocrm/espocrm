@@ -47,7 +47,7 @@ class Phone extends Base
             'type' => 'varchar',
             'select' => [
                 "select" => "phoneNumbers.name",
-                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
             ],
             'selectForeign' => [
                 "select" => "{$foreignJoinAlias}.name",
@@ -57,8 +57,8 @@ class Phone extends Base
                         $foreignJoinMiddleAlias,
                         [
                             "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
-                            "{$foreignJoinMiddleAlias}.primary" => 1,
-                            "{$foreignJoinMiddleAlias}.deleted" => 0,
+                            "{$foreignJoinMiddleAlias}.primary" => true,
+                            "{$foreignJoinMiddleAlias}.deleted" => false,
                         ]
                     ],
                     [
@@ -66,7 +66,7 @@ class Phone extends Base
                         $foreignJoinAlias,
                         [
                             "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.phoneNumberId",
-                            "{$foreignJoinAlias}.deleted" => 0,
+                            "{$foreignJoinAlias}.deleted" => false,
                         ]
                     ]
                 ],
@@ -166,7 +166,7 @@ class Phone extends Base
                 'order' => [
                     ['phoneNumbers.name', '{direction}'],
                 ],
-                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
                 'additionalSelect' => ['phoneNumbers.name'],
             ],
         ];
@@ -283,7 +283,7 @@ class Phone extends Base
                         'notStorable' => true,
                         'select' => [
                             'select' => 'phoneNumbers.optOut',
-                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
                         ],
                         'selectForeign' => [
                             'select' => "{$foreignJoinAlias}.optOut",
@@ -293,8 +293,8 @@ class Phone extends Base
                                     $foreignJoinMiddleAlias,
                                     [
                                         "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
-                                        "{$foreignJoinMiddleAlias}.primary" => 1,
-                                        "{$foreignJoinMiddleAlias}.deleted" => 0,
+                                        "{$foreignJoinMiddleAlias}.primary" => true,
+                                        "{$foreignJoinMiddleAlias}.deleted" => false,
                                     ]
                                 ],
                                 [
@@ -302,7 +302,7 @@ class Phone extends Base
                                     $foreignJoinAlias,
                                     [
                                         "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.phoneNumberId",
-                                        "{$foreignJoinAlias}.deleted" => 0,
+                                        "{$foreignJoinAlias}.deleted" => false,
                                     ]
                                 ]
                             ],
@@ -313,7 +313,7 @@ class Phone extends Base
                                     ['phoneNumbers.optOut=' => true],
                                     ['phoneNumbers.optOut!=' => null],
                                 ],
-                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
                             ],
                             '= FALSE' => [
                                 'whereClause' => [
@@ -322,14 +322,14 @@ class Phone extends Base
                                         ['phoneNumbers.optOut=' => null],
                                     ]
                                 ],
-                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
                             ]
                         ],
                        'order' => [
                             'order' => [
                                 ['phoneNumbers.optOut', '{direction}'],
                             ],
-                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
                             'additionalSelect' => ['phoneNumbers.optOut'],
                         ],
                     ],
@@ -338,7 +338,7 @@ class Phone extends Base
                         'notStorable' => true,
                         'select' => [
                             'select' => 'phoneNumbers.invalid',
-                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
                         ],
                         'selectForeign' => [
                             'select' => "{$foreignJoinAlias}.invalid",
@@ -348,8 +348,8 @@ class Phone extends Base
                                     $foreignJoinMiddleAlias,
                                     [
                                         "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
-                                        "{$foreignJoinMiddleAlias}.primary" => 1,
-                                        "{$foreignJoinMiddleAlias}.deleted" => 0,
+                                        "{$foreignJoinMiddleAlias}.primary" => true,
+                                        "{$foreignJoinMiddleAlias}.deleted" => false,
                                     ]
                                 ],
                                 [
@@ -357,7 +357,7 @@ class Phone extends Base
                                     $foreignJoinAlias,
                                     [
                                         "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.phoneNumberId",
-                                        "{$foreignJoinAlias}.deleted" => 0,
+                                        "{$foreignJoinAlias}.deleted" => false,
                                     ]
                                 ]
                             ],
@@ -368,7 +368,7 @@ class Phone extends Base
                                     ['phoneNumbers.invalid=' => true],
                                     ['phoneNumbers.invalid!=' => null],
                                 ],
-                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
                             ],
                             '= FALSE' => [
                                 'whereClause' => [
@@ -377,14 +377,14 @@ class Phone extends Base
                                         ['phoneNumbers.invalid=' => null],
                                     ]
                                 ],
-                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
                             ]
                         ],
                         'order' => [
                             'order' => [
                                 ['phoneNumbers.invalid', '{direction}'],
                             ],
-                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
+                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
                             'additionalSelect' => ['phoneNumbers.invalid'],
                         ],
                     ],

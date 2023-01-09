@@ -611,7 +611,7 @@ class Htmlizer
                 $decimalPoint = $context['hash']['decimalPoint'] ?? '.';
                 $thousandsSeparator = $context['hash']['thousandsSeparator'] ?? ',';
 
-                return number_format($number, $decimals, $decimalPoint, $thousandsSeparator);
+                return number_format((float) $number, $decimals, $decimalPoint, $thousandsSeparator);
             },
             'dateFormat' => function () {
                 $args = func_get_args();
@@ -740,7 +740,7 @@ class Htmlizer
 
         $customHelper = function () {
             $args = func_get_args();
-            $agumentList = array_slice($args, 0, -1);
+            $argumentList = array_slice($args, 0, -1);
             $context = $args[count($args) - 1];
 
             $options = $context['hash'];
@@ -755,7 +755,7 @@ class Htmlizer
 
             $data = new \Espo\Core\Htmlizer\Helper\Data(
                 $name,
-                $agumentList,
+                $argumentList,
                 (object) $options,
                 $context['_this'],
                 $rootData,

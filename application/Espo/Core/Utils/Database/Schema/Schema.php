@@ -29,90 +29,62 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
-use Doctrine\DBAL\{
-    Types\Type,
-    Schema\SchemaDiff as DBALSchemaDiff,
-    Schema\Schema as DBALSchema,
-    Connection,
-    Platforms\AbstractPlatform,
-};
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Schema\Schema as DBALSchema;
+use Doctrine\DBAL\Schema\SchemaDiff as DBALSchemaDiff;
+use Doctrine\DBAL\Types\Type;
 
-use Espo\Core\{
-    Utils\Config,
-    Utils\Metadata,
-    Utils\File\Manager as FileManager,
-    ORM\EntityManager,
-    Utils\File\ClassMap,
-    Utils\Metadata\OrmMetadataData,
-    Utils\Util,
-    Utils\Database\Helper,
-    Utils\Database\DBAL\Schema\Comparator,
-    Utils\Database\Converter as DatabaseConverter,
-    Utils\Log,
-    Utils\Module\PathProvider,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Database\Converter as DatabaseConverter;
+use Espo\Core\Utils\Database\DBAL\Schema\Comparator;
+use Espo\Core\Utils\Database\Helper;
+use Espo\Core\Utils\File\ClassMap;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Metadata\OrmMetadataData;
+use Espo\Core\Utils\Module\PathProvider;
+use Espo\Core\Utils\Util;
 
 use Throwable;
 
 class Schema
 {
-    private Config $config;
-
-    private Metadata $metadata;
-
-    private FileManager $fileManager;
-
-    private EntityManager $entityManager;
-
-    private ClassMap $classMap;
-
-    private Comparator $comparator;
-
-    private DatabaseConverter $converter;
-
-    private Helper $databaseHelper;
-
-    protected OrmMetadataData $ormMetadataData;
-
-    private Log $log;
-
     private string $fieldTypePath = 'application/Espo/Core/Utils/Database/DBAL/FieldTypes';
-
     private string $rebuildActionsPath = 'Core/Utils/Database/Schema/rebuildActions';
 
+    private Comparator $comparator;
+    private DatabaseConverter $converter;
     private Converter $schemaConverter;
 
     /**
      * @var ?array{
-     *   beforeRebuild: \Espo\Core\Utils\Database\Schema\BaseRebuildActions[],
-     *   afterRebuild: \Espo\Core\Utils\Database\Schema\BaseRebuildActions[],
+     *   beforeRebuild: BaseRebuildActions[],
+     *   afterRebuild: BaseRebuildActions[],
      * }
      */
     protected $rebuildActions = null;
 
     public function __construct(
-        Config $config,
-        Metadata $metadata,
-        FileManager $fileManager,
-        EntityManager $entityManager,
-        ClassMap $classMap,
-        OrmMetadataData $ormMetadataData,
-        Log $log,
-        PathProvider $pathProvider
+        private Config $config,
+        private Metadata $metadata,
+        private FileManager $fileManager,
+        private ClassMap $classMap,
+        protected OrmMetadataData $ormMetadataData,
+        private Log $log,
+        PathProvider $pathProvider,
+        DatabaseConverter $databaseConverter,
+        private Helper $databaseHelper,
+        private InjectableFactory $injectableFactory
     ) {
-        $this->config = $config;
-        $this->metadata = $metadata;
-        $this->fileManager = $fileManager;
-        $this->entityManager = $entityManager;
-        $this->classMap = $classMap;
-        $this->log = $log;
+        $this->converter = $databaseConverter;
 
-        $this->databaseHelper = new Helper($this->config);
         $this->comparator = new Comparator();
 
         $this->initFieldTypes();
-
-        $this->converter = new DatabaseConverter($this->metadata, $this->fileManager, $this->config);
 
         $this->schemaConverter = new Converter(
             $this->metadata,
@@ -122,8 +94,6 @@ class Schema
             $this->log,
             $pathProvider
         );
-
-        $this->ormMetadataData = $ormMetadataData;
     }
 
     public function getDatabaseHelper(): Helper
@@ -279,7 +249,7 @@ class Schema
             'afterRebuild',
         ];
 
-        /** @var array<string,class-string<\Espo\Core\Utils\Database\Schema\BaseRebuildActions>> $classes */
+        /** @var array<string, class-string<BaseRebuildActions>> $classes */
         $classes = $this->classMap->getData($this->rebuildActionsPath, null, $methodList);
 
         $objects = [
@@ -288,12 +258,7 @@ class Schema
         ];
 
         foreach ($classes as $className) {
-            $actionObj = new $className(
-                $this->metadata,
-                $this->config,
-                $this->entityManager,
-                $this->log
-            );
+            $actionObj = $this->injectableFactory->create($className);
 
             if (isset($currentSchema)) {
                 $actionObj->setCurrentSchema($currentSchema);

@@ -142,13 +142,22 @@
             "type": "varchar",
             "default": ",",
             "maxLength": 1,
-            "view": "views/settings/fields/thousand-separator"
+            "view": "views/settings/fields/thousand-separator",
+            "options": [
+                ".",
+                ",",
+                "'"
+            ]
         },
         "decimalMark": {
             "type": "varchar",
             "default": ".",
             "required": true,
-            "maxLength": 1
+            "maxLength": 1,
+            "options": [
+                ".",
+                ","
+            ]
         },
         "currencyList": {
             "type": "multiEnum",

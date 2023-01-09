@@ -30,17 +30,22 @@
 namespace Espo\Core\Formula;
 
 use Espo\Core\Formula\Exceptions\SyntaxError;
+use Espo\Core\Formula\Parser\Ast\Attribute;
+use Espo\Core\Formula\Parser\Ast\Node;
+use Espo\Core\Formula\Parser\Ast\Value;
+use Espo\Core\Formula\Parser\Ast\Variable;
+use Espo\Core\Formula\Parser\Statement\IfRef;
+use Espo\Core\Formula\Parser\Statement\StatementRef;
 
-use stdClass;
+use Espo\Core\Formula\Parser\Statement\WhileRef;
+use LogicException;
 
 /**
- * Parses a formula script into AST. Returns a RAW data object that represents a tree of functions.
+ * Parses a formula-script into AST.
  */
 class Parser
 {
-    /**
-     * @var array<int,string[]>
-     */
+    /** @var array<int, string[]> */
     private $priorityList = [
         ['='],
         ['??'],
@@ -51,9 +56,7 @@ class Parser
         ['*', '/', '%'],
     ];
 
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string, string> */
     private $operatorMap = [
         '=' => 'assign',
         '??' => 'comparison\\nullCoalescing',
@@ -72,18 +75,30 @@ class Parser
         '<=' => 'comparison\\lessThanOrEquals',
     ];
 
+    /** @var string[] */
+    private array $whiteSpaceCharList = [
+        "\r",
+        "\n",
+        "\t",
+        ' ',
+    ];
+
     private string $variableNameRegExp = "/^[a-zA-Z0-9_\$]+$/";
-
     private string $functionNameRegExp = "/^[a-zA-Z0-9_\\\\]+$/";
-
     private string $attributeNameRegExp = "/^[a-zA-Z0-9.]+$/";
 
-    public function parse(string $expression): stdClass
+    /**
+     * @throws SyntaxError
+     */
+    public function parse(string $expression): Node|Attribute|Variable|Value
     {
-        return $this->split($expression);
+        return $this->split($expression, true);
     }
 
-    private function applyOperator(string $operator, string $firstPart, string $secondPart): stdClass
+    /**
+     * @throws SyntaxError
+     */
+    private function applyOperator(string $operator, string $firstPart, string $secondPart): Node
     {
         if ($operator === '=') {
             if (!strlen($firstPart)) {
@@ -94,35 +109,23 @@ class Parser
                 $variable = substr($firstPart, 1);
 
                 if ($variable === '' || !preg_match($this->variableNameRegExp, $variable)) {
-                    throw new SyntaxError("Bad varable name `{$variable}`.");
+                    throw new SyntaxError("Bad variable name `{$variable}`.");
                 }
 
-                return (object) [
-                    'type' => 'assign',
-                    'value' => [
-                        (object) [
-                            'type' => 'value',
-                            'value' => $variable,
-                        ],
-                        $this->split($secondPart),
-                    ]
-                ];
+                return new Node('assign', [
+                    new Value($variable),
+                    $this->split($secondPart)
+                ]);
             }
 
             if ($secondPart === '') {
                 throw SyntaxError::create("Bad assignment usage.");
             }
 
-            return (object) [
-                'type' => 'setAttribute',
-                'value' => [
-                    (object) [
-                        'type' => 'value',
-                        'value' => $firstPart,
-                    ],
-                    $this->split($secondPart)
-                ]
-            ];
+            return new Node('setAttribute', [
+                new Value($firstPart),
+                $this->split($secondPart)
+            ]);
         }
 
         $functionName = $this->operatorMap[$operator];
@@ -131,22 +134,22 @@ class Parser
             throw new SyntaxError("Bad function name `{$functionName}`.");
         }
 
-        return (object) [
-            'type' => $functionName,
-            'value' => [
-                $this->split($firstPart),
-                $this->split($secondPart),
-            ]
-        ];
+        return new Node($functionName, [
+            $this->split($firstPart),
+            $this->split($secondPart),
+        ]);
     }
 
     /**
-     * @param ?int[] $splitterIndexList
+     * @param string $string An expression. Comments will be stripped by the method.
+     * @param string $modifiedString A modified expression with removed parentheses and braces inside strings.
+     * @param ?((StatementRef|IfRef|WhileRef)[]) $statementList Statements will be added if there are multiple.
+     * @throws SyntaxError
      */
-    private function processStrings(
+    private function processString(
         string &$string,
         string &$modifiedString,
-        ?array &$splitterIndexList = null,
+        ?array &$statementList = null,
         bool $intoOneLine = false
     ): bool {
 
@@ -154,13 +157,15 @@ class Parser
         $isSingleQuote = false;
         $isComment = false;
         $isLineComment = false;
+        $parenthesisCounter = 0;
+        $braceCounter = 0;
 
         $modifiedString = $string;
 
-        $braceCounter = 0;
-
         for ($i = 0; $i < strlen($string); $i++) {
             $isStringStart = false;
+            $char = $string[$i];
+            $isLast = $i === strlen($string) - 1;
 
             if (!$isLineComment && !$isComment) {
                 if ($string[$i] === "'" && ($i === 0 || $string[$i - 1] !== "\\")) {
@@ -168,135 +173,656 @@ class Parser
                         $isString = true;
                         $isSingleQuote = true;
                         $isStringStart = true;
-                    } else {
-                        if ($isSingleQuote) {
-                            $isString = false;
-                        }
                     }
-                } else if ($string[$i] === "\"" && ($i === 0 || $string[$i - 1] !== "\\")) {
+                    else if ($isSingleQuote) {
+                        $isString = false;
+                    }
+                }
+                else if ($string[$i] === "\"" && ($i === 0 || $string[$i - 1] !== "\\")) {
                     if (!$isString) {
                         $isString = true;
                         $isStringStart = true;
                         $isSingleQuote = false;
-                    } else {
-                        if (!$isSingleQuote) {
-                            $isString = false;
-                        }
+                    }
+                    else if (!$isSingleQuote) {
+                        $isString = false;
                     }
                 }
             }
 
             if ($isString) {
-                if ($string[$i] === '(' || $string[$i] === ')') {
+                if (in_array($char, ['(', ')', '{', '}'])) {
                     $modifiedString[$i] = '_';
                 }
                 else if (!$isStringStart) {
                     $modifiedString[$i] = ' ';
                 }
+
+                continue;
             }
-            else {
-                if (!$isLineComment && !$isComment) {
-                    if ($i && $string[$i] === '/' && $string[$i - 1] === '/') {
-                        $isLineComment = true;
-                    }
 
-                    if (!$isLineComment) {
-                        if ($i && $string[$i] === '*' && $string[$i - 1] === '/') {
-                            $isComment = true;
-                        }
-                    }
+            $isLineCommentEnding = $isLineComment && ($string[$i] === "\n" || $isLast);
+            $isCommentEnding = $isComment && $string[$i] === "*" && $string[$i + 1] === "/";
 
-                    if ($string[$i] === '(') {
-                        $braceCounter++;
-                    }
+            if ($isCommentEnding) {
+                $string[$i + 1] = ' ';
+                $modifiedString[$i + 1] = ' ';
+            }
 
-                    if ($string[$i] === ')') {
-                        $braceCounter--;
-                    }
+            if ($isLineComment || $isComment) {
+                $string[$i] = ' ';
+                $modifiedString[$i] = ' ';
+            }
 
-                    if ($braceCounter === 0) {
-                        if (!is_null($splitterIndexList)) {
-                            if ($string[$i] === ';') {
-                                $splitterIndexList[] = $i;
-                            }
-                        }
+            if (!$isLineComment && !$isComment) {
+                if (!$isLast && $string[$i] === '/' && $string[$i + 1] === '/') {
+                    $isLineComment = true;
 
-                        if ($intoOneLine) {
-                            if ($string[$i] === "\r" || $string[$i] === "\n" || $string[$i] === "\t") {
-                                $string[$i] = ' ';
-                            }
-                        }
+                    $string[$i] = ' ';
+                    $string[$i + 1] = ' ';
+                    $modifiedString[$i] = ' ';
+                    $modifiedString[$i + 1] = ' ';
+                }
+
+                if (!$isLineComment) {
+                    if (!$isLast && $string[$i] === '/' && $string[$i + 1] === '*') {
+                        $isComment = true;
+
+                        $string[$i] = ' ';
+                        $string[$i + 1] = ' ';
+                        $modifiedString[$i] = ' ';
+                        $modifiedString[$i + 1] = ' ';
                     }
                 }
 
-                if ($isLineComment) {
-                    if ($string[$i] === "\n") {
-                        $isLineComment = false;
-                    }
+                if ($char === '(') {
+                    $parenthesisCounter++;
+                } else if ($char === ')') {
+                    $parenthesisCounter--;
+                } else if ($char === '{') {
+                    $braceCounter++;
+                } else if ($char === '}') {
+                    $braceCounter--;
                 }
+            }
 
-                if ($isComment) {
-                    if ($string[$i - 1] === "*" && $string[$i] === "/") {
-                        $isComment = false;
-                    }
+            if ($statementList !== null) {
+                $this->processStringIteration(
+                    $string,
+                    $i,
+                    $statementList,
+                    $parenthesisCounter,
+                    $braceCounter,
+                    $isLineComment,
+                    $isComment
+                );
+            }
+
+            if ($intoOneLine) {
+                if (
+                    $parenthesisCounter === 0 &&
+                    $this->isWhiteSpace($char) &&
+                    $char !== ' '
+                ) {
+                    $string[$i] = ' ';
                 }
+            }
+
+            if ($isLineCommentEnding) {
+                $isLineComment = false;
+            }
+
+            if ($isCommentEnding) {
+                $isComment = false;
+            }
+
+            /*if ($isLineComment) {
+                if ($string[$i] === "\n") {
+                    $isLineComment = false;
+                }
+            }
+
+            if ($isComment) {
+                if ($string[$i - 1] === "*" && $string[$i] === "/") {
+                    $isComment = false;
+                }
+            }*/
+        }
+
+        if ($statementList !== null) {
+            $lastStatement = end($statementList);
+
+            if (
+                $lastStatement instanceof StatementRef &&
+                count($statementList) === 1 &&
+                !$lastStatement->isEndedWithSemicolon()
+            ) {
+                array_pop($statementList);
             }
         }
 
         return $isString;
     }
 
-    private function split(string $expression): stdClass
+    /**
+     * @param (StatementRef|IfRef|WhileRef)[] $statementList
+     * @throws SyntaxError
+     */
+    private function processStringIteration(
+        string $string,
+        int &$i,
+        array &$statementList,
+        int $parenthesisCounter,
+        int $braceCounter,
+        bool $isLineComment,
+        bool $isComment
+    ): void {
+
+        $char = $string[$i];
+        $isLast = $i === strlen($string) - 1;
+
+        $lastStatement = count($statementList) ?
+            end($statementList) : null;
+
+        if (
+            $lastStatement instanceof StatementRef &&
+            !$lastStatement->isReady()
+        ) {
+            if (
+                $parenthesisCounter === 0 &&
+                $braceCounter === 0
+            ) {
+                if ($char === ';') {
+                    $lastStatement->setEnd($i, true);
+
+                    return;
+                }
+
+                if ($isLast) {
+                    $lastStatement->setEnd($i + 1);
+
+                    return;
+                }
+            }
+        }
+
+        if (
+            $lastStatement instanceof IfRef &&
+            !$lastStatement->isReady()
+        ) {
+            $toContinue = $this->processStringIfStatement(
+                $string,
+                $i,
+                $parenthesisCounter,
+                $braceCounter,
+                $lastStatement
+            );
+
+            if ($toContinue) {
+                return;
+            }
+        }
+
+        if (
+            $lastStatement instanceof WhileRef &&
+            !$lastStatement->isReady()
+        ) {
+            $toContinue = $this->processStringWhileStatement(
+                $string,
+                $i,
+                $parenthesisCounter,
+                $braceCounter,
+                $lastStatement
+            );
+
+            if ($toContinue === null) {
+                // Not a `while` statement, but likely a `while` function.
+                array_pop($statementList);
+
+                $lastStatement = new StatementRef($lastStatement->getStart());
+                $statementList[] = $lastStatement;
+
+                if ($char === ';') {
+                    $lastStatement->setEnd($i, true);
+
+                    return;
+                }
+            }
+
+            if ($toContinue) {
+                return;
+            }
+        }
+
+        if (
+            $parenthesisCounter === 0 &&
+            $braceCounter === 0
+        ) {
+            if ($isLineComment || $isComment) {
+                return;
+            }
+
+            $previousStatementEnd = $lastStatement ?
+                $lastStatement->getEnd() :
+                -1;
+
+            if (
+                $lastStatement &&
+                !$lastStatement->isReady()
+            ) {
+                return;
+            }
+
+            if ($previousStatementEnd === null) {
+                throw SyntaxError::create("Incorrect statement usage.");
+            }
+
+            if ($this->isOnIf($string, $i)) {
+                $statementList[] = new IfRef();
+
+                $i += 1;
+
+                return;
+            }
+
+            if ($this->isOnWhile($string, $i)) {
+                $statementList[] = new WhileRef($i);
+
+                $i += 4;
+
+                return;
+            }
+
+            if (
+                !$this->isWhiteSpace($char) &&
+                $char !== ';' &&
+                $char !== '/'
+            ) {
+                $statementList[] = new StatementRef($i);
+            }
+        }
+    }
+
+    private function processStringIfStatement(
+        string $string,
+        int &$i,
+        int $parenthesisCounter,
+        int $braceCounter,
+        IfRef $statement
+    ): bool {
+
+        $char = $string[$i];
+        $isLast = $i === strlen($string) - 1;
+
+        if (
+            $char === '(' &&
+            !$isLast &&
+            $parenthesisCounter === 1 &&
+            $braceCounter === 0 &&
+            $statement->getState() === IfRef::STATE_EMPTY
+        ) {
+            $statement->setConditionStart($i + 1);
+
+            return true;
+        }
+
+        if (
+            $char === ')' &&
+            $parenthesisCounter === 0 &&
+            $braceCounter === 0 &&
+            $statement->getState() === IfRef::STATE_CONDITION_STARTED
+        ) {
+            $statement->setConditionEnd($i);
+
+            return true;
+        }
+
+        if (
+            $statement->getState() === IfRef::STATE_CONDITION_ENDED &&
+            !$isLast &&
+            $parenthesisCounter === 0 &&
+            $braceCounter === 1 &&
+            $char === '{'
+        ) {
+            $statement->setThenStart($i + 1);
+
+            return true;
+        }
+
+        if (
+            $statement->getState() === IfRef::STATE_THEN_STARTED &&
+            $parenthesisCounter === 0 &&
+            $braceCounter === 0 &&
+            $char === '}'
+        ) {
+            $statement->setThenEnd($i);
+
+            if ($isLast) {
+                $statement->setReady();
+            }
+
+            return true;
+        }
+
+        if (
+            $statement->getState() === IfRef::STATE_THEN_ENDED &&
+            $this->isWhiteSpace($char) &&
+            $isLast
+        ) {
+            $statement->setReady();
+
+            // No need to call continue.
+            return false;
+        }
+
+        if (
+            $statement->getState() === IfRef::STATE_THEN_ENDED &&
+            !$this->isWhiteSpace($char) &&
+            !$this->isOnElse($string, $i)
+        ) {
+            $statement->setReady();
+
+            // No need to call continue.
+            return false;
+        }
+
+        if (
+            $statement->getState() === IfRef::STATE_THEN_ENDED &&
+            $parenthesisCounter === 0 &&
+            $braceCounter === 0 &&
+            $this->isOnElse($string, $i)
+        ) {
+            $statement->setElseMet($i + 4);
+
+            $i += 3;
+
+            return true;
+        }
+
+        if (
+            $statement->getState() === IfRef::STATE_ELSE_MET &&
+            !$isLast &&
+            $parenthesisCounter === 0 &&
+            $braceCounter === 1 &&
+            $char === '{'
+        ) {
+            $statement->setElseStart($i + 1);
+
+            return true;
+        }
+
+        if (
+            $statement->getState() === IfRef::STATE_ELSE_MET &&
+            !$isLast &&
+            $parenthesisCounter === 0 &&
+            $braceCounter === 0 &&
+            $this->isWhiteSpace($string[$i - 1]) &&
+            $this->isOnIf($string, $i)
+        ) {
+            $statement->setElseStart($i, true);
+
+            $i += 1;
+
+            return true;
+        }
+
+        if (
+            $statement->getState() === IfRef::STATE_ELSE_STARTED &&
+            $statement->hasInlineElse() &&
+            $parenthesisCounter === 0 &&
+            $braceCounter === 0 &&
+            $char === '}'
+        ) {
+            $elseFound = false;
+            $j = $i + 1;
+
+            while ($j < strlen($string)) {
+                if ($this->isWhiteSpace($string[$j])) {
+                    $j++;
+
+                    continue;
+                }
+
+                $elseFound = $this->isOnElse($string, $j);
+
+                break;
+            }
+
+            if (!$elseFound) {
+                $statement->setElseEnd($i + 1);
+                $statement->setReady();
+            }
+
+            return true;
+        }
+
+        if (
+            $statement->getState() === IfRef::STATE_ELSE_STARTED &&
+            !$statement->hasInlineElse() &&
+            $parenthesisCounter === 0 &&
+            $braceCounter === 0 &&
+            $char === '}'
+        ) {
+            $statement->setElseEnd($i);
+            $statement->setReady();
+
+            return true;
+        }
+
+        if (
+            $statement->getState() === IfRef::STATE_ELSE_MET &&
+            $parenthesisCounter === 0 &&
+            $braceCounter === 0 &&
+            $char === '}'
+        ) {
+            $statement->setElseStart($statement->getElseKeywordEnd() + 1);
+            $statement->setElseEnd($i + 1);
+            $statement->setReady();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private function processStringWhileStatement(
+        string $string,
+        int $i,
+        int $parenthesisCounter,
+        int $braceCounter,
+        WhileRef $statement
+    ): ?bool {
+
+        $char = $string[$i];
+        $isLast = $i === strlen($string) - 1;
+
+        if (
+            $char === '(' &&
+            !$isLast &&
+            $parenthesisCounter === 1 &&
+            $braceCounter === 0 &&
+            $statement->getState() === WhileRef::STATE_EMPTY
+        ) {
+            $statement->setConditionStart($i + 1);
+
+            return true;
+        }
+
+        if (
+            $char === ')' &&
+            !$isLast &&
+            $parenthesisCounter === 0 &&
+            $braceCounter === 0 &&
+            $statement->getState() === WhileRef::STATE_CONDITION_STARTED
+        ) {
+            $statement->setConditionEnd($i);
+
+            return true;
+        }
+
+        if (
+            $statement->getState() === WhileRef::STATE_CONDITION_ENDED &&
+            !$isLast &&
+            $parenthesisCounter === 0 &&
+            $braceCounter === 1 &&
+            $char === '{'
+        ) {
+            $statement->setBodyStart($i + 1);
+
+            return true;
+        }
+
+        if (
+            $statement->getState() === WhileRef::STATE_CONDITION_STARTED &&
+            $parenthesisCounter === 0 &&
+            $braceCounter === 0 &&
+            $char === ')' &&
+            $isLast
+        ) {
+            return null;
+        }
+
+        if (
+            $statement->getState() === WhileRef::STATE_CONDITION_ENDED &&
+            $parenthesisCounter === 0 &&
+            $braceCounter === 0 &&
+            (
+                $isLast ||
+                !$this->isWhiteSpace($char)
+            )
+        ) {
+            return null;
+        }
+
+        if (
+            $statement->getState() === WhileRef::STATE_BODY_STARTED &&
+            $parenthesisCounter === 0 &&
+            $braceCounter === 0 &&
+            $char === '}'
+        ) {
+            $statement->setBodyEnd($i);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private function isOnIf(string $string, int $i): bool
+    {
+        $before = substr($string, $i - 1, 1);
+        $after = substr($string, $i + 2, 1);
+
+        return
+            substr($string, $i, 2) === 'if' &&
+            (
+                $i === 0 ||
+                $this->isWhiteSpace($before) ||
+                $before === ';'
+            ) &&
+            (
+                $this->isWhiteSpace($after) ||
+                $after === '('
+            );
+    }
+
+    private function isOnElse(string $string, int $i): bool
+    {
+        return substr($string, $i, 4) === 'else' &&
+            $this->isWhiteSpaceCharOrBraceOpen(substr($string, $i + 4, 1)) &&
+            $this->isWhiteSpaceCharOrBraceClose(substr($string, $i - 1, 1));
+    }
+
+    private function isOnWhile(string $string, int $i): bool
+    {
+        $before = substr($string, $i - 1, 1);
+        $after = substr($string, $i + 5, 1);
+
+        return
+            substr($string, $i, 5) === 'while' &&
+            (
+                $i === 0 ||
+                $this->isWhiteSpace($before) ||
+                $before === ';'
+            ) &&
+            (
+                $this->isWhiteSpace($after) ||
+                $after === '('
+            );
+    }
+
+    private function isWhiteSpaceCharOrBraceOpen(string $char): bool
+    {
+        return $char === '{' || in_array($char, $this->whiteSpaceCharList);
+    }
+
+    private function isWhiteSpaceCharOrBraceClose(string $char): bool
+    {
+        return $char === '}' || in_array($char, $this->whiteSpaceCharList);
+    }
+
+    private function isWhiteSpace(string $char): bool
+    {
+        return in_array($char, $this->whiteSpaceCharList);
+    }
+
+    /**
+     * @throws SyntaxError
+     */
+    private function split(string $expression, bool $isRoot = false): Node|Attribute|Variable|Value
     {
         $expression = trim($expression);
 
+        $parenthesisCounter = 0;
         $braceCounter = 0;
-        $hasExcessBraces = true;
+        $hasExcessParenthesis = true;
         $modifiedExpression = '';
-        $splitterIndexList = [];
+        $expressionOutOfParenthesisList = [];
 
-        $isStringNotClosed = $this->processStrings($expression, $modifiedExpression, $splitterIndexList, true);
+        $statementList = [];
+
+        $isStringNotClosed = $this->processString($expression, $modifiedExpression, $statementList, true);
 
         if ($isStringNotClosed) {
             throw SyntaxError::create('String is not closed.');
         }
 
-        $this->stripComments($expression, $modifiedExpression);
+        $expressionLength = strlen($modifiedExpression);
 
-        foreach ($splitterIndexList as $i => $index) {
-            if ($expression[$index] !== ';') {
-                unset($splitterIndexList[$i]);
+        for ($i = 0; $i < $expressionLength; $i++) {
+            $value = $modifiedExpression[$i];
+
+            if ($value === '(') {
+                $parenthesisCounter++;
             }
-        }
-
-        $splitterIndexList = array_values($splitterIndexList);
-
-        $expressionOutOfBraceList = [];
-
-        for ($i = 0; $i < strlen($modifiedExpression); $i++) {
-            if ($modifiedExpression[$i] === '(') {
+            else if ($value === ')') {
+                $parenthesisCounter--;
+            }
+            else if ($value === '{') {
                 $braceCounter++;
             }
-
-            if ($modifiedExpression[$i] === ')') {
+            else if ($value === '}') {
                 $braceCounter--;
             }
 
-            if ($braceCounter === 0 && $i < strlen($modifiedExpression) - 1) {
-                $hasExcessBraces = false;
+            if ($parenthesisCounter === 0 && $i < $expressionLength - 1) {
+                $hasExcessParenthesis = false;
             }
 
-            if ($braceCounter === 0) {
-                $expressionOutOfBraceList[] = true;
-            } else {
-                $expressionOutOfBraceList[] = false;
-            }
+            $expressionOutOfParenthesisList[] = $parenthesisCounter === 0;
+        }
+
+        if ($parenthesisCounter !== 0) {
+            throw SyntaxError::create(
+                'Incorrect parentheses usage in expression ' . $expression . '.',
+                'Incorrect parentheses.'
+            );
         }
 
         if ($braceCounter !== 0) {
             throw SyntaxError::create(
-                'Incorrect round brackets in expression ' . $expression . '.',
-                'Incorrect round brackets.'
+                'Incorrect braces usage in expression ' . $expression . '.',
+                'Incorrect braces.'
             );
         }
 
@@ -304,52 +830,22 @@ class Parser
             strlen($expression) > 1 &&
             $expression[0] === '(' &&
             $expression[strlen($expression) - 1] === ')' &&
-            $hasExcessBraces
+            $hasExcessParenthesis
         ) {
             $expression = substr($expression, 1, strlen($expression) - 2);
 
-            return $this->split($expression);
+            return $this->split($expression, true);
         }
 
-        if (count($splitterIndexList)) {
-            if ($expression[strlen($expression) - 1] !== ';') {
-                $splitterIndexList[] = strlen($expression);
-            }
-
-            $parsedPartList = [];
-
-            for ($i = 0; $i < count($splitterIndexList); $i++) {
-                if ($i > 0) {
-                    $previousSplitterIndex = $splitterIndexList[$i - 1] + 1;
-                }
-                else {
-                    $previousSplitterIndex = 0;
-                }
-
-                $part = trim(
-                    substr(
-                        $expression,
-                        $previousSplitterIndex,
-                        $splitterIndexList[$i] - $previousSplitterIndex
-                    )
-                );
-
-                $parsedPartList[] = $this->parse($part);
-            }
-            return (object) [
-                'type' => 'bundle',
-                'value' => $parsedPartList,
-            ];
+        if (count($statementList)) {
+            return $this->processStatementList($expression, $statementList, $isRoot);
         }
 
         $firstOperator = null;
         $minIndex = null;
 
         if (trim($expression) === '') {
-            return (object) [
-                'type' => 'value',
-                'value' => null,
-            ];
+            return new Value(null);
         }
 
         foreach ($this->priorityList as $operationList) {
@@ -363,7 +859,7 @@ class Parser
                         break;
                     }
 
-                    if ($expressionOutOfBraceList[$index]) {
+                    if ($expressionOutOfParenthesisList[$index]) {
                         break;
                     }
 
@@ -408,9 +904,9 @@ class Parser
 
                     $modifiedFirstPart = $modifiedSecondPart = '';
 
-                    $isString = $this->processStrings($firstPart, $modifiedFirstPart);
+                    $isString = $this->processString($firstPart, $modifiedFirstPart);
 
-                    $this->processStrings($secondPart, $modifiedSecondPart);
+                    $this->processString($secondPart, $modifiedSecondPart);
 
                     if (
                         substr_count($modifiedFirstPart, '(') === substr_count($modifiedFirstPart, ')') &&
@@ -451,54 +947,42 @@ class Parser
         $expression = trim($expression);
 
         if ($expression[0] === '!') {
-            return (object) [
-                'type' => 'logical\\not',
-                'value' => $this->split(substr($expression, 1))
-            ];
+            return new Node('logical\\not', [
+                $this->split(substr($expression, 1))
+            ]);
         }
 
         if ($expression[0] === '-') {
-            return (object) [
-                'type' => 'numeric\\subtraction',
-                'value' => [
-                    $this->split('0'),
-                    $this->split(substr($expression, 1))
-                ]
-            ];
+            return new Node('numeric\\subtraction', [
+                new Value(0),
+                $this->split(substr($expression, 1))
+            ]);
         }
 
         if ($expression[0] === '+') {
-            return (object) [
-                'type' => 'numeric\\summation',
-                'value' => [
-                    $this->split('0'),
-                    $this->split(substr($expression, 1))
-                ]
-            ];
+            return new Node('numeric\\summation', [
+                new Value(0),
+                $this->split(substr($expression, 1))
+            ]);
         }
 
         if (
-            $expression[0] === "'" && $expression[strlen($expression) - 1] === "'"
-            ||
+            $expression[0] === "'" && $expression[strlen($expression) - 1] === "'" ||
             $expression[0] === "\"" && $expression[strlen($expression) - 1] === "\""
         ) {
-            return (object) [
-                'type' => 'value',
-                'value' => substr($expression, 1, strlen($expression) - 2)
-            ];
+            $subExpression = substr($expression, 1, strlen($expression) - 2);
+
+            return new Value($subExpression);
         }
 
         if ($expression[0] === "$") {
             $value = substr($expression, 1);
 
             if ($value === '' || !preg_match($this->variableNameRegExp, $value)) {
-                throw new SyntaxError("Bad varable name `{$value}`.");
+                throw new SyntaxError("Bad variable name `{$value}`.");
             }
 
-            return (object) [
-                'type' => 'variable',
-                'value' => $value,
-            ];
+            return new Variable($value);
         }
 
         if (is_numeric($expression)) {
@@ -506,31 +990,27 @@ class Parser
                 (int) $expression :
                 (float) $expression;
 
-            return (object) [
-                'type' => 'value',
-                'value' => $value,
-            ];
+            return new Value($value);
         }
 
         if ($expression === 'true') {
-            return (object) [
-                'type' => 'value',
-                'value' => true,
-            ];
+            return new Value(true);
         }
 
         if ($expression === 'false') {
-            return (object) [
-                'type' => 'value',
-                'value' => false,
-            ];
+            return new Value(false);
         }
 
         if ($expression === 'null') {
-            return (object) [
-                'type' => 'value',
-                'value' => null,
-            ];
+            return new Value(null);
+        }
+
+        if ($expression === 'break') {
+            return new Node('break', []);
+        }
+
+        if ($expression === 'continue') {
+            return new Node('continue', []);
         }
 
         if ($expression[strlen($expression) - 1] === ')') {
@@ -542,82 +1022,159 @@ class Parser
 
                 $argumentList = $this->parseArgumentListFromFunctionContent($functionContent);
 
-                $argumentSplittedList = [];
+                $argumentSplitList = [];
 
                 foreach ($argumentList as $argument) {
-                    $argumentSplittedList[] = $this->split($argument);
+                    $argumentSplitList[] = $this->split($argument);
                 }
 
                 if ($functionName === '' || !preg_match($this->functionNameRegExp, $functionName)) {
                     throw new SyntaxError("Bad function name `{$functionName}`.");
                 }
 
-                return (object) [
-                    'type' => $functionName,
-                    'value' => $argumentSplittedList,
-                ];
+                return new Node($functionName, $argumentSplitList);
             }
+        }
+
+        if (str_contains($expression, ' ')) {
+            throw SyntaxError::create("Could not parse.");
         }
 
         if (!preg_match($this->attributeNameRegExp, $expression)) {
             throw SyntaxError::create("Attribute name `$expression` contains not allowed characters.");
         }
 
-        if (substr($expression, -1) === '.') {
+        if (str_ends_with($expression, '.')) {
             throw SyntaxError::create("Attribute ends with dot.");
         }
 
-        return (object) [
-            'type' => 'attribute',
-            'value' => $expression,
-        ];
+        return new Attribute($expression);
     }
 
-    private function stripComments(string &$expression, string &$modifiedExpression): void
-    {
-        $commentIndexStart = null;
+    /**
+     * @param (StatementRef|IfRef|WhileRef)[] $statementList
+     * @throws SyntaxError
+     */
+    private function processStatementList(
+        string $expression,
+        array $statementList,
+        bool $isRoot
+    ): Node|Value|Attribute|Variable {
 
-        for ($i = 0; $i < strlen($modifiedExpression); $i++) {
-            if (is_null($commentIndexStart)) {
+        $parsedPartList = [];
+
+        foreach ($statementList as $statement) {
+            $parsedPart = null;
+
+            if ($statement instanceof StatementRef) {
+                $start = $statement->getStart();
+                $end = $statement->getEnd();
+
+                if ($end === null) {
+                    throw new LogicException();
+                }
+
+                $part = self::sliceByStartEnd($expression, $start, $end);
+
+                $parsedPart = $this->split($part);
+            }
+            else if ($statement instanceof IfRef) {
+                if (!$isRoot || !$statement->isReady()) {
+                    throw SyntaxError::create(
+                        'Incorrect if statement usage in expression ' . $expression . '.',
+                        'Incorrect if statement.'
+                    );
+                }
+
+                $conditionStart = $statement->getConditionStart();
+                $conditionEnd = $statement->getConditionEnd();
+                $thenStart = $statement->getThenStart();
+                $thenEnd = $statement->getThenEnd();
+                $elseStart = $statement->getElseStart();
+                $elseEnd = $statement->getElseEnd();
+
                 if (
-                    $modifiedExpression[$i] === '/' &&
-                    $i < strlen($modifiedExpression) - 1 &&
-                    $modifiedExpression[$i + 1] === '/'
+                    $conditionStart === null ||
+                    $conditionEnd === null ||
+                    $thenStart === null ||
+                    $thenEnd === null
                 ) {
-                    $commentIndexStart = $i;
+                    throw new LogicException();
                 }
+
+                $conditionPart = self::sliceByStartEnd($expression, $conditionStart, $conditionEnd);
+                $thenPart = self::sliceByStartEnd($expression, $thenStart, $thenEnd);
+                $elsePart = $elseStart !== null && $elseEnd !== null ?
+                    self::sliceByStartEnd($expression, $elseStart, $elseEnd) : null;
+
+                $parsedPart = $statement->getElseKeywordEnd() ?
+                    new Node('ifThenElse', [
+                        $this->split($conditionPart),
+                        $this->split($thenPart, true),
+                        $this->split($elsePart ?? '', true)
+                    ]) :
+                    new Node('ifThen', [
+                        $this->split($conditionPart),
+                        $this->split($thenPart, true)
+                    ]);
             }
-            else {
-                if ($modifiedExpression[$i] === "\n" || $i === strlen($modifiedExpression) - 1) {
-                    for ($j = $commentIndexStart; $j <= $i; $j++) {
-                        $modifiedExpression[$j] = ' ';
-
-                        $expression[$j] = ' ';
-                    }
-
-                    $commentIndexStart = null;
+            else if ($statement instanceof WhileRef) {
+                if (!$isRoot || !$statement->isReady()) {
+                    throw SyntaxError::create(
+                        'Incorrect while statement usage in expression ' . $expression . '.',
+                        'Incorrect while statement.'
+                    );
                 }
+
+                $conditionStart = $statement->getConditionStart();
+                $conditionEnd = $statement->getConditionEnd();
+                $bodyStart = $statement->getBodyStart();
+                $bodyEnd = $statement->getBodyEnd();
+
+                if (
+                    $conditionStart === null ||
+                    $conditionEnd === null ||
+                    $bodyStart === null ||
+                    $bodyEnd === null
+                ) {
+                    throw new LogicException();
+                }
+
+                $conditionPart = self::sliceByStartEnd($expression, $conditionStart, $conditionEnd);
+                $bodyPart = self::sliceByStartEnd($expression, $bodyStart, $bodyEnd);
+
+                $parsedPart = new Node('while', [
+                    $this->split($conditionPart),
+                    $this->split($bodyPart, true)
+                ]);
             }
+
+            if (!$parsedPart) {
+                throw SyntaxError::create(
+                    'Unknown syntax error in expression ' . $expression . '.',
+                    'Unknown syntax error.'
+                );
+            }
+
+            $parsedPartList[] = $parsedPart;
         }
 
-        for ($i = 0; $i < strlen($modifiedExpression) - 1; $i++) {
-            if (is_null($commentIndexStart)) {
-                if ($modifiedExpression[$i] === '/' && $modifiedExpression[$i + 1] === '*') {
-                    $commentIndexStart = $i;
-                }
-            }
-            else {
-                if ($modifiedExpression[$i] === '*' && $modifiedExpression[$i + 1] === '/') {
-                    for ($j = $commentIndexStart; $j <= $i + 1; $j++) {
-                        $modifiedExpression[$j] = ' ';
-
-                        $expression[$j] = ' ';
-                    }
-
-                    $commentIndexStart = null;
-                }
-            }
+        if (count($parsedPartList) === 1) {
+            return $parsedPartList[0];
         }
+
+        return new Node('bundle', $parsedPartList);
+    }
+
+    private static function sliceByStartEnd(string $expression, int $start, int $end): string
+    {
+        return trim(
+            substr(
+                $expression,
+                $start,
+                $end - $start
+            )
+        );
     }
 
     /**

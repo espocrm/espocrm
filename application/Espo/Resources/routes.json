@@ -23,7 +23,7 @@
         }
     },
     {
-        "route": "I18n",
+        "route": "/I18n",
         "method": "get",
         "params": {
             "controller": "I18n"
@@ -53,7 +53,7 @@
         }
     },
     {
-        "route": "User/passwordChangeRequest",
+        "route": "/User/passwordChangeRequest",
         "method": "post",
         "params": {
             "controller": "User",
@@ -62,7 +62,7 @@
         "noAuth": true
     },
     {
-        "route": "User/changePasswordByRequest",
+        "route": "/User/changePasswordByRequest",
         "method": "post",
         "params": {
             "controller": "User",
@@ -285,7 +285,7 @@
         }
     },
     {
-        "route": "Oidc/authorizationData",
+        "route": "/Oidc/authorizationData",
         "method": "get",
         "params": {
             "controller": "Oidc",
@@ -294,7 +294,7 @@
         "noAuth": true
     },
     {
-        "route": "Oidc/backchannelLogout",
+        "route": "/Oidc/backchannelLogout",
         "method": "post",
         "params": {
             "controller": "Oidc",

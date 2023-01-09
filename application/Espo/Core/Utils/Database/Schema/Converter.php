@@ -29,39 +29,26 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
-use Espo\Core\Utils\{
-    Util,
-    Config,
-    Metadata,
-    File\Manager as FileManager,
-    Log,
-    Database\Schema\Schema,
-    Database\Schema\Utils as SchemaUtils,
-    Module\PathProvider,
-};
-
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Module\PathProvider;
+use Espo\Core\Utils\Util;
 
 use Doctrine\DBAL\Schema\Table;
-
-use Doctrine\DBAL\{
-    Schema\Schema as DbalSchema,
-    Types\Type as DbalType,
-};
+use Doctrine\DBAL\Schema\Schema as DbalSchema;
+use Doctrine\DBAL\Types\Type as DbalType;
 
 class Converter
 {
     private ?DbalSchema $dbalSchema = null;
-
     private Schema $databaseSchema;
-
     private FileManager $fileManager;
-
     private Metadata $metadata;
-
     private Config $config;
-
     private Log $log;
-
     private PathProvider $pathProvider;
 
     private string $tablesPath = 'Core/Utils/Database/Schema/tables';
@@ -80,6 +67,8 @@ class Converter
         'default' => 'default',
         'notNull' => 'notnull',
         'autoincrement' => 'autoincrement',
+        'precision' => 'precision',
+        'scale' => 'scale',
     ];
 
     /**
@@ -144,10 +133,7 @@ class Converter
         return $this->databaseSchema;
     }
 
-    /**
-     * @return int
-     */
-    protected function getMaxIndexLength()
+    protected function getMaxIndexLength(): int
     {
         if (!isset($this->maxIndexLength)) {
             $this->maxIndexLength = $this->getDatabaseSchema()->getDatabaseHelper()->getMaxIndexLength();

@@ -89,17 +89,13 @@ abstract class BaseQueryComposer implements QueryComposer
         'forShare',
     ];
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected const SQL_OPERATORS = [
         'OR',
         'AND',
     ];
 
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string, string> */
     protected array $comparisonOperators = [
         '!=s' => 'NOT IN',
         '=s' => 'IN',
@@ -113,9 +109,7 @@ abstract class BaseQueryComposer implements QueryComposer
         '=' => '=',
     ];
 
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string, string> */
     protected array $comparisonFunctionOperatorMap = [
         'LIKE' => 'LIKE',
         'NOT_LIKE' => 'NOT LIKE',
@@ -131,9 +125,7 @@ abstract class BaseQueryComposer implements QueryComposer
         'NOT_IN' => 'NOT IN',
     ];
 
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string, string> */
     protected array $mathFunctionOperatorMap = [
         'ADD' => '+',
         'SUB' => '-',
@@ -142,9 +134,7 @@ abstract class BaseQueryComposer implements QueryComposer
         'MOD' => '%',
     ];
 
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string, string> */
     protected array $matchFunctionMap = [
         'MATCH_BOOLEAN' => 'IN BOOLEAN MODE',
         'MATCH_NATURAL_LANGUAGE' => 'IN NATURAL LANGUAGE MODE',
@@ -152,38 +142,23 @@ abstract class BaseQueryComposer implements QueryComposer
     ];
 
     protected const SELECT_METHOD = 'SELECT';
-
     protected const DELETE_METHOD = 'DELETE';
-
     protected const UPDATE_METHOD = 'UPDATE';
-
     protected const INSERT_METHOD = 'INSERT';
 
     protected string $identifierQuoteCharacter = '`';
 
     protected EntityFactory $entityFactory;
-
     protected PDO $pdo;
-
     protected Metadata $metadata;
-
     protected ?FunctionConverterFactory $functionConverterFactory;
-
     protected Helper $helper;
 
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string, string> */
     protected array $attributeDbMapCache = [];
-
-    /**
-     * @var array<string,array<string,string>>
-     */
+    /** @var array<string, array<string, string>> */
     protected $aliasesCache = [];
-
-    /**
-     * @var array<string,Entity>
-     */
+    /** @var array<string, Entity> */
     protected $seedCache = [];
 
     public function __construct(
@@ -198,6 +173,16 @@ abstract class BaseQueryComposer implements QueryComposer
         $this->functionConverterFactory = $functionConverterFactory;
 
         $this->helper = new Helper($metadata);
+    }
+
+    protected function quoteIdentifier(string $string): string
+    {
+        return $this->identifierQuoteCharacter . $string . $this->identifierQuoteCharacter;
+    }
+
+    protected function quoteColumn(string $column): string
+    {
+        return $column;
     }
 
     protected function getSeed(?string $entityType): Entity
@@ -289,7 +274,7 @@ abstract class BaseQueryComposer implements QueryComposer
     /**
      * @deprecated
      * @todo Remove in v7.3.
-     * @param array<string,mixed>|null $params
+     * @param array<string, mixed>|null $params
      */
     public function createSelectQuery(string $entityType, ?array $params = null): string
     {
@@ -301,7 +286,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed>|null $params
+     * @param array<string, mixed>|null $params
      */
     protected function createDeleteQuery(?array $params = null): string
     {
@@ -336,7 +321,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed>|null $params
+     * @param array<string, mixed>|null $params
      */
     protected function createUpdateQuery(?array $params = null): string
     {
@@ -367,7 +352,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed>|null $params
+     * @param array<string, mixed>|null $params
      */
     protected function createInsertQuery(?array $params): string
     {
@@ -392,7 +377,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function getInsertValuesPart(string $entityType, array $params): string
     {
@@ -422,7 +407,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function createUnionQuery(array $params): string
     {
@@ -495,8 +480,8 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
-     * @return array<string,mixed>
+     * @param array<string, mixed> $params
+     * @return array<string, mixed>
      */
     protected function normalizeInsertParams(array $params): array
     {
@@ -560,8 +545,8 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed>|null $params
-     * @return array<string,mixed>
+     * @param array<string, mixed>|null $params
+     * @return array<string, mixed>
      */
     protected function normalizeParams(string $method, ?array $params): array
     {
@@ -601,7 +586,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed>|null $params
+     * @param array<string, mixed>|null $params
      */
     protected function createSelectQueryInternal(?array $params = null): string
     {
@@ -626,10 +611,8 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         $selectPart = null;
-        $joinsPart = null;
         $orderPart = null;
         $havingPart = null;
-        $groupByPart = null;
         $tailPart = null;
 
         $wherePart = $this->getWherePart($entity, $whereClause, 'AND', $params);
@@ -769,7 +752,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function createSelectQueryNoFrom(array $params): string
     {
@@ -784,7 +767,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @return string[]|null
      */
     protected function getIndexKeyList(string $entityType, array $params): ?array
@@ -803,6 +786,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         foreach ($indexList as $indexName) {
             $indexKey = $this->metadata->get($entityType, ['indexes', $indexName, 'key']);
+
             if ($indexKey) {
                 $indexKeyList[] = $indexKey;
             }
@@ -812,7 +796,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function getJoinsPart(Entity $entity, array $params, bool $includeBelongsTo = false): string
     {
@@ -877,7 +861,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function getGroupByPart(Entity $entity, array $params): ?string
     {
@@ -895,7 +879,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function getAdditionalSelect(Entity $entity, array $params): ?string
     {
@@ -907,11 +891,13 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if (!empty($params['extraAdditionalSelect'])) {
             $extraSelect = [];
+
             foreach ($params['extraAdditionalSelect'] as $item) {
                 if (!in_array($item, $params['select'])) {
                     $extraSelect[] = $item;
                 }
             }
+
             if (count($extraSelect)) {
                 $newParams = ['select' => $extraSelect];
                 $extraSelectPart = $this->getSelectPart($entity, $newParams);
@@ -922,12 +908,13 @@ abstract class BaseQueryComposer implements QueryComposer
             }
         }
 
-        if (!empty($params['additionalSelectColumns']) && is_array($params['additionalSelectColumns'])) {
+        /*if (!empty($params['additionalSelectColumns']) && is_array($params['additionalSelectColumns'])) {
             foreach ($params['additionalSelectColumns'] as $column => $field) {
                 $itemAlias = $this->sanitizeSelectAlias($field);
+
                 $selectPart .= ", " . $column . " AS " . $this->quoteIdentifier($itemAlias);
             }
-        }
+        }*/
 
         if ($selectPart === '') {
             return null;
@@ -938,7 +925,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * @param string[] $argumentPartList
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function getFunctionPart(
         string $function,
@@ -961,8 +948,9 @@ abstract class BaseQueryComposer implements QueryComposer
             throw new RuntimeException("ORM Query: Not allowed function '{$function}'.");
         }
 
-        if (strpos($function, 'YEAR_') === 0 && $function !== 'YEAR_NUMBER') {
+        if (str_starts_with($function, 'YEAR_') && $function !== 'YEAR_NUMBER') {
             $fiscalShift = substr($function, 5);
+
             if (is_numeric($fiscalShift)) {
                 $fiscalShift = (int) $fiscalShift;
                 $fiscalFirstMonth = $fiscalShift + 1;
@@ -974,7 +962,7 @@ abstract class BaseQueryComposer implements QueryComposer
             }
         }
 
-        if (strpos($function, 'QUARTER_') === 0 && $function !== 'QUARTER_NUMBER') {
+        if (str_starts_with($function, 'QUARTER_') && $function !== 'QUARTER_NUMBER') {
             $fiscalShift = substr($function, 8);
 
             if (is_numeric($fiscalShift)) {
@@ -1165,7 +1153,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $offsetHoursString = $argumentPartList[1];
 
-        if (substr($offsetHoursString, 0, 1) === '\'' && substr($offsetHoursString, -1) === '\'') {
+        if (str_starts_with($offsetHoursString, '\'') && str_ends_with($offsetHoursString, '\'')) {
             $offsetHoursString = substr($offsetHoursString, 1, -1);
         }
 
@@ -1190,7 +1178,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function convertMatchExpression(Entity $entity, string $expression, array $params): string
     {
@@ -1207,7 +1195,7 @@ abstract class BaseQueryComposer implements QueryComposer
             throw new RuntimeException("ORM Query: Empty MATCH parameters.");
         }
 
-        if (substr($rest, 0, 1) === '(' && substr($rest, -1) === ')') {
+        if (str_starts_with($rest, '(') && str_ends_with($rest, ')')) {
             $rest = substr($rest, 1, -1);
 
             $argumentList = Util::parseArgumentListFromFunctionContent($rest);
@@ -1217,19 +1205,21 @@ abstract class BaseQueryComposer implements QueryComposer
             }
 
             $columnList = [];
+
             for ($i = 0; $i < count($argumentList) - 1; $i++) {
                 $columnList[] = $argumentList[$i];
             }
 
             $query = $argumentList[count($argumentList) - 1];
-        } else {
+        }
+        else {
             throw new RuntimeException("ORM Query: Bad MATCH usage.");
         }
 
         $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
 
         foreach ($columnList as $i => $column) {
-            $columnList[$i] = $fromAlias . '.' . $this->sanitize($this->toDb($column));
+            $columnList[$i] = $this->quoteColumn($fromAlias . '.' . $this->sanitize($this->toDb($column)));
         }
 
         if (!Util::isArgumentString($query)) {
@@ -1246,13 +1236,11 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $modePart = ' ' . $this->matchFunctionMap[$function];
 
-        $result = "MATCH (" . implode(',', $columnList) . ") AGAINST (" . $query . "" . $modePart . ")";
-
-        return $result;
+        return "MATCH (" . implode(',', $columnList) . ") AGAINST (" . $query . $modePart . ")";
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function convertComplexExpression(
         ?Entity $entity,
@@ -1280,7 +1268,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
             $attribute = substr($attribute, $delimiterPosition + 1);
 
-            if (substr($attribute, 0, 1) === '(' && substr($attribute, -1) === ')') {
+            if (str_starts_with($attribute, '(') && str_ends_with($attribute, ')')) {
                 $attribute = substr($attribute, 1, -1);
             }
         }
@@ -1334,7 +1322,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function getFunctionArgumentPart(
         Entity $entity,
@@ -1347,11 +1335,11 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if (Util::isArgumentString($argument)) {
             $string = substr($argument, 1, -1);
-            $string = $this->quote($string);
 
-            return $string;
+            return $this->quote($string);
         }
-        else if (Util::isArgumentNumeric($argument)) {
+
+        if (Util::isArgumentNumeric($argument)) {
             if (filter_var($argument, FILTER_VALIDATE_INT) !== false) {
                 $argument = intval($argument);
             }
@@ -1361,7 +1349,8 @@ abstract class BaseQueryComposer implements QueryComposer
 
             return $this->quote($argument);
         }
-        else if (Util::isArgumentBoolOrNull($argument)) {
+
+        if (Util::isArgumentBoolOrNull($argument)) {
             return strtoupper($argument);
         }
 
@@ -1390,7 +1379,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($relName) {
-            $part = $relName . '.' . $part;
+            $part = $this->quoteColumn($relName . '.' . $part);
 
             $foreignEntityType = $this->getRelationParam($entity, $relName, 'entity');
 
@@ -1413,13 +1402,15 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if ($part !== '') {
             $part = $this->getFromAlias($params, $entityType) . '.' . $part;
+
+            $part = $this->quoteColumn($part);
         }
 
         return $part;
     }
 
     /**
-     * @param array<string,mixed>|null $params
+     * @param array<string, mixed>|null $params
      */
     protected function getFromAlias(?array $params = null, ?string $entityType = null): string
     {
@@ -1445,7 +1436,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed>|null $params
+     * @param array<string, mixed>|null $params
      */
     protected function getAttributeOrderSql(
         Entity $entity,
@@ -1465,7 +1456,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (is_string($this->getAttributeParam($entity, $attribute, 'order'))) {
-            $defs = [];
+            // @deprecated
 
             $part = $this->getAttributeParam($entity, $attribute, 'order');
 
@@ -1475,6 +1466,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (!empty($defs['sql'])) {
+            // @deprecated
             $part = $defs['sql'];
 
             $part = str_replace('{direction}', $order, $part);
@@ -1483,8 +1475,6 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (!empty($defs['order'])) {
-            $list = [];
-
             if (!is_array($defs['order'])) {
                 throw new LogicException("Bad custom order definition.");
             }
@@ -1513,10 +1503,10 @@ abstract class BaseQueryComposer implements QueryComposer
             return $part;
         }
 
-        $part = $this->getFromAlias(
-            $params,
-            $entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute)
-        );
+        $part = $this->getFromAlias($params, $entity->getEntityType()) . '.' .
+            $this->toDb($this->sanitize($attribute));
+
+        $part = $this->quoteColumn($part);
 
         $part .= ' ' . $order;
 
@@ -1524,7 +1514,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed>|null $params
+     * @param array<string, mixed>|null $params
      */
     protected function getAttributeSql(
         Entity $entity,
@@ -1549,6 +1539,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (!empty($defs['sql'])) {
+            // @deprecated
             $part = $defs['sql'];
 
             if ($alias) {
@@ -1574,15 +1565,16 @@ abstract class BaseQueryComposer implements QueryComposer
             return $pair[0];
         }
 
-        return $this->getFromAlias(
-            $params,
-            $entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute)
-        );
+        $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
+
+        $path = $fromAlias . '.' . $this->toDb($this->sanitize($attribute));
+
+        return $this->quoteColumn($path);
     }
 
     /**
-     * @param array<string,mixed> $defs
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $defs
+     * @param array<string, mixed> $params
      */
     protected function applyAttributeCustomParams(
         array $defs,
@@ -1687,7 +1679,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @return string[]
      */
     protected function getOrderByAttributeList(array $params): array
@@ -1719,7 +1711,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
             $expression = $item[0];
 
-            if (strpos($expression, 'LIST:') === 0 && substr_count($expression, ':') === 2) {
+            if (str_starts_with($expression, 'LIST:') && substr_count($expression, ':') === 2) {
                 $expression = explode(':', $expression)[1];
             }
 
@@ -1765,7 +1757,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function getSelectPart(?Entity $entity, array &$params): string
     {
@@ -1805,11 +1797,7 @@ abstract class BaseQueryComposer implements QueryComposer
             if (is_string($item)) {
                 if (strpos($item, ':')) {
                     $itemList[$i] = [$item, $item];
-
-                    continue;
                 }
-
-                continue;
             }
         }
 
@@ -1848,9 +1836,9 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @param string|string[] $attribute
-     * @return array{string,string}|null
+     * @return array{string, string}|null
      */
     protected function getSelectPartItemPair(?Entity $entity, array &$params, $attribute): ?array
     {
@@ -2005,7 +1993,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed>|null $params
+     * @param array<string, mixed>|null $params
      */
     protected function getBelongsToJoinItemPart(
         Entity $entity,
@@ -2019,12 +2007,9 @@ abstract class BaseQueryComposer implements QueryComposer
         $key = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
 
-        if (!$alias) {
-            $alias = $this->getAlias($entity, $relationName);
-        }
-        else {
-            $alias = $this->sanitizeSelectAlias($alias);
-        }
+        $alias = !$alias ?
+            $this->getAlias($entity, $relationName) :
+            $this->sanitizeSelectAlias($alias);
 
         if (!$alias) {
             return null;
@@ -2036,14 +2021,16 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
 
+        $leftColumnPart = $this->quoteColumn("{$fromAlias}." . $this->toDb($key));
+        $rightColumnPart = $this->quoteColumn("{$alias}." . $this->toDb($foreignKey));
+
         return
             "JOIN " . $this->quoteIdentifier($table) . " AS " . $this->quoteIdentifier($alias) . " ON ".
-            "{$fromAlias}." . $this->toDb($key) . " = " .
-            "{$alias}." . $this->toDb($foreignKey);
+            "{$leftColumnPart} = {$rightColumnPart}";
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function getSelectTailPart(array $params): ?string
     {
@@ -2064,7 +2051,7 @@ abstract class BaseQueryComposer implements QueryComposer
     /**
      * @param string[]|array<string[]> $select
      * @param string[] $skipList
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function getBelongsToJoinsPart(Entity $entity, ?array $select, array $skipList, array $params): string
     {
@@ -2174,7 +2161,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed>|null $params
+     * @param array<string, mixed>|null $params
      * @param mixed $orderBy
      * @param mixed $order
      */
@@ -2215,7 +2202,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return implode(", ", $arr);
         }
 
-        if (strpos($orderBy, 'LIST:') === 0) {
+        if (str_starts_with($orderBy, 'LIST:')) {
             list($l, $field, $list) = explode(':', $orderBy);
 
             $fieldPath = $this->getAttributePathForOrderBy($entity, $field, $params ?? []);
@@ -2224,8 +2211,9 @@ abstract class BaseQueryComposer implements QueryComposer
 
             $list = array_reverse(explode(',', $list));
 
-            foreach ($list as $i => $listItem) {
+            foreach ($list as $listItem) {
                 $listItem = str_replace('_COMMA_', ',', $listItem);
+
                 $listQuoted[] = $this->quote($listItem);
             }
 
@@ -2268,7 +2256,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed>|null $params
+     * @param array<string, mixed>|null $params
      * @param mixed $orderBy
      * @param mixed $order
      */
@@ -2278,7 +2266,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function getAttributePathForOrderBy(Entity $entity, string $orderBy, array $params): ?string
     {
@@ -2295,7 +2283,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function getAggregationSelectPart(
         Entity $entity,
@@ -2309,24 +2297,16 @@ abstract class BaseQueryComposer implements QueryComposer
             return null;
         }
 
-        $aggregation = strtoupper($aggregation);
+        $aggregationPart = $this->sanitize(strtoupper($aggregation));
 
-        $distinctPart = '';
-        if ($distinct) {
-            $distinctPart = 'DISTINCT ';
-        }
+        $distinctPart = $distinct ? 'DISTINCT ' : '';
 
         $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
 
-        $selectPart = "{$aggregation}({$distinctPart}{$fromAlias}." .
-            $this->toDb($this->sanitize($aggregationBy)) . ") AS " . $this->quoteIdentifier('value') . "";
+        $columnPart = "{$fromAlias}." . $this->toDb($this->sanitize($aggregationBy));
+        $columnPart = $this->quoteColumn($columnPart);
 
-        return $selectPart;
-    }
-
-    protected function quoteIdentifier(string $string): string
-    {
-        return $this->identifierQuoteCharacter . $string . $this->identifierQuoteCharacter;
+        return "{$aggregationPart}({$distinctPart}{$columnPart}) AS " . $this->quoteIdentifier('value');
     }
 
     /**
@@ -2392,7 +2372,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @return array<string,string>
+     * @return array<string, string>
      */
     protected function getTableAliases(Entity $entity): array
     {
@@ -2428,7 +2408,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function getAttributePath(Entity $entity, string $attribute, array &$params): ?string
     {
@@ -2468,12 +2448,14 @@ abstract class BaseQueryComposer implements QueryComposer
                             $foreign[$i] = '\' \'';
 
                             $wsCount ++;
-                        }
-                        else {
-                            $item =  $this->getAlias($entity, $relationName) . '.' . $this->toDb($value);
 
-                            $foreign[$i] = "IFNULL({$item}, '')";
+                            continue;
                         }
+
+                        $item =  $this->getAlias($entity, $relationName) . '.' . $this->toDb($value);
+                        $item = $this->quoteColumn($item);
+
+                        $foreign[$i] = "IFNULL({$item}, '')";
                     }
 
                     $path = 'TRIM(CONCAT(' . implode(', ', $foreign). '))';
@@ -2482,25 +2464,24 @@ abstract class BaseQueryComposer implements QueryComposer
                         $path = "REPLACE({$path}, '  ', ' ')";
                     }
 
-                    $path = "NULLIF({$path}, '')";
-                }
-                else {
-                    $expression = $this->getAlias($entity, $relationName) . '.' . $foreign;
-
-                    $path = $this->convertComplexExpression($entity, $expression, false, $params);
+                    return "NULLIF({$path}, '')";
                 }
 
-                return $path;
+                $expression = $this->getAlias($entity, $relationName) . '.' . $foreign;
+
+                return $this->convertComplexExpression($entity, $expression, false, $params);
         }
 
         $alias = $this->getFromAlias($params, $entityType);
 
-        return $alias . '.' . $this->toDb($this->sanitize($attribute));
+        $path = $alias . '.' . $this->toDb($this->sanitize($attribute));
+
+        return $this->quoteColumn($path);
     }
 
     /**
-     * @param array<string,mixed> $params
-     * @param array<mixed,mixed> $whereClause
+     * @param array<string, mixed> $params
+     * @param array<mixed, mixed> $whereClause
      */
     protected function getWherePart(
         Entity $entity,
@@ -2529,7 +2510,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @param mixed $leftKey
      * @param mixed $value
      */
@@ -2612,7 +2593,11 @@ abstract class BaseQueryComposer implements QueryComposer
 
             $attributeType = $entity->getAttributeType($field) ?? null;
 
-            if (is_bool($value) && in_array($operator, ['=', '<>']) && $attributeType == Entity::BOOL) {
+            if (
+                is_bool($value) &&
+                in_array($operator, ['=', '<>']) &&
+                $attributeType == Entity::BOOL
+            ) {
                 if ($value) {
                     if ($operator === '=') {
                         $operatorModified = '= TRUE';
@@ -2620,7 +2605,8 @@ abstract class BaseQueryComposer implements QueryComposer
                     else {
                         $operatorModified = '= FALSE';
                     }
-                } else {
+                }
+                else {
                     if ($operator === '=') {
                         $operatorModified = '= FALSE';
                     }
@@ -2759,16 +2745,14 @@ abstract class BaseQueryComposer implements QueryComposer
                 return '0';
             }
 
-            $subQuerySelectParams = [];
+            $subQuerySelectParams = !empty($value['selectParams']) ?
+                $value['selectParams'] :
+                $value;
 
-            if (!empty($value['selectParams'])) {
-                $subQuerySelectParams = $value['selectParams'];
-            }
-            else {
-                $subQuerySelectParams = $value;
-            }
-
-            if (!isset($subQuerySelectParams['from']) && !isset($subQuerySelectParams['fromQuery'])) {
+            if (
+                !isset($subQuerySelectParams['from']) &&
+                !isset($subQuerySelectParams['fromQuery'])
+            ) {
                 // 'entityType' is for backward compatibility.
                 $subQuerySelectParams['from'] = $value['entityType'] ?? $entity->getEntityType();
             }
@@ -2933,9 +2917,9 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
-     * @param array<mixed,mixed> $joinConditions
-     * @param array<string,mixed[]> $joins
+     * @param array<string, mixed> $params
+     * @param array<mixed, mixed> $joinConditions
+     * @param array<string, mixed[]> $joins
      */
     protected function getJoinsTypePart(
         Entity $entity,
@@ -3003,7 +2987,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @param string $alias
      * @param mixed $left
      * @param mixed $right
@@ -3085,7 +3069,7 @@ abstract class BaseQueryComposer implements QueryComposer
                     $this->sanitize($alias);
             }
 
-            $sql .= "{$leftAlias}.{$column}";
+            $sql .= $this->quoteColumn("{$leftAlias}.{$column}");
         }
 
         if (is_array($right)) {
@@ -3140,9 +3124,9 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $params
-     * @param array<string,mixed> $joinParams
-     * @param array<mixed,mixed> $conditions
+     * @param array<string, mixed> $params
+     * @param array<string, mixed> $joinParams
+     * @param array<mixed, mixed> $conditions
      */
     protected function getJoinItemPart(
         Entity $entity,
@@ -3157,12 +3141,9 @@ abstract class BaseQueryComposer implements QueryComposer
         $prefix = ($isLeft) ? 'LEFT ' : '';
 
         if (!$entity->hasRelation($name)) {
-            if (!$alias) {
-                $alias = $this->sanitize($name);
-            }
-            else {
-                $alias = $this->sanitizeSelectAlias($alias);
-            }
+            $alias = !$alias ?
+                $this->sanitize($name) :
+                $this->sanitizeSelectAlias($alias);
 
             $table = $this->toDb($this->sanitize($name));
 
@@ -3228,12 +3209,6 @@ abstract class BaseQueryComposer implements QueryComposer
                     $this->getRelationParam($entity, $relationName, 'relationName')
                 );
 
-                $midAlias = lcfirst(
-                    $this->sanitize(
-                        $this->getRelationParam($entity, $relationName, 'relationName')
-                    )
-                );
-
                 $distantTable = $this->toDb($foreignEntityType);
 
                 $midAlias = $alias . 'Middle';
@@ -3271,15 +3246,19 @@ abstract class BaseQueryComposer implements QueryComposer
                         );
                     }
 
-                    $indexPart = " USE INDEX (".implode(', ', $sanitizedIndexList).")";
+                    $indexPart = " USE INDEX (" . implode(', ', $sanitizedIndexList) . ")";
                 }
+
+                $leftKeyColumn = $this->quoteColumn("{$fromAlias}." . $this->toDb($key));
+                $middleKeyColumn = $this->quoteColumn("{$midAlias}." . $this->toDb($nearKey));
+                $middleDeletedColumn = $this->quoteColumn("{$midAlias}.deleted");
 
                 $sql =
                     "{$prefix}JOIN ".$this->quoteIdentifier($relTable)." AS " .
                     $this->quoteIdentifier($midAlias) . "{$indexPart} " .
-                    "ON {$fromAlias}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey) .
+                    "ON {$leftKeyColumn} = {$middleKeyColumn}" .
                     " AND " .
-                    "{$midAlias}.deleted = " . $this->quote(false);
+                    "{$middleDeletedColumn} = " . $this->quote(false);
 
                 $joinSqlList = [];
 
@@ -3300,12 +3279,15 @@ abstract class BaseQueryComposer implements QueryComposer
                 $onlyMiddle = $joinParams['onlyMiddle'] ?? false;
 
                 if (!$onlyMiddle) {
-                    $sql .= " {$prefix}JOIN " . $this->quoteIdentifier($distantTable)." AS " .
-                        $this->quoteIdentifier($alias) . " ".
-                        "ON {$alias}." . $this->toDb($foreignKey) .
-                        " = {$midAlias}." . $this->toDb($distantKey)
-                            . " AND "
-                            . "{$alias}.deleted = " . $this->quote(false);
+                    $rightKeyColumn = $this->quoteColumn("{$alias}." . $this->toDb($foreignKey));
+                    $middleDistantKeyColumn = $this->quoteColumn("{$midAlias}." . $this->toDb($distantKey));
+                    $rightDeletedColumn = $this->quoteColumn("{$alias}.deleted");
+
+                    $sql .= " {$prefix}JOIN " . $this->quoteIdentifier($distantTable) . " AS " .
+                        $this->quoteIdentifier($alias)
+                        . " ON {$rightKeyColumn} = {$middleDistantKeyColumn}"
+                        . " AND "
+                        . "{$rightDeletedColumn} = " . $this->quote(false);
                 }
 
                 return $sql;
@@ -3315,13 +3297,15 @@ abstract class BaseQueryComposer implements QueryComposer
                 $foreignKey = $keySet['foreignKey'];
                 $distantTable = $this->toDb($foreignEntityType);
 
+                $leftIdColumn = $this->quoteColumn("{$fromAlias}." . $this->toDb('id'));
+                $rightIdColumn = $this->quoteColumn("{$alias}." . $this->toDb($foreignKey));
+                $leftDeletedColumn = $this->quoteColumn("{$alias}.deleted");
+
                 $sql =
-                    "{$prefix}JOIN " . $this->quoteIdentifier($distantTable) . " AS " .
-                    $this->quoteIdentifier($alias) . " ".
-                    "ON {$fromAlias}." .
-                    $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
-                    . " AND "
-                    . "{$alias}.deleted = " . $this->quote(false);
+                    "{$prefix}JOIN " . $this->quoteIdentifier($distantTable) . " AS "
+                    . $this->quoteIdentifier($alias) . " ON "
+                    . "{$leftIdColumn} = {$rightIdColumn} AND "
+                    . "{$leftDeletedColumn} = " . $this->quote(false);
 
                 $joinSqlList = [];
 
@@ -3345,15 +3329,18 @@ abstract class BaseQueryComposer implements QueryComposer
 
                 $distantTable = $this->toDb($foreignEntityType);
 
+                $leftIdColumn = $this->quoteColumn("{$fromAlias}." . $this->toDb('id'));
+                $rightIdColumn = $this->quoteColumn("{$alias}." . $this->toDb($foreignKey));
+                $leftTypeColumn = $this->quoteColumn("{$alias}." . $this->toDb($foreignType));
+                $leftDeletedColumn = $this->quoteColumn("{$alias}.deleted");
+
                 $sql =
-                    "{$prefix}JOIN " . $this->quoteIdentifier($distantTable) . " AS ".
-                    $this->quoteIdentifier($alias) . " ON ".
-                    "{$fromAlias}." .
-                    $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
-                    . " AND "
-                    . "{$alias}." . $this->toDb($foreignType) . " = " . $this->pdo->quote($entity->getEntityType())
-                    . " AND "
-                    . "{$alias}.deleted = " . $this->quote(false) . "";
+                    "{$prefix}JOIN " . $this->quoteIdentifier($distantTable)
+                    . " AS "
+                    . $this->quoteIdentifier($alias) . " ON "
+                    . "{$leftIdColumn} = {$rightIdColumn} AND "
+                    . "{$leftTypeColumn} = " . $this->pdo->quote($entity->getEntityType()) . " AND "
+                    . "{$leftDeletedColumn} = " . $this->quote(false);
 
                 $joinSqlList = [];
 
@@ -3368,9 +3355,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 return $sql;
 
             case Entity::BELONGS_TO:
-                $sql = $prefix . $this->getBelongsToJoinItemPart($entity, $relationName, $alias, $params);
-
-                return $sql;
+                return $prefix . $this->getBelongsToJoinItemPart($entity, $relationName, $alias, $params);
         }
 
         return '';
@@ -3540,8 +3525,8 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $values
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $values
+     * @param array<string, mixed> $params
      */
     protected function getSetPart(Entity $entity, array $values, array $params): string
     {
@@ -3554,7 +3539,7 @@ abstract class BaseQueryComposer implements QueryComposer
         foreach ($values as $attribute => $value) {
             $isNotValue = false;
 
-            if (substr($attribute, -1) == ':') {
+            if (str_ends_with($attribute, ':')) {
                 $attribute = substr($attribute, 0, -1);
                 $isNotValue = true;
             }
@@ -3603,7 +3588,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * @param string[] $columnList
-     * @param array<string,mixed> $values
+     * @param array<string, mixed> $values
      */
     protected function getInsertValuesItemPart(array $columnList, array $values): string
     {
@@ -3617,7 +3602,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string,mixed> $values
+     * @param array<string, mixed> $values
      */
     protected function getInsertUpdatePart(array $values): string
     {

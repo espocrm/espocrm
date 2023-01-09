@@ -30,11 +30,8 @@
 namespace tests\unit\Espo\Tools;
 
 use tests\unit\ReflectionHelper;
-
 use Espo\Tools\FieldManager\FieldManager;
-
 use Espo\Core\InjectableFactory;
-use Espo\Core\Utils\FieldUtil;
 
 class FieldManagerTest extends \PHPUnit\Framework\TestCase
 {
@@ -56,12 +53,10 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
             $this->metadata,
             $this->language,
             $this->baseLanguage,
-            $this->defaultLanguage,
-            $this->createMock(FieldUtil::class)
+            $this->metadataHelper
         );
 
         $this->reflection = new ReflectionHelper($this->fieldManager);
-        $this->reflection->setProperty('metadataHelper', $this->metadataHelper);
     }
 
     public function testCreateExistingField()

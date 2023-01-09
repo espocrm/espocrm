@@ -4,6 +4,11 @@
             "type": "link",
             "readOnly": true
         },
+        "entityType": {
+            "type": "foreign",
+            "link": "import",
+            "field": "entityType"
+        },
         "rowIndex": {
             "type": "int",
             "readOnly": true,

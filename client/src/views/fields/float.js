@@ -46,6 +46,8 @@ define('views/fields/float', ['views/fields/int'], function (Dep) {
 
         validations: ['required', 'float', 'range'],
 
+        decimalPlacesRawValue: 10,
+
         /**
          * @inheritDoc
          */
@@ -55,11 +57,26 @@ define('views/fields/float', ['views/fields/int'], function (Dep) {
             if (this.getPreferences().has('decimalMark')) {
                 this.decimalMark = this.getPreferences().get('decimalMark');
             }
-            else {
-                if (this.getConfig().has('decimalMark')) {
-                    this.decimalMark = this.getConfig().get('decimalMark');
-                }
+            else if (this.getConfig().has('decimalMark')) {
+                this.decimalMark = this.getConfig().get('decimalMark');
             }
+        },
+
+        /**
+         * @inheritDoc
+         */
+        setupAutoNumericOptions: function () {
+            this.autoNumericOptions = {
+                digitGroupSeparator: this.thousandSeparator,
+                decimalCharacter: this.decimalMark,
+                modifyValueOnWheel: false,
+                selectOnFocus: false,
+                decimalPlaces: this.decimalPlacesRawValue,
+                decimalPlacesRawValue: this.decimalPlacesRawValue,
+                allowDecimalPadding: false,
+                showWarnings: false,
+                formulaMode: true,
+            };
         },
 
         getValueForDisplay: function () {
@@ -154,22 +171,24 @@ define('views/fields/float', ['views/fields/int'], function (Dep) {
         parse: function (value) {
             value = (value !== '') ? value : null;
 
-            if (value !== null) {
-                value = value.split(this.thousandSeparator).join('');
-                value = value.split(this.decimalMark).join('.');
-                value = parseFloat(value);
+            if (value === null) {
+                return null;
             }
 
-            return value;
+            value = value
+                .split(this.thousandSeparator)
+                .join('')
+                .split(this.decimalMark)
+                .join('.');
+
+            return parseFloat(value);
         },
 
         fetch: function () {
-            var value = this.$element.val();
-
+            let value = this.$element.val();
             value = this.parse(value);
 
-            var data = {};
-
+            let data = {};
             data[this.name] = value;
 
             return data;

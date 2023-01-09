@@ -52,6 +52,12 @@ function (Dep, /** module:ui/select*/Select) {
 
         maxDecimalPlaces: 3,
 
+        validations: [
+            'required',
+            'number',
+            'range',
+        ],
+
         /**
          * @inheritDoc
          */
@@ -82,6 +88,7 @@ function (Dep, /** module:ui/select*/Select) {
             this.currencyFieldName = this.name + 'Currency';
             this.defaultCurrency = this.getConfig().get('defaultCurrency');
             this.currencyList = this.getConfig().get('currencyList') || [this.defaultCurrency];
+            this.decimalPlaces = this.getConfig().get('currencyDecimalPlaces');
 
             if (this.params.onlyDefaultCurrency) {
                 this.currencyList = [this.defaultCurrency];
@@ -96,6 +103,22 @@ function (Dep, /** module:ui/select*/Select) {
                 this.currencyList = Espo.Utils.clone(this.currencyList);
                 this.currencyList.push(currencyValue);
             }
+        },
+
+        /**
+         * @inheritDoc
+         */
+        setupAutoNumericOptions: function () {
+            this.autoNumericOptions = {
+                digitGroupSeparator: this.thousandSeparator,
+                decimalCharacter: this.decimalMark,
+                modifyValueOnWheel: false,
+                selectOnFocus: false,
+                decimalPlaces: this.decimalPlaces,
+                allowDecimalPadding: true,
+                showWarnings: false,
+                formulaMode: true,
+            };
         },
 
         getCurrencyFormat: function () {
@@ -134,7 +157,7 @@ function (Dep, /** module:ui/select*/Select) {
         },
 
         formatNumberEdit: function (value) {
-            let currencyDecimalPlaces = this.getConfig().get('currencyDecimalPlaces');
+            let currencyDecimalPlaces = this.decimalPlaces;
 
             if (value !== null) {
                 var parts = value.toString().split(".");
@@ -142,12 +165,33 @@ function (Dep, /** module:ui/select*/Select) {
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
 
                 if (parts.length > 1) {
-                    if (currencyDecimalPlaces && parts[1].length < currencyDecimalPlaces) {
+                    if (
+                        currencyDecimalPlaces &&
+                        parts[1].length < currencyDecimalPlaces
+                    ) {
                         var limit = currencyDecimalPlaces - parts[1].length;
 
                         for (var i = 0; i < limit; i++) {
                             parts[1] += '0';
                         }
+                    }
+
+                    if (
+                        this.params.decimal &&
+                        currencyDecimalPlaces &&
+                        parts[1].length > currencyDecimalPlaces
+                    ) {
+                        let i = parts[1].length - 1;
+
+                        while (i >= currencyDecimalPlaces) {
+                            if (parts[1][i] !== '0') {
+                                break;
+                            }
+
+                            i--;
+                        }
+
+                        parts[1] = parts[1].substring(0, i + 1);
                     }
                 }
 
@@ -159,15 +203,15 @@ function (Dep, /** module:ui/select*/Select) {
 
         formatNumberDetail: function (value) {
             if (value !== null) {
-                let currencyDecimalPlaces = this.getConfig().get('currencyDecimalPlaces');
+                let currencyDecimalPlaces = this.decimalPlaces;
 
                 if (currencyDecimalPlaces === 0) {
                     value = Math.round(value);
                 }
                 else if (currencyDecimalPlaces) {
-                     value = Math.round(
-                         value * Math.pow(10, currencyDecimalPlaces)) / (Math.pow(10, currencyDecimalPlaces)
-                        );
+                    value = Math.round(
+                        value * Math.pow(10, currencyDecimalPlaces)) / (Math.pow(10, currencyDecimalPlaces)
+                    );
                 }
                 else {
                     value = Math.round(
@@ -206,6 +250,23 @@ function (Dep, /** module:ui/select*/Select) {
             return '';
         },
 
+        parse: function (value) {
+            value = (value !== '') ? value : null;
+
+            if (value === null) {
+                return null;
+            }
+
+            value = value.split(this.thousandSeparator).join('');
+            value = value.split(this.decimalMark).join('.');
+
+            if (!this.params.decimal) {
+                value = parseFloat(value);
+            }
+
+            return value;
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
@@ -220,8 +281,24 @@ function (Dep, /** module:ui/select*/Select) {
             }
         },
 
+        validateNumber: function () {
+            if (!this.params.decimal) {
+                return this.validateFloat();
+            }
+
+            let value = this.model.get(this.name);
+
+            if (Number.isNaN(Number(value))) {
+                let msg = this.translate('fieldShouldBeNumber', 'messages').replace('{field}', this.getLabelText());
+
+                this.showValidationMessage(msg);
+
+                return true;
+            }
+        },
+
         fetch: function () {
-            let value = this.$element.val();
+            let value = this.$element.val().trim();
 
             value = this.parse(value);
 

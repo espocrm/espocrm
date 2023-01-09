@@ -32,24 +32,18 @@ namespace Espo\Core\Api;
 class Route
 {
     private string $method;
-    private string $route;
-    /** @var array<string, string> */
-    private array $params;
-    private bool $noAuth;
 
     /**
      * @param array<string, string> $params
      */
     public function __construct(
         string $method,
-        string $route,
-        array $params,
-        bool $noAuth
+        private string $route,
+        private string $adjustedRoute,
+        private array $params,
+        private bool $noAuth
     ) {
         $this->method = strtoupper($method);
-        $this->route = $route;
-        $this->params = $params;
-        $this->noAuth = $noAuth;
     }
 
     public function getMethod(): string
@@ -57,13 +51,24 @@ class Route
         return $this->method;
     }
 
+    /**
+     * Get a route.
+     */
     public function getRoute(): string
     {
         return $this->route;
     }
 
     /**
-     * @return array<string,string>
+     * Get an adjusted route for FastRoute.
+     */
+    public function getAdjustedRoute(): string
+    {
+        return $this->adjustedRoute;
+    }
+
+    /**
+     * @return array<string, string>
      */
     public function getParams(): array
     {

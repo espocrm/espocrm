@@ -30,6 +30,7 @@
 namespace Espo\Core\Api;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\HasBody;
 use Espo\Core\Exceptions\ServiceUnavailable;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Authentication\ConfigDataProvider;
@@ -232,6 +233,10 @@ class Auth
             }
 
             $response->setStatus($e->getCode());
+
+            if ($e->getBody()) {
+                $response->writeBody($e->getBody());
+            }
 
             $this->log->notice("Auth: " . $e->getMessage());
 

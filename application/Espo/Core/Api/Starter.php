@@ -48,6 +48,7 @@ class Starter
         private RequestProcessor $requestProcessor,
         private RouteUtil $routeUtil,
         private RouteParamsFetcher $routeParamsFetcher,
+        private MiddlewareProvider $middlewareProvider,
         private Log $log
     ) {}
 
@@ -56,10 +57,18 @@ class Starter
         $slim = SlimAppFactory::create();
 
         $slim->setBasePath(RouteUtil::detectBasePath());
+        $this->addGlobalMiddlewares($slim);
         $slim->addRoutingMiddleware();
         $this->addRoutes($slim);
         $slim->addErrorMiddleware(false, true, true, $this->log);
         $slim->run();
+    }
+
+    private function addGlobalMiddlewares(SlimApp $slim): void
+    {
+        foreach ($this->middlewareProvider->getGlobalMiddlewareList() as $middleware) {
+            $slim->add($middleware);
+        }
     }
 
     private function addRoutes(SlimApp $slim): void
@@ -73,20 +82,31 @@ class Starter
 
     private function addRoute(SlimApp $slim, Route $item): void
     {
-        $slim->map(
+        $slimRoute = $slim->map(
             [$item->getMethod()],
-            $item->getRoute(),
+            $item->getAdjustedRoute(),
             function (Psr7Request $request, Psr7Response $response, array $args) use ($slim, $item)
             {
                 $routeParams = $this->routeParamsFetcher->fetch($item, $args);
 
-                $requestWrapped = new RequestWrapper($request, $slim->getBasePath(), $routeParams);
-                $responseWrapped = new ResponseWrapper($response);
+                $processData = new ProcessData(
+                    route: $item,
+                    basePath: $slim->getBasePath(),
+                    routeParams: $routeParams,
+                );
 
-                $this->requestProcessor->process($item, $requestWrapped, $responseWrapped);
-
-                return $responseWrapped->getResponse();
+                return $this->requestProcessor->process(
+                    $processData,
+                    $request,
+                    $response
+                );
             }
         );
+
+        $middlewareList = $this->middlewareProvider->getRouteMiddlewareList($item);
+
+        foreach ($middlewareList as $middleware) {
+            $slimRoute->addMiddleware($middleware);
+        }
     }
 }

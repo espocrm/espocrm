@@ -199,7 +199,7 @@ class VarcharFieldTest extends Base
         $this->assertEquals('100', $column['CHARACTER_MAXIMUM_LENGTH']);
         $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
 
-        $dbHelper = new DatabaseHelper($this->getContainer()->get('config'));
+        $dbHelper = $this->getInjectableFactory()->create(DatabaseHelper::class);
 
         if (
             $dbHelper->getDatabaseType() == 'MariaDB'

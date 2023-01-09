@@ -80,6 +80,7 @@
         }
     },
     "tooltips": {
+        "currencyDecimal": "Use the Decimal DB type. In the app, values will be represented as strings. Check this parameter if precision is required.",
         "cutHeight": "A text higher then a specified value will be cut with a 'show more' button displayed.",
         "urlStrip": "Strip a protocol and a trailing slash.",
         "audited": "Updates will be logged in stream.",

@@ -18,7 +18,8 @@
         "ext-pdo": "*",
         "psr/log": "1.1.*",
         "psr/http-message": "^1.0",
-        "slim/slim": "^4.7",
+        "psr/container": "*",
+        "slim/slim": "^4.11",
         "slim/psr7": "^1",
         "dragonmantank/cron-expression": "3.0.*",
         "laminas/laminas-mail": "2.20.*",
@@ -44,7 +45,8 @@
         "doctrine/dbal": "^3.3.3",
         "league/flysystem-async-aws-s3": "^2.0",
         "johngrogg/ics-parser": "^3.0",
-        "phpseclib/phpseclib": "^3.0"
+        "phpseclib/phpseclib": "^3.0",
+        "openspout/openspout": "^4.9"
     },
     "require-dev": {
         "phpunit/phpunit": "^9",

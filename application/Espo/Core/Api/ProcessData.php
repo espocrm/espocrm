@@ -27,35 +27,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Processor;
+namespace Espo\Core\Api;
 
-class Data
+class ProcessData
 {
     /**
-     * @var resource
+     * @param array<string, string> $routeParams
      */
-    private $resource;
+    public function __construct(
+        private Route $route,
+        private string $basePath,
+        private array $routeParams
+    ) {}
 
     /**
-     * @param resource $resource
+     * @return Route
      */
-    public function __construct($resource)
+    public function getRoute(): Route
     {
-        $this->resource = $resource;
+        return $this->route;
     }
 
     /**
-     *
-     * @return ?array<string, mixed>
+     * @return string
      */
-    public function readRow(): ?array
+    public function getBasePath(): string
     {
-        $line = fgets($this->resource);
+        return $this->basePath;
+    }
 
-        if ($line === false) {
-            return null;
-        }
-
-        return unserialize(base64_decode($line));
+    /**
+     * @return array<string, string>
+     */
+    public function getRouteParams(): array
+    {
+        return $this->routeParams;
     }
 }

@@ -32,10 +32,11 @@ namespace Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Metadata;
 
+/**
+ * Warning: Instantiated explicitly.
+ */
 class Helper
 {
-    private Metadata $metadata;
-
     protected string $defaultNaming = 'postfix';
 
     /**
@@ -43,7 +44,7 @@ class Helper
      *
      * @var string[]
      */
-    protected $copiedDefParams = [
+    private $copiedDefParams = [
         'readOnly',
         'disabled',
         'notStorable',
@@ -58,10 +59,8 @@ class Helper
         'exportDisabled',
     ];
 
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     /**
      * Get field definition by type in metadata, "fields" key.

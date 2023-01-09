@@ -34,19 +34,20 @@ use ReflectionParameter;
 use ReflectionNamedType;
 use LogicException;
 
+/**
+ * Access point for bindings.
+ */
 class BindingContainer
 {
-    private BindingData $data;
-
-    public function __construct(BindingData $data)
-    {
-        $this->data = $data;
-    }
+    public function __construct(private BindingData $data)
+    {}
 
     /**
-     * @param ReflectionClass<object>|null $class
+     * Has binding by a reflection parameter.
+     *
+     * @param ?ReflectionClass<object> $class
      */
-    public function has(?ReflectionClass $class, ReflectionParameter $param): bool
+    public function hasByParam(?ReflectionClass $class, ReflectionParameter $param): bool
     {
         if ($this->getInternal($class, $param) === null) {
             return false;
@@ -56,12 +57,14 @@ class BindingContainer
     }
 
     /**
-     * @param ReflectionClass<object>|null $class
+     * Get binding by a reflection parameter.
+     *
+     * @param ?ReflectionClass<object> $class
      */
-    public function get(?ReflectionClass $class, ReflectionParameter $param): Binding
+    public function getByParam(?ReflectionClass $class, ReflectionParameter $param): Binding
     {
-        if (!$this->has($class, $param)) {
-            throw new LogicException("BindingContainer: Can't get not existing binding.");
+        if (!$this->hasByParam($class, $param)) {
+            throw new LogicException("Cannot get not existing binding.");
         }
 
         /** @var Binding */
@@ -69,7 +72,35 @@ class BindingContainer
     }
 
     /**
-     * @param ReflectionClass<object>|null $class
+     * Has global binding by an interface.
+     *
+     * @param class-string $interfaceName
+     */
+    public function hasByInterface(string $interfaceName): bool
+    {
+        return $this->data->hasGlobal($interfaceName);
+    }
+
+    /**
+     * Get global binding by an interface.
+     *
+     * @param class-string $interfaceName
+     */
+    public function getByInterface(string $interfaceName): Binding
+    {
+        if (!$this->hasByInterface($interfaceName)) {
+            throw new LogicException("Binding for interface `{$interfaceName}` does not exist.");
+        }
+
+        if (!interface_exists($interfaceName) && !class_exists($interfaceName)) {
+            throw new LogicException("Interface `{$interfaceName}` does not exist.");
+        }
+
+        return $this->data->getGlobal($interfaceName);
+    }
+
+    /**
+     * @param ?ReflectionClass<object> $class
      */
     private function getInternal(?ReflectionClass $class, ReflectionParameter $param): ?Binding
     {

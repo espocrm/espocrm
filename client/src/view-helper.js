@@ -710,7 +710,7 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                 '<a type="button" class="selectable" data-email-address="$1" data-action="mailTo"'
             );
 
-            return new Handlebars.SafeString(text);
+            return (new Handlebars.SafeString(text)).toString();
         },
 
         /**

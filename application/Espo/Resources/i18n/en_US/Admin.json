@@ -213,6 +213,7 @@
         "codeType": "Code Type",
         "lastChar": "Last Character",
         "onlyDefaultCurrency": "Only default currency",
+        "decimal": "Decimal",
         "displayRawText": "Display raw text (no markdown)",
         "conversionDisabled": "Disable Conversion",
         "decimalPlaces": "Decimal Places",

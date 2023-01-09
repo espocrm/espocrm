@@ -29,8 +29,32 @@
 
 namespace Espo\Core\Exceptions;
 
-class ServiceUnavailable extends \Exception
+use Throwable;
+
+class ServiceUnavailable extends \Exception implements HasBody
 {
     /** @var int */
     protected $code = 503;
+    private ?string $body = null;
+
+    final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+    }
+
+    /**
+     * Create with a body (supposed to be sent to the frontend).
+     */
+    public static function createWithBody(string $message, string $body): self
+    {
+        $exception = new static($message);
+        $exception->body = $body;
+
+        return $exception;
+    }
+
+    public function getBody(): ?string
+    {
+        return $this->body;
+    }
 }

@@ -29,36 +29,19 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\{
-    Utils\Config,
-    Utils\File\Manager as FileManager,
-    Utils\System,
-    Utils\Database\Helper as DatabaseHelper,
-};
+use Espo\Core\Utils\Database\Helper as DatabaseHelper;
+use Espo\Core\Utils\File\Manager as FileManager;
 
 use PDO;
 
 class SystemRequirements
 {
-    private Config $config;
-
-    private FileManager $fileManager;
-
-    private System $systemHelper;
-
-    private DatabaseHelper $databaseHelper;
-
     public function __construct(
-        Config $config,
-        FileManager $fileManager,
-        System $systemHelper,
-        DatabaseHelper $databaseHelper
-    ) {
-        $this->config = $config;
-        $this->fileManager = $fileManager;
-        $this->systemHelper = $systemHelper;
-        $this->databaseHelper = $databaseHelper;
-    }
+        private Config $config,
+        private FileManager $fileManager,
+        private System $systemHelper,
+        private DatabaseHelper $databaseHelper
+    ) {}
 
     /**
      * @return array{
@@ -135,18 +118,15 @@ class SystemRequirements
      */
     protected function getDatabaseRequiredList(bool $requiredOnly, ?array $additionalData = null): array
     {
-        $databaseTypeName = 'Mysql';
-
         $databaseHelper =  $this->databaseHelper;
         $databaseParams = $additionalData['database'] ?? [];
 
         $pdoConnection = $databaseHelper->createPdoConnection($databaseParams);
 
-        if ($pdoConnection) {
-            $databaseHelper->setPdoConnection($pdoConnection);
-            $databaseType = $databaseHelper->getDatabaseType();
-            $databaseTypeName = ucfirst(strtolower($databaseType));
-        }
+        $databaseHelper->setPdoConnection($pdoConnection);
+        $databaseType = $databaseHelper->getDatabaseType();
+        $databaseTypeName = ucfirst(strtolower($databaseType));
+
 
         $requiredList = [
             'required' . $databaseTypeName . 'Version',
@@ -300,22 +280,17 @@ class SystemRequirements
 
         $databaseParams = $additionalData['database'] ?? [];
 
-        $pdo = $databaseHelper->createPdoConnection($databaseParams);
-
-        if (!$pdo) {
-            $type = 'connection';
-        }
-
         switch ($type) {
             case 'requiredMysqlVersion':
             case 'requiredMariadbVersion':
                 /** @var string $data */
-                /** @var PDO $pdo */
-                $actualVersion = $databaseHelper->getPdoDatabaseVersion($pdo);
+
+                $actualVersion = $databaseHelper->getDatabaseServerVersion();
 
                 $requiredVersion = $data;
 
                 $acceptable = true;
+
                 if (version_compare($actualVersion, $requiredVersion) == -1) {
                     $acceptable = false;
                 }
@@ -334,22 +309,20 @@ class SystemRequirements
                 foreach ($data as $name => $value) {
                     $requiredValue = $value;
 
-                    /** @var PDO $pdo */
-
-                    $actualValue = $databaseHelper->getPdoDatabaseParam($name, $pdo);
+                    $actualValue = $databaseHelper->getDatabaseParam($name);
 
                     $acceptable = false;
 
                     switch (gettype($requiredValue)) {
                         case 'integer':
-                            if (Util::convertToByte($actualValue) >= Util::convertToByte($requiredValue)) {
+                            if (Util::convertToByte($actualValue ?? '') >= Util::convertToByte($requiredValue)) {
                                 $acceptable = true;
                             }
 
                             break;
 
                         case 'string':
-                            if (strtoupper($actualValue) === strtoupper($requiredValue)) {
+                            if (strtoupper($actualValue ?? '') === strtoupper($requiredValue)) {
                                 $acceptable = true;
                             }
 
@@ -372,10 +345,6 @@ class SystemRequirements
                 }
 
                 $acceptable = true;
-
-                if (!$pdo instanceof PDO) {
-                    $acceptable = false;
-                }
 
                 $list['host'] = [
                     'type' => 'connection',

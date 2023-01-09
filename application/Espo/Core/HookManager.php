@@ -29,6 +29,7 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Hook\GeneralInvoker;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\File\Manager as FileManager;
@@ -39,8 +40,14 @@ use Espo\Core\Utils\Util;
 
 /**
  * Runs hooks. E.g. beforeSave, afterSave. Hooks can be located in a folder
- * that matches a certain *entityType* or in the `Common` folder.
+ * that matches a certain entity type or in the `Common` folder.
  * Common hooks are applied to all entity types.
+ *
+ * - `Espo\Hooks\Common\MyHook` – a common hook;
+ * - `Espo\Hooks\{EntityType}\MyHook` – an entity type specific hook;
+ * - `Espo\Modules\{ModuleName}\Hooks\{EntityType}\MyHook` – in a module.
+ *
+ * @link https://docs.espocrm.com/development/hooks/
  */
 class HookManager
 {
@@ -68,18 +75,21 @@ class HookManager
         private Config $config,
         private DataCache $dataCache,
         private Log $log,
-        private PathProvider $pathProvider
+        private PathProvider $pathProvider,
+        private GeneralInvoker $generalInvoker
     ) {}
 
     /**
-     * @param mixed $injection
-     * @param array<string,mixed> $options
-     * @param array<string,mixed> $hookData
+     * @param string $scope A scope (entity type).
+     * @param string $hookName A hook name.
+     * @param mixed $injection A subject (usually an entity).
+     * @param array<string, mixed> $options Options.
+     * @param array<string, mixed> $hookData Additional hook data.
      */
     public function process(
         string $scope,
         string $hookName,
-        $injection = null,
+        mixed $injection = null,
         array $options = [],
         array $hookData = []
     ): void {
@@ -105,7 +115,13 @@ class HookManager
 
             $hook = $this->hooks[$className];
 
-            $hook->$hookName($injection, $options, $hookData);
+            $this->generalInvoker->invoke(
+                $hook,
+                $hookName,
+                $injection,
+                $options,
+                $hookData
+            );
         }
     }
 
@@ -171,8 +187,8 @@ class HookManager
 
     /**
      * @param string $hookDir
-     * @param array<string,array<string,mixed>> $hookData
-     * @return array<string,array<string,mixed>>
+     * @param array<string, array<string, mixed>> $hookData
+     * @return array<string, array<string, mixed>>
      */
     private function readHookData(string $hookDir, array $hookData = []): array
     {
@@ -180,7 +196,7 @@ class HookManager
             return $hookData;
         }
 
-        /** @var array<string,string[]> $fileList */
+        /** @var array<string, string[]> $fileList */
         $fileList = $this->fileManager->getFileList($hookDir, 1, '\.php$', true);
 
         foreach ($fileList as $scopeName => $hookFiles) {
@@ -197,7 +213,7 @@ class HookManager
 
                 /** @var string[] $hookMethods */
                 $hookMethods = array_filter($hookMethods, function ($item) {
-                    if (strpos($item, 'set') === 0) {
+                    if (str_starts_with($item, 'set')) {
                         return false;
                     }
 
@@ -211,6 +227,10 @@ class HookManager
                         continue;
                     }
 
+                    if ($this->hookClassIsSuppressed($className)) {
+                        continue;
+                    }
+
                     $hookData[$normalizedScopeName][$hookType][] = [
                         'className' => $className,
                         'order' => $className::$order ?? self::DEFAULT_ORDER,
@@ -220,6 +240,16 @@ class HookManager
         }
 
         return $hookData;
+    }
+
+    /**
+     * @param class-string $className
+     */
+    private function hookClassIsSuppressed(string $className): bool
+    {
+        $suppressList = $this->metadata->get(['app', 'hook', 'suppressClassNameList']) ?? [];
+
+        return in_array($className, $suppressList);
     }
 
     /**

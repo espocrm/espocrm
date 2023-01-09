@@ -1,0 +1,6 @@
+{
+    "dbalConnectionFactoryClassNameMap": {
+        "Mysql": "Espo\\Core\\Utils\\Database\\DBAL\\Factories\\MysqlConnectionFactory",
+        "Postgresql": "Espo\\Core\\Utils\\Database\\DBAL\\Factories\\PostgresqlConnectionFactory"
+    }
+}

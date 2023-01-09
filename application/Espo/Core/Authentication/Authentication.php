@@ -30,6 +30,7 @@
 namespace Espo\Core\Authentication;
 
 use Espo\Core\Authentication\Logout\Params as LogoutParams;
+use Espo\Core\Exceptions\Error\Body;
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
@@ -223,7 +224,12 @@ class Authentication
         }
 
         if (!$user->isAdmin() && $this->configDataProvider->isMaintenanceMode()) {
-            throw new ServiceUnavailable("Application is in maintenance mode.");
+            throw ServiceUnavailable::createWithBody(
+                "Application is in maintenance mod1e.",
+                Body::create()
+                    ->withMessageTranslation('maintenanceModeError', 'messages')
+                    ->encode()
+            );
         }
 
         if (!$this->processUserCheck($user, $authLogRecord)) {

@@ -66,7 +66,7 @@ class Converter
 
     /**
      * Convert a currency value to a specific currency with specific rates.
-     * Base currency should has rate equal to `1.0`.
+     * Base currency should have rate equal to `1.0`.
      *
      * @throws RuntimeException
      */

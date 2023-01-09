@@ -67,9 +67,10 @@ define(() => {
                 throw new Error();
             }
 
-            let actionDefsList = (this.metadata
-                .get(['clientDefs', scope, type + 'ActionList']) || [])
-                .concat(this.metadata.get(['clientDefs', 'Global', type + 'ActionList']) || []);
+            let actionDefsList = [
+                ...this.metadata.get(['clientDefs', 'Global', type + 'ActionList']) || [],
+                ...this.metadata.get(['clientDefs', scope, type + 'ActionList']) || [],
+            ];
 
             actionDefsList.forEach(item => {
                 if (typeof item === 'string') {
@@ -84,6 +85,14 @@ define(() => {
                     item.html = this.language.translate(name, 'actions', scope);
                 }
 
+                item.data = item.data || {};
+
+                let handlerName = item.handler || item.data.handler;
+
+                if (handlerName && !item.data.handler) {
+                    item.data.handler = handlerName;
+                }
+
                 addFunc(item);
 
                 if (!Espo.Utils.checkActionAvailability(this.viewHelper, item)) {
@@ -95,9 +104,6 @@ define(() => {
                 }
 
                 actionList.push(item);
-
-                let data = item.data || {};
-                let handlerName = item.handler || data.handler;
 
                 if (!handlerName) {
                     return;

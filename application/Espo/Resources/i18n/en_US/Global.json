@@ -309,6 +309,7 @@
         "fieldShouldBeEmail": "{field} should be a valid email",
         "fieldShouldBeFloat": "{field} should be a valid float",
         "fieldShouldBeInt": "{field} should be a valid integer",
+        "fieldShouldBeNumber": "{field} should be a valid number",
         "fieldShouldBeDate": "{field} should be a valid date",
         "fieldShouldBeDatetime": "{field} should be a valid date/time",
         "fieldShouldAfter": "{field} should be after {otherField}",
@@ -357,6 +358,7 @@
         "massFollowZeroResult": "Nothing got followed",
         "massUnfollowZeroResult": "Nothing got unfollowed",
         "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
+        "maintenanceModeError": "The application currently is in maintenance mode.",
         "maintenanceMode": "The application currently is in maintenance mode. Only admin users have access.\n\nMaintenance mode can be disabled at Administration → Settings.",
         "resolveSaveConflict": "The record has been modified. You need to resolve the conflict before you can save the record.",
         "massPrintPdfMaxCountError": "Can't print more that {maxCount} records.",
@@ -854,5 +856,18 @@
         "noEmptyString": "No Empty String",
         "max": "Max Value",
         "min": "Min Value"
+    },
+    "fieldValidationExplanations": {
+        "url_valid": "Invalid URL value.",
+        "currency_valid": "Invalid amount value.",
+        "currency_validCurrency": "The currency code value is invalid or not allowed.",
+        "varchar_pattern": "Likely, the value contains not allowed characters.",
+        "email_emailAddress": "Invalid email address value.",
+        "phone_phoneNumber": "Invalid phone number value.",
+        "dateTimeOptional_valid": "Invalid date-time value.",
+        "dateTime_valid": "Invalid date-time value.",
+        "date_valid": "Invalid date value.",
+        "enum_valid": "Invalid enum value. The value must be one of defined enum options. An empty value is allowed only if the field has an empty option.",
+        "multiEnum_valid": "Invalid multi-enum value. Values must be one of defined field options."
     }
 }

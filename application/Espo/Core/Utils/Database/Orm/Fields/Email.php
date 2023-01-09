@@ -47,7 +47,7 @@ class Email extends Base
             'type' => 'varchar',
             'select' => [
                 "select" => "emailAddresses.name",
-                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => true]]],
             ],
             'selectForeign' => [
                 "select" => "{$foreignJoinAlias}.name",
@@ -57,8 +57,8 @@ class Email extends Base
                         $foreignJoinMiddleAlias,
                         [
                             "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
-                            "{$foreignJoinMiddleAlias}.primary" => 1,
-                            "{$foreignJoinMiddleAlias}.deleted" => 0,
+                            "{$foreignJoinMiddleAlias}.primary" => true,
+                            "{$foreignJoinMiddleAlias}.deleted" => false,
                         ]
                     ],
                     [
@@ -66,7 +66,7 @@ class Email extends Base
                         $foreignJoinAlias,
                         [
                             "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.emailAddressId",
-                            "{$foreignJoinAlias}.deleted" => 0,
+                            "{$foreignJoinAlias}.deleted" => false,
                         ]
                     ]
                 ],
@@ -187,7 +187,7 @@ class Email extends Base
                         'notStorable' => true,
                         'select' => [
                             'select' => "emailAddresses.optOut",
-                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => true]]],
                         ],
                         'selectForeign' => [
                             'select' => "{$foreignJoinAlias}.optOut",
@@ -197,8 +197,8 @@ class Email extends Base
                                     $foreignJoinMiddleAlias,
                                     [
                                         "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
-                                        "{$foreignJoinMiddleAlias}.primary" => 1,
-                                        "{$foreignJoinMiddleAlias}.deleted" => 0,
+                                        "{$foreignJoinMiddleAlias}.primary" => true,
+                                        "{$foreignJoinMiddleAlias}.deleted" => false,
                                     ]
                                 ],
                                 [
@@ -206,7 +206,7 @@ class Email extends Base
                                     $foreignJoinAlias,
                                     [
                                         "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.emailAddressId",
-                                        "{$foreignJoinAlias}.deleted" => 0,
+                                        "{$foreignJoinAlias}.deleted" => false,
                                     ]
                                 ]
                             ],
@@ -217,7 +217,7 @@ class Email extends Base
                                     ['emailAddresses.optOut=' => true],
                                     ['emailAddresses.optOut!=' => null],
                                 ],
-                                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => true]]],
                             ],
                             '= FALSE' => [
                                 'whereClause' => [
@@ -226,14 +226,14 @@ class Email extends Base
                                         ['emailAddresses.optOut=' => null],
                                     ]
                                 ],
-                                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => true]]],
                             ]
                         ],
                         'order' => [
                             'order' => [
                                 ['emailAddresses.optOut', '{direction}'],
                             ],
-                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => true]]],
                             'additionalSelect' => ['emailAddresses.optOut'],
                         ],
                     ],
@@ -242,7 +242,7 @@ class Email extends Base
                         'notStorable' => true,
                         'select' => [
                             'select' => "emailAddresses.invalid",
-                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => true]]],
                         ],
                         'selectForeign' => [
                             'select' => "{$foreignJoinAlias}.invalid",
@@ -252,8 +252,8 @@ class Email extends Base
                                     $foreignJoinMiddleAlias,
                                     [
                                         "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
-                                        "{$foreignJoinMiddleAlias}.primary" => 1,
-                                        "{$foreignJoinMiddleAlias}.deleted" => 0,
+                                        "{$foreignJoinMiddleAlias}.primary" => true,
+                                        "{$foreignJoinMiddleAlias}.deleted" => false,
                                     ]
                                 ],
                                 [
@@ -261,7 +261,7 @@ class Email extends Base
                                     $foreignJoinAlias,
                                     [
                                         "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.emailAddressId",
-                                        "{$foreignJoinAlias}.deleted" => 0,
+                                        "{$foreignJoinAlias}.deleted" => false,
                                     ]
                                 ]
                             ],
@@ -272,7 +272,7 @@ class Email extends Base
                                     ['emailAddresses.invalid=' => true],
                                     ['emailAddresses.invalid!=' => null],
                                 ],
-                                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => true]]],
                             ],
                             '= FALSE' => [
                                 'whereClause' => [
@@ -281,14 +281,14 @@ class Email extends Base
                                         ['emailAddresses.invalid=' => null],
                                     ]
                                 ],
-                                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => true]]],
                             ]
                         ],
                         'order' => [
                             'order' => [
                                 ['emailAddresses.invalid', '{direction}'],
                             ],
-                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                            'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => true]]],
                             'additionalSelect' => ['emailAddresses.invalid'],
                         ],
                     ],

@@ -14,10 +14,6 @@
             "returnType": "array"
         },
         {
-            "name": "while",
-            "insertText": "while(CONDITION, STATEMENT)"
-        },
-        {
             "name": "string\\concatenate",
             "insertText": "string\\concatenate(STRING_1, STRING_2)",
             "returnType": "string"
