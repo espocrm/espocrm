@@ -41,7 +41,10 @@
     "ApiUser": "API Benutzer",
     "DashboardTemplate": "Dashboard-Vorlage",
     "Currency": "Währung",
-    "LayoutSet": "Layout-Set"
+    "LayoutSet": "Layout-Set",
+    "Mass Action": "Massenaktionen",
+    "Note": "Notiz",
+    "ImportError": "Fehler beim Importieren"
   },
   "scopeNamesPlural": {
     "Email": "E-Mails",
@@ -79,7 +82,9 @@
     "EmailAddress": "E-Mail-Adressen",
     "PhoneNumber": "Telefonnummern",
     "Currency": "Währung",
-    "LayoutSet": "Layout-Sätze"
+    "LayoutSet": "Layout-Sätze",
+    "Note": "Notiz",
+    "ImportError": "Fehler beim Importieren"
   },
   "labels": {
     "Misc": "Verschiedenes",
@@ -234,7 +239,14 @@
     "View on Map": "Ansicht auf Karte",
     "Proceed": "Fortfahren",
     "Attached": "Beigefügt",
-    "Preview": "Vorschau"
+    "Preview": "Vorschau",
+    "Up": "Hoch",
+    "Save & Continue Editing": "Speichern & weiter Bearbeiten",
+    "Save & New": "Speichern & Neu",
+    "Field": "Feld",
+    "Resolution": "Auflösung",
+    "Resolve Conflict": "Löse Konflikt",
+    "Sort": "Sortieren"
   },
   "messages": {
     "pleaseWait": "Bitte warten...",
@@ -298,7 +310,8 @@
     "fieldExceedsMaxCount": "Anzahl überschreitet die maximal zulässige Anzahl {maxCount}",
     "notUpdated": "Nicht aktualisiert",
     "maintenanceMode": "Die Anwendung befindet sich derzeit im Wartungsmodus. Nur Admin-Benutzer haben Zugriff.\n\nDer Wartungsmodus kann unter Administration → Einstellungen deaktiviert werden.",
-    "fieldInvalid": "{field} ist ungültig"
+    "fieldInvalid": "{field} ist ungültig",
+    "resolveSaveConflict": "Der Eintrag wurde bearbeitet. Um den Eintrag speichern zu können, müssen Sie den Konflikt beheben."
   },
   "boolFilters": {
     "onlyMy": "Nur Meine",

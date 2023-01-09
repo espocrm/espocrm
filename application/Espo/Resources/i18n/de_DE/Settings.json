@@ -129,7 +129,10 @@
     "busyRangesEntityList": "Liste der Frei/Gebucht-Einheiten",
     "passwordRecoveryForInternalUsersDisabled": "Deaktivieren der Passwort-Wiederherstellung für interne Benutzer",
     "passwordRecoveryNoExposure": "Verhindern Sie die Preisgabe von E-Mail-Adressen im Passwort-Wiederherstellungsformular",
-    "auth2FAForced": "Regelmäßige Benutzer zur Einrichtung von 2FA zwingen"
+    "auth2FAForced": "Regelmäßige Benutzer zur Einrichtung von 2FA zwingen",
+    "smsProvider": "SMS Anbieter",
+    "outboundSmsFromNumber": "SMS Absender Nummer",
+    "recordsPerPageSelect": "Einträge pro Seite (Auswahl)"
   },
   "tooltips": {
     "recordsPerPage": "Anzahl Sätze In Listenansichten (Standard) ",
@@ -234,6 +237,9 @@
       "lastFirst": "Nachname Vorname\n",
       "firstMiddleLast": "Vorname 2. Vorname Nachname",
       "lastFirstMiddle": "Nachname Vorname 2. Vorname"
+    },
+    "auth2FAMethodList": {
+      "Email": "E-Mail"
     }
   }
 }

@@ -16,7 +16,9 @@
     "fontFace": "Schriftart",
     "pageWidth": "Seitenbreite (mm)",
     "pageHeight": "Seitenhöhe (mm)",
-    "headerPosition": "Kopfzeilen-Position"
+    "headerPosition": "Kopfzeilen-Position",
+    "printHeader": "Header ausgeben",
+    "title": "Titel"
   },
   "labels": {
     "Create Template": "Vorlage erstellen"

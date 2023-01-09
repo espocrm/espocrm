@@ -62,6 +62,13 @@
     },
     "barcodeType": {
       "QRcode": "QR Code"
+    },
+    "globalRestrictions": {
+      "forbidden": "Verboten",
+      "internal": "Intern",
+      "onlyAdmin": "Nur Admin",
+      "readOnly": "Nur Lesen",
+      "nonAdminReadOnly": "Nicht-Admin nur Lesen"
     }
   },
   "tooltips": {
@@ -78,7 +85,14 @@
     "readOnly": "Feldwert kann nicht vom Benutzer angegebe, aber durch Formel berechnet werden.",
     "maxFileSize": "Wenn leer oder 0, dann keine Begrenzung.",
     "fileAccept": "Welche Dateitypen akzeptiert werden sollen. Es ist möglich, benutzerdefinierte Elemente hinzuzufügen.",
-    "barcodeLastChar": "Für den Typ EAN-13."
+    "barcodeLastChar": "Für den Typ EAN-13.",
+    "cutHeight": "Ein Text, der einen bestimmte Länge überschreitet, wird abgeschnitten und ein \"Mehr anzeigen\" Button angezeigt.",
+    "pattern": "Ein regulärer Ausdruck, gegen den ein Feldwert geprüft wird. Definieren Sie einen Ausdruck oder wählen Sie einen vordefinierten Ausdruck.",
+    "options": "Eine Liste der möglichen Werte und ihrer Bezeichnungen.",
+    "optionsArray": "Eine Liste der möglichen Werte und ihrer Bezeichnungen. Wenn das Feld leer ist, können eigene Werte eingegeben werden.",
+    "maxCount": "Maximale Anzahl an auswählbaren Werten.",
+    "displayAsList": "Jeder Wert in eine neue Zeile.",
+    "optionsVarchar": "Eine Liste mit Werten zur Autovervollständigung."
   },
   "fieldParts": {
     "address": {

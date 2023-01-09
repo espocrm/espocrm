@@ -32,7 +32,8 @@
     "fullTextSearch": "Volltextsuche",
     "countDisabled": "Deaktivieren der Datensatzzählung",
     "parentEntityTypeList": "Übergeordnete Entitätstypen",
-    "foreignLinkEntityTypeList": "Fremde Links"
+    "foreignLinkEntityTypeList": "Fremde Links",
+    "entity": "Eintrag"
   },
   "options": {
     "type": {

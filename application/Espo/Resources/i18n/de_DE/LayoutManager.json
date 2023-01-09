@@ -27,5 +27,8 @@
   "tooltips": {
     "link": "Wenn diese Option aktiviert ist, wird ein Feldwert als Link angezeigt, der auf die Detailansicht des Datensatzes verweist. Normalerweise wird er für *Name*-Felder verwendet.",
     "hiddenPanel": "Klicken Sie auf 'mehr anzeigen', um das Panel zu sehen."
+  },
+  "messages": {
+    "cantBeEmpty": "Layout kann nicht leer sein."
   }
 }

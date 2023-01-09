@@ -10,7 +10,8 @@
     "field": "Feld",
     "sourceId": "Quell-ID",
     "storage": "Speicher",
-    "size": "Größe (Bytes)"
+    "size": "Größe (Bytes)",
+    "isBeingUploaded": "Wird hochgeladen"
   },
   "options": {
     "role": {

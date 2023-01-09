@@ -67,7 +67,10 @@
     "Dashboard Templates": "Dashboard-Vorlagen",
     "Email Addresses": "E-Mail-Adressen",
     "Phone Numbers": "Telefonnummern",
-    "Layout Sets": "Layout-Sätze"
+    "Layout Sets": "Layout-Sätze",
+    "Misc": "Verschiedenes",
+    "Job Settings": "Job Einstellungen",
+    "Configuration Instructions": "Konfigurationsanleitung"
   },
   "layouts": {
     "list": "Liste",
@@ -181,7 +184,12 @@
     "codeType": "Code-Typ",
     "lastChar": "Letztes Zeichen",
     "listPreviewSize": "Vorschaugröße in der Listenansicht",
-    "onlyDefaultCurrency": "Nur Standardwährung"
+    "onlyDefaultCurrency": "Nur Standardwährung",
+    "dynamicLogicInvalid": "Bedingungen, die das Feld ungültig machen",
+    "conversionDisabled": "Konvertierung deaktivieren",
+    "decimalPlaces": "Dezimalstellen",
+    "pattern": "Muster",
+    "globalRestrictions": "Globale Beschränkungen"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
@@ -247,7 +255,9 @@
     "dashboardTemplates": "Stellen Sie Dashboards für Benutzer bereit.",
     "phoneNumbers": "Alle im System gespeicherten Telefonnummern.",
     "emailAddresses": "Alle im System gespeicherten E-Mail-Adressen.",
-    "layoutSets": "Sammlungen von Layouts, die den Teams und Portalen zugeordnet werden können."
+    "layoutSets": "Sammlungen von Layouts, die den Teams und Portalen zugeordnet werden können.",
+    "sms": "SMS Einstellungen",
+    "formulaSandbox": "Schreibe und teste Formula Skripte"
   },
   "options": {
     "previewSize": {
@@ -282,6 +292,7 @@
   },
   "keywords": {
     "settings": "System",
-    "templateManager": "Benachrichtigungen"
+    "templateManager": "Benachrichtigungen",
+    "authentication": "Passwort,Sicherheit,LDAP"
   }
 }

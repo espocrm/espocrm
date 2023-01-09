@@ -1,1 +1,23 @@
-{}
+{
+  "labels": {
+    "Check Syntax": "Syntax prüfen",
+    "Run": "Ausführen"
+  },
+  "fields": {
+    "target": "Ziel",
+    "targetType": "Ziel Typ",
+    "script": "Skript",
+    "output": "Ausgabe",
+    "error": "Fehler"
+  },
+  "messages": {
+    "runSuccess": "Erfolgreich ausgeführt",
+    "runError": "Fehler.",
+    "checkSyntaxSuccess": "Syntax ist richtig.",
+    "checkSyntaxError": "Syntax Fehler.",
+    "emptyScript": "Skript ist leer."
+  },
+  "tooltips": {
+    "output": "Werte können mit der Funktion `output\\printLine` ausgegeben werden."
+  }
+}

@@ -14,7 +14,7 @@
     "dateStartDate": "Startdatum (ganztägig)",
     "dateEndDate": "Enddatum (ganztägig)",
     "isAllDay": "Ist ganztägig",
-    "Acceptance": "Akzeptanz"
+    "sourceEmail": "Quell E-Mail"
   },
   "options": {
     "status": {

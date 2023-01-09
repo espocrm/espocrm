@@ -13,7 +13,8 @@
     "targetType": "Zieltyp",
     "targetId": "Ziel ID",
     "number": "Nummer",
-    "queue": "Warteschlange"
+    "queue": "Warteschlange",
+    "targetGroup": "Zielgruppe"
   },
   "options": {
     "status": {

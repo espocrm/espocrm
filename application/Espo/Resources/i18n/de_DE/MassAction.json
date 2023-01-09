@@ -1,1 +1,16 @@
-{}
+{
+  "fields": {
+    "processedCount": "Verarbeitet"
+  },
+  "options": {
+    "status": {
+      "Pending": "Ausstehend",
+      "Running": "In Verarbeitung",
+      "Success": "Erfolgreich",
+      "Failed": "Fehlgeschlagen"
+    }
+  },
+  "messages": {
+    "infoText": "Die Massenaktion wird im Leerlauf vom Cron verarbeitet. Es kann einige Zeit dauern, bis sie abgeschlossen ist. Das Schließen dieses Dialogs hat keinen Einfluss auf die Ausführung des Prozesses."
+  }
+}

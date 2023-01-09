@@ -6,7 +6,6 @@
     "to": "An",
     "replyTo": "Antwort an",
     "replyToString": "Antwort an (Zeichenkette)",
-    "isHtml": "Ist HTML",
     "body": "Inhalt",
     "subject": "Betreff",
     "attachments": "Anhänge",
@@ -46,7 +45,11 @@
     "personStringData": "Personenstring-Daten",
     "fromEmailAddress": "Absenderadresse (link)",
     "replyToName": "Antwort-an Name",
-    "replyToAddress": "Antwort-an Adresse"
+    "replyToAddress": "Antwort-an Adresse",
+    "icsContents": "ICS Inhalt",
+    "icsEventData": "ICS Event Daten",
+    "createdEvent": "Erstelltes Event",
+    "icsEventDateStart": "ICS Event Startdatum"
   },
   "links": {
     "replied": "Beantwortet",

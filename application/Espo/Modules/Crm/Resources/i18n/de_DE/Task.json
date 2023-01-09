@@ -17,7 +17,8 @@
   "links": {
     "attachments": "Anhänge",
     "account": "Firma",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "email": "E-Mail"
   },
   "options": {
     "status": {
@@ -44,5 +45,8 @@
     "todays": "Heutige",
     "overdue": "Überfällig",
     "deferred": "Zurückgestellt"
+  },
+  "nameOptions": {
+    "replyToEmail": "Antworten an E-Mail"
   }
 }

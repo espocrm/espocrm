@@ -18,7 +18,9 @@
       "contains": "Enthält",
       "has": "Enthält",
       "notContains": "Enthält nicht",
-      "notHas": "Enthält nicht"
+      "notHas": "Enthält nicht",
+      "startsWith": "Beginnt mit",
+      "endsWith": "Endet mit"
     }
   },
   "labels": {

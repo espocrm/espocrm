@@ -69,7 +69,9 @@
     "Requirements": "Anforderungen",
     "Security": "Sicherheit",
     "Reset 2FA": "2FA zurücksetzen",
-    "Secret": "Geheimnis"
+    "Secret": "Geheimnis",
+    "Send Password Change Link": "Passwort ändern Link versenden",
+    "Send Code": "Code senden"
   },
   "tooltips": {
     "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",

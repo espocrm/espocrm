@@ -1,6 +1,5 @@
 {
   "fields": {
-    "isHtml": "Ist HTML",
     "body": "Inhalt",
     "subject": "Betreff",
     "attachments": "Anhänge",
