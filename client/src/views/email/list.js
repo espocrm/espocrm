@@ -156,6 +156,7 @@ define('views/email/list', ['views/list'], function (Dep) {
                 let $row = $container.find(`.list-row[data-id="${m.id}"]`).first();
 
                 $row.draggable({
+                    cancel: 'input,textarea,button,select,option,.dropdown-menu',
                     helper: () => {
                         let text = this.translate('Moving to Folder', 'labels', 'Email');
 
