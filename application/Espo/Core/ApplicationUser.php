@@ -55,7 +55,20 @@ class ApplicationUser
      */
     public function setupSystemUser(): void
     {
-        $user = $this->entityManagerProxy->getEntityById(User::ENTITY_TYPE, self::SYSTEM_USER_ID);
+        $user = $this->entityManagerProxy
+            ->getRDBRepository(User::ENTITY_TYPE)
+            ->select([
+                'id',
+                'name',
+                'userName',
+                'type',
+                'isActive',
+                'firstName',
+                'lastName',
+                'deleted',
+            ])
+            ->where(['id' => self::SYSTEM_USER_ID])
+            ->findOne();
 
         if (!$user) {
             throw new RuntimeException("System user is not found.");
