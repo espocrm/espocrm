@@ -196,6 +196,8 @@ define('views/notification/badge', ['view'], function (Dep) {
             ) {
                 return true;
             }
+
+            return false;
         },
 
         checkUpdates: function (isFirstCheck) {
@@ -276,14 +278,16 @@ define('views/notification/badge', ['view'], function (Dep) {
          * @private
          */
         checkGroupedPopupNotifications: function () {
-            Espo.Ajax.getRequest('PopupNotification/action/grouped')
-                .then(result => {
-                    for (let type in result) {
-                        let list = result[type];
+            if (!this.checkBypass()) {
+                Espo.Ajax.getRequest('PopupNotification/action/grouped')
+                    .then(result => {
+                        for (let type in result) {
+                            let list = result[type];
 
-                        list.forEach(item => this.showPopupNotification(type, item));
-                    }
-                });
+                            list.forEach(item => this.showPopupNotification(type, item));
+                        }
+                    });
+            }
 
             this.groupedTimeout = setTimeout(
                 () => this.checkGroupedPopupNotifications(),
