@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2021 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2023 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -32,11 +32,14 @@ use Espo\Entities\EmailAccount;
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
 use Espo\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Database\Helper as DatabaseHelper;
 
 class BeforeUpgrade
 {
     public function run(Container $container): void
     {
+        $this->addUserColumn($container->get('config'));
         $this->migrateSmtp($container->get('entityManager'));
     }
 
@@ -120,5 +123,22 @@ class BeforeUpgrade
         $preferences->set('smtpPassword', null);
 
         $entityManager->saveEntity($preferences);
+    }
+
+    private function addUserColumn(Config $config)
+    {
+        $databaseHelper = new DatabaseHelper($config);
+
+        $pdo = $databaseHelper->createPdoConnection();
+
+        $query = "
+            ALTER TABLE `user` ADD `working_time_calendar_id` VARCHAR(24)
+            DEFAULT NULL COLLATE `utf8mb4_unicode_ci`
+        ";
+
+        try {
+            $sth = $pdo->prepare($query);
+            $sth->execute();
+        } catch (\Exception $e) {}
     }
 }

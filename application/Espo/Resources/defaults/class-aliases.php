@@ -29,6 +29,19 @@
 
 /** @todo Remove in v8.0. */
 
-class_alias('Laminas\\Mail\\Protocol\\Smtp', 'Zend\\Mail\\Protocol\\Smtp');
-class_alias('Laminas\\Mail\\Protocol\\Imap', 'Zend\\Mail\\Protocol\\Imap');
-class_alias('Laminas\\Mail\\Message', 'Zend\\Mail\\Message');
+$map = [
+    ['Laminas\\Mail\\Protocol\\Smtp', 'Zend\\Mail\\Protocol\\Smtp'],
+    ['Laminas\\Mail\\Protocol\\Imap', 'Zend\\Mail\\Protocol\\Imap'],
+    ['Laminas\\Mail\\Message', 'Zend\\Mail\\Message'],
+];
+
+foreach ($map as $item) {
+    $className = $item[0];
+    $alias = $item[1];
+
+    if (!class_exists($className)) {
+        continue;
+    }
+
+    class_alias($className, $alias);
+}

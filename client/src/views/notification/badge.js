@@ -33,8 +33,10 @@ define('views/notification/badge', ['view'], function (Dep) {
         template: 'notification/badge',
 
         notificationsCheckInterval: 10,
+        groupedCheckInterval: 15,
 
         timeout: null,
+        groupedTimeout: null,
 
         popupNotificationsData: null,
 
@@ -58,6 +60,10 @@ define('views/notification/badge', ['view'], function (Dep) {
                     clearTimeout(this.timeout);
                 }
 
+                if (this.groupedTimeout) {
+                    clearTimeout(this.groupedTimeout);
+                }
+
                 for (let name in this.popupTimeouts) {
                     clearTimeout(this.popupTimeouts[name]);
                 }
@@ -68,6 +74,9 @@ define('views/notification/badge', ['view'], function (Dep) {
 
             this.notificationsCheckInterval = this.getConfig().get('notificationsCheckInterval') ||
                 this.notificationsCheckInterval;
+
+            this.groupedCheckInterval = this.getConfig().get('popupNotificationsCheckInterval') ||
+                this.groupedCheckInterval;
 
             this.lastId = 0;
             this.shownNotificationIds = [];
@@ -80,10 +89,10 @@ define('views/notification/badge', ['view'], function (Dep) {
 
             window.addEventListener('storage', e => {
                 if (e.key === 'messageClosePopupNotificationId') {
-                    var id = localStorage.getItem('messageClosePopupNotificationId');
+                    let id = localStorage.getItem('messageClosePopupNotificationId');
 
                     if (id) {
-                        var key = 'popup-' + id;
+                        let key = 'popup-' + id;
 
                         if (this.hasView(key)) {
                             this.markPopupRemoved(id);
@@ -105,7 +114,6 @@ define('views/notification/badge', ['view'], function (Dep) {
 
         afterRender: function () {
             this.$badge = this.$el.find('.notifications-button');
-            this.$icon = this.$el.find('.notifications-button .icon');
             this.$number = this.$el.find('.number-badge');
 
             this.runCheckUpdates(true);
@@ -119,14 +127,16 @@ define('views/notification/badge', ['view'], function (Dep) {
                     .appendTo('body');
             }
 
-            var popupNotificationsData = this.popupNotificationsData =
+            let popupNotificationsData = this.popupNotificationsData =
                 this.getMetadata().get('app.popupNotifications') || {};
 
-            for (var name in popupNotificationsData) {
+            for (let name in popupNotificationsData) {
                 this.checkPopupNotifications(name);
             }
 
-            this.checkGroupedPopupNotifications();
+            if (this.hasGroupedPopupNotifications()) {
+                this.checkGroupedPopupNotifications();
+            }
         },
 
         playSound: function () {
@@ -186,6 +196,8 @@ define('views/notification/badge', ['view'], function (Dep) {
             ) {
                 return true;
             }
+
+            return false;
         },
 
         checkUpdates: function (isFirstCheck) {
@@ -197,7 +209,7 @@ define('views/notification/badge', ['view'], function (Dep) {
                 .getRequest('Notification/action/notReadCount')
                 .then(count => {
                     if (!isFirstCheck && count > this.unreadCount) {
-                        var messageBlockPlayNotificationSound =
+                        let messageBlockPlayNotificationSound =
                             localStorage.getItem('messageBlockPlayNotificationSound');
 
                         if (!messageBlockPlayNotificationSound) {
@@ -240,45 +252,57 @@ define('views/notification/badge', ['view'], function (Dep) {
             );
         },
 
-        checkGroupedPopupNotifications: function () {
-            var toCheck = false;
-
-            for (var name in this.popupNotificationsData) {
-                var data = this.popupNotificationsData[name] || {};
+        /**
+         * @private
+         * @return {boolean}
+         */
+        hasGroupedPopupNotifications: function () {
+            for (let name in this.popupNotificationsData) {
+                let data = this.popupNotificationsData[name] || {};
 
                 if (!data.grouped) {
                     continue;
                 }
 
                 if (data.portalDisabled && this.getUser().isPortal()) {
-                    return;
+                    continue;
                 }
 
-                toCheck = true;
+                return true;
             }
 
-            if (!toCheck) {
-                return;
+            return false;
+        },
+
+        /**
+         * @private
+         */
+        checkGroupedPopupNotifications: function () {
+            if (!this.checkBypass()) {
+                Espo.Ajax.getRequest('PopupNotification/action/grouped')
+                    .then(result => {
+                        for (let type in result) {
+                            let list = result[type];
+
+                            list.forEach(item => this.showPopupNotification(type, item));
+                        }
+                    });
             }
 
-            Espo.Ajax.getRequest('PopupNotification/action/grouped')
-                .then(result => {
-                    for (const type in result) {
-                        const list = result[type];
-
-                        list.forEach(item => this.showPopupNotification(type, item));
-                    }
-                });
+            this.groupedTimeout = setTimeout(
+                () => this.checkGroupedPopupNotifications(),
+                this.groupedCheckInterval * 1000
+            );
         },
 
         checkPopupNotifications: function (name, isNotFirstCheck) {
-            var data = this.popupNotificationsData[name] || {};
+            let data = this.popupNotificationsData[name] || {};
 
-            var url = data.url;
-            var interval = data.interval;
-            var disabled = data.disabled || false;
+            let url = data.url;
+            let interval = data.interval;
+            let disabled = data.disabled || false;
 
-            var isFirstCheck = !isNotFirstCheck;
+            let isFirstCheck = !isNotFirstCheck;
 
             if (disabled) {
                 return;
@@ -288,10 +312,10 @@ define('views/notification/badge', ['view'], function (Dep) {
                 return;
             }
 
-            var useWebSocket = this.useWebSocket && data.useWebSocket;
+            let useWebSocket = this.useWebSocket && data.useWebSocket;
 
             if (useWebSocket) {
-                var category = 'popupNotifications.' + (data.webSocketCategory || name);
+                let category = 'popupNotifications.' + (data.webSocketCategory || name);
 
                 this.getHelper().webSocketManager.subscribe(category, (c, response) => {
                     if (!response.list) {
@@ -356,19 +380,19 @@ define('views/notification/badge', ['view'], function (Dep) {
         },
 
         showPopupNotification: function (name, data, isNotFirstCheck) {
-            var view = this.popupNotificationsData[name].view;
+            let view = this.popupNotificationsData[name].view;
 
             if (!view) {
                 return;
             }
 
-            var id = data.id || null;
+            let id = data.id || null;
 
             if (id) {
                 id = name + '_' + id;
 
                 if (~this.shownNotificationIds.indexOf(id)) {
-                    var notificationView = this.getView('popup-' + id);
+                    let notificationView = this.getView('popup-' + id);
 
                     if (notificationView) {
                         notificationView.trigger('update-data', data.data);
@@ -406,7 +430,7 @@ define('views/notification/badge', ['view'], function (Dep) {
         },
 
         markPopupRemoved: function (id) {
-            var index = this.shownNotificationIds.indexOf(id);
+            let index = this.shownNotificationIds.indexOf(id);
 
             if (index > -1) {
                 this.shownNotificationIds.splice(index, 1);
@@ -437,7 +461,7 @@ define('views/notification/badge', ['view'], function (Dep) {
         showNotifications: function () {
             this.closeNotifications();
 
-            var $container = $('<div>').attr('id', 'notifications-panel');
+            let $container = $('<div>').attr('id', 'notifications-panel');
 
             $container.appendTo(this.$el.find('.notifications-panel-container'));
 

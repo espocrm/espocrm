@@ -133,6 +133,7 @@ return [
     'emailNotificationsDelay' => 30,
     'emailMessageMaxSize' => 10,
     'notificationsCheckInterval' => 10,
+    'popupNotificationsCheckInterval' => 15,
     'maxEmailAccountCount' => 2,
     'followCreatedEntities' => false,
     'b2cMode' => false,

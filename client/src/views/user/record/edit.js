@@ -192,6 +192,16 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
                     });
                 }
 
+                if (this.model.isAdmin() || this.model.isRegular()) {
+                    layout.push({
+                        "label": "Misc",
+                        "name": "misc",
+                        "rows": [
+                            [{"name": "workingTimeCalendar"}, false]
+                        ]
+                    });
+                }
+
                 if (this.type == 'edit' && this.getUser().isAdmin() && !this.model.isApi()) {
                     layout.push({
                         label: 'Password',
