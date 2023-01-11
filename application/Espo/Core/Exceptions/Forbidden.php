@@ -29,13 +29,14 @@
 
 namespace Espo\Core\Exceptions;
 
+use Espo\Core\Utils\Log;
 use Throwable;
 use Exception;
 
 /**
  * A forbidden exception. Main purpose is for the 403 Forbidden HTTP error.
  */
-class Forbidden extends Exception implements HasBody
+class Forbidden extends Exception implements HasBody, HasLogLevel
 {
     /** @var int */
     protected $code = 403;
@@ -61,5 +62,10 @@ class Forbidden extends Exception implements HasBody
     public function getBody(): ?string
     {
         return $this->body;
+    }
+
+    public function getLogLevel(): string
+    {
+        return Log::LEVEL_WARNING;
     }
 }

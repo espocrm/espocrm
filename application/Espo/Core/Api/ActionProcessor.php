@@ -30,6 +30,7 @@
 namespace Espo\Core\Api;
 
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\ClassFinder;
 use Espo\Core\Utils\Json;
@@ -80,7 +81,7 @@ class ActionProcessor
             $actionMethodName;
 
         if (!method_exists($controller, $primaryActionMethodName)) {
-            throw new NotFound(
+            throw new NotFoundSilent(
                 "Action {$requestMethod} '{$actionName}' does not exist in controller '{$controllerName}'.");
         }
 

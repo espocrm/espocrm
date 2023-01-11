@@ -29,13 +29,14 @@
 
 namespace Espo\Core\Exceptions;
 
+use Espo\Core\Utils\Log;
 use Throwable;
 use Exception;
 
 /**
  * A bad request exception. Main purpose is for the 400 Bad Request HTTP error.
  */
-class BadRequest extends Exception implements HasBody
+class BadRequest extends Exception implements HasBody, HasLogLevel
 {
     /** @var int */
     protected $code = 400;
@@ -60,5 +61,10 @@ class BadRequest extends Exception implements HasBody
     public function getBody(): ?string
     {
         return $this->body;
+    }
+
+    public function getLogLevel(): string
+    {
+        return Log::LEVEL_WARNING;
     }
 }
