@@ -35,9 +35,22 @@ define('views/notification/badge', ['view'], function (Dep) {
         notificationsCheckInterval: 10,
         groupedCheckInterval: 15,
 
+        /** @private */
+        useWebSocket: false,
+
         timeout: null,
         groupedTimeout: null,
 
+        /**
+         * @type {{
+         *     portalDisabled?: boolean,
+         *     grouped?: boolean,
+         *     disabled?: boolean,
+         *     interval?: Number,
+         *     url?: string,
+         *     useWebSocket?: boolean,
+         * }|null}
+         */
         popupNotificationsData: null,
 
         soundPath: 'client/sounds/pop_cork',
@@ -289,6 +302,10 @@ define('views/notification/badge', ['view'], function (Dep) {
                     });
             }
 
+            if (this.useWebSocket) {
+                return;
+            }
+
             this.groupedTimeout = setTimeout(
                 () => this.checkGroupedPopupNotifications(),
                 this.groupedCheckInterval * 1000
@@ -301,8 +318,6 @@ define('views/notification/badge', ['view'], function (Dep) {
             let url = data.url;
             let interval = data.interval;
             let disabled = data.disabled || false;
-
-            let isFirstCheck = !isNotFirstCheck;
 
             if (disabled) {
                 return;
@@ -328,16 +343,7 @@ define('views/notification/badge', ['view'], function (Dep) {
                 });
             }
 
-            if (data.grouped && interval && !useWebSocket && isFirstCheck) {
-                this.popupTimeouts[name] = setTimeout(
-                    () => this.checkPopupNotifications(name, true),
-                    interval * 1000
-                );
-
-                return;
-            }
-
-            if (data.grouped && isFirstCheck) {
+            if (data.grouped) {
                 return;
             }
 
