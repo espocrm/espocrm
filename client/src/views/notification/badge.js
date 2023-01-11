@@ -33,8 +33,10 @@ define('views/notification/badge', ['view'], function (Dep) {
         template: 'notification/badge',
 
         notificationsCheckInterval: 10,
+        groupedCheckInterval: 15,
 
         timeout: null,
+        groupedTimeout: null,
 
         popupNotificationsData: null,
 
@@ -58,6 +60,10 @@ define('views/notification/badge', ['view'], function (Dep) {
                     clearTimeout(this.timeout);
                 }
 
+                if (this.groupedTimeout) {
+                    clearTimeout(this.groupedTimeout);
+                }
+
                 for (let name in this.popupTimeouts) {
                     clearTimeout(this.popupTimeouts[name]);
                 }
@@ -68,6 +74,9 @@ define('views/notification/badge', ['view'], function (Dep) {
 
             this.notificationsCheckInterval = this.getConfig().get('notificationsCheckInterval') ||
                 this.notificationsCheckInterval;
+
+            this.groupedCheckInterval = this.getConfig().get('popupNotificationsCheckInterval') ||
+                this.groupedCheckInterval;
 
             this.lastId = 0;
             this.shownNotificationIds = [];
@@ -125,7 +134,9 @@ define('views/notification/badge', ['view'], function (Dep) {
                 this.checkPopupNotifications(name);
             }
 
-            this.checkGroupedPopupNotifications();
+            if (this.hasGroupedPopupNotifications()) {
+                this.checkGroupedPopupNotifications();
+            }
         },
 
         playSound: function () {
@@ -239,9 +250,11 @@ define('views/notification/badge', ['view'], function (Dep) {
             );
         },
 
-        checkGroupedPopupNotifications: function () {
-            let toCheck = false;
-
+        /**
+         * @private
+         * @return {boolean}
+         */
+        hasGroupedPopupNotifications: function () {
             for (let name in this.popupNotificationsData) {
                 let data = this.popupNotificationsData[name] || {};
 
@@ -250,16 +263,19 @@ define('views/notification/badge', ['view'], function (Dep) {
                 }
 
                 if (data.portalDisabled && this.getUser().isPortal()) {
-                    return;
+                    continue;
                 }
 
-                toCheck = true;
+                return true;
             }
 
-            if (!toCheck) {
-                return;
-            }
+            return false;
+        },
 
+        /**
+         * @private
+         */
+        checkGroupedPopupNotifications: function () {
             Espo.Ajax.getRequest('PopupNotification/action/grouped')
                 .then(result => {
                     for (let type in result) {
@@ -268,6 +284,11 @@ define('views/notification/badge', ['view'], function (Dep) {
                         list.forEach(item => this.showPopupNotification(type, item));
                     }
                 });
+
+            this.groupedTimeout = setTimeout(
+                () => this.checkGroupedPopupNotifications(),
+                this.groupedCheckInterval * 1000
+            );
         },
 
         checkPopupNotifications: function (name, isNotFirstCheck) {
