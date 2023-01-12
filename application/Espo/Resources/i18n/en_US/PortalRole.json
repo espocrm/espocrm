@@ -1,7 +1,9 @@
 {
     "fields": {
         "exportPermission": "Export Permission",
-        "massUpdatePermission": "Mass Update Permission"
+        "massUpdatePermission": "Mass Update Permission",
+        "data": "Data",
+        "fieldData": "Field Data"
     },
     "links": {
         "users": "Users"

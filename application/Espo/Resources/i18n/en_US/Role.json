@@ -9,7 +9,9 @@
         "exportPermission": "Export Permission",
         "massUpdatePermission": "Mass Update Permission",
         "followerManagementPermission": "Follower Management Permission",
-        "dataPrivacyPermission": "Data Privacy Permission"
+        "dataPrivacyPermission": "Data Privacy Permission",
+        "data": "Data",
+        "fieldData": "Field Data"
     },
     "links": {
         "users": "Users",
