@@ -73,11 +73,14 @@ class Service
                 return false;
             }
 
-            if (!($item['serviceName'] ?? null)) {
+            if ($item['disabled'] ?? false) {
                 return false;
             }
 
-            if (!($item['methodName'] ?? null)) {
+            if (
+                empty($item['providerClassName']) &&
+                (empty($item['serviceName']) || empty($item['methodName']))
+            ) {
                 return false;
             }
 
