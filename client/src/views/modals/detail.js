@@ -282,9 +282,9 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
             }
 
             if (this.getAcl().check(this.model, 'delete')) {
-                this.showButton('remove');
+                this.showActionItem('remove');
             } else {
-                this.hideButton('remove');
+                this.hideActionItem('remove');
             }
         },
 
