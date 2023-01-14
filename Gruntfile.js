@@ -21,10 +21,10 @@
 
 /**
 * * `grunt` - full build;
-* * `grunt dev` - build only items needed for development (takes less time);
+* * `grunt dev` - build for development;
 * * `grunt offline` - build but skip *composer install*;
 * * `grunt internal` - build only libs and css;
-* * `grunt release` - full build plus upgrade packages`;
+* * `grunt release` - full build zipped with upgrade packages`;
 * * `grunt test` - build for tests running;
 * * `grunt run-tests` - build and run unit and integration tests.
 */
@@ -503,7 +503,8 @@ module.exports = grunt => {
 
     grunt.registerTask('dev', [
         'composer-install-dev',
-        'less',
+        'npm-install',
+        'internal',
     ]);
 
     grunt.registerTask('test', [
