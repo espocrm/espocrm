@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "type": "Tipas",
+    "validationFailures": "Patvirtinimo nesėkmės",
+    "import": "Importas",
+    "rowIndex": "Eilutės indeksas",
+    "exportRowIndex": "Eksporto eilučių indeksas",
+    "lineNumber": "Linijos numeris",
+    "exportLineNumber": "Eksporto eilutės numeris",
+    "row": "Eilutė"
+  },
+  "options": {
+    "type": {
+      "Validation": "Patvirtinimas",
+      "Access": "Prieiga",
+      "Not-Found": "Nerastas"
+    }
+  },
+  "tooltips": {
+    "lineNumber": "Pradinio CSV eilutės numeris.",
+    "exportLineNumber": "Eksporto CSV eilutės numeris."
+  }
+}

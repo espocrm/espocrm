@@ -22,7 +22,7 @@
     "users": "Utilizadores",
     "portalRoles": "Perfis",
     "notes": "Notas",
-    "layoutSet": "Conjutnto de layouts"
+    "layoutSet": "Conjunto de layouts"
   },
   "tooltips": {
     "portalRoles": "As funções de portal especificadas serão aplicadas a todos os utilizadores deste portal.",

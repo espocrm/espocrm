@@ -1,0 +1,27 @@
+{
+  "labels": {
+    "Create WorkingTimeRange": "Izveidot diapazonu",
+    "Calendars": "Kalendāri"
+  },
+  "fields": {
+    "timeRanges": "Grafiks",
+    "dateStart": "Datums Sākums",
+    "dateEnd": "Datums Beigu datums",
+    "type": "Tips",
+    "calendars": "Kalendāri",
+    "users": "Lietotāji"
+  },
+  "links": {
+    "calendars": "Kalendāri",
+    "users": "Lietotāji"
+  },
+  "options": {
+    "type": {
+      "Non-working": "Nestrādājošs",
+      "Working": "Darbs"
+    }
+  },
+  "presetFilters": {
+    "actual": "Faktiskais"
+  }
+}

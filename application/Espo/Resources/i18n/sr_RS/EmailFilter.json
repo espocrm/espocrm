@@ -16,7 +16,6 @@
     "from": "Poruke se šalju sa navedene adrese. Ostaviti prazno ako nije potrebno. Možete koristiti džoker *.",
     "to": "Poruke se šalju na navedenu adresu. Ostaviti prazno ako nije potrebno. Možete koristiti džoker *.",
     "name": "Dajte filteru opisno ime.",
-    "subject": "Koristite džoker *:\n\ntext* - pošinje sa text,\n*text* - sadrži text,\n*text - završava se sa text.",
     "bodyContains": "Telo e-poruke sadrži bilo koju od navedenih reči ili fraza.",
     "isGlobal": "Primenjuje ovaj filter na svim email porukama koje dolaze u sistem."
   },

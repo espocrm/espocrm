@@ -13,7 +13,7 @@
     "Show records": "Mostrar registos",
     "Remove Duplicates": "Remover duplicados",
     "importedCount": "Importado (contagem)",
-    "duplicateCount": "Duplciados (Contagem)",
+    "duplicateCount": "Duplicados (Contagem)",
     "updatedCount": "Atualizado (Contagem)",
     "Create Only": "Apenas criar",
     "Create and Update": "Criar e atualizar",
@@ -51,7 +51,7 @@
     "New Import": "Nova importação",
     "Import Results": "Importar Resultados",
     "Silent Mode": "Modo silencioso",
-    "New import with same params": "Novo import com os mesmos parametros",
+    "New import with same params": "Novo import com os mesmos parâmetros",
     "Run Manually": "Correr de forma manual",
     "Export": "Exportar"
   },
@@ -85,8 +85,8 @@
     "personNameFormat": {
       "f l": "Primeiro Último",
       "l f": "Último Primeiro",
-      "f m l": "Primeio Meio Último",
-      "l f m": "Úlitmo Primeiro Meio",
+      "f m l": "Primeiro Meio Último",
+      "l f m": "Último Primeiro Meio",
       "l, f": "Último, Primeiro"
     }
   },

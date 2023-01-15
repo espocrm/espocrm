@@ -10,7 +10,11 @@
     "isLarge": "Didelis šrifto dydis",
     "dynamicLogicVisible": "Sąlygos, dėl kurių skydas matomas",
     "hidden": "Paslėptas",
-    "dynamicLogicStyled": "Taikomas sąlygų sudarymo stilius"
+    "dynamicLogicStyled": "Taikomas sąlygų sudarymo stilius",
+    "widthPx": "Plotis (px)",
+    "noLabel": "Be etiketės",
+    "tabLabel": "Skirtuko etiketė",
+    "tabBreak": "Skirtukų pertraukiklis"
   },
   "options": {
     "align": {
@@ -36,7 +40,12 @@
     "sticked": "Plokštė bus priklijuota prie aukščiau esančios plokštės. Tarp plokščių nėra tarpo.",
     "panelStyle": "Skydelio spalva.",
     "dynamicLogicVisible": "Jei nustatyta, skydelis bus paslėptas, nebent bus įvykdyta sąlyga.",
-    "dynamicLogicStyled": "Spalva bus taikoma, jei bus įvykdyta tam tikra sąlyga . Spalva apibrėžiama parametru *Style*."
+    "dynamicLogicStyled": "Spalva bus taikoma, jei bus įvykdyta tam tikra sąlyga . Spalva apibrėžiama parametru *Style*.",
+    "tabBreak": "Atskiras skirtukas skydeliui ir visiems tolesniems skydeliams iki kito skirtuko lūžio.",
+    "noLabel": "Nerodykite stulpelio etiketės antraštėje.",
+    "notSortable": "Išjungiama galimybė rūšiuoti pagal stulpelį.",
+    "width": "Stulpelio plotis procentais. Rekomenduojama turėti vieną stulpelį, kurio plotis nenustatytas, paprastai tai būna *Vardas* laukas.",
+    "widthPx": "Stulpelio plotis pikseliais. Veikia tik tuo atveju, jei nenustatyta (%) reikšmė. Nustato fiksuotą stulpelio plotį."
   },
   "messages": {
     "cantBeEmpty": "Maketas negali būti tuščias.",

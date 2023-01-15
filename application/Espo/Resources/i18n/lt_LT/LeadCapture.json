@@ -20,7 +20,8 @@
     "duplicateCheck": "Dublikatų tikrinimas",
     "skipOptInConfirmationIfSubscribed": "Praleisti patvirtinimą, jei vadovas jau yra tiksliniame sąraše",
     "smtpAccount": "SMTP paskyra",
-    "inboundEmail": "Grupės el. pašto paskyra"
+    "inboundEmail": "Grupės el. pašto paskyra",
+    "exampleRequestHeaders": "Antraštės"
   },
   "links": {
     "targetList": "Tikslinis sąrašas",

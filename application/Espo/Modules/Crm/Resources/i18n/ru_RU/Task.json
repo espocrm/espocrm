@@ -19,7 +19,8 @@
   "links": {
     "attachments": "Вложения",
     "account": "Контрагент",
-    "contact": "Контакт"
+    "contact": "Контакт",
+    "email": "Электронная почта"
   },
   "options": {
     "status": {
@@ -47,5 +48,8 @@
     "todays": "На сегодня",
     "overdue": "Просроченные",
     "deferred": "Отложенные"
+  },
+  "nameOptions": {
+    "replyToEmail": "Ответить на электронное письмо"
   }
 }

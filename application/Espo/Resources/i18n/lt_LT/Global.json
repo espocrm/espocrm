@@ -51,7 +51,11 @@
     "DashboardTemplate": "Prietaisų skydelio šablonas",
     "Currency": "Valiuta",
     "LayoutSet": "Maketų rinkinys",
-    "Mass Action": "Masiniai veiksmai"
+    "Mass Action": "Masiniai veiksmai",
+    "Note": "Pastaba",
+    "ImportError": "Importo klaida",
+    "WorkingTimeCalendar": "Darbo laiko kalendorius",
+    "WorkingTimeRange": "Darbo laiko diapazonas"
   },
   "scopeNamesPlural": {
     "Email": "El. laiškai",
@@ -94,7 +98,11 @@
     "EmailAddress": "El. pašto adresai",
     "PhoneNumber": "Telefono numeriai",
     "Currency": "Valiuta",
-    "LayoutSet": "Maketų rinkiniai"
+    "LayoutSet": "Maketų rinkiniai",
+    "Note": "Pastabos",
+    "ImportError": "Importo klaidos",
+    "WorkingTimeCalendar": "Darbo laiko kalendoriai",
+    "WorkingTimeRange": "Darbo laiko intervalai"
   },
   "labels": {
     "Misc": "Įvairūs",
@@ -262,7 +270,12 @@
     "Field": "Laukas",
     "Resolution": "Rezoliucija",
     "Resolve Conflict": "Išspręskite konfliktą",
-    "Download": "Atsisiųsti"
+    "Download": "Atsisiųsti",
+    "Sort": "Rūšiuoti",
+    "Log in": "Prisijungti",
+    "Log in as": "Prisijunkite kaip",
+    "Sign in": "Prisijunkite",
+    "Global Search": "Visuotinė paieška"
   },
   "messages": {
     "pleaseWait": "Prašome palaukti...",
@@ -328,7 +341,22 @@
     "maintenanceMode": "Šiuo metu programa veikia techninės priežiūros režimu. Prieigą turi tik administratoriaus naudotojai.\n\nPriežiūros režimą galima išjungti adresu Administravimas → Nustatymai.",
     "fieldInvalid": "{field} yra negaliojantis",
     "resolveSaveConflict": "Įrašas buvo pakeistas. Prieš išsaugodami įrašą turite išspręsti konfliktą.",
-    "massActionProcessed": "Masinis veiksmas buvo apdorotas."
+    "massActionProcessed": "Masinis veiksmas buvo apdorotas.",
+    "fieldUrlExceedsMaxLength": "Užkoduotas URL viršija maksimalų ilgį {maxLength}",
+    "fieldNotMatchingPattern": "{field} neatitinka šablono `{pattern}`",
+    "fieldNotMatchingPattern$noBadCharacters": "{lauke} yra neleistinų simbolių",
+    "fieldNotMatchingPattern$noAsciiSpecialCharacters": "{field} neturėtų būti ASCII specialiųjų ženklų",
+    "fieldNotMatchingPattern$latinLetters": "{field} gali būti tik lotyniškos raidės",
+    "fieldNotMatchingPattern$latinLettersDigits": "{field} gali būti tik lotyniškos raidės ir skaitmenys",
+    "fieldNotMatchingPattern$latinLettersDigitsWhitespace": "{field} gali būti tik lotyniškos raidės, skaitmenys ir baltosios raidės",
+    "fieldNotMatchingPattern$latinLettersWhitespace": "{field} gali būti tik lotyniškos raidės ir baltosios raidės",
+    "fieldNotMatchingPattern$digits": "{polyje} gali būti tik skaitmenys",
+    "fieldPhoneInvalidCharacters": "Leidžiami tik skaitmenys, lotyniškos raidės ir simboliai `-+_@:#().`",
+    "arrayItemMaxLength": "Elementas neturėtų būti ilgesnis nei {max} simbolių",
+    "validationFailure": "Galinio patvirtinimo klaida.\n\nLaukas: `{field}`\nPatvirtinimas: `{type}`",
+    "confirmAppRefresh": "Paraiška buvo atnaujinta. Rekomenduojama atnaujinti puslapį, kad jis veiktų tinkamai.",
+    "error404": "Jūsų prašomas url adresas negali būti tvarkomas.",
+    "error403": "Jūs neturite prieigos prie šios srities."
   },
   "boolFilters": {
     "onlyMy": "Tik mano",
@@ -726,6 +754,25 @@
   },
   "themes": {
     "Dark": "Tamsus",
-    "Violet": "Violetinė"
+    "Violet": "Violetinė",
+    "Glass": "Stiklas"
+  },
+  "themeNavbars": {
+    "side": "Šoninė naršymo juosta",
+    "top": "Viršutinė naršymo juosta"
+  },
+  "fieldValidations": {
+    "required": "Privaloma",
+    "maxCount": "Maksimalus skaičius",
+    "maxLength": "Maksimalus ilgis",
+    "pattern": "Pavyzdžių atitikimas",
+    "emailAddress": "Galiojantis el. pašto adresas",
+    "phoneNumber": "Galiojantis telefono numeris",
+    "array": "Masyvas",
+    "arrayOfString": "Styginių masyvas",
+    "valid": "Galioja",
+    "noEmptyString": "Nėra tuščios eilutės",
+    "max": "Didžiausia vertė",
+    "min": "Mažiausia vertė"
   }
 }

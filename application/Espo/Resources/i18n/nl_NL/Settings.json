@@ -130,7 +130,26 @@
     "auth2FAForced": "Voorkom blootstelling van e-mail adres op wachtwoord herstel formulier",
     "smsProvider": "SMS-aanbieder",
     "outboundSmsFromNumber": "SMS van nummer",
-    "recordsPerPageSelect": "Records per pagina (Selecteer)"
+    "recordsPerPageSelect": "Records per pagina (Selecteer)",
+    "attachmentUploadMaxSize": "Upload Max. grootte (Mb)",
+    "attachmentUploadChunkSize": "Upload Chunk Grootte (Mb)",
+    "workingTimeCalendar": "Werktijd Kalender",
+    "oidcClientId": "OIDC Klant ID",
+    "oidcClientSecret": "OIDC cliënt geheim",
+    "oidcAuthorizationRedirectUri": "OIDC autorisatie omleiding URI",
+    "oidcAuthorizationEndpoint": "OIDC autorisatie eindpunt",
+    "oidcTokenEndpoint": "OIDC token eindpunt",
+    "oidcJwksEndpoint": "OIDC JSON Eindpunt websleutel instellen",
+    "oidcJwtSignatureAlgorithmList": "OIDC JWT toegestane handtekening algoritmen",
+    "oidcScopes": "OIDC scopes",
+    "oidcGroupClaim": "Claim van OIDC-groep",
+    "oidcCreateUser": "OIDC Creëer gebruiker",
+    "oidcUsernameClaim": "OIDC gebruikersnaam Claim",
+    "oidcTeams": "OIDC teams",
+    "oidcSync": "OIDC synchronisatie",
+    "oidcAllowRegularUserFallback": "OIDC fallback login toestaan voor gewone gebruikers",
+    "oidcAllowAdminUser": "OIDC Inlog OIDC toestaan voor admin-gebruikers",
+    "oidcLogoutUrl": "OIDC Uitlog URL"
   },
   "tooltips": {
     "recordsPerPage": "Aantal zichtbare records in lijsten.",
@@ -203,7 +222,16 @@
     "outboundEmailFromAddress": "Het e-mailadres van het systeem.",
     "smtpServer": "Indien leeg, dan wordt de e-mailaccount van de groep met het corresponderende e-mailadres gebruikt.",
     "busyRangesEntityList": "Waarmee rekening wordt gehouden bij het tonen van bezette tijden in planner en tijdlijn.",
-    "recordsPerPageSelect": "Aantal records dat aanvankelijk wordt weergegeven bij het selecteren van records."
+    "recordsPerPageSelect": "Aantal records dat aanvankelijk wordt weergegeven bij het selecteren van records.",
+    "workingTimeCalendar": "Een werktijd kalender die standaard op alle gebruikers wordt toegepast.",
+    "oidcGroupClaim": "Een claim naar de gebruiker voor team mapping.",
+    "oidcFallback": "Aanmelding met gebruikersnaam/wachtwoord toestaan.",
+    "oidcCreateUser": "Maak een nieuwe gebruiker aan in Espo als er geen overeenkomende gebruiker is gevonden.",
+    "oidcSync": "Gebruikersgegevens synchroniseren (bij elke aanmelding).",
+    "oidcSyncTeams": "Gebruikers teams synchroniseren (bij elke aanmelding).",
+    "oidcUsernameClaim": "Een claim om te gebruiken voor een gebruikersnaam (voor het matchen en aanmaken van gebruikers).",
+    "oidcTeams": "Espo-teams gemapt tegen groepen/teams/rollen van de identity provider. Teams met een lege mapping waarde worden altijd toegewezen aan een gebruiker (bij het aanmaken of synchroniseren).",
+    "oidcLogoutUrl": "Een URL waarnaar de browser zal doorverwijzen na het afmelden bij Espo. Bedoeld voor het wissen van de sessiegegevens in de browser en het afmelden aan de providerzijde. Meestal bevat de URL een redirect-URL parameter, om terug te keren naar Espo.\n\nBeschikbare plaatshouders:\n* `{siteUrl}`\n* `{clientId}`"
   },
   "labels": {
     "System": "Systeem",
@@ -222,7 +250,9 @@
     "Misc": "Overig",
     "Passwords": "Wachtwoorden",
     "2-Factor Authentication": "2-Factor authenticatie",
-    "Group Tab": "Tabblad Groep"
+    "Group Tab": "Tabblad Groep",
+    "Attachments": "Bijlagen",
+    "IdP Group": "IdP Groep"
   },
   "messages": {
     "ldapTestConnection": "De verbinding is succesvol tot stand gebracht."

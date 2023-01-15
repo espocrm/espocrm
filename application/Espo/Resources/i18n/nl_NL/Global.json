@@ -47,7 +47,11 @@
     "DashboardTemplate": "Dashboard sjabloon",
     "Currency": "Valuta",
     "LayoutSet": "Lay-out set",
-    "Mass Action": "Massa-actie"
+    "Mass Action": "Massa-actie",
+    "Note": "Opmerking",
+    "ImportError": "Importfout",
+    "WorkingTimeCalendar": "Werktijd Kalender",
+    "WorkingTimeRange": "Werktijdbereik"
   },
   "scopeNamesPlural": {
     "Email": "E-mails",
@@ -86,7 +90,11 @@
     "EmailAddress": "E-mailadressen",
     "PhoneNumber": "Telefoonnummers",
     "Currency": "Valuta",
-    "LayoutSet": "Lay-out sets"
+    "LayoutSet": "Lay-out sets",
+    "Note": "Opmerkingen",
+    "ImportError": "Importfouten",
+    "WorkingTimeCalendar": "Werktijd kalenders",
+    "WorkingTimeRange": "Werktijdbereiken"
   },
   "labels": {
     "Misc": "Overig",
@@ -240,7 +248,12 @@
     "Save & New": "Opslaan & Nieuw",
     "Field": "Veld",
     "Resolution": "Resolutie",
-    "Resolve Conflict": "Conflict oplossen"
+    "Resolve Conflict": "Conflict oplossen",
+    "Sort": "Sorteer",
+    "Log in": "Inloggen",
+    "Log in as": "Log in als",
+    "Sign in": "Aanmelden",
+    "Global Search": "Uitgebreid zoeken"
   },
   "messages": {
     "pleaseWait": "Even geduld...",
@@ -306,7 +319,22 @@
     "maintenanceMode": "De applicatie staat momenteel in onderhoudsmodus. Alleen beheerders hebben toegang.\n\nDe onderhoudsmodus kan worden uitgeschakeld via Beheer → Instellingen.",
     "fieldInvalid": "{field} is ongeldig",
     "resolveSaveConflict": "Het record is gewijzigd. U moet het conflict oplossen voordat u het record kunt opslaan.",
-    "massActionProcessed": "De massa-actie is verwerkt."
+    "massActionProcessed": "De massa-actie is verwerkt.",
+    "fieldUrlExceedsMaxLength": "Gecodeerde URL overschrijdt maximale lengte van {maxLength}",
+    "fieldNotMatchingPattern": "{field} komt niet overeen met het patroon `{pattern}`",
+    "fieldNotMatchingPattern$noBadCharacters": "{field} bevat niet toegestane tekens",
+    "fieldNotMatchingPattern$noAsciiSpecialCharacters": "{field} mag geen speciale ASCII-tekens bevatten",
+    "fieldNotMatchingPattern$latinLetters": "{field} kan alleen latijnse letters bevatten",
+    "fieldNotMatchingPattern$latinLettersDigits": "{field} kan alleen latijnse letters en cijfers bevatten",
+    "fieldNotMatchingPattern$latinLettersDigitsWhitespace": "{field} kan alleen Latijnse letters, cijfers en spaties bevatten",
+    "fieldNotMatchingPattern$latinLettersWhitespace": "{field} kan alleen latijnse letters en spaties bevatten",
+    "fieldNotMatchingPattern$digits": "{field} kan alleen cijfers bevatten",
+    "fieldPhoneInvalidCharacters": "Alleen cijfers, Latijnse letters en tekens `-+_@:#().` zijn toegestaan",
+    "arrayItemMaxLength": "Item mag niet langer zijn dan {max} tekens",
+    "validationFailure": "Backend validatie fout.\n\nVeld: `{field}`\nValidatie: `{type}`",
+    "confirmAppRefresh": "De applicatie is bijgewerkt. Het wordt aanbevolen de pagina te verversen om een goede werking te garanderen.",
+    "error404": "De door u opgevraagde url kan niet worden verwerkt.",
+    "error403": "Je hebt geen toegang tot dit gedeelte."
   },
   "boolFilters": {
     "onlyMy": "Alleen mijn",
@@ -693,5 +721,23 @@
   },
   "themes": {
     "Dark": "Donker"
+  },
+  "themeNavbars": {
+    "side": "Navigatiebalk zijkant",
+    "top": "Navigatiebalk boven"
+  },
+  "fieldValidations": {
+    "required": "Vereist",
+    "maxCount": "Max. aantal",
+    "maxLength": "Max. lengte",
+    "pattern": "Patroonvergelijking",
+    "emailAddress": "Geldig e-mailadres",
+    "phoneNumber": "Geldig telefoonnummer",
+    "array": "Reeks",
+    "arrayOfString": "Reeks tekens",
+    "valid": "Geldig",
+    "noEmptyString": "Geen lege string",
+    "max": "Max. waarde",
+    "min": "Min. waarde"
   }
 }

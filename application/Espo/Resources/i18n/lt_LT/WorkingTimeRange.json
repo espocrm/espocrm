@@ -1,0 +1,27 @@
+{
+  "labels": {
+    "Create WorkingTimeRange": "Sukurti diapazoną",
+    "Calendars": "Kalendoriai"
+  },
+  "fields": {
+    "timeRanges": "Tvarkaraštis",
+    "dateStart": "Data Pradžia",
+    "dateEnd": "Data Pabaiga",
+    "type": "Tipas",
+    "calendars": "Kalendoriai",
+    "users": "Vartotojai"
+  },
+  "links": {
+    "calendars": "Kalendoriai",
+    "users": "Vartotojai"
+  },
+  "options": {
+    "type": {
+      "Non-working": "Neveikiantis",
+      "Working": "Dirbama"
+    }
+  },
+  "presetFilters": {
+    "actual": "Tikrasis"
+  }
+}

@@ -10,7 +10,8 @@
     "field": "Laukas",
     "sourceId": "Šaltinio ID",
     "storage": "Sandėliavimas",
-    "size": "Dydis (baitai)"
+    "size": "Dydis (baitai)",
+    "isBeingUploaded": "Įkeliama"
   },
   "options": {
     "role": {

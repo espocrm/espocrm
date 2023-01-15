@@ -12,13 +12,13 @@
     "emailTemplate": "Modelo de email",
     "inboundEmail": "Conta de email",
     "targetLists": "Públicos Alvo",
-    "excludingTargetLists": "Exluir dos Públicos Alvo",
+    "excludingTargetLists": "Excluir dos Públicos Alvo",
     "optOutEntirely": "Desativar totalmente",
     "smtpAccount": "Conta SMTP"
   },
   "links": {
     "targetLists": "Público Alvo",
-    "excludingTargetLists": "Exluir do Público Alvo",
+    "excludingTargetLists": "Excluir do Público Alvo",
     "queueItems": "Items da fila",
     "campaign": "Campanha",
     "emailTemplate": "Modelo de email",

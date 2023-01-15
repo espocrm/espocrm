@@ -75,7 +75,12 @@
     "Dashboard Templates": "Шаблоны панели виджетов",
     "Email Addresses": "Адреса эл. почты",
     "Phone Numbers": "Телефонные номера",
-    "Layout Sets": "Наборы макетов"
+    "Layout Sets": "Наборы макетов",
+    "Messaging": "Обмен сообщениями",
+    "Job Settings": "Параметры работы",
+    "Configuration Instructions": "Инструкции по настройке",
+    "Formula Sandbox": "Формула песочницы",
+    "Working Time Calendars": "Календари рабочего времени"
   },
   "layouts": {
     "list": "Список",
@@ -205,7 +210,12 @@
     "codeType": "Тип кода",
     "lastChar": "Последний знак",
     "listPreviewSize": "Предварительный просмотр в виде списка",
-    "onlyDefaultCurrency": "Только валюта по умолчанию"
+    "onlyDefaultCurrency": "Только валюта по умолчанию",
+    "dynamicLogicInvalid": "Условия, делающие поле недействительным",
+    "conversionDisabled": "Отключить преобразование",
+    "decimalPlaces": "Десятичные знаки",
+    "pattern": "Узор",
+    "globalRestrictions": "Глобальные ограничения"
   },
   "messages": {
     "selectEntityType": "Выберите тип объекта в левом меню.",
@@ -271,7 +281,11 @@
     "dashboardTemplates": "Применить панели виджетов для пользователей.",
     "phoneNumbers": "Все телефонные номера, которые хранятся в системе.",
     "emailAddresses": "Все адреса электронной почты хранятся в системе.",
-    "layoutSets": "Коллекции макетов, которые можно назначать командам и порталам."
+    "layoutSets": "Коллекции макетов, которые можно назначать командам и порталам.",
+    "jobsSettings": "Настройки обработки заданий. Задания выполняют задачи в фоновом режиме.",
+    "sms": "Настройки SMS.",
+    "formulaSandbox": "Написание и тестирование скриптов формул.",
+    "workingTimeCalendars": "График работы."
   },
   "options": {
     "previewSize": {
@@ -306,7 +320,8 @@
     "notePostNoParent": "Заметка о сообщении (без источника)",
     "noteStatus": "Заметка об обновлении статуса",
     "passwordChangeLink": "Ссылка для смены пароля",
-    "noteEmailReceived": "Заметка о полученном письме"
+    "noteEmailReceived": "Заметка о полученном письме",
+    "twoFactorCode": "Код 2FA"
   },
   "strings": {
     "rebuildRequired": "Требуется перестройка"
@@ -314,13 +329,14 @@
   "keywords": {
     "settings": "система",
     "userInterface": "пользовательский интерфейс, тема, вкладки, логотип, панель управления",
-    "authentication": "пароль",
     "scheduledJob": "Планировщик заданий, задание выполняемое по расписанию",
     "integrations": "гугл, карты, гугл карты",
     "authLog": "Журнал истории",
     "authTokens": "Журнал истории доступа",
     "entityManager": "набор записей, отношения, связь",
     "templateManager": "уведомления",
-    "jobs": "Планировщик заданий"
+    "jobs": "Планировщик заданий",
+    "authentication": "пароль, безопасность, ldap",
+    "labelManager": "язык, перевод"
   }
 }

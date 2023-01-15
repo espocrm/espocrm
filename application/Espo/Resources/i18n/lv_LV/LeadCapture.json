@@ -21,7 +21,8 @@
     "duplicateCheck": "Dublikātu pārbaude",
     "skipOptInConfirmationIfSubscribed": "Izlaist apstiprinājumu, ja līderis jau ir mērķa sarakstā",
     "smtpAccount": "SMTP konts",
-    "inboundEmail": "Grupas e-pasta konts"
+    "inboundEmail": "Grupas e-pasta konts",
+    "exampleRequestHeaders": "Virsraksti"
   },
   "links": {
     "targetList": "Mērķa adresātu saraksts",

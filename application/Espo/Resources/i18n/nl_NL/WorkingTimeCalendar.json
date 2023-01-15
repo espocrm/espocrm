@@ -1,0 +1,27 @@
+{
+  "labels": {
+    "Create WorkingTimeCalendar": "Kalender maken",
+    "Ranges": "Bereiken"
+  },
+  "fields": {
+    "timeZone": "Tijdzone",
+    "timeRanges": "Werkdag schema",
+    "weekday0": "Zon",
+    "weekday1": "Ma",
+    "weekday2": "Di",
+    "weekday3": "Woe",
+    "weekday4": "Do",
+    "weekday5": "Vr",
+    "weekday6": "Zat",
+    "weekday0TimeRanges": "Zon Schema",
+    "weekday1TimeRanges": "Ma Schema",
+    "weekday2TimeRanges": "Di Schema",
+    "weekday3TimeRanges": "Woe Schema",
+    "weekday4TimeRanges": "Do Schema",
+    "weekday5TimeRanges": "Vr Schema",
+    "weekday6TimeRanges": "Zat Schema"
+  },
+  "links": {
+    "ranges": "Bereiken"
+  }
+}

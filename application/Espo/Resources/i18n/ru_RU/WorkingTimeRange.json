@@ -1,0 +1,27 @@
+{
+  "labels": {
+    "Create WorkingTimeRange": "Создать диапазон",
+    "Calendars": "Календари"
+  },
+  "fields": {
+    "timeRanges": "Расписание",
+    "dateStart": "Дата начала",
+    "dateEnd": "Дата Окончание",
+    "type": "Тип",
+    "calendars": "Календари",
+    "users": "Пользователи"
+  },
+  "links": {
+    "calendars": "Календари",
+    "users": "Пользователи"
+  },
+  "options": {
+    "type": {
+      "Non-working": "Неработающий",
+      "Working": "Работа"
+    }
+  },
+  "presetFilters": {
+    "actual": "Фактический"
+  }
+}

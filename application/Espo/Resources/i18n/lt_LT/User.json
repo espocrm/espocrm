@@ -38,7 +38,8 @@
     "dashboardTemplate": "Prietaisų skydelio šablonas",
     "auth2FAEnable": "Įjungti 2 veiksnių autentiškumo nustatymą",
     "auth2FAMethod": "2FA metodas",
-    "auth2FATotpSecret": "2FA TOTP paslaptis"
+    "auth2FATotpSecret": "2FA TOTP paslaptis",
+    "workingTimeCalendar": "Darbo laiko kalendorius"
   },
   "links": {
     "teams": "Komandos",
@@ -52,7 +53,9 @@
     "tasks": "Užduotys",
     "defaultTeam": "Numatytoji komanda",
     "dashboardTemplate": "Prietaisų skydelio šablonas",
-    "userData": "Naudotojo duomenys"
+    "userData": "Naudotojo duomenys",
+    "workingTimeCalendar": "Darbo laiko kalendorius",
+    "workingTimeRanges": "Darbo laiko intervalai"
   },
   "labels": {
     "Create User": "Sukurti vartotoją",
@@ -78,7 +81,8 @@
     "Reset 2FA": "Iš naujo nustatyti 2FA",
     "Secret": "Paslaptis",
     "Send Password Change Link": "Siųsti slaptažodžio keitimo nuorodą",
-    "Send Code": "Siųsti kodą"
+    "Send Code": "Siųsti kodą",
+    "Login Link": "Prisijungimo nuoroda"
   },
   "tooltips": {
     "defaultTeam": "Visi šio naudotojo sukurti įrašai bus susiję su šia komanda pagal nutylėjimą.",
@@ -122,7 +126,9 @@
     "choose2FaEmailAddress": "Pasirinkite el. pašto adresą, kuris bus naudojamas 2FA. Labai rekomenduojama naudoti ne pagrindinį el. pašto adresą.",
     "enterCodeSentInEmail": "Įveskite į el. pašto adresą atsiųstą kodą.",
     "enterCodeSentBySms": "Įveskite SMS žinute į savo telefono numerį atsiųstą kodą.",
-    "passwordChangeRequestNotFound": "Slaptažodžio keitimo užklausa nerasta. Gali būti, kad jo galiojimo laikas pasibaigęs. Pabandykite inicijuoti naujo slaptažodžio atkūrimą iš [prisijungimo puslapio]({url})."
+    "passwordChangeRequestNotFound": "Slaptažodžio keitimo užklausa nerasta. Gali būti, kad jo galiojimo laikas pasibaigęs. Pabandykite inicijuoti naujo slaptažodžio atkūrimą iš [prisijungimo puslapio]({url}).",
+    "loginAs": "Atidarykite prisijungimo nuorodą inkognito lange, kad išsaugotumėte dabartinę sesiją. Prisijungimui naudokite savo administratoriaus įgaliojimus.",
+    "failedToLogIn": "Nepavyko prisijungti"
   },
   "boolFilters": {
     "onlyMyTeam": "Tik mano komanda"

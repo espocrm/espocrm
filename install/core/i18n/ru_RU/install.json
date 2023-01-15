@@ -126,5 +126,22 @@
     "writable": "С доступом записи",
     "readable": "С доступом чтения",
     "requiredMariadbVersion": "Версия MariaDB"
+  },
+  "options": {
+    "modRewriteTitle": {
+      "apache": "<h3>Ошибка API: EspoCRM API недоступен.</h3><br> Выполните только необходимые действия. После каждого шага проверяйте, решена ли проблема.",
+      "nginx": "<h3>Ошибка API: API EspoCRM недоступен.</h3>",
+      "microsoft-iis": "<h3>Ошибка API: EspoCRM API недоступен.</h3><br> Возможная проблема: отключен модуль \"URL Rewrite\". Пожалуйста, проверьте и включите модуль \"URL Rewrite\" на сервере IIS",
+      "default": "<h3>Ошибка API: EspoCRM API недоступен.</h3><br> Возможные проблемы: отключен модуль Rewrite. Пожалуйста, проверьте и включите модуль Rewrite в вашем сервере (например, mod_rewrite в Apache) и поддержку .htaccess."
+    },
+    "modRewriteInstruction": {
+      "apache": {
+        "linux": "<br><br><h4>1. Включите \"mod_rewrite\".</h4> Чтобы включить <i>mod_rewrite</i>, выполните эти команды в терминале:<br><br><pre>{APACHE1}</pre><hr><h4>2. Если предыдущий шаг не помог, попробуйте включить поддержку .htaccess.</h4> Добавьте/отредактируйте настройки конфигурации сервера <code>{APACHE2_PATH1}</code> или <code>{APACHE2_PATH2}</code> (или <code>{APACHE2_PATH3}</code>):<br><br><pre>{APACHE2}</pre>.\n После этого выполните эту команду в терминале:<br><br><pre>{APACHE3}</pre><hr><h4>3. Если предыдущий шаг не помог, попробуйте добавить путь RewriteBase.</h4>Откройте файл <code>{API_PATH}.htaccess</code> и замените следующую строку:<br><br><pre>{APACHE4}</pre>To<br><br><pre>{APACHE5}</pre><hr>Для получения дополнительной информации посетите руководство <a href=\"{APACHE_LINK}\" target=\"_blank\">Настройка сервера Apache для EspoCRM</a>.<br><br>",
+        "windows": "<br><br> <h4>1. Найдите файл httpd.conf.</h4> Обычно его можно найти в папке под названием \"conf\", \"config\" или что-то в этом роде.<br><br><h4>2. Отредактируйте файл httpd.conf.</h4> Внутри файла httpd.conf откомментируйте строку <code>{WINDOWS_APACHE1}</code> (уберите знак фунта '#' перед строкой).<br><br><h4>3. Проверьте остальные параметры.</h4> Также проверьте, не закомментирована ли строка <code>ClearModuleList</code> и убедитесь, что строка <code>AddModule mod_rewrite.c</code> не закомментирована.\n"
+      },
+      "nginx": {
+        "linux": "<br> Добавьте этот код в файл конфигурации сервера Nginx <code>{NGINX_PATH}</code> внутри секции \"server\":<br><br><pre>{NGINX}</pre> <br> Для получения дополнительной информации посетите руководство <a href=\"{NGINX_LINK}\" target=\"_blank\">Конфигурация сервера Nginx для EspoCRM</a>.<br><br>"
+      }
+    }
   }
 }

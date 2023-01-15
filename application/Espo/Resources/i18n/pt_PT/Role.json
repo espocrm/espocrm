@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nome",
     "roles": "Perfis",
-    "assignmentPermission": "Permissão de atribuíção",
+    "assignmentPermission": "Permissão de atribuição",
     "userPermission": "Permissão de utilizador",
     "portalPermission": "Permissões de Portal",
     "groupEmailAccountPermission": "Permissão de conta de email em grupo",
@@ -41,7 +41,7 @@
       "all": "todos",
       "team": "equipa",
       "account": "conta",
-      "contact": "contacto",
+      "contact": "contato",
       "own": "próprio",
       "no": "não",
       "yes": "sim",

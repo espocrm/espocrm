@@ -17,7 +17,9 @@
     "fontFace": "Шрифт",
     "pageWidth": "Ширина страницы (мм)",
     "pageHeight": "Высота страницы (мм)",
-    "headerPosition": "Положение заголовка"
+    "headerPosition": "Положение заголовка",
+    "printHeader": "Печатный заголовок",
+    "title": "Название"
   },
   "labels": {
     "Create Template": "Создать шаблон"

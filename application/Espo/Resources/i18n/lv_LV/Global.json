@@ -51,7 +51,11 @@
     "DashboardTemplate": "Informācijas paneļa veidne",
     "Currency": "Valūta",
     "LayoutSet": "Izkārtojuma komplekts",
-    "Mass Action": "Masveida rīcība"
+    "Mass Action": "Masveida rīcība",
+    "Note": "Piezīme",
+    "ImportError": "Importēšanas kļūda",
+    "WorkingTimeCalendar": "Darba laika kalendārs",
+    "WorkingTimeRange": "Darba laika diapazons"
   },
   "scopeNamesPlural": {
     "Email": "E-pasti",
@@ -94,7 +98,11 @@
     "EmailAddress": "E-pasta adreses",
     "PhoneNumber": "Tālruņu numuri",
     "Currency": "Valūta",
-    "LayoutSet": "Izkārtojuma komplekti"
+    "LayoutSet": "Izkārtojuma komplekti",
+    "Note": "Piezīmes",
+    "ImportError": "Importēšanas kļūdas",
+    "WorkingTimeCalendar": "Darba laika kalendāri",
+    "WorkingTimeRange": "Darba laika diapazoni"
   },
   "labels": {
     "Misc": "Dažādi",
@@ -262,7 +270,12 @@
     "Field": "Laukums",
     "Resolution": "Rezolūcija",
     "Resolve Conflict": "Konflikta atrisināšana",
-    "Download": "Lejupielādēt"
+    "Download": "Lejupielādēt",
+    "Sort": "Atlasīt",
+    "Log in": "Piesakieties",
+    "Log in as": "Piesakieties kā",
+    "Sign in": "Pierakstīties",
+    "Global Search": "Globālā meklēšana"
   },
   "messages": {
     "pleaseWait": "Lūdzu, uzgaidiet...",
@@ -328,7 +341,22 @@
     "maintenanceMode": "Pašlaik lietojumprogramma ir uzturēšanas režīmā. Piekļuve ir tikai administratoram.\n\nUzturēšanas režīmu var atspējot sadaļā Administrācija → Iestatījumi.",
     "fieldInvalid": "{field} ir nederīgs",
     "resolveSaveConflict": "Ieraksts ir mainīts. Pirms ieraksta saglabāšanas ir jāatrisina konflikts.",
-    "massActionProcessed": "Ir apstrādāta masveida darbība."
+    "massActionProcessed": "Ir apstrādāta masveida darbība.",
+    "fieldUrlExceedsMaxLength": "Kodētais URL pārsniedz maksimālo garumu {maxLength}",
+    "fieldNotMatchingPattern": "{field} neatbilst rakstam `{pattern}``",
+    "fieldNotMatchingPattern$noBadCharacters": "{laukā} ir neatļautas rakstzīmes",
+    "fieldNotMatchingPattern$noAsciiSpecialCharacters": "{field} nedrīkst saturēt ASCII īpašās rakstzīmes",
+    "fieldNotMatchingPattern$latinLetters": "{field} var saturēt tikai latīņu burtus",
+    "fieldNotMatchingPattern$latinLettersDigits": "{field} var saturēt tikai latīņu burtus un ciparus",
+    "fieldNotMatchingPattern$latinLettersDigitsWhitespace": "{field} var saturēt tikai latīņu burtus, ciparus un baltās zīmes.",
+    "fieldNotMatchingPattern$latinLettersWhitespace": "{field} var saturēt tikai latīņu burtus un baltās atstarpes.",
+    "fieldNotMatchingPattern$digits": "{field} var saturēt tikai ciparus",
+    "fieldPhoneInvalidCharacters": "Ir atļauti tikai cipari, latīņu burti un rakstzīmes `-+_@:#().`",
+    "arrayItemMaxLength": "Vienumam nevajadzētu būt garākam par {max} rakstzīmēm",
+    "validationFailure": "Backend validācijas kļūda.\n\nLauks: `{field}`\nApstiprināšana: `{tips}`",
+    "confirmAppRefresh": "Pieteikums ir atjaunināts. Ieteicams atjaunināt lapu, lai nodrošinātu tās pareizu darbību.",
+    "error404": "Jūsu pieprasīto url failu nevar apstrādāt.",
+    "error403": "Jums nav piekļuves šai zonai."
   },
   "boolFilters": {
     "onlyMy": "Tikai manējie",
@@ -725,7 +753,25 @@
     "kanban": "\"Kanban\""
   },
   "themes": {
-    "Dark": "Tumši",
-    "Violet": "Violeta"
+    "Dark": "Tumšs",
+    "Violet": "Violeta",
+    "Glass": "Stikls"
+  },
+  "themeNavbars": {
+    "side": "Sānu navigācijas josla",
+    "top": "Augšējā navigācijas josla"
+  },
+  "fieldValidations": {
+    "required": "Nepieciešams",
+    "maxCount": "Maksimālais skaits",
+    "maxLength": "Maksimālais garums",
+    "emailAddress": "Derīga e-pasta adrese",
+    "phoneNumber": "Derīgs tālruņa numurs",
+    "array": "Masīvs",
+    "arrayOfString": "Virkņu masīvs",
+    "valid": "Derīgs",
+    "noEmptyString": "Nav tukšas virknes",
+    "max": "Maksimālā vērtība",
+    "min": "Minimālā vērtība"
   }
 }

@@ -9,7 +9,7 @@
     "type": "Tipo",
     "field": "Campo",
     "sourceId": "ID Origem",
-    "storage": "Amazenamento",
+    "storage": "Armazenamento",
     "size": "Tamanho (bytes)",
     "isBeingUploaded": "Está a ser carregado"
   },

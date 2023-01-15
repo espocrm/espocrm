@@ -66,7 +66,8 @@
     "confirmRevert": "Hierdoor worden alle geïmporteerde records definitief verwijderd. Weet u het zeker?",
     "confirmRemoveDuplicates": "Hierdoor worden alle geïmporteerde records die als dubbelen werden herkend, permanent verwijderd. Weet u het zeker?",
     "removeImportLog": "Dit zal het importlogboek verwijderen. Alle geïmporteerde gegevens worden bewaard. Gebruik het als u zeker weet dat het importeren in orde is.",
-    "confirmRemoveImportLog": "Dit zal het import logboek verwijderen. Alle geïmporteerde records blijven bewaard. U zult niet in staat zijn om de importresultaten terug te draaien. Ben je zeker?"
+    "confirmRemoveImportLog": "Dit zal het import logboek verwijderen. Alle geïmporteerde records blijven bewaard. U zult niet in staat zijn om de importresultaten terug te draaien. Ben je zeker?",
+    "noErrors": "Geen fouten."
   },
   "fields": {
     "file": "Bestand",
@@ -98,5 +99,8 @@
   "tooltips": {
     "manualMode": "Indien aangevinkt, moet u de import handmatig uitvoeren vanuit CLI. Commando zal worden getoond na het opzetten van de import.",
     "silentMode": "De meeste scripts na het opslaan worden overgeslagen, stroomnotities worden niet aangemaakt. Import zal sneller verlopen."
+  },
+  "links": {
+    "errors": "Fouten"
   }
 }

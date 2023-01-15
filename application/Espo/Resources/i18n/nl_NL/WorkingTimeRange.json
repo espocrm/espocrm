@@ -1,0 +1,26 @@
+{
+  "labels": {
+    "Create WorkingTimeRange": "Bereik creëren",
+    "Calendars": "Kalenders"
+  },
+  "fields": {
+    "timeRanges": "Schema",
+    "dateStart": "Datum begin",
+    "dateEnd": "Datum einde",
+    "calendars": "Kalenders",
+    "users": "Gebruikers"
+  },
+  "links": {
+    "calendars": "Kalenders",
+    "users": "Gebruikers"
+  },
+  "options": {
+    "type": {
+      "Non-working": "Geen werktijd",
+      "Working": "Werktijd"
+    }
+  },
+  "presetFilters": {
+    "actual": "Actueel"
+  }
+}

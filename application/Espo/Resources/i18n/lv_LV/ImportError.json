@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "type": "Tips",
+    "validationFailures": "Validācijas neveiksmes",
+    "import": "Importēt",
+    "rowIndex": "Rindu indekss",
+    "exportRowIndex": "Eksporta rindu indekss",
+    "lineNumber": "Līnijas numurs",
+    "exportLineNumber": "Eksporta līnijas numurs",
+    "row": "Rinda"
+  },
+  "options": {
+    "type": {
+      "Validation": "Apstiprināšana",
+      "Access": "Piekļuve",
+      "Not-Found": "Nav atrasts"
+    }
+  },
+  "tooltips": {
+    "lineNumber": "rindas numurs sākotnējā CSV.",
+    "exportLineNumber": "rindas numurs CSV eksportētajā formātā."
+  }
+}

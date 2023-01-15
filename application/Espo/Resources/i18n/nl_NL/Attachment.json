@@ -9,7 +9,8 @@
     "field": "Veld",
     "sourceId": "Bron ID",
     "storage": "Opslagruimte",
-    "size": "Grootte (bytes)"
+    "size": "Grootte (bytes)",
+    "isBeingUploaded": "Wordt geüpload"
   },
   "options": {
     "role": {

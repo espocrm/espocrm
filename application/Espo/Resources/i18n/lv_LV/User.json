@@ -37,7 +37,8 @@
     "dashboardTemplate": "Informācijas paneļa veidne",
     "auth2FAEnable": "Iespējot 2 faktoru autentifikāciju",
     "auth2FAMethod": "2FA metode",
-    "auth2FATotpSecret": "2FA TOTP noslēpums"
+    "auth2FATotpSecret": "2FA TOTP noslēpums",
+    "workingTimeCalendar": "Darba laika kalendārs"
   },
   "links": {
     "teams": "Grupas",
@@ -51,7 +52,9 @@
     "tasks": "Uzdevumi",
     "defaultTeam": "Noklusējuma komanda",
     "dashboardTemplate": "Informācijas paneļa veidne",
-    "userData": "Lietotāja dati"
+    "userData": "Lietotāja dati",
+    "workingTimeCalendar": "Darba laika kalendārs",
+    "workingTimeRanges": "Darba laika diapazoni"
   },
   "labels": {
     "Create User": "Izveidot lietotāju",
@@ -76,7 +79,8 @@
     "Reset 2FA": "2FA atiestatīšana",
     "Secret": "Noslēpums",
     "Send Password Change Link": "Nosūtīt paroles maiņas saiti",
-    "Send Code": "Nosūtīt kodu"
+    "Send Code": "Nosūtīt kodu",
+    "Login Link": "Pieslēgšanās saite"
   },
   "tooltips": {
     "defaultTeam": "Visus šī lietotāja izveidotie ieraksti pēc noklusējuma tiks sasaistīti ar šo grupu.",
@@ -120,7 +124,9 @@
     "choose2FaEmailAddress": "Izvēlieties e-pasta adresi, kas tiks izmantota 2FA. Ieteicams izmantot ne primāro e-pasta adresi.",
     "enterCodeSentInEmail": "Ievadiet kodu, kas nosūtīts uz jūsu e-pasta adresi.",
     "enterCodeSentBySms": "Ievadiet kodu, kas nosūtīts ar SMS uz jūsu tālruņa numuru.",
-    "passwordChangeRequestNotFound": "Paroles maiņas pieprasījums nav atrasts. Iespējams, tā derīguma termiņš ir beidzies. Mēģiniet uzsākt jaunas paroles atjaunošanu no [pieteikšanās lapas]({url})."
+    "passwordChangeRequestNotFound": "Paroles maiņas pieprasījums nav atrasts. Iespējams, tā derīguma termiņš ir beidzies. Mēģiniet uzsākt jaunas paroles atjaunošanu no [pieteikšanās lapas]({url}).",
+    "loginAs": "Atveriet pieteikšanās saiti inkognito logā, lai saglabātu pašreizējo sesiju. Lai pieteiktos, izmantojiet savus administratora akreditācijas datus.",
+    "failedToLogIn": "Neizdevās pieteikties"
   },
   "boolFilters": {
     "onlyMyTeam": "Tikai manai grupai"

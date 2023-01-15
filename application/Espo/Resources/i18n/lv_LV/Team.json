@@ -3,19 +3,22 @@
     "name": "Vārds",
     "roles": "Lomas",
     "positionList": "Amatu saraksts",
-    "layoutSet": "Izkārtojuma komplekts"
+    "layoutSet": "Izkārtojuma komplekts",
+    "workingTimeCalendar": "Darba laika kalendārs"
   },
   "links": {
     "users": "Lietotāji",
     "notes": "Piezīmes",
     "roles": "Lomas",
     "inboundEmails": "Grupas e-pasta konti",
-    "layoutSet": "Izkārtojuma komplekts"
+    "layoutSet": "Izkārtojuma komplekts",
+    "workingTimeCalendar": "Darba laika kalendārs"
   },
   "tooltips": {
     "roles": "Piekļuves lomas. Šīs grupas lietotāji iegūs piekļuves kontroles līmeni no atlasītajām lomām.",
     "positionList": "Šajā grupā pieejamie amati. Piem., pārdevējs, pārvaldnieks.",
-    "layoutSet": "Nodrošina iespēju izmantot izkārtojumus, kas atšķiras no standarta izkārtojumiem. Izkārtojumu komplekts tiks piemērots lietotājiem, kuriem šī komanda ir iestatīta kā noklusējuma komanda."
+    "layoutSet": "Nodrošina iespēju izmantot izkārtojumus, kas atšķiras no standarta izkārtojumiem. Izkārtojumu komplekts tiks piemērots lietotājiem, kuriem šī komanda ir iestatīta kā noklusējuma komanda.",
+    "workingTimeCalendar": "Kalendārs tiks piemērots lietotājiem, kuriem šī komanda ir iestatīta kā noklusējuma komanda."
   },
   "labels": {
     "Create Team": "Izveidot grupu"

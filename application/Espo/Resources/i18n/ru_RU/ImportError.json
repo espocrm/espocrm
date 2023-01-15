@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "type": "Тип",
+    "validationFailures": "Ошибки валидации",
+    "import": "Импорт",
+    "rowIndex": "Индекс строки",
+    "exportRowIndex": "Индекс строки экспорта",
+    "lineNumber": "Номер строки",
+    "exportLineNumber": "Номер линии экспорта",
+    "row": "Строка"
+  },
+  "options": {
+    "type": {
+      "Validation": "Валидация",
+      "Access": "Доступ",
+      "Not-Found": "Не найдено"
+    }
+  },
+  "tooltips": {
+    "lineNumber": "Номер строки в исходном CSV.",
+    "exportLineNumber": "Номер строки в экспортируемом CSV."
+  }
+}

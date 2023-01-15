@@ -29,8 +29,5 @@
       "Active": "Aktivan",
       "Inactive": "Neaktivan"
     }
-  },
-  "tooltips": {
-    "scheduling": "Crontab beleška. Definiše učestalost posla.\n\n*/5 * * * * - svakih 5 minuta\n\n0 */2 * * * - svaka 2 sata\n\n30 1 * * * - u 01:30 svakog dana\n\n0 0 1 * * - prvog dana u mesecu"
   }
 }

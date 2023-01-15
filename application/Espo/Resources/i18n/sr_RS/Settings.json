@@ -81,15 +81,8 @@
     "historyEntityList": "Lista entiteta za istoriju",
     "currencyFormat": "Format valute",
     "currencyDecimalPlaces": "Valuta decimale",
-    "aclStrictMode": "ACL strogo",
     "massEmailMaxPerHourCount": "Maks broj e-poruka po satu",
     "maxEmailAccountCount": "Maks broj ličnih naloga pošte po korisniku"
-  },
-  "options": {
-    "weekStart": {
-      "0": "nedelja",
-      "1": "ponedeljak"
-    }
   },
   "tooltips": {
     "recordsPerPage": "Broj unosa prvobitno prikazan u listama.",

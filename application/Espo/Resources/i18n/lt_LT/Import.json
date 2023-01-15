@@ -55,7 +55,8 @@
     "Import Results": "Importuoti rezultatus",
     "Silent Mode": "Tylusis režimas",
     "New import with same params": "Naujas importas su tais pačiais parametrais",
-    "Run Manually": "Paleisti rankiniu būdu"
+    "Run Manually": "Paleisti rankiniu būdu",
+    "Export": "Eksportuoti"
   },
   "messages": {
     "utf8": "Turėtų būti užkoduotas UTF-8",
@@ -66,7 +67,8 @@
     "confirmRevert": "Tai ištrins visus importuotus įrašus visam laikui. Ar tikrai?",
     "confirmRemoveDuplicates": "Tai visam laikui ištrins visus importuotus įrašus, kurie buvo pripažinti kaip pasikartojantys. Ar tikrai?",
     "removeImportLog": "Tai ištrins importo žurnalą. Visi importuoti įrašai bus saugomi. Naudok jį, jei esate tikri, kad importas yra gerai.",
-    "confirmRemoveImportLog": "Taip bus ištrintas importo žurnalas. Visi importuoti įrašai bus išsaugoti. Negalėsite grąžinti importo rezultatų. Ar esate tikri?"
+    "confirmRemoveImportLog": "Taip bus ištrintas importo žurnalas. Visi importuoti įrašai bus išsaugoti. Negalėsite grąžinti importo rezultatų. Ar esate tikri?",
+    "noErrors": "Klaidų nėra."
   },
   "fields": {
     "file": "Failas",
@@ -99,5 +101,8 @@
   "tooltips": {
     "manualMode": "Jei pažymėta, turėsite paleisti importą rankiniu būdu iš CLI. Komanda bus rodoma nustačius importą.",
     "silentMode": "Dauguma po išsaugojimo sukurtų scenarijų bus praleisti, srauto pastabos nebus sukurtos. Importas vyks greičiau."
+  },
+  "links": {
+    "errors": "Klaidos"
   }
 }

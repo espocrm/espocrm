@@ -64,6 +64,13 @@
     "barcodeType": {
       "pharmacode": "Farmakodas",
       "QRcode": "QR kodas"
+    },
+    "globalRestrictions": {
+      "forbidden": "Draudžiama",
+      "internal": "Vidinis",
+      "onlyAdmin": "Tik administratoriui",
+      "readOnly": "Tik nuskaityti",
+      "nonAdminReadOnly": "Ne administratoriaus skaitymo teisė"
     }
   },
   "tooltips": {
@@ -81,7 +88,15 @@
     "maxFileSize": "Jei tuščia arba 0, tai nelimituojama",
     "fileAccept": "Kokius failų tipus priimti. Galima pridėti pasirinktinių elementų.",
     "barcodeLastChar": "EAN-13 tipo.",
-    "conversionDisabled": "Šiam laukui valiutos konvertavimo veiksmas nebus taikomas."
+    "conversionDisabled": "Šiam laukui valiutos konvertavimo veiksmas nebus taikomas.",
+    "cutHeight": "Tekstas, viršijantis nurodytą ilgį, bus nukirptas ir bus perkeltas į \"Rodyti daugiau\".",
+    "urlStrip": "Pašalinkite protokolą ir galinį pasvirąjį brūkšnį.",
+    "pattern": "Reguliarioji išraiška, pagal kurią tikrinama lauko reikšmė. Nustatykite išraišką arba pasirinkite iš anksto nustatytą išraišką.",
+    "options": "Galimų reikšmių ir jų etikečių sąrašas.",
+    "optionsArray": "Galimų reikšmių ir jų etikečių sąrašas. Jei laukas tuščias, jame bus galima įvesti pasirinktines reikšmes.",
+    "maxCount": "Didžiausias leistinas pasirinkti elementų skaičius.",
+    "displayAsList": "Kiekvienas elementas įrašomas į naują eilutę.",
+    "optionsVarchar": "Automatinio užbaigimo reikšmių sąrašas."
   },
   "fieldParts": {
     "address": {

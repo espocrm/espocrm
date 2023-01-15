@@ -38,7 +38,7 @@
   "tooltips": {
     "monitoredFolders": "Várias pastas devem ser separadas por vírgula.\n\nPode adicionar uma pasta 'Enviada' para sincronizar emails enviados de um cliente de email externo.",
     "storeSentEmails": "Os emails enviados serão armazenados no servidor IMAP. O campo \"endereço de email\" deve corresponder ao endereço do qual os emails serão enviados.",
-    "useSmtp": "Abilidade de enviar emails.",
+    "useSmtp": "A capacidade de enviar emails.",
     "emailAddress": "O utilizador registado (utilizador atribuído) deverá ter o mesmo endereço de email para ser capaz de usar esta conta de email para enviar."
   }
 }

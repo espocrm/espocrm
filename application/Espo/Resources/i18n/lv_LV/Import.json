@@ -55,7 +55,8 @@
     "Import Results": "Importēt rezultātus",
     "Silent Mode": "Klusais režīms",
     "New import with same params": "Jauns imports ar tiem pašiem parametriem",
-    "Run Manually": "Palaist manuāli"
+    "Run Manually": "Palaist manuāli",
+    "Export": "Eksportēt"
   },
   "messages": {
     "utf8": "Jābūt UTF-8 kodējumā",
@@ -66,7 +67,8 @@
     "confirmRevert": "Šī izvēle neatgriezeniski dzēsīs visus importētos ierakstus. Vai tiešām vēlaties turpināt?",
     "confirmRemoveDuplicates": "Šī izvēle neatgriezeniski dzēsīs visus importētos ierakstus, kas būs atpazīti kā dublikāti. Vai tiešām vēlaties turpināt?",
     "removeImportLog": "Šī izvēle dzēsīs importēto ierakstu reģistru. Visi importētie ieraksti tiks saglabāti. Izmantojiet šo izvēli, ja vēlaties pieļaut importēšanu.",
-    "confirmRemoveImportLog": "Tādējādi tiks dzēsts importa žurnāls. Visi importētie ieraksti tiks saglabāti. Jūs nevarēsiet atgriezt importa rezultātus. Vai esat pārliecināts?"
+    "confirmRemoveImportLog": "Tādējādi tiks dzēsts importa žurnāls. Visi importētie ieraksti tiks saglabāti. Jūs nevarēsiet atgriezt importa rezultātus. Vai esat pārliecināts?",
+    "noErrors": "Kļūdu nav."
   },
   "fields": {
     "file": "Fails",
@@ -99,5 +101,8 @@
   "tooltips": {
     "manualMode": "Ja ir atzīmēts, jums būs nepieciešams palaist importu manuāli no CLI. Komanda tiks parādīta pēc importa iestatīšanas.",
     "silentMode": "Lielākā daļa pēc saglabāšanas skriptu tiks izlaisti, plūsmas piezīmes netiks izveidotas. Imports darbosies ātrāk."
+  },
+  "links": {
+    "errors": "Kļūdas"
   }
 }

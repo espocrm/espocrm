@@ -8,14 +8,13 @@
     "duration": "Duração",
     "description": "Descrição",
     "users": "Utilizadores",
-    "contacts": "Contactos",
+    "contacts": "Contatos",
     "reminders": "Lembretes",
     "account": "Conta",
     "acceptanceStatus": "Estado de aceitação",
     "dateStartDate": "Data de início (todo o dia)",
     "dateEndDate": "Data de fim (todo o dia)",
     "isAllDay": "Todo o dia",
-    "Acceptance": "Aceitar",
     "sourceEmail": "Email de origem"
   },
   "options": {
@@ -51,7 +50,6 @@
   },
   "messages": {
     "nothingHasBeenSent": "Nada foi enviado",
-    "selectAcceptanceStatus": "Defina seu status de aceitação.",
-    "sendInvitationsConfirmation": "Enviar e-mails de convite para os participantes?"
+    "selectAcceptanceStatus": "Defina seu status de aceitação."
   }
 }

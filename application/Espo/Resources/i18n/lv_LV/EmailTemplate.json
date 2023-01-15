@@ -2,7 +2,6 @@
   "fields": {
     "name": "Vārds/nosaukums",
     "status": "Statuss",
-    "isHtml": "Ir HTML",
     "body": "Pamatteksts",
     "subject": "Tēma",
     "attachments": "Pielikumi",

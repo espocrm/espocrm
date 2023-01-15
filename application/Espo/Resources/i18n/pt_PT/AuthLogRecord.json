@@ -9,7 +9,7 @@
     "user": "Utilizador",
     "authToken": "Token de autenticação criado",
     "requestUrl": "Solicitar URL",
-    "requestMethod": "Método de soliticação",
+    "requestMethod": "Método de solicitacação",
     "authTokenIsActive": "Token de autenticação está ativo",
     "authenticationMethod": "Método de autenticação"
   },
@@ -24,7 +24,7 @@
   },
   "options": {
     "denialReason": {
-      "CREDENTIALS": "Credenciais inválias",
+      "CREDENTIALS": "Credenciais inválidas",
       "INACTIVE_USER": "Utilizador inativo",
       "IS_PORTAL_USER": "Utilizador do portal",
       "IS_NOT_PORTAL_USER": "Não é utilizador do portal",

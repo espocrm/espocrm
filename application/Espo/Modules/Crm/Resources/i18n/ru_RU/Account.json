@@ -30,7 +30,8 @@
     "campaignLogRecords": "Журнал кампании",
     "campaign": "Кампания",
     "portalUsers": "Пользователи портала",
-    "originalLead": "Изначальный кандидат"
+    "originalLead": "Изначальный кандидат",
+    "contactsPrimary": "Контакты (основные)"
   },
   "options": {
     "type": {
