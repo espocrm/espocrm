@@ -79,7 +79,7 @@ define('views/import-error/fields/validation-failures', ['views/fields/base'], (
 
         afterRenderDetail: function () {
             this.$el.find('.popover-anchor').each((i, el) => {
-                let text = this.getHelper().transformMarkdownText(el.dataset.text);
+                let text = this.getHelper().transformMarkdownText(el.dataset.text).toString();
 
                 Espo.Ui.popover($(el), {content: text}, this);
             });
