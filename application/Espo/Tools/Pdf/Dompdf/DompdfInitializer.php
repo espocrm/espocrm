@@ -61,8 +61,6 @@ class DompdfInitializer
 
         $pdf->setPaper($size, $orientation);
 
-
-
         return $pdf;
     }
 
