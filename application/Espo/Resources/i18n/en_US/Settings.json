@@ -158,7 +158,8 @@
         "oidcFallback": "OIDC Fallback Login",
         "oidcAllowRegularUserFallback": "OIDC Allow fallback login for regular users",
         "oidcAllowAdminUser": "OIDC Allow OIDC login for admin users",
-        "oidcLogoutUrl": "OIDC Logout URL"
+        "oidcLogoutUrl": "OIDC Logout URL",
+        "pdfEngine": "PDF Engine"
     },
     "options": {
         "authenticationMethod": {

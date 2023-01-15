@@ -852,6 +852,10 @@
         "oidcLogoutUrl": {
             "type": "varchar",
             "tooltip": true
+        },
+        "pdfEngine": {
+            "type": "enum",
+            "view": "views/settings/fields/pdf-engine"
         }
     }
 }

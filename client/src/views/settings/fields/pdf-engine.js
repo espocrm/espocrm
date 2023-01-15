@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,48 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Pdf;
+define('views/settings/fields/pdf-engine', ['views/fields/enum'], function (Dep) {
 
-interface Template
-{
-    public const PAGE_FORMAT_CUSTOM = 'Custom';
+    return Dep.extend({
 
-    public const PAGE_ORIENTATION_PORTRAIT = 'Portrait';
-    public const PAGE_ORIENTATION_LANDSCAPE = 'Landscape';
+        setupOptions: function () {
+            this.params.options = Object.keys(this.getMetadata().get(['app', 'pdfEngines']));
 
-    public function getFontFace(): ?string;
-
-    public function getBottomMargin(): float;
-
-    public function getTopMargin(): float;
-
-    public function getLeftMargin(): float;
-
-    public function getRightMargin(): float;
-
-    public function hasFooter(): bool;
-
-    public function getFooter(): string;
-
-    public function getFooterPosition(): float;
-
-    public function hasHeader(): bool;
-
-    public function getHeader(): string;
-
-    public function getHeaderPosition(): float;
-
-    public function getBody(): string;
-
-    public function getPageOrientation(): string;
-
-    public function getPageFormat(): string;
-
-    public function getPageWidth(): float;
-
-    public function getPageHeight(): float;
-
-    public function hasTitle(): bool;
-
-    public function getTitle(): string;
-}
+            if (this.params.options.length === 0) {
+                this.params.options = [''];
+            }
+        },
+    });
+});

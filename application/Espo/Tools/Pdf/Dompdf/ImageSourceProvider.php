@@ -27,48 +27,46 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Pdf;
+namespace Espo\Tools\Pdf\Dompdf;
 
-interface Template
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\FileStorage\Manager as FileStorageManager;
+use Espo\Entities\Attachment;
+use Espo\ORM\EntityManager;
+use Espo\Tools\Attachment\Checker;
+
+class ImageSourceProvider
 {
-    public const PAGE_FORMAT_CUSTOM = 'Custom';
+    public function __construct(
+        private EntityManager $entityManager,
+        private Checker $checker,
+        private FileStorageManager $fileStorageManager,
+    ) {}
 
-    public const PAGE_ORIENTATION_PORTRAIT = 'Portrait';
-    public const PAGE_ORIENTATION_LANDSCAPE = 'Landscape';
+    public function get(string $id): ?string
+    {
+        /** @var Attachment $attachment */
+        $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
 
-    public function getFontFace(): ?string;
+        if (!$attachment) {
+            return null;
+        }
 
-    public function getBottomMargin(): float;
+        try {
+            $this->checker->checkTypeImage($attachment);
+        }
+        catch (Forbidden) {
+            return null;
+        }
 
-    public function getTopMargin(): float;
+        $type = $attachment->getType();
 
-    public function getLeftMargin(): float;
+        if (!$type) {
+            return null;
+        }
 
-    public function getRightMargin(): float;
+        $contents = $this->fileStorageManager->getContents($attachment);
 
-    public function hasFooter(): bool;
-
-    public function getFooter(): string;
-
-    public function getFooterPosition(): float;
-
-    public function hasHeader(): bool;
-
-    public function getHeader(): string;
-
-    public function getHeaderPosition(): float;
-
-    public function getBody(): string;
-
-    public function getPageOrientation(): string;
-
-    public function getPageFormat(): string;
-
-    public function getPageWidth(): float;
-
-    public function getPageHeight(): float;
-
-    public function hasTitle(): bool;
-
-    public function getTitle(): string;
+        return 'data:image/' . $type . ';base64,' . base64_encode($contents);
+    }
 }

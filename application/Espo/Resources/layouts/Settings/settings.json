@@ -18,7 +18,8 @@
         "rows": [
             [{"name": "followCreatedEntities"}, {"name": "emailAddressIsOptedOutByDefault"}],
             [{"name": "aclAllowDeleteCreated"}, {"name": "cleanupDeletedRecords"}],
-            [{"name": "exportDisabled"}, {"name": "b2cMode"}]
+            [{"name": "exportDisabled"}, {"name": "b2cMode"}],
+            [{"name": "pdfEngine"}, false]
         ]
     },
     {

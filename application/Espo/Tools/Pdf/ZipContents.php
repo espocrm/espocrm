@@ -29,46 +29,33 @@
 
 namespace Espo\Tools\Pdf;
 
-interface Template
+use Psr\Http\Message\StreamInterface;
+use GuzzleHttp\Psr7\Stream;
+
+use RuntimeException;
+
+class ZipContents implements Contents
 {
-    public const PAGE_FORMAT_CUSTOM = 'Custom';
+    public function __construct(private string $filePath) {}
 
-    public const PAGE_ORIENTATION_PORTRAIT = 'Portrait';
-    public const PAGE_ORIENTATION_LANDSCAPE = 'Landscape';
+    public function getStream(): StreamInterface
+    {
+        $resource = fopen($this->filePath, 'r+');
 
-    public function getFontFace(): ?string;
+        if ($resource === false) {
+            throw new RuntimeException("Could not open {$this->filePath}.");
+        }
 
-    public function getBottomMargin(): float;
+        return new Stream($resource);
+    }
 
-    public function getTopMargin(): float;
+    public function getString(): string
+    {
+        return $this->getStream()->getContents();
+    }
 
-    public function getLeftMargin(): float;
-
-    public function getRightMargin(): float;
-
-    public function hasFooter(): bool;
-
-    public function getFooter(): string;
-
-    public function getFooterPosition(): float;
-
-    public function hasHeader(): bool;
-
-    public function getHeader(): string;
-
-    public function getHeaderPosition(): float;
-
-    public function getBody(): string;
-
-    public function getPageOrientation(): string;
-
-    public function getPageFormat(): string;
-
-    public function getPageWidth(): float;
-
-    public function getPageHeight(): float;
-
-    public function hasTitle(): bool;
-
-    public function getTitle(): string;
+    public function getLength(): int
+    {
+        return (int) $this->getStream()->getSize();
+    }
 }

@@ -27,48 +27,50 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Pdf;
+namespace Espo\Tools\Pdf\Dompdf;
 
-interface Template
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Espo\Core\Utils\Config;
+use Espo\ORM\Entity;
+use Espo\Tools\Pdf\Template;
+
+class DompdfInitializer
 {
-    public const PAGE_FORMAT_CUSTOM = 'Custom';
+    private string $defaultFontFace = 'Courier';
 
-    public const PAGE_ORIENTATION_PORTRAIT = 'Portrait';
-    public const PAGE_ORIENTATION_LANDSCAPE = 'Landscape';
+    public function __construct(
+        private Config $config
+    ) {}
 
-    public function getFontFace(): ?string;
+    public function initialize(Template $template, ?Entity $entity = null): Dompdf
+    {
+        $options = new Options();
 
-    public function getBottomMargin(): float;
+        $options->setDefaultFont($this->getFontFace($template));
 
-    public function getTopMargin(): float;
+        $pdf = new Dompdf($options);
 
-    public function getLeftMargin(): float;
+        $size = $template->getPageFormat() === Template::PAGE_FORMAT_CUSTOM ?
+            [$template->getPageWidth(), $template->getPageHeight()] :
+            $template->getPageFormat();
 
-    public function getRightMargin(): float;
+        $orientation = $template->getPageOrientation() === Template::PAGE_ORIENTATION_PORTRAIT ?
+            'portrait' :
+            'landscape';
 
-    public function hasFooter(): bool;
+        $pdf->setPaper($size, $orientation);
 
-    public function getFooter(): string;
 
-    public function getFooterPosition(): float;
 
-    public function hasHeader(): bool;
+        return $pdf;
+    }
 
-    public function getHeader(): string;
-
-    public function getHeaderPosition(): float;
-
-    public function getBody(): string;
-
-    public function getPageOrientation(): string;
-
-    public function getPageFormat(): string;
-
-    public function getPageWidth(): float;
-
-    public function getPageHeight(): float;
-
-    public function hasTitle(): bool;
-
-    public function getTitle(): string;
+    private function getFontFace(Template $template): string
+    {
+        return
+            $template->getFontFace() ??
+            $this->config->get('pdfFontFace') ??
+            $this->defaultFontFace;
+    }
 }

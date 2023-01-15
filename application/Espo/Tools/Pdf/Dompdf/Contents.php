@@ -27,48 +27,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Pdf;
+namespace Espo\Tools\Pdf\Dompdf;
 
-interface Template
+use Espo\Tools\Pdf\Contents as ContentsInterface;
+
+use GuzzleHttp\Psr7\Stream;
+use Psr\Http\Message\StreamInterface;
+use Dompdf\Dompdf;
+
+use RuntimeException;
+
+class Contents implements ContentsInterface
 {
-    public const PAGE_FORMAT_CUSTOM = 'Custom';
+    private ?string $string = null;
 
-    public const PAGE_ORIENTATION_PORTRAIT = 'Portrait';
-    public const PAGE_ORIENTATION_LANDSCAPE = 'Landscape';
+    public function __construct(private Dompdf $pdf) {}
 
-    public function getFontFace(): ?string;
+    public function getStream(): StreamInterface
+    {
+        $resource = fopen('php://temp', 'r+');
 
-    public function getBottomMargin(): float;
+        if ($resource === false) {
+            throw new RuntimeException("Could not open temp.");
+        }
 
-    public function getTopMargin(): float;
+        fwrite($resource, $this->getString());
+        rewind($resource);
 
-    public function getLeftMargin(): float;
+        return new Stream($resource);
+    }
 
-    public function getRightMargin(): float;
+    public function getString(): string
+    {
+        if ($this->string === null) {
+            $this->string = $this->pdf->output();
+        }
 
-    public function hasFooter(): bool;
+        return $this->string ?? '';
+    }
 
-    public function getFooter(): string;
-
-    public function getFooterPosition(): float;
-
-    public function hasHeader(): bool;
-
-    public function getHeader(): string;
-
-    public function getHeaderPosition(): float;
-
-    public function getBody(): string;
-
-    public function getPageOrientation(): string;
-
-    public function getPageFormat(): string;
-
-    public function getPageWidth(): float;
-
-    public function getPageHeight(): float;
-
-    public function hasTitle(): bool;
-
-    public function getTitle(): string;
+    public function getLength(): int
+    {
+        return strlen($this->getString());
+    }
 }

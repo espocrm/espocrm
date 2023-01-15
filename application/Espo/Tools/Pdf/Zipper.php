@@ -29,46 +29,65 @@
 
 namespace Espo\Tools\Pdf;
 
-use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Util;
+use LogicException;
 use RuntimeException;
+use ZipArchive;
 
-class Builder
+class Zipper
 {
-    private ?Template $template = null;
-    private ?string $engine = null;
+    private ?string $filePath = null;
+    /** @var array{string, string}[] */
+    private array $itemList = [];
 
-    public function __construct(private InjectableFactory $injectableFactory) {}
+    public function __construct() {}
 
-    public function setTemplate(Template $template): self
+    public function add(Contents $contents, string $name): void
     {
-        $this->template = $template;
+        $tempPath = tempnam(sys_get_temp_dir(), 'espo-pdf-zip-item');
 
-        return $this;
-    }
-
-    public function setEngine(string $engine): self
-    {
-        $this->engine = $engine;
-
-        return $this;
-    }
-
-    public function build(): PrinterController
-    {
-        if (!$this->engine) {
-            throw new RuntimeException('Engine is not set.');
+        if ($tempPath === false) {
+            throw new RuntimeException("Could not create a temp file.");
         }
 
-        if (!$this->template) {
-            throw new RuntimeException('Template is not set.');
+        $fp = fopen($tempPath, 'w');
+
+        if ($fp === false) {
+            throw new RuntimeException("Could not open a temp file {$tempPath}.");
         }
 
-        return $this->injectableFactory->createWith(
-            PrinterController::class,
-            [
-                'template' => $this->template,
-                'engine' => $this->engine,
-            ]
-        );
+        fwrite($fp, $contents->getString());
+        fclose($fp);
+
+        $this->itemList[] = [$tempPath, Util::sanitizeFileName($name) . '.pdf'];
+    }
+
+    public function archive(): void
+    {
+        $tempPath = tempnam(sys_get_temp_dir(), 'espo-pdf-zip');
+
+        if ($tempPath === false) {
+            throw new RuntimeException("Could not create a temp file.");
+        }
+
+        $archive = new ZipArchive();
+        $archive->open($tempPath, ZipArchive::CREATE);
+
+        foreach ($this->itemList as $item) {
+            $archive->addFile($item[0], $item[1]);
+        }
+
+        $archive->close();
+
+        $this->filePath = $tempPath;
+    }
+
+    public function getFilePath(): string
+    {
+        if (!$this->filePath) {
+            throw new LogicException();
+        }
+
+        return $this->filePath;
     }
 }

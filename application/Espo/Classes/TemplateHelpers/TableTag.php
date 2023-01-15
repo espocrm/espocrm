@@ -51,8 +51,10 @@ class TableTag implements Helper
 
         $content = $function !== null ? $function() : '';
 
+        $style = "border: {$border}; border-spacing: 0; border-collapse: collapse;";
+
         return Result::createSafeString(
-            "<table border=\"{$border}\" cellpadding=\"{$cellpadding}\" {$attributesPart}>" .
+            "<table style=\"{$style}\" border=\"{$border}\" cellpadding=\"{$cellpadding}\" {$attributesPart}>" .
             $content .
             "</table>"
         );
