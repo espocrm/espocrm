@@ -48,7 +48,7 @@ define('views/modals/mass-action', ['views/modal', 'model'], function (Dep, Mode
             this.status = 'Pending';
 
             this.headerText =
-                this.translate('Mass Action') + ': ' +
+                this.translate('Mass Action', 'scopeNames') + ': ' +
                 this.translate(this.action, 'massActions', this.options.scope);
 
             this.model = new Model();
