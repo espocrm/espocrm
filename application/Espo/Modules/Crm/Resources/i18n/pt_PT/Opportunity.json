@@ -8,23 +8,23 @@
     "leadSource": "Origem Lead",
     "doNotCall": "Não contactar",
     "closeDate": "Data de fecho",
-    "contacts": "Contactos",
+    "contacts": "Contatos",
     "description": "Descrição",
     "amountConverted": "Montante (convertido)",
     "amountWeightedConverted": "Quantia ponderada",
     "campaign": "Campanha",
     "originalLead": "Origem Lead",
     "amountCurrency": "Valor em moeda",
-    "contactRole": "Função do contacto",
+    "contactRole": "Função do contato",
     "lastStage": "Último estado",
-    "contact": "Contacto (primário)"
+    "contact": "Contato (primário)"
   },
   "links": {
-    "contacts": "Contactos",
+    "contacts": "Contatos",
     "documents": "Documentos",
     "campaign": "Campanha",
     "originalLead": "Lead original",
-    "contact": "Contacto (primário)"
+    "contact": "Contato (primário)"
   },
   "options": {
     "stage": {

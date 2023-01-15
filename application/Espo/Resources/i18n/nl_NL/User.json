@@ -35,7 +35,8 @@
     "dashboardTemplate": "Dashboard sjabloon",
     "auth2FAEnable": "2-Factor authenticatie inschakelen",
     "auth2FAMethod": "2FA-methode",
-    "auth2FATotpSecret": "2FA TOTP-geheim"
+    "auth2FATotpSecret": "2FA TOTP-geheim",
+    "workingTimeCalendar": "Werktijd Kalender"
   },
   "links": {
     "teams": "Groepen",
@@ -48,7 +49,9 @@
     "tasks": "Taken",
     "defaultTeam": "Standaard groep",
     "dashboardTemplate": "Dashboard sjabloon",
-    "userData": "Gebruikers gegevens"
+    "userData": "Gebruikers gegevens",
+    "workingTimeCalendar": "Werktijd Kalender",
+    "workingTimeRanges": "Werktijd Bereiken"
   },
   "labels": {
     "Create User": "Creëer Gebruiker",
@@ -72,7 +75,8 @@
     "Security": "Beveiliging",
     "Secret": "Geheim",
     "Send Password Change Link": "Stuur wachtwoordwijzigingslink",
-    "Send Code": "Code verzenden"
+    "Send Code": "Code verzenden",
+    "Login Link": "Inloglink"
   },
   "tooltips": {
     "defaultTeam": "Alle door gebruiker gecreëerde records worden standaard aan de groep gekoppeld.",
@@ -116,7 +120,9 @@
     "choose2FaEmailAddress": "Selecteer een e-mailadres dat gebruikt zal worden voor 2FA. Het is sterk aanbevolen om een niet-primair e-mailadres te gebruiken.",
     "enterCodeSentInEmail": "Voer de code in die naar uw e-mailadres is gestuurd.",
     "enterCodeSentBySms": "Voer de code in die per SMS naar uw telefoonnummer is gestuurd.",
-    "passwordChangeRequestNotFound": "Het verzoek om het wachtwoord te wijzigen is niet gevonden. Het kan verlopen zijn. Probeer een nieuw wachtwoord op te vragen vanaf de [login page]({url})."
+    "passwordChangeRequestNotFound": "Het verzoek om het wachtwoord te wijzigen is niet gevonden. Het kan verlopen zijn. Probeer een nieuw wachtwoord op te vragen vanaf de [login page]({url}).",
+    "loginAs": "Open de inloglink in een incognitovenster om uw huidige sessie te behouden. Gebruik uw beheerdersgegevens om in te loggen.",
+    "failedToLogIn": "Aanmelden mislukt"
   },
   "boolFilters": {
     "onlyMyTeam": "Alleen mijn groep"

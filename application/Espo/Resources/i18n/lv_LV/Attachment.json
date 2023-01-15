@@ -10,7 +10,8 @@
     "field": "Lauks",
     "sourceId": "Avota ID",
     "storage": "Krātuve",
-    "size": "Lielums (baitos)"
+    "size": "Lielums (baitos)",
+    "isBeingUploaded": "Tiek augšupielādēts"
   },
   "options": {
     "role": {

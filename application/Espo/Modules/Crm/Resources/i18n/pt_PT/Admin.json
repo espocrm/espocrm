@@ -2,7 +2,7 @@
   "layouts": {
     "detailConvert": "Converter Lead",
     "listForAccount": "Lista (para contas)",
-    "listForContact": "Lista (para contactos)"
+    "listForContact": "Lista (para contatos)"
   },
   "templates": {
     "invitation": "Convites",

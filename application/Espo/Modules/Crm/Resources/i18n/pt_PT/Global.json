@@ -1,7 +1,7 @@
 {
   "links": {
     "parent": "Retalivo a",
-    "contacts": "Contactos",
+    "contacts": "Contatos",
     "opportunities": "Oportunidades",
     "meetings": "Reuniões",
     "calls": "Chamadas",
@@ -11,11 +11,11 @@
     "documents": "Documentos",
     "account": "Conta",
     "opportunity": "Oportunidade",
-    "contact": "Contacto"
+    "contact": "Contato"
   },
   "scopeNames": {
     "Account": "Conta",
-    "Contact": "Contacto",
+    "Contact": "Contato",
     "Target": "Alvo",
     "Opportunity": "Oportunidade",
     "Meeting": "Reunião",
@@ -37,7 +37,7 @@
   },
   "scopeNamesPlural": {
     "Account": "Contas",
-    "Contact": "Contactos",
+    "Contact": "Contatos",
     "Target": "Alvos",
     "Opportunity": "Oportunidades",
     "Meeting": "Reuniões",

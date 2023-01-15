@@ -20,7 +20,7 @@
     "sortDirection": "Ordenação por defeito (orientação)",
     "relationName": "Nome da tabela intermédia",
     "linkMultipleField": "Link múltiplo campo",
-    "linkMultipleFieldForeign": "Link estrangeiro multiplo campo",
+    "linkMultipleFieldForeign": "Link estrangeiro múltiplo campo",
     "disabled": "Desativado",
     "textFilterFields": "Filtro de texto - campos ",
     "audited": "Auditado",
@@ -56,7 +56,7 @@
       "oneToOneLeft": "One-to-one left"
     },
     "sortDirection": {
-      "asc": "Crescente",
+      "asc": "Ascendente",
       "desc": "Descendente"
     }
   },

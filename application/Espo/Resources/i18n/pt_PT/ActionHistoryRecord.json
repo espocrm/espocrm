@@ -7,14 +7,14 @@
     "targetType": "Tipo de alvo",
     "authToken": "Token de autenticação",
     "ipAddress": "Endereço IP",
-    "authLogRecord": "registo de autenticações",
+    "authLogRecord": "Registo de autenticações",
     "userType": "Tipo de utilizador"
   },
   "links": {
     "authToken": "Token de autenticação",
     "user": "Utilizador",
     "target": "Alvo",
-    "authLogRecord": "registo de autenticações"
+    "authLogRecord": "Registo de autenticações"
   },
   "presetFilters": {
     "onlyMy": "Apenas eu"

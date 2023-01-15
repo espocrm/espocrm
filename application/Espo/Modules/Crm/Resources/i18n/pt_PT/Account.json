@@ -16,12 +16,12 @@
     "contactIsInactive": "Inativo"
   },
   "links": {
-    "contacts": "Contactos",
+    "contacts": "Contatos",
     "opportunities": "Oportunidades",
     "cases": "Casos",
     "documents": "Documentos",
     "meetingsPrimary": "Reuniões (expandidas)",
-    "callsPrimary": "Chamdas (expandidas)",
+    "callsPrimary": "Chamadas (expandidas)",
     "tasksPrimary": "Tarefas (expandidas)",
     "emailsPrimary": "emails (expandidas)",
     "targetLists": "Públicos Alvo",
@@ -29,7 +29,7 @@
     "campaign": "Campanha",
     "portalUsers": "Utilizadores do portal",
     "originalLead": "Lead original",
-    "contactsPrimary": "Contactos (primário)"
+    "contactsPrimary": "Contatos (primário)"
   },
   "options": {
     "type": {

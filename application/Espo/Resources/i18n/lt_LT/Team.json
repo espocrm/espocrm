@@ -3,19 +3,22 @@
     "name": "Vardas",
     "roles": "Rolės",
     "positionList": "Pozicijų sąrašas",
-    "layoutSet": "Maketų rinkinys"
+    "layoutSet": "Maketų rinkinys",
+    "workingTimeCalendar": "Darbo laiko kalendorius"
   },
   "links": {
     "users": "Vartotojai",
     "notes": "Pastabos",
     "roles": "Rolės",
     "inboundEmails": "Grupės el. pašto paskyros",
-    "layoutSet": "Maketų rinkinys"
+    "layoutSet": "Maketų rinkinys",
+    "workingTimeCalendar": "Darbo laiko kalendorius"
   },
   "tooltips": {
     "roles": "Prieigos rolės. Šios komandos vartotojai gauna prieigos kontrolės lygį iš pasirinktų rolių.",
     "positionList": "Galimos pozicijos šioje komandoje. Pavyzdžiui pardavėjas, vadybininkas.\n",
-    "layoutSet": "Suteikiama galimybė kurti kitokius nei standartiniai maketus. Maketų rinkinys bus taikomas naudotojams, kuriems ši komanda nustatyta kaip numatytoji komanda."
+    "layoutSet": "Suteikiama galimybė kurti kitokius nei standartiniai maketus. Maketų rinkinys bus taikomas naudotojams, kuriems ši komanda nustatyta kaip numatytoji komanda.",
+    "workingTimeCalendar": "Kalendorius bus taikomas naudotojams, kuriems ši komanda nustatyta kaip numatytoji komanda."
   },
   "labels": {
     "Create Team": "Sukurti komandą"

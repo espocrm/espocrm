@@ -62,7 +62,7 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 ano"
     },
     "globalRestrictions": {
-      "forbidden": "Proíbido",
+      "forbidden": "Proibido",
       "internal": "Interno",
       "onlyAdmin": "Restrito ao admin",
       "readOnly": "Apenas leitura",
@@ -82,7 +82,7 @@
     "after": "O valor de data deve ser posterior ao valor de data do campo especificado.",
     "readOnly": "O valor do campo não pode ser especificado pelo utilizador. Mas pode ser calculado por fórmula.",
     "maxFileSize": "Se vazio ou 0, então não tem limite.",
-    "fileAccept": "Quais tipos de ficheiros podem ser aceitados. É possível adicionar itens personalizados.",
+    "fileAccept": "Quais tipos de arquivo aceitar. É possível adicionar itens personalizados.",
     "barcodeLastChar": "Para o tipo EAN-13.",
     "conversionDisabled": "A conversão de moeda não será aplicada neste campo.",
     "cutHeight": "Texto maior que o valor especificado será cortado com um botão \"ver mais\".",
@@ -125,7 +125,7 @@
     "currency": "O valor da moeda. Um valor variável com o código de moeda.",
     "int": "Um número inteiro.",
     "float": "Um número com casas decimais.",
-    "bool": "Uma caixa de seleção. Dois valores possíves: verdadeiro e falso.",
+    "bool": "Uma caixa de seleção. Dois valores possíveis: verdadeiro e falso.",
     "multiEnum": "Uma lista de valores, múltiplos valores podem ser selecionados. A lisa é ordenada.",
     "checklist": "Uma lista de caixas de seleção.",
     "array": "Uma lista de valores, similar a um campo Multi-Enum. ",
@@ -138,11 +138,11 @@
     "number": "Um número de incremento automático do tipo de string com um possível prefixo e comprimento específico.",
     "autoincrement": "Um número inteiro, apenas de leitura e com incremento automático, gerado.",
     "barcode": "Um código de barras. Pode ser impresso para PDF.",
-    "email": "Um conjunto de endereços de email, com o paramêtros: opted-out, inválio, primário.",
-    "phone": "Um conjunto de números de telemóvel, com o paramêtros: opted-out, inválio, primário.",
+    "email": "Um conjunto de endereços de email, com o parâmetros: opted-out, inválido, primário.",
+    "phone": "Um conjunto de números de telemóvel, com o parâmetros: opted-out, inválido, primário.",
     "foreign": "Um campo de um registo relacionado. Apenas de leitura.",
-    "link": "Um reegisto relacionado com uma relação  Belongs-To (many-to-one or one-to-one)",
+    "link": "Um registo relacionado com uma relação  Belongs-To (many-to-one or one-to-one)",
     "linkParent": "Um registo relacionado com uma relação Belongs-To-Parent. Pode ter diferentes tipos de entidades.",
-    "linkMultiple": "Um registo relacionado com uma relção Has-Many (many-to-many or one-to-many). Nem todas as relações têm campos com links múltiplos. Apenas esses têm, onde o paramêtro está ativo."
+    "linkMultiple": "Um registo relacionado com uma relação Has-Many (many-to-many or one-to-many). Nem todas as relações têm campos com links múltiplos. Apenas esses têm, onde o parâmetro está ativo."
   }
 }

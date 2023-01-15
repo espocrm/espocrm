@@ -2,7 +2,6 @@
   "fields": {
     "name": "Nome",
     "status": "Estado",
-    "isHtml": "É Html",
     "body": "Corpo",
     "subject": "Assunto",
     "attachments": "Anexos",

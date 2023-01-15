@@ -133,7 +133,28 @@
     "auth2FAForced": "Priversti nuolatinius naudotojus nustatyti 2FA",
     "smsProvider": "SMS paslaugų teikėjas",
     "outboundSmsFromNumber": "SMS iš numerio",
-    "recordsPerPageSelect": "Įrašai viename puslapyje (pasirinkite)"
+    "recordsPerPageSelect": "Įrašai viename puslapyje (pasirinkite)",
+    "attachmentUploadMaxSize": "Maksimalus įkėlimo dydis (Mb)",
+    "attachmentUploadChunkSize": "Įkelti gabalo dydį (Mb)",
+    "workingTimeCalendar": "Darbo laiko kalendorius",
+    "oidcClientId": "OIDC kliento ID",
+    "oidcClientSecret": "OIDC kliento paslaptis",
+    "oidcAuthorizationRedirectUri": "OIDC autorizavimo nukreipimo URI",
+    "oidcAuthorizationEndpoint": "OIDC autorizavimo galinis taškas",
+    "oidcTokenEndpoint": "OIDC žetono galinis taškas",
+    "oidcJwksEndpoint": "OIDC JSON žiniatinklio raktų nustatymo galinis taškas",
+    "oidcJwtSignatureAlgorithmList": "OIDC JWT leidžiami parašo algoritmai",
+    "oidcScopes": "OIDC taikymo sritys",
+    "oidcGroupClaim": "OIDC grupės pretenzija",
+    "oidcCreateUser": "OIDC Sukurti naudotoją",
+    "oidcUsernameClaim": "OIDC vartotojo vardo reikalavimas",
+    "oidcTeams": "OIDC komandos",
+    "oidcSync": "OIDC sinchronizavimas",
+    "oidcSyncTeams": "OIDC sinchronizavimo komandos",
+    "oidcFallback": "OIDC atsarginis prisijungimas",
+    "oidcAllowRegularUserFallback": "OIDC Leidimas įprastiems naudotojams prisijungti atsargine tvarka",
+    "oidcAllowAdminUser": "OIDC Leisti administratoriaus naudotojams prisijungti prie OIDC",
+    "oidcLogoutUrl": "OIDC atsijungimo URL"
   },
   "tooltips": {
     "recordsPerPage": "Iš pradžių rodomas įrašų skaičius sąrašo rodinyje.",
@@ -206,7 +227,16 @@
     "outboundEmailFromAddress": "Sistemos el. pašto adresas.",
     "smtpServer": "Jei tuščia, bus naudojama grupės el. pašto paskyra su atitinkamu el. pašto adresu.",
     "busyRangesEntityList": "Į ką bus atsižvelgta rodant užimto laiko intervalus tvarkaraštyje ir laiko juostoje.",
-    "recordsPerPageSelect": "Įrašų skaičius, iš pradžių rodomas pasirenkant įrašus."
+    "recordsPerPageSelect": "Įrašų skaičius, iš pradžių rodomas pasirenkant įrašus.",
+    "workingTimeCalendar": "Darbo laiko kalendorius, kuris pagal numatytuosius nustatymus bus taikomas visiems naudotojams.",
+    "oidcGroupClaim": "Reikalavimas naudotojui dėl komandos žemėlapio.",
+    "oidcFallback": "Leisti prisijungti pagal vartotojo vardą ir slaptažodį.",
+    "oidcCreateUser": "Sukurti naują \"Espo\" naudotoją, kai nerandama tinkamo naudotojo.",
+    "oidcSync": "Sinchronizuokite naudotojo duomenis (kiekvieno prisijungimo metu).",
+    "oidcSyncTeams": "Sinchronizuokite naudotojų komandas (kiekvieno prisijungimo metu).",
+    "oidcUsernameClaim": "Reikalavimas, naudojamas kaip vartotojo vardas (naudotojų parinkimui ir kūrimui).",
+    "oidcTeams": "\"Espo\" komandos atvaizduotos pagal tapatybės teikėjo grupes / komandas / vaidmenis. Komandos su tuščia atvaizdavimo reikšme visada bus priskirtos naudotojui (kuriant arba sinchronizuojant).",
+    "oidcLogoutUrl": "URL adresas, į kurį naršyklė bus nukreipiama po atsijungimo iš \"Espo\". Skirtas išvalyti sesijos informaciją naršyklėje ir atlikti atsijungimą paslaugų teikėjo pusėje. Paprastai URL turi parametrą redirect-URL, kad būtų galima grįžti atgal į \"Espo\".\n\nGalimi simboliai:\n* `{siteUrl}`\n* `{klientoId}`"
   },
   "labels": {
     "System": "Sistema",
@@ -224,7 +254,9 @@
     "Misc": "Įvairūs",
     "Passwords": "Slaptažodžiai",
     "2-Factor Authentication": "2 veiksnių autentiškumo nustatymas",
-    "Group Tab": "Skirtukas Grupė"
+    "Group Tab": "Skirtukas Grupė",
+    "Attachments": "Priedai",
+    "IdP Group": "IdP grupė"
   },
   "messages": {
     "ldapTestConnection": "Prisijungėte sėkmingai. Ryšys veikia."

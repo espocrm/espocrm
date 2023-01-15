@@ -9,14 +9,6 @@
     "defaultCurrency": "Валюта по умолчанию",
     "currencyList": "Список валют",
     "language": "Язык",
-    "smtpServer": "Сервер",
-    "smtpPort": "Порт",
-    "smtpAuth": "Аутентификация",
-    "smtpSecurity": "Безопасность",
-    "smtpUsername": "Имя пользователя",
-    "emailAddress": "Адрес эл. почты",
-    "smtpPassword": "Пароль",
-    "smtpEmailAddress": "Адрес эл. почты",
     "exportDelimiter": "Разделитель полей при экспорте",
     "signature": "Подпись к эл. письмам",
     "dashboardTabList": "Список вкладок",
@@ -50,7 +42,6 @@
   "labels": {
     "Notifications": "Оповещения",
     "User Interface": "Интерфейс пльзователя",
-    "SMTP": "SMTP- протокол передачи эл.почты",
     "Misc": "Разное",
     "Locale": "Локаль",
     "Reset Dashboard to Default": "Сбросить настройки панели виджетов по умолчанию"

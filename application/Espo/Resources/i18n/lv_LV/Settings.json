@@ -137,7 +137,28 @@
     "auth2FAForced": "Piespiest regulāros lietotājus iestatīt 2FA",
     "smsProvider": "SMS pakalpojumu sniedzējs",
     "outboundSmsFromNumber": "SMS no numura",
-    "recordsPerPageSelect": "Ieraksti vienā lappusē (izvēlieties)"
+    "recordsPerPageSelect": "Ieraksti vienā lappusē (izvēlieties)",
+    "attachmentUploadMaxSize": "Maksimālais augšupielādes izmērs (Mb)",
+    "attachmentUploadChunkSize": "Augšupielādējamo datu kopu lielums (Mb)",
+    "workingTimeCalendar": "Darba laika kalendārs",
+    "oidcClientId": "OIDC klienta ID",
+    "oidcClientSecret": "OIDC klienta noslēpums",
+    "oidcAuthorizationRedirectUri": "OIDC autorizācijas pāradresācijas URI",
+    "oidcAuthorizationEndpoint": "OIDC autorizācijas galapunkts",
+    "oidcTokenEndpoint": "OIDC žetona galapunkts",
+    "oidcJwksEndpoint": "OIDC JSON tīmekļa atslēgu iestatīšanas galapunkts",
+    "oidcJwtSignatureAlgorithmList": "OIDC JWT atļautie paraksta algoritmi",
+    "oidcScopes": "OIDC darbības jomas",
+    "oidcGroupClaim": "OIDC grupas prasījums",
+    "oidcCreateUser": "OIDC Izveidot lietotāju",
+    "oidcUsernameClaim": "OIDC lietotājvārda pieprasījums",
+    "oidcTeams": "OIDC komandas",
+    "oidcSync": "OIDC sinhronizācija",
+    "oidcSyncTeams": "OIDC sinhronizācijas komandas",
+    "oidcFallback": "OIDC rezerves pieteikšanās",
+    "oidcAllowRegularUserFallback": "OIDC Atļaut rezerves pieteikšanos parastajiem lietotājiem",
+    "oidcAllowAdminUser": "OIDC Atļaut OIDC pieteikšanos admin lietotājiem",
+    "oidcLogoutUrl": "OIDC izrakstīšanās URL"
   },
   "tooltips": {
     "recordsPerPage": "Saraksta skatījumos sākotnēji parādāmo ierakstu skaits.",
@@ -210,7 +231,16 @@
     "outboundEmailFromAddress": "Sistēmas e-pasta adrese.",
     "smtpServer": "Ja tas ir tukšs, tiks izmantots grupas e-pasta konts ar atbilstošo e-pasta adresi.",
     "busyRangesEntityList": "Kas tiks ņemts vērā, rādot aizņemtā laika diapazonus plānotājā un laika grafikā.",
-    "recordsPerPageSelect": "Ierakstu skaits, kas sākotnēji tiek parādīts, izvēloties ierakstus."
+    "recordsPerPageSelect": "Ierakstu skaits, kas sākotnēji tiek parādīts, izvēloties ierakstus.",
+    "workingTimeCalendar": "Darba laika kalendārs, kas pēc noklusējuma tiks piemērots visiem lietotājiem.",
+    "oidcGroupClaim": "Prasība lietotājam par komandas kartēšanu.",
+    "oidcFallback": "Atļaut pieteikšanos, izmantojot lietotājvārdu/paroli.",
+    "oidcCreateUser": "Izveidot jaunu lietotāju Espo, ja nav atrasts atbilstošs lietotājs.",
+    "oidcSync": "Sinhronizēt lietotāja datus (pēc katras pieteikšanās).",
+    "oidcSyncTeams": "Lietotāju komandu sinhronizēšana (pēc katras pieteikšanās).",
+    "oidcUsernameClaim": "Pretenzija, kas jāizmanto kā lietotājvārds (lietotāju saskaņošanai un izveidei).",
+    "oidcTeams": "Espo komandas, kas kartētas pret identitātes nodrošinātāja grupām/komandām/ lomām. Komandas ar tukšu kartēšanas vērtību vienmēr tiks piešķirtas lietotājam (izveidojot vai sinhronizējot).",
+    "oidcLogoutUrl": "URL, uz kuru pārlūkprogramma tiks novirzīta pēc izrakstīšanās no Espo. Paredzēts sesijas informācijas dzēšanai pārlūkprogrammā un izrakstīšanai no pakalpojuma sniedzēja puses. Parasti URL satur parametru redirect-URL, lai atgrieztos atpakaļ Espo.\n\nPieejamie vietrāži:\n* `{siteUrl}`\n* `{{clientId}}"
   },
   "labels": {
     "System": "Sistēma",
@@ -229,7 +259,9 @@
     "Misc": "Dažādi",
     "Passwords": "Paroles",
     "2-Factor Authentication": "2 faktoru autentifikācija",
-    "Group Tab": "Grupas cilne"
+    "Group Tab": "Grupas cilne",
+    "Attachments": "Pielikumi",
+    "IdP Group": "IdP grupa"
   },
   "messages": {
     "ldapTestConnection": "Savienojums sekmīgi izveidots."

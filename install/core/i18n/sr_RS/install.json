@@ -91,23 +91,6 @@
     "option": "Preporučena vrednost je {0}",
     "mysqlSettingError": "EspoCRM zahteva MySQL podešavanje \"{NAME}\" da se podesi na {VALUE}"
   },
-  "options": {
-    "modRewriteInstruction": {
-      "apache": {
-        "windows": "<br> <pre>1. Pronađite httpd.conf datoteku (uobičajeno je u fascikli conf, config ili nešto slično)<br>\n2. Unutar httpd.conf datoteke skinite komentar sa reda <code>{WINDOWS_APACHE1}</code> (uklonite '#' znak na početku reda)<br>\n3. Proverite i da li su ClearModuleList AddModule mod_rewrite.c takođe bez znaka #.\n</pre>",
-        "linux": "<br><br>1.Omogućite \"mod_rewrite\". Da ovo uradite pokrenite ovaj kod u terminalu:<pre>{APACHE1}</pre><br>2. Omogućite .htaccess podršku. Dodajte/izmenite podešacanja servera (<code>{APACHE2_PATH1}</code>, <code>{APACHE2_PATH2}</code>, <code>{APACHE2_PATH3}</code>):<pre>{APACHE2}</pre>\n Nakon toga pokrenite ovaj kod na serveru:<pre>{APACHE3}</pre><br>3. Pokuštajte da dodate RewriteBase putanju, otvorite datoteku {API_PATH}.htaccess i izmenite sledeći red:<pre>{APACHE4}</pre>NA<pre>{APACHE5}</pre><br> Za više informacija posetite <a href=\"{APACHE_LINK}\" target=\"_blank\">Apache server konfiguraciju za EspoCRM</a>.<br><br>"
-      },
-      "nginx": {
-        "linux": "<br> Dodajte ovaj kod u svoju Nginx servera blok config datoteku <code>{NGINX_PATH}</code> unutar \"server\" sekcije:<pre>{NGINX}</pre> <br> Za više informacija posetite <a href=\"{NGINX_LINK}\" target=\"_blank\">Nginx server konfiguraciju za EspoCRM</a>.<br><br>"
-      }
-    },
-    "modRewriteTitle": {
-      "apache": "<h3>API Greška: EspoCRM API nije dostupan.</h3><br>Učinite samo neophodne izmene. Posle svake proverite da li je problem rešen.",
-      "nginx": "<h3>API greška: EspoCRM API je dostupan</h3>",
-      "microsoft-iis": "<h3>API greška: EspoCRM API je dostupan</h3> <br> Mogući problem: onemogućen \"URL Rewrite \". Molimo proverite i omogućite \"URL Rewrite \" modul u IIS serveru",
-      "default": "<h3>API greška: EspoCRM API je dostupan</h3> <br> Mogući problem: onemogućen Rewrite Module. Molimo proverite i omogućiti Rewrite Module u vašem serveru (npr mod_rewrite u Apachu) i .htaccess podršku."
-    }
-  },
   "systemRequirements": {
     "requiredPhpVersion": "PHP verzija",
     "requiredMysqlVersion": "MySQL verzija",

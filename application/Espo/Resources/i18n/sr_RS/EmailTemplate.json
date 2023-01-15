@@ -1,11 +1,9 @@
 {
   "fields": {
     "name": "Ime",
-    "isHtml": "je HTML",
     "body": "Telo",
     "subject": "Predmet",
     "attachments": "Prilozi",
-    "insertField": "Ubaci polje",
     "oneOff": "Jednokratno"
   },
   "labels": {

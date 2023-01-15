@@ -75,7 +75,8 @@
     "Misc": "Overig",
     "Job Settings": "Taakinstellingen",
     "Configuration Instructions": "Configuratie-instructies",
-    "Formula Sandbox": "Formule Sandbox"
+    "Formula Sandbox": "Formule Sandbox",
+    "Working Time Calendars": "Werktijd kalenders"
   },
   "layouts": {
     "list": "Lijst",
@@ -189,7 +190,9 @@
     "onlyDefaultCurrency": "Alleen standaardvaluta",
     "dynamicLogicInvalid": "Condities die veld ongeldig maken",
     "conversionDisabled": "Conversie uitschakelen",
-    "decimalPlaces": "Decimale posities"
+    "decimalPlaces": "Decimale posities",
+    "pattern": "Patroon",
+    "globalRestrictions": "Globale beperkingen"
   },
   "messages": {
     "selectEntityType": "Selecteer de eenheid soort in het linker menu.",
@@ -301,6 +304,7 @@
     "settings": "systeem",
     "userInterface": "ui, thema, tabbladen, logo, dashboard",
     "templateManager": "meldingen",
-    "authentication": "wachtwoord, beveiliging, ldap"
+    "authentication": "wachtwoord, beveiliging, ldap",
+    "labelManager": "taal, vertaling"
   }
 }

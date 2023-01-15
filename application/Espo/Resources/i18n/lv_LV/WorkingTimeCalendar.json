@@ -1,0 +1,23 @@
+{
+  "labels": {
+    "Create WorkingTimeCalendar": "Izveidot kalendāru",
+    "Ranges": "Diapazoni"
+  },
+  "fields": {
+    "timeZone": "Laika josla",
+    "timeRanges": "Darba dienas grafiks",
+    "weekday2": "Otrdiena",
+    "weekday4": "Cet",
+    "weekday5": "Piektdiena",
+    "weekday0TimeRanges": "Saules grafiks",
+    "weekday1TimeRanges": "Pirmdiena Grafiks",
+    "weekday2TimeRanges": "Ot grafiks",
+    "weekday3TimeRanges": "Wed grafiks",
+    "weekday4TimeRanges": "Cet grafiks",
+    "weekday5TimeRanges": "Fri grafiks",
+    "weekday6TimeRanges": "Sat grafiks"
+  },
+  "links": {
+    "ranges": "Diapazoni"
+  }
+}

@@ -10,7 +10,8 @@
     "field": "Поле",
     "sourceId": "ID Источника",
     "storage": "Хранилище",
-    "size": "Размер (bytes)"
+    "size": "Размер (bytes)",
+    "isBeingUploaded": "Загружается"
   },
   "options": {
     "role": {

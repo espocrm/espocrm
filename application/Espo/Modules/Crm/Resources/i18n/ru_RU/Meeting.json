@@ -16,7 +16,7 @@
     "dateStartDate": "Дата начала (весь день)",
     "dateEndDate": "Дата окончания (весь день)",
     "isAllDay": "Весь день",
-    "Acceptance": "Принятие"
+    "sourceEmail": "Источник Электронная почта"
   },
   "options": {
     "status": {

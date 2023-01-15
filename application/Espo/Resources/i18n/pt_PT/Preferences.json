@@ -22,7 +22,7 @@
     "dashboardLayout": "Layout do Painel",
     "emailReplyForceHtml": "Responder a email em HTML",
     "autoFollowEntityTypeList": "Auto acompanhamento global",
-    "emailReplyToAllByDefault": "Email Responder a todos por padrão",
+    "emailReplyToAllByDefault": "Responda por e-amil para todos por padrão",
     "doNotFillAssignedUserIfNotRequired": "Não preencha previamente o utilizador atribuído na criação do registo",
     "followEntityOnStreamPost": "Seguir automaticamente o registo após publicar no Fluxo",
     "followCreatedEntities": "Siga automaticamente os registos criados",
@@ -31,7 +31,7 @@
     "scopeColorsDisabled": "Desativar cores do âmbito",
     "tabColorsDisabled": "Desativar cores das guias",
     "assignmentNotificationsIgnoreEntityTypeList": "Notificações de atribuição no aplicativo",
-    "assignmentEmailNotificationsIgnoreEntityTypeList": "Notificaões de atribuição via email"
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Notificações de atribuição via email"
   },
   "options": {
     "weekStart": {

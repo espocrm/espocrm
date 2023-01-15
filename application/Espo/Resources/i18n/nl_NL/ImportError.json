@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "validationFailures": "Validatiefouten",
+    "rowIndex": "Rij index",
+    "exportRowIndex": "Rij index exporteren",
+    "lineNumber": "Lijnnummer",
+    "exportLineNumber": "Exportregelnummer",
+    "row": "Rij"
+  },
+  "options": {
+    "type": {
+      "Validation": "Validatie",
+      "Access": "Toegang",
+      "Not-Found": "Niet gevonden"
+    }
+  },
+  "tooltips": {
+    "lineNumber": "Een regelnummer in de originele CSV.",
+    "exportLineNumber": "Een regelnummer in de export CSV."
+  }
+}

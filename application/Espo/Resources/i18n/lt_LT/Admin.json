@@ -79,7 +79,8 @@
     "Misc": "Įvairūs",
     "Job Settings": "Darbo nustatymai",
     "Configuration Instructions": "Konfigūravimo instrukcijos",
-    "Formula Sandbox": "Formulės smėlio dėžė"
+    "Formula Sandbox": "Formulės smėlio dėžė",
+    "Working Time Calendars": "Darbo laiko kalendoriai"
   },
   "layouts": {
     "list": "Sąrašas",
@@ -203,7 +204,9 @@
     "onlyDefaultCurrency": "Tik numatytoji valiuta",
     "dynamicLogicInvalid": "Sąlygos, dėl kurių laukas negalioja",
     "conversionDisabled": "Išjungti konversiją",
-    "decimalPlaces": "Dešimtainės vietos"
+    "decimalPlaces": "Dešimtainės vietos",
+    "pattern": "Šablonas",
+    "globalRestrictions": "Visuotiniai apribojimai"
   },
   "messages": {
     "selectEntityType": "Pasirinkite objekto tipą kairiajame meniu.",
@@ -272,7 +275,8 @@
     "layoutSets": "Maketų, kuriuos galima priskirti komandoms ir portalams, rinkiniai.",
     "jobsSettings": "Darbo apdorojimo nustatymai. Užduotys vykdomos fone.",
     "sms": "SMS nustatymai.",
-    "formulaSandbox": "Rašykite ir išbandykite formulių scenarijus."
+    "formulaSandbox": "Rašykite ir išbandykite formulių scenarijus.",
+    "workingTimeCalendars": "Darbo grafikas."
   },
   "options": {
     "previewSize": {
@@ -311,7 +315,7 @@
     "twoFactorCode": "2FA kodas"
   },
   "strings": {
-    "rebuildRequired": "Reikia atstatyti"
+    "rebuildRequired": "Būtina sistemos rekonstrukcija"
   },
   "keywords": {
     "settings": "sistema",
@@ -322,6 +326,7 @@
     "authTokens": "istorija, prieiga, žurnalas",
     "entityManager": "laukai,santykiai,ryšiai",
     "templateManager": "pranešimai",
-    "authentication": "slaptažodis, saugumas, ldap"
+    "authentication": "slaptažodis, saugumas, ldap",
+    "labelManager": "kalba, vertimas"
   }
 }

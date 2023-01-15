@@ -1,7 +1,8 @@
 {
   "messages": {
     "infoMention": "Введите **@username**, чтобы упомянуть пользователя в сообщении.",
-    "infoSyntax": "Доступный синтаксис markdown"
+    "infoSyntax": "Доступный синтаксис markdown",
+    "couldNotAddFollowerUserHasNoAccessToStream": "Не удалось добавить пользователя '{userName}' к подписчикам. Пользователь не имеет 'потокового' доступа к записи."
   },
   "syntaxItems": {
     "code": "код",

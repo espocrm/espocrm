@@ -46,7 +46,7 @@
     "smtpIsShared": "Se marcado, os utilizadores poderão enviar emails usando o seu serviço SMTP. A disponibilidade é controlada por funções através da permissão de conta de email do grupo.",
     "smtpIsForMassEmail": "Se marcado, o SMTP estará disponível para email em massa.",
     "storeSentEmails": "Os emails enviados serão armazenados no servidor IMAP.",
-    "useSmtp": "Possiblidade de enviar emails."
+    "useSmtp": "A capacidade de enviar emails."
   },
   "links": {
     "filters": "Filtros",

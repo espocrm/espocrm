@@ -387,7 +387,7 @@ class SendService
             return [null, null];
         }
 
-        $smtpParams->withFromName($user->getName());
+        $smtpParams = $smtpParams->withFromName($user->getName());
 
         return [$smtpParams, $personalAccount];
     }

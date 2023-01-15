@@ -6,7 +6,6 @@
     "to": "Za",
     "replyTo": "Odgovarati na",
     "replyToString": "Odgovarati na (string)",
-    "isHtml": "je HTML",
     "body": "Telo teksta",
     "subject": "Predmet",
     "attachments": "Prilozi",
@@ -80,7 +79,6 @@
     "Folders": "Fascikle"
   },
   "messages": {
-    "noSmtpSetup": "Nema podešavanje SMTP. {link}.",
     "testEmailSent": "Test poruka je poslata",
     "emailSent": "Poruka je poslata",
     "savedAsDraft": "Sačuvano kao nacrt"

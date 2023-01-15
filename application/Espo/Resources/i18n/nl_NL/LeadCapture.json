@@ -19,7 +19,8 @@
     "duplicateCheck": "Dubbele controle",
     "skipOptInConfirmationIfSubscribed": "Bevestiging overslaan als het lood al in de doellijst is opgenomen",
     "smtpAccount": "SMTP-account",
-    "inboundEmail": "Groep e-mailaccount"
+    "inboundEmail": "Groep e-mailaccount",
+    "exampleRequestHeaders": "Koppen"
   },
   "links": {
     "targetList": "Doellijst",

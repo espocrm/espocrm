@@ -64,6 +64,13 @@
     "barcodeType": {
       "pharmacode": "Farmakodekss",
       "QRcode": "QR kods"
+    },
+    "globalRestrictions": {
+      "forbidden": "Aizliegts",
+      "internal": "Iekšējais",
+      "onlyAdmin": "Tikai administratoram",
+      "readOnly": "Tikai lasīšanai",
+      "nonAdminReadOnly": "Tikai lasīšanai, kas nav administrators"
     }
   },
   "tooltips": {
@@ -81,7 +88,15 @@
     "maxFileSize": "If tukšs vai 0, tad limita nav.",
     "fileAccept": "Kādus failu tipus pieņemt. Ir iespējams pievienot pielāgotas pozīcijas.",
     "barcodeLastChar": "EAN-13 tipam.",
-    "conversionDisabled": "Šim laukam netiks piemērota valūtas konvertēšanas darbība."
+    "conversionDisabled": "Šim laukam netiks piemērota valūtas konvertēšanas darbība.",
+    "cutHeight": "Teksts, kas ir lielāks par norādīto vērtību, tiks izgriezts, un tiks parādīta poga \"parādīt vairāk\".",
+    "urlStrip": "Noņemiet protokolu un slīpsvītru.",
+    "pattern": "Regulārā izteiksme, pēc kuras pārbaudīt lauka vērtību. Definējiet izteiksmi vai izvēlieties iepriekš definētu.",
+    "options": "Iespējamo vērtību un to marķējumu saraksts.",
+    "optionsArray": "Iespējamo vērtību un to apzīmējumu saraksts. Ja lauks ir tukšs, tajā var ievadīt pielāgotas vērtības.",
+    "maxCount": "Maksimālais atļautais atlasāmo elementu skaits.",
+    "displayAsList": "Katrs vienums jaunā rindā.",
+    "optionsVarchar": "Automātiski papildināmo vērtību saraksts."
   },
   "fieldParts": {
     "address": {

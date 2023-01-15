@@ -85,6 +85,8 @@ class Login implements LoginInterface
         $endpoint = $this->config->get('oidcTokenEndpoint');
         /** @var ?string $clientId */
         $clientId = $this->config->get('oidcClientId');
+        /** @var ?string $clientSecret */
+        $clientSecret = $this->config->get('oidcClientSecret');
         $redirectUri = rtrim($this->config->get('siteUrl'), '/') . '/oauth-callback.php';
 
         if (!$endpoint) {
@@ -95,7 +97,11 @@ class Login implements LoginInterface
             throw new RuntimeException("No client ID.");
         }
 
-        [$rawToken, $failResult] = $this->requestToken($endpoint, $clientId, $code, $redirectUri);
+        if (!$clientSecret) {
+            throw new RuntimeException("No client secret.");
+        }
+
+        [$rawToken, $failResult] = $this->requestToken($endpoint, $clientId, $code, $redirectUri, $clientSecret);
 
         if ($failResult) {
             return $failResult;
@@ -180,11 +186,17 @@ class Login implements LoginInterface
     /**
      * @return array{?string, ?Result}
      */
-    private function requestToken(string $endpoint, string $clientId, string $code, string $redirectUri): array
-    {
+    private function requestToken(
+        string $endpoint,
+        string $clientId,
+        string $code,
+        string $redirectUri,
+        string $clientSecret
+    ): array {
         $params = [
             'grant_type' => 'authorization_code',
             'client_id' => $clientId,
+            'client_secret' => $clientSecret,
             'code' => $code,
             'redirect_uri' => $redirectUri,
         ];

@@ -56,6 +56,13 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 maanden",
       "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 maanden",
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+ 1 jaar"
+    },
+    "globalRestrictions": {
+      "forbidden": "Verboden",
+      "internal": "Intern",
+      "onlyAdmin": "Alleen beheerders",
+      "readOnly": "Alleen lezen",
+      "nonAdminReadOnly": "Niet-beheerders, alleen-lezen"
     }
   },
   "tooltips": {
@@ -73,7 +80,15 @@
     "maxFileSize": "Indien leeg of 0 dan geen limiet.",
     "fileAccept": "Welke bestandstypen te accepteren. Het is mogelijk om aangepaste items toe te voegen.",
     "barcodeLastChar": "Voor EAN-13 type.",
-    "conversionDisabled": "De valutaconversie actie zal niet worden toegepast op dit veld."
+    "conversionDisabled": "De valutaconversie actie zal niet worden toegepast op dit veld.",
+    "cutHeight": "Een tekst die hoger is dan een bepaalde waarde wordt afgekapt met een \"toon meer\" knop.",
+    "urlStrip": "Maximum aantal items dat mag worden geselecteerd.",
+    "pattern": "Een reguliere expressie om een veldwaarde aan te toetsen. Definieer een uitdrukking of selecteer een vooraf gedefinieerde.",
+    "options": "Een lijst van mogelijke waarden en hun labels.",
+    "optionsArray": "Een lijst met mogelijke waarden en hun labels. Als het veld leeg is, kunnen er aangepaste waarden worden ingevoerd.",
+    "maxCount": "Maximum aantal items dat mag worden geselecteerd.",
+    "displayAsList": "Elk item op een nieuwe regel.",
+    "optionsVarchar": "Een lijst van autocomplete waarden."
   },
   "fieldParts": {
     "address": {

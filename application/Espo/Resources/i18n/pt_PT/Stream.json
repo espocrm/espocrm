@@ -1,6 +1,6 @@
 {
   "messages": {
-    "infoMention": "Escrva **@username** para mencionar um utilizador no post.",
+    "infoMention": "Escreva **@username** para mencionar um utilizador no post.",
     "infoSyntax": "Sintaxe markdown disponível.",
     "couldNotAddFollowerUserHasNoAccessToStream": "Não foi possível adicionar o utilizador '{userName}' aos seguidores. O utilizador não tem acesso ao 'Fluxo' do registro."
   },

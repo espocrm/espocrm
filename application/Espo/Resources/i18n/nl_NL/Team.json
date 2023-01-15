@@ -3,19 +3,22 @@
     "name": "Naam",
     "roles": "Functies",
     "positionList": "Overzichtslijst",
-    "layoutSet": "Lay-out set"
+    "layoutSet": "Lay-out set",
+    "workingTimeCalendar": "Werktijd Kalender"
   },
   "links": {
     "users": "Gebruikers",
     "notes": "Notities",
     "roles": "Functies",
     "inboundEmails": "Groep e-mailaccounts",
-    "layoutSet": "Lay-out set"
+    "layoutSet": "Lay-out set",
+    "workingTimeCalendar": "Werktijd Kalender"
   },
   "tooltips": {
     "roles": "Alle gebruikers van deze groep krijgen de rechten uit de geselecteerde rollen.",
     "positionList": "Beschikbare functies in deze groep. Zoals Verkoop, Manager ed.",
-    "layoutSet": "Biedt de mogelijkheid om lay-outs te hebben die verschillen van de standaard lay-outs. Lay-out set zal worden toegepast op gebruikers die deze groep als standaard groep hebben ingesteld."
+    "layoutSet": "Biedt de mogelijkheid om lay-outs te hebben die verschillen van de standaard lay-outs. Lay-out set zal worden toegepast op gebruikers die deze groep als standaard groep hebben ingesteld.",
+    "workingTimeCalendar": "Een kalender wordt toegepast op gebruikers die dit team als standaardteam hebben ingesteld."
   },
   "labels": {
     "Create Team": "Creëer Groep"

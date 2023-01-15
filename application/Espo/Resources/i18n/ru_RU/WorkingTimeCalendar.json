@@ -1,0 +1,25 @@
+{
+  "labels": {
+    "Create WorkingTimeCalendar": "Создать календарь",
+    "Ranges": "Диапазоны"
+  },
+  "fields": {
+    "timeZone": "Часовой пояс",
+    "timeRanges": "Расписание рабочего дня",
+    "weekday0": "Солнце",
+    "weekday1": "Пн",
+    "weekday3": "Ср.",
+    "weekday5": "Пн",
+    "weekday6": "Сб",
+    "weekday0TimeRanges": "Солнечное расписание",
+    "weekday1TimeRanges": "Расписание на пн",
+    "weekday2TimeRanges": "Расписание на вторник",
+    "weekday3TimeRanges": "Расписание на среду",
+    "weekday4TimeRanges": "Расписание",
+    "weekday5TimeRanges": "Расписание на пятницу",
+    "weekday6TimeRanges": "Расписание на субботу"
+  },
+  "links": {
+    "ranges": "Диапазоны"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "labels": {
+    "Create WorkingTimeCalendar": "Sukurti kalendorių",
+    "Ranges": "Diapazonai"
+  },
+  "fields": {
+    "timeZone": "Laiko juosta",
+    "timeRanges": "Darbo dienos tvarkaraštis",
+    "weekday0": "Sk.",
+    "weekday1": "Pr.",
+    "weekday2": "An.",
+    "weekday3": "Tr.",
+    "weekday4": "Kt.",
+    "weekday5": "Pn.",
+    "weekday6": "Št.",
+    "weekday0TimeRanges": "Sekmadienio tvarkaraštis",
+    "weekday1TimeRanges": "Pirmadienio tvarkaraštis",
+    "weekday2TimeRanges": "Antradienis Tvarkaraštis",
+    "weekday3TimeRanges": "Trečiadienio tvarkaraštis",
+    "weekday4TimeRanges": "Ketvirtadienio tvarkaraštis",
+    "weekday5TimeRanges": "Penktadienio tvarkaraštis",
+    "weekday6TimeRanges": "Šeštadienio tvarkaraštis"
+  },
+  "links": {
+    "ranges": "Diapazonai"
+  }
+}

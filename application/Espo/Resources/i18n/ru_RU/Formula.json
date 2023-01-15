@@ -1,0 +1,23 @@
+{
+  "labels": {
+    "Check Syntax": "Проверка синтаксиса",
+    "Run": "Запускайте"
+  },
+  "fields": {
+    "target": "Цель",
+    "targetType": "Тип цели",
+    "script": "Сценарий",
+    "output": "Выход",
+    "error": "Ошибка"
+  },
+  "messages": {
+    "runSuccess": "Выполнено успешно.",
+    "runError": "Ошибка.",
+    "checkSyntaxSuccess": "Синтаксис правильный.",
+    "checkSyntaxError": "Синтаксическая ошибка.",
+    "emptyScript": "Сценарий пуст."
+  },
+  "tooltips": {
+    "output": "Выведите значения с помощью функции `output\\printLine`."
+  }
+}

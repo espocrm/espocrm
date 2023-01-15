@@ -10,7 +10,11 @@
     "isLarge": "Liels šrifta izmērs",
     "dynamicLogicVisible": "Nosacījumi, lai panelis kļūtu redzams",
     "hidden": "Slēptais",
-    "dynamicLogicStyled": "Nosacījumi, kas nosaka piemērojamo stilu"
+    "dynamicLogicStyled": "Nosacījumi, kas nosaka piemērojamo stilu",
+    "widthPx": "Platums (px)",
+    "noLabel": "Nav etiķetes",
+    "tabLabel": "Cilnes etiķete",
+    "tabBreak": "Tabulatora pārrāvums"
   },
   "options": {
     "align": {
@@ -36,7 +40,12 @@
     "sticked": "Panelis tiks piestiprināts pie paneļa virs tā. Starp paneļiem nav atstarpes.",
     "panelStyle": "Paneļa krāsa.",
     "dynamicLogicVisible": "Ja tas ir iestatīts, panelis tiks paslēpts, ja vien nosacījums nebūs izpildīts.",
-    "dynamicLogicStyled": "Krāsa tiks piemērota, ja tiks izpildīts konkrēts nosacījums . Krāsu nosaka parametrs *Style*."
+    "dynamicLogicStyled": "Krāsa tiks piemērota, ja tiks izpildīts konkrēts nosacījums . Krāsu nosaka parametrs *Style*.",
+    "tabBreak": "Atsevišķa cilne panelim un visiem nākamajiem paneļiem līdz nākamajam cilnes pārrāvumam.",
+    "noLabel": "Kolonnas etiķete nav redzama galvenē.",
+    "notSortable": "Izslēdz iespēju šķirot pēc kolonnas.",
+    "width": "A kolonnas platums procentos. Ieteicams izmantot vienu kolonnu ar nenoteiktu platumu, parasti tas ir *Nosaukuma* lauks.",
+    "widthPx": "Kolonnas platums pikseļos. Iedarbojas tikai tad, ja nav iestatīta vērtība (%). Slejas platumu padara fiksētu."
   },
   "messages": {
     "cantBeEmpty": "Izkārtojums nevar būt tukšs.",

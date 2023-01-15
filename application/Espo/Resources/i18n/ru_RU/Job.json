@@ -16,7 +16,10 @@
     "targetId": "ID цели",
     "number": "Номер",
     "queue": "Очередь",
-    "job": "Задание"
+    "job": "Задание",
+    "group": "Группа",
+    "className": "Название класса",
+    "targetGroup": "Целевая группа"
   },
   "options": {
     "status": {

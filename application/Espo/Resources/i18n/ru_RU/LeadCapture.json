@@ -20,7 +20,8 @@
     "duplicateCheck": "Проверка на дубликаты",
     "skipOptInConfirmationIfSubscribed": "Пропустить подтверждение, если кандидат уже в списке целей",
     "smtpAccount": "SMTP-аккаунт",
-    "inboundEmail": "Учетная запись эл. почты группы"
+    "inboundEmail": "Учетная запись эл. почты группы",
+    "exampleRequestHeaders": "Заголовки"
   },
   "links": {
     "targetList": "Список целей",

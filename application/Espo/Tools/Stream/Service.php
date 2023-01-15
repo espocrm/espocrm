@@ -303,11 +303,6 @@ class Service
         if (!$skipAclCheck) {
             $user = $this->entityManager
                 ->getRDBRepository(User::ENTITY_TYPE)
-                ->select([
-                    'id',
-                    'type',
-                    'isActive',
-                ])
                 ->where([
                     'id' => $userId,
                     'isActive' => true,

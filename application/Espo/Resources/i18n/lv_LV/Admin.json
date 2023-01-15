@@ -78,7 +78,8 @@
     "Messaging": "Ziņapmaiņa",
     "Misc": "Dažādi",
     "Job Settings": "Darba iestatījumi",
-    "Configuration Instructions": "Konfigurēšanas norādījumi"
+    "Configuration Instructions": "Konfigurēšanas norādījumi",
+    "Working Time Calendars": "Darba laika kalendāri"
   },
   "layouts": {
     "list": "Saraksts",
@@ -211,7 +212,9 @@
     "onlyDefaultCurrency": "Tikai noklusējuma valūta",
     "dynamicLogicInvalid": "Nosacījumi, kas padara lauku nederīgu",
     "conversionDisabled": "Atslēgt konvertēšanu",
-    "decimalPlaces": "Decimālskaitļi aiz komata"
+    "decimalPlaces": "Decimālskaitļi aiz komata",
+    "pattern": "Modelis",
+    "globalRestrictions": "Globālie ierobežojumi"
   },
   "messages": {
     "selectEntityType": "Atlasīt vienību tipu kreisajā izvēlnē.",
@@ -280,7 +283,8 @@
     "layoutSets": "Izkārtojumu kolekcijas, ko var piešķirt komandām un portāliem.",
     "jobsSettings": "Darba apstrādes iestatījumi. Uzdevumi tiek izpildīti fonā.",
     "sms": "SMS iestatījumi.",
-    "formulaSandbox": "Rakstīt un testēt formulas skriptus."
+    "formulaSandbox": "Rakstīt un testēt formulas skriptus.",
+    "workingTimeCalendars": "Darba grafiks."
   },
   "options": {
     "previewSize": {
@@ -330,6 +334,7 @@
     "authTokens": "vēsture, piekļuve, žurnāls",
     "entityManager": "lauki,attiecības,attiecības,attiecības",
     "templateManager": "paziņojumi",
-    "authentication": "parole,drošība,ldap"
+    "authentication": "parole,drošība,ldap",
+    "labelManager": "valoda,tulkošana"
   }
 }

@@ -384,6 +384,7 @@
         "all": "All"
     },
     "massActions": {
+        "delete": "Delete",
         "remove": "Remove",
         "merge": "Merge",
         "update": "Update",
