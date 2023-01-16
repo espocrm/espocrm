@@ -37,7 +37,7 @@ use Espo\Tools\Pdf\Template;
 
 class DompdfInitializer
 {
-    private string $defaultFontFace = 'Courier';
+    private string $defaultFontFace = 'DejaVu Sans';
 
     public function __construct(
         private Config $config
