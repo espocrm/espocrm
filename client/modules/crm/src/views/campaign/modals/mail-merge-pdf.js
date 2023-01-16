@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/campaign/modals/mail-merge-pdf', ['views/modal', 'model'], function (Dep, Model) {
+define('crm:views/campaign/modals/mail-merge-pdf', ['views/modal', 'ui/select'],
+function (Dep, /** module:ui/select */ Select) {
 
     return Dep.extend({
 
@@ -51,7 +52,8 @@ define('crm:views/campaign/modals/mail-merge-pdf', ['views/modal', 'model'], fun
                     return;
                 }
 
-                var targetEntityType = this.getMetadata().get(['entityDefs', 'TargetList', 'links', link, 'entity']);
+                let targetEntityType = this.getMetadata()
+                    .get(['entityDefs', 'TargetList', 'links', link, 'entity']);
 
                 if (!this.getAcl().checkScope(targetEntityType)) {
                     return;
@@ -72,8 +74,13 @@ define('crm:views/campaign/modals/mail-merge-pdf', ['views/modal', 'model'], fun
             });
         },
 
+        afterRender: function () {
+            Select.init(this.$el.find('.field[data-name="link"] select'));
+        },
+
         actionProceed: function () {
-            var link = this.$el.find('.field[data-name="link"] select').val();
+            let link = this.$el.find('.field[data-name="link"] select').val();
+
             this.trigger('proceed', link);
         },
     });
