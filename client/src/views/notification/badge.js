@@ -370,7 +370,7 @@ define('views/notification/badge', ['view'], function (Dep) {
                                 this.showPopupNotification(name, item, isNotFirstCheck)
                             )
                         )
-                        .always(() => resolve());
+                        .finally(() => resolve());
                 })
             )
             .then(() => {
