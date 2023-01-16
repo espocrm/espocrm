@@ -604,6 +604,13 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                             this.isUploading = false;
 
                             setTimeout(() => {
+                                if (
+                                    document.activeElement &&
+                                    document.activeElement.tagName !== 'BODY'
+                                ) {
+                                    return;
+                                }
+
                                 let $a = this.$el.find('.preview a');
                                 $a.focus();
                             }, 50);
