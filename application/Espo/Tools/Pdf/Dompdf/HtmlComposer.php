@@ -125,8 +125,6 @@ class HtmlComposer
             ->setSkipInlineAttachmentHandling(true)
             ->setData($data->getAdditionalTemplateData());
 
-        // @todo Apply pagination tags.
-
         if ($template->hasHeader()) {
             $htmlHeader = $renderer->renderTemplate($template->getHeader());
 
