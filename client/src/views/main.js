@@ -179,6 +179,8 @@ define('views/main', ['view'], function (Dep) {
 
             this.on('header-rendered', () => {
                 this.$headerActionsContainer = this.$el.find('.page-header .header-buttons');
+
+                this.adjustButtons();
             });
 
             this.on('after:render', () => this.adjustButtons());
@@ -411,8 +413,7 @@ define('views/main', ['view'], function (Dep) {
 
             if (!doNotReRender && this.isRendered()) {
                 this.getHeaderView()
-                    .reRender()
-                    .then(() => this.adjustButtons());
+                    .reRender();
 
                 return;
             }
@@ -420,8 +421,7 @@ define('views/main', ['view'], function (Dep) {
             if (!doNotReRender && this.isBeingRendered()) {
                 this.once('after:render', () => {
                     this.getHeaderView()
-                        .reRender()
-                        .then(() => this.adjustButtons());
+                        .reRender();
                 });
             }
         },
@@ -453,8 +453,7 @@ define('views/main', ['view'], function (Dep) {
 
             if (!doNotReRender && this.isRendered()) {
                 this.getHeaderView()
-                    .reRender()
-                    .then(() => this.adjustButtons());
+                    .reRender();
 
                 return;
             }
@@ -462,8 +461,7 @@ define('views/main', ['view'], function (Dep) {
             if (!doNotReRender && this.isBeingRendered()) {
                 this.once('after:render', () => {
                     this.getHeaderView()
-                        .reRender()
-                        .then(() => this.adjustButtons());
+                        .reRender();
 
                 });
 
