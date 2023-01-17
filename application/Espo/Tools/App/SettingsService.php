@@ -172,7 +172,7 @@ class SettingsService
         }
 
         /** @var stdClass $data */
-        $data = (object) ($mData['fallbackConfigParam'] ?? []);
+        $data = (object) ($mData['data'] ?? []);
 
         return [
             'handler' => $handler,
