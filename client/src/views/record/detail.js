@@ -935,7 +935,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
 
                 if (!this.isDropdownEditItemListEmpty()) {
-                    this.$dropdownItemListButton.removeClass('hidden');
+                    this.$dropdownEditItemListButton.removeClass('hidden');
                 }
 
                 this.adjustButtons();
