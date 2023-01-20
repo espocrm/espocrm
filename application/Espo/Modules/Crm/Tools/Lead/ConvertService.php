@@ -404,7 +404,7 @@ class ConvertService
                 $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
 
                 if (in_array($type, ['file', 'image'])) {
-                    $attachment = $lead->get($field);
+                    $attachment = $lead->get($leadField);
 
                     if ($attachment) {
                         $attachment = $this->getAttachmentRepository()->getCopiedAttachment($attachment);
@@ -419,7 +419,7 @@ class ConvertService
                     continue;
                 }
                 else if ($type === 'attachmentMultiple') {
-                    $attachmentList = $lead->get($field);
+                    $attachmentList = $lead->get($leadField);
 
                     if (count($attachmentList)) {
                         $idList = [];
