@@ -232,7 +232,7 @@ class ConvertService
             ->find();
 
         foreach ($meetings as $meeting) {
-            if ($contact &&  $contact->hasId()) {
+            if ($contact && $contact->hasId()) {
                 $this->entityManager
                     ->getRDBRepository(Meeting::ENTITY_TYPE)
                     ->relate($meeting, 'contacts', $contact);
@@ -379,7 +379,7 @@ class ConvertService
             $fieldList = array_keys($this->metadata->get('entityDefs.Lead.fields', []));
 
             foreach ($fieldList as $field) {
-                if (!$this->metadata->get('entityDefs.'.$entityType.'.fields.' . $field)) {
+                if (!$this->metadata->get('entityDefs.' . $entityType . '.fields.' . $field)) {
                     continue;
                 }
 
@@ -401,10 +401,10 @@ class ConvertService
             }
 
             foreach ($fieldMap as $field => $leadField) {
-                $type = $this->metadata->get(['entityDefs', 'Lead', 'fields', $field, 'type']);
+                $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
 
                 if (in_array($type, ['file', 'image'])) {
-                    $attachment = $lead->get($field);
+                    $attachment = $lead->get($leadField);
 
                     if ($attachment) {
                         $attachment = $this->getAttachmentRepository()->getCopiedAttachment($attachment);
@@ -419,7 +419,7 @@ class ConvertService
                     continue;
                 }
                 else if ($type === 'attachmentMultiple') {
-                    $attachmentList = $lead->get($field);
+                    $attachmentList = $lead->get($leadField);
 
                     if (count($attachmentList)) {
                         $idList = [];
