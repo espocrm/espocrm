@@ -148,6 +148,8 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected string $identifierQuoteCharacter = '`';
 
+    protected bool $indexHints = true;
+
     protected EntityFactory $entityFactory;
     protected PDO $pdo;
     protected Metadata $metadata;
@@ -3233,7 +3235,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
                 $indexPart = '';
 
-                if ($indexKeyList !== null && count($indexKeyList)) {
+                if ($this->indexHints && $indexKeyList !== null && count($indexKeyList)) {
                     $sanitizedIndexList = [];
 
                     foreach ($indexKeyList as $indexKey) {
@@ -3392,7 +3394,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $sql .= " AS " . $this->quoteIdentifier($alias);
         }
 
-        if (!empty($indexKeyList)) {
+        if ($this->indexHints && !empty($indexKeyList)) {
             foreach ($indexKeyList as $index) {
                 $sql .= " USE INDEX (" . $this->quoteIdentifier($this->sanitizeIndexName($index)) . ")";
             }
