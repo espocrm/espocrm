@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Authentication\Oidc\UserProvider;
 
-use Espo\Core\Authentication\Oidc\UserProvider\UserRepository;
 use Espo\Core\FieldProcessing\EmailAddress\Saver as EmailAddressSaver;
 use Espo\Core\FieldProcessing\PhoneNumber\Saver as PhoneNumberSaver;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;

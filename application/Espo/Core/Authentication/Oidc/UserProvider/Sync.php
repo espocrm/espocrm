@@ -33,7 +33,6 @@ use Espo\Core\Acl\Cache\Clearer as AclCacheClearer;
 use Espo\Core\ApplicationState;
 use Espo\Core\Authentication\Jwt\Token\Payload;
 use Espo\Core\Authentication\Oidc\ConfigDataProvider;
-use Espo\Core\Authentication\Oidc\UserProvider\UserRepository;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\PasswordHash;
