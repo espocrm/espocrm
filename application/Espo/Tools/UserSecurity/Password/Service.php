@@ -30,6 +30,7 @@
 namespace Espo\Tools\UserSecurity\Password;
 
 use Espo\Core\Authentication\Logins\Espo;
+use Espo\Core\Authentication\Util\MethodProvider as AuthenticationMethodProvider;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -56,7 +57,8 @@ class Service
         private EntityManager $entityManager,
         private RecoveryService $recovery,
         private FieldValidationManager $fieldValidationManager,
-        private Checker $checker
+        private Checker $checker,
+        private AuthenticationMethodProvider $authenticationMethodProvider
     ) {}
 
     /**
@@ -165,7 +167,7 @@ class Service
             throw new Forbidden();
         }
 
-        $authenticationMethod = $this->config->get('authenticationMethod', Espo::NAME);
+        $authenticationMethod = $this->authenticationMethodProvider->get();
 
         if (!$user->isAdmin() && $authenticationMethod !== Espo::NAME) {
             throw new Forbidden("Authentication method is not `Espo`.");

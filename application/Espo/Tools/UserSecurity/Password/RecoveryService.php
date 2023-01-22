@@ -29,6 +29,8 @@
 
 namespace Espo\Tools\UserSecurity\Password;
 
+use Espo\Core\ApplicationState;
+use Espo\Core\Authentication\Util\MethodProvider as AuthenticationMethodProvider;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Exceptions\SendingError;
@@ -67,31 +69,17 @@ class RecoveryService
     private const NEW_USER_REQUEST_LIFETIME = '2 days';
     private const EXISTING_USER_REQUEST_LIFETIME = '2 days';
 
-    private EntityManager $entityManager;
-    private Config $config;
-    private EmailSender $emailSender;
-    private HtmlizerFactory $htmlizerFactory;
-    private TemplateFileManager $templateFileManager;
-    private Log $log;
-    private JobSchedulerFactory $jobSchedulerFactory;
-
     public function __construct(
-        EntityManager $entityManager,
-        Config $config,
-        EmailSender $emailSender,
-        HtmlizerFactory $htmlizerFactory,
-        TemplateFileManager $templateFileManager,
-        Log $log,
-        JobSchedulerFactory $jobSchedulerFactory
-    ) {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->emailSender = $emailSender;
-        $this->htmlizerFactory = $htmlizerFactory;
-        $this->templateFileManager = $templateFileManager;
-        $this->log = $log;
-        $this->jobSchedulerFactory = $jobSchedulerFactory;
-    }
+        private EntityManager $entityManager,
+        private Config $config,
+        private EmailSender $emailSender,
+        private HtmlizerFactory $htmlizerFactory,
+        private TemplateFileManager $templateFileManager,
+        private Log $log,
+        private JobSchedulerFactory $jobSchedulerFactory,
+        private ApplicationState $applicationState,
+        private AuthenticationMethodProvider $authenticationMethodProvider
+    ) {}
 
     /**
      * @throws Forbidden
@@ -166,7 +154,7 @@ class RecoveryService
             ->findOne();
 
         if (!$user) {
-            $this->fail("Password recovery: User {$emailAddress} not found.", 404);
+            $this->fail("User {$emailAddress} not found.", 404);
 
             return false;
         }
@@ -174,20 +162,29 @@ class RecoveryService
         $userId = $user->getId();
 
         if (!$user->isActive()) {
-            $this->fail("Password recovery: User {$userId} is not active.");
+            $this->fail("User {$userId} is not active.");
+
+            return false;
+        }
+
+        if (
+            !$user->isAdmin() &&
+            $this->authenticationMethodProvider->get() !== EspoLogin::NAME
+        ) {
+            $this->fail("User {$userId} is not allowed, authentication method is not 'Espo'.");
 
             return false;
         }
 
         if ($user->isApi() || $user->isSystem() || $user->isSuperAdmin()) {
-            $this->fail("Password recovery: User {$userId} is not allowed.");
+            $this->fail("User {$userId} is not allowed.");
 
             return false;
         }
 
         if ($config->get('passwordRecoveryForInternalUsersDisabled')) {
             if ($user->isRegular() || $user->isAdmin()) {
-                $this->fail("Password recovery: User {$userId} is not allowed, disabled for internal users.");
+                $this->fail("User {$userId} is not allowed, disabled for internal users.");
 
                 return false;
             }
@@ -195,19 +192,26 @@ class RecoveryService
 
         if ($config->get('passwordRecoveryForAdminDisabled')) {
             if ($user->isAdmin()) {
-                $this->fail("Password recovery: User {$userId} is not allowed, disabled for admin users.");
+                $this->fail("User {$userId} is not allowed, disabled for admin users.");
 
                 return false;
             }
         }
 
-        if (
-            !$user->isAdmin() &&
-            $config->get('authenticationMethod', EspoLogin::NAME) !== EspoLogin::NAME
-        ) {
-            $this->fail("Password recovery: User {$userId} is not allowed, authentication method is not 'Espo'.");
+        if ($this->applicationState->isPortal()) {
+            if (!$user->isPortal()) {
+                $this->fail("User {$userId} is not allowed, as it's not portal user.");
 
-            return false;
+                return false;
+            }
+
+            $portalId = $this->applicationState->getPortalId();
+
+            if (!$user->getPortals()->hasId($portalId)) {
+                $this->fail("User {$userId} is from another portal.");
+
+                return false;
+            }
         }
 
         $existingRequest = $this->entityManager
@@ -222,7 +226,7 @@ class RecoveryService
                 throw new Forbidden(Json::encode(['reason' => 'Already-Sent']));
             }
 
-            $this->fail("Password recovery: Denied for {$userId}, already sent.");
+            $this->fail("Denied for {$userId}, already sent.");
 
             return false;
         }
@@ -460,6 +464,8 @@ class RecoveryService
         $noExposure = $this->config->get('passwordRecoveryNoExposure') ?? false;
 
         if ($msg) {
+            $msg = 'Password recovery: ' . $msg;
+
             $this->log->warning($msg);
         }
 
