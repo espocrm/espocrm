@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -24,52 +23,28 @@
  * Section 5 of the GNU General Public License version 3.
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ * these Appropriate Legal Notices must retain the display of tтhe "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+define('views/authentication-provider/fields/method', ['views/fields/enum'], function (Dep) {
 
-use Espo\Core\Field\Link;
+    return Dep.extend({
 
-class Portal extends \Espo\Core\ORM\Entity
-{
-    public const ENTITY_TYPE = 'Portal';
+        setupOptions: function () {
+            /** @var {Object.<string, Object.<string, *>>} defs */
+            let defs = this.getMetadata().get(['authenticationMethods']) || {};
 
-    /**
-     * @var string[]
-     */
-    protected $settingsAttributeList = [
-        'companyLogoId',
-        'tabList',
-        'quickCreateList',
-        'dashboardLayout',
-        'dashletsOptions',
-        'theme',
-        'themeParams',
-        'language',
-        'timeZone',
-        'dateFormat',
-        'timeFormat',
-        'weekStart',
-        'defaultCurrency',
-    ];
+            let options = Object.keys(defs)
+                .filter(item => {
+                    /** @var {Object.<string, *>} */
+                    let data = defs[item].provider || {};
 
-    /**
-     * @return string[]
-     */
-    public function getSettingsAttributeList(): array
-    {
-        return $this->settingsAttributeList;
-    }
+                    return data.isAvailable;
+                });
 
-    public function getUrl(): ?string
-    {
-        return $this->get('url');
-    }
+            options.unshift('');
 
-    public function getAuthenticationProvider(): ?Link
-    {
-        /** @var ?Link */
-        return $this->getValueObject('authenticationProvider');
-    }
-}
+            this.params.options = options;
+        },
+    });
+});

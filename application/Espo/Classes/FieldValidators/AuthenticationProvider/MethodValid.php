@@ -27,49 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Classes\FieldValidators\AuthenticationProvider;
 
-use Espo\Core\Field\Link;
+use Espo\Core\FieldValidation\Validator;
+use Espo\Core\FieldValidation\Validator\Data;
+use Espo\Core\FieldValidation\Validator\Failure;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\AuthenticationProvider;
+use Espo\ORM\Entity;
 
-class Portal extends \Espo\Core\ORM\Entity
+/**
+ * @implements Validator<AuthenticationProvider>
+ */
+class MethodValid implements Validator
 {
-    public const ENTITY_TYPE = 'Portal';
+    public function __construct(private Metadata $metadata) {}
 
-    /**
-     * @var string[]
-     */
-    protected $settingsAttributeList = [
-        'companyLogoId',
-        'tabList',
-        'quickCreateList',
-        'dashboardLayout',
-        'dashletsOptions',
-        'theme',
-        'themeParams',
-        'language',
-        'timeZone',
-        'dateFormat',
-        'timeFormat',
-        'weekStart',
-        'defaultCurrency',
-    ];
-
-    /**
-     * @return string[]
-     */
-    public function getSettingsAttributeList(): array
+    public function validate(Entity $entity, string $field, Data $data): ?Failure
     {
-        return $this->settingsAttributeList;
-    }
+        $value = $entity->get($field);
 
-    public function getUrl(): ?string
-    {
-        return $this->get('url');
-    }
+        if (!$value) {
+            return Failure::create();
+        }
 
-    public function getAuthenticationProvider(): ?Link
-    {
-        /** @var ?Link */
-        return $this->getValueObject('authenticationProvider');
+        $isAvailable = $this->metadata->get(['authenticationMethods', $value, 'provider', 'isAvailable']);
+
+        if (!$isAvailable) {
+            return Failure::create();
+        }
+
+        return null;
     }
 }

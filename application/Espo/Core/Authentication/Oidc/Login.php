@@ -30,6 +30,7 @@
 namespace Espo\Core\Authentication\Oidc;
 
 use Espo\Core\Api\Request;
+use Espo\Core\ApplicationState;
 use Espo\Core\Authentication\Login as LoginInterface;
 use Espo\Core\Authentication\Login\Data;
 use Espo\Core\Authentication\Jwt\Token;
@@ -39,7 +40,6 @@ use Espo\Core\Authentication\Jwt\Exceptions\SignatureNotVerified;
 use Espo\Core\Authentication\Jwt\Validator;
 use Espo\Core\Authentication\Result;
 use Espo\Core\Authentication\Result\FailReason;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Log;
 use JsonException;
@@ -57,11 +57,12 @@ class Login implements LoginInterface
 
     public function __construct(
         private Espo $espoLogin,
-        private Config $config,
         private Log $log,
+        private ConfigDataProvider $configDataProvider,
         private Validator $validator,
         private TokenValidator $tokenValidator,
-        private UserProvider $userProvider
+        private UserProvider $userProvider,
+        private ApplicationState $applicationState
     ) {}
 
     public function login(Data $data, Request $request): Result
@@ -81,13 +82,10 @@ class Login implements LoginInterface
 
     private function loginWithCode(string $code, Request $request): Result
     {
-        /** @var ?string $endpoint */
-        $endpoint = $this->config->get('oidcTokenEndpoint');
-        /** @var ?string $clientId */
-        $clientId = $this->config->get('oidcClientId');
-        /** @var ?string $clientSecret */
-        $clientSecret = $this->config->get('oidcClientSecret');
-        $redirectUri = rtrim($this->config->get('siteUrl'), '/') . '/oauth-callback.php';
+        $endpoint = $this->configDataProvider->getTokenEndpoint();
+        $clientId = $this->configDataProvider->getClientId();
+        $clientSecret = $this->configDataProvider->getClientSecret();
+        $redirectUri = $this->configDataProvider->getRedirectUri();
 
         if (!$endpoint) {
             throw new RuntimeException("No token endpoint.");
@@ -161,7 +159,14 @@ class Login implements LoginInterface
     {
         if (
             !$data->getAuthToken() &&
-            !$this->config->get('oidcFallback')
+            !$this->configDataProvider->fallback()
+        ) {
+            return Result::fail(FailReason::METHOD_NOT_ALLOWED);
+        }
+
+        if (
+            !$data->getAuthToken() &&
+            $this->applicationState->isPortal()
         ) {
             return Result::fail(FailReason::METHOD_NOT_ALLOWED);
         }
@@ -170,13 +175,24 @@ class Login implements LoginInterface
 
         $user = $result->getUser();
 
+        if (!$user) {
+            return $result;
+        }
+
+        if ($data->getAuthToken()) {
+            // Allow fallback when logged by auth token.
+            return $result;
+        }
+
         if (
-            !$data->getAuthToken() &&
-            $user &&
             $user->isRegular() &&
-            !$this->config->get('oidcAllowRegularUserFallback')
+            !$this->configDataProvider->allowRegularUserFallback()
             // Portal users are allowed.
         ) {
+            return Result::fail(FailReason::METHOD_NOT_ALLOWED);
+        }
+
+        if ($user->isPortal()) {
             return Result::fail(FailReason::METHOD_NOT_ALLOWED);
         }
 
@@ -243,7 +259,7 @@ class Login implements LoginInterface
         try {
             $parsedResponse = Json::decode($response);
         }
-        catch (JsonException $e) {}
+        catch (JsonException) {}
 
         if (!$parsedResponse instanceof stdClass) {
             $this->log->error(self::composeLogMessage('Bad token response.', $status, $response));

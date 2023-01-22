@@ -30,28 +30,21 @@
 namespace Espo\Core\EntryPoint;
 
 use Espo\Core\Exceptions\NotFound;
-
-use Espo\Core\{
-    Exceptions\NotFoundSilent,
-    InjectableFactory,
-    Utils\ClassFinder,
-    Api\Request,
-    Api\Response,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Exceptions\NotFoundSilent;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\ClassFinder;
 
 /**
  * Runs entry points.
  */
 class EntryPointManager
 {
-    private InjectableFactory $injectableFactory;
-    private ClassFinder $classFinder;
-
-    public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->classFinder = $classFinder;
-    }
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private ClassFinder $classFinder
+    ) {}
 
     /**
      * @throws NotFound
@@ -76,20 +69,6 @@ class EntryPointManager
 
         // for backward compatibility
         return $className::$authRequired ?? true;
-    }
-
-    /**
-     * @throws NotFound
-     */
-    public function checkNotStrictAuth(string $name): bool
-    {
-        $className = $this->getClassName($name);
-
-        if (!$className) {
-            throw new NotFoundSilent("Entry point '{$name}' not found.");
-        }
-
-        return $className::$notStrictAuth ?? false;
     }
 
     /**

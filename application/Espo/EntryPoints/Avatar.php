@@ -32,7 +32,6 @@ namespace Espo\EntryPoints;
 use Espo\Core\ApplicationUser;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\EntryPoints\NotStrictAuth;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\Exceptions\ForbiddenSilent;
@@ -44,8 +43,6 @@ use Identicon\Identicon;
 
 class Avatar extends Image
 {
-    use NotStrictAuth;
-
     protected string $systemColor = '#a4b5bd';
 
     /** @var array<int, string|array{int, int, int}> */

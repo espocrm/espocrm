@@ -33,7 +33,6 @@ use Espo\Core\Authentication\Jwt\SignatureVerifier;
 use Espo\Core\Authentication\Jwt\SignatureVerifierFactory;
 use Espo\Core\Authentication\Jwt\SignatureVerifiers\Hmac;
 use Espo\Core\Authentication\Jwt\SignatureVerifiers\Rsa;
-use Espo\Core\Utils\Config;
 use RuntimeException;
 
 class DefaultSignatureVerifierFactory implements SignatureVerifierFactory
@@ -54,14 +53,10 @@ class DefaultSignatureVerifierFactory implements SignatureVerifierFactory
         self::HS512 => Hmac::class,
     ];
 
-    private Config $config;
-    private KeysProvider $keysProvider;
-
-    public function __construct(Config $config, KeysProvider $keysProvider)
-    {
-        $this->config = $config;
-        $this->keysProvider = $keysProvider;
-    }
+    public function __construct(
+        private KeysProvider $keysProvider,
+        private ConfigDataProvider $configDataProvider
+    ) {}
 
     public function create(string $algorithm): SignatureVerifier
     {
@@ -79,7 +74,7 @@ class DefaultSignatureVerifierFactory implements SignatureVerifierFactory
         }
 
         if ($className === Hmac::class) {
-            $key = $this->config->get('oidcClientSecret');
+            $key = $this->configDataProvider->getClientSecret();
 
             if (!$key) {
                 throw new RuntimeException("No client secret.");

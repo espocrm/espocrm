@@ -30,7 +30,7 @@
 namespace Espo\Core\EntryPoint\Traits;
 
 /**
- * To be used with EntryPoint interface.
+ * @deprecated
  */
 trait NotStrictAuth
 {

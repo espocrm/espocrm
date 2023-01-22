@@ -33,21 +33,14 @@ use Espo\Core\Authentication\Jwt\Exceptions\Invalid;
 use Espo\Core\Authentication\Jwt\Exceptions\SignatureNotVerified;
 use Espo\Core\Authentication\Jwt\SignatureVerifierFactory;
 use Espo\Core\Authentication\Jwt\Token;
-use Espo\Core\Utils\Config;
 use RuntimeException;
 
 class TokenValidator
 {
-    private Config $config;
-    private SignatureVerifierFactory $signatureVerifierFactory;
-
     public function __construct(
-        Config $config,
-        SignatureVerifierFactory $signatureVerifierFactory
-    ) {
-        $this->config = $config;
-        $this->signatureVerifierFactory = $signatureVerifierFactory;
-    }
+        private ConfigDataProvider $configDataProvider,
+        private SignatureVerifierFactory $signatureVerifierFactory
+    ) {}
 
     /**
      * @throws SignatureNotVerified
@@ -57,8 +50,7 @@ class TokenValidator
     {
         $algorithm = $token->getHeader()->getAlg();
 
-        /** @var string[] $allowedAlgorithmList */
-        $allowedAlgorithmList = $this->config->get('oidcJwtSignatureAlgorithmList') ?? [];
+        $allowedAlgorithmList = $this->configDataProvider->getJwtSignatureAlgorithmList();
 
         if (!in_array($algorithm, $allowedAlgorithmList)) {
             throw new Invalid("JWT signing algorithm `{$algorithm}` not allowed.");
@@ -76,8 +68,7 @@ class TokenValidator
      */
     public function validateFields(Token $token): void
     {
-        /** @var ?string $oidcClientId */
-        $oidcClientId = $this->config->get('oidcClientId');
+        $oidcClientId = $this->configDataProvider->getClientId();
 
         if (!$oidcClientId) {
             throw new RuntimeException("OIDC: No client ID.");

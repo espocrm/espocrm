@@ -27,49 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+include "../../bootstrap.php";
 
-use Espo\Core\Field\Link;
+use Espo\Core\Application;
+use Espo\Core\Application\Runner\Params;
+use Espo\Core\ApplicationRunners\EntryPoint;
 
-class Portal extends \Espo\Core\ORM\Entity
-{
-    public const ENTITY_TYPE = 'Portal';
+$app = new Application();
 
-    /**
-     * @var string[]
-     */
-    protected $settingsAttributeList = [
-        'companyLogoId',
-        'tabList',
-        'quickCreateList',
-        'dashboardLayout',
-        'dashletsOptions',
-        'theme',
-        'themeParams',
-        'language',
-        'timeZone',
-        'dateFormat',
-        'timeFormat',
-        'weekStart',
-        'defaultCurrency',
-    ];
-
-    /**
-     * @return string[]
-     */
-    public function getSettingsAttributeList(): array
-    {
-        return $this->settingsAttributeList;
-    }
-
-    public function getUrl(): ?string
-    {
-        return $this->get('url');
-    }
-
-    public function getAuthenticationProvider(): ?Link
-    {
-        /** @var ?Link */
-        return $this->getValueObject('authenticationProvider');
-    }
-}
+$app->run(
+    EntryPoint::class,
+    Params::create()->with('entryPoint', 'oauthCallback')
+);

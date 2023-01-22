@@ -67,7 +67,6 @@ class Starter
 
     /**
      * @throws BadRequest
-     * @throws NotFound
      */
     public function start(?string $entryPoint = null, bool $final = false): void
     {
@@ -92,7 +91,6 @@ class Starter
 
         try {
             $authRequired = $this->entryPointManager->checkAuthRequired($entryPoint);
-            $authNotStrict = $this->entryPointManager->checkNotStrictAuth($entryPoint);
         }
         catch (NotFound $exception) {
             $this->errorOutput->processWithBodyPrinting($requestWrapped, $responseWrapped, $exception);
@@ -102,7 +100,7 @@ class Starter
             return;
         }
 
-        if ($authRequired && !$authNotStrict && !$final) {
+        if ($authRequired && !$final) {
             $portalId = $this->detectPortalId($requestWrapped);
 
             if ($portalId) {
@@ -116,8 +114,7 @@ class Starter
             $entryPoint,
             $requestWrapped,
             $responseWrapped,
-            $authRequired,
-            $authNotStrict
+            $authRequired
         );
 
         (new ResponseEmitter())->emit($responseWrapped->getResponse());
@@ -127,8 +124,7 @@ class Starter
         string $entryPoint,
         RequestWrapper $requestWrapped,
         ResponseWrapper $responseWrapped,
-        bool $authRequired,
-        bool $authNotStrict
+        bool $authRequired
     ): void {
 
         try {
@@ -136,8 +132,7 @@ class Starter
                 $entryPoint,
                 $requestWrapped,
                 $responseWrapped,
-                $authRequired,
-                $authNotStrict
+                $authRequired
             );
         }
         catch (Exception $exception) {
@@ -146,19 +141,17 @@ class Starter
     }
 
     /**
-     * @throws \Espo\Core\Exceptions\NotFound
+     * @throws NotFound
+     * @throws BadRequest
      */
     private function processRequestInternal(
         string $entryPoint,
         RequestWrapper $request,
         ResponseWrapper $response,
-        bool $authRequired,
-        bool $authNotStrict
+        bool $authRequired
     ): void {
 
-        $authentication = $authNotStrict ?
-            $this->authenticationFactory->createWithAnyAccessAllowed() :
-            $this->authenticationFactory->create();
+        $authentication = $this->authenticationFactory->create();
 
         $apiAuth = $this->authBuilderFactory
             ->create()

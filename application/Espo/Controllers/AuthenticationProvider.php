@@ -27,49 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Controllers;
 
-use Espo\Core\Field\Link;
+use Espo\Core\Controllers\RecordBase;
 
-class Portal extends \Espo\Core\ORM\Entity
+class AuthenticationProvider extends RecordBase
 {
-    public const ENTITY_TYPE = 'Portal';
-
-    /**
-     * @var string[]
-     */
-    protected $settingsAttributeList = [
-        'companyLogoId',
-        'tabList',
-        'quickCreateList',
-        'dashboardLayout',
-        'dashletsOptions',
-        'theme',
-        'themeParams',
-        'language',
-        'timeZone',
-        'dateFormat',
-        'timeFormat',
-        'weekStart',
-        'defaultCurrency',
-    ];
-
-    /**
-     * @return string[]
-     */
-    public function getSettingsAttributeList(): array
+    protected function checkAccess(): bool
     {
-        return $this->settingsAttributeList;
-    }
+        if (!$this->user->isAdmin()) {
+            return false;
+        }
 
-    public function getUrl(): ?string
-    {
-        return $this->get('url');
-    }
-
-    public function getAuthenticationProvider(): ?Link
-    {
-        /** @var ?Link */
-        return $this->getValueObject('authenticationProvider');
+        return true;
     }
 }

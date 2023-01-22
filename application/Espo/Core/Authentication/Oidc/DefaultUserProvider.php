@@ -29,8 +29,9 @@
 
 namespace Espo\Core\Authentication\Oidc;
 
+use Espo\Core\ApplicationState;
 use Espo\Core\Authentication\Jwt\Token\Payload;
-use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use RuntimeException;
@@ -38,9 +39,11 @@ use RuntimeException;
 class DefaultUserProvider implements UserProvider
 {
     public function __construct(
-        private Config $config,
+        private ConfigDataProvider $configDataProvider,
         private Sync $sync,
-        private EntityManager $entityManager
+        private EntityManager $entityManager,
+        private ApplicationState $applicationState,
+        private Log $log
     ) {}
 
     public function get(Payload $payload): ?User
@@ -58,7 +61,7 @@ class DefaultUserProvider implements UserProvider
 
     private function findUser(Payload $payload): ?User
     {
-        $usernameClaim = $this->config->get('oidcUsernameClaim');
+        $usernameClaim = $this->configDataProvider->getUsernameClaim();
 
         if (!$usernameClaim) {
             throw new RuntimeException("No username claim in config.");
@@ -86,15 +89,41 @@ class DefaultUserProvider implements UserProvider
             return null;
         }
 
-        if (!$user->isRegular() && !$user->isAdmin()) {
+        $userId = $user->getId();
+
+        $isPortal = $this->applicationState->isPortal();
+
+        if (!$isPortal && !$user->isRegular() && !$user->isAdmin()) {
+            $this->log->info("Oidc: User {$userId} found but it's neither regular user not admin.");
+
             return null;
+        }
+
+        if ($isPortal && !$user->isPortal()) {
+            $this->log->info("Oidc: User {$userId} found but it's not portal user.");
+
+            return null;
+        }
+
+        if ($isPortal) {
+            $portalId = $this->applicationState->getPortalId();
+
+            if (!$user->getPortals()->hasId($portalId)) {
+                $this->log->info("Oidc: User {$userId} found but it's not related to current portal.");
+
+                return null;
+            }
         }
 
         if ($user->isSuperAdmin()) {
+            $this->log->info("Oidc: User {$userId} found but it's super-admin, not allowed.");
+
             return null;
         }
 
-        if ($user->isAdmin() && !$this->config->get('oidcAllowAdminUser')) {
+        if ($user->isAdmin() && !$this->configDataProvider->allowAdminUser()) {
+            $this->log->info("Oidc: User {$userId} found but it's admin, not allowed.");
+
             return null;
         }
 
@@ -103,11 +132,11 @@ class DefaultUserProvider implements UserProvider
 
     private function tryToCreateUser(Payload $payload): ?User
     {
-        if (!$this->config->get('oidcCreateUser')) {
+        if (!$this->configDataProvider->createUser()) {
             return null;
         }
 
-        $usernameClaim = $this->config->get('oidcUsernameClaim');
+        $usernameClaim = $this->configDataProvider->getUsernameClaim();
 
         if (!$usernameClaim) {
             throw new RuntimeException("Could not create a user. No OIDC username claim in config.");
@@ -124,7 +153,10 @@ class DefaultUserProvider implements UserProvider
 
     private function syncUser(User $user, Payload $payload): void
     {
-        if (!$this->config->get('oidcSync') && !$this->config->get('oidcSyncTeams')) {
+        if (
+            !$this->configDataProvider->sync() &&
+            !$this->configDataProvider->syncTeams()
+        ) {
             return;
         }
 

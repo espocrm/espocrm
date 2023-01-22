@@ -37,31 +37,23 @@ use Espo\Core\Utils\Config;
 
 class Logout implements LogoutInterface
 {
-    private Config $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(
+        private Config $config,
+        private ConfigDataProvider $configDataProvider
+    ) {}
 
     public function logout(AuthToken $authToken, Params $params): Result
     {
-        if ($authToken->getPortalId()) {
-            return Result::create();
-        }
-
-        /** @var ?string $url */
-        $url = $this->config->get('oidcLogoutUrl');
-        /** @var string $oidcClientId */
-        $oidcClientId = $this->config->get('oidcClientId') ?? '';
+        $url = $this->configDataProvider->getLogoutUrl();
+        $clientId = $this->configDataProvider->getClientId() ?? '';
         $siteUrl = rtrim($this->config->get('siteUrl') ?? '', '/');
 
         if ($url) {
-            $url = str_replace('{clientId}', urlencode($oidcClientId), $url);
+            $url = str_replace('{clientId}', urlencode($clientId), $url);
             $url = str_replace('{siteUrl}', urlencode($siteUrl), $url);
         }
 
-        // @todo Check session is set if auth token to bypass fallback logins.
+        // @todo Check session is set in auth token to bypass fallback logins.
 
         return Result::create()->withRedirectUrl($url);
     }

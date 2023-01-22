@@ -58,7 +58,8 @@
         "Webhook": "Webhook",
         "Mass Action": "Mass Action",
         "WorkingTimeCalendar": "Working Time Calendar",
-        "WorkingTimeRange": "Working Time Range"
+        "WorkingTimeRange": "Working Time Range",
+        "AuthenticationProvider": "Authentication Provider"
     },
     "scopeNamesPlural": {
         "Note": "Notes",
@@ -107,7 +108,8 @@
         "LayoutSet": "Layout Sets",
         "Webhook": "Webhooks",
         "WorkingTimeCalendar": "Working Time Calendars",
-        "WorkingTimeRange": "Working Time Ranges"
+        "WorkingTimeRange": "Working Time Ranges",
+        "AuthenticationProvider": "Authentication Providers"
     },
     "labels": {
         "Sort": "Sort",

@@ -30,30 +30,27 @@
 namespace Espo\Tools\Oidc;
 
 use Espo\Core\Authentication\Jwt\Exceptions\Invalid;
+use Espo\Core\Authentication\Oidc\ConfigDataProvider;
 use Espo\Core\Authentication\Oidc\Login as OidcLogin;
 use Espo\Core\Authentication\Oidc\BackchannelLogout;
+use Espo\Core\Authentication\Util\MethodProvider;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\ForbiddenSilent;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 
 class Service
 {
-    private Config $config;
-    private BackchannelLogout $backchannelLogout;
-
-    public function __construct(Config $config, BackchannelLogout $backchannelLogout)
-    {
-        $this->config = $config;
-        $this->backchannelLogout = $backchannelLogout;
-    }
+    public function __construct(
+        private BackchannelLogout $backchannelLogout,
+        private MethodProvider $methodProvider,
+        private ConfigDataProvider $configDataProvider
+    ) {}
 
     /**
      * @return array{
      *     clientId: non-empty-string,
      *     endpoint: non-empty-string,
-     *     redirectUri: non-empty-string,
+     *     redirectUri: string,
      *     scopes: non-empty-array<string>,
      *     claims: ?string,
      *     prompt: 'login'|'consent'|'select_account',
@@ -64,19 +61,15 @@ class Service
      */
     public function getAuthorizationData(): array
     {
-        if ($this->config->get('authenticationMethod') !== OidcLogin::NAME) {
-            throw new ForbiddenSilent();
+        if ($this->methodProvider->get() !== OidcLogin::NAME) {
+            throw new Forbidden();
         }
 
-        /** @var ?string $clientId */
-        $clientId = $this->config->get('oidcClientId');
-        /** @var ?string $endpoint */
-        $endpoint = $this->config->get('oidcAuthorizationEndpoint');
-        /** @var string[] $scopes */
-        $scopes = $this->config->get('oidcScopes') ?? [];
-
-        /** @var ?string $groupClaim */
-        $groupClaim = $this->config->get('oidcGroupClaim');
+        $clientId = $this->configDataProvider->getClientId();
+        $endpoint = $this->configDataProvider->getAuthorizationEndpoint();
+        $scopes = $this->configDataProvider->getScopes();
+        $groupClaim = $this->configDataProvider->getGroupClaim();
+        $redirectUri = $this->configDataProvider->getRedirectUri();
 
         if (!$clientId) {
             throw new Error("No client ID.");
@@ -85,8 +78,6 @@ class Service
         if (!$endpoint) {
             throw new Error("No authorization endpoint.");
         }
-
-        $redirectUri = rtrim($this->config->get('siteUrl') ?? '', '/') . '/oauth-callback.php';
 
         array_unshift($scopes, 'openid');
 
@@ -101,9 +92,8 @@ class Service
         }
 
         /** @var 'login'|'consent'|'select_account' $prompt */
-        $prompt = $this->config->get('oidcAuthorizationPrompt') ?? 'consent';
-        /** @var ?int $maxAge */
-        $maxAge = $this->config->get('oidcAuthorizationMaxAge');
+        $prompt = $this->configDataProvider->getAuthorizationPrompt();
+        $maxAge = $this->configDataProvider->getAuthorizationMaxAge();
 
         return [
             'clientId' => $clientId,
@@ -117,19 +107,19 @@ class Service
     }
 
     /**
-     * @throws ForbiddenSilent
+     * @throws Forbidden
      */
     public function backchannelLogout(string $rawToken): void
     {
-        if ($this->config->get('authenticationMethod') !== OidcLogin::NAME) {
-            throw new ForbiddenSilent();
+        if ($this->methodProvider->get() !== OidcLogin::NAME) {
+            throw new Forbidden();
         }
 
         try {
             $this->backchannelLogout->logout($rawToken);
         }
         catch (Invalid $e) {
-            throw new ForbiddenSilent("OIDC logout: Invalid JWT. " . $e->getMessage());
+            throw new Forbidden("OIDC logout: Invalid JWT. " . $e->getMessage());
         }
     }
 }

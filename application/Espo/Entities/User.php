@@ -172,6 +172,19 @@ class User extends Person
         return $this;
     }
 
+    public function getPortals(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('portals');
+    }
+
+    public function setPortals(LinkMultiple $portals): self
+    {
+        $this->setValueObject('portals', $portals);
+
+        return $this;
+    }
+
     public function setRoles(LinkMultiple $roles): self
     {
         $this->setValueObject('roles', $roles);

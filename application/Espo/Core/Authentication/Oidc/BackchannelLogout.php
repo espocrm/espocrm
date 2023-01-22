@@ -35,7 +35,6 @@ use Espo\Core\Authentication\Jwt\Exceptions\Invalid;
 use Espo\Core\Authentication\Jwt\Exceptions\SignatureNotVerified;
 use Espo\Core\Authentication\Jwt\Token;
 use Espo\Core\Authentication\Jwt\Validator;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 use Espo\Entities\AuthToken as AuthTokenEntity;
 use Espo\Entities\User;
@@ -48,28 +47,14 @@ use Espo\ORM\EntityManager;
  */
 class BackchannelLogout
 {
-    private Log $log;
-    private Validator $validator;
-    private TokenValidator $tokenValidator;
-    private Config $config;
-    private EntityManager $entityManager;
-    private AuthTokenManager $authTokenManger;
-
     public function __construct(
-        Log $log,
-        Validator $validator,
-        TokenValidator $tokenValidator,
-        Config $config,
-        EntityManager $entityManager,
-        AuthTokenManager $authTokenManger
-    ) {
-        $this->log = $log;
-        $this->validator = $validator;
-        $this->tokenValidator = $tokenValidator;
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->authTokenManger = $authTokenManger;
-    }
+        private Log $log,
+        private Validator $validator,
+        private TokenValidator $tokenValidator,
+        private ConfigDataProvider $configDataProvider,
+        private EntityManager $entityManager,
+        private AuthTokenManager $authTokenManger
+    ) {}
 
     /**
      * @throws SignatureNotVerified
@@ -86,7 +71,7 @@ class BackchannelLogout
         $this->tokenValidator->validateSignature($token);
         $this->tokenValidator->validateFields($token);
 
-        $usernameClaim = $this->config->get('oidcUsernameClaim');
+        $usernameClaim = $this->configDataProvider->getUsernameClaim();
 
         if (!$usernameClaim) {
             throw new Invalid("No username claim in config.");

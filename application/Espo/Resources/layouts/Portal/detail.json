@@ -5,7 +5,7 @@
             [{"name": "name"}, {"name": "isActive"}],
             [{"name": "url"}, {"name": "isDefault"}],
             [{"name": "portalRoles"}, {"name": "customId"}],
-            [false, {"name": "customUrl"}]
+            [{"name": "authenticationProvider"}, {"name": "customUrl"}]
         ]
     },
     {

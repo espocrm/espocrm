@@ -311,6 +311,12 @@
                 "description": "jobs"
             },
             {
+                "url": "#Admin/authenticationProviders",
+                "label": "Authentication Providers",
+                "iconClass": "fas fa-sign-in-alt",
+                "description": "authenticationProviders"
+            },
+            {
                 "url": "#Admin/emailAddresses",
                 "label": "Email Addresses",
                 "iconClass": "fas fa-envelope",

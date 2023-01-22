@@ -29,47 +29,14 @@
 
 namespace Espo\Entities;
 
-use Espo\Core\Field\Link;
+use Espo\Core\ORM\Entity;
 
-class Portal extends \Espo\Core\ORM\Entity
+class AuthenticationProvider extends Entity
 {
-    public const ENTITY_TYPE = 'Portal';
+    public const ENTITY_TYPE = 'AuthenticationProvider';
 
-    /**
-     * @var string[]
-     */
-    protected $settingsAttributeList = [
-        'companyLogoId',
-        'tabList',
-        'quickCreateList',
-        'dashboardLayout',
-        'dashletsOptions',
-        'theme',
-        'themeParams',
-        'language',
-        'timeZone',
-        'dateFormat',
-        'timeFormat',
-        'weekStart',
-        'defaultCurrency',
-    ];
-
-    /**
-     * @return string[]
-     */
-    public function getSettingsAttributeList(): array
+    public function getMethod(): ?string
     {
-        return $this->settingsAttributeList;
-    }
-
-    public function getUrl(): ?string
-    {
-        return $this->get('url');
-    }
-
-    public function getAuthenticationProvider(): ?Link
-    {
-        /** @var ?Link */
-        return $this->getValueObject('authenticationProvider');
+        return $this->get('method');
     }
 }

@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,49 +26,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+define('views/authentication-provider/record/edit', ['views/record/edit', 'helpers/misc/authentication-provider'],
+function (Dep, Helper) {
 
-use Espo\Core\Field\Link;
+    return Dep.extend({
 
-class Portal extends \Espo\Core\ORM\Entity
-{
-    public const ENTITY_TYPE = 'Portal';
+        saveAndNewAction: false,
 
-    /**
-     * @var string[]
-     */
-    protected $settingsAttributeList = [
-        'companyLogoId',
-        'tabList',
-        'quickCreateList',
-        'dashboardLayout',
-        'dashletsOptions',
-        'theme',
-        'themeParams',
-        'language',
-        'timeZone',
-        'dateFormat',
-        'timeFormat',
-        'weekStart',
-        'defaultCurrency',
-    ];
+        /**
+         * @private
+         * @type {module:helpers/misc/authentication-provider.Class}
+         */
+        helper: null,
 
-    /**
-     * @return string[]
-     */
-    public function getSettingsAttributeList(): array
-    {
-        return $this->settingsAttributeList;
-    }
+        setup: function () {
+            this.helper = new Helper(this);
 
-    public function getUrl(): ?string
-    {
-        return $this->get('url');
-    }
+            Dep.prototype.setup.call(this);
+        },
 
-    public function getAuthenticationProvider(): ?Link
-    {
-        /** @var ?Link */
-        return $this->getValueObject('authenticationProvider');
-    }
-}
+        setupBeforeFinal: function () {
+            this.dynamicLogicDefs = this.helper.setupMethods();
+
+            Dep.prototype.setupBeforeFinal.call(this);
+
+            this.helper.setupPanelsVisibility(() => {
+                this.processDynamicLogic();
+            });
+        },
+
+        modifyDetailLayout: function (layout) {
+            this.helper.modifyDetailLayout(layout);
+        },
+    });
+});
