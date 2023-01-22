@@ -156,6 +156,7 @@ class RecoveryService
             throw new Forbidden("Password recovery: Disabled.");
         }
 
+        /** @var ?User $user */
         $user = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
@@ -170,23 +171,23 @@ class RecoveryService
             return false;
         }
 
+        $userId = $user->getId();
+
         if (!$user->isActive()) {
-            $this->fail("Password recovery: User {$user->id} is not active.");
+            $this->fail("Password recovery: User {$userId} is not active.");
 
             return false;
         }
 
         if ($user->isApi() || $user->isSystem() || $user->isSuperAdmin()) {
-            $this->fail("Password recovery: User {$user->id} is not allowed.");
+            $this->fail("Password recovery: User {$userId} is not allowed.");
 
             return false;
         }
 
         if ($config->get('passwordRecoveryForInternalUsersDisabled')) {
             if ($user->isRegular() || $user->isAdmin()) {
-                $this->fail(
-                    "Password recovery: User {$user->id} is not allowed, disabled for internal users."
-                );
+                $this->fail("Password recovery: User {$userId} is not allowed, disabled for internal users.");
 
                 return false;
             }
@@ -194,18 +195,17 @@ class RecoveryService
 
         if ($config->get('passwordRecoveryForAdminDisabled')) {
             if ($user->isAdmin()) {
-                $this->fail(
-                    "Password recovery: User {$user->id} is not allowed, disabled for admin users."
-                );
+                $this->fail("Password recovery: User {$userId} is not allowed, disabled for admin users.");
 
                 return false;
             }
         }
 
-        if (!$user->isAdmin() && $config->get('authenticationMethod', EspoLogin::NAME) !== EspoLogin::NAME) {
-            $this->fail(
-                "Password recovery: User {$user->id} is not allowed, authentication method is not 'Espo'."
-            );
+        if (
+            !$user->isAdmin() &&
+            $config->get('authenticationMethod', EspoLogin::NAME) !== EspoLogin::NAME
+        ) {
+            $this->fail("Password recovery: User {$userId} is not allowed, authentication method is not 'Espo'.");
 
             return false;
         }
@@ -222,7 +222,7 @@ class RecoveryService
                 throw new Forbidden(Json::encode(['reason' => 'Already-Sent']));
             }
 
-            $this->fail("Password recovery: Denied for {$user->id}, already sent.");
+            $this->fail("Password recovery: Denied for {$userId}, already sent.");
 
             return false;
         }

@@ -45,43 +45,19 @@ use Espo\ORM\EntityManager;
 
 class Service
 {
-    private User $user;
-    private ServiceContainer $serviceContainer;
-    private EmailSender $emailSender;
-    private Config $config;
-    private Generator $generator;
-    private Sender $sender;
-    private PasswordHash $passwordHash;
-    private EntityManager $entityManager;
-    private RecoveryService $recovery;
-    private FieldValidationManager $fieldValidationManager;
-    private Checker $checker;
-
     public function __construct(
-        User $user,
-        ServiceContainer $serviceContainer,
-        EmailSender $emailSender,
-        Config $config,
-        Generator $generator,
-        Sender $sender,
-        PasswordHash $passwordHash,
-        EntityManager $entityManager,
-        RecoveryService $recovery,
-        FieldValidationManager $fieldValidationManager,
-        Checker $checker
-    ) {
-        $this->user = $user;
-        $this->serviceContainer = $serviceContainer;
-        $this->emailSender = $emailSender;
-        $this->config = $config;
-        $this->generator = $generator;
-        $this->sender = $sender;
-        $this->passwordHash = $passwordHash;
-        $this->entityManager = $entityManager;
-        $this->recovery = $recovery;
-        $this->fieldValidationManager = $fieldValidationManager;
-        $this->checker = $checker;
-    }
+        private User $user,
+        private ServiceContainer $serviceContainer,
+        private EmailSender $emailSender,
+        private Config $config,
+        private Generator $generator,
+        private Sender $sender,
+        private PasswordHash $passwordHash,
+        private EntityManager $entityManager,
+        private RecoveryService $recovery,
+        private FieldValidationManager $fieldValidationManager,
+        private Checker $checker
+    ) {}
 
     /**
      * Create and send a password recovery link in an email. Only for admin.

@@ -31,22 +31,14 @@ namespace Espo\Core\Authentication;
 
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\Config;
 
 class LoginFactory
 {
-    private const DEFAULT_METHOD = 'Espo';
-
-    private InjectableFactory $injectableFactory;
-    private Metadata $metadata;
-    private Config $config;
-
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata, Config $config)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
-        $this->config = $config;
-    }
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata,
+        private ConfigDataProvider $configDataProvider
+    ) {}
 
     public function create(string $method, bool $isPortal = false): Login
     {
@@ -67,7 +59,7 @@ class LoginFactory
 
     public function createDefault(): Login
     {
-        $method = $this->config->get('authenticationMethod', self::DEFAULT_METHOD);
+        $method = $this->configDataProvider->getDefaultAuthenticationMethod();
 
         return $this->create($method);
     }
