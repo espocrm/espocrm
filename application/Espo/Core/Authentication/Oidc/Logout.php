@@ -33,12 +33,10 @@ use Espo\Core\Authentication\AuthToken\AuthToken;
 use Espo\Core\Authentication\Logout as LogoutInterface;
 use Espo\Core\Authentication\Logout\Params;
 use Espo\Core\Authentication\Logout\Result;
-use Espo\Core\Utils\Config;
 
 class Logout implements LogoutInterface
 {
     public function __construct(
-        private Config $config,
         private ConfigDataProvider $configDataProvider
     ) {}
 
@@ -46,7 +44,7 @@ class Logout implements LogoutInterface
     {
         $url = $this->configDataProvider->getLogoutUrl();
         $clientId = $this->configDataProvider->getClientId() ?? '';
-        $siteUrl = rtrim($this->config->get('siteUrl') ?? '', '/');
+        $siteUrl = $this->configDataProvider->getSiteUrl();
 
         if ($url) {
             $url = str_replace('{clientId}', urlencode($clientId), $url);

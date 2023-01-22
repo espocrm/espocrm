@@ -70,9 +70,18 @@ class ConfigDataProvider
         return $this->entityManager->getEntityById(AuthenticationProvider::ENTITY_TYPE, $link->getId());
     }
 
+    public function getSiteUrl(): string
+    {
+        $siteUrl = $this->isAuthenticationProvider() ?
+            $this->applicationState->getPortal()->getUrl() :
+            $this->config->get('siteUrl');
+
+        return rtrim($siteUrl, '/');
+    }
+
     public function getRedirectUri(): string
     {
-        return rtrim($this->config->get('siteUrl'), '/') . '/oauth-callback.php';
+        return $this->getSiteUrl() . '/oauth-callback.php';
     }
 
     public function getClientId(): ?string

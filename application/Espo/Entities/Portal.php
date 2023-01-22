@@ -30,6 +30,7 @@
 namespace Espo\Entities;
 
 use Espo\Core\Field\Link;
+use Espo\Repositories\Portal as PortalRepository;
 
 class Portal extends \Espo\Core\ORM\Entity
 {
@@ -64,6 +65,13 @@ class Portal extends \Espo\Core\ORM\Entity
 
     public function getUrl(): ?string
     {
+        if (!$this->has('url') && $this->entityManager) {
+            /** @var PortalRepository $repository */
+            $repository = $this->entityManager->getRDBRepositoryByClass(Portal::class);
+
+            $repository->loadUrlField($this);
+        }
+
         return $this->get('url');
     }
 
