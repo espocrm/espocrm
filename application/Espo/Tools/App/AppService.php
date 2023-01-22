@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\App;
 
+use Espo\Core\Authentication\Util\MethodProvider as AuthenticationMethodProvider;
 use Espo\Entities\DashboardTemplate;
 use Espo\Entities\EmailAccount as EmailAccountEntity;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
@@ -55,40 +56,19 @@ use Throwable;
 
 class AppService
 {
-    private Config $config;
-    private EntityManager $entityManager;
-    private Metadata $metadata;
-    private Acl $acl;
-    private InjectableFactory $injectableFactory;
-    private SettingsService $settingsService;
-    private User $user;
-    private Preferences $preferences;
-    private FieldUtil $fieldUtil;
-    private Log $log;
-
     public function __construct(
-        Config $config,
-        EntityManager $entityManager,
-        Metadata $metadata,
-        Acl $acl,
-        InjectableFactory $injectableFactory,
-        SettingsService $settingsService,
-        User $user,
-        Preferences $preferences,
-        FieldUtil $fieldUtil,
-        Log $log
-    ) {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->metadata = $metadata;
-        $this->acl = $acl;
-        $this->injectableFactory = $injectableFactory;
-        $this->settingsService = $settingsService;
-        $this->user = $user;
-        $this->preferences = $preferences;
-        $this->fieldUtil = $fieldUtil;
-        $this->log = $log;
-    }
+        private Config $config,
+        private EntityManager $entityManager,
+        private Metadata $metadata,
+        private Acl $acl,
+        private InjectableFactory $injectableFactory,
+        private SettingsService $settingsService,
+        private User $user,
+        private Preferences $preferences,
+        private FieldUtil $fieldUtil,
+        private Log $log,
+        private AuthenticationMethodProvider $authenticationMethodProvider
+    ) {}
 
     /**
      * @return array<string,mixed>
@@ -112,9 +92,11 @@ class AppService
 
         $settings = $this->settingsService->getConfigData();
 
-        if ($user->get('dashboardTemplateId')) {
+        $dashboardTemplateId = $user->get('dashboardTemplateId');
+
+        if ($dashboardTemplateId) {
             $dashboardTemplate = $this->entityManager
-                ->getEntity(DashboardTemplate::ENTITY_TYPE, $user->get('dashboardTemplateId'));
+                ->getEntityById(DashboardTemplate::ENTITY_TYPE, $dashboardTemplateId);
 
             if ($dashboardTemplate) {
                 $settings->forcedDashletsOptions = $dashboardTemplate->get('dashletsOptions') ?? (object) [];
@@ -124,28 +106,47 @@ class AppService
 
         $language = Language::detectLanguage($this->config, $this->preferences);
 
-        $auth2FARequired = false;
+        return [
+            'user' => $this->getUserDataForFrontend(),
+            'acl' => $this->getAclDataForFrontend(),
+            'preferences' => $preferencesData,
+            'token' => $this->user->get('token'),
+            'settings' => $settings,
+            'language' => $language,
+            'appParams' => $this->getAppParams(),
+        ];
+    }
 
-        if (
+    /**
+     * @return array<string, mixed>
+     */
+    private function getAppParams(): array
+    {
+        $user = $this->user;
+
+        $auth2FARequired =
             $user->isRegular() &&
             $this->config->get('auth2FA') &&
             $this->config->get('auth2FAForced') &&
-            !$user->get('auth2FA')
-        ) {
-            $auth2FARequired = true;
-        }
+            !$user->get('auth2FA');
+
+        $passwordChangeForNonAdminDisabled = $this->authenticationMethodProvider->get() !== Espo::NAME;
+
+        $timeZoneList = $this->metadata
+            ->get(['entityDefs', Settings::ENTITY_TYPE, 'fields', 'timeZone', 'options']) ?? [];
 
         $appParams = [
             'maxUploadSize' => $this->getMaxUploadSize() / 1024.0 / 1024.0,
             'isRestrictedMode' => $this->config->get('restrictedMode'),
-            'passwordChangeForNonAdminDisabled' => $this->config
-                    ->get('authenticationMethod', Espo::NAME) !== Espo::NAME,
-            'timeZoneList' => $this->metadata
-                ->get(['entityDefs', Settings::ENTITY_TYPE, 'fields', 'timeZone', 'options'], []),
+            'passwordChangeForNonAdminDisabled' => $passwordChangeForNonAdminDisabled,
+            'timeZoneList' => $timeZoneList,
             'auth2FARequired' => $auth2FARequired,
         ];
 
-        foreach (($this->metadata->get(['app', 'appParams']) ?? []) as $paramKey => $item) {
+        /** @var array<string, array<string, mixed>> $map */
+        $map = $this->metadata->get(['app', 'appParams']) ?? [];
+
+        foreach ($map as $paramKey => $item) {
             /** @var ?class-string<AppParam> $className */
             $className = $item['className'] ?? null;
 
@@ -168,15 +169,7 @@ class AppService
             $appParams[$paramKey] = $itemParams;
         }
 
-        return [
-            'user' => $this->getUserDataForFrontend(),
-            'acl' => $this->getAclDataForFrontend(),
-            'preferences' => $preferencesData,
-            'token' => $this->user->get('token'),
-            'settings' => $settings,
-            'language' => $language,
-            'appParams' => $appParams,
-        ];
+        return $appParams;
     }
 
     private function getUserDataForFrontend(): stdClass
@@ -323,12 +316,10 @@ class AppService
             [...$emailAccountCollection]
         );
 
-        $filteredList = array_values(array_filter(
+        return array_values(array_filter(
             $emailAddressList,
             fn (string $item) => in_array($item, $inAccountList)
         ));
-
-        return $filteredList;
     }
 
     /**
