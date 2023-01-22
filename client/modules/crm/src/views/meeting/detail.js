@@ -104,7 +104,7 @@ define('crm:views/meeting/detail', ['views/detail', 'lib!moment'], function (Dep
                 text = this.translate('Acceptance', 'labels', 'Meeting');
             }
 
-            this.removeMenuItem('setAcceptanceStatus');
+            this.removeMenuItem('setAcceptanceStatus', true);
 
             let iconHtml = '';
 

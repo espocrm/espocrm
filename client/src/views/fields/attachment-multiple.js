@@ -575,7 +575,16 @@ function (Dep, FileUpload) {
 
                                 this.isUploading = false;
 
-                                setTimeout(() => this.focusOnUploadButton(), 50);
+                                setTimeout(() => {
+                                    if (
+                                        document.activeElement &&
+                                        document.activeElement.tagName !== 'BODY'
+                                    ) {
+                                        return;
+                                    }
+
+                                    this.focusOnUploadButton();
+                                }, 50);
                             }
                         })
                         .catch(() => {

@@ -71,13 +71,16 @@
             "customizationDisplayAsLabelDisabled": true,
             "customizationAuditedDisabled": true,
             "customizationReadOnlyDisabled": true,
+            "customizationInlineEditDisabledDisabled": true,
             "customizationDefaultView": "views/admin/field-manager/fields/currency-default",
+            "customizationTooltipTextDisabled": true,
             "maxLength": 6
         },
         "converted": {
             "type": "currencyConverted",
             "readOnly": true,
-            "importDisabled": true
+            "importDisabled": true,
+            "customizationInlineEditDisabledDisabled": true
         }
     },
     "validationList": [

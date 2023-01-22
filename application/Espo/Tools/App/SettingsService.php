@@ -162,7 +162,9 @@ class SettingsService
         }
 
         /** @var ?bool $fallback */
-        $fallback = $mData['fallback'] ?? null;
+        $fallback = !$this->applicationState->isPortal() ?
+            ($mData['fallback'] ?? null) :
+            false;
 
         if ($fallback === null) {
             /** @var ?string $fallbackConfigParam */
@@ -172,7 +174,7 @@ class SettingsService
         }
 
         /** @var stdClass $data */
-        $data = (object) ($mData['fallbackConfigParam'] ?? []);
+        $data = (object) ($mData['data'] ?? []);
 
         return [
             'handler' => $handler,
