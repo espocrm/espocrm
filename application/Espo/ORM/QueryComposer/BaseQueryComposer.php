@@ -2586,7 +2586,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if (!$isComplex) {
             if (!$entity->hasAttribute($field)) {
-                return '0';
+                return $this->quote(false);
             }
 
             $operatorModified = $operator;
@@ -2654,7 +2654,7 @@ abstract class BaseQueryComposer implements QueryComposer
                     $customWhereClause = $this->applyValueToCustomWhereClause($whereDefs['whereClause'], $value);
                 }
                 else {
-                    return '0';
+                    return $this->quote(false);
                 }
 
                 if (!empty($whereDefs['leftJoins'])) {
@@ -2738,12 +2738,12 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($leftPart === null) {
-            return '0';
+            return $this->quote(false);
         }
 
         if ($operatorOrm === '=s' || $operatorOrm === '!=s') {
             if (!is_array($value)) {
-                return '0';
+                return $this->quote(false);
             }
 
             $subQuerySelectParams = !empty($value['selectParams']) ?
@@ -2775,11 +2775,11 @@ abstract class BaseQueryComposer implements QueryComposer
             }
 
             $oppose = '';
-            $emptyValue = '0';
+            $emptyValue = $this->quote(false);
 
             if ($operator == '<>') {
                 $oppose = 'NOT ';
-                $emptyValue = '1';
+                $emptyValue = $this->quote(true);
             }
 
             if (empty($valArr)) {
@@ -2808,7 +2808,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 return $leftPart . " IS NOT NULL";
             }
 
-            return '0';
+            return $this->quote(false);
         }
 
         return $leftPart . " " . $operator . " " . $this->quote($value);
