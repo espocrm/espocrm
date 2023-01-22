@@ -36,7 +36,6 @@ use Doctrine\DBAL\Schema\SchemaDiff as DBALSchemaDiff;
 use Doctrine\DBAL\Types\Type;
 
 use Espo\Core\InjectableFactory;
-use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Database\Converter as DatabaseConverter;
 use Espo\Core\Utils\Database\DBAL\Schema\Comparator;

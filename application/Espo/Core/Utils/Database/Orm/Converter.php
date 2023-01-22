@@ -35,7 +35,6 @@ use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
-use Espo\Core\Utils\Database\Helper as DatabaseHelper;
 
 class Converter
 {
