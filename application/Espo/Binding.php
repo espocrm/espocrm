@@ -255,7 +255,13 @@ class Binding implements BindingProcessor
             ->for('Espo\\Core\\Authentication\\Oidc\\Login')
             ->bindImplementation(
                 'Espo\\Core\\Authentication\\Oidc\\UserProvider',
-                'Espo\\Core\\Authentication\\Oidc\\DefaultUserProvider'
+                'Espo\\Core\\Authentication\\Oidc\\UserProvider\\DefaultUserProvider'
+            );
+
+        $binder
+            ->bindImplementation(
+                'Espo\\Core\\Authentication\\Oidc\\UserProvider\\UserRepository',
+                'Espo\\Core\\Authentication\\Oidc\\UserProvider\\DefaultUserRepository'
             );
 
         $binder->bindImplementation(

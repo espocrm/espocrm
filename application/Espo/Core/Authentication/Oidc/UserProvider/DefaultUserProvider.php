@@ -27,13 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\Oidc;
+namespace Espo\Core\Authentication\Oidc\UserProvider;
 
 use Espo\Core\ApplicationState;
 use Espo\Core\Authentication\Jwt\Token\Payload;
+use Espo\Core\Authentication\Oidc\ConfigDataProvider;
+use Espo\Core\Authentication\Oidc\UserProvider;
 use Espo\Core\Utils\Log;
 use Espo\Entities\User;
-use Espo\ORM\EntityManager;
 use RuntimeException;
 
 class DefaultUserProvider implements UserProvider
@@ -41,7 +42,7 @@ class DefaultUserProvider implements UserProvider
     public function __construct(
         private ConfigDataProvider $configDataProvider,
         private Sync $sync,
-        private EntityManager $entityManager,
+        private UserRepository $userRepository,
         private ApplicationState $applicationState,
         private Log $log
     ) {}
@@ -75,11 +76,7 @@ class DefaultUserProvider implements UserProvider
 
         $username = $this->sync->normalizeUsername($username);
 
-        /** @var ?User $user */
-        $user = $this->entityManager
-            ->getRDBRepositoryByClass(User::class)
-            ->where(['userName' => $username])
-            ->findOne();
+        $user = $this->userRepository->findByUsername($username);
 
         if (!$user) {
             return null;

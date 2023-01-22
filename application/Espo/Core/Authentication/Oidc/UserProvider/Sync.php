@@ -27,17 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\Oidc;
+namespace Espo\Core\Authentication\Oidc\UserProvider;
 
 use Espo\Core\Acl\Cache\Clearer as AclCacheClearer;
 use Espo\Core\ApplicationState;
 use Espo\Core\Authentication\Jwt\Token\Payload;
+use Espo\Core\Authentication\Oidc\ConfigDataProvider;
+use Espo\Core\Authentication\Oidc\UserProvider\UserRepository;
 use Espo\Core\Field\LinkMultiple;
-use Espo\Core\FieldProcessing\EmailAddress\Saver as EmailAddressSaver;
-use Espo\Core\FieldProcessing\PhoneNumber\Saver as PhoneNumberSaver;
-use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
-use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
-use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Core\Utils\Util;
@@ -51,9 +48,7 @@ class Sync
         private EntityManager $entityManager,
         private Config $config,
         private ConfigDataProvider $configDataProvider,
-        private LinkMultipleSaver $linkMultipleSaver,
-        private EmailAddressSaver $emailAddressSaver,
-        private PhoneNumberSaver $phoneNumberSaver,
+        private UserRepository $userRepository,
         private PasswordHash $passwordHash,
         private AclCacheClearer $aclCacheClearer,
         private ApplicationState $applicationState
@@ -65,8 +60,7 @@ class Sync
 
         $this->validateUsername($username);
 
-        /** @var User $user */
-        $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getNew();
+        $user = $this->userRepository->getNew();
 
         $user->set([
             'type' => User::TYPE_REGULAR,
@@ -84,7 +78,7 @@ class Sync
             $user->setPortals(LinkMultiple::create()->withAddedId($portalId));
         }
 
-        $this->saveUser($user);
+        $this->userRepository->save($user);
 
         return $user;
     }
@@ -113,34 +107,11 @@ class Sync
             $clearAclCache = $user->isAttributeChanged('teamsIds');
         }
 
-        $this->saveUser($user);
+        $this->userRepository->save($user);
 
         if ($clearAclCache) {
             $this->aclCacheClearer->clearForUser($user);
         }
-    }
-
-    private function saveUser(User $user): void
-    {
-        $this->entityManager->saveEntity($user, [
-            // Prevent `user` service being loaded by hooks.
-            SaveOption::SKIP_HOOKS => true,
-            SaveOption::KEEP_NEW => true,
-            SaveOption::KEEP_DIRTY => true,
-        ]);
-
-        $saverParams = SaverParams::create()->withRawOptions(['skipLinkMultipleHooks' => true]);
-
-        $this->linkMultipleSaver->process($user, 'teams', $saverParams);
-        $this->linkMultipleSaver->process($user, 'portals', $saverParams);
-        $this->linkMultipleSaver->process($user, 'portalRoles', $saverParams);
-        $this->emailAddressSaver->process($user, $saverParams);
-        $this->phoneNumberSaver->process($user, $saverParams);
-
-        $user->setAsNotNew();
-        $user->updateFetchedValues();
-
-        $this->entityManager->refreshEntity($user);
     }
 
     /**
