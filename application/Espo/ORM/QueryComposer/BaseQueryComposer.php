@@ -2733,6 +2733,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
 
                 $leftPart = $fromAlias . '.' . $this->toDb($this->sanitize($field));
+                $leftPart = $this->quoteColumn($leftPart);
             }
         }
 
@@ -3545,22 +3546,23 @@ abstract class BaseQueryComposer implements QueryComposer
             }
 
             if (strpos($attribute, '.') > 0) {
-                list($alias, $attribute) = explode('.', $attribute);
+                [$alias, $attribute] = explode('.', $attribute);
 
                 $alias = $this->sanitize($alias);
                 $column = $this->toDb($this->sanitize($attribute));
-                $left = "{$alias}.{$column}";
-            } else {
+
+                $left = $this->quoteColumn("{$alias}.{$column}");
+            }
+            else {
                 $table = $this->toDb($entity->getEntityType());
                 $column = $this->toDb($this->sanitize($attribute));
-                $left = "{$table}.{$column}";
+
+                $left = $this->quoteColumn("{$table}.{$column}");
             }
 
-            if ($isNotValue) {
-                $right = $this->convertComplexExpression($entity, $value, false, $params);
-            } else {
-                $right = $this->quote($value);
-            }
+            $right = $isNotValue ?
+                $this->convertComplexExpression($entity, $value, false, $params) :
+                $this->quote($value);
 
             $list[] = $left . " = " . $right;
         }
