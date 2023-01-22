@@ -2203,21 +2203,16 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (str_starts_with($orderBy, 'LIST:')) {
-            list($l, $field, $list) = explode(':', $orderBy);
+            [, $field, $listString] = explode(':', $orderBy);
 
-            $fieldPath = $this->getAttributePathForOrderBy($entity, $field, $params ?? []);
+            $list = explode(',', $listString);
+            $list = array_map(fn($item) => str_replace('_COMMA_', ',', $item), $list);
+            $list = array_map(fn($item) => $this->quote($item), $list);
+            $list = array_reverse($list);
+            $listString = implode(', ', $list);
 
-            $listQuoted = [];
-
-            $list = array_reverse(explode(',', $list));
-
-            foreach ($list as $listItem) {
-                $listItem = str_replace('_COMMA_', ',', $listItem);
-
-                $listQuoted[] = $this->quote($listItem);
-            }
-
-            return "FIELD(" . $fieldPath . ", " . implode(", ", $listQuoted) . ") DESC";
+            $orderBy = "POSITION_IN_LIST:({$field}, {$listString})";
+            $order = 'DESC';
         }
 
         if (!is_null($order)) {
