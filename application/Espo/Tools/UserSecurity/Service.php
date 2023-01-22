@@ -70,7 +70,7 @@ class Service
         }
 
         /** @var ?User $user */
-        $user = $this->entityManager->getEntityById('User', $id);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $id);
 
         if (!$user) {
             throw new NotFound();
@@ -110,7 +110,7 @@ class Service
         $isReset = $data->reset ?? false;
 
         /** @var ?User $user */
-        $user = $this->entityManager->getEntityById('User', $id);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $id);
 
         if (!$user) {
             throw new NotFound();
@@ -172,7 +172,7 @@ class Service
         }
 
         /** @var ?User $user */
-        $user = $this->entityManager->getEntity('User', $id);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $id);
 
         if (!$user) {
             throw new NotFound();
