@@ -33,10 +33,11 @@ use Espo\Core\Acl\Cache\Clearer;
 use Espo\Core\ApplicationState;
 use Espo\Core\Authentication\Oidc\ConfigDataProvider;
 use Espo\Core\Authentication\Oidc\UserProvider\Sync;
+use Espo\Core\Authentication\Oidc\UserProvider\UsernameValidator;
 use Espo\Core\Authentication\Oidc\UserProvider\UserRepository;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\PasswordHash;
-use Espo\ORM\EntityManager;
+
 use PHPUnit\Framework\TestCase;
 
 class SyncTest extends TestCase
@@ -50,10 +51,10 @@ class SyncTest extends TestCase
         $configDataProvider = $this->createMock(ConfigDataProvider::class);
 
         $this->sync = new Sync(
-            $this->createMock(EntityManager::class),
+            $this->createMock(UsernameValidator::class),
             $this->config,
             $configDataProvider,
-            $this->createMock(\Espo\Core\Authentication\Oidc\UserProvider\UserRepository::class),
+            $this->createMock(UserRepository::class),
             $this->createMock(PasswordHash::class),
             $this->createMock(Clearer::class),
             $this->createMock(ApplicationState::class)

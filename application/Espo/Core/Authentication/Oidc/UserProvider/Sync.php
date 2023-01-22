@@ -38,13 +38,12 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
-use Espo\ORM\EntityManager;
 use RuntimeException;
 
 class Sync
 {
     public function __construct(
-        private EntityManager $entityManager,
+        private UsernameValidator $usernameValidator,
         private Config $config,
         private ConfigDataProvider $configDataProvider,
         private UserRepository $userRepository,
@@ -57,7 +56,7 @@ class Sync
     {
         $username = $this->getUsernameFromToken($payload);
 
-        $this->validateUsername($username);
+        $this->usernameValidator->validate($username);
 
         $user = $this->userRepository->getNew();
 
@@ -86,7 +85,7 @@ class Sync
     {
         $username = $this->getUsernameFromToken($payload);
 
-        $this->validateUsername($username);
+        $this->usernameValidator->validate($username);
 
         if ($user->getUserName() !== $username) {
             throw new RuntimeException("Could not sync user. Username mismatch.");
@@ -225,20 +224,6 @@ class Sync
         }
 
         return $list;
-    }
-
-    private function validateUsername(string $username): void
-    {
-        $maxLength = $this->entityManager
-            ->getDefs()
-            ->getEntity(User::ENTITY_TYPE)
-            ->getAttribute('userName')
-            ->getLength();
-
-        if ($maxLength && $maxLength < strlen($username)) {
-            throw new RuntimeException("Value in username claim exceeds max length of `{$maxLength}`. " .
-                "Increase maxLength parameter for User.userName field (up to 255).");
-        }
     }
 
     public function normalizeUsername(string $username): string

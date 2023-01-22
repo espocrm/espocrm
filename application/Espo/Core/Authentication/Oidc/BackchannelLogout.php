@@ -35,9 +35,9 @@ use Espo\Core\Authentication\Jwt\Exceptions\Invalid;
 use Espo\Core\Authentication\Jwt\Exceptions\SignatureNotVerified;
 use Espo\Core\Authentication\Jwt\Token;
 use Espo\Core\Authentication\Jwt\Validator;
+use Espo\Core\Authentication\Oidc\UserProvider\UserRepository;
 use Espo\Core\Utils\Log;
 use Espo\Entities\AuthToken as AuthTokenEntity;
-use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 
 /**
@@ -52,6 +52,7 @@ class BackchannelLogout
         private Validator $validator,
         private TokenValidator $tokenValidator,
         private ConfigDataProvider $configDataProvider,
+        private UserRepository $userRepository,
         private EntityManager $entityManager,
         private AuthTokenManager $authTokenManger
     ) {}
@@ -83,12 +84,7 @@ class BackchannelLogout
             throw new Invalid("No username claim `{$usernameClaim}` in token.");
         }
 
-        $user = $this->entityManager
-            ->getRDBRepositoryByClass(User::class)
-            ->where([
-                'userName' => $username,
-            ])
-            ->findOne();
+        $user = $this->userRepository->findByUsername($username);
 
         if (!$user) {
             return;
