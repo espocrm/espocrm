@@ -90,10 +90,6 @@ class BackchannelLogout
             return;
         }
 
-        if ($user->isPortal()) {
-            return;
-        }
-
         $authTokenList = $this->entityManager
             ->getRDBRepositoryByClass(AuthTokenEntity::class)
             ->where([
