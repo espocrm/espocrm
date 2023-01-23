@@ -258,12 +258,6 @@ class Binding implements BindingProcessor
                 'Espo\\Core\\Authentication\\Oidc\\UserProvider\\DefaultUserProvider'
             );
 
-        $binder
-            ->bindImplementation(
-                'Espo\\Core\\Authentication\\Oidc\\UserProvider\\UserRepository',
-                'Espo\\Core\\Authentication\\Oidc\\UserProvider\\DefaultUserRepository'
-            );
-
         $binder->bindImplementation(
             'Espo\\Core\\Mail\\Importer\\ParentFinder',
             'Espo\\Core\\Mail\\Importer\\DefaultParentFinder'
