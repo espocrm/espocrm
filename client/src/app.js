@@ -419,6 +419,7 @@ function (
          * @private
          */
         init: function (options, callback) {
+            /** @type {Object.<string, *>} */
             this.appParams = {};
             this.controllers = {};
 
@@ -956,7 +957,9 @@ function (
                                 return;
                             }
 
-                            this.doAction({action: 'login'});
+                            if (logoutWait) {
+                                this.doAction({action: 'login'});
+                            }
                         });
                 }
             }
