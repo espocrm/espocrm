@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils\Database\Orm;
 
 use Espo\Core\Utils\Util;
+use Espo\ORM\Defs\IndexDefs;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 use Espo\Core\Utils\Metadata;
@@ -733,19 +734,23 @@ class Converter
 
         if (isset($ormMetadata[$entityType]['indexes'])) {
             foreach ($ormMetadata[$entityType]['indexes'] as $indexName => &$indexData) {
-                if (!isset($indexData['key'])) {
-                    $indexType = SchemaUtils::getIndexTypeByIndexDefs($indexData);
-                    $indexData['key'] = SchemaUtils::generateIndexName($indexName, $indexType);
+                $indexDefs = IndexDefs::fromRaw($indexData, $indexName);
+
+                if (!$indexDefs->getKey()) {
+                    $indexData['key'] = SchemaUtils::generateIndexName($indexDefs, $entityType);
                 }
             }
         }
 
         if (isset($ormMetadata[$entityType]['relations'])) {
-            foreach ($ormMetadata[$entityType]['relations'] as $relationName => &$relationData) {
+            foreach ($ormMetadata[$entityType]['relations'] as &$relationData) {
                 if (isset($relationData['indexes'])) {
                     foreach ($relationData['indexes'] as $indexName => &$indexData) {
-                        $indexType = SchemaUtils::getIndexTypeByIndexDefs($indexData);
-                        $indexData['key'] = SchemaUtils::generateIndexName($indexName, $indexType);
+                        $indexDefs = IndexDefs::fromRaw($indexData, $indexName);
+
+                        $relationName = $relationData['relationName'] ?? '';
+
+                        $indexData['key'] = SchemaUtils::generateIndexName($indexDefs, $relationName);
                     }
                 }
             }

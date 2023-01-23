@@ -40,6 +40,7 @@ use Espo\Core\Utils\Util;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\Schema as DbalSchema;
 use Doctrine\DBAL\Types\Type as DbalType;
+use Espo\ORM\Defs\IndexDefs;
 
 class Converter
 {
@@ -305,12 +306,14 @@ class Converter
      * Prepare a relation table for the manyMany relation.
      *
      * @param string $entityName
-     * @param array<string,mixed> $relationParams
+     * @param array<string, mixed> $relationParams
      * @throws \Doctrine\DBAL\Schema\SchemaException
      */
     protected function prepareManyMany(string $entityName, $relationParams): Table
     {
-        $tableName = Util::toUnderScore($relationParams['relationName']);
+        $relationName = $relationParams['relationName'];
+
+        $tableName = Util::toUnderScore($relationName);
 
         $this->log->debug('DBAL: prepareManyMany invoked for ' . $entityName, [
             'tableName' => $tableName, 'parameters' => $relationParams
@@ -342,7 +345,7 @@ class Converter
             ]);
         }
         else {
-            foreach($relationParams['midKeys'] as $midKey) {
+            foreach ($relationParams['midKeys'] as $midKey) {
                 $columnName = Util::toUnderScore($midKey);
 
                 $table->addColumn(
@@ -354,7 +357,11 @@ class Converter
                     ])
                 );
 
-                $table->addIndex([$columnName], SchemaUtils::generateIndexName($columnName));
+                $indexDefs = IndexDefs::fromRaw([], $columnName);
+
+                $indexName = SchemaUtils::generateIndexName($indexDefs, $relationName);
+
+                $table->addIndex([$columnName], $indexName);
 
                 $uniqueIndex[] = $columnName;
             }
@@ -411,10 +418,11 @@ class Converter
             /** @var string[] $uniqueIndex */
             $uniqueIndexName = implode('_', $uniqueIndex);
 
-            $table->addUniqueIndex(
-                $uniqueIndex,
-                SchemaUtils::generateIndexName($uniqueIndexName, 'unique')
-            );
+            $indexDefs = IndexDefs::fromRaw(['type' => 'unique'], $uniqueIndexName);
+
+            $indexName = SchemaUtils::generateIndexName($indexDefs, $relationName);
+
+            $table->addUniqueIndex($uniqueIndex, $indexName);
         }
 
         return $table;
@@ -426,10 +434,14 @@ class Converter
      */
     protected function addIndexes(Table $table, array $indexes): void
     {
-        foreach($indexes as $indexName => $indexParams) {
-            $indexType = !empty($indexParams['type']) ?
+        foreach ($indexes as $indexName => $indexParams) {
+            $indexDefs = IndexDefs::fromRaw($indexParams, $indexName);
+
+            $indexType = SchemaUtils::getIndexTypeByIndexDefs($indexDefs);
+
+            /*$indexType = !empty($indexParams['type']) ?
                 $indexParams['type'] :
-                SchemaUtils::getIndexTypeByIndexDefs($indexParams);
+                SchemaUtils::getIndexTypeByIndexDefs($indexParams);*/
 
             switch ($indexType) {
                 case 'index':

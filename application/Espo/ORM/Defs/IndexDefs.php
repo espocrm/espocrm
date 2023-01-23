@@ -66,7 +66,7 @@ class IndexDefs
      */
     public function getKey(): string
     {
-        return $this->data['key'];
+        return $this->data['key'] ?? '';
     }
 
     /**
@@ -74,6 +74,11 @@ class IndexDefs
      */
     public function isUnique(): bool
     {
+        // For bc.
+        if (($this->data['unique'] ?? false)) {
+            return true;
+        }
+
         $type = $this->data['type'] ?? null;
 
         return $type === 'unique';

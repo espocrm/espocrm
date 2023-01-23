@@ -30,20 +30,22 @@
 namespace Espo\Core\Utils\Database\Schema;
 
 use Espo\Core\Utils\Util;
+use Espo\ORM\Defs\IndexDefs;
 
 class Utils
 {
     /**
-     * @param array<string,mixed> $ormMeta
+     * Get indexes in specific format.
+     *
+     * @param array<string, mixed> $ormMeta
      * @param string[] $ignoreFlags
-     * @return array<string,array<string,mixed>>
+     * @return array<string, array<string, mixed>>
      */
-    public static function getIndexes(array $ormMeta, array $ignoreFlags = [])
+    public static function getIndexes(array $ormMeta, array $ignoreFlags = []): array
     {
         $indexList = [];
 
         foreach ($ormMeta as $entityName => $entityParams) {
-            /* add indexes for additionalTables */
             $entityIndexList = static::getEntityIndexListByFieldsDefs($entityParams['fields']);
 
             foreach ($entityIndexList as $indexName => $indexParams) {
@@ -54,11 +56,9 @@ class Utils
 
             if (isset($entityParams['indexes']) && is_array($entityParams['indexes'])) {
                 foreach ($entityParams['indexes'] as $indexName => $indexParams) {
-                    $indexType = static::getIndexTypeByIndexDefs($indexParams);
+                    $indexDefs = IndexDefs::fromRaw($indexParams, $indexName);
 
-                    $tableIndexName = isset($indexParams['key']) ?
-                        $indexParams['key'] :
-                        static::generateIndexName($indexName, $indexType);
+                    $tableIndexName = $indexParams['key'] ?? static::generateIndexName($indexDefs, $entityName);
 
                     if (isset($indexParams['flags']) && is_array($indexParams['flags'])) {
                         $skipIndex = false;
@@ -79,6 +79,9 @@ class Utils
                     }
 
                     if (is_array($indexParams['columns'])) {
+                        $indexType = static::getIndexTypeByIndexDefs($indexDefs);
+
+                        // @todo Revise, may to be removed.
                         $indexList[$entityName][$tableIndexName]['type'] = $indexType;
 
                         $indexList[$entityName][$tableIndexName]['columns'] = array_map(
@@ -178,19 +181,15 @@ class Utils
     }
 
     /**
-     * @param array<string,mixed> $indexDefs
-     * @return string
+     * @return 'unique'|'fulltext'|'index'
      */
-    public static function getIndexTypeByIndexDefs(array $indexDefs)
+    public static function getIndexTypeByIndexDefs(IndexDefs $indexDefs): string
     {
-        if (
-            (isset($indexDefs['type']) && $indexDefs['type'] == 'unique') ||
-            (isset($indexDefs['unique']) && $indexDefs['unique'])
-        ) {
+        if ($indexDefs->isUnique()) {
             return 'unique';
         }
 
-        if (isset($indexDefs['flags']) && in_array('fulltext', $indexDefs['flags'])) {
+        if (in_array('fulltext', $indexDefs->getFlagList())) {
             return 'fulltext';
         }
 
@@ -198,28 +197,20 @@ class Utils
     }
 
     /**
-     * @param string $name
-     * @param string $type
-     * @param int $maxLength
-     * @return string
+     * @todo Move to IndexHelper interface.
      */
-    public static function generateIndexName($name, $type = 'index', $maxLength = 60)
+    public static function generateIndexName(IndexDefs $defs, string $entityType): string
     {
-        switch ($type) {
-            case 'unique':
-                $prefix = 'UNIQ';
-                break;
+        $maxLength = 60;
 
-            default:
-                $prefix = 'IDX';
-                break;
-        }
+        $name = $defs->getName();
+        $prefix = $defs->isUnique() ? 'UNIQ' : 'IDX';
 
-        $nameList = [];
-        $nameList[] = strtoupper($prefix);
-        $nameList[] = strtoupper(Util::toUnderScore($name));
+        $parts = [$prefix, strtoupper(Util::toUnderScore($name))];
 
-        return substr(implode('_', $nameList), 0, $maxLength);
+        $key = implode('_', $parts);
+
+        return substr($key, 0, $maxLength);
     }
 
     /**
