@@ -133,6 +133,13 @@ define('controllers/base', ['controller'], function (Dep) {
             this.logout();
         },
 
+        actionLogoutWait: function () {
+            this.entire('views/base', {template: 'logout-wait'}, view => {
+                view.render()
+                    .then(() => Espo.Ui.notify(' ... '))
+            });
+        },
+
         actionClearCache: function () {
             this.clearCache();
         },

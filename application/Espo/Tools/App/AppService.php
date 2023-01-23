@@ -130,7 +130,10 @@ class AppService
             $this->config->get('auth2FAForced') &&
             !$user->get('auth2FA');
 
-        $passwordChangeForNonAdminDisabled = $this->authenticationMethodProvider->get() !== Espo::NAME;
+        $authenticationMethod = $this->authenticationMethodProvider->get();
+
+        $passwordChangeForNonAdminDisabled = $authenticationMethod !== Espo::NAME;
+        $logoutWait = (bool) $this->metadata->get(['authenticationMethods', $authenticationMethod, 'logoutClassName']);
 
         $timeZoneList = $this->metadata
             ->get(['entityDefs', Settings::ENTITY_TYPE, 'fields', 'timeZone', 'options']) ?? [];
@@ -141,6 +144,7 @@ class AppService
             'passwordChangeForNonAdminDisabled' => $passwordChangeForNonAdminDisabled,
             'timeZoneList' => $timeZoneList,
             'auth2FARequired' => $auth2FARequired,
+            'logoutWait' => $logoutWait,
         ];
 
         /** @var array<string, array<string, mixed>> $map */
