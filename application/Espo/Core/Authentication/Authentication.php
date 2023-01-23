@@ -528,14 +528,19 @@ class Authentication
 
         $user = $this->applicationState->getUser();
 
-        if ($authToken->getUserId() !== $user->getId()) {
-            throw new Forbidden("Auth token for another user.");
-        }
-
         $this->authTokenManager->inactivate($authToken);
 
         if ($authToken->getSecret()) {
             $sentSecret = $request->getCookieParam(self::COOKIE_AUTH_TOKEN_SECRET);
+
+            if (
+                // Still need the ability to destroy auth tokens of another users
+                // for login-as-another-user feature.
+                $authToken->getUserId() !== $user->getId() &&
+                $sentSecret !== $authToken->getSecret()
+            ) {
+                throw new Forbidden("Can't destroy auth token.");
+            }
 
             if ($sentSecret === $authToken->getSecret()) {
                 $this->setSecretInCookie(null, $response);
