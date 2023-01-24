@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
+use Doctrine\DBAL\Schema\SchemaException;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 use Espo\Core\Utils\File\Manager as FileManager;
@@ -148,7 +149,7 @@ class Converter
      *
      * @param array<string,mixed> $ormMeta
      * @param string[]|string|null $entityList
-     * @throws \Doctrine\DBAL\Schema\SchemaException
+     * @throws SchemaException
      */
     public function process(array $ormMeta, $entityList = null): DbalSchema
     {
@@ -307,7 +308,7 @@ class Converter
      *
      * @param string $entityName
      * @param array<string, mixed> $relationParams
-     * @throws \Doctrine\DBAL\Schema\SchemaException
+     * @throws SchemaException
      */
     protected function prepareManyMany(string $entityName, $relationParams): Table
     {
@@ -399,8 +400,7 @@ class Converter
         if (!empty($relationParams['indexes'])) {
             $normalizedIndexes = SchemaUtils::getIndexes([
                 $entityName => [
-                    'fields' => [],
-                    'indexes' => $relationParams['indexes'],
+                    'indexes' => $relationParams['indexes']
                 ]
             ]);
 
@@ -429,34 +429,21 @@ class Converter
     }
 
     /**
-     * @param array<string,array<string,mixed>> $indexes
-     * @throws \Doctrine\DBAL\Schema\SchemaException
+     * @param array<string, array<string, mixed>> $indexes
+     * @throws SchemaException
      */
     protected function addIndexes(Table $table, array $indexes): void
     {
         foreach ($indexes as $indexName => $indexParams) {
             $indexDefs = IndexDefs::fromRaw($indexParams, $indexName);
 
-            $indexType = SchemaUtils::getIndexTypeByIndexDefs($indexDefs);
+            if ($indexDefs->isUnique()) {
+                $table->addUniqueIndex($indexDefs->getColumnList(), $indexName);
 
-            /*$indexType = !empty($indexParams['type']) ?
-                $indexParams['type'] :
-                SchemaUtils::getIndexTypeByIndexDefs($indexParams);*/
-
-            switch ($indexType) {
-                case 'index':
-                case 'fulltext':
-                    $indexFlagList = isset($indexParams['flags']) ? $indexParams['flags'] : [];
-
-                    $table->addIndex($indexParams['columns'], $indexName, $indexFlagList);
-
-                    break;
-
-                case 'unique':
-                    $table->addUniqueIndex($indexParams['columns'], $indexName);
-
-                    break;
+                continue;
             }
+
+            $table->addIndex($indexDefs->getColumnList(), $indexName, $indexDefs->getFlagList());
         }
     }
 

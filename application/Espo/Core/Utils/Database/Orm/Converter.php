@@ -717,10 +717,8 @@ class Converter
 
     /**
      * @param array<string, mixed> $ormMetadata
-     * @param string $entityType
-     * @return void
      */
-    protected function applyIndexes(&$ormMetadata, $entityType)
+    protected function applyIndexes(&$ormMetadata, string $entityType): void
     {
         if (isset($ormMetadata[$entityType]['fields'])) {
             $indexList = SchemaUtils::getEntityIndexListByFieldsDefs($ormMetadata[$entityType]['fields']);
