@@ -157,7 +157,7 @@ class Converter
 
         // Check if exist files in "Tables" directory and merge with ormMetadata.
 
-        /** @var array<string,mixed> $ormMeta */
+        /** @var array<string, mixed> $ormMeta */
         $ormMeta = Util::merge($ormMeta, $this->getCustomTables($ormMeta));
 
         if (isset($ormMeta['unsetIgnore'])) {
@@ -175,14 +175,14 @@ class Converter
 
         // unset some keys in orm
         if (isset($ormMeta['unset'])) {
-            /** @var array<string,mixed> $ormMeta */
+            /** @var array<string, mixed> $ormMeta */
             $ormMeta = Util::unsetInArray($ormMeta, $ormMeta['unset']);
 
             unset($ormMeta['unset']);
         }
 
         if (isset($protectedOrmMeta)) {
-            /** @var array<string,mixed> $ormMeta */
+            /** @var array<string, mixed> $ormMeta */
             $ormMeta = Util::merge($ormMeta, $protectedOrmMeta);
         }
 
@@ -193,7 +193,7 @@ class Converter
 
             $this->log->debug(
                 'Rebuild Database for entities: [' .
-                implode(', ', $entityList).'] with dependent entities: [' .
+                implode(', ', $entityList) . '] with dependent entities: [' .
                 implode(', ', $dependentEntities) . ']'
             );
 

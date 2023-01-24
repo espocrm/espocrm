@@ -33,6 +33,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Schema as DBALSchema;
 use Doctrine\DBAL\Schema\SchemaDiff as DBALSchemaDiff;
+use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Types\Type;
 
 use Espo\Core\InjectableFactory;
@@ -65,7 +66,7 @@ class Schema
      *   afterRebuild: BaseRebuildActions[],
      * }
      */
-    protected $rebuildActions = null;
+    private $rebuildActions = null;
 
     public function __construct(
         private Config $config,
@@ -110,7 +111,7 @@ class Schema
         return $this->getDatabaseHelper()->getDbalConnection();
     }
 
-    protected function initFieldTypes(): void
+    private function initFieldTypes(): void
     {
         /** @var string[] $typeList */
         $typeList = $this->fileManager->getFileList($this->fieldTypePath, false, '\.php$');
@@ -152,7 +153,7 @@ class Schema
      * Rebuild database schema.
      *
      * @param ?string[] $entityList
-     * @throws \Doctrine\DBAL\Schema\SchemaException
+     * @throws SchemaException
      */
     public function rebuild(?array $entityList = null): bool
     {
@@ -208,7 +209,7 @@ class Schema
     /**
      * Get current database schema.
      */
-    protected function getCurrentSchema(): DBALSchema
+    private function getCurrentSchema(): DBALSchema
     {
         return $this->getConnection()
             ->getSchemaManager()
@@ -229,7 +230,7 @@ class Schema
      * Get SQL queries to get from one to another schema.
      *
      * @return string[] Array of SQL queries.
-     * @throws \Doctrine\DBAL\Schema\SchemaException
+     * @throws SchemaException
      */
     public function getDiffSql(DBALSchema $fromSchema, DBALSchema $toSchema)
     {
@@ -241,7 +242,7 @@ class Schema
     /**
      * Init Rebuild Actions, get all classes and create them.
      */
-    protected function initRebuildActions(?DBALSchema $currentSchema = null, ?DBALSchema $metadataSchema = null): void
+    private function initRebuildActions(?DBALSchema $currentSchema = null, ?DBALSchema $metadataSchema = null): void
     {
         $methodList = [
             'beforeRebuild',
@@ -280,9 +281,9 @@ class Schema
     /**
      * Execute actions for RebuildAction classes.
      *
-     * @param 'beforeRebuild'|'afterRebuild' $action An action name, 'beforeRebuild' or 'afterRebuild'.
+     * @param 'beforeRebuild'|'afterRebuild' $action An action name.
      */
-    protected function executeRebuildActions(string $action = 'beforeRebuild'): void
+    private function executeRebuildActions(string $action): void
     {
         if (!isset($this->rebuildActions)) {
             $this->initRebuildActions();
