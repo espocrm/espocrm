@@ -42,20 +42,16 @@ class Converter
     /** @var ?array<string, mixed> */
     private $entityDefs = null;
 
-    protected string $defaultFieldType = 'varchar';
+    private string $defaultFieldType = 'varchar';
 
-    /**
-     * @var array<string, int>
-     */
-    protected $defaultLength = [
+    /** @var array<string, int> */
+    private $defaultLength = [
         'varchar' => 255,
         'int' => 11,
     ];
 
-    /**
-     * @var array<string, mixed>
-     */
-    protected $defaultValue = [
+    /** @var array<string, mixed>  */
+    private $defaultValue = [
         'bool' => false,
     ];
 
@@ -64,7 +60,7 @@ class Converter
      *
      * @var array<string, string>
      */
-    protected $fieldAccordances = [
+    private $fieldAccordances = [
         'type' => 'type',
         'dbType' => 'dbType',
         'maxLength' => 'len',
@@ -89,10 +85,8 @@ class Converter
         'scale' => 'scale',
     ];
 
-    /**
-     * @var array<string, mixed>
-     */
-    protected $idParams = [
+    /** @var array<string, mixed> */
+    private $idParams = [
         'dbType' => 'varchar',
         'len' => 24,
     ];
@@ -102,7 +96,7 @@ class Converter
      *
      * @var string[]
      */
-    protected $permittedEntityOptions = [
+    private $permittedEntityOptions = [
         'indexes',
         'additionalTables',
     ];
@@ -167,10 +161,10 @@ class Converter
     }
 
     /**
-     * @param array<string,mixed> $entityMetadata
-     * @return array<string,mixed>
+     * @param array<string, mixed> $entityMetadata
+     * @return array<string, mixed>
      */
-    protected function convertEntity(string $entityType, array $entityMetadata): array
+    private function convertEntity(string $entityType, array $entityMetadata): array
     {
         $ormMetadata = [];
 
@@ -221,10 +215,10 @@ class Converter
     }
 
     /**
-     * @param array<string,mixed> $ormMetadata
-     * @return array<string,mixed>
+     * @param array<string, mixed> $ormMetadata
+     * @return array<string, mixed>
      */
-    protected function afterFieldsProcess(array $ormMetadata): array
+    private function afterFieldsProcess(array $ormMetadata): array
     {
         foreach ($ormMetadata as $entityType => &$entityParams) {
             foreach ($entityParams['fields'] as $attribute => &$attributeParams) {
@@ -286,10 +280,10 @@ class Converter
     }
 
     /**
-     * @param array<string,mixed> $ormMetadata
-     * @return array<string,mixed>
+     * @param array<string, mixed> $ormMetadata
+     * @return array<string, mixed>
      */
-    protected function afterProcess(array $ormMetadata): array
+    private function afterProcess(array $ormMetadata): array
     {
         foreach ($ormMetadata as $entityType => &$entityParams) {
             foreach ($entityParams['fields'] as $attribute => &$attributeParams) {
@@ -309,9 +303,9 @@ class Converter
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
-    protected function obtainForeignType(array $data, string $entityType, string $attribute): ?string
+    private function obtainForeignType(array $data, string $entityType, string $attribute): ?string
     {
         $params = $data[$entityType]['fields'][$attribute] ?? [];
 
@@ -339,7 +333,7 @@ class Converter
      * @param array<string, mixed> $entityMetadata
      * @return array<string, mixed>
      */
-    protected function convertFields(string $entityType, array &$entityMetadata): array
+    private function convertFields(string $entityType, array &$entityMetadata): array
     {
         $entityMetadata['fields'] ??= [];
 
@@ -354,8 +348,7 @@ class Converter
                 'dbType' => 'varchar',
             ],
             'name' => [
-                'type' => isset($entityMetadata['fields']['name']['type']) ?
-                    $entityMetadata['fields']['name']['type'] : Entity::VARCHAR,
+                'type' => $entityMetadata['fields']['name']['type'] ?? Entity::VARCHAR,
                 'notStorable' => true,
             ],
             'deleted' => [
@@ -413,16 +406,16 @@ class Converter
     /**
      * Correct fields definitions based on Espo\Custom\Core\Utils\Database\Orm\Fields.
      *
-     * @param array<string,mixed> $ormMetadata
-     * @return array<string,mixed>
+     * @param array<string, mixed> $ormMetadata
+     * @return array<string, mixed>
      */
-    protected function correctFields(string $entityType, array $ormMetadata): array
+    private function correctFields(string $entityType, array $ormMetadata): array
     {
         $entityDefs = $this->getEntityDefs();
 
         $entityMetadata = $ormMetadata[$entityType];
 
-        //load custom field definitions and customCodes
+        // Load custom field definitions.
         foreach ($entityMetadata['fields'] as $attribute => $attributeParams) {
             if (empty($attributeParams['type'])) {
                 continue;
@@ -461,7 +454,8 @@ class Converter
                 $ormMetadata = Util::merge($ormMetadata, $fieldResult);
             }
 
-            $defaultAttributes = $this->metadata->get(['entityDefs', $entityType, 'fields', $attribute, 'defaultAttributes']);
+            $defaultAttributes = $this->metadata
+                ->get(['entityDefs', $entityType, 'fields', $attribute, 'defaultAttributes']);
 
             if ($defaultAttributes && array_key_exists($attribute, $defaultAttributes)) {
                 $defaultMetadataPart = [
@@ -495,6 +489,7 @@ class Converter
                     'notStorable' => true,
                     'notExportable' => true,
                 ];
+
                 $ormMetadata[$entityType]['fields']['followersNames'] = [
                     'type' => 'jsonObject',
                     'notStorable' => true,
@@ -520,7 +515,7 @@ class Converter
      * @param ?array<string,mixed> $fieldTypeMetadata
      * @return array<string,mixed>|false
      */
-    protected function convertField(
+    private function convertField(
         string $entityType,
         string $field,
         array $fieldParams,
@@ -583,11 +578,11 @@ class Converter
     }
 
     /**
-     * @param array<string,mixed> $entityMetadata
-     * @param array<string,mixed> $ormMetadata
-     * @return array<string,mixed>
+     * @param array<string, mixed> $entityMetadata
+     * @param array<string, mixed> $ormMetadata
+     * @return array<string, mixed>
      */
-    protected function convertLinks(string $entityType, array $entityMetadata, array $ormMetadata): array
+    private function convertLinks(string $entityType, array $entityMetadata, array $ormMetadata): array
     {
         if (!isset($entityMetadata['links'])) {
             return [];
@@ -612,10 +607,10 @@ class Converter
     }
 
     /**
-     * @param array<string,mixed> $attributeParams
-     * @return array<string,mixed>
+     * @param array<string, mixed> $attributeParams
+     * @return array<string, mixed>
      */
-    protected function getInitValues(array $attributeParams)
+    private function getInitValues(array $attributeParams)
     {
         $values = [];
 
@@ -651,10 +646,9 @@ class Converter
     }
 
     /**
-     * @param array<string,mixed> $ormMetadata
-     * @return void
+     * @param array<string, mixed> $ormMetadata
      */
-    protected function applyFullTextSearch(array &$ormMetadata, string $entityType)
+    private function applyFullTextSearch(array &$ormMetadata, string $entityType): void
     {
         if (!$this->metadata->get(['entityDefs', $entityType, 'collection', 'fullTextSearch'])) {
             return;
@@ -718,7 +712,7 @@ class Converter
     /**
      * @param array<string, mixed> $ormMetadata
      */
-    protected function applyIndexes(&$ormMetadata, string $entityType): void
+    private function applyIndexes(&$ormMetadata, string $entityType): void
     {
         if (isset($ormMetadata[$entityType]['fields'])) {
             $indexList = SchemaUtils::getEntityIndexListByFieldsDefs($ormMetadata[$entityType]['fields']);
@@ -756,25 +750,23 @@ class Converter
     }
 
     /**
-     * @param array<string,mixed> $defs
-     * @return array<string,mixed>
+     * @param array<string, mixed> $defs
+     * @return array<string, mixed>
      */
-    protected function createAdditionalEntityTypes(string $entityType, array $defs): array
+    private function createAdditionalEntityTypes(string $entityType, array $defs): array
     {
         if (empty($defs['additionalTables'])) {
             return [];
         }
 
-        $additionalDefs = $defs['additionalTables'];
-
-        return $additionalDefs;
+        return $defs['additionalTables'];
     }
 
     /**
-     * @param array<string,mixed> $defs
-     * @return array<string,mixed>
+     * @param array<string, mixed> $defs
+     * @return array<string, mixed>
      */
-    protected function createRelationsEntityDefs(string $entityType, array $defs): array
+    private function createRelationsEntityDefs(string $entityType, array $defs): array
     {
         $result = [];
 

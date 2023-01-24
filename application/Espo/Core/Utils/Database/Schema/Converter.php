@@ -58,13 +58,13 @@ class Converter
     /**
      * @var string[]
      */
-    protected $typeList;
+    private $typeList;
 
     /**
      * ORM => doctrine
      * @var array<string,string>
      */
-    protected $allowedDbFieldParams = [
+    private $allowedDbFieldParams = [
         'len' => 'length',
         'default' => 'default',
         'notNull' => 'notnull',
@@ -77,7 +77,7 @@ class Converter
      * @todo Same array in Converters\Orm.
      * @var array<string,mixed>
      */
-    protected $idParams = [
+    private $idParams = [
         'dbType' => 'varchar',
         'len' => 24,
     ];
@@ -86,7 +86,7 @@ class Converter
      * @todo Same array in Converters\Orm.
      * @var array<string,mixed>
      */
-    protected $defaultLength = [
+    private $defaultLength = [
         'varchar' => 255,
         'int' => 11,
     ];
@@ -94,14 +94,14 @@ class Converter
     /**
      * @var string[]
      */
-    protected $notStorableTypes = [
+    private $notStorableTypes = [
         'foreign',
     ];
 
     /**
      * @var ?int
      */
-    protected $maxIndexLength = null;
+    private $maxIndexLength = null;
 
     public function __construct(
         Metadata $metadata,
@@ -121,7 +121,7 @@ class Converter
         $this->typeList = array_keys(DbalType::getTypesMap());
     }
 
-    protected function getSchema(bool $reload = false): DbalSchema
+    private function getSchema(bool $reload = false): DbalSchema
     {
         if (!isset($this->dbalSchema) || $reload) {
             $this->dbalSchema = new DbalSchema();
@@ -130,15 +130,17 @@ class Converter
         return $this->dbalSchema;
     }
 
-    protected function getDatabaseSchema(): Schema
+    private function getDatabaseSchema(): Schema
     {
         return $this->databaseSchema;
     }
 
-    protected function getMaxIndexLength(): int
+    private function getMaxIndexLength(): int
     {
         if (!isset($this->maxIndexLength)) {
-            $this->maxIndexLength = $this->getDatabaseSchema()->getDatabaseHelper()->getMaxIndexLength();
+            $this->maxIndexLength = $this->getDatabaseSchema()
+                ->getDatabaseHelper()
+                ->getMaxIndexLength();
         }
 
         return $this->maxIndexLength;
@@ -310,7 +312,7 @@ class Converter
      * @param array<string, mixed> $relationParams
      * @throws SchemaException
      */
-    protected function prepareManyMany(string $entityName, $relationParams): Table
+    private function prepareManyMany(string $entityName, $relationParams): Table
     {
         $relationName = $relationParams['relationName'];
 
@@ -432,7 +434,7 @@ class Converter
      * @param array<string, array<string, mixed>> $indexes
      * @throws SchemaException
      */
-    protected function addIndexes(Table $table, array $indexes): void
+    private function addIndexes(Table $table, array $indexes): void
     {
         foreach ($indexes as $indexName => $indexParams) {
             $indexDefs = IndexDefs::fromRaw($indexParams, $indexName);
@@ -448,10 +450,10 @@ class Converter
     }
 
     /**
-     * @param array<string,mixed> $fieldParams
-     * @return array<string,mixed>
+     * @param array<string, mixed> $fieldParams
+     * @return array<string, mixed>
      */
-    protected function getDbFieldParams($fieldParams)
+    private function getDbFieldParams($fieldParams)
     {
         $dbFieldParams = [
             'notnull' => false,
@@ -533,10 +535,9 @@ class Converter
      * `application/Espo/Core/Utils/Database/Schema/tables/` and in metadata 'additionalTables'.
      *
      * @param array<string,mixed> $ormMeta
-     *
      * @return array<string,array<string,mixed>>
      */
-    protected function getCustomTables(array $ormMeta)
+    private function getCustomTables(array $ormMeta): array
     {
         $customTables = $this->loadData($this->pathProvider->getCore() . $this->tablesPath);
 
@@ -573,7 +574,7 @@ class Converter
      * @param string[] $dependentEntities
      * @return string[]
      */
-    protected function getDependentEntities($entityList, $ormMeta, $dependentEntities = [])
+    private function getDependentEntities($entityList, $ormMeta, $dependentEntities = [])
     {
         if (is_string($entityList)) {
             $entityList = (array) $entityList;
@@ -609,9 +610,9 @@ class Converter
 
     /**
      * @param string $path
-     * @return array<string,array<string,mixed>>
+     * @return array<string, array<string, mixed>>
      */
-    protected function loadData($path)
+    private function loadData(string $path): array
     {
         $tables = [];
 
