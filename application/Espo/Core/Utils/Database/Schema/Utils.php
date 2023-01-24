@@ -46,7 +46,7 @@ class Utils
         $indexList = [];
 
         foreach ($defs as $entityType => $entityParams) {
-            $entityIndexList = static::getEntityIndexListByFieldsDefs($entityParams['fields'] ?? []);
+            $entityIndexList = self::getEntityIndexListByFieldsDefs($entityParams['fields'] ?? []);
 
             foreach ($entityIndexList as $indexName => $indexParams) {
                 if (!isset($entityParams['indexes'][$indexName])) {
@@ -58,7 +58,7 @@ class Utils
                 foreach ($entityParams['indexes'] as $indexName => $indexParams) {
                     $indexDefs = IndexDefs::fromRaw($indexParams, $indexName);
 
-                    $tableIndexName = $indexParams['key'] ?? static::generateIndexName($indexDefs, $entityType);
+                    $tableIndexName = $indexParams['key'] ?? self::generateIndexName($indexDefs, $entityType);
 
                     $columns = $indexDefs->getColumnList();
                     $flags = $indexDefs->getFlagList();
@@ -82,7 +82,7 @@ class Utils
                     }
 
                     if ($columns !== []) {
-                        $indexType = static::getIndexTypeByIndexDefs($indexDefs);
+                        $indexType = self::getIndexTypeByIndexDefs($indexDefs);
 
                         // @todo Revise, may to be removed.
                         $indexList[$entityType][$tableIndexName]['type'] = $indexType;
@@ -96,15 +96,14 @@ class Utils
             }
         }
 
-        /** @var array<string,array<string,mixed>> */
+        /** @var array<string, array<string, mixed>> */
         return $indexList;
     }
 
     /**
-     * @param array<string,mixed> $fieldDefs
-     * @return ?string
+     * @param array<string, mixed> $fieldDefs
      */
-    public static function getIndexTypeByFieldDefs(array $fieldDefs)
+    private static function getIndexTypeByFieldDefs(array $fieldDefs): ?string
     {
         if ($fieldDefs['type'] != 'id' && isset($fieldDefs['unique']) && $fieldDefs['unique']) {
             return 'unique';
@@ -118,14 +117,11 @@ class Utils
     }
 
     /**
-     * @param string $fieldName
-     * @param array<string,mixed> $fieldDefs
-     * @param mixed $default
-     * @return mixed
+     * @param array<string, mixed> $fieldDefs
      */
-    public static function getIndexNameByFieldDefs($fieldName, array $fieldDefs, $default = null)
+    private static function getIndexNameByFieldDefs(string $fieldName, array $fieldDefs): ?string
     {
-        $indexType = static::getIndexTypeByFieldDefs($fieldDefs);
+        $indexType = self::getIndexTypeByFieldDefs($fieldDefs);
 
         if ($indexType) {
             $keyValue = $fieldDefs[$indexType];
@@ -139,15 +135,14 @@ class Utils
             }
         }
 
-        return $default;
+        return null;
     }
 
     /**
      * @param array<string, mixed> $fieldsDefs
-     * @param bool $isTableColumnNames
      * @return array<string, mixed>
      */
-    public static function getEntityIndexListByFieldsDefs(array $fieldsDefs, $isTableColumnNames = false)
+    public static function getEntityIndexListByFieldsDefs(array $fieldsDefs, bool $isTableColumnNames = false): array
     {
         $indexList = [];
 
@@ -156,8 +151,8 @@ class Utils
                 continue;
             }
 
-            $indexType = static::getIndexTypeByFieldDefs($fieldParams);
-            $indexName = static::getIndexNameByFieldDefs($fieldName, $fieldParams);
+            $indexType = self::getIndexTypeByFieldDefs($fieldParams);
+            $indexName = self::getIndexNameByFieldDefs($fieldName, $fieldParams);
 
             if (!$indexType || !$indexName) {
                 continue;
@@ -181,10 +176,7 @@ class Utils
         return $indexList;
     }
 
-    /**
-     * @return 'unique'|'fulltext'|'index'
-     */
-    public static function getIndexTypeByIndexDefs(IndexDefs $indexDefs): string
+    private static function getIndexTypeByIndexDefs(IndexDefs $indexDefs): string
     {
         if ($indexDefs->isUnique()) {
             return 'unique';
@@ -215,6 +207,7 @@ class Utils
     }
 
     /**
+     * @deprecated
      *
      * @param array<string,mixed> $ormMeta
      * @param int $indexMaxLength
@@ -236,7 +229,7 @@ class Utils
         $fields = [];
 
         if (!isset($indexList)) {
-            $indexList = static::getIndexes($ormMeta, ['fulltext']);
+            $indexList = self::getIndexes($ormMeta, ['fulltext']);
         }
 
         foreach ($indexList as $entityName => $indexes) {
@@ -252,7 +245,7 @@ class Utils
                         continue;
                     }
 
-                    $indexLength += static::getFieldLength(
+                    $indexLength += self::getFieldLength(
                         $ormMeta[$entityName]['fields'][$fieldName],
                         $characterLength
                     );
@@ -266,7 +259,7 @@ class Utils
                             continue;
                         }
 
-                        $fieldType = static::getFieldType($ormMeta[$entityName]['fields'][$fieldName]);
+                        $fieldType = self::getFieldType($ormMeta[$entityName]['fields'][$fieldName]);
 
                         if (in_array($fieldType, $permittedFieldTypeList)) {
                             if (!isset($fields[$entityName]) || !in_array($fieldName, $fields[$entityName])) {
@@ -282,11 +275,11 @@ class Utils
     }
 
     /**
-     * @param array<string,mixed> $ormFieldDefs
+     * @param array<string, mixed> $ormFieldDefs
      * @param int $characterLength
      * @return int
      */
-    protected static function getFieldLength(array $ormFieldDefs, $characterLength = 4)
+    private static function getFieldLength(array $ormFieldDefs, $characterLength = 4)
     {
         $length = 0;
 
@@ -303,14 +296,15 @@ class Utils
             'varchar' => 255,
         ];
 
-        $type = static::getDbFieldType($ormFieldDefs);
+        $type = self::getDbFieldType($ormFieldDefs);
 
-        $length = isset($defaultLength[$type]) ? $defaultLength[$type] : $length;
+        $length = $defaultLength[$type] ?? $length;
         //$length = isset($ormFieldDefs['len']) ? $ormFieldDefs['len'] : $length;
 
         switch ($type) {
             case 'varchar':
                 $length = $length * $characterLength;
+
                 break;
         }
 
@@ -318,20 +312,19 @@ class Utils
     }
 
     /**
-     * @param array<string,mixed> $ormFieldDefs
+     * @param array<string, mixed> $ormFieldDefs
      * @return string
      */
-    protected static function getDbFieldType(array $ormFieldDefs)
+    private static function getDbFieldType(array $ormFieldDefs)
     {
-        return isset($ormFieldDefs['dbType']) ? $ormFieldDefs['dbType'] : $ormFieldDefs['type'];
+        return $ormFieldDefs['dbType'] ?? $ormFieldDefs['type'];
     }
 
     /**
-     * @param array<string,mixed> $ormFieldDefs
-     * @return string
+     * @param array<string, mixed> $ormFieldDefs
      */
-    protected static function getFieldType(array $ormFieldDefs)
+    private static function getFieldType(array $ormFieldDefs): string
     {
-        return isset($ormFieldDefs['type']) ? $ormFieldDefs['type'] : static::getDbFieldType($ormFieldDefs);
+        return $ormFieldDefs['type'] ?? self::getDbFieldType($ormFieldDefs);
     }
 }
