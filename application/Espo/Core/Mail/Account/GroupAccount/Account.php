@@ -267,6 +267,10 @@ class Account implements AccountInterface
                 ->withAuthMechanism($this->entity->getSmtpAuthMechanism());
         }
 
+        if ($this->entity->getFromName()) {
+            $smtpParams = $smtpParams->withFromName($this->entity->getFromName());
+        }
+
         $handlerClassName = $this->entity->getSmtpHandlerClassName();
 
         if (!$handlerClassName) {
