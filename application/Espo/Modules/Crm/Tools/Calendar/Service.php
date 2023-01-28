@@ -378,7 +378,7 @@ class Service
             ->leftJoin('users')
             ->where([
                 'usersMiddle.userId' => $userId,
-                'usersMiddle.status!=' => 'Declined',
+                'usersMiddle.status!=' => Meeting::ATTENDEE_STATUS_DECLINED,
                 'OR' => [
                     [
                         'dateStart>=' => $from,
@@ -439,7 +439,7 @@ class Service
             ->leftJoin('users')
             ->where([
                 'usersMiddle.userId' => $userId,
-                'usersMiddle.status!=' => 'Declined',
+                'usersMiddle.status!=' => Meeting::ATTENDEE_STATUS_DECLINED,
                 'OR' => [
                     [
                         'dateStart>=' => $from,
