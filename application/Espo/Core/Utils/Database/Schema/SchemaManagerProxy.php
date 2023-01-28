@@ -36,11 +36,15 @@ use Doctrine\DBAL\Schema\SchemaException;
 
 class SchemaManagerProxy
 {
+    private ?SchemaManager $schemaManager = null;
+
     public function __construct(private InjectableFactory $injectableFactory) {}
 
     private function getSchemaManager(): SchemaManager
     {
-        return $this->injectableFactory->create(SchemaManager::class);
+        $this->schemaManager ??= $this->injectableFactory->create(SchemaManager::class);
+
+        return $this->schemaManager;
     }
 
     /**
