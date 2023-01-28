@@ -29,92 +29,94 @@
 
 namespace Espo\Tools\Currency;
 
+use Espo\Core\Acl\Table;
+use Espo\Core\Currency\ConfigDataProvider;
+use Espo\Core\Currency\Rates;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Acl;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Core\Utils\Currency\DatabasePopulator;
-use stdClass;
 
 class RateService
 {
     private const SCOPE = 'Currency';
 
     public function __construct(
-        private Config $config,
         private ConfigWriter $configWriter,
         private Acl $acl,
-        private DatabasePopulator $databasePopulator
+        private DatabasePopulator $databasePopulator,
+        private ConfigDataProvider $configDataProvider
     ) {}
 
     /**
      * @throws Forbidden
      */
-    public function get(): stdClass
+    public function get(): Rates
     {
         if (!$this->acl->check(self::SCOPE)) {
             throw new Forbidden();
         }
 
-        if ($this->acl->getLevel(self::SCOPE, Acl\Table::ACTION_READ) !== Acl\Table::LEVEL_YES) {
+        if ($this->acl->getLevel(self::SCOPE, Table::ACTION_READ) !== Table::LEVEL_YES) {
             throw new Forbidden();
         }
 
-        return (object) (
-            $this->config->get('currencyRates') ?? []
-        );
+        $rates = Rates::create($this->configDataProvider->getBaseCurrency());
+
+        foreach ($this->configDataProvider->getCurrencyList() as $code) {
+            $rates = $rates->withRate($code, $this->configDataProvider->getCurrencyRate($code));
+        }
+
+        return $rates;
     }
 
     /**
      * @throws BadRequest
      * @throws Forbidden
      */
-    public function set(stdClass $rates): stdClass
+    public function set(Rates $rates): void
     {
         if (!$this->acl->check(self::SCOPE)) {
             throw new Forbidden();
         }
 
-        if ($this->acl->getLevel(self::SCOPE, Acl\Table::ACTION_EDIT) !== Acl\Table::LEVEL_YES) {
+        if ($this->acl->getLevel(self::SCOPE, Table::ACTION_EDIT) !== Table::LEVEL_YES) {
             throw new Forbidden();
         }
 
-        $config = $this->config;
+        $currencyList = $this->configDataProvider->getCurrencyList();
+        $baseCurrency = $this->configDataProvider->getBaseCurrency();
 
-        $currencyList = $config->get('currencyList') ?? [];
+        $set = [];
 
-        foreach (get_object_vars($rates) as $key => $value) {
-            if (!is_string($key) || !in_array($key, $currencyList)) {
-                unset($rates->$key);
+        foreach ($rates->toAssoc() as $key => $value) {
+            if ($value < 0) {
+                throw new BadRequest("Bad value.");
+            }
 
+            if (!in_array($key, $currencyList)) {
                 continue;
             }
 
-            if (!is_numeric($value) || is_string($value)) {
-                throw new BadRequest();
+            if ($key === $baseCurrency) {
+                continue;
             }
 
-            if ($value < 0) {
-                throw new BadRequest();
-            }
+            $set[$key] = $value;
         }
 
         foreach ($currencyList as $currency) {
-            if ($currency == $config->get('baseCurrency')) {
+            if ($currency === $baseCurrency) {
                 continue;
             }
 
-            if (!isset($rates->$currency)) {
-                $rates->$currency = $config->get('currencyRates.' . $currency) ?? 1.0;
-            }
+            $set[$currency] ??= $this->configDataProvider->getCurrencyRate($currency);
         }
 
-        $this->configWriter->set('currencyRates', $rates);
+        $this->configWriter->set('currencyRates', $set);
         $this->configWriter->save();
 
         $this->databasePopulator->process();
-
-        return (object) ($config->get('currencyRates') ?? []);
     }
 }

@@ -155,7 +155,7 @@ class ConvertCurrency implements Action
 
         $ratesArray[$baseCurrency] = 1.0;
 
-        return CurrencyRates::fromArray($ratesArray, $baseCurrency);
+        return CurrencyRates::fromAssoc($ratesArray, $baseCurrency);
     }
 
     /**

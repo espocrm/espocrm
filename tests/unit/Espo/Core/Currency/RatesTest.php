@@ -33,7 +33,7 @@ use Espo\Core\Currency\Rates;
 
 class RatesTest extends \PHPUnit\Framework\TestCase
 {
-    public function testRates1()
+    public function testRates1(): void
     {
         $rates = Rates
             ::create('USD')
@@ -42,5 +42,14 @@ class RatesTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('USD', $rates->getBase());
         $this->assertEquals(true, $rates->hasRate('EUR'));
         $this->assertEquals(1.2, $rates->getRate('EUR'));
+
+        $this->assertEquals(['EUR' => 1.2, 'USD' => 1.0], $rates->toAssoc());
+    }
+
+    public function testRates2(): void
+    {
+        $rates = Rates::fromAssoc(['EUR' => 1.2], 'USD');
+
+        $this->assertEquals(['EUR' => 1.2, 'USD' => 1.0], $rates->toAssoc());
     }
 }

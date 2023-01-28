@@ -31,37 +31,39 @@ namespace tests\integration\Espo\Currency;
 
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\Tools\Currency\RateService;
-use Espo\Core\{
-    Field\Currency,
-    Utils\Config\ConfigWriter};
+use Espo\Core\Currency\Rates;
+use Espo\Core\Field\Currency;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config\ConfigWriter;
 
 class CurrencyTest extends \tests\integration\Core\BaseTestCase
 {
-    public function testSetCurrencyRates()
+    public function testSetCurrencyRates(): void
     {
         $app = $this->createApplication();
 
-        $configWriter = $app->getContainer()->get('injectableFactory')->create(ConfigWriter::class);
+        /** @var InjectableFactory $factory */
+        $factory = $app->getContainer()->get('injectableFactory');
+
+        $configWriter = $factory->create(ConfigWriter::class);
 
         $configWriter->set('currencyList', ['USD', 'EUR']);
         $configWriter->set('defaultCurrency', 'USD');
         $configWriter->set('baseCurrency', 'USD');
-
         $configWriter->set('currencyRates', [
             'EUR' => 1.2,
         ]);
-
         $configWriter->save();
 
-        $service = $app->getContainer()->get('injectableFactory')->create(RateService::class);
+        $service = $factory->create(RateService::class);
 
-        $newRates = $service->set(
-            (object) [
-                'EUR' => 1.3,
-            ]
-        );
+        $rates = Rates::fromAssoc(['EUR' => 1.3], '___');
 
-        $this->assertEquals(1.3, $newRates->EUR);
+        $service->set($rates);
+
+        $newRates = $service->get();
+
+        $this->assertEquals(1.3, $newRates->getRate('EUR'));
     }
 
     public function testDecimal1(): void

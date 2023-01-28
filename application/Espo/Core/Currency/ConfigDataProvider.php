@@ -30,17 +30,12 @@
 namespace Espo\Core\Currency;
 
 use Espo\Core\Utils\Config;
-
 use RuntimeException;
 
 class ConfigDataProvider
 {
-    private Config $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private Config $config)
+    {}
 
     /**
      * Get a system default currency.
@@ -61,7 +56,7 @@ class ConfigDataProvider
     /**
      * Get a list of available currencies.
      *
-     * @return array<int,string>
+     * @return array<int, string>
      */
     public function getCurrencyList(): array
     {
@@ -87,9 +82,7 @@ class ConfigDataProvider
             throw new RuntimeException("Can't get currency rate of '{$currencyCode}' currency.");
         }
 
-        $rate = $rates[$currencyCode] ?? 1.0;
-
-        return $rate;
+        return $rates[$currencyCode] ?? 1.0;
     }
 
     /**
@@ -101,6 +94,6 @@ class ConfigDataProvider
 
         $rates[$this->getBaseCurrency()] = 1.0;
 
-        return Rates::fromArray($rates, $this->getBaseCurrency());
+        return Rates::fromAssoc($rates, $this->getBaseCurrency());
     }
 }

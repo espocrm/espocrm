@@ -29,28 +29,38 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Currency\Rates;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Tools\Currency\RateService as Service;
 use Espo\Core\Api\Request;
 use stdClass;
 
 class CurrencyRate
 {
-    private Service $service;
+    public function __construct(private Service $service)
+    {}
 
-    public function __construct(Service $service)
-    {
-        $this->service = $service;
-    }
-
+    /**
+     * @throws Forbidden
+     */
     public function getActionIndex(): stdClass
     {
-        return $this->service->get();
+        return (object) $this->service->get()->toAssoc();
     }
 
-    public function putActionUpdate(Request $request): stdClass
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    public function putActionUpdate(Request $request): bool
     {
         $data = $request->getParsedBody();
 
-        return $this->service->set($data);
+        $rates = Rates::fromAssoc(get_object_vars($data), '___');
+
+        $this->service->set($rates);
+
+        return true;
     }
 }

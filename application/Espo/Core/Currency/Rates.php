@@ -36,17 +36,11 @@ use RuntimeException;
  */
 class Rates
 {
-    private ?string $baseCode = null;
-
-    /**
-     * @var array<string,float>
-     */
+    /** @var array<string, float> */
     private array $data = [];
 
-    private function __construct(?string $baseCode = null)
-    {
-        $this->baseCode = $baseCode;
-    }
+    private function __construct(private ?string $baseCode = null)
+    {}
 
     /**
      * Create an instance.
@@ -104,13 +98,37 @@ class Rates
     }
 
     /**
-     * @param array<string,float> $data
+     * To an associative array.
+     *
+     * @return array<string, float>
      */
-    public static function fromArray(array $data, ?string $baseCode = null): self
+    public function toAssoc(): array
+    {
+        return array_merge(
+            $this->data,
+            [$this->getBase() => 1.0]
+        );
+    }
+
+    /**
+     * Create from an associative array.
+     *
+     * @param array<string, float> $data
+     */
+    public static function fromAssoc(array $data, ?string $baseCode = null): self
     {
         $obj = new self($baseCode);
         $obj->data = $data;
 
         return $obj;
+    }
+
+    /**
+     * @deprecated Use `fromAssoc`.
+     * @param array<string, float> $data
+     */
+    public function fromArray(array $data, ?string $baseCode = null): self
+    {
+        return self::fromAssoc($data, $baseCode);
     }
 }
