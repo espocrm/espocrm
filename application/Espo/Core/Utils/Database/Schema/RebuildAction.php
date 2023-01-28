@@ -27,20 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database;
+namespace Espo\Core\Utils\Database\Schema;
 
-/**
- * ORM converter wrapper.
- */
-class Converter
+use Doctrine\DBAL\Schema\Schema as DbalSchema;
+
+interface RebuildAction
 {
-    public function __construct(private Orm\Converter $ormConverter) {}
-
-    /**
-     * @return array<string, array<string, mixed>>
-     */
-    public function process()
-    {
-        return $this->ormConverter->process();
-    }
+    public function process(DbalSchema $oldSchema, DbalSchema $newSchema): void;
 }

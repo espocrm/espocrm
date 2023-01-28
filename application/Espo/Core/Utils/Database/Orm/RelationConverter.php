@@ -33,7 +33,7 @@ use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
 
-class RelationManager
+class RelationConverter
 {
     public function __construct(
         private Metadata $metadata,
@@ -41,19 +41,9 @@ class RelationManager
     ) {}
 
     /**
-     * @param string $entityName
-     * @param array<string, mixed> $linkParams
-     * @return string
-     */
-    public function getLinkEntityName($entityName, $linkParams)
-    {
-        return $linkParams['entity'] ?? $entityName;
-    }
-
-    /**
      * @param string $relationName
      */
-    public function relationExists($relationName): bool
+    private function relationExists($relationName): bool
     {
         if ($this->getRelationClass($relationName) !== false) {
             return true;
@@ -85,12 +75,11 @@ class RelationManager
     }
 
     /**
-     * Get foreign link.
+     * Get a foreign link.
      *
-     * @param array<string,mixed> $parentLinkParams
-     * @param array<string,mixed> $currentEntityDefs
-     *
-     * @return array{name:string,params:array<string,mixed>}|false
+     * @param array<string, mixed> $parentLinkParams
+     * @param array<string, mixed> $currentEntityDefs
+     * @return array{name: string, params: array<string, mixed>}|false
      */
     private function getForeignLink($parentLinkParams, $currentEntityDefs)
     {
@@ -107,16 +96,16 @@ class RelationManager
     /**
      * @param string $linkName
      * @param array<string, mixed> $linkParams
-     * @param string $entityName
+     * @param string $entityType
      * @param array<string, mixed> $ormMetadata
      * @return ?array<string, mixed>
      */
-    public function convert($linkName, $linkParams, $entityName, $ormMetadata)
+    public function process(string $linkName, array $linkParams, string $entityType, array $ormMetadata): ?array
     {
         $entityDefs = $this->metadata->get('entityDefs');
 
-        $foreignEntityName = $this->getLinkEntityName($entityName, $linkParams);
-        $foreignLink = $this->getForeignLink($linkParams, $entityDefs[$foreignEntityName]);
+        $foreignEntityType = $linkParams['entity'] ?? $entityType;
+        $foreignLink = $this->getForeignLink($linkParams, $entityDefs[$foreignEntityType]);
 
         $currentType = $linkParams['type'];
 
@@ -132,7 +121,6 @@ class RelationManager
             $relType /*hasManyHasMany*/ :
             $currentType /*hasMany*/;
 
-        // relationDefs defined in separate file
         if (isset($linkParams['relationName'])) {
             $className = $this->getRelationClass($linkParams['relationName']);
 
@@ -150,9 +138,8 @@ class RelationManager
 
             $helperClass = new $className($this->metadata, $ormMetadata, $entityDefs, $this->config);
 
-            return $helperClass->process($linkName, $entityName, $foreignLinkName, $foreignEntityName);
+            return $helperClass->process($linkName, $entityType, $foreignLinkName, $foreignEntityType);
         }
-        //END: relationDefs defined in separate file
 
         return null;
     }

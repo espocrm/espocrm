@@ -31,7 +31,6 @@ namespace Espo\Core\ORM;
 
 use Espo\Core\ORM\PDO\PDOFactoryFactory;
 use Espo\Core\ORM\QueryComposer\QueryComposerFactory;
-use Espo\Core\Utils\Config;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\ORM\QueryComposer\Part\FunctionConverterFactory;
@@ -52,18 +51,12 @@ use RuntimeException;
 
 class EntityManagerFactory
 {
-    /** @var array<string, string> */
-    private $driverPlatformMap = [
-        'pdo_mysql' => 'Mysql',
-        'mysqli' => 'Mysql',
-    ];
-
     public function __construct(
-        private Config $config,
         private InjectableFactory $injectableFactory,
         private MetadataDataProvider $metadataDataProvider,
         private EventDispatcher $eventDispatcher,
-        private PDOFactoryFactory $pdoFactoryFactory
+        private PDOFactoryFactory $pdoFactoryFactory,
+        private DatabaseParamsFactory $databaseParamsFactory
     ) {}
 
     public function create(): EntityManager
@@ -140,41 +133,10 @@ class EntityManagerFactory
 
     private function createDatabaseParams(): DatabaseParams
     {
-        $config = $this->config;
-
-        $databaseParams = DatabaseParams::create()
-            ->withHost($config->get('database.host'))
-            ->withPort($config->get('database.port') ? (int) $config->get('database.port') : null)
-            ->withName($config->get('database.dbname'))
-            ->withUsername($config->get('database.user'))
-            ->withPassword($config->get('database.password'))
-            ->withCharset($config->get('database.charset') ?? 'utf8')
-            ->withPlatform($config->get('database.platform'))
-            ->withSslCa($config->get('database.sslCA'))
-            ->withSslCert($config->get('database.sslCert'))
-            ->withSslKey($config->get('database.sslKey'))
-            ->withSslCaPath($config->get('database.sslCAPath'))
-            ->withSslCipher($config->get('database.sslCipher'))
-            ->withSslVerifyDisabled($config->get('database.sslVerifyDisabled') ?? false);
+        $databaseParams = $this->databaseParamsFactory->create();
 
         if (!$databaseParams->getName()) {
-            throw new RuntimeException('No database name specified.');
-        }
-
-        if (!$databaseParams->getPlatform()) {
-            $driver = $config->get('database.driver');
-
-            if (!$driver) {
-                throw new RuntimeException('No database driver specified.');
-            }
-
-            $platform = $this->driverPlatformMap[$driver] ?? null;
-
-            if (!$platform) {
-                throw new RuntimeException("Database driver '{$driver}' is not supported.");
-            }
-
-            $databaseParams = $databaseParams->withPlatform($platform);
+            throw new RuntimeException('No database name specified in config.');
         }
 
         return $databaseParams;

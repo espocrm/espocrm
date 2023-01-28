@@ -202,8 +202,8 @@ class VarcharFieldTest extends Base
         $dbHelper = $this->getInjectableFactory()->create(DatabaseHelper::class);
 
         if (
-            $dbHelper->getDatabaseType() == 'MariaDB'
-            && version_compare($dbHelper->getDatabaseVersion(), '10.2.7', '>=')
+            $dbHelper->getType() == 'MariaDB'
+            && version_compare($dbHelper->getVersion(), '10.2.7', '>=')
         ) {
             $this->assertEquals("'test-default'", $column['COLUMN_DEFAULT']);
         } else {

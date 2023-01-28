@@ -29,10 +29,13 @@
 
 namespace Espo\Core\Utils\Database\Orm;
 
+use Doctrine\DBAL\Types\Types;
+use Espo\Core\Utils\Database\ConfigDataProvider;
 use Espo\Core\Utils\Util;
+use Espo\ORM\Defs\AttributeDefs;
 use Espo\ORM\Defs\IndexDefs;
+use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
-use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
@@ -42,7 +45,10 @@ class Converter
     /** @var ?array<string, mixed> */
     private $entityDefs = null;
 
-    private string $defaultFieldType = 'varchar';
+    private string $defaultAttributeType = Entity::VARCHAR;
+
+    private const INDEX_TYPE_UNIQUE = 'unique';
+    private const INDEX_TYPE_INDEX = 'index';
 
     /** @var array<string, int> */
     private $defaultLength = [
@@ -50,7 +56,7 @@ class Converter
         'int' => 11,
     ];
 
-    /** @var array<string, mixed>  */
+    /** @var array<string, mixed> */
     private $defaultValue = [
         'bool' => false,
     ];
@@ -60,7 +66,7 @@ class Converter
      *
      * @var array<string, string>
      */
-    private $fieldAccordances = [
+    private $paramMap = [
         'type' => 'type',
         'dbType' => 'dbType',
         'maxLength' => 'len',
@@ -88,7 +94,7 @@ class Converter
     /** @var array<string, mixed> */
     private $idParams = [
         'dbType' => 'varchar',
-        'len' => 24,
+        'len' => 24, // @todo Make configurable.
     ];
 
     /**
@@ -101,12 +107,20 @@ class Converter
         'additionalTables',
     ];
 
+    private IndexHelper $indexHelper;
+
     public function __construct(
         private Metadata $metadata,
         private Config $config,
-        private RelationManager $relationManager,
-        private MetadataHelper $metadataHelper
-    ) {}
+        private RelationConverter $relationConverter,
+        private MetadataHelper $metadataHelper,
+        ConfigDataProvider $configDataProvider,
+        IndexHelperFactory $indexHelperFactory
+    ) {
+        $platform = $configDataProvider->getPlatform();
+
+        $this->indexHelper = $indexHelperFactory->create($platform);
+    }
 
     /**
      * @param bool $reload
@@ -137,27 +151,35 @@ class Converter
                 $ormMetadata[$entityType]['skipRebuild'] = true;
             }
 
-            /** @var array<string,array<string,mixed>> $ormMetadata */
-            $ormMetadata = Util::merge($ormMetadata, $this->convertEntity($entityType, $entityMetadata));
+            /** @var array<string, array<string, mixed>> $ormMetadata */
+            $ormMetadata = Util::merge(
+                $ormMetadata,
+                $this->convertEntity($entityType, $entityMetadata)
+            );
         }
 
         $ormMetadata = $this->afterFieldsProcess($ormMetadata);
 
-        foreach ($ormMetadata as $entityType => $entityOrmMetadata) {
-            /** @var array<string,array<string,mixed>> $ormMetadata */
+        foreach ($ormMetadata as $entityOrmMetadata) {
+            /** @var array<string, array<string, mixed>> $ormMetadata */
             $ormMetadata = Util::merge(
                 $ormMetadata,
-                $this->createRelationsEntityDefs($entityType, $entityOrmMetadata)
+                $this->createEntityTypesFromRelations($entityOrmMetadata)
             );
 
-            /** @var array<string,array<string,mixed>> $ormMetadata */
+            /** @var array<string, array<string, mixed>> $ormMetadata */
             $ormMetadata = Util::merge(
                 $ormMetadata,
-                $this->createAdditionalEntityTypes($entityType, $entityOrmMetadata)
+                $this->createAdditionalEntityTypes($entityOrmMetadata)
             );
         }
 
         return $this->afterProcess($ormMetadata);
+    }
+
+    private function composeIndexKey(IndexDefs $defs, string $entityType): string
+    {
+        return $this->indexHelper->composeKey($defs, $entityType);
     }
 
     /**
@@ -268,7 +290,7 @@ class Converter
                         $constName = strtoupper(Util::toUnderScore($attributeParams['type']));
 
                         if (!defined('Espo\\ORM\\Entity::' . $constName)) {
-                            $attributeParams['type'] = $this->defaultFieldType;
+                            $attributeParams['type'] = $this->defaultAttributeType;
                         }
 
                         break;
@@ -473,36 +495,37 @@ class Converter
             }
         }
 
-        // @todo move to separate file
-        $scopeDefs = $this->metadata->get('scopes.'.$entityType);
+        // @todo Refactor.
+        /** @var array<string, mixed> $scopeDefs */
+        $scopeDefs = $this->metadata->get(['scopes', $entityType]) ?? [];
 
-        if (isset($scopeDefs['stream']) && $scopeDefs['stream']) {
+        if ($scopeDefs['stream'] ?? false) {
             if (!isset($entityMetadata['fields']['isFollowed'])) {
                 $ormMetadata[$entityType]['fields']['isFollowed'] = [
-                    'type' => 'varchar',
+                    'type' => Entity::VARCHAR,
                     'notStorable' => true,
                     'notExportable' => true,
                 ];
 
                 $ormMetadata[$entityType]['fields']['followersIds'] = [
-                    'type' => 'jsonArray',
+                    'type' => Entity::JSON_ARRAY,
                     'notStorable' => true,
                     'notExportable' => true,
                 ];
 
                 $ormMetadata[$entityType]['fields']['followersNames'] = [
-                    'type' => 'jsonObject',
+                    'type' => Entity::JSON_OBJECT,
                     'notStorable' => true,
                     'notExportable' => true,
                 ];
             }
         }
 
-        // @todo move to separate file
+        // @todo Refactor.
         if ($this->metadata->get(['entityDefs', $entityType, 'optimisticConcurrencyControl'])) {
             $ormMetadata[$entityType]['fields']['versionNumber'] = [
                 'type' => Entity::INT,
-                'dbType' => 'bigint',
+                'dbType' => Types::BIGINT,
                 'notExportable' => true,
             ];
         }
@@ -511,9 +534,9 @@ class Converter
     }
 
     /**
-     * @param array<string,mixed> $fieldParams
-     * @param ?array<string,mixed> $fieldTypeMetadata
-     * @return array<string,mixed>|false
+     * @param array<string, mixed> $fieldParams
+     * @param ?array<string, mixed> $fieldTypeMetadata
+     * @return array<string, mixed>|false
      */
     private function convertField(
         string $entityType,
@@ -528,7 +551,7 @@ class Converter
         $this->prepareFieldParamsBeforeConvert($fieldParams);
 
         if (isset($fieldTypeMetadata['fieldDefs'])) {
-            /** @var array<string,mixed> $fieldParams */
+            /** @var array<string, mixed> $fieldParams */
             $fieldParams = Util::merge($fieldParams, $fieldTypeMetadata['fieldDefs']);
         }
 
@@ -564,7 +587,7 @@ class Converter
     }
 
     /**
-     * @param array<string,mixed> $fieldParams
+     * @param array<string, mixed> $fieldParams
      */
     private function prepareFieldParamsBeforeConvert(array &$fieldParams): void
     {
@@ -589,16 +612,16 @@ class Converter
         }
 
         $relationships = [];
-        foreach ($entityMetadata['links'] as $linkName => $linkParams) {
 
+        foreach ($entityMetadata['links'] as $linkName => $linkParams) {
             if (isset($linkParams['skipOrmDefs']) && $linkParams['skipOrmDefs'] === true) {
                 continue;
             }
 
-            $convertedLink = $this->relationManager->convert($linkName, $linkParams, $entityType, $ormMetadata);
+            $convertedLink = $this->relationConverter->process($linkName, $linkParams, $entityType, $ormMetadata);
 
-            if (isset($convertedLink)) {
-                /** @var array<string,mixed> $relationships */
+            if ($convertedLink) {
+                /** @var array<string, mixed> $relationships */
                 $relationships = Util::merge($convertedLink, $relationships);
             }
         }
@@ -614,7 +637,7 @@ class Converter
     {
         $values = [];
 
-        foreach ($this->fieldAccordances as $espoType => $ormType) {
+        foreach ($this->paramMap as $espoType => $ormType) {
             if (!array_key_exists($espoType, $attributeParams)) {
                 continue;
             }
@@ -712,38 +735,85 @@ class Converter
     /**
      * @param array<string, mixed> $ormMetadata
      */
-    private function applyIndexes(&$ormMetadata, string $entityType): void
+    private function applyIndexes(array &$ormMetadata, string $entityType): void
     {
-        if (isset($ormMetadata[$entityType]['fields'])) {
-            $indexList = SchemaUtils::getEntityIndexListByFieldsDefs($ormMetadata[$entityType]['fields']);
+        $defs = &$ormMetadata[$entityType];
+
+        $defs['indexes'] ??= [];
+
+        if (isset($defs['fields'])) {
+            $indexList = self::getEntityIndexListFromAttributes($defs['fields']);
 
             foreach ($indexList as $indexName => $indexParams) {
-                if (!isset($ormMetadata[$entityType]['indexes'][$indexName])) {
-                    $ormMetadata[$entityType]['indexes'][$indexName] = $indexParams;
+                if (!isset($defs['indexes'][$indexName])) {
+                    $defs['indexes'][$indexName] = $indexParams;
                 }
             }
         }
 
-        if (isset($ormMetadata[$entityType]['indexes'])) {
-            foreach ($ormMetadata[$entityType]['indexes'] as $indexName => &$indexData) {
-                $indexDefs = IndexDefs::fromRaw($indexData, $indexName);
+        foreach ($defs['indexes'] as $indexName => &$indexData) {
+            $indexDefs = IndexDefs::fromRaw($indexData, $indexName);
 
-                if (!$indexDefs->getKey()) {
-                    $indexData['key'] = SchemaUtils::generateIndexName($indexDefs, $entityType);
-                }
+            if (!$indexDefs->getKey()) {
+                $indexData['key'] = $this->composeIndexKey($indexDefs, $entityType);
             }
         }
 
-        if (isset($ormMetadata[$entityType]['relations'])) {
-            foreach ($ormMetadata[$entityType]['relations'] as &$relationData) {
-                if (isset($relationData['indexes'])) {
-                    foreach ($relationData['indexes'] as $indexName => &$indexData) {
-                        $indexDefs = IndexDefs::fromRaw($indexData, $indexName);
+        if (isset($defs['relations'])) {
+            foreach ($defs['relations'] as &$relationData) {
+                $type = $relationData['type'] ?? null;
 
-                        $relationName = $relationData['relationName'] ?? '';
+                if ($type !== Entity::MANY_MANY) {
+                    continue;
+                }
 
-                        $indexData['key'] = SchemaUtils::generateIndexName($indexDefs, $relationName);
+                $relationName = $relationData['relationName'] ?? '';
+
+                $relationData['indexes'] ??= [];
+
+                $uniqueColumnList = [];
+
+                foreach (($relationData['midKeys'] ?? []) as $midKey) {
+                    $indexName = $midKey;
+
+                    $indexDefs = IndexDefs::fromRaw(['columns' => [$midKey]], $indexName);
+
+                    $relationData['indexes'][$indexName] = [
+                        'columns' => $indexDefs->getColumnList(),
+                        'key' => $this->composeIndexKey($indexDefs, ucfirst($relationName)),
+                    ];
+
+                    $uniqueColumnList[] = $midKey;
+                }
+
+                foreach ($relationData['indexes'] as $indexName => &$indexData) {
+                    if (!empty($indexData['key'])) {
+                        continue;
                     }
+
+                    $indexDefs = IndexDefs::fromRaw($indexData, $indexName);
+
+                    $indexData['key'] = $this->composeIndexKey($indexDefs, ucfirst($relationName));
+                }
+
+                foreach (($relationData['conditions'] ?? []) as $column => $fieldParams) {
+                    $uniqueColumnList[] = $column;
+                }
+
+                if ($uniqueColumnList !== []) {
+                    $indexName = implode('_', $uniqueColumnList);
+
+                    $indexDefs = IndexDefs
+                        ::fromRaw([
+                            'columns' => $uniqueColumnList,
+                            'type' => self::INDEX_TYPE_UNIQUE,
+                        ], $indexName);
+
+                    $relationData['indexes'][$indexName] = [
+                        'type' => self::INDEX_TYPE_UNIQUE,
+                        'columns' => $indexDefs->getColumnList(),
+                        'key' => $this->composeIndexKey($indexDefs, ucfirst($relationName)),
+                    ];
                 }
             }
         }
@@ -753,59 +823,184 @@ class Converter
      * @param array<string, mixed> $defs
      * @return array<string, mixed>
      */
-    private function createAdditionalEntityTypes(string $entityType, array $defs): array
+    private function createAdditionalEntityTypes(array $defs): array
     {
-        if (empty($defs['additionalTables'])) {
+        /** @var array<string, array<string, mixed>> $additionalDefs */
+        $additionalDefs = $defs['additionalTables'] ?? [];
+
+        if ($additionalDefs === []) {
             return [];
         }
 
-        return $defs['additionalTables'];
+        /** @var string[] $entityTypeList */
+        $entityTypeList = array_keys($additionalDefs);
+
+        foreach ($entityTypeList as $itemEntityType) {
+            $this->applyIndexes($additionalDefs, $itemEntityType);
+        }
+
+        return $additionalDefs;
     }
 
     /**
      * @param array<string, mixed> $defs
      * @return array<string, mixed>
      */
-    private function createRelationsEntityDefs(string $entityType, array $defs): array
+    private function createEntityTypesFromRelations(array $defs): array
     {
         $result = [];
 
-        foreach ($defs['relations'] as $relationParams) {
-            if ($relationParams['type'] !== 'manyMany') {
+        foreach ($defs['relations'] as $name => $relationParams) {
+            $relationDefs = RelationDefs::fromRaw($relationParams, $name);
+
+            if ($relationDefs->getType() !== Entity::MANY_MANY) {
                 continue;
             }
 
-            $relationEntityType = ucfirst($relationParams['relationName']);
+            $relationEntityType = ucfirst($relationDefs->getRelationshipName());
 
             $itemDefs = [
                 'skipRebuild' => true,
                 'fields' => [
                     'id' => [
-                        'type' => 'id',
+                        'type' => Entity::ID,
                         'autoincrement' => true,
-                        'dbType' => 'bigint', // ignored because of `skipRebuild`
+                        'dbType' => Types::BIGINT, // ignored because of `skipRebuild`
                     ],
                     'deleted' => [
-                        'type' => 'bool'
+                        'type' => Entity::BOOL,
                     ],
                 ],
             ];
 
-            foreach ($relationParams['midKeys'] ?? [] as $key) {
+            $key1 = $relationDefs->getMidKey();
+            $key2 = $relationDefs->getForeignMidKey();
+
+            $midKeys = [$key1, $key2];
+
+            foreach ($midKeys as $key) {
                 $itemDefs['fields'][$key] = [
-                    'type' => 'foreignId',
+                    'type' => Entity::FOREIGN_ID,
                 ];
             }
 
-            foreach ($relationParams['additionalColumns'] ?? [] as $columnName => $columnItem) {
-                $itemDefs['fields'][$columnName] = [
-                    'type' => $columnItem['type'] ?? 'varchar',
+            foreach ($relationDefs->getParam('additionalColumns') ?? [] as $columnName => $columnItem) {
+                $columnItem['type'] ??= Entity::VARCHAR;
+
+                $attributeDefs = AttributeDefs::fromRaw($columnItem, $columnName);
+
+                $columnDefs = [
+                    'type' => $attributeDefs->getType(),
                 ];
+
+                if ($attributeDefs->getLength()) {
+                    $columnDefs['len'] = $attributeDefs->getLength();
+                }
+
+                if ($attributeDefs->getParam('default') !== null) {
+                    $columnDefs['default'] = $attributeDefs->getParam('default');
+                }
+
+                $itemDefs['fields'][$columnName] = $columnDefs;
+            }
+
+            foreach ($relationDefs->getIndexList() as $indexDefs) {
+                $itemDefs['indexes'] ??= [];
+                $itemDefs['indexes'][] = self::convertIndexDefsToRaw($indexDefs);
             }
 
             $result[$relationEntityType] = $itemDefs;
         }
 
         return $result;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private static function convertIndexDefsToRaw(IndexDefs $indexDefs): array
+    {
+        return [
+            'type' => $indexDefs->isUnique() ? self::INDEX_TYPE_UNIQUE : self::INDEX_TYPE_INDEX,
+            'columns' => $indexDefs->getColumnList(),
+            'flags' => $indexDefs->getFlagList(),
+            'key' => $indexDefs->getKey(),
+        ];
+    }
+
+    /**
+     * @param array<string, mixed> $attributesMetadata
+     * @return array<string, mixed>
+     */
+    private static function getEntityIndexListFromAttributes(array $attributesMetadata): array
+    {
+        $indexList = [];
+
+        foreach ($attributesMetadata as $attributeName => $rawParams) {
+            $attributeDefs = AttributeDefs::fromRaw($rawParams, $attributeName);
+
+            if ($attributeDefs->isNotStorable()) {
+                continue;
+            }
+
+            $indexType = self::getIndexTypeByAttributeDefs($attributeDefs);
+            $indexName = self::getIndexNameByAttributeDefs($attributeDefs);
+
+            if (!$indexType || !$indexName) {
+                continue;
+            }
+
+            $keyValue = $attributeDefs->getParam($indexType);
+
+            if ($keyValue === true) {
+                $indexList[$indexName]['type'] = $indexType;
+                $indexList[$indexName]['columns'] = [$attributeName];
+            }
+            else if (is_string($keyValue)) {
+                $indexList[$indexName]['type'] = $indexType;
+                $indexList[$indexName]['columns'][] = $attributeName;
+            }
+        }
+
+        /** @var array<string, mixed> */
+        return $indexList;
+    }
+
+
+    private static function getIndexTypeByAttributeDefs(AttributeDefs $attributeDefs): ?string
+    {
+        if (
+            $attributeDefs->getType() !== Entity::ID &&
+            $attributeDefs->getParam(self::INDEX_TYPE_UNIQUE)
+        ) {
+            return self::INDEX_TYPE_UNIQUE;
+        }
+
+        if ($attributeDefs->getParam(self::INDEX_TYPE_INDEX)) {
+            return self::INDEX_TYPE_INDEX;
+        }
+
+        return null;
+    }
+
+    private static function getIndexNameByAttributeDefs(AttributeDefs $attributeDefs): ?string
+    {
+        $indexType = self::getIndexTypeByAttributeDefs($attributeDefs);
+
+        if (!$indexType) {
+            return null;
+        }
+
+        $keyValue = $attributeDefs->getParam($indexType);
+
+        if ($keyValue === true) {
+            return $attributeDefs->getName();
+        }
+
+        if (is_string($keyValue)) {
+            return $keyValue;
+        }
+
+        return null;
     }
 }

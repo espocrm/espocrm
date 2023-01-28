@@ -29,69 +29,34 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
-use Doctrine\DBAL\Schema\Schema as DbalSchema;
-
-use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Log;
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Database\Helper;
 use Espo\Core\Utils\Metadata;
+use RuntimeException;
 
-abstract class BaseRebuildActions
+class ColumnPreparatorFactory
 {
-    /** @var ?DbalSchema  */
-    protected $currentSchema = null;
-    /** @var ?DbalSchema */
-    protected $metadataSchema = null;
-
-    protected Metadata $metadata;
-    protected Config $config;
-    protected EntityManager $entityManager;
-    protected Log $log;
-
     public function __construct(
-        Metadata $metadata,
-        Config $config,
-        EntityManager $entityManager,
-        Log $log
-    ) {
-        $this->metadata = $metadata;
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->log = $log;
-    }
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory,
+        private Helper $helper
+    ) {}
 
-    protected function getEntityManager(): EntityManager
+    public function create(string $platform): ColumnPreparator
     {
-        return $this->entityManager;
-    }
+        /** @var ?class-string<ColumnPreparator> $className */
+        $className = $this->metadata
+            ->get(['app', 'database', 'platforms', $platform, 'columnPreparatorClassName']);
 
-    protected function getConfig(): Config
-    {
-        return $this->config;
-    }
+        if (!$className) {
+            throw new RuntimeException("No Column-Preparator for {$platform}.");
+        }
 
-    protected function getMetadata(): Metadata
-    {
-        return $this->metadata;
-    }
+        $binding = BindingContainerBuilder::create()
+            ->bindInstance(Helper::class, $this->helper)
+            ->build();
 
-    public function setCurrentSchema(DbalSchema $currentSchema): void
-    {
-        $this->currentSchema = $currentSchema;
-    }
-
-    public function setMetadataSchema(DbalSchema $metadataSchema): void
-    {
-        $this->metadataSchema = $metadataSchema;
-    }
-
-    protected function getCurrentSchema(): ?DbalSchema
-    {
-        return $this->currentSchema;
-    }
-
-    protected function getMetadataSchema(): ?DbalSchema
-    {
-        return $this->metadataSchema;
+        return $this->injectableFactory->createWithBinding($className, $binding);
     }
 }

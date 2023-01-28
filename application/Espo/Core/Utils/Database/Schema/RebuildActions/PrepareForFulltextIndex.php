@@ -27,51 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\Schema\rebuildActions;
+namespace Espo\Core\Utils\Database\Schema\RebuildActions;
 
+use Doctrine\DBAL\Exception as DbalException;
+use Doctrine\DBAL\Schema\Schema as DbalSchema;
 use Espo\Core\Utils\Database\Helper;
-use Espo\Core\Utils\Database\Schema\BaseRebuildActions;
+use Espo\Core\Utils\Database\Schema\RebuildAction;
+use Espo\Core\Utils\Log;
 
 use Exception;
-use RuntimeException;
 
-use Espo\Core\Di;
-
-class FulltextIndex extends BaseRebuildActions implements Di\InjectableFactoryAware
+class PrepareForFulltextIndex implements RebuildAction
 {
-    use Di\InjectableFactorySetter;
+    public function __construct(
+        private Helper $helper,
+        private Log $log
+    ) {}
 
     /**
-     * @return void
-     * @throws \Doctrine\DBAL\Exception
+     * @throws DbalException
      */
-    public function beforeRebuild()
+    public function process(DbalSchema $oldSchema, DbalSchema $newSchema): void
     {
-        $currentSchema = $this->getCurrentSchema();
-
-        if (!$currentSchema) {
-            throw new RuntimeException();
-        }
-
-        $tables = $currentSchema->getTables();
-
-        if (empty($tables)) {
+        if ($oldSchema->getTables() === []) {
             return;
         }
 
-        $databaseHelper = $this->injectableFactory->create(Helper::class);
+        $connection = $this->helper->getDbalConnection();
+        $pdo = $this->helper->getPDO();
 
-        $connection = $databaseHelper->getDbalConnection();
-
-        $metadataSchema = $this->getMetadataSchema();
-
-        if (!$metadataSchema) {
-            throw new RuntimeException();
-        }
-
-        $tables = $metadataSchema->getTables();
-
-        foreach ($tables as $table) {
+        foreach ($newSchema->getTables() as $table) {
             $tableName = $table->getName();
             $indexes = $table->getIndexes();
 
@@ -83,26 +68,25 @@ class FulltextIndex extends BaseRebuildActions implements Di\InjectableFactoryAw
                 $columns = $index->getColumns();
 
                 foreach ($columns as $columnName) {
-
-                    $query = "SHOW FULL COLUMNS FROM `". $tableName ."` WHERE Field = '" . $columnName . "'";
+                    $sql = "SHOW FULL COLUMNS FROM `" . $tableName . "` WHERE Field = " . $pdo->quote($columnName);
 
                     try {
                         /** @var array{Type: string, Collation: string} $row */
-                        $row = $connection->fetchAssociative($query);
+                        $row = $connection->fetchAssociative($sql);
                     }
-                    catch (Exception $e) {
+                    catch (Exception) {
                         continue;
                     }
 
                     switch (strtoupper($row['Type'])) {
                         case 'LONGTEXT':
-                            $alterQuery =
-                                "ALTER TABLE `". $tableName ."` " .
-                                "MODIFY `". $columnName ."` MEDIUMTEXT COLLATE ". $row['Collation'] ."";
+                            $alterSql =
+                                "ALTER TABLE `{$tableName}` " .
+                                "MODIFY `{$columnName}` MEDIUMTEXT COLLATE " . $row['Collation'];
 
-                            $this->log->info('SCHEMA, Execute Query: ' . $alterQuery);
+                            $this->log->info('SCHEMA, Execute Query: ' . $alterSql);
 
-                            $connection->executeQuery($alterQuery);
+                            $connection->executeQuery($alterSql);
 
                             break;
                     }

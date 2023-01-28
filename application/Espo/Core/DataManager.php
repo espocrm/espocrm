@@ -33,13 +33,13 @@ use Espo\Core\Utils\Config\MissingDefaultParamsSaver as ConfigMissingDefaultPara
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManagerProxy;
+use Espo\Core\Utils\Database\Schema\SchemaManagerProxy;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Core\Utils\Metadata\OrmMetadataData;
-use Espo\Core\Utils\Database\Schema\SchemaProxy;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Module;
 use Espo\Core\Rebuild\RebuildActionProcessor;
@@ -51,63 +51,37 @@ use Throwable;
  */
 class DataManager
 {
-    private Config $config;
-    private ConfigWriter $configWriter;
-    private EntityManagerProxy $entityManager;
-    private Metadata $metadata;
-    private OrmMetadataData $ormMetadataData;
-    private HookManager $hookManager;
-    private SchemaProxy $schemaProxy;
-    private Log $log;
-    private Module $module;
-    private RebuildActionProcessor $rebuildActionProcessor;
-    private ConfigMissingDefaultParamsSaver $configMissingDefaultParamsSaver;
-    private FileManager $fileManager;
-
     private string $cachePath = 'data/cache';
 
     public function __construct(
-        EntityManagerProxy $entityManager,
-        Config $config,
-        ConfigWriter $configWriter,
-        Metadata $metadata,
-        OrmMetadataData $ormMetadataData,
-        HookManager $hookManager,
-        SchemaProxy $schemaProxy,
-        Log $log,
-        Module $module,
-        RebuildActionProcessor $rebuildActionProcessor,
-        ConfigMissingDefaultParamsSaver $configMissingDefaultParamsSaver,
-        FileManager $fileManager
-    ) {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->configWriter = $configWriter;
-        $this->metadata = $metadata;
-        $this->ormMetadataData = $ormMetadataData;
-        $this->hookManager = $hookManager;
-        $this->schemaProxy = $schemaProxy;
-        $this->log = $log;
-        $this->module = $module;
-        $this->rebuildActionProcessor = $rebuildActionProcessor;
-        $this->configMissingDefaultParamsSaver = $configMissingDefaultParamsSaver;
-        $this->fileManager = $fileManager;
-    }
+        private EntityManagerProxy $entityManager,
+        private Config $config,
+        private ConfigWriter $configWriter,
+        private Metadata $metadata,
+        private OrmMetadataData $ormMetadataData,
+        private HookManager $hookManager,
+        private SchemaManagerProxy $schemaManager,
+        private Log $log,
+        private Module $module,
+        private RebuildActionProcessor $rebuildActionProcessor,
+        private ConfigMissingDefaultParamsSaver $configMissingDefaultParamsSaver,
+        private FileManager $fileManager
+    ) {}
 
     /**
      * Rebuild the system with metadata, database and cache clearing.
      *
-     * @param ?string[] $entityList
+     * @param ?string[] $entityTypeList
      * @throws Error
      */
-    public function rebuild(?array $entityList = null): void
+    public function rebuild(?array $entityTypeList = null): void
     {
         $this->clearCache();
         $this->disableHooks();
         $this->checkModules();
         $this->rebuildMetadata();
         $this->populateConfigParameters();
-        $this->rebuildDatabase($entityList);
+        $this->rebuildDatabase($entityTypeList);
         $this->rebuildActionProcessor->process();
         $this->configMissingDefaultParamsSaver->process();
         $this->enableHooks();
@@ -134,15 +108,15 @@ class DataManager
     /**
      * Rebuild database.
      *
-     * @param ?string[] $entityList
+     * @param ?string[] $entityTypeList
      * @throws Error
      */
-    public function rebuildDatabase(?array $entityList = null): void
+    public function rebuildDatabase(?array $entityTypeList = null): void
     {
-        $schema = $this->schemaProxy;
+        $schemaManager = $this->schemaManager;
 
         try {
-            $result = $schema->rebuild($entityList);
+            $result = $schemaManager->rebuild($entityTypeList);
         }
         catch (Throwable $e) {
             $result = false;
@@ -157,7 +131,7 @@ class DataManager
             throw new Error("Error while rebuilding database. See log file for details.");
         }
 
-        $databaseType = strtolower($schema->getDatabaseHelper()->getDatabaseType());
+        $databaseType = strtolower($schemaManager->getDatabaseHelper()->getType());
 
         if (
             !$this->config->get('actualDatabaseType') ||
@@ -166,7 +140,7 @@ class DataManager
             $this->configWriter->set('actualDatabaseType', $databaseType);
         }
 
-        $databaseVersion = $schema->getDatabaseHelper()->getDatabaseVersion();
+        $databaseVersion = $schemaManager->getDatabaseHelper()->getVersion();
 
         if (
             !$this->config->get('actualDatabaseVersion') ||
@@ -181,24 +155,14 @@ class DataManager
 
     /**
      * Rebuild metadata.
-     *
-     * @throws Error
      */
     public function rebuildMetadata(): void
     {
-        $metadata = $this->metadata;
-
-        $metadata->init(true);
-
-        $ormData = $this->ormMetadataData->getData(true);
-
+        $this->metadata->init(true);
+        $this->ormMetadataData->reload();
         $this->entityManager->getMetadata()->updateData();
 
         $this->updateCacheTimestamp();
-
-        if (empty($ormData)) {
-            throw new Error("Error while rebuilding metadata. See log file for details.");
-        }
     }
 
     /**

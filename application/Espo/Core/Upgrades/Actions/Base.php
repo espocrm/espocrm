@@ -368,11 +368,11 @@ abstract class Base
         //check database version
         if (isset($manifest['database'])) {
             $databaseHelper = $this->getDatabaseHelper();
-            $databaseType = $databaseHelper->getDatabaseType();
+            $databaseType = $databaseHelper->getType();
             $databaseTypeLc = strtolower($databaseType);
 
             if (isset($manifest['database'][$databaseTypeLc])) {
-                $databaseVersion = $databaseHelper->getDatabaseVersion();
+                $databaseVersion = $databaseHelper->getVersion();
 
                 if ($databaseVersion) {
                     $res &= $this->checkVersions(

@@ -27,35 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\DBAL;
+namespace Espo\Core\Utils\Database\Orm\IndexHelpers;
 
-use Espo\Core\Binding\BindingContainerBuilder;
-use Espo\Core\InjectableFactory;
-use Espo\Core\Utils\Metadata;
-use PDO;
-use RuntimeException;
+use Espo\Core\Utils\Database\Orm\IndexHelper;
+use Espo\Core\Utils\Util;
+use Espo\ORM\Defs\IndexDefs;
 
-class ConnectionFactoryFactory
+class MysqlIndexHelper implements IndexHelper
 {
-    public function __construct(
-        private Metadata $metadata,
-        private InjectableFactory $injectableFactory
-    ) {}
+    private const MAX_LENGTH = 60;
 
-    public function create(string $platform, PDO $pdo): ConnectionFactory
+    public function composeKey(IndexDefs $defs, string $entityType): string
     {
-        /** @var ?class-string<ConnectionFactory> $className */
-        $className = $this->metadata
-            ->get(['app', 'database', 'platforms', $platform, 'dbalConnectionFactoryClassName']);
+        $name = $defs->getName();
+        $prefix = $defs->isUnique() ? 'UNIQ' : 'IDX';
 
-        if (!$className) {
-            throw new RuntimeException("No DBAL ConnectionFactory for {$platform}.");
-        }
+        $parts = [$prefix, strtoupper(Util::toUnderScore($name))];
 
-        $bindingContainer = BindingContainerBuilder::create()
-            ->bindInstance(PDO::class, $pdo)
-            ->build();
+        $key = implode('_', $parts);
 
-        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
+        return substr($key, 0, self::MAX_LENGTH);
     }
 }

@@ -2,9 +2,6 @@
     "authTokenManager": {
         "className": "Espo\\Core\\Authentication\\AuthToken\\EspoManager"
     },
-    "schema": {
-        "className": "Espo\\Core\\Utils\\Database\\Schema\\Schema"
-    },
     "ormMetadataData": {
         "className": "Espo\\Core\\Utils\\Metadata\\OrmMetadataData"
     },

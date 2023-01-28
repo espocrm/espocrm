@@ -30,13 +30,11 @@
 namespace Espo\Tools\Currency;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Acl;
-use Espo\Core\DataManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
-
+use Espo\Core\Utils\Currency\DatabasePopulator;
 use stdClass;
 
 class RateService
@@ -46,8 +44,8 @@ class RateService
     public function __construct(
         private Config $config,
         private ConfigWriter $configWriter,
-        private DataManager $dataManager,
-        private Acl $acl
+        private Acl $acl,
+        private DatabasePopulator $databasePopulator
     ) {}
 
     /**
@@ -71,7 +69,6 @@ class RateService
     /**
      * @throws BadRequest
      * @throws Forbidden
-     * @throws Error
      */
     public function set(stdClass $rates): stdClass
     {
@@ -114,12 +111,10 @@ class RateService
         }
 
         $this->configWriter->set('currencyRates', $rates);
-
         $this->configWriter->save();
-        $this->dataManager->rebuildDatabase([]);
 
-        return (object) (
-            $config->get('currencyRates') ?? []
-        );
+        $this->databasePopulator->process();
+
+        return (object) ($config->get('currencyRates') ?? []);
     }
 }

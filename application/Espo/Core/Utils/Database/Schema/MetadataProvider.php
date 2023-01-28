@@ -27,35 +27,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\DBAL;
+namespace Espo\Core\Utils\Database\Schema;
 
-use Espo\Core\Binding\BindingContainerBuilder;
-use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Database\ConfigDataProvider;
 use Espo\Core\Utils\Metadata;
-use PDO;
-use RuntimeException;
 
-class ConnectionFactoryFactory
+class MetadataProvider
 {
     public function __construct(
-        private Metadata $metadata,
-        private InjectableFactory $injectableFactory
+        private ConfigDataProvider $configDataProvider,
+        private Metadata $metadata
     ) {}
 
-    public function create(string $platform, PDO $pdo): ConnectionFactory
+    private function getPlatform(): string
     {
-        /** @var ?class-string<ConnectionFactory> $className */
-        $className = $this->metadata
-            ->get(['app', 'database', 'platforms', $platform, 'dbalConnectionFactoryClassName']);
+        return $this->configDataProvider->getPlatform();
+    }
 
-        if (!$className) {
-            throw new RuntimeException("No DBAL ConnectionFactory for {$platform}.");
-        }
+    /**
+     * @return class-string<RebuildAction>[]
+     */
+    public function getPreRebuildActionClassNameList(): array
+    {
+        /** @var class-string<RebuildAction>[] */
+        return $this->metadata
+            ->get(['app', 'database', 'platforms', $this->getPlatform(), 'preRebuildActionClassNameList']) ?? [];
+    }
 
-        $bindingContainer = BindingContainerBuilder::create()
-            ->bindInstance(PDO::class, $pdo)
-            ->build();
-
-        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
+    /**
+     * @return class-string<RebuildAction>[]
+     */
+    public function getPostRebuildActionClassNameList(): array
+    {
+        /** @var class-string<RebuildAction>[] */
+        return $this->metadata
+            ->get(['app', 'database', 'platforms', $this->getPlatform(), 'postRebuildActionClassNameList']) ?? [];
     }
 }

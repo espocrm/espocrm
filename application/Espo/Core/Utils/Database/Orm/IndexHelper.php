@@ -27,31 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\Schema\rebuildActions;
+namespace Espo\Core\Utils\Database\Orm;
 
-use Espo\Core\Utils\Database\Schema\BaseRebuildActions as Base;
+use Espo\ORM\Defs\IndexDefs;
 
-class AddSystemUser extends Base
+interface IndexHelper
 {
     /**
-     * @return void
+     * Compose an index DB name. Depending on database, the name can be unique, limited by a max length.
      */
-    public function afterRebuild()
-    {
-        $userId = $this->getConfig()->get('systemUserAttributes.id');
-
-        $user = $this->getEntityManager()->getEntity('User', $userId);
-
-        if ($user) {
-            return;
-        }
-
-        $systemUserAttributes = $this->getConfig()->get('systemUserAttributes');
-
-        $user = $this->getEntityManager()->getNewEntity('User');
-
-        $user->set($systemUserAttributes);
-
-        $this->getEntityManager()->saveEntity($user);
-    }
+    public function composeKey(IndexDefs $defs, string $entityType): string;
 }

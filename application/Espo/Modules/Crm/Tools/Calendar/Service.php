@@ -258,11 +258,11 @@ class Service
             'name',
             ['dateStart', 'dateStart'],
             ['dateEnd', 'dateEnd'],
-            ($seed->hasAttribute('status') ? ['status', 'status'] : ['""', 'status']),
-            ($seed->hasAttribute('dateStartDate') ? ['dateStartDate', 'dateStartDate'] : ['""', 'dateStartDate']),
-            ($seed->hasAttribute('dateEndDate') ? ['dateEndDate', 'dateEndDate'] : ['""', 'dateEndDate']),
-            ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['""', 'parentType']),
-            ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['""', 'parentId']),
+            ($seed->hasAttribute('status') ? ['status', 'status'] : ['null', 'status']),
+            ($seed->hasAttribute('dateStartDate') ? ['dateStartDate', 'dateStartDate'] : ['null', 'dateStartDate']),
+            ($seed->hasAttribute('dateEndDate') ? ['dateEndDate', 'dateEndDate'] : ['null', 'dateEndDate']),
+            ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['null', 'parentType']),
+            ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['null', 'parentId']),
             'createdAt',
         ];
 
@@ -273,7 +273,7 @@ class Service
         foreach ($additionalAttributeList as $attribute) {
             $select[] = $seed->hasAttribute($attribute) ?
                 [$attribute, $attribute] :
-                ['""', $attribute];
+                ['null', $attribute];
         }
 
         $orGroup = [
@@ -369,7 +369,7 @@ class Service
         foreach ($additionalAttributeList as $attribute) {
             $select[] = $seed->hasAttribute($attribute) ?
                 [$attribute, $attribute] :
-                ['""', $attribute];
+                ['null', $attribute];
         }
 
         return $builder
@@ -414,8 +414,8 @@ class Service
             ['dateStart', 'dateStart'],
             ['dateEnd', 'dateEnd'],
             'status',
-            ['""', 'dateStartDate'],
-            ['""', 'dateEndDate'],
+            ['null', 'dateStartDate'],
+            ['null', 'dateEndDate'],
             'parentType',
             'parentId',
             'createdAt',
@@ -430,7 +430,7 @@ class Service
         foreach ($additionalAttributeList as $attribute) {
             $select[] = $seed->hasAttribute($attribute) ?
                 [$attribute, $attribute] :
-                ['""', $attribute];
+                ['null', $attribute];
         }
 
         return $builder
@@ -491,7 +491,7 @@ class Service
         foreach ($additionalAttributeList as $attribute) {
             $select[] = $seed->hasAttribute($attribute) ?
                 [$attribute, $attribute] :
-                ['""', $attribute];
+                ['null', $attribute];
         }
 
         $queryBuilder = $builder

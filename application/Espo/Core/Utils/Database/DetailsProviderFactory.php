@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\DBAL;
+namespace Espo\Core\Utils\Database;
 
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\InjectableFactory;
@@ -35,27 +35,27 @@ use Espo\Core\Utils\Metadata;
 use PDO;
 use RuntimeException;
 
-class ConnectionFactoryFactory
+class DetailsProviderFactory
 {
     public function __construct(
-        private Metadata $metadata,
-        private InjectableFactory $injectableFactory
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata
     ) {}
 
-    public function create(string $platform, PDO $pdo): ConnectionFactory
+    public function create(string $platform, PDO $pdo): DetailsProvider
     {
-        /** @var ?class-string<ConnectionFactory> $className */
+        /** @var ?class-string<DetailsProvider> $className */
         $className = $this->metadata
-            ->get(['app', 'database', 'platforms', $platform, 'dbalConnectionFactoryClassName']);
+            ->get(['app', 'database', 'platforms', $platform, 'detailsProviderClassName']);
 
         if (!$className) {
-            throw new RuntimeException("No DBAL ConnectionFactory for {$platform}.");
+            throw new RuntimeException("No Details-Provider for {$platform}.");
         }
 
-        $bindingContainer = BindingContainerBuilder::create()
+        $binding = BindingContainerBuilder::create()
             ->bindInstance(PDO::class, $pdo)
             ->build();
 
-        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
+        return $this->injectableFactory->createWithBinding($className, $binding);
     }
 }

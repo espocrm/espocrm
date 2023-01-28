@@ -129,7 +129,7 @@ class BeforeUpgrade
     {
         $databaseHelper = new DatabaseHelper($config);
 
-        $pdo = $databaseHelper->createPdoConnection();
+        $pdo = $databaseHelper->getDatabaseType();
 
         $query = "
             ALTER TABLE `user` ADD `working_time_calendar_id` VARCHAR(24)

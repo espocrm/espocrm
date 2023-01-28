@@ -29,84 +29,65 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Connection as DbalConnection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Schema\Schema as DBALSchema;
-use Doctrine\DBAL\Schema\SchemaDiff as DBALSchemaDiff;
+use Doctrine\DBAL\Schema\Schema as DbalSchema;
+use Doctrine\DBAL\Schema\SchemaDiff as DbalSchemaDiff;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Types\Type;
 
+use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\InjectableFactory;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Database\Converter as DatabaseConverter;
 use Espo\Core\Utils\Database\DBAL\Schema\Comparator;
 use Espo\Core\Utils\Database\Helper;
-use Espo\Core\Utils\File\ClassMap;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Log;
-use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Metadata\OrmMetadataData;
-use Espo\Core\Utils\Module\PathProvider;
 use Espo\Core\Utils\Util;
 
 use Throwable;
 
-class Schema
+/**
+ * A database schema manager.
+ */
+class SchemaManager
 {
     private string $fieldTypePath = 'application/Espo/Core/Utils/Database/DBAL/FieldTypes';
-    private string $rebuildActionsPath = 'Core/Utils/Database/Schema/rebuildActions';
 
     private Comparator $comparator;
-    private DatabaseConverter $converter;
-    private Converter $schemaConverter;
-
-    /**
-     * @var ?array{
-     *   beforeRebuild: BaseRebuildActions[],
-     *   afterRebuild: BaseRebuildActions[],
-     * }
-     */
-    private $rebuildActions = null;
+    private Builder $builder;
 
     public function __construct(
-        private Config $config,
-        private Metadata $metadata,
         private FileManager $fileManager,
-        private ClassMap $classMap,
-        protected OrmMetadataData $ormMetadataData,
+        private OrmMetadataData $ormMetadataData,
         private Log $log,
-        PathProvider $pathProvider,
-        DatabaseConverter $databaseConverter,
-        private Helper $databaseHelper,
+        private Helper $helper,
+        private MetadataProvider $metadataProvider,
         private InjectableFactory $injectableFactory
     ) {
-        $this->converter = $databaseConverter;
-
         $this->comparator = new Comparator();
 
         $this->initFieldTypes();
 
-        $this->schemaConverter = new Converter(
-            $this->metadata,
-            $this->fileManager,
-            $this,
-            $this->config,
-            $this->log,
-            $pathProvider
+        $this->builder = $this->injectableFactory->createWithBinding(
+            Builder::class,
+            BindingContainerBuilder::create()
+                ->bindInstance(Helper::class, $this->helper)
+                ->build()
         );
     }
 
     public function getDatabaseHelper(): Helper
     {
-        return $this->databaseHelper;
+        return $this->helper;
     }
 
-    public function getPlatform(): AbstractPlatform
+    private function getPlatform(): AbstractPlatform
     {
-        return $this->getConnection()->getDatabasePlatform();
+        return $this->getDbalConnection()->getDatabasePlatform();
     }
 
-    public function getConnection(): Connection
+    private function getDbalConnection(): DbalConnection
     {
         return $this->getDatabaseHelper()->getDbalConnection();
     }
@@ -123,7 +104,7 @@ class Schema
 
             $filePath = Util::concatPath($this->fieldTypePath, $typeName . 'Type');
 
-            /** @var class-string<\Doctrine\DBAL\Types\Type> $class */
+            /** @var class-string<Type> $class */
             $class = Util::getClassName($filePath);
 
             if (!Type::hasType($dbalTypeName)) {
@@ -143,75 +124,71 @@ class Schema
                 $dbTypeName = $dbalTypeName;
             }
 
-            $this->getConnection()
+            $this->getDbalConnection()
                 ->getDatabasePlatform()
                 ->registerDoctrineTypeMapping($dbTypeName, $dbalTypeName);
         }
     }
 
     /**
-     * Rebuild database schema.
+     * Rebuild database schema. Creates and alters needed tables and columns.
+     * Does not remove columns, does not decrease column lengths.
      *
-     * @param ?string[] $entityList
+     * @param ?string[] $entityTypeList Specific entity types.
      * @throws SchemaException
      */
-    public function rebuild(?array $entityList = null): bool
+    public function rebuild(?array $entityTypeList = null): bool
     {
-        if (!$this->converter->process()) {
-            return false;
-        }
-
         $currentSchema = $this->getCurrentSchema();
 
-        $metadataSchema = $this->schemaConverter->process($this->ormMetadataData->getData(), $entityList);
-
-        $this->initRebuildActions($currentSchema, $metadataSchema);
+        $schema = $this->builder->build($this->ormMetadataData->getData(), $entityTypeList);
 
         try {
-            $this->executeRebuildActions('beforeRebuild');
+            $this->processPreRebuildActions($currentSchema, $schema);
         }
         catch (Throwable $e) {
-            $this->log->alert('Rebuild database fault: '. $e);
+            $this->log->alert('Rebuild database pre-rebuild error: '. $e->getMessage());
 
             return false;
         }
 
-        $queries = $this->getDiffSql($currentSchema, $metadataSchema);
+        $queries = $this->getDiffSql($currentSchema, $schema);
 
         $result = true;
-        $connection = $this->getConnection();
+
+        $connection = $this->getDbalConnection();
 
         foreach ($queries as $sql) {
-            $this->log->info('SCHEMA, Execute Query: '.$sql);
+            $this->log->info('SCHEMA, Execute Query: '. $sql);
 
             try {
-                $result &= (bool) $connection->executeQuery($sql);
+                $connection->executeQuery($sql);
             }
             catch (Throwable $e) {
-                $this->log->alert('Rebuild database fault: '. $e);
+                $this->log->alert('Rebuild database error: ' . $e->getMessage());
 
                 $result = false;
             }
         }
 
         try {
-            $this->executeRebuildActions('afterRebuild');
+            $this->processPostRebuildActions($currentSchema, $schema);
         }
         catch (Throwable $e) {
-            $this->log->alert('Rebuild database fault: '. $e);
+            $this->log->alert('Rebuild database post-rebuild error: ' . $e->getMessage());
 
             return false;
         }
 
-        return (bool) $result;
+        return $result;
     }
 
     /**
      * Get current database schema.
      */
-    private function getCurrentSchema(): DBALSchema
+    private function getCurrentSchema(): DbalSchema
     {
-        return $this->getConnection()
+        return $this->getDbalConnection()
             ->getSchemaManager()
             ->createSchema();
     }
@@ -221,7 +198,7 @@ class Schema
      *
      * @return string[] Array of SQL queries.
      */
-    public function toSql(DBALSchemaDiff $schema)
+    private function toSql(DbalSchemaDiff $schema)
     {
         return $schema->toSaveSql($this->getPlatform());
     }
@@ -232,67 +209,36 @@ class Schema
      * @return string[] Array of SQL queries.
      * @throws SchemaException
      */
-    public function getDiffSql(DBALSchema $fromSchema, DBALSchema $toSchema)
+    private function getDiffSql(DbalSchema $fromSchema, DbalSchema $toSchema)
     {
         $schemaDiff = $this->comparator->compare($fromSchema, $toSchema);
 
         return $this->toSql($schemaDiff);
     }
 
-    /**
-     * Init Rebuild Actions, get all classes and create them.
-     */
-    private function initRebuildActions(?DBALSchema $currentSchema = null, ?DBALSchema $metadataSchema = null): void
+    private function processPreRebuildActions(DbalSchema $actualSchema, DbalSchema $schema): void
     {
-        $methodList = [
-            'beforeRebuild',
-            'afterRebuild',
-        ];
+        $binding = BindingContainerBuilder::create()
+            ->bindInstance(Helper::class, $this->helper)
+            ->build();
 
-        /** @var array<string, class-string<BaseRebuildActions>> $classes */
-        $classes = $this->classMap->getData($this->rebuildActionsPath, null, $methodList);
+        foreach ($this->metadataProvider->getPreRebuildActionClassNameList() as $className) {
+            $action = $this->injectableFactory->createWithBinding($className, $binding);
 
-        $objects = [
-            'beforeRebuild' => [],
-            'afterRebuild' => [],
-        ];
-
-        foreach ($classes as $className) {
-            $actionObj = $this->injectableFactory->create($className);
-
-            if (isset($currentSchema)) {
-                $actionObj->setCurrentSchema($currentSchema);
-            }
-
-            if (isset($metadataSchema)) {
-                $actionObj->setMetadataSchema($metadataSchema);
-            }
-
-            foreach ($methodList as $methodName) {
-                if (method_exists($actionObj, $methodName)) {
-                    $objects[$methodName][] = $actionObj;
-                }
-            }
+            $action->process($actualSchema, $schema);
         }
-
-        $this->rebuildActions = $objects;
     }
 
-    /**
-     * Execute actions for RebuildAction classes.
-     *
-     * @param 'beforeRebuild'|'afterRebuild' $action An action name.
-     */
-    private function executeRebuildActions(string $action): void
+    private function processPostRebuildActions(DbalSchema $actualSchema, DbalSchema $schema): void
     {
-        if (!isset($this->rebuildActions)) {
-            $this->initRebuildActions();
-        }
+        $binding = BindingContainerBuilder::create()
+            ->bindInstance(Helper::class, $this->helper)
+            ->build();
 
-        assert($this->rebuildActions !== null);
+        foreach ($this->metadataProvider->getPostRebuildActionClassNameList() as $className) {
+            $action = $this->injectableFactory->createWithBinding($className, $binding);
 
-        foreach ($this->rebuildActions[$action] as $rebuildActionClass) {
-            $rebuildActionClass->$action();
+            $action->process($actualSchema, $schema);
         }
     }
 }

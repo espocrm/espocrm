@@ -27,35 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\DBAL;
+namespace Espo\Core\Rebuild\Actions;
 
-use Espo\Core\Binding\BindingContainerBuilder;
-use Espo\Core\InjectableFactory;
-use Espo\Core\Utils\Metadata;
-use PDO;
-use RuntimeException;
+use Espo\Core\Rebuild\RebuildAction;
+use Espo\Core\Utils\Currency\DatabasePopulator;
 
-class ConnectionFactoryFactory
+class CurrencyRates implements RebuildAction
 {
-    public function __construct(
-        private Metadata $metadata,
-        private InjectableFactory $injectableFactory
-    ) {}
+    public function __construct(private DatabasePopulator $databasePopulator) {}
 
-    public function create(string $platform, PDO $pdo): ConnectionFactory
+    public function process(): void
     {
-        /** @var ?class-string<ConnectionFactory> $className */
-        $className = $this->metadata
-            ->get(['app', 'database', 'platforms', $platform, 'dbalConnectionFactoryClassName']);
-
-        if (!$className) {
-            throw new RuntimeException("No DBAL ConnectionFactory for {$platform}.");
-        }
-
-        $bindingContainer = BindingContainerBuilder::create()
-            ->bindInstance(PDO::class, $pdo)
-            ->build();
-
-        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
+        $this->databasePopulator->process();
     }
 }

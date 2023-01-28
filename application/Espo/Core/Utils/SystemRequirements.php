@@ -29,10 +29,9 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\Utils\Database\Helper as DatabaseHelper;
 use Espo\Core\Utils\File\Manager as FileManager;
-
-use PDO;
 
 class SystemRequirements
 {
@@ -40,14 +39,15 @@ class SystemRequirements
         private Config $config,
         private FileManager $fileManager,
         private System $systemHelper,
-        private DatabaseHelper $databaseHelper
+        private DatabaseHelper $databaseHelper,
+        private DatabaseParamsFactory $databaseParamsFactory
     ) {}
 
     /**
      * @return array{
-     *   php: array<string,array<string,mixed>>,
-     *   database: array<string,array<string,mixed>>,
-     *   permission: array<string,array<string,mixed>>,
+     *   php: array<string, array<string, mixed>>,
+     *   database: array<string, array<string, mixed>>,
+     *   permission: array<string, array<string, mixed>>,
      * }
      */
     public function getAllRequiredList(bool $requiredOnly = false): array
@@ -55,16 +55,16 @@ class SystemRequirements
         return [
             'php' => $this->getPhpRequiredList($requiredOnly),
             'database' => $this->getDatabaseRequiredList($requiredOnly),
-            'permission' => $this->getRequiredPermissionList($requiredOnly),
+            'permission' => $this->getRequiredPermissionList(),
         ];
     }
 
     /**
-     * @param array<string,mixed> $additionalData
+     * @param array<string, mixed> $additionalData
      * @return array{
-     *   php?: array<string,array<string,mixed>>,
-     *   database?: array<string,array<string,mixed>>,
-     *   permission?: array<string,array{type:string,acceptable:int}>,
+     *   php?: array<string, array<string, mixed>>,
+     *   database?: array<string, array<string, mixed>>,
+     *   permission?: array<string, array{type: string, acceptable: int}>,
      * }
      */
     public function getRequiredListByType(
@@ -73,27 +73,20 @@ class SystemRequirements
         array $additionalData = null
     ): array {
 
-        switch ($type) {
-            case 'php':
-                return $this->getPhpRequiredList($requiredOnly, $additionalData);
-
-            case 'database':
-                return $this->getDatabaseRequiredList($requiredOnly, $additionalData);
-
-            case 'permission':
-                return $this->getRequiredPermissionList($requiredOnly, $additionalData);
-        }
-
-        return [];
+        return match ($type) {
+            'php' => $this->getPhpRequiredList($requiredOnly),
+            'database' => $this->getDatabaseRequiredList($requiredOnly, $additionalData),
+            'permission' => $this->getRequiredPermissionList(),
+            default => [],
+        };
     }
 
     /**
      * Get required PHP params.
      *
-     * @param ?array<string,mixed> $additionalData
-     * @return array<string,array<string,mixed>>
+     * @return array<string, array<string, mixed>>
      */
-    protected function getPhpRequiredList(bool $requiredOnly, ?array $additionalData = null): array
+    public function getPhpRequiredList(bool $requiredOnly): array
     {
         $requiredList = [
             'requiredPhpVersion',
@@ -107,26 +100,25 @@ class SystemRequirements
             ]);
         }
 
-        return $this->getRequiredList('phpRequirements', $requiredList, $additionalData);
+        return $this->getRequiredList('phpRequirements', $requiredList);
     }
 
     /**
      * Get required DB params.
      *
-     * @param ?array<string,mixed> $additionalData
-     * @return array<string,array<string,mixed>>
+     * @param ?array<string, mixed> $additionalData
+     * @return array<string, array<string, mixed>>
      */
-    protected function getDatabaseRequiredList(bool $requiredOnly, ?array $additionalData = null): array
+    private function getDatabaseRequiredList(bool $requiredOnly, ?array $additionalData = null): array
     {
-        $databaseHelper =  $this->databaseHelper;
-        $databaseParams = $additionalData['database'] ?? [];
+        $databaseParams = $this->databaseParamsFactory
+            ->createWithMergedAssoc($additionalData['databaseParams'] ?? []);
 
-        $pdoConnection = $databaseHelper->createPdoConnection($databaseParams);
+        $pdo = $this->databaseHelper->createPDO($databaseParams);
 
-        $databaseHelper->setPdoConnection($pdoConnection);
-        $databaseType = $databaseHelper->getDatabaseType();
-        $databaseTypeName = ucfirst(strtolower($databaseType));
+        $this->databaseHelper = $this->databaseHelper->withPDO($pdo);
 
+        $databaseTypeName = ucfirst(strtolower($this->databaseHelper->getType()));
 
         $requiredList = [
             'required' . $databaseTypeName . 'Version',
@@ -145,17 +137,14 @@ class SystemRequirements
     /**
      * Get permission requirements.
      *
-     * @param ?array<string,mixed> $additionalData
-     * @return array<string,array<string,mixed>>
+     * @return array<string, array<string, mixed>>
      */
-    private function getRequiredPermissionList(bool $requiredOnly, ?array $additionalData = null): array
+    private function getRequiredPermissionList(): array
     {
         return $this->getRequiredList(
             'permissionRequirements',
-            [
-                'permissionMap.writable',
-            ],
-            $additionalData,
+            ['permissionMap.writable'],
+            null,
             [
                 'permissionMap.writable' => $this->fileManager->getPermissionUtils()->getWritableList(),
             ]
@@ -164,9 +153,9 @@ class SystemRequirements
 
     /**
      * @param string[] $checkList
-     * @param ?array<string,mixed> $additionalData
-     * @param array<string,mixed> $predefinedData
-     * @return array<string,array<string,mixed>>
+     * @param ?array<string, mixed> $additionalData
+     * @param array<string, mixed> $predefinedData
+     * @return array<string, array<string, mixed>>
      */
     private function getRequiredList(
         string $type,
@@ -178,30 +167,37 @@ class SystemRequirements
         $list = [];
 
         foreach ($checkList as $itemName) {
-            $methodName = 'check' . ucfirst($type);
+            $type = lcfirst($type);
 
-            if (method_exists($this, $methodName)) {
-                $itemValue =
-                    isset($predefinedData[$itemName]) ?
-                    $predefinedData[$itemName] :
-                    $this->config->get($itemName);
+            $itemValue = $predefinedData[$itemName] ?? $this->config->get($itemName);
 
-                $result = $this->$methodName($itemName, $itemValue, $additionalData);
-                $list = array_merge($list, $result);
+            $result = [];
+
+            if ($type === 'phpRequirements') {
+                $result = $this->checkPhpRequirements($itemName, $itemValue);
             }
+
+            if ($type === 'databaseRequirements') {
+                $result = $this->checkDatabaseRequirements($itemName, $itemValue, $additionalData);
+            }
+
+            if ($type === 'permissionRequirements') {
+                $result = $this->checkPermissionRequirements($itemName, $itemValue);
+            }
+
+            $list = array_merge($list, $result);
         }
 
         return $list;
     }
 
     /**
-     * Check PHP requirements,
+     * Check PHP requirements.
      *
-     * @param array<string,mixed>|string $data
-     * @param ?array<string,mixed> $additionalData
-     * @return array<string,array<string,mixed>>
+     * @param array<string, mixed>|string $data
+     * @return array<string, array<string, mixed>>
      */
-    private function checkPhpRequirements(string $type, $data, ?array $additionalData = null): array
+    private function checkPhpRequirements(string $type, $data): array
     {
         $list = [];
 
@@ -247,9 +243,7 @@ class SystemRequirements
                     $requiredValue = $value;
                     $actualValue = $this->systemHelper->getPhpParam($name) ?: '0';
 
-                    $acceptable = (
-                        Util::convertToByte($actualValue) >= Util::convertToByte($requiredValue)
-                    ) ? true : false;
+                    $acceptable = Util::convertToByte($actualValue) >= Util::convertToByte($requiredValue);
 
                     $list[$name] = [
                         'type' => 'param',
@@ -268,9 +262,9 @@ class SystemRequirements
     /**
      * Check DB requirements.
      *
-     * @param array<string,mixed>|string $data
-     * @param ?array<string,mixed> $additionalData
-     * @return array<string,array<string,mixed>>
+     * @param array<string, mixed>|string $data
+     * @param ?array<string, mixed> $additionalData
+     * @return array<string, array<string, mixed>>
      */
     private function checkDatabaseRequirements(string $type, $data, ?array $additionalData = null): array
     {
@@ -278,14 +272,14 @@ class SystemRequirements
 
         $databaseHelper = $this->databaseHelper;
 
-        $databaseParams = $additionalData['database'] ?? [];
+        $databaseParams = $additionalData['databaseParams'] ?? [];
 
         switch ($type) {
             case 'requiredMysqlVersion':
             case 'requiredMariadbVersion':
                 /** @var string $data */
 
-                $actualVersion = $databaseHelper->getDatabaseServerVersion();
+                $actualVersion = $databaseHelper->getServerVersion();
 
                 $requiredVersion = $data;
 
@@ -309,7 +303,7 @@ class SystemRequirements
                 foreach ($data as $name => $value) {
                     $requiredValue = $value;
 
-                    $actualValue = $databaseHelper->getDatabaseParam($name);
+                    $actualValue = $databaseHelper->getParam($name);
 
                     $acceptable = false;
 
@@ -344,21 +338,21 @@ class SystemRequirements
                     $databaseParams = $this->config->get('database');
                 }
 
-                $acceptable = true;
-
                 $list['host'] = [
                     'type' => 'connection',
-                    'acceptable' => $acceptable,
+                    'acceptable' => true,
                     'actual' => $databaseParams['host'],
                 ];
+
                 $list['dbname'] = [
                     'type' => 'connection',
-                    'acceptable' => $acceptable,
+                    'acceptable' => true,
                     'actual' => $databaseParams['dbname'],
                 ];
+
                 $list['user'] = [
                     'type' => 'connection',
-                    'acceptable' => $acceptable,
+                    'acceptable' => true,
                     'actual' => $databaseParams['user'],
                 ];
 
@@ -369,11 +363,10 @@ class SystemRequirements
     }
 
     /**
-     * @param array<string,mixed> $data
-     * @param ?array<string,mixed> $additionalData
-     * @return array<string,array<string,mixed>>
+     * @param array<string, mixed> $data
+     * @return array<string, array<string, mixed>>
      */
-    private function checkPermissionRequirements(string $type, $data, ?array $additionalData = null): array
+    private function checkPermissionRequirements(string $type, $data): array
     {
         $list = [];
 
@@ -383,21 +376,25 @@ class SystemRequirements
             case 'permissionMap.writable':
                 foreach ($data as $item) {
                     $fullPathItem = Util::concatPath($this->systemHelper->getRootDir(), $item);
+
                     $list[$fullPathItem] = [
                         'type' => 'writable',
-                        'acceptable' => $fileManager->isWritable($fullPathItem) ? true : false,
+                        'acceptable' => $fileManager->isWritable($fullPathItem),
                     ];
                 }
+
                 break;
 
             case 'permissionMap.readable':
                 foreach ($data as $item) {
                     $fullPathItem = Util::concatPath($this->systemHelper->getRootDir(), $item);
+
                     $list[$fullPathItem] = [
                         'type' => 'readable',
-                        'acceptable' => $fileManager->isReadable($fullPathItem) ? true : false,
+                        'acceptable' => $fileManager->isReadable($fullPathItem),
                     ];
                 }
+
                 break;
         }
 

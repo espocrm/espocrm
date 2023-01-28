@@ -38,7 +38,7 @@ class ManyMany extends Base
     /**
      * @param string $linkName
      * @param string $entityType
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     protected function load($linkName, $entityType)
     {
@@ -132,7 +132,7 @@ class ManyMany extends Base
     /**
      * @param string $entity1
      * @param string $entity2
-     * @return array{string,string}
+     * @return array{string, string}
      */
     protected function getSortEntities($entity1, $entity2)
     {

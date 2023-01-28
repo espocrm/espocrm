@@ -29,37 +29,9 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
-use Espo\Core\{
-    Container,
-    Utils\Database\Helper,
-};
+use Espo\ORM\Defs\AttributeDefs;
 
-class SchemaProxy
+interface ColumnPreparator
 {
-    private Container $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
-    protected function getSchema(): Schema
-    {
-        /** @var Schema */
-        return $this->container->get('schema');
-    }
-
-    /**
-     * @param ?string[] $entityList
-     * @throws \Doctrine\DBAL\Schema\SchemaException
-     */
-    public function rebuild(?array $entityList = null): bool
-    {
-        return $this->getSchema()->rebuild();
-    }
-
-    public function getDatabaseHelper(): Helper
-    {
-        return $this->getSchema()->getDatabaseHelper();
-    }
+    public function prepare(AttributeDefs $defs): Column;
 }

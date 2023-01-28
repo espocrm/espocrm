@@ -27,35 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\DBAL;
+namespace Espo\Core\Utils\Database\Orm;
 
-use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
-use PDO;
 use RuntimeException;
 
-class ConnectionFactoryFactory
+class IndexHelperFactory
 {
     public function __construct(
         private Metadata $metadata,
         private InjectableFactory $injectableFactory
     ) {}
 
-    public function create(string $platform, PDO $pdo): ConnectionFactory
+    public function create(string $platform): IndexHelper
     {
-        /** @var ?class-string<ConnectionFactory> $className */
+        /** @var ?class-string<IndexHelper> $className */
         $className = $this->metadata
-            ->get(['app', 'database', 'platforms', $platform, 'dbalConnectionFactoryClassName']);
+            ->get(['app', 'database', 'platforms', $platform, 'indexHelperClassName']);
 
         if (!$className) {
-            throw new RuntimeException("No DBAL ConnectionFactory for {$platform}.");
+            throw new RuntimeException("No Index Helper for {$platform}");
         }
 
-        $bindingContainer = BindingContainerBuilder::create()
-            ->bindInstance(PDO::class, $pdo)
-            ->build();
-
-        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
+        return $this->injectableFactory->create($className);
     }
 }

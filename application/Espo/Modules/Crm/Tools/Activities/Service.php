@@ -161,7 +161,7 @@ class Service
                 'parentId',
                 'status',
                 'createdAt',
-                ['""', 'hasAttachment'],
+                ['null', 'hasAttachment'],
             ])
             ->leftJoin(
                 'MeetingUser',
@@ -217,11 +217,11 @@ class Service
                 ['dateEnd', 'dateEnd'],
                 (
                     $seed->hasAttribute('dateStartDate') ?
-                        ['dateStartDate', 'dateStartDate'] : ['""', 'dateStartDate']
+                        ['dateStartDate', 'dateStartDate'] : ['null', 'dateStartDate']
                 ),
                 (
                     $seed->hasAttribute('dateEndDate') ?
-                        ['dateEndDate', 'dateEndDate'] : ['""', 'dateEndDate']
+                        ['dateEndDate', 'dateEndDate'] : ['null', 'dateEndDate']
                 ),
                 ['"Call"', '_scope'],
                 'assignedUserId',
@@ -230,7 +230,7 @@ class Service
                 'parentId',
                 'status',
                 'createdAt',
-                ['""', 'hasAttachment'],
+                ['null', 'hasAttachment'],
             ])
             ->leftJoin(
                 'CallUser',
@@ -290,9 +290,9 @@ class Service
                 'id',
                 'name',
                 ['dateSent', 'dateStart'],
-                ['""', 'dateEnd'],
-                ['""', 'dateStartDate'],
-                ['""', 'dateEndDate'],
+                ['null', 'dateEnd'],
+                ['null', 'dateStartDate'],
+                ['null', 'dateEndDate'],
                 ['"Email"', '_scope'],
                 'assignedUserId',
                 'assignedUserName',
@@ -356,11 +356,11 @@ class Service
                 ['dateEnd', 'dateEnd'],
                 (
                     $seed->hasAttribute('dateStartDate') ?
-                        ['dateStartDate', 'dateStartDate'] : ['""', 'dateStartDate']
+                        ['dateStartDate', 'dateStartDate'] : ['null', 'dateStartDate']
                 ),
                 (
                     $seed->hasAttribute('dateEndDate') ?
-                        ['dateEndDate', 'dateEndDate'] : ['""', 'dateEndDate']
+                        ['dateEndDate', 'dateEndDate'] : ['null', 'dateEndDate']
                 ),
                 ['"' . $targetEntityType . '"', '_scope'],
                 'assignedUserId',
@@ -369,7 +369,7 @@ class Service
                 'parentId',
                 'status',
                 'createdAt',
-                ['""', 'hasAttachment'],
+                ['false', 'hasAttachment'],
             ]);
 
         if (!empty($statusList)) {
@@ -501,9 +501,9 @@ class Service
                 'id',
                 'name',
                 ['dateSent', 'dateStart'],
-                ['""', 'dateEnd'],
-                ['""', 'dateStartDate'],
-                ['""', 'dateEndDate'],
+                ['null', 'dateEnd'],
+                ['null', 'dateStartDate'],
+                ['null', 'dateEndDate'],
                 ['"Email"', '_scope'],
                 'assignedUserId',
                 'assignedUserName',
@@ -1091,22 +1091,22 @@ class Service
             ->select([
                 'id',
                 'name',
-                ($seed->hasAttribute('dateStart') ? ['dateStart', 'dateStart'] : ['""', 'dateStart']),
-                ($seed->hasAttribute('dateEnd') ? ['dateEnd', 'dateEnd'] : ['""', 'dateEnd']),
+                ($seed->hasAttribute('dateStart') ? ['dateStart', 'dateStart'] : ['null', 'dateStart']),
+                ($seed->hasAttribute('dateEnd') ? ['dateEnd', 'dateEnd'] : ['null', 'dateEnd']),
                 ($seed->hasAttribute('dateStartDate') ?
-                    ['dateStartDate', 'dateStartDate'] : ['""', 'dateStartDate']),
+                    ['dateStartDate', 'dateStartDate'] : ['null', 'dateStartDate']),
                 ($seed->hasAttribute('dateEndDate') ?
-                    ['dateEndDate', 'dateEndDate'] : ['""', 'dateEndDate']),
+                    ['dateEndDate', 'dateEndDate'] : ['null', 'dateEndDate']),
                 ['"' . $scope . '"', '_scope'],
                 ($seed->hasAttribute('assignedUserId') ?
-                    ['assignedUserId', 'assignedUserId'] : ['""', 'assignedUserId']),
+                    ['assignedUserId', 'assignedUserId'] : ['null', 'assignedUserId']),
                 ($seed->hasAttribute('assignedUserName') ? ['assignedUserName', 'assignedUserName'] :
-                    ['""', 'assignedUserName']),
-                ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['""', 'parentType']),
-                ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['""', 'parentId']),
+                    ['null', 'assignedUserName']),
+                ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['null', 'parentType']),
+                ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['null', 'parentId']),
                 'status',
                 'createdAt',
-                ['""', 'hasAttachment'],
+                ['false', 'hasAttachment'],
             ]);
 
         if ($entity->getEntityType() === User::ENTITY_TYPE) {

@@ -30,16 +30,19 @@
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
 use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
 
 class Base extends \Espo\Core\Utils\Database\Orm\Base
 {
+    private const DEFAULT_VARCHAR_LENGTH = 255;
+
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     private $params;
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     private $foreignParams;
 
@@ -62,11 +65,11 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         'additionalColumns',
         'midKeys',
         'noJoin',
-        'indexes'
+        'indexes',
     ];
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     protected function getParams()
     {
@@ -74,7 +77,7 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     protected function getForeignParams()
     {
@@ -82,7 +85,7 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @return void
      */
     protected function setParams(array $params)
@@ -91,7 +94,7 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
     }
 
     /**
-     * @param array<string,mixed> $foreignParams
+     * @param array<string, mixed> $foreignParams
      * @return void
      */
     protected function setForeignParams(array $foreignParams)
@@ -134,7 +137,7 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     protected function getForeignLinkParams()
     {
@@ -148,25 +151,29 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
     /**
      *
      * @param string $linkName
-     * @param string $entityName
+     * @param string $entityType
      * @param ?string $foreignLinkName
      * @param ?string $foreignEntityName
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
-    public function process($linkName, $entityName, $foreignLinkName, $foreignEntityName)
+    public function process($linkName, $entityType, $foreignLinkName, $foreignEntityName)
     {
         $inputs = [
             'itemName' => $linkName,
-            'entityName' => $entityName,
+            'entityName' => $entityType,
             'foreignLinkName' => $foreignLinkName,
             'foreignEntityName' => $foreignEntityName,
         ];
 
         $this->setMethods($inputs);
 
-        $convertedDefs = $this->load($linkName, $entityName);
+        $convertedDefs = $this->load($linkName, $entityType);
 
         $convertedDefs = $this->mergeAllowedParams($convertedDefs);
+
+        if (isset($convertedDefs[$entityType]['relations'][$linkName])) {
+            $this->correct($convertedDefs[$entityType]['relations'][$linkName]);
+        }
 
         $inputs = $this->setArrayValue(null, $inputs);
 
@@ -176,8 +183,34 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
     }
 
     /**
-     * @param array<string,mixed> $loads
-     * @return array<string,mixed>'
+     * @param array<string, mixed> $relationDefs
+     */
+    private function correct(array &$relationDefs): void
+    {
+        if (!isset($relationDefs['additionalColumns'])) {
+            return;
+        }
+
+        /** @var array<string, array<string, mixed>> $additionalColumns */
+        $additionalColumns = &$relationDefs['additionalColumns'];
+
+        foreach ($additionalColumns as &$columnDefs) {
+            $columnDefs['type'] ??= Entity::VARCHAR;
+
+            if (
+                $columnDefs['type'] === Entity::VARCHAR &&
+                !isset($columnDefs['len'])
+            ) {
+                $columnDefs['len'] = self::DEFAULT_VARCHAR_LENGTH;
+            }
+        }
+
+        $relationDefs['additionalColumns'] = $additionalColumns;
+    }
+
+    /**
+     * @param array<string, mixed> $loads
+     * @return array<string, mixed>
      */
     private function mergeAllowedParams($loads)
     {
@@ -193,7 +226,7 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
                 if (isset($additionalParam)) {
                     $linkParams[$name] = $additionalParam;
 
-                    if (isset($linkParams[$name]) && is_array($linkParams[$name])) {
+                    if (is_array($linkParams[$name])) {
                         $linkParams[$name] = Util::merge($linkParams[$name], $additionalParam);
                     }
                 }
@@ -205,17 +238,15 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
 
     /**
      * @param string $allowedItemName
-     * @return ?array<string,mixed>
+     * @return ?array<string, mixed>
      */
     private function getAllowedAdditionalParam($allowedItemName)
     {
         $linkParams = $this->getLinkParams();
         $foreignLinkParams = $this->getForeignLinkParams();
 
-        $itemLinkParams = isset($linkParams[$allowedItemName]) ? $linkParams[$allowedItemName] : null;
-        $itemForeignLinkParams = isset($foreignLinkParams[$allowedItemName]) ?
-            $foreignLinkParams[$allowedItemName] :
-            null;
+        $itemLinkParams = $linkParams[$allowedItemName] ?? null;
+        $itemForeignLinkParams = $foreignLinkParams[$allowedItemName] ?? null;
 
         $additionalParam = null;
 

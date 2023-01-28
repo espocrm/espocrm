@@ -27,19 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\Schema\rebuildActions;
+namespace Espo\Core\Utils\Database\Schema;
 
-use Espo\Core\Utils\Currency\DatabasePopulator;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Database\Helper;
 
-class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
+use Doctrine\DBAL\Schema\SchemaException;
+
+class SchemaManagerProxy
 {
-    /**
-     * @return void
-     */
-    public function afterRebuild()
-    {
-        $populator = new DatabasePopulator($this->getConfig(), $this->getEntityManager());
+    public function __construct(private InjectableFactory $injectableFactory) {}
 
-        $populator->process();
+    private function getSchemaManager(): SchemaManager
+    {
+        return $this->injectableFactory->create(SchemaManager::class);
+    }
+
+    /**
+     * @param ?string[] $entityTypeList
+     * @throws SchemaException
+     */
+    public function rebuild(?array $entityTypeList = null): bool
+    {
+        return $this->getSchemaManager()->rebuild($entityTypeList);
+    }
+
+    public function getDatabaseHelper(): Helper
+    {
+        return $this->getSchemaManager()->getDatabaseHelper();
     }
 }

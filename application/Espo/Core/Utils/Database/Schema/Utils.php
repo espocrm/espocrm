@@ -36,6 +36,7 @@ class Utils
 {
     /**
      * Get indexes in specific format.
+     * @deprecated
      *
      * @param array<string, mixed> $defs
      * @param string[] $ignoreFlags @todo Remove parameter?
@@ -46,133 +47,53 @@ class Utils
         $indexList = [];
 
         foreach ($defs as $entityType => $entityParams) {
-            $entityIndexList = self::getEntityIndexListByFieldsDefs($entityParams['fields'] ?? []);
+            $indexes = $entityParams['indexes'] ?? [];
 
-            foreach ($entityIndexList as $indexName => $indexParams) {
-                if (!isset($entityParams['indexes'][$indexName])) {
-                    $entityParams['indexes'][$indexName] = $indexParams;
+            foreach ($indexes as $indexName => $indexParams) {
+                $indexDefs = IndexDefs::fromRaw($indexParams, $indexName);
+
+                $tableIndexName = $indexParams['key'] ?? null;
+
+                if (!$tableIndexName) {
+                    continue;
                 }
-            }
 
-            if (isset($entityParams['indexes']) && is_array($entityParams['indexes'])) {
-                foreach ($entityParams['indexes'] as $indexName => $indexParams) {
-                    $indexDefs = IndexDefs::fromRaw($indexParams, $indexName);
+                $columns = $indexDefs->getColumnList();
+                $flags = $indexDefs->getFlagList();
 
-                    $tableIndexName = $indexParams['key'] ?? self::generateIndexName($indexDefs, $entityType);
+                if ($flags !== []) {
+                    $skipIndex = false;
 
-                    $columns = $indexDefs->getColumnList();
-                    $flags = $indexDefs->getFlagList();
+                    foreach ($ignoreFlags as $ignoreFlag) {
+                        if (($flagKey = array_search($ignoreFlag, $flags)) !== false) {
+                            unset($flags[$flagKey]);
 
-                    if ($flags !== []) {
-                        $skipIndex = false;
-
-                        foreach ($ignoreFlags as $ignoreFlag) {
-                            if (($flagKey = array_search($ignoreFlag, $flags)) !== false) {
-                                unset($flags[$flagKey]);
-
-                                $skipIndex = true;
-                            }
+                            $skipIndex = true;
                         }
-
-                        if ($skipIndex && empty($flags)) {
-                            continue;
-                        }
-
-                        $indexList[$entityType][$tableIndexName]['flags'] = $flags;
                     }
 
-                    if ($columns !== []) {
-                        $indexType = self::getIndexTypeByIndexDefs($indexDefs);
-
-                        // @todo Revise, may to be removed.
-                        $indexList[$entityType][$tableIndexName]['type'] = $indexType;
-
-                        $indexList[$entityType][$tableIndexName]['columns'] = array_map(
-                            fn ($item) => Util::toUnderScore($item),
-                            $columns
-                        );
+                    if ($skipIndex && empty($flags)) {
+                        continue;
                     }
+
+                    $indexList[$entityType][$tableIndexName]['flags'] = $flags;
+                }
+
+                if ($columns !== []) {
+                    $indexType = self::getIndexTypeByIndexDefs($indexDefs);
+
+                    // @todo Revise, may to be removed.
+                    $indexList[$entityType][$tableIndexName]['type'] = $indexType;
+
+                    $indexList[$entityType][$tableIndexName]['columns'] = array_map(
+                        fn ($item) => Util::toUnderScore($item),
+                        $columns
+                    );
                 }
             }
         }
 
         /** @var array<string, array<string, mixed>> */
-        return $indexList;
-    }
-
-    /**
-     * @param array<string, mixed> $fieldDefs
-     */
-    private static function getIndexTypeByFieldDefs(array $fieldDefs): ?string
-    {
-        if ($fieldDefs['type'] != 'id' && isset($fieldDefs['unique']) && $fieldDefs['unique']) {
-            return 'unique';
-        }
-
-        if (isset($fieldDefs['index']) && $fieldDefs['index']) {
-            return 'index';
-        }
-
-        return null;
-    }
-
-    /**
-     * @param array<string, mixed> $fieldDefs
-     */
-    private static function getIndexNameByFieldDefs(string $fieldName, array $fieldDefs): ?string
-    {
-        $indexType = self::getIndexTypeByFieldDefs($fieldDefs);
-
-        if ($indexType) {
-            $keyValue = $fieldDefs[$indexType];
-
-            if ($keyValue === true) {
-                return $fieldName;
-            }
-
-            if (is_string($keyValue)) {
-                return $keyValue;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @param array<string, mixed> $fieldsDefs
-     * @return array<string, mixed>
-     */
-    public static function getEntityIndexListByFieldsDefs(array $fieldsDefs, bool $isTableColumnNames = false): array
-    {
-        $indexList = [];
-
-        foreach ($fieldsDefs as $fieldName => $fieldParams) {
-            if (isset($fieldParams['notStorable']) && $fieldParams['notStorable']) {
-                continue;
-            }
-
-            $indexType = self::getIndexTypeByFieldDefs($fieldParams);
-            $indexName = self::getIndexNameByFieldDefs($fieldName, $fieldParams);
-
-            if (!$indexType || !$indexName) {
-                continue;
-            }
-
-            $keyValue = $fieldParams[$indexType];
-
-            $columnName = $isTableColumnNames ? Util::toUnderScore($fieldName) : $fieldName;
-
-            if ($keyValue === true) {
-                $indexList[$indexName]['type'] = $indexType;
-                $indexList[$indexName]['columns'] = [$columnName];
-            }
-            else if (is_string($keyValue)) {
-                $indexList[$indexName]['type'] = $indexType;
-                $indexList[$indexName]['columns'][] = $columnName;
-            }
-        }
-
-        /** @var array<string,mixed> */
         return $indexList;
     }
 
@@ -187,23 +108,6 @@ class Utils
         }
 
         return 'index';
-    }
-
-    /**
-     * @todo Move to IndexHelper interface.
-     */
-    public static function generateIndexName(IndexDefs $defs, string $entityType): string
-    {
-        $maxLength = 60;
-
-        $name = $defs->getName();
-        $prefix = $defs->isUnique() ? 'UNIQ' : 'IDX';
-
-        $parts = [$prefix, strtoupper(Util::toUnderScore($name))];
-
-        $key = implode('_', $parts);
-
-        return substr($key, 0, $maxLength);
     }
 
     /**
