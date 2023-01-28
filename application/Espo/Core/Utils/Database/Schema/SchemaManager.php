@@ -64,7 +64,7 @@ class SchemaManager
         private MetadataProvider $metadataProvider,
         private InjectableFactory $injectableFactory
     ) {
-        $this->comparator = new Comparator();
+        $this->comparator = new Comparator($this->getPlatform());
 
         $this->initFieldTypes();
 

@@ -31,11 +31,13 @@ namespace Espo\Core\Utils\Database\DBAL\Traits\Schema;
 
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Types\TextType;
+use Espo\Core\Utils\Database\DBAL\Types\LongtextType;
+use Espo\Core\Utils\Database\DBAL\Types\MediumtextType;
 
 trait Comparator
 {
     /**
-     * Fix problem with executing query for custom types
+     * Fix problem with executing query for custom types.
      *
      * @param string[] $changedProperties
      * @return void
@@ -51,13 +53,17 @@ trait Comparator
 
         if (! $column1->getType() instanceof TextType) {
             $changedProperties[] = 'type';
+
             return;
         }
 
         $column1DbLength = $this->getColumnDbLength($column1);
         $column2DbLength = $this->getColumnDbLength($column2);
 
-        if ($column1DbLength && $column2DbLength && $column2DbLength > $column1DbLength) {
+        if (
+            $column1DbLength && $column2DbLength &&
+            $column2DbLength > $column1DbLength
+        ) {
             $changedProperties[] = 'type';
         }
     }
