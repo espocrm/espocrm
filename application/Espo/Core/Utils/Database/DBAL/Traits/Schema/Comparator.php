@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Utils\Database\DBAL\Traits\Schema;
 
-use Doctrine\DBAL\{
-    Schema\Column,
-    Types\TextType,
-};
+use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Types\TextType;
 
 trait Comparator
 {
@@ -71,9 +69,8 @@ trait Comparator
     {
         $dbType = $column->getType()->getName();
 
-        if (method_exists($column->getType(), 'getDbTypeName')) {
-            $dbType = $column->getType()->getDbTypeName();
-        }
+        // Here was db type obtained by dbal type.
+        // Can't obtain it from Connection as the mapping is not public.
 
         return strtoupper($dbType);
     }

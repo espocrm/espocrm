@@ -30,15 +30,14 @@
 namespace Espo\Core\Utils\Database\DBAL\Schema;
 
 use Espo\Core\Utils\Database\DBAL\Traits\Schema\Comparator as ComparatorTrait;
-use Doctrine\DBAL\{
-    Types,
-    Schema\Table,
-    Schema\Column,
-    Schema\TableDiff,
-    Schema\ColumnDiff,
-    Schema\Index,
-    Schema\Comparator as OriginalComparator,
-};
+
+use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\ColumnDiff;
+use Doctrine\DBAL\Schema\Comparator as OriginalComparator;
+use Doctrine\DBAL\Schema\Index;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Schema\TableDiff;
+use Doctrine\DBAL\Types;
 
 class Comparator extends OriginalComparator
 {

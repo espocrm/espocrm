@@ -51,14 +51,9 @@ class Converter
     private const INDEX_TYPE_INDEX = 'index';
 
     /** @var array<string, int> */
-    private $defaultLength = [
-        'varchar' => 255,
-        'int' => 11,
-    ];
-
-    /** @var array<string, mixed> */
-    private $defaultValue = [
-        'bool' => false,
+    private $defaultLengthMap = [
+        Entity::VARCHAR => 255,
+        Entity::INT => 11,
     ];
 
     /**
@@ -93,7 +88,7 @@ class Converter
 
     /** @var array<string, mixed> */
     private $idParams = [
-        'dbType' => 'varchar',
+        'dbType' => Types::STRING,
         'len' => 24, // @todo Make configurable.
     ];
 
@@ -245,7 +240,7 @@ class Converter
         foreach ($ormMetadata as $entityType => &$entityParams) {
             foreach ($entityParams['fields'] as $attribute => &$attributeParams) {
 
-                /* remove fields without type */
+                // Remove fields without type.
                 if (
                     !isset($attributeParams['type']) &&
                     (!isset($attributeParams['notStorable']) || $attributeParams['notStorable'] === false)
@@ -259,7 +254,7 @@ class Converter
 
                 switch ($attributeType) {
                     case Entity::ID:
-                        if ($attributeParams['dbType'] != 'int') {
+                        if (empty($attributeParams['dbType'])) {
                             $attributeParams = array_merge($this->idParams, $attributeParams);
                         }
 
@@ -272,22 +267,27 @@ class Converter
                         break;
 
                     case Entity::FOREIGN_TYPE:
-                        $attributeParams['dbType'] = Entity::VARCHAR;
+                        $attributeParams['dbType'] = Types::STRING;
+
                         if (empty($attributeParams['len'])) {
-                            $attributeParams['len'] = $this->defaultLength['varchar'];
+                            $attributeParams['len'] = $this->defaultLengthMap[Entity::VARCHAR];
                         }
 
                         break;
 
                     case Entity::BOOL:
-                        $attributeParams['default'] = isset($attributeParams['default']) ?
-                            (bool) $attributeParams['default'] :
-                            $this->defaultValue['bool'];
+                        $attributeParams['default'] ??= false;
+                        $attributeParams['default'] = (bool) $attributeParams['default'];
+
+                        break;
+
+                    case Entity::PASSWORD:
+                        $attributeParams['dbType'] ??= Types::STRING;
 
                         break;
 
                     default:
-                        $constName = strtoupper(Util::toUnderScore($attributeParams['type']));
+                        $constName = strtoupper(Util::toUnderScore($attributeType));
 
                         if (!defined('Espo\\ORM\\Entity::' . $constName)) {
                             $attributeParams['type'] = $this->defaultAttributeType;
@@ -367,7 +367,6 @@ class Converter
         $output = [
             'id' => [
                 'type' => Entity::ID,
-                'dbType' => 'varchar',
             ],
             'name' => [
                 'type' => $entityMetadata['fields']['name']['type'] ?? Entity::VARCHAR,
@@ -576,11 +575,14 @@ class Converter
             $fieldDefs['notStorable'] = true;
         }
 
+        $type = $fieldDefs['type'] ?? null;
+
         if (
-            isset($fieldDefs['type']) && !isset($fieldDefs['len']) &&
-            in_array($fieldDefs['type'], array_keys($this->defaultLength))
+            $type &&
+            !isset($fieldDefs['len']) &&
+            array_key_exists($type, $this->defaultLengthMap)
         ) {
-            $fieldDefs['len'] = $this->defaultLength[$fieldDefs['type']];
+            $fieldDefs['len'] = $this->defaultLengthMap[$type];
         }
 
         return $fieldDefs;

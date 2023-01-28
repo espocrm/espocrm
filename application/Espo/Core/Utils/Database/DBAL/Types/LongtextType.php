@@ -27,14 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
+namespace Espo\Core\Utils\Database\DBAL\Types;
 
-use Doctrine\DBAL\Types\IntegerType;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\TextType;
 
-class IntType extends IntegerType
+/**
+ * MySQL only.
+ */
+class LongtextType extends TextType
 {
+    public const NAME = 'longtext';
+
     public function getName()
     {
-        return 'int';
+        return self::NAME;
+    }
+
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform)
+    {
+        return 'LONGTEXT';
     }
 }

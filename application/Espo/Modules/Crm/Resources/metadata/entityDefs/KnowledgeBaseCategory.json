@@ -92,7 +92,7 @@
             "fields": {
                 "id": {
                     "type": "id",
-                    "dbType": "int",
+                    "dbType": "integer",
                     "len": "11",
                     "autoincrement": true
                 },

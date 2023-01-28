@@ -8,7 +8,11 @@
             "preRebuildActionClassNameList": [
                 "Espo\\Core\\Utils\\Database\\Schema\\RebuildActions\\PrepareForFulltextIndex"
             ],
-            "postRebuildActionClassNameList": []
+            "postRebuildActionClassNameList": [],
+            "dbalTypeClassNameMap": {
+                "mediumtext": "Espo\\Core\\Utils\\Database\\DBAL\\Types\\MediumtextType",
+                "longtext": "Espo\\Core\\Utils\\Database\\DBAL\\Types\\LongtextType"
+            }
         },
         "Postgresql": {
             "dbalConnectionFactoryClassName": "Espo\\Core\\Utils\\Database\\DBAL\\Factories\\PostgresqlConnectionFactory"

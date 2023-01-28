@@ -435,7 +435,6 @@
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
-            "dbType": "text",
             "customizationDisabled": true,
             "layoutAvailabilityList": []
         },

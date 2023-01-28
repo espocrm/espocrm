@@ -27,27 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
+namespace Espo\Core\Utils\Database\DBAL\Types;
 
-use Doctrine\DBAL\Types\StringType;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\TextType;
 
-class PasswordType extends StringType
+/**
+ * MySQL only.
+ */
+class MediumtextType extends TextType
 {
-    const PASSWORD = 'password';
+    public const NAME = 'mediumtext';
 
-    /**
-     * @return string
-     */
     public function getName()
     {
-        return self::PASSWORD;
+        return self::NAME;
     }
 
-    /**
-     * @return string
-     */
-    public static function getDbTypeName()
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform)
     {
-        return 'VARCHAR';
+        return 'MEDIUMTEXT';
     }
 }

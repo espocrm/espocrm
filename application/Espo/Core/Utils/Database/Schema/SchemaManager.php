@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils\Database\Schema;
 
 use Doctrine\DBAL\Connection as DbalConnection;
+use Doctrine\DBAL\Exception as DbalException;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Schema as DbalSchema;
 use Doctrine\DBAL\Schema\SchemaDiff as DbalSchemaDiff;
@@ -40,10 +41,8 @@ use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Database\DBAL\Schema\Comparator;
 use Espo\Core\Utils\Database\Helper;
-use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata\OrmMetadataData;
-use Espo\Core\Utils\Util;
 
 use Throwable;
 
@@ -52,13 +51,13 @@ use Throwable;
  */
 class SchemaManager
 {
-    private string $fieldTypePath = 'application/Espo/Core/Utils/Database/DBAL/FieldTypes';
-
     private Comparator $comparator;
     private Builder $builder;
 
+    /**
+     * @throws DbalException
+     */
     public function __construct(
-        private FileManager $fileManager,
         private OrmMetadataData $ormMetadataData,
         private Log $log,
         private Helper $helper,
@@ -92,41 +91,19 @@ class SchemaManager
         return $this->getDatabaseHelper()->getDbalConnection();
     }
 
+    /**
+     * @throws DbalException
+     */
     private function initFieldTypes(): void
     {
-        /** @var string[] $typeList */
-        $typeList = $this->fileManager->getFileList($this->fieldTypePath, false, '\.php$');
-
-        foreach ($typeList as $name) {
-            /** @var string $typeName */
-            $typeName = preg_replace('/Type\.php$/i', '', $name);
-            $dbalTypeName = strtolower($typeName);
-
-            $filePath = Util::concatPath($this->fieldTypePath, $typeName . 'Type');
-
-            /** @var class-string<Type> $class */
-            $class = Util::getClassName($filePath);
-
-            if (!Type::hasType($dbalTypeName)) {
-                Type::addType($dbalTypeName, $class);
-            }
-            else {
-                Type::overrideType($dbalTypeName, $class);
-            }
-
-            if (method_exists($class, 'getDbTypeName')) {
-                /** @var callable $getDbTypeNameCallable */
-                $getDbTypeNameCallable = [$class, 'getDbTypeName'];
-
-                $dbTypeName = call_user_func($getDbTypeNameCallable);
-            }
-            else {
-                $dbTypeName = $dbalTypeName;
-            }
+        foreach ($this->metadataProvider->getDbalTypeClassNameMap() as $type => $className) {
+            Type::hasType($type) ?
+                Type::overrideType($type, $className) :
+                Type::addType($type, $className);
 
             $this->getDbalConnection()
                 ->getDatabasePlatform()
-                ->registerDoctrineTypeMapping($dbTypeName, $dbalTypeName);
+                ->registerDoctrineTypeMapping($type, $type);
         }
     }
 

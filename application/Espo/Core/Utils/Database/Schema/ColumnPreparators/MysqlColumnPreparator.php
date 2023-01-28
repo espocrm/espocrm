@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils\Database\Schema\ColumnPreparators;
 
+use Doctrine\DBAL\Types\Types;
+use Espo\Core\Utils\Database\DBAL\Types\MediumtextType;
 use Espo\Core\Utils\Database\Helper;
 use Espo\Core\Utils\Database\Schema\Column;
 use Espo\Core\Utils\Database\Schema\ColumnPreparator;
@@ -52,6 +54,20 @@ class MysqlColumnPreparator implements ColumnPreparator
     private const MB4_INDEX_LENGTH_LIMIT = 3072;
     private const DEFAULT_INDEX_LIMIT = 1000;
 
+    /** @var string[] */
+    private array $mediumTextTypeList = [
+        Entity::TEXT,
+        Entity::JSON_OBJECT,
+        Entity::JSON_ARRAY,
+    ];
+
+    /** @var array<string, string> */
+    private array $columnTypeMap = [
+        Entity::BOOL => Types::BOOLEAN,
+        Entity::INT => Types::INTEGER,
+        Entity::VARCHAR => Types::STRING,
+    ];
+
     private ?int $maxIndexLength = null;
 
     public function __construct(
@@ -60,11 +76,7 @@ class MysqlColumnPreparator implements ColumnPreparator
 
     public function prepare(AttributeDefs $defs): Column
     {
-        $columnType = $defs->getParam(self::PARAM_DB_TYPE) ?? $defs->getType();
-        $columnName = Util::toUnderScore($defs->getName());
-
-        $column = Column::create($columnName, strtolower($columnType));
-
+        $dbType = $defs->getParam(self::PARAM_DB_TYPE);
         $type = $defs->getType();
         $length = $defs->getLength();
         $default = $defs->getParam(self::PARAM_DEFAULT);
@@ -73,6 +85,18 @@ class MysqlColumnPreparator implements ColumnPreparator
         $precision = $defs->getParam(self::PARAM_PRECISION);
         $scale = $defs->getParam(self::PARAM_SCALE);
         $binary = $defs->getParam(self::PARAM_BINARY);
+
+        $columnType = $dbType ?? $type;
+
+        if (in_array($type, $this->mediumTextTypeList) && !$dbType) {
+            $columnType = MediumtextType::NAME;
+        }
+
+        $columnType = $this->columnTypeMap[$columnType] ?? $columnType;
+
+        $columnName = Util::toUnderScore($defs->getName());
+
+        $column = Column::create($columnName, strtolower($columnType));
 
         if ($length !== null) {
             $column = $column->withLength($length);

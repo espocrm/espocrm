@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
+use Doctrine\DBAL\Types\Type;
 use Espo\Core\Utils\Database\ConfigDataProvider;
 use Espo\Core\Utils\Metadata;
 
@@ -62,5 +63,15 @@ class MetadataProvider
         /** @var class-string<RebuildAction>[] */
         return $this->metadata
             ->get(['app', 'database', 'platforms', $this->getPlatform(), 'postRebuildActionClassNameList']) ?? [];
+    }
+
+    /**
+     * @return array<string, class-string<Type>>
+     */
+    public function getDbalTypeClassNameMap(): array
+    {
+        /** @var array<string, class-string<Type>> */
+        return $this->metadata
+            ->get(['app', 'database', 'platforms', $this->getPlatform(), 'dbalTypeClassNameMap']) ?? [];
     }
 }

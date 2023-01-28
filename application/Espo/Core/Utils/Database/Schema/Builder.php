@@ -53,6 +53,7 @@ use Doctrine\DBAL\Types\Type as DbalType;
  */
 class Builder
 {
+    private const ID_DB_TYPE = Types::STRING;
     private const ID_LENGTH = 24; // @todo Make configurable.
 
     private const ATTR_ID = 'id';
@@ -317,8 +318,8 @@ class Builder
         foreach ($midKeys as $midKey) {
             $column = $this->columnPreparator->prepare(
                 AttributeDefs::fromRaw([
-                    'dbType' => Entity::VARCHAR,
                     'type' => Entity::FOREIGN_ID,
+                    'dbType' => self::ID_DB_TYPE,
                     'len' => self::ID_LENGTH,
                 ], $midKey)
             );
