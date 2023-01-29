@@ -166,7 +166,7 @@ class Email extends Base
                 'order' => [
                     ['emailAddresses.lower', '{direction}'],
                 ],
-                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
+                'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => true]]],
                 'additionalSelect' => ['emailAddresses.lower'],
             ],
         ];

@@ -331,7 +331,7 @@ class EmailAddress extends Database implements
             ->join(
                 EmailAddressEntity::ENTITY_TYPE,
                 'ea',
-                ['ea.id:' => 'emailAddressId', 'ea.deleted' => 0]
+                ['ea.id:' => 'emailAddressId', 'ea.deleted' => false]
             )
             ->where('ea.lower=', strtolower($address))
             ->order([
