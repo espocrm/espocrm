@@ -67,6 +67,6 @@ class ImageSourceProvider
 
         $contents = $this->fileStorageManager->getContents($attachment);
 
-        return 'data:image/' . $type . ';base64,' . base64_encode($contents);
+        return 'data:' . $type . ';base64,' . base64_encode($contents);
     }
 }
