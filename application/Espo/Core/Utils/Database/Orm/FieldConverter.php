@@ -27,44 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\Orm\Fields;
+namespace Espo\Core\Utils\Database\Orm;
+
+use Espo\ORM\Defs\FieldDefs;
+use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 
 /**
- * @deprecated As of v7.4. Use FieldConverter.
+ * Converts field definitions to ORM definitions.
  */
-class Base extends \Espo\Core\Utils\Database\Orm\Base
+interface FieldConverter
 {
-    /**
-     * ORM conversion for fields.
-     *
-     * @param string $itemName A field name.
-     * @param string $entityName
-     * @return array<string,mixed>
-     */
-    public function process($itemName, $entityName)
-    {
-        $inputs = [
-            'itemName' => $itemName,
-            'entityName' => $entityName,
-        ];
-
-        $this->setMethods($inputs);
-
-        $convertedDefs = $this->load($itemName, $entityName);
-
-        $inputs = $this->setArrayValue(null, $inputs);
-        $this->setMethods($inputs);
-
-        return $convertedDefs;
-    }
-
-    /**
-     * @param string $fieldName
-     * @param string $entityType
-     * @return array<string,mixed>
-     */
-    protected function load($fieldName, $entityType)
-    {
-        return [];
-    }
+    public function convert(FieldDefs $fieldDefs, string $entityType): EntityDefs;
 }

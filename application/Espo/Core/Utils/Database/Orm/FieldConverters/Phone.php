@@ -27,24 +27,108 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\Orm\Fields;
+namespace Espo\Core\Utils\Database\Orm\FieldConverters;
 
-use Espo\ORM\Entity;
+use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
+use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
+use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
+use Espo\Core\Utils\Database\Orm\FieldConverter;
+use Espo\Entities\PhoneNumber;
+use Espo\ORM\Defs\FieldDefs;
+use Espo\ORM\Type\AttributeType;
+use Espo\ORM\Type\RelationType;
 
-class Phone extends Base
+class Phone implements FieldConverter
 {
-    /**
-     * @param string $fieldName
-     * @param string $entityType
-     * @return array<string,mixed>
-     */
-    protected function load($fieldName, $entityType)
-    {
-        $foreignJoinAlias = "{$fieldName}{$entityType}{alias}Foreign";
-        $foreignJoinMiddleAlias = "{$fieldName}{$entityType}{alias}ForeignMiddle";
+    private const COLUMN_ENTITY_TYPE_LENGTH = 100;
 
-        $mainFieldDefs = [
-            'type' => 'varchar',
+    public function convert(FieldDefs $fieldDefs, string $entityType): EntityDefs
+    {
+        $name = $fieldDefs->getName();
+
+        $foreignJoinAlias = "{$name}{$entityType}{alias}Foreign";
+        $foreignJoinMiddleAlias = "{$name}{$entityType}{alias}ForeignMiddle";
+
+        $emailAddressDefs = AttributeDefs
+            ::create($name)
+            ->withType(AttributeType::VARCHAR)
+            ->withParamsMerged(
+                $this->getPhoneNumberParams($entityType, $foreignJoinAlias, $foreignJoinMiddleAlias)
+            );
+
+        $dataDefs = AttributeDefs
+            ::create($name . 'Data')
+            ->withType(AttributeType::JSON_ARRAY)
+            ->withNotStorable()
+            ->withParamsMerged([
+                'notExportable' => true,
+                'isPhoneNumberData' => true,
+                'field' => $name,
+            ]);
+
+        $isOptedOutDefs = AttributeDefs
+            ::create($name . 'IsOptedOut')
+            ->withType(AttributeType::BOOL)
+            ->withNotStorable()
+            ->withParamsMerged(
+                $this->getIsOptedOutParams($foreignJoinAlias, $foreignJoinMiddleAlias)
+            );
+
+        $isInvalidDefs = AttributeDefs
+            ::create($name . 'IsInvalid')
+            ->withType(AttributeType::BOOL)
+            ->withNotStorable()
+            ->withParamsMerged(
+                $this->getIsInvalidParams($foreignJoinAlias, $foreignJoinMiddleAlias)
+            );
+
+        $numericAttribute = AttributeDefs
+            ::create($name . 'Numeric')
+            ->withType(AttributeType::VARCHAR)
+            ->withNotStorable()
+            ->withParamsMerged(
+                $this->getNumericParams($entityType)
+            );
+
+        $relationDefs = RelationDefs
+            ::create('phoneNumbers')
+            ->withType(RelationType::MANY_MANY)
+            ->withForeignEntityType(PhoneNumber::ENTITY_TYPE)
+            ->withRelationshipName('entityPhoneNumber')
+            ->withMidKeys('entityId', 'phoneNumberId')
+            ->withConditions(['entityType' => $entityType])
+            ->withAdditionalColumn(
+                AttributeDefs
+                    ::create('entityType')
+                    ->withType(AttributeType::VARCHAR)
+                    ->withLength(self::COLUMN_ENTITY_TYPE_LENGTH)
+            )
+            ->withAdditionalColumn(
+                AttributeDefs
+                    ::create('primary')
+                    ->withType(AttributeType::BOOL)
+                    ->withDefault(false)
+            );
+
+        return EntityDefs::create()
+            ->withAttribute($emailAddressDefs)
+            ->withAttribute($dataDefs)
+            ->withAttribute($isOptedOutDefs)
+            ->withAttribute($isInvalidDefs)
+            ->withAttribute($numericAttribute)
+            ->withRelation($relationDefs);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function getPhoneNumberParams(
+        string $entityType,
+        string $foreignJoinAlias,
+        string $foreignJoinMiddleAlias,
+    ): array {
+
+        return [
             'select' => [
                 "select" => "phoneNumbers.name",
                 'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
@@ -62,7 +146,7 @@ class Phone extends Base
                         ]
                     ],
                     [
-                        'PhoneNumber',
+                        PhoneNumber::ENTITY_TYPE,
                         $foreignJoinAlias,
                         [
                             "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.phoneNumberId",
@@ -124,42 +208,42 @@ class Phone extends Base
                     'whereClause' => [
                         'phoneNumbersMultiple.name=' => '{value}',
                     ],
-                    'distinct' => true
+                    'distinct' => true,
                 ],
                 '<>' => [
                     'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
                         'phoneNumbersMultiple.name!=' => '{value}',
                     ],
-                    'distinct' => true
+                    'distinct' => true,
                 ],
                 'IN' => [
                     'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
                         'phoneNumbersMultiple.name=' => '{value}',
                     ],
-                    'distinct' => true
+                    'distinct' => true,
                 ],
                 'NOT IN' => [
                     'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
                         'phoneNumbersMultiple.name!=' => '{value}',
                     ],
-                    'distinct' => true
+                    'distinct' => true,
                 ],
                 'IS NULL' => [
                     'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
                         'phoneNumbersMultiple.name=' => null,
                     ],
-                    'distinct' => true
+                    'distinct' => true,
                 ],
                 'IS NOT NULL' => [
                     'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
                         'phoneNumbersMultiple.name!=' => null,
                     ],
-                    'distinct' => true
+                    'distinct' => true,
                 ],
             ],
             'order' => [
@@ -170,10 +254,134 @@ class Phone extends Base
                 'additionalSelect' => ['phoneNumbers.name'],
             ],
         ];
+    }
 
-        $numbericFieldDefs = [
-            'type' => 'varchar',
-            'notStorable' => true,
+    /**
+     * @return array<string, mixed>
+     */
+    private function getIsOptedOutParams(string $foreignJoinAlias, string $foreignJoinMiddleAlias): array
+    {
+        return [
+            'select' => [
+                'select' => 'phoneNumbers.optOut',
+                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
+            ],
+            'selectForeign' => [
+                'select' => "{$foreignJoinAlias}.optOut",
+                'leftJoins' => [
+                    [
+                        'EntityPhoneNumber',
+                        $foreignJoinMiddleAlias,
+                        [
+                            "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
+                            "{$foreignJoinMiddleAlias}.primary" => true,
+                            "{$foreignJoinMiddleAlias}.deleted" => false,
+                        ]
+                    ],
+                    [
+                        PhoneNumber::ENTITY_TYPE,
+                        $foreignJoinAlias,
+                        [
+                            "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.phoneNumberId",
+                            "{$foreignJoinAlias}.deleted" => false,
+                        ]
+                    ]
+                ],
+            ],
+            'where' => [
+                '= TRUE' => [
+                    'whereClause' => [
+                        ['phoneNumbers.optOut=' => true],
+                        ['phoneNumbers.optOut!=' => null],
+                    ],
+                    'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
+                ],
+                '= FALSE' => [
+                    'whereClause' => [
+                        'OR' => [
+                            ['phoneNumbers.optOut=' => false],
+                            ['phoneNumbers.optOut=' => null],
+                        ]
+                    ],
+                    'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
+                ]
+            ],
+            'order' => [
+                'order' => [
+                    ['phoneNumbers.optOut', '{direction}'],
+                ],
+                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
+                'additionalSelect' => ['phoneNumbers.optOut'],
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function getIsInvalidParams(string $foreignJoinAlias, string $foreignJoinMiddleAlias): array
+    {
+        return [
+            'select' => [
+                'select' => 'phoneNumbers.invalid',
+                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
+            ],
+            'selectForeign' => [
+                'select' => "{$foreignJoinAlias}.invalid",
+                'leftJoins' => [
+                    [
+                        'EntityPhoneNumber',
+                        $foreignJoinMiddleAlias,
+                        [
+                            "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
+                            "{$foreignJoinMiddleAlias}.primary" => true,
+                            "{$foreignJoinMiddleAlias}.deleted" => false,
+                        ]
+                    ],
+                    [
+                        PhoneNumber::ENTITY_TYPE,
+                        $foreignJoinAlias,
+                        [
+                            "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.phoneNumberId",
+                            "{$foreignJoinAlias}.deleted" => false,
+                        ]
+                    ]
+                ],
+            ],
+            'where' => [
+                '= TRUE' => [
+                    'whereClause' => [
+                        ['phoneNumbers.invalid=' => true],
+                        ['phoneNumbers.invalid!=' => null],
+                    ],
+                    'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
+                ],
+                '= FALSE' => [
+                    'whereClause' => [
+                        'OR' => [
+                            ['phoneNumbers.invalid=' => false],
+                            ['phoneNumbers.invalid=' => null],
+                        ]
+                    ],
+                    'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
+                ]
+            ],
+            'order' => [
+                'order' => [
+                    ['phoneNumbers.invalid', '{direction}'],
+                ],
+                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
+                'additionalSelect' => ['phoneNumbers.invalid'],
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function getNumericParams(string $entityType): array
+    {
+        return [
             'notExportable' => true,
             'where' => [
                 'LIKE' => [
@@ -263,153 +471,6 @@ class Phone extends Base
                         'phoneNumbersMultiple.numeric!=' => null,
                     ],
                     'distinct' => true
-                ],
-            ],
-        ];
-
-        return [
-            $entityType => [
-                'fields' => [
-                    $fieldName => $mainFieldDefs,
-                    $fieldName . 'Data' => [
-                        'type' => Entity::JSON_ARRAY,
-                        'notStorable' => true,
-                        'notExportable' => true,
-                        'isPhoneNumberData' => true,
-                        'field' => $fieldName,
-                    ],
-                    $fieldName .'IsOptedOut' => [
-                        'type' => 'bool',
-                        'notStorable' => true,
-                        'select' => [
-                            'select' => 'phoneNumbers.optOut',
-                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
-                        ],
-                        'selectForeign' => [
-                            'select' => "{$foreignJoinAlias}.optOut",
-                            'leftJoins' => [
-                                [
-                                    'EntityPhoneNumber',
-                                    $foreignJoinMiddleAlias,
-                                    [
-                                        "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
-                                        "{$foreignJoinMiddleAlias}.primary" => true,
-                                        "{$foreignJoinMiddleAlias}.deleted" => false,
-                                    ]
-                                ],
-                                [
-                                    'PhoneNumber',
-                                    $foreignJoinAlias,
-                                    [
-                                        "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.phoneNumberId",
-                                        "{$foreignJoinAlias}.deleted" => false,
-                                    ]
-                                ]
-                            ],
-                        ],
-                        'where' => [
-                            '= TRUE' => [
-                                'whereClause' => [
-                                    ['phoneNumbers.optOut=' => true],
-                                    ['phoneNumbers.optOut!=' => null],
-                                ],
-                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
-                            ],
-                            '= FALSE' => [
-                                'whereClause' => [
-                                    'OR' => [
-                                        ['phoneNumbers.optOut=' => false],
-                                        ['phoneNumbers.optOut=' => null],
-                                    ]
-                                ],
-                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
-                            ]
-                        ],
-                       'order' => [
-                            'order' => [
-                                ['phoneNumbers.optOut', '{direction}'],
-                            ],
-                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
-                            'additionalSelect' => ['phoneNumbers.optOut'],
-                        ],
-                    ],
-                    $fieldName .'IsInvalid' => [
-                        'type' => 'bool',
-                        'notStorable' => true,
-                        'select' => [
-                            'select' => 'phoneNumbers.invalid',
-                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
-                        ],
-                        'selectForeign' => [
-                            'select' => "{$foreignJoinAlias}.invalid",
-                            'leftJoins' => [
-                                [
-                                    'EntityPhoneNumber',
-                                    $foreignJoinMiddleAlias,
-                                    [
-                                        "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
-                                        "{$foreignJoinMiddleAlias}.primary" => true,
-                                        "{$foreignJoinMiddleAlias}.deleted" => false,
-                                    ]
-                                ],
-                                [
-                                    'PhoneNumber',
-                                    $foreignJoinAlias,
-                                    [
-                                        "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.phoneNumberId",
-                                        "{$foreignJoinAlias}.deleted" => false,
-                                    ]
-                                ]
-                            ],
-                        ],
-                        'where' => [
-                            '= TRUE' => [
-                                'whereClause' => [
-                                    ['phoneNumbers.invalid=' => true],
-                                    ['phoneNumbers.invalid!=' => null],
-                                ],
-                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
-                            ],
-                            '= FALSE' => [
-                                'whereClause' => [
-                                    'OR' => [
-                                        ['phoneNumbers.invalid=' => false],
-                                        ['phoneNumbers.invalid=' => null],
-                                    ]
-                                ],
-                                'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
-                            ]
-                        ],
-                        'order' => [
-                            'order' => [
-                                ['phoneNumbers.invalid', '{direction}'],
-                            ],
-                            'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
-                            'additionalSelect' => ['phoneNumbers.invalid'],
-                        ],
-                    ],
-                    $fieldName . 'Numeric' => $numbericFieldDefs,
-                ],
-                'relations' => [
-                    'phoneNumbers' => [
-                        'type' => 'manyMany',
-                        'entity' => 'PhoneNumber',
-                        'relationName' => 'entityPhoneNumber',
-                        'midKeys' => ['entityId', 'phoneNumberId'],
-                        'conditions' => [
-                            'entityType' => $entityType,
-                        ],
-                        'additionalColumns' => [
-                            'entityType' => [
-                                'type' => 'varchar',
-                                'len' => 100
-                            ],
-                            'primary' => [
-                                'type' => 'bool',
-                                'default' => false
-                            ],
-                        ],
-                    ],
                 ],
             ],
         ];

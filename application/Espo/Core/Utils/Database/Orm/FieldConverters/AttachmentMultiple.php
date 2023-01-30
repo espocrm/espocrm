@@ -27,44 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\Orm\Fields;
+namespace Espo\Core\Utils\Database\Orm\FieldConverters;
 
-/**
- * @deprecated As of v7.4. Use FieldConverter.
- */
-class Base extends \Espo\Core\Utils\Database\Orm\Base
+use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
+use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
+use Espo\Core\Utils\Database\Orm\FieldConverter;
+use Espo\ORM\Defs\FieldDefs;
+use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Type\AttributeType;
+
+class AttachmentMultiple implements FieldConverter
 {
-    /**
-     * ORM conversion for fields.
-     *
-     * @param string $itemName A field name.
-     * @param string $entityName
-     * @return array<string,mixed>
-     */
-    public function process($itemName, $entityName)
+    public function convert(FieldDefs $fieldDefs, string $entityType): EntityDefs
     {
-        $inputs = [
-            'itemName' => $itemName,
-            'entityName' => $entityName,
-        ];
+        $name = $fieldDefs->getName();
 
-        $this->setMethods($inputs);
-
-        $convertedDefs = $this->load($itemName, $entityName);
-
-        $inputs = $this->setArrayValue(null, $inputs);
-        $this->setMethods($inputs);
-
-        return $convertedDefs;
-    }
-
-    /**
-     * @param string $fieldName
-     * @param string $entityType
-     * @return array<string,mixed>
-     */
-    protected function load($fieldName, $entityType)
-    {
-        return [];
+        return EntityDefs::create()
+            ->withAttribute(
+                AttributeDefs::create($name . 'Ids')
+                    ->withType(AttributeType::JSON_ARRAY)
+                    ->withNotStorable()
+                    ->withParamsMerged([
+                        'orderBy' => [
+                            ['createdAt', Order::ASC],
+                            ['name', Order::ASC],
+                        ],
+                        'isLinkMultipleIdList' => true,
+                        'relation' => $name,
+                    ])
+            )
+            ->withAttribute(
+                AttributeDefs::create($name . 'Names')
+                    ->withType(AttributeType::JSON_OBJECT)
+                    ->withNotStorable()
+                    ->withParamsMerged([
+                        'isLinkMultipleNameMap' => true,
+                    ])
+            );
     }
 }

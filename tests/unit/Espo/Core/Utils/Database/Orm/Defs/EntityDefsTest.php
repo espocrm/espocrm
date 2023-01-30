@@ -27,44 +27,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\Orm\Fields;
+namespace tests\unit\Espo\Core\Utils\Database\Orm\Defs;
 
-/**
- * @deprecated As of v7.4. Use FieldConverter.
- */
-class Base extends \Espo\Core\Utils\Database\Orm\Base
+use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
+use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
+use Espo\Core\Utils\Database\Orm\Defs\IndexDefs;
+use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
+use Espo\ORM\Type\AttributeType;
+use Espo\ORM\Type\RelationType;
+use PHPUnit\Framework\TestCase;
+
+class EntityDefsTest extends TestCase
 {
-    /**
-     * ORM conversion for fields.
-     *
-     * @param string $itemName A field name.
-     * @param string $entityName
-     * @return array<string,mixed>
-     */
-    public function process($itemName, $entityName)
+    public function testWith(): void
     {
-        $inputs = [
-            'itemName' => $itemName,
-            'entityName' => $entityName,
-        ];
+        $entityDefs = EntityDefs::create();
 
-        $this->setMethods($inputs);
+        $a1 = AttributeDefs::create('a1')->withType(AttributeType::VARCHAR);
+        $a2 = AttributeDefs::create('a2')->withType(AttributeType::INT);
+        $r1 = RelationDefs::create('r1')->withType(RelationType::MANY_MANY);
+        $i1 = IndexDefs::create('i1')->withParam('key', 'KEY_1');
 
-        $convertedDefs = $this->load($itemName, $entityName);
+        $entityDefs = $entityDefs
+            ->withAttribute($a1)
+            ->withAttribute($a2)
+            ->withRelation($r1)
+            ->withIndex($i1);
 
-        $inputs = $this->setArrayValue(null, $inputs);
-        $this->setMethods($inputs);
-
-        return $convertedDefs;
-    }
-
-    /**
-     * @param string $fieldName
-     * @param string $entityType
-     * @return array<string,mixed>
-     */
-    protected function load($fieldName, $entityType)
-    {
-        return [];
+        $this->assertEquals([
+            'fields' => [
+                'a1' => $a1->toAssoc(),
+                'a2' => $a2->toAssoc(),
+            ],
+            'relations' => [
+                'r1' => $r1->toAssoc(),
+            ],
+            'indexes' => [
+                'i1' => $i1->toAssoc(),
+            ],
+        ], $entityDefs->toAssoc());
     }
 }

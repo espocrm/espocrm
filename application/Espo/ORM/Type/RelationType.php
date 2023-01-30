@@ -27,43 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\Orm\Fields;
+namespace Espo\ORM\Type;
 
-class LinkOne extends Base
+class RelationType
 {
-    /**
-     * @param string $fieldName
-     * @param string $entityType
-     * @return array<string,mixed>
-     */
-    protected function load($fieldName, $entityType)
-    {
-        $fieldParams = $this->getFieldParams();
-
-        $data = [
-            $entityType => [
-                'fields' => [
-                    $fieldName.'Id' => [
-                        'type' => 'varchar',
-                        'notStorable' => true,
-                        'attributeRole' => 'id',
-                        'fieldType' => 'linkOne',
-                    ],
-                    $fieldName.'Name' => [
-                        'type' => 'varchar',
-                        'notStorable' => true,
-                        'attributeRole' => 'name',
-                        'fieldType' => 'linkOne',
-                    ]
-                ]
-            ],
-            'unset' => [
-                $entityType => [
-                    'fields.' . $fieldName,
-                ]
-            ]
-        ];
-
-        return $data;
-    }
+    public const MANY_MANY = 'manyMany';
+    public const HAS_MANY = 'hasMany';
+    public const BELONGS_TO = 'belongsTo';
+    public const HAS_ONE = 'hasOne';
+    public const BELONGS_TO_PARENT = 'belongsToParent';
+    public const HAS_CHILDREN = 'hasChildren';
 }

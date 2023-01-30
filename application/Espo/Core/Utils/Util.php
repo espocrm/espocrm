@@ -439,8 +439,8 @@ class Util
     /**
      * Unset content items defined in the unset.json.
      *
-     * @param array<mixed,mixed> $content
-     * @param string|array<mixed,string> $unsets in format
+     * @param array<mixed, mixed> $content
+     * @param string|array<mixed, string|string[]> $unsets in format
      *  [
      *      'EntityType1' => [ 'unset1', 'unset2'],
      *      'EntityType2' => ['unset1', 'unset2'],
@@ -451,7 +451,7 @@ class Util
      *  'EntityType1.unset1'
      * @param bool $unsetParentEmptyArray If unset empty parent array after unsets
      *
-     * @return array<mixed,mixed>
+     * @return array<mixed, mixed>
      */
     public static function unsetInArray(array $content, $unsets, bool $unsetParentEmptyArray = false)
     {

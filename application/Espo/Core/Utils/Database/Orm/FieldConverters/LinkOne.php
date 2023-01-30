@@ -27,36 +27,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\Orm\Fields;
+namespace Espo\Core\Utils\Database\Orm\FieldConverters;
 
-class AttachmentMultiple extends Base
+use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
+use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
+use Espo\Core\Utils\Database\Orm\FieldConverter;
+use Espo\ORM\Defs\FieldDefs;
+use Espo\ORM\Type\AttributeType;
+
+class LinkOne implements FieldConverter
 {
-    protected function load($fieldName, $entityType)
+    public function convert(FieldDefs $fieldDefs, string $entityType): EntityDefs
     {
-        $data = array(
-            $entityType => array(
-                'fields' => array(
-                    $fieldName.'Ids' => array(
-                        'type' => 'jsonArray',
-                        'notStorable' => true,
-                        'orderBy' => [['createdAt', 'ASC'], ['name', 'ASC']],
-                        'isLinkMultipleIdList' => true,
-                        'relation' => $fieldName
-                    ),
-                    $fieldName.'Names' => array(
-                        'type' => 'jsonObject',
-                        'notStorable' => true,
-                        'isLinkMultipleNameMap' => true
-                    )
-                )
-            ),
-            'unset' => array(
-                $entityType => array(
-                    'fields.'.$fieldName,
-                )
-            )
-        );
+        $name = $fieldDefs->getName();
 
-        return $data;
+        return EntityDefs::create()
+            ->withAttribute(
+                AttributeDefs::create($name . 'Id')
+                    ->withType(AttributeType::VARCHAR)
+                    ->withNotStorable()
+                    ->withParamsMerged([
+                        'attributeRole' => 'id',
+                        'fieldType' => 'linkOne',
+                    ])
+            )
+            ->withAttribute(
+                AttributeDefs::create($name . 'Name')
+                    ->withType(AttributeType::VARCHAR)
+                    ->withNotStorable()
+                    ->withParamsMerged([
+                        'attributeRole' => 'name',
+                        'fieldType' => 'linkOne',
+                    ])
+            );
     }
 }

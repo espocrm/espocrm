@@ -37,6 +37,7 @@
         }
     },
     "naming": "prefix",
+    "converterClassName": "Espo\\Core\\Utils\\Database\\Orm\\FieldConverters\\PersonName",
     "notMergeable": true,
     "notCreatable": true,
     "filter": true,

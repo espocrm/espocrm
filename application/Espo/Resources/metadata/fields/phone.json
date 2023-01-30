@@ -57,6 +57,7 @@
             "customizationInlineEditDisabledDisabled": true
         }
     },
+    "converterClassName": "Espo\\Core\\Utils\\Database\\Orm\\FieldConverters\\Phone",
     "validationList": [
         "required",
         "valid",
