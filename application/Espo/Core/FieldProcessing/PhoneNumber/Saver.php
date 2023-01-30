@@ -163,7 +163,7 @@ class Saver implements SaverInterface
             $key = $phoneNumberValue;
 
             if (isset($hash->$key)) {
-                $hash->{$key}['optOut'] = $entity->get('phoneNumberIsOptedOut');
+                $hash->{$key}['optOut'] = (bool) $entity->get('phoneNumberIsOptedOut');
             }
         }
 
@@ -180,7 +180,7 @@ class Saver implements SaverInterface
             $key = $phoneNumberValue;
 
             if (isset($hash->$key)) {
-                $hash->{$key}['invalid'] = $entity->get('phoneNumberIsInvalid');
+                $hash->{$key}['invalid'] = (bool) $entity->get('phoneNumberIsInvalid');
             }
         }
 
