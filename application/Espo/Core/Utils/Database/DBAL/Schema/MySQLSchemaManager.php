@@ -29,16 +29,14 @@
 
 namespace Espo\Core\Utils\Database\DBAL\Schema;
 
-use Doctrine\DBAL\Schema\MySQLSchemaManager as OriginalComparator;
+use Doctrine\DBAL\Schema\MySQLSchemaManager as Original;
 
 // Espo: requires for the issue https://github.com/doctrine/dbal/issues/4496
 
 //use Doctrine\DBAL\Platforms\MariaDb1027Platform;
 //use Doctrine\DBAL\Platforms\MySQLPlatform;
-use Espo\Core\Utils\Database\DBAL\Platforms\{
-    MariaDb1027Platform,
-    MySQLPlatform,
-};
+use Espo\Core\Utils\Database\DBAL\Platforms\MariaDb1027Platform;
+use Espo\Core\Utils\Database\DBAL\Platforms\MySQLPlatform;
 
 use Doctrine\DBAL\Schema\Column;
 // Espo: end
@@ -59,7 +57,7 @@ use function strtr;
 
 use const CASE_LOWER;
 
-class MySQLSchemaManager extends OriginalComparator
+class MySQLSchemaManager extends Original
 {
     private const MARIADB_ESCAPE_SEQUENCES = [
         '\\0' => "\0",
