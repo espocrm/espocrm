@@ -184,11 +184,10 @@ class SchemaManager
      * Get SQL queries to get from one to another schema.
      *
      * @return string[] Array of SQL queries.
-     * @throws SchemaException
      */
     private function getDiffSql(DbalSchema $fromSchema, DbalSchema $toSchema)
     {
-        $schemaDiff = $this->comparator->compare($fromSchema, $toSchema);
+        $schemaDiff = $this->comparator->compareSchemas($fromSchema, $toSchema);
 
         return $this->toSql($schemaDiff);
     }

@@ -31,8 +31,6 @@ namespace Espo\Core\Utils\Database\DBAL\Traits\Schema;
 
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Types\TextType;
-use Espo\Core\Utils\Database\DBAL\Types\LongtextType;
-use Espo\Core\Utils\Database\DBAL\Types\MediumtextType;
 
 trait Comparator
 {
