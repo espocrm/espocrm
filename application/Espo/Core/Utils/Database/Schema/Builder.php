@@ -417,6 +417,10 @@ class Builder
             $result['platformOptions']['collation'] = $column->getCollation();
         }
 
+        if ($column->getCharset()) {
+            $result['platformOptions']['charset'] = $column->getCharset();
+        }
+
         return $result;
     }
 

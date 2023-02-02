@@ -29,24 +29,18 @@
 
 namespace tests\integration\Espo\Core\Utils\Database;
 
-use tests\unit\ReflectionHelper;
 use Espo\Core\Utils\Database\Helper;
 use Doctrine\DBAL\Connection;
-use Espo\Core\Exceptions\Error;
 use PDO;
-
-use RuntimeException;
 
 class HelperTest extends \tests\integration\Core\BaseTestCase
 {
+    /** @var ?Helper */
     protected $helper;
-    protected $reflection;
 
     protected function initTest()
     {
-        $this->helper =  $this->getInjectableFactory()->create(Helper::class);
-
-        $this->reflection = new ReflectionHelper($this->helper);
+        $this->helper = $this->getInjectableFactory()->create(Helper::class);
     }
 
     private function getDatabaseInfo()
@@ -84,41 +78,7 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
     {
         $this->initTest();
 
-        $this->assertInstanceOf(PDO::class, $this->helper->getPdoConnection());
-    }
-
-    public function testGetMaxIndexLength()
-    {
-        $this->initTest();
-
-        $databaseInfo = $this->getDatabaseInfo();
-        if (empty($databaseInfo)) {
-            return;
-        }
-
-        $expectedMaxIndexLength = 767;
-
-        switch ($databaseInfo['type']) {
-            case 'mysql':
-                if (version_compare($databaseInfo['version'], '5.7.0') >= 0) {
-                    $expectedMaxIndexLength = 3072;
-                }
-                break;
-
-            case 'mariadb':
-                if (version_compare($databaseInfo['version'], '10.2.2') >= 0) {
-                    $expectedMaxIndexLength = 3072;
-                }
-                break;
-        }
-
-        $engine = $this->reflection->invokeMethod('getTableEngine');
-        $result = ($engine == 'MyISAM') ? 1000 : $expectedMaxIndexLength;
-        $this->assertEquals($result, $this->helper->getMaxIndexLength());
-
-        $engine = $this->reflection->invokeMethod('getTableEngine', ['account']);
-        $result = ($engine == 'MyISAM') ? 1000 : $expectedMaxIndexLength;
-        $this->assertEquals($expectedMaxIndexLength, $this->helper->getMaxIndexLength('account'));
+        $this->assertInstanceOf(PDO::class, $this->helper->getPDO());
     }
 
     public function testGetDatabaseInfo()
@@ -130,8 +90,8 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
             return;
         }
 
-        $this->assertEquals($databaseInfo['type'], strtolower($this->helper->getDatabaseType()));
-        $this->assertEquals($databaseInfo['version'], $this->helper->getDatabaseVersion());
+        $this->assertEquals($databaseInfo['type'], strtolower($this->helper->getType()));
+        $this->assertEquals($databaseInfo['version'], $this->helper->getVersion());
     }
 
     public function testGetDatabaseType()
@@ -145,11 +105,11 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
 
         switch ($databaseInfo['type']) {
             case 'mysql':
-                $this->assertEquals('MySQL', $this->helper->getDatabaseType());
+                $this->assertEquals('MySQL', $this->helper->getType());
                 break;
 
             case 'mariadb':
-                $this->assertEquals('MariaDB', $this->helper->getDatabaseType());
+                $this->assertEquals('MariaDB', $this->helper->getType());
                 break;
         }
     }

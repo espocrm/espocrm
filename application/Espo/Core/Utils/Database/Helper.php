@@ -33,7 +33,7 @@ use Doctrine\DBAL\Connection as DbalConnection;
 
 use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\ORM\PDO\PDOFactoryFactory;
-use Espo\Core\Utils\Database\DBAL\ConnectionFactoryFactory as DBALConnectionFactoryFactory;
+use Espo\Core\Utils\Database\Dbal\ConnectionFactoryFactory as DBALConnectionFactoryFactory;
 use Espo\ORM\DatabaseParams;
 
 use PDO;

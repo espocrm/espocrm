@@ -91,7 +91,7 @@ abstract class Base extends \tests\integration\Core\BaseTestCase
             $metadata->set('entityDefs', 'Test', $entityDefs);
             $metadata->save();
 
-            $this->getContainer()->get('dataManager')->rebuild([$entityName]);
+            $this->getDataManager()->rebuild([$entityName]);
         }
     }
 

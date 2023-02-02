@@ -43,7 +43,7 @@ class AutoIncrementFieldTest extends Base
         $this->assertEquals('UNI', $column['COLUMN_KEY']);
     }
 
-    public function testColumnOnExistingTable()
+    public function testColumnOnExistingTable(): void
     {
         $this->updateDefs('Test', 'testAutoIncrement', [
             'type' => 'autoincrement',
@@ -59,19 +59,17 @@ class AutoIncrementFieldTest extends Base
         $this->assertEquals('UNI', $column['COLUMN_KEY']);
     }
 
-    public function testDeleteColumnOnExistingTable()
+    public function testDeleteColumnOnExistingTable(): void
     {
         // 1. Create "testAutoIncrement" field
         $this->testColumnOnExistingTable();
 
         // 2. Delete "testAutoIncrement" field
-        $metadata = $this->getContainer()->get('metadata');
-        $entityDefs = $metadata->delete('entityDefs', 'Test', [
-            'fields.testAutoIncrement',
-        ]);
-        $metadata->save();
+        $this->getMetadata()->delete('entityDefs', 'Test', ['fields.testAutoIncrement']);
+        $this->getMetadata()->save();
 
-        $this->getContainer()->get('dataManager')->rebuild([$entityName]);
+        // Issue that it requires rebuilding between removing and adding a new indexes.
+        $this->getDataManager()->rebuild();
 
         $column = $this->getColumnInfo('Test', 'testAutoIncrement');
 
@@ -83,17 +81,17 @@ class AutoIncrementFieldTest extends Base
         $this->assertEmpty($column['COLUMN_KEY']);
     }
 
-    public function testDeleteCreateColumnOnExistingTable()
+    public function testDeleteCreateColumnOnExistingTable(): void
     {
         // 1. Create "testAutoIncrement" field
         $this->testColumnOnExistingTable();
 
         // 2. Delete "testAutoIncrement" field
-        $metadata = $this->getContainer()->get('metadata');
-        $entityDefs = $metadata->delete('entityDefs', 'Test', [
-            'fields.testAutoIncrement',
-        ]);
+        $metadata = $this->getMetadata();
+        $metadata->delete('entityDefs', 'Test', ['fields.testAutoIncrement']);
         $metadata->save();
+
+        $this->getDataManager()->rebuild();
 
         // 3. Create "testAutoIncrement2" field
         $this->updateDefs('Test', 'testAutoIncrement2', [

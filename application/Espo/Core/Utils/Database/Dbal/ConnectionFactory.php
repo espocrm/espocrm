@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\DBAL;
+namespace Espo\Core\Utils\Database\Dbal;
 
 use Doctrine\DBAL\Connection;
 use Espo\ORM\DatabaseParams;

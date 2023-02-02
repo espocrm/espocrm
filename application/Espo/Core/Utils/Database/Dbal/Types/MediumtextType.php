@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\DBAL\Types;
+namespace Espo\Core\Utils\Database\Dbal\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\TextType;
@@ -35,9 +35,9 @@ use Doctrine\DBAL\Types\TextType;
 /**
  * MySQL only.
  */
-class LongtextType extends TextType
+class MediumtextType extends TextType
 {
-    public const NAME = 'longtext';
+    public const NAME = 'mediumtext';
 
     public function getName()
     {
@@ -46,6 +46,6 @@ class LongtextType extends TextType
 
     public function getSQLDeclaration(array $column, AbstractPlatform $platform)
     {
-        return 'LONGTEXT';
+        return 'MEDIUMTEXT';
     }
 }

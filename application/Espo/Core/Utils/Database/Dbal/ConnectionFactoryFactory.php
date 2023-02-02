@@ -27,12 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\DBAL\Platforms;
+namespace Espo\Core\Utils\Database\Dbal;
 
-use Doctrine\DBAL\Platforms\MySQL57Platform as OriginalMySQL57Platform;
-use Espo\Core\Utils\Database\DBAL\Traits\Platforms\MySQLPlatform as MySQLPlatformTrait;
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
+use PDO;
+use RuntimeException;
 
-class MySQL57Platform extends OriginalMySQL57Platform
+class ConnectionFactoryFactory
 {
-    use MySQLPlatformTrait;
+    public function __construct(
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory
+    ) {}
+
+    public function create(string $platform, PDO $pdo): ConnectionFactory
+    {
+        /** @var ?class-string<ConnectionFactory> $className */
+        $className = $this->metadata
+            ->get(['app', 'database', 'platforms', $platform, 'dbalConnectionFactoryClassName']);
+
+        if (!$className) {
+            throw new RuntimeException("No DBAL ConnectionFactory for {$platform}.");
+        }
+
+        $bindingContainer = BindingContainerBuilder::create()
+            ->bindInstance(PDO::class, $pdo)
+            ->build();
+
+        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
+    }
 }

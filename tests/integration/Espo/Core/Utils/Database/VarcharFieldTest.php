@@ -210,4 +210,18 @@ class VarcharFieldTest extends Base
             $this->assertEquals('test-default', $column['COLUMN_DEFAULT']);
         }
     }
+
+    /**
+     * Make sure columns not removed.
+     */
+    public function testRemoveField(): void
+    {
+        $this->getMetadata()->delete('entityDefs', 'Test', ['fields.testVarchar']);
+        $this->getMetadata()->save();
+        $this->getDataManager()->rebuildDatabase();
+
+        $column = $this->getColumnInfo('Test', 'testVarchar');
+
+        $this->assertTrue((bool) $column);
+    }
 }

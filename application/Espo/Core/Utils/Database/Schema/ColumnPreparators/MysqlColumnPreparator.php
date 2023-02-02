@@ -30,7 +30,8 @@
 namespace Espo\Core\Utils\Database\Schema\ColumnPreparators;
 
 use Doctrine\DBAL\Types\Types;
-use Espo\Core\Utils\Database\DBAL\Types\MediumtextType;
+use Espo\Core\Utils\Database\Dbal\Types\LongtextType;
+use Espo\Core\Utils\Database\Dbal\Types\MediumtextType;
 use Espo\Core\Utils\Database\Helper;
 use Espo\Core\Utils\Database\Schema\Column;
 use Espo\Core\Utils\Database\Schema\ColumnPreparator;
@@ -152,17 +153,34 @@ class MysqlColumnPreparator implements ColumnPreparator
                 ->withUnsigned();
         }
 
+        if (
+            !in_array($columnType, [
+                Types::STRING,
+                Types::TEXT,
+                MediumtextType::NAME,
+                LongtextType::NAME,
+            ])
+        ) {
+            return $column;
+        }
+
         $collation = $binary ?
             'utf8mb4_bin' :
             'utf8mb4_unicode_ci';
 
+        $charset = 'utf8mb4';
+
         if ($mb3) {
             $collation = $binary ?
-                'utf8_bin' :
-                'utf8_unicode_ci';
+                'utf8mb3_bin' :
+                'utf8mb3_unicode_ci';
+
+            $charset = 'utf8mb3';
         }
 
-        return $column->withCollation($collation);
+        return $column
+            ->withCollation($collation)
+            ->withCharset($charset);
     }
 
     private function getMaxIndexLength(): int

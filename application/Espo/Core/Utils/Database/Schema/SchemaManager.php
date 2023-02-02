@@ -32,14 +32,15 @@ namespace Espo\Core\Utils\Database\Schema;
 use Doctrine\DBAL\Connection as DbalConnection;
 use Doctrine\DBAL\Exception as DbalException;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Schema\Schema as DbalSchema;
-use Doctrine\DBAL\Schema\SchemaDiff as DbalSchemaDiff;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Comparator;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Types\Type;
 
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\InjectableFactory;
-use Espo\Core\Utils\Database\DBAL\Schema\Comparator;
 use Espo\Core\Utils\Database\Helper;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata\OrmMetadataData;
@@ -51,6 +52,8 @@ use Throwable;
  */
 class SchemaManager
 {
+    /** @var AbstractSchemaManager<AbstractPlatform> */
+    private AbstractSchemaManager $schemaManager;
     private Comparator $comparator;
     private Builder $builder;
 
@@ -62,8 +65,13 @@ class SchemaManager
         private Log $log,
         private Helper $helper,
         private MetadataProvider $metadataProvider,
+        private DiffModifier $diffModifier,
         private InjectableFactory $injectableFactory
     ) {
+        $this->schemaManager = $this->getDbalConnection()->createSchemaManager();
+        // Not using a platform specific comparator as it unsets a collation and charset if
+        // they match a table default.
+        //$this->comparator = $this->schemaManager->createComparator();
         $this->comparator = new Comparator($this->getPlatform());
 
         $this->initFieldTypes();
@@ -81,6 +89,9 @@ class SchemaManager
         return $this->helper;
     }
 
+    /**
+     * @throws DbalException
+     */
     private function getPlatform(): AbstractPlatform
     {
         return $this->getDbalConnection()->getDatabasePlatform();
@@ -88,7 +99,7 @@ class SchemaManager
 
     private function getDbalConnection(): DbalConnection
     {
-        return $this->getDatabaseHelper()->getDbalConnection();
+        return $this->helper->getDbalConnection();
     }
 
     /**
@@ -113,15 +124,15 @@ class SchemaManager
      *
      * @param ?string[] $entityTypeList Specific entity types.
      * @throws SchemaException
+     * @throws DbalException
      */
     public function rebuild(?array $entityTypeList = null): bool
     {
-        $currentSchema = $this->getCurrentSchema();
-
+        $fromSchema = $this->introspectSchema();
         $schema = $this->builder->build($this->ormMetadataData->getData(), $entityTypeList);
 
         try {
-            $this->processPreRebuildActions($currentSchema, $schema);
+            $this->processPreRebuildActions($fromSchema, $schema);
         }
         catch (Throwable $e) {
             $this->log->alert('Rebuild database pre-rebuild error: '. $e->getMessage());
@@ -129,14 +140,58 @@ class SchemaManager
             return false;
         }
 
-        $queries = $this->getDiffSql($currentSchema, $schema);
+        $diff = $this->comparator->compareSchemas($fromSchema, $schema);
+        $needReRun = $this->diffModifier->modify($diff);
+        $sql = $this->composeDiffSql($diff);
 
+        $result = $this->runSql($sql);
+
+        if (!$result) {
+            return false;
+        }
+
+        if ($needReRun) {
+            // Needed to handle auto-increment column creation/removal/change.
+            // As an auto-increment column requires having a unique index, but
+            // Doctrine DBAL does not handle this.
+            $intermediateSchema = $this->introspectSchema();
+            $schema = $this->builder->build($this->ormMetadataData->getData(), $entityTypeList);
+
+            $diff = $this->comparator->compareSchemas($intermediateSchema, $schema);
+
+            $this->diffModifier->modify($diff, true);
+            $sql = $this->composeDiffSql($diff);
+            $result = $this->runSql($sql);
+        }
+
+        if (!$result) {
+            return false;
+        }
+
+        try {
+            $this->processPostRebuildActions($fromSchema, $schema);
+        }
+        catch (Throwable $e) {
+            $this->log->alert('Rebuild database post-rebuild error: ' . $e->getMessage());
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param string[] $queries
+     * @return bool
+     */
+    private function runSql(array $queries): bool
+    {
         $result = true;
 
         $connection = $this->getDbalConnection();
 
         foreach ($queries as $sql) {
-            $this->log->info('SCHEMA, Execute Query: '. $sql);
+            $this->log->info('Schema, query: '. $sql);
 
             try {
                 $connection->executeQuery($sql);
@@ -148,51 +203,29 @@ class SchemaManager
             }
         }
 
-        try {
-            $this->processPostRebuildActions($currentSchema, $schema);
-        }
-        catch (Throwable $e) {
-            $this->log->alert('Rebuild database post-rebuild error: ' . $e->getMessage());
-
-            return false;
-        }
-
         return $result;
     }
 
     /**
-     * Get current database schema.
+     * Introspect and return a current database schema.
+     *
+     * @throws DbalException
      */
-    private function getCurrentSchema(): DbalSchema
+    private function introspectSchema(): Schema
     {
-        return $this->getDbalConnection()
-            ->getSchemaManager()
-            ->createSchema();
+        return $this->schemaManager->introspectSchema();
     }
 
     /**
-     * Get SQL queries of database schema.
-     *
-     * @return string[] Array of SQL queries.
+     * @return string[]
+     * @throws DbalException
      */
-    private function toSql(DbalSchemaDiff $schema)
+    private function composeDiffSql(SchemaDiff $diff): array
     {
-        return $schema->toSaveSql($this->getPlatform());
+        return $this->getPlatform()->getAlterSchemaSQL($diff);
     }
 
-    /**
-     * Get SQL queries to get from one to another schema.
-     *
-     * @return string[] Array of SQL queries.
-     */
-    private function getDiffSql(DbalSchema $fromSchema, DbalSchema $toSchema)
-    {
-        $schemaDiff = $this->comparator->compareSchemas($fromSchema, $toSchema);
-
-        return $this->toSql($schemaDiff);
-    }
-
-    private function processPreRebuildActions(DbalSchema $actualSchema, DbalSchema $schema): void
+    private function processPreRebuildActions(Schema $actualSchema, Schema $schema): void
     {
         $binding = BindingContainerBuilder::create()
             ->bindInstance(Helper::class, $this->helper)
@@ -205,7 +238,7 @@ class SchemaManager
         }
     }
 
-    private function processPostRebuildActions(DbalSchema $actualSchema, DbalSchema $schema): void
+    private function processPostRebuildActions(Schema $actualSchema, Schema $schema): void
     {
         $binding = BindingContainerBuilder::create()
             ->bindInstance(Helper::class, $this->helper)

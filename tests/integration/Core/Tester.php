@@ -139,6 +139,8 @@ class Tester
 
     protected function getTestConfigData()
     {
+        $this->changeDirToBase();
+
         if (file_exists($this->configPath)) {
             $data = include($this->configPath);
         }
@@ -258,12 +260,19 @@ class Tester
         $this->loadData();
     }
 
-    public function terminate()
+    private function changeDirToBase(): void
     {
-        $baseDir = str_replace('/' . $this->installPath, '', getcwd());
+        $installPath = str_replace('/', DIRECTORY_SEPARATOR, $this->installPath);
+
+        $baseDir = str_replace(DIRECTORY_SEPARATOR . $installPath, '', getcwd());
 
         chdir($baseDir);
         set_include_path($baseDir);
+    }
+
+    public function terminate()
+    {
+        $this->changeDirToBase();
 
         if ($this->getParam('fullReset')) {
             $this->saveTestConfigData('lastModifiedTime', null);

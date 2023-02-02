@@ -39,6 +39,7 @@ class Column
     private ?int $scale = null;
     private ?bool $unsigned = null;
     private ?string $collation = null;
+    private ?string $charset = null;
 
     private function __construct(
         private string $name,
@@ -98,6 +99,11 @@ class Column
     public function getCollation(): ?string
     {
         return $this->collation;
+    }
+
+    public function getCharset(): ?string
+    {
+        return $this->charset;
     }
 
     public function withNotNull(bool $notNull = true): self
@@ -163,6 +169,14 @@ class Column
     {
         $obj = clone $this;
         $obj->collation = $collation;
+
+        return $obj;
+    }
+
+    public function withCharset(?string $charset): self
+    {
+        $obj = clone $this;
+        $obj->charset = $charset;
 
         return $obj;
     }
