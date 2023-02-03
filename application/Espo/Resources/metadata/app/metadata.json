@@ -31,7 +31,7 @@
         ["app", "linkManager"],
         ["app", "hook"],
         ["app", "api"],
-        ["app", "database"],
+        ["app", "databasePlatforms"],
         ["selectDefs"],
         ["recordDefs"],
         ["pdfDefs"],
