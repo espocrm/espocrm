@@ -27,45 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\Orm\Relations;
+namespace Espo\Core\Utils\Database\Orm;
 
-class BelongsToParent extends Base
+use Espo\ORM\Defs\RelationDefs;
+use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
+
+/**
+ * Converts link definitions to ORM definitions.
+ */
+interface LinkConverter
 {
-    /**
-     * @param string $linkName
-     * @param string $entityName
-     * @return array<string,mixed>
-     */
-    protected function load($linkName, $entityName)
-    {
-        $linkParams = $this->getLinkParams();
-
-        return [
-            $entityName => [
-                'fields' => [
-                    $linkName.'Id' => [
-                        'type' => 'foreignId',
-                        'index' => $linkName,
-                    ],
-                    $linkName.'Type' => [
-                        'type' => 'foreignType',
-                        'notNull' => false,
-                        'index' => $linkName,
-                        'len' => 100,
-                    ],
-                    $linkName.'Name' => [
-                        'type' => 'varchar',
-                        'notStorable' => true,
-                    ],
-                ],
-                'relations' => [
-                    $linkName => [
-                        'type' => 'belongsToParent',
-                        'key' => $linkName .'Id',
-                        'foreign' => $linkParams['foreign'] ?? null,
-                    ],
-                ],
-            ],
-        ];
-    }
+    public function convert(RelationDefs $linkDefs, string $entityType): EntityDefs;
 }

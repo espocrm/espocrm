@@ -92,7 +92,7 @@ class RelationDefs
     /**
      * Clone with a foreign relation name.
      */
-    public function withForeignRelationName(string $name): self
+    public function withForeignRelationName(?string $name): self
     {
         return $this->withParam('foreign', $name);
     }
@@ -202,7 +202,7 @@ class RelationDefs
     /**
      * Clone with conditions. Conditions are used for relationships that share a same middle table.
      *
-     * @param array<string, ?scalar> $conditions
+     * @param array<string, scalar|(array<int, mixed>)|null> $conditions
      */
     public function withConditions(array $conditions): self
     {

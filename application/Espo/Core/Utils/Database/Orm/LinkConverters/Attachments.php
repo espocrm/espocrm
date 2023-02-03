@@ -27,41 +27,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\Orm\Relations;
+namespace Espo\Core\Utils\Database\Orm\LinkConverters;
 
-use RuntimeException;
+use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
+use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
+use Espo\Core\Utils\Database\Orm\LinkConverter;
+use Espo\ORM\Defs\RelationDefs as LinkDefs;
+use Espo\ORM\Type\AttributeType;
+use LogicException;
 
-class EmailEmailAddress extends HasMany
+class Attachments implements LinkConverter
 {
-    /**
-     * @param string $linkName
-     * @param string $entityName
-     * @return array<string,mixed>
-     */
-    protected function load($linkName, $entityName)
+    public function __construct(private HasChildren $hasChildren) {}
+
+    public function convert(LinkDefs $linkDefs, string $entityType): EntityDefs
     {
-        $parentRelation = parent::load($linkName, $entityName);
+        $name = $linkDefs->getName();
 
-        $foreignEntityName = $this->getForeignEntityName();
+        $entityDefs = $this->hasChildren->convert($linkDefs, $entityType);
 
-        if ($foreignEntityName === null) {
-            throw new RuntimeException("No foreign-entity-type.");
-        }
-
-        $relation = array(
-            $entityName => array(
-                'relations' => array(
-                    $linkName => array(
-                        'midKeys' => array(
-                            lcfirst($entityName).'Id',
-                            lcfirst($foreignEntityName).'Id',
-                        ),
-                    ),
-                ),
-            ),
+        $entityDefs = $entityDefs->withAttribute(
+            AttributeDefs::create($name . 'Types')
+                ->withType(AttributeType::JSON_OBJECT)
+                ->withNotStorable()
         );
 
-        /** @var array<string,mixed> */
-        return \Espo\Core\Utils\Util::merge($parentRelation, $relation);
+        $relationDefs = $entityDefs->getRelation($name);
+
+        if (!$relationDefs) {
+            throw new LogicException();
+        }
+
+        $relationDefs = $relationDefs->withConditions([
+            'OR' => [
+                ['field' => null],
+                ['field' => $name],
+            ]
+        ]);
+
+        return $entityDefs->withRelation($relationDefs);
     }
 }

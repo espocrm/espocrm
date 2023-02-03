@@ -82,7 +82,6 @@
         "authToken": {
             "type": "belongsTo",
             "entity": "AuthToken",
-            "foreign": "authLog",
             "foreignName": "id"
         },
         "actionHistoryRecords": {

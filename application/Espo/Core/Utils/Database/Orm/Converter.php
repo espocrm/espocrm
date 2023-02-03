@@ -39,9 +39,7 @@ use Espo\ORM\Defs\IndexDefs;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
-use ReflectionClass;
 
 class Converter
 {
@@ -109,7 +107,6 @@ class Converter
 
     public function __construct(
         private Metadata $metadata,
-        private Config $config,
         private RelationConverter $relationConverter,
         private MetadataHelper $metadataHelper,
         private InjectableFactory $injectableFactory,
@@ -293,7 +290,7 @@ class Converter
                     default:
                         $constName = strtoupper(Util::toUnderScore($attributeType));
 
-                        if (!defined('Espo\\ORM\\Entity::' . $constName)) {
+                        if (!defined('Espo\\ORM\\Type\\AttributeType::' . $constName)) {
                             $attributeParams['type'] = $this->defaultAttributeType;
                         }
 
@@ -436,8 +433,6 @@ class Converter
      */
     private function correctFields(string $entityType, array $ormMetadata): array
     {
-        $entityDefs = $this->getEntityDefs();
-
         $entityMetadata = $ormMetadata[$entityType];
 
         foreach ($entityMetadata['fields'] as $field => $fieldParams) {
@@ -447,23 +442,10 @@ class Converter
                 continue;
             }
 
+            /** @var ?class-string<FieldConverter> $className */
             $className = $this->metadata->get(['fields', $fieldType, 'converterClassName']);
 
-            if (!$className) {
-                // Legacy.
-                $className = 'Espo\Custom\Core\Utils\Database\Orm\Fields\\' . ucfirst($fieldType);
-
-                if (!class_exists($className)) {
-                    $className = 'Espo\Core\Utils\Database\Orm\Fields\\' . ucfirst($fieldType);
-                }
-            }
-
-            if (
-                class_exists($className) &&
-                (new ReflectionClass($className))->implementsInterface(FieldConverter::class)
-            ) {
-                /** @var class-string<FieldConverter> $className */
-
+            if ($className) {
                 $toUnset =
                     !in_array('', $this->metadata->get(['fields', $fieldType, 'actualFields']) ?? []) &&
                     !in_array('', $this->metadata->get(['fields', $fieldType, 'notActualFields']) ?? []);
@@ -483,33 +465,6 @@ class Converter
 
                 /** @var array<string, mixed> $ormMetadata */
                 $ormMetadata = Util::merge($ormMetadata, [$entityType => $convertedEntityDefs->toAssoc()]);
-
-                // @todo Unset if needed.
-
-                $className = null;
-            }
-
-            if (
-                $className &&
-                class_exists($className) &&
-                method_exists($className, 'load') &&
-                method_exists($className, 'process')
-            ) {
-                // Legacy.
-                $helperClass = new $className($this->metadata, $ormMetadata, $entityDefs, $this->config);
-
-                assert(method_exists($helperClass, 'process'));
-
-                $fieldResult = $helperClass->process($field, $entityType);
-
-                if (isset($fieldResult['unset'])) {
-                    $ormMetadata = Util::unsetInArray($ormMetadata, $fieldResult['unset']);
-
-                    unset($fieldResult['unset']);
-                }
-
-                /** @var array<string,mixed> $ormMetadata */
-                $ormMetadata = Util::merge($ormMetadata, $fieldResult);
             }
 
             $defaultAttributes = $this->metadata
@@ -520,7 +475,7 @@ class Converter
                     $entityType => [
                         'fields' => [
                             $field => [
-                                'default' => $defaultAttributes[$field]
+                                'default' => $defaultAttributes[$field],
                             ]
                         ]
                     ]

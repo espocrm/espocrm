@@ -27,6 +27,7 @@
         ["app", "rebuild"],
         ["app", "smsProviders", "__ANY__", "senderClassName"],
         ["app", "orm"],
+        ["app", "relationships"],
         ["app", "linkManager"],
         ["app", "hook"],
         ["app", "api"],

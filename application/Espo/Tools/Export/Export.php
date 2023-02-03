@@ -266,6 +266,7 @@ class Export
             return false;
         }
 
+        // Revise.
         if ($this->getAttributeParam($entity, $attribute, 'isLinkStub')) {
             return false;
         }

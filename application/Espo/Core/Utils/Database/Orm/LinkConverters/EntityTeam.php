@@ -27,44 +27,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\Orm\Fields;
+namespace Espo\Core\Utils\Database\Orm\LinkConverters;
 
-/**
- * @deprecated As of v7.4. Use FieldConverter.
- */
-class Base extends \Espo\Core\Utils\Database\Orm\Base
+use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
+use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
+use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
+use Espo\Core\Utils\Database\Orm\LinkConverter;
+use Espo\Entities\Team;
+use Espo\ORM\Defs\RelationDefs as LinkDefs;
+use Espo\ORM\Type\AttributeType;
+use Espo\ORM\Type\RelationType;
+
+class EntityTeam implements LinkConverter
 {
-    /**
-     * ORM conversion for fields.
-     *
-     * @param string $itemName A field name.
-     * @param string $entityName
-     * @return array<string,mixed>
-     */
-    public function process($itemName, $entityName)
+    private const ENTITY_TYPE_LENGTH = 100;
+
+    public function convert(LinkDefs $linkDefs, string $entityType): EntityDefs
     {
-        $inputs = [
-            'itemName' => $itemName,
-            'entityName' => $entityName,
-        ];
+        $name = $linkDefs->getName();
+        $relationshipName = $linkDefs->getRelationshipName();
 
-        $this->setMethods($inputs);
-
-        $convertedDefs = $this->load($itemName, $entityName);
-
-        $inputs = $this->setArrayValue(null, $inputs);
-        $this->setMethods($inputs);
-
-        return $convertedDefs;
-    }
-
-    /**
-     * @param string $fieldName
-     * @param string $entityType
-     * @return array<string,mixed>
-     */
-    protected function load($fieldName, $entityType)
-    {
-        return [];
+        return EntityDefs::create()
+            ->withRelation(
+                RelationDefs::create($name)
+                    ->withType(RelationType::MANY_MANY)
+                    ->withForeignEntityType(Team::ENTITY_TYPE)
+                    ->withRelationshipName($relationshipName)
+                    ->withMidKeys('entityId', 'teamId')
+                    ->withConditions(['entityType' => $entityType])
+                    ->withAdditionalColumn(
+                        AttributeDefs::create('entityType')
+                            ->withType(AttributeType::VARCHAR)
+                            ->withLength(self::ENTITY_TYPE_LENGTH)
+                    )
+            );
     }
 }
