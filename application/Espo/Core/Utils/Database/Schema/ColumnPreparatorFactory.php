@@ -47,7 +47,7 @@ class ColumnPreparatorFactory
     {
         /** @var ?class-string<ColumnPreparator> $className */
         $className = $this->metadata
-            ->get(['app', 'database', 'platforms', $platform, 'columnPreparatorClassName']);
+            ->get(['app', 'databasePlatforms', $platform, 'columnPreparatorClassName']);
 
         if (!$className) {
             throw new RuntimeException("No Column-Preparator for {$platform}.");

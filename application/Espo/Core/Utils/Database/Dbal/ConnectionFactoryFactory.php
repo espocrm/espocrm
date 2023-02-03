@@ -46,7 +46,7 @@ class ConnectionFactoryFactory
     {
         /** @var ?class-string<ConnectionFactory> $className */
         $className = $this->metadata
-            ->get(['app', 'database', 'platforms', $platform, 'dbalConnectionFactoryClassName']);
+            ->get(['app', 'databasePlatforms', $platform, 'dbalConnectionFactoryClassName']);
 
         if (!$className) {
             throw new RuntimeException("No DBAL ConnectionFactory for {$platform}.");

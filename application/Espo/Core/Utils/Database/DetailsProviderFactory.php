@@ -46,7 +46,7 @@ class DetailsProviderFactory
     {
         /** @var ?class-string<DetailsProvider> $className */
         $className = $this->metadata
-            ->get(['app', 'database', 'platforms', $platform, 'detailsProviderClassName']);
+            ->get(['app', 'databasePlatforms', $platform, 'detailsProviderClassName']);
 
         if (!$className) {
             throw new RuntimeException("No Details-Provider for {$platform}.");

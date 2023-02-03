@@ -44,7 +44,7 @@ class IndexHelperFactory
     {
         /** @var ?class-string<IndexHelper> $className */
         $className = $this->metadata
-            ->get(['app', 'database', 'platforms', $platform, 'indexHelperClassName']);
+            ->get(['app', 'databasePlatforms', $platform, 'indexHelperClassName']);
 
         if (!$className) {
             throw new RuntimeException("No Index Helper for {$platform}");

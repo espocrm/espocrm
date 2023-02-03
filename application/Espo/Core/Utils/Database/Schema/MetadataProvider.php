@@ -52,7 +52,7 @@ class MetadataProvider
     {
         /** @var class-string<RebuildAction>[] */
         return $this->metadata
-            ->get(['app', 'database', 'platforms', $this->getPlatform(), 'preRebuildActionClassNameList']) ?? [];
+            ->get(['app', 'databasePlatforms', $this->getPlatform(), 'preRebuildActionClassNameList']) ?? [];
     }
 
     /**
@@ -62,7 +62,7 @@ class MetadataProvider
     {
         /** @var class-string<RebuildAction>[] */
         return $this->metadata
-            ->get(['app', 'database', 'platforms', $this->getPlatform(), 'postRebuildActionClassNameList']) ?? [];
+            ->get(['app', 'databasePlatforms', $this->getPlatform(), 'postRebuildActionClassNameList']) ?? [];
     }
 
     /**
@@ -72,6 +72,6 @@ class MetadataProvider
     {
         /** @var array<string, class-string<Type>> */
         return $this->metadata
-            ->get(['app', 'database', 'platforms', $this->getPlatform(), 'dbalTypeClassNameMap']) ?? [];
+            ->get(['app', 'databasePlatforms', $this->getPlatform(), 'dbalTypeClassNameMap']) ?? [];
     }
 }
