@@ -29,10 +29,8 @@
 
 namespace tests\integration\Espo\User;
 
-use Espo\Core\{
-    Api\ControllerActionProcessor,
-    Api\Response,
-};
+use Espo\Core\Api\ControllerActionProcessor;
+use Espo\Core\Api\ResponseWrapper;
 
 class AclAdminTest extends \tests\integration\Core\BaseTestCase
 {
@@ -64,7 +62,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->once())
@@ -99,7 +97,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->once())
@@ -134,7 +132,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->once())
@@ -169,7 +167,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->once())

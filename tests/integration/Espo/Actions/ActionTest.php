@@ -29,21 +29,17 @@
 
 namespace tests\integration\Espo\Actions;
 
-use Espo\Core\{
-    Api\ControllerActionProcessor,
-    Api\Response,
-    ORM\EntityManager,
-    Application,
-    Exceptions\Forbidden,
-    Field\EmailAddress,
-    Field\PhoneNumber,
-    Action\Actions\Merge\Merger,
-    Action\Params,
-};
+use Espo\Core\Action\Actions\Merge\Merger;
+use Espo\Core\Action\Params;
+use Espo\Core\Api\ControllerActionProcessor;
+use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\Application;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Field\EmailAddress;
+use Espo\Core\Field\PhoneNumber;
+use Espo\Core\ORM\EntityManager;
 
-use Espo\Modules\Crm\Entities\{
-    Contact,
-};
+use Espo\Modules\Crm\Entities\Contact;
 
 class ActionTest extends \tests\integration\Core\BaseTestCase
 {
@@ -104,7 +100,7 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $this->expectException(Forbidden::class);
 
@@ -220,7 +216,7 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $this->actionProcessor->process('Action', 'process', $request, $response);
 

@@ -38,17 +38,14 @@ use Espo\Core\MassAction\Jobs\Process as JobProcess;
 use Espo\Core\Job\Job\Data as JobData;
 
 use Espo\Core\Select\SearchParams;
-
 use Espo\Core\InjectableFactory;
 
-use Espo\Core\{
-    Api\ControllerActionProcessor,
-    Api\Response,
-    ORM\EntityManager,
-    Application,
-    Exceptions\Forbidden,
-    Exceptions\Error,
-};
+use Espo\Core\Api\ControllerActionProcessor;
+use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\Application;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\ORM\EntityManager;
 
 class MassActionTest extends \tests\integration\Core\BaseTestCase
 {
@@ -114,7 +111,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->once())
@@ -149,7 +146,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $this->expectException(Forbidden::class);
 

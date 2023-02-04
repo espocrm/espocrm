@@ -29,13 +29,9 @@
 
 namespace tests\integration\Espo\Webhook;
 
-use Espo\Core\{
-    Api\ControllerActionProcessor,
-    Api\Response,
-};
-
+use Espo\Core\Api\ControllerActionProcessor;
+use Espo\Core\Api\ResponseWrapper;
 use Espo\ORM\EntityManager;
-
 use Espo\Core\Exceptions\Forbidden;
 
 class AclTest extends \tests\integration\Core\BaseTestCase
@@ -177,7 +173,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->once())
@@ -231,7 +227,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $em = $app->getContainer()->get('entityManager');
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
