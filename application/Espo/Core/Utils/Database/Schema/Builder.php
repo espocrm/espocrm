@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils\Database\Schema;
 
 use Espo\Core\Utils\Database\ConfigDataProvider;
+use Espo\Core\Utils\Database\MetadataProvider as MetadataProvider;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
@@ -53,13 +54,10 @@ use Doctrine\DBAL\Types\Type as DbalType;
  */
 class Builder
 {
-    private const DEFAULT_ID_LENGTH = 24;
-    private const DEFAULT_ID_DB_TYPE = Types::STRING;
-
     private const ATTR_ID = 'id';
     private const ATTR_DELETED = 'deleted';
 
-    private string $idLength;
+    private int $idLength;
     private string $idDbType;
 
     private string $tablesPath = 'Core/Utils/Database/Schema/tables';
@@ -73,7 +71,8 @@ class Builder
         private Log $log,
         private PathProvider $pathProvider,
         ConfigDataProvider $configDataProvider,
-        ColumnPreparatorFactory $columnPreparatorFactory
+        ColumnPreparatorFactory $columnPreparatorFactory,
+        MetadataProvider $metadataProvider
     ) {
         $this->typeList = array_keys(DbalType::getTypesMap());
 
@@ -81,11 +80,8 @@ class Builder
 
         $this->columnPreparator = $columnPreparatorFactory->create($platform);
 
-        $this->idLength = $this->metadata->get(['app', 'recordId', 'length']) ??
-            self::DEFAULT_ID_LENGTH;
-
-        $this->idDbType = $this->metadata->get(['app', 'recordId', 'dbType']) ??
-            self::DEFAULT_ID_DB_TYPE;
+        $this->idLength = $metadataProvider->getIdLength();
+        $this->idDbType = $metadataProvider->getIdDbType();
     }
 
     /**

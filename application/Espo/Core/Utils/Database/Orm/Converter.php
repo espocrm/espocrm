@@ -32,6 +32,7 @@ namespace Espo\Core\Utils\Database\Orm;
 use Doctrine\DBAL\Types\Types;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Database\ConfigDataProvider;
+use Espo\Core\Utils\Database\MetadataProvider;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Defs\AttributeDefs;
 use Espo\ORM\Defs\FieldDefs;
@@ -90,9 +91,6 @@ class Converter
     /** @var array<string, mixed> */
     private $idParams = [];
 
-    private const DEFAULT_ID_LENGTH = 24;
-    private const DEFAULT_ID_DB_TYPE = Types::STRING;
-
     /**
      * Permitted entityDefs parameters which will be copied to ormMetadata.
      *
@@ -111,17 +109,15 @@ class Converter
         private MetadataHelper $metadataHelper,
         private InjectableFactory $injectableFactory,
         ConfigDataProvider $configDataProvider,
-        IndexHelperFactory $indexHelperFactory
+        IndexHelperFactory $indexHelperFactory,
+        MetadataProvider $metadataProvider
     ) {
         $platform = $configDataProvider->getPlatform();
 
         $this->indexHelper = $indexHelperFactory->create($platform);
 
-        $this->idParams['len'] = $this->metadata->get(['app', 'recordId', 'length']) ??
-            self::DEFAULT_ID_LENGTH;
-
-        $this->idParams['dbType'] = $this->metadata->get(['app', 'recordId', 'dbType']) ??
-            self::DEFAULT_ID_DB_TYPE;
+        $this->idParams['len'] = $metadataProvider->getIdLength();
+        $this->idParams['dbType'] = $metadataProvider->getIdDbType();
     }
 
     /**
