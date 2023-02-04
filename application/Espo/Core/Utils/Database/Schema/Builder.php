@@ -410,6 +410,10 @@ class Builder
             $result['unsigned'] = $column->getUnsigned();
         }
 
+        if ($column->getFixed() !== null) {
+            $result['fixed'] = $column->getFixed();
+        }
+
         // Can't use customSchemaOptions as it causes unwanted ALTER TABLE.
         $result['platformOptions'] = [];
 

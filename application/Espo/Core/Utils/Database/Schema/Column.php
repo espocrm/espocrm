@@ -38,6 +38,7 @@ class Column
     private ?int $precision = null;
     private ?int $scale = null;
     private ?bool $unsigned = null;
+    private ?bool $fixed = null;
     private ?string $collation = null;
     private ?string $charset = null;
 
@@ -96,6 +97,11 @@ class Column
         return $this->scale;
     }
 
+    public function getFixed(): ?bool
+    {
+        return $this->fixed;
+    }
+
     public function getCollation(): ?string
     {
         return $this->collation;
@@ -139,7 +145,7 @@ class Column
     }
 
     /**
-     * Supported only by MySQL.
+     * Unsigned. Supported only by MySQL.
      */
     public function withUnsigned(?bool $unsigned = true): self
     {
@@ -161,6 +167,17 @@ class Column
     {
         $obj = clone $this;
         $obj->scale = $scale;
+
+        return $obj;
+    }
+
+    /**
+     * Fixed length. For string and binary types.
+     */
+    public function withFixed(?bool $fixed = true): self
+    {
+        $obj = clone $this;
+        $obj->fixed = $fixed;
 
         return $obj;
     }
