@@ -49,5 +49,27 @@ define('views/fields/assigned-users', ['views/fields/link-multiple'], function (
         getSelectPrimaryFilterName: function () {
             return 'active';
         },
+        
+        getDetailLinkHtml: function (id) {
+            let name = this.nameHash[id] || id;
+
+            if (!name && id) {
+                name = this.translate(this.foreignScope, 'scopeNames');
+            }
+
+            let $a = $('<a>')
+                .attr('href', this.getUrl(id))
+                .attr('data-id', id)
+                .text(name);
+
+            $a.prepend(this.getAvatarHtml(id));
+
+            return $a.get(0).outerHTML;
+        },
+
+        getAvatarHtml: function (id) {
+            return this.getHelper()
+                .getAvatarHtml(id, 'small', 14, 'avatar-link');
+        },
     });
 });
