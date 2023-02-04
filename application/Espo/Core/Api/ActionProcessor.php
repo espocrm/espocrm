@@ -56,8 +56,8 @@ class ActionProcessor
         string $controllerName,
         string $actionName,
         Request $request,
-        Response $response
-    ): void {
+        ResponseWrapper $response
+    ): ResponseWrapper {
 
         $controller = $this->createController($controllerName);
 
@@ -70,9 +70,7 @@ class ActionProcessor
             $actionName = $controller::$defaultAction ?? 'index';
         }
 
-        $actionNameUcfirst = ucfirst($actionName);
-
-        $actionMethodName = 'action' . $actionNameUcfirst;
+        $actionMethodName = 'action' . ucfirst($actionName);
 
         $fullActionMethodName = strtolower($requestMethod) . ucfirst($actionMethodName);
 
@@ -90,7 +88,7 @@ class ActionProcessor
 
             $this->handleResult($response, $result);
 
-            return;
+            return $response;
         }
 
         // Below is a legacy way.
@@ -103,7 +101,7 @@ class ActionProcessor
 
         $params = $request->getRouteParams();
 
-        $beforeMethodName = 'before' . $actionNameUcfirst;
+        $beforeMethodName = 'before' . ucfirst($actionName);
 
         if (method_exists($controller, $beforeMethodName)) {
             $controller->$beforeMethodName($params, $data, $request, $response);
@@ -111,13 +109,15 @@ class ActionProcessor
 
         $result = $controller->$primaryActionMethodName($params, $data, $request, $response) ?? null;
 
-        $afterMethodName = 'after' . $actionNameUcfirst;
+        $afterMethodName = 'after' . ucfirst($actionName);
 
         if (method_exists($controller, $afterMethodName)) {
             $controller->$afterMethodName($params, $data, $request, $response);
         }
 
         $this->handleResult($response, $result);
+
+        return $response;
     }
 
     /**

@@ -59,16 +59,16 @@ class ControllerActionHandler implements RequestHandlerInterface
 
         $this->beforeProceed();
 
-        $this->actionProcessor->process(
+        $responseWrapped = $this->actionProcessor->process(
             $this->controllerName,
             $this->actionName,
             $requestWrapped,
             $this->responseWrapped
         );
 
-        $this->afterProceed();
+        $this->afterProceed($responseWrapped);
 
-        return $this->responseWrapped->getResponse();
+        return $responseWrapped->getResponse();
     }
 
     private function beforeProceed(): void
@@ -76,9 +76,9 @@ class ControllerActionHandler implements RequestHandlerInterface
         $this->responseWrapped->setHeader('Content-Type', 'application/json');
     }
 
-    private function afterProceed(): void
+    private function afterProceed(Response $responseWrapped): void
     {
-        $this->responseWrapped
+        $responseWrapped
             ->setHeader('X-App-Timestamp', (string) ($this->config->get('appTimestamp') ?? '0'))
             ->setHeader('Expires', '0')
             ->setHeader('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT')
