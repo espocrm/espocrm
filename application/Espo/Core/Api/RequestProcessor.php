@@ -147,7 +147,7 @@ class RequestProcessor
             }
         }
 
-        $handler = new ControllerActionHandler(
+        $handler = new ActionHandler(
             controllerName: $controller,
             actionName: $action,
             processData: $processData,

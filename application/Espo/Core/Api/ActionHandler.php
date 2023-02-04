@@ -35,7 +35,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class ControllerActionHandler implements RequestHandlerInterface
+class ActionHandler implements RequestHandlerInterface
 {
     public function __construct(
         private string $controllerName,
