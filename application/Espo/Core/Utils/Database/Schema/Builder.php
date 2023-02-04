@@ -53,11 +53,14 @@ use Doctrine\DBAL\Types\Type as DbalType;
  */
 class Builder
 {
-    private const ID_DB_TYPE = Types::STRING;
-    private const ID_LENGTH = 24; // @todo Make configurable.
+    private const DEFAULT_ID_LENGTH = 24;
+    private const DEFAULT_ID_DB_TYPE = Types::STRING;
 
     private const ATTR_ID = 'id';
     private const ATTR_DELETED = 'deleted';
+
+    private string $idLength;
+    private string $idDbType;
 
     private string $tablesPath = 'Core/Utils/Database/Schema/tables';
     /** @var string[] */
@@ -77,6 +80,12 @@ class Builder
         $platform = $configDataProvider->getPlatform();
 
         $this->columnPreparator = $columnPreparatorFactory->create($platform);
+
+        $this->idLength = $this->metadata->get(['app', 'recordId', 'length']) ??
+            self::DEFAULT_ID_LENGTH;
+
+        $this->idDbType = $this->metadata->get(['app', 'recordId', 'dbType']) ??
+            self::DEFAULT_ID_DB_TYPE;
     }
 
     /**
@@ -319,8 +328,8 @@ class Builder
             $column = $this->columnPreparator->prepare(
                 AttributeDefs::fromRaw([
                     'type' => Entity::FOREIGN_ID,
-                    'dbType' => self::ID_DB_TYPE,
-                    'len' => self::ID_LENGTH,
+                    'dbType' => $this->idDbType,
+                    'len' => $this->idLength,
                 ], $midKey)
             );
 
