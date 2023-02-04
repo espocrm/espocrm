@@ -90,8 +90,10 @@ class Converter
     /** @var array<string, mixed> */
     private $idParams = [
         'dbType' => Types::STRING,
-        'len' => 24, // @todo Make configurable.
+        'len' => self::DEFAULT_ID_LENGTH,
     ];
+
+    private const DEFAULT_ID_LENGTH = 24;
 
     /**
      * Permitted entityDefs parameters which will be copied to ormMetadata.
@@ -116,6 +118,9 @@ class Converter
         $platform = $configDataProvider->getPlatform();
 
         $this->indexHelper = $indexHelperFactory->create($platform);
+
+        $this->idParams['len'] = $this->metadata->get(['app', 'recordId', 'length']) ??
+            self::DEFAULT_ID_LENGTH;
     }
 
     /**
