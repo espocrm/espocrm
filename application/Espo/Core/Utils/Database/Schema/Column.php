@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
+/**
+ * A DB column parameters.
+ */
 class Column
 {
     private bool $notNull = false;
