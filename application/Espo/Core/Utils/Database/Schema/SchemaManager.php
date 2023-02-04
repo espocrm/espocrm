@@ -123,10 +123,12 @@ class SchemaManager
      * Does not remove columns, does not decrease column lengths.
      *
      * @param ?string[] $entityTypeList Specific entity types.
+     * @param RebuildMode::* $mode A mode.
      * @throws SchemaException
      * @throws DbalException
+     * @todo Catch and re-throw exceptions.
      */
-    public function rebuild(?array $entityTypeList = null): bool
+    public function rebuild(?array $entityTypeList = null, string $mode = RebuildMode::SOFT): bool
     {
         $fromSchema = $this->introspectSchema();
         $schema = $this->builder->build($this->ormMetadataData->getData(), $entityTypeList);
@@ -141,7 +143,7 @@ class SchemaManager
         }
 
         $diff = $this->comparator->compareSchemas($fromSchema, $schema);
-        $needReRun = $this->diffModifier->modify($diff);
+        $needReRun = $this->diffModifier->modify($diff, false, $mode);
         $sql = $this->composeDiffSql($diff);
 
         $result = $this->runSql($sql);

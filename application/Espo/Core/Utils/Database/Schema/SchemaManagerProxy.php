@@ -49,11 +49,12 @@ class SchemaManagerProxy
 
     /**
      * @param ?string[] $entityTypeList
+     * @param RebuildMode::* $mode
      * @throws SchemaException
      */
-    public function rebuild(?array $entityTypeList = null): bool
+    public function rebuild(?array $entityTypeList = null, string $mode = RebuildMode::SOFT): bool
     {
-        return $this->getSchemaManager()->rebuild($entityTypeList);
+        return $this->getSchemaManager()->rebuild($entityTypeList, $mode);
     }
 
     public function getDatabaseHelper(): Helper

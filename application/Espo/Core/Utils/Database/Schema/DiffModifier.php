@@ -43,16 +43,18 @@ use Espo\Core\Utils\Database\Dbal\Types\MediumtextType;
 class DiffModifier
 {
     /**
+     * @param RebuildMode::* $mode
      * @throws DbalException
      */
-    public function modify(SchemaDiff $diff, bool $secondRun = false): bool
+    public function modify(SchemaDiff $diff, bool $secondRun = false, string $mode = RebuildMode::SOFT): bool
     {
         $reRun = false;
+        $isHard = $mode === RebuildMode::HARD;
 
         $diff->removedTables = [];
 
         foreach ($diff->changedTables as $tableDiff) {
-            $reRun = $this->amendTableDiff($tableDiff, $secondRun) || $reRun;
+            $reRun = $this->amendTableDiff($tableDiff, $secondRun, $isHard) || $reRun;
         }
 
         return $reRun;
@@ -61,7 +63,7 @@ class DiffModifier
     /**
      * @throws DbalException
      */
-    private function amendTableDiff(TableDiff $tableDiff, bool $secondRun): bool
+    private function amendTableDiff(TableDiff $tableDiff, bool $secondRun, bool $isHard): bool
     {
         $reRun = false;
 
@@ -70,15 +72,20 @@ class DiffModifier
          * MariaDB supports RENAME INDEX as of v10.5.
          * Find out how long does it take to rename fo different databases.
          */
-        // Prevent index renaming as an operation may take a lot of time.
-        $tableDiff->renamedIndexes = [];
+
+        if (!$isHard) {
+            // Prevent index renaming as an operation may take a lot of time.
+            $tableDiff->renamedIndexes = [];
+        }
 
         foreach ($tableDiff->removedColumns as $name => $column) {
             $reRun = $this->moveRemovedAutoincrementColumnToChanged($tableDiff, $column, $name) || $reRun;
         }
 
-        // Prevent column removal to prevent data loss.
-        $tableDiff->removedColumns = [];
+        if (!$isHard) {
+            // Prevent column removal to prevent data loss.
+            $tableDiff->removedColumns = [];
+        }
 
         // Prevent column renaming as a not desired behavior.
         foreach ($tableDiff->renamedColumns as $renamedColumn) {
@@ -94,14 +101,17 @@ class DiffModifier
         }
 
         foreach ($tableDiff->changedColumns as $name => $columnDiff) {
-            // Prevent decreasing length for string columns to prevent data loss.
-            $this->amendColumnDiffLength($tableDiff, $columnDiff, $name);
-            // Prevent longtext => mediumtext to prevent data loss.
-            $this->amendColumnDiffTextType($tableDiff, $columnDiff, $name);
-            // Prevent changing collation.
-            $this->amendColumnDiffCollation($tableDiff, $columnDiff, $name);
-            // Prevent changing charset.
-            $this->amendColumnDiffCharset($tableDiff, $columnDiff, $name);
+            if (!$isHard) {
+                // Prevent decreasing length for string columns to prevent data loss.
+                $this->amendColumnDiffLength($tableDiff, $columnDiff, $name);
+                // Prevent longtext => mediumtext to prevent data loss.
+                $this->amendColumnDiffTextType($tableDiff, $columnDiff, $name);
+                // Prevent changing collation.
+                $this->amendColumnDiffCollation($tableDiff, $columnDiff, $name);
+                // Prevent changing charset.
+                $this->amendColumnDiffCharset($tableDiff, $columnDiff, $name);
+            }
+
             // Prevent setting autoincrement in first run.
             if (!$secondRun) {
                 $reRun = $this->amendColumnDiffAutoincrement($tableDiff, $columnDiff, $name) || $reRun;

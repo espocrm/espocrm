@@ -33,6 +33,7 @@ use Espo\Core\Utils\Config\MissingDefaultParamsSaver as ConfigMissingDefaultPara
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManagerProxy;
+use Espo\Core\Utils\Database\Schema\RebuildMode;
 use Espo\Core\Utils\Database\Schema\SchemaManagerProxy;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata;
@@ -109,14 +110,15 @@ class DataManager
      * Rebuild database.
      *
      * @param ?string[] $entityTypeList
+     * @param RebuildMode::* $mode
      * @throws Error
      */
-    public function rebuildDatabase(?array $entityTypeList = null): void
+    public function rebuildDatabase(?array $entityTypeList = null, string $mode = RebuildMode::SOFT): void
     {
         $schemaManager = $this->schemaManager;
 
         try {
-            $result = $schemaManager->rebuild($entityTypeList);
+            $result = $schemaManager->rebuild($entityTypeList, $mode);
         }
         catch (Throwable $e) {
             $result = false;
