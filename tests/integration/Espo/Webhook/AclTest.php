@@ -30,7 +30,7 @@
 namespace tests\integration\Espo\Webhook;
 
 use Espo\Core\{
-    Api\ActionProcessor,
+    Api\ControllerActionProcessor,
     Api\Response,
 };
 
@@ -59,7 +59,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
         $this->expectException(Forbidden::class);
 
@@ -99,7 +99,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
         $this->expectException(Forbidden::class);
 
@@ -137,7 +137,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
         $this->expectException(Forbidden::class);
 
@@ -175,7 +175,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
         $response = $this->createMock(Response::class);
 
@@ -233,7 +233,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $response = $this->createMock(Response::class);
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
         $processor->process('Webhook', 'delete', $request, $response);
 

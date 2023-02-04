@@ -42,7 +42,7 @@ use stdClass;
 /**
  * Creates controller instances and processes actions.
  */
-class ActionProcessor
+class ControllerActionProcessor
 {
     public function __construct(
         private InjectableFactory $injectableFactory,

@@ -30,7 +30,7 @@
 namespace tests\integration\Espo\User;
 
 use Espo\Core\{
-    Api\ActionProcessor,
+    Api\ControllerActionProcessor,
     Api\Response,
     Select\SearchParams,
     Select\Where\Item as WhereItem,
@@ -93,7 +93,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
         $request = $this->createRequest(
             'POST',
@@ -136,7 +136,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
         $data = json_decode('{"name":"Test Account"}');
 
@@ -163,7 +163,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
         $params = [
             'id' => $user1->id,
@@ -251,7 +251,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
         $params = [
             'id' => $user1->id

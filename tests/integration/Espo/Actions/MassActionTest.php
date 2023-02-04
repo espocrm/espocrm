@@ -42,7 +42,7 @@ use Espo\Core\Select\SearchParams;
 use Espo\Core\InjectableFactory;
 
 use Espo\Core\{
-    Api\ActionProcessor,
+    Api\ControllerActionProcessor,
     Api\Response,
     ORM\EntityManager,
     Application,
@@ -63,7 +63,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
     private $entityManager;
 
     /**
-     * @var ActionProcessor
+     * @var ControllerActionProcessor
      */
     private $actionProcessor;
 
@@ -78,7 +78,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
         $this->actionProcessor = $this->app
             ->getContainer()
             ->get('injectableFactory')
-            ->create(ActionProcessor::class);
+            ->create(ControllerActionProcessor::class);
     }
 
     public function testUpdate1(): void

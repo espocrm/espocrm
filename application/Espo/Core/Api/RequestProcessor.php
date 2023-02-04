@@ -55,7 +55,7 @@ class RequestProcessor
         private Config $config,
         private Log $log,
         private ApplicationUser $applicationUser,
-        private ActionProcessor $actionProcessor,
+        private ControllerActionProcessor $actionProcessor,
         private MiddlewareProvider $middlewareProvider
     ) {}
 
@@ -152,7 +152,7 @@ class RequestProcessor
             actionName: $action,
             processData: $processData,
             responseWrapped: $responseWrapped,
-            actionProcessor: $this->actionProcessor,
+            controllerActionProcessor: $this->actionProcessor,
             config: $this->config,
         );
 

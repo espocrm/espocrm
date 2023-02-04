@@ -30,7 +30,7 @@
 namespace tests\integration\Espo\Actions;
 
 use Espo\Core\{
-    Api\ActionProcessor,
+    Api\ControllerActionProcessor,
     Api\Response,
     ORM\EntityManager,
     Application,
@@ -58,7 +58,7 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
     private $entityManager;
 
     /**
-     * @var ActionProcessor
+     * @var ControllerActionProcessor
      */
     private $actionProcessor;
 
@@ -78,7 +78,7 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
         $this->actionProcessor = $this->app
             ->getContainer()
             ->get('injectableFactory')
-            ->create(ActionProcessor::class);
+            ->create(ControllerActionProcessor::class);
 
         $this->merger = $this->app
             ->getContainer()

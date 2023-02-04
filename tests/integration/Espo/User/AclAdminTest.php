@@ -30,7 +30,7 @@
 namespace tests\integration\Espo\User;
 
 use Espo\Core\{
-    Api\ActionProcessor,
+    Api\ControllerActionProcessor,
     Api\Response,
 };
 
@@ -49,7 +49,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
 
         $processor = $app->getContainer()
             ->get('injectableFactory')
-            ->create(ActionProcessor::class);
+            ->create(ControllerActionProcessor::class);
 
         $data = [
             'userName' => 'test',
@@ -86,7 +86,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
 
         $processor = $app->getContainer()
             ->get('injectableFactory')
-            ->create(ActionProcessor::class);
+            ->create(ControllerActionProcessor::class);
 
         $data = [
             'name' => 'test',
@@ -121,7 +121,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
 
         $processor = $app->getContainer()
             ->get('injectableFactory')
-            ->create(ActionProcessor::class);
+            ->create(ControllerActionProcessor::class);
 
         $data = [
             'name' => 'test',
@@ -156,7 +156,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
 
         $processor = $app->getContainer()
             ->get('injectableFactory')
-            ->create(ActionProcessor::class);
+            ->create(ControllerActionProcessor::class);
 
         $data = [
             'name' => 'test',

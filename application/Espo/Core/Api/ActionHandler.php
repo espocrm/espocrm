@@ -42,7 +42,7 @@ class ActionHandler implements RequestHandlerInterface
         private string $actionName,
         private ProcessData $processData,
         private ResponseWrapper $responseWrapped,
-        private ActionProcessor $actionProcessor,
+        private ControllerActionProcessor $controllerActionProcessor,
         private Config $config
     ) {}
 
@@ -59,7 +59,7 @@ class ActionHandler implements RequestHandlerInterface
 
         $this->beforeProceed();
 
-        $responseWrapped = $this->actionProcessor->process(
+        $responseWrapped = $this->controllerActionProcessor->process(
             $this->controllerName,
             $this->actionName,
             $requestWrapped,
