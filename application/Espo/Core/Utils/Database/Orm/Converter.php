@@ -88,12 +88,10 @@ class Converter
     ];
 
     /** @var array<string, mixed> */
-    private $idParams = [
-        'dbType' => Types::STRING,
-        'len' => self::DEFAULT_ID_LENGTH,
-    ];
+    private $idParams = [];
 
     private const DEFAULT_ID_LENGTH = 24;
+    private const DEFAULT_ID_DB_TYPE = Types::STRING;
 
     /**
      * Permitted entityDefs parameters which will be copied to ormMetadata.
@@ -121,6 +119,9 @@ class Converter
 
         $this->idParams['len'] = $this->metadata->get(['app', 'recordId', 'length']) ??
             self::DEFAULT_ID_LENGTH;
+
+        $this->idParams['dbType'] = $this->metadata->get(['app', 'recordId', 'dbType']) ??
+            self::DEFAULT_ID_DB_TYPE;
     }
 
     /**
