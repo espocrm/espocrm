@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Classes\Select\Meeting\BoolFilters;
 
 use Espo\Core\Select\Bool\Filter;
+use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
 use Espo\ORM\Query\Part\Condition as Cond;
@@ -38,12 +39,8 @@ use Espo\Entities\User;
 
 class OnlyMy implements Filter
 {
-    private $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
+    public function __construct(private User $user)
+    {}
 
     public function apply(SelectBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {
@@ -60,7 +57,7 @@ class OnlyMy implements Filter
                     Cond::or(
                         Cond::notEqual(
                             Cond::column('usersFilterOnlyMyMiddle.status'),
-                            'Declined'
+                            Meeting::ATTENDEE_STATUS_DECLINED
                         ),
                         Cond::equal(
                             Cond::column('usersFilterOnlyMyMiddle.status'),
