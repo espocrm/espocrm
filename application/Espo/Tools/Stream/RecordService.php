@@ -222,34 +222,28 @@ class RecordService
                 $subscriptionTeamBuilder = clone $subscriptionBuilder;
 
                 $subscriptionTeamBuilder
-                    ->distinct()
-                    ->leftJoin(
-                        'noteTeam',
-                        'noteTeam',
-                        [
-                            'noteTeam.noteId=:' => 'id',
-                            'noteTeam.deleted' => false,
-                        ]
-                    )
-                    ->leftJoin(
-                        'noteUser',
-                        'noteUser',
-                        [
-                            'noteUser.noteId=:' => 'id',
-                            'noteUser.deleted' => false,
-                        ]
-                    )
                     ->where([
-                        [
-                            'relatedId!=' => null,
-                            'relatedType=' => $onlyTeamEntityTypeList,
-                        ],
-                        [
-                            'OR' => [
-                                'noteTeam.teamId' => $teamIdList,
-                                'noteUser.userId' => $user->getId(),
-                            ],
-                        ],
+                        'relatedId!=' => null,
+                        'relatedType=' => $onlyTeamEntityTypeList,
+                        'id=s' => SelectQueryBuilder::create()
+                            ->select('id')
+                            ->from(Note::ENTITY_TYPE)
+                            ->leftJoin('NoteTeam', 'noteTeam', [
+                                'noteTeam.noteId=:' => 'id',
+                                'noteTeam.deleted' => false,
+                            ])
+                            ->leftJoin('NoteUser', 'noteUser', [
+                                'noteUser.noteId=:' => 'id',
+                                'noteUser.deleted' => false,
+                            ])
+                            ->where([
+                                'OR' => [
+                                    'noteTeam.teamId' => $teamIdList,
+                                    'noteUser.userId' => $user->getId(),
+                                ]
+                            ])
+                            ->build()
+                            ->getRaw(),
                     ]);
 
                 $queryList[] = $subscriptionTeamBuilder->build();
@@ -259,21 +253,19 @@ class RecordService
                 $subscriptionOwnBuilder = clone $subscriptionBuilder;
 
                 $subscriptionOwnBuilder
-                    ->distinct()
-                    ->leftJoin(
-                        'noteUser',
-                        'noteUser',
-                        [
-                            'noteUser.noteId=:' => 'id',
-                            'noteUser.deleted' => false,
-                        ]
-                    )
                     ->where([
-                        [
-                            'relatedId!=' => null,
-                            'relatedType=' => $onlyOwnEntityTypeList,
-                        ],
-                        'noteUser.userId' => $user->getId(),
+                        'relatedId!=' => null,
+                        'relatedType=' => $onlyOwnEntityTypeList,
+                        'id=s' => SelectQueryBuilder::create()
+                            ->select('id')
+                            ->from(Note::ENTITY_TYPE)
+                            ->leftJoin('NoteUser', 'noteUser', [
+                                'noteUser.noteId=:' => 'id',
+                                'noteUser.deleted' => false,
+                            ])
+                            ->where(['noteUser.userId' => $user->getId()])
+                            ->build()
+                            ->getRaw(),
                     ]);
 
                 $queryList[] = $subscriptionOwnBuilder->build();
@@ -412,7 +404,6 @@ class RecordService
             $portalIdList = $user->getLinkMultipleIdList('portals');
 
             if (!empty($portalIdList)) {
-
                 $queryList[] = (clone $baseBuilder)
                     ->leftJoin('portals')
                     ->leftJoin('createdBy')
