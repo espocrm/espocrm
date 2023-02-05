@@ -31,25 +31,18 @@ namespace Espo\Classes\Select\User\AccessControlFilters;
 
 use Espo\ORM\Query\SelectBuilder;
 
-use Espo\Core\{
-    Select\AccessControl\Filter,
-    AclManager,
-    Acl\Table,
-};
+use Espo\Core\Acl\Table;
+use Espo\Core\AclManager;
+use Espo\Core\Select\AccessControl\Filter;
 
 use Espo\Entities\User;
 
 class OnlyTeam implements Filter
 {
-    private $user;
-
-    private $aclManager;
-
-    public function __construct(User $user, AclManager $aclManager)
-    {
-        $this->user = $user;
-        $this->aclManager = $aclManager;
-    }
+    public function __construct(
+        private User $user,
+        private AclManager $aclManager
+    ) {}
 
     public function apply(SelectBuilder $queryBuilder): void
     {
@@ -59,7 +52,7 @@ class OnlyTeam implements Filter
         ];
 
         if ($this->aclManager->getPermissionLevel($this->user, 'portalPermission') === Table::LEVEL_YES) {
-            $orGroup['type'] = 'portal';
+            $orGroup['type'] = User::TYPE_PORTAL;
         }
 
         $queryBuilder

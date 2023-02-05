@@ -29,65 +29,68 @@
 
 namespace Espo\Core\Select\AccessControl\Filters;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Core\Select\AccessControl\Filter,
-    Core\Select\Helpers\FieldHelper,
-    Entities\User,
-};
+use Espo\Core\Select\AccessControl\Filter;
+use Espo\Core\Select\Helpers\FieldHelper;
+use Espo\Entities\Team;
+use Espo\Entities\User;
+use Espo\ORM\Defs;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class OnlyTeam implements Filter
 {
-    private $user;
-
-    private $fieldHelper;
-
-    public function __construct(User $user, FieldHelper $fieldHelper)
-    {
-        $this->user = $user;
-        $this->fieldHelper = $fieldHelper;
-    }
+    public function __construct(
+        private User $user,
+        private FieldHelper $fieldHelper,
+        private string $entityType,
+        private Defs $defs
+    ) {}
 
     public function apply(QueryBuilder $queryBuilder): void
     {
         if (!$this->fieldHelper->hasTeamsField()) {
-            $queryBuilder->where([
-                'id' => null,
-            ]);
+            $queryBuilder->where(['id' => null]);
 
             return;
         }
 
-        $queryBuilder->distinct();
+        $subQueryBuilder = QueryBuilder::create()
+            ->select('id')
+            ->from($this->entityType)
+            ->leftJoin(Team::RELATIONSHIP_ENTITY_TEAM, 'entityTeam', [
+                'entityTeam.entityId:' => 'id',
+                'entityTeam.entityType' => $this->entityType,
+                'entityTeam.deleted' => false,
+            ]);
 
-        $queryBuilder->leftJoin('teams', 'teamsAccess');
+        $orGroup = ['entityTeam.teamId' => $this->user->getTeamIdList()];
 
         if ($this->fieldHelper->hasAssignedUsersField()) {
-            $queryBuilder->leftJoin('assignedUsers', 'assignedUsersAccess');
+            $relationDefs = $this->defs
+                ->getEntity($this->entityType)
+                ->getRelation('assignedUsers');
 
-            $queryBuilder->where([
-                'OR' => [
-                    'teamsAccess.id' => $this->user->getTeamIdList(),
-                    'assignedUsersAccess.id' => $this->user->id,
-                ]
+            $middleEntityType = ucfirst($relationDefs->getRelationshipName());
+            $key1 = $relationDefs->getMidKey();
+            $key2 = $relationDefs->getForeignMidKey();
+
+            $subQueryBuilder->leftJoin($middleEntityType, 'assignedUsersMiddle', [
+                "assignedUsersMiddle.{$key1}:" => 'id',
+                'assignedUsersMiddle.deleted' => false,
             ]);
 
-            return;
+            $orGroup["assignedUsersMiddle.{$key2}"] = $this->user->getId();
         }
-
-        $orGroup = [
-            'teamsAccess.id' => $this->user->getTeamIdList(),
-        ];
-
-        if ($this->fieldHelper->hasAssignedUserField()) {
-            $orGroup['assignedUserId'] = $this->user->id;
+        else if ($this->fieldHelper->hasAssignedUserField()) {
+            $orGroup['assignedUserId'] = $this->user->getId();
         }
         else if ($this->fieldHelper->hasCreatedByField()) {
-            $orGroup['createdById'] = $this->user->id;
+            $orGroup['createdById'] = $this->user->getId();
         }
 
-        $queryBuilder->where([
-            'OR' => $orGroup,
-        ]);
+        $subQuery = $subQueryBuilder
+            ->where(['OR' => $orGroup])
+            ->build();
+
+        $queryBuilder->where(['id=s' => $subQuery->getRaw()]);
     }
 }

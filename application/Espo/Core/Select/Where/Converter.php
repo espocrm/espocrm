@@ -29,45 +29,35 @@
 
 namespace Espo\Core\Select\Where;
 
-use Espo\{
-    Core\Exceptions\Error,
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\WhereClause,
-    ORM\Query\Part\WhereItem,
-    ORM\Entity,
-    ORM\Defs as ORMDefs,
-    Core\Select\Helpers\RandomStringGenerator,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Select\Helpers\RandomStringGenerator;
+use Espo\Entities\Team;
+use Espo\Entities\User;
+use Espo\ORM\Defs as ORMDefs;
+use Espo\ORM\Entity;
+use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Query\Part\WhereItem;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 /**
  * Converts a search where (passed from front-end) to a where clause (for ORM).
  */
 class Converter
 {
-    private string $entityType;
-
-    private ItemConverter $itemConverter;
-
-    private Scanner $scanner;
-
-    private RandomStringGenerator $randomStringGenerator;
-
-    private ORMDefs $ormDefs;
+    private const TYPE_IN_CATEGORY = 'inCategory';
+    private const TYPE_IS_USER_FROM_TEAMS = 'isUserFromTeams';
 
     public function __construct(
-        string $entityType,
-        ItemConverter $itemConverter,
-        Scanner $scanner,
-        RandomStringGenerator $randomStringGenerator,
-        ORMDefs $ormDefs
-    ) {
-        $this->entityType = $entityType;
-        $this->itemConverter = $itemConverter;
-        $this->scanner = $scanner;
-        $this->randomStringGenerator = $randomStringGenerator;
-        $this->ormDefs = $ormDefs;
-    }
+        private string $entityType,
+        private ItemConverter $itemConverter,
+        private Scanner $scanner,
+        private RandomStringGenerator $randomStringGenerator,
+        private ORMDefs $ormDefs
+    ) {}
 
+    /**
+     * @throws Error
+     */
     public function convert(QueryBuilder $queryBuilder, Item $item): WhereItem
     {
         $whereClause = [];
@@ -90,7 +80,7 @@ class Converter
     }
 
     /**
-     * @return array<mixed,mixed>
+     * @return array<int|string,mixed>
      * @throws Error
      */
     private function itemToList(Item $item): array
@@ -111,7 +101,7 @@ class Converter
     }
 
     /**
-     * @return ?array<mixed,mixed>
+     * @return ?array<int|string, mixed>
      * @throws Error
      */
     private function processItem(QueryBuilder $queryBuilder, Item $item): ?array
@@ -120,9 +110,10 @@ class Converter
         $attribute = $item->getAttribute();
         $value = $item->getValue();
 
-        $methodName = 'apply' . ucfirst($type);
-
-        if (method_exists($this, $methodName)) {
+        if (
+            $type === self::TYPE_IN_CATEGORY ||
+            $type === self::TYPE_IS_USER_FROM_TEAMS
+        ) {
             // Processing special filters. Only at the top level of the tree.
 
             if (!$attribute) {
@@ -133,7 +124,11 @@ class Converter
                 return null;
             }
 
-            return $this->$methodName($queryBuilder, $attribute, $value);
+            if ($type === self::TYPE_IN_CATEGORY) {
+                return $this->applyInCategory($queryBuilder, $attribute, $value);
+            }
+
+            return $this->applyIsUserFromTeams($queryBuilder, $attribute, $value);
         }
 
         return $this->itemConverter->convert($queryBuilder, $item)->getRaw();
@@ -141,7 +136,7 @@ class Converter
 
     /**
      * @param mixed $value
-     * @return array<mixed,mixed>
+     * @return array<int|string, mixed>
      * @throws Error
      */
     private function applyInCategory(QueryBuilder $queryBuilder, string $attribute, $value): array
@@ -207,7 +202,7 @@ class Converter
 
     /**
      * @param mixed $value
-     * @return array<mixed,mixed>
+     * @return array<int|string ,mixed>
      * @throws Error
      */
     private function applyIsUserFromTeams(QueryBuilder $queryBuilder, string $attribute, $value): array
@@ -229,7 +224,7 @@ class Converter
         $relationType = $defs->getType();
         $entityType = $defs->getForeignEntityType();
 
-        if ($entityType !== 'User') {
+        if ($entityType !== User::ENTITY_TYPE) {
             throw new Error("Not supported link '{$link}' in where item.");
         }
 
@@ -239,7 +234,7 @@ class Converter
             $aliasName = $link . 'IsUserFromTeamsFilter' . $this->randomStringGenerator->generate();
 
             $queryBuilder->leftJoin(
-                'TeamUser',
+                Team::RELATIONSHIP_TEAM_USER,
                 $aliasName . 'Middle',
                 [
                     $aliasName . 'Middle.userId:' => $key,

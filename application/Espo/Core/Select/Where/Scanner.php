@@ -114,7 +114,7 @@ class Scanner
         string $entityType
     ): void {
 
-        if (strpos($attribute, ':') !== false) {
+        if (str_contains($attribute, ':')) {
             $argumentList = QueryComposer::getAllAttributesFromComplexExpression($attribute);
 
             foreach ($argumentList as $argument) {
@@ -126,7 +126,7 @@ class Scanner
 
         $seed = $this->getSeed($entityType);
 
-        if (strpos($attribute, '.') !== false) {
+        if (str_contains($attribute, '.')) {
             list($link, $attribute) = explode('.', $attribute);
 
             if ($seed->hasRelation($link)) {

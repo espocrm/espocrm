@@ -72,7 +72,7 @@ class ForeignOnlyTeam implements Filter
             return;
         }
 
-        $teamIdList = $this->user->getLinkMultipleIdList('teams') ?? [];
+        $teamIdList = $this->user->getTeamIdList();
 
         if (count($teamIdList) === 0) {
             $queryBuilder->where([

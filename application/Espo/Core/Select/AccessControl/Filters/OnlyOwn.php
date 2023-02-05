@@ -29,53 +29,55 @@
 
 namespace Espo\Core\Select\AccessControl\Filters;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Core\Select\AccessControl\Filter,
-    Core\Select\Helpers\FieldHelper,
-    Entities\User,
-};
+use Espo\Core\Select\AccessControl\Filter;
+use Espo\Core\Select\Helpers\FieldHelper;
+use Espo\Entities\User;
+use Espo\ORM\Defs;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class OnlyOwn implements Filter
 {
-    private $user;
-
-    private $fieldHelper;
-
-    public function __construct(User $user, FieldHelper $fieldHelper)
-    {
-        $this->user = $user;
-        $this->fieldHelper = $fieldHelper;
-    }
+    public function __construct(
+        private User $user,
+        private FieldHelper $fieldHelper,
+        private string $entityType,
+        private Defs $defs
+    ) {}
 
     public function apply(QueryBuilder $queryBuilder): void
     {
         if ($this->fieldHelper->hasAssignedUsersField()) {
-            $queryBuilder->distinct();
+            $relationDefs = $this->defs
+                ->getEntity($this->entityType)
+                ->getRelation('assignedUsers');
 
-            $queryBuilder->leftJoin('assignedUsers', 'assignedUsersAccess');
+            $middleEntityType = ucfirst($relationDefs->getRelationshipName());
+            $key1 = $relationDefs->getMidKey();
+            $key2 = $relationDefs->getForeignMidKey();
 
-            $queryBuilder->where([
-                'assignedUsersAccess.id' => $this->user->id,
-            ]);
+            $subQuery = QueryBuilder::create()
+                ->select('id')
+                ->from($this->entityType)
+                ->leftJoin($middleEntityType, 'assignedUsersMiddle', [
+                    "assignedUsersMiddle.{$key1}:" => 'id',
+                    'assignedUsersMiddle.deleted' => false,
+                ])
+                ->where(["assignedUsersMiddle.{$key2}" => $this->user->getId()])
+                ->build();
+
+            $queryBuilder->where(['id=s' => $subQuery->getRaw()]);
 
             return;
         }
 
         if ($this->fieldHelper->hasAssignedUserField()) {
-            $queryBuilder->where([
-                'assignedUserId' => $this->user->id,
-            ]);
+            $queryBuilder->where(['assignedUserId' => $this->user->getId()]);
 
             return;
         }
 
         if ($this->fieldHelper->hasCreatedByField()) {
-            $queryBuilder->where([
-                'createdById' => $this->user->id,
-            ]);
-
-            return;
+            $queryBuilder->where(['createdById' => $this->user->getId()]);
         }
     }
 }
