@@ -29,14 +29,12 @@
 
 namespace tests\integration\Espo\User;
 
-use Espo\Core\{
-    Api\ControllerActionProcessor,
-    Api\Response,
-    Select\SearchParams,
-    Select\Where\Item as WhereItem,
-    Record\CreateParams,
-    Record\UpdateParams,
-};
+use Espo\Core\Api\ControllerActionProcessor;
+use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\Record\CreateParams;
+use Espo\Core\Record\UpdateParams;
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\Where\Item as WhereItem;
 
 use Espo\Core\Exceptions\Forbidden;
 
@@ -177,7 +175,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $request = $this
             ->createRequest('PATCH', [], ['Content-Type' => 'application/json'], json_encode($data), $params);
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->once())
@@ -197,7 +195,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $request = $this
             ->createRequest('PATCH', [], ['Content-Type' => 'application/json'], json_encode($data), $params);
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->never())
@@ -265,7 +263,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $request = $this
             ->createRequest('PUT', [], ['Content-Type' => 'application/json'], json_encode($data), $params);
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->never())
