@@ -62,6 +62,7 @@ class OnlyTeam implements Filter
                 'entityTeam.deleted' => false,
             ]);
 
+        // Empty list is converted to false statement by ORM.
         $orGroup = ['entityTeam.teamId' => $this->user->getTeamIdList()];
 
         if ($this->fieldHelper->hasAssignedUsersField()) {
