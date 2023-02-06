@@ -67,7 +67,6 @@ use Espo\Core\Di;
 use stdClass;
 use InvalidArgumentException;
 use LogicException;
-use tests\unit\testData\DB\TEntity;
 
 /**
  * The layer between a controller and ORM repository. For CRUD and other operations with records.
@@ -1289,21 +1288,23 @@ class Service implements Crud,
             $action = AclTable::ACTION_READ;
         }
 
-        if (!$this->acl->check($foreignEntity, $action)) {
-            $body = ErrorBody::create();
-
-            $body = $fromUpdate ?
-                $body->withMessageTranslation('cannotRelateForbidden', null, [
-                    'foreignEntityType' => $foreignEntity->getEntityType(),
-                    'action' => $action,
-                ]) :
-                $body->withMessageTranslation('noAccessToForeignRecord', null, ['action' => $action]);
-
-            throw ForbiddenSilent::createWithBody(
-                "No foreign record access for link operation ({$this->entityType}:{$link}).",
-                $body->encode()
-            );
+        if ($this->acl->check($foreignEntity, $action)) {
+            return;
         }
+
+        $body = ErrorBody::create();
+
+        $body = $fromUpdate ?
+            $body->withMessageTranslation('cannotRelateForbidden', null, [
+                'foreignEntityType' => $foreignEntity->getEntityType(),
+                'action' => $action,
+            ]) :
+            $body->withMessageTranslation('noAccessToForeignRecord', null, ['action' => $action]);
+
+        throw ForbiddenSilent::createWithBody(
+            "No foreign record access for link operation ({$this->entityType}:{$link}).",
+            $body->encode()
+        );
     }
 
     /**
@@ -1318,9 +1319,7 @@ class Service implements Crud,
             return;
         }
 
-        $hasAccess = $checker->check($this->user, $entity, $foreignEntity);
-
-        if ($hasAccess) {
+        if ($checker->check($this->user, $entity, $foreignEntity)) {
             return;
         }
 
