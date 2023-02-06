@@ -67,6 +67,7 @@ use Espo\Core\Di;
 use stdClass;
 use InvalidArgumentException;
 use LogicException;
+use tests\unit\testData\DB\TEntity;
 
 /**
  * The layer between a controller and ORM repository. For CRUD and other operations with records.
@@ -186,6 +187,8 @@ class Service implements Crud,
     private $listLoadProcessor = null;
     /** @var ?DuplicateFinder */
     private $duplicateFinder = null;
+    /** @var array<string, ?LinkChecker<TEntity, Entity>> */
+    private $linkCheckerCache = [];
 
     protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;
 
@@ -378,7 +381,7 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @throws Forbidden
-     * @todo Move to a separate class.
+     * @todo Move to a separate class Access\LinkCheck.
      */
     private function processLinkedRecordsCheck(Entity $entity): void
     {
@@ -423,22 +426,50 @@ class Service implements Crud,
             $oldIds = $entity->getFetched($attribute) ?? [];
 
             $ids = array_values(array_diff($ids, $oldIds));
+            $removedIds = array_values(array_diff($oldIds, $ids));
+
+            if ($ids === [] && $removedIds === []) {
+                continue;
+            }
+
+            $hasLinkMultiple =
+                $entityDefs->hasField($name) &&
+                $entityDefs->getField($name)->getType() === 'linkMultiple';
+
+            if (
+                !$hasLinkMultiple &&
+                !$this->acl->getScopeForbiddenLinkList($this->entityType, AclTable::ACTION_EDIT)
+            ) {
+                throw ForbiddenSilent::createWithBody(
+                    "No access to link {$name}.",
+                    ErrorBody::create()
+                        ->withMessageTranslation('cannotRelateForbiddenLink', null, ['link' => $name])
+                        ->encode()
+                );
+            }
 
             if ($ids === []) {
                 continue;
             }
 
             foreach ($ids as $id) {
-                $this->processLinkedRecordsCheckEntity($relationDefs, $id);
+                $this->processLinkedRecordsCheckItem($entity, $relationDefs, $id);
             }
         }
     }
 
     /**
+     * @param TEntity $entity
      * @throws Forbidden
      */
-    private function processLinkedRecordsCheckEntity(RelationDefs $defs, string $id): void
+    private function processLinkedRecordsCheckItem(Entity $entity, RelationDefs $defs, string $id): void
     {
+        $link = $defs->getName();
+
+        if (!$defs->hasForeignEntityType()) {
+            return;
+        }
+
         $foreignEntityType = $defs->getForeignEntityType();
 
         $foreignEntity = $this->entityManager->getEntityById($foreignEntityType, $id);
@@ -453,15 +484,14 @@ class Service implements Crud,
             );
         }
 
-        if (!$this->acl->checkEntityRead($foreignEntity)) {
-            throw ForbiddenSilent::createWithBody(
-                "Can't relate with forbidden record.",
-                ErrorBody::create()
-                    ->withMessageTranslation(
-                        'cannotRelateForbidden', null, ['foreignEntityType' => $foreignEntityType])
-                    ->encode()
-            );
-        }
+        $entityDefs = $this->entityManager->getDefs()->getEntity($this->entityType);
+
+        $readAccess =
+            $entityDefs->hasField($link) &&
+            $entityDefs->getField($link)->getType() === 'linkMultiple';
+
+        $this->linkForeignAccessCheck($link, $foreignEntity, true, $readAccess);
+        $this->linkEntityAccessCheck($entity, $foreignEntity, $link);
     }
 
     /**
@@ -1238,8 +1268,13 @@ class Service implements Crud,
     /**
      * @throws Forbidden
      */
-    private function linkForeignAccessCheck(string $link, Entity $foreignEntity): void
-    {
+    private function linkForeignAccessCheck(
+        string $link,
+        Entity $foreignEntity,
+        bool $fromUpdate = false,
+        bool $readAccess = false
+    ): void {
+
         $action = in_array($link, $this->noEditAccessRequiredLinkList) ?
             AclTable::ACTION_READ : null;
 
@@ -1250,12 +1285,23 @@ class Service implements Crud,
                 AclTable::ACTION_EDIT;
         }
 
+        if ($readAccess) {
+            $action = AclTable::ACTION_READ;
+        }
+
         if (!$this->acl->check($foreignEntity, $action)) {
+            $body = ErrorBody::create();
+
+            $body = $fromUpdate ?
+                $body->withMessageTranslation('cannotRelateForbidden', null, [
+                    'foreignEntityType' => $foreignEntity->getEntityType(),
+                    'action' => $action,
+                ]) :
+                $body->withMessageTranslation('noAccessToForeignRecord', null, ['action' => $action]);
+
             throw ForbiddenSilent::createWithBody(
                 "No foreign record access for link operation ({$this->entityType}:{$link}).",
-                ErrorBody::create()
-                    ->withMessageTranslation('noAccessToForeignRecord', null, ['action' => $action])
-                    ->encode()
+                $body->encode()
             );
         }
     }
@@ -1291,14 +1337,22 @@ class Service implements Crud,
      */
     private function getLinkChecker(string $link): ?LinkChecker
     {
+        if (array_key_exists($link, $this->linkCheckerCache)) {
+            return $this->linkCheckerCache[$link];
+        }
+
         $factory = $this->injectableFactory->create(LinkCheckerFactory::class);
 
         if (!$factory->isCreatable($this->entityType, $link)) {
             return null;
         }
 
-        /** @var LinkChecker<TEntity, Entity> */
-        return $factory->create($this->entityType, $link);
+        /** @var LinkChecker<TEntity, Entity> $checker */
+        $checker = $factory->create($this->entityType, $link);
+
+        $this->linkCheckerCache[$link] = $checker;
+
+        return $checker;
     }
 
     /**
