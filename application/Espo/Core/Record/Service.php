@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Record;
 
+use Espo\Core\Acl\LinkChecker;
+use Espo\Core\Acl\LinkChecker\LinkCheckerFactory;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Exceptions\Error\Body as ErrorBody;
 use Espo\Core\Exceptions\BadRequest;
@@ -1039,6 +1041,7 @@ class Service implements Crud,
         }
 
         $this->linkForeignAccessCheck($link, $foreignEntity);
+        $this->linkEntityAccessCheck($entity, $foreignEntity, $link);
 
         $this->recordHookManager->processBeforeLink($entity, $link, $foreignEntity);
 
@@ -1099,6 +1102,7 @@ class Service implements Crud,
         }
 
         $this->linkForeignAccessCheck($link, $foreignEntity);
+        $this->linkEntityAccessCheck($entity, $foreignEntity, $link);
 
         $this->recordHookManager->processBeforeUnlink($entity, $link, $foreignEntity);
 
@@ -1157,6 +1161,47 @@ class Service implements Crud,
                     ->encode()
             );
         }
+    }
+
+    /**
+     * @param TEntity $entity
+     * @throws Forbidden
+     */
+    private function linkEntityAccessCheck(Entity $entity, Entity $foreignEntity, string $link): void
+    {
+        $checker = $this->getLinkChecker($link);
+
+        if (!$checker) {
+            return;
+        }
+
+        $hasAccess = $checker->check($this->user, $entity, $foreignEntity);
+
+        if ($hasAccess) {
+            return;
+        }
+
+        throw ForbiddenSilent::createWithBody(
+            "No access for link operation ({$this->entityType}:{$link}).",
+            ErrorBody::create()
+                ->withMessageTranslation('noLinkAccess')
+                ->encode()
+        );
+    }
+
+    /**
+     * @return ?LinkChecker<TEntity, Entity>
+     */
+    private function getLinkChecker(string $link): ?LinkChecker
+    {
+        $factory = $this->injectableFactory->create(LinkCheckerFactory::class);
+
+        if (!$factory->isCreatable($this->entityType, $link)) {
+            return null;
+        }
+
+        /** @var LinkChecker<TEntity, Entity> */
+        return $factory->create($this->entityType, $link);
     }
 
     /**

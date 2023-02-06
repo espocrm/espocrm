@@ -373,6 +373,7 @@
         "loggedOutLeaveOut": "Logged out. The session is inactive. You may lose unsaved form data after page refresh. You may need to make a copy.",
         "noAccessToRecord": "Operation requires `{action}` access to record.",
         "noAccessToForeignRecord": "Operation requires `{action}` access to foreign record.",
+        "noLinkAccess": "No access to link operation for a specific record.",
         "error404": "The url you requested can't be handled.",
         "error403": "You don't have an access to this area."
     },
