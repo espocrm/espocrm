@@ -173,42 +173,47 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                     'DESC',
                 ],
             ],
-            'joins' => [],
-            'leftJoins' => [
-                [
-                    'teams',
-                    'teamsAccess',
-                ],
-            ],
-            'distinct' => true,
             'whereClause' => [
+                'id=s' => [
+                    'select' => [
+                        'id',
+                    ],
+                    'from' => 'Account',
+                    'leftJoins' => [
+                        [
+                            'EntityTeam',
+                            'entityTeam',
+                            [
+                                'entityTeam.entityId:' => 'id',
+                                'entityTeam.entityType' => 'Account',
+                                'entityTeam.deleted' => false,
+                            ],
+                        ],
+                    ],
+                    'whereClause' => [
+                        'OR' =>
+                            [
+                                'entityTeam.teamId' => [],
+                                'assignedUserId' => $userId,
+                            ],
+                    ],
+                ],
                 'OR' => [
                     [
                         'assignedUserId' => $userId,
                     ],
                 ],
+                'type' => 'Customer',
                 [
                     'name=' => 'test',
                 ],
                 [
                     'createdAt<' => '2020-12-12 10:00:00',
                 ],
-                [
-                    'OR' => [
-                        'teamsAccess.id' => [],
-                        'assignedUserId' => $userId,
-                    ],
-                ],
-                'type' => 'Customer',
             ],
         ];
 
-        $this->assertEquals($expected['from'], $raw['from']);
-        $this->assertEquals($expected['whereClause'], $raw['whereClause']);
-        $this->assertEquals($expected['orderBy'], $raw['orderBy']);
-        $this->assertEquals($expected['leftJoins'], $raw['leftJoins']);
-
-        $this->assertTrue($raw['distinct']);
+        $this->assertEquals($expected, $raw);
     }
 
     public function testBuild2()
@@ -236,31 +241,62 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 
         $expected = [
             'from' => 'Meeting',
-            'joins' => [],
-            'leftJoins' => [
+            'whereClause' =>
                 [
-                    'teams',
-                    'teamsAccess',
+                    'id=s' =>
+                        [
+                            'select' =>
+                                [
+                                    0 => 'id',
+                                ],
+                            'from' => 'Meeting',
+                            'leftJoins' =>
+                                [
+                                    0 =>
+                                        [
+                                            0 => 'EntityTeam',
+                                            1 => 'entityTeam',
+                                            2 =>
+                                                [
+                                                    'entityTeam.entityId:' => 'id',
+                                                    'entityTeam.entityType' => 'Meeting',
+                                                    'entityTeam.deleted' => false,
+                                                ],
+                                        ],
+                                    1 =>
+                                        [
+                                            0 => 'MeetingUser',
+                                            1 => 'usersMiddle',
+                                            2 =>
+                                                [
+                                                    'usersMiddle.meetingId:' => 'id',
+                                                    'usersMiddle.deleted' => false,
+                                                ],
+                                        ],
+                                ],
+                            'whereClause' =>
+                                [
+                                    'OR' =>
+                                        [
+                                            0 =>
+                                                [
+                                                    'entityTeam.teamId=' => [],
+                                                ],
+                                            1 =>
+                                                [
+                                                    'usersMiddle.userId=' => $userId,
+                                                ],
+                                            2 =>
+                                                [
+                                                    'assignedUserId=' => $userId,
+                                                ],
+                                        ],
+                                ],
+                        ],
                 ],
-                [
-                    'users',
-                    'usersAccess',
-                ],
-            ],
-            'distinct' => true,
-            'whereClause' => [
-                'OR' => [
-                    ['teamsAccessMiddle.teamId=' => []],
-                    ['usersAccessMiddle.userId=' => $userId],
-                    ['assignedUserId=' => $userId],
-                ],
-            ],
         ];
 
-        $this->assertEquals($expected['whereClause'], $raw['whereClause']);
-        $this->assertEquals($expected['leftJoins'], $raw['leftJoins']);
-
-        $this->assertTrue($raw['distinct']);
+        $this->assertEquals($expected, $raw);
     }
 
     public function testEmailAccessFilterOnlyOwn()
@@ -288,25 +324,27 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 
         $expected = [
             'from' => 'Email',
-            'joins' => [],
-            'leftJoins' => [
+            'leftJoins' =>
                 [
-                    'EmailUser',
-                    'emailUser',
-                    [
-                        'emailUser.emailId:' => 'id',
-                        'emailUser.deleted' => false,
-                        'emailUser.userId' => $this->user->id,
-                    ]
+                    0 =>
+                        [
+                            0 => 'EmailUser',
+                            1 => 'emailUser',
+                            2 =>
+                                [
+                                    'emailUser.emailId:' => 'id',
+                                    'emailUser.deleted' => false,
+                                    'emailUser.userId' => $userId,
+                                ],
+                        ],
                 ],
-            ],
-            'whereClause' => [
-                'emailUser.userId' => $userId,
-            ],
+            'whereClause' =>
+                [
+                    'emailUser.userId' => $userId,
+                ]
         ];
 
-        $this->assertEquals($expected['whereClause'], $raw['whereClause']);
-        $this->assertEquals($expected['leftJoins'], $raw['leftJoins']);
+        $this->assertEquals($expected, $raw);
     }
 
     public function testEmailAccessFilterOnlyTeam()
@@ -334,32 +372,53 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 
         $expected = [
             'from' => 'Email',
-            'joins' => [],
-            'leftJoins' => [
+            'whereClause' =>
                 [
-                    'EmailUser',
-                    'emailUser',
-                    [
-                        'emailUser.emailId:' => 'id',
-                        'emailUser.deleted' => false,
-                        'emailUser.userId' => $this->user->id,
-                    ]
+                    'id=s' =>
+                        [
+                            'select' =>
+                                [
+                                    0 => 'id',
+                                ],
+                            'from' => 'Email',
+                            'leftJoins' =>
+                                [
+                                    0 =>
+                                        [
+                                            0 => 'EntityTeam',
+                                            1 => 'entityTeam',
+                                            2 =>
+                                                [
+                                                    'entityTeam.entityId:' => 'id',
+                                                    'entityTeam.entityType' => 'Email',
+                                                    'entityTeam.deleted' => false,
+                                                ],
+                                        ],
+                                    1 =>
+                                        [
+                                            0 => 'EmailUser',
+                                            1 => 'emailUser',
+                                            2 =>
+                                                [
+                                                    'emailUser.emailId:' => 'id',
+                                                    'emailUser.deleted' => false,
+                                                    'emailUser.userId' => $userId,
+                                                ],
+                                        ],
+                                ],
+                            'whereClause' =>
+                                [
+                                    'OR' =>
+                                        [
+                                            'entityTeam.teamId' => [],
+                                            'emailUser.userId' => $userId,
+                                        ],
+                                ],
+                        ],
                 ],
-                [
-                    'teams',
-                    'teamsAccess',
-                ],
-            ],
-            'whereClause' => [
-                'OR' => [
-                   'teamsAccessMiddle.teamId' => [],
-                   'emailUser.userId' => $userId,
-               ],
-            ],
         ];
 
-        $this->assertEquals($expected['whereClause'], $raw['whereClause']);
-        $this->assertEquals($expected['leftJoins'], $raw['leftJoins']);
+        $this->assertEquals($expected, $raw);
     }
 
     public function testEmailAccessFilterOnlyAccount()
