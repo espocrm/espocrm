@@ -31,6 +31,7 @@ namespace Espo\Core\Record;
 
 use Espo\Core\Acl\LinkChecker;
 use Espo\Core\Acl\LinkChecker\LinkCheckerFactory;
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Exceptions\Error\Body as ErrorBody;
 use Espo\Core\Exceptions\BadRequest;
@@ -39,6 +40,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
+use Espo\Entities\ActionHistoryRecord;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\ORM\Collection;
@@ -209,7 +211,7 @@ class Service implements Crud,
             return;
         }
 
-        $historyRecord = $this->entityManager->getNewEntity('ActionHistoryRecord');
+        $historyRecord = $this->entityManager->getNewEntity(ActionHistoryRecord::ENTITY_TYPE);
 
         $historyRecord->set('action', $action);
         $historyRecord->set('userId', $this->user->getId());
@@ -259,7 +261,7 @@ class Service implements Crud,
      * Get an entity by ID. Access control check is performed.
      *
      * @throws ForbiddenSilent If no read access.
-     * @return TEntity|null
+     * @return ?TEntity
      */
     public function getEntity(string $id): ?Entity
     {
@@ -485,7 +487,7 @@ class Service implements Crud,
 
     /**
      * @param TEntity $entity
-     * @throws \Espo\Core\Exceptions\Conflict
+     * @throws Conflict
      */
     protected function processConcurrencyControl(Entity $entity, stdClass $data, int $versionNumber): void
     {
@@ -527,7 +529,7 @@ class Service implements Crud,
 
     /**
      * @param TEntity $entity
-     * @throws \Espo\Core\Exceptions\Conflict
+     * @throws Conflict
      */
     protected function processDuplicateCheck(Entity $entity, stdClass $data): void
     {
@@ -613,7 +615,7 @@ class Service implements Crud,
      * @return TEntity
      * @throws BadRequest
      * @throws Forbidden If no create access.
-     * @throws \Espo\Core\Exceptions\Conflict
+     * @throws Conflict
      */
     public function create(stdClass $data, CreateParams $params): Entity
     {
@@ -661,7 +663,7 @@ class Service implements Crud,
      * @return TEntity
      * @throws NotFound If record not found.
      * @throws Forbidden If no access
-     * @throws \Espo\Core\Exceptions\Conflict
+     * @throws Conflict
      * @throws BadRequest
      */
     public function update(string $id, stdClass $data, UpdateParams $params): Entity
@@ -881,7 +883,7 @@ class Service implements Crud,
      * Find linked records.
      *
      * @param non-empty-string $link
-     * @return RecordCollection<\Espo\ORM\Entity>
+     * @return RecordCollection<Entity>
      * @throws NotFound If a record not found.
      * @throws Forbidden If no access.
      */
@@ -1619,7 +1621,7 @@ class Service implements Crud,
     }
 
     /**
-     * @return RecordCollection<\Espo\Entities\User>
+     * @return RecordCollection<User>
      * @throws NotFound
      * @throws Forbidden
      */
