@@ -41,6 +41,7 @@ use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Entities\ActionHistoryRecord;
+use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\ORM\Collection;
@@ -375,6 +376,95 @@ class Service implements Crud,
     }
 
     /**
+     * @param TEntity $entity
+     * @throws Forbidden
+     * @todo Move to a separate class.
+     */
+    private function processLinkedRecordsCheck(Entity $entity): void
+    {
+        $this->processLinkMultipleRecordsCheck($entity);
+    }
+
+    /**
+     * @param TEntity $entity
+     * @throws Forbidden
+     */
+    private function processLinkMultipleRecordsCheck(Entity $entity): void
+    {
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($this->entityType);
+
+        $typeList = [
+            Entity::HAS_MANY,
+            Entity::MANY_MANY,
+            Entity::HAS_CHILDREN,
+        ];
+
+        foreach ($entityDefs->getRelationList() as $relationDefs) {
+            $name = $relationDefs->getName();
+
+            if (!in_array($relationDefs->getType(), $typeList)) {
+                continue;
+            }
+
+            $attribute = $name . 'Ids';
+
+            if (
+                !$entityDefs->hasAttribute($attribute) ||
+                !$entity->isAttributeChanged($attribute)
+            ) {
+                continue;
+            }
+
+            /** @var string[] $ids */
+            $ids = $entity->get($attribute) ?? [];
+            /** @var string[] $oldIds */
+            $oldIds = $entity->getFetched($attribute) ?? [];
+
+            $ids = array_values(array_diff($ids, $oldIds));
+
+            if ($ids === []) {
+                continue;
+            }
+
+            foreach ($ids as $id) {
+                $this->processLinkedRecordsCheckEntity($relationDefs, $id);
+            }
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function processLinkedRecordsCheckEntity(RelationDefs $defs, string $id): void
+    {
+        $foreignEntityType = $defs->getForeignEntityType();
+
+        $foreignEntity = $this->entityManager->getEntityById($foreignEntityType, $id);
+
+        if (!$foreignEntity) {
+            throw ForbiddenSilent::createWithBody(
+                "Can't relate with non-existing record.",
+                ErrorBody::create()
+                    ->withMessageTranslation(
+                        'cannotRelateNonExisting', null, ['foreignEntityType' => $foreignEntityType])
+                    ->encode()
+            );
+        }
+
+        if (!$this->acl->checkEntityRead($foreignEntity)) {
+            throw ForbiddenSilent::createWithBody(
+                "Can't relate with forbidden record.",
+                ErrorBody::create()
+                    ->withMessageTranslation(
+                        'cannotRelateForbidden', null, ['foreignEntityType' => $foreignEntityType])
+                    ->encode()
+            );
+        }
+    }
+
+    /**
      * @param string $attribute
      * @param mixed $value
      * @return mixed
@@ -637,6 +727,7 @@ class Service implements Crud,
 
         $this->processValidation($entity, $data);
         $this->processAssignmentCheck($entity);
+        $this->processLinkedRecordsCheck($entity);
 
         if (!$params->skipDuplicateCheck()) {
             $this->processDuplicateCheck($entity, $data);
@@ -678,13 +769,16 @@ class Service implements Crud,
 
         $this->filterUpdateInput($data);
 
-        $entity =
-            $this->getEntityBeforeUpdate ?
+        $entity = $this->getEntityBeforeUpdate ?
             $this->getEntity($id) :
             $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound("Record {$id} not found.");
+        }
+
+        if (!$this->getEntityBeforeUpdate) {
+            $this->loadAdditionalFields($entity);
         }
 
         if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
@@ -699,6 +793,7 @@ class Service implements Crud,
 
         $this->processValidation($entity, $data);
         $this->processAssignmentCheck($entity);
+        $this->processLinkedRecordsCheck($entity);
 
         $checkForDuplicates =
             $this->metadata->get(['recordDefs', $this->entityType, 'updateDuplicateCheck']) ??
