@@ -102,6 +102,7 @@ class BeforeUpgrade
             'assignedUserId' => $user->getId(),
             'name' => $emailAddress . ' (auto-created)',
             'emailAddress' => $emailAddress,
+            'useImap' => false,
             'useSmtp' => true,
             'status' => 'Active',
             'smtpHost' => $smtpServer,
