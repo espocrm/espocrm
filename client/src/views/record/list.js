@@ -2477,6 +2477,10 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
          * @param {boolean} [isSilent] Do not trigger the `check` event.
          */
         checkRecord: function (id, $target, isSilent) {
+            if (!this.collection.get(id)) {
+                return;
+            }
+
             $target = $target || this.$el.find('.record-checkbox[data-id="' + id + '"]');
 
             if ($target.length) {
