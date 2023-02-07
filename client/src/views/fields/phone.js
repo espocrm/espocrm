@@ -176,6 +176,7 @@ function (Dep, /** module:ui/select*/Select) {
 
             if (this.isReadMode()) {
                 data.isOptedOut = this.model.get(this.isOptedOutFieldName);
+                data.isInvalid = this.model.get(this.isInvalidFieldName);
 
                 if (this.model.get(this.name)) {
                     data.isErased = this.model.get(this.name).indexOf(this.erasedPlaceholder) === 0;
@@ -409,6 +410,7 @@ function (Dep, /** module:ui/select*/Select) {
                     .get('entityDefs.' + this.model.name + '.fields.' + this.name + '.defaultType');
 
             this.isOptedOutFieldName = this.name + 'IsOptedOut';
+            this.isInvalidFieldName = this.name + 'IsInvalid';
 
             this.phoneNumberOptedOutByDefault = this.getConfig().get('phoneNumberIsOptedOutByDefault');
 
@@ -468,6 +470,7 @@ function (Dep, /** module:ui/select*/Select) {
             data[this.dataFieldName] = addressData;
             data[this.name] = null;
             data[this.isOptedOutFieldName] = false;
+            data[this.isInvalidFieldName] = false;
 
             let primaryIndex = 0;
 
@@ -477,6 +480,10 @@ function (Dep, /** module:ui/select*/Select) {
 
                     if (item.optOut) {
                         data[this.isOptedOutFieldName] = true;
+                    }
+
+                    if (item.invalid) {
+                        data[this.isInvalidFieldName] = true;
                     }
                 }
             });
@@ -492,6 +499,7 @@ function (Dep, /** module:ui/select*/Select) {
                 data[this.name] = addressData[0].phoneNumber;
             } else {
                 data[this.isOptedOutFieldName] = null;
+                data[this.isInvalidFieldName] = null;
             }
 
             return data;

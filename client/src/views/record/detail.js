@@ -3965,6 +3965,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return;
             }
 
+            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+                return;
+            }
+
             let $button = this.$el.find('button[data-action="previous"]');
 
             if (!$button.length || $button.hasClass('disabled')) {
@@ -3991,6 +3995,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             if (this.type !== this.TYPE_DETAIL || this.mode !== this.MODE_DETAIL) {
+                return;
+            }
+
+            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
                 return;
             }
 

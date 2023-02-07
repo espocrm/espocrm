@@ -156,6 +156,7 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
 
             if (this.isReadMode()) {
                 data.isOptedOut = this.model.get(this.isOptedOutFieldName);
+                data.isInvalid = this.model.get(this.isInvalidFieldName);
 
                 if (this.model.get(this.name)) {
                     data.isErased = this.model.get(this.name).indexOf(this.erasedPlaceholder) === 0
@@ -509,6 +510,7 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
         setup: function () {
             this.dataFieldName = this.name + 'Data';
             this.isOptedOutFieldName = this.name + 'IsOptedOut';
+            this.isInvalidFieldName = this.name + 'IsInvalid';
 
             this.erasedPlaceholder = 'ERASED:';
 
@@ -555,6 +557,7 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
             data[this.dataFieldName] = addressData;
             data[this.name] = null;
             data[this.isOptedOutFieldName] = false;
+            data[this.isInvalidFieldName] = false;
 
             let primaryIndex = 0;
 
@@ -564,6 +567,10 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
 
                     if (item.optOut) {
                         data[this.isOptedOutFieldName] = true;
+                    }
+
+                    if (item.invalid) {
+                        data[this.isInvalidFieldName] = true;
                     }
                 }
             });
@@ -579,6 +586,7 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
                 data[this.name] = addressData[0].emailAddress;
             } else {
                 data[this.isOptedOutFieldName] = null;
+                data[this.isInvalidFieldName] = null;
             }
 
             return data;
