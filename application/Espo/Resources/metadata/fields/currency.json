@@ -74,7 +74,7 @@
             "customizationInlineEditDisabledDisabled": true,
             "customizationDefaultView": "views/admin/field-manager/fields/currency-default",
             "customizationTooltipTextDisabled": true,
-            "maxLength": 6
+            "maxLength": 3
         },
         "converted": {
             "type": "currencyConverted",
