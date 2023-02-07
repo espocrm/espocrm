@@ -5,20 +5,11 @@
             "dbType": "bigint",
             "autoincrement": true
         },
-        "entityId": {
-            "type": "varchar",
-            "maxLength": 24,
-            "index": "entity"
+        "entity": {
+            "type": "linkParent"
         },
-        "entityType": {
-            "type": "varchar",
-            "maxLength": 100,
-            "index": "entity"
-        },
-        "importId": {
-            "type": "varchar",
-            "maxLength": 24,
-            "index": true
+        "import": {
+            "type": "link"
         },
         "isImported": {
             "type": "bool"

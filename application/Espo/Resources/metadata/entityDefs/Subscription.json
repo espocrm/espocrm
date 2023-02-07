@@ -5,20 +5,11 @@
             "dbType": "bigInt",
             "autoincrement": true
         },
-        "entityId": {
-            "type": "varchar",
-            "maxLength": 24,
-            "index": "entity"
+        "entity": {
+            "type": "linkParent"
         },
-        "entityType": {
-            "type": "varchar",
-            "maxLength": 100,
-            "index": "entity"
-        },
-        "userId": {
-            "type": "varchar",
-            "maxLength": 24,
-            "index": true
+        "user": {
+            "type": "link"
         }
     },
     "indexes": {

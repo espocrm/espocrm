@@ -48,6 +48,7 @@ use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\Schema as DbalSchema;
 use Doctrine\DBAL\Types\Type as DbalType;
+use Espo\ORM\Type\AttributeType;
 
 /**
  * Schema representation builder.
@@ -175,7 +176,7 @@ class Builder
             }
 
             if (!in_array($column->getType(), $this->typeList)) {
-                $this->log->debug(
+                $this->log->warning(
                     'Schema\Builder: Column type [' . $column->getType() . '] not supported, ' .
                     $entityType . ':' . $attributeDefs->getName()
                 );
@@ -336,9 +337,14 @@ class Builder
         $additionalColumns = $relationDefs->getParam('additionalColumns') ?? [];
 
         foreach ($additionalColumns as $fieldName => $fieldParams) {
-            $column = $this->columnPreparator->prepare(
-                AttributeDefs::fromRaw($fieldParams, $fieldName)
-            );
+            if ($fieldParams['type'] === AttributeType::FOREIGN_ID) {
+                $fieldParams = array_merge([
+                    'dbType' => $this->idDbType,
+                    'len' => $this->idLength,
+                ], $fieldParams);
+            }
+
+            $column = $this->columnPreparator->prepare(AttributeDefs::fromRaw($fieldParams, $fieldName));
 
             $this->addColumn($table, $column);
         }

@@ -522,9 +522,8 @@
                     "default": false
                 },
                 "folderId": {
-                    "type": "varchar",
-                    "default": null,
-                    "maxLength": 24
+                    "type": "foreignId",
+                    "default": null
                 }
             }
         },

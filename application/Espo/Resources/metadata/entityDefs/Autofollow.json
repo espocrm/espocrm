@@ -10,10 +10,8 @@
             "maxLength": 100,
             "index": true
         },
-        "userId": {
-            "type": "varchar",
-            "maxLength": 24,
-            "index": true
+        "user": {
+            "type": "link"
         }
     }
 }

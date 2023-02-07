@@ -156,8 +156,6 @@ class Converter
             );
         }
 
-        $ormMetadata = $this->afterFieldsProcess($ormMetadata);
-
         foreach ($ormMetadata as $entityOrmMetadata) {
             /** @var array<string, array<string, mixed>> $ormMetadata */
             $ormMetadata = Util::merge(
@@ -171,6 +169,8 @@ class Converter
                 $this->createAdditionalEntityTypes($entityOrmMetadata)
             );
         }
+
+        $ormMetadata = $this->afterFieldsProcess($ormMetadata);
 
         return $this->afterProcess($ormMetadata);
     }

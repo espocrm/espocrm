@@ -90,18 +90,16 @@
                 "id": {
                     "type": "id",
                     "dbType": "integer",
-                    "len": "11",
+                    "len": 11,
                     "autoincrement": true,
                     "unique" : true
                 },
                 "ascendorId": {
-                    "type": "varchar",
-                    "len": "100",
+                    "type": "foreignId",
                     "index": true
                 },
                 "descendorId": {
-                    "type": "varchar",
-                    "len": "24",
+                    "type": "foreignId",
                     "index": true
                 }
             }
