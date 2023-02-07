@@ -63,10 +63,10 @@ class Helper
     {}
 
     /**
-     * Get field definition by type in metadata, "fields" key.
+     * Get field definitions by a type in metadata, "fields" key.
      *
-     * @param array<string,mixed> $defs It can be a string or field definition from entityDefs.
-     * @return ?array<string,mixed>
+     * @param array<string, mixed> $defs It can be a string or field definition from entityDefs.
+     * @return ?array<string, mixed>
      */
     public function getFieldDefsByType($defs)
     {
@@ -78,8 +78,8 @@ class Helper
     }
 
     /**
-     * @param array<string,mixed> $defs
-     * @return ?array<string,mixed>
+     * @param array<string, mixed> $defs
+     * @return ?array<string, mixed>
      */
     public function getFieldDefsInFieldMetadata($defs)
     {
@@ -133,9 +133,9 @@ class Helper
      * Get additional field list based on field definition in metadata 'fields'.
      *
      * @param string $fieldName
-     * @param array<string,mixed> $fieldParams
-     * @param array<string,mixed> $definitionList
-     * @return ?array<string,mixed>
+     * @param array<string, mixed> $fieldParams
+     * @param array<string, mixed> $definitionList
+     * @return ?array<string, mixed>
      */
     public function getAdditionalFieldList($fieldName, array $fieldParams, array $definitionList)
     {
@@ -144,7 +144,7 @@ class Helper
         }
 
         $fieldType = $fieldParams['type'];
-        $fieldDefinition = isset($definitionList[$fieldType]) ? $definitionList[$fieldType] : null;
+        $fieldDefinition = $definitionList[$fieldType] ?? null;
 
         if (
             isset($fieldDefinition) &&
@@ -157,7 +157,7 @@ class Helper
 
             // add additional fields
             foreach ($fieldDefinition['fields'] as $subFieldName => $subFieldParams) {
-                $namingType = isset($fieldDefinition['naming']) ? $fieldDefinition['naming'] : $this->defaultNaming;
+                $namingType = $fieldDefinition['naming'] ?? $this->defaultNaming;
 
                 $subFieldNaming = Util::getNaming($fieldName, $subFieldName, $namingType);
 

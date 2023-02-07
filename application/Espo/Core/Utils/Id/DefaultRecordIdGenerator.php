@@ -31,6 +31,9 @@ namespace Espo\Core\Utils\Id;
 
 use Espo\Core\Utils\Util;
 
+/**
+ * Generates 17-character hex IDs.
+ */
 class DefaultRecordIdGenerator implements RecordIdGenerator
 {
     public function generate(): string

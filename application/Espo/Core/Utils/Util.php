@@ -29,11 +29,12 @@
 
 namespace Espo\Core\Utils;
 
+use stdClass;
+
 class Util
 {
     /** @var string */
     protected static $separator = DIRECTORY_SEPARATOR;
-
     /** @var string[] */
     protected static $reservedWordList = ['Case'];
 
@@ -45,43 +46,49 @@ class Util
         return static::$separator;
     }
 
+    /**
+     * Convert camelCase to under_score.
+     */
     public static function camelCaseToUnderscore(string $string): string
     {
         return static::toUnderScore($string);
     }
 
+    /**
+     * Convert hyphen-string to camelCase.
+     */
     public static function hyphenToCamelCase(string $string): string
     {
         return self::toCamelCase($string, '-');
     }
 
+    /**
+     * Convert camelCase to hyphen-string.
+     */
     public static function camelCaseToHyphen(string $string): string
     {
         return static::fromCamelCase($string, '-');
     }
 
     /**
-     * Convert to format with defined delimeter.
-     * ex. Espo/Utils to Espo\Utils
+     * Replace slashes and backslashes with a delimiter. E.g. Espo\Utils to Espo/Utils.
      *
      * @param string $name
      * @param string $delimiter
-     *
      * @return string
      */
-    public static function toFormat($name, $delimiter = '/')
+    public static function toFormat(string $name, string $delimiter = '/'): string
     {
         /** @var string */
         return preg_replace("/[\/\\\]/", $delimiter, $name);
     }
 
-
     /**
-     * Convert name to Camel Case format, ex. camel_case to camelCase.
+     * Convert a string of a specific format to camelCase.
      *
-     * @param string $input
-     * @param bool $capitaliseFirstChar
-     *
+     * @param string $input An input string.
+     * @param string $symbol A formatting symbol.
+     * @param bool $capitaliseFirstChar Capitalise the first character.
      * @return string
      */
     public static function toCamelCase($input, string $symbol = '_', bool $capitaliseFirstChar = false)
@@ -114,7 +121,7 @@ class Util
     }
 
     /**
-     * Convert name from Camel Case format. Ex. camelCase to camel-case.
+     * Convert a string from camelCase to a format defined by a symbol.
      *
      * @param string $input
      * @return string
@@ -142,8 +149,7 @@ class Util
     }
 
     /**
-     * Convert a string from Camel Case to underscore.
-     * Ex. camelCase to camel_case
+     * Convert a string from camelCase to under_score.
      *
      * @param string $input
      * @return string
@@ -156,10 +162,9 @@ class Util
     /**
      * Merge arrays recursively. $newArray overrides $currentArray.
      *
-     * @param array<mixed,mixed> $currentArray
-     * @param array<mixed,mixed> $newArray Chief array (priority is same as for array_merge()).
-     *
-     * @return array<mixed,mixed>
+     * @param array<int|string, mixed> $currentArray A source array.
+     * @param array<int|string, mixed> $newArray A merge-array (priority is same as for array_merge()).
+     * @return array<int|string, mixed>
      */
     public static function merge($currentArray, $newArray)
     {
@@ -217,11 +222,11 @@ class Util
     }
 
     /**
-     * Unset a value in array recursively.
+     * Unset a value in an array recursively.
      *
-     * @param string $needle
-     * @param array<mixed,mixed> $haystack
-     * @return array<mixed,mixed>
+     * @param string $needle A needle.
+     * @param array<string|int, mixed> $haystack A haystack.
+     * @return array<string|int, mixed>
      */
     public static function unsetInArrayByValue($needle, array $haystack, bool $reIndex = true): array
     {
@@ -248,9 +253,9 @@ class Util
     }
 
     /**
-     * Get a full path of the file.
+     * Get a full path of a  file.
      *
-     * @param string|string[] $folderPath
+     * @param string|string[] $folderPath A folder path.
      */
     public static function concatPath($folderPath, ?string $filePath = null): string
     {
@@ -272,7 +277,7 @@ class Util
             return static::fixPath($filePath);
         }
 
-        if (substr($folderPath, -1) == static::getSeparator() || substr($folderPath, -1) == '/') {
+        if (substr($folderPath, -1) == static::getSeparator() || str_ends_with($folderPath, '/')) {
             return static::fixPath($folderPath . $filePath);
         }
 
@@ -280,7 +285,7 @@ class Util
     }
 
     /**
-     * Fix path separator.
+     * Fix a path separator.
      */
     public static function fixPath(string $path): string
     {
@@ -288,14 +293,14 @@ class Util
     }
 
     /**
-     * Convert array to object format recursively.
+     * Convert an array to stdClass recursively.
      *
-     * @param array<string,mixed> $array
-     * @return \stdClass
+     * @param array<string, mixed> $array
+     * @return stdClass
      */
     public static function arrayToObject($array)
     {
-        /** @var \stdClass */
+        /** @var stdClass */
         return self::arrayToObjectInternal($array);
     }
 
@@ -322,10 +327,10 @@ class Util
     }
 
     /**
-     * Convert object to array format recursively.
+     * Convert stdClass to array recursively.
      *
      * @param object $object
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public static function objectToArray($object)
     {
@@ -351,9 +356,9 @@ class Util
     }
 
     /**
-     * Appends 'Obj' if name is reserved PHP word.
+     * Appends 'Obj' if a name is a PHP reserved  word.
      *
-     * @param string $name
+     * @param string $name A name.
      * @return string
      */
     public static function normalizeClassName($name)
@@ -366,7 +371,7 @@ class Util
     }
 
     /**
-     * Remove 'Obj' if name is reserved PHP word.
+     * Remove 'Obj' if a name is a PHP reserved word.
      *
      * @param string $name
      * @return string
@@ -383,7 +388,7 @@ class Util
     }
 
     /**
-    * Get naming according to prefix or postfix type.
+    * Get naming according to a prefix or postfix type.
     */
     public static function getNaming(
         string $name,
@@ -404,13 +409,13 @@ class Util
     }
 
     /**
-     * Replace $search in array recursively.
+     * Replace a search-string in an array recursively.
      *
      * @param string $search
      * @param string $replace
      * @param string[]|string $array
      * @param bool $isKeys
-     * @return string|array<scalar,mixed>
+     * @return string|array<scalar, mixed>
      *
      * @todo Maybe to remove the method.
      * @deprecated
@@ -439,8 +444,8 @@ class Util
     /**
      * Unset content items defined in the unset.json.
      *
-     * @param array<mixed, mixed> $content
-     * @param string|array<mixed, string|string[]> $unsets in format
+     * @param array<string|int, mixed> $content
+     * @param string|array<string|int, string|string[]> $unsets in format
      *  [
      *      'EntityType1' => [ 'unset1', 'unset2'],
      *      'EntityType2' => ['unset1', 'unset2'],
@@ -450,8 +455,7 @@ class Util
      *  OR
      *  'EntityType1.unset1'
      * @param bool $unsetParentEmptyArray If unset empty parent array after unsets
-     *
-     * @return array<mixed, mixed>
+     * @return array<string|int, mixed>
      */
     public static function unsetInArray(array $content, $unsets, bool $unsetParentEmptyArray = false)
     {
@@ -480,7 +484,6 @@ class Util
                 $elementArr[] = &$elem;
 
                 for ($i = 0; $i <= $keyChainCount; $i++) {
-
                     if (is_array($elem) && array_key_exists($keyArr[$i], $elem)) {
                         if ($i == $keyChainCount) {
                             unset($elem[$keyArr[$i]]);
@@ -528,16 +531,16 @@ class Util
     }
 
     /**
-     * Return values of defined $key.
+     * Get a value of a key.
      *
-     * @param \stdClass|array<string,mixed> $data
+     * @param stdClass|array<string, mixed> $data
      * @param string[]|string $key Ex. of key is "entityDefs", "entityDefs.User".
      * @param mixed $default
      * @return mixed
      */
     public static function getValueByKey($data, $key = null, $default = null)
     {
-        if (!isset($key) || empty($key)) {
+        if (empty($key)) {
             return $data;
         }
 
@@ -594,7 +597,7 @@ class Util
     /**
      * Sort array recursively.
      *
-     * @param array<mixed,mixed> $array
+     * @param array<string|int, mixed> $array
      */
     public static function ksortRecursive(&$array): bool
     {
@@ -612,7 +615,7 @@ class Util
     }
 
     /**
-     * @param array<mixed,mixed> $array
+     * @param array<string|int, mixed> $array
      * @deprecated
      * @todo Make private.
      */
@@ -627,11 +630,17 @@ class Util
         return true;
     }
 
+    /**
+     * Generate a 17-character hex ID.
+     */
     public static function generateId(): string
     {
         return uniqid() . substr(md5((string) rand()), 0, 4);
     }
 
+    /**
+     * Generate an ID with more entropy.
+     */
     public static function generateMoreEntropyId(): string
     {
         return
@@ -639,29 +648,47 @@ class Util
             substr(md5((string) rand()), 0, 4);
     }
 
+    /**
+     * Generate a crypt ID.
+     *
+     * @return string
+     */
     public static function generateCryptId(): string
     {
         if (!function_exists('random_bytes')) {
             return self::generateMoreEntropyId();
         }
+
         return bin2hex(random_bytes(16));
     }
 
+    /**
+     * Generate an API key.
+     */
     public static function generateApiKey(): string
     {
         return self::generateCryptId();
     }
 
+    /**
+     * Generate a secret key.
+     */
     public static function generateSecretKey(): string
     {
         return self::generateCryptId();
     }
 
+    /**
+     * Generate a 32-character hex key.
+     */
     public static function generateKey(): string
     {
         return md5(uniqid((string) rand(), true));
     }
 
+    /**
+     * Sanitize a file name.
+     */
     public static function sanitizeFileName(string $fileName): string
     {
         /** @var string */
@@ -671,10 +698,10 @@ class Util
     /**
      * Improved computing the difference of arrays.
      *
-     * @param array<mixed,mixed> $array1
-     * @param array<mixed,mixed> $array2
-     *
-     * @return array<mixed,mixed>
+     * @deprecated As of v7.4.
+     * @param array<string|int, mixed> $array1
+     * @param array<string|int, mixed> $array2
+     * @return array<string|int, mixed>
      */
     public static function arrayDiff(array $array1, array $array2)
     {
@@ -696,12 +723,11 @@ class Util
     }
 
     /**
-     * Fill array with specified keys.
+     * Fill an array with specific keys.
      *
      * @param mixed[]|mixed $keys
      * @param mixed $value
-     *
-     * @return array<mixed,mixed>
+     * @return array<string|int, mixed>
      */
     public static function fillArrayKeys($keys, $value)
     {
@@ -722,8 +748,7 @@ class Util
      * Array keys exists.
      *
      * @param mixed[] $keys
-     * @param array<mixed,mixed> $array
-     *
+     * @param array<string|int, mixed> $array
      * @return bool
      */
     public static function arrayKeysExists(array $keys, array $array)
@@ -731,29 +756,24 @@ class Util
        return !array_diff_key(array_flip($keys), $array);
     }
 
+    /**
+     * Convert a numeric a memory amount value to a number of bytes it represents. E.g. 1K => 1024.
+     */
     public static function convertToByte(string $value): int
     {
         $valueTrimmed = trim($value);
-
         $last = strtoupper(substr($valueTrimmed, -1));
 
-        switch ($last)
-        {
-            case 'G':
-                return (int) $valueTrimmed * 1024;
-
-            case 'M':
-                return (int) $valueTrimmed * 1024;
-
-            case 'K':
-                return (int) $valueTrimmed * 1024;
-        }
-
-        return (int) $valueTrimmed;
+        return match ($last) {
+            'G' => (int) $valueTrimmed * 1024 * 1024 * 1024 ,
+            'M' => (int) $valueTrimmed * 1024 * 1024,
+            'K' => (int) $valueTrimmed * 1024,
+            default => (int) $valueTrimmed,
+        };
     }
 
     /**
-     * Whether values are equal.
+     * Check whether values are equal.
      *
      * @param mixed $v1
      * @param mixed $v2
@@ -771,15 +791,15 @@ class Util
             }
 
             foreach ($v1 as $i => $itemValue) {
-                if (is_object($v1[$i]) && is_object($v2[$i])) {
-                    if (!self::areValuesEqual($v1[$i], $v2[$i])) {
+                if (is_object($itemValue) && is_object($v2[$i])) {
+                    if (!self::areValuesEqual($itemValue, $v2[$i])) {
                         return false;
                     }
 
                     continue;
                 }
 
-                if ($v1[$i] !== $v2[$i]) {
+                if ($itemValue !== $v2[$i]) {
                     return false;
                 }
             }
@@ -796,23 +816,23 @@ class Util
             $a2 = get_object_vars($v2);
 
             foreach ($a1 as $key => $itemValue) {
-                if (is_object($a1[$key]) && is_object($a2[$key])) {
-                    if (!self::areValuesEqual($a1[$key], $a2[$key])) {
+                if (is_object($itemValue) && is_object($a2[$key])) {
+                    if (!self::areValuesEqual($itemValue, $a2[$key])) {
                         return false;
                     }
 
                     continue;
                 }
 
-                if (is_array($a1[$key]) && is_array($a2[$key])) {
-                    if (!self::areValuesEqual($a1[$key], $a2[$key])) {
+                if (is_array($itemValue) && is_array($a2[$key])) {
+                    if (!self::areValuesEqual($itemValue, $a2[$key])) {
                         return false;
                     }
 
                     continue;
                 }
 
-                if ($a1[$key] !== $a2[$key]) {
+                if ($itemValue !== $a2[$key]) {
                     return false;
                 }
             }
@@ -823,6 +843,9 @@ class Util
         return $v1 === $v2;
     }
 
+    /**
+     * Upper-case a first letter for multibyte strings.
+     */
     public static function mbUpperCaseFirst(string $string): string
     {
         if (!$string) {
@@ -836,6 +859,9 @@ class Util
         return mb_strtoupper($firstChar) . $then;
     }
 
+    /**
+     * Lower-case a first letter for multibyte strings.
+     */
     public static function mbLowerCaseFirst(string $string): string
     {
         if (!$string) {
@@ -850,9 +876,10 @@ class Util
     }
 
     /**
-     * Sanitize Html code.
-     * @param string|string[] $text
-     * @param string[] $permittedHtmlTags - Allows only html tags without parameters like <p></p>, <br>, etc.
+     * Sanitize HTML code.
+     *
+     * @param string|string[] $text A source.
+     * @param string[] $permittedHtmlTags Allows only HTML tags without parameters like <p></p>, <br>, etc.
      * @return string|string[]
      */
     public static function sanitizeHtml($text, $permittedHtmlTags = ['p', 'br', 'b', 'strong', 'pre'])
@@ -876,6 +903,7 @@ class Util
     }
 
     /**
+     * @deprecated As of v7.4.
      * @param mixed $paramValue
      */
     public static function urlAddParam(string $url, string $paramName, $paramValue): string
@@ -907,6 +935,9 @@ class Util
         return $url;
     }
 
+    /**
+     * @deprecated As of v7.4.
+     */
     public static function urlRemoveParam(string $url, string $paramName, string $suffix = ''): string
     {
         $urlQuery = parse_url($url, \PHP_URL_QUERY);
@@ -935,10 +966,19 @@ class Util
         return $url;
     }
 
+    /**
+     * Generate a password.
+     *
+     * @param int $length A length.
+     * @param int $letters A number of letters.
+     * @param int $digits A number of digits.
+     * @param bool $bothCases Use upper and lower case letters.
+     * @return string
+     */
     public static function generatePassword(
         int $length = 8,
         int $letters = 5,
-        int $numbers = 3,
+        int $digits = 3,
         bool $bothCases = false
     ): string {
 
@@ -980,7 +1020,7 @@ class Util
             }
         }
 
-        $either = $length - ($letters + $numbers + $upperCase + $lowerCase);
+        $either = $length - ($letters + $digits + $upperCase + $lowerCase);
 
         if ($either < 0) {
             $either = 0;
@@ -988,7 +1028,7 @@ class Util
 
         $array = [];
 
-        foreach ([$letters, $numbers, $either, $upperCase, $lowerCase] as $i => $len) {
+        foreach ([$letters, $digits, $either, $upperCase, $lowerCase] as $i => $len) {
             $set = $chars[$i];
             $subArray = [];
 
