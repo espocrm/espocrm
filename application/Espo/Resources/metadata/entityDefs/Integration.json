@@ -1,5 +1,9 @@
 {
     "fields": {
+        "id": {
+            "type": "id",
+            "maxLength": 24
+        },
         "data": {
             "type": "jsonObject"
         },
