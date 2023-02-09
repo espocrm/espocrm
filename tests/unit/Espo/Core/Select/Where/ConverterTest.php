@@ -542,7 +542,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
                 ->from($this->entityType)
                 ->leftJoin('EntityEntity', $alias, [
                     "{$alias}.localId:" => 'id',
-                    "{$alias}.deleted" => 0,
+                    "{$alias}.deleted" => false,
                 ])
                 ->where(["{$alias}.foreignId" => $value])
                 ->build()
