@@ -1215,7 +1215,7 @@ class ItemGeneralConverter implements ItemConverter
                 ->from($this->entityType)
                 ->leftJoin($middleEntityType, $alias, [
                     "{$alias}.{$nearKey}:" => 'id',
-                    "{$alias}.deleted" => 0,
+                    "{$alias}.deleted" => false,
                 ])
                 ->where(["{$alias}.{$key}" => null])
                 ->build();
@@ -1266,7 +1266,7 @@ class ItemGeneralConverter implements ItemConverter
                 ->from($this->entityType)
                 ->leftJoin($middleEntityType, $alias, [
                     "{$alias}.{$nearKey}:" => 'id',
-                    "{$alias}.deleted" => 0,
+                    "{$alias}.deleted" => false,
                 ])
                 ->where(["{$alias}.{$key}!=" => null])
                 ->build();
@@ -1329,7 +1329,7 @@ class ItemGeneralConverter implements ItemConverter
                 ->from($this->entityType)
                 ->leftJoin($middleEntityType, $alias, [
                     "{$alias}.{$nearKey}:" => 'id',
-                    "{$alias}.deleted" => 0,
+                    "{$alias}.deleted" => false,
                 ])
                 ->where(["{$alias}.{$key}" => $value])
                 ->build();
@@ -1393,7 +1393,7 @@ class ItemGeneralConverter implements ItemConverter
                 ->from($this->entityType)
                 ->leftJoin($middleEntityType, $alias, [
                     "{$alias}.{$nearKey}:" => 'id',
-                    "{$alias}.deleted" => 0,
+                    "{$alias}.deleted" => false,
                 ])
                 ->where(["{$alias}.{$key}=" => $value])
                 ->build();
