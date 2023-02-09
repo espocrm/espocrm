@@ -3,9 +3,11 @@
         "ABS": "Espo\\Core\\ORM\\QueryComposer\\Part\\FunctionConverters\\Abs"
     },
     "queryComposerClassNameMap": {
-        "Mysql": "Espo\\ORM\\QueryComposer\\MysqlQueryComposer"
+        "Mysql": "Espo\\ORM\\QueryComposer\\MysqlQueryComposer",
+        "Postgresql": "Espo\\ORM\\QueryComposer\\PostgresqlQueryComposer"
     },
     "pdoFactoryClassNameMap": {
-        "Mysql": "Espo\\ORM\\PDO\\MysqlPDOFactory"
+        "Mysql": "Espo\\ORM\\PDO\\MysqlPDOFactory",
+        "Postgresql": "Espo\\ORM\\PDO\\PostgresqlPDOFactory"
     }
 }
