@@ -110,6 +110,7 @@ class PersonName implements FieldConverter
 
         $attributeDefs = AttributeDefs::create($name)
             ->withType(AttributeType::VARCHAR)
+            ->withNotStorable()
             ->withParamsMerged([
                 'select' => [
                     'select' => $selectExpression,
