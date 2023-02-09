@@ -2452,7 +2452,7 @@ abstract class BaseQueryComposer implements QueryComposer
                         $item =  $this->getAlias($entity, $relationName) . '.' . $this->toDb($value);
                         $item = $this->quoteColumn($item);
 
-                        $foreign[$i] = "IFNULL({$item}, '')";
+                        $foreign[$i] = "COALESCE({$item}, '')";
                     }
 
                     $path = 'TRIM(CONCAT(' . implode(', ', $foreign). '))';

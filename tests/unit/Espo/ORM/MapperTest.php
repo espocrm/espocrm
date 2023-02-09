@@ -226,8 +226,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testSelectOne()
     {
         $query =
-            "SELECT post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(IFNULL(createdBy.salutation_name, ''), " .
-            "IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))), '') AS `createdByName`, ".
+            "SELECT post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(COALESCE(createdBy.salutation_name, ''), " .
+            "COALESCE(createdBy.first_name, ''), ' ', COALESCE(createdBy.last_name, ''))), '') AS `createdByName`, ".
              "post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
             "FROM `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
@@ -258,8 +258,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testSelect1()
     {
         $sql =
-            "SELECT post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(IFNULL(createdBy.salutation_name, ''), " .
-            "IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))), '') AS `createdByName`, " .
+            "SELECT post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(COALESCE(createdBy.salutation_name, ''), " .
+            "COALESCE(createdBy.first_name, ''), ' ', COALESCE(createdBy.last_name, ''))), '') AS `createdByName`, " .
             "post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
             "FROM `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
@@ -520,8 +520,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $query =
             "SELECT ".
-            "post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(IFNULL(createdBy.salutation_name, ''), ".
-            "IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))), '') AS `createdByName`, ".
+            "post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(COALESCE(createdBy.salutation_name, ''), ".
+            "COALESCE(createdBy.first_name, ''), ' ', COALESCE(createdBy.last_name, ''))), '') AS `createdByName`, ".
             "post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
             "FROM `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
