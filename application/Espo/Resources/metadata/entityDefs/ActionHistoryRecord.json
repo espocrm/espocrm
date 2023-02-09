@@ -36,7 +36,7 @@
         },
         "ipAddress": {
             "type": "varchar",
-            "maxLength": "39"
+            "maxLength": 39
         },
         "authToken": {
             "type": "link"

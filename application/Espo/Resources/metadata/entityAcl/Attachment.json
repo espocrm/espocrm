@@ -3,6 +3,9 @@
         "storage": {
             "readOnly": true
         },
+        "source": {
+            "readOnly": true
+        },
         "sourceId": {
             "readOnly": true
         }

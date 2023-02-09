@@ -19,7 +19,7 @@
         },
         "ipAddress": {
             "type": "varchar",
-            "maxLength": "45",
+            "maxLength": 45,
             "readOnly": true
         },
         "createdAt": {
@@ -55,7 +55,7 @@
         "requestMethod": {
             "type": "varchar",
             "readOnly": true,
-            "maxLength": "15"
+            "maxLength": 15
         },
         "authTokenIsActive": {
             "type": "foreign",
