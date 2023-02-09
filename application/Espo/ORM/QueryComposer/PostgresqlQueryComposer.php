@@ -29,9 +29,11 @@
 
 namespace Espo\ORM\QueryComposer;
 
+use Espo\ORM\Entity;
 use Espo\ORM\Query\LockTable as LockTableQuery;
 
 use LogicException;
+use RuntimeException;
 
 class PostgresqlQueryComposer extends BaseQueryComposer
 {
@@ -96,6 +98,50 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             $distinct,
             $argumentPartList
         );
+    }
+
+    /**
+     * @param array<string, mixed> $values
+     * @param array<string, mixed> $params
+     */
+    protected function getSetPart(Entity $entity, array $values, array $params): string
+    {
+        if (!count($values)) {
+            throw new RuntimeException("ORM Query: No SET values for update query.");
+        }
+
+        $list = [];
+
+        foreach ($values as $attribute => $value) {
+            $isNotValue = false;
+
+            if (str_ends_with($attribute, ':')) {
+                $attribute = substr($attribute, 0, -1);
+                $isNotValue = true;
+            }
+
+            if (strpos($attribute, '.') > 0) {
+                [$alias, $attribute] = explode('.', $attribute);
+
+                $alias = $this->sanitize($alias);
+                $column = $this->toDb($this->sanitize($attribute));
+
+                $left = $this->quoteColumn("{$alias}.{$column}");
+            }
+            else {
+                $column = $this->toDb($this->sanitize($attribute));
+
+                $left = $this->quoteColumn("{$column}"); // Diff.
+            }
+
+            $right = $isNotValue ?
+                $this->convertComplexExpression($entity, $value, false, $params) :
+                $this->quote($value);
+
+            $list[] = $left . " = " . $right;
+        }
+
+        return implode(', ', $list);
     }
 
     public function composeLockTable(LockTableQuery $query): string
