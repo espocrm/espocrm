@@ -1675,7 +1675,10 @@ abstract class BaseQueryComposer implements QueryComposer
             $params['extraAdditionalSelect'] = $params['extraAdditionalSelect'] ?? [];
 
             foreach ($defs['additionalSelect'] as $value) {
-                $value = str_replace('{alias}', $alias ?? '', $value);
+                if (is_string($value)) {
+                    $value = str_replace('{alias}', $alias ?? '', $value);
+                }
+
                 $value = str_replace('{attribute}', $attribute, $value);
 
                 if (!in_array($value, $params['extraAdditionalSelect'])) {
