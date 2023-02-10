@@ -2,6 +2,9 @@
     "functionConverterClassNameMap_Mysql": {
         "ABS": "Espo\\Core\\ORM\\QueryComposer\\Part\\FunctionConverters\\Abs"
     },
+    "functionConverterClassNameMap_Postgresql": {
+        "ABS": "Espo\\Core\\ORM\\QueryComposer\\Part\\FunctionConverters\\Abs"
+    },
     "queryComposerClassNameMap": {
         "Mysql": "Espo\\ORM\\QueryComposer\\MysqlQueryComposer",
         "Postgresql": "Espo\\ORM\\QueryComposer\\PostgresqlQueryComposer"

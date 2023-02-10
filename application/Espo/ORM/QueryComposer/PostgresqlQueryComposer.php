@@ -88,7 +88,6 @@ class PostgresqlQueryComposer extends BaseQueryComposer
         array $argumentPartList = []
     ): string
     {
-
         if ($function === 'POSITION_IN_LIST') {
             if (count($argumentPartList) <= 1) {
                 return $this->quote(1);
@@ -113,6 +112,41 @@ class PostgresqlQueryComposer extends BaseQueryComposer
 
         if ($function === 'IFNULL') {
             $function = 'COALESCE';
+        }
+
+        if (str_starts_with($function, 'YEAR_') && $function !== 'YEAR_NUMBER') {
+            $fiscalShift = substr($function, 5);
+
+            if (is_numeric($fiscalShift)) {
+                $fiscalShift = (int) $fiscalShift;
+                $fiscalFirstMonth = $fiscalShift + 1;
+
+                return
+                    "CASE WHEN EXTRACT(MONTH FROM {$part}) >= {$fiscalFirstMonth} THEN ".
+                    "EXTRACT(YEAR FROM {$part}) ".
+                    "ELSE EXTRACT(YEAR FROM {$part}) - 1 END";
+            }
+        }
+
+        if (str_starts_with($function, 'QUARTER_') && $function !== 'QUARTER_NUMBER') {
+            $fiscalShift = substr($function, 8);
+
+            if (is_numeric($fiscalShift)) {
+                $fiscalShift = (int) $fiscalShift;
+                $fiscalFirstMonth = $fiscalShift + 1;
+                $fiscalDistractedMonth = $fiscalFirstMonth < 4 ?
+                    12 - $fiscalFirstMonth :
+                    12 - $fiscalFirstMonth + 1;
+
+                return
+                    "CASE WHEN EXTRACT(MONTH FROM {$part}) >= {$fiscalFirstMonth} " .
+                    "THEN " .
+                    "CONCAT(EXTRACT(YEAR FROM {$part}), '_', " .
+                        "FLOOR((EXTRACT(MONTH FROM {$part}) - {$fiscalFirstMonth}) / 3) + 1) " .
+                    "ELSE CONCAT(EXTRACT(YEAR FROM {$part}) - 1, '_', " .
+                        "CEIL(EXTRACT(MONTH FROM {$part}) + {$fiscalDistractedMonth}) / 3)) " .
+                    "END";
+            }
         }
 
         switch ($function) {
@@ -176,7 +210,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                     return "EXTRACT(YEAR FROM {$to} - {$from})";
 
                 case 'TIMESTAMPDIFF_MONTH':
-                    return "EXTRACT(MONTH TH FROM {$to}) - {$from})";
+                    return "EXTRACT(MONTH FROM {$to}) - {$from})";
 
                 case 'TIMESTAMPDIFF_WEEK':
                     return "FLOOR(EXTRACT(DAY FROM {$to} - {$from}) / 7)";
