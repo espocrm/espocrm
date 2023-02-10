@@ -86,7 +86,8 @@ class PostgresqlQueryComposer extends BaseQueryComposer
         string $entityType,
         bool $distinct,
         array $argumentPartList = []
-    ): string {
+    ): string
+    {
 
         if ($function === 'POSITION_IN_LIST') {
             if (count($argumentPartList) <= 1) {
@@ -96,7 +97,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             $field = $argumentPartList[0];
 
             $pairs = array_map(
-                fn ($i) => [$i, $argumentPartList[$i]],
+                fn($i) => [$i, $argumentPartList[$i]],
                 array_keys($argumentPartList)
             );
 
@@ -112,6 +113,34 @@ class PostgresqlQueryComposer extends BaseQueryComposer
 
         if ($function === 'IFNULL') {
             $function = 'COALESCE';
+        }
+
+        if (str_starts_with($function, 'TIMESTAMPDIFF_')) {
+            $from = $argumentPartList[0] ?? $this->quote(0);
+            $to = $argumentPartList[1] ?? $this->quote(0);
+
+            switch ($function) {
+                case 'TIMESTAMPDIFF_YEAR':
+                    return "EXTRACT(YEAR FROM {$to} - {$from})";
+
+                case 'TIMESTAMPDIFF_MONTH':
+                    return "EXTRACT(MONTH TH FROM {$to}) - {$from})";
+
+                case 'TIMESTAMPDIFF_WEEK':
+                    return "FLOOR(EXTRACT(DAY FROM {$to} - {$from}) / 7)";
+
+                case 'TIMESTAMPDIFF_DAY':
+                    return "EXTRACT(DAY FROM ({$to}) - {$from})";
+
+                case 'TIMESTAMPDIFF_HOUR':
+                    return "EXTRACT(HOUR FROM {$to} - {$from})";
+
+                case 'TIMESTAMPDIFF_MINUTE':
+                    return "EXTRACT(MINUTE FROM {$to} - {$from})";
+
+                case 'TIMESTAMPDIFF_SECOND':
+                    return "FLOOR(EXTRACT(SECOND FROM {$to} - {$from}))";
+            }
         }
 
         return parent::getFunctionPart(
