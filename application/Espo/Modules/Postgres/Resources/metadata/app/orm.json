@@ -1,0 +1,8 @@
+{
+    "queryComposerClassNameMap": {
+        "Postgresql": "Espo\\Modules\\Postgres\\ORM\\QueryComposer\\PostgresqlQueryComposer"
+    },
+    "pdoFactoryClassNameMap": {
+        "Postgresql": "Espo\\Modules\\Postgres\\ORM\\PDO\\PostgresqlPDOFactory"
+    }
+}

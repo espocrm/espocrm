@@ -1,0 +1,10 @@
+{
+    "Postgresql": {
+        "dbalConnectionFactoryClassName": "Espo\\Modules\\Postgres\\Core\\Utils\\Database\\Dbal\\Factories\\PostgresqlConnectionFactory",
+        "detailsProviderClassName": "Espo\\Modules\\Postgres\\Core\\Utils\\Database\\DetailsProviders\\PostgresqlDetailsProvider",
+        "indexHelperClassName": "Espo\\Modules\\Postgres\\Core\\Utils\\Database\\Orm\\IndexHelpers\\PostgresqlIndexHelper",
+        "columnPreparatorClassName": "Espo\\Modules\\Postgres\\Core\\Utils\\Database\\Schema\\ColumnPreparators\\PostgresqlColumnPreparator",
+        "preRebuildActionClassNameList": [],
+        "postRebuildActionClassNameList": []
+    }
+}
