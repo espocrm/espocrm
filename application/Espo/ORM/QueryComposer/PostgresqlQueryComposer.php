@@ -167,6 +167,11 @@ class PostgresqlQueryComposer extends BaseQueryComposer
         return implode(', ', $list);
     }
 
+    public function composeRollbackToSavepoint(string $savepointName): string
+    {
+        return 'ROLLBACK TRANSACTION TO SAVEPOINT ' . $this->sanitize($savepointName);
+    }
+
     public function composeLockTable(LockTableQuery $query): string
     {
         $params = $query->getRaw();
