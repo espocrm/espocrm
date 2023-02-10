@@ -1610,7 +1610,10 @@ abstract class BaseQueryComposer implements QueryComposer
                         $conditions = [];
 
                         foreach ($j[2] as $k => $value) {
-                            $value = str_replace('{alias}', $alias, $value);
+                            if (is_string($value)) {
+                                $value = str_replace('{alias}', $alias, $value);
+                            }
+
                             /** @var string $left */
                             $left = $k;
                             $left = str_replace('{alias}', $alias, $left);
@@ -1648,7 +1651,9 @@ abstract class BaseQueryComposer implements QueryComposer
                         $conditions = [];
 
                         foreach ($j[2] as $k => $value) {
-                            $value = str_replace('{alias}', $alias, $value);
+                            if (is_string($value)) {
+                                $value = str_replace('{alias}', $alias, $value);
+                            }
 
                             /** @var string $left */
                             $left = $k;
