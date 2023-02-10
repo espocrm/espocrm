@@ -57,6 +57,8 @@ class PostgresqlColumnPreparator implements ColumnPreparator
         Entity::BOOL => Types::BOOLEAN,
         Entity::INT => Types::INTEGER,
         Entity::VARCHAR => Types::STRING,
+        // DBAL reverse engineers as blob.
+        Types::BINARY => Types::BLOB,
     ];
 
     public function __construct() {}
