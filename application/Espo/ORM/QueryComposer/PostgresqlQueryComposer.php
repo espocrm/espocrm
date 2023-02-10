@@ -115,6 +115,58 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             $function = 'COALESCE';
         }
 
+        switch ($function) {
+            case 'MONTH':
+                return "TO_CHAR({$part}, 'YYYY-MM')";
+
+            case 'DAY':
+                return "TO_CHAR({$part}, 'YYYY-MM-DD')";
+
+            case 'WEEK':
+            case 'WEEK_0':
+            case 'WEEK_1':
+                return "CONCAT(TO_CHAR({$part}, 'YYYY'), '/', TRIM(LEADING '0' FROM TO_CHAR({$part}, 'IW')))";
+
+            case 'QUARTER':
+                return "CONCAT(TO_CHAR({$part}, 'YYYY'), '_', TO_CHAR({$part}, 'Q'))";
+
+            case 'WEEK_NUMBER_0':
+            case 'WEEK_NUMBER':
+            case 'WEEK_NUMBER_1':
+                // Monday week-start not implemented.
+                return "TO_CHAR({$part}, 'IW')::INTEGER";
+
+            case 'HOUR_NUMBER':
+            case 'HOUR':
+                return "EXTRACT(HOUR FROM {$part})";
+
+            case 'MINUTE_NUMBER':
+            case 'MINUTE':
+                return "EXTRACT(MINUTE FROM {$part})";
+
+            case 'SECOND_NUMBER':
+            case 'SECOND':
+                return "FLOOR(EXTRACT(SECOND FROM {$part}))";
+
+            case 'DATE_NUMBER':
+            case 'DAYOFMONTH':
+                return "EXTRACT(DAY FROM {$part})";
+
+            case 'DAYOFWEEK_NUMBER':
+            case 'DAYOFWEEK':
+                return "EXTRACT(DOW FROM {$part})";
+
+            case 'MONTH_NUMBER':
+                return "EXTRACT(MONTH FROM {$part})";
+
+            case 'YEAR_NUMBER':
+            case 'YEAR':
+                return "EXTRACT(YEAR FROM {$part})";
+
+            case 'QUARTER_NUMBER':
+                return "EXTRACT(QUARTER FROM {$part})";
+        }
+
         if (str_starts_with($function, 'TIMESTAMPDIFF_')) {
             $from = $argumentPartList[0] ?? $this->quote(0);
             $to = $argumentPartList[1] ?? $this->quote(0);
