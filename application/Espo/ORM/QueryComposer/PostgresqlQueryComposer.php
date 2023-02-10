@@ -30,6 +30,7 @@
 namespace Espo\ORM\QueryComposer;
 
 use Espo\ORM\Entity;
+use Espo\ORM\Query\Insert as InsertQuery;
 use Espo\ORM\Query\LockTable as LockTableQuery;
 
 use LogicException;
@@ -121,6 +122,55 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             $distinct,
             $argumentPartList
         );
+    }
+
+    public function composeInsert(InsertQuery $query): string
+    {
+        $params = $query->getRaw();
+        $params = $this->normalizeInsertParams($params);
+
+        $entityType = $params['into'];
+        $columns = $params['columns'];
+        $updateSet = $params['updateSet'];
+
+        $columnsPart = $this->getInsertColumnsPart($columns);
+        $valuesPart = $this->getInsertValuesPart($entityType, $params);
+        $updatePart = $updateSet ? $this->getInsertUpdatePart($updateSet) : null;
+
+        $table = $this->toDb($entityType);
+
+        $sql = "INSERT INTO " . $this->quoteIdentifier($table) . " ({$columnsPart}) {$valuesPart}";
+
+        if ($updatePart) {
+            $updateColumnsPart = implode(', ',
+                array_map(fn ($item) => $this->quoteIdentifier($this->toDb($this->sanitize($item))),
+                    $this->getEntityUniqueColumns($entityType)
+                )
+            );
+
+            $sql .= " ON CONFLICT({$updateColumnsPart}) DO UPDATE SET " . $updatePart;
+        }
+
+        return $sql;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getEntityUniqueColumns(string $entityType): array
+    {
+        $indexes = $this->metadata
+            ->getDefs()
+            ->getEntity($entityType)
+            ->getIndexList();
+
+        foreach ($indexes as $index) {
+            if ($index->isUnique()) {
+                return $index->getColumnList();
+            }
+        }
+
+        return ['id'];
     }
 
     /**
