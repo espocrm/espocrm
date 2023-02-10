@@ -143,7 +143,7 @@ class SchemaManager
         }
 
         $diff = $this->comparator->compareSchemas($fromSchema, $schema);
-        $needReRun = $this->diffModifier->modify($diff, false, $mode);
+        $needReRun = $this->diffModifier->modify($diff, $schema, false, $mode);
         $sql = $this->composeDiffSql($diff);
 
         $result = $this->runSql($sql);
@@ -161,7 +161,7 @@ class SchemaManager
 
             $diff = $this->comparator->compareSchemas($intermediateSchema, $schema);
 
-            $this->diffModifier->modify($diff, true);
+            $this->diffModifier->modify($diff, $schema, true);
             $sql = $this->composeDiffSql($diff);
             $result = $this->runSql($sql);
         }
