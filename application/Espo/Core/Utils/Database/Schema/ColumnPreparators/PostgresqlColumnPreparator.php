@@ -129,7 +129,10 @@ class PostgresqlColumnPreparator implements ColumnPreparator
                 ->withUnsigned();
         }
 
-        if (
+        return $column;
+
+        // @todo Revise. Comparator would detect the column as changed if charset is set.
+        /*if (
             !in_array($columnType, [
                 Types::STRING,
                 Types::TEXT,
@@ -138,6 +141,6 @@ class PostgresqlColumnPreparator implements ColumnPreparator
             return $column;
         }
 
-        return $column->withCharset('UTF8');
+        return $column->withCharset('UTF8');*/
     }
 }
