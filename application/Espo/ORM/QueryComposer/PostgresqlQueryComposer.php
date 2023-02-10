@@ -86,6 +86,29 @@ class PostgresqlQueryComposer extends BaseQueryComposer
         bool $distinct,
         array $argumentPartList = []
     ): string {
+
+        if ($function === 'POSITION_IN_LIST') {
+            if (count($argumentPartList) <= 1) {
+                return $this->quote(1);
+            }
+
+            $field = $argumentPartList[0];
+
+            $pairs = array_map(
+                fn ($i) => [$i, $argumentPartList[$i]],
+                array_keys($argumentPartList)
+            );
+
+            $whenParts = array_map(function ($item) use ($field) {
+                $resolution = intval($item[0]);
+                $value = $item[1];
+
+                return " WHEN {$field} = {$value} THEN {$resolution}";
+            }, array_slice($pairs, 1));
+
+            return "CASE" . implode('', $whenParts) . " ELSE " . count($argumentPartList) . " END";
+        }
+
         if ($function === 'IFNULL') {
             $function = 'COALESCE';
         }
