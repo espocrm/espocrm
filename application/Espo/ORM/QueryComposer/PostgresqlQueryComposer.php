@@ -107,7 +107,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                 return " WHEN {$field} = {$value} THEN {$resolution}";
             }, array_slice($pairs, 1));
 
-            return "CASE" . implode('', $whenParts) . " ELSE " . count($argumentPartList) . " END";
+            return "CASE" . implode('', $whenParts) . " ELSE 0 END";
         }
 
         if ($function === 'IFNULL') {
