@@ -2596,6 +2596,13 @@ abstract class BaseQueryComposer implements QueryComposer
 
             $operatorModified = $operator;
 
+            if ($operatorOrm === '*') {
+                $operatorModified = 'LIKE';
+            }
+            else if ($operatorOrm === '!*') {
+                $operatorModified = 'NOT LIKE';
+            }
+
             $attributeType = $entity->getAttributeType($field) ?? null;
 
             if (
