@@ -74,6 +74,8 @@ class PostgresqlPDOFactory implements PDOFactory
 
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+        $pdo->query("SET time zone 'UTC'");
+
         return $pdo;
     }
 }
