@@ -32,6 +32,7 @@ namespace Espo\ORM\Mapper;
 use Espo\ORM\Entity;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Collection;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\SthCollection;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\CollectionFactory;
@@ -100,6 +101,8 @@ class BaseMapper implements RDBMapper
         if ($entityType === null) {
             throw new RuntimeException("No entity type.");
         }
+
+        $select = $this->addFromAliasToSelectQuery($select);
 
         $entity = $this->entityFactory->create($entityType);
 
@@ -191,9 +194,23 @@ class BaseMapper implements RDBMapper
             throw new RuntimeException("No entity type.");
         }
 
+        $select = $this->addFromAliasToSelectQuery($select);
+
         $sql = $this->queryComposer->composeSelect($select);
 
         return $this->selectBySqlInternal($entityType, $sql);
+    }
+
+    private function addFromAliasToSelectQuery(Select $select): Select
+    {
+        if ($select->getFromAlias() || !$select->getFrom()) {
+            return $select;
+        }
+
+        return SelectBuilder::create()
+            ->clone($select)
+            ->from($select->getFrom(), lcfirst($select->getFrom()))
+            ->build();
     }
 
     /**
@@ -224,6 +241,8 @@ class BaseMapper implements RDBMapper
         if ($entityType === null) {
             throw new RuntimeException("No entity type.");
         }
+
+        $select = $this->addFromAliasToSelectQuery($select);
 
         $entity = $this->entityFactory->create($entityType);
 
@@ -321,6 +340,7 @@ class BaseMapper implements RDBMapper
                 $params['offset'] = 0;
                 $params['limit'] = 1;
                 $params['from'] = $relEntity->getEntityType();
+                $params['fromAlias'] ??= lcfirst($relEntity->getEntityType());
 
                 $sql = $this->queryComposer->composeSelect(Select::fromRaw($params));
 
@@ -371,11 +391,10 @@ class BaseMapper implements RDBMapper
                     $params['whereClause'][] = $relConditions;
                 }
 
-                $resultDataList = [];
-
                 /** @var Entity $relEntity */
 
                 $params['from'] = $relEntity->getEntityType();
+                $params['fromAlias'] ??= lcfirst($relEntity->getEntityType());
 
                 $sql = $this->queryComposer->composeSelect(Select::fromRaw($params));
 
@@ -407,8 +426,7 @@ class BaseMapper implements RDBMapper
 
             case Entity::MANY_MANY:
 
-                $params['joins'] = $params['joins'] ?? [];
-
+                $params['joins'] ??= [];
                 $params['joins'][] = $this->getManyManyJoin($entity, $relationName);
 
                 $params['select'] = $this->getModifiedSelectForManyToMany(
@@ -420,6 +438,7 @@ class BaseMapper implements RDBMapper
                 /** @var Entity $relEntity */
 
                 $params['from'] = $relEntity->getEntityType();
+                $params['fromAlias'] ??= lcfirst($relEntity->getEntityType());
 
                 $sql = $this->queryComposer->composeSelect(Select::fromRaw($params));
 
@@ -456,6 +475,7 @@ class BaseMapper implements RDBMapper
                 $relEntity = $this->entityFactory->create($foreignEntityType);
 
                 $params['from'] = $foreignEntityType;
+                $params['fromAlias'] ??= lcfirst($foreignEntityType);
 
                 $sql = $this->queryComposer->composeSelect(Select::fromRaw($params));
 

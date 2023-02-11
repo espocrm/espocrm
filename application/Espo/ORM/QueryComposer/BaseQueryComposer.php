@@ -95,6 +95,8 @@ abstract class BaseQueryComposer implements QueryComposer
         'AND',
     ];
 
+    protected const EXISTS_OPERATOR = 'EXISTS';
+
     /** @var array<string, string> */
     protected array $comparisonOperators = [
         '!=s' => 'NOT IN',
@@ -2553,6 +2555,16 @@ abstract class BaseQueryComposer implements QueryComposer
             }
 
             return "(" . $internalPart . ")";
+        }
+
+        if ($field === self::EXISTS_OPERATOR) {
+            if (!is_array($value)) {
+                throw new RuntimeException("Bad EXISTS usage in where-clause.");
+            }
+
+            $subQueryPart = $this->createSelectQueryInternal($value);
+
+            return "EXISTS ({$subQueryPart})";
         }
 
         $isComplex = false;

@@ -31,6 +31,7 @@ namespace Espo\ORM\Query\Part;
 
 use Espo\ORM\Query\Part\Where\AndGroup;
 use Espo\ORM\Query\Part\Where\Comparison;
+use Espo\ORM\Query\Part\Where\Exists;
 use Espo\ORM\Query\Part\Where\Not;
 use Espo\ORM\Query\Part\Where\OrGroup;
 
@@ -67,6 +68,14 @@ class Condition
     public static function not(WhereItem $item): Not
     {
         return Not::create($item);
+    }
+
+    /**
+     * Create `EXISTS`.
+     */
+    public static function exists(Select $subQuery): Exists
+    {
+        return Exists::create($subQuery);
     }
 
     /**
