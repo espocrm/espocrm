@@ -1331,10 +1331,16 @@ class ItemGeneralConverter implements ItemConverter
             $subQuery = QueryBuilder::create()
                 ->select('id')
                 ->from($this->entityType)
-                ->leftJoin($middleEntityType, $alias, [
-                    "{$alias}.{$nearKey}:" => 'id',
-                    "{$alias}.deleted" => false,
-                ])
+                ->leftJoin(
+                    Join::create($link, $alias)
+                        ->withConditions(
+                            Cond::equal(
+                                Cond::column("{$alias}.{$nearKey}"),
+                                Cond::column('id')
+                            )
+                        )
+                        ->withOnlyMiddle()
+                )
                 ->where(["{$alias}.{$key}" => $value])
                 ->build();
 
