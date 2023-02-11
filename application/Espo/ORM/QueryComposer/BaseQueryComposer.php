@@ -3274,7 +3274,11 @@ abstract class BaseQueryComposer implements QueryComposer
 
                 $distantTable = $this->toDb($foreignEntityType);
 
-                $midAlias = $alias . 'Middle';
+                $onlyMiddle = $joinParams['onlyMiddle'] ?? false;
+
+                $midAlias = $onlyMiddle ?
+                    $alias :
+                    $alias . 'Middle';
 
                 $indexKeyList = null;
                 $indexList = $joinParams['useIndex'] ?? null;
@@ -3338,8 +3342,6 @@ abstract class BaseQueryComposer implements QueryComposer
                 if (count($joinSqlList)) {
                     $sql .= " AND " . implode(" AND ", $joinSqlList);
                 }
-
-                $onlyMiddle = $joinParams['onlyMiddle'] ?? false;
 
                 if (!$onlyMiddle) {
                     $rightKeyColumn = $this->quoteColumn("{$alias}." . $this->toDb($foreignKey));

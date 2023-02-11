@@ -38,6 +38,8 @@ use Espo\Entities\ArrayValue;
 use Espo\Entities\User;
 use Espo\ORM\Defs as ORMDefs;
 use Espo\ORM\Entity;
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\Part\Join;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
@@ -1319,9 +1321,11 @@ class ItemGeneralConverter implements ItemConverter
 
         if ($relationType == Entity::MANY_MANY) {
             $key = $defs->getForeignMidKey();
+
             $nearKey = $defs->getMidKey();
             $middleEntityType = ucfirst($defs->getRelationshipName());
 
+            // IN-sub-query performs faster than EXISTS on MariaDB when multiple IDs.
             // Left-join performs faster than Inner-join.
             // Not joining a foreign table as it affects performance in MySQL.
             $subQuery = QueryBuilder::create()
@@ -1385,20 +1389,26 @@ class ItemGeneralConverter implements ItemConverter
 
         if ($relationType == Entity::MANY_MANY) {
             $key = $defs->getForeignMidKey();
-            $nearKey = $defs->getMidKey();
-            $middleEntityType = ucfirst($defs->getRelationshipName());
 
-            $subQuery = QueryBuilder::create()
-                ->select('id')
-                ->from($this->entityType)
-                ->leftJoin($middleEntityType, $alias, [
-                    "{$alias}.{$nearKey}:" => 'id',
-                    "{$alias}.deleted" => false,
-                ])
-                ->where(["{$alias}.{$key}=" => $value])
-                ->build();
-
-            return ['id!=s' =>  $subQuery->getRaw()];
+            // MariaDB and MySQL performs slow, PostgreSQL – fast.
+            return Cond::not(
+                Cond::exists(
+                    QueryBuilder::create()
+                        ->from($this->entityType, 'sq')
+                        ->join(
+                            Join::create($link, $alias)
+                                ->withOnlyMiddle()
+                        )
+                        ->where(["{$alias}.{$key}" => $value])
+                        ->where(
+                            Cond::equal(
+                                Cond::column('sq.id'),
+                                Cond::column(lcfirst($this->entityType) . '.id')
+                            )
+                        )
+                        ->build()
+                )
+            )->getRaw();
         }
 
         if (
@@ -1455,6 +1465,7 @@ class ItemGeneralConverter implements ItemConverter
             $whereList = [];
 
             foreach ($value as $targetId) {
+                // Only-middle join performs slower on MariaDB.
                 $sq = QueryBuilder::create()
                     ->from($this->entityType)
                     ->select('id')

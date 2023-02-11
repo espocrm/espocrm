@@ -954,7 +954,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT post.id AS `id` FROM `post` " .
-            "LEFT JOIN `post_tag` AS `tagsMiddle` ON post.id = tagsMiddle.post_id AND tagsMiddle.deleted = 0 " .
+            "LEFT JOIN `post_tag` AS `tags` ON post.id = tags.post_id AND tags.deleted = 0 " .
             "WHERE post.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
