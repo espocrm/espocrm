@@ -41,6 +41,36 @@ class PostgresqlQueryComposer extends BaseQueryComposer
     protected string $identifierQuoteCharacter = '"';
     protected bool $indexHints = false;
 
+    /** @var array<string, string> */
+    protected array $comparisonOperators = [
+        '!=s' => 'NOT IN',
+        '=s' => 'IN',
+        '!=' => '<>',
+        '!*' => 'NOT ILIKE',
+        '*' => 'ILIKE',
+        '>=' => '>=',
+        '<=' => '<=',
+        '>' => '>',
+        '<' => '<',
+        '=' => '=',
+    ];
+
+    /** @var array<string, string> */
+    protected array $comparisonFunctionOperatorMap = [
+        'LIKE' => 'ILIKE',
+        'NOT_LIKE' => 'NOT ILIKE',
+        'EQUAL' => '=',
+        'NOT_EQUAL' => '<>',
+        'GREATER_THAN' => '>',
+        'LESS_THAN' => '<',
+        'GREATER_THAN_OR_EQUAL' => '>=',
+        'LESS_THAN_OR_EQUAL' => '<=',
+        'IS_NULL' => 'IS NULL',
+        'IS_NOT_NULL' => 'IS NOT NULL',
+        'IN' => 'IN',
+        'NOT_IN' => 'NOT IN',
+    ];
+
     protected function quoteColumn(string $column): string
     {
         $list = explode('.', $column);
@@ -86,8 +116,27 @@ class PostgresqlQueryComposer extends BaseQueryComposer
         string $entityType,
         bool $distinct,
         array $argumentPartList = []
-    ): string
-    {
+    ): string {
+
+        if ($function === 'UNIX_TIMESTAMP') {
+            $arg = $argumentPartList[0] ?? 'NOW()';
+
+            return "FLOOR(EXTRACT(EPOCH FROM {$arg}))";
+        }
+
+        if ($function === 'TZ') {
+            if (count($argumentPartList) < 2) {
+                throw new RuntimeException("Not enough arguments for function TZ.");
+            }
+
+            $offsetHoursString = $argumentPartList[1];
+            if (str_starts_with($offsetHoursString, '\'') && str_ends_with($offsetHoursString, '\'')) {
+                $offsetHoursString = substr($offsetHoursString, 1, -1);
+            }
+
+            return "{$argumentPartList[0]} + INTERVAL 'HOUR {$offsetHoursString}'";
+        }
+
         if ($function === 'POSITION_IN_LIST') {
             if (count($argumentPartList) <= 1) {
                 return $this->quote(1);
