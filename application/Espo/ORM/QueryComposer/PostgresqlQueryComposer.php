@@ -124,6 +124,11 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             return "FLOOR(EXTRACT(EPOCH FROM {$arg}))";
         }
 
+        if ($function === 'BINARY') {
+            // Not supported.
+            return $argumentPartList[0] ?? '0';
+        }
+
         if ($function === 'TZ') {
             if (count($argumentPartList) < 2) {
                 throw new RuntimeException("Not enough arguments for function TZ.");
