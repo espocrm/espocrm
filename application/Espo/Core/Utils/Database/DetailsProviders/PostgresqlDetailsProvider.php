@@ -62,14 +62,18 @@ class PostgresqlDetailsProvider implements DetailsProvider
 
     public function getParam(string $name): ?string
     {
-        $sql = "SHOW " . $this->pdo->quote($name);;
+        $name = preg_replace('/[^A-Za-z0-9_]+/', '', $name);;
 
-        $sth = $this->pdo->prepare($sql);
+        $sql = "SHOW {$name}";
+
+        $sth = $this->pdo->query($sql);
         $row = $sth->fetch(PDO::FETCH_NUM);
 
-        $index = 1;
+        if ($row === false) {
+            return null;
+        }
 
-        $value = $row[$index] ?: null;
+        $value = $row[0] ?: null;
 
         if ($value === null) {
             return null;
