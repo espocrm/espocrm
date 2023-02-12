@@ -136,13 +136,6 @@ abstract class BaseQueryComposer implements QueryComposer
         'MOD' => '%',
     ];
 
-    /** @var array<string, string> */
-    protected array $matchFunctionMap = [
-        'MATCH_BOOLEAN' => 'IN BOOLEAN MODE',
-        'MATCH_NATURAL_LANGUAGE' => 'IN NATURAL LANGUAGE MODE',
-        'MATCH_QUERY_EXPANSION' => 'WITH QUERY EXPANSION',
-    ];
-
     protected const SELECT_METHOD = 'SELECT';
     protected const DELETE_METHOD = 'DELETE';
     protected const UPDATE_METHOD = 'UPDATE';
@@ -952,6 +945,19 @@ abstract class BaseQueryComposer implements QueryComposer
             throw new RuntimeException("ORM Query: Not allowed function '{$function}'.");
         }
 
+        if (in_array($function, ['MATCH_BOOLEAN', 'MATCH_NATURAL_LANGUAGE'])) {
+            if (count($argumentPartList) < 2) {
+                throw new RuntimeException("Not enough arguments for MATCH function.");
+            }
+
+            $queryPart = end($argumentPartList);
+            $columnsPart = implode(', ', array_splice($argumentPartList, 0, -1));
+            $modePart = $function === 'MATCH_BOOLEAN' ?
+                'IN BOOLEAN MODE' : 'IN NATURAL LANGUAGE MODE';
+
+            return "MATCH ({$columnsPart}) AGAINST ({$queryPart} {$modePart})";
+        }
+
         if (str_starts_with($function, 'YEAR_') && $function !== 'YEAR_NUMBER') {
             $fiscalShift = substr($function, 5);
 
@@ -989,7 +995,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if (in_array($function, Functions::COMPARISON_FUNCTION_LIST)) {
             if (count($argumentPartList) < 2) {
-                throw new RuntimeException("ORM Query: Not enough arguments for function '{$function}'.");
+                throw new RuntimeException("Not enough arguments for function '{$function}'.");
             }
 
             $operator = $this->comparisonFunctionOperatorMap[$function];
@@ -1184,68 +1190,6 @@ abstract class BaseQueryComposer implements QueryComposer
     /**
      * @param array<string, mixed> $params
      */
-    protected function convertMatchExpression(Entity $entity, string $expression, array $params): string
-    {
-        $delimiterPosition = strpos($expression, ':');
-
-        if ($delimiterPosition === false) {
-            throw new RuntimeException("ORM Query: Bad MATCH usage.");
-        }
-
-        $function = substr($expression, 0, $delimiterPosition);
-        $rest = substr($expression, $delimiterPosition + 1);
-
-        if (empty($rest)) {
-            throw new RuntimeException("ORM Query: Empty MATCH parameters.");
-        }
-
-        if (str_starts_with($rest, '(') && str_ends_with($rest, ')')) {
-            $rest = substr($rest, 1, -1);
-
-            $argumentList = Util::parseArgumentListFromFunctionContent($rest);
-
-            if (count($argumentList) < 2) {
-                throw new RuntimeException("ORM Query: Bad MATCH usage.");
-            }
-
-            $columnList = [];
-
-            for ($i = 0; $i < count($argumentList) - 1; $i++) {
-                $columnList[] = $argumentList[$i];
-            }
-
-            $query = $argumentList[count($argumentList) - 1];
-        }
-        else {
-            throw new RuntimeException("ORM Query: Bad MATCH usage.");
-        }
-
-        $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
-
-        foreach ($columnList as $i => $column) {
-            $columnList[$i] = $this->quoteColumn($fromAlias . '.' . $this->sanitize($this->toDb($column)));
-        }
-
-        if (!Util::isArgumentString($query)) {
-            throw new RuntimeException("ORM Query: Bad MATCH usage. The last argument should be a string.");
-        }
-
-        $query = mb_substr($query, 1, -1);
-
-        $query = $this->quote($query);
-
-        if (!in_array($function, Functions::MATCH_FUNCTION_LIST)) {
-            throw new RuntimeException("ORM Query: Not allowed MATCH usage.");
-        }
-
-        $modePart = ' ' . $this->matchFunctionMap[$function];
-
-        return "MATCH (" . implode(',', $columnList) . ") AGAINST (" . $query . $modePart . ")";
-    }
-
-    /**
-     * @param array<string, mixed> $params
-     */
     protected function convertComplexExpression(
         ?Entity $entity,
         string $attribute,
@@ -1265,11 +1209,6 @@ abstract class BaseQueryComposer implements QueryComposer
             /** @var int $delimiterPosition */
             $delimiterPosition = strpos($attribute, ':');
             $function = substr($attribute, 0, $delimiterPosition);
-
-            if (in_array($function, Functions::MATCH_FUNCTION_LIST)) {
-                return $this->convertMatchExpression($entity, $attribute, $params);
-            }
-
             $attribute = substr($attribute, $delimiterPosition + 1);
 
             if (str_starts_with($attribute, '(') && str_ends_with($attribute, ')')) {
@@ -2530,7 +2469,7 @@ abstract class BaseQueryComposer implements QueryComposer
     ): ?string {
 
         if (is_int($leftKey) && is_string($value)) {
-            return $this->convertMatchExpression($entity, $value, $params);
+            return $this->convertComplexExpression($entity, $value, false, $params);
         }
 
         $field = $leftKey;

@@ -1306,7 +1306,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT DISTINCT article.id AS `id`, article.name AS `name`, article.description AS `description` " .
             "FROM `article` WHERE article.deleted = 0 ".
-            "ORDER BY MATCH (article.name,article.description) AGAINST ('test' IN BOOLEAN MODE) DESC";
+            "ORDER BY MATCH (article.name, article.description) AGAINST ('test' IN BOOLEAN MODE) DESC";
 
         $sql = $this->query->compose($select);
 
@@ -1326,7 +1326,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT DISTINCT article.id AS `id`, article.name AS `name`, article.description AS `description` " .
             "FROM `article` WHERE article.deleted = 0 ".
-            "ORDER BY MATCH (article.name,article.description) AGAINST ('test' IN BOOLEAN MODE) DESC";
+            "ORDER BY MATCH (article.name, article.description) AGAINST ('test' IN BOOLEAN MODE) DESC";
 
         $sql = $this->query->compose($select);
 
@@ -1801,7 +1801,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
-            "WHERE MATCH (article.name,article.description) AGAINST " .
+            "WHERE MATCH (article.name, article.description) AGAINST " .
             "('test +hello' IN BOOLEAN MODE) AND article.id IS NOT NULL AND article.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
