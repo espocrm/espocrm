@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils\Database\Dbal\Platforms;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Table;
@@ -42,6 +43,11 @@ class PostgresqlPlatform extends PostgreSQL100Platform
     public function setTextSearchConfig(?string $textSearchConfig): void
     {
         $this->textSearchConfig = $textSearchConfig;
+    }
+
+    public function createSchemaManager(Connection $connection): PostgreSQLSchemaManager
+    {
+        return new PostgreSQLSchemaManager($connection, $this);
     }
 
     public function getCreateIndexSQL(Index $index, $table)
