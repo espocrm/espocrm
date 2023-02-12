@@ -33,6 +33,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\PDO\PgSQL\Driver as PostgreSQLDriver;
 use Doctrine\DBAL\Exception as DBALException;
 use Espo\Core\Utils\Database\Dbal\ConnectionFactory;
+use Espo\Core\Utils\Database\Dbal\Platforms\PostgresqlPlatform;
 use Espo\ORM\DatabaseParams;
 use Espo\ORM\PDO\Options as PdoOptions;
 
@@ -57,6 +58,7 @@ class PostgresqlConnectionFactory implements ConnectionFactory
         }
 
         $params = [
+            'platform' => new PostgresqlPlatform(),
             'pdo' => $this->pdo,
             'host' => $databaseParams->getHost(),
             'dbname' => $databaseParams->getName(),

@@ -118,6 +118,17 @@ class PostgresqlQueryComposer extends BaseQueryComposer
         array $argumentPartList = []
     ): string {
 
+        if (in_array($function, ['MATCH_BOOLEAN', 'MATCH_NATURAL_LANGUAGE'])) {
+            if (count($argumentPartList) < 2) {
+                throw new RuntimeException("Not enough arguments for MATCH function.");
+            }
+
+            $queryPart = end($argumentPartList);
+            $columnsPart = implode(" || ' ' || ", array_slice($argumentPartList, 0, -1));
+
+            return "TO_TSVECTOR({$columnsPart}) @@ PLAINTO_TSQUERY({$queryPart})";
+        }
+
         if ($function === 'UNIX_TIMESTAMP') {
             $arg = $argumentPartList[0] ?? 'NOW()';
 
