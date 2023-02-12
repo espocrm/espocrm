@@ -351,8 +351,6 @@ class ItemGeneralConverter implements ItemConverter
         $value
     ): array {
 
-        $arrayValueAlias = 'arrayFilter' . $this->randomStringGenerator->generate();
-
         $arrayAttribute = $attribute;
         $arrayEntityType = $this->entityType;
         $idPart = 'id';
@@ -420,33 +418,36 @@ class ItemGeneralConverter implements ItemConverter
                 throw new Error("Bad where item 'array'. No value.");
             }
 
-            $subQuery = QueryBuilder::create()
-                ->select('entityId')
-                ->from(ArrayValue::ENTITY_TYPE)
-                ->where([
-                    'entityType' => $arrayEntityType,
-                    'attribute' => $arrayAttribute,
-                    'value' => $value,
-                ])
-                ->build();
-
-            return [$idPart . '!=s' => $subQuery->getRaw()];
+            return Cond::not(
+                Cond::exists(
+                    QueryBuilder::create()
+                        ->select('entityId')
+                        ->from(ArrayValue::ENTITY_TYPE)
+                        ->where([
+                            'entityType' => $arrayEntityType,
+                            'attribute' => $arrayAttribute,
+                            'value' => $value,
+                            'entityId:' => lcfirst($arrayEntityType) . '.id'
+                        ])
+                        ->build()
+                )
+            )->getRaw();
         }
 
         if ($type === Type::ARRAY_IS_EMPTY) {
-            // Though distinct-left-join may perform faster than not-in-subquery
-            // it's reasonable to avoid using distinct as it may negatively affect
-            // performance when other filters are applied.
-            $subQuery = QueryBuilder::create()
-                ->select('entityId')
-                ->from(ArrayValue::ENTITY_TYPE)
-                ->where([
-                    'entityType' => $arrayEntityType,
-                    'attribute' => $arrayAttribute,
-                ])
-                ->build();
-
-            return [$idPart . '!=s' => $subQuery->getRaw()];
+            return Cond::not(
+                Cond::exists(
+                    QueryBuilder::create()
+                        ->select('entityId')
+                        ->from(ArrayValue::ENTITY_TYPE)
+                        ->where([
+                            'entityType' => $arrayEntityType,
+                            'attribute' => $arrayAttribute,
+                            'entityId:' => lcfirst($arrayEntityType) . '.id'
+                        ])
+                        ->build()
+                )
+            )->getRaw();
         }
 
         if ($type === Type::ARRAY_IS_NOT_EMPTY) {
@@ -1321,30 +1322,30 @@ class ItemGeneralConverter implements ItemConverter
 
         if ($relationType == Entity::MANY_MANY) {
             $key = $defs->getForeignMidKey();
-
             $nearKey = $defs->getMidKey();
-            $middleEntityType = ucfirst($defs->getRelationshipName());
 
             // IN-sub-query performs faster than EXISTS on MariaDB when multiple IDs.
-            // Left-join performs faster than Inner-join.
+            // Left-join performs faster than inner-join.
             // Not joining a foreign table as it affects performance in MySQL.
-            $subQuery = QueryBuilder::create()
-                ->select('id')
-                ->from($this->entityType)
-                ->leftJoin(
-                    Join::create($link, $alias)
-                        ->withConditions(
-                            Cond::equal(
-                                Cond::column("{$alias}.{$nearKey}"),
-                                Cond::column('id')
+            // MariaDB and PostgreSQL perform fast, MySQL – slow.
+            return Cond::in(
+                Cond::column('id'),
+                QueryBuilder::create()
+                    ->select('id')
+                    ->from($this->entityType)
+                    ->leftJoin(
+                        Join::create($link, $alias)
+                            ->withConditions(
+                                Cond::equal(
+                                    Cond::column("{$alias}.{$nearKey}"),
+                                    Cond::column('id')
+                                )
                             )
-                        )
-                        ->withOnlyMiddle()
-                )
-                ->where(["{$alias}.{$key}" => $value])
-                ->build();
-
-            return ['id=s' =>  $subQuery->getRaw()];
+                            ->withOnlyMiddle()
+                    )
+                    ->where(["{$alias}.{$key}" => $value])
+                    ->build()
+            )->getRaw();
         }
 
         if (
@@ -1396,7 +1397,7 @@ class ItemGeneralConverter implements ItemConverter
         if ($relationType == Entity::MANY_MANY) {
             $key = $defs->getForeignMidKey();
 
-            // MariaDB and MySQL performs slow, PostgreSQL – fast.
+            // MariaDB and MySQL perform slow, PostgreSQL – fast.
             return Cond::not(
                 Cond::exists(
                     QueryBuilder::create()
@@ -1421,14 +1422,17 @@ class ItemGeneralConverter implements ItemConverter
             $relationType == Entity::HAS_MANY ||
             $relationType == Entity::HAS_ONE
         ) {
-            $subQuery = QueryBuilder::create()
-                ->select('id')
-                ->from($this->entityType)
-                ->leftJoin($link, $alias)
-                ->where(["{$alias}.id" => $value])
-                ->build();
-
-            return ['id!=s' =>  $subQuery->getRaw()];
+            return Cond::not(
+                Cond::exists(
+                    QueryBuilder::create()
+                        ->select('id')
+                        ->from($this->entityType, 'sq')
+                        ->join($link, $alias)
+                        ->where(["{$alias}.id" => $value])
+                        ->where(['sq.id:' => lcfirst($this->entityType) . '.id'])
+                        ->build()
+                )
+            )->getRaw();
         }
 
         if ($relationType == Entity::BELONGS_TO) {
