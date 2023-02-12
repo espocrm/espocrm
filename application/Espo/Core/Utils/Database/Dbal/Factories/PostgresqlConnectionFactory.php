@@ -34,6 +34,7 @@ use Doctrine\DBAL\Driver\PDO\PgSQL\Driver as PostgreSQLDriver;
 use Doctrine\DBAL\Exception as DBALException;
 use Espo\Core\Utils\Database\Dbal\ConnectionFactory;
 use Espo\Core\Utils\Database\Dbal\Platforms\PostgresqlPlatform;
+use Espo\Core\Utils\Database\Helper;
 use Espo\ORM\DatabaseParams;
 use Espo\ORM\PDO\Options as PdoOptions;
 
@@ -43,7 +44,8 @@ use RuntimeException;
 class PostgresqlConnectionFactory implements ConnectionFactory
 {
     public function __construct(
-        private PDO $pdo
+        private PDO $pdo,
+        private Helper $helper
     ) {}
 
     /**
@@ -57,8 +59,11 @@ class PostgresqlConnectionFactory implements ConnectionFactory
             throw new RuntimeException("No required database params.");
         }
 
+        $platform = new PostgresqlPlatform();
+        $platform->setTextSearchConfig($this->helper->getParam('default_text_search_config'));
+
         $params = [
-            'platform' => new PostgresqlPlatform(),
+            'platform' => $platform,
             'pdo' => $this->pdo,
             'host' => $databaseParams->getHost(),
             'dbname' => $databaseParams->getName(),

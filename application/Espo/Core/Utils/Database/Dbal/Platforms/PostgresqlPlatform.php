@@ -35,6 +35,15 @@ use Doctrine\DBAL\Schema\Table;
 
 class PostgresqlPlatform extends PostgreSQL100Platform
 {
+    private const TEXT_SEARCH_CONFIG = 'pg_catalog.simple';
+
+    private ?string $textSearchConfig;
+
+    public function setTextSearchConfig(?string $textSearchConfig): void
+    {
+        $this->textSearchConfig = $textSearchConfig;
+    }
+
     public function getCreateIndexSQL(Index $index, $table)
     {
         if (!$index->hasFlag('fulltext')) {
@@ -59,8 +68,10 @@ class PostgresqlPlatform extends PostgreSQL100Platform
         $columnsPart = implode(" || ' ' || ", $index->getQuotedColumns($this));
         $partialPart = $this->getPartialIndexSQL($index);
 
-        $query = "CREATE INDEX {$name} ON {$table} USING GIN (TO_TSVECTOR('english', {$columnsPart})) {$partialPart}";
+        $textSearchConfig = $this->textSearchConfig ?? self::TEXT_SEARCH_CONFIG;
+        $textSearchConfig = preg_replace('/[^A-Za-z0-9_.\-]+/', '', $textSearchConfig) ?? '';
+        $configPart = $this->quoteStringLiteral($textSearchConfig);
 
-        return $query;
+        return "CREATE INDEX {$name} ON {$table} USING GIN (TO_TSVECTOR({$configPart}, {$columnsPart})) {$partialPart}";
     }
 }
