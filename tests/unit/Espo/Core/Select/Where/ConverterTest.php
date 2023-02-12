@@ -537,16 +537,24 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
             );
 
         $expected = [
-            'id=s' => QueryBuilder::create()
-                ->select('id')
-                ->from($this->entityType)
-                ->leftJoin('EntityEntity', $alias, [
-                    "{$alias}.localId:" => 'id',
-                    "{$alias}.deleted" => false,
-                ])
-                ->where(["{$alias}.foreignId" => $value])
-                ->build()
-                ->getRaw()
+            'id=s' => [
+                'select' => ['id'],
+                'from' => 'Test',
+                'leftJoins' => [
+                    [
+                        'test',
+                        $alias,
+                        [ $alias . '.localId=:' => 'id'],
+                        [
+                            'noLeftAlias' => true,
+                            'onlyMiddle' => true,
+                        ],
+                    ],
+                ],
+                'whereClause' => [
+                    $alias . '.foreignId' => $value,
+                ],
+            ],
         ];
 
         $whereClause = $this->converter->convert($this->queryBuilder, $item);
