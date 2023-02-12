@@ -67,6 +67,11 @@ class PostgresqlDetailsProvider implements DetailsProvider
         $sql = "SHOW {$name}";
 
         $sth = $this->pdo->query($sql);
+
+        if ($sth === false) {
+            return null;
+        }
+
         $row = $sth->fetch(PDO::FETCH_NUM);
 
         if ($row === false) {
