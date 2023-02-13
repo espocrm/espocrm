@@ -255,6 +255,9 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 checkAllResultDisabled: !this.massRelateEnabled,
                 buttonsDisabled: true,
                 skipBuildRows: true,
+                pagination: this.getConfig().get('listPagination') ||
+                    this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||
+                    null,
             }, function (view) {
                 this.listenToOnce(view, 'select', (model) =>{
                     this.trigger('select', model);
