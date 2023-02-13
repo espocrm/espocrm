@@ -74,13 +74,13 @@ class Converter
             $whereClause[] = $part;
         }
 
-        $this->scanner->applyLeftJoins($queryBuilder, $item);
+        $this->scanner->apply($queryBuilder, $item);
 
         return WhereClause::fromRaw($whereClause);
     }
 
     /**
-     * @return array<int|string,mixed>
+     * @return array<int|string, mixed>
      * @throws Error
      */
     private function itemToList(Item $item): array

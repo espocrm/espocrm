@@ -116,7 +116,7 @@ class ItemGeneralConverter implements ItemConverter
         }
 
         switch ($type) {
-            // Revise.
+            // @todo Revise. Maybe to use regular like, in, etc. types?
             case 'columnLike':
             case 'columnIn':
             case 'columnNotIn':
@@ -251,7 +251,7 @@ class ItemGeneralConverter implements ItemConverter
 
         $whereClause = $this->convert($sqQueryBuilder, $whereItem)->getRaw();
 
-        $this->scanner->applyLeftJoins($sqQueryBuilder, $whereItem);
+        $this->scanner->apply($sqQueryBuilder, $whereItem);
 
         $rawParams = $sqQueryBuilder->build()->getRaw();
 

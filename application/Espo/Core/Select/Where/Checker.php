@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Acl;
 
+use Espo\Core\Select\Where\Item\Type;
 use Espo\ORM\QueryComposer\BaseQueryComposer as QueryComposer;
 use Espo\ORM\QueryComposer\Util as QueryUtil;
 use Espo\ORM\EntityManager;
@@ -46,58 +47,57 @@ class Checker
 {
     private ?Entity $seed = null;
 
-    private string $entityType;
+    private const TYPE_IN_CATEGORY = 'inCategory';
+    private const TYPE_IS_USER_FROM_TEAMS = 'isUserFromTeams';
 
-    private EntityManager $entityManager;
-
-    private Acl $acl;
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $nestingTypeList = [
-        'or',
-        'and',
-        'subQueryIn',
-        'subQueryNotIn',
-        'not',
+        Type::OR,
+        Type::AND,
+        Type::NOT,
+        Type::SUBQUERY_IN,
+        Type::SUBQUERY_NOT_IN,
     ];
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $subQueryTypeList = [
-        'subQueryIn',
-        'subQueryNotIn',
-        'not',
+        Type::SUBQUERY_IN,
+        Type::SUBQUERY_NOT_IN,
+        Type::NOT,
     ];
+
+    /** @var string[] */
+    private $linkTypeList = [
+        self::TYPE_IN_CATEGORY,
+        self::TYPE_IS_USER_FROM_TEAMS,
+        Type::IS_LINKED_WITH_ANY,
+        Type::IS_LINKED_WITH_NONE,
+        Type::IS_LINKED_WITH,
+        Type::IS_NOT_LINKED_WITH,
+        Type::IS_LINKED_WITH_ALL,
+    ];
+
+    public function __construct(
+        private string $entityType,
+        private EntityManager $entityManager,
+        private Acl $acl
+    ) {}
 
     /**
-     * @var string[]
+     * Check.
+     *
+     * @throws Forbidden
+     * @throws BadRequest
      */
-    private $linkTypeList = [
-        'inCategory',
-        'isLinked',
-        'isNotLinked',
-        'linkedWith',
-        'notLinkedWith',
-        'linkedWithAll',
-        'isUserFromTeams',
-    ];
-
-    public function __construct(string $entityType, EntityManager $entityManager, Acl $acl)
-    {
-        $this->entityType = $entityType;
-
-        $this->entityManager = $entityManager;
-        $this->acl = $acl;
-    }
-
     public function check(Item $item, Params $params): void
     {
         $this->checkItem($item, $params);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     private function checkItem(Item $item, Params $params): void
     {
         $type = $item->getType();
@@ -114,9 +114,7 @@ class Checker
         }
 
         if ($attribute && $forbidComplexExpressions) {
-            if (
-                QueryUtil::isComplexExpression($attribute)
-            ) {
+            if (QueryUtil::isComplexExpression($attribute)) {
                 throw new Forbidden("Complex expressions are forbidden in where.");
             }
         }
@@ -140,10 +138,13 @@ class Checker
         }
     }
 
+    /**
+     * @throws BadRequest
+     */
     private function checkAttributeExistence(string $attribute, string $type): void
     {
-        if (strpos($attribute, '.') !== false) {
-            // @todo Check existance of foreign attributes.
+        if (str_contains($attribute, '.')) {
+            // @todo Check existence of foreign attributes.
             return;
         }
 
@@ -160,11 +161,14 @@ class Checker
         }
     }
 
+    /**
+     * @throws Forbidden
+     */
     private function checkAttributePermission(string $attribute, string $type): void
     {
         $entityType = $this->entityType;
 
-        if (strpos($attribute, '.') !== false) {
+        if (str_contains($attribute, '.')) {
             list($link, $attribute) = explode('.', $attribute);
 
             if (!$this->getSeed()->hasRelation($link)) {
@@ -226,10 +230,7 @@ class Checker
         return $this->seed ?? $this->entityManager->getNewEntity($this->entityType);
     }
 
-    /**
-     * @return mixed
-     */
-    private function getRelationParam(Entity $entity, string $relation, string $param)
+    private function getRelationParam(Entity $entity, string $relation, string $param): mixed
     {
         if ($entity instanceof BaseEntity) {
             return $entity->getRelationParam($relation, $param);

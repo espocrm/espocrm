@@ -131,7 +131,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
 
         $this->scanner
             ->expects($this->once())
-            ->method('applyLeftJoins')
+            ->method('apply')
             ->with($this->queryBuilder, $item);
 
         $this->converter->convert($this->queryBuilder, $item);
@@ -459,7 +459,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->scanner
-            ->method('applyLeftJoins')
+            ->method('apply')
             ->withConsecutive(
                 [$this->isInstanceOf(QueryBuilder::class), $sqItem],
                 [$this->queryBuilder, $item]

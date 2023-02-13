@@ -341,11 +341,11 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
 
         $where = $params->getWhere();
 
-        $this->assertEquals(WhereItem::TYPE_AND, $where->getType());
+        $this->assertEquals(WhereItem\Type::AND, $where->getType());
 
         $this->assertEquals(
             [
-                'type' => WhereItem::TYPE_AND,
+                'type' => WhereItem\Type::AND,
                 'value' => [
                     [
                         'type' => 'isTrue',
@@ -376,11 +376,11 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
 
         $where = $params->getWhere();
 
-        $this->assertEquals(WhereItem::TYPE_AND, $where->getType());
+        $this->assertEquals(WhereItem\Type::AND, $where->getType());
 
         $this->assertEquals(
             [
-                'type' => WhereItem::TYPE_AND,
+                'type' => WhereItem\Type::AND,
                 'value' => [
                     [
                         'type' => 'isTrue',

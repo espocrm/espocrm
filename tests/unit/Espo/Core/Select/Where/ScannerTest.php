@@ -152,6 +152,6 @@ class ScannerTest extends \PHPUnit\Framework\TestCase
                 )
             );
 
-        $this->scanner->applyLeftJoins($this->queryBuilder, $item);
+        $this->scanner->apply($this->queryBuilder, $item);
     }
 }

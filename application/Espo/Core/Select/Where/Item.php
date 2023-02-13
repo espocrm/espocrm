@@ -43,39 +43,30 @@ class Item
     public const TYPE_AND = Item\Type::AND;
     public const TYPE_OR = Item\Type::OR;
 
-    private string $type;
     private ?string $attribute = null;
-    /** @var mixed */
-    private $value = null;
+    private mixed $value = null;
     private ?Data $data = null;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $noAttributeTypeList = [
         Item\Type::AND,
         Item\Type::OR,
         Item\Type::NOT,
         Item\Type::SUBQUERY_IN,
         Item\Type::SUBQUERY_NOT_IN,
-        'having', // @todo Check usage. Maybe to be removed.
     ];
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $withNestedItemsTypeList = [
         Item\Type::AND,
         Item\Type::OR,
     ];
 
-    private function __construct(string $type)
-    {
-        $this->type = $type;
-    }
+    private function __construct(private string $type)
+    {}
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * {@internal}
      */
     public static function fromRaw(array $params): self
@@ -129,7 +120,7 @@ class Item
     }
 
     /**
-     * @param array<array<mixed,mixed>> $paramList
+     * @param array<array<int|string, mixed>> $paramList
      * {@internal}
      */
     public static function fromRawAndGroup(array $paramList): self
