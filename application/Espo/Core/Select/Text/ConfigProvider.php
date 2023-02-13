@@ -35,12 +35,8 @@ class ConfigProvider
 {
     private const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
 
-    private $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private Config $config)
+    {}
 
     public function getMinLengthForContentSearch(): int
     {

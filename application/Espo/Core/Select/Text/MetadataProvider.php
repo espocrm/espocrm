@@ -35,13 +35,10 @@ use Espo\ORM\Defs;
 
 class MetadataProvider
 {
-    private Metadata $metadata;
-
     private Defs $ormDefs;
 
-    public function __construct(Metadata $metadata, Defs $ormDefs)
+    public function __construct(private Metadata $metadata, Defs $ormDefs)
     {
-        $this->metadata = $metadata;
         $this->ormDefs = $ormDefs;
     }
 

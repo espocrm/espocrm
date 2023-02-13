@@ -29,13 +29,10 @@
 
 namespace Espo\Core\Select\Text;
 
-use Espo\Core\Select\Text\MetadataProvider;
-use Espo\Core\Select\Text\FilterParams;
 use Espo\Core\Select\Text\FullTextSearch\Data as FullTextSearchData;
 use Espo\Core\Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory;
 use Espo\Core\Select\Text\FullTextSearch\DataComposer\Params as FullTextSearchDataComposerParams;
 use Espo\Core\Select\Text\Filter\Data as FilterData;
-use Espo\Core\Select\Text\FilterFactory;
 
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Query\Part\Order as OrderExpr;
@@ -48,41 +45,23 @@ class Applier
 {
     /** @todo Move to metadata. */
     private ?int $fullTextRelevanceThreshold = null;
-
     /** @todo Move to metadata. */
     private int $fullTextOrderRelevanceDivider = 5;
 
-    private const DEFAULT_FT_ORDER = self::FT_ORDER_COMBINTED;
+    private const DEFAULT_FT_ORDER = self::FT_ORDER_COMBINED;
+    private const DEFAULT_ATTRIBUTE_LIST = ['name'];
 
-    private const FT_ORDER_COMBINTED = 0;
-
+    private const FT_ORDER_COMBINED = 0;
     private const FT_ORDER_RELEVANCE = 1;
-
     private const FT_ORDER_ORIGINAL = 3;
 
-    private string $entityType;
-
-    private User $user;
-
-    private MetadataProvider $metadataProvider;
-
-    private FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory;
-
-    private FilterFactory $filterFactory;
-
     public function __construct(
-        string $entityType,
-        User $user,
-        MetadataProvider $metadataProvider,
-        FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory,
-        FilterFactory $filterFactory
-    ) {
-        $this->entityType = $entityType;
-        $this->user = $user;
-        $this->metadataProvider = $metadataProvider;
-        $this->fullTextSearchDataComposerFactory = $fullTextSearchDataComposerFactory;
-        $this->filterFactory = $filterFactory;
-    }
+        private string $entityType,
+        private User $user,
+        private MetadataProvider $metadataProvider,
+        private FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory,
+        private FilterFactory $filterFactory
+    ) {}
 
     public function apply(QueryBuilder $queryBuilder, string $filter, FilterParams $params): void
     {
@@ -104,7 +83,7 @@ class Applier
 
         $fieldList = $forceFullTextSearch ? [] :
             array_filter(
-                $this->metadataProvider->getTextFilterAttributeList($this->entityType) ?? ['name'],
+                $this->metadataProvider->getTextFilterAttributeList($this->entityType) ?? self::DEFAULT_ATTRIBUTE_LIST,
                 function ($field) use ($fullTextSearchFieldList) {
                     return !in_array($field, $fullTextSearchFieldList);
                 }
@@ -144,7 +123,7 @@ class Applier
         $fullTextOrderType = self::DEFAULT_FT_ORDER;
 
         $orderTypeMap = [
-            'combined' => self::FT_ORDER_COMBINTED,
+            'combined' => self::FT_ORDER_COMBINED,
             'relevance' => self::FT_ORDER_RELEVANCE,
             'original' => self::FT_ORDER_ORIGINAL,
         ];
@@ -164,7 +143,7 @@ class Applier
                 OrderExpr::create($expression)->withDesc()
             ]);
         }
-        else if ($fullTextOrderType === self::FT_ORDER_COMBINTED) {
+        else if ($fullTextOrderType === self::FT_ORDER_COMBINED) {
             $orderExpression =
                 Expr::round(
                     Expr::divide($expression, $this->fullTextOrderRelevanceDivider)
