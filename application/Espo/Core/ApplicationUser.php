@@ -39,6 +39,7 @@ use RuntimeException;
  */
 class ApplicationUser
 {
+    /** @deprecated As of v7.4. In the future different IDs may be used. */
     public const SYSTEM_USER_ID = 'system';
     public const SYSTEM_USER_NAME = 'system';
 
