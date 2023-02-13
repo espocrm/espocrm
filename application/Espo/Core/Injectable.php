@@ -29,7 +29,9 @@
 
 namespace Espo\Core;
 
-/** @deprecated */
+/**
+ * @deprecated As of v6.0. Use the dependency injection framework.
+ */
 abstract class Injectable implements \Espo\Core\Interfaces\Injectable
 {
     protected $dependencyList = []; /** @phpstan-ignore-line */

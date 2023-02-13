@@ -189,7 +189,7 @@ class Config
     }
 
     /**
-     * @deprecated Since v7.0.
+     * @deprecated As of v7.0. Use ConfigWriter instead.
      *
      * @param string|array<string,mixed>|\stdClass $name
      * @param mixed $value
@@ -218,7 +218,7 @@ class Config
     }
 
     /**
-     * @deprecated Since v7.0.
+     * @deprecated As of v7.0. Use ConfigWriter instead.
      */
     public function remove(string $name): bool
     {
@@ -236,8 +236,7 @@ class Config
     }
 
     /**
-     * @deprecated Since v7.0.
-     *
+     * @deprecated As of v7.0. Use ConfigWriter instead.
      * @return bool
      */
     public function save()
@@ -301,7 +300,7 @@ class Config
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function getData(): array
     {
@@ -364,7 +363,7 @@ class Config
     }
 
     /**
-     * @deprecated
+     * @deprecated As of 7.0. Use ConfigWriter instead.
      * @param array<string,mixed> $data
      * @return void
      */
@@ -378,9 +377,7 @@ class Config
     }
 
     /**
-     * Update cache timestamp.
-     *
-     * @deprecated
+     * @deprecated As of 7.0. Use ConfigWriter instead.
      * @return ?array<string,int>
      */
     public function updateCacheTimestamp(bool $returnOnlyValue = false)

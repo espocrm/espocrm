@@ -102,7 +102,8 @@ class Sender
     }
 
     /**
-     * @deprecated
+     * @deprecated As of 6.0. EmailSender should be used as an access point
+     * for email sending functionality. Sender instances are not meant to be reused.
      */
     public function resetParams(): self
     {
@@ -118,7 +119,7 @@ class Sender
     /**
      * With parameters.
      *
-     * @param SenderParams|array<string,mixed> $params
+     * @param SenderParams|array<string, mixed> $params
      */
     public function withParams($params): self
     {
@@ -179,7 +180,7 @@ class Sender
     /**
      * With envelope options.
      *
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function withEnvelopeOptions(array $options): self
     {
@@ -197,8 +198,8 @@ class Sender
     }
 
     /**
-     * @deprecated
-     * @param array<string,mixed> $params
+     * @deprecated As of v6.0. Use withParams.
+     * @param array<string, mixed> $params
      */
     public function setParams(array $params = []): self
     {
@@ -209,7 +210,7 @@ class Sender
 
 
     /**
-     * @deprecated
+     * @deprecated As of 6.0. Use withSmtpParams.
      * @param array<string,mixed> $params
      */
     public function useSmtp(array $params = []): self
@@ -222,7 +223,8 @@ class Sender
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0. Sender class not meant to be reused. Global params is applied by default.
+     * No need to reset it back.
      */
     public function useGlobal(): self
     {
@@ -234,7 +236,7 @@ class Sender
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     private function applySmtp(array $params = []): void
     {
@@ -328,7 +330,7 @@ class Sender
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0. Use EmailSender::hasSystemSmtp.
      */
     public function hasSystemSmtp(): bool
     {
@@ -346,9 +348,9 @@ class Sender
     /**
      * Send an email.
      *
-     * @param ?array<string,mixed> $params @deprecated
-     * @param ?Message $message @deprecated
-     * @param iterable<Attachment> $attachmentList @deprecated
+     * @param ?array<string, mixed> $params @deprecated As of v6.0. Use withParams.
+     * @param ?Message $message @deprecated As of v6.0. Use withMessage.
+     * @param iterable<Attachment> $attachmentList @deprecated As of v6.0. Use withAttachments.
      * @throws SendingError
      */
     public function send(
@@ -694,9 +696,9 @@ class Sender
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0. Use withEnvelopeOptions.
      *
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function setEnvelopeOptions(array $options): self
     {

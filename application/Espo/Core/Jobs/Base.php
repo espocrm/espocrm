@@ -32,7 +32,8 @@ namespace Espo\Core\Jobs;
 use Espo\Core\Container;
 
 /**
- * @deprecated
+ * @deprecated As of v7.0. Create classes that implement Espo\Core\Job\Job and Espo\Core\Job\JobDataLess
+ * interfaces. Pass needed dependencies via a constructor.
  */
 abstract class Base
 {

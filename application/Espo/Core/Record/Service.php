@@ -492,7 +492,8 @@ class Service implements Crud,
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v7.0. Use filterCreateInput or filterUpdateInput. Or better don't extend the class.
+     * Use entityAcl, app > acl, roles to restrict write access for specific fields.
      * @param stdClass $data
      * @return void
      */
@@ -501,7 +502,8 @@ class Service implements Crud,
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v7.0. Use filterCreateInput or filterUpdateInput. Or better don't extend the class.
+     * Use entityAcl, app > acl, roles to restrict write access for specific fields.
      * @param stdClass $data
      * @return void
      */

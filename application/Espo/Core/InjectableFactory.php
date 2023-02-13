@@ -464,7 +464,7 @@ class InjectableFactory
     }
 
     /**
-     * @deprecated Use create or createWith methods instead.
+     * @deprecated As of v6.0. Use create or createWith methods instead.
      *
      * @template T of object
      * @param class-string<T> $className

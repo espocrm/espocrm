@@ -50,6 +50,8 @@ use RuntimeException;
 use PDO;
 
 /**
+ * A relation database repository.
+ *
  * @template TEntity of Entity
  * @implements Repository<TEntity>
  */
@@ -251,7 +253,7 @@ class RDBRepository implements Repository
     /**
      * Find records.
      *
-     * @param ?array<string,mixed> $params @deprecated
+     * @param ?array<string, mixed> $params @deprecated As of v6.0. Use query building.
      * @return Collection<TEntity>
      */
     public function find(?array $params = []): Collection
@@ -262,7 +264,7 @@ class RDBRepository implements Repository
     /**
      * Find one record.
      *
-     * @param ?array<string,mixed> $params @deprecated
+     * @param ?array<string,mixed> $params @deprecated As of v6.0. Use query building.
      */
     public function findOne(?array $params = []): ?Entity
     {
@@ -293,7 +295,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0. Use `getRelation(...)->find()`.
      * @param ?array<string,mixed> $params
      * @return Collection<TEntity>|TEntity|null
      */
@@ -360,8 +362,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @deprecated
-     *
+     * @deprecated As of v6.0. Use `getRelation(...)->count()`.
      * @param ?array<string,mixed> $params
      */
     public function countRelated(Entity $entity, string $relationName, ?array $params = null): int
@@ -478,7 +479,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0. Use `getRelation(...)->isRelated(...)`.
      * @param TEntity|string $foreign
      */
     public function isRelated(Entity $entity, string $relationName, $foreign): bool
@@ -533,7 +534,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0. Use `getRelation(...)->relate(...)`.
      * @phpstan-ignore-next-line
      */
     public function relate(Entity $entity, string $relationName, $foreign, $columnData = null, array $options = [])
@@ -596,7 +597,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0. Use `getRelation(...)->unrelate(...)`.
      * @phpstan-ignore-next-line
      */
     public function unrelate(Entity $entity, string $relationName, $foreign, array $options = [])
@@ -651,7 +652,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0. Use `getRelation(...)->getColumn(...)`.
      * @phpstan-ignore-next-line
      */
     public function getRelationColumn(Entity $entity, string $relationName, string $foreignId, string $column)
@@ -660,7 +661,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0.
      * @phpstan-ignore-next-line
      */
     protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
@@ -668,7 +669,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0.
      * @phpstan-ignore-next-line
      */
     protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
@@ -676,7 +677,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0.
      * @phpstan-ignore-next-line
      */
     protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
@@ -684,7 +685,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0.
      * @phpstan-ignore-next-line
      */
     protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
@@ -692,7 +693,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0.
      * @phpstan-ignore-next-line
      */
     protected function beforeMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
@@ -700,7 +701,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0.
      * @phpstan-ignore-next-line
      */
     protected function afterMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
@@ -708,7 +709,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0. Use `getRelation(...)->updateColumns(...)`.
      * @phpstan-ignore-next-line
      */
     public function updateRelation(Entity $entity, string $relationName, $foreign, $columnData)
@@ -741,7 +742,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0. Use `getRelation(...)->massRelate(...)`.
      * @phpstan-ignore-next-line
      */
     public function massRelate(Entity $entity, string $relationName, array $params = [], array $options = [])
@@ -760,7 +761,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @param array<string,mixed> $params @deprecated Omit it.
+     * @param array<string,mixed> $params @deprecated Use query building.
      */
     public function count(array $params = []): int
     {
@@ -821,7 +822,6 @@ class RDBRepository implements Repository
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
      * @param WhereItem|array<scalar,mixed>|null $conditions Join conditions.
-     *
      * @return RDBSelectBuilder<TEntity>
      */
     public function join($target, ?string $alias = null, $conditions = null): RDBSelectBuilder
@@ -836,7 +836,6 @@ class RDBRepository implements Repository
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
      * @param WhereItem|array<scalar,mixed>|null $conditions Join conditions.
-     *
      * @return RDBSelectBuilder<TEntity>
      */
     public function leftJoin($target, ?string $alias = null, $conditions = null): RDBSelectBuilder
@@ -986,7 +985,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v7.0. Use the Query Builder instead. Otherwise, code will be not portable.
      */
     protected function getPDO(): PDO
     {

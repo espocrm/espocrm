@@ -196,7 +196,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @deprecated Use wrapper or methods directly.
+     * @deprecated As of v7.2. Use the wrapper or methods directly.
      */
     public function compose(Query $query): string
     {
@@ -269,8 +269,8 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @deprecated
-     * @todo Remove in v7.3.
+     * @deprecated As of v6.0. Use `composeSelect`.
+     * @todo Remove in v8.0.
      * @param array<string, mixed>|null $params
      */
     public function createSelectQuery(string $entityType, ?array $params = null): string
@@ -1256,8 +1256,8 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
+     * @deprecated As of v6.0. Use `Util::getAllAttributesFromComplexExpression`.
      * @return string[]
-     * @deprecated
      */
     public static function getAllAttributesFromComplexExpression(string $expression): array
     {
@@ -2257,8 +2257,9 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * Quote a value (if needed).
-     * @deprecated
-     * @todo Make protected in 6.5.
+     * @deprecated As of v6.0. Not meant to be used outside as Query Builder should be used to
+     * build queries.
+     * @todo Make protected in 8.0.
      * @param mixed $value
      */
     public function quote($value): string
@@ -2890,8 +2891,8 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * Sanitize a string.
-     * @todo Make protected in 6.5.
-     * @deprecated
+     * @todo Make protected in 8.0.
+     * @deprecated As of v6.0. Not to be used outside.
      */
     public function sanitize(string $string): string
     {
@@ -2901,7 +2902,7 @@ abstract class BaseQueryComposer implements QueryComposer
     /**
      * Sanitize an alias for a SELECT statement.
      * @todo Make protected in 6.5.
-     * @deprecated
+     * @deprecated As of v6.0. Not to be used outside.
      */
     public function sanitizeSelectAlias(string $string): string
     {

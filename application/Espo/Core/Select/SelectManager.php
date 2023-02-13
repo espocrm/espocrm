@@ -59,7 +59,7 @@ use DateInterval;
 use ReflectionMethod;
 
 /**
- * @deprecated Since v7.0. Use SelectBuilder instead.
+ * @deprecated As of v7.0. Use SelectBuilder instead.
  *
  * Used for generating and managing select parameters which subsequently will be feed to ORM.
  */
@@ -846,9 +846,6 @@ class SelectManager
         return false;
     }
 
-    /**
-     * @deprecated
-     */
     public function getAclParams() : array
     {
         $result = [];

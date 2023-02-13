@@ -41,7 +41,10 @@ use Espo\Core\{
     Utils\Id\RecordIdGenerator,
 };
 
-/** @deprecated */
+/**
+ * @deprecated As of v6.0. Not to be extended. Extend Espo\Core\Repositories\Database, or better
+ * don't extend repositories at all. Use hooks.
+ */
 class RDB extends \Espo\Core\Repositories\Database implements Injectable /** @phpstan-ignore-line */
 {
     protected $dependencyList = [ /** @phpstan-ignore-line */
