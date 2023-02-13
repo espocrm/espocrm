@@ -124,9 +124,25 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             }
 
             $queryPart = end($argumentPartList);
-            $columnsPart = implode(" || ' ' || ", array_slice($argumentPartList, 0, -1));
+            $columnsPart = implode(
+                " || ' ' || ",
+                array_map(
+                    fn ($item) => "COALESCE({$item}, '')",
+                    array_slice($argumentPartList, 0, -1)
+                )
+            );
 
-            return "TO_TSVECTOR({$columnsPart}) @@ PLAINTO_TSQUERY({$queryPart})";
+            return "TS_RANK_CD(TO_TSVECTOR({$columnsPart}), PLAINTO_TSQUERY({$queryPart}))";
+
+            //return "TO_TSVECTOR({$columnsPart}) @@ PLAINTO_TSQUERY({$queryPart})";
+        }
+
+        if ($function === 'ROUND') {
+            if (count($argumentPartList) === 2 && $argumentPartList[1] === '0') {
+                $argumentPartList = array_slice($argumentPartList, 0, -1);
+
+                return "ROUND({$argumentPartList[0]})";
+            }
         }
 
         if ($function === 'UNIX_TIMESTAMP') {
