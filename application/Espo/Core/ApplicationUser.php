@@ -41,14 +41,10 @@ class ApplicationUser
 {
     public const SYSTEM_USER_ID = 'system';
 
-    private Container $container;
-    private EntityManagerProxy $entityManagerProxy;
-
-    public function __construct(Container $container, EntityManagerProxy $entityManagerProxy)
-    {
-        $this->container = $container;
-        $this->entityManagerProxy = $entityManagerProxy;
-    }
+    public function __construct(
+        private Container $container,
+        private EntityManagerProxy $entityManagerProxy
+    ) {}
 
     /**
      * Set up the system user as a current user. The system user is used when no user is logged in.

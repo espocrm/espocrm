@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\MassAction\User;
 
+use Espo\Core\ApplicationUser;
 use Espo\Core\MassAction\Actions\MassUpdate as MassUpdateOriginal;
 use Espo\Core\MassAction\QueryBuilder;
 use Espo\Core\MassAction\Params;
@@ -50,16 +51,7 @@ use Espo\Tools\MassUpdate\Data as MassUpdateData;
 
 class MassUpdate implements MassAction
 {
-    private MassUpdateOriginal $massUpdateOriginal;
-    private QueryBuilder $queryBuilder;
-    private EntityManager $entityManager;
-    private Acl $acl;
-    private User $user;
-    private FileManager $fileManager;
-    private DataManager $dataManager;
-
     private const PERMISSION = 'massUpdatePermission';
-    private const SYSTEM_USER_ID = 'system';
 
     /** @var string[] */
     private array $notAllowedAttributeList = [
@@ -72,22 +64,14 @@ class MassUpdate implements MassAction
     ];
 
     public function __construct(
-        MassUpdateOriginal $massUpdateOriginal,
-        QueryBuilder $queryBuilder,
-        EntityManager $entityManager,
-        Acl $acl,
-        User $user,
-        FileManager $fileManager,
-        DataManager $dataManager
-    ) {
-        $this->massUpdateOriginal = $massUpdateOriginal;
-        $this->queryBuilder = $queryBuilder;
-        $this->entityManager = $entityManager;
-        $this->acl = $acl;
-        $this->user = $user;
-        $this->fileManager = $fileManager;
-        $this->dataManager = $dataManager;
-    }
+        private MassUpdateOriginal $massUpdateOriginal,
+        private QueryBuilder $queryBuilder,
+        private EntityManager $entityManager,
+        private Acl $acl,
+        private User $user,
+        private FileManager $fileManager,
+        private DataManager $dataManager
+    ) {}
 
     /**
      * @throws Forbidden
@@ -149,7 +133,7 @@ class MassUpdate implements MassAction
      */
     private function checkEntity(Entity $entity, MassUpdateData $data): void
     {
-        if ($entity->getId() === self::SYSTEM_USER_ID) {
+        if ($entity->getId() === ApplicationUser::SYSTEM_USER_ID) {
             throw new Forbidden("Can't update 'system' user.");
         }
 

@@ -59,6 +59,7 @@ class AddSystemUser implements RebuildAction
 
         $user = $repository->getNew();
         $user->set($attributes);
+        $user->set('id', $userId);
         $repository->save($user);
     }
 }

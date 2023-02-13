@@ -29,16 +29,12 @@
 
 namespace Espo\Classes\Select\User\Where\ItemConverters;
 
-use Espo\Core\{
-    Select\Where\ItemConverter,
-    Select\Where\Item,
-};
-
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\WhereItem as WhereClauseItem,
-    ORM\Query\Part\WhereClause,
-};
+use Espo\Core\Select\Where\Item;
+use Espo\Core\Select\Where\ItemConverter;
+use Espo\Entities\User;
+use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class IsOfType implements ItemConverter
 {
@@ -46,23 +42,21 @@ class IsOfType implements ItemConverter
     {
         $type = $item->getValue();
 
-        switch ($type) {
-            case 'internal':
-                return WhereClause::fromRaw([
-                    'type!=' => ['portal', 'api', 'system'],
-                ]);
-
-            case 'api':
-                return WhereClause::fromRaw([
-                    'type' => 'api',
-                ]);
-
-            case 'portal':
-                return WhereClause::fromRaw([
-                    'type' => 'portal',
-                ]);
-        }
-
-        return WhereClause::fromRaw(['id' => null]);
+        return match ($type) {
+            'internal' => WhereClause::fromRaw([
+                'type!=' => [
+                    User::TYPE_PORTAL,
+                    User::TYPE_API,
+                    User::TYPE_SYSTEM,
+                ],
+            ]),
+            User::TYPE_API => WhereClause::fromRaw([
+                'type' => User::TYPE_API,
+            ]),
+            User::TYPE_SYSTEM => WhereClause::fromRaw([
+                'type' => User::TYPE_SYSTEM,
+            ]),
+            default => WhereClause::fromRaw(['id' => null]),
+        };
     }
 }

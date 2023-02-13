@@ -29,6 +29,8 @@
 
 namespace Espo\Tools\MassUpdate;
 
+use Espo\Core\ApplicationUser;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\MassAction\Params;
 use Espo\Core\MassAction\Result;
 use Espo\Core\MassAction\MassActionFactory;
@@ -44,12 +46,10 @@ use RuntimeException;
 class MassUpdate
 {
     private MassActionFactory $massActionFactory;
-
     private EntityManager $entityManager;
 
     private const ACTION = 'massUpdate';
-
-    private const DEFAULT_USER_ID = 'system';
+    private const DEFAULT_USER_ID = ApplicationUser::SYSTEM_USER_ID;
 
     public function __construct(MassActionFactory $massActionFactory, EntityManager $entityManager)
     {
@@ -59,8 +59,8 @@ class MassUpdate
 
     /**
      * @param ?User $user Under what user to perform mass-update. If not specified, the system user will be used.
-     *   Access control is applied for the user.
-     * @throws \Espo\Core\Exceptions\NotFound
+     * Access control is applied for the user.
+     * @throws NotFound
      */
     public function process(Params $params, Data $data, ?User $user = null): Result
     {

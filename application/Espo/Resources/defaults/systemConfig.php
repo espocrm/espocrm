@@ -42,7 +42,6 @@ return [
         'delete' => 'delete',
     ],
     'systemUserAttributes' => [
-        'id' => 'system',
         'userName' => 'system',
         'firstName' => '',
         'lastName' => 'System',
