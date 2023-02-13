@@ -438,24 +438,7 @@ class Installer
             $preferences['baseCurrency'] = $preferences['defaultCurrency'];
         }
 
-        $result = $this->saveConfig($preferences);
-
-        /*$unsetList = [
-            'dateFormat',
-            'timeFormat',
-            'timeZone',
-            'weekStart',
-            'defaultCurrency',
-            'language',
-        ];
-
-        foreach ($unsetList as $item) {
-            unset($preferences[$item]);
-        }
-
-        $this->saveAdminPreferences($preferences);*/
-
-        return $result;
+        return $this->saveConfig($preferences);
     }
 
     private function createRecords()
@@ -571,50 +554,8 @@ class Installer
             ]);
         }
 
-        /*$this->saveAdminPreferences([
-            'dateFormat' => '',
-            'timeFormat' => '',
-            'timeZone' => '',
-            'weekStart' => -1,
-            'defaultCurrency' => '',
-            'language' => '',
-            'thousandSeparator' => $this->getConfig()->get('thousandSeparator', ','),
-            'decimalMark' => $this->getConfig()->get('decimalMark', '.'),
-        ]);*/
-
         return true;
     }
-
-    /*private function saveAdminPreferences($preferences)
-    {
-        $permittedSettingList = [
-            'dateFormat',
-            'timeFormat',
-            'timeZone',
-            'weekStart',
-            'defaultCurrency',
-            'thousandSeparator',
-            'decimalMark',
-            'language',
-            'theme',
-        ];
-
-        $data = array_intersect_key($preferences, array_flip($permittedSettingList));
-
-        if (empty($data)) {
-            return true;
-        }
-
-        $entity = $this->getEntityManager()->getEntity('Preferences', '1');
-
-        if ($entity) {
-            $entity->set($data);
-
-            return $this->getEntityManager()->saveEntity($entity);
-        }
-
-        return false;
-    }*/
 
     public function checkPermission(): bool
     {
