@@ -30,8 +30,8 @@
 use Espo\Core\Application;
 use Espo\Core\Container;
 use Espo\Core\InjectableFactory;
-
 use Espo\Core\ORM\DatabaseParamsFactory;
+use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Config\ConfigFileManager;
 use Espo\Core\Utils\Config;
@@ -43,22 +43,24 @@ use Espo\Core\Utils\SystemRequirements;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Language;
-
 use Espo\Core\Binding\BindingContainerBuilder;
-
 use Espo\Core\ORM\EntityManager;
+use Espo\Entities\Job;
+use Espo\Entities\ScheduledJob;
+use Espo\Entities\User;
+use Espo\ORM\Query\SelectBuilder;
 
 class Installer
 {
-    private $app = null;
-    private $language = null;
-    private $systemHelper = null;
-    private $databaseHelper = null;
-    private $installerConfig;
-    private $isAuth = false;
-    private $passwordHash;
-    private $defaultSettings;
+    private SystemHelper $systemHelper;
+    private DatabaseHelper $databaseHelper;
+    private InstallerConfig $installerConfig;
     private DatabaseParamsFactory $databaseParamsFactory;
+    private ?Application $app = null;
+    private ?Language $language = null;
+    private ?PasswordHash $passwordHash;
+    private bool $isAuth = false;
+    private ?array $defaultSettings = null;
 
     private $permittedSettingList = [
         'dateFormat',
@@ -100,7 +102,6 @@ class Installer
     private function initialize(): void
     {
         $fileManager = new ConfigFileManager();
-
         $config = new Config($fileManager);
 
         $configPath = $config->getConfigPath();
@@ -139,7 +140,7 @@ class Installer
                 ->build()
         );
 
-        // Save default data if does not exist.
+        // Save default data if it does not exist.
         if (!Util::arrayKeysExists(array_keys($defaultData), $configData)) {
             $defaultData = array_replace_recursive($defaultData, $configData);
 
@@ -157,56 +158,58 @@ class Installer
 
     private function getEntityManager(): EntityManager
     {
+        /** @var EntityManager */
         return $this->getContainer()->get('entityManager');
     }
 
     public function getMetadata(): Metadata
     {
+        /** @var Metadata */
         return $this->app->getContainer()->get('metadata');
     }
 
     public function getInjectableFactory(): InjectableFactory
     {
+        /** @var InjectableFactory */
         return $this->app->getContainer()->get('injectableFactory');
     }
 
     public function getConfig(): Config
     {
+        /** @var Config */
         return $this->app->getContainer()->get('config');
     }
 
     public function createConfigWriter(): ConfigWriter
     {
-        return $this->app->getContainer()->get('injectableFactory')->create(ConfigWriter::class);
+        return $this->getInjectableFactory()->create(ConfigWriter::class);
     }
 
-    private function getSystemHelper()
+    private function getSystemHelper(): SystemHelper
     {
         return $this->systemHelper;
     }
 
-    private function getDatabaseHelper()
+    private function getDatabaseHelper(): DatabaseHelper
     {
         return $this->databaseHelper;
     }
 
-    private function getInstallerConfig()
+    private function getInstallerConfig(): InstallerConfig
     {
         return $this->installerConfig;
     }
 
     private function getFileManager(): FileManager
     {
+        /** @var FileManager */
         return $this->app->getContainer()->get('fileManager');
     }
 
     private function getPasswordHash(): PasswordHash
     {
         if (!isset($this->passwordHash)) {
-            $config = $this->getConfig();
-            $configWriter = $this->createConfigWriter();
-
-            $this->passwordHash = new PasswordHash($config, $configWriter);
+            $this->passwordHash = $this->getInjectableFactory()->create(PasswordHash::class);
         }
 
         return $this->passwordHash;
@@ -217,15 +220,13 @@ class Installer
         return $this->getConfig()->get('version');
     }
 
-    private function auth()
+    private function auth(): void
     {
         if (!$this->isAuth) {
             $this->app->setupSystemUser();
 
             $this->isAuth = true;
         }
-
-        return $this->isAuth;
     }
 
     public function isInstalled(): bool
@@ -241,9 +242,7 @@ class Installer
 
     public function createLanguage(string $language): Language
     {
-        return $this->app
-            ->getContainer()
-            ->get('injectableFactory')
+        return $this->getInjectableFactory()
             ->createWith(Language::class, ['language' => $language]);
     }
 
@@ -344,7 +343,7 @@ class Installer
     /**
      * Save data.
      *
-     * @param array $database
+     * @param array<string, mixed> $saveData
      * array(
      *   'driver' => 'pdo_mysql',
      *   'host' => 'localhost',
@@ -352,7 +351,6 @@ class Installer
      *   'user' => 'root',
      *   'password' => '',
      * )
-     * @param string $language
      * @return bool
      */
     public function saveData(array $saveData)
@@ -396,11 +394,7 @@ class Installer
             $data['defaultPermissions']['group'] = $saveData['defaultPermissions']['group'];
         }
 
-        $result = $this->saveConfig(
-            array_merge($data, $initData)
-        );
-
-        return $result;
+        return $this->saveConfig(array_merge($data, $initData));
     }
 
     public function saveConfig($data)
@@ -421,7 +415,7 @@ class Installer
 
             return true;
         }
-        catch (Exception $e) {
+        catch (Exception) {
             $this->auth();
 
             $this->app->getContainer()->get('dataManager')->rebuild();
@@ -446,7 +440,7 @@ class Installer
 
         $result = $this->saveConfig($preferences);
 
-        $unsetList = [
+        /*$unsetList = [
             'dateFormat',
             'timeFormat',
             'timeZone',
@@ -459,7 +453,7 @@ class Installer
             unset($preferences[$item]);
         }
 
-        $this->saveAdminPreferences($preferences);
+        $this->saveAdminPreferences($preferences);*/
 
         return $result;
     }
@@ -479,69 +473,105 @@ class Installer
         return $result;
     }
 
-    private function createRecord($entityName, $data)
+    private function createRecord(string $entityType, array $data): bool
     {
-        if (isset($data['id'])) {
+        $id = $data['id'] ?? null;
 
-            $entity = $this->getEntityManager()->getEntity($entityName, $data['id']);
+        $entity = null;
 
-            if (!isset($entity)) {
-                $pdo = $this->getEntityManager()->getPDO();
+        $em = $this->getEntityManager();
 
-                $sql = "SELECT id FROM `".Util::toUnderScore($entityName)."` WHERE `id` = '".$data['id']."'";
+        if ($id) {
+            $entity = $em->getEntity($entityType, $id);
 
-                $sth = $pdo->prepare($sql);
-                $sth->execute();
+            if (!$entity) {
+                $selectQuery = $em->getQueryBuilder()
+                    ->select('id')
+                    ->from($entityType)
+                    ->withDeleted()
+                    ->where(['id' => $id])
+                    ->build();
 
-                $deletedEntity = $sth->fetch(\PDO::FETCH_ASSOC);
+                $entity = $em->getRDBRepository($entityType)
+                    ->clone($selectQuery)
+                    ->findOne();
 
-                if ($deletedEntity) {
-                    $sql =
-                        "UPDATE `". Util::toUnderScore($entityName)."` SET deleted = '0' " .
-                        "WHERE `id` = '".$data['id']."'";
+                if ($entity) {
+                    $updateQuery = $em->getQueryBuilder()
+                        ->update()
+                        ->in($entityType)
+                        ->set(['deleted' => false])
+                        ->where(['id' => $id])
+                        ->build();
 
-                    $pdo->prepare($sql)->execute();
+                    $em->getQueryExecutor()->execute($updateQuery);
 
-                    $entity = $this->getEntityManager()->getEntity($entityName, $data['id']);
+                    $em->refreshEntity($entity);
                 }
             }
         }
 
-        if (!isset($entity)) {
+        if (!$entity) {
             if (isset($data['name'])) {
                 $entity = $this->getEntityManager()
-                    ->getRepository($entityName)
-                    ->where([
-                        'name' => $data['name'],
-                    ])
+                    ->getRDBRepository($entityType)
+                    ->where(['name' => $data['name']])
                     ->findOne();
             }
 
-            if (!isset($entity)) {
-                $entity = $this->getEntityManager()->getEntity($entityName);
+            if (!$entity) {
+                $entity = $this->getEntityManager()->getNewEntity($entityType);
             }
         }
 
         $entity->set($data);
 
-        $id = $this->getEntityManager()->saveEntity($entity);
+        $this->getEntityManager()->saveEntity($entity);
 
-        return is_string($id);
+        return true;
     }
 
-    public function createUser($userName, $password)
+    public function createUser(string $userName, string $password): bool
     {
         $this->auth();
 
-        $result = $this->createRecord('User', [
-            'id' => '1',
-            'userName' => $userName,
-            'password' => $this->getPasswordHash()->hash($password),
-            'lastName' => 'Admin',
-            'type' => 'admin',
-        ]);
+        $password = $this->getPasswordHash()->hash($password);
 
-        $this->saveAdminPreferences([
+        $user = $this->getEntityManager()
+            ->getRDBRepositoryByClass(User::class)
+            ->clone(
+                SelectBuilder::create()
+                    ->from(User::ENTITY_TYPE)
+                    ->withDeleted()
+                    ->build()
+            )
+            ->where(['userName' => $userName])
+            ->findOne();
+
+        if ($user) {
+            $user->set([
+                'password' => $password,
+                'deleted' => false,
+            ]);
+
+            $this->getEntityManager()->saveEntity($user);
+        }
+
+        if (!$user) {
+            $id = $this->getInjectableFactory()
+                ->createResolved(RecordIdGenerator::class)
+                ->generate();
+
+            $this->createRecord(User::ENTITY_TYPE, [
+                'id' => $id,
+                'userName' => $userName,
+                'password' => $password,
+                'lastName' => 'Admin',
+                'type' => User::TYPE_ADMIN,
+            ]);
+        }
+
+        /*$this->saveAdminPreferences([
             'dateFormat' => '',
             'timeFormat' => '',
             'timeZone' => '',
@@ -550,12 +580,12 @@ class Installer
             'language' => '',
             'thousandSeparator' => $this->getConfig()->get('thousandSeparator', ','),
             'decimalMark' => $this->getConfig()->get('decimalMark', '.'),
-        ]);
+        ]);*/
 
-        return $result;
+        return true;
     }
 
-    private function saveAdminPreferences($preferences)
+    /*private function saveAdminPreferences($preferences)
     {
         $permittedSettingList = [
             'dateFormat',
@@ -584,9 +614,9 @@ class Installer
         }
 
         return false;
-    }
+    }*/
 
-    public function checkPermission()
+    public function checkPermission(): bool
     {
         return $this->getFileManager()->getPermissionUtils()->setMapPermission();
     }
@@ -622,10 +652,12 @@ class Installer
         return $result;
     }
 
-    public function getDefaultSettings()
+    /**
+     * @return array<string, mixed>
+     */
+    public function getDefaultSettings(): array
     {
         if (!$this->defaultSettings) {
-
             $settingDefs = $this->getMetadata()->get('entityDefs.Settings.fields');
 
             $defaults = [];
@@ -673,11 +705,13 @@ class Installer
             }
 
             $paramDefs = $defaultSettings[$name];
-            $paramType = isset($paramDefs['type']) ? $paramDefs['type'] : 'varchar';
+            $paramType = $paramDefs['type'] ?? 'varchar';
 
             switch ($paramType) {
                 case 'enumInt':
-                    $value = (int) $value;
+                    $normalizedParams[$name] = (int) $value;;
+
+                    break;
 
                 case 'enum':
                     if (
@@ -742,7 +776,7 @@ class Installer
         if ($translatedOptions == $name) {
             $translatedOptions = [];
 
-            foreach ($settingDefs['options'] as $key => $value) {
+            foreach ($settingDefs['options'] as $value) {
                 $translatedOptions[$value] = $value;
             }
         }
@@ -771,7 +805,7 @@ class Installer
             try {
                 $result &= $sth->execute();
             }
-            catch (Exception $e) {
+            catch (Exception) {
                 $GLOBALS['log']->warning('Error executing the query: ' . $query);
             }
 
@@ -788,19 +822,17 @@ class Installer
     private function prepareDummyJob()
     {
         $scheduledJob = $this->getEntityManager()
-            ->getRepository('ScheduledJob')
-            ->where([
-                'job' => 'Dummy',
-            ])
+            ->getRDBRepository(ScheduledJob::ENTITY_TYPE)
+            ->where(['job' => 'Dummy'])
             ->findOne();
 
         if (!$scheduledJob) {
             return;
         }
 
-        $this->getEntityManager()->createEntity('Job', [
+        $this->getEntityManager()->createEntity(Job::ENTITY_TYPE, [
             'name' => 'Dummy',
-            'scheduledJobId' => $scheduledJob->id,
+            'scheduledJobId' => $scheduledJob->getId(),
         ]);
     }
 }
