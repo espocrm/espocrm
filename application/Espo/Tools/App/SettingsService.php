@@ -29,19 +29,19 @@
 
 namespace Espo\Tools\App;
 
-use Espo\Core\Authentication\Logins\Espo;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Authentication\Util\MethodProvider as AuthenticationMethodProvider;
 use Espo\Core\ApplicationState;
 use Espo\Core\Acl;
 use Espo\Core\InjectableFactory;
-
 use Espo\Core\DataManager;
 use Espo\Core\FieldValidation\FieldValidationManager;
 use Espo\Core\Utils\Currency\DatabasePopulator as CurrencyDatabasePopulator;
-
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
@@ -54,40 +54,19 @@ use stdClass;
 
 class SettingsService
 {
-    private ApplicationState $applicationState;
-    private Config $config;
-    private ConfigWriter $configWriter;
-    private Metadata $metadata;
-    private Acl $acl;
-    private EntityManager $entityManager;
-    private DataManager $dataManager;
-    private FieldValidationManager $fieldValidationManager;
-    private InjectableFactory $injectableFactory;
-    private Access $access;
-
     public function __construct(
-        ApplicationState $applicationState,
-        Config $config,
-        ConfigWriter $configWriter,
-        Metadata $metadata,
-        Acl $acl,
-        EntityManager $entityManager,
-        DataManager $dataManager,
-        FieldValidationManager $fieldValidationManager,
-        InjectableFactory $injectableFactory,
-        Access $access
-    ) {
-        $this->applicationState = $applicationState;
-        $this->config = $config;
-        $this->configWriter = $configWriter;
-        $this->metadata = $metadata;
-        $this->acl = $acl;
-        $this->entityManager = $entityManager;
-        $this->dataManager = $dataManager;
-        $this->fieldValidationManager = $fieldValidationManager;
-        $this->injectableFactory = $injectableFactory;
-        $this->access = $access;
-    }
+        private ApplicationState $applicationState,
+        private Config $config,
+        private ConfigWriter $configWriter,
+        private Metadata $metadata,
+        private Acl $acl,
+        private EntityManager $entityManager,
+        private DataManager $dataManager,
+        private FieldValidationManager $fieldValidationManager,
+        private InjectableFactory $injectableFactory,
+        private Access $access,
+        private AuthenticationMethodProvider $authenticationMethodProvider
+    ) {}
 
     public function getConfigData(): stdClass
     {
@@ -133,7 +112,7 @@ class SettingsService
      */
     private function getLoginData(): ?array
     {
-        $method = $this->config->get('authenticationMethod') ?? Espo::NAME;
+        $method = $this->authenticationMethodProvider->get();
 
         /** @var array<string, mixed> $mData */
         $mData = $this->metadata->get(['authenticationMethods', $method, 'login']) ?? [];
@@ -145,7 +124,9 @@ class SettingsService
             return null;
         }
 
-        if ($this->applicationState->isPortal()) {
+        $isProvider = $this->isPortalWithAuthenticationProvider();
+
+        if (!$isProvider && $this->applicationState->isPortal()) {
             /** @var ?bool $portal */
             $portal = $mData['portal'] ?? null;
 
@@ -173,6 +154,10 @@ class SettingsService
             $fallback = $fallbackConfigParam && $this->config->get($fallbackConfigParam);
         }
 
+        if ($isProvider) {
+            $fallback = false;
+        }
+
         /** @var stdClass $data */
         $data = (object) ($mData['data'] ?? []);
 
@@ -184,10 +169,21 @@ class SettingsService
         ];
     }
 
+    private function isPortalWithAuthenticationProvider(): bool
+    {
+        if (!$this->applicationState->isPortal()) {
+            return false;
+        }
+
+        $portal = $this->applicationState->getPortal();
+
+        return (bool) $this->authenticationMethodProvider->getForPortal($portal);
+    }
+
     /**
-     * @throws \Espo\Core\Exceptions\BadRequest
+     * @throws BadRequest
      * @throws Forbidden
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      */
     public function setConfigData(stdClass $data): void
     {
@@ -372,7 +368,7 @@ class SettingsService
     }
 
     /**
-     * @throws \Espo\Core\Exceptions\BadRequest
+     * @throws BadRequest
      */
     private function processValidation(Entity $entity, stdClass $data): void
     {

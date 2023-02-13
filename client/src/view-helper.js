@@ -679,7 +679,7 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
          *
          * @param {string} text A text.
          * @param {{inline?: boolean, linksInNewTab?: boolean}} [options] Options.
-         * @returns {string} HTML.
+         * @returns {Handlebars.SafeString} HTML.
          */
         transformMarkdownText: function (text, options) {
             text = text || '';

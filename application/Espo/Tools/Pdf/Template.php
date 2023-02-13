@@ -31,6 +31,11 @@ namespace Espo\Tools\Pdf;
 
 interface Template
 {
+    public const PAGE_FORMAT_CUSTOM = 'Custom';
+
+    public const PAGE_ORIENTATION_PORTRAIT = 'Portrait';
+    public const PAGE_ORIENTATION_LANDSCAPE = 'Landscape';
+
     public function getFontFace(): ?string;
 
     public function getBottomMargin(): float;

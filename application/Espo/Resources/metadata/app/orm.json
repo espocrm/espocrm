@@ -4,5 +4,8 @@
     },
     "queryComposerClassNameMap": {
         "Mysql": "Espo\\ORM\\QueryComposer\\MysqlQueryComposer"
+    },
+    "pdoFactoryClassNameMap": {
+        "Mysql": "Espo\\ORM\\PDO\\MysqlPDOFactory"
     }
 }

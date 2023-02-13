@@ -267,13 +267,13 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             }
 
             this.once('show', () => {
-                if (!this.isSubscribedToWebSocked) {
+                if (!this.isSubscribedToWebSocket) {
                     this.subscribeToWebSocket();
                 }
             });
 
             this.once('remove', () => {
-                if (this.isSubscribedToWebSocked) {
+                if (this.isSubscribedToWebSocket) {
                     this.unsubscribeFromWebSocket();
                 }
             });
@@ -291,7 +291,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             var topic = 'streamUpdate.' + this.model.entityType + '.' + this.model.id;
             this.streamUpdateWebSocketTopic = topic;
 
-            this.isSubscribedToWebSocked = true;
+            this.isSubscribedToWebSocket = true;
 
             this.getHelper().webSocketManager.subscribe(topic, (t, data) => {
                 if (data.createdById === this.getUser().id) {

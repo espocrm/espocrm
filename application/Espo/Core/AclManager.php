@@ -724,7 +724,7 @@ class AclManager
     }
 
     /**
-     * @deprecated User `checkOwnershipOwn`.
+     * @deprecated Use `checkOwnershipOwn`.
      */
     public function checkIsOwner(User $user, Entity $entity): bool
     {
@@ -732,7 +732,7 @@ class AclManager
     }
 
     /**
-     * @deprecated User `checkOwnershipTeam`.
+     * @deprecated Use `checkOwnershipTeam`.
      */
     public function checkInTeam(User $user, Entity $entity): bool
     {
@@ -740,7 +740,7 @@ class AclManager
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v7.0. Access checkers not to be exposed.
      */
     public function getImplementation(string $scope): object
     {

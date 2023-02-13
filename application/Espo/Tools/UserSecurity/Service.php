@@ -51,25 +51,13 @@ use stdClass;
 
 class Service
 {
-    private EntityManager $entityManager;
-    private User $user;
-    private Config $config;
-    private LoginFactory $authLoginFactory;
-    private TwoFactorUserSetupFactory $twoFactorUserSetupFactory;
-
     public function __construct(
-        EntityManager $entityManager,
-        User $user,
-        Config $config,
-        LoginFactory $authLoginFactory,
-        TwoFactorUserSetupFactory $twoFactorUserSetupFactory
-    ) {
-        $this->entityManager = $entityManager;
-        $this->user = $user;
-        $this->config = $config;
-        $this->authLoginFactory = $authLoginFactory;
-        $this->twoFactorUserSetupFactory = $twoFactorUserSetupFactory;
-    }
+        private EntityManager $entityManager,
+        private User $user,
+        private Config $config,
+        private LoginFactory $authLoginFactory,
+        private TwoFactorUserSetupFactory $twoFactorUserSetupFactory
+    ) {}
 
     /**
      * @throws Forbidden
@@ -82,7 +70,7 @@ class Service
         }
 
         /** @var ?User $user */
-        $user = $this->entityManager->getEntityById('User', $id);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $id);
 
         if (!$user) {
             throw new NotFound();
@@ -122,7 +110,7 @@ class Service
         $isReset = $data->reset ?? false;
 
         /** @var ?User $user */
-        $user = $this->entityManager->getEntityById('User', $id);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $id);
 
         if (!$user) {
             throw new NotFound();
@@ -184,7 +172,7 @@ class Service
         }
 
         /** @var ?User $user */
-        $user = $this->entityManager->getEntity('User', $id);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $id);
 
         if (!$user) {
             throw new NotFound();
@@ -250,12 +238,10 @@ class Service
 
         $this->entityManager->saveEntity($userData);
 
-        $returnData = (object) [
+        return (object) [
             'auth2FA' => $userData->get('auth2FA'),
             'auth2FAMethod' => $userData->get('auth2FAMethod'),
         ];
-
-        return $returnData;
     }
 
     /**

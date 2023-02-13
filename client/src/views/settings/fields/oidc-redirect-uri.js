@@ -32,16 +32,54 @@ define('views/settings/fields/oidc-redirect-uri', ['views/fields/varchar'], func
 
         detailTemplateContent: `{{value}}`,
 
+        portalCollection: null,
+
         data: function () {
+            let valueIsSet = this.model.entityType !== 'AuthenticationProvider' ||
+                this.portalCollection;
+
             return {
                 value: this.getValueForDisplay(),
+                valueIsSet: valueIsSet,
             };
         },
 
         getValueForDisplay: function () {
+            if (this.model.entityType === 'AuthenticationProvider') {
+                if (!this.portalCollection) {
+                    return null;
+                }
+
+                return this.portalCollection.models
+                    .map(model => {
+                        let url = (model.get('url') || '').replace(/\/+$/, '');
+
+                        return url + '/oauth-callback.php';
+                    })
+                    .join('\n');
+            }
+
             let siteUrl = (this.getConfig().get('siteUrl') || '').replace(/\/+$/, '');
 
             return siteUrl + '/oauth-callback.php';
+        },
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            if (this.model.entityType === 'AuthenticationProvider') {
+                this.getCollectionFactory()
+                    .create('Portal')
+                    .then(collection => {
+                        collection.data.select = ['url', 'isDefault'];
+
+                        collection.fetch().then(() => {
+                            this.portalCollection = collection;
+
+                            this.reRender();
+                        })
+                    });
+            }
         },
     });
 });

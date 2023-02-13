@@ -29,26 +29,22 @@
 
 namespace tests\unit\Espo\Core;
 
-use Espo\Core\{
-    Binding\BindingData,
-    Binding\Binder,
-    Binding\BindingContainer,
-    InjectableFactory,
-    Container,
-};
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\Container;
+use Espo\Core\InjectableFactory;
 
-use tests\integration\testClasses\Binding\{
-    SomeInterface,
-    SomeClass,
-};
+use tests\integration\testClasses\Binding\SomeClass;
+use tests\integration\testClasses\Binding\SomeImplementation;
+use tests\integration\testClasses\Binding\SomeInterface;
 
-use tests\unit\testClasses\Core\Binding\{
-    SomeClass0,
-    SomeClass1,
-    SomeInterface1,
-    SomeClass2,
-    SomeInterface2,
-};
+use tests\unit\testClasses\Core\Binding\SomeClass0;
+use tests\unit\testClasses\Core\Binding\SomeClass1;
+use tests\unit\testClasses\Core\Binding\SomeClass2;
+use tests\unit\testClasses\Core\Binding\SomeInterface1;
+use tests\unit\testClasses\Core\Binding\SomeInterface2;
 
 class InjectableFactoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -90,5 +86,35 @@ class InjectableFactoryTest extends \PHPUnit\Framework\TestCase
         $obj = $injectableFactory->createWithBinding(SomeClass0::class, new BindingContainer($bindingData));
 
         $this->assertNotNull($obj);
+    }
+
+    public function testCreateResolved1(): void
+    {
+        $container = $this->createMock(Container::class);
+
+        $bindingContainer = BindingContainerBuilder::create()
+            ->bindImplementation(SomeInterface::class, SomeImplementation::class)
+            ->build();
+
+        $injectableFactory = new InjectableFactory($container, $bindingContainer);
+
+        $obj = $injectableFactory->createResolved(SomeInterface::class);
+
+        $this->assertInstanceOf(SomeImplementation::class, $obj);
+    }
+
+    public function testCreateResolved2(): void
+    {
+        $container = $this->createMock(Container::class);
+
+        $bindingContainer = BindingContainerBuilder::create()->build();
+
+        $injectableFactory = new InjectableFactory($container, $bindingContainer);
+
+        $bindingContainer1 = BindingContainerBuilder::create()->build();
+
+        $obj = $injectableFactory->createResolved(SomeImplementation::class, $bindingContainer1);
+
+        $this->assertInstanceOf(SomeImplementation::class, $obj);
     }
 }

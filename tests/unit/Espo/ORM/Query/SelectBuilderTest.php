@@ -636,4 +636,44 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedJoins, $raw['joins']);
         $this->assertEquals($expectedLeftJoins, $raw['leftJoins']);
     }
+
+    public function testExists1(): void
+    {
+        $query = (new SelectBuilder())
+            ->select('id')
+            ->from('Test', 'test')
+            ->where(
+                Cond::exists(
+                    (new SelectBuilder())
+                        ->select('id')
+                        ->from('Test', 'sq')
+                        ->where(
+                            Cond::equal(
+                                Cond::column('test.id'),
+                                Cond::column('sq.id')
+                            )
+                        )
+                        ->build()
+                )
+            )
+            ->build();
+
+        $expected = [
+            'select' => ['id'],
+            'from' => 'Test',
+            'fromAlias' => 'test',
+            'whereClause' => [
+                'EXISTS' => [
+                    'select' => ['id'],
+                    'from' => 'Test',
+                    'fromAlias' => 'sq',
+                    'whereClause' => [
+                        'test.id=:' => 'sq.id',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertEquals($expected, $query->getRaw());
+    }
 }

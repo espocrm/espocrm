@@ -6,7 +6,7 @@
                 <img src="{{logoSrc}}" class="logo">
             </div>
         </div>
-        <div class="panel-body">
+        <div class="panel-body{{#if anotherUser}} another-user{{/if}}">
             <div class="">
                 <form id="login-form">
                     {{#if hasSignIn}}

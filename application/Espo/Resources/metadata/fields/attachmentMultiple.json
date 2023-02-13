@@ -72,6 +72,7 @@
         "disabled": true
     },
     "notSortable": true,
+    "converterClassName": "Espo\\Core\\Utils\\Database\\Orm\\FieldConverters\\AttachmentMultiple",
     "filter": true,
     "personalData": true,
     "validationList": [

@@ -29,37 +29,73 @@
 
 namespace tests\integration\Espo\Currency;
 
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\Tools\Currency\RateService;
-use Espo\Core\{
-    Utils\Config\ConfigWriter,
-};
+use Espo\Core\Currency\Rates;
+use Espo\Core\Field\Currency;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config\ConfigWriter;
 
 class CurrencyTest extends \tests\integration\Core\BaseTestCase
 {
-    public function testSetCurrencyRates()
+    public function testSetCurrencyRates(): void
     {
         $app = $this->createApplication();
 
-        $configWriter = $app->getContainer()->get('injectableFactory')->create(ConfigWriter::class);
+        /** @var InjectableFactory $factory */
+        $factory = $app->getContainer()->get('injectableFactory');
+
+        $configWriter = $factory->create(ConfigWriter::class);
 
         $configWriter->set('currencyList', ['USD', 'EUR']);
         $configWriter->set('defaultCurrency', 'USD');
         $configWriter->set('baseCurrency', 'USD');
-
         $configWriter->set('currencyRates', [
             'EUR' => 1.2,
         ]);
-
         $configWriter->save();
 
-        $service = $app->getContainer()->get('injectableFactory')->create(RateService::class);
+        $service = $factory->create(RateService::class);
 
-        $newRates = $service->set(
-            (object) [
-                'EUR' => 1.3,
+        $rates = Rates::fromAssoc(['EUR' => 1.3], '___');
+
+        $service->set($rates);
+
+        $newRates = $service->get();
+
+        $this->assertEquals(1.3, $newRates->getRate('EUR'));
+    }
+
+    public function testDecimal1(): void
+    {
+        $this->getMetadata()->set('entityDefs', 'Lead', [
+            'fields' => [
+                'testCurrency' => [
+                    'type' => 'currency',
+                    'decimal' => true,
+                ]
             ]
-        );
+        ]);
 
-        $this->assertEquals(1.3, $newRates->EUR);
+        $this->getMetadata()->save();
+        $this->getDataManager()->rebuild();
+        $this->reCreateApplication();
+
+        $value = Currency::create('10.1', 'USD')
+            ->add(Currency::create('0.1', 'USD'));
+
+        /** @var Lead $lead */
+        $lead = $this->getEntityManager()->getNewEntity(Lead::ENTITY_TYPE);
+        $lead->setValueObject('testCurrency', $value);
+        $this->getEntityManager()->saveEntity($lead);
+
+        /** @var Lead $lead */
+        $lead = $this->getEntityManager()->getEntityById(Lead::ENTITY_TYPE, $lead->getId());
+
+        $value = $lead->getValueObject('testCurrency');
+
+        $this->assertInstanceOf(Currency::class, $value);
+        $this->assertEquals('10.2000', $value->getAmountAsString());
+        $this->assertEquals(0, $value->compare(Currency::create('10.2', 'USD')));
     }
 }

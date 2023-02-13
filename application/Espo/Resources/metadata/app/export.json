@@ -5,16 +5,86 @@
     ],
     "formatDefs": {
         "csv": {
+            "processorClassName": "Espo\\Tools\\Export\\Format\\Csv\\Processor",
+            "additionalFieldsLoaderClassName": "Espo\\Tools\\Export\\Format\\Csv\\AdditionalFieldsLoader",
             "mimeType": "text/csv",
             "fileExtension": "csv"
         },
         "xlsx": {
+            "processorClassName": "Espo\\Tools\\Export\\Format\\Xlsx\\Processor",
+            "processorParamsHandler": "Espo\\Tools\\Export\\Format\\Xlsx\\ParamsHandler",
+            "additionalFieldsLoaderClassName": "Espo\\Tools\\Export\\Format\\Xlsx\\AdditionalFieldsLoader",
             "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "fileExtension": "xlsx"
+            "fileExtension": "xlsx",
+            "cellValuePreparatorClassNameMap": {
+                "link": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Link",
+                "linkOne": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Link",
+                "linkParent": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Link",
+                "file": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Link",
+                "bool": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Boolean",
+                "int": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Integer",
+                "float": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Floating",
+                "currency": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Currency",
+                "currencyConverted": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\CurrencyConverted",
+                "personName": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\PersonName",
+                "date": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Date",
+                "datetime": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\DateTime",
+                "datetimeOptional": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\DateTimeOptional",
+                "linkMultiple": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\LinkMultiple",
+                "attachmentMultiple": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\LinkMultiple",
+                "address": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Address",
+                "duration": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Duration",
+                "enum": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Enumeration",
+                "multiEnum": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\MultiEnum",
+                "array": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\MultiEnum"
+            },
+            "params": {
+                "fields": {
+                    "lite": {
+                        "type": "bool",
+                        "default": false,
+                        "tooltip": true
+                    },
+                    "recordLinks": {
+                        "type": "bool",
+                        "default": false
+                    },
+                    "title": {
+                        "type": "bool",
+                        "default": false,
+                        "tooltip": true
+                    }
+                },
+                "layout": [
+                    [
+                        {"name": "lite"},
+                        {"name": "recordLinks"},
+                        {"name": "title"}
+                    ]
+                ],
+                "dynamicLogic": {
+                    "recordLinks": {
+                        "visible": {
+                            "conditionGroup": [
+                                {
+                                    "type": "isFalse",
+                                    "attribute": "xlsxLite"
+                                }
+                            ]
+                        }
+                    },
+                    "title": {
+                        "visible": {
+                            "conditionGroup": [
+                                {
+                                    "type": "isFalse",
+                                    "attribute": "xlsxLite"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         }
-    },
-    "processorClassNameMap": {
-        "csv": "Espo\\Tools\\Export\\Processors\\Csv",
-        "xlsx": "Espo\\Tools\\Export\\Processors\\Xlsx"
     }
 }

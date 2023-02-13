@@ -1,0 +1,75 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true
+        },
+        "method": {
+            "type": "enum",
+            "view": "views/authentication-provider/fields/method",
+            "translation": "Settings.options.authenticationMethod",
+            "required": true,
+            "validatorClassNameMap": {
+                "valid": "Espo\\Classes\\FieldValidators\\AuthenticationProvider\\MethodValid"
+            }
+        },
+        "oidcAuthorizationRedirectUri": {
+            "type": "varchar",
+            "notStorable": true,
+            "readOnly": true
+        },
+        "oidcClientId": {
+            "type": "varchar"
+        },
+        "oidcClientSecret": {
+            "type": "password"
+        },
+        "oidcAuthorizationEndpoint": {
+            "type": "url",
+            "strip": false
+        },
+        "oidcTokenEndpoint": {
+            "type": "url",
+            "strip": false
+        },
+        "oidcJwksEndpoint": {
+            "type": "url",
+            "strip": false
+        },
+        "oidcJwtSignatureAlgorithmList": {
+            "type": "multiEnum",
+            "optionsPath": "entityDefs.Settings.fields.oidcJwtSignatureAlgorithmList.options",
+            "default": [
+                "RS256"
+            ]
+        },
+        "oidcScopes": {
+            "type": "multiEnum",
+            "allowCustomOptions": true,
+            "optionsPath": "entityDefs.Settings.fields.oidcScopes.options",
+            "default": [
+                "profile",
+                "email",
+                "phone"
+            ]
+        },
+        "oidcCreateUser": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "oidcUsernameClaim": {
+            "type": "varchar",
+            "optionsPath": "entityDefs.Settings.fields.oidcUsernameClaim.options",
+            "tooltip": true,
+            "default": "sub"
+        },
+        "oidcSync": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "oidcLogoutUrl": {
+            "type": "varchar",
+            "tooltip": true
+        }
+    }
+}

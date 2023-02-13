@@ -29,39 +29,29 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\{
-    Container\Loader,
-    ORM\EntityManager,
-    ApplicationState,
-};
+use Espo\Core\ApplicationState;
+use Espo\Core\ApplicationUser as ApplicationUser;
+use Espo\Core\Container\Loader;
+use Espo\Core\ORM\EntityManager;
 
-use Espo\Entities\{
-    Preferences as PreferencesService,
-};
+use Espo\Entities\Preferences as PreferencesEntity;
 
 class Preferences implements Loader
 {
-    private $entityManager;
+    public function __construct(
+        private EntityManager $entityManager,
+        private ApplicationState $applicationState
+    ) {}
 
-    private $applicationState;
-
-    public function __construct(EntityManager $entityManager, ApplicationState $applicationState)
+    public function load(): PreferencesEntity
     {
-        $this->entityManager = $entityManager;
-        $this->applicationState = $applicationState;
-    }
-
-    public function load(): PreferencesService
-    {
-        $id = 'system';
+        $id = ApplicationUser::SYSTEM_USER_ID;
 
         if ($this->applicationState->hasUser()) {
             $id = $this->applicationState->getUser()->getId();
         }
 
-        /** @var PreferencesService $entity */
-        $entity = $this->entityManager->getEntity('Preferences', $id);
-
-        return $entity;
+        /** @var PreferencesEntity */
+        return $this->entityManager->getEntity(PreferencesEntity::ENTITY_TYPE, $id);
     }
 }

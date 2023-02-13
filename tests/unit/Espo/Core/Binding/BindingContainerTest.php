@@ -140,7 +140,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $param = $this->createParamMock('test', 'Espo\\Test');
 
         $this->assertTrue(
-            $this->createContainer()->has($class, $param)
+            $this->createContainer()->hasByParam($class, $param)
         );
     }
 
@@ -151,7 +151,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $param = $this->createParamMock('test', 'Espo\\Test');
 
         $this->assertTrue(
-            $this->createContainer()->has(null, $param)
+            $this->createContainer()->hasByParam(null, $param)
         );
     }
 
@@ -164,7 +164,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $param = $this->createParamMock('test', 'Espo\\Hello');
 
         $this->assertFalse(
-            $this->createContainer()->has($class, $param)
+            $this->createContainer()->hasByParam($class, $param)
         );
     }
 
@@ -175,7 +175,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $param = $this->createParamMock('test', 'Espo\\Hello');
 
         $this->assertFalse(
-            $this->createContainer()->has(null, $param)
+            $this->createContainer()->hasByParam(null, $param)
         );
     }
 
@@ -191,7 +191,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $param = $this->createParamMock('test', 'Espo\\Test');
 
         $this->assertTrue(
-            $this->createContainer()->has($class, $param)
+            $this->createContainer()->hasByParam($class, $param)
         );
     }
 
@@ -206,7 +206,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $param = $this->createParamMock('test', 'Espo\\Test');
 
         $this->assertTrue(
-            $this->createContainer()->has($class, $param)
+            $this->createContainer()->hasByParam($class, $param)
         );
     }
 
@@ -221,7 +221,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $param = $this->createParamMock('test');
 
         $this->assertTrue(
-            $this->createContainer()->has($class, $param)
+            $this->createContainer()->hasByParam($class, $param)
         );
     }
 
@@ -236,7 +236,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $param = $this->createParamMock('test');
 
         $this->assertTrue(
-            $this->createContainer()->has($class, $param)
+            $this->createContainer()->hasByParam($class, $param)
         );
     }
 
@@ -250,7 +250,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $param = $this->createParamMock('test', 'Espo\\Test');
 
         $this->assertTrue(
-            $this->createContainer()->has($class, $param)
+            $this->createContainer()->hasByParam($class, $param)
         );
     }
 
@@ -264,7 +264,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $param = $this->createParamMock('test', 'Espo\\Hello');
 
         $this->assertFalse(
-            $this->createContainer()->has($class, $param)
+            $this->createContainer()->hasByParam($class, $param)
         );
     }
 
@@ -279,7 +279,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $param = $this->createParamMock('test', 'Espo\\Test');
 
         $this->assertFalse(
-            $this->createContainer()->has($class, $param)
+            $this->createContainer()->hasByParam($class, $param)
         );
     }
 
@@ -294,7 +294,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $param = $this->createParamMock('test');
 
         $this->assertFalse(
-            $this->createContainer()->has($class, $param)
+            $this->createContainer()->hasByParam($class, $param)
         );
     }
 
@@ -305,7 +305,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $class = $this->createClassMock('Espo\\Context');
         $param = $this->createParamMock('test', 'Espo\\Test');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::IMPLEMENTATION_CLASS_NAME, $binding->getType());
         $this->assertEquals('Espo\\ImplTest', $binding->getValue());
@@ -318,7 +318,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $class = $this->createClassMock('Espo\\Context');
         $param = $this->createParamMock('test', 'Espo\\Test');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::FACTORY_CLASS_NAME, $binding->getType());
         $this->assertEquals('Espo\\TestFactory', $binding->getValue());
@@ -332,7 +332,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $param = $this->createParamMock('test', 'Espo\\Test');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::CONTAINER_SERVICE, $binding->getType());
 
@@ -352,7 +352,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $param = $this->createParamMock('test', 'Espo\\Test');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::CALLBACK, $binding->getType());
 
@@ -369,7 +369,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $param = $this->createParamMock('test', $className);
 
-        $binding = $this->createContainer()->get(null, $param);
+        $binding = $this->createContainer()->getByParam(null, $param);
 
         $this->assertEquals(Binding::VALUE, $binding->getType());
 
@@ -390,7 +390,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $class = $this->createClassMock('Espo\\Context');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::VALUE, $binding->getType());
 
@@ -412,7 +412,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $param = $this->createParamMock('test', 'Espo\\Test');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::CALLBACK, $binding->getType());
 
@@ -429,7 +429,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $param = $this->createParamMock('test', 'Espo\\Test');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::CONTAINER_SERVICE, $binding->getType());
 
@@ -446,7 +446,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $param = $this->createParamMock('name', 'Espo\\Test');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::CONTAINER_SERVICE, $binding->getType());
 
@@ -454,7 +454,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $param = $this->createParamMock('hello', 'Espo\\Test');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::CONTAINER_SERVICE, $binding->getType());
 
@@ -471,7 +471,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $param = $this->createParamMock('test', 'Espo\\Test');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::IMPLEMENTATION_CLASS_NAME, $binding->getType());
         $this->assertEquals('Espo\\ImplTest', $binding->getValue());
@@ -487,7 +487,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $param = $this->createParamMock('test', 'Espo\\Test');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::FACTORY_CLASS_NAME, $binding->getType());
         $this->assertEquals('Espo\\TestFactory', $binding->getValue());
@@ -504,7 +504,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $param = $this->createParamMock('test', 'Espo\\Test');
 
         $this->assertFalse(
-            $this->createContainer()->has($class, $param)
+            $this->createContainer()->hasByParam($class, $param)
         );
     }
 
@@ -520,7 +520,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $param = $this->createParamMock('name', 'Espo\\Test');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::CONTAINER_SERVICE, $binding->getType());
 
@@ -528,7 +528,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $param = $this->createParamMock('hello', 'Espo\\Test');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::CONTAINER_SERVICE, $binding->getType());
 
@@ -545,7 +545,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $param = $this->createParamMock('test');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::VALUE, $binding->getType());
 
@@ -563,7 +563,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $class = $this->createClassMock('Espo\\Context');
         $param = $this->createParamMock('test', 'Espo\\SomeClass');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::VALUE, $binding->getType());
         $this->assertEquals($instance, $binding->getValue());
@@ -580,7 +580,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $class = $this->createClassMock('Espo\\Context');
         $param = $this->createParamMock('test', 'Espo\\SomeClass');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::VALUE, $binding->getType());
         $this->assertEquals($instance, $binding->getValue());
@@ -596,7 +596,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $param = $this->createParamMock('test', 'Espo\\Test');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::CONTAINER_SERVICE, $binding->getType());
 
@@ -617,7 +617,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $param = $this->createParamMock('test', 'Espo\\Test');
 
-        $binding = $this->createContainer()->get($class, $param);
+        $binding = $this->createContainer()->getByParam($class, $param);
 
         $this->assertEquals(Binding::CONTAINER_SERVICE, $binding->getType());
 
@@ -634,13 +634,13 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
             ->build();
 
         $param1 = $this->createParamMock('test', SomeInterface1::class);
-        $this->assertTrue($container->has(null, $param1));
+        $this->assertTrue($container->hasByParam(null, $param1));
 
         $param2 = $this->createParamMock('test', SomeInterface2::class);
-        $this->assertFalse($container->has(null, $param2));
+        $this->assertFalse($container->hasByParam(null, $param2));
 
         $class3 = $this->createClassMock(SomeClass1::class);
         $param3 = $this->createParamMock('test', SomeInterface2::class);
-        $this->assertTrue($container->has($class3, $param3));
+        $this->assertTrue($container->hasByParam($class3, $param3));
     }
 }

@@ -33,35 +33,25 @@ use Espo\Core\Authentication\AuthToken\AuthToken;
 use Espo\Core\Authentication\Logout as LogoutInterface;
 use Espo\Core\Authentication\Logout\Params;
 use Espo\Core\Authentication\Logout\Result;
-use Espo\Core\Utils\Config;
 
 class Logout implements LogoutInterface
 {
-    private Config $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(
+        private ConfigDataProvider $configDataProvider
+    ) {}
 
     public function logout(AuthToken $authToken, Params $params): Result
     {
-        if ($authToken->getPortalId()) {
-            return Result::create();
-        }
-
-        /** @var ?string $url */
-        $url = $this->config->get('oidcLogoutUrl');
-        /** @var string $oidcClientId */
-        $oidcClientId = $this->config->get('oidcClientId') ?? '';
-        $siteUrl = rtrim($this->config->get('siteUrl') ?? '', '/');
+        $url = $this->configDataProvider->getLogoutUrl();
+        $clientId = $this->configDataProvider->getClientId() ?? '';
+        $siteUrl = $this->configDataProvider->getSiteUrl();
 
         if ($url) {
-            $url = str_replace('{clientId}', urlencode($oidcClientId), $url);
+            $url = str_replace('{clientId}', urlencode($clientId), $url);
             $url = str_replace('{siteUrl}', urlencode($siteUrl), $url);
         }
 
-        // @todo Check session is set if auth token to bypass fallback logins.
+        // @todo Check session is set in auth token to bypass fallback logins.
 
         return Result::create()->withRedirectUrl($url);
     }

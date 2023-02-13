@@ -37,16 +37,14 @@ use RuntimeException;
 class Params
 {
     private string $fileName;
-    /**
-     * @var string[]
-     */
-    private $attributeList;
-    /**
-     * @var ?string[]
-     */
-    private $fieldList = null;
+    /** @var string[] */
+    private array $attributeList;
+    /** @var ?string[] */
+    private ?array $fieldList = null;
     private ?string $name = null;
     private ?string $entityType = null;
+    /** @var array<string, mixed> */
+    private array $params = [];
 
     /**
      * @param string[] $attributeList
@@ -62,7 +60,6 @@ class Params
     public function withEntityType(string $entityType): self
     {
         $obj = clone $this;
-
         $obj->entityType = $entityType;
 
         return $obj;
@@ -71,18 +68,52 @@ class Params
     public function withName(?string $name): self
     {
         $obj = clone $this;
-
         $obj->name = $name;
 
         return $obj;
     }
 
+    /**
+     * @param ?string[] $fieldList
+     */
+    public function withFieldList(?array $fieldList): self
+    {
+        $obj = clone $this;
+        $obj->fieldList = $fieldList;
+
+        return $obj;
+    }
+
+    /**
+     * @param string[] $attributeList
+     */
+    public function withAttributeList(array $attributeList): self
+    {
+        $obj = clone $this;
+        $obj->attributeList = $attributeList;
+
+        return $obj;
+    }
+
+    public function withParam(string $name, mixed $value): self
+    {
+        $obj = clone $this;
+        $obj->params[$name] = $value;
+
+        return $obj;
+    }
+
+    /**
+     * An export file name.
+     */
     public function getFileName(): string
     {
         return $this->fileName;
     }
 
     /**
+     * Attributes to export.
+     *
      * @return string[]
      */
     public function getAttributeList(): array
@@ -91,6 +122,8 @@ class Params
     }
 
     /**
+     * Fields to export.
+     *
      * @return ?string[]
      */
     public function getFieldList(): ?array
@@ -98,11 +131,17 @@ class Params
         return $this->fieldList;
     }
 
+    /**
+     * An export name.
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * An entity type.
+     */
     public function getEntityType(): string
     {
         if ($this->entityType === null) {
@@ -110,5 +149,13 @@ class Params
         }
 
         return $this->entityType;
+    }
+
+    /**
+     * Get a parameter value.
+     */
+    public function getParam(string $name): mixed
+    {
+        return $this->params[$name] ?? null;
     }
 }

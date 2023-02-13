@@ -39,6 +39,7 @@
             "customizationInlineEditDisabledDisabled": true
         }
     },
+    "converterClassName": "Espo\\Core\\Utils\\Database\\Orm\\FieldConverters\\Email",
     "validationList": [
         "required",
         "emailAddress",

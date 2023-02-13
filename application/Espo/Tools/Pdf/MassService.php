@@ -179,14 +179,20 @@ class MassService
 
         $entityTypeTranslated = $this->defaultLanguage->translateLabel($entityType, 'scopeNamesPlural');
 
-        $filename = Util::sanitizeFileName($entityTypeTranslated) . '.pdf';
+        $type = $contents instanceof ZipContents ?
+            'application/zip' :
+            'application/pdf';
+
+        $filename = $contents instanceof ZipContents ?
+            Util::sanitizeFileName($entityTypeTranslated) . '.zip' :
+            Util::sanitizeFileName($entityTypeTranslated) . '.pdf';
 
         /** @var Attachment $attachment */
         $attachment = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
 
         $attachment
             ->setName($filename)
-            ->setType('application/pdf')
+            ->setType($type)
             ->setRole(self::ATTACHMENT_MASS_PDF_ROLE)
             ->setSize($contents->getStream()->getSize());
 

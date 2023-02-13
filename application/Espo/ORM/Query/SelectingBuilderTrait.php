@@ -184,15 +184,18 @@ trait SelectingBuilderTrait
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array<mixed, mixed>|null $conditions Join conditions.
+     * @param WhereItem|array<string|int, mixed>|null $conditions Join conditions.
      *
      * @todo Support USE INDEX in Join.
      */
     private function joinInternal(string $type, $target, ?string $alias = null, $conditions = null): self
     {
+        $onlyMiddle = false;
+
         if ($target instanceof Join) {
             $alias = $alias ?? $target->getAlias();
             $conditions = $conditions ?? $target->getConditions();
+            $onlyMiddle = $target->isOnlyMiddle();
             $target = $target->getTarget();
         }
 
@@ -229,6 +232,22 @@ trait SelectingBuilderTrait
             return $this;
         }
 
+        $params = [];
+
+        if ($noLeftAlias) {
+            $params['noLeftAlias'] = true;
+        }
+
+        if ($onlyMiddle) {
+            $params['onlyMiddle'] = true;
+        }
+
+        if ($params !== []) {
+            $this->params[$type][] = [$target, $alias, $conditions, $params];
+
+            return $this;
+        }
+
         if (is_null($alias) && is_null($conditions)) {
             $this->params[$type][] = $target;
 
@@ -241,13 +260,7 @@ trait SelectingBuilderTrait
             return $this;
         }
 
-        $item = [$target, $alias, $conditions];
-
-        if ($noLeftAlias) {
-            $item[] = ['noLeftAlias' => true];
-        }
-
-        $this->params[$type][] = $item;
+        $this->params[$type][] = [$target, $alias, $conditions];
 
         return $this;
     }

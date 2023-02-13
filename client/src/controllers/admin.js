@@ -197,6 +197,10 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager, _) {
             this.getRouter().dispatch('Attachment', 'list', {fromAdmin: true});
         },
 
+        actionAuthenticationProviders: function () {
+            this.getRouter().dispatch('AuthenticationProvider', 'list', {fromAdmin: true});
+        },
+
         actionEmailAddresses: function () {
             this.getRouter().dispatch('EmailAddress', 'list', {fromAdmin: true});
         },

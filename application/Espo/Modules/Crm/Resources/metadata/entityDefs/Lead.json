@@ -74,6 +74,7 @@
         "opportunityAmount": {
             "type": "currency",
             "min": 0,
+            "decimal": false,
             "audited": true
         },
         "opportunityAmountConverted": {

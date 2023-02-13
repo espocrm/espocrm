@@ -25,12 +25,10 @@
             "view": "views/attachment/fields/parent",
             "validatorClassName": "Espo\\Classes\\FieldValidators\\Attachment\\Related"
         },
-        "sourceId": {
-            "type": "varchar",
-            "maxLength": 36,
+        "source": {
+            "type": "link",
             "readOnly": true,
-            "disabled": true,
-            "index": true
+            "disabled": true
         },
         "field": {
             "type": "varchar",

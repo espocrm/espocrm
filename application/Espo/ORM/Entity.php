@@ -29,6 +29,8 @@
 
 namespace Espo\ORM;
 
+use Espo\ORM\Type\AttributeType;
+use Espo\ORM\Type\RelationType;
 use stdClass;
 
 /**
@@ -36,27 +38,27 @@ use stdClass;
  */
 interface Entity
 {
-    public const ID = 'id';
-    public const VARCHAR = 'varchar';
-    public const INT = 'int';
-    public const FLOAT = 'float';
-    public const TEXT = 'text';
-    public const BOOL = 'bool';
-    public const FOREIGN_ID = 'foreignId';
-    public const FOREIGN = 'foreign';
-    public const FOREIGN_TYPE = 'foreignType';
-    public const DATE = 'date';
-    public const DATETIME = 'datetime';
-    public const JSON_ARRAY = 'jsonArray';
-    public const JSON_OBJECT = 'jsonObject';
-    public const PASSWORD = 'password';
+    public const ID = AttributeType::ID;
+    public const VARCHAR = AttributeType::VARCHAR;
+    public const INT = AttributeType::INT;
+    public const FLOAT = AttributeType::FLOAT;
+    public const TEXT = AttributeType::TEXT;
+    public const BOOL = AttributeType::BOOL;
+    public const FOREIGN_ID = AttributeType::FOREIGN_ID;
+    public const FOREIGN = AttributeType::FOREIGN;
+    public const FOREIGN_TYPE = AttributeType::FOREIGN_TYPE;
+    public const DATE = AttributeType::DATE;
+    public const DATETIME = AttributeType::DATETIME;
+    public const JSON_ARRAY = AttributeType::JSON_ARRAY;
+    public const JSON_OBJECT = AttributeType::JSON_OBJECT;
+    public const PASSWORD = AttributeType::PASSWORD;
 
-    public const MANY_MANY = 'manyMany';
-    public const HAS_MANY = 'hasMany';
-    public const BELONGS_TO = 'belongsTo';
-    public const HAS_ONE = 'hasOne';
-    public const BELONGS_TO_PARENT = 'belongsToParent';
-    public const HAS_CHILDREN = 'hasChildren';
+    public const MANY_MANY = RelationType::MANY_MANY;
+    public const HAS_MANY = RelationType::HAS_MANY;
+    public const BELONGS_TO = RelationType::BELONGS_TO;
+    public const HAS_ONE = RelationType::HAS_ONE;
+    public const BELONGS_TO_PARENT = RelationType::BELONGS_TO_PARENT;
+    public const HAS_CHILDREN = RelationType::HAS_CHILDREN;
 
     /**
      * Get an entity ID.

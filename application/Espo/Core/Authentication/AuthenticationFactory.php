@@ -33,22 +33,11 @@ use Espo\Core\InjectableFactory;
 
 class AuthenticationFactory
 {
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private InjectableFactory $injectableFactory)
+    {}
 
     public function create(): Authentication
     {
         return $this->injectableFactory->create(Authentication::class);
-    }
-
-    public function createWithAnyAccessAllowed(): Authentication
-    {
-        return $this->injectableFactory->createWith(Authentication::class, [
-            'allowAnyAccess' => true,
-        ]);
     }
 }

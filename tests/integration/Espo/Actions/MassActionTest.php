@@ -29,6 +29,7 @@
 
 namespace tests\integration\Espo\Actions;
 
+use Espo\Core\MassAction\MassActionFactory;
 use Espo\Modules\Crm\Entities\Account;
 
 use Espo\Core\MassAction\ServiceParams;
@@ -38,17 +39,18 @@ use Espo\Core\MassAction\Jobs\Process as JobProcess;
 use Espo\Core\Job\Job\Data as JobData;
 
 use Espo\Core\Select\SearchParams;
-
 use Espo\Core\InjectableFactory;
 
-use Espo\Core\{
-    Api\ActionProcessor,
-    Api\Response,
-    ORM\EntityManager,
-    Application,
-    Exceptions\Forbidden,
-    Exceptions\Error,
-};
+use Espo\Core\Api\ControllerActionProcessor;
+use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\Application;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\ORM\EntityManager;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Opportunity;
+use Espo\Tools\MassUpdate\Data as MassUpdateData;
+use Espo\Tools\MassUpdate\Processor;
 
 class MassActionTest extends \tests\integration\Core\BaseTestCase
 {
@@ -63,7 +65,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
     private $entityManager;
 
     /**
-     * @var ActionProcessor
+     * @var ControllerActionProcessor
      */
     private $actionProcessor;
 
@@ -78,7 +80,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
         $this->actionProcessor = $this->app
             ->getContainer()
             ->get('injectableFactory')
-            ->create(ActionProcessor::class);
+            ->create(ControllerActionProcessor::class);
     }
 
     public function testUpdate1(): void
@@ -114,7 +116,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->once())
@@ -149,7 +151,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $this->expectException(Forbidden::class);
 
@@ -304,5 +306,66 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertEquals('Tester', $user->get('title'));
         $this->assertEquals(null, $user1->get('title'));*/
+    }
+
+    public function testMassUpdateLinkAccess(): void
+    {
+        $user = $this->createUser('tester', [
+            'massUpdatePermission' => 'yes',
+            'data' => [
+                'Contact' => [
+                    'create' => 'no',
+                    'read' => 'own',
+                    'edit' => 'no',
+                    'delete' => 'no'
+                ],
+                'Opportunity' => [
+                    'create' => 'yes',
+                    'read' => 'team',
+                    'edit' => 'own',
+                    'delete' => 'own'
+                ],
+            ],
+        ]);
+
+        $this->auth('tester');
+        $this->setApplication($this->createApplication());
+
+        $contact1 = $this->getEntityManager()
+            ->createEntity(Contact::ENTITY_TYPE, [
+                'lastName' => 'Contact 1',
+                'assignedUserId' => $user->getId(),
+            ]);
+
+        $contact2 = $this->getEntityManager()
+            ->createEntity(Contact::ENTITY_TYPE, [
+                'lastName' => 'Contact 2',
+            ]);
+
+        $opp1 = $this->getEntityManager()
+            ->createEntity(Opportunity::ENTITY_TYPE, [
+                'name' => 'Opp 1',
+                'assignedUserId' => $user->getId(),
+            ]);
+
+        $opp2 = $this->getEntityManager()
+            ->createEntity(Opportunity::ENTITY_TYPE, [
+                'name' => 'Opp 2',
+                'assignedUserId' => $user->getId(),
+            ]);
+
+        $processor = $this->getInjectableFactory()->create(Processor::class);
+
+        $params = MassActionParams::createWithIds(Opportunity::ENTITY_TYPE, [$opp1->getId(), $opp2->getId()]);
+
+        $data = MassUpdateData::create()
+            ->with('contactsIds', [$contact1->getId()]);
+        $result = $processor->process($params, $data);
+        $this->assertEquals(2, $result->getCount());
+
+        $data = MassUpdateData::create()
+            ->with('contactsIds', [$contact2->getId()]);
+        $result = $processor->process($params, $data);
+        $this->assertEquals(0, $result->getCount());
     }
 }

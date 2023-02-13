@@ -35,13 +35,10 @@ use Espo\ORM\Defs;
 
 class MetadataProvider
 {
-    private Metadata $metadata;
-
     private Defs $ormDefs;
 
-    public function __construct(Metadata $metadata, Defs $ormDefs)
+    public function __construct(private Metadata $metadata, Defs $ormDefs)
     {
-        $this->metadata = $metadata;
         $this->ormDefs = $ormDefs;
     }
 
@@ -121,6 +118,17 @@ class MetadataProvider
             ->getEntity($entityType)
             ->getAttribute($attribute)
             ->getType();
+    }
+
+    public function getFieldType(string $entityType, string $field): ?string
+    {
+        $entityDefs = $this->ormDefs->getEntity($entityType);
+
+        if (!$entityDefs->hasField($field)) {
+            return null;
+        }
+
+        return $entityDefs->getField($field)->getType();
     }
 
     public function getRelationEntityType(string $entityType, string $link): ?string

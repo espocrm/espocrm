@@ -38,18 +38,11 @@ use InvalidArgumentException;
  */
 class Data
 {
-    private Expression $expression;
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private array $fieldList;
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private array $columnList;
-    /**
-     * @var Mode::* $mode
-     */
+    /** @var Mode::* $mode */
     private string $mode;
 
     /**
@@ -57,9 +50,8 @@ class Data
      * @param string[] $columnList
      * @param Mode::* $mode
      */
-    public function __construct(Expression $expression, array $fieldList, array $columnList, string $mode)
+    public function __construct(private Expression $expression, array $fieldList, array $columnList, string $mode)
     {
-        $this->expression = $expression;
         $this->fieldList = $fieldList;
         $this->columnList = $columnList;
         $this->mode = $mode;

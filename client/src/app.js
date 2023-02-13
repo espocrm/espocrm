@@ -419,6 +419,7 @@ function (
          * @private
          */
         init: function (options, callback) {
+            /** @type {Object.<string, *>} */
             this.appParams = {};
             this.controllers = {};
 
@@ -938,16 +939,26 @@ function (
          * @private
          */
         logout: function (afterFail, silent) {
+            let logoutWait = false;
+
             if (this.auth && !afterFail) {
                 let arr = Base64.decode(this.auth).split(':');
 
                 if (arr.length > 1) {
+                    logoutWait = this.appParams.logoutWait || false;
+
                     Ajax.postRequest('App/action/destroyAuthToken', {token: arr[1]}, {fullResponse: true})
                         .then(xhr => {
                             let redirectUrl = xhr.getResponseHeader('X-Logout-Redirect-Url');
 
                             if (redirectUrl) {
                                 setTimeout(() => window.location.href = redirectUrl, 50);
+
+                                return;
+                            }
+
+                            if (logoutWait) {
+                                this.doAction({action: 'login'});
                             }
                         });
                 }
@@ -973,7 +984,9 @@ function (
                 this.storage.clear('user', 'anotherUser');
             }
 
-            this.doAction({action: 'login'});
+            let action = logoutWait ? 'logoutWait' : 'login';
+
+            this.doAction({action: action});
 
             if (!silent) {
                 this.unsetCookieAuth();

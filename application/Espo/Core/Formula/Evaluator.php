@@ -29,6 +29,12 @@
 
 namespace Espo\Core\Formula;
 
+use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\SyntaxError;
+use Espo\Core\Formula\Parser\Ast\Attribute;
+use Espo\Core\Formula\Parser\Ast\Node;
+use Espo\Core\Formula\Parser\Ast\Value;
+use Espo\Core\Formula\Parser\Ast\Variable;
 use Espo\ORM\Entity;
 use Espo\Core\InjectableFactory;
 
@@ -44,7 +50,7 @@ class Evaluator
     private Parser $parser;
     private AttributeFetcher $attributeFetcher;
     private InjectableFactory $injectableFactory;
-    /** @var array<string, stdClass> */
+    /** @var array<string, (Node|Value|Attribute|Variable)> */
     private $parsedHash;
 
     /**
@@ -61,7 +67,8 @@ class Evaluator
 
     /**
      * @return mixed
-     * @throws Exceptions\Error
+     * @throws SyntaxError
+     * @throws Error
      */
     public function process(string $expression, ?Entity $entity = null, ?stdClass $variables = null)
     {
@@ -82,6 +89,9 @@ class Evaluator
         return $result;
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function getParsedExpression(string $expression): Argument
     {
         if (!array_key_exists($expression, $this->parsedHash)) {

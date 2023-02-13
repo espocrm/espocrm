@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Portal\Api;
 
+use Espo\Core\Api\MiddlewareProvider;
 use Espo\Core\Api\Starter as StarterBase;
 use Espo\Core\Portal\Utils\Route as RouteUtil;
 use Espo\Core\Api\RequestProcessor;
@@ -41,12 +42,14 @@ class Starter extends StarterBase
         RequestProcessor $requestProcessor,
         RouteUtil $routeUtil,
         RouteParamsFetcher $routeParamsFetcher,
+        MiddlewareProvider $middlewareProvider,
         Log $log
     ) {
         parent::__construct(
             $requestProcessor,
             $routeUtil,
             $routeParamsFetcher,
+            $middlewareProvider,
             $log
         );
     }

@@ -269,8 +269,16 @@ class Record extends RecordService implements
 
         $export = $this->injectableFactory->create(ExportTool::class);
 
+        $exportParams = ExportParams::fromRaw($params);
+
+        if (isset($params['params'])) {
+            foreach (get_object_vars($params['params']) as $k => $v) {
+                $exportParams = $exportParams->withParam($k, $v);
+            }
+        }
+
         return $export
-            ->setParams(ExportParams::fromRaw($params))
+            ->setParams($exportParams)
             ->setCollection($collection)
             ->run()
             ->getAttachmentId();

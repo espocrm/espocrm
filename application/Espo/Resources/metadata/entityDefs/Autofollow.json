@@ -2,7 +2,7 @@
     "fields": {
         "id": {
             "type": "id",
-            "dbType": "int",
+            "dbType": "integer",
             "autoincrement": true
         },
         "entityType": {
@@ -10,10 +10,8 @@
             "maxLength": 100,
             "index": true
         },
-        "userId": {
-            "type": "varchar",
-            "maxLength": 24,
-            "index": true
+        "user": {
+            "type": "link"
         }
     }
 }

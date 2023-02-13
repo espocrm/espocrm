@@ -355,7 +355,7 @@ class Acl
     }
 
     /**
-     * @deprecated
+     * @deprecated Use `checkUserPermission` instead.
      */
     public function checkUser(string $permission, User $entity): bool
     {

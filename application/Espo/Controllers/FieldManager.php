@@ -29,36 +29,25 @@
 
 namespace Espo\Controllers;
 
-use Espo\{
-    Entities\User,
-    Tools\FieldManager\FieldManager as FieldManagerTool,
-};
-
-use Espo\Core\{
-    Exceptions\Conflict,
-    Exceptions\Error,
-    Exceptions\Forbidden,
-    Exceptions\BadRequest,
-    Api\Request,
-    DataManager};
+use Espo\Entities\User;
+use Espo\Tools\FieldManager\FieldManager as FieldManagerTool;
+use Espo\Core\Api\Request;
+use Espo\Core\DataManager;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 
 class FieldManager
 {
-    private $user;
-
-    private $dataManager;
-
-    private $fieldManagerTool;
-
     /**
      * @throws Forbidden
      */
-    public function __construct(User $user, DataManager $dataManager, FieldManagerTool $fieldManagerTool)
-    {
-        $this->user = $user;
-        $this->dataManager = $dataManager;
-        $this->fieldManagerTool = $fieldManagerTool;
-
+    public function __construct(
+        private User $user,
+        private DataManager $dataManager,
+        private FieldManagerTool $fieldManagerTool
+    ) {
         $this->checkControllerAccess();
     }
 
@@ -90,7 +79,7 @@ class FieldManager
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      * @throws BadRequest
      * @throws Conflict
      * @throws Error
@@ -123,7 +112,7 @@ class FieldManager
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      * @throws BadRequest
      * @throws Error
      */
@@ -133,7 +122,7 @@ class FieldManager
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      * @throws BadRequest
      * @throws Error
      */
@@ -176,6 +165,7 @@ class FieldManager
 
         $result = $this->fieldManagerTool->delete($scope, $name);
 
+        $this->dataManager->clearCache();
         $this->dataManager->rebuildMetadata();
 
         return $result;
@@ -189,14 +179,20 @@ class FieldManager
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->scope) || empty($data->name)) {
+        $scope = $data->scope ?? null;
+        $name = $data->name ?? null;
+
+        if (!$scope || !$name) {
             throw new BadRequest();
         }
 
-        $this->fieldManagerTool->resetToDefault($data->scope, $data->name);
+        if (!is_string($scope) || !is_string($name)) {
+            throw new BadRequest();
+        }
 
-        $this->dataManager->clearCache();
-        $this->dataManager->rebuildMetadata();
+        $this->fieldManagerTool->resetToDefault($scope, $name);
+
+        $this->dataManager->rebuild([$scope]);
 
         return true;
     }

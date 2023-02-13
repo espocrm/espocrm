@@ -29,40 +29,24 @@
 
 namespace Espo\Tools\Pdf;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Utils\Metadata,
-    InjectableFactory,
-};
-
-use Espo\{
-    ORM\Entity,
-    ORM\Collection,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\Collection;
+use Espo\ORM\Entity;
 
 class PrinterController
 {
-    private Metadata $metadata;
-
-    private InjectableFactory $injectableFactory;
-
-    private Template $template;
-
-    private string $engine;
-
     public function __construct(
-        Metadata $metadata,
-        InjectableFactory $injectableFactory,
-        Template $template,
-        string $engine
-    ) {
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory,
+        private Template $template,
+        private string $engine
+    ) {}
 
-        $this->template = $template;
-        $this->engine = $engine;
-    }
-
+    /**
+     * @throws Error
+     */
     public function printEntity(Entity $entity, ?Params $params, ?Data $data = null): Contents
     {
         $params = $params ?? new Params();
@@ -75,12 +59,34 @@ class PrinterController
      * @param Collection<Entity> $collection
      * @throws Error
      */
-    public function printCollection(Collection $collection, ?Params $params, ?IdDataMap $IdDataMap = null): Contents
-    {
-        $params = $params ?? new Params();
-        $IdDataMap = $IdDataMap ?? new IdDataMap();
+    public function printCollection(
+        Collection $collection,
+        ?Params $params,
+        ?IdDataMap $idDataMap = null
+    ): Contents {
 
-        return $this->createCollectionPrinter()->print($this->template, $collection, $params, $IdDataMap);
+        $params = $params ?? new Params();
+        $idDataMap = $idDataMap ?? new IdDataMap();
+
+        if ($this->hasCollectionPrinter()) {
+            return $this->createCollectionPrinter()->print($this->template, $collection, $params, $idDataMap);
+        }
+
+        $printer = $this->createEntityPrinter();
+
+        $zipper = new Zipper();
+
+        foreach ($collection as $entity) {
+            $data = $idDataMap->get($entity->getId()) ?? new Data();
+
+            $itemContents = $printer->print($this->template, $entity, $params, $data);
+
+            $zipper->add($itemContents, $entity->getId());
+        }
+
+        $zipper->archive();
+
+        return new ZipContents($zipper->getFilePath());
     }
 
     /**
@@ -104,9 +110,7 @@ class PrinterController
      */
     private function createCollectionPrinter(): CollectionPrinter
     {
-        /** @var ?class-string<CollectionPrinter> $className */
-        $className = $this->metadata
-            ->get(['app', 'pdfEngines', $this->engine, 'implementationClassNameMap', 'collection']) ?? null;
+        $className = $this->getCollectionPrinterClassName();
 
         if (!$className) {
             throw new Error("Unknown PDF engine '{$this->engine}', type 'collection'.");
@@ -114,4 +118,20 @@ class PrinterController
 
         return $this->injectableFactory->create($className);
     }
+
+    private function hasCollectionPrinter(): bool
+    {
+        return (bool) $this->getCollectionPrinterClassName();
+    }
+
+    /**
+     * @return ?class-string<CollectionPrinter>
+     */
+    private function getCollectionPrinterClassName(): ?string
+    {
+        /** @var ?class-string<CollectionPrinter> */
+        return $this->metadata
+            ->get(['app', 'pdfEngines', $this->engine, 'implementationClassNameMap', 'collection']) ?? null;
+    }
+
 }

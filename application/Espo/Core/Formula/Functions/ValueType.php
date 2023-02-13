@@ -31,10 +31,7 @@ namespace Espo\Core\Formula\Functions;
 
 use Espo\Core\Formula\Exceptions\Error;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Formula\ArgumentList;
 
 class ValueType extends BaseFunction
 {

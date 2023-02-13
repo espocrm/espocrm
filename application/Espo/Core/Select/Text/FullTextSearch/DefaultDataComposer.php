@@ -32,35 +32,22 @@ namespace Espo\Core\Select\Text\FullTextSearch;
 use Espo\Core\Utils\Config;
 use Espo\Core\Select\Text\MetadataProvider;
 use Espo\Core\Select\Text\FullTextSearch\DataComposer\Params;
-
 use Espo\ORM\Query\Part\Expression\Util as ExpressionUtil;
 use Espo\ORM\Query\Part\Expression;
 
 class DefaultDataComposer implements DataComposer
 {
-    private string $entityType;
-
-    private Config $config;
-
-    private MetadataProvider $metadataProvider;
-
-    /**
-     * @var array<Mode::*,string>
-     */
+    /** @var array<Mode::*, string>*/
     private array $functionMap = [
         Mode::BOOLEAN => 'MATCH_BOOLEAN',
         Mode::NATURAL_LANGUAGE => 'MATCH_NATURAL_LANGUAGE',
     ];
 
     public function __construct(
-        string $entityType,
-        Config $config,
-        MetadataProvider $metadataProvider
-    ) {
-        $this->entityType = $entityType;
-        $this->config = $config;
-        $this->metadataProvider = $metadataProvider;
-    }
+        private string $entityType,
+        private Config $config,
+        private MetadataProvider $metadataProvider
+    ) {}
 
     public function compose(string $filter, Params $params): ?Data
     {
@@ -77,7 +64,7 @@ class DefaultDataComposer implements DataComposer
         $fieldList = [];
 
         foreach ($this->getTextFilterFieldList() as $field) {
-            if (strpos($field, '.') !== false) {
+            if (str_contains($field, '.')) {
                 continue;
             }
 
@@ -114,12 +101,7 @@ class DefaultDataComposer implements DataComposer
         }
 
         $argumentList = array_merge(
-            array_map(
-                function ($item) {
-                    return Expression::column($item);
-                },
-                $columnList
-            ),
+            array_map(fn ($item) => Expression::column($item), $columnList),
             [$preparedFilter]
         );
 
@@ -142,7 +124,7 @@ class DefaultDataComposer implements DataComposer
         $filter = str_replace('"*', '"', $filter);
         $filter = str_replace('*"', '"', $filter);
 
-        while (strpos($filter, '**') !== false) {
+        while (str_contains($filter, '**')) {
             $filter = trim(
                 str_replace('**', '*', $filter)
             );
@@ -156,11 +138,11 @@ class DefaultDataComposer implements DataComposer
 
         $filter = str_replace(['+-', '--', '-+', '++', '+*', '-*'], '', $filter);
 
-        while (strpos($filter, '+ ') !== false) {
+        while (str_contains($filter, '+ ')) {
             $filter = str_replace('+ ', '', $filter);
         }
 
-        while (strpos($filter, '- ') !== false) {
+        while (str_contains($filter, '- ')) {
             $filter = str_replace('- ', '', $filter);
         }
 

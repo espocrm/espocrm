@@ -31,23 +31,16 @@ namespace Espo\Core\Select\Text;
 
 use Espo\Core\Utils\Metadata;
 use Espo\Core\InjectableFactory;
-
 use Espo\Entities\User;
-
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Binding\ContextualBinder;
 
 class FilterFactory
 {
-    private Metadata $metadata;
-
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
-    {
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     public function create(string $entityType, User $user): Filter
     {

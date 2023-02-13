@@ -29,6 +29,11 @@
 
 namespace Espo\Core\Formula;
 
+use Espo\Core\Formula\Exceptions\ExecutionException;
+use Espo\Core\Formula\Parser\Ast\Attribute;
+use Espo\Core\Formula\Parser\Ast\Node;
+use Espo\Core\Formula\Parser\Ast\Value;
+use Espo\Core\Formula\Parser\Ast\Variable;
 use Espo\ORM\Entity;
 
 use Espo\Core\Formula\Exceptions\Error;
@@ -73,6 +78,7 @@ class Processor
      *
      * @return mixed A result of evaluation. An array if an argument list was passed.
      * @throws Error
+     * @throws ExecutionException
      */
     public function process(Evaluatable $item)
     {
@@ -84,18 +90,50 @@ class Processor
             throw new InvalidArgumentException();
         }
 
-        if (!$item->getType()) {
-            throw new Error("Missing 'type' in raw function data.");
-        }
-
         $function = $this->functionFactory->create($item->getType(), $this->entity, $this->variables);
 
         /** @deprecated */
         if ($function instanceof DeprecatedBaseFunction) {
-            return $function->process($item->getData());
+            return $function->process(self::dataToStdClass($item->getData()));
         }
 
         return $function->process($item->getArgumentList());
+    }
+
+    /**
+     * @throws Error
+     */
+    private function dataToStdClass(Node|Value|Attribute|Variable|string|float|int|bool|null $data): stdClass
+    {
+        if ($data instanceof Node) {
+            return (object) [
+                'type' => $data->getType(),
+                'value' => $data->getChildNodes(),
+            ];
+        }
+
+        if ($data instanceof Value) {
+            return (object) [
+                'type' => 'value',
+                'value' => $data->getValue(),
+            ];
+        }
+
+        if ($data instanceof Attribute) {
+            return (object) [
+                'type' => 'attribute',
+                'value' => $data->getName(),
+            ];
+        }
+
+        if ($data instanceof Variable) {
+            return (object) [
+                'type' => 'variable',
+                'value' => $data->getName(),
+            ];
+        }
+
+        throw new Error("Can't convert argument to a raw object.");
     }
 
     /**

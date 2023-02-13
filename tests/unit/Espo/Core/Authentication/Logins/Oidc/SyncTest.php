@@ -30,13 +30,14 @@
 namespace tests\unit\Espo\Core\Authentication\Logins\Oidc;
 
 use Espo\Core\Acl\Cache\Clearer;
-use Espo\Core\Authentication\Oidc\Sync;
-use Espo\Core\FieldProcessing\EmailAddress\Saver as EmailAddressSaver;
-use Espo\Core\FieldProcessing\PhoneNumber\Saver as PhoneNumberSaver;
-use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
+use Espo\Core\ApplicationState;
+use Espo\Core\Authentication\Oidc\ConfigDataProvider;
+use Espo\Core\Authentication\Oidc\UserProvider\Sync;
+use Espo\Core\Authentication\Oidc\UserProvider\UsernameValidator;
+use Espo\Core\Authentication\Oidc\UserProvider\UserRepository;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\PasswordHash;
-use Espo\ORM\EntityManager;
+
 use PHPUnit\Framework\TestCase;
 
 class SyncTest extends TestCase
@@ -47,15 +48,16 @@ class SyncTest extends TestCase
     protected function setUp(): void
     {
         $this->config = $this->createMock(Config::class);
+        $configDataProvider = $this->createMock(ConfigDataProvider::class);
 
         $this->sync = new Sync(
-            $this->createMock(EntityManager::class),
+            $this->createMock(UsernameValidator::class),
             $this->config,
-            $this->createMock(LinkMultipleSaver::class),
-            $this->createMock(EmailAddressSaver::class),
-            $this->createMock(PhoneNumberSaver::class),
+            $configDataProvider,
+            $this->createMock(UserRepository::class),
             $this->createMock(PasswordHash::class),
-            $this->createMock(Clearer::class)
+            $this->createMock(Clearer::class),
+            $this->createMock(ApplicationState::class)
         );
     }
 

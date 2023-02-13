@@ -29,13 +29,19 @@
 
 namespace Espo\Core\Exceptions;
 
+use Espo\Core\Utils\Log;
 use Exception;
 
 /**
  * A not-found exception. Main purpose is for the 404 Not Found HTTP error.
  */
-class NotFound extends Exception
+class NotFound extends Exception implements HasLogLevel
 {
     /** @var int */
     protected $code = 404;
+
+    public function getLogLevel(): string
+    {
+        return Log::LEVEL_WARNING;
+    }
 }

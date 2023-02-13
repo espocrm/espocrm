@@ -29,23 +29,15 @@
 
 namespace Espo\Tools\Pdf;
 
-use Espo\Core\{
-    Exceptions\Error,
-    InjectableFactory,
-};
+use Espo\Core\InjectableFactory;
+use RuntimeException;
 
 class Builder
 {
     private ?Template $template = null;
-
     private ?string $engine = null;
 
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private InjectableFactory $injectableFactory) {}
 
     public function setTemplate(Template $template): self
     {
@@ -64,11 +56,11 @@ class Builder
     public function build(): PrinterController
     {
         if (!$this->engine) {
-            throw new Error('Engine is not set.');
+            throw new RuntimeException('Engine is not set.');
         }
 
         if (!$this->template) {
-            throw new Error('Template is not set.');
+            throw new RuntimeException('Template is not set.');
         }
 
         return $this->injectableFactory->createWith(

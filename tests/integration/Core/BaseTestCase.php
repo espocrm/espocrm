@@ -91,6 +91,11 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         return $this->espoTester->getApplication(true, $clearCache, $portalId);
     }
 
+    protected function setApplication(Application $application): void
+    {
+        $this->espoApplication = $application;
+    }
+
     protected function auth(
         ?string $userName = null,
         ?string $password = null,
@@ -110,7 +115,7 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Get Application.
+     * Get the application.
      */
     protected function getApplication(): Application
     {
@@ -187,6 +192,14 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         $this->espoApplication = $this->createApplication();
 
         $this->afterStartApplication();
+    }
+
+    /**
+     * Re-create an application.
+     */
+    protected function reCreateApplication(): void
+    {
+        $this->espoApplication = $this->createApplication();
     }
 
     protected function tearDown(): void

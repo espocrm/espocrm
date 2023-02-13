@@ -11,9 +11,8 @@
             "type": "varchar",
             "maxLength": 100
         },
-        "userId": {
-            "type": "varchar",
-            "maxLength": 24
+        "user": {
+            "type": "link"
         }
     },
     "links": {

@@ -29,40 +29,42 @@
 
 namespace Espo\Core\Container;
 
+use Espo\Core\Container\Exceptions\NotSettableException;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
-use RuntimeException;
 
 /**
  * DI container for services. Lazy initialization is used. Services are instantiated only once.
  *
  * See https://docs.espocrm.com/development/di/.
  */
-interface Container
+interface Container extends ContainerInterface
 {
     /**
      * Obtain a service object.
      *
-     * @throws RuntimeException If not gettable.
+     * @throws NotFoundExceptionInterface If not gettable.
      */
-    public function get(string $name): object;
+    public function get(string $id): object;
 
     /**
      * Check whether a service can be obtained.
      */
-    public function has(string $name): bool;
+    public function has(string $id): bool;
 
     /**
      * Set a service object. Must be configured as settable.
      *
-     * @throws RuntimeException Is not settable or already set.
+     * @throws NotSettableException Is not settable or already set.
      */
-    public function set(string $name, object $object): void;
+    public function set(string $id, object $object): void;
 
     /**
      * Get a class of a service.
      *
      * @return ReflectionClass<object>
-     * @throws RuntimeException If not gettable.
+     * @throws NotFoundExceptionInterface If not gettable.
      */
-    public function getClass(string $name): ReflectionClass;
+    public function getClass(string $id): ReflectionClass;
 }

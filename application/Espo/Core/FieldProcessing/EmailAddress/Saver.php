@@ -152,7 +152,7 @@ class Saver implements SaverInterface
             $key = strtolower($emailAddressValue);
 
             if ($key && isset($hash->$key)) {
-                $hash->{$key}['optOut'] = $entity->get('emailAddressIsOptedOut');
+                $hash->{$key}['optOut'] = (bool) $entity->get('emailAddressIsOptedOut');
             }
         }
 
@@ -170,7 +170,7 @@ class Saver implements SaverInterface
             $key = strtolower($emailAddressValue);
 
             if ($key && isset($hash->$key)) {
-                $hash->{$key}['invalid'] = $entity->get('emailAddressIsInvalid');
+                $hash->{$key}['invalid'] = (bool) $entity->get('emailAddressIsInvalid');
             }
         }
 

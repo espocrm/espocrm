@@ -83,7 +83,8 @@ if ($result['success'] && !empty($allPostData['dbName']) && !empty($allPostData[
     }
 
     if ($isConnected) {
-        $databaseRequiredList = $installer->getSystemRequirementList('database', true, ['database' => $databaseParams]);
+        $databaseRequiredList = $installer
+            ->getSystemRequirementList('database', true, ['databaseParams' => $databaseParams]);
 
         foreach ($databaseRequiredList as $name => $details) {
             if (!$details['acceptable']) {

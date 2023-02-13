@@ -1,5 +1,6 @@
 {
     "implementationClassName": "Espo\\Core\\Authentication\\Ldap\\LdapLogin",
+    "portalDefault": true,
     "settings": {
         "isAvailable": true,
         "layout": {

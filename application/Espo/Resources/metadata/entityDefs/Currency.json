@@ -1,7 +1,12 @@
 {
     "fields": {
+        "id": {
+            "type": "id",
+            "maxLength": 3
+        },
         "rate": {
             "type": "float"
         }
-    }
+    },
+    "noDeletedAttribute": true
 }

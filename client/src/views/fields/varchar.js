@@ -88,6 +88,11 @@ define('views/fields/varchar', ['views/fields/base', 'helpers/reg-exp-pattern'],
 
             this.noSpellCheck = this.noSpellCheck || this.params.noSpellCheck;
 
+            if (this.params.optionsPath) {
+                this.params.options = Espo.Utils.clone(
+                    this.getMetadata().get(this.params.optionsPath) || []);
+            }
+
             if (this.options.customOptionList) {
                 this.setOptionList(this.options.customOptionList);
             }

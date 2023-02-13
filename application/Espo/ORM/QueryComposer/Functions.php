@@ -130,6 +130,8 @@ class Functions
         'TIMESTAMPDIFF_MINUTE',
         'TIMESTAMPDIFF_SECOND',
         'POSITION_IN_LIST',
+        'MATCH_BOOLEAN',
+        'MATCH_NATURAL_LANGUAGE',
     ];
 
     public const COMPARISON_FUNCTION_LIST = [
@@ -149,11 +151,5 @@ class Functions
         'MUL',
         'DIV',
         'MOD',
-    ];
-
-    public const MATCH_FUNCTION_LIST = [
-        'MATCH_BOOLEAN',
-        'MATCH_NATURAL_LANGUAGE',
-        'MATCH_QUERY_EXPANSION',
     ];
 }

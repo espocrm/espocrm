@@ -204,7 +204,7 @@ return [
     'auth2FAMethodList' => ['Totp'],
     'personNameFormat' => 'firstLast',
     'newNotificationCountInTitle' => false,
-    'pdfEngine' => 'Tcpdf',
+    'pdfEngine' => 'Dompdf',
     'smsProvider' => null,
     'defaultFileStorage' => 'EspoUploadDir',
     'ldapUserNameAttribute' => 'sAMAccountName',

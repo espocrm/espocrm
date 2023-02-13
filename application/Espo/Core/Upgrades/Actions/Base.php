@@ -38,12 +38,12 @@ use Espo\Core\Utils\File\Manager as FileManager;
 
 use Espo\Core\{
     Container,
+    InjectableFactory,
     Upgrades\ActionManager,
     Utils\File\ZipArchive,
     Utils\Config\ConfigWriter,
     Utils\Database\Helper as DatabaseHelper,
-    Utils\Log,
-};
+    Utils\Log};
 
 use Composer\Semver\Semver;
 
@@ -155,12 +155,6 @@ abstract class Base
         $this->zipUtil = new ZipArchive($fileManager);
     }
 
-    public function __destruct()
-    {
-        $this->processId = null;
-        $this->data = null;
-    }
-
     /**
      * @return \Espo\Core\Container
      */
@@ -217,7 +211,10 @@ abstract class Base
     protected function getDatabaseHelper()
     {
         if (!isset($this->databaseHelper)) {
-            $this->databaseHelper = new DatabaseHelper($this->getConfig());
+            /** @var InjectableFactory $injectableFactory */
+            $injectableFactory = $this->getContainer()->get('injectableFactory');
+
+            $this->databaseHelper = $injectableFactory->create(DatabaseHelper::class);
         }
 
         return $this->databaseHelper;
@@ -371,11 +368,11 @@ abstract class Base
         //check database version
         if (isset($manifest['database'])) {
             $databaseHelper = $this->getDatabaseHelper();
-            $databaseType = $databaseHelper->getDatabaseType();
+            $databaseType = $databaseHelper->getType();
             $databaseTypeLc = strtolower($databaseType);
 
             if (isset($manifest['database'][$databaseTypeLc])) {
-                $databaseVersion = $databaseHelper->getDatabaseVersion();
+                $databaseVersion = $databaseHelper->getVersion();
 
                 if ($databaseVersion) {
                     $res &= $this->checkVersions(

@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Tools\Campaign;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Field\LinkParent;
 use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Config;
@@ -45,6 +46,7 @@ use Espo\Tools\Pdf\Data\DataLoaderManager;
 use Espo\Tools\Pdf\IdDataMap;
 use Espo\Tools\Pdf\Params;
 use Espo\Tools\Pdf\TemplateWrapper;
+use Espo\Tools\Pdf\ZipContents;
 
 class MailMergeGenerator
 {
@@ -127,21 +129,26 @@ class MailMergeGenerator
 
         $contents = $printer->printCollection($collection, $params, $idDataMap);
 
-        $filename = Util::sanitizeFileName($name) . '.pdf';
+        $type = $contents instanceof ZipContents ?
+            'application/zip' :
+            'application/pdf';
+
+        $filename = $contents instanceof ZipContents ?
+            Util::sanitizeFileName($name) . '.zip' :
+            Util::sanitizeFileName($name) . '.pdf';
 
         /** @var Attachment $attachment */
         $attachment = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
 
-        $attachment->set([
-            'relatedType' => Campaign::ENTITY_TYPE,
-            'relatedId' => $campaignId,
-        ]);
+        $relatedLink = $campaignId ?
+            LinkParent::create(Campaign::ENTITY_TYPE, $campaignId) : null;
 
         $attachment
+            ->setRelated($relatedLink)
             ->setSize($contents->getStream()->getSize())
             ->setRole(self::ATTACHMENT_MAIL_MERGE_ROLE)
             ->setName($filename)
-            ->setType('application/pdf');
+            ->setType($type);
 
         $this->entityManager->saveEntity($attachment);
 

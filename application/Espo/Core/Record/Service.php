@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Record;
 
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\Binding\ContextualBinder;
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Exceptions\Error\Body as ErrorBody;
 use Espo\Core\Exceptions\BadRequest;
@@ -37,6 +40,8 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
+use Espo\Core\Record\Access\LinkCheck;
+use Espo\Entities\ActionHistoryRecord;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\ORM\Collection;
@@ -181,6 +186,7 @@ class Service implements Crud,
     private $listLoadProcessor = null;
     /** @var ?DuplicateFinder */
     private $duplicateFinder = null;
+    private ?LinkCheck $linkCheck = null;
 
     protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;
 
@@ -207,7 +213,7 @@ class Service implements Crud,
             return;
         }
 
-        $historyRecord = $this->entityManager->getNewEntity('ActionHistoryRecord');
+        $historyRecord = $this->entityManager->getNewEntity(ActionHistoryRecord::ENTITY_TYPE);
 
         $historyRecord->set('action', $action);
         $historyRecord->set('userId', $this->user->getId());
@@ -257,7 +263,7 @@ class Service implements Crud,
      * Get an entity by ID. Access control check is performed.
      *
      * @throws ForbiddenSilent If no read access.
-     * @return TEntity|null
+     * @return ?TEntity
      */
     public function getEntity(string $id): ?Entity
     {
@@ -370,6 +376,28 @@ class Service implements Crud,
         return $this->assignmentCheckerManager->check($this->user, $entity);
     }
 
+    private function getLinkCheck(): LinkCheck
+    {
+        if (!$this->linkCheck) {
+            $linkCheck = $this->injectableFactory->createWithBinding(
+                LinkCheck::class,
+                BindingContainerBuilder::create()
+                    ->bindInstance(Acl::class, $this->acl)
+                    ->bindInstance(User::class, $this->user)
+                    ->inContext(LinkCheck::class, function (ContextualBinder $binder) {
+                        $binder
+                            ->bindValue('$noEditAccessRequiredLinkList', $this->noEditAccessRequiredLinkList)
+                            ->bindValue('$noEditAccessRequiredForLink', $this->noEditAccessRequiredForLink);
+                    })
+                    ->build()
+            );
+
+            $this->linkCheck = $linkCheck;
+        }
+
+        return $this->linkCheck;
+    }
+
     /**
      * @param string $attribute
      * @param mixed $value
@@ -464,7 +492,8 @@ class Service implements Crud,
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v7.0. Use filterCreateInput or filterUpdateInput. Or better don't extend the class.
+     * Use entityAcl, app > acl, roles to restrict write access for specific fields.
      * @param stdClass $data
      * @return void
      */
@@ -473,7 +502,8 @@ class Service implements Crud,
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v7.0. Use filterCreateInput or filterUpdateInput. Or better don't extend the class.
+     * Use entityAcl, app > acl, roles to restrict write access for specific fields.
      * @param stdClass $data
      * @return void
      */
@@ -483,7 +513,7 @@ class Service implements Crud,
 
     /**
      * @param TEntity $entity
-     * @throws \Espo\Core\Exceptions\Conflict
+     * @throws Conflict
      */
     protected function processConcurrencyControl(Entity $entity, stdClass $data, int $versionNumber): void
     {
@@ -525,7 +555,7 @@ class Service implements Crud,
 
     /**
      * @param TEntity $entity
-     * @throws \Espo\Core\Exceptions\Conflict
+     * @throws Conflict
      */
     protected function processDuplicateCheck(Entity $entity, stdClass $data): void
     {
@@ -611,7 +641,7 @@ class Service implements Crud,
      * @return TEntity
      * @throws BadRequest
      * @throws Forbidden If no create access.
-     * @throws \Espo\Core\Exceptions\Conflict
+     * @throws Conflict
      */
     public function create(stdClass $data, CreateParams $params): Entity
     {
@@ -633,6 +663,7 @@ class Service implements Crud,
 
         $this->processValidation($entity, $data);
         $this->processAssignmentCheck($entity);
+        $this->getLinkCheck()->process($entity);
 
         if (!$params->skipDuplicateCheck()) {
             $this->processDuplicateCheck($entity, $data);
@@ -658,8 +689,8 @@ class Service implements Crud,
      *
      * @return TEntity
      * @throws NotFound If record not found.
-     * @throws Forbidden If no access
-     * @throws \Espo\Core\Exceptions\Conflict
+     * @throws Forbidden If no access.
+     * @throws Conflict
      * @throws BadRequest
      */
     public function update(string $id, stdClass $data, UpdateParams $params): Entity
@@ -674,13 +705,16 @@ class Service implements Crud,
 
         $this->filterUpdateInput($data);
 
-        $entity =
-            $this->getEntityBeforeUpdate ?
+        $entity = $this->getEntityBeforeUpdate ?
             $this->getEntity($id) :
             $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound("Record {$id} not found.");
+        }
+
+        if (!$this->getEntityBeforeUpdate) {
+            $this->loadAdditionalFields($entity);
         }
 
         if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
@@ -695,6 +729,7 @@ class Service implements Crud,
 
         $this->processValidation($entity, $data);
         $this->processAssignmentCheck($entity);
+        $this->getLinkCheck()->process($entity);
 
         $checkForDuplicates =
             $this->metadata->get(['recordDefs', $this->entityType, 'updateDuplicateCheck']) ??
@@ -879,7 +914,7 @@ class Service implements Crud,
      * Find linked records.
      *
      * @param non-empty-string $link
-     * @return RecordCollection<\Espo\ORM\Entity>
+     * @return RecordCollection<Entity>
      * @throws NotFound If a record not found.
      * @throws Forbidden If no access.
      */
@@ -1016,7 +1051,7 @@ class Service implements Crud,
             throw new LogicException("Only core entities are supported.");
         }
 
-        $this->linkAccessCheck($entity, $link);
+        $this->getLinkCheck()->processLink($entity, $link);
 
         $methodName = 'link' . ucfirst($link);
 
@@ -1038,7 +1073,7 @@ class Service implements Crud,
             throw new NotFound();
         }
 
-        $this->linkForeignAccessCheck($link, $foreignEntity);
+        $this->getLinkCheck()->processLinkForeign($entity, $link, $foreignEntity);
 
         $this->recordHookManager->processBeforeLink($entity, $link, $foreignEntity);
 
@@ -1076,7 +1111,7 @@ class Service implements Crud,
             throw new LogicException("Only core entities are supported.");
         }
 
-        $this->linkAccessCheck($entity, $link);
+        $this->getLinkCheck()->processLink($entity, $link);
 
         $methodName = 'unlink' . ucfirst($link);
 
@@ -1098,65 +1133,13 @@ class Service implements Crud,
             throw new NotFound();
         }
 
-        $this->linkForeignAccessCheck($link, $foreignEntity);
+        $this->getLinkCheck()->processLinkForeign($entity, $link, $foreignEntity);
 
         $this->recordHookManager->processBeforeUnlink($entity, $link, $foreignEntity);
 
         $this->getRepository()
             ->getRelation($entity, $link)
             ->unrelate($foreignEntity);
-    }
-
-    /**
-     * @param TEntity $entity
-     * @throws Forbidden
-     */
-    private function linkAccessCheck(Entity $entity, string $link): void
-    {
-        /** @var AclTable::ACTION_*|null $action */
-        $action = $this->metadata
-            ->get(['recordDefs', $this->entityType, 'relationships', $link, 'linkRequiredAccess']) ??
-            null;
-
-        if (!$action) {
-            $action = $this->noEditAccessRequiredForLink ?
-                AclTable::ACTION_READ :
-                AclTable::ACTION_EDIT;
-        }
-
-        if (!$this->acl->check($entity, $action)) {
-            throw ForbiddenSilent::createWithBody(
-                "No record access for link operation ({$this->entityType}:{$link}).",
-                ErrorBody::create()
-                    ->withMessageTranslation('noAccessToRecord', null, ['action' => $action])
-                    ->encode()
-            );
-        }
-    }
-
-    /**
-     * @throws Forbidden
-     */
-    private function linkForeignAccessCheck(string $link, Entity $foreignEntity): void
-    {
-        $action = in_array($link, $this->noEditAccessRequiredLinkList) ?
-            AclTable::ACTION_READ : null;
-
-        if (!$action) {
-            /** @var AclTable::ACTION_* $action */
-            $action = $this->metadata
-                ->get(['recordDefs', $this->entityType, 'relationships', $link, 'linkRequiredForeignAccess']) ??
-                AclTable::ACTION_EDIT;
-        }
-
-        if (!$this->acl->check($foreignEntity, $action)) {
-            throw ForbiddenSilent::createWithBody(
-                "No foreign record access for link operation ({$this->entityType}:{$link}).",
-                ErrorBody::create()
-                    ->withMessageTranslation('noAccessToForeignRecord', null, ['action' => $action])
-                    ->encode()
-            );
-        }
     }
 
     /**
@@ -1574,7 +1557,7 @@ class Service implements Crud,
     }
 
     /**
-     * @return RecordCollection<\Espo\Entities\User>
+     * @return RecordCollection<User>
      * @throws NotFound
      * @throws Forbidden
      */

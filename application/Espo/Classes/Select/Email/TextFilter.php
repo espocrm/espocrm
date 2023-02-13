@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\Select\Email;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Select\Text\Filter;
 use Espo\Core\Select\Text\Filter\Data;
 use Espo\Core\Select\Text\DefaultFilter;
@@ -44,22 +45,15 @@ use Espo\Entities\EmailAddress;
 
 class TextFilter implements Filter
 {
-    private $defaultFilter;
-
-    private $config;
-
-    private $entityManager;
-
     public function __construct(
-        DefaultFilter $defaultFilter,
-        ConfigProvider $config,
-        EntityManager $entityManager
-    ) {
-        $this->defaultFilter = $defaultFilter;
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-    }
+        private DefaultFilter $defaultFilter,
+        private ConfigProvider $config,
+        private EntityManager $entityManager
+    ) {}
 
+    /**
+     * @throws Error
+     */
     public function apply(QueryBuilder $queryBuilder, Data $data): void
     {
         $filter = $data->getFilter();
@@ -67,7 +61,7 @@ class TextFilter implements Filter
 
         if (
             mb_strlen($filter) < $this->config->getMinLengthForContentSearch() ||
-            strpos($filter, '@') === false ||
+            !str_contains($filter, '@') ||
             $data->forceFullTextSearch()
         ) {
             $this->defaultFilter->apply($queryBuilder, $data);

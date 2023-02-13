@@ -18,6 +18,7 @@
         "weekStart": "First Day of Week",
         "defaultCurrency": "Default Currency",
         "layoutSet": "Layout Set",
+        "authenticationProvider": "Authentication Provider",
         "customUrl": "Custom URL",
         "customId": "Custom ID"
     },
@@ -25,6 +26,7 @@
         "users": "Users",
         "portalRoles": "Roles",
         "layoutSet": "Layout Set",
+        "authenticationProvider": "Authentication Provider",
         "notes": "Notes"
     },
     "tooltips": {

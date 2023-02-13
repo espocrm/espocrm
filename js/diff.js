@@ -82,6 +82,7 @@ class Diff
 
         let minorVersionNumber = version.split('.')[1];
         let hotfixVersionNumber = version.split('.')[2];
+        let majorVersionNumber = version.split('.')[0];
 
         for (let i = 0; i < tagList.length; i++) {
             let tag = tagList[i];
@@ -105,15 +106,26 @@ class Diff
             }
         }
 
+
         if (hotfixVersionNumber !== '0') {
             for (let i = 0; i < tagList.length; i++) {
                 let tag = tagList[i];
 
                 let patchVersionNumberI = tag.split('.')[2];
+                let minorVersionNumberI = tag.split('.')[1];
+                let majorVersionNumberI = tag.split('.')[0];
 
-                if (closest && parseInt(patchVersionNumberI) !== parseInt(hotfixVersionNumber) - 1) {
-                    break;
+                if (
+                    closest &&
+                    (
+                        minorVersionNumberI !== minorVersionNumber ||
+                        majorVersionNumberI !== majorVersionNumber ||
+                        parseInt(patchVersionNumberI) !== parseInt(hotfixVersionNumber) - 1
+                    )
+                ) {
+                    continue;
                 }
+
 
                 if (tag === version) {
                     continue;

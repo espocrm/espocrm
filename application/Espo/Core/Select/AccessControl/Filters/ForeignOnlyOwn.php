@@ -39,18 +39,12 @@ use LogicException;
 
 class ForeignOnlyOwn implements Filter
 {
-    private string $entityType;
-    private User $user;
-    private Metadata $metadata;
-    private Defs $defs;
-
-    public function __construct(string $entityType, User $user, Metadata $metadata, Defs $defs)
-    {
-        $this->user = $user;
-        $this->entityType = $entityType;
-        $this->metadata = $metadata;
-        $this->defs = $defs;
-    }
+    public function __construct(
+        private string $entityType,
+        private User $user,
+        private Metadata $metadata,
+        private Defs $defs
+    ) {}
 
     public function apply(SelectBuilder $queryBuilder): void
     {

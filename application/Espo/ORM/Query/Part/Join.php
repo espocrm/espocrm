@@ -41,6 +41,7 @@ class Join
     private string $target;
     private ?string $alias = null;
     private ?WhereItem $conditions = null;
+    private bool $onlyMiddle = false;
 
     private function __construct(string $target, ?string $alias = null)
     {
@@ -85,6 +86,11 @@ class Join
     public function isRelation(): bool
     {
         return !$this->isTable();
+    }
+
+    public function isOnlyMiddle(): bool
+    {
+        return $this->onlyMiddle;
     }
 
     /**
@@ -134,6 +140,17 @@ class Join
     {
         $obj = clone $this;
         $obj->conditions = $conditions;
+
+        return $obj;
+    }
+
+    /**
+     * Join only middle table. For many-to-many relationships.
+     */
+    public function withOnlyMiddle(bool $onlyMiddle = true): self
+    {
+        $obj = clone $this;
+        $obj->onlyMiddle = $onlyMiddle;
 
         return $obj;
     }

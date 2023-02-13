@@ -37,7 +37,8 @@ use Espo\ORM\{
 };
 
 /**
- * @deprecated
+ * @deprecated As of v6.0. Not to be extended. Extend Espo\Core\Repositories\Database, or better
+ * don't extend repositories at all. Use hooks.
  * @extends RDBRepository<Entity>
  */
 abstract class Repository extends RDBRepository implements Injectable

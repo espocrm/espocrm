@@ -135,7 +135,7 @@ class CurrencyConverterTest extends \PHPUnit\Framework\TestCase
     {
         $currencyConfigDataProvider = $this->createMock(CurrencyConfigDataProvider::class);
 
-        $rates = CurrencyRates::fromArray([
+        $rates = CurrencyRates::fromAssoc([
             'USD' => 1.0,
             'EUR' => 1.2,
             'UAH' => 0.035,

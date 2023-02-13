@@ -156,8 +156,8 @@ class EntityManager
     }
 
     /**
-     * @todo Remove in v7.4.
-     * @deprecated
+     * @todo Remove in v6.0.
+     * @deprecated As of v6.0. Use `getQueryComposer`.
      */
     public function getQuery(): QueryComposer
     {
@@ -419,7 +419,7 @@ class EntityManager
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v7.0. Use the Query Builder instead. Otherwise, code will be not portable.
      */
     public function getPDO(): PDO
     {
@@ -427,9 +427,8 @@ class EntityManager
     }
 
     /**
-     * @deprecated Use `getCollectionFactory`.
+     * @deprecated As of v7.0. Use `getCollectionFactory`.
      * @param array<string, mixed> $data
-     *
      * @return EntityCollection<Entity>
      */
     public function createCollection(?string $entityType = null, array $data = []): EntityCollection

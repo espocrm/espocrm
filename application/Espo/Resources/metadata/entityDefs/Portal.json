@@ -98,6 +98,9 @@
             "type": "link",
             "tooltip": true
         },
+        "authenticationProvider": {
+            "type": "link"
+        },
         "modifiedAt": {
             "type": "datetime",
             "readOnly": true
@@ -145,6 +148,10 @@
             "type": "belongsTo",
             "entity": "LayoutSet",
             "foreign": "portals"
+        },
+        "authenticationProvider": {
+            "type": "belongsTo",
+            "entity": "AuthenticationProvider"
         }
     },
     "collection": {

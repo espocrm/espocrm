@@ -29,67 +29,75 @@
 
 namespace Espo\Hooks\Common;
 
+use Espo\Core\Hook\Hook\AfterRelate;
+use Espo\Core\Hook\Hook\AfterRemove;
+use Espo\Core\Hook\Hook\AfterSave;
+use Espo\Core\Hook\Hook\AfterUnrelate;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\Entity;
+use Espo\ORM\Repository\Option\RelateOptions;
+use Espo\ORM\Repository\Option\RemoveOptions;
+use Espo\ORM\Repository\Option\SaveOptions;
+use Espo\ORM\Repository\Option\UnrelateOptions;
 use Espo\Tools\Stream\HookProcessor;
 
-class Stream
+/**
+ * @implements AfterSave<Entity>
+ * @implements AfterRemove<Entity>
+ * @implements AfterRelate<Entity>
+ * @implements AfterUnrelate<Entity>
+ */
+class Stream implements AfterSave, AfterRemove, AfterRelate, AfterUnrelate
 {
     public static int $order = 9;
 
-    private HookProcessor $processor;
+    public function __construct(private HookProcessor $processor)
+    {}
 
-    public function __construct(HookProcessor $processor)
+    public function afterSave(Entity $entity, SaveOptions $options): void
     {
-        $this->processor = $processor;
-    }
-
-    /**
-     * @param array<string,mixed> $options
-     */
-    public function afterSave(Entity $entity, array $options): void
-    {
-        if (!empty($options[SaveOption::SILENT])) {
+        if ($options->get(SaveOption::SILENT)) {
             return;
         }
 
-        $this->processor->afterSave($entity, $options);
+        $this->processor->afterSave($entity, $options->toAssoc());
     }
 
-    public function afterRemove(Entity $entity): void
+    public function afterRemove(Entity $entity, RemoveOptions $options): void
     {
+        if ($options->get(SaveOption::SILENT)) {
+            return;
+        }
+
         $this->processor->afterRemove($entity);
     }
 
-    /**
-     * @param array<string,mixed> $options
-     * @param array<string,mixed> $data
-     */
-    public function afterRelate(Entity $entity, array $options, array $data): void
-    {
-        $link = $data['relationName'] ?? null;
-        $foreignEntity = $data['foreignEntity'] ?? null;
+    public function afterRelate(
+        Entity $entity,
+        string $relationName,
+        Entity $relatedEntity,
+        array $columnData,
+        RelateOptions $options
+    ): void {
 
-        if (!$link || !$foreignEntity instanceof Entity) {
+        if ($options->get(SaveOption::SILENT)) {
             return;
         }
 
-        $this->processor->afterRelate($entity, $foreignEntity, $link, $options);
+        $this->processor->afterRelate($entity, $relatedEntity, $relationName, $options->toAssoc());
     }
 
-    /**
-     * @param array<string,mixed> $options
-     * @param array<string,mixed> $data
-     */
-    public function afterUnrelate(Entity $entity, array $options, array $data): void
-    {
-        $link = $data['relationName'] ?? null;
-        $foreignEntity = $data['foreignEntity'] ?? null;
+    public function afterUnrelate(
+        Entity $entity,
+        string $relationName,
+        Entity $relatedEntity,
+        UnrelateOptions $options
+    ): void {
 
-        if (!$link || !$foreignEntity instanceof Entity) {
+        if ($options->get(SaveOption::SILENT)) {
             return;
         }
 
-        $this->processor->afterUnrelate($entity, $foreignEntity, $link, $options);
+        $this->processor->afterUnrelate($entity, $relatedEntity, $relationName, $options->toAssoc());
     }
 }

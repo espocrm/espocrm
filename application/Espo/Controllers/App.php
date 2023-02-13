@@ -33,6 +33,8 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Authentication\Authentication;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\InjectableFactory;
 
 use Espo\Tools\App\AppService as Service;
@@ -56,6 +58,7 @@ class App
 
     /**
      * @throws BadRequest
+     * @throws Forbidden
      */
     public function postActionDestroyAuthToken(Request $request, Response $response): bool
     {
@@ -67,7 +70,14 @@ class App
 
         $auth = $this->injectableFactory->create(Authentication::class);
 
-        return $auth->destroyAuthToken($data->token, $request, $response);
+        try {
+            $auth->destroyAuthToken($data->token, $request, $response);
+
+            return true;
+        }
+        catch (NotFound) {
+            return false;
+        }
     }
 
     private function getService(): Service

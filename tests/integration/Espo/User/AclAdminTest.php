@@ -29,10 +29,8 @@
 
 namespace tests\integration\Espo\User;
 
-use Espo\Core\{
-    Api\ActionProcessor,
-    Api\Response,
-};
+use Espo\Core\Api\ControllerActionProcessor;
+use Espo\Core\Api\ResponseWrapper;
 
 class AclAdminTest extends \tests\integration\Core\BaseTestCase
 {
@@ -49,7 +47,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
 
         $processor = $app->getContainer()
             ->get('injectableFactory')
-            ->create(ActionProcessor::class);
+            ->create(ControllerActionProcessor::class);
 
         $data = [
             'userName' => 'test',
@@ -64,7 +62,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->once())
@@ -86,7 +84,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
 
         $processor = $app->getContainer()
             ->get('injectableFactory')
-            ->create(ActionProcessor::class);
+            ->create(ControllerActionProcessor::class);
 
         $data = [
             'name' => 'test',
@@ -99,7 +97,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->once())
@@ -121,7 +119,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
 
         $processor = $app->getContainer()
             ->get('injectableFactory')
-            ->create(ActionProcessor::class);
+            ->create(ControllerActionProcessor::class);
 
         $data = [
             'name' => 'test',
@@ -134,7 +132,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->once())
@@ -156,7 +154,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
 
         $processor = $app->getContainer()
             ->get('injectableFactory')
-            ->create(ActionProcessor::class);
+            ->create(ControllerActionProcessor::class);
 
         $data = [
             'name' => 'test',
@@ -169,7 +167,7 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->once())

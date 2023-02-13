@@ -294,6 +294,27 @@ class RelationDefs
     }
 
     /**
+     * Get indexes.
+     *
+     * @return IndexDefs[]
+     * @throws RuntimeException
+     */
+    public function getIndexList(): array
+    {
+        if ($this->getType() !== Entity::MANY_MANY) {
+            throw new RuntimeException("Can't get indexes.");
+        }
+
+        $list = [];
+
+        foreach (($this->data['indexes'] ?? []) as $name => $item) {
+            $list[] = IndexDefs::fromRaw($item, $name);
+        }
+
+        return $list;
+    }
+
+    /**
      * Whether a parameter is set.
      */
     public function hasParam(string $name): bool

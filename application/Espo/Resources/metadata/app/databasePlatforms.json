@@ -1,0 +1,19 @@
+{
+    "Mysql": {
+        "detailsProviderClassName": "Espo\\Core\\Utils\\Database\\DetailsProviders\\MysqlDetailsProvider",
+        "dbalConnectionFactoryClassName": "Espo\\Core\\Utils\\Database\\Dbal\\Factories\\MysqlConnectionFactory",
+        "indexHelperClassName": "Espo\\Core\\Utils\\Database\\Orm\\IndexHelpers\\MysqlIndexHelper",
+        "columnPreparatorClassName": "Espo\\Core\\Utils\\Database\\Schema\\ColumnPreparators\\MysqlColumnPreparator",
+        "preRebuildActionClassNameList": [
+            "Espo\\Core\\Utils\\Database\\Schema\\RebuildActions\\PrepareForFulltextIndex"
+        ],
+        "postRebuildActionClassNameList": [],
+        "dbalTypeClassNameMap": {
+            "mediumtext": "Espo\\Core\\Utils\\Database\\Dbal\\Types\\MediumtextType",
+            "longtext": "Espo\\Core\\Utils\\Database\\Dbal\\Types\\LongtextType"
+        }
+    },
+    "Postgresql": {
+        "dbalConnectionFactoryClassName": "Espo\\Core\\Utils\\Database\\Dbal\\Factories\\PostgresqlConnectionFactory"
+    }
+}

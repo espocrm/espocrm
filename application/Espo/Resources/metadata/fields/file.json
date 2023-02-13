@@ -54,6 +54,7 @@
     "notActualFields": [
         "name"
     ],
+    "converterClassName": "Espo\\Core\\Utils\\Database\\Orm\\FieldConverters\\File",
     "validationList": [
         "required",
         "pattern"

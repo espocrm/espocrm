@@ -51,7 +51,7 @@ class MysqlQueryComposer extends BaseQueryComposer
             throw new LogicException();
         }
 
-        $sql = "LOCK TABLES `{$table}` ";
+        $sql = "LOCK TABLES " . $this->quoteIdentifier($table) . " ";
 
         $modeMap = [
             LockTableQuery::MODE_SHARE => 'READ',

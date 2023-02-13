@@ -44,25 +44,15 @@ use stdClass;
 class KeysProvider
 {
     private const CACHE_KEY = 'oidcJwks';
-    private const CACHE_PERIOD = '10 minutes';
     private const REQUEST_TIMEOUT = 10;
 
-    private DataCache $dataCache;
-    private Config $config;
-    private KeyFactory $factory;
-    private Log $log;
-
     public function __construct(
-        DataCache $dataCache,
-        Config $config,
-        KeyFactory $factory,
-        Log $log
-    ) {
-        $this->dataCache = $dataCache;
-        $this->config = $config;
-        $this->factory = $factory;
-        $this->log = $log;
-    }
+        private DataCache $dataCache,
+        private Config $config,
+        private ConfigDataProvider $configDataProvider,
+        private KeyFactory $factory,
+        private Log $log
+    ) {}
 
     /**
      * @return Key[]
@@ -106,8 +96,7 @@ class KeysProvider
      */
     private function load(): array
     {
-        /** @var ?string $endpoint */
-        $endpoint = $this->config->get('oidcJwksEndpoint');
+        $endpoint = $this->configDataProvider->getJwksEndpoint();
 
         if (!$endpoint) {
             throw new RuntimeException("JSON Web Key Set endpoint not specified in settings.");
@@ -145,7 +134,7 @@ class KeysProvider
         try {
             $parsedResponse = Json::decode($response);
         }
-        catch (JsonException $e) {}
+        catch (JsonException) {}
 
         if (!$parsedResponse instanceof stdClass || !isset($parsedResponse->keys)) {
             throw new RuntimeException("OIDC: JWKS bad response.");
@@ -180,7 +169,7 @@ class KeysProvider
             return null;
         }
 
-        $period = '-' . ($this->config->get('oidcJwksCachePeriod') ?? self::CACHE_PERIOD);
+        $period = '-' . $this->configDataProvider->getJwksCachePeriod();
 
         if ($timestamp < DateTime::createNow()->modify($period)->getTimestamp()) {
             return null;

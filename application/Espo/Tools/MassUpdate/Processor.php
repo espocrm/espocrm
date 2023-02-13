@@ -29,12 +29,15 @@
 
 namespace Espo\Tools\MassUpdate;
 
+use Espo\Core\FieldProcessing\LinkMultiple\ListLoader as LinkMultipleLoader;
+use Espo\Core\FieldProcessing\Loader\Params as LoaderParams;
 use Espo\Core\MassAction\QueryBuilder;
 use Espo\Core\MassAction\Params;
 use Espo\Core\MassAction\Result;
 
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
+use Espo\Core\Record\Access\LinkCheck;
 use Espo\Core\Record\ServiceFactory;
 use Espo\Core\Record\Service;
 
@@ -54,40 +57,23 @@ use stdClass;
 
 class Processor
 {
-    private ValueMapPreparator $valueMapPreparator;
-
-    private QueryBuilder $queryBuilder;
-
-    private Acl $acl;
-
-    private ServiceFactory $serviceFactory;
-
-    private EntityManager $entityManager;
-
-    private FieldUtil $fieldUtil;
-
-    private User $user;
-
     private const PERMISSION = 'massUpdatePermission';
 
     public function __construct(
-        ValueMapPreparator $valueMapPreparator,
-        QueryBuilder $queryBuilder,
-        Acl $acl,
-        ServiceFactory $serviceFactory,
-        EntityManager $entityManager,
-        FieldUtil $fieldUtil,
-        User $user
-    ) {
-        $this->valueMapPreparator = $valueMapPreparator;
-        $this->queryBuilder = $queryBuilder;
-        $this->acl = $acl;
-        $this->serviceFactory = $serviceFactory;
-        $this->entityManager = $entityManager;
-        $this->fieldUtil = $fieldUtil;
-        $this->user = $user;
-    }
+        private ValueMapPreparator $valueMapPreparator,
+        private QueryBuilder $queryBuilder,
+        private Acl $acl,
+        private ServiceFactory $serviceFactory,
+        private EntityManager $entityManager,
+        private FieldUtil $fieldUtil,
+        private User $user,
+        private LinkCheck $linkCheck,
+        private LinkMultipleLoader $linkMultipleLoader
+    ) {}
 
+    /**
+     * @throws Forbidden
+     */
     public function process(Params $params, Data $data): Result
     {
         $entityType = $params->getEntityType();
@@ -96,7 +82,7 @@ class Processor
             throw new Forbidden("No edit access for '{$entityType}'.");
         }
 
-        if ($this->acl->get(self::PERMISSION) !== Table::LEVEL_YES) {
+        if ($this->acl->getPermissionLevel(self::PERMISSION) !== Table::LEVEL_YES) {
             throw new Forbidden("No mass-update permission.");
         }
 
@@ -174,16 +160,30 @@ class Processor
 
         $values = $this->prepareItemValueMap($entity, $data, $i, $fieldToCopyList);
 
+        // Needed for link check.
+        $this->linkMultipleLoader->process(
+            $entity,
+            LoaderParams::create()
+                ->withSelect($data->getAttributeList())
+        );
+
         $entity->set($values);
 
         try {
             $service->processValidation($entity, $values);
         }
-        catch (Exception $e) {
+        catch (Exception) {
             return false;
         }
 
         if (!$service->checkAssignment($entity)) {
+            return false;
+        }
+
+        try {
+            $this->linkCheck->process($entity);
+        }
+        catch (Forbidden) {
             return false;
         }
 

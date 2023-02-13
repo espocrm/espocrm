@@ -29,7 +29,8 @@
 
 namespace Espo\Core\Authentication;
 
-use Espo\Core\Authentication\Logout\Params as LogoutParams;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
@@ -37,6 +38,9 @@ use Espo\Entities\AuthLogRecord;
 use Espo\Entities\AuthToken as AuthTokenEntity;
 use Espo\Entities\UserData;
 
+use Espo\Core\Exceptions\Error\Body;
+use Espo\Core\Authentication\Logout\Params as LogoutParams;
+use Espo\Core\Authentication\Util\MethodProvider;
 use Espo\Core\Authentication\Result\FailReason;
 use Espo\Core\Authentication\TwoFactor\LoginFactory as TwoFactorLoginFactory;
 use Espo\Core\Authentication\AuthToken\Manager as AuthTokenManager;
@@ -44,7 +48,6 @@ use Espo\Core\Authentication\AuthToken\Data as AuthTokenData;
 use Espo\Core\Authentication\AuthToken\AuthToken;
 use Espo\Core\Authentication\Hook\Manager as HookManager;
 use Espo\Core\Authentication\Login\Data as LoginData;
-
 use Espo\Core\ApplicationUser;
 use Espo\Core\ApplicationState;
 use Espo\Core\Api\Request;
@@ -53,6 +56,7 @@ use Espo\Core\Utils\Log;
 use Espo\Core\ORM\EntityManagerProxy;
 use Espo\Core\Exceptions\ServiceUnavailable;
 
+use LogicException;
 use RuntimeException;
 
 /**
@@ -70,50 +74,22 @@ class Authentication
 
     private const COOKIE_AUTH_TOKEN_SECRET = 'auth-token-secret';
 
-    private bool $allowAnyAccess;
-    private ?Portal $portal = null;
-
-    private ApplicationUser $applicationUser;
-    private ApplicationState $applicationState;
-    private ConfigDataProvider $configDataProvider;
-    private EntityManagerProxy $entityManager;
-    private LoginFactory $loginFactory;
-    private TwoFactorLoginFactory $twoFactorLoginFactory;
-    private AuthTokenManager $authTokenManager;
-    private HookManager $hookManager;
-    private LogoutFactory $logoutFactory;
-    private Log $log;
-
     public function __construct(
-        ApplicationUser $applicationUser,
-        ApplicationState $applicationState,
-        ConfigDataProvider $configDataProvider,
-        EntityManagerProxy $entityManagerProxy,
-        LoginFactory $loginFactory,
-        TwoFactorLoginFactory $twoFactorLoginFactory,
-        AuthTokenManager $authTokenManager,
-        HookManager $hookManager,
-        Log $log,
-        LogoutFactory $logoutFactory,
-        bool $allowAnyAccess = false
-    ) {
-        $this->allowAnyAccess = $allowAnyAccess;
-
-        $this->applicationUser = $applicationUser;
-        $this->applicationState = $applicationState;
-        $this->configDataProvider = $configDataProvider;
-        $this->entityManager = $entityManagerProxy;
-        $this->loginFactory = $loginFactory;
-        $this->twoFactorLoginFactory = $twoFactorLoginFactory;
-        $this->authTokenManager = $authTokenManager;
-        $this->hookManager = $hookManager;
-        $this->logoutFactory = $logoutFactory;
-        $this->log = $log;
-    }
+        private ApplicationUser $applicationUser,
+        private ApplicationState $applicationState,
+        private ConfigDataProvider $configDataProvider,
+        private EntityManagerProxy $entityManager,
+        private LoginFactory $loginFactory,
+        private TwoFactorLoginFactory $twoFactorLoginFactory,
+        private AuthTokenManager $authTokenManager,
+        private HookManager $hookManager,
+        private Log $log,
+        private LogoutFactory $logoutFactory,
+        private MethodProvider $methodProvider
+    ) {}
 
     /**
      * Process logging in.
-     * Note: This method can change the state of the object (by setting the `portal` property.).
      *
      * @throws ServiceUnavailable
      */
@@ -121,22 +97,22 @@ class Authentication
     {
         $username = $data->getUsername();
         $password = $data->getPassword();
-        $authenticationMethod = $data->getMethod();
+        $method = $data->getMethod();
         $byTokenOnly = $data->byTokenOnly();
 
         if (
-            $authenticationMethod &&
-            !$this->configDataProvider->authenticationMethodIsApi($authenticationMethod)
+            $method &&
+            !$this->configDataProvider->authenticationMethodIsApi($method)
         ) {
             $this->log
-                ->warning("AUTH: Trying to use not allowed authentication method '{$authenticationMethod}'.");
+                ->warning("AUTH: Trying to use not allowed authentication method '{$method}'.");
 
             return $this->processFail(Result::fail(FailReason::METHOD_NOT_ALLOWED), $data, $request);
         }
 
         $this->hookManager->processBeforeLogin($data, $request);
 
-        if (!$authenticationMethod && $password === null) {
+        if (!$method && $password === null) {
             $this->log->error("AUTH: Trying to login w/o password.");
 
             return Result::fail(FailReason::NO_PASSWORD);
@@ -144,7 +120,7 @@ class Authentication
 
         $authToken = null;
 
-        if (!$authenticationMethod) {
+        if (!$method) {
             $authToken = $this->authTokenManager->get($password);
         }
 
@@ -172,7 +148,7 @@ class Authentication
 
         $byTokenAndUsername = $request->getHeader(self::HEADER_BY_TOKEN) === 'true';
 
-        if ($authenticationMethod && $byTokenAndUsername) {
+        if ($method && $byTokenAndUsername) {
             return Result::fail(FailReason::DISCREPANT_DATA);
         }
 
@@ -194,9 +170,9 @@ class Authentication
             }
         }
 
-        $authenticationMethod ??= $this->configDataProvider->getDefaultAuthenticationMethod();
+        $method ??= $this->methodProvider->get();
 
-        $login = $this->loginFactory->create($authenticationMethod, $this->isPortal());
+        $login = $this->loginFactory->create($method, $this->isPortal());
 
         $loginData = LoginData
             ::createBuilder()
@@ -210,7 +186,7 @@ class Authentication
         $user = $result->getUser();
 
         $authLogRecord = !$authTokenIsFound ?
-            $this->createAuthLogRecord($username, $user, $request, $authenticationMethod) :
+            $this->createAuthLogRecord($username, $user, $request, $method) :
             null;
 
         if ($result->isFail()) {
@@ -223,7 +199,12 @@ class Authentication
         }
 
         if (!$user->isAdmin() && $this->configDataProvider->isMaintenanceMode()) {
-            throw new ServiceUnavailable("Application is in maintenance mode.");
+            throw ServiceUnavailable::createWithBody(
+                "Application is in maintenance mod1e.",
+                Body::create()
+                    ->withMessageTranslation('maintenanceModeError', 'messages')
+                    ->encode()
+            );
         }
 
         if (!$this->processUserCheck($user, $authLogRecord)) {
@@ -350,40 +331,18 @@ class Authentication
         }
     }
 
-    private function setPortal(Portal $portal): void
-    {
-        $this->portal = $portal;
-    }
-
     private function isPortal(): bool
     {
-        return $this->portal || $this->applicationState->isPortal();
+        return $this->applicationState->isPortal();
     }
 
     private function getPortal(): Portal
     {
-        if ($this->portal) {
-            return $this->portal;
-        }
-
         return $this->applicationState->getPortal();
     }
 
     private function processAuthTokenCheck(AuthToken $authToken): bool
     {
-        if ($this->allowAnyAccess && $authToken->getPortalId() && !$this->isPortal()) {
-            /** @var ?Portal $portal */
-            $portal = $this->entityManager->getEntity('Portal', $authToken->getPortalId());
-
-            if ($portal) {
-                $this->setPortal($portal);
-            }
-        }
-
-        if ($this->allowAnyAccess) {
-            return true;
-        }
-
         if ($this->isPortal() && $authToken->getPortalId() !== $this->getPortal()->getId()) {
             $this->log->info("AUTH: Trying to login to portal with a token not related to portal.");
 
@@ -546,46 +505,70 @@ class Authentication
         return $authToken;
     }
 
-    public function destroyAuthToken(string $token, Request $request, Response $response): bool
+    /**
+     * Destroy an auth token.
+     *
+     * @param string $token A token to destroy.
+     * @param Request $request A request.
+     * @param Response $response A response.
+     * @throws Forbidden
+     * @throws NotFound
+     */
+    public function destroyAuthToken(string $token, Request $request, Response $response): void
     {
         $authToken = $this->authTokenManager->get($token);
 
         if (!$authToken) {
-            return false;
+            throw new NotFound("Auth token not found.");
         }
+
+        if (!$this->applicationState->hasUser()) {
+            throw new LogicException("No logged user.");
+        }
+
+        $user = $this->applicationState->getUser();
 
         $this->authTokenManager->inactivate($authToken);
 
         if ($authToken->getSecret()) {
             $sentSecret = $request->getCookieParam(self::COOKIE_AUTH_TOKEN_SECRET);
 
+            if (
+                // Still need the ability to destroy auth tokens of another users
+                // for login-as-another-user feature.
+                $authToken->getUserId() !== $user->getId() &&
+                $sentSecret !== $authToken->getSecret()
+            ) {
+                throw new Forbidden("Can't destroy auth token.");
+            }
+
             if ($sentSecret === $authToken->getSecret()) {
                 $this->setSecretInCookie(null, $response);
             }
         }
 
-        $method = $this->configDataProvider->getDefaultAuthenticationMethod();
+        $method = $this->methodProvider->get();
 
-        if ($this->logoutFactory->isCreatable($method)) {
-            $logout = $this->logoutFactory->create($method);
-
-            $result = $logout->logout($authToken, LogoutParams::create());
-
-            $redirectUrl = $result->getRedirectUrl();
-
-            if ($redirectUrl) {
-                $response->setHeader(self::HEADER_LOGOUT_REDIRECT_URL, $redirectUrl);
-            }
+        if (!$this->logoutFactory->isCreatable($method)) {
+            return;
         }
 
-        return true;
+        $result = $this->logoutFactory
+            ->create($method)
+            ->logout($authToken, LogoutParams::create());
+
+        $redirectUrl = $result->getRedirectUrl();
+
+        if ($redirectUrl) {
+            $response->setHeader(self::HEADER_LOGOUT_REDIRECT_URL, $redirectUrl);
+        }
     }
 
     private function createAuthLogRecord(
         ?string $username,
         ?User $user,
         Request $request,
-        ?string $authenticationMethod = null
+        ?string $method = null
     ): ?AuthLogRecord {
 
         if ($username === self::LOGOUT_USERNAME) {
@@ -610,7 +593,7 @@ class Authentication
             'requestTime' => $request->getServerParam('REQUEST_TIME_FLOAT'),
             'requestMethod' => $request->getMethod(),
             'requestUrl' => $requestUrl,
-            'authenticationMethod' => $authenticationMethod,
+            'authenticationMethod' => $method,
         ]);
 
         if ($this->isPortal()) {

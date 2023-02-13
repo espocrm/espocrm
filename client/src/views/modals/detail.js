@@ -715,6 +715,10 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                 return;
             }
 
+            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+                return;
+            }
+
             e.preventDefault();
             e.stopPropagation();
 
@@ -731,6 +735,10 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
             }
 
             if (this.buttonList.findIndex(item => item.name === 'next' && !item.disabled) === -1) {
+                return;
+            }
+
+            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
                 return;
             }
 

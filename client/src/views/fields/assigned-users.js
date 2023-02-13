@@ -49,5 +49,18 @@ define('views/fields/assigned-users', ['views/fields/link-multiple'], function (
         getSelectPrimaryFilterName: function () {
             return 'active';
         },
+
+        getDetailLinkHtml: function (id) {
+            let html = Dep.prototype.getDetailLinkHtml.call(this, id);
+
+            let avatarHtml = this.isDetailMode() ?
+                this.getHelper().getAvatarHtml(id, 'small', 14, 'avatar-link') : '';
+
+            if (!avatarHtml) {
+                return html;
+            }
+
+            return avatarHtml + ' ' + html;
+        },
     });
 });

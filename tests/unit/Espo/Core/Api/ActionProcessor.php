@@ -32,7 +32,7 @@ namespace tests\unit\Espo\Core\Api;
 use Espo\Core\{
     Utils\ClassFinder,
     InjectableFactory,
-    Api\ActionProcessor,
+    Api\ControllerActionProcessor,
     Api\RequestWrapper,
     Api\ResponseWrapper,
 };

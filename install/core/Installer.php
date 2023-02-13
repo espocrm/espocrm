@@ -31,6 +31,7 @@ use Espo\Core\Application;
 use Espo\Core\Container;
 use Espo\Core\InjectableFactory;
 
+use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Config\ConfigFileManager;
 use Espo\Core\Utils\Config;
@@ -57,6 +58,7 @@ class Installer
     private $isAuth = false;
     private $passwordHash;
     private $defaultSettings;
+    private DatabaseParamsFactory $databaseParamsFactory;
 
     private $permittedSettingList = [
         'dateFormat',
@@ -91,7 +93,8 @@ class Installer
 
         $this->systemHelper = new SystemHelper();
 
-        $this->databaseHelper = new DatabaseHelper($this->getConfig());
+        $this->databaseHelper = $this->getInjectableFactory()->create(DatabaseHelper::class);
+        $this->databaseParamsFactory = $this->getInjectableFactory()->create(DatabaseParamsFactory::class);
     }
 
     private function initialize(): void
@@ -160,6 +163,11 @@ class Installer
     public function getMetadata(): Metadata
     {
         return $this->app->getContainer()->get('metadata');
+    }
+
+    public function getInjectableFactory(): InjectableFactory
+    {
+        return $this->app->getContainer()->get('injectableFactory');
     }
 
     public function getConfig(): Config
@@ -292,6 +300,7 @@ class Installer
 
     public function getSystemRequirementList($type, $requiredOnly = false, array $additionalData = null)
     {
+        /** @var SystemRequirements $systemRequirementManager */
          $systemRequirementManager = $this->app
             ->getContainer()
             ->get('injectableFactory')
@@ -304,13 +313,14 @@ class Installer
         array $params,
         bool $createDatabase = false
     ) {
+        $databaseParams = $this->databaseParamsFactory->createWithMergedAssoc($params);
+
         try {
-            $pdo = $this->getDatabaseHelper()->createPdoConnection($params);
+            $this->getDatabaseHelper()->createPDO($databaseParams);
         }
         catch (Exception $e) {
             if ($createDatabase && $e->getCode() == '1049') {
-                $pdo = $this->getDatabaseHelper()
-                    ->createPdoConnection($params, true);
+                $pdo = $this->getDatabaseHelper()->createPDO($databaseParams, true);
 
                 $dbname = preg_replace('/[^A-Za-z0-9_\-@$#\(\)]+/', '', $params['dbname']);
 

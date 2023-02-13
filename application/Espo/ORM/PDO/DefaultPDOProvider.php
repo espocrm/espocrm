@@ -30,23 +30,16 @@
 namespace Espo\ORM\PDO;
 
 use Espo\ORM\DatabaseParams;
-
 use PDO;
-use RuntimeException;
 
 class DefaultPDOProvider implements PDOProvider
 {
-    private $databaseParams;
+    private ?PDO $pdo = null;
 
-    /**
-     * @var ?PDO
-     */
-    private $pdo = null;
-
-    public function __construct(DatabaseParams $databaseParams)
-    {
-        $this->databaseParams = $databaseParams;
-    }
+    public function __construct(
+        private DatabaseParams $databaseParams,
+        private PDOFactory $pdoFactory
+    ) {}
 
     public function get(): PDO
     {
@@ -61,41 +54,6 @@ class DefaultPDOProvider implements PDOProvider
 
     private function intPDO(): void
     {
-        $platform = strtolower($this->databaseParams->getPlatform() ?? '');
-
-        $host = $this->databaseParams->getHost();
-        $port = $this->databaseParams->getPort();
-        $dbname = $this->databaseParams->getName();
-        $charset = $this->databaseParams->getCharset();
-        $username = $this->databaseParams->getUsername();
-        $password = $this->databaseParams->getPassword();
-
-        if (!$platform) {
-            throw new RuntimeException("No 'platform' parameter.");
-        }
-
-        if (!$host) {
-            throw new RuntimeException("No 'host' parameter.");
-        }
-
-        $dsn = $platform . ':' . 'host=' . $host;
-
-        if ($port) {
-            $dsn .= ';' . 'port=' . (string) $port;
-        }
-
-        if ($dbname) {
-            $dsn .= ';' . 'dbname=' . $dbname;
-        }
-
-        if ($charset) {
-            $dsn .= ';' . 'charset=' . $charset;
-        }
-
-        $options = Options::getOptionsFromDatabaseParams($this->databaseParams);
-
-        $this->pdo = new PDO($dsn, $username, $password, $options);
-
-        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->pdo = $this->pdoFactory->create($this->databaseParams);
     }
 }

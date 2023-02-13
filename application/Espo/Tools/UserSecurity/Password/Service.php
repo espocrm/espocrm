@@ -30,6 +30,7 @@
 namespace Espo\Tools\UserSecurity\Password;
 
 use Espo\Core\Authentication\Logins\Espo;
+use Espo\Core\Authentication\Util\MethodProvider as AuthenticationMethodProvider;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -45,43 +46,20 @@ use Espo\ORM\EntityManager;
 
 class Service
 {
-    private User $user;
-    private ServiceContainer $serviceContainer;
-    private EmailSender $emailSender;
-    private Config $config;
-    private Generator $generator;
-    private Sender $sender;
-    private PasswordHash $passwordHash;
-    private EntityManager $entityManager;
-    private RecoveryService $recovery;
-    private FieldValidationManager $fieldValidationManager;
-    private Checker $checker;
-
     public function __construct(
-        User $user,
-        ServiceContainer $serviceContainer,
-        EmailSender $emailSender,
-        Config $config,
-        Generator $generator,
-        Sender $sender,
-        PasswordHash $passwordHash,
-        EntityManager $entityManager,
-        RecoveryService $recovery,
-        FieldValidationManager $fieldValidationManager,
-        Checker $checker
-    ) {
-        $this->user = $user;
-        $this->serviceContainer = $serviceContainer;
-        $this->emailSender = $emailSender;
-        $this->config = $config;
-        $this->generator = $generator;
-        $this->sender = $sender;
-        $this->passwordHash = $passwordHash;
-        $this->entityManager = $entityManager;
-        $this->recovery = $recovery;
-        $this->fieldValidationManager = $fieldValidationManager;
-        $this->checker = $checker;
-    }
+        private User $user,
+        private ServiceContainer $serviceContainer,
+        private EmailSender $emailSender,
+        private Config $config,
+        private Generator $generator,
+        private Sender $sender,
+        private PasswordHash $passwordHash,
+        private EntityManager $entityManager,
+        private RecoveryService $recovery,
+        private FieldValidationManager $fieldValidationManager,
+        private Checker $checker,
+        private AuthenticationMethodProvider $authenticationMethodProvider
+    ) {}
 
     /**
      * Create and send a password recovery link in an email. Only for admin.
@@ -189,7 +167,7 @@ class Service
             throw new Forbidden();
         }
 
-        $authenticationMethod = $this->config->get('authenticationMethod', Espo::NAME);
+        $authenticationMethod = $this->authenticationMethodProvider->get();
 
         if (!$user->isAdmin() && $authenticationMethod !== Espo::NAME) {
             throw new Forbidden("Authentication method is not `Espo`.");

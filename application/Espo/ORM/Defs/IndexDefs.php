@@ -34,16 +34,12 @@ namespace Espo\ORM\Defs;
  */
 class IndexDefs
 {
-    /**
-     * @var array<string,mixed>
-     */
+    /** @var array<string,mixed> */
     private $data;
-
     private string $name;
 
     private function __construct()
-    {
-    }
+    {}
 
     /**
      * @param array<string,mixed> $raw
@@ -51,9 +47,7 @@ class IndexDefs
     public static function fromRaw(array $raw, string $name): self
     {
         $obj = new self();
-
         $obj->data = $raw;
-
         $obj->name = $name;
 
         return $obj;
@@ -72,7 +66,7 @@ class IndexDefs
      */
     public function getKey(): string
     {
-        return $this->data['key'];
+        return $this->data['key'] ?? '';
     }
 
     /**
@@ -80,6 +74,11 @@ class IndexDefs
      */
     public function isUnique(): bool
     {
+        // For bc.
+        if (($this->data['unique'] ?? false)) {
+            return true;
+        }
+
         $type = $this->data['type'] ?? null;
 
         return $type === 'unique';
@@ -93,5 +92,15 @@ class IndexDefs
     public function getColumnList(): array
     {
         return $this->data['columns'] ?? [];
+    }
+
+    /**
+     * Get a flag list.
+     *
+     * @return string[]
+     */
+    public function getFlagList(): array
+    {
+        return $this->data['flags'] ?? [];
     }
 }

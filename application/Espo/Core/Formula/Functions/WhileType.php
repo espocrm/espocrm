@@ -29,10 +29,9 @@
 
 namespace Espo\Core\Formula\Functions;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Exceptions\BreakLoop;
+use Espo\Core\Formula\Exceptions\ContinueLoop;
 
 class WhileType extends BaseFunction
 {
@@ -43,7 +42,15 @@ class WhileType extends BaseFunction
         }
 
         while ($this->evaluate($args[0])) {
-            $this->evaluate($args[1]);
+            try {
+                $this->evaluate($args[1]);
+            }
+            catch (BreakLoop) {
+                break;
+            }
+            catch (ContinueLoop) {
+                continue;
+            }
         }
     }
 }

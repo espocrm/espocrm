@@ -68,6 +68,8 @@ class TextFieldTest extends Base
         ]);
         $this->getContainer()->get('metadata')->save();
 
+        $this->getDataManager()->rebuildDatabase();
+
         $column = $this->getColumnInfo('Test', 'testText');
 
         $this->assertNotEmpty($column);

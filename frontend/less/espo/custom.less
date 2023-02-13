@@ -800,8 +800,11 @@ div.list-kanban > div > table {
         user-select: none;
     }
 
-    .fallback-shown .cell[data-name="sign-in"] {
-        margin-bottom: 12px;
+    .fallback-shown,
+    .another-user {
+        .cell[data-name="sign-in"] {
+            margin-bottom: 12px;
+        }
     }
 }
 
@@ -2565,6 +2568,8 @@ table.table td.cell .html-container {
 }
 
 .field > .html-container {
+    overflow: hidden;
+
     h1:first-child,
     h2:first-child,
     h3:first-child,

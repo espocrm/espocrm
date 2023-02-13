@@ -2,7 +2,7 @@
     "fields": {
         "token": {
             "type": "varchar",
-            "maxLength": "36",
+            "maxLength": 36,
             "index": true,
             "readOnly": true
         },
@@ -14,12 +14,7 @@
         },
         "secret": {
             "type": "varchar",
-            "maxLength": "36",
-            "readOnly": true
-        },
-        "userId": {
-            "type": "varchar",
-            "maxLength": "36",
+            "maxLength": 36,
             "readOnly": true
         },
         "user": {
@@ -32,7 +27,7 @@
         },
         "ipAddress": {
             "type": "varchar",
-            "maxLength": "45",
+            "maxLength": 45,
             "readOnly": true
         },
         "isActive": {

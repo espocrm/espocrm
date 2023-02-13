@@ -39,20 +39,19 @@ use SeekableIterator;
 /**
  * A list of function arguments.
  *
- * @implements ArrayAccess<int,Argument>
+ * @implements ArrayAccess<int, Argument>
  * @implements Iterator<Argument>
- * @implements SeekableIterator<int,Argument>
+ * @implements SeekableIterator<int, Argument>
  */
 class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, SeekableIterator
 {
-    /** @var mixed[] */
-    protected $dataList;
     private int $position = 0;
-    /** @param mixed[] $dataList */
-    public function __construct(array $dataList)
-    {
-        $this->dataList = $dataList;
-    }
+
+    /**
+     * @param mixed[] $dataList
+     */
+    public function __construct(private array $dataList)
+    {}
 
     /**
      * @return int
@@ -144,6 +143,7 @@ class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, See
         if (!$this->offsetExists($offset)) {
             return null;
         }
+
         return $this->getArgumentByIndex($offset);
     }
 

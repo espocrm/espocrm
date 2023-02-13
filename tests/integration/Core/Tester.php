@@ -47,39 +47,23 @@ use Slim\Psr7\Response;
 class Tester
 {
     protected string $configPath = 'tests/integration/config.php';
-
     private string $envConfigPath = 'tests/integration/config-env.php';
 
-    protected $buildedPath = 'build';
-
+    protected $buildPath = 'build';
     protected $installPath = 'build/test';
-
     protected $testDataPath = 'tests/integration/testData';
-
     protected $packageJsonPath = 'package.json';
 
     private $application;
-
     private $apiClient;
-
     private $dataLoader;
-
     protected $params;
 
-    /**
-     * Username used for authentication.
-     */
     protected $userName = null;
-
-    /**
-     * Password used for authentication.
-     */
     protected $password = null;
 
     protected $portalId = null;
-
     protected $authenticationMethod = null;
-
     protected $defaultUserPassword = '1';
 
     public function __construct(array $params)
@@ -139,6 +123,8 @@ class Tester
 
     protected function getTestConfigData()
     {
+        $this->changeDirToBase();
+
         if (file_exists($this->configPath)) {
             $data = include($this->configPath);
         }
@@ -258,12 +244,19 @@ class Tester
         $this->loadData();
     }
 
-    public function terminate()
+    private function changeDirToBase(): void
     {
-        $baseDir = str_replace('/' . $this->installPath, '', getcwd());
+        $installPath = str_replace('/', DIRECTORY_SEPARATOR, $this->installPath);
+
+        $baseDir = str_replace(DIRECTORY_SEPARATOR . $installPath, '', getcwd());
 
         chdir($baseDir);
         set_include_path($baseDir);
+    }
+
+    public function terminate()
+    {
+        $this->changeDirToBase();
 
         if ($this->getParam('fullReset')) {
             $this->saveTestConfigData('lastModifiedTime', null);
@@ -276,7 +269,7 @@ class Tester
 
         $configData = $this->getTestConfigData();
 
-        $latestEspoDir = Utils::getLatestBuildedPath($this->buildedPath);
+        $latestEspoDir = Utils::getLatestBuildedPath($this->buildPath);
 
         if (empty($latestEspoDir)) {
             die("EspoCRM build is not found. Please run \"grunt\" in your terminal.\n");

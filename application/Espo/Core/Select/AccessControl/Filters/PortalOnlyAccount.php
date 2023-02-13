@@ -29,24 +29,19 @@
 
 namespace Espo\Core\Select\AccessControl\Filters;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Core\Select\AccessControl\Filter,
-    Core\Select\Helpers\FieldHelper,
-    Entities\User,
-};
+use Espo\Core\Select\AccessControl\Filter;
+use Espo\Core\Select\Helpers\FieldHelper;
+use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class PortalOnlyAccount implements Filter
 {
-    private $user;
-
-    private $fieldHelper;
-
-    public function __construct(User $user, FieldHelper $fieldHelper)
-    {
-        $this->user = $user;
-        $this->fieldHelper = $fieldHelper;
-    }
+    public function __construct(
+        private User $user,
+        private FieldHelper $fieldHelper
+    ) {}
 
     public function apply(QueryBuilder $queryBuilder): void
     {
@@ -70,13 +65,13 @@ class PortalOnlyAccount implements Filter
 
             if ($this->fieldHelper->hasParentField()) {
                 $orGroup[] = [
-                    'parentType' => 'Account',
+                    'parentType' => Account::ENTITY_TYPE,
                     'parentId' => $accountIdList,
                 ];
 
                 if ($contactId) {
                     $orGroup[] = [
-                        'parentType' => 'Contact',
+                        'parentType' => Contact::ENTITY_TYPE,
                         'parentId' => $contactId,
                     ];
                 }
@@ -98,19 +93,15 @@ class PortalOnlyAccount implements Filter
         }
 
         if ($this->fieldHelper->hasCreatedByField()) {
-            $orGroup['createdById'] = $this->user->id;
+            $orGroup['createdById'] = $this->user->getId();
         }
 
         if (empty($orGroup)) {
-            $queryBuilder->where([
-                'id' => null,
-            ]);
+            $queryBuilder->where(['id' => null]);
 
             return;
         }
 
-        $queryBuilder->where([
-            'OR' => $orGroup,
-        ]);
+        $queryBuilder->where(['OR' => $orGroup]);
     }
 }

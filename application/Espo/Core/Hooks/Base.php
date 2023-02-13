@@ -31,7 +31,9 @@ namespace Espo\Core\Hooks;
 
 use Espo\Core\Interfaces\Injectable;
 
-/** @deprecated */
+/**
+ * @deprecated As of v6.0. Not to be extended. Create plain classes with needed dependencies.
+ */
 abstract class Base implements Injectable
 {
     protected $injections = []; /** @phpstan-ignore-line */

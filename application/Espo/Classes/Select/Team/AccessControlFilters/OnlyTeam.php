@@ -30,22 +30,14 @@
 namespace Espo\Classes\Select\Team\AccessControlFilters;
 
 use Espo\Entities\User;
-
 use Espo\Core\Select\AccessControl\Filter;
-
-use Espo\ORM\Query\{
-    SelectBuilder,
-    Part\Condition as Cond,
-};
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\SelectBuilder;
 
 class OnlyTeam implements Filter
 {
-    private $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
+    public function __construct(private User $user)
+    {}
 
     public function apply(SelectBuilder $queryBuilder): void
     {

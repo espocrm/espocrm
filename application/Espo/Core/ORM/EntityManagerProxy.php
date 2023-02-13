@@ -29,25 +29,19 @@
 
 namespace Espo\Core\ORM;
 
-use Espo\ORM\{
-    Entity,
-    Metadata,
-    Repository\Repository,
-    Repository\RDBRepository,
-    SqlExecutor,
-};
-
+use Espo\ORM\Entity;
+use Espo\ORM\Metadata;
+use Espo\ORM\Repository\RDBRepository;
+use Espo\ORM\Repository\Repository;
+use Espo\ORM\SqlExecutor;
 use Espo\Core\Container;
 
 class EntityManagerProxy
 {
     private ?EntityManager $entityManager = null;
-    private Container $container;
 
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
+    public function __construct(private Container $container)
+    {}
 
     private function getEntityManager(): EntityManager
     {
@@ -111,5 +105,29 @@ class EntityManagerProxy
     public function getSqlExecutor(): SqlExecutor
     {
         return $this->getEntityManager()->getSqlExecutor();
+    }
+
+    /**
+     * Get an RDB repository by an entity class name.
+     *
+     * @template T of Entity
+     * @param class-string<T> $className An entity class name.
+     * @return RDBRepository<T>
+     */
+    public function getRDBRepositoryByClass(string $className): RDBRepository
+    {
+        return $this->getEntityManager()->getRDBRepositoryByClass($className);
+    }
+
+    /**
+     * Get a repository by an entity class name.
+     *
+     * @template T of Entity
+     * @param class-string<T> $className An entity class name.
+     * @return Repository<T>
+     */
+    public function getRepositoryByClass(string $className): Repository
+    {
+        return $this->getEntityManager()->getRepositoryByClass($className);
     }
 }

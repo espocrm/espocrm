@@ -29,53 +29,35 @@
 
 namespace Espo\Core\ORM;
 
+use Espo\Core\ORM\PDO\PDOFactoryFactory;
 use Espo\Core\ORM\QueryComposer\QueryComposerFactory;
-use Espo\Core\Utils\Config;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\ORM\QueryComposer\Part\FunctionConverterFactory;
 
 use Espo\ORM\Metadata;
 use Espo\ORM\EventDispatcher;
 use Espo\ORM\DatabaseParams;
+use Espo\ORM\PDO\PDOFactory;
 use Espo\ORM\QueryComposer\QueryComposerFactory as QueryComposerFactoryInterface;
 use Espo\ORM\Repository\RepositoryFactory as RepositoryFactoryInterface;
-use Espo\ORM\EntityFactory as EntityFactoryInteface;
-use Espo\ORM\Value\ValueFactoryFactory as ValueFactoryFactoryInteface;
-use Espo\ORM\Value\AttributeExtractorFactory as AttributeExtractorFactoryInteface;
+use Espo\ORM\EntityFactory as EntityFactoryInterface;
+use Espo\ORM\Value\ValueFactoryFactory as ValueFactoryFactoryInterface;
+use Espo\ORM\Value\AttributeExtractorFactory as AttributeExtractorFactoryInterface;
 use Espo\ORM\PDO\PDOProvider;
-use Espo\ORM\PDO\DefaultPDOProvider;
 use Espo\ORM\QueryComposer\Part\FunctionConverterFactory as FunctionConverterFactoryInterface;
-
-use Espo\Core\ORM\QueryComposer\Part\FunctionConverterFactory;
 
 use RuntimeException;
 
 class EntityManagerFactory
 {
-    private Config $config;
-    private InjectableFactory $injectableFactory;
-    private MetadataDataProvider $metadataDataProvider;
-    private EventDispatcher $eventDispatcher;
-
-    /**
-     * @var array<string,string>
-     */
-    private $driverPlatformMap = [
-        'pdo_mysql' => 'Mysql',
-        'mysqli' => 'Mysql',
-    ];
-
     public function __construct(
-        Config $config,
-        InjectableFactory $injectableFactory,
-        MetadataDataProvider $metadataDataProvider,
-        EventDispatcher $eventDispatcher
-    ) {
-        $this->config = $config;
-        $this->injectableFactory = $injectableFactory;
-        $this->metadataDataProvider = $metadataDataProvider;
-        $this->eventDispatcher = $eventDispatcher;
-    }
+        private InjectableFactory $injectableFactory,
+        private MetadataDataProvider $metadataDataProvider,
+        private EventDispatcher $eventDispatcher,
+        private PDOFactoryFactory $pdoFactoryFactory,
+        private DatabaseParamsFactory $databaseParamsFactory
+    ) {}
 
     public function create(): EntityManager
     {
@@ -84,7 +66,7 @@ class EntityManagerFactory
         $repositoryFactory = $this->injectableFactory->createWithBinding(
             RepositoryFactory::class,
             BindingContainerBuilder::create()
-                ->bindInstance(EntityFactoryInteface::class, $entityFactory)
+                ->bindInstance(EntityFactoryInterface::class, $entityFactory)
                 ->build()
         );
 
@@ -113,10 +95,13 @@ class EntityManagerFactory
                 ->build()
         );
 
-        $pdoProvider = $this->injectableFactory->createWithBinding(
-            DefaultPDOProvider::class,
+        $pdoFactory = $this->pdoFactoryFactory->create($databaseParams->getPlatform() ?? '');
+
+        $pdoProvider = $this->injectableFactory->createResolved(
+            PDOProvider::class,
             BindingContainerBuilder::create()
                 ->bindInstance(DatabaseParams::class, $databaseParams)
+                ->bindInstance(PDOFactory::class, $pdoFactory)
                 ->build()
         );
 
@@ -125,7 +110,7 @@ class EntityManagerFactory
             BindingContainerBuilder::create()
                 ->bindInstance(PDOProvider::class, $pdoProvider)
                 ->bindInstance(Metadata::class, $metadata)
-                ->bindInstance(EntityFactoryInteface::class, $entityFactory)
+                ->bindInstance(EntityFactoryInterface::class, $entityFactory)
                 ->bindInstance(FunctionConverterFactoryInterface::class, $functionConverterFactory)
                 ->build()
         );
@@ -135,9 +120,9 @@ class EntityManagerFactory
             ->bindInstance(Metadata::class, $metadata)
             ->bindInstance(QueryComposerFactoryInterface::class, $queryComposerFactory)
             ->bindInstance(RepositoryFactoryInterface::class, $repositoryFactory)
-            ->bindInstance(EntityFactoryInteface::class, $entityFactory)
-            ->bindInstance(ValueFactoryFactoryInteface::class, $valueFactoryFactory)
-            ->bindInstance(AttributeExtractorFactoryInteface::class, $attributeExtractorFactory)
+            ->bindInstance(EntityFactoryInterface::class, $entityFactory)
+            ->bindInstance(ValueFactoryFactoryInterface::class, $valueFactoryFactory)
+            ->bindInstance(AttributeExtractorFactoryInterface::class, $attributeExtractorFactory)
             ->bindInstance(EventDispatcher::class, $this->eventDispatcher)
             ->bindInstance(PDOProvider::class, $pdoProvider)
             ->bindInstance(FunctionConverterFactoryInterface::class, $functionConverterFactory)
@@ -148,41 +133,10 @@ class EntityManagerFactory
 
     private function createDatabaseParams(): DatabaseParams
     {
-        $config = $this->config;
-
-        $databaseParams = DatabaseParams::create()
-            ->withHost($config->get('database.host'))
-            ->withPort($config->get('database.port') ? (int) $config->get('database.port') : null)
-            ->withName($config->get('database.dbname'))
-            ->withUsername($config->get('database.user'))
-            ->withPassword($config->get('database.password'))
-            ->withCharset($config->get('database.charset') ?? 'utf8')
-            ->withPlatform($config->get('database.platform'))
-            ->withSslCa($config->get('database.sslCA'))
-            ->withSslCert($config->get('database.sslCert'))
-            ->withSslKey($config->get('database.sslKey'))
-            ->withSslCaPath($config->get('database.sslCAPath'))
-            ->withSslCipher($config->get('database.sslCipher'))
-            ->withSslVerifyDisabled($config->get('database.sslVerifyDisabled') ?? false);
+        $databaseParams = $this->databaseParamsFactory->create();
 
         if (!$databaseParams->getName()) {
-            throw new RuntimeException('No database name specified.');
-        }
-
-        if (!$databaseParams->getPlatform()) {
-            $driver = $config->get('database.driver');
-
-            if (!$driver) {
-                throw new RuntimeException('No database driver specified.');
-            }
-
-            $platform = $this->driverPlatformMap[$driver] ?? null;
-
-            if (!$platform) {
-                throw new RuntimeException("Database driver '{$driver}' is not supported.");
-            }
-
-            $databaseParams = $databaseParams->withPlatform($platform);
+            throw new RuntimeException('No database name specified in config.');
         }
 
         return $databaseParams;

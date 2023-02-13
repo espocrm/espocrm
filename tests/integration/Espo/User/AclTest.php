@@ -29,17 +29,20 @@
 
 namespace tests\integration\Espo\User;
 
-use Espo\Core\{
-    Api\ActionProcessor,
-    Api\Response,
-    Select\SearchParams,
-    Select\Where\Item as WhereItem,
-    Record\CreateParams,
-    Record\UpdateParams,
-};
+use Espo\Core\Api\ControllerActionProcessor;
+use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\Field\Date;
+use Espo\Core\FieldValidation\Exceptions\ValidationError;
+use Espo\Core\Record\CreateParams;
+use Espo\Core\Record\ServiceContainer;
+use Espo\Core\Record\UpdateParams;
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\Where\Item as WhereItem;
 
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Opportunity;
 use Exception;
 
 class AclTest extends \tests\integration\Core\BaseTestCase
@@ -93,7 +96,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
         $request = $this->createRequest(
             'POST',
@@ -136,7 +139,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
         $data = json_decode('{"name":"Test Account"}');
 
@@ -163,7 +166,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
         $params = [
             'id' => $user1->id,
@@ -177,7 +180,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $request = $this
             ->createRequest('PATCH', [], ['Content-Type' => 'application/json'], json_encode($data), $params);
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->once())
@@ -197,7 +200,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $request = $this
             ->createRequest('PATCH', [], ['Content-Type' => 'application/json'], json_encode($data), $params);
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->never())
@@ -251,7 +254,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
         $params = [
             'id' => $user1->id
@@ -265,7 +268,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $request = $this
             ->createRequest('PUT', [], ['Content-Type' => 'application/json'], json_encode($data), $params);
 
-        $response = $this->createMock(Response::class);
+        $response = $this->createMock(ResponseWrapper::class);
 
         $response
             ->expects($this->never())
@@ -302,6 +305,12 @@ class AclTest extends \tests\integration\Core\BaseTestCase
                 'assignmentPermission' => 'team',
                 'data' => [
                     'Account' => false,
+                    'Contact' => [
+                        'create' => 'no',
+                        'read' => 'own',
+                        'edit' => 'no',
+                        'delete' => 'no'
+                    ],
                     'Lead' => [
                         'create' => 'no',
                         'read' => 'own',
@@ -313,7 +322,13 @@ class AclTest extends \tests\integration\Core\BaseTestCase
                         'read' => 'team',
                         'edit' => 'own',
                         'delete' => 'own'
-                    ]
+                    ],
+                    'Opportunity' => [
+                        'create' => 'yes',
+                        'read' => 'team',
+                        'edit' => 'own',
+                        'delete' => 'own'
+                    ],
                 ]
             ]
         );
@@ -580,5 +595,82 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ));
 
         $service->find($searchParams);
+    }
+
+    public function testLinkAccess(): void
+    {
+        $userId = 'testUserId';
+
+        $this->prepareTestUser();
+        $this->auth('test');
+        $this->setApplication($this->createApplication());
+
+        $contact1 = $this->getEntityManager()
+            ->createEntity(Contact::ENTITY_TYPE, [
+                'lastName' => 'Contact 1',
+                'assignedUserId' => $userId,
+            ]);
+
+        $contact2 = $this->getEntityManager()
+            ->createEntity(Contact::ENTITY_TYPE, [
+                'lastName' => 'Contact 2',
+            ]);
+
+        /** @var ServiceContainer $recordServiceContainer */
+        $recordServiceContainer = $this->getContainer()->get('recordServiceContainer');
+        $service = $recordServiceContainer->get(Opportunity::ENTITY_TYPE);
+
+        $service->create((object) [
+            'name' => 'Test 1',
+            'probability' => 10,
+            'amount' => 1,
+            'contactsIds' => [],
+            'closeDate' => Date::createToday()->getString(),
+            'assignedUserId' => $userId,
+        ], CreateParams::create());
+
+        // Allow own contact.
+        $opp2 = $service->create((object) [
+            'name' => 'Test 2',
+            'amount' => 1,
+            'probability' => 10,
+            'contactsIds' => [$contact1->getId()],
+            'closeDate' => Date::createToday()->getString(),
+            'assignedUserId' => $userId,
+        ], CreateParams::create());
+
+        $opp2 = $this->getEntityManager()->getEntityById(Opportunity::ENTITY_TYPE, $opp2->getId());
+        $opp2->set([
+            'contactsIds' => [$contact2->getId(), $contact2->getId()],
+        ]);
+        $this->getEntityManager()->saveEntity($opp2);
+
+        // Allow remove own contact, keeping not own.
+        $service->update($opp2->getId(), (object) [
+            'amount' => 2,
+            'contactsIds' => [$contact1->getId()],
+        ], UpdateParams::create());
+
+        $result = null;
+        try {
+            // Don't allow to add not own contact.
+            $result = $service->update($opp2->getId(), (object) [
+                'amount' => 2,
+                'contactsIds' => [$contact1->getId(), $contact2->getId()],
+            ], UpdateParams::create());
+        } catch (Forbidden) {}
+        $this->assertNull($result);
+
+        // Disallow not own contact.
+        $this->expectException(Forbidden::class);
+
+        $service->create((object) [
+            'name' => 'Test 3',
+            'amount' => 1,
+            'probability' => 10,
+            'contactsIds' => [$contact2->getId()],
+            'closeDate' => Date::createToday()->getString(),
+            'assignedUserId' => $userId,
+        ], CreateParams::create());
     }
 }

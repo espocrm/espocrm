@@ -368,6 +368,10 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                             options.tooltipText = this.translate(tooltip, 'tooltips', 'FieldManager');
                         }
 
+                        if (o.readOnlyNotNew && !this.isNew) {
+                            options.readOnly = true;
+                        }
+
                         promiseList.push(
                             this.createFieldView(o.type, o.name, null, o, options)
                         );

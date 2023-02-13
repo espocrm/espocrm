@@ -199,15 +199,29 @@ class VarcharFieldTest extends Base
         $this->assertEquals('100', $column['CHARACTER_MAXIMUM_LENGTH']);
         $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
 
-        $dbHelper = new DatabaseHelper($this->getContainer()->get('config'));
+        $dbHelper = $this->getInjectableFactory()->create(DatabaseHelper::class);
 
         if (
-            $dbHelper->getDatabaseType() == 'MariaDB'
-            && version_compare($dbHelper->getDatabaseVersion(), '10.2.7', '>=')
+            $dbHelper->getType() == 'MariaDB'
+            && version_compare($dbHelper->getVersion(), '10.2.7', '>=')
         ) {
             $this->assertEquals("'test-default'", $column['COLUMN_DEFAULT']);
         } else {
             $this->assertEquals('test-default', $column['COLUMN_DEFAULT']);
         }
+    }
+
+    /**
+     * Make sure columns not removed.
+     */
+    public function testRemoveField(): void
+    {
+        $this->getMetadata()->delete('entityDefs', 'Test', ['fields.testVarchar']);
+        $this->getMetadata()->save();
+        $this->getDataManager()->rebuildDatabase();
+
+        $column = $this->getColumnInfo('Test', 'testVarchar');
+
+        $this->assertTrue((bool) $column);
     }
 }

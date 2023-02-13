@@ -20,6 +20,7 @@
     "notActualFields": [
         "name"
     ],
+    "converterClassName": "Espo\\Core\\Utils\\Database\\Orm\\FieldConverters\\LinkOne",
     "validationList": [
         "required",
         "pattern"

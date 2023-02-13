@@ -29,29 +29,18 @@
 
 namespace tests\integration\Espo\Core\Utils\Database;
 
-use tests\unit\ReflectionHelper;
-
 use Espo\Core\Utils\Database\Helper;
-
 use Doctrine\DBAL\Connection;
-
-use Espo\Core\Exceptions\Error;
-
 use PDO;
-
-use RuntimeException;
 
 class HelperTest extends \tests\integration\Core\BaseTestCase
 {
-    protected $reflection;
+    /** @var ?Helper */
+    protected $helper;
 
-    protected function initTest(bool $noConfig = false)
+    protected function initTest()
     {
-        $config = $noConfig ? null : $this->getContainer()->get('config');
-
-        $this->helper = new Helper($config);
-
-        $this->reflection = new ReflectionHelper($this->helper);
+        $this->helper = $this->getInjectableFactory()->create(Helper::class);
     }
 
     private function getDatabaseInfo()
@@ -78,15 +67,6 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
         ];
     }
 
-    public function testGetDbalConnectionWithNoConfig()
-    {
-        $this->initTest(true);
-
-        $this->expectException(RuntimeException::class);
-
-        $this->helper->getDbalConnection();
-    }
-
     public function testGetDbalConnectionWithConfig()
     {
         $this->initTest();
@@ -94,54 +74,11 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
         $this->assertInstanceOf(Connection::class, $this->helper->getDbalConnection());
     }
 
-    public function testGetPdoConnection()
-    {
-        $this->initTest(true);
-
-        $this->expectException(RuntimeException::class);
-
-        $this->helper->getPdoConnection();
-    }
-
     public function testGetPdoConnectionWithConfig()
     {
         $this->initTest();
 
-        $this->assertInstanceOf(PDO::class, $this->helper->getPdoConnection());
-    }
-
-    public function testGetMaxIndexLength()
-    {
-        $this->initTest();
-
-        $databaseInfo = $this->getDatabaseInfo();
-        if (empty($databaseInfo)) {
-            return;
-        }
-
-        $expectedMaxIndexLength = 767;
-
-        switch ($databaseInfo['type']) {
-            case 'mysql':
-                if (version_compare($databaseInfo['version'], '5.7.0') >= 0) {
-                    $expectedMaxIndexLength = 3072;
-                }
-                break;
-
-            case 'mariadb':
-                if (version_compare($databaseInfo['version'], '10.2.2') >= 0) {
-                    $expectedMaxIndexLength = 3072;
-                }
-                break;
-        }
-
-        $engine = $this->reflection->invokeMethod('getTableEngine');
-        $result = ($engine == 'MyISAM') ? 1000 : $expectedMaxIndexLength;
-        $this->assertEquals($result, $this->helper->getMaxIndexLength());
-
-        $engine = $this->reflection->invokeMethod('getTableEngine', ['account']);
-        $result = ($engine == 'MyISAM') ? 1000 : $expectedMaxIndexLength;
-        $this->assertEquals($expectedMaxIndexLength, $this->helper->getMaxIndexLength('account'));
+        $this->assertInstanceOf(PDO::class, $this->helper->getPDO());
     }
 
     public function testGetDatabaseInfo()
@@ -153,41 +90,8 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
             return;
         }
 
-        $this->assertEquals($databaseInfo['type'], strtolower($this->helper->getDatabaseType()));
-        $this->assertEquals($databaseInfo['version'], $this->helper->getDatabaseVersion());
-    }
-
-    public function testIsSupportsFulltext()
-    {
-        $this->initTest();
-
-        $databaseInfo = $this->getDatabaseInfo();
-        if (empty($databaseInfo)) {
-            return;
-        }
-
-        switch ($databaseInfo['type']) {
-            case 'mysql':
-                if (version_compare($databaseInfo['version'], '5.7.0', '<')) {
-                    throw new Error('You have to upgrade your MySQL to use EspoCRM.');
-                }
-                break;
-
-            case 'mariadb':
-                if (version_compare($databaseInfo['version'], '10.1.0', '<')) {
-                    throw new Error('You have to upgrade your MariaDB to use EspoCRM.');
-                }
-                break;
-
-            default:
-                throw new Error('Uknown database type.');
-                break;
-        }
-
-        $this->assertTrue($this->helper->doesSupportFulltext());
-        $this->assertTrue($this->helper->doesSupportFulltext('dummy_table', false));
-        $this->assertTrue($this->helper->doesTableSupportFulltext('account'));
-        $this->assertTrue($this->helper->doesTableSupportFulltext('account', true));
+        $this->assertEquals($databaseInfo['type'], strtolower($this->helper->getType()));
+        $this->assertEquals($databaseInfo['version'], $this->helper->getVersion());
     }
 
     public function testGetDatabaseType()
@@ -201,15 +105,12 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
 
         switch ($databaseInfo['type']) {
             case 'mysql':
-                $this->assertEquals('MySQL', $this->helper->getDatabaseType());
+                $this->assertEquals('MySQL', $this->helper->getType());
                 break;
 
             case 'mariadb':
-                $this->assertEquals('MariaDB', $this->helper->getDatabaseType());
+                $this->assertEquals('MariaDB', $this->helper->getType());
                 break;
         }
-
-        $this->assertEquals('MySQL', $this->helper->getDatabaseType('MySQL'));
-        $this->assertEquals('MariaDB', $this->helper->getDatabaseType('MariaDB'));
     }
 }

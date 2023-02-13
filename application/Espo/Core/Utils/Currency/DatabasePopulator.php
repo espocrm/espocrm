@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils\Currency;
 
+use Espo\Entities\Currency;
 use Espo\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 
@@ -37,20 +38,14 @@ use Espo\Core\Utils\Config;
  */
 class DatabasePopulator
 {
-    private Config $config;
-
-    private EntityManager $entityManager;
-
-    public function __construct(Config $config, EntityManager $entityManager)
-    {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private Config $config,
+        private EntityManager $entityManager)
+    {}
 
     public function process(): void
     {
         $defaultCurrency = $this->config->get('defaultCurrency');
-
         $baseCurrency = $this->config->get('baseCurrency');
         $currencyRates = $this->config->get('currencyRates');
 
@@ -62,13 +57,13 @@ class DatabasePopulator
 
         $delete = $this->entityManager->getQueryBuilder()
             ->delete()
-            ->from('Currency')
+            ->from(Currency::ENTITY_TYPE)
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($delete);
 
         foreach ($currencyRates as $currencyName => $rate) {
-            $this->entityManager->createEntity('Currency', [
+            $this->entityManager->createEntity(Currency::ENTITY_TYPE, [
                 'id' => $currencyName,
                 'rate' => $rate,
             ]);
@@ -76,8 +71,8 @@ class DatabasePopulator
     }
 
     /**
-     * @param array<string,float> $currencyRates
-     * @return array<string,float>
+     * @param array<string, float> $currencyRates
+     * @return array<string, float>
      */
     private function exchangeRates(string $baseCurrency, string $defaultCurrency, array $currencyRates): array
     {

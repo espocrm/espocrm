@@ -935,7 +935,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
 
                 if (!this.isDropdownEditItemListEmpty()) {
-                    this.$dropdownItemListButton.removeClass('hidden');
+                    this.$dropdownEditItemListButton.removeClass('hidden');
                 }
 
                 this.adjustButtons();
@@ -1912,7 +1912,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this.subscribeToWebSocket();
 
                 this.once('remove', () => {
-                    if (this.isSubscribedToWebSocked) {
+                    if (this.isSubscribedToWebSocket) {
                         this.unsubscribeFromWebSocket();
                     }
                 });
@@ -3350,7 +3350,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             let topic = 'recordUpdate.' + this.entityType + '.' + this.model.id;
 
             this.recordUpdateWebSocketTopic = topic;
-            this.isSubscribedToWebSocked = true;
+            this.isSubscribedToWebSocket = true;
 
             this.getHelper().webSocketManager.subscribe(topic, (t, data) => {
                 this.handleRecordUpdate();
@@ -3358,7 +3358,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         unsubscribeFromWebSocket: function () {
-            if (!this.isSubscribedToWebSocked) {
+            if (!this.isSubscribedToWebSocket) {
                 return;
             }
 
@@ -3965,6 +3965,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return;
             }
 
+            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+                return;
+            }
+
             let $button = this.$el.find('button[data-action="previous"]');
 
             if (!$button.length || $button.hasClass('disabled')) {
@@ -3991,6 +3995,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             if (this.type !== this.TYPE_DETAIL || this.mode !== this.MODE_DETAIL) {
+                return;
+            }
+
+            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
                 return;
             }
 

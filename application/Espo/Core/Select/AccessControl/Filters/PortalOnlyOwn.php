@@ -29,24 +29,15 @@
 
 namespace Espo\Core\Select\AccessControl\Filters;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Core\Select\AccessControl\Filter,
-    Core\Select\Helpers\FieldHelper,
-    Entities\User,
-};
+use Espo\Core\Select\AccessControl\Filter;
+use Espo\Core\Select\Helpers\FieldHelper;
+use Espo\Entities\User;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class PortalOnlyOwn implements Filter
 {
-    private $user;
-
-    private $fieldHelper;
-
-    public function __construct(User $user, FieldHelper $fieldHelper)
-    {
-        $this->user = $user;
-        $this->fieldHelper = $fieldHelper;
-    }
+    public function __construct(private User $user, private FieldHelper $fieldHelper)
+    {}
 
     public function apply(QueryBuilder $queryBuilder): void
     {
@@ -58,8 +49,6 @@ class PortalOnlyOwn implements Filter
             return;
         }
 
-        $queryBuilder->where([
-            'id' => null,
-        ]);
+        $queryBuilder->where(['id' => null]);
     }
 }

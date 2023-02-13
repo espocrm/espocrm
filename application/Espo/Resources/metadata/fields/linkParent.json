@@ -26,6 +26,7 @@
     "notActualFields": [
         "name"
     ],
+    "converterClassName": "Espo\\Core\\Utils\\Database\\Orm\\FieldConverters\\LinkParent",
     "validationList": [
         "required",
         "pattern",

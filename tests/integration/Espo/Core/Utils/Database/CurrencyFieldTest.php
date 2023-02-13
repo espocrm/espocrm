@@ -31,18 +31,18 @@ namespace tests\integration\Espo\Core\Utils\Database;
 
 class CurrencyFieldTest extends Base
 {
-    public function fieldlist()
+    public function fieldList(): array
     {
         return [
             ['testCurrency', 'double', null, null],
-            ['testCurrencyCurrency', 'varchar', 6, 'utf8mb4_unicode_ci'],
+            ['testCurrencyCurrency', 'varchar', 3, 'utf8mb4_unicode_ci'],
         ];
     }
 
     /**
-     * @dataProvider fieldlist
+     * @dataProvider fieldList
      */
-    public function testColumns($fieldName, $type, $length, $collation)
+    public function testColumns($fieldName, $type, $length, $collation): void
     {
         $column = $this->getColumnInfo('Test', $fieldName);
 

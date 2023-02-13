@@ -58,9 +58,10 @@ class Oidc
         $response->writeBody(Json::encode($data));
     }
 
+
     /**
      * @throws BadRequest
-     * @throws ForbiddenSilent
+     * @throws Forbidden
      */
     public function postActionBackchannelLogout(Request $request, Response $response): void
     {
