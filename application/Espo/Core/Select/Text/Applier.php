@@ -185,6 +185,6 @@ class Applier
             );
         }
 
-        return $expression;
+        return Expr::notEqual($expression, 0);
     }
 }
