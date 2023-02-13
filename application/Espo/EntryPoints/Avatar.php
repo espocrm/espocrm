@@ -100,6 +100,7 @@ class Avatar extends Image
             throw new BadRequest();
         }
 
+        /** @var ?User $user */
         $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
@@ -112,6 +113,8 @@ class Avatar extends Image
 
         if ($id) {
             $this->show($response, $id, $size, true);
+
+            return;
         }
 
         $identicon = new Identicon();
@@ -136,7 +139,7 @@ class Avatar extends Image
 
         $color = $this->getColor($userId);
 
-        if ($hash === ApplicationUser::SYSTEM_USER_ID) {
+        if ($user->getUserName() === ApplicationUser::SYSTEM_USER_NAME) {
             $color = $this->metadata->get(['app', 'avatars', 'systemColor']) ?? $this->systemColor;
         }
 

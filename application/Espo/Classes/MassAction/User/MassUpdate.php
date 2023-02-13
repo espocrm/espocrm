@@ -30,6 +30,7 @@
 namespace Espo\Classes\MassAction\User;
 
 use Espo\Core\ApplicationUser;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\MassAction\Actions\MassUpdate as MassUpdateOriginal;
 use Espo\Core\MassAction\QueryBuilder;
 use Espo\Core\MassAction\Params;
@@ -44,7 +45,6 @@ use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\Forbidden;
 
 use Espo\Entities\User;
-use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 use Espo\Tools\MassUpdate\Data as MassUpdateData;
@@ -75,6 +75,7 @@ class MassUpdate implements MassAction
 
     /**
      * @throws Forbidden
+     * @throws BadRequest
      */
     public function process(Params $params, Data $data): Result
     {
@@ -102,7 +103,7 @@ class MassUpdate implements MassAction
             ->getRDBRepository(User::ENTITY_TYPE)
             ->clone($query)
             ->sth()
-            ->select(['id'])
+            ->select(['id', 'userName'])
             ->find();
 
         foreach ($collection as $entity) {
@@ -131,9 +132,9 @@ class MassUpdate implements MassAction
     /**
      * @throws Forbidden
      */
-    private function checkEntity(Entity $entity, MassUpdateData $data): void
+    private function checkEntity(User $entity, MassUpdateData $data): void
     {
-        if ($entity->getId() === ApplicationUser::SYSTEM_USER_ID) {
+        if ($entity->getUserName() === ApplicationUser::SYSTEM_USER_NAME) {
             throw new Forbidden("Can't update 'system' user.");
         }
 

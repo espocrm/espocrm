@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\ApplicationUser;
 use Espo\Tools\Email\SendService;
 use Espo\ORM\Entity;
 use Espo\Entities\User;
@@ -211,12 +212,11 @@ class Email extends Record
             $skipFilter = true;
         }
 
-        if ($entity->isManuallyArchived()) {
+        if ($this->isEmailManuallyArchived($entity)) {
             $skipFilter = true;
-        } else {
-            if ($entity->isAttributeChanged('dateSent')) {
-                $entity->set('dateSent', $entity->getFetched('dateSent'));
-            }
+        }
+        else if ($entity->isAttributeChanged('dateSent')) {
+            $entity->set('dateSent', $entity->getFetched('dateSent'));
         }
 
         if ($entity->getStatus() === EmailEntity::STATUS_DRAFT) {
@@ -246,6 +246,30 @@ class Email extends Record
 
             $entity->set('messageId', '<' . $messageId . '>');
         }
+    }
+
+    private function isEmailManuallyArchived(EmailEntity $email): bool
+    {
+        if ($email->getStatus() !== EmailEntity::STATUS_ARCHIVED) {
+            return false;
+        }
+
+        $userId = $email->getCreatedBy()?->getId();
+
+        if (!$userId) {
+            return false;
+        }
+
+        /** @var ?User $user */
+        $user = $this->entityManager
+            ->getRDBRepositoryByClass(User::class)
+            ->getById($userId);
+
+        if (!$user) {
+            return true;
+        }
+
+        return $user->getUserName() !== ApplicationUser::SYSTEM_USER_NAME;
     }
 
     private function clearEntityForUpdate(EmailEntity $email): void

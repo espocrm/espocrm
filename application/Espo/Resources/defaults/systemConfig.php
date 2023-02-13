@@ -42,10 +42,7 @@ return [
         'delete' => 'delete',
     ],
     'systemUserAttributes' => [
-        'userName' => 'system',
-        'firstName' => '',
         'lastName' => 'System',
-        'type' => 'system',
     ],
     'systemItems' => [
         'systemItems',

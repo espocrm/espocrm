@@ -40,6 +40,7 @@ use RuntimeException;
 class ApplicationUser
 {
     public const SYSTEM_USER_ID = 'system';
+    public const SYSTEM_USER_NAME = 'system';
 
     public function __construct(
         private Container $container,
@@ -63,7 +64,7 @@ class ApplicationUser
                 'lastName',
                 'deleted',
             ])
-            ->where(['id' => self::SYSTEM_USER_ID])
+            ->where(['userName' => self::SYSTEM_USER_NAME])
             ->findOne();
 
         if (!$user) {

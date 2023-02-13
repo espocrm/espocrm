@@ -89,18 +89,18 @@ class User extends Record implements
      */
     public function getEntity(string $id): ?Entity
     {
-        if ($id === ApplicationUser::SYSTEM_USER_ID) {
-            throw new Forbidden();
-        }
-
         /** @var ?UserEntity $entity */
         $entity = parent::getEntity($id);
 
-        if ($entity && $entity->isSuperAdmin() && !$this->user->isSuperAdmin()) {
+        if (!$entity) {
+            return null;
+        }
+
+        if ($entity->isSuperAdmin() && !$this->user->isSuperAdmin()) {
             throw new Forbidden();
         }
 
-        if ($entity && $entity->isSystem()) {
+        if ($entity->isSystem()) {
             throw new Forbidden();
         }
 
@@ -176,10 +176,6 @@ class User extends Record implements
 
     public function update(string $id, stdClass $data, UpdateParams $params): Entity
     {
-        if ($id === ApplicationUser::SYSTEM_USER_ID) {
-            throw new Forbidden();
-        }
-
         $newPassword = null;
 
         if (property_exists($data, 'password')) {
@@ -192,7 +188,7 @@ class User extends Record implements
             $data->password = $this->hashPassword($data->password);
         }
 
-        if ($id == $this->user->getId()) {
+        if ($id === $this->user->getId()) {
             unset($data->isActive);
             unset($data->isPortalUser);
             unset($data->type);
@@ -207,7 +203,7 @@ class User extends Record implements
                     $this->sendPassword($user, $newPassword);
                 }
             }
-            catch (Exception $e) {}
+            catch (Exception) {}
         }
 
         return $user;
@@ -281,43 +277,41 @@ class User extends Record implements
     }
 
     /**
+     * @param UserEntity $entity
      * @throws Forbidden
      */
     protected function beforeCreateEntity(Entity $entity, $data)
     {
-        /** @var UserEntity $entity */
+        $userLimit = $this->config->get('userLimit');
 
         if (
-            $this->config->get('userLimit') &&
+            $userLimit &&
             !$this->user->isSuperAdmin() &&
             !$entity->isPortal() && !$entity->isApi()
         ) {
             $userCount = $this->getInternalUserCount();
 
-            if ($userCount >= $this->config->get('userLimit')) {
-                throw new Forbidden(
-                    'User limit '.$this->config->get('userLimit').' is reached.'
-                );
+            if ($userCount >= $userLimit) {
+                throw new Forbidden("User limit {$userLimit} is reached.");
             }
         }
+
+        $portalUserLimit = $this->config->get('portalUserLimit');
+
         if (
-            $this->config->get('portalUserLimit') &&
+            $portalUserLimit &&
             !$this->user->isSuperAdmin() &&
             $entity->isPortal()
         ) {
             $portalUserCount = $this->getPortalUserCount();
 
-            if ($portalUserCount >= $this->config->get('portalUserLimit')) {
-                throw new Forbidden(
-                    'Portal user limit ' . $this->config->get('portalUserLimit').' is reached.'
-                );
+            if ($portalUserCount >= $portalUserLimit) {
+                throw new Forbidden("Portal user limit {$portalUserLimit} is reached.");
             }
         }
 
         if ($entity->isApi()) {
-            $apiKey = Util::generateApiKey();
-
-            $entity->set('apiKey', $apiKey);
+            $entity->set('apiKey', Util::generateApiKey());
 
             if ($entity->getAuthMethod() === Hmac::NAME) {
                 $secretKey = Util::generateSecretKey();
@@ -326,25 +320,27 @@ class User extends Record implements
             }
         }
 
-        if (!$entity->isSuperAdmin()) {
-            if (
-                $entity->getType() &&
-                !in_array($entity->getType(), $this->allowedUserTypeList)
-            ) {
-                throw new Forbidden();
-            }
+        if (
+            !$entity->isSuperAdmin() &&
+            $entity->getType() &&
+            !in_array($entity->getType(), $this->allowedUserTypeList)
+        ) {
+            throw new Forbidden();
         }
     }
 
     /**
+     * @param UserEntity $entity
      * @throws Forbidden
      */
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
-        /** @var UserEntity $entity */
+        $userLimit = $this->config->get('userLimit');
 
-        if ($this->config->get('userLimit') && !$this->user->isSuperAdmin()) {
-            if (
+        if (
+            $userLimit &&
+            !$this->user->isSuperAdmin() &&
+            (
                 (
                     $entity->isActive() &&
                     $entity->isAttributeChanged('isActive') &&
@@ -364,17 +360,21 @@ class User extends Record implements
                         $entity->getFetched('type') == UserEntity::TYPE_API
                     )
                 )
-            ) {
-                $userCount = $this->getInternalUserCount();
+            )
+        ) {
+            $userCount = $this->getInternalUserCount();
 
-                if ($userCount >= $this->config->get('userLimit')) {
-                    throw new Forbidden('User limit '.$this->config->get('userLimit').' is reached.');
-                }
+            if ($userCount >= $userLimit) {
+                throw new Forbidden("User limit {$userLimit} is reached.");
             }
         }
 
-        if ($this->config->get('portalUserLimit') && !$this->user->isSuperAdmin()) {
-            if (
+        $portalUserLimit = $this->config->get('portalUserLimit');
+
+        if (
+            $portalUserLimit &&
+            !$this->user->isSuperAdmin() &&
+            (
                 (
                     $entity->isActive() &&
                     $entity->isAttributeChanged('isActive') &&
@@ -384,47 +384,39 @@ class User extends Record implements
                     $entity->isPortal() &&
                     $entity->isAttributeChanged('type')
                 )
-            ) {
-                $portalUserCount = $this->getPortalUserCount();
+            )
+        ) {
+            $portalUserCount = $this->getPortalUserCount();
 
-                if ($portalUserCount >= $this->config->get('portalUserLimit')) {
-                    throw new Forbidden(
-                        'Portal user limit '. $this->config->get('portalUserLimit').' is reached.'
-                    );
-                }
+            if ($portalUserCount >= $portalUserLimit) {
+                throw new Forbidden("Portal user limit {$portalUserLimit} is reached.");
             }
         }
 
-        if ($entity->isApi()) {
-            if (
-                $entity->isAttributeChanged('authMethod') &&
-                $entity->getAuthMethod() === Hmac::NAME
-            ) {
-                $secretKey = Util::generateSecretKey();
+        if (
+            $entity->isApi() &&
+            $entity->isAttributeChanged('authMethod') &&
+            $entity->getAuthMethod() === Hmac::NAME
+        ) {
+            $secretKey = Util::generateSecretKey();
 
-                $entity->set('secretKey', $secretKey);
-            }
+            $entity->set('secretKey', $secretKey);
         }
 
-        if (!$entity->isSuperAdmin()) {
-            if (
-                $entity->isAttributeChanged('type') &&
-                $entity->getType() &&
-                !in_array($entity->getType(), $this->allowedUserTypeList)
-            ) {
-                throw new Forbidden();
-            }
+        if (
+            !$entity->isSuperAdmin() &&
+            $entity->isAttributeChanged('type') &&
+            $entity->getType() &&
+            !in_array($entity->getType(), $this->allowedUserTypeList)
+        ) {
+            throw new Forbidden("Can't change type.");
         }
     }
 
     public function delete(string $id, DeleteParams $params): void
     {
-        if ($id === ApplicationUser::SYSTEM_USER_ID) {
-            throw new Forbidden();
-        }
-
-        if ($id == $this->user->getId()) {
-            throw new Forbidden();
+        if ($id === $this->user->getId()) {
+            throw new Forbidden("Can't delete own user.");
         }
 
         parent::delete($id, $params);

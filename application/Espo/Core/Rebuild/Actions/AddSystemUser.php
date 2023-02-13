@@ -44,22 +44,28 @@ class AddSystemUser implements RebuildAction
 
     public function process(): void
     {
-        $userId = ApplicationUser::SYSTEM_USER_ID;
-
         $repository = $this->entityManager->getRDBRepositoryByClass(User::class);
 
-        $user = $repository->getById($userId);
+        $user = $repository
+            ->where(['userName' => ApplicationUser::SYSTEM_USER_NAME])
+            ->findOne();
 
         if ($user) {
             return;
         }
 
+        // @todo If a user with the 'system' ID already exists, delete it from DB.
+
         /** @var array<string, mixed> $attributes */
         $attributes = $this->config->get('systemUserAttributes');
 
         $user = $repository->getNew();
+
+        $user->set('id', ApplicationUser::SYSTEM_USER_ID);
+        $user->set('userName', ApplicationUser::SYSTEM_USER_NAME);
+        $user->set('type', User::TYPE_SYSTEM);
         $user->set($attributes);
-        $user->set('id', $userId);
+
         $repository->save($user);
     }
 }

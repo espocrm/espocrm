@@ -169,8 +169,15 @@ class Email extends Entity
         $this->setInContainer('isUsers', false);
     }
 
+    /**
+     * @deprecated As of v7.4. As the system user ID may be not constant in the future.
+     */
     public function isManuallyArchived(): bool
     {
+        if ($this->getStatus() !== self::STATUS_ARCHIVED) {
+            return false;
+        }
+
         return $this->getStatus() === self::STATUS_ARCHIVED &&
             $this->get('createdById') !== ApplicationUser::SYSTEM_USER_ID;
     }
