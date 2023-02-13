@@ -120,6 +120,17 @@ class MetadataProvider
             ->getType();
     }
 
+    public function getFieldType(string $entityType, string $field): ?string
+    {
+        $entityDefs = $this->ormDefs->getEntity($entityType);
+
+        if (!$entityDefs->hasField($field)) {
+            return null;
+        }
+
+        return $entityDefs->getField($field)->getType();
+    }
+
     public function getRelationEntityType(string $entityType, string $link): ?string
     {
         $relationDefs = $this->ormDefs

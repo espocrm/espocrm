@@ -104,6 +104,14 @@ class DefaultFilter implements Filter
             return;
         }
 
+        if (
+            !str_contains($attribute, '.') &&
+            $this->metadataProvider->getFieldType($this->entityType, $attribute) === 'email' &&
+            str_contains($filter, ' ')
+        ) {
+            return;
+        }
+
         $expression = $filter;
 
         if (!$skipWildcards) {
