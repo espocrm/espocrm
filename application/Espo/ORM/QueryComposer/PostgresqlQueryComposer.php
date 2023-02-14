@@ -133,8 +133,18 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             );
 
             return "TS_RANK_CD(TO_TSVECTOR({$columnsPart}), PLAINTO_TSQUERY({$queryPart}))";
+        }
 
-            //return "TO_TSVECTOR({$columnsPart}) @@ PLAINTO_TSQUERY({$queryPart})";
+        if ($function === 'IF') {
+            if (count($argumentPartList) < 3) {
+                throw new RuntimeException("Not enough arguments for IF function.");
+            }
+
+            $conditionPart = $argumentPartList[0];
+            $thenPart = $argumentPartList[1];
+            $elsePart = $argumentPartList[2];
+
+            return "CASE WHEN {$conditionPart} THEN {$thenPart} ELSE {$elsePart} END";
         }
 
         if ($function === 'ROUND') {
