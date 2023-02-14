@@ -333,18 +333,14 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
             let previewSize = this.previewSize;
 
             if (this.isListMode()) {
-                previewSize = 'small';
-
-                if (this.params.listPreviewSize) {
-                    previewSize = this.params.listPreviewSize;
-                }
+                previewSize = this.params.listPreviewSize || 'small';
             }
 
             let src = this.getBasePath() + '?entryPoint=image&size=' + previewSize + '&id=' + id;
 
-            let maxHeight = (this.imageSizes[this.previewSize] || {})[1];
+            let maxHeight = (this.imageSizes[previewSize] || {})[1];
 
-            if (this.isListMode()) {
+            if (this.isListMode() && !this.params.listPreviewSize) {
                 maxHeight = this.ROW_HEIGHT + 'px';
             }
 
@@ -352,7 +348,7 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                 .attr('src', src)
                 .addClass('image-preview')
                 .css({
-                    maxWidth: (this.imageSizes[this.previewSize] || {})[0],
+                    maxWidth: (this.imageSizes[previewSize] || {})[0],
                     maxHeight: maxHeight,
                 });
 
