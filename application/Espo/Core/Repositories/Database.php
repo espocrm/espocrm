@@ -53,6 +53,13 @@ use Espo\Core\Utils\Metadata;
  */
 class Database extends RDBRepository
 {
+    private const ATTR_ID = 'id';
+    private const ATTR_CREATED_BY_ID = 'createdById';
+    private const ATTR_MODIFIED_BY_ID = 'modifiedById';
+    private const ATTR_MODIFIED_BY_NAME = 'modifiedByName';
+    private const ATTR_CREATED_AT = 'createdAt';
+    private const ATTR_MODIFIED_AT = 'modifiedAt';
+
     /**
      * Disables hook processing.
      * @var bool
@@ -116,10 +123,10 @@ class Database extends RDBRepository
     {
         if (
             $entity->isNew() &&
-            !$entity->has('id') &&
-            !$this->getAttributeParam($entity, 'id', 'autoincrement')
+            !$entity->has(self::ATTR_ID) &&
+            !$this->getAttributeParam($entity, self::ATTR_ID, 'autoincrement')
         ) {
-            $entity->set('id', $this->recordIdGenerator->generate());
+            $entity->set(self::ATTR_ID, $this->recordIdGenerator->generate());
         }
 
         if (empty($options[SaveOption::SKIP_ALL])) {
@@ -146,11 +153,11 @@ class Database extends RDBRepository
 
         $nowString = DateTimeUtil::getSystemNowString();
 
-        if ($entity->hasAttribute('modifiedAt')) {
-            $entity->set('modifiedAt', $nowString);
+        if ($entity->hasAttribute(self::ATTR_MODIFIED_AT)) {
+            $entity->set(self::ATTR_MODIFIED_AT, $nowString);
         }
 
-        if ($entity->hasAttribute('modifiedById')) {
+        if ($entity->hasAttribute(self::ATTR_MODIFIED_BY_ID)) {
             $modifiedById = $options[SaveOption::MODIFIED_BY_ID] ?? null;
 
             if ($modifiedById === SystemUser::NAME) {
@@ -163,7 +170,7 @@ class Database extends RDBRepository
             }
 
             if ($modifiedById) {
-                $entity->set('modifiedById', $modifiedById);
+                $entity->set(self::ATTR_MODIFIED_BY_ID, $modifiedById);
             }
         }
     }
@@ -233,7 +240,7 @@ class Database extends RDBRepository
             if ($foreignEntityType) {
                 $foreign = $this->entityManager->getNewEntity($foreignEntityType);
 
-                $foreign->set('id', $foreignId);
+                $foreign->set(self::ATTR_ID, $foreignId);
                 $foreign->setAsFetched();
             }
         }
@@ -270,7 +277,7 @@ class Database extends RDBRepository
             if ($foreignEntityType) {
                 $foreign = $this->entityManager->getNewEntity($foreignEntityType);
 
-                $foreign->set('id', $foreignId);
+                $foreign->set(self::ATTR_ID, $foreignId);
                 $foreign->setAsFetched();
             }
         }
@@ -335,11 +342,11 @@ class Database extends RDBRepository
             return;
         }
 
-        if ($entity->hasAttribute('modifiedAt')) {
-            $entity->set('modifiedAt', $nowString);
+        if ($entity->hasAttribute(self::ATTR_MODIFIED_AT)) {
+            $entity->set(self::ATTR_MODIFIED_AT, $nowString);
         }
 
-        if ($entity->hasAttribute('modifiedById')) {
+        if ($entity->hasAttribute(self::ATTR_MODIFIED_BY_ID)) {
             $modifiedById = $options[SaveOption::MODIFIED_BY_ID] ?? null;
 
             if ($modifiedById === SystemUser::NAME) {
@@ -348,11 +355,13 @@ class Database extends RDBRepository
             }
 
             if ($modifiedById) {
-                $entity->set('modifiedById', $modifiedById);
+                $entity->set(self::ATTR_MODIFIED_BY_ID, $modifiedById);
             }
             else if ($this->applicationState->hasUser()) {
-                $entity->set('modifiedById', $this->applicationState->getUser()->getId());
-                $entity->set('modifiedByName', $this->applicationState->getUser()->get('name'));
+                $user = $this->applicationState->getUser();
+
+                $entity->set(self::ATTR_MODIFIED_BY_ID, $user->getId());
+                $entity->set(self::ATTR_MODIFIED_BY_NAME, $user->getName());
             }
         }
     }
@@ -366,17 +375,17 @@ class Database extends RDBRepository
         $nowString = DateTimeUtil::getSystemNowString();
 
         if (
-            $entity->hasAttribute('createdAt') &&
-            (empty($options[SaveOption::IMPORT]) || !$entity->has('createdAt'))
+            $entity->hasAttribute(self::ATTR_CREATED_AT) &&
+            (empty($options[SaveOption::IMPORT]) || !$entity->has(self::ATTR_CREATED_AT))
         ) {
-            $entity->set('createdAt', $nowString);
+            $entity->set(self::ATTR_CREATED_AT, $nowString);
         }
 
-        if ($entity->hasAttribute('modifiedAt')) {
-            $entity->set('modifiedAt', $nowString);
+        if ($entity->hasAttribute(self::ATTR_MODIFIED_AT)) {
+            $entity->set(self::ATTR_MODIFIED_AT, $nowString);
         }
 
-        if ($entity->hasAttribute('createdById')) {
+        if ($entity->hasAttribute(self::ATTR_CREATED_BY_ID)) {
             $createdById = $options[SaveOption::CREATED_BY_ID] ?? null;
 
             if ($createdById) {
@@ -385,14 +394,14 @@ class Database extends RDBRepository
                     $createdById = $this->systemUser->getId();
                 }
 
-                $entity->set('createdById', $createdById);
+                $entity->set(self::ATTR_CREATED_BY_ID, $createdById);
             }
             else if (
                 empty($options[SaveOption::SKIP_CREATED_BY]) &&
-                (empty($options[SaveOption::IMPORT]) || !$entity->has('createdById')) &&
+                (empty($options[SaveOption::IMPORT]) || !$entity->has(self::ATTR_CREATED_BY_ID)) &&
                 $this->applicationState->hasUser()
             ) {
-                $entity->set('createdById', $this->applicationState->getUser()->getId());
+                $entity->set(self::ATTR_CREATED_BY_ID, $this->applicationState->getUser()->getId());
             }
         }
     }
