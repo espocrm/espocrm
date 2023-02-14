@@ -46,53 +46,28 @@ use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Core\Utils\Metadata;
 
 /**
- * @template TEntity of \Espo\ORM\Entity
+ * A database repository. Extending is not recommended. Use hooks, field saver framework instead.
+ *
+ * @template TEntity of Entity
  * @extends RDBRepository<TEntity>
  */
 class Database extends RDBRepository
 {
     /**
+     * Disables hook processing.
      * @var bool
      */
     protected $hooksDisabled = false;
 
-    /**
-     * @deprecated
-     * @todo Remove all usage.
-     * @var bool
-     */
-    protected $processFieldsAfterSaveDisabled = false;
-
-    /**
-     * @deprecated
-     * @todo Remove all usage.
-     * @var bool
-     */
-    protected $processFieldsAfterRemoveDisabled = false;
-
-    /**
-     * @var ?array<string,mixed>
-     */
+    /** @var ?array<string, mixed> */
     private $restoreData = null;
-
-    /**
-     * @var Metadata
-     */
+    /** @var Metadata */
     protected $metadata;
-
-    /**
-     * @var HookManager
-     */
+    /** @var HookManager */
     protected $hookManager;
-
-    /**
-     * @var ApplicationState
-     */
+    /** @var ApplicationState  */
     protected $applicationState;
-
-    /**
-     * @var RecordIdGenerator
-     */
+    /** @var RecordIdGenerator */
     protected $recordIdGenerator;
 
     public function __construct(
@@ -131,12 +106,11 @@ class Database extends RDBRepository
      * @deprecated Will be removed.
      */
     public function handleSelectParams(&$params) /** @phpstan-ignore-line */
-    {
-    }
+    {}
 
     /**
      * @param TEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function save(Entity $entity, array $options = []): void
     {
@@ -159,7 +133,7 @@ class Database extends RDBRepository
 
     /**
      * @param TEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function beforeRemove(Entity $entity, array $options = [])
@@ -196,7 +170,7 @@ class Database extends RDBRepository
 
     /**
      * @param TEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function afterRemove(Entity $entity, array $options = [])
@@ -211,8 +185,8 @@ class Database extends RDBRepository
     /**
      * @param TEntity $entity
      * @param string $relationName
-     * @param array<string,mixed> $params
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $params
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function afterMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
@@ -239,7 +213,7 @@ class Database extends RDBRepository
      * @param TEntity $entity
      * @param string $relationName
      * @param Entity|string $foreign
-     * @param \stdClass|array<string,mixed>|null $data
+     * @param \stdClass|array<string, mixed>|null $data
      * @param array<string,mixed> $options
      * @return void
      */
@@ -277,7 +251,7 @@ class Database extends RDBRepository
      * @param TEntity $entity
      * @param string $relationName
      * @param Entity|string $foreign
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
@@ -308,7 +282,7 @@ class Database extends RDBRepository
 
     /**
      * @param TEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function beforeSave(Entity $entity, array $options = [])
@@ -322,7 +296,7 @@ class Database extends RDBRepository
 
     /**
      * @param TEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function afterSave(Entity $entity, array $options = [])
@@ -342,7 +316,7 @@ class Database extends RDBRepository
 
     /**
      * @param TEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function processCreatedAndModifiedFieldsSave(Entity $entity, array $options): void
     {
@@ -378,7 +352,7 @@ class Database extends RDBRepository
 
     /**
      * @param TEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function processCreatedAndModifiedFieldsSaveNew(Entity $entity, array $options): void
     {
