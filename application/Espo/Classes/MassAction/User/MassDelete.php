@@ -30,7 +30,6 @@
 namespace Espo\Classes\MassAction\User;
 
 use Espo\Core\Acl;
-use Espo\Core\ApplicationUser;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\MassAction\Actions\MassDelete as MassDeleteOriginal;
@@ -41,6 +40,7 @@ use Espo\Core\MassAction\QueryBuilder;
 use Espo\Core\MassAction\Result;
 use Espo\Core\ORM\EntityManager;
 
+use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
 
 /**
@@ -96,7 +96,7 @@ class MassDelete implements MassAction
      */
     private function checkEntity(User $entity): void
     {
-        if ($entity->getUserName() === ApplicationUser::SYSTEM_USER_NAME) {
+        if ($entity->getUserName() === SystemUser::NAME) {
             throw new Forbidden("Can't delete 'system' user.");
         }
 

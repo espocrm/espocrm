@@ -27,30 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\Utils;
 
-use Espo\Core\ApplicationState;
-use Espo\Core\Container\Loader;
-use Espo\Core\ORM\EntityManager;
-
-use Espo\Core\Utils\SystemUser;
-use Espo\Entities\Preferences as PreferencesEntity;
-
-class Preferences implements Loader
+/**
+ * A system user utility.
+ */
+class SystemUser
 {
-    public function __construct(
-        private EntityManager $entityManager,
-        private ApplicationState $applicationState,
-        private SystemUser $systemUser
-    ) {}
+    /**
+     * A system user username.
+     */
+    public const NAME = 'system';
 
-    public function load(): PreferencesEntity
+    private const ID = 'system';
+    private const UUID = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
+
+    private bool $isUuid;
+
+    public function __construct(Metadata $metadata)
     {
-        $id = $this->applicationState->hasUser() ?
-            $this->applicationState->getUser()->getId() :
-            $this->systemUser->getId();
+        $this->isUuid = $metadata->get(['app', 'recordId', 'dbType']) === 'uuid';
+    }
 
-        /** @var PreferencesEntity */
-        return $this->entityManager->getEntity(PreferencesEntity::ENTITY_TYPE, $id);
+    /**
+     * Get a system user ID.
+     */
+    public function getId(): string
+    {
+        return $this->isUuid ?
+            self::UUID :
+            self::ID;
     }
 }

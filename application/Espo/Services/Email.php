@@ -29,7 +29,7 @@
 
 namespace Espo\Services;
 
-use Espo\Core\ApplicationUser;
+use Espo\Core\Utils\SystemUser;
 use Espo\Tools\Email\SendService;
 use Espo\ORM\Entity;
 use Espo\Entities\User;
@@ -269,7 +269,7 @@ class Email extends Record
             return true;
         }
 
-        return $user->getUserName() !== ApplicationUser::SYSTEM_USER_NAME;
+        return $user->getUserName() !== SystemUser::NAME;
     }
 
     private function clearEntityForUpdate(EmailEntity $email): void

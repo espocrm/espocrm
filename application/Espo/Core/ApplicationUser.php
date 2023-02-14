@@ -29,6 +29,7 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
 use Espo\Core\ORM\EntityManagerProxy;
 
@@ -39,9 +40,8 @@ use RuntimeException;
  */
 class ApplicationUser
 {
-    /** @deprecated As of v7.4. In the future different IDs may be used. */
+    /** @deprecated As of v7.4. Different IDs may be used. Use Espo\Core\Utils\SystemUser. */
     public const SYSTEM_USER_ID = 'system';
-    public const SYSTEM_USER_NAME = 'system';
 
     public function __construct(
         private Container $container,
@@ -65,7 +65,7 @@ class ApplicationUser
                 'lastName',
                 'deleted',
             ])
-            ->where(['userName' => self::SYSTEM_USER_NAME])
+            ->where(['userName' => SystemUser::NAME])
             ->findOne();
 
         if (!$user) {

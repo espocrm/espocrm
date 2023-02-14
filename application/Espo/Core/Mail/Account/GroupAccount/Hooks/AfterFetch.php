@@ -29,10 +29,10 @@
 
 namespace Espo\Core\Mail\Account\GroupAccount\Hooks;
 
-use Espo\Core\ApplicationUser;
 use Espo\Core\Mail\Account\GroupAccount\AccountFactory as GroupAccountFactory;
 use Espo\Core\Mail\SenderParams;
 use Espo\Core\Templates\Entities\Person;
+use Espo\Core\Utils\SystemUser;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\Tools\Email\Util;
@@ -96,7 +96,8 @@ class AfterFetch implements AfterFetchInterface
         RoundRobin $roundRobin,
         LeastBusy $leastBusy,
         GroupAccountFactory $groupAccountFactory,
-        EmailTemplateService $emailTemplateService
+        EmailTemplateService $emailTemplateService,
+        private SystemUser $systemUser
     ) {
         $this->entityManager = $entityManager;
         $this->streamService = $streamService;
@@ -215,7 +216,7 @@ class AfterFetch implements AfterFetchInterface
                     'toEmailAddresses.id' => $emailAddress->getId(),
                     'dateSent>' => $threshold,
                     'status' => Email::STATUS_SENT,
-                    'createdById' => ApplicationUser::SYSTEM_USER_ID,
+                    'createdById' => $this->systemUser->getId(),
                 ])
                 ->join('toEmailAddresses')
                 ->count();

@@ -178,8 +178,7 @@ class Email extends Entity
             return false;
         }
 
-        return $this->getStatus() === self::STATUS_ARCHIVED &&
-            $this->get('createdById') !== ApplicationUser::SYSTEM_USER_ID;
+        return true;
     }
 
     /**

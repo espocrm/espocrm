@@ -29,7 +29,6 @@
 
 namespace Espo\Classes\MassAction\User;
 
-use Espo\Core\ApplicationUser;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\MassAction\Actions\MassUpdate as MassUpdateOriginal;
 use Espo\Core\MassAction\QueryBuilder;
@@ -44,6 +43,7 @@ use Espo\Core\Acl\Table;
 
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 
@@ -134,7 +134,7 @@ class MassUpdate implements MassAction
      */
     private function checkEntity(User $entity, MassUpdateData $data): void
     {
-        if ($entity->getUserName() === ApplicationUser::SYSTEM_USER_NAME) {
+        if ($entity->getUserName() === SystemUser::NAME) {
             throw new Forbidden("Can't update 'system' user.");
         }
 

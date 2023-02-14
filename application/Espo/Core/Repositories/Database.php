@@ -30,6 +30,7 @@
 namespace Espo\Core\Repositories;
 
 use Espo\Core\ORM\Repository\Option\SaveOption;
+use Espo\Core\Utils\SystemUser;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\RDBRepository;
@@ -101,7 +102,8 @@ class Database extends RDBRepository
         Metadata $metadata,
         HookManager $hookManager,
         ApplicationState $applicationState,
-        RecordIdGenerator $recordIdGenerator
+        RecordIdGenerator $recordIdGenerator,
+        private SystemUser $systemUser
     ) {
         $this->metadata = $metadata;
         $this->hookManager = $hookManager;
@@ -176,6 +178,11 @@ class Database extends RDBRepository
 
         if ($entity->hasAttribute('modifiedById')) {
             $modifiedById = $options[SaveOption::MODIFIED_BY_ID] ?? null;
+
+            if ($modifiedById === SystemUser::NAME) {
+                // For bc.
+                $modifiedById = $this->systemUser->getId();
+            }
 
             if (!$modifiedById && $this->applicationState->hasUser()) {
                 $modifiedById = $this->applicationState->getUser()->getId();
@@ -389,8 +396,15 @@ class Database extends RDBRepository
         }
 
         if ($entity->hasAttribute('createdById')) {
-            if (!empty($options[SaveOption::CREATED_BY_ID])) {
-                $entity->set('createdById', $options[SaveOption::CREATED_BY_ID]);
+            $createdById = $options[SaveOption::CREATED_BY_ID] ?? null;
+
+            if ($createdById) {
+                if ($createdById === SystemUser::NAME) {
+                    // For bc.
+                    $createdById = $this->systemUser->getId();
+                }
+
+                $entity->set('createdById', $createdById);
             }
             else if (
                 empty($options[SaveOption::SKIP_CREATED_BY]) &&

@@ -29,7 +29,6 @@
 
 namespace Espo\Tools\MassUpdate;
 
-use Espo\Core\ApplicationUser;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -37,6 +36,7 @@ use Espo\Core\MassAction\Params;
 use Espo\Core\MassAction\Result;
 use Espo\Core\MassAction\MassActionFactory;
 
+use Espo\Core\Utils\SystemUser;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
 
@@ -70,7 +70,7 @@ class MassUpdate
         if (!$user) {
             $user = $this->entityManager
                 ->getRDBRepositoryByClass(User::class)
-                ->where(['userName' => ApplicationUser::SYSTEM_USER_NAME])
+                ->where(['userName' => SystemUser::NAME])
                 ->findOne();
         }
 
