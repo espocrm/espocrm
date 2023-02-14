@@ -99,12 +99,12 @@ class Preload
         $file = str_replace('\\', '/', $file);
 
         foreach ($this->ignoreList as $item) {
-            if (strpos($file, $item) === 0) {
+            if (str_starts_with($file, $item)) {
                 return true;
             }
         }
 
-        if (strpos($file, 'vendor/composer/ClassLoader.php') !== false) {
+        if (str_contains($file, 'vendor/composer/ClassLoader.php')) {
             return true;
         }
 

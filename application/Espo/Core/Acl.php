@@ -29,10 +29,9 @@
 
 namespace Espo\Core;
 
-use Espo\Core\{
-    Acl\GlobalRestriction,
-    Acl\Table,
-    Acl\Exceptions\NotImplemented};
+use Espo\Core\Acl\Exceptions\NotImplemented;
+use Espo\Core\Acl\GlobalRestriction;
+use Espo\Core\Acl\Table;
 
 use Espo\ORM\Entity;
 use Espo\Entities\User;
@@ -44,14 +43,11 @@ use stdClass;
  */
 class Acl
 {
-    protected AclManager $aclManager;
-    protected User $user;
 
-    public function __construct(AclManager $aclManager, User $user)
-    {
-        $this->aclManager = $aclManager;
-        $this->user = $user;
-    }
+    public function __construct(
+        protected AclManager $aclManager,
+        protected User $user
+    ) {}
 
     /**
      * Get a full access data map.

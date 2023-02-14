@@ -29,53 +29,28 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\{
-    Utils\Autoload\Loader,
-    Utils\DataCache,
-    Utils\File\Manager as FileManager,
-    Utils\Resource\PathProvider,
-};
+use Espo\Core\Utils\Autoload\Loader;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Resource\PathProvider;
 
 use Exception;
 
 class Autoload
 {
-    /**
-     * @var ?array<string,mixed>
-     */
+    /** @var ?array<string,mixed> */
     private $data = null;
 
     private string $cacheKey = 'autoload';
-
     private string $autoloadFileName = 'autoload.json';
 
-    private Config $config;
-
-    private Metadata $metadata;
-
-    private DataCache $dataCache;
-
-    private FileManager $fileManager;
-
-    private Loader $loader;
-
-    private PathProvider $pathProvider;
-
     public function __construct(
-        Config $config,
-        Metadata $metadata,
-        DataCache $dataCache,
-        FileManager $fileManager,
-        Loader $loader,
-        PathProvider $pathProvider
-    ) {
-        $this->config = $config;
-        $this->metadata = $metadata;
-        $this->dataCache = $dataCache;
-        $this->fileManager = $fileManager;
-        $this->loader = $loader;
-        $this->pathProvider = $pathProvider;
-    }
+        private Config $config,
+        private Metadata $metadata,
+        private DataCache $dataCache,
+        private FileManager $fileManager,
+        private Loader $loader,
+        private PathProvider $pathProvider
+    ) {}
 
     /**
      * @return array<string,mixed>

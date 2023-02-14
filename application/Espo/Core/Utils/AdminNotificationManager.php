@@ -37,22 +37,12 @@ use Espo\ORM\EntityManager;
  */
 class AdminNotificationManager
 {
-    private EntityManager $entityManager;
-    private Config $config;
-    private Language $language;
-    private ScheduledJob $scheduledJob;
-
     public function __construct(
-        EntityManager $entityManager,
-        Config $config,
-        Language $language,
-        ScheduledJob $scheduledJob
-    ) {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->language = $language;
-        $this->scheduledJob = $scheduledJob;
-    }
+        private EntityManager $entityManager,
+        private Config $config,
+        private Language $language,
+        private ScheduledJob $scheduledJob
+    ) {}
 
     /**
      * @return array<int,array{id:string,type:string,message:string}>

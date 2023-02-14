@@ -31,28 +31,20 @@ namespace Espo\Hooks\Common;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    ORM\Repository\Option\SaveOption,
-    Utils\Metadata,
-    Utils\Config,
-    WebSocket\Submission as WebSocketSubmission};
+use Espo\Core\ORM\Repository\Option\SaveOption;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\WebSocket\Submission as WebSocketSubmission;
 
 class WebSocketSubmit
 {
     public static int $order = 20;
 
-    private Metadata $metadata;
-
-    private WebSocketSubmission $webSocketSubmission;
-
-    private Config $config;
-
-    public function __construct(Metadata $metadata, WebSocketSubmission $webSocketSubmission, Config $config)
-    {
-        $this->metadata = $metadata;
-        $this->webSocketSubmission = $webSocketSubmission;
-        $this->config = $config;
-    }
+    public function __construct(
+        private Metadata $metadata,
+        private WebSocketSubmission $webSocketSubmission,
+        private Config $config
+    ) {}
 
     /**
      * @param array<string,mixed> $options

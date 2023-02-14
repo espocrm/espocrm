@@ -29,67 +29,38 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\{
-    Utils\File\Manager as FileManager,
-    Utils\Resource\Reader as ResourceReader,
-    Utils\Resource\Reader\Params as ResourceReaderParams,
-};
-
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Resource\Reader as ResourceReader;
+use Espo\Core\Utils\Resource\Reader\Params as ResourceReaderParams;
 use Espo\Entities\Preferences;
 
 use RuntimeException;
 
 class Language
 {
-    /**
-     * @var array<string,array<string,mixed>>
-     */
+    /** @var array<string, array<string, mixed>> */
     private $data = [];
-
-    /**
-     * @var array<string,array<string,mixed>>
-     */
+    /** @var array<string, array<string, mixed>> */
     private $deletedData = [];
-
-    /**
-     * @var array<string,array<string,mixed>>
-     */
+    /** @var array<string, array<string, mixed>> */
     private $changedData = [];
 
     private string $currentLanguage;
-
     protected string $defaultLanguage = 'en_US';
 
-    protected bool $useCache = false;
-
-    protected bool $noCustom = false;
-
     private string $customPath = 'custom/Espo/Custom/Resources/i18n/{language}';
-
     private string $resourcePath = 'i18n/{language}';
-
-    private FileManager $fileManager;
-
-    private ResourceReader $resourceReader;
-
-    private DataCache $dataCache;
 
     public function __construct(
         ?string $language,
-        FileManager $fileManager,
-        ResourceReader $resourceReader,
-        DataCache $dataCache,
-        bool $useCache = false,
-        bool $noCustom = false
+        private FileManager $fileManager,
+        private ResourceReader $resourceReader,
+        private DataCache $dataCache,
+        protected bool $useCache = false,
+        protected bool $noCustom = false
     ) {
         $this->currentLanguage = $language ?? $this->defaultLanguage;
 
-        $this->fileManager = $fileManager;
-        $this->resourceReader = $resourceReader;
-        $this->dataCache = $dataCache;
-
-        $this->useCache = $useCache;
-        $this->noCustom = $noCustom;
     }
 
     public function getLanguage(): string
@@ -104,11 +75,7 @@ class Language
 
     public static function detectLanguage(Config $config, ?Preferences $preferences = null): ?string
     {
-        $language = null;
-
-        if ($preferences) {
-            $language = $preferences->get('language');
-        }
+        $language = $preferences?->get('language');
 
         if (!$language) {
             $language = $config->get('language');
@@ -117,6 +84,9 @@ class Language
         return $language;
     }
 
+    /**
+     * @deprecated As of v7.4. Not to be used.
+     */
     public function setLanguage(string $language): void
     {
         $this->currentLanguage = $language;
@@ -156,7 +126,7 @@ class Language
      *  Ex., $requiredOptions = ['en_US', 'de_DE']
      *  "language" option has only ['en_US' => 'English (United States)']
      *  Result will be ['en_US' => 'English (United States)', 'de_DE' => 'de_DE'].
-     * @return string|string[]|array<string,string>
+     * @return string|string[]|array<string, string>
      */
     public function translate(
         $label,
@@ -171,7 +141,7 @@ class Language
                 $translated[$subLabel] = $this->translate($subLabel, $category, $scope, $requiredOptions);
             }
 
-            /** @var string[]|array<string,string> */
+            /** @var string[]|array<string, string> */
             return $translated;
         }
 
@@ -239,7 +209,7 @@ class Language
     }
 
     /**
-     * @return array<string,array<string,mixed>>
+     * @return array<string, array<string, mixed>>
      */
     public function getAll(): array
     {
@@ -292,7 +262,7 @@ class Language
     }
 
     /**
-     * @return ?array<string,mixed>
+     * @return ?array<string, mixed>
      */
     private function getData(): ?array
     {
@@ -308,7 +278,7 @@ class Language
     /**
      * Set/change a label.
      *
-     * @param string|array<string,string> $name
+     * @param string|array<string, string> $name
      * @param mixed $value
      */
     public function set(string $scope, string $category, $name, $value): void
@@ -385,7 +355,7 @@ class Language
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function getDefaultLanguageData(bool $reload = false): array
     {
@@ -393,7 +363,7 @@ class Language
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function getLanguageData(string $language, bool $reload = false): array
     {

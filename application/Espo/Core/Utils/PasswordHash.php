@@ -33,17 +33,13 @@ use RuntimeException;
 
 class PasswordHash
 {
-    private Config $config;
-
     /**
      * SHA-512 salt format.
      */
     private string $saltFormat = '$6${0}$';
 
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private Config $config)
+    {}
 
     /**
      * Hash a password.

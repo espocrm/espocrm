@@ -54,23 +54,14 @@ class ScheduledJob
         'default' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BINARY} -f {CRON-FILE} > /dev/null 2>&1',
     ];
 
-    private ClassFinder $classFinder;
-    private Language $language;
-    private EntityManager $entityManager;
-    private MetadataProvider $metadataProvider;
     private System $systemUtil;
 
     public function __construct(
-        ClassFinder $classFinder,
-        EntityManager $entityManager,
-        Language $language,
-        MetadataProvider $metadataProvider
+        private ClassFinder $classFinder,
+        private EntityManager $entityManager,
+        private Language $language,
+        private MetadataProvider $metadataProvider
     ) {
-        $this->classFinder = $classFinder;
-        $this->entityManager = $entityManager;
-        $this->language = $language;
-        $this->metadataProvider = $metadataProvider;
-
         $this->systemUtil = new System();
     }
 
@@ -121,9 +112,9 @@ class ScheduledJob
             'FULL-CRON-PATH' => Util::concatPath($this->systemUtil->getRootDir(), $this->cronFile),
         ];
 
-        $message = isset($desc[$OS]) ? $desc[$OS] : $desc['default'];
+        $message = $desc[$OS] ?? $desc['default'];
 
-        $command = isset($this->cronSetup[$OS]) ? $this->cronSetup[$OS] : $this->cronSetup['default'];
+        $command = $this->cronSetup[$OS] ?? $this->cronSetup['default'];
 
         foreach ($data as $name => $value) {
             /** @var string $command */

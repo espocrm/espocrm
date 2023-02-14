@@ -49,25 +49,13 @@ class Route
     private string $cacheKey = 'routes';
     private string $routesFileName = 'routes.json';
 
-    private Config $config;
-    private Metadata $metadata;
-    private FileManager $fileManager;
-    private DataCache $dataCache;
-    private PathProvider $pathProvider;
-
     public function __construct(
-        Config $config,
-        Metadata $metadata,
-        FileManager $fileManager,
-        DataCache $dataCache,
-        PathProvider $pathProvider
-    ) {
-        $this->config = $config;
-        $this->metadata = $metadata;
-        $this->fileManager = $fileManager;
-        $this->dataCache = $dataCache;
-        $this->pathProvider = $pathProvider;
-    }
+        private Config $config,
+        private Metadata $metadata,
+        private FileManager $fileManager,
+        private DataCache $dataCache,
+        private PathProvider $pathProvider
+    ) {}
 
     /**
      * Get all routes.
@@ -254,8 +242,8 @@ class Route
     }
 
     /**
-     * @param array<string,mixed> $newRoute
-     * @param array<int,array<string,mixed>> $routeList
+     * @param array<string, mixed> $newRoute
+     * @param array<int, array<string, mixed>> $routeList
      */
     static private function isRouteInList(array $newRoute, array $routeList): bool
     {

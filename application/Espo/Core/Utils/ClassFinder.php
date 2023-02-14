@@ -38,17 +38,12 @@ use Espo\Core\Utils\File\ClassMap;
  */
 class ClassFinder
 {
-    private ClassMap $classMap;
 
-    /**
-     * @var array<string,array<string,class-string>>
-     */
+    /** @var array<string, array<string, class-string>> */
     private $dataHashMap = [];
 
-    public function __construct(ClassMap $classMap)
-    {
-        $this->classMap = $classMap;
-    }
+    public function __construct(private ClassMap $classMap)
+    {}
 
     /**
      * Find class name by a category and name.
@@ -59,15 +54,13 @@ class ClassFinder
     {
         $map = $this->getMap($category, $subDirs);
 
-        $className = $map[$name] ?? null;
-
-        return $className;
+        return $map[$name] ?? null;
     }
 
     /**
      * Get a name => class name map.
      *
-     * @return array<string,class-string>
+     * @return array<string, class-string>
      */
     public function getMap(string $category, bool $subDirs = false): array
     {

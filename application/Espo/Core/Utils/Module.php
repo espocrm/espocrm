@@ -29,11 +29,7 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\{
-    Utils\File\Manager as FileManager,
-    Utils\DataCache,
-    Utils\Json,
-};
+use Espo\Core\Utils\File\Manager as FileManager;
 
 /**
  * Gets module parameters.
@@ -42,51 +38,25 @@ class Module
 {
     private const DEFAULT_ORDER = 11;
 
-    private bool $useCache;
-
-    /**
-     * @var ?array<string,array<string,mixed>>
-     */
+    /** @var ?array<string, array<string, mixed>> */
     private $data = null;
-
-    /**
-     * @var ?string[]
-     */
+    /** @var ?string[]  */
     private $list = null;
-
-    /**
-     * @var ?string[]
-     */
+    /** @var ?string[] */
     private $internalList = null;
-
-    /**
-     * @var ?string[]
-     */
+    /** @var ?string[]  */
     private $orderedList = null;
 
     private string $cacheKey = 'modules';
-
     private string $internalPath = 'application/Espo/Modules';
-
     private string $customPath = 'custom/Espo/Modules';
-
     private string $moduleFilePath = 'Resources/module.json';
 
-    private FileManager $fileManager;
-
-    private ?DataCache $dataCache;
-
     public function __construct(
-        FileManager $fileManager,
-        ?DataCache $dataCache = null,
-        bool $useCache = false
-    ) {
-
-        $this->fileManager = $fileManager;
-        $this->dataCache = $dataCache;
-
-        $this->useCache = $useCache;
-    }
+        private FileManager $fileManager,
+        private ?DataCache $dataCache = null,
+        private bool $useCache = false
+    ) {}
 
     /**
      * Get module parameters.
@@ -117,7 +87,7 @@ class Module
             $this->dataCache &&
             $this->dataCache->has($this->cacheKey)
         ) {
-            /** @var array<string,array<string,mixed>> $data */
+            /** @var array<string, array<string, mixed>> $data */
             $data = $this->dataCache->get($this->cacheKey);
 
             $this->data = $data;
@@ -136,7 +106,6 @@ class Module
      * Get an ordered list of modules.
      *
      * @return string[]
-     *
      * @todo Use cache if available.
      */
     public function getOrderedList(): array
@@ -204,7 +173,7 @@ class Module
 
     /**
      * @todo Use event-dispatcher class (passed via constructor).
-     * `$this->clearCacheEventDispatcher->subscribe( ... );`
+     * `$this->clearCacheEventDispatcher->subscribe(...);`
      */
     public function clearCache(): void
     {
@@ -215,7 +184,7 @@ class Module
     }
 
     /**
-     * @return array<string,array<string,mixed>>
+     * @return array<string, array<string, mixed>>
      */
     private function loadData(): array
     {
@@ -229,7 +198,7 @@ class Module
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function loadModuleData(string $moduleName): array
     {

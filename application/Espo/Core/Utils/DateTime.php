@@ -43,15 +43,11 @@ use RuntimeException;
 class DateTime
 {
     public const SYSTEM_DATE_TIME_FORMAT = 'Y-m-d H:i:s';
-
     public const SYSTEM_DATE_FORMAT = 'Y-m-d';
 
     private string $dateFormat;
-
     private string $timeFormat;
-
     private DateTimeZone $timezone;
-
     private string $language;
 
     public function __construct(
@@ -113,9 +109,9 @@ class DateTime
      * Convert a system date-time.
      *
      * @param string $string A system date-time.
-     * @param string $timezone A target timezone. If not specified then the default timezone will be used.
-     * @param string|null $format A target format. If not specified then the default format will be used.
-     * @param string|null $language A language. If not specified then the default language will be used.
+     * @param ?string $timezone A target timezone. If not specified then the default timezone will be used.
+     * @param ?string $format A target format. If not specified then the default format will be used.
+     * @param ?string $language A language. If not specified then the default language will be used.
      * @throws RuntimeException If could not parse.
      */
     public function convertSystemDateTime(
@@ -125,7 +121,7 @@ class DateTime
         ?string $language = null
     ): string {
 
-        if (is_string($string) && strlen($string) === 16) {
+        if (strlen($string) === 16) {
             $string .= ':00';
         }
 
@@ -140,7 +136,6 @@ class DateTime
         $dateTime->setTimezone($tz);
 
         $carbon = Carbon::instance($dateTime);
-
         $carbon->locale($language ?? $this->language);
 
         return $carbon->isoFormat($format ?? $this->getDateTimeFormat());
@@ -149,19 +144,17 @@ class DateTime
     /**
      * Get a current date.
      *
-     * @param string|null $timezone If not specified then the default will be used.
-     * @param string|null $format If not specified then the default will be used.
+     * @param ?string $timezone If not specified then the default will be used.
+     * @param ?string $format If not specified then the default will be used.
      */
     public function getTodayString(?string $timezone = null, ?string $format = null): string
     {
         $tz = $timezone ? new DateTimeZone($timezone) : $this->timezone;
 
         $dateTime = new DateTimeStd();
-
         $dateTime->setTimezone($tz);
 
         $carbon = Carbon::instance($dateTime);
-
         $carbon->locale($this->language);
 
         return $carbon->isoFormat($format ?? $this->getDateFormat());
@@ -170,8 +163,8 @@ class DateTime
     /**
      * Get a current date-time.
      *
-     * @param string|null $timezone If not specified then the default will be used.
-     * @param string|null $format If not specified then the default will be used.
+     * @param ?string $timezone If not specified then the default will be used.
+     * @param ?string $format If not specified then the default will be used.
      */
     public function getNowString(?string $timezone = null, ?string $format = null): string
     {

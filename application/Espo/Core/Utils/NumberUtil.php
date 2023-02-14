@@ -31,15 +31,10 @@ namespace Espo\Core\Utils;
 
 class NumberUtil
 {
-    private ?string $decimalMark;
-
-    private ?string $thousandSeparator;
-
-    public function __construct(?string $decimalMark = '.', ?string $thousandSeparator = ',')
-    {
-        $this->decimalMark = $decimalMark;
-        $this->thousandSeparator = $thousandSeparator;
-    }
+    public function __construct(
+        private ?string $decimalMark = '.',
+        private ?string $thousandSeparator = ','
+    ) {}
 
     /**
      * @param scalar $value

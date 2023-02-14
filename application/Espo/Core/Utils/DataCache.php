@@ -37,14 +37,10 @@ use stdClass;
 
 class DataCache
 {
-    protected FileManager $fileManager;
-
     protected string $cacheDir = 'data/cache/application/';
 
-    public function __construct(FileManager $fileManager)
-    {
-        $this->fileManager = $fileManager;
-    }
+    public function __construct(protected FileManager $fileManager)
+    {}
 
     /**
      * Whether is cached.
@@ -71,7 +67,7 @@ class DataCache
     /**
      * Store in cache.
      *
-     * @param array<mixed,mixed>|stdClass $data
+     * @param array<mixed, mixed>|stdClass $data
      */
     public function store(string $key, $data): void
     {

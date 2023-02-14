@@ -31,19 +31,13 @@ namespace Espo\Core\Utils;
 
 class ThemeManager
 {
-    private Config $config;
-
-    private Metadata $metadata;
-
     private string $defaultName = 'Espo';
-
     private string $defaultStylesheet = 'client/css/espo/espo.css';
 
-    public function __construct(Config $config, Metadata $metadata)
-    {
-        $this->config = $config;
-        $this->metadata = $metadata;
-    }
+    public function __construct(
+        private Config $config,
+        private Metadata $metadata
+    ) {}
 
     public function getName(): string
     {

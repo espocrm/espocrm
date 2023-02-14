@@ -30,37 +30,33 @@
 namespace Espo\Core;
 
 use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
 use Espo\Entities\User;
 
-use Espo\ORM\EntityManager;
-
-use Espo\Core\{
-    Acl,
-    Acl\GlobalRestriction,
-    Acl\OwnerUserFieldProvider,
-    Acl\Table\TableFactory,
-    Acl\Table,
-    Acl\Map\Map,
-    Acl\Map\MapFactory,
-    Acl\OwnershipChecker\OwnershipCheckerFactory,
-    Acl\OwnershipChecker,
-    Acl\OwnershipOwnChecker,
-    Acl\OwnershipTeamChecker,
-    Acl\AccessChecker\AccessCheckerFactory,
-    Acl\AccessChecker,
-    Acl\AccessCreateChecker,
-    Acl\AccessReadChecker,
-    Acl\AccessEditChecker,
-    Acl\AccessDeleteChecker,
-    Acl\AccessStreamChecker,
-    Acl\AccessEntityCreateChecker,
-    Acl\AccessEntityReadChecker,
-    Acl\AccessEntityEditChecker,
-    Acl\AccessEntityDeleteChecker,
-    Acl\AccessEntityStreamChecker,
-    Acl\Exceptions\NotImplemented,
-};
+use Espo\Core\Acl\AccessChecker;
+use Espo\Core\Acl\AccessChecker\AccessCheckerFactory;
+use Espo\Core\Acl\AccessCreateChecker;
+use Espo\Core\Acl\AccessDeleteChecker;
+use Espo\Core\Acl\AccessEditChecker;
+use Espo\Core\Acl\AccessEntityCreateChecker;
+use Espo\Core\Acl\AccessEntityDeleteChecker;
+use Espo\Core\Acl\AccessEntityEditChecker;
+use Espo\Core\Acl\AccessEntityReadChecker;
+use Espo\Core\Acl\AccessEntityStreamChecker;
+use Espo\Core\Acl\AccessReadChecker;
+use Espo\Core\Acl\AccessStreamChecker;
+use Espo\Core\Acl\Exceptions\NotImplemented;
+use Espo\Core\Acl\GlobalRestriction;
+use Espo\Core\Acl\Map\Map;
+use Espo\Core\Acl\Map\MapFactory;
+use Espo\Core\Acl\OwnershipChecker;
+use Espo\Core\Acl\OwnershipChecker\OwnershipCheckerFactory;
+use Espo\Core\Acl\OwnershipOwnChecker;
+use Espo\Core\Acl\OwnershipTeamChecker;
+use Espo\Core\Acl\OwnerUserFieldProvider;
+use Espo\Core\Acl\Table;
+use Espo\Core\Acl\Table\TableFactory;
 
 use stdClass;
 use InvalidArgumentException;
@@ -101,9 +97,9 @@ class AclManager
         Table::ACTION_STREAM => AccessStreamChecker::class,
     ];
 
-    /** @var AccessCheckerFactory|\Espo\Core\Portal\Acl\AccessChecker\AccessCheckerFactory  */
+    /** @var AccessCheckerFactory|Portal\Acl\AccessChecker\AccessCheckerFactory */
     protected $accessCheckerFactory;
-    /** @var OwnershipCheckerFactory|\Espo\Core\Portal\Acl\OwnershipChecker\OwnershipCheckerFactory */
+    /** @var OwnershipCheckerFactory|Portal\Acl\OwnershipChecker\OwnershipCheckerFactory */
     protected $ownershipCheckerFactory;
     /** @var TableFactory */
     private $tableFactory;
@@ -639,7 +635,7 @@ class AclManager
     /**
      * Get a restricted field list for a specific scope by a restriction type.
      *
-     * @param GlobalRestriction::TYPE_*|array<int,GlobalRestriction::TYPE_*> $type
+     * @param GlobalRestriction::TYPE_*|array<int, GlobalRestriction::TYPE_*> $type
      * @return string[]
      */
     public function getScopeRestrictedFieldList(string $scope, $type): array

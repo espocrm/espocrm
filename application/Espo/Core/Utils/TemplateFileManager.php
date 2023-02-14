@@ -29,30 +29,17 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\{
-    Utils\File\Manager as FileManager,
-    Exceptions\Error,
-    Utils\Resource\FileReader,
-    Utils\Resource\FileReader\Params as FileReaderParams,
-};
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Resource\FileReader;
+use Espo\Core\Utils\Resource\FileReader\Params as FileReaderParams;
 
 class TemplateFileManager
 {
-    private Config $config;
-
-    private FileManager $fileManager;
-
-    private FileReader $fileReader;
-
     public function __construct(
-        Config $config,
-        FileManager $fileManager,
-        FileReader $fileReader
-    ) {
-        $this->config = $config;
-        $this->fileManager = $fileManager;
-        $this->fileReader = $fileReader;
-    }
+        private Config $config,
+        private FileManager $fileManager,
+        private FileReader $fileReader
+    ) {}
 
     public function getTemplate(
         string $type,
