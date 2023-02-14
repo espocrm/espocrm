@@ -141,7 +141,7 @@ class Saver implements SaverInterface
             }
 
             $hash->$key = [
-                'primary' => $row->primary ? true : false,
+                'primary' => !empty($row->primary) ? true : false,
                 'type' => $type,
                 'optOut' => !empty($row->optOut) ? true : false,
                 'invalid' => !empty($row->invalid) ? true : false,
