@@ -608,7 +608,7 @@ class Xlsx implements Processor
                         $array = [];
                     }
 
-                    foreach ($array as $item) {
+                    foreach ($array as $i => $item) {
                         if ($linkName) {
                             $itemValue = $this->language
                                 ->translateOption($item, $foreignField, $foreignScope);
