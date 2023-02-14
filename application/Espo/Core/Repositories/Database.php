@@ -340,8 +340,15 @@ class Database extends RDBRepository
         }
 
         if ($entity->hasAttribute('modifiedById')) {
-            if (!empty($options[SaveOption::MODIFIED_BY_ID])) {
-                $entity->set('modifiedById', $options[SaveOption::MODIFIED_BY_ID]);
+            $modifiedById = $options[SaveOption::MODIFIED_BY_ID] ?? null;
+
+            if ($modifiedById === SystemUser::NAME) {
+                // For bc.
+                $modifiedById = $this->systemUser->getId();
+            }
+
+            if ($modifiedById) {
+                $entity->set('modifiedById', $modifiedById);
             }
             else if ($this->applicationState->hasUser()) {
                 $entity->set('modifiedById', $this->applicationState->getUser()->getId());
