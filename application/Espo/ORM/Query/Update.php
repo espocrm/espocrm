@@ -44,9 +44,15 @@ class Update implements Query
     /**
      * Get an entity type.
      */
-    public function getIn(): ?string
+    public function getIn(): string
     {
-        return $this->params['from'] ?? null;
+        $in = $this->params['from'];
+
+        if ($in === null) {
+            throw new RuntimeException("Missing 'in'.");
+        }
+
+        return $in;
     }
 
     /**
@@ -58,7 +64,7 @@ class Update implements Query
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     private function validateRawParams(array $params): void
     {
@@ -67,7 +73,7 @@ class Update implements Query
         $from = $params['from'] ?? null;
 
         if (!$from || !is_string($from)) {
-            throw new RuntimeException("Select params: Missing 'in'.");
+            throw new RuntimeException("Update params: Missing 'in'.");
         }
 
         $set = $params['set'] ?? null;
