@@ -64,6 +64,16 @@ class Update implements Query
     }
 
     /**
+     * Get SET values.
+     *
+     * @return array<string, ?scalar>
+     */
+    public function getSet(): array
+    {
+        return $this->params['set'];
+    }
+
+    /**
      * @param array<string, mixed> $params
      */
     private function validateRawParams(array $params): void
