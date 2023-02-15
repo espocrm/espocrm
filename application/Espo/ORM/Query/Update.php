@@ -29,6 +29,7 @@
 
 namespace Espo\ORM\Query;
 
+use Espo\ORM\Query\Part\Expression;
 use RuntimeException;
 
 /**
@@ -66,11 +67,24 @@ class Update implements Query
     /**
      * Get SET values.
      *
-     * @return array<string, ?scalar>
+     * @return array<string, scalar|Expression|null>
      */
     public function getSet(): array
     {
-        return $this->params['set'];
+        $set = [];
+        /** @var array<string, ?scalar> $raw */
+        $raw = $this->params['set'];
+
+        foreach ($raw as $key => $value) {
+            if (str_ends_with($key, ':')) {
+                $key = substr($key, 0, -1);
+                $value = Expression::create((string) $value);
+            }
+
+            $set[$key] = $value;
+        }
+
+        return $set;
     }
 
     /**
