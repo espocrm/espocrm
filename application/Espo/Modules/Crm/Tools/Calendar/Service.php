@@ -576,7 +576,7 @@ class Service
                     continue;
                 }
 
-                throw new Exception($e->getMessage(), $e->getCode(), $e);
+                throw new $e;
             }
 
             $resultData[$userId] = array_merge($eventList, $busyRangeList);
