@@ -37,6 +37,8 @@ use Espo\ORM\Query\LockTable as LockTableQuery;
 
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\SelectBuilder;
+use Espo\ORM\Query\Update as UpdateQuery;
+use Espo\ORM\Query\UpdateBuilder;
 use LogicException;
 use RuntimeException;
 
@@ -344,7 +346,8 @@ class PostgresqlQueryComposer extends BaseQueryComposer
         ) {
             $subQueryBuilder = SelectBuilder::create()
                 ->select('id')
-                ->from($query->getFrom());
+                ->from($query->getFrom())
+                ->order($query->getOrder());
 
             foreach ($query->getJoins() as $join) {
                 $subQueryBuilder->join($join);
@@ -353,8 +356,6 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             foreach ($query->getLeftJoins() as $join) {
                 $subQueryBuilder->leftJoin($join);
             }
-
-            $subQueryBuilder->order($query->getOrder());
 
             if ($query->getWhere()) {
                 $subQueryBuilder->where($query->getWhere());
@@ -377,6 +378,52 @@ class PostgresqlQueryComposer extends BaseQueryComposer
         }
 
         return parent::composeDelete($query);
+    }
+
+    public function composeUpdate(UpdateQuery $query): string
+    {
+        if (
+            $query->getJoins() !== [] ||
+            $query->getLeftJoins() !== [] ||
+            $query->getLimit() !== null ||
+            $query->getOrder() !== []
+        ) {
+            $subQueryBuilder = SelectBuilder::create()
+                ->select('id')
+                ->from($query->getIn())
+                ->order($query->getOrder())
+                ->forUpdate();
+
+            foreach ($query->getJoins() as $join) {
+                $subQueryBuilder->join($join);
+            }
+
+            foreach ($query->getLeftJoins() as $join) {
+                $subQueryBuilder->leftJoin($join);
+            }
+
+            if ($query->getWhere()) {
+                $subQueryBuilder->where($query->getWhere());
+            }
+
+            if ($query->getLimit() !== null) {
+                $subQueryBuilder->limit(null, $query->getLimit());
+            }
+
+            $builder = UpdateBuilder::create()
+                ->in($query->getIn())
+                ->set($query->getSet())
+                ->where(
+                    Cond::in(
+                        Cond::column('id'),
+                        $subQueryBuilder->build()
+                    )
+                );
+
+            $query = $builder->build();
+        }
+
+        return parent::composeUpdate($query);
     }
 
     public function composeInsert(InsertQuery $query): string

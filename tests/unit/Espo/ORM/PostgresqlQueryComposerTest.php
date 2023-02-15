@@ -35,6 +35,7 @@ use Espo\ORM\Metadata;
 use Espo\ORM\MetadataDataProvider;
 use Espo\ORM\Query\DeleteBuilder;
 use Espo\ORM\Query\InsertBuilder;
+use Espo\ORM\Query\UpdateBuilder;
 use Espo\ORM\QueryBuilder;
 use Espo\ORM\QueryComposer\PostgresqlQueryComposer as QueryComposer;
 
@@ -96,6 +97,29 @@ class PostgresqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->note = $entityFactory->create('Note');
         $this->contact = $entityFactory->create('Contact');
         $this->account = $entityFactory->create('Account');
+    }
+
+    public function testUpdate1(): void
+    {
+        $query = UpdateBuilder::create()
+            ->in('Comment')
+            ->set(['name' => '1'])
+            ->where(['name' => 'post.name'])
+            ->join('post')
+            ->limit(1)
+            ->order('name')
+            ->build();
+
+        $sql = $this->queryComposer->composeUpdate($query);
+
+        $expectedSql =
+            'UPDATE "comment" SET "name" = \'1\' WHERE "comment"."id" IN ' .
+            '(SELECT "comment"."id" AS "id" FROM "comment" ' .
+            'JOIN "post" AS "post" ON "comment"."post_id" = "post"."id" ' .
+            'WHERE "comment"."name" = \'post.name\' AND "comment"."deleted" = false ' .
+            'ORDER BY "comment"."name" ASC LIMIT 1 OFFSET 0 FOR UPDATE)';
+
+        $this->assertEquals($expectedSql, $sql);
     }
 
     public function testDelete1(): void
