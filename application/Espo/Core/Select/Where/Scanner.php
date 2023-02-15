@@ -29,51 +29,47 @@
 
 namespace Espo\Core\Select\Where;
 
-use Espo\Core\Exceptions\Error;
-
+use Espo\Core\Select\Where\Item\Type;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\QueryComposer\BaseQueryComposer as QueryComposer;
+use RuntimeException;
 
+/**
+ * Scans where-item to apply needed joins to a query builder.
+ */
 class Scanner
 {
-    /**
-     * @var array<string,Entity>
-     */
+    /** @var array<string, Entity> */
     private array $seedHash = [];
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $nestingTypeList = [
-        'or',
-        'and',
+        Type::OR,
+        Type::AND,
     ];
+
+    /** @var string[] */
+    private array $subQueryTypeList = [
+        Type::SUBQUERY_IN,
+        Type::SUBQUERY_NOT_IN,
+        Type::NOT,
+    ];
+
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     /**
-     * @var string[]
+     * Apply needed joins to a query builder.
      */
-    private array $subQueryTypeList = [
-        'subQueryIn',
-        'subQueryNotIn',
-        'not',
-    ];
-
-    private EntityManager $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-    public function applyLeftJoins(QueryBuilder $queryBuilder, Item $item): void
+    public function apply(QueryBuilder $queryBuilder, Item $item): void
     {
         $entityType = $queryBuilder->build()->getFrom();
 
         if (!$entityType) {
-            throw new Error("No entity type.");
+            throw new RuntimeException("No entity type.");
         }
 
         $this->applyLeftJoinsFromItem($queryBuilder, $item, $entityType);

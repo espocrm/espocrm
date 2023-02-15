@@ -68,7 +68,10 @@ class SchemaManager
         private DiffModifier $diffModifier,
         private InjectableFactory $injectableFactory
     ) {
-        $this->schemaManager = $this->getDbalConnection()->createSchemaManager();
+        $this->schemaManager = $this->getDbalConnection()
+            ->getDatabasePlatform()
+            ->createSchemaManager($this->getDbalConnection());
+
         // Not using a platform specific comparator as it unsets a collation and charset if
         // they match a table default.
         //$this->comparator = $this->schemaManager->createComparator();
@@ -143,7 +146,7 @@ class SchemaManager
         }
 
         $diff = $this->comparator->compareSchemas($fromSchema, $schema);
-        $needReRun = $this->diffModifier->modify($diff, false, $mode);
+        $needReRun = $this->diffModifier->modify($diff, $schema, false, $mode);
         $sql = $this->composeDiffSql($diff);
 
         $result = $this->runSql($sql);
@@ -161,7 +164,7 @@ class SchemaManager
 
             $diff = $this->comparator->compareSchemas($intermediateSchema, $schema);
 
-            $this->diffModifier->modify($diff, true);
+            $this->diffModifier->modify($diff, $schema, true);
             $sql = $this->composeDiffSql($diff);
             $result = $this->runSql($sql);
         }

@@ -269,7 +269,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0. Use `getEntityType`.
      * @return ?string
      */
     public function getEntityName()
@@ -278,7 +278,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     }
 
     /**
-     * @return array<TEntity|array<string,mixed>>
+     * @return array<TEntity|array<string, mixed>>
      */
     public function getDataList(): array
     {
@@ -360,8 +360,8 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     }
 
     /**
-     * @deprecated Use `getValueMapList`.
-     * @return array<array<string,mixed>>|\stdClass[]
+     * @deprecated As of v6.0. Use `getValueMapList`.
+     * @return array<array<string, mixed>>|\stdClass[]
      */
     public function toArray(bool $itemsAsObjects = false): array
     {

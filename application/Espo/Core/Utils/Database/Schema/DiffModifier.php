@@ -32,6 +32,7 @@ namespace Espo\Core\Utils\Database\Schema;
 use Doctrine\DBAL\Exception as DbalException;
 use Doctrine\DBAL\Schema\Column as Column;
 use Doctrine\DBAL\Schema\ColumnDiff;
+use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\Types\TextType;
@@ -46,10 +47,17 @@ class DiffModifier
      * @param RebuildMode::* $mode
      * @throws DbalException
      */
-    public function modify(SchemaDiff $diff, bool $secondRun = false, string $mode = RebuildMode::SOFT): bool
-    {
+    public function modify(
+        SchemaDiff $diff,
+        Schema $schema,
+        bool $secondRun = false,
+        string $mode = RebuildMode::SOFT
+    ): bool {
+
         $reRun = false;
         $isHard = $mode === RebuildMode::HARD;
+
+        $diff = $this->handleRemovedSequences($diff, $schema);
 
         $diff->removedTables = [];
 
@@ -317,5 +325,47 @@ class DiffModifier
         }
 
         $columnDiff->changedProperties = array_diff($columnDiff->changedProperties, [$property]);
+    }
+
+    /**
+     * DBAL does not handle autoincrement columns that are not primary keys,
+     * making them dropped.
+     */
+    private function handleRemovedSequences(SchemaDiff $diff, Schema $schema): SchemaDiff
+    {
+        $droppedSequences = $diff->getDroppedSequences();
+
+        if ($droppedSequences === []) {
+            return $diff;
+        }
+
+        foreach ($droppedSequences as $i => $sequence) {
+            foreach ($schema->getTables() as $table) {
+                $namespace = $table->getNamespaceName();
+                $tableName = $table->getShortestName($namespace);
+
+                foreach ($table->getColumns() as $column) {
+                    if (!$column->getAutoincrement()) {
+                        continue;
+                    }
+
+                    $sequenceName = $sequence->getShortestName($namespace);
+
+                    $tableSequenceName = sprintf('%s_%s_seq', $tableName, $column->getShortestName($namespace));
+
+                    if ($tableSequenceName !== $sequenceName) {
+                        continue;
+                    }
+
+                    unset($droppedSequences[$i]);
+
+                    continue 3;
+                }
+            }
+        }
+
+        $diff->removedSequences = array_values($droppedSequences);
+
+        return $diff;
     }
 }

@@ -229,7 +229,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             "SELECT post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(COALESCE(createdBy.salutation_name, ''), " .
             "COALESCE(createdBy.first_name, ''), ' ', COALESCE(createdBy.last_name, ''))), '') AS `createdByName`, ".
              "post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
-            "FROM `post` ".
+            "FROM `post` AS `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
             "WHERE post.id = '1' AND post.deleted = 0";
 
@@ -261,7 +261,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             "SELECT post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(COALESCE(createdBy.salutation_name, ''), " .
             "COALESCE(createdBy.first_name, ''), ' ', COALESCE(createdBy.last_name, ''))), '') AS `createdByName`, " .
             "post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
-            "FROM `post` ".
+            "FROM `post` AS `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
             "JOIN `post_tag` AS `tagsMiddle` ON post.id = tagsMiddle.post_id AND tagsMiddle.deleted = 0 ".
             "JOIN `tag` AS `tags` ON tags.id = tagsMiddle.tag_id AND tags.deleted = 0 ".
@@ -324,7 +324,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $sql =
             "SELECT contact.id AS `id`, TRIM(CONCAT(contact.first_name, ' ', contact.last_name)) AS `name`, " .
             "contact.first_name AS `firstName`, contact.last_name AS `lastName`, contact.deleted AS `deleted` ".
-            "FROM `contact` ".
+            "FROM `contact` AS `contact` ".
             "WHERE " .
             "(contact.first_name LIKE 'test%' OR contact.last_name LIKE 'test%' OR ".
             "CONCAT(contact.first_name, ' ', contact.last_name) LIKE 'test%') ".
@@ -361,7 +361,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $sql =
             "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `postName`, comment.name AS `name`, " .
             "comment.deleted AS `deleted` ".
-            "FROM `comment` ".
+            "FROM `comment` AS `comment` ".
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id ".
             "WHERE comment.deleted = 0";
 
@@ -397,7 +397,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $sql =
             "SELECT tag.id AS `id`, tag.name AS `name`, tag.deleted AS `deleted`, postTag.role AS `postRole` ".
-            "FROM `tag` ".
+            "FROM `tag` AS `tag` ".
             "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 ".
             "WHERE tag.deleted = 0";
 
@@ -429,7 +429,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $sql =
             "SELECT tag.id AS `id`, postTag.role AS `postRole` ".
-            "FROM `tag` ".
+            "FROM `tag` AS `tag` ".
             "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 ".
             "WHERE tag.deleted = 0";
 
@@ -455,7 +455,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testSelectRelatedManyManyWithConditions()
     {
         $sql =
-            "SELECT team.id AS `id`, team.name AS `name`, team.deleted AS `deleted`, entityTeam.team_id AS `stub` FROM `team` ".
+            "SELECT team.id AS `id`, team.name AS `name`, team.deleted AS `deleted`, entityTeam.team_id AS `stub` FROM `team` AS `team` ".
             "JOIN `entity_team` AS `entityTeam` ON entityTeam.team_id = team.id AND entityTeam.entity_id = '1' AND " .
             "entityTeam.deleted = 0 AND entityTeam.entity_type = 'Account' WHERE team.deleted = 0";
 
@@ -486,7 +486,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $sql =
             "SELECT ".
             "note.id AS `id`, note.name AS `name`, note.parent_id AS `parentId`, note.parent_type AS `parentType`, note.deleted AS `deleted` ".
-            "FROM `note` ".
+            "FROM `note` AS `note` ".
             "WHERE note.parent_id = '1' AND note.parent_type = 'Post' AND note.deleted = 0";
 
         $note = $this->entityFactory->create('Note');
@@ -523,7 +523,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             "post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(COALESCE(createdBy.salutation_name, ''), ".
             "COALESCE(createdBy.first_name, ''), ' ', COALESCE(createdBy.last_name, ''))), '') AS `createdByName`, ".
             "post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
-            "FROM `post` ".
+            "FROM `post` AS `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
             "WHERE post.id = '1' AND post.deleted = 0 ".
             "LIMIT 0, 1";
@@ -549,7 +549,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $query =
             "SELECT COUNT(tag.id) AS `value` ".
-            "FROM `tag` ".
+            "FROM `tag` AS `tag` ".
             "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 ".
             "WHERE tag.deleted = 0";
 
@@ -861,7 +861,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->comment->id = 'c';
 
         $query1 =
-            "SELECT COUNT(comment.id) AS `value` FROM `comment` " .
+            "SELECT COUNT(comment.id) AS `value` FROM `comment` AS `comment` " .
             "WHERE comment.id = 'c' AND comment.deleted = 0";
 
         $query2 =
@@ -884,7 +884,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->note->id = 'n';
 
         $query1 =
-            "SELECT COUNT(note.id) AS `value` FROM `note` " .
+            "SELECT COUNT(note.id) AS `value` FROM `note` AS `note` " .
             "WHERE note.id = 'n' AND note.deleted = 0";
 
         $query2 =
@@ -958,8 +958,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->postData->id = 'd';
 
         $query1 =
-            "SELECT COUNT(post_data.id) AS `value` FROM `post_data` " .
-            "WHERE post_data.id = 'd' AND post_data.deleted = 0";
+            "SELECT COUNT(postData.id) AS `value` FROM `post_data` AS `postData` " .
+            "WHERE postData.id = 'd' AND postData.deleted = 0";
 
         $query2 =
             "UPDATE `post_data` SET post_data.post_id = NULL WHERE post_data.post_id = 'p' AND post_data.deleted = 0";
@@ -985,7 +985,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->tag->id = 'tagId';
 
         $query1 =
-            "SELECT COUNT(tag.id) AS `value` FROM `tag` " .
+            "SELECT COUNT(tag.id) AS `value` FROM `tag` AS `tag` " .
             "WHERE tag.id = 'tagId' AND tag.deleted = 0";
 
         $query2 =
@@ -1020,7 +1020,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->tag->id = 'tagId';
 
         $query1 =
-            "SELECT COUNT(tag.id) AS `value` FROM `tag` " .
+            "SELECT COUNT(tag.id) AS `value` FROM `tag` AS `tag` " .
             "WHERE tag.id = 'tagId' AND tag.deleted = 0";
 
         $query2 =
@@ -1055,7 +1055,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->team->id = 'teamId';
 
         $query1 =
-            "SELECT COUNT(team.id) AS `value` FROM `team` " .
+            "SELECT COUNT(team.id) AS `value` FROM `team` AS `team` " .
             "WHERE team.id = 'teamId' AND team.deleted = 0";
 
         $query2 =
@@ -1090,7 +1090,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->team->id = 'teamId';
 
         $query1 =
-            "SELECT COUNT(team.id) AS `value` FROM `team` " .
+            "SELECT COUNT(team.id) AS `value` FROM `team` AS `team` " .
             "WHERE team.id = 'teamId' AND team.deleted = 0";
 
         $query2 =
@@ -1153,7 +1153,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
     public function testMax()
     {
-        $query = "SELECT MAX(post.id) AS `value` FROM `post` WHERE post.deleted = 0";
+        $query = "SELECT MAX(post.id) AS `value` FROM `post` AS `post` WHERE post.deleted = 0";
         $return =[
             [
                 'value' => 10,

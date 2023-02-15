@@ -37,7 +37,7 @@ class FileFieldTest extends Base
 
         $this->assertNotEmpty($column);
         $this->assertEquals('varchar', $column['DATA_TYPE']);
-        $this->assertEquals(24, $column['CHARACTER_MAXIMUM_LENGTH']);
+        $this->assertEquals(17, $column['CHARACTER_MAXIMUM_LENGTH']);
         $this->assertEquals('YES', $column['IS_NULLABLE']);
         $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
     }

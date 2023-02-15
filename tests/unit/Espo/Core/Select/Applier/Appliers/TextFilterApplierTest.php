@@ -198,7 +198,7 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
         $expectedWhere[] = ['link2.field*' => $filter . '%'];
 
         if (!$noFullTextSearch) {
-            $expectedWhere[] = ['TEST:(test):' => null];
+            $expectedWhere[] = ['NOT_EQUAL:(TEST:(test), 0):' => null];
         }
 
         $this->queryBuilder

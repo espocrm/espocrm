@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\MassAction\User;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\MassAction\Actions\MassUpdate as MassUpdateOriginal;
 use Espo\Core\MassAction\QueryBuilder;
 use Espo\Core\MassAction\Params;
@@ -42,24 +43,15 @@ use Espo\Core\Acl\Table;
 
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
-use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 use Espo\Tools\MassUpdate\Data as MassUpdateData;
 
 class MassUpdate implements MassAction
 {
-    private MassUpdateOriginal $massUpdateOriginal;
-    private QueryBuilder $queryBuilder;
-    private EntityManager $entityManager;
-    private Acl $acl;
-    private User $user;
-    private FileManager $fileManager;
-    private DataManager $dataManager;
-
     private const PERMISSION = 'massUpdatePermission';
-    private const SYSTEM_USER_ID = 'system';
 
     /** @var string[] */
     private array $notAllowedAttributeList = [
@@ -72,25 +64,18 @@ class MassUpdate implements MassAction
     ];
 
     public function __construct(
-        MassUpdateOriginal $massUpdateOriginal,
-        QueryBuilder $queryBuilder,
-        EntityManager $entityManager,
-        Acl $acl,
-        User $user,
-        FileManager $fileManager,
-        DataManager $dataManager
-    ) {
-        $this->massUpdateOriginal = $massUpdateOriginal;
-        $this->queryBuilder = $queryBuilder;
-        $this->entityManager = $entityManager;
-        $this->acl = $acl;
-        $this->user = $user;
-        $this->fileManager = $fileManager;
-        $this->dataManager = $dataManager;
-    }
+        private MassUpdateOriginal $massUpdateOriginal,
+        private QueryBuilder $queryBuilder,
+        private EntityManager $entityManager,
+        private Acl $acl,
+        private User $user,
+        private FileManager $fileManager,
+        private DataManager $dataManager
+    ) {}
 
     /**
      * @throws Forbidden
+     * @throws BadRequest
      */
     public function process(Params $params, Data $data): Result
     {
@@ -118,7 +103,7 @@ class MassUpdate implements MassAction
             ->getRDBRepository(User::ENTITY_TYPE)
             ->clone($query)
             ->sth()
-            ->select(['id'])
+            ->select(['id', 'userName'])
             ->find();
 
         foreach ($collection as $entity) {
@@ -147,9 +132,9 @@ class MassUpdate implements MassAction
     /**
      * @throws Forbidden
      */
-    private function checkEntity(Entity $entity, MassUpdateData $data): void
+    private function checkEntity(User $entity, MassUpdateData $data): void
     {
-        if ($entity->getId() === self::SYSTEM_USER_ID) {
+        if ($entity->getUserName() === SystemUser::NAME) {
             throw new Forbidden("Can't update 'system' user.");
         }
 

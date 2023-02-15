@@ -131,7 +131,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
 
         $this->scanner
             ->expects($this->once())
-            ->method('applyLeftJoins')
+            ->method('apply')
             ->with($this->queryBuilder, $item);
 
         $this->converter->convert($this->queryBuilder, $item);
@@ -459,7 +459,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->scanner
-            ->method('applyLeftJoins')
+            ->method('apply')
             ->withConsecutive(
                 [$this->isInstanceOf(QueryBuilder::class), $sqItem],
                 [$this->queryBuilder, $item]
@@ -537,16 +537,24 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
             );
 
         $expected = [
-            'id=s' => QueryBuilder::create()
-                ->select('id')
-                ->from($this->entityType)
-                ->leftJoin('EntityEntity', $alias, [
-                    "{$alias}.localId:" => 'id',
-                    "{$alias}.deleted" => false,
-                ])
-                ->where(["{$alias}.foreignId" => $value])
-                ->build()
-                ->getRaw()
+            'id=s' => [
+                'select' => ['id'],
+                'from' => 'Test',
+                'leftJoins' => [
+                    [
+                        'test',
+                        $alias,
+                        [ $alias . '.localId=:' => 'id'],
+                        [
+                            'noLeftAlias' => true,
+                            'onlyMiddle' => true,
+                        ],
+                    ],
+                ],
+                'whereClause' => [
+                    $alias . '.foreignId' => $value,
+                ],
+            ],
         ];
 
         $whereClause = $this->converter->convert($this->queryBuilder, $item);

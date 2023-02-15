@@ -38,6 +38,8 @@ use Espo\Entities\ArrayValue;
 use Espo\Entities\User;
 use Espo\ORM\Defs as ORMDefs;
 use Espo\ORM\Entity;
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\Part\Join;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
@@ -114,7 +116,7 @@ class ItemGeneralConverter implements ItemConverter
         }
 
         switch ($type) {
-            // Revise.
+            // @todo Revise. Maybe to use regular like, in, etc. types?
             case 'columnLike':
             case 'columnIn':
             case 'columnNotIn':
@@ -249,7 +251,7 @@ class ItemGeneralConverter implements ItemConverter
 
         $whereClause = $this->convert($sqQueryBuilder, $whereItem)->getRaw();
 
-        $this->scanner->applyLeftJoins($sqQueryBuilder, $whereItem);
+        $this->scanner->apply($sqQueryBuilder, $whereItem);
 
         $rawParams = $sqQueryBuilder->build()->getRaw();
 
@@ -349,8 +351,6 @@ class ItemGeneralConverter implements ItemConverter
         $value
     ): array {
 
-        $arrayValueAlias = 'arrayFilter' . $this->randomStringGenerator->generate();
-
         $arrayAttribute = $attribute;
         $arrayEntityType = $this->entityType;
         $idPart = 'id';
@@ -418,33 +418,36 @@ class ItemGeneralConverter implements ItemConverter
                 throw new Error("Bad where item 'array'. No value.");
             }
 
-            $subQuery = QueryBuilder::create()
-                ->select('entityId')
-                ->from(ArrayValue::ENTITY_TYPE)
-                ->where([
-                    'entityType' => $arrayEntityType,
-                    'attribute' => $arrayAttribute,
-                    'value' => $value,
-                ])
-                ->build();
-
-            return [$idPart . '!=s' => $subQuery->getRaw()];
+            return Cond::not(
+                Cond::exists(
+                    QueryBuilder::create()
+                        ->select('entityId')
+                        ->from(ArrayValue::ENTITY_TYPE)
+                        ->where([
+                            'entityType' => $arrayEntityType,
+                            'attribute' => $arrayAttribute,
+                            'value' => $value,
+                            'entityId:' => lcfirst($arrayEntityType) . '.id'
+                        ])
+                        ->build()
+                )
+            )->getRaw();
         }
 
         if ($type === Type::ARRAY_IS_EMPTY) {
-            // Though distinct-left-join may perform faster than not-in-subquery
-            // it's reasonable to avoid using distinct as it may negatively affect
-            // performance when other filters are applied.
-            $subQuery = QueryBuilder::create()
-                ->select('entityId')
-                ->from(ArrayValue::ENTITY_TYPE)
-                ->where([
-                    'entityType' => $arrayEntityType,
-                    'attribute' => $arrayAttribute,
-                ])
-                ->build();
-
-            return [$idPart . '!=s' => $subQuery->getRaw()];
+            return Cond::not(
+                Cond::exists(
+                    QueryBuilder::create()
+                        ->select('entityId')
+                        ->from(ArrayValue::ENTITY_TYPE)
+                        ->where([
+                            'entityType' => $arrayEntityType,
+                            'attribute' => $arrayAttribute,
+                            'entityId:' => lcfirst($arrayEntityType) . '.id'
+                        ])
+                        ->build()
+                )
+            )->getRaw();
         }
 
         if ($type === Type::ARRAY_IS_NOT_EMPTY) {
@@ -1320,21 +1323,29 @@ class ItemGeneralConverter implements ItemConverter
         if ($relationType == Entity::MANY_MANY) {
             $key = $defs->getForeignMidKey();
             $nearKey = $defs->getMidKey();
-            $middleEntityType = ucfirst($defs->getRelationshipName());
 
-            // Left-join performs faster than Inner-join.
+            // IN-sub-query performs faster than EXISTS on MariaDB when multiple IDs.
+            // Left-join performs faster than inner-join.
             // Not joining a foreign table as it affects performance in MySQL.
-            $subQuery = QueryBuilder::create()
-                ->select('id')
-                ->from($this->entityType)
-                ->leftJoin($middleEntityType, $alias, [
-                    "{$alias}.{$nearKey}:" => 'id',
-                    "{$alias}.deleted" => false,
-                ])
-                ->where(["{$alias}.{$key}" => $value])
-                ->build();
-
-            return ['id=s' =>  $subQuery->getRaw()];
+            // MariaDB and PostgreSQL perform fast, MySQL – slow.
+            return Cond::in(
+                Cond::column('id'),
+                QueryBuilder::create()
+                    ->select('id')
+                    ->from($this->entityType)
+                    ->leftJoin(
+                        Join::create($link, $alias)
+                            ->withConditions(
+                                Cond::equal(
+                                    Cond::column("{$alias}.{$nearKey}"),
+                                    Cond::column('id')
+                                )
+                            )
+                            ->withOnlyMiddle()
+                    )
+                    ->where(["{$alias}.{$key}" => $value])
+                    ->build()
+            )->getRaw();
         }
 
         if (
@@ -1385,34 +1396,43 @@ class ItemGeneralConverter implements ItemConverter
 
         if ($relationType == Entity::MANY_MANY) {
             $key = $defs->getForeignMidKey();
-            $nearKey = $defs->getMidKey();
-            $middleEntityType = ucfirst($defs->getRelationshipName());
 
-            $subQuery = QueryBuilder::create()
-                ->select('id')
-                ->from($this->entityType)
-                ->leftJoin($middleEntityType, $alias, [
-                    "{$alias}.{$nearKey}:" => 'id',
-                    "{$alias}.deleted" => false,
-                ])
-                ->where(["{$alias}.{$key}=" => $value])
-                ->build();
-
-            return ['id!=s' =>  $subQuery->getRaw()];
+            // MariaDB and MySQL perform slow, PostgreSQL – fast.
+            return Cond::not(
+                Cond::exists(
+                    QueryBuilder::create()
+                        ->from($this->entityType, 'sq')
+                        ->join(
+                            Join::create($link, $alias)
+                                ->withOnlyMiddle()
+                        )
+                        ->where(["{$alias}.{$key}" => $value])
+                        ->where(
+                            Cond::equal(
+                                Cond::column('sq.id'),
+                                Cond::column(lcfirst($this->entityType) . '.id')
+                            )
+                        )
+                        ->build()
+                )
+            )->getRaw();
         }
 
         if (
             $relationType == Entity::HAS_MANY ||
             $relationType == Entity::HAS_ONE
         ) {
-            $subQuery = QueryBuilder::create()
-                ->select('id')
-                ->from($this->entityType)
-                ->leftJoin($link, $alias)
-                ->where(["{$alias}.id" => $value])
-                ->build();
-
-            return ['id!=s' =>  $subQuery->getRaw()];
+            return Cond::not(
+                Cond::exists(
+                    QueryBuilder::create()
+                        ->select('id')
+                        ->from($this->entityType, 'sq')
+                        ->join($link, $alias)
+                        ->where(["{$alias}.id" => $value])
+                        ->where(['sq.id:' => lcfirst($this->entityType) . '.id'])
+                        ->build()
+                )
+            )->getRaw();
         }
 
         if ($relationType == Entity::BELONGS_TO) {
@@ -1455,6 +1475,7 @@ class ItemGeneralConverter implements ItemConverter
             $whereList = [];
 
             foreach ($value as $targetId) {
+                // Only-middle join performs slower on MariaDB.
                 $sq = QueryBuilder::create()
                     ->from($this->entityType)
                     ->select('id')

@@ -30,6 +30,7 @@
 namespace Espo\Core\Repositories;
 
 use Espo\Core\ORM\Repository\Option\SaveOption;
+use Espo\Core\Utils\SystemUser;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\RDBRepository;
@@ -45,53 +46,35 @@ use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Core\Utils\Metadata;
 
 /**
- * @template TEntity of \Espo\ORM\Entity
+ * A database repository. Extending is not recommended. Use hooks, field saver framework instead.
+ *
+ * @template TEntity of Entity
  * @extends RDBRepository<TEntity>
  */
 class Database extends RDBRepository
 {
+    private const ATTR_ID = 'id';
+    private const ATTR_CREATED_BY_ID = 'createdById';
+    private const ATTR_MODIFIED_BY_ID = 'modifiedById';
+    private const ATTR_MODIFIED_BY_NAME = 'modifiedByName';
+    private const ATTR_CREATED_AT = 'createdAt';
+    private const ATTR_MODIFIED_AT = 'modifiedAt';
+
     /**
+     * Disables hook processing.
      * @var bool
      */
     protected $hooksDisabled = false;
 
-    /**
-     * @deprecated
-     * @todo Remove all usage.
-     * @var bool
-     */
-    protected $processFieldsAfterSaveDisabled = false;
-
-    /**
-     * @deprecated
-     * @todo Remove all usage.
-     * @var bool
-     */
-    protected $processFieldsAfterRemoveDisabled = false;
-
-    /**
-     * @var ?array<string,mixed>
-     */
+    /** @var ?array<string, mixed> */
     private $restoreData = null;
-
-    /**
-     * @var Metadata
-     */
+    /** @var Metadata */
     protected $metadata;
-
-    /**
-     * @var HookManager
-     */
+    /** @var HookManager */
     protected $hookManager;
-
-    /**
-     * @var ApplicationState
-     */
+    /** @var ApplicationState  */
     protected $applicationState;
-
-    /**
-     * @var RecordIdGenerator
-     */
+    /** @var RecordIdGenerator */
     protected $recordIdGenerator;
 
     public function __construct(
@@ -101,7 +84,8 @@ class Database extends RDBRepository
         Metadata $metadata,
         HookManager $hookManager,
         ApplicationState $applicationState,
-        RecordIdGenerator $recordIdGenerator
+        RecordIdGenerator $recordIdGenerator,
+        private SystemUser $systemUser
     ) {
         $this->metadata = $metadata;
         $this->hookManager = $hookManager;
@@ -129,21 +113,20 @@ class Database extends RDBRepository
      * @deprecated Will be removed.
      */
     public function handleSelectParams(&$params) /** @phpstan-ignore-line */
-    {
-    }
+    {}
 
     /**
      * @param TEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function save(Entity $entity, array $options = []): void
     {
         if (
             $entity->isNew() &&
-            !$entity->has('id') &&
-            !$this->getAttributeParam($entity, 'id', 'autoincrement')
+            !$entity->has(self::ATTR_ID) &&
+            !$this->getAttributeParam($entity, self::ATTR_ID, 'autoincrement')
         ) {
-            $entity->set('id', $this->recordIdGenerator->generate());
+            $entity->set(self::ATTR_ID, $this->recordIdGenerator->generate());
         }
 
         if (empty($options[SaveOption::SKIP_ALL])) {
@@ -157,7 +140,7 @@ class Database extends RDBRepository
 
     /**
      * @param TEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function beforeRemove(Entity $entity, array $options = [])
@@ -170,26 +153,31 @@ class Database extends RDBRepository
 
         $nowString = DateTimeUtil::getSystemNowString();
 
-        if ($entity->hasAttribute('modifiedAt')) {
-            $entity->set('modifiedAt', $nowString);
+        if ($entity->hasAttribute(self::ATTR_MODIFIED_AT)) {
+            $entity->set(self::ATTR_MODIFIED_AT, $nowString);
         }
 
-        if ($entity->hasAttribute('modifiedById')) {
+        if ($entity->hasAttribute(self::ATTR_MODIFIED_BY_ID)) {
             $modifiedById = $options[SaveOption::MODIFIED_BY_ID] ?? null;
+
+            if ($modifiedById === SystemUser::NAME) {
+                // For bc.
+                $modifiedById = $this->systemUser->getId();
+            }
 
             if (!$modifiedById && $this->applicationState->hasUser()) {
                 $modifiedById = $this->applicationState->getUser()->getId();
             }
 
             if ($modifiedById) {
-                $entity->set('modifiedById', $modifiedById);
+                $entity->set(self::ATTR_MODIFIED_BY_ID, $modifiedById);
             }
         }
     }
 
     /**
      * @param TEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function afterRemove(Entity $entity, array $options = [])
@@ -204,8 +192,8 @@ class Database extends RDBRepository
     /**
      * @param TEntity $entity
      * @param string $relationName
-     * @param array<string,mixed> $params
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $params
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function afterMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
@@ -232,7 +220,7 @@ class Database extends RDBRepository
      * @param TEntity $entity
      * @param string $relationName
      * @param Entity|string $foreign
-     * @param \stdClass|array<string,mixed>|null $data
+     * @param \stdClass|array<string, mixed>|null $data
      * @param array<string,mixed> $options
      * @return void
      */
@@ -252,7 +240,7 @@ class Database extends RDBRepository
             if ($foreignEntityType) {
                 $foreign = $this->entityManager->getNewEntity($foreignEntityType);
 
-                $foreign->set('id', $foreignId);
+                $foreign->set(self::ATTR_ID, $foreignId);
                 $foreign->setAsFetched();
             }
         }
@@ -270,7 +258,7 @@ class Database extends RDBRepository
      * @param TEntity $entity
      * @param string $relationName
      * @param Entity|string $foreign
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
@@ -289,7 +277,7 @@ class Database extends RDBRepository
             if ($foreignEntityType) {
                 $foreign = $this->entityManager->getNewEntity($foreignEntityType);
 
-                $foreign->set('id', $foreignId);
+                $foreign->set(self::ATTR_ID, $foreignId);
                 $foreign->setAsFetched();
             }
         }
@@ -301,7 +289,7 @@ class Database extends RDBRepository
 
     /**
      * @param TEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function beforeSave(Entity $entity, array $options = [])
@@ -315,7 +303,7 @@ class Database extends RDBRepository
 
     /**
      * @param TEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function afterSave(Entity $entity, array $options = [])
@@ -335,7 +323,7 @@ class Database extends RDBRepository
 
     /**
      * @param TEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function processCreatedAndModifiedFieldsSave(Entity $entity, array $options): void
     {
@@ -354,50 +342,66 @@ class Database extends RDBRepository
             return;
         }
 
-        if ($entity->hasAttribute('modifiedAt')) {
-            $entity->set('modifiedAt', $nowString);
+        if ($entity->hasAttribute(self::ATTR_MODIFIED_AT)) {
+            $entity->set(self::ATTR_MODIFIED_AT, $nowString);
         }
 
-        if ($entity->hasAttribute('modifiedById')) {
-            if (!empty($options[SaveOption::MODIFIED_BY_ID])) {
-                $entity->set('modifiedById', $options[SaveOption::MODIFIED_BY_ID]);
+        if ($entity->hasAttribute(self::ATTR_MODIFIED_BY_ID)) {
+            $modifiedById = $options[SaveOption::MODIFIED_BY_ID] ?? null;
+
+            if ($modifiedById === SystemUser::NAME) {
+                // For bc.
+                $modifiedById = $this->systemUser->getId();
+            }
+
+            if ($modifiedById) {
+                $entity->set(self::ATTR_MODIFIED_BY_ID, $modifiedById);
             }
             else if ($this->applicationState->hasUser()) {
-                $entity->set('modifiedById', $this->applicationState->getUser()->getId());
-                $entity->set('modifiedByName', $this->applicationState->getUser()->get('name'));
+                $user = $this->applicationState->getUser();
+
+                $entity->set(self::ATTR_MODIFIED_BY_ID, $user->getId());
+                $entity->set(self::ATTR_MODIFIED_BY_NAME, $user->getName());
             }
         }
     }
 
     /**
      * @param TEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function processCreatedAndModifiedFieldsSaveNew(Entity $entity, array $options): void
     {
         $nowString = DateTimeUtil::getSystemNowString();
 
         if (
-            $entity->hasAttribute('createdAt') &&
-            (empty($options[SaveOption::IMPORT]) || !$entity->has('createdAt'))
+            $entity->hasAttribute(self::ATTR_CREATED_AT) &&
+            (empty($options[SaveOption::IMPORT]) || !$entity->has(self::ATTR_CREATED_AT))
         ) {
-            $entity->set('createdAt', $nowString);
+            $entity->set(self::ATTR_CREATED_AT, $nowString);
         }
 
-        if ($entity->hasAttribute('modifiedAt')) {
-            $entity->set('modifiedAt', $nowString);
+        if ($entity->hasAttribute(self::ATTR_MODIFIED_AT)) {
+            $entity->set(self::ATTR_MODIFIED_AT, $nowString);
         }
 
-        if ($entity->hasAttribute('createdById')) {
-            if (!empty($options[SaveOption::CREATED_BY_ID])) {
-                $entity->set('createdById', $options[SaveOption::CREATED_BY_ID]);
+        if ($entity->hasAttribute(self::ATTR_CREATED_BY_ID)) {
+            $createdById = $options[SaveOption::CREATED_BY_ID] ?? null;
+
+            if ($createdById) {
+                if ($createdById === SystemUser::NAME) {
+                    // For bc.
+                    $createdById = $this->systemUser->getId();
+                }
+
+                $entity->set(self::ATTR_CREATED_BY_ID, $createdById);
             }
             else if (
                 empty($options[SaveOption::SKIP_CREATED_BY]) &&
-                (empty($options[SaveOption::IMPORT]) || !$entity->has('createdById')) &&
+                (empty($options[SaveOption::IMPORT]) || !$entity->has(self::ATTR_CREATED_BY_ID)) &&
                 $this->applicationState->hasUser()
             ) {
-                $entity->set('createdById', $this->applicationState->getUser()->getId());
+                $entity->set(self::ATTR_CREATED_BY_ID, $this->applicationState->getUser()->getId());
             }
         }
     }

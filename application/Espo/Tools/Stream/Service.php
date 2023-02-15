@@ -33,6 +33,7 @@ use Espo\Core\ApplicationUser;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
+use Espo\Core\Utils\SystemUser;
 use Espo\Entities\Subscription;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
@@ -130,7 +131,8 @@ class Service
         FieldUtil $fieldUtil,
         SelectBuilderFactory $selectBuilderFactory,
         UserAclManagerProvider $userAclManagerProvider,
-        RecordServiceContainer $recordServiceContainer
+        RecordServiceContainer $recordServiceContainer,
+        private SystemUser $systemUser
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
@@ -212,7 +214,7 @@ class Service
         $userIdList = [];
 
         foreach ($sourceUserIdList as $id) {
-            if ($id === ApplicationUser::SYSTEM_USER_ID) {
+            if ($id === $this->systemUser->getId()) {
                 continue;
             }
 
@@ -292,7 +294,7 @@ class Service
 
     public function followEntity(Entity $entity, string $userId, bool $skipAclCheck = false): bool
     {
-        if ($userId === ApplicationUser::SYSTEM_USER_ID) {
+        if ($userId === $this->systemUser->getId()) {
             return false;
         }
 

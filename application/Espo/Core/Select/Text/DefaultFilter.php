@@ -30,11 +30,7 @@
 namespace Espo\Core\Select\Text;
 
 use Espo\Core\Exceptions\Error;
-
-use Espo\Core\Select\Text\MetadataProvider;
 use Espo\Core\Select\Text\Filter\Data;
-use Espo\Core\Select\Text\ConfigProvider;
-
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
@@ -45,21 +41,11 @@ use Espo\ORM\Entity;
 
 class DefaultFilter implements Filter
 {
-    private $entityType;
-
-    private $metadataProvider;
-
-    private $config;
-
     public function __construct(
-        string $entityType,
-        MetadataProvider $metadataProvider,
-        ConfigProvider $config
-    ) {
-        $this->entityType = $entityType;
-        $this->metadataProvider = $metadataProvider;
-        $this->config = $config;
-    }
+        private string $entityType,
+        private MetadataProvider $metadataProvider,
+        private ConfigProvider $config
+    ) {}
 
     /**
      * @throws Error
@@ -118,6 +104,14 @@ class DefaultFilter implements Filter
             return;
         }
 
+        if (
+            !str_contains($attribute, '.') &&
+            $this->metadataProvider->getFieldType($this->entityType, $attribute) === 'email' &&
+            str_contains($filter, ' ')
+        ) {
+            return;
+        }
+
         $expression = $filter;
 
         if (!$skipWildcards) {
@@ -141,7 +135,7 @@ class DefaultFilter implements Filter
      */
     private function getAttributeTypeAndApplyJoin(QueryBuilder $queryBuilder, string $attribute): string
     {
-        if (strpos($attribute, '.') !== false) {
+        if (str_contains($attribute, '.')) {
             list($link, $foreignField) = explode('.', $attribute);
 
             $foreignEntityType = $this->metadataProvider->getRelationEntityType($this->entityType, $link);

@@ -31,15 +31,15 @@ namespace Espo\Core\Formula\Functions\ExtGroup\EmailGroup;
 
 use Espo\Core\ApplicationUser;
 use Espo\Core\ORM\Repository\Option\SaveOption;
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Functions\BaseFunction;
+use Espo\Core\Utils\SystemUser;
 use Espo\Entities\Email;
 use Espo\Tools\Email\SendService;
-use Exception;
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
 
 use Espo\Core\Di;
+
+use Exception;
 
 class SendType extends BaseFunction implements
     Di\EntityManagerAware,
@@ -108,10 +108,12 @@ class SendType extends BaseFunction implements
             }
         }
 
+        $systemUserId = $this->injectableFactory->create(SystemUser::class)->getId();
+
         if ($toSave) {
             $em->saveEntity($email, [
                 SaveOption::SILENT => true,
-                SaveOption::MODIFIED_BY_ID => ApplicationUser::SYSTEM_USER_ID,
+                SaveOption::MODIFIED_BY_ID => $systemUserId,
             ]);
         }
 

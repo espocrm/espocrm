@@ -27,49 +27,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils;
+namespace Espo\ORM\Query\Part\Where;
 
-class NumberUtil
+use Espo\ORM\Query\Part\WhereItem;
+use Espo\ORM\Query\Select;
+
+/**
+ * An EXISTS-operator. Immutable.
+ *
+ * @immutable
+ */
+class Exists implements WhereItem
 {
-    public function __construct(
-        private ?string $decimalMark = '.',
-        private ?string $thousandSeparator = ','
-    ) {}
+    /** @var array<string, mixed> */
+    private $rawValue = [];
+
+    public function getRaw(): array
+    {
+        return ['EXISTS' => $this->getRawValue()];
+    }
+
+    public function getRawKey(): string
+    {
+        return 'EXISTS';
+    }
 
     /**
-     * @param scalar $value
+     * @return array<string, mixed>
      */
-    public function format(
-        $value,
-        ?int $decimals = null,
-        ?string $decimalMark = null,
-        ?string $thousandSeparator = null
-    ): string {
+    public function getRawValue()
+    {
+        return $this->rawValue;
+    }
 
-        if (is_null($decimalMark)) {
-            $decimalMark = $this->decimalMark;
-        }
+    public static function create(Select $subQuery): self
+    {
+        $obj = new self();
+        $obj->rawValue = $subQuery->getRaw();
 
-        if (is_null($thousandSeparator)) {
-            $thousandSeparator = $this->thousandSeparator;
-        }
-
-        if (!is_null($decimals)) {
-            return number_format((float) $value, $decimals, $decimalMark, $thousandSeparator);
-        }
-
-        $arr = explode('.', strval($value));
-
-        $r = '0';
-
-        if (!empty($arr[0])) {
-            $r = number_format(intval($arr[0]), 0, '.', $thousandSeparator);
-        }
-
-        if (!empty($arr[1])) {
-            $r = $r . $decimalMark . $arr[1];
-        }
-
-        return $r;
+        return $obj;
     }
 }

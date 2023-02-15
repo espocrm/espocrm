@@ -88,7 +88,7 @@ class MassActionFactory
      * @param array<string,mixed> $with
      * @throws NotFound
      * @todo Remove.
-     * @deprecated
+     * @deprecated As of v7.1. Use create.
      */
     public function createWith(string $action, string $entityType, array $with): MassAction
     {

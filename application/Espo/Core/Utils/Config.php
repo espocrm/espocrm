@@ -42,49 +42,27 @@ use const E_USER_DEPRECATED;
 class Config
 {
     private string $configPath = 'data/config.php';
-
     private string $internalConfigPath = 'data/config-internal.php';
-
     private string $systemConfigPath = 'application/Espo/Resources/defaults/systemConfig.php';
-
     private string $cacheTimestamp = 'cacheTimestamp';
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $associativeArrayAttributeList = [
         'currencyRates',
         'database',
         'logger',
         'defaultPermissions',
     ];
-
-    /**
-     * @var ?array<string,mixed>
-     */
+    /** @var ?array<string, mixed> */
     private $data = null;
-
-    /**
-     * @var array<string,mixed>
-     */
+    /** @var array<string, mixed> */
     private $changedData = [];
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $removeData = [];
-
-    private ConfigFileManager $fileManager;
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $internalParamList = [];
 
-    public function __construct(ConfigFileManager $fileManager)
-    {
-        $this->fileManager = $fileManager;
-    }
+    public function __construct(private ConfigFileManager $fileManager)
+    {}
 
     /**
      * A path to the config file.
@@ -189,9 +167,9 @@ class Config
     }
 
     /**
-     * @deprecated Since v7.0.
+     * @deprecated As of v7.0. Use ConfigWriter instead.
      *
-     * @param string|array<string,mixed>|\stdClass $name
+     * @param string|array<string, mixed>|stdClass $name
      * @param mixed $value
      */
     public function set($name, $value = null, bool $dontMarkDirty = false): void
@@ -218,7 +196,7 @@ class Config
     }
 
     /**
-     * @deprecated Since v7.0.
+     * @deprecated As of v7.0. Use ConfigWriter instead.
      */
     public function remove(string $name): bool
     {
@@ -236,8 +214,7 @@ class Config
     }
 
     /**
-     * @deprecated Since v7.0.
-     *
+     * @deprecated As of v7.0. Use ConfigWriter instead.
      * @return bool
      */
     public function save()
@@ -283,7 +260,7 @@ class Config
             throw new RuntimeException('Invalid config data while saving.');
         }
 
-        $data['microtime'] = $microtime = microtime(true);
+        $data['microtime'] = microtime(true);
 
         $this->fileManager->putPhpContents($configPath, $data);
 
@@ -301,7 +278,7 @@ class Config
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function getData(): array
     {
@@ -324,7 +301,7 @@ class Config
         $internalData = $this->fileManager->isFile($this->internalConfigPath) ?
             $this->fileManager->getPhpContents($this->internalConfigPath) : [];
 
-        /** @var array<string,mixed> $mergedData */
+        /** @var array<string, mixed> $mergedData */
         $mergedData = Util::merge(
             Util::merge($systemData, $data),
             $internalData
@@ -364,8 +341,8 @@ class Config
     }
 
     /**
-     * @deprecated
-     * @param array<string,mixed> $data
+     * @deprecated As of 7.0. Use ConfigWriter instead.
+     * @param array<string, mixed> $data
      * @return void
      */
     public function setData($data)
@@ -378,9 +355,7 @@ class Config
     }
 
     /**
-     * Update cache timestamp.
-     *
-     * @deprecated
+     * @deprecated As of 7.0. Use ConfigWriter instead.
      * @return ?array<string,int>
      */
     public function updateCacheTimestamp(bool $returnOnlyValue = false)

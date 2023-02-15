@@ -25,14 +25,15 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 ob_start();
-$result = array('success' => false, 'errorMsg' => '');
+$result = ['success' => false, 'errorMsg' => ''];
 
 // create user
 if (!empty($_SESSION['install']['user-name']) && !empty($_SESSION['install']['user-pass'])) {
     $userId = $installer->createUser($_SESSION['install']['user-name'], $_SESSION['install']['user-pass']);
+
     if (!empty($userId)) {
         $result['success'] = true;
     }

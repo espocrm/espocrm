@@ -29,12 +29,10 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\{
-    Utils\File\Manager as FileManager,
-    Utils\Metadata\Helper,
-    Utils\Resource\Reader as ResourceReader,
-    Utils\Resource\Reader\Params as ResourceReaderParams,
-};
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Metadata\Helper;
+use Espo\Core\Utils\Resource\Reader as ResourceReader;
+use Espo\Core\Utils\Resource\Reader\Params as ResourceReaderParams;
 
 use stdClass;
 use LogicException;
@@ -45,32 +43,20 @@ use RuntimeException;
  */
 class Metadata
 {
-    /**
-     * @var ?array<string,mixed>
-     */
+    /** @var ?array<string, mixed> */
     private ?array $data = null;
-
     private ?stdClass $objData = null;
 
     private string $cacheKey = 'metadata';
-
     private string $objCacheKey = 'objMetadata';
-
     private string $customPath = 'custom/Espo/Custom/Resources/metadata';
 
-    /**
-     * @var array<string,array<string,mixed>>
-     */
+    /** @var array<string, array<string, mixed>>  */
     private $deletedData = [];
-
-    /**
-     * @var array<string,array<string,mixed>>
-     */
+    /** @var array<string, array<string, mixed>> */
     private $changedData = [];
 
-    /**
-     * @var array<int, string[]>
-     */
+    /** @var array<int, string[]> */
     private $forceAppendPathList = [
         ['app', 'rebuild', 'actionClassNameList'],
         ['app', 'fieldProcessing', 'readLoaderClassNameList'],
@@ -96,26 +82,14 @@ class Metadata
     private const ANY_KEY = '__ANY__';
 
     private Helper $metadataHelper;
-    private Module $module;
-    private FileManager $fileManager;
-    private DataCache $dataCache;
-    private ResourceReader $resourceReader;
-    private bool $useCache;
 
     public function __construct(
-        FileManager $fileManager,
-        DataCache $dataCache,
-        ResourceReader $resourceReader,
-        Module $module,
-        bool $useCache = false
-    ){
-        $this->fileManager = $fileManager;
-        $this->dataCache = $dataCache;
-        $this->resourceReader = $resourceReader;
-        $this->module = $module;
-
-        $this->useCache = $useCache;
-    }
+        private FileManager $fileManager,
+        private DataCache $dataCache,
+        private ResourceReader $resourceReader,
+        private Module $module,
+        private bool $useCache = false
+    ){}
 
     private function getMetadataHelper(): Helper
     {
@@ -158,7 +132,7 @@ class Metadata
     /**
      * Get metadata array.
      *
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function getData(): array
     {
@@ -188,7 +162,7 @@ class Metadata
     *
     * @param bool $isJSON
     * @param bool $reload
-    * @return array<string,mixed>|string
+    * @return array<string, mixed>|string
     */
     public function getAll(bool $isJSON = false, bool $reload = false)
     {
@@ -437,7 +411,7 @@ class Metadata
     /**
      * Set Metadata data.
      *
-     * @param array<string,mixed>|scalar|null $data
+     * @param array<string, mixed>|scalar|null $data
      */
     public function set(string $key1, string $key2, $data): void
     {
@@ -455,9 +429,9 @@ class Metadata
             ],
         ];
 
-        /** @var array<string,array<string,mixed>> $mergedChangedData */
+        /** @var array<string, array<string, mixed>> $mergedChangedData */
         $mergedChangedData = Util::merge($this->changedData, $newData);
-        /** @var array<string,mixed> $mergedData */
+        /** @var array<string, mixed> $mergedData */
         $mergedData = Util::merge($this->getData(), $newData);
 
         $this->changedData = $mergedChangedData;
@@ -481,7 +455,7 @@ class Metadata
 
         switch ($key1) {
             case 'entityDefs':
-                //unset related additional fields, e.g. a field with "address" type
+                // unset related additional fields, e.g. a field with "address" type
                 $fieldDefinitionList = $this->get('fields');
 
                 $unsetList = $unsets;
@@ -524,21 +498,21 @@ class Metadata
             ]
         ];
 
-        /** @var array<string,array<string,mixed>> $mergedDeletedData */
+        /** @var array<string, array<string, mixed>> $mergedDeletedData */
         $mergedDeletedData = Util::merge($this->deletedData, $unsetData);
         $this->deletedData = $mergedDeletedData;
 
-        /** @var array<string,array<string,mixed>> $unsetDeletedData */
+        /** @var array<string, array<string, mixed>> $unsetDeletedData */
         $unsetDeletedData = Util::unsetInArrayByValue('__APPEND__', $this->deletedData, true);
         $this->deletedData = $unsetDeletedData;
 
-        /** @var array<string,mixed> $data */
+        /** @var array<string, mixed> $data */
         $data = Util::unsetInArray($this->getData(), $metadataUnsetData, true);
         $this->data = $data;
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     private function undelete(string $key1, string $key2, $data): void
     {

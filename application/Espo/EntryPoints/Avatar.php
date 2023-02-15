@@ -29,7 +29,6 @@
 
 namespace Espo\EntryPoints;
 
-use Espo\Core\ApplicationUser;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Api\Request;
@@ -38,6 +37,7 @@ use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
 
+use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
 use Identicon\Identicon;
 
@@ -100,6 +100,7 @@ class Avatar extends Image
             throw new BadRequest();
         }
 
+        /** @var ?User $user */
         $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
@@ -112,6 +113,8 @@ class Avatar extends Image
 
         if ($id) {
             $this->show($response, $id, $size, true);
+
+            return;
         }
 
         $identicon = new Identicon();
@@ -136,7 +139,7 @@ class Avatar extends Image
 
         $color = $this->getColor($userId);
 
-        if ($hash === ApplicationUser::SYSTEM_USER_ID) {
+        if ($user->getUserName() === SystemUser::NAME) {
             $color = $this->metadata->get(['app', 'avatars', 'systemColor']) ?? $this->systemColor;
         }
 

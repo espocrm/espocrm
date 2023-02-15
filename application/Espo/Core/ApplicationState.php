@@ -29,7 +29,6 @@
 
 namespace Espo\Core;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Entities\Portal as PortalEntity;
 use Espo\Entities\User as UserEntity;
 
@@ -40,12 +39,8 @@ use LogicException;
  */
 class ApplicationState
 {
-    private Container $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
+    public function __construct(private Container $container)
+    {}
 
     /**
      * Whether an application is initialized as a portal.

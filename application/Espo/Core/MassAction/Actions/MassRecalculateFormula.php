@@ -29,6 +29,7 @@
 
 namespace Espo\Core\MassAction\Actions;
 
+use Espo\Core\ApplicationUser;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\MassAction\Data;
 use Espo\Core\MassAction\MassAction;
@@ -36,23 +37,17 @@ use Espo\Core\MassAction\Params;
 use Espo\Core\MassAction\QueryBuilder;
 use Espo\Core\MassAction\Result;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
 
 class MassRecalculateFormula implements MassAction
 {
-    private QueryBuilder $queryBuilder;
-    private EntityManager $entityManager;
-    private User $user;
-
     public function __construct(
-        QueryBuilder $queryBuilder,
-        EntityManager $entityManager,
-        User $user
-    ) {
-        $this->queryBuilder = $queryBuilder;
-        $this->entityManager = $entityManager;
-        $this->user = $user;
-    }
+        private QueryBuilder $queryBuilder,
+        private EntityManager $entityManager,
+        private User $user,
+        private SystemUser $systemUser
+    ) {}
 
     public function process(Params $params, Data $data): Result
     {
@@ -76,7 +71,7 @@ class MassRecalculateFormula implements MassAction
 
         foreach ($collection as $entity) {
             $this->entityManager->saveEntity($entity, [
-                'modifiedById' => 'system',
+                'modifiedById' => $this->systemUser->getId(),
             ]);
 
             /** @var string $id */

@@ -41,75 +41,68 @@ use RuntimeException;
 class BaseEntity implements Entity
 {
     /**
-     * @var string|null
-     * @deprecated
+     * @deprecated As of v7.0. Use `getId`. To be changed to protected.
+     * @todo Change to protected in v8.0.
+     * @var ?string
      */
     public $id = null;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $entityType;
 
     private bool $isNotNew = false;
-
     private bool $isSaved = false;
-
     private bool $isFetched = false;
-
     private bool $isBeingSaved = false;
 
     /**
-     * @todo Make private. Rename to `attributes`.
-     * @deprecated
-     * @var array<string,array<string,mixed>>
+     * @todo Make private, rename to `attributes` in v8.0. .
+     * @deprecated As of v6.0. Use getAttributeList, getAttributeParam, ORM\Defs.
+     * @var array<string, array<string, mixed>>
      */
     public array $fields = [];
 
     /**
-     * @var array<string,array<string,mixed>>
+     * @var array<string, array<string, mixed>>
      */
     private array $attributes = [];
 
     /**
-     * @todo Make private.
-     * @deprecated
-     * @var array<string,array<string,mixed>>
+     * @todo Make private in v8.0.
+     * @deprecated As of v6.0. Use getRelationList, getRelationParam, ORM\Defs.
+     * @var array<string, array<string, mixed>>
      */
     protected array $relations = [];
 
     /**
      * An attribute-value map.
      *
-     * @deprecated
-     * @todo Make private.
-     * @var array<string,mixed>
+     * @deprecated As of v7.0. `setInContainer`, `hasInContainer`, `getFromContainer`.
+     * @todo Make private in v8.0.
+     * @var array<string, mixed>
      */
     protected array $valuesContainer = [];
 
     /**
      * An attribute-value map of values fetched from DB (before changed).
      *
-     * @deprecated
+     * @deprecated As of v7.0. `getFromFetchedContainer`, `hasInFetchedContainer`.
      * @todo Make private.
      * @var array<string,mixed>
      */
     private array $fetchedValuesContainer = [];
 
     protected ?EntityManager $entityManager;
-
     private ?ValueAccessor $valueAccessor = null;
 
-    /**
-     * @var array<string,bool>
-     */
+    /** @var array<string, bool> */
     private array $writtenMap = [];
 
     /**
      * @param array{
-     *   attributes?: array<string,array<string,mixed>>,
-     *   relations?: array<string,array<string,mixed>>,
-     *   fields?: array<string,array<string,mixed>>
+     *   attributes?: array<string, array<string, mixed>>,
+     *   relations?: array<string, array<string, mixed>>,
+     *   fields?: array<string, array<string, mixed>>
      * } $defs
      */
     public function __construct(
@@ -124,7 +117,6 @@ class BaseEntity implements Entity
 
         $this->attributes = $defs['attributes'] ?? $defs['fields'] ?? $this->attributes;
         $this->relations = $defs['relations'] ?? $this->relations;
-
         $this->fields = $this->attributes;
 
         if ($valueAccessorFactory) {
@@ -173,7 +165,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated Use `setInContainer` method.
+     * @deprecated As of v7.0. Use `setInContainer` method.
      *
      * @param string $attribute
      * @param mixed $value
@@ -257,7 +249,7 @@ class BaseEntity implements Entity
     /**
      * Get an attribute value.
      *
-     * @param array<string,mixed> $params @deprecated
+     * @param array<string, mixed> $params @deprecated
      * @retrun mixed
      */
     public function get(string $attribute, $params = [])
@@ -448,7 +440,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v7.0. Use set instead.
      * @todo Make protected.
      * @param array<string,mixed> $data
      */
@@ -681,7 +673,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0. Use `getEntityType`.
      * @return string
      */
     public function getEntityName()
@@ -698,7 +690,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0. Use `hasAttribute`.
      * @param string $name
      * @return bool
      */
@@ -710,9 +702,9 @@ class BaseEntity implements Entity
     /**
      * Whether an entity type has an attribute defined.
      */
-    public function hasAttribute(string $attibute): bool
+    public function hasAttribute(string $attribute): bool
     {
-        return isset($this->attributes[$attibute]);
+        return isset($this->attributes[$attribute]);
     }
 
     /**
@@ -740,7 +732,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated Use `getValueMap`.
+     * @deprecated As of v6.0. Use `getValueMap`.
      * @return array<string,mixed>
      */
     public function getValues()
@@ -749,7 +741,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated Use `getValueMap`.
+     * @deprecated As of v6.0. Use `getValueMap`.
      * @todo Make protected.
      * @return array<string,mixed>
      */
@@ -785,8 +777,8 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated
-     * @return array<string,mixed>
+     * @deprecated As of v6.0. Use ORM\Defs instead.
+     * @return array<string, mixed>
      */
     public function getFields()
     {
@@ -794,8 +786,8 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated
-     * @return array<string,mixed>
+     * @deprecated As of v7.0. Use ORM\Defs instead.
+     * @return array<string, mixed>
      */
     public function getAttributes()
     {
@@ -803,7 +795,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v7.0. Use ORM\Defs instead.
      * @return array<string,mixed>
      */
     public function getRelations()
@@ -872,8 +864,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     *
-     * @deprecated
+     * @deprecated As of v6.0. Use `isAttributeChanged`.
      * @param string $name
      * @return bool
      */
@@ -932,15 +923,15 @@ class BaseEntity implements Entity
                 }
 
                 foreach ($v1 as $i => $itemValue) {
-                    if (is_object($v1[$i]) && is_object($v2[$i])) {
-                        if (!self::areValuesEqual(self::JSON_OBJECT, $v1[$i], $v2[$i])) {
+                    if (is_object($itemValue) && is_object($v2[$i])) {
+                        if (!self::areValuesEqual(self::JSON_OBJECT, $itemValue, $v2[$i])) {
                             return false;
                         }
 
                         continue;
                     }
 
-                    if ($v1[$i] !== $v2[$i]) {
+                    if ($itemValue !== $v2[$i]) {
                         return false;
                     }
                 }
@@ -1095,7 +1086,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated Use `$this->entityManager`.
+     * @deprecated As of v6.0. Access `entityManager` property.
      */
     protected function getEntityManager(): EntityManager
     {

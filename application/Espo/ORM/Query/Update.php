@@ -29,6 +29,7 @@
 
 namespace Espo\ORM\Query;
 
+use Espo\ORM\Query\Part\Expression;
 use RuntimeException;
 
 /**
@@ -44,9 +45,15 @@ class Update implements Query
     /**
      * Get an entity type.
      */
-    public function getIn(): ?string
+    public function getIn(): string
     {
-        return $this->params['from'] ?? null;
+        $in = $this->params['from'];
+
+        if ($in === null) {
+            throw new RuntimeException("Missing 'in'.");
+        }
+
+        return $in;
     }
 
     /**
@@ -58,7 +65,30 @@ class Update implements Query
     }
 
     /**
-     * @param array<string,mixed> $params
+     * Get SET values.
+     *
+     * @return array<string, scalar|Expression|null>
+     */
+    public function getSet(): array
+    {
+        $set = [];
+        /** @var array<string, ?scalar> $raw */
+        $raw = $this->params['set'];
+
+        foreach ($raw as $key => $value) {
+            if (str_ends_with($key, ':')) {
+                $key = substr($key, 0, -1);
+                $value = Expression::create((string) $value);
+            }
+
+            $set[$key] = $value;
+        }
+
+        return $set;
+    }
+
+    /**
+     * @param array<string, mixed> $params
      */
     private function validateRawParams(array $params): void
     {
@@ -67,7 +97,7 @@ class Update implements Query
         $from = $params['from'] ?? null;
 
         if (!$from || !is_string($from)) {
-            throw new RuntimeException("Select params: Missing 'in'.");
+            throw new RuntimeException("Update params: Missing 'in'.");
         }
 
         $set = $params['set'] ?? null;

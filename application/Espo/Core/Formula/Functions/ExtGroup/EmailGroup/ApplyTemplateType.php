@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Formula\Functions\ExtGroup\EmailGroup;
 
-use Espo\Core\ApplicationUser;
+use Espo\Core\Utils\SystemUser;
 use Espo\Entities\Email;
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
@@ -142,8 +142,10 @@ class ApplyTemplateType extends BaseFunction implements
             ->setIsHtml($emailData->isHtml())
             ->setAttachmentIdList($attachmentsIdList);
 
+        $systemUserId = $this->injectableFactory->create(SystemUser::class)->getId();
+
         $em->saveEntity($email, [
-            'modifiedById' => ApplicationUser::SYSTEM_USER_ID,
+            'modifiedById' => $systemUserId,
         ]);
 
         return true;

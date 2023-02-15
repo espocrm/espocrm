@@ -31,17 +31,11 @@ namespace Espo\Core\Utils;
 
 class FieldUtil
 {
-    private Metadata $metadata;
-
-    /**
-     * @var array<string,array<string,string[]>>
-     */
+    /** @var array<string, array<string, string[]>> */
     private $fieldByTypeListCache = [];
 
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     /**
      * @return string[]

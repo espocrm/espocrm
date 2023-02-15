@@ -39,7 +39,6 @@ class Json
      * JSON encode.
      *
      * @param mixed $value
-     *
      * @throws JsonException
      */
     public static function encode($value, int $options = 0): string
@@ -52,7 +51,6 @@ class Json
      *
      * @param bool $associative Objects will be converted to associative.
      * @return mixed
-     *
      * @throws JsonException
      */
     public static function decode(string $json, bool $associative = false)

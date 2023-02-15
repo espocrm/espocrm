@@ -29,6 +29,7 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
 use Espo\Core\ORM\EntityManagerProxy;
 
@@ -39,16 +40,13 @@ use RuntimeException;
  */
 class ApplicationUser
 {
+    /** @deprecated As of v7.4. Different IDs may be used. Use Espo\Core\Utils\SystemUser. */
     public const SYSTEM_USER_ID = 'system';
 
-    private Container $container;
-    private EntityManagerProxy $entityManagerProxy;
-
-    public function __construct(Container $container, EntityManagerProxy $entityManagerProxy)
-    {
-        $this->container = $container;
-        $this->entityManagerProxy = $entityManagerProxy;
-    }
+    public function __construct(
+        private Container $container,
+        private EntityManagerProxy $entityManagerProxy
+    ) {}
 
     /**
      * Set up the system user as a current user. The system user is used when no user is logged in.
@@ -67,7 +65,7 @@ class ApplicationUser
                 'lastName',
                 'deleted',
             ])
-            ->where(['id' => self::SYSTEM_USER_ID])
+            ->where(['userName' => SystemUser::NAME])
             ->findOne();
 
         if (!$user) {

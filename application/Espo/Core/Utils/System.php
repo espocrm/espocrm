@@ -48,17 +48,15 @@ class System
             preg_match('/^(.*)\/?/i', $serverSoft, $match);
         }
 
-        $serverName = strtolower(
+        return strtolower(
             trim($match[1])
         );
-
-        return $serverName;
     }
 
     /**
      * Get an OS. Details at http://en.wikipedia.org/wiki/Uname.
      *
-     * @return string E.g. `windows`, `mac`, `linux`.
+     * @return ?string E.g. `windows`, `mac`, `linux`.
      */
     public function getOS(): ?string
     {
@@ -98,9 +96,8 @@ class System
     public function getRootDir(): string
     {
         $bPath = realpath('bootstrap.php') ?: '';
-        $rootDir = dirname($bPath);
 
-        return $rootDir;
+        return dirname($bPath);
     }
 
     /**

@@ -36,9 +36,9 @@ use stdClass;
 class DataUtil
 {
     /**
-     * @param array<mixed,mixed> $data
-     * @param array<int,string|string[]>|string $unsetList
-     * @return array<mixed,mixed>
+     * @param array<string|int, mixed> $data
+     * @param array<int, string|string[]>|string $unsetList
+     * @return array<string|int, mixed>
      */
     public static function unsetByKey(&$data, $unsetList, bool $removeEmptyItems = false)
     {
@@ -65,7 +65,6 @@ class DataUtil
             }
 
             $pointer = &$data;
-            $parent = null;
 
             $elementArr = [];
             $elementArr[] = &$pointer;
@@ -76,38 +75,44 @@ class DataUtil
                         if (array_key_exists($key, $pointer)) {
                             unset($pointer[$key]);
                         }
+
+                        continue;
                     }
-                    else if (is_object($pointer)) {
-                        unset($pointer->$key);
 
-                        if ($removeEmptyItems) {
-                            for ($j = count($elementArr); $j > 0; $j--) {
-                                $pointerBack =& $elementArr[$j];
+                    if (!is_object($pointer)) {
+                        continue;
+                    }
 
-                                if (is_object($pointerBack) && count(get_object_vars($pointerBack)) === 0) {
-                                    $previous =& $elementArr[$j - 1];
+                    unset($pointer->$key);
 
-                                    if (is_object($previous)) {
-                                        $key = $arr[$j - 1];
-                                        unset($previous->$key);
-                                    }
-                                }
+                    if (!$removeEmptyItems) {
+                        continue;
+                    }
+
+                    for ($j = count($elementArr); $j > 0; $j--) {
+                        $pointerBack =& $elementArr[$j];
+
+                        if (is_object($pointerBack) && count(get_object_vars($pointerBack)) === 0) {
+                            $previous =& $elementArr[$j - 1];
+
+                            if (is_object($previous)) {
+                                $key = $arr[$j - 1];
+                                unset($previous->$key);
                             }
                         }
                     }
-                }
-                else {
-                    $parent = $pointer;
 
-                    if (is_array($pointer)) {
-                        $pointer = &$pointer[$key];
-                    }
-                    else if (is_object($pointer)) {
-                        $pointer = &$pointer->$key;
-                    }
-
-                    $elementArr[] = &$pointer;
+                    continue;
                 }
+
+                if (is_array($pointer)) {
+                    $pointer = &$pointer[$key];
+                }
+                else if (is_object($pointer)) {
+                    $pointer = &$pointer->$key;
+                }
+
+                $elementArr[] = &$pointer;
             }
         }
 
@@ -115,7 +120,7 @@ class DataUtil
     }
 
     /**
-     * @param array<string|int,mixed>|stdClass $data
+     * @param array<string|int, mixed>|stdClass $data
      * @param mixed $needle
      * @return array<string|int,mixed>|stdClass
      */
@@ -200,10 +205,10 @@ class DataUtil
                 $data = [];
             }
 
-            /** @var array<string,mixed> $data */
+            /** @var array<string, mixed> $data */
 
             if (in_array($appendIdentifier, $overrideData)) {
-                foreach ($overrideData as $key => $item) {
+                foreach ($overrideData as $item) {
                     if ($item === $appendIdentifier) {
                         continue;
                     }

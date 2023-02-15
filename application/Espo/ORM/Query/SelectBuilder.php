@@ -71,7 +71,7 @@ class SelectBuilder implements Builder
      */
     public function from(string $entityType, ?string $alias = null): self
     {
-        if (isset($this->params['from'])) {
+        if (isset($this->params['from']) && $entityType !== $this->params['from']) {
             throw new RuntimeException("Method 'from' can be called only once.");
         }
 

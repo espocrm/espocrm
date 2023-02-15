@@ -631,6 +631,21 @@ class Util
     }
 
     /**
+     * Generate a UUID v4.
+     */
+    public static function generateUuid4(): string
+    {
+        try {
+            $hex = bin2hex(random_bytes(16));
+        }
+        catch (\Exception $e) {
+            throw new \RuntimeException("Could not generate UUID.");
+        }
+
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split($hex, 4));
+    }
+
+    /**
      * Generate a 17-character hex ID.
      */
     public static function generateId(): string

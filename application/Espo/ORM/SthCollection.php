@@ -166,7 +166,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v6.0. Use `getValueMapList`.
      * @return array<int,array<string,mixed>>|\stdClass[]
      */
     public function toArray(bool $itemsAsObjects = false): array

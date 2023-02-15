@@ -51,27 +51,14 @@ class ClientManager
 
     private const APP_DESCRIPTION = "EspoCRM - Open Source CRM application.";
 
-    private Config $config;
-    private ThemeManager $themeManager;
-    private Metadata $metadata;
-    private FileManager $fileManager;
-    private DevModeJsFileListProvider $devModeJsFileListProvider;
-    private Module $module;
-
     public function __construct(
-        Config $config,
-        ThemeManager $themeManager,
-        Metadata $metadata,
-        FileManager $fileManager,
-        DevModeJsFileListProvider $devModeJsFileListProvider,
-        Module $module
+        private Config $config,
+        private ThemeManager $themeManager,
+        private Metadata $metadata,
+        private FileManager $fileManager,
+        private DevModeJsFileListProvider $devModeJsFileListProvider,
+        private Module $module
     ) {
-        $this->config = $config;
-        $this->themeManager = $themeManager;
-        $this->metadata = $metadata;
-        $this->fileManager = $fileManager;
-        $this->devModeJsFileListProvider = $devModeJsFileListProvider;
-        $this->module = $module;
 
         $this->nonce = Util::generateKey();
     }
@@ -145,7 +132,7 @@ class ClientManager
 
         $siteUrl = $this->config->get('siteUrl') ?? '';
 
-        if (strpos($siteUrl, 'https://') === 0) {
+        if (str_starts_with($siteUrl, 'https://')) {
             $response->setHeader('Strict-Transport-Security', 'max-age=10368000');
         }
     }

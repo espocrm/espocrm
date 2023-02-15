@@ -29,47 +29,33 @@
 
 namespace Espo\Core\Utils;
 
-class NumberUtil
+/**
+ * A system user utility.
+ */
+class SystemUser
 {
-    public function __construct(
-        private ?string $decimalMark = '.',
-        private ?string $thousandSeparator = ','
-    ) {}
+    /**
+     * A system user username.
+     */
+    public const NAME = 'system';
+
+    private const ID = 'system';
+    private const UUID = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
+
+    private bool $isUuid;
+
+    public function __construct(Metadata $metadata)
+    {
+        $this->isUuid = $metadata->get(['app', 'recordId', 'dbType']) === 'uuid';
+    }
 
     /**
-     * @param scalar $value
+     * Get a system user ID.
      */
-    public function format(
-        $value,
-        ?int $decimals = null,
-        ?string $decimalMark = null,
-        ?string $thousandSeparator = null
-    ): string {
-
-        if (is_null($decimalMark)) {
-            $decimalMark = $this->decimalMark;
-        }
-
-        if (is_null($thousandSeparator)) {
-            $thousandSeparator = $this->thousandSeparator;
-        }
-
-        if (!is_null($decimals)) {
-            return number_format((float) $value, $decimals, $decimalMark, $thousandSeparator);
-        }
-
-        $arr = explode('.', strval($value));
-
-        $r = '0';
-
-        if (!empty($arr[0])) {
-            $r = number_format(intval($arr[0]), 0, '.', $thousandSeparator);
-        }
-
-        if (!empty($arr[1])) {
-            $r = $r . $decimalMark . $arr[1];
-        }
-
-        return $r;
+    public function getId(): string
+    {
+        return $this->isUuid ?
+            self::UUID :
+            self::ID;
     }
 }

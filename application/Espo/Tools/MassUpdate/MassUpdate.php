@@ -29,10 +29,14 @@
 
 namespace Espo\Tools\MassUpdate;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\MassAction\Params;
 use Espo\Core\MassAction\Result;
 use Espo\Core\MassAction\MassActionFactory;
 
+use Espo\Core\Utils\SystemUser;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
 
@@ -43,31 +47,31 @@ use RuntimeException;
  */
 class MassUpdate
 {
-    private MassActionFactory $massActionFactory;
-
-    private EntityManager $entityManager;
-
     private const ACTION = 'massUpdate';
 
-    private const DEFAULT_USER_ID = 'system';
-
-    public function __construct(MassActionFactory $massActionFactory, EntityManager $entityManager)
-    {
-        $this->massActionFactory = $massActionFactory;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private MassActionFactory $massActionFactory,
+        private EntityManager $entityManager
+    ) {}
 
     /**
+     * Process.
+     *
      * @param ?User $user Under what user to perform mass-update. If not specified, the system user will be used.
-     *   Access control is applied for the user.
-     * @throws \Espo\Core\Exceptions\NotFound
+     * Access control is applied for the user.
+     * @throws NotFound
+     * @throws Forbidden
+     * @throws BadRequest
      */
     public function process(Params $params, Data $data, ?User $user = null): Result
     {
         $entityType = $params->getEntityType();
 
         if (!$user) {
-            $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, self::DEFAULT_USER_ID);
+            $user = $this->entityManager
+                ->getRDBRepositoryByClass(User::class)
+                ->where(['userName' => SystemUser::NAME])
+                ->findOne();
         }
 
         if (!$user) {

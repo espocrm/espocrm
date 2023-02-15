@@ -39,9 +39,12 @@ use Espo\Core\{
     HookManager,
     ApplicationState,
     Utils\Id\RecordIdGenerator,
-};
+    Utils\SystemUser};
 
-/** @deprecated */
+/**
+ * @deprecated As of v6.0. Not to be extended. Extend Espo\Core\Repositories\Database, or better
+ * don't extend repositories at all. Use hooks.
+ */
 class RDB extends \Espo\Core\Repositories\Database implements Injectable /** @phpstan-ignore-line */
 {
     protected $dependencyList = [ /** @phpstan-ignore-line */
@@ -96,7 +99,8 @@ class RDB extends \Espo\Core\Repositories\Database implements Injectable /** @ph
         Metadata $metadata,
         HookManager $hookManager,
         ApplicationState $applicationState,
-        RecordIdGenerator $recordIdGenerator
+        RecordIdGenerator $recordIdGenerator,
+        SystemUser $systemUser
     ) {
         parent::__construct(
             $entityType,
@@ -105,7 +109,8 @@ class RDB extends \Espo\Core\Repositories\Database implements Injectable /** @ph
             $metadata,
             $hookManager,
             $applicationState,
-            $recordIdGenerator
+            $recordIdGenerator,
+            $systemUser
         );
 
         $this->init();

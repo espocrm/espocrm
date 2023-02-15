@@ -30,7 +30,7 @@
 namespace Espo\ORM\DB\Query;
 
 /**
- * @deprecated
+ * @deprecated As of v6.0. Not to be used directly.
  */
 abstract class Base extends \Espo\ORM\QueryComposer\BaseQueryComposer
 {

@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Rebuild\Actions;
 
-use Espo\Core\ApplicationUser;
 use Espo\Core\Rebuild\RebuildAction;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 
@@ -39,26 +39,45 @@ class AddSystemUser implements RebuildAction
 {
     public function __construct(
         private EntityManager $entityManager,
-        private Config $config
+        private Config $config,
+        private SystemUser $systemUser
     ) {}
 
     public function process(): void
     {
-        $userId = ApplicationUser::SYSTEM_USER_ID;
-
         $repository = $this->entityManager->getRDBRepositoryByClass(User::class);
 
-        $user = $repository->getById($userId);
+        $user = $repository
+            ->where(['userName' => SystemUser::NAME])
+            ->findOne();
 
         if ($user) {
-            return;
+            if ($user->getId() === $this->systemUser->getId()) {
+                return;
+            }
+
+            $this->entityManager
+                ->getQueryExecutor()
+                ->execute(
+                    $this->entityManager
+                        ->getQueryBuilder()
+                        ->delete()
+                        ->from(User::ENTITY_TYPE)
+                        ->where(['id' => $user->getId()])
+                        ->build()
+                );
         }
 
         /** @var array<string, mixed> $attributes */
         $attributes = $this->config->get('systemUserAttributes');
 
         $user = $repository->getNew();
+
+        $user->set('id', $this->systemUser->getId());
+        $user->set('userName', SystemUser::NAME);
+        $user->set('type', User::TYPE_SYSTEM);
         $user->set($attributes);
+
         $repository->save($user);
     }
 }

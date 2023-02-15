@@ -270,7 +270,7 @@ class SearchParams
     {
         $obj = clone $this;
 
-        if ($where->getType() === WhereItem::TYPE_AND) {
+        if ($where->getType() === WhereItem\Type::AND) {
             $obj->rawParams['where'] = $where->getValue() ?? [];
 
             return $obj;

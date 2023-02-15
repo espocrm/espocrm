@@ -45,14 +45,11 @@ class EmailFilterManager
 {
     /** @var array<string, iterable<EmailFilter>> */
     private array $data = [];
-    private EntityManager $entityManager;
-    private FiltersMatcher $filtersMatcher;
 
-    public function __construct(EntityManager $entityManager, FiltersMatcher $filtersMatcher)
-    {
-        $this->entityManager = $entityManager;
-        $this->filtersMatcher = $filtersMatcher;
-    }
+    public function __construct(
+        private EntityManager $entityManager,
+        private FiltersMatcher $filtersMatcher
+    ) {}
 
     public function getMatchingFilter(Email $email, string $userId): ?EmailFilter
     {

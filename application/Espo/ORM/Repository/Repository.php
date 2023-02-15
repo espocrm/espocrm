@@ -32,7 +32,7 @@ namespace Espo\ORM\Repository;
 use Espo\ORM\Entity;
 
 /**
- * An access point for fetching and storing records.
+ * An access point for record fetching and storing.
  *
  * @template TEntity of Entity
  */

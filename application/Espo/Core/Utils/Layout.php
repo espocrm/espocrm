@@ -29,34 +29,24 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\{
-    Utils\File\Manager as FileManager,
-    InjectableFactory,
-    Exceptions\Error,
-    Utils\Resource\FileReader,
-    Utils\Resource\FileReader\Params as FileReaderParams,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Resource\FileReader;
+use Espo\Core\Utils\Resource\FileReader\Params as FileReaderParams;
+use RuntimeException;
 
 class Layout
 {
     private string $defaultPath = 'application/Espo/Resources/defaults/layouts';
 
-    private FileManager $fileManager;
-
-    private InjectableFactory $injectableFactory;
-
-    /**
-     * @internal Used by the portal layout util.
-     */
+    /** @internal Used by the portal layout util. */
     protected FileReader $fileReader;
 
     public function __construct(
-        FileManager $fileManager,
-        InjectableFactory $injectableFactory,
+        private FileManager $fileManager,
+        private InjectableFactory $injectableFactory,
         FileReader $fileReader
     ) {
-        $this->fileManager = $fileManager;
-        $this->injectableFactory = $injectableFactory;
         $this->fileReader = $fileReader;
     }
 
@@ -66,7 +56,7 @@ class Layout
             $this->sanitizeInput($scope) !== $scope ||
             $this->sanitizeInput($name) !== $name
         ) {
-            throw new Error("Bad parameters.");
+            throw new RuntimeException("Bad parameters.");
         }
 
         $path = 'layouts/' . $scope . '/' . $name . '.json';
@@ -94,7 +84,7 @@ class Layout
             $defaultImpl = $this->injectableFactory->create($defaultImplClassName);
 
             if (!method_exists($defaultImpl, 'get')) {
-                throw new Error("No 'get' method in '{$defaultImplClassName}'.");
+                throw new RuntimeException("No 'get' method in '{$defaultImplClassName}'.");
             }
 
             $data = $defaultImpl->get($scope);

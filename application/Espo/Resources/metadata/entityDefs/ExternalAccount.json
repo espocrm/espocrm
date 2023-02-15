@@ -2,6 +2,7 @@
     "fields": {
         "id": {
             "type": "id",
+            "dbType": "string",
             "maxLength": 64
         },
         "data": {

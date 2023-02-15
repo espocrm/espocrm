@@ -227,11 +227,14 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertInstanceOf(Update::class, $update);
 
-
         $this->assertEquals(
             ['col:' => 'ADD:(1, 2)'],
             $update->getRaw()['set']
         );
+
+        $set = $update->getSet();
+
+        $this->assertEquals('ADD:(1, 2)', $set['col']->getValue());
     }
 
     public function testUnion1()
