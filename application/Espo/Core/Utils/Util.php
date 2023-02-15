@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils;
 
+use Exception;
+use RuntimeException;
 use stdClass;
 
 class Util
@@ -638,8 +640,8 @@ class Util
         try {
             $hex = bin2hex(random_bytes(16));
         }
-        catch (\Exception $e) {
-            throw new \RuntimeException("Could not generate UUID.");
+        catch (Exception) {
+            throw new RuntimeException("Could not generate UUID.");
         }
 
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split($hex, 4));
