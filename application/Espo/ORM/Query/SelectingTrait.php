@@ -87,6 +87,10 @@ trait SelectingTrait
     {
         return array_map(
             function ($item) {
+                if (is_string($item)) {
+                    $item = [$item];
+                }
+
                 $conditions = isset($item[2]) ?
                     WhereClause::fromRaw($item[2]) :
                     null;
@@ -108,6 +112,10 @@ trait SelectingTrait
     {
         return array_map(
             function ($item) {
+                if (is_string($item)) {
+                    $item = [$item];
+                }
+
                 $conditions = isset($item[2]) ?
                     WhereClause::fromRaw($item[2]) :
                     null;
