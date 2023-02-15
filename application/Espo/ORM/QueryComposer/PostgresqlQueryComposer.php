@@ -30,9 +30,13 @@
 namespace Espo\ORM\QueryComposer;
 
 use Espo\ORM\Entity;
+use Espo\ORM\Query\Delete as DeleteQuery;
+use Espo\ORM\Query\DeleteBuilder;
 use Espo\ORM\Query\Insert as InsertQuery;
 use Espo\ORM\Query\LockTable as LockTableQuery;
 
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\SelectBuilder;
 use LogicException;
 use RuntimeException;
 
@@ -328,6 +332,51 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             $distinct,
             $argumentPartList
         );
+    }
+
+    public function composeDelete(DeleteQuery $query): string
+    {
+        if (
+            $query->getJoins() !== [] ||
+            $query->getLeftJoins() !== [] ||
+            $query->getLimit() !== null ||
+            $query->getOrder() !== []
+        ) {
+            $subQueryBuilder = SelectBuilder::create()
+                ->select('id')
+                ->from($query->getFrom());
+
+            foreach ($query->getJoins() as $join) {
+                $subQueryBuilder->join($join);
+            }
+
+            foreach ($query->getLeftJoins() as $join) {
+                $subQueryBuilder->leftJoin($join);
+            }
+
+            $subQueryBuilder->order($query->getOrder());
+
+            if ($query->getWhere()) {
+                $subQueryBuilder->where($query->getWhere());
+            }
+
+            if ($query->getLimit() !== null) {
+                $subQueryBuilder->limit(null, $query->getLimit());
+            }
+
+            $builder = DeleteBuilder::create()
+                ->from($query->getFrom(), $query->getFromAlias())
+                ->where(
+                    Cond::in(
+                        Cond::column('id'),
+                        $subQueryBuilder->build()
+                    )
+                );
+
+            $query = $builder->build();
+        }
+
+        return parent::composeDelete($query);
     }
 
     public function composeInsert(InsertQuery $query): string

@@ -114,6 +114,28 @@ class PostgresqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testDelete2(): void
+    {
+        $query = DeleteBuilder::create()
+            ->from('Comment')
+            ->join('post')
+            ->where(['name' => 'post.name'])
+            ->limit(1)
+            ->order('name')
+            ->build();
+
+        $sql = $this->queryComposer->composeDelete($query);
+
+        $expectedSql =
+            'DELETE FROM "comment" WHERE "comment"."id" IN ' .
+            '(SELECT "comment"."id" AS "id" FROM "comment" ' .
+            'JOIN "post" AS "post" ON "comment"."post_id" = "post"."id" ' .
+            'WHERE "comment"."name" = \'post.name\' AND "comment"."deleted" = false ' .
+            'ORDER BY "comment"."name" ASC LIMIT 1 OFFSET 0)';
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testInsertUpdate1(): void
     {
         $query = InsertBuilder::create()
