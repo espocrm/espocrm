@@ -63,38 +63,19 @@ class Service
 {
     private const BUSY_RANGES_MAX_RANGE_DAYS = 10;
 
-    private EntityManager $entityManager;
-    private Config $config;
-    private WorkingCalendarFactory $workingCalendarFactory;
-    private Acl $acl;
-    private Metadata $metadata;
-    private ServiceFactory $serviceFactory;
-    private SelectBuilderFactory $selectBuilderFactory;
-    private User $user;
-
     public function __construct(
-        EntityManager $entityManager,
-        Config $config,
-        WorkingCalendarFactory $workingCalendarFactory,
-        Acl $acl,
-        Metadata $metadata,
-        SelectBuilderFactory $selectBuilderFactory,
-        User $user,
-        ServiceFactory $serviceFactory
-    ) {
-
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->workingCalendarFactory = $workingCalendarFactory;
-        $this->acl = $acl;
-        $this->metadata = $metadata;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->user = $user;
-        $this->serviceFactory = $serviceFactory;
-    }
+        private EntityManager $entityManager,
+        private Config $config,
+        private WorkingCalendarFactory $workingCalendarFactory,
+        private Acl $acl,
+        private Metadata $metadata,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private User $user,
+        private ServiceFactory $serviceFactory
+    ) {}
 
     /**
-     * @todo Return array of objects.
+     * Fetch events and ranges.
      *
      * @return (Event|NonWorkingRange|WorkingRange)[]
      * @throws NotFound
@@ -721,6 +702,8 @@ class Service
     }
 
     /**
+     * Fetch for users.
+     *
      * @param string[] $userIdList
      * @return Item[]
      */
