@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\App;
 
+use Espo\Entities\Settings;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -68,6 +69,9 @@ class SettingsService
         private AuthenticationMethodProvider $authenticationMethodProvider
     ) {}
 
+    /**
+     * Get config data.
+     */
     public function getConfigData(): stdClass
     {
         $data = $this->config->getAllNonInternalData();
@@ -79,6 +83,9 @@ class SettingsService
         return $data;
     }
 
+    /**
+     * Get metadata to be used in config.
+     */
     public function getMetadataConfigData(): stdClass
     {
         $data = (object) [];
@@ -181,6 +188,8 @@ class SettingsService
     }
 
     /**
+     * Set config data.
+     *
      * @throws BadRequest
      * @throws Forbidden
      * @throws Error
@@ -193,23 +202,18 @@ class SettingsService
             throw new Forbidden();
         }
 
-        $ignoreItemList = [];
-
-        foreach ($this->access->getSystemParamList() as $item) {
-            $ignoreItemList[] = $item;
-        }
-
-        if ($this->config->get('restrictedMode') && !$user->isSuperAdmin()) {
-            foreach ($this->access->getSuperAdminParamList() as $item) {
-                $ignoreItemList[] = $item;
-            }
-        }
+        $ignoreItemList = array_merge(
+            $this->access->getSystemParamList(),
+            $this->access->getReadOnlyParamList(),
+            $this->isRestrictedMode() && !$user->isSuperAdmin() ?
+                $this->access->getSuperAdminParamList() : []
+        );
 
         foreach ($ignoreItemList as $item) {
             unset($data->$item);
         }
 
-        $entity = $this->entityManager->getNewEntity('Settings');
+        $entity = $this->entityManager->getNewEntity(Settings::ENTITY_TYPE);
 
         $entity->set($data);
         $entity->setAsNotNew();
@@ -217,15 +221,13 @@ class SettingsService
         $this->processValidation($entity, $data);
 
         if (
-            (isset($data->useCache) && $data->useCache !== $this->config->get('useCache'))
+            isset($data->useCache) &&
+            $data->useCache !== $this->config->get('useCache')
         ) {
             $this->dataManager->clearCache();
         }
 
-        $this->configWriter->setMultiple(
-            get_object_vars($data)
-        );
-
+        $this->configWriter->setMultiple(get_object_vars($data));
         $this->configWriter->save();
 
         if (isset($data->personNameFormat)) {
@@ -275,7 +277,7 @@ class SettingsService
             }
         }
 
-        if ($this->config->get('restrictedMode') && !$user->isSuperAdmin()) {
+        if ($this->isRestrictedMode() && !$user->isSuperAdmin()) {
             // @todo Maybe add restriction level for non-super admins.
         }
 
@@ -365,6 +367,11 @@ class SettingsService
             unset($data->outboundEmailFromName);
             unset($data->outboundEmailBccAddress);
         }
+    }
+
+    private function isRestrictedMode(): bool
+    {
+        return (bool) $this->config->get('restrictedMode');
     }
 
     /**

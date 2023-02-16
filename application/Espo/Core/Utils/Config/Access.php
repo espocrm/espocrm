@@ -36,6 +36,8 @@ use Espo\Entities\Settings;
 
 class Access
 {
+    /** Logged-in users can read. Admin can write. */
+    public const LEVEL_DEFAULT = 'default';
     /** No one can read/write. */
     public const LEVEL_SYSTEM = 'system';
     /** No one can read, admin can write. */
@@ -47,15 +49,42 @@ class Access
     /** Even not logged-in can read. Admin can write. */
     public const LEVEL_GLOBAL = 'global';
 
-    private Config $config;
-    private Metadata $metadata;
-    private FieldUtil $fieldUtil;
+    public function __construct(
+        private Config $config,
+        private Metadata $metadata,
+        private FieldUtil $fieldUtil
+    ) {}
 
-    public function __construct(Config $config, Metadata $metadata, FieldUtil $fieldUtil)
+    /**
+     * Get read-only parameters.
+     *
+     * @return string[]
+     */
+    public function getReadOnlyParamList(): array
     {
-        $this->config = $config;
-        $this->metadata = $metadata;
-        $this->fieldUtil = $fieldUtil;
+        $itemList = [];
+
+        $fieldDefs = $this->metadata->get(['entityDefs', Settings::ENTITY_TYPE, 'fields']);
+
+        foreach ($fieldDefs as $field => $fieldParams) {
+            if (empty($fieldParams['readOnly'])) {
+                continue;
+            }
+
+            foreach ($this->fieldUtil->getAttributeList(Settings::ENTITY_TYPE, $field) as $attribute) {
+                $itemList[] = $attribute;
+            }
+        }
+
+        $params = $this->metadata->get(['app', 'config', 'params']) ?? [];
+
+        foreach ($params as $name => $item) {
+            if ($item['readOnly'] ?? false) {
+                $itemList[] = $name;
+            }
+        }
+
+        return array_values(array_unique($itemList));
     }
 
     /**
