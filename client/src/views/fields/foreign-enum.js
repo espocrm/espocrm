@@ -46,8 +46,21 @@ define('views/fields/foreign-enum', ['views/fields/enum'], function (Dep) {
                 return;
             }
 
-            this.params.options = this.getMetadata()
-                .get(['entityDefs', scope, 'fields', this.params.field, 'options']) || [];
+            const {
+                optionsPath, translation
+            } = this.getMetadata().get(['entityDefs', scope, 'fields', this.params.field]);
+
+            if (optionsPath) {
+                this.params.options = Espo.Utils.clone(this.getMetadata().get(optionsPath)) || [];
+            }
+            else {
+                this.params.options = this.getMetadata()
+                    .get(['entityDefs', scope, 'fields', this.params.field, 'options']) || [];
+            }
+
+            if (translation) {
+                this.params.translation = translation;
+            }
 
             this.params.isSorted = this.getMetadata()
                 .get(['entityDefs', scope, 'fields', this.params.field, 'isSorted']) || false;
