@@ -51,7 +51,7 @@ define('views/fields/foreign-enum', ['views/fields/enum'], function (Dep) {
             } = this.getMetadata().get(['entityDefs', scope, 'fields', this.params.field]);
 
             if (optionsPath) {
-                this.params.options = this.getMetadata().get(optionsPath) || [];
+                this.params.options = Espo.Utils.clone(this.getMetadata().get(optionsPath)) || [];
             }
             else {
                 this.params.options = this.getMetadata()
