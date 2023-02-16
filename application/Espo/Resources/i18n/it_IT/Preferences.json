@@ -6,20 +6,20 @@
     "weekStart": "Primo giorno della settimana",
     "thousandSeparator": "Separatore delle migliaia",
     "decimalMark": "Marcatore dei decimali",
-    "defaultCurrency": "Valuta di default",
-    "currencyList": "Elenco valute",
+    "defaultCurrency": "Valuta Predefinita",
+    "currencyList": "Elenco Valute",
     "language": "Lingua",
     "exportDelimiter": "Delimitatore esportazione",
     "signature": "Firma email",
-    "dashboardTabList": "Elenco schede",
-    "tabList": "Elenco schede",
+    "dashboardTabList": "Elenco Schede",
+    "tabList": "Elenco Schede",
     "defaultReminders": "Promemoria predefiniti",
     "theme": "Tema",
-    "useCustomTabList": "Elenco schede personalizzate",
+    "useCustomTabList": "Elenco Schede Personalizzate",
     "receiveAssignmentEmailNotifications": "Notifiche via email al momento dell' assegnazione",
     "receiveMentionEmailNotifications": "Notifiche via email in caso di menzioni nei post",
     "receiveStreamEmailNotifications": "Notifiche via email per i messaggi e gli aggiornamenti di stato",
-    "dashboardLayout": "Layout panoramica",
+    "dashboardLayout": "Layout Dashboard",
     "emailReplyForceHtml": "Email di Risposta in HTML",
     "autoFollowEntityTypeList": "Auto-follow globale",
     "emailReplyToAllByDefault": "Rispondi a Tutti di default per le email",
@@ -28,15 +28,15 @@
     "followCreatedEntities": "Segui automaticamente i record creati",
     "followCreatedEntityTypeList": "Segui automaticamente i record creati di tipi di entità specifici\n",
     "emailUseExternalClient": "Utilizzare un client di posta elettronica esterno",
-    "scopeColorsDisabled": "Disabilita campo colori",
-    "tabColorsDisabled": "Disabilita tabella colori",
+    "scopeColorsDisabled": "Disabilita colori entità",
+    "tabColorsDisabled": "Disabilita colori schede",
     "assignmentNotificationsIgnoreEntityTypeList": "Notifiche di assegnazione in-app",
     "assignmentEmailNotificationsIgnoreEntityTypeList": "Notifiche di assegnazione e-mail"
   },
   "options": {
     "weekStart": {
       "0": "Domenica",
-      "1": "Lunedi"
+      "1": "Lunedì"
     }
   },
   "labels": {

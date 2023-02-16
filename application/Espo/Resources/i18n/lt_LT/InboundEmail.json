@@ -36,7 +36,8 @@
     "useImap": "Paimkite el. Laiškus",
     "keepFetchedEmailsUnread": "Laikykite gautus laiškus neperskaitytus",
     "smtpAuthMechanism": "SMTP autentifikavimo mechanizmas",
-    "security": "Apsauga"
+    "security": "Apsauga",
+    "groupEmailFolder": "Grupės el. pašto aplankas"
   },
   "tooltips": {
     "reply": "Pranešti siuntėjams, kad jų el. Laiškai buvo gauti.\n\n  Tam tikram gavėjui per tam tikrą laikotarpį bus išsiųstas tik vienas el. laiškas, kad būtų išvengta kartojimų.",
@@ -52,12 +53,14 @@
     "smtpIsShared": "Jei pažymėsite, vartotojai galės siųsti el. laiškus naudodami šį SMTP. Prieinamumą kontroliuoja Rolės, per leidimą grupės el. Pašto paskyrai.",
     "smtpIsForMassEmail": "Jei pažymėta, SMTP bus prieinamas masiniams el.laiškams.",
     "storeSentEmails": "Išsiųsti el. laiškai bus saugomi IMAP serveryje.",
-    "useSmtp": "Galimybė siųsti el. laiškus."
+    "useSmtp": "Galimybė siųsti el. laiškus.",
+    "groupEmailFolder": "Gautus el. laiškus sudėkite į grupinį aplanką."
   },
   "links": {
     "filters": "Filtrai",
     "emails": "El. laiška",
-    "assignToUser": "Priskirti vartotoją"
+    "assignToUser": "Priskirti vartotoją",
+    "groupEmailFolder": "Grupės el. pašto aplankas"
   },
   "options": {
     "status": {

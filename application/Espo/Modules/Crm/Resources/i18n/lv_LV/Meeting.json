@@ -42,7 +42,9 @@
     "Send Invitations": "Nosūtīt uzaicinājumus",
     "on time": "laikā",
     "before": "pirms",
-    "All-Day": "Visas dienas"
+    "All-Day": "Visas dienas",
+    "Send Cancellation": "Sūtīt atcelšanu",
+    "Acceptance": "Pieņemšana"
   },
   "presetFilters": {
     "planned": "Plānota",
@@ -51,6 +53,8 @@
   },
   "messages": {
     "nothingHasBeenSent": "Nekas netika nosūtīts",
-    "selectAcceptanceStatus": "Iestatiet pieņemšanas statusu."
+    "selectAcceptanceStatus": "Iestatiet pieņemšanas statusu.",
+    "sendInvitationsToSelectedAttendees": "Izvēlētajiem dalībniekiem tiks nosūtīti uzaicinājuma e-pasti.",
+    "sendCancellationsToSelectedAttendees": "Izvēlētajiem dalībniekiem tiks nosūtīti atcelšanas e-pasta ziņojumi."
   }
 }

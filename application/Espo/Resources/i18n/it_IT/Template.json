@@ -24,7 +24,7 @@
     "Create Template": "Crea Modello"
   },
   "tooltips": {
-    "footer": "Utilizzare {pageNumber} per stampare il numero di pagina .",
+    "footer": "Utilizzare {pageNumber} per stampare il numero di pagina.",
     "variables": "Copia e incolla il placeholder necessario in Intestazione, Corpo o Piè di pagina."
   },
   "options": {

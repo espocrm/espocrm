@@ -42,7 +42,9 @@
     "Send Invitations": "Siųsti pakvietimus",
     "on time": "laiku",
     "before": "prieš",
-    "All-Day": "Visą dieną"
+    "All-Day": "Visą dieną",
+    "Send Cancellation": "Siųsti atšaukimą",
+    "Acceptance": "Priėmimas"
   },
   "presetFilters": {
     "planned": "Suplanuota",
@@ -51,6 +53,8 @@
   },
   "messages": {
     "nothingHasBeenSent": "Nieko nebuvo išsiųsta",
-    "selectAcceptanceStatus": "Nustatykite priėmimo būseną."
+    "selectAcceptanceStatus": "Nustatykite priėmimo būseną.",
+    "sendInvitationsToSelectedAttendees": "Atrinktiems dalyviams bus išsiųsti kvietimai el. paštu.",
+    "sendCancellationsToSelectedAttendees": "Atrinktiems dalyviams bus išsiųsti atšaukimo laiškai."
   }
 }

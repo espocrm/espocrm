@@ -79,7 +79,8 @@
     "Misc": "Dažādi",
     "Job Settings": "Darba iestatījumi",
     "Configuration Instructions": "Konfigurēšanas norādījumi",
-    "Working Time Calendars": "Darba laika kalendāri"
+    "Working Time Calendars": "Darba laika kalendāri",
+    "Group Email Folders": "Grupas e-pasta mapes"
   },
   "layouts": {
     "list": "Saraksts",
@@ -284,7 +285,8 @@
     "jobsSettings": "Darba apstrādes iestatījumi. Uzdevumi tiek izpildīti fonā.",
     "sms": "SMS iestatījumi.",
     "formulaSandbox": "Rakstīt un testēt formulas skriptus.",
-    "workingTimeCalendars": "Darba grafiks."
+    "workingTimeCalendars": "Darba grafiks.",
+    "groupEmailFolders": "E-pasta mapes, kas kopīgotas komandām."
   },
   "options": {
     "previewSize": {

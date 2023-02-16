@@ -72,7 +72,7 @@
   "tooltips": {
     "audited": "Gli aggiornamenti verranno registrati nel flusso attivita.",
     "required": "Il campo sarà obbligatorio. Non potrà essere vuoto.",
-    "default": "Sarà impostato al valore di default durante la creazione.",
+    "default": "Sarà impostato al valore predefinito durante la creazione.",
     "min": "Valore minimo accettabile.",
     "max": "Valore massimo accettabile.",
     "seeMoreDisabled": "Se non selezionato, i testi lunghi saranno tagliati.",

@@ -6,18 +6,18 @@
     "startAt": "Data Inizio",
     "fromAddress": "Indirizzo mittente",
     "fromName": "Dal Nome",
-    "replyToAddress": "Rispondi aa Indirizzo",
+    "replyToAddress": "Rispondi a Indirizzo",
     "replyToName": "Rispondi a Nome",
     "campaign": "Campagna",
     "emailTemplate": "Modello Email",
-    "targetLists": "Liste di destinazione",
-    "excludingTargetLists": "Escludi liste di destinazione",
-    "optOutEntirely": "Disdetta interamente",
+    "targetLists": "Liste di Destinazione",
+    "excludingTargetLists": "Liste di Destinazione Escluse",
+    "optOutEntirely": "Esclusione Totale",
     "smtpAccount": "Account SMTP"
   },
   "links": {
     "targetLists": "Liste di Destinazione",
-    "excludingTargetLists": "Esclusi gli elenchi target",
+    "excludingTargetLists": "Liste di Destinazione Escluse",
     "queueItems": "Articoli in coda",
     "campaign": "Campagna",
     "emailTemplate": "Modello Email"

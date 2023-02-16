@@ -54,7 +54,8 @@
     "icsEventUid": "ICS notikuma UID",
     "createdEvent": "Izveidotais notikums",
     "event": "Pasākums",
-    "icsEventDateStart": "ICS Pasākuma datums Sākums"
+    "icsEventDateStart": "ICS Pasākuma datums Sākums",
+    "groupFolder": "Grupas mape"
   },
   "links": {
     "replied": "Atbildēts",
@@ -68,7 +69,8 @@
     "toEmailAddresses": "Uz e-pasta adresi",
     "ccEmailAddresses": "E-pasta kopija (CC) sūtāma uz",
     "bccEmailAddresses": "Diskrētā kopija (BCC) sūtāma uz",
-    "replyToEmailAddresses": "Atbildēt uz e-pasta adresi"
+    "replyToEmailAddresses": "Atbildēt uz e-pasta adresi",
+    "groupFolder": "Grupas mape"
   },
   "options": {
     "status": {
@@ -110,7 +112,9 @@
     "View Users": "Skatīt lietotājus",
     "No Subject": "Nav tēmas",
     "Insert Field": "Ievietot lauku",
-    "Event": "Pasākums"
+    "Event": "Pasākums",
+    "Moving to folder": "Pārvietošana uz mapi",
+    "Group Folders": "Grupu mapes"
   },
   "messages": {
     "testEmailSent": "Nosūtīts testa e-pasts",

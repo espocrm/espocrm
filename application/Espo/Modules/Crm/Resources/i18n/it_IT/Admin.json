@@ -1,11 +1,12 @@
 {
   "layouts": {
     "detailConvert": "Converti Lead",
-    "listForAccount": "Elenco (per Account)",
-    "listForContact": "Lista (per contatto)"
+    "listForAccount": "Lista (per Account)",
+    "listForContact": "Lista (per Contatto)"
   },
   "templates": {
     "invitation": "Invito",
-    "reminder": "Promemoria"
+    "reminder": "Promemoria",
+    "cancellation": "Annullamento"
   }
 }

@@ -40,7 +40,9 @@
     "Send Invitations": "Invia Inviti",
     "on time": "Puntuale",
     "before": "prima",
-    "All-Day": "Tutto il giorno\n"
+    "All-Day": "Tutto il giorno\n",
+    "Send Cancellation": "Invia Annullamento",
+    "Acceptance": "Accettazione"
   },
   "presetFilters": {
     "planned": "Pianificate",
@@ -49,6 +51,8 @@
   },
   "messages": {
     "nothingHasBeenSent": "Nulla è stato inviato",
-    "selectAcceptanceStatus": "Imposta il tuo stato di accettazione."
+    "selectAcceptanceStatus": "Imposta il tuo stato di accettazione.",
+    "sendInvitationsToSelectedAttendees": "Ai partecipanti selezionati verranno inviate e-mail di invito.",
+    "sendCancellationsToSelectedAttendees": "Le e-mail di annullamento saranno inviate ai partecipanti selezionati."
   }
 }

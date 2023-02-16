@@ -80,7 +80,8 @@
     "Job Settings": "Darbo nustatymai",
     "Configuration Instructions": "Konfigūravimo instrukcijos",
     "Formula Sandbox": "Formulės smėlio dėžė",
-    "Working Time Calendars": "Darbo laiko kalendoriai"
+    "Working Time Calendars": "Darbo laiko kalendoriai",
+    "Group Email Folders": "Grupės el. pašto aplankai"
   },
   "layouts": {
     "list": "Sąrašas",
@@ -276,7 +277,8 @@
     "jobsSettings": "Darbo apdorojimo nustatymai. Užduotys vykdomos fone.",
     "sms": "SMS nustatymai.",
     "formulaSandbox": "Rašykite ir išbandykite formulių scenarijus.",
-    "workingTimeCalendars": "Darbo grafikas."
+    "workingTimeCalendars": "Darbo grafikas.",
+    "groupEmailFolders": "Komandoms bendrinami el. pašto aplankai."
   },
   "options": {
     "previewSize": {

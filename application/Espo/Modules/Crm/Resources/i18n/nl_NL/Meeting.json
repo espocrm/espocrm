@@ -40,7 +40,9 @@
     "Send Invitations": "Uitnodiging versturen",
     "on time": "op tijd",
     "before": "voor",
-    "All-Day": "Hele dag"
+    "All-Day": "Hele dag",
+    "Send Cancellation": "Annulering verzenden",
+    "Acceptance": "Acceptatie"
   },
   "presetFilters": {
     "planned": "Gepland",
@@ -49,6 +51,8 @@
   },
   "messages": {
     "nothingHasBeenSent": "Er is niets verzonden",
-    "selectAcceptanceStatus": "Stel uw acceptatiestatus in."
+    "selectAcceptanceStatus": "Stel uw acceptatiestatus in.",
+    "sendInvitationsToSelectedAttendees": "De geselecteerde deelnemers krijgen een uitnodiging per e-mail.",
+    "sendCancellationsToSelectedAttendees": "Annuleringsmails zullen naar de geselecteerde deelnemers worden gestuurd."
   }
 }

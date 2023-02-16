@@ -6,7 +6,9 @@
     "bodyContains": "Tekste yra",
     "action": "Veiksmas",
     "isGlobal": "yra globalus",
-    "emailFolder": "Aplankas"
+    "emailFolder": "Aplankas",
+    "groupEmailFolder": "Grupės el. pašto aplankas",
+    "markAsRead": "Pažymėti kaip perskaitytą"
   },
   "labels": {
     "Create EmailFilter": "Sukurti el.pašto filtrą",
@@ -23,7 +25,13 @@
   "options": {
     "action": {
       "Skip": "Ignoruoti",
-      "Move to Folder": "Įkelti į aplanką"
+      "Move to Folder": "Įkelti į aplanką",
+      "None": "Nėra",
+      "Move to Group Folder": "Įdėkite į grupės aplanką"
     }
+  },
+  "links": {
+    "emailFolder": "Aplankas",
+    "groupEmailFolder": "Grupės el. pašto aplankas"
   }
 }

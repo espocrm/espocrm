@@ -6,7 +6,9 @@
     "bodyContains": "Bericht bevat",
     "action": "Actie",
     "isGlobal": "Is globaal",
-    "emailFolder": "Map"
+    "emailFolder": "Map",
+    "groupEmailFolder": "Groep e-mail map",
+    "markAsRead": "Markeer als gelezen"
   },
   "labels": {
     "Create EmailFilter": "Creëer E-mail Filter",
@@ -23,7 +25,13 @@
   "options": {
     "action": {
       "Skip": "Negeren",
-      "Move to Folder": "Zet in map"
+      "Move to Folder": "Zet in map",
+      "None": "Geen",
+      "Move to Group Folder": "Zet in de groepsmap"
     }
+  },
+  "links": {
+    "emailFolder": "Map",
+    "groupEmailFolder": "Groep e-mail map"
   }
 }

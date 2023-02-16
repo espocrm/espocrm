@@ -10,16 +10,17 @@
     "ExternalAccount": "Account Esterno",
     "Extension": "Estensione",
     "InboundEmail": "Gruppo account email",
-    "Stream": "Flusso attività",
+    "Stream": "Flusso Attività",
     "Import": "Importa",
     "Template": "Modello",
+    "Job": "Lavoro",
     "EmailFilter": "Filtro Email",
     "Portal": "Portale",
     "PortalRole": "Ruolo Portale",
     "Attachment": "Allegato",
     "EmailFolder": "Casella Email",
     "PortalUser": "Utente portale",
-    "ScheduledJobLogRecord": "Registro lavoro pianificato",
+    "ScheduledJobLogRecord": "Registro Lavoro Pianificato",
     "PasswordChangeRequest": "Richiesta di Cambio Password",
     "ActionHistoryRecord": "Record di cronologia delle azioni",
     "AuthToken": "Token di Autenticazione",
@@ -51,7 +52,8 @@
     "Note": "Nota",
     "ImportError": "Errore di importazione",
     "WorkingTimeCalendar": "Calendario Lavorativo",
-    "WorkingTimeRange": "Intervallo di Lavoro"
+    "WorkingTimeRange": "Intervallo di Lavoro",
+    "GroupEmailFolder": "Cartella Email di Gruppo"
   },
   "scopeNamesPlural": {
     "Email": "Email",
@@ -61,19 +63,20 @@
     "EmailAccount": "Account email Personale",
     "EmailAccountScope": "Account email Personale",
     "OutboundEmail": "Email in Uscita",
-    "ScheduledJob": "Jobs schedulati",
+    "ScheduledJob": "Lavori Pianificati",
     "ExternalAccount": "Account Esterni",
     "Extension": "Estensioni",
     "InboundEmail": "Gruppi Account Email",
-    "Stream": "Flusso attività",
+    "Stream": "Flusso Attività",
     "Template": "Modelli",
+    "Job": "Lavori",
     "EmailFilter": "Filtri Email",
     "Portal": "Portali",
     "PortalRole": "Ruoli Portale",
     "Attachment": "Allegato",
     "EmailFolder": "Caselle Email",
     "PortalUser": "Utenti Portale",
-    "ScheduledJobLogRecord": "Record registro lavoro pianificato",
+    "ScheduledJobLogRecord": "Record Registro Lavoro Pianificato",
     "PasswordChangeRequest": "Richiesta di Cambio Password",
     "ActionHistoryRecord": "Storico Azioni",
     "AuthToken": "Tokens di Autenticazione",
@@ -95,7 +98,8 @@
     "Note": "Note",
     "ImportError": "Errori di importazione",
     "WorkingTimeCalendar": "Calendari Lavorativi",
-    "WorkingTimeRange": "Intervalli di Lavoro"
+    "WorkingTimeRange": "Intervalli di Lavoro",
+    "GroupEmailFolder": "Cartelle Email di Gruppo"
   },
   "labels": {
     "Misc": "Varie",
@@ -115,8 +119,8 @@
     "Merged": "Fusione",
     "Removed": "Rimosso",
     "Posted": "Postato",
-    "Linked": "Connesso",
-    "Unlinked": "Non connesso",
+    "Linked": "Collegato",
+    "Unlinked": "Scollegato",
     "Done": "Fatto",
     "Access denied": "Accesso negato",
     "Not found": "Non trovato",
@@ -126,7 +130,7 @@
     "Wrong username/password": "I dati forniti non sono corretti",
     "Post cannot be empty": "Il post non può essere vuoto",
     "Removing...": "Rimozione...",
-    "Unlinking...": "Disconnessione...",
+    "Unlinking...": "Scollegamento...",
     "Username can not be empty!": "L'Username non può essere vuota!",
     "Cache is not enabled": "Cache non abilitata",
     "Cache has been cleared": "La cache è stata svuotata",
@@ -182,7 +186,7 @@
     "Inactive": "Inattivo",
     "Write your comment here": "Scrivi il tuo commento qui",
     "Post": "Pubblica",
-    "Stream": "Flusso attività",
+    "Stream": "Flusso Attività",
     "Show more": "Mostra altro",
     "Dashlet Options": "Opzioni dashlet",
     "Full Form": "Modulo completo",
@@ -211,18 +215,19 @@
     "Yes": "Sì",
     "Value": "Valore",
     "Current version": "Versione in uso",
-    "List View": "Vista Elenco",
+    "List View": "Vista Lista",
     "Tree View": "Vista ad Albero",
     "Unlink All": "Scollega Tutti",
     "Total": "Totale",
     "Print to PDF": "Stampa in PDF",
+    "Default": "Predefinito",
     "Number": "Numero",
     "From": "Da",
     "To": "A",
     "Create Post": "Crea Post",
     "Previous Entry": "Voce Precedente",
     "Next Entry": "Voce Successiva",
-    "View List": "Visualizza elenco",
+    "View List": "Visualizza Lista",
     "Attach File": "Allega File",
     "Skip": "Salta",
     "Attribute": "Attributo",
@@ -250,7 +255,7 @@
     "Attached": "Allegato",
     "Preview": "Anteprima",
     "Up": "Su",
-    "Save & Continue Editing": "Salva e continua a modificare",
+    "Save & Continue Editing": "Salva & Continua a Modificare",
     "Save & New": "Salva & Nuovo",
     "Field": "Campo",
     "Resolution": "Risoluzione",
@@ -259,14 +264,16 @@
     "Log in": "Accedi",
     "Log in as": "Accedi come",
     "Sign in": "Accedi",
-    "Global Search": "Ricerca Globale"
+    "Global Search": "Ricerca Globale",
+    "Show Navigation Panel": "Mostra Pannello di Navigazione",
+    "Hide Navigation Panel": "Nascondi Pannello di Navigazione"
   },
   "messages": {
     "pleaseWait": "Attendere...",
     "posting": "Spedizione...",
     "confirmLeaveOutMessage": "Sei sicuro di volere lasciare il form?",
     "notModified": "Non hai modificato il record",
-    "fieldIsRequired": "{field} È richiesto",
+    "fieldIsRequired": "{field} è richiesto",
     "fieldShouldAfter": "{field} Deve essere dopo {otherField}",
     "fieldShouldBefore": "{field} Deve essere prima {otherField}",
     "fieldShouldBeBetween": "{field} Deve essere compreso tra {min} e {max}",
@@ -340,7 +347,13 @@
     "validationFailure": "Errore di convalida nel backend.\n\nCampo: `{field}`\nConvalida: `{type}`",
     "confirmAppRefresh": "L'applicazione è stata aggiornata. Si consiglia di aggiornare la pagina per garantirne il corretto funzionamento.",
     "error404": "L'url richiesto non può essere elaborato.",
-    "error403": "Non hai l'accesso a quest'area."
+    "error403": "Non hai l'accesso a quest'area.",
+    "extensionLicenseInvalid": "Licenza estensione '{name}' non valida.",
+    "extensionLicenseExpired": "L'abbonamento alla licenza dell'estensione '{name}' è scaduto.",
+    "extensionLicenseSoftExpired": "L'abbonamento alla licenza dell'estensione '{name}' è scaduto.",
+    "loggedOutLeaveOut": "Disconnesso. La sessione è inattiva. I dati dei moduli non salvati potrebbero essere persi dopo l'aggiornamento della pagina. Potrebbe essere necessario farne una copia.",
+    "noAccessToRecord": "L'operazione richiede l'accesso `{action}` al record.",
+    "noAccessToForeignRecord": "L'operazione richiede l'accesso `{action}` al record esterno."
   },
   "boolFilters": {
     "onlyMy": "Solo i miei",
@@ -352,7 +365,7 @@
     "all": "Tutti"
   },
   "massActions": {
-    "remove": "Elimina",
+    "remove": "Rimuovi",
     "merge": "Unisci",
     "massUpdate": "Aggiornamento Massivo",
     "export": "Esporta",
@@ -360,7 +373,8 @@
     "unfollow": "Smetti di Seguire",
     "convertCurrency": "Converti valuta",
     "printPdf": "Stampa in PDF",
-    "recalculateFormula": "Ricalcola formula",
+    "unlink": "Scollega",
+    "recalculateFormula": "Ricalcola Formula",
     "update": "Aggiorna"
   },
   "fields": {
@@ -392,11 +406,13 @@
     "ids": "ID",
     "names": "Nomi",
     "emailAddressIsOptedOut": "L'Indirizzo Email è Stato Cancellato",
-    "targetListIsOptedOut": "È stato cancellato (lista di destinazione)",
+    "targetListIsOptedOut": "È Stato Cancellato (Lista di Destinazione)",
     "type": "Tipo",
     "phoneNumberIsOptedOut": "Il Numero di Telefono è Escluso",
     "types": "Modello",
-    "middleName": "Secondo Nome"
+    "middleName": "Secondo Nome",
+    "emailAddressIsInvalid": "L'Indirizzo Email non è valido",
+    "phoneNumberIsInvalid": "Il Numero di Telefono non è valido"
   },
   "links": {
     "assignedUser": "Utente Assegnato",
@@ -408,9 +424,9 @@
     "children": "Bambini"
   },
   "dashlets": {
-    "Stream": "Flusso attività",
+    "Stream": "Flusso Attività",
     "Emails": "La mia posta in arrivo",
-    "Records": "Elenco records"
+    "Records": "Elenco Record"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} è stato assegnato a te",
@@ -425,7 +441,7 @@
     "postTargetTeam": "{user} ha scritto al team {target}",
     "postTargetTeams": "{user} ha scritto ai team {target}",
     "postTargetPortal": "{user} Ha postato sul portale {target}",
-    "postTargetPortals": "{user} Ha postato sui portali {target}",
+    "postTargetPortals": "{user} ha postato sui portali {target}",
     "postTarget": "{user} Ha postato a {target}",
     "postTargetYou": "{user} Ha postato a te",
     "postTargetYouAndOthers": "{user} Ha postato a {target} e a te",
@@ -503,11 +519,11 @@
     ],
     "dayNames": [
       "Domenica",
-      "Lunedi",
-      "Martedi",
-      "Mercoledi",
-      "Giovedi",
-      "Venerdi",
+      "Lunedì",
+      "Martedì",
+      "Mercoledì",
+      "Giovedì",
+      "Venerdì",
       "Sabato"
     ],
     "dayNamesShort": [
@@ -544,7 +560,7 @@
       "currentQuarter": "Trimestre in Corso",
       "lastQuarter": "Ultimo Trimestre",
       "currentYear": "Anno in Corso",
-      "lastYear": "Ultimo Anno",
+      "lastYear": "Anno Precedente",
       "lastSevenDays": "Ultimi 7 Giorni",
       "lastXDays": "Ultimi X Giorni",
       "nextXDays": "Successivi X Giorni",
@@ -554,9 +570,9 @@
       "afterXDays": "Dopo X giorni",
       "nextMonth": "Prossimo mese",
       "currentFiscalYear": "Anno fiscale corrente",
-      "lastFiscalYear": "L'ultimo anno fiscale",
+      "lastFiscalYear": "Anno Fiscale Precedente",
       "currentFiscalQuarter": "Trimestre fiscale In Corso",
-      "lastFiscalQuarter": "Ultimo trimestre fiscale\n"
+      "lastFiscalQuarter": "Ultimo Trimestre Fiscale"
     },
     "searchRanges": {
       "is": "È",
@@ -641,7 +657,7 @@
         "remove": "Rimuovi l'Immagine"
       },
       "link": {
-        "insert": "Inserisci link",
+        "insert": "Inserisci Link",
         "unlink": "Scollega",
         "edit": "Modifica",
         "textToDisplay": "Testo da mostrare",
@@ -649,8 +665,12 @@
         "openInNewWindow": "Apri in una nuova finestra"
       },
       "video": {
+        "videoLink": "Link Video",
         "insert": "Inserisici video",
         "providers": "(YouTube, Vimeo, Vine, Instagram, o DailyMotion)"
+      },
+      "table": {
+        "table": "Tabella"
       },
       "hr": {
         "insert": "Inserisci regola orizzontale"
@@ -667,8 +687,8 @@
         "h6": "Intestazione 6"
       },
       "lists": {
-        "unordered": "Elenco non ordinato",
-        "ordered": "Elenco ordinato"
+        "unordered": "Lista Non Ordinata",
+        "ordered": "Lista Ordinata"
       },
       "options": {
         "help": "Aiuto",
@@ -691,7 +711,7 @@
         "foreground": "Colore del Testo",
         "transparent": "Trasparente",
         "setTransparent": "Imposta Trasparente",
-        "resetToDefault": "Riportare alle condizioni originali"
+        "resetToDefault": "Ripristina ai Valori Predefiniti"
       },
       "shortcut": {
         "shortcuts": "Tasti rapidi",

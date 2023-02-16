@@ -51,7 +51,8 @@
     "Note": "Opmerking",
     "ImportError": "Importfout",
     "WorkingTimeCalendar": "Werktijd Kalender",
-    "WorkingTimeRange": "Werktijdbereik"
+    "WorkingTimeRange": "Werktijdbereik",
+    "GroupEmailFolder": "Groep e-mail map"
   },
   "scopeNamesPlural": {
     "Email": "E-mails",
@@ -94,7 +95,8 @@
     "Note": "Opmerkingen",
     "ImportError": "Importfouten",
     "WorkingTimeCalendar": "Werktijd kalenders",
-    "WorkingTimeRange": "Werktijdbereiken"
+    "WorkingTimeRange": "Werktijdbereiken",
+    "GroupEmailFolder": "Groep e-mailmappen"
   },
   "labels": {
     "Misc": "Overig",
@@ -253,7 +255,9 @@
     "Log in": "Inloggen",
     "Log in as": "Log in als",
     "Sign in": "Aanmelden",
-    "Global Search": "Uitgebreid zoeken"
+    "Global Search": "Uitgebreid zoeken",
+    "Show Navigation Panel": "Toon navigatiepaneel",
+    "Hide Navigation Panel": "Verberg navigatiepaneel"
   },
   "messages": {
     "pleaseWait": "Even geduld...",
@@ -334,7 +338,13 @@
     "validationFailure": "Backend validatie fout.\n\nVeld: `{field}`\nValidatie: `{type}`",
     "confirmAppRefresh": "De applicatie is bijgewerkt. Het wordt aanbevolen de pagina te verversen om een goede werking te garanderen.",
     "error404": "De door u opgevraagde url kan niet worden verwerkt.",
-    "error403": "Je hebt geen toegang tot dit gedeelte."
+    "error403": "Je hebt geen toegang tot dit gedeelte.",
+    "extensionLicenseInvalid": "Ongeldige '{name}' uitbreidingslicentie.",
+    "extensionLicenseExpired": "Het '{name}' uitbreidingslicentieabonnement is verlopen.",
+    "extensionLicenseSoftExpired": "Het '{name}' uitbreidingslicentieabonnement is verlopen.",
+    "loggedOutLeaveOut": "Uitgelogd. De sessie is inactief. Niet-opgeslagen formuliergegevens kunnen verloren gaan na het vernieuwen van de pagina. Mogelijk moet u een kopie maken.",
+    "noAccessToRecord": "Operatie vereist `{action}` toegang tot record.",
+    "noAccessToForeignRecord": "Operatie vereist `{action}` toegang tot vreemd record."
   },
   "boolFilters": {
     "onlyMy": "Alleen mijn",
@@ -389,7 +399,9 @@
     "targetListIsOptedOut": "Is afgemeld (doellijst)",
     "phoneNumberIsOptedOut": "Telefoonnummer is niet-aangemeld",
     "types": "Typen",
-    "middleName": "Tussenvoegsel"
+    "middleName": "Tussenvoegsel",
+    "emailAddressIsInvalid": "E-mailadres is ongeldig",
+    "phoneNumberIsInvalid": "Telefoonnummer is ongeldig"
   },
   "links": {
     "assignedUser": "Toegewezen gebruiker",

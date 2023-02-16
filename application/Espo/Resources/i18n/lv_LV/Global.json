@@ -55,7 +55,8 @@
     "Note": "Piezīme",
     "ImportError": "Importēšanas kļūda",
     "WorkingTimeCalendar": "Darba laika kalendārs",
-    "WorkingTimeRange": "Darba laika diapazons"
+    "WorkingTimeRange": "Darba laika diapazons",
+    "GroupEmailFolder": "Grupas e-pasta mape"
   },
   "scopeNamesPlural": {
     "Email": "E-pasti",
@@ -102,7 +103,8 @@
     "Note": "Piezīmes",
     "ImportError": "Importēšanas kļūdas",
     "WorkingTimeCalendar": "Darba laika kalendāri",
-    "WorkingTimeRange": "Darba laika diapazoni"
+    "WorkingTimeRange": "Darba laika diapazoni",
+    "GroupEmailFolder": "Grupas e-pasta mapes"
   },
   "labels": {
     "Misc": "Dažādi",
@@ -275,7 +277,9 @@
     "Log in": "Piesakieties",
     "Log in as": "Piesakieties kā",
     "Sign in": "Pierakstīties",
-    "Global Search": "Globālā meklēšana"
+    "Global Search": "Globālā meklēšana",
+    "Show Navigation Panel": "Rādīt navigācijas paneli",
+    "Hide Navigation Panel": "Navigācijas paneļa paslēpšana"
   },
   "messages": {
     "pleaseWait": "Lūdzu, uzgaidiet...",
@@ -356,7 +360,13 @@
     "validationFailure": "Backend validācijas kļūda.\n\nLauks: `{field}`\nApstiprināšana: `{tips}`",
     "confirmAppRefresh": "Pieteikums ir atjaunināts. Ieteicams atjaunināt lapu, lai nodrošinātu tās pareizu darbību.",
     "error404": "Jūsu pieprasīto url failu nevar apstrādāt.",
-    "error403": "Jums nav piekļuves šai zonai."
+    "error403": "Jums nav piekļuves šai zonai.",
+    "extensionLicenseInvalid": "Nederīga '{name}' paplašinājuma licence.",
+    "extensionLicenseExpired": "Paplašinājuma '{nosaukums}' licences abonēšanas termiņš ir beidzies.",
+    "extensionLicenseSoftExpired": "Paplašinājuma '{nosaukums}' licences abonēšanas termiņš ir beidzies.",
+    "loggedOutLeaveOut": "Izrakstījies. Sesija ir neaktīva. Pēc lapas atsvaidzināšanas var tikt zaudēti nesaglabātie veidlapas dati. Jums var būt nepieciešams izveidot kopiju.",
+    "noAccessToRecord": "Operācijai nepieciešama `{action}` piekļuve ierakstam.",
+    "noAccessToForeignRecord": "Operācijai nepieciešama `{action}` piekļuve svešam ierakstam."
   },
   "boolFilters": {
     "onlyMy": "Tikai manējie",
@@ -414,7 +424,9 @@
     "type": "Tips",
     "phoneNumberIsOptedOut": "Tālruņa numurs ir izslēgts",
     "types": "Veidi",
-    "middleName": "Vidējais vārds"
+    "middleName": "Vidējais vārds",
+    "emailAddressIsInvalid": "E-pasta adrese ir nederīga",
+    "phoneNumberIsInvalid": "Tālruņa numurs ir nederīgs"
   },
   "links": {
     "assignedUser": "Piešķirtais lietotājs",
@@ -489,8 +501,8 @@
     "assignYou": "{user} izveidoja {entityType} {entity}, kas domāts jums",
     "assignThisVoid": "{user} atcēla šī {entityType} piešķiršanu",
     "assignVoid": "{user} atcēla šīs {entityType} {entity} piešķiršanu",
-    "assignThisSelf": "{user} veica šī {entityType} piešķiršanu pašu starpā",
-    "assignSelf": "{user} veica šīs {entityType} {entity} piešķiršanu pašu starpā"
+    "assignThisSelf": "{user} iecēla sevi {entityType} atbildīgo",
+    "assignSelf": "{user} iecēla sevi par {entityType} {entity} atbildīgo"
   },
   "lists": {
     "monthNames": [

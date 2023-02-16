@@ -106,5 +106,16 @@
       "Popup": "Pop-up",
       "Email": "E-mail"
     }
+  },
+  "notificationMessages": {
+    "eventAttendee": "{user} heeft je toegevoegd aan {entityType} {entity}"
+  },
+  "streamMessages": {
+    "eventConfirmationAccepted": "{invitee} accepteerde deelname aan {entityType} {entity}",
+    "eventConfirmationDeclined": "{invitee} weigerde deelname aan {entityType} {entity}",
+    "eventConfirmationTentative": "{invitee} is onzeker over deelname aan {entityType} {entity}",
+    "eventConfirmationAcceptedThis": "{invitee} accepteerde deelname",
+    "eventConfirmationDeclinedThis": "{invitee} weigerde deelname",
+    "eventConfirmationTentativeThis": "{invitee} twijfelt over deelname"
   }
 }
