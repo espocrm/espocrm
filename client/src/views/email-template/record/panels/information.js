@@ -26,38 +26,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email-template/record/panels/information', 'views/record/panels/side', function (Dep) {
+define('views/email-template/record/panels/information', 'views/record/panels/side', function (Dep) {
 
     return Dep.extend({
 
-        _template: '{{{infoText}}}',
+        templateContent: '{{{infoText}}}',
 
         data: function () {
-            var infoText = '';
-            var placeholderList = this.getMetadata().get(['clientDefs', 'EmailTemplate', 'placeholderList']);
-            if (placeholderList.length) {
-                infoText += '<h4>' + this.translate('Available placeholders') + ':</h4>';
-                infoText += '<ul>';
-                placeholderList.forEach(function (item, i) {
-                    infoText += '<li>' + '<code>{' + item + '}</code> &#8211; ' + this.translate(item, 'placeholderTexts', 'EmailTemplate');
-                    if (i === placeholderList.length - 1) {
-                        infoText += '.';
-                    } else {
-                        infoText += ';';
-                    }
+            let placeholderList = this.getMetadata().get(['clientDefs', 'EmailTemplate', 'placeholderList']) || [];
 
-                    infoText += '</li>';
-                }, this);
-                infoText += '</ul>';
-
-                infoText = '<span class="complex-text">' + infoText + '</span>';
+            if (!placeholderList.length) {
+                return {
+                    infoText: ''
+                };
             }
 
+            let $header = $('<h4>').text(this.translate('Available placeholders', 'labels', 'EmailTemplate') + ':');
+
+            let $liList = placeholderList.map(item => {
+                return $('<li>').append(
+                    $('<code>').text('{' + item + '}'),
+                    ' &#8211; ',
+                    $('<span>').text(this.translate(item, 'placeholderTexts', 'EmailTemplate'))
+                )
+            });
+
+            let $ul = $('<ul>').append($liList);
+
+            let $text = $('<span>')
+                .addClass('complex-text')
+                .append($header, $ul)
+
             return {
-                infoText: infoText
+                infoText: $text[0].outerHTML,
             };
-        }
-
+        },
     });
-
 });
