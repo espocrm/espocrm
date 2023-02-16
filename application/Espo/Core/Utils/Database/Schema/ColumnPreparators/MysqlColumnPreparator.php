@@ -197,34 +197,16 @@ class MysqlColumnPreparator implements ColumnPreparator
      */
     private function detectMaxIndexLength(): int
     {
-        $databaseType = $this->helper->getType();
-
         $tableEngine = $this->getTableEngine();
 
         if (!$tableEngine) {
             return self::DEFAULT_INDEX_LIMIT;
         }
 
-        switch ($tableEngine) {
-            case 'InnoDB':
-                $version = $this->helper->getVersion();
-
-                switch ($databaseType) {
-                    case self::TYPE_MARIADB:
-                        if (version_compare($version, '10.2.2') >= 0) {
-                            return 3072; // InnoDB, MariaDB 10.2.2+
-                        }
-
-                        break;
-
-                    case self::TYPE_MYSQL:
-                        return 3072;
-                }
-
-                return 767; // InnoDB
-        }
-
-        return 1000; // MyISAM
+        return match ($tableEngine) {
+            'InnoDB' => 3072,
+            default => 1000,
+        };
     }
 
     /**

@@ -261,7 +261,7 @@ return [
     ],
     'requiredMysqlVersion' => '5.7.0',
     'recommendedMysqlParams' => [],
-    'requiredMariadbVersion' => '10.1.0',
+    'requiredMariadbVersion' => '10.2.2',
     'recommendedMariadbParams' => [],
     /** Max execution time (in seconds) allocated for a single job. If exceeded then set to Failed.*/
     'jobPeriod' => 7800,
