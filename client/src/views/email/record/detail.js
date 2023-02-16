@@ -57,7 +57,7 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
 
             if (status === 'Archived') {
                 if (
-                    this.model.get('createdById') === 'system' ||
+                    this.model.get('createdById') === this.getHelper().getAppParam('systemUserId') ||
                     !this.model.get('createdById') || this.model.get('isImported')
                 ) {
                     isRestricted = true;

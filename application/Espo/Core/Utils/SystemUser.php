@@ -42,11 +42,23 @@ class SystemUser
     private const ID = 'system';
     private const UUID = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
 
-    private bool $isUuid;
+    private string $id;
 
-    public function __construct(Metadata $metadata)
+    public function __construct(Metadata $metadata, Config $config)
     {
-        $this->isUuid = $metadata->get(['app', 'recordId', 'dbType']) === 'uuid';
+        $id = $config->get('systemUserId');
+
+        if ($id) {
+            $this->id = $id;
+
+            return;
+        }
+
+        $isUuid = $metadata->get(['app', 'recordId', 'dbType']) === 'uuid';
+
+        $this->id = $isUuid ?
+            self::UUID :
+            self::ID;
     }
 
     /**
@@ -54,8 +66,6 @@ class SystemUser
      */
     public function getId(): string
     {
-        return $this->isUuid ?
-            self::UUID :
-            self::ID;
+        return $this->id;
     }
 }

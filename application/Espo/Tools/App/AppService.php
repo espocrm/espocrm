@@ -30,6 +30,7 @@
 namespace Espo\Tools\App;
 
 use Espo\Core\Authentication\Util\MethodProvider as AuthenticationMethodProvider;
+use Espo\Core\Utils\SystemUser;
 use Espo\Entities\DashboardTemplate;
 use Espo\Entities\EmailAccount as EmailAccountEntity;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
@@ -67,7 +68,8 @@ class AppService
         private Preferences $preferences,
         private FieldUtil $fieldUtil,
         private Log $log,
-        private AuthenticationMethodProvider $authenticationMethodProvider
+        private AuthenticationMethodProvider $authenticationMethodProvider,
+        private SystemUser $systemUser
     ) {}
 
     /**
@@ -145,6 +147,7 @@ class AppService
             'timeZoneList' => $timeZoneList,
             'auth2FARequired' => $auth2FARequired,
             'logoutWait' => $logoutWait,
+            'systemUserId' => $this->systemUser->getId(),
         ];
 
         /** @var array<string, array<string, mixed>> $map */

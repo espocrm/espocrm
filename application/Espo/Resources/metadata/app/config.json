@@ -13,6 +13,10 @@
         "emailKeepParentTeamsEntityList"
     ],
     "params": {
+        "systemUserId": {
+            "level": "admin",
+            "readOnly": true
+        },
         "smtpPassword": {
             "level": "internal"
         },

@@ -29,6 +29,7 @@
 
 namespace tests\integration\Espo\Settings;
 
+use Espo\Entities\User;
 use Espo\Tools\App\SettingsService;
 
 class AccessTest extends \tests\integration\Core\BaseTestCase
@@ -98,7 +99,7 @@ class AccessTest extends \tests\integration\Core\BaseTestCase
     {
         $this->createUser([
             'userName' => 'admin-tester',
-            'type' => 'admin'
+            'type' => 'admin',
         ]);
 
         $this->auth('admin-tester');
@@ -114,5 +115,24 @@ class AccessTest extends \tests\integration\Core\BaseTestCase
         $this->assertTrue(property_exists($data, 'outboundEmailFromAddress'));
         $this->assertTrue(property_exists($data, 'jobPeriod'));
         $this->assertFalse(property_exists($data, 'cryptKey'));
+    }
+
+    public function testReadOnly(): void
+    {
+        $this->createUser([
+            'userName' => 'admin-tester',
+            'type' => User::TYPE_ADMIN,
+        ]);
+
+        $this->auth('admin-tester');
+        $this->setApplication($this->createApplication());
+
+        $this->getInjectableFactory()
+            ->create(SettingsService::class)
+            ->setConfigData((object) [
+                'systemUserId' => 'test'
+            ]);
+
+        $this->assertNull($this->getConfig()->get('systemUserId'));
     }
 }

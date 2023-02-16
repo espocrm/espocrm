@@ -92,7 +92,7 @@ define('views/notification/items/base', ['view'], function (Dep) {
             let id = this.userId;
 
             if (this.isSystemAvatar || !id) {
-                id = 'system';
+                id = this.getHelper().getAppParam('systemUserId');
             }
 
             return this.getHelper().getAvatarHtml(id, 'small', 20);

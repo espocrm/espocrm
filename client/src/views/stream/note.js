@@ -221,7 +221,7 @@ define('views/stream/note', ['view'], function (Dep) {
             let id = this.model.get('createdById');
 
             if (this.isSystemAvatar) {
-                id = 'system';
+                id = this.getHelper().getAppParam('systemUserId');
             }
 
             return this.getHelper().getAvatarHtml(id, 'small', 20);
