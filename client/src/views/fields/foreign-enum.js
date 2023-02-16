@@ -35,48 +35,41 @@ define('views/fields/foreign-enum', ['views/fields/enum'], function (Dep) {
         setupOptions: function () {
             this.params.options = [];
 
-            if (!this.params.field || !this.params.link) {
+            let field = this.params.field;
+            let link = this.params.link;
+
+            if (!field || !link) {
                 return;
             }
 
-            var scope = this.getMetadata()
-                .get(['entityDefs', this.model.name, 'links', this.params.link, 'entity']);
+            let scope = this.getMetadata().get(['entityDefs', this.model.name, 'links', link, 'entity']);
 
             if (!scope) {
                 return;
             }
 
-            const {
-                optionsPath, translation
-            } = this.getMetadata().get(['entityDefs', scope, 'fields', this.params.field]);
+            let {
+                optionsPath,
+                translation,
+                options,
+                isSorted,
+                displayAsLabel,
+                style,
+            } = this.getMetadata()
+                .get(['entityDefs', scope, 'fields', field]);
 
-            if (optionsPath) {
-                this.params.options = Espo.Utils.clone(this.getMetadata().get(optionsPath)) || [];
-            }
-            else {
-                this.params.options = this.getMetadata()
-                    .get(['entityDefs', scope, 'fields', this.params.field, 'options']) || [];
-            }
+            options = optionsPath ? this.getMetadata().get(optionsPath) : options;
 
-            if (translation) {
-                this.params.translation = translation;
-            }
+            this.params.options = Espo.Utils.clone(options) || [];
+            this.params.translation = translation;
+            this.params.isSorted = isSorted || false;
+            this.params.displayAsLabel = displayAsLabel || false;
+            this.styleMap = style || {};
 
-            this.params.isSorted = this.getMetadata()
-                .get(['entityDefs', scope, 'fields', this.params.field, 'isSorted']) || false;
-            this.params.displayAsLabel = this.getMetadata()
-                    .get(['entityDefs', scope, 'fields', this.params.field, 'displayAsLabel'])
-                || false;
-
-            this.styleMap = this.getMetadata()
-                .get(['entityDefs', scope, 'fields', this.params.field, 'style']) || {};
-
-            this.translatedOptions = {};
-
-            this.params.options.forEach(item => {
-                this.translatedOptions[item] = this.getLanguage()
-                    .translateOption(item, this.params.field, scope);
-            });
+            this.translatedOptions = Object.fromEntries(
+                this.params.options
+                    .map(item => [item, this.getLanguage().translateOption(item, field, scope)])
+            );
         },
     });
 });
