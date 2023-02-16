@@ -142,5 +142,32 @@ define('views/email/record/edit', ['views/record/edit', 'views/email/record/deta
                 })
                 .catch(() => {});
         },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlS: function (e) {
+            if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (this.mode !== this.MODE_EDIT) {
+                return;
+            }
+
+            if (!this.saveAndContinueEditingAction) {
+                return;
+            }
+
+            if (!this.hasAvailableActionItem('saveDraft') && !this.hasAvailableActionItem('saveAndContinueEditing')) {
+                return;
+            }
+
+            this.actionSaveAndContinueEditing();
+        },
     });
 });
