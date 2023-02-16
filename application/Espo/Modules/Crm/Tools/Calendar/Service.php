@@ -57,6 +57,7 @@ use Espo\Core\ServiceFactory;
 use Espo\Tools\WorkingTime\Extractor;
 use PDO;
 use Exception;
+use RuntimeException;
 
 class Service
 {
@@ -539,7 +540,6 @@ class Service
     /**
      * @param string[] $userIdList
      * @return array<string,Item[]>
-     * @throws Exception
      */
     public function fetchTimelineForUsers(array $userIdList, FetchParams $fetchParams): array
     {
@@ -576,7 +576,7 @@ class Service
                     continue;
                 }
 
-                throw new Exception($e->getMessage(), $e->getCode(), $e);
+                throw new RuntimeException($e->getMessage(), (int) $e->getCode(), $e);
             }
 
             $resultData[$userId] = array_merge($eventList, $busyRangeList);
@@ -723,7 +723,6 @@ class Service
     /**
      * @param string[] $userIdList
      * @return Item[]
-     * @throws Exception
      */
     public function fetchForUsers(array $userIdList, FetchParams $fetchParams): array
     {
@@ -738,7 +737,7 @@ class Service
                     continue;
                 }
 
-                throw new Exception($e->getMessage(), $e->getCode(), $e);
+                throw new RuntimeException($e->getMessage(), (int) $e->getCode(), $e);
             }
 
             foreach ($userItemList as $event) {
@@ -853,7 +852,7 @@ class Service
 
                 $rangeList[] = $busyItem;
             }
-            catch (Exception $e) {}
+            catch (Exception) {}
         }
 
         return array_map(
@@ -909,7 +908,6 @@ class Service
      * @return array<string, (BusyRange|NonWorkingRange)[]>
      * @throws Forbidden
      * @throws Error
-     * @throws Exception
      */
     public function fetchBusyRangesForUsers(
         array $userIdList,
@@ -938,7 +936,7 @@ class Service
                 return [];
             }
         }
-        catch (Exception $e) {
+        catch (Exception) {
             throw new Error("BusyRanges: Bad date range.");
         }
 
@@ -986,7 +984,7 @@ class Service
                     continue;
                 }
 
-                throw new Exception($e->getMessage(), $e->getCode(), $e);
+                throw new RuntimeException($e->getMessage(), (int) $e->getCode(), $e);
             }
 
             $result[$userId] = array_merge($busyRangeList, $workingRangeItemList);
