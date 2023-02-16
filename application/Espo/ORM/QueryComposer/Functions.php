@@ -121,6 +121,7 @@ class Functions
         'IFNULL',
         'NULLIF',
         'BINARY',
+        'MD5',
         'UNIX_TIMESTAMP',
         'TIMESTAMPDIFF_DAY',
         'TIMESTAMPDIFF_MONTH',
