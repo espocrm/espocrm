@@ -115,8 +115,10 @@ class Email extends Database implements
             return;
         }
 
-        if ($entity->get('fromEmailAddressId')) {
-            $ea = $this->getEmailAddressRepository()->get($entity->get('fromEmailAddressId'));
+        $fromEmailAddressId = $entity->get('fromEmailAddressId');
+
+        if ($fromEmailAddressId) {
+            $ea = $this->getEmailAddressRepository()->getById($fromEmailAddressId);
 
             if ($ea) {
                 $entity->set('from', $ea->get('name'));

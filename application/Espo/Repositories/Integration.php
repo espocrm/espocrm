@@ -46,7 +46,7 @@ class Integration extends Database
 
         if (!$entity) {
             /** @var IntegrationEntity $entity */
-            $entity = $this->get();
+            $entity = $this->getNew();
 
             $entity->set('id', $id);
         }

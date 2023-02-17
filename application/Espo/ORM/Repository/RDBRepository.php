@@ -57,21 +57,15 @@ use PDO;
  */
 class RDBRepository implements Repository
 {
-    protected string $entityType;
-    protected EntityManager $entityManager;
-    protected EntityFactory $entityFactory;
     protected HookMediator $hookMediator;
     protected RDBTransactionManager $transactionManager;
 
     public function __construct(
-        string $entityType,
-        EntityManager $entityManager,
-        EntityFactory $entityFactory,
+        protected string $entityType,
+        protected EntityManager $entityManager,
+        protected EntityFactory $entityFactory,
         ?HookMediator $hookMediator = null
     ) {
-        $this->entityType = $entityType;
-        $this->entityFactory = $entityFactory;
-        $this->entityManager = $entityManager;
         $this->hookMediator = $hookMediator ?? (new EmptyHookMediator());
         $this->transactionManager = new RDBTransactionManager($entityManager->getTransactionManager());
     }
@@ -145,7 +139,7 @@ class RDBRepository implements Repository
 
     /**
      * @param TEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function save(Entity $entity, array $options = []): void
     {
@@ -881,7 +875,7 @@ class RDBRepository implements Repository
      * * `where(array $clause)`
      * * `where(string $key, string $value)`
      *
-     * @param WhereItem|array<scalar,mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<scalar, mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
      * @return RDBSelectBuilder<TEntity>
      */
@@ -898,7 +892,7 @@ class RDBRepository implements Repository
      * * `having(array $clause)`
      * * `having(string $key, string $value)`
      *
-     * @param WhereItem|array<scalar,mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<scalar, mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
      * @return RDBSelectBuilder<TEntity>
      */

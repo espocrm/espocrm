@@ -492,7 +492,7 @@ class AfterFetch implements AfterFetchInterface
         $attachmentRepository = $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
 
         foreach ($attachmentIdList as $attachmentId) {
-            $attachment = $attachmentRepository->get($attachmentId);
+            $attachment = $attachmentRepository->getById($attachmentId);
 
             if (!$attachment) {
                 continue;

@@ -211,10 +211,15 @@ class TargetList extends Record implements
         }
     }
 
+    /**
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function unlinkAll(string $id, string $link): void
     {
-        /** @var TargetListEntity|null $entity */
-        $entity = $this->getRepository()->get($id);
+        /** @var ?TargetListEntity $entity */
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound();

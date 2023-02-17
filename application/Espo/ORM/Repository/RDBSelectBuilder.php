@@ -53,16 +53,17 @@ use RuntimeException;
  */
 class RDBSelectBuilder
 {
-    private EntityManager $entityManager;
     private SelectBuilder $builder;
     /** @var RDBRepository<TEntity> */
     private RDBRepository $repository;
 
     private bool $returnSthCollection = false;
 
-    public function __construct(EntityManager $entityManager, string $entityType, ?Select $query = null)
-    {
-        $this->entityManager = $entityManager;
+    public function __construct(
+        private EntityManager $entityManager,
+        string $entityType,
+        ?Select $query = null
+    ) {
 
         /** @var RDBRepository<TEntity> $repository */
         $repository = $this->entityManager->getRepository($entityType);
@@ -90,7 +91,7 @@ class RDBSelectBuilder
     }
 
     /**
-     * @param ?array<string,mixed> $params @deprecated. Omit it.
+     * @param ?array<string, mixed> $params @deprecated. Omit it.
      * @return Collection<TEntity>
      */
     public function find(?array $params = null): Collection
@@ -129,7 +130,7 @@ class RDBSelectBuilder
     /**
      * Get a number of records.
      *
-     * @param ?array<string,mixed> $params @deprecated
+     * @param ?array<string, mixed> $params @deprecated
      */
     public function count(?array $params = null): int
     {
@@ -416,6 +417,7 @@ class RDBSelectBuilder
 
     /**
      * For backward compatibility.
+     * @deprecated As of v6.0.
      * @todo Remove.
      * @param array<string, mixed> $params
      */

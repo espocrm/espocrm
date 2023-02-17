@@ -46,7 +46,7 @@ class ExternalAccount extends Database
 
         if (!$entity) {
             /** @var ExternalAccountEntity $entity */
-            $entity = $this->get();
+            $entity = $this->getNew();
 
             $entity->set('id', $id);
         }
