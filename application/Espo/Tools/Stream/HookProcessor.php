@@ -34,12 +34,10 @@ use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Job\QueueName;
 use Espo\Core\Job\JobSchedulerFactory;
-use Espo\Core\Utils\DateTime as DateTimeUtil;
 
 use Espo\Entities\Autofollow;
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
-use Espo\Entities\Note;
 
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
@@ -95,26 +93,6 @@ class HookProcessor
         if ($this->checkHasStream($entity->getEntityType())) {
             $this->service->unfollowAllUsersFromEntity($entity);
         }
-
-        if (!$options->has('noStream')) {
-            return;
-        }
-
-        /*$query = $this->entityManager
-            ->getQueryBuilder()
-            ->update()
-            ->in(Note::ENTITY_TYPE)
-            ->set([
-                'deleted' => true,
-                'modifiedAt' => date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
-            ])
-            ->where([
-                'relatedId' => $entity->getId(),
-                'relatedType' => $entity->getEntityType(),
-            ])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($query);*/
     }
 
     private function checkHasStream(string $entityType): bool
