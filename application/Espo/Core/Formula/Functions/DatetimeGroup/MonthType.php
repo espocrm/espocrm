@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\DateTimeGroup;
+namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
 use Espo\Core\Di;
 
