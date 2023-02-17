@@ -30,6 +30,7 @@
 namespace tests\unit\Espo\Core\Formula;
 
 use Espo\Core\Formula\Evaluator;
+use Espo\Core\Formula\Exceptions\Error;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Formula\Exceptions\SyntaxError;
 use Espo\Core\Utils\Log;
@@ -1152,5 +1153,32 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $value = $this->evaluator->process($expression);
 
         $this->assertEquals(2, $value);
+    }
+
+    public function testFuncInterface1(): void
+    {
+        $expression = "string\\contains(string\\concatenate('test', 'hello'), 'hello')";
+
+        $value = $this->evaluator->process($expression);
+
+        $this->assertEquals(true, $value);
+    }
+
+    public function testFuncInterface2(): void
+    {
+        $expression = "true == string\\contains('test hello', 'hello')";
+
+        $value = $this->evaluator->process($expression);
+
+        $this->assertEquals(true, $value);
+    }
+
+    public function testFuncInterfaceException(): void
+    {
+        $expression = "true == string\\contains('test hello')";
+
+        $this->expectException(Error::class);
+
+        $this->evaluator->process($expression);
     }
 }

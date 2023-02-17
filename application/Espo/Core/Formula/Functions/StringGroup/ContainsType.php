@@ -29,23 +29,20 @@
 
 namespace Espo\Core\Formula\Functions\StringGroup;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Formula\EvaluatedArgumentList;
+use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Func;
 
-class ContainsType extends BaseFunction
+class ContainsType implements Func
 {
-    public function process(ArgumentList $args)
+    public function process(EvaluatedArgumentList $arguments): bool
     {
-        $args = $this->evaluate($args);
-
-        if (count($args) < 2) {
-            $this->throwTooFewArguments();
+        if (count($arguments) < 2) {
+            throw TooFewArguments::create(2);
         }
 
-        $string = $args[0];
-        $needle = $args[1];
+        $string = $arguments[0];
+        $needle = $arguments[1];
 
         if (!is_string($string)) {
             return false;

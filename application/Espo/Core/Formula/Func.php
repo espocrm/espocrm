@@ -27,16 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\UtilGroup;
+namespace Espo\Core\Formula;
 
-use Espo\Core\Formula\EvaluatedArgumentList;
-use Espo\Core\Formula\Func;
-use Espo\Core\Utils\Util;
+use Espo\Core\Formula\Exceptions\Error;
 
-class GenerateIdType implements Func
+/**
+ * A function.
+ */
+interface Func
 {
-    public function process(EvaluatedArgumentList $arguments): string
-    {
-        return Util::generateId();
-    }
+    /**
+     * Process.
+     *
+     * @param EvaluatedArgumentList $arguments
+     * @throws Error
+     */
+    public function process(EvaluatedArgumentList $arguments): mixed;
 }

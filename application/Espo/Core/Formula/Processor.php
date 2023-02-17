@@ -29,16 +29,20 @@
 
 namespace Espo\Core\Formula;
 
+use Espo\Core\Formula\Exceptions\BadArgumentType;
+use Espo\Core\Formula\Exceptions\BadArgumentValue;
 use Espo\Core\Formula\Exceptions\ExecutionException;
+use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Functions\Base as DeprecatedBaseFunction;
+use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Formula\Parser\Ast\Attribute;
 use Espo\Core\Formula\Parser\Ast\Node;
 use Espo\Core\Formula\Parser\Ast\Value;
 use Espo\Core\Formula\Parser\Ast\Variable;
-use Espo\ORM\Entity;
-
 use Espo\Core\Formula\Exceptions\Error;
 use Espo\Core\InjectableFactory;
-use Espo\Core\Formula\Functions\Base as DeprecatedBaseFunction;
+
+use Espo\ORM\Entity;
 
 use InvalidArgumentException;
 use stdClass;
@@ -49,17 +53,16 @@ use stdClass;
 class Processor
 {
     private FunctionFactory $functionFactory;
-    private ?Entity $entity;
     private stdClass $variables;
 
     /**
-     * @param ?array<string, class-string> $functionClassNameMap
+     * @param ?array<string, class-string<BaseFunction|Func|DeprecatedBaseFunction>> $functionClassNameMap
      */
     public function __construct(
         InjectableFactory $injectableFactory,
         AttributeFetcher $attributeFetcher,
         ?array $functionClassNameMap = null,
-        ?Entity $entity = null,
+        private ?Entity $entity = null,
         ?stdClass $variables = null
     ) {
         $this->functionFactory = new FunctionFactory(
@@ -69,7 +72,6 @@ class Processor
             $functionClassNameMap
         );
 
-        $this->entity = $entity;
         $this->variables = $variables ?? (object) [];
     }
 
@@ -80,7 +82,7 @@ class Processor
      * @throws Error
      * @throws ExecutionException
      */
-    public function process(Evaluatable $item)
+    public function process(Evaluatable $item): mixed
     {
         if ($item instanceof ArgumentList) {
             return $this->processList($item);
@@ -92,7 +94,21 @@ class Processor
 
         $function = $this->functionFactory->create($item->getType(), $this->entity, $this->variables);
 
-        /** @deprecated */
+        if ($function instanceof Func) {
+            $evaluatedArguments = array_map(function ($item) {
+                return $this->process($item);
+            }, iterator_to_array($item->getArgumentList()));
+
+            try {
+                return $function->process(new EvaluatedArgumentList($evaluatedArguments));
+            }
+            catch (TooFewArguments|BadArgumentType|BadArgumentValue $e) {
+                $message = sprintf('Function %s; %s', $item->getType(), $e->getLogMessage());
+
+                throw new Error($message);
+            }
+        }
+
         if ($function instanceof DeprecatedBaseFunction) {
             return $function->process(self::dataToStdClass($item->getData()));
         }
@@ -139,6 +155,7 @@ class Processor
     /**
      * @return mixed[]
      * @throws Error
+     * @throws ExecutionException
      */
     private function processList(ArgumentList $args): array
     {

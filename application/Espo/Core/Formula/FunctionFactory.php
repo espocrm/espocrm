@@ -36,36 +36,30 @@ use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\ORM\Entity;
 use Espo\Core\InjectableFactory;
 
+use ReflectionClass;
 use stdClass;
 
 class FunctionFactory
 {
-    private Processor $processor;
-    private InjectableFactory $injectableFactory;
-    private AttributeFetcher $attributeFetcher;
-    /** @var array<string, class-string> */
+    /** @var array<string, class-string<BaseFunction|Func|Base>> */
     private $classNameMap;
 
     /**
-     * @param array<string,class-string> $classNameMap
+     * @param array<string, class-string<BaseFunction|Func|Base>> $classNameMap
      */
     public function __construct(
-        Processor $processor,
-        InjectableFactory $injectableFactory,
-        AttributeFetcher $attributeFetcher,
+        private Processor $processor,
+        private InjectableFactory $injectableFactory,
+        private AttributeFetcher $attributeFetcher,
         ?array $classNameMap = null
     ) {
-        $this->processor = $processor;
-        $this->injectableFactory = $injectableFactory;
-        $this->attributeFetcher = $attributeFetcher;
         $this->classNameMap = $classNameMap ?? [];
     }
 
     /**
-     * @return BaseFunction|Base
      * @throws UnknownFunction
      */
-    public function create(string $name, ?Entity $entity = null, ?stdClass $variables = null): object
+    public function create(string $name, ?Entity $entity = null, ?stdClass $variables = null): Func|BaseFunction|Base
     {
         if ($this->classNameMap && array_key_exists($name, $this->classNameMap)) {
             $className = $this->classNameMap[$name];
@@ -83,12 +77,16 @@ class FunctionFactory
 
             $typeName = implode('\\', $arr);
 
-            /** @var class-string<BaseFunction|Base> $className */
+            /** @var class-string<Func|BaseFunction|Base> $className */
             $className = 'Espo\\Core\\Formula\\Functions\\' . $typeName . 'Type';
         }
 
         if (!class_exists($className)) {
             throw new UnknownFunction("Unknown function: " . $name);
+        }
+
+        if ((new ReflectionClass($className))->implementsInterface(Func::class)) {
+            return $this->injectableFactory->create($className);
         }
 
         $object = $this->injectableFactory->createWith($className, [

@@ -163,7 +163,6 @@ abstract class BaseFunction
      * @throws Error
      */
     protected function throwError(?string $msg = null)
-
     {
         $string = 'function: ' . $this->name;
 

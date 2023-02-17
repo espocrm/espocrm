@@ -29,6 +29,34 @@
 
 namespace Espo\Core\Formula\Exceptions;
 
+/**
+ * A bad argument type.
+ */
 class BadArgumentType extends Error
 {
+    private ?int $position = null;
+    private ?string $type = null;
+
+    /**
+     * Create.
+     *
+     * @param int $position An argument position.
+     * @param string $type A required argument type.
+     */
+    public static function create(int $position, string $type): self
+    {
+        $obj = new self();
+        $obj->position = $position;
+        $obj->type = $type;
+
+        return $obj;
+    }
+
+    public function getLogMessage(): string
+    {
+        $position = (string) ($this->position ?? '?');
+        $type = $this->type ?? '?';
+
+        return "Bad argument type on position {$position}, must be {$type}.";
+    }
 }

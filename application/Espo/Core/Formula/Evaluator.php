@@ -30,7 +30,10 @@
 namespace Espo\Core\Formula;
 
 use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\ExecutionException;
 use Espo\Core\Formula\Exceptions\SyntaxError;
+use Espo\Core\Formula\Functions\Base as DeprecatedBaseFunction;
+use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Formula\Parser\Ast\Attribute;
 use Espo\Core\Formula\Parser\Ast\Node;
 use Espo\Core\Formula\Parser\Ast\Value;
@@ -45,32 +48,31 @@ use stdClass;
  */
 class Evaluator
 {
-    /** @var array<string, class-string> */
-    private $functionClassNameMap;
     private Parser $parser;
     private AttributeFetcher $attributeFetcher;
-    private InjectableFactory $injectableFactory;
     /** @var array<string, (Node|Value|Attribute|Variable)> */
     private $parsedHash;
 
     /**
-     * @param array<string, class-string> $functionClassNameMap
+     * @param array<string, class-string<BaseFunction|Func|DeprecatedBaseFunction>> $functionClassNameMap
      */
-    public function __construct(InjectableFactory $injectableFactory, array $functionClassNameMap = [])
-    {
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private array $functionClassNameMap = []
+    ) {
         $this->attributeFetcher = $injectableFactory->create(AttributeFetcher::class);
-        $this->injectableFactory = $injectableFactory;
-        $this->functionClassNameMap = $functionClassNameMap;
         $this->parser = new Parser();
         $this->parsedHash = [];
     }
 
     /**
-     * @return mixed
+     * Process expression.
+     *
      * @throws SyntaxError
      * @throws Error
+     * @throws ExecutionException
      */
-    public function process(string $expression, ?Entity $entity = null, ?stdClass $variables = null)
+    public function process(string $expression, ?Entity $entity = null, ?stdClass $variables = null): mixed
     {
         $processor = new Processor(
             $this->injectableFactory,
@@ -81,9 +83,7 @@ class Evaluator
         );
 
         $item = $this->getParsedExpression($expression);
-
         $result = $processor->process($item);
-
         $this->attributeFetcher->resetRuntimeCache();
 
         return $result;
