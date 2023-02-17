@@ -58,7 +58,7 @@ define('views/email/fields/email-address', ['views/fields/base'], function (Dep)
             this.$input = this.$input || this.$el.find('input');
 
             this.$input.autocomplete({
-                serviceUrl: (q) => {
+                serviceUrl: () => {
                     return 'EmailAddress/action/searchInAddressBook?maxSize=' +
                         this.getAutocompleteMaxCount();
                 },
@@ -67,16 +67,15 @@ define('views/email/fields/email-address', ['views/fields/base'], function (Dep)
                 autoSelectFirst: true,
                 triggerSelectOnValidInput: false,
                 noCache: true,
-                formatResult: (suggestion) => {
+                formatResult: suggestion => {
                     return this.getHelper().escapeString(suggestion.name) + ' &#60;' +
                         this.getHelper().escapeString(suggestion.id) + '&#62;';
                 },
-                transformResult: (response) => {
-                    var response = JSON.parse(response);
-                    var list = [];
+                transformResult: response => {
+                    response = JSON.parse(response);
 
-                    response.forEach(item => {
-                        list.push({
+                    let list = response.map(item => {
+                        return {
                             id: item.emailAddress,
                             name: item.entityName,
                             emailAddress: item.emailAddress,
@@ -85,12 +84,16 @@ define('views/email/fields/email-address', ['views/fields/base'], function (Dep)
                             entityType: item.entityType,
                             data: item.emailAddress,
                             value: item.emailAddress,
-                        });
+                        }
                     });
 
-                    return {
-                        suggestions: list
-                    };
+                    if (this.skipCurrentInAutocomplete) {
+                        let current = this.$input.val();
+
+                        list = list.filter(item => item.emailAddress !== current)
+                    }
+
+                    return {suggestions: list};
                 },
                 onSelect: (s) => {
                     this.$input.val(s.emailAddress);
@@ -108,19 +111,17 @@ define('views/email/fields/email-address', ['views/fields/base'], function (Dep)
         },
 
         fetchSearch: function () {
-            var value = this.$element.val();
+            let value = this.$element.val();
 
             if (typeof value.trim === 'function') {
                 value = value.trim();
             }
 
             if (value) {
-                var data = {
+                return {
                     type: 'equals',
                     value: value,
                 };
-
-                return data;
             }
 
             return false;

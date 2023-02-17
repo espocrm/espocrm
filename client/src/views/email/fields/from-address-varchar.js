@@ -37,6 +37,8 @@ define(
 
         validations: ['required', 'email'],
 
+        skipCurrentInAutocomplete: true,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
