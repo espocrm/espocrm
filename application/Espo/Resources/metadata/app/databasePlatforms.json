@@ -10,7 +10,8 @@
         "postRebuildActionClassNameList": [],
         "dbalTypeClassNameMap": {
             "mediumtext": "Espo\\Core\\Utils\\Database\\Dbal\\Types\\MediumtextType",
-            "longtext": "Espo\\Core\\Utils\\Database\\Dbal\\Types\\LongtextType"
+            "longtext": "Espo\\Core\\Utils\\Database\\Dbal\\Types\\LongtextType",
+            "uuid": "Espo\\Core\\Utils\\Database\\Dbal\\Types\\UuidType"
         }
     },
     "Postgresql": {
