@@ -100,6 +100,6 @@ class PortalClient implements RunnerParameterized
     {
         $this->errorOutput->processWithBodyPrinting($request, $response, $exception);
 
-        (new ResponseEmitter())->emit($response->getResponse());
+        (new ResponseEmitter())->emit($response->toPsr7());
     }
 }

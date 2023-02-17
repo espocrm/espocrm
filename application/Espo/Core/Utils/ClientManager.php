@@ -149,7 +149,7 @@ class ClientManager
         $this->writeHeaders($response);
         $response->writeBody($body);
 
-        (new ResponseEmitter())->emit($response->getResponse());
+        (new ResponseEmitter())->emit($response->toPsr7());
     }
 
     /**

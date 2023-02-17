@@ -35,15 +35,25 @@ class Route
 
     /**
      * @param array<string, string> $params
+     * @param ?class-string<Action> $actionClassName
      */
     public function __construct(
         string $method,
         private string $route,
         private string $adjustedRoute,
         private array $params,
-        private bool $noAuth
+        private bool $noAuth,
+        private ?string $actionClassName
     ) {
         $this->method = strtoupper($method);
+    }
+
+    /**
+     * @return ?class-string<Action>
+     */
+    public function getActionClassName(): ?string
+    {
+        return $this->actionClassName;
     }
 
     public function getMethod(): string

@@ -95,7 +95,7 @@ class Starter
         catch (NotFound $exception) {
             $this->errorOutput->processWithBodyPrinting($requestWrapped, $responseWrapped, $exception);
 
-            (new ResponseEmitter())->emit($responseWrapped->getResponse());
+            (new ResponseEmitter())->emit($responseWrapped->toPsr7());
 
             return;
         }
@@ -117,7 +117,7 @@ class Starter
             $authRequired
         );
 
-        (new ResponseEmitter())->emit($responseWrapped->getResponse());
+        (new ResponseEmitter())->emit($responseWrapped->toPsr7());
     }
 
     private function processRequest(

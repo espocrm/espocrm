@@ -27,40 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal\Utils;
+namespace Espo\Core\Api;
 
-use Espo\Core\Api\Route as RouteItem;
-use Espo\Core\Utils\Route as BaseRoute;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 
-class Route extends BaseRoute
+/**
+ * A route action.
+ */
+interface Action
 {
-    public function getFullList(): array
-    {
-        $originalRouteList = parent::getFullList();
-
-        $newRouteList = [];
-
-        foreach ($originalRouteList as $route) {
-            $path = $route->getAdjustedRoute();
-
-            if ($path[0] !== '/') {
-                $path = '/' . $path;
-            }
-
-            $path = '/{portalId}' . $path;
-
-            $newRoute = new RouteItem(
-                $route->getMethod(),
-                $route->getRoute(),
-                $path,
-                $route->getParams(),
-                $route->noAuth(),
-                $route->getActionClassName()
-            );
-
-            $newRouteList[] = $newRoute;
-        }
-
-        return $newRouteList;
-    }
+    /**
+     * Process.
+     *
+     * @param Request $request A request.
+     * @param Response $response A response. Passed empty, to be written in the method.
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws Error
+     */
+    public function process(Request $request, Response $response): void;
 }

@@ -31,6 +31,7 @@ namespace Espo\Core\Api;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Authentication\AuthenticationFactory;
+use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 use Espo\Core\ApplicationUser;
@@ -44,10 +45,12 @@ use LogicException;
 
 /**
  * Processes requests. Handles authentication. Obtains a controller name, action, body from a request.
- * Then passes them to the action processor.
+ * Then passes them to the action processor or processes an action class.
  */
 class RequestProcessor
 {
+    private const DEFAULT_CONTENT_TYPE = 'application/json';
+
     public function __construct(
         private AuthenticationFactory $authenticationFactory,
         private AuthBuilderFactory $authBuilderFactory,
@@ -56,7 +59,8 @@ class RequestProcessor
         private Log $log,
         private ApplicationUser $applicationUser,
         private ControllerActionProcessor $actionProcessor,
-        private MiddlewareProvider $middlewareProvider
+        private MiddlewareProvider $middlewareProvider,
+        private InjectableFactory $injectableFactory
     ) {}
 
     public function process(
@@ -84,7 +88,7 @@ class RequestProcessor
                 $processData->getRoute()->getAdjustedRoute()
             );
 
-            return $responseWrapped->getResponse();
+            return $responseWrapped->toPsr7();
         }
     }
 
@@ -109,7 +113,7 @@ class RequestProcessor
         $authResult = $apiAuth->process($request, $response);
 
         if (!$authResult->isResolved()) {
-            return $response->getResponse();
+            return $response->toPsr7();
         }
 
         if ($authResult->isResolvedUseNoAuth()) {
@@ -118,7 +122,7 @@ class RequestProcessor
 
         ob_start();
 
-        $response = $this->proceed($processData, $psrRequest, $response);
+        $response = $this->processAfterAuth($processData, $psrRequest, $request, $response);
 
         ob_clean();
 
@@ -128,11 +132,18 @@ class RequestProcessor
     /**
      * @throws BadRequest
      */
-    private function proceed(
+    private function processAfterAuth(
         ProcessData $processData,
         Psr7Request $request,
+        RequestWrapper $requestWrapped,
         ResponseWrapper $responseWrapped
     ): Psr7Response {
+
+        $actionClassName = $processData->getRoute()->getActionClassName();
+
+        if ($actionClassName) {
+            return $this->processAction($actionClassName, $requestWrapped, $responseWrapped);
+        }
 
         $controller = $this->getControllerName($processData);
         $action = $processData->getRouteParams()['action'] ?? null;
@@ -161,6 +172,29 @@ class RequestProcessor
         $this->addControllerMiddlewares($dispatcher, $method, $controller, $action);
 
         return $dispatcher->handle($request);
+    }
+
+    /**
+     * @param class-string<Action> $actionClassName
+     */
+    private function processAction(
+        string $actionClassName,
+        RequestWrapper $requestWrapped,
+        ResponseWrapper $responseWrapped
+    ): Psr7Response {
+
+        /** @var Action $action */
+        $action = $this->injectableFactory->create($actionClassName);
+
+        $action->process($requestWrapped, $responseWrapped);
+
+        $response = $responseWrapped->toPsr7();
+
+        if (!$response->getHeader('Content-Type')) {
+            $response = $response->withHeader('Content-Type', self::DEFAULT_CONTENT_TYPE);
+        }
+
+        return $response;
     }
 
     private function getControllerName(ProcessData $processData): string

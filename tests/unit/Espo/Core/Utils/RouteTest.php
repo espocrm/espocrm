@@ -101,83 +101,83 @@ class RouteTest extends \PHPUnit\Framework\TestCase
                 ['Crm']
             );
 
-        $expected = array (
-          array (
+        $expected = [
+          [
             'adjustedRoute' => '/Custom/{scope}/{id}/{name}',
             'route' => '/Custom/:scope/:id/:name',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => 'Custom',
               'action' => 'list',
               'scope' => ':scope',
               'id' => ':id',
               'name' => ':name',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/Activities/{scope}/{id}/{name}',
             'route' => '/Activities/:scope/:id/:name',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => 'Activities',
               'action' => 'list',
               'scope' => ':scope',
               'id' => ':id',
               'name' => ':name',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/Activities',
               'route' => '/Activities',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => 'Activities',
               'action' => 'listCalendarEvents',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/App/user',
               'route' => '/App/user',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => 'App',
               'action' => 'user',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/Metadata',
               'route' => '/Metadata',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => 'Metadata',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/{controller}/action/{action}',
               'route' => '/:controller/action/:action',
             'method' => 'post',
             'params' =>
-            array (
+            [
               'controller' => ':controller',
               'action' => ':action',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/{controller}/action/{action}',
             'route' => '/:controller/action/:action',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => ':controller',
               'action' => ':action',
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
 
         $expectedItemList = array_map(
             function (array $item) {
@@ -186,7 +186,8 @@ class RouteTest extends \PHPUnit\Framework\TestCase
                     $item['route'],
                     $item['adjustedRoute'],
                     $item['params'] ?? [],
-                    $item['noAuth'] ?? false
+                    $item['noAuth'] ?? false,
+                    null
                 );
             },
             $expected
@@ -206,80 +207,80 @@ class RouteTest extends \PHPUnit\Framework\TestCase
                 ['Crm', 'Test']
             );
 
-        $expected = array (
-          array (
+        $expected = [
+          [
             'adjustedRoute' => '/Activities/{scope}/{id}/{name}',
               'route' => '/Activities/:scope/:id/:name',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => 'Activities',
               'action' => 'list',
               'scope' => ':scope',
               'id' => ':id',
               'name' => ':name',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/Activities',
               'route' => '/Activities',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => 'Activities',
               'action' => 'listCalendarEvents',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/Test',
               'route' => '/Test',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => 'Test',
               'action' => 'listCalendarEvents',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/App/user',
               'route' => '/App/user',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => 'App',
               'action' => 'user',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/Metadata',
               'route' => '/Metadata',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => 'Metadata',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/{controller}/action/{action}',
               'route' => '/:controller/action/:action',
             'method' => 'post',
             'params' =>
-            array (
+            [
               'controller' => ':controller',
               'action' => ':action',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/{controller}/action/{action}',
               'route' => '/:controller/action/:action',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => ':controller',
               'action' => ':action',
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
 
         $expectedItemList = array_map(
             function (array $item) {
@@ -288,7 +289,8 @@ class RouteTest extends \PHPUnit\Framework\TestCase
                     $item['route'],
                     $item['adjustedRoute'],
                     $item['params'] ?? [],
-                    $item['noAuth'] ?? false
+                    $item['noAuth'] ?? false,
+                    null
                 );
             },
             $expected
@@ -308,80 +310,80 @@ class RouteTest extends \PHPUnit\Framework\TestCase
                 ['Crm', 'Test']
             );
 
-        $expected = array (
-          array (
+        $expected = [
+          [
             'adjustedRoute' => '/Activities/{scope}/{id}/{name}',
               'route' => '/Activities/:scope/:id/:name',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => 'Test',
               'action' => 'list',
               'scope' => ':scope',
               'id' => ':id',
               'name' => ':name',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/Activities',
               'route' => '/Activities',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => 'Activities',
               'action' => 'listCalendarEvents',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/Test',
               'route' => '/Test',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => 'Test',
               'action' => 'listCalendarEvents',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/App/user',
               'route' => '/App/user',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => 'App',
               'action' => 'user',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/Metadata',
               'route' => '/Metadata',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => 'Metadata',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/{controller}/action/{action}',
               'route' => '/:controller/action/:action',
             'method' => 'post',
             'params' =>
-            array (
+            [
               'controller' => ':controller',
               'action' => ':action',
-            ),
-          ),
-          array (
+            ],
+          ],
+          [
             'adjustedRoute' => '/{controller}/action/{action}',
               'route' => '/:controller/action/:action',
             'method' => 'get',
             'params' =>
-            array (
+            [
               'controller' => ':controller',
               'action' => ':action',
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
 
         $expectedItemList = array_map(
             function (array $item) {
@@ -390,7 +392,8 @@ class RouteTest extends \PHPUnit\Framework\TestCase
                     $item['route'],
                     $item['adjustedRoute'],
                     $item['params'] ?? [],
-                    $item['noAuth'] ?? false
+                    $item['noAuth'] ?? false,
+                    false
                 );
             },
             $expected
@@ -459,7 +462,8 @@ class RouteTest extends \PHPUnit\Framework\TestCase
                     $item['route'],
                     $item['adjustedRoute'],
                     $item['params'] ?? [],
-                    $item['noAuth'] ?? false
+                    $item['noAuth'] ?? false,
+                    false
                 );
             },
             $expected

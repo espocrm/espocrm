@@ -40,11 +40,12 @@ use Espo\Core\Utils\Resource\PathProvider;
  *     method: string,
  *     noAuth?: bool,
  *     params?: array<string, mixed>,
+ *     actionClassName: ?class-string<\Espo\Core\Api\Action>
  *   }
  */
 class Route
 {
-    /** @var ?(RouteArrayShape[]) */
+    /** @var ?RouteArrayShape[] */
     private $data = null;
     private string $cacheKey = 'routes';
     private string $routesFileName = 'routes.json';
@@ -77,7 +78,8 @@ class Route
                     $item['route'],
                     $item['adjustedRoute'],
                     $item['params'] ?? [],
-                    $item['noAuth'] ?? false
+                    $item['noAuth'] ?? false,
+                    $item['actionClassName'] ?? null
                 );
             },
             $this->data
@@ -242,8 +244,8 @@ class Route
     }
 
     /**
-     * @param array<string, mixed> $newRoute
-     * @param array<int, array<string, mixed>> $routeList
+     * @param RouteArrayShape $newRoute
+     * @param array<int, RouteArrayShape> $routeList
      */
     static private function isRouteInList(array $newRoute, array $routeList): bool
     {

@@ -68,7 +68,7 @@ class ActionHandler implements RequestHandlerInterface
 
         $this->afterProceed($responseWrapped);
 
-        return $responseWrapped->getResponse();
+        return $responseWrapped->toPsr7();
     }
 
     private function beforeProceed(): void

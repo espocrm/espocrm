@@ -13,18 +13,17 @@
     {
         "route": "/Activities",
         "method": "get",
-        "params": {
-            "controller": "Activities",
-            "action": "listCalendarEvents"
-        }
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\Calendar\\Api\\GetCalendar"
     },
     {
         "route": "/Timeline",
         "method": "get",
-        "params": {
-            "controller": "Activities",
-            "action": "getTimeline"
-        }
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\Calendar\\Api\\GetTimeline"
+    },
+    {
+        "route": "/Timeline/busyRanges",
+        "method": "get",
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\Calendar\\Api\\GetBusyRanges"
     },
     {
         "route": "/Activities/:scope/:id/:name/list/:entityType",

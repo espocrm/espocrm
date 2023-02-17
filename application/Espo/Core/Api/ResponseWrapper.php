@@ -39,45 +39,45 @@ use Espo\Core\Api\Response as ApiResponse;
  */
 class ResponseWrapper implements ApiResponse
 {
-    public function __construct(private Psr7Response $response)
+    public function __construct(private Psr7Response $psr7Response)
     {
         // Slim adds Authorization header. It's not needed.
-        $this->response = $this->response->withoutHeader('Authorization');
+        $this->psr7Response = $this->psr7Response->withoutHeader('Authorization');
     }
 
     public function setStatus(int $code, ?string $reason = null): Response
     {
-        $this->response = $this->response->withStatus($code, $reason ?? '');
+        $this->psr7Response = $this->psr7Response->withStatus($code, $reason ?? '');
 
         return $this;
     }
 
     public function setHeader(string $name, string $value): Response
     {
-        $this->response = $this->response->withHeader($name, $value);
+        $this->psr7Response = $this->psr7Response->withHeader($name, $value);
 
         return $this;
     }
 
     public function addHeader(string $name, string $value): Response
     {
-        $this->response = $this->response->withAddedHeader($name, $value);
+        $this->psr7Response = $this->psr7Response->withAddedHeader($name, $value);
 
         return $this;
     }
 
     public function getHeader(string $name): ?string
     {
-        if (!$this->response->hasHeader($name)) {
+        if (!$this->psr7Response->hasHeader($name)) {
             return null;
         }
 
-        return $this->response->getHeaderLine($name);
+        return $this->psr7Response->getHeaderLine($name);
     }
 
     public function hasHeader(string $name): bool
     {
-        return $this->response->hasHeader($name);
+        return $this->psr7Response->hasHeader($name);
     }
 
     /**
@@ -85,29 +85,29 @@ class ResponseWrapper implements ApiResponse
      */
     public function getHeaderAsArray(string $name): array
     {
-        if (!$this->response->hasHeader($name)) {
+        if (!$this->psr7Response->hasHeader($name)) {
             return [];
         }
 
-        return $this->response->getHeader($name);
+        return $this->psr7Response->getHeader($name);
     }
 
     public function writeBody(string $string): Response
     {
-        $this->response->getBody()->write($string);
+        $this->psr7Response->getBody()->write($string);
 
         return $this;
     }
 
     public function setBody(StreamInterface $body): Response
     {
-        $this->response = $this->response->withBody($body);
+        $this->psr7Response = $this->psr7Response->withBody($body);
 
         return $this;
     }
 
-    public function getResponse(): Psr7Response
+    public function toPsr7(): Psr7Response
     {
-        return $this->response;
+        return $this->psr7Response;
     }
 }

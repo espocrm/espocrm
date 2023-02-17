@@ -328,7 +328,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             let toString = to.utc().format(this.getDateTime().internalDateTimeFormat);
 
             let url =
-                'Activities/action/busyRanges?from=' + fromString + '&to=' + toString +
+                'Timeline/busyRanges?from=' + fromString + '&to=' + toString +
                 '&userIdList=' + encodeURIComponent(this.userIdList.join(',')) +
                 '&entityType=' + this.model.entityType;
 

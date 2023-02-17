@@ -43,21 +43,16 @@ use stdClass;
  */
 class RequestWrapper implements ApiRequest
 {
-    private Psr7Request $request;
-    private string $basePath;
     private ?stdClass $parsedBody = null;
-    /** @var array<string,string> */
-    private array $routeParams;
 
     /**
      * @param array<string, string> $routeParams
      */
-    public function __construct(Psr7Request $request, string $basePath = '', array $routeParams = [])
-    {
-        $this->request = $request;
-        $this->basePath = $basePath;
-        $this->routeParams = $routeParams;
-    }
+    public function __construct(
+        private Psr7Request $psr7Request,
+        private string $basePath = '',
+        private array $routeParams = []
+    ) {}
 
     /**
      * Get a route or query parameter. Route params have a higher priority.
@@ -80,7 +75,7 @@ class RequestWrapper implements ApiRequest
             return $this->getRouteParam($name);
         }
 
-        return $this->request->getQueryParams()[$name] ?? null;
+        return $this->psr7Request->getQueryParams()[$name] ?? null;
     }
 
     public function hasRouteParam(string $name): bool
@@ -94,7 +89,7 @@ class RequestWrapper implements ApiRequest
     }
 
     /**
-     * @return array<string,string>
+     * @return array<string, string>
      */
     public function getRouteParams(): array
     {
@@ -103,12 +98,12 @@ class RequestWrapper implements ApiRequest
 
     public function hasQueryParam(string $name): bool
     {
-        return array_key_exists($name, $this->request->getQueryParams());
+        return array_key_exists($name, $this->psr7Request->getQueryParams());
     }
 
     public function getQueryParam(string $name): ?string
     {
-        $value = $this->request->getQueryParams()[$name] ?? null;
+        $value = $this->psr7Request->getQueryParams()[$name] ?? null;
 
         if (!is_string($value)) {
             return null;
@@ -119,21 +114,21 @@ class RequestWrapper implements ApiRequest
 
     public function getQueryParams(): array
     {
-        return $this->request->getQueryParams();
+        return $this->psr7Request->getQueryParams();
     }
 
     public function getHeader(string $name): ?string
     {
-        if (!$this->request->hasHeader($name)) {
+        if (!$this->psr7Request->hasHeader($name)) {
             return null;
         }
 
-        return $this->request->getHeaderLine($name);
+        return $this->psr7Request->getHeaderLine($name);
     }
 
     public function hasHeader(string $name): bool
     {
-        return $this->request->hasHeader($name);
+        return $this->psr7Request->hasHeader($name);
     }
 
     /**
@@ -141,16 +136,16 @@ class RequestWrapper implements ApiRequest
      */
     public function getHeaderAsArray(string $name): array
     {
-        if (!$this->request->hasHeader($name)) {
+        if (!$this->psr7Request->hasHeader($name)) {
             return [];
         }
 
-        return $this->request->getHeader($name);
+        return $this->psr7Request->getHeader($name);
     }
 
     public function getMethod(): string
     {
-        return $this->request->getMethod();
+        return $this->psr7Request->getMethod();
     }
 
     public function getContentType(): ?string
@@ -161,7 +156,7 @@ class RequestWrapper implements ApiRequest
 
         $contentType = explode(
             ';',
-            $this->request->getHeader('Content-Type')[0]
+            $this->psr7Request->getHeader('Content-Type')[0]
         )[0];
 
         return strtolower($contentType);
@@ -169,9 +164,9 @@ class RequestWrapper implements ApiRequest
 
     public function getBodyContents(): ?string
     {
-        $contents = $this->request->getBody()->getContents();
+        $contents = $this->psr7Request->getBody()->getContents();
 
-        $this->request->getBody()->rewind();
+        $this->psr7Request->getBody()->rewind();
 
         return $contents;
     }
@@ -223,7 +218,7 @@ class RequestWrapper implements ApiRequest
             in_array($contentType, ['application/x-www-form-urlencoded', 'multipart/form-data']) &&
             $contents
         ) {
-            $parsedBody = $this->request->getParsedBody();
+            $parsedBody = $this->psr7Request->getParsedBody();
 
             if (is_array($parsedBody)) {
                 $this->parsedBody = (object) $parsedBody;
@@ -243,7 +238,7 @@ class RequestWrapper implements ApiRequest
 
     public function getCookieParam(string $name): ?string
     {
-        $params = $this->request->getCookieParams();
+        $params = $this->psr7Request->getCookieParams();
 
         return $params[$name] ?? null;
     }
@@ -253,19 +248,19 @@ class RequestWrapper implements ApiRequest
      */
     public function getServerParam(string $name)
     {
-        $params = $this->request->getServerParams();
+        $params = $this->psr7Request->getServerParams();
 
         return $params[$name] ?? null;
     }
 
     public function getUri(): UriInterface
     {
-        return $this->request->getUri();
+        return $this->psr7Request->getUri();
     }
 
     public function getResourcePath(): string
     {
-        $path = $this->request->getUri()->getPath();
+        $path = $this->psr7Request->getUri()->getPath();
 
         return substr($path, strlen($this->basePath));
     }
