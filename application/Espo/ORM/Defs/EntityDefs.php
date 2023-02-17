@@ -33,46 +33,28 @@ use RuntimeException;
 
 class EntityDefs
 {
-    /**
-     * @var array<string,array<string,mixed>>
-     */
+    /** @var array<string, array<string, mixed>|mixed> */
     private array $data;
-
     private string $name;
-
-    /**
-     * @var array<string,?AttributeDefs>
-     */
+    /** @var array<string, ?AttributeDefs> */
     private $attributeCache = [];
-
-    /**
-     * @var array<string,?RelationDefs>
-     */
+    /** @var array<string, ?RelationDefs> */
     private $relationCache = [];
-
-    /**
-     * @var array<string,?IndexDefs>
-     */
+    /** @var array<string, ?IndexDefs> */
     private $indexCache = [];
-
-    /**
-     * @var array<string,?FieldDefs>
-     */
+    /** @var array<string, ?FieldDefs> */
     private $fieldCache = [];
 
     private function __construct()
-    {
-    }
+    {}
 
     /**
-     * @param array<string,mixed> $raw
+     * @param array<string, mixed> $raw
      */
     public static function fromRaw(array $raw, string $name): self
     {
         $obj = new self();
-
         $obj->data = $raw;
-
         $obj->name = $name;
 
         return $obj;
@@ -93,6 +75,7 @@ class EntityDefs
      */
     public function getAttributeNameList(): array
     {
+        /** @var string[] */
         return array_keys($this->data['attributes'] ?? $this->data['fields'] ?? []);
     }
 
@@ -103,6 +86,7 @@ class EntityDefs
      */
     public function getRelationNameList(): array
     {
+        /** @var string[] */
         return array_keys($this->data['relations'] ?? []);
     }
 
@@ -113,6 +97,7 @@ class EntityDefs
      */
     public function getIndexNameList(): array
     {
+        /** @var string[] */
         return array_keys($this->data['indexes'] ?? []);
     }
 
@@ -123,6 +108,7 @@ class EntityDefs
      */
     public function getFieldNameList(): array
     {
+        /** @var string[] */
         return array_keys($this->data['vFields'] ?? []);
     }
 
@@ -232,6 +218,7 @@ class EntityDefs
 
     /**
      * Get an attribute definitions.
+     *
      * @throws RuntimeException
      */
     public function getAttribute(string $name): AttributeDefs
@@ -264,6 +251,7 @@ class EntityDefs
 
     /**
      * Get an index definitions.
+     *
      * @throws RuntimeException
      */
     public function getIndex(string $name): IndexDefs
@@ -280,6 +268,7 @@ class EntityDefs
 
     /**
      * Get a field definitions.
+     *
      * @throws RuntimeException
      */
     public function getField(string $name): FieldDefs
@@ -304,10 +293,8 @@ class EntityDefs
 
     /**
      * Get a parameter value by a name.
-     *
-     * @return mixed
      */
-    public function getParam(string $name)
+    public function getParam(string $name): mixed
     {
         return $this->data[$name] ?? null;
     }

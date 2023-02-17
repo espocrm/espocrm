@@ -36,16 +36,12 @@ use RuntimeException;
  */
 class FieldDefs
 {
-    /**
-     * @var array<string,mixed>
-     */
-    private $data;
-
+    /** @var array<string, mixed> */
+    private array $data;
     private string $name;
 
     private function __construct()
-    {
-    }
+    {}
 
     /**
      * @param array<string,mixed> $raw
@@ -91,10 +87,8 @@ class FieldDefs
 
     /**
      * Get a parameter value by a name.
-     *
-     * @return mixed
      */
-    public function getParam(string $name)
+    public function getParam(string $name): mixed
     {
         return $this->data[$name] ?? null;
     }

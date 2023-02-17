@@ -38,14 +38,10 @@ use RuntimeException;
  */
 class RDBTransactionManager
 {
-    private TransactionManager $transactionManager;
-
     private int $level = 0;
 
-    public function __construct(TransactionManager $transactionManager)
-    {
-        $this->transactionManager = $transactionManager;
-    }
+    public function __construct(private TransactionManager $transactionManager)
+    {}
 
     public function isStarted(): bool
     {

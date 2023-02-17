@@ -29,31 +29,22 @@
 
 namespace Espo\ORM\Locker;
 
-use Espo\ORM\{
-    TransactionManager,
-    QueryComposer\QueryComposer,
-    Query\LockTableBuilder,
-};
+use Espo\ORM\Query\LockTableBuilder;
+use Espo\ORM\QueryComposer\QueryComposer;
+use Espo\ORM\TransactionManager;
 
 use PDO;
 use RuntimeException;
 
 class BaseLocker implements Locker
 {
-    private PDO $pdo;
-
-    private QueryComposer $queryComposer;
-
-    private TransactionManager $transactionManager;
-
     private bool $isLocked = false;
 
-    public function __construct(PDO $pdo, QueryComposer $queryComposer, TransactionManager $transactionManager)
-    {
-        $this->pdo = $pdo;
-        $this->queryComposer = $queryComposer;
-        $this->transactionManager = $transactionManager;
-    }
+    public function __construct(
+        private PDO $pdo,
+        private QueryComposer $queryComposer,
+        private TransactionManager $transactionManager
+    ) {}
 
     /**
      * {@inheritdoc}

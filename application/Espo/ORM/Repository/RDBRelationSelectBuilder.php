@@ -121,7 +121,7 @@ class RDBRelationSelectBuilder
      * Usage example:
      * `->columnsWhere(['column' => $value])`
      *
-     * @param WhereItem|array<mixed, mixed> $clause Where clause.
+     * @param WhereItem|array<int|string, mixed> $clause Where clause.
      */
     public function columnsWhere($clause): self
     {
@@ -252,7 +252,7 @@ class RDBRelationSelectBuilder
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
+     * @param WhereItem|array<int|string, mixed>|null $conditions Join conditions.
      */
     public function leftJoin($target, ?string $alias = null, $conditions = null): self
     {
@@ -289,7 +289,7 @@ class RDBRelationSelectBuilder
      * * `where(array $clause)`
      * * `where(string $key, string $value)`
      *
-     * @param WhereItem|array<mixed, mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<int|string, mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
      */
     public function where($clause = [], $value = null): self
@@ -439,8 +439,8 @@ class RDBRelationSelectBuilder
     }
 
     /**
-     * @param array<mixed, mixed> $where
-     * @return array<mixed, mixed>
+     * @param array<int|string, mixed> $where
+     * @return array<int|string, mixed>
      */
     protected function applyRelationAliasToWhereClause(array $where): array
     {

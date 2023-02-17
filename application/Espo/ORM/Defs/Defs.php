@@ -36,12 +36,8 @@ use RuntimeException;
  */
 class Defs
 {
-    private $data;
-
-    public function __construct(DefsData $data)
-    {
-        $this->data = $data;
-    }
+    public function __construct(private DefsData $data)
+    {}
 
     /**
      * Get an entity type list.

@@ -34,7 +34,7 @@ namespace Espo\ORM\Defs;
  */
 class IndexDefs
 {
-    /** @var array<string,mixed> */
+    /** @var array<string, mixed> */
     private $data;
     private string $name;
 

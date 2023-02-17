@@ -38,19 +38,15 @@ use RuntimeException;
  */
 class RelationDefs
 {
-    /**
-     * @var array<string,mixed>
-     */
+    /** @var array<string, mixed> */
     private array $data;
-
     private string $name;
 
     private function __construct()
-    {
-    }
+    {}
 
     /**
-     * @param array<string,mixed> $raw
+     * @param array<string, mixed> $raw
      */
     public static function fromRaw(array $raw, string $name): self
     {
@@ -141,14 +137,13 @@ class RelationDefs
 
     /**
      * Get a foreign entity type.
+     *
      * @throws RuntimeException
      */
     public function getForeignEntityType(): string
     {
         if (!$this->hasForeignEntityType()) {
-            throw new RuntimeException(
-                "No 'entity' parameter defined in the relation '{$this->name}'."
-            );
+            throw new RuntimeException("No 'entity' parameter defined in the relation '{$this->name}'.");
         }
 
         return $this->data['entity'];
@@ -164,14 +159,13 @@ class RelationDefs
 
     /**
      * Get a foreign relation name.
+     *
      * @throws RuntimeException
      */
     public function getForeignRelationName(): string
     {
         if (!$this->hasForeignRelationName()) {
-            throw new RuntimeException(
-                "No 'foreign' parameter defined in the relation '{$this->name}'."
-            );
+            throw new RuntimeException("No 'foreign' parameter defined in the relation '{$this->name}'.");
         }
 
         return $this->data['foreign'];
@@ -187,14 +181,13 @@ class RelationDefs
 
     /**
      * Get a foreign key.
+     *
      * @throws RuntimeException
      */
     public function getForeignKey(): string
     {
         if (!$this->hasForeignKey()) {
-            throw new RuntimeException(
-                "No 'foreignKey' parameter defined in the relation '{$this->name}'."
-            );
+            throw new RuntimeException("No 'foreignKey' parameter defined in the relation '{$this->name}'.");
         }
 
         return $this->data['foreignKey'];
@@ -215,9 +208,7 @@ class RelationDefs
     public function getKey(): string
     {
         if (!$this->hasKey()) {
-            throw new RuntimeException(
-                "No 'key' parameter defined in the relation '{$this->name}'."
-            );
+            throw new RuntimeException("No 'key' parameter defined in the relation '{$this->name}'.");
         }
 
         return $this->data['key'];
@@ -233,14 +224,13 @@ class RelationDefs
 
     /**
      * Get a mid-key. For Many-to-Many relationships only.
+     *
      * @throws RuntimeException
      */
     public function getMidKey(): string
     {
         if (!$this->hasMidKey()) {
-            throw new RuntimeException(
-                "No 'midKey' parameter defined in the relation '{$this->name}'."
-            );
+            throw new RuntimeException("No 'midKey' parameter defined in the relation '{$this->name}'.");
         }
 
         return $this->data['midKeys'][0];
@@ -248,6 +238,7 @@ class RelationDefs
 
     /**
      * Whether a foreign mid-key is defined. For Many-to-Many relationships only.
+     *
      * @throws RuntimeException
      */
     public function hasForeignMidKey(): bool
@@ -257,14 +248,13 @@ class RelationDefs
 
     /**
      * Get a foreign mid-key. For Many-to-Many relationships only.
+     *
      * @throws RuntimeException
      */
     public function getForeignMidKey(): string
     {
         if (!$this->hasForeignMidKey()) {
-            throw new RuntimeException(
-                "No 'foreignMidKey' parameter defined in the relation '{$this->name}'."
-            );
+            throw new RuntimeException("No 'foreignMidKey' parameter defined in the relation '{$this->name}'.");
         }
 
         return $this->data['midKeys'][1];
@@ -280,14 +270,13 @@ class RelationDefs
 
     /**
      * Get a relationship name.
+     *
      * @throws RuntimeException
      */
     public function getRelationshipName(): string
     {
         if (!$this->hasRelationshipName()) {
-            throw new RuntimeException(
-                "No 'relationName' parameter defined in the relation '{$this->name}'."
-            );
+            throw new RuntimeException("No 'relationName' parameter defined in the relation '{$this->name}'.");
         }
 
         return $this->data['relationName'];
@@ -324,10 +313,8 @@ class RelationDefs
 
     /**
      * Get a parameter value by a name.
-     *
-     * @return mixed
      */
-    public function getParam(string $name)
+    public function getParam(string $name): mixed
     {
         return $this->data[$name] ?? null;
     }

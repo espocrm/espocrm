@@ -35,17 +35,11 @@ use RuntimeException;
 
 class DefsData
 {
-    /**
-     * @var array<string,?EntityDefs>
-     */
+    /** @var array<string, ?EntityDefs> */
     private array $cache = [];
 
-    private Metadata $metadata;
-
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     public function clearCache(): void
     {

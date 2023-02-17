@@ -29,10 +29,12 @@
 
 namespace Espo\ORM\Repository;
 
+use Espo\ORM\Entity;
+
 interface RepositoryFactory
 {
     /**
-     * @return Repository<\Espo\ORM\Entity>
+     * @return Repository<Entity>
      */
     public function create(string $entityType): Repository;
 }
