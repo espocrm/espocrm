@@ -29,46 +29,34 @@
 
 namespace Espo\Core\Select\Where;
 
-use Espo\Core\{
-    Select\Where\Params,
-    Select\Where\ConverterFactory,
-    Select\Where\CheckerFactory,
-    Select\Where\Item as WhereItem,
-};
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Select\Where\Item as WhereItem;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Entities\User,
-};
+use Espo\Entities\User;
 
 class Applier
 {
-    private string $entityType;
-
-    private User $user;
-    private ConverterFactory $converterFactory;
-    private CheckerFactory $checkerFactory;
-
     public function __construct(
-        string $entityType,
-        User $user,
-        ConverterFactory $converterFactory,
-        CheckerFactory $checkerFactory
-    ) {
-        $this->entityType = $entityType;
-        $this->user = $user;
-        $this->converterFactory = $converterFactory;
-        $this->checkerFactory = $checkerFactory;
-    }
+        private string $entityType,
+        private User $user,
+        private ConverterFactory $converterFactory,
+        private CheckerFactory $checkerFactory
+    ) {}
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     */
     public function apply(QueryBuilder $queryBuilder, WhereItem $whereItem, Params $params): void
     {
         $checker = $this->checkerFactory->create($this->entityType, $this->user);
-
         $checker->check($whereItem, $params);
 
         $converter = $this->converterFactory->create($this->entityType, $this->user);
-
         $whereClause = $converter->convert($queryBuilder, $whereItem);
 
         $queryBuilder->where($whereClause);

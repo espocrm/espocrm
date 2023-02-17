@@ -33,15 +33,8 @@ use Espo\Core\Acl;
 
 class DefaultFilterResolver implements FilterResolver
 {
-    private $entityType;
-
-    private $acl;
-
-    public function __construct(string $entityType, Acl $acl)
-    {
-        $this->entityType = $entityType;
-        $this->acl = $acl;
-    }
+    public function __construct(private string $entityType, private Acl $acl)
+    {}
 
     public function resolve(): ?string
     {

@@ -36,18 +36,11 @@ use Espo\Core\Utils\Config;
 
 class UserTimeZoneProvider
 {
-    private $user;
-
-    private $entityManager;
-
-    private $config;
-
-    public function __construct(User $user, EntityManager $entityManager, Config $config)
-    {
-        $this->user = $user;
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-    }
+    public function __construct(
+        private User $user,
+        private EntityManager $entityManager,
+        private Config $config
+    ) {}
 
     public function get(): string
     {

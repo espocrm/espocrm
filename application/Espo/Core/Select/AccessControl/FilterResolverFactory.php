@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\AccessControl;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Acl;
 use Espo\Core\Portal\Acl as PortalAcl;
@@ -39,24 +40,15 @@ use Espo\Core\Binding\Binder;
 use Espo\Core\Binding\BindingData;
 
 use Espo\Entities\User;
+use RuntimeException;
 
 class FilterResolverFactory
 {
-    private InjectableFactory $injectableFactory;
-
-    private Metadata $metadata;
-
-    private UserAclManagerProvider $userAclManagerProvider;
-
     public function __construct(
-        InjectableFactory $injectableFactory,
-        Metadata $metadata,
-        UserAclManagerProvider $userAclManagerProvider
-    ) {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
-        $this->userAclManagerProvider = $userAclManagerProvider;
-    }
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata,
+        private UserAclManagerProvider $userAclManagerProvider
+    ) {}
 
     public function create(string $entityType, User $user): FilterResolver
     {
@@ -64,14 +56,18 @@ class FilterResolverFactory
             $this->getClassName($entityType) :
             $this->getPortalClassName($entityType);
 
-        $acl = $this->userAclManagerProvider
-            ->get($user)
-            ->createUserAcl($user);
+        try {
+            $acl = $this->userAclManagerProvider
+                ->get($user)
+                ->createUserAcl($user);
+        }
+        catch (Error $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         $bindingData = new BindingData();
 
         $binder = new Binder($bindingData);
-
         $binder
             ->bindInstance(User::class, $user)
             ->bindInstance(Acl::class, $acl);
@@ -95,9 +91,8 @@ class FilterResolverFactory
     private function getClassName(string $entityType): string
     {
         /** @var class-string<FilterResolver> */
-        return $this->metadata->get([
-            'selectDefs', $entityType, 'accessControlFilterResolverClassName'
-        ]) ?? DefaultFilterResolver::class;
+        return $this->metadata->get(['selectDefs', $entityType, 'accessControlFilterResolverClassName']) ??
+            DefaultFilterResolver::class;
     }
 
     /**
@@ -106,8 +101,7 @@ class FilterResolverFactory
     private function getPortalClassName(string $entityType): string
     {
         /** @var class-string<FilterResolver> */
-        return $this->metadata->get([
-            'selectDefs', $entityType, 'portalAccessControlFilterResolverClassName'
-        ]) ?? DefaultPortalFilterResolver::class;
+        return $this->metadata->get(['selectDefs', $entityType, 'portalAccessControlFilterResolverClassName']) ??
+            DefaultPortalFilterResolver::class;
     }
 }

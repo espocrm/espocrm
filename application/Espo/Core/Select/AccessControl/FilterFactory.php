@@ -29,38 +29,26 @@
 
 namespace Espo\Core\Select\AccessControl;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Select\Helpers\FieldHelper,
-    InjectableFactory,
-    Utils\Metadata,
-    AclManager,
-    Acl,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Acl;
+use Espo\Core\AclManager;
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Select\Helpers\FieldHelper;
+use Espo\Core\Utils\Metadata;
 
-use Espo\{
-    Entities\User,
-};
+use Espo\Entities\User;
 
 use RuntimeException;
 
 class FilterFactory
 {
-    private $injectableFactory;
-
-    private $metadata;
-
-    private $aclManager;
-
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata, AclManager $aclManager)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
-        $this->aclManager = $aclManager;
-    }
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata,
+        private AclManager $aclManager
+    ) {}
 
     public function create(string $entityType, User $user, string $name): Filter
     {
@@ -73,15 +61,12 @@ class FilterFactory
         $bindingData = new BindingData();
 
         $binder = new Binder($bindingData);
-
         $binder
             ->bindInstance(User::class, $user)
             ->bindInstance(Acl::class, $this->aclManager->createUserAcl($user));
-
         $binder
             ->for($className)
             ->bindValue('$entityType', $entityType);
-
         $binder
             ->for(FieldHelper::class)
             ->bindValue('$entityType', $entityType);

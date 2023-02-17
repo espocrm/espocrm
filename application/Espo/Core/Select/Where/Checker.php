@@ -32,7 +32,6 @@ namespace Espo\Core\Select\Where;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Acl;
-
 use Espo\Core\Select\Where\Item\Type;
 use Espo\ORM\QueryComposer\BaseQueryComposer as QueryComposer;
 use Espo\ORM\QueryComposer\Util as QueryUtil;

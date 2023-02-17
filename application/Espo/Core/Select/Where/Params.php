@@ -40,8 +40,7 @@ class Params
     private bool $forbidComplexExpressions = false;
 
     private function __construct()
-    {
-    }
+    {}
 
     /**
      * @param array<string,mixed> $params

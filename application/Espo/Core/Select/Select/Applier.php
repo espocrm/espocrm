@@ -29,31 +29,22 @@
 
 namespace Espo\Core\Select\Select;
 
-use Espo\Core\{
-    Select\SearchParams,
-    Select\Select\MetadataProvider,
-    Utils\FieldUtil,
-};
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Utils\FieldUtil;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Entity,
-    Entities\User,
-};
+use Espo\Entities\User;
+use Espo\ORM\Entity;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class Applier
 {
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $aclAttributeList = [
         'assignedUserId',
         'createdById',
     ];
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $aclPortalAttributeList = [
         'assignedUserId',
         'createdById',
@@ -61,25 +52,12 @@ class Applier
         'accountId',
     ];
 
-    private string $entityType;
-
-    private User $user;
-
-    private FieldUtil $fieldUtil;
-
-    private MetadataProvider $metadataProvider;
-
     public function __construct(
-        string $entityType,
-        User $user,
-        FieldUtil $fieldUtil,
-        MetadataProvider $metadataProvider
-    ) {
-        $this->entityType = $entityType;
-        $this->user = $user;
-        $this->fieldUtil = $fieldUtil;
-        $this->metadataProvider = $metadataProvider;
-    }
+        private string $entityType,
+        private User $user,
+        private FieldUtil $fieldUtil,
+        private MetadataProvider $metadataProvider
+    ) {}
 
     public function apply(QueryBuilder $queryBuilder, SearchParams $searchParams): void
     {
@@ -94,7 +72,7 @@ class Applier
 
     /**
      * @param string[] $attributeList
-     * @return array<int,array{string,string}|string>
+     * @return array<int, array{string, string}|string>
      */
     private function prepareAttributeList(array $attributeList, SearchParams $searchParams): array
     {

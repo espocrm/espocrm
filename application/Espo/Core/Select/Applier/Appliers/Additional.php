@@ -39,15 +39,8 @@ use Espo\Entities\User;
 
 class Additional
 {
-    private User $user;
-
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(User $user, InjectableFactory $injectableFactory)
-    {
-        $this->user = $user;
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private User $user, private InjectableFactory $injectableFactory)
+    {}
 
     /**
      * @param class-string<AdditionalApplier>[] $classNameList

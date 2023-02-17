@@ -30,11 +30,10 @@
 namespace Espo\Core\Select\Where;
 
 use Espo\Core\Exceptions\Error;
-use Espo\Entities\User;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Config;
-
 use Espo\Core\Select\Where\Item\Type;
+use Espo\Entities\User;
 
 use DateTime;
 use DateTimeZone;
@@ -45,16 +44,12 @@ use DateInterval;
  */
 class DateTimeItemTransformer
 {
-    protected User $user;
+    public function __construct(protected User $user, private Config $config)
+    {}
 
-    private Config $config;
-
-    public function __construct(User $user, Config $config)
-    {
-        $this->user = $user;
-        $this->config = $config;
-    }
-
+    /**
+     * @throws Error
+     */
     public function transform(Item $item): Item
     {
         $format = DateTimeUtil::SYSTEM_DATE_TIME_FORMAT;
@@ -296,7 +291,6 @@ class DateTimeItemTransformer
             case Type::NEXT_MONTH:
                 $where['type'] = Type::BETWEEN;
 
-                $dtFrom = new DateTime('now', new DateTimeZone($timeZone));
                 $dtFrom = $dt->modify('first day of this month')->setTime(0, 0, 0);
 
                 if ($type == Type::LAST_MONTH) {

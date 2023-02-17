@@ -32,31 +32,20 @@ namespace Espo\Core\Select\Order\ItemConverters;
 use Espo\ORM\Query\Part\OrderList;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Query\Part\Expression;
-
-use Espo\Core\{
-    Select\Order\ItemConverter,
-    Select\Order\Item,
-    Select\SearchParams,
-    Utils\Metadata,
-};
+use Espo\Core\Select\Order\Item;
+use Espo\Core\Select\Order\ItemConverter;
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Utils\Metadata;
 
 class EnumType implements ItemConverter
 {
-    private $entityType;
-
-    private $metadata;
-
     public function __construct(
-        string $entityType,
-        Metadata $metadata
-    ) {
-        $this->entityType = $entityType;
-        $this->metadata = $metadata;
-    }
+        private string $entityType,
+        private Metadata $metadata
+    ) {}
 
     public function convert(Item $item): OrderList
     {
-        /** @var string $orderBy */
         $orderBy = $item->getOrderBy();
         $order = $item->getOrder();
 

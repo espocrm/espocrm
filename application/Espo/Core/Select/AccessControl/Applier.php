@@ -30,45 +30,24 @@
 namespace Espo\Core\Select\AccessControl;
 
 use Espo\Core\Select\OrmSelectBuilder;
+use Espo\Core\Select\AccessControl\FilterFactory as AccessControlFilterFactory;
+use Espo\Core\Select\AccessControl\FilterResolverFactory as AccessControlFilterResolverFactory;
+use Espo\Core\Select\SelectManager;
 
-use Espo\Core\{
-    Select\SelectManager,
-    Select\AccessControl\FilterFactory as AccessControlFilterFactory,
-    Select\AccessControl\FilterResolverFactory as AccessControlFilterResolverFactory,
-};
-
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Entities\User,
-};
+use Espo\Entities\User;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 use RuntimeException;
 
 class Applier
 {
-    private string $entityType;
-
-    private User $user;
-
-    private AccessControlFilterFactory $accessControlFilterFactory;
-
-    private AccessControlFilterResolverFactory $accessControlFilterResolverFactory;
-
-    private SelectManager $selectManager;
-
     public function __construct(
-        string $entityType,
-        User $user,
-        AccessControlFilterFactory $accessControlFilterFactory,
-        AccessControlFilterResolverFactory $accessControlFilterResolverFactory,
-        SelectManager $selectManager
-    ) {
-        $this->entityType = $entityType;
-        $this->user = $user;
-        $this->accessControlFilterFactory = $accessControlFilterFactory;
-        $this->accessControlFilterResolverFactory = $accessControlFilterResolverFactory;
-        $this->selectManager = $selectManager;
-    }
+        private string $entityType,
+        private User $user,
+        private AccessControlFilterFactory $accessControlFilterFactory,
+        private AccessControlFilterResolverFactory $accessControlFilterResolverFactory,
+        private SelectManager $selectManager
+    ) {}
 
     public function apply(QueryBuilder $queryBuilder): void
     {

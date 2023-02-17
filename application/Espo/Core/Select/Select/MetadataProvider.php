@@ -30,20 +30,12 @@
 namespace Espo\Core\Select\Select;
 
 use Espo\Core\Utils\Metadata;
-
 use Espo\ORM\EntityManager;
 
 class MetadataProvider
 {
-    private Metadata $metadata;
-
-    private EntityManager $entityManager;
-
-    public function __construct(Metadata $metadata, EntityManager $entityManager)
-    {
-        $this->metadata = $metadata;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private Metadata $metadata, private EntityManager $entityManager)
+    {}
 
     public function getDefaultOrderBy(string $entityType): ?string
     {
@@ -53,7 +45,7 @@ class MetadataProvider
     }
 
     /**
-     * @return array<string,string[]>|null
+     * @return ?array<string, string[]>
      */
     public function getSelectAttributesDependencyMap(string $entityType): ?array
     {
@@ -63,7 +55,7 @@ class MetadataProvider
     }
 
     /**
-     * @return string[]
+     * @return ?string[]
      */
     public function getAclPortalAttributeList(string $entityType): ?array
     {
@@ -73,7 +65,7 @@ class MetadataProvider
     }
 
     /**
-     * @return string[]
+     * @return ?string[]
      */
     public function getAclAttributeList(string $entityType): ?array
     {

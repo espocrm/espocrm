@@ -33,8 +33,6 @@ class RandomStringGenerator
 {
     public function generate(): string
     {
-        return strval(
-            rand(10000, 99999)
-        );
+        return strval(rand(10000, 99999));
     }
 }

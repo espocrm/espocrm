@@ -48,7 +48,7 @@ class Params
     private function __construct() {}
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     public static function fromArray(array $params): self
     {

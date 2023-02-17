@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Select\Where;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\WhereItem as WhereClauseItem,
-};
+use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 /**
  * Converts a where item to a where clause item (for ORM).

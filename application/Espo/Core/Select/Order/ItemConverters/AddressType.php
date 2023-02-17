@@ -32,10 +32,8 @@ namespace Espo\Core\Select\Order\ItemConverters;
 use Espo\ORM\Query\Part\OrderList;
 use Espo\ORM\Query\Part\Order;
 
-use Espo\Core\{
-    Select\Order\ItemConverter,
-    Select\Order\Item,
-};
+use Espo\Core\Select\Order\Item;
+use Espo\Core\Select\Order\ItemConverter;
 
 class AddressType implements ItemConverter
 {

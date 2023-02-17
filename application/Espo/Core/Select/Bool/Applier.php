@@ -43,25 +43,12 @@ use Espo\Entities\User;
 
 class Applier
 {
-    private string $entityType;
-
-    private User $user;
-
-    private SelectManager $selectManager;
-
-    private BoolFilterFactory $boolFilterFactory;
-
     public function __construct(
-        string $entityType,
-        User $user,
-        BoolFilterFactory $boolFilterFactory,
-        SelectManager $selectManager
-    ) {
-        $this->entityType = $entityType;
-        $this->user = $user;
-        $this->boolFilterFactory = $boolFilterFactory;
-        $this->selectManager = $selectManager;
-    }
+        private string $entityType,
+        private User $user,
+        private BoolFilterFactory $boolFilterFactory,
+        private SelectManager $selectManager
+    ) {}
 
     /**
      * @param string[] $boolFilterNameList

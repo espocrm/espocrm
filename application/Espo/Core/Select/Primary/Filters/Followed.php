@@ -29,23 +29,14 @@
 
 namespace Espo\Core\Select\Primary\Filters;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Core\Select\Primary\Filter,
-    Entities\User,
-};
+use Espo\Core\Select\Primary\Filter;
+use Espo\Entities\User;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class Followed implements Filter
 {
-    private $entityType;
-
-    private $user;
-
-    public function __construct(string $entityType, User $user)
-    {
-        $this->entityType = $entityType;
-        $this->user = $user;
-    }
+    public function __construct(private string $entityType, private User $user)
+    {}
 
     public function apply(QueryBuilder $queryBuilder): void
     {
@@ -57,7 +48,7 @@ class Followed implements Filter
             [
                 $alias . '.entityType' => $this->entityType,
                 $alias . '.entityId=:' => 'id',
-                $alias . '.userId' => $this->user->id,
+                $alias . '.userId' => $this->user->getId(),
             ]
         );
     }

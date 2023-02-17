@@ -29,25 +29,13 @@
 
 namespace Espo\Core\Select\Order;
 
-use Espo\Core\{
-    Utils\Metadata,
-};
-
-use Espo\{
-    ORM\EntityManager,
-};
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\EntityManager;
 
 class MetadataProvider
 {
-    private $metadata;
-
-    private $entityManager;
-
-    public function __construct(Metadata $metadata, EntityManager $entityManager)
-    {
-        $this->metadata = $metadata;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private Metadata $metadata, private EntityManager $entityManager)
+    {}
 
     public function getFieldType(string $entityType, string $field): ?string
     {

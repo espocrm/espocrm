@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Select;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Select\Applier\Factory as ApplierFactory;
 use Espo\Core\Select\Where\Params as WhereParams;
 use Espo\Core\Select\Where\Item as WhereItem;
@@ -59,49 +62,27 @@ use LogicException;
 class SelectBuilder
 {
     private ?string $entityType = null;
-
     private ?OrmSelectBuilder $queryBuilder = null;
-
     private ?Query $sourceQuery = null;
-
     private ?SearchParams $searchParams = null;
-
     private bool $applyAccessControlFilter = false;
-
     private bool $applyDefaultOrder = false;
-
     private ?string $textFilter = null;
-
     private ?string $primaryFilter = null;
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private array $boolFilterList = [];
-
-    /**
-     * @var WhereItem[]
-     */
+    /** @var WhereItem[] */
     private array $whereItemList = [];
-
     private bool $applyWherePermissionCheck = false;
-
     private bool $applyComplexExpressionsForbidden = false;
 
-    /**
-     * @var class-string<\Espo\Core\Select\Applier\AdditionalApplier>[]
-     */
+    /** @var class-string<Applier\AdditionalApplier>[]  */
     private array $additionalApplierClassNameList = [];
 
-    private User $user;
-
-    private ApplierFactory $applierFactory;
-
-    public function __construct(User $user, ApplierFactory $applierFactory)
-    {
-        $this->user = $user;
-        $this->applierFactory = $applierFactory;
-    }
+    public function __construct(
+        private User $user,
+        private ApplierFactory $applierFactory
+    ) {}
 
     /**
      * Specify an entity type to select from.
@@ -134,6 +115,10 @@ class SelectBuilder
 
     /**
      * Build a result query.
+     *
+     * @throws Error
+     * @throws Forbidden
+     * @throws BadRequest
      */
     public function build(): Query
     {
@@ -142,6 +127,10 @@ class SelectBuilder
 
     /**
      * Build an ORM query builder. Used to continue building but by means of ORM.
+     *
+     * @throws Error
+     * @throws Forbidden
+     * @throws BadRequest
      */
     public function buildQueryBuilder(): QueryBuilder
     {
@@ -335,7 +324,7 @@ class SelectBuilder
     /**
      * Apply a list of additional applier class names.
      *
-     * @param class-string<\Espo\Core\Select\Applier\AdditionalApplier>[] $additionalApplierClassNameList
+     * @param class-string<Applier\AdditionalApplier>[] $additionalApplierClassNameList
      */
     public function withAdditionalApplierClassNameList(array $additionalApplierClassNameList): self
     {
@@ -347,6 +336,9 @@ class SelectBuilder
         return $this;
     }
 
+    /**
+     * @throws Error
+     */
     private function applyPrimaryFilter(): void
     {
         assert($this->queryBuilder !== null);
@@ -359,6 +351,9 @@ class SelectBuilder
             );
     }
 
+    /**
+     * @throws Error
+     */
     private function applyBoolFilterList(): void
     {
         assert($this->queryBuilder !== null);
@@ -393,15 +388,15 @@ class SelectBuilder
             );
     }
 
+    /**
+     * @throws Forbidden
+     * @throws Error
+     */
     private function applyDefaultOrder(): void
     {
         assert($this->queryBuilder !== null);
 
-        $order = null;
-
-        if ($this->searchParams) {
-            $order = $this->searchParams->getOrder();
-        }
+        $order = $this->searchParams?->getOrder();
 
         $params = OrderParams::fromArray([
             'forceDefault' => true,
@@ -415,6 +410,11 @@ class SelectBuilder
             );
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     */
     private function applyWhereItemList(): void
     {
         foreach ($this->whereItemList as $whereItem) {
@@ -422,6 +422,11 @@ class SelectBuilder
         }
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     */
     private function applyWhereItem(WhereItem $whereItem): void
     {
         assert($this->queryBuilder !== null);
@@ -439,6 +444,10 @@ class SelectBuilder
             );
     }
 
+    /**
+     * @throws Forbidden
+     * @throws Error
+     */
     private function applyFromSearchParams(): void
     {
         if (!$this->searchParams) {

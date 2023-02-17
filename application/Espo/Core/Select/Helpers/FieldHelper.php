@@ -40,15 +40,8 @@ class FieldHelper
 {
     private ?Entity $seed = null;
 
-    private string $entityType;
-
-    private EntityManager $entityManager;
-
-    public function __construct(string $entityType, EntityManager $entityManager)
-    {
-        $this->entityType = $entityType;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private string $entityType, private EntityManager $entityManager)
+    {}
 
     private function getSeed(): Entity
     {

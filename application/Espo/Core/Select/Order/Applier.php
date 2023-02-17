@@ -41,22 +41,12 @@ use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class Applier
 {
-    private string $entityType;
-    private MetadataProvider $metadataProvider;
-    private ItemConverterFactory $itemConverterFactory;
-    private OrdererFactory $ordererFactory;
-
     public function __construct(
-        string $entityType,
-        MetadataProvider $metadataProvider,
-        ItemConverterFactory $itemConverterFactory,
-        OrdererFactory $ordererFactory
-    ) {
-        $this->entityType = $entityType;
-        $this->metadataProvider = $metadataProvider;
-        $this->itemConverterFactory = $itemConverterFactory;
-        $this->ordererFactory = $ordererFactory;
-    }
+        private string $entityType,
+        private MetadataProvider $metadataProvider,
+        private ItemConverterFactory $itemConverterFactory,
+        private OrdererFactory $ordererFactory
+    ) {}
 
     /**
      * @throws Forbidden
@@ -75,8 +65,8 @@ class Applier
         if ($params->forbidComplexExpressions() && $orderBy) {
             if (
                 !is_string($orderBy) ||
-                strpos($orderBy, '.') !== false ||
-                strpos($orderBy, ':') !== false
+                str_contains($orderBy, '.') ||
+                str_contains($orderBy, ':')
             ) {
                 throw new Forbidden("Complex expressions are forbidden in 'orderBy'.");
             }
@@ -179,8 +169,8 @@ class Applier
             $resultOrderBy .= 'Type';
         }
         else if (
-            strpos($orderBy, '.') === false &&
-            strpos($orderBy, ':') === false &&
+            !str_contains($orderBy, '.') &&
+            !str_contains($orderBy, ':') &&
             !$this->metadataProvider->hasAttribute($this->entityType, $orderBy)
         ) {
             throw new Error("Order by non-existing field '{$orderBy}'.");
@@ -211,7 +201,7 @@ class Applier
     }
 
     /**
-     * @return array<array{string,string}>
+     * @return array<array{string, string}>
      */
     private function orderListToArray(OrderList $orderList): array
     {

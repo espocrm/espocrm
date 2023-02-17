@@ -29,31 +29,22 @@
 
 namespace Espo\Core\Select\Where;
 
-use Espo\Core\{
-    Utils\Metadata,
-    InjectableFactory,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 
 use Espo\Entities\User;
 
 class ConverterFactory
 {
-    private InjectableFactory $injectableFactory;
-
-    private Metadata $metadata;
-
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
-    }
+    public function __construct(private InjectableFactory $injectableFactory, private Metadata $metadata)
+    {}
 
     public function create(string $entityType, User $user): Converter
     {
-        $dateTimeItemTransformer = $this->createDateTimeItemTranformer($entityType, $user);
+        $dateTimeItemTransformer = $this->createDateTimeItemTransformer($entityType, $user);
 
         $itemConverter = $this->createItemConverter($entityType, $user, $dateTimeItemTransformer);
 
@@ -62,10 +53,8 @@ class ConverterFactory
         $bindingData = new BindingData();
 
         $binder = new Binder($bindingData);
-
         $binder
             ->bindInstance(User::class, $user);
-
         $binder
             ->for($className)
             ->bindValue('$entityType', $entityType)
@@ -76,7 +65,7 @@ class ConverterFactory
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
-    private function createDateTimeItemTranformer(string $entityType, User $user): DateTimeItemTransformer
+    private function createDateTimeItemTransformer(string $entityType, User $user): DateTimeItemTransformer
     {
         $className = $this->getDateTimeItemTransformerClassName($entityType);
 
@@ -111,15 +100,12 @@ class ConverterFactory
         $bindingData = new BindingData();
 
         $binder = new Binder($bindingData);
-
         $binder
             ->bindInstance(User::class, $user);
-
         $binder
             ->for($className)
             ->bindValue('$entityType', $entityType)
             ->bindInstance(DateTimeItemTransformer::class, $dateTimeItemTransformer);
-
         $binder
             ->for(ItemGeneralConverter::class)
             ->bindValue('$entityType', $entityType)

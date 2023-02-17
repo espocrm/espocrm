@@ -31,27 +31,20 @@ namespace Espo\Core\Select\Order;
 
 use Espo\Entities\User;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
-
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Binding\ContextualBinder;
 
+use RuntimeException;
+
 class ItemConverterFactory
 {
-    private InjectableFactory $injectableFactory;
-
-    private Metadata $metadata;
-
-    private User $user;
-
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata, User $user)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
-        $this->user = $user;
-    }
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata,
+        private User $user
+    ) {}
 
     public function has(string $entityType, string $field): bool
     {
@@ -63,7 +56,7 @@ class ItemConverterFactory
         $className = $this->getClassName($entityType, $field);
 
         if (!$className) {
-            throw new Error("Order item converter class name is not defined.");
+            throw new RuntimeException("Order item converter class name is not defined.");
         }
 
         $container = BindingContainerBuilder::create()

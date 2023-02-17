@@ -29,29 +29,21 @@
 
 namespace Espo\Core\Select\Order;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
-
-use Espo\Entities\User;
-
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Binding\ContextualBinder;
 
+use Espo\Entities\User;
+use RuntimeException;
+
 class OrdererFactory
 {
-    private InjectableFactory $injectableFactory;
-
-    private Metadata $metadata;
-
-    private User $user;
-
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata, User $user)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
-        $this->user = $user;
-    }
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata,
+        private User $user
+    ) {}
 
     public function has(string $entityType, string $field): bool
     {
@@ -63,7 +55,7 @@ class OrdererFactory
         $className = $this->getClassName($entityType, $field);
 
         if (!$className) {
-            throw new Error("Orderer class name is not defined.");
+            throw new RuntimeException("Orderer class name is not defined.");
         }
 
         $container = BindingContainerBuilder::create()

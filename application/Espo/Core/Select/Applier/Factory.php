@@ -38,20 +38,16 @@ use Espo\Core\Select\Order\Applier as OrderApplier;
 use Espo\Core\Select\Bool\Applier as BoolFilterListApplier;
 use Espo\Core\Select\Applier\Appliers\Additional as AdditionalApplier;
 use Espo\Core\Select\Applier\Appliers\Limit as LimitApplier;
-
-use Espo\Core\Exceptions\Error;
-
-use Espo\Core\{
-    InjectableFactory,
-    Utils\Metadata,
-    Select\SelectManagerFactory,
-    Select\SelectManager,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Select\SelectManager;
+use Espo\Core\Select\SelectManagerFactory;
+use Espo\Core\Utils\Metadata;
 
 use Espo\Entities\User;
+use RuntimeException;
 
 class Factory
 {
@@ -66,7 +62,7 @@ class Factory
     public const ADDITIONAL = 'additional';
 
     /**
-     * @var array<string,class-string<object>>
+     * @var array<string, class-string<object>>
      */
     private array $defaultClassNameMap = [
         self::TEXT_FILTER => TextFilterApplier::class,
@@ -80,21 +76,11 @@ class Factory
         self::LIMIT => LimitApplier::class,
     ];
 
-    private InjectableFactory $injectableFactory;
-
-    private Metadata $metadata;
-
-    private SelectManagerFactory $selectManagerFactory;
-
     public function __construct(
-        InjectableFactory $injectableFactory,
-        Metadata $metadata,
-        SelectManagerFactory $selectManagerFactory
-    ) {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
-        $this->selectManagerFactory = $selectManagerFactory;
-    }
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata,
+        private SelectManagerFactory $selectManagerFactory
+    ) {}
 
     private function create(string $entityType, User $user, string $type): object
     {
@@ -114,7 +100,6 @@ class Factory
         $bindingData = new BindingData();
 
         $binder = new Binder($bindingData);
-
         $binder
             ->bindInstance(User::class, $user)
             ->bindInstance(SelectManager::class, $selectManager)
@@ -183,7 +168,6 @@ class Factory
 
     /**
      * @return class-string<object>
-     * @throws Error
      */
     private function getDefaultClassName(string $type): string
     {
@@ -191,6 +175,6 @@ class Factory
             return $this->defaultClassNameMap[$type];
         }
 
-        throw new Error("Applier `$type` does not exist.");
+        throw new RuntimeException("Applier `$type` does not exist.");
     }
 }

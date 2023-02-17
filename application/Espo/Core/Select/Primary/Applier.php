@@ -31,7 +31,6 @@ namespace Espo\Core\Select\Primary;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Select\SelectManager;
-use Espo\Core\Select\Primary\FilterFactory;
 use Espo\Core\Select\OrmSelectBuilder;
 
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
@@ -39,26 +38,16 @@ use Espo\Entities\User;
 
 class Applier
 {
-    private string $entityType;
-
-    private User $user;
-
-    private SelectManager $selectManager;
-
-    private FilterFactory $primaryFilterFactory;
-
     public function __construct(
-        string $entityType,
-        User $user,
-        FilterFactory $primaryFilterFactory,
-        SelectManager $selectManager
-    ) {
-        $this->entityType = $entityType;
-        $this->user = $user;
-        $this->primaryFilterFactory = $primaryFilterFactory;
-        $this->selectManager = $selectManager;
-    }
+        private string $entityType,
+        private User $user,
+        private FilterFactory $primaryFilterFactory,
+        private SelectManager $selectManager
+    ) {}
 
+    /**
+     * @throws Error
+     */
     public function apply(QueryBuilder $queryBuilder, string $filterName): void
     {
         if ($this->primaryFilterFactory->has($this->entityType, $filterName)) {
