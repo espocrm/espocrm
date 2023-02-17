@@ -30,9 +30,13 @@
 namespace Espo\Tools\Stream;
 
 use Espo\Core\ORM\Repository\Option\SaveOption;
+use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Job\QueueName;
+use Espo\Core\Job\JobSchedulerFactory;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+
 use Espo\Entities\Autofollow;
-use Espo\Tools\Stream\Service as Service;
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
 use Espo\Entities\Note;
@@ -41,52 +45,33 @@ use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 use Espo\ORM\Defs\RelationDefs;
 
-use Espo\Core\Job\QueueName;
-use Espo\Core\Job\JobSchedulerFactory;
-use Espo\Core\Utils\DateTime as DateTimeUtil;
-
+use Espo\Tools\Stream\Service as Service;
 use Espo\Tools\Stream\Jobs\AutoFollow as AutoFollowJob;
 use Espo\Tools\Stream\Jobs\ControlFollowers as ControlFollowersJob;
-
-use Espo\Core\ORM\Entity as CoreEntity;
 
 /**
  * Handles operations with entities.
  */
 class HookProcessor
 {
-    /** @var array<string,bool> */
+    /** @var array<string, bool> */
     private $hasStreamCache = [];
-    /** @var array<string,bool> */
+    /** @var array<string, bool> */
     private $isLinkObservableInStreamCache = [];
-    /** @var ?array<string,?string> */
+    /** @var ?array<string, ?string> */
     private $statusFields = null;
 
-    private Metadata $metadata;
-    private EntityManager $entityManager;
-    private Service $service;
-    private User $user;
-    private Preferences $preferences;
-    private JobSchedulerFactory $jobSchedulerFactory;
-
     public function __construct(
-        Metadata $metadata,
-        EntityManager $entityManager,
-        Service $service,
-        User $user,
-        Preferences $preferences,
-        JobSchedulerFactory $jobSchedulerFactory
-    ) {
-        $this->metadata = $metadata;
-        $this->entityManager = $entityManager;
-        $this->service = $service;
-        $this->user = $user;
-        $this->preferences = $preferences;
-        $this->jobSchedulerFactory = $jobSchedulerFactory;
-    }
+        private Metadata $metadata,
+        private EntityManager $entityManager,
+        private Service $service,
+        private User $user,
+        private Preferences $preferences,
+        private JobSchedulerFactory $jobSchedulerFactory
+    ) {}
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function afterSave(Entity $entity, array $options): void
     {
@@ -150,7 +135,7 @@ class HookProcessor
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function handleCreateRelated(Entity $entity, array $options = []): void
     {
@@ -225,7 +210,7 @@ class HookProcessor
 
     /**
      * @param string[] $notifiedEntityTypeList
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function handleCreateRelatedBelongsToParent(
         Entity $entity,
@@ -263,7 +248,7 @@ class HookProcessor
 
     /**
      * @param string[] $notifiedEntityTypeList
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function handleCreateRelatedHasMany(
         Entity $entity,
@@ -338,7 +323,7 @@ class HookProcessor
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function afterSaveStream(Entity $entity, array $options): void
     {
@@ -356,7 +341,7 @@ class HookProcessor
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function afterSaveStreamNew(CoreEntity $entity, array $options): void
     {
@@ -371,8 +356,6 @@ class HookProcessor
 
         $assignedUserId = $entity->get('assignedUserId');
         $createdById = $entity->get('createdById');
-
-
 
         /** @var string[] $assignedUserIdList */
         $assignedUserIdList = $hasAssignedUsersField ? $entity->getLinkMultipleIdList($multipleField) : [];
@@ -430,7 +413,7 @@ class HookProcessor
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function afterSaveStreamNotNew(CoreEntity $entity, array $options): void
     {
@@ -439,7 +422,7 @@ class HookProcessor
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function afterSaveStreamNotNew1(CoreEntity $entity, array $options): void
     {
@@ -488,7 +471,7 @@ class HookProcessor
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function afterSaveStreamNotNewAssignedUserIdChanged(Entity $entity, array $options): void
     {
@@ -541,14 +524,14 @@ class HookProcessor
     }
 
     /**
-     * @return array<string,string>
+     * @return array<string, string>
      */
     private function getStatusFields(): array
     {
         if (is_null($this->statusFields)) {
             $this->statusFields = [];
 
-            /** @var array<string,array<string,mixed>> $scopes */
+            /** @var array<string,array<string, mixed>> $scopes */
             $scopes = $this->metadata->get('scopes', []);
 
             foreach ($scopes as $scope => $data) {
@@ -563,12 +546,12 @@ class HookProcessor
             }
         }
 
-        /** @var array<string,string> */
+        /** @var array<string, string> */
         return $this->statusFields;
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function afterRelate(Entity $entity, Entity $foreignEntity, string $link, array $options): void
     {
@@ -602,7 +585,7 @@ class HookProcessor
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function afterUnrelate(Entity $entity, Entity $foreignEntity, string $link, array $options): void
     {
@@ -640,21 +623,8 @@ class HookProcessor
 
             $this->entityManager->saveEntity($note1);
 
-            /** @todo Add time period (a few minutes). Don't create 'unrelate' if before. */
-            /*$note1 = $this->entityManager
-                ->getRDBRepository(Note::ENTITY_TYPE)
-                ->where([
-                    'type' => Note::TYPE_RELATE,
-                    'parentId' => $entity->getId(),
-                    'parentType' => $entityType,
-                    'relatedId' => $foreignEntity->getId(),
-                    'relatedType' => $foreignEntityType,
-                ])
-                ->findOne();
-
-            if ($note1) {
-                $this->entityManager->removeEntity($note1);
-            }*/
+            // @todo
+            // Add time period (a few minutes). If before, remove RELATE note, don't create 'unrelate' if before.
         }
 
         if ($auditedForeign) {
@@ -672,21 +642,8 @@ class HookProcessor
 
             $this->entityManager->saveEntity($note2);
 
-            /** @todo Add time period (a few minutes). Don't create 'unrelate' if before. */
-            /*$note2 = $this->entityManager
-                ->getRDBRepository(Note::ENTITY_TYPE)
-                ->where([
-                    'type' => Note::TYPE_RELATE,
-                    'parentId' => $foreignEntity->getId(),
-                    'parentType' => $foreignEntityType,
-                    'relatedId' => $entity->getId(),
-                    'relatedType' => $entityType,
-                ])
-                ->findOne();
-
-            if ($note2) {
-                $this->entityManager->removeEntity($note2);
-            }*/
+            // @todo
+            // Add time period (a few minutes). If before, remove RELATE note, don't create 'unrelate' if before.
         }
     }
 }
