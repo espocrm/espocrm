@@ -37,7 +37,6 @@ use Espo\Core\Select\Where\Params as WhereParams;
 use Espo\Core\Select\Where\Item as WhereItem;
 use Espo\Core\Select\Order\Params as OrderParams;
 use Espo\Core\Select\Text\FilterParams as TextFilterParams;
-
 use Espo\Core\Select\Where\Applier as WhereApplier;
 use Espo\Core\Select\Select\Applier as SelectApplier;
 use Espo\Core\Select\Order\Applier as OrderApplier;
@@ -75,7 +74,6 @@ class SelectBuilder
     private array $whereItemList = [];
     private bool $applyWherePermissionCheck = false;
     private bool $applyComplexExpressionsForbidden = false;
-
     /** @var class-string<Applier\AdditionalApplier>[]  */
     private array $additionalApplierClassNameList = [];
 
