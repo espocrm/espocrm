@@ -44,7 +44,8 @@ use Espo\Core\{
 };
 
 /**
- * @deprecated Use AccessChecker interfaces instead.
+ * @deprecated As of v6.0. Use AccessChecker interfaces instead.
+ * @see https://docs.espocrm.com/development/metadata/acl-defs/
  */
 class Base implements AccessChecker, Injectable
 {

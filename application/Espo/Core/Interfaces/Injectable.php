@@ -29,7 +29,9 @@
 
 namespace Espo\Core\Interfaces;
 
-/** @deprecated */
+/**
+ * @deprecated As of v6.0. Use the DI framework.
+ */
 interface Injectable
 {
     public function getDependencyList(); /** @phpstan-ignore-line */

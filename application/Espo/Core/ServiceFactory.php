@@ -34,14 +34,12 @@ use Espo\Core\Utils\ClassFinder;
 use RuntimeException;
 
 /**
- * Creates services. Services are intended for a business logic. Do not confuse with container services.
- *
- * @deprecated Use DI to pass a specific service class to a constructor.
+ * @deprecated As of v6.1. For business logic, use plain classes. Inject them via constructor.
+ * To access record services of specific entity types use `Espo\Core\Record\ServiceContainer`.
  */
 class ServiceFactory
 {
     private $classFinder;
-
     private $injectableFactory;
 
     public function __construct(ClassFinder $classFinder, InjectableFactory $injectableFactory)
@@ -70,7 +68,7 @@ class ServiceFactory
     }
 
     /**
-     * @param array<string,mixed> $with
+     * @param array<string, mixed> $with
      */
     public function createWith(string $name, array $with): object
     {

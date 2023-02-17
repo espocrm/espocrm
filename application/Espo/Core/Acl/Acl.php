@@ -30,9 +30,8 @@
 namespace Espo\Core\Acl;
 
 /**
- * @deprecated Use AccessChecker interfaces instead.
+ * @deprecated As of v7.0. Use AccessChecker interfaces instead.
+ * @see https://docs.espocrm.com/development/metadata/acl-defs/
  */
 class Acl extends Base
-{
-
-}
+{}

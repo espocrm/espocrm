@@ -31,7 +31,9 @@ namespace Espo\Core\Services;
 
 use Espo\Core\Interfaces\Injectable;
 
-/** @deprecated */
+/**
+ * @deprecated As of v6.0. Create plain classes with dependencies passed via constrictor.
+ */
 abstract class Base implements Injectable
 {
     protected $dependencyList = [ /** @phpstan-ignore-line */

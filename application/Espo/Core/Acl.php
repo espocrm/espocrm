@@ -43,7 +43,6 @@ use stdClass;
  */
 class Acl
 {
-
     public function __construct(
         protected AclManager $aclManager,
         protected User $user
