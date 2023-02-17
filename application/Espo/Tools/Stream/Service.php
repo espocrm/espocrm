@@ -765,6 +765,51 @@ class Service
     }
 
     /**
+     * @param array<string, mixed> $options
+     */
+    public function noteUnrelate(Entity $entity, string $parentType, string $parentId, array $options = []): void
+    {
+        $entityType = $entity->getEntityType();
+
+        $existing = $this->entityManager
+            ->getRDBRepository(Note::ENTITY_TYPE)
+            ->select(['id'])
+            ->where([
+                'type' => Note::TYPE_UNRELATE,
+                'parentId' => $parentId,
+                'parentType' => $parentType,
+                'relatedId' => $entity->getId(),
+                'relatedType' => $entityType,
+            ])
+            ->findOne();
+
+        if ($existing) {
+            return;
+        }
+
+        /** @var Note $note */
+        $note = $this->entityManager->getNewEntity(Note::ENTITY_TYPE);
+
+        $note->set([
+            'type' => Note::TYPE_UNRELATE,
+            'parentId' => $parentId,
+            'parentType' => $parentType,
+            'relatedType' => $entityType,
+            'relatedId' => $entity->getId(),
+        ]);
+
+        $this->processNoteTeamsUsers($note, $entity);
+
+        $o = [];
+
+        if (!empty($options['modifiedById'])) {
+            $o['createdById'] = $options['modifiedById'];
+        }
+
+        $this->entityManager->saveEntity($note, $o);
+    }
+
+    /**
      * @param array<string,mixed> $options
      */
     public function noteAssign(Entity $entity, array $options = []): void

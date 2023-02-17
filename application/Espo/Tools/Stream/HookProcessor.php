@@ -45,6 +45,7 @@ use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 use Espo\ORM\Defs\RelationDefs;
 
+use Espo\ORM\Repository\Option\RemoveOptions;
 use Espo\Tools\Stream\Service as Service;
 use Espo\Tools\Stream\Jobs\AutoFollow as AutoFollowJob;
 use Espo\Tools\Stream\Jobs\ControlFollowers as ControlFollowersJob;
@@ -89,13 +90,17 @@ class HookProcessor
         }
     }
 
-    public function afterRemove(Entity $entity): void
+    public function afterRemove(Entity $entity, RemoveOptions $options): void
     {
         if ($this->checkHasStream($entity->getEntityType())) {
             $this->service->unfollowAllUsersFromEntity($entity);
         }
 
-        $query = $this->entityManager
+        if (!$options->has('noStream')) {
+            return;
+        }
+
+        /*$query = $this->entityManager
             ->getQueryBuilder()
             ->update()
             ->in(Note::ENTITY_TYPE)
@@ -109,7 +114,7 @@ class HookProcessor
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->execute($query);
+        $this->entityManager->getQueryExecutor()->execute($query);*/
     }
 
     private function checkHasStream(string $entityType): bool
@@ -609,38 +614,14 @@ class HookProcessor
         $auditedForeign = $this->metadata->get(['entityDefs', $foreignEntityType, 'links', $foreignLink, 'audited']);
 
         if ($audited) {
-            $note1 = $this->entityManager
-                ->getRDBRepositoryByClass(Note::class)
-                ->getNew();
-
-            $note1->set([
-                'type' => Note::TYPE_UNRELATE,
-                'parentId' => $entity->getId(),
-                'parentType' => $entityType,
-                'relatedId' => $foreignEntity->getId(),
-                'relatedType' => $foreignEntityType,
-            ]);
-
-            $this->entityManager->saveEntity($note1);
+            $this->service->noteUnrelate($foreignEntity, $entityType, $entity->getId());
 
             // @todo
             // Add time period (a few minutes). If before, remove RELATE note, don't create 'unrelate' if before.
         }
 
         if ($auditedForeign) {
-            $note2 = $this->entityManager
-                ->getRDBRepositoryByClass(Note::class)
-                ->getNew();
-
-            $note2->set([
-                'type' => Note::TYPE_UNRELATE,
-                'parentId' => $foreignEntity->getId(),
-                'parentType' => $foreignEntityType,
-                'relatedId' => $entity->getId(),
-                'relatedType' => $entityType,
-            ]);
-
-            $this->entityManager->saveEntity($note2);
+            $this->service->noteUnrelate($entity, $foreignEntity->getEntityType(), $foreignEntity->getId());
 
             // @todo
             // Add time period (a few minutes). If before, remove RELATE note, don't create 'unrelate' if before.

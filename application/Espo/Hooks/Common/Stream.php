@@ -69,7 +69,7 @@ class Stream implements AfterSave, AfterRemove, AfterRelate, AfterUnrelate
             return;
         }
 
-        $this->processor->afterRemove($entity);
+        $this->processor->afterRemove($entity, $options);
     }
 
     public function afterRelate(
