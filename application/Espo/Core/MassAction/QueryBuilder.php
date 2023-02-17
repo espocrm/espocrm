@@ -29,21 +29,23 @@
 
 namespace Espo\Core\MassAction;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Query\Select;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Entities\User;
 
 class QueryBuilder
 {
-    private SelectBuilderFactory $selectBuilderFactory;
-    private User $user;
+    public function __construct(private SelectBuilderFactory $selectBuilderFactory, private User $user)
+    {}
 
-    public function __construct(SelectBuilderFactory $selectBuilderFactory, User $user)
-    {
-        $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->user = $user;
-    }
-
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     */
     public function build(Params $params): Select
     {
         $builder = $this->selectBuilderFactory

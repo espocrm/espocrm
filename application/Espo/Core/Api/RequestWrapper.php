@@ -31,13 +31,10 @@ namespace Espo\Core\Api;
 
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\BadRequest;
-
-use Psr\Http\Message\{
-    ServerRequestInterface as Psr7Request,
-    UriInterface,
-};
-
 use Espo\Core\Api\Request as ApiRequest;
+
+use Psr\Http\Message\ServerRequestInterface as Psr7Request;
+use Psr\Http\Message\UriInterface;
 
 use stdClass;
 
@@ -53,7 +50,7 @@ class RequestWrapper implements ApiRequest
     private array $routeParams;
 
     /**
-     * @param array<string,string> $routeParams
+     * @param array<string, string> $routeParams
      */
     public function __construct(Psr7Request $request, string $basePath = '', array $routeParams = [])
     {

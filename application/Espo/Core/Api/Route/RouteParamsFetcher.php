@@ -34,8 +34,8 @@ use Espo\Core\Api\Route;
 class RouteParamsFetcher
 {
     /**
-     * @param array<string,mixed> $args
-     * @return array<string,mixed>
+     * @param array<string, mixed> $args
+     * @return array<string, mixed>
      */
     public function fetch(Route $item, array $args): array
     {

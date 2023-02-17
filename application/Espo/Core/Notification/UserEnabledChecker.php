@@ -33,17 +33,11 @@ use Espo\Core\ORM\EntityManager;
 
 class UserEnabledChecker
 {
-    /**
-     * @var array<string,bool>
-     */
+    /** @var array<string, bool> */
     private $assignmentCache = [];
 
-    private EntityManager $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     public function checkAssignment(string $entityType, string $userId): bool
     {

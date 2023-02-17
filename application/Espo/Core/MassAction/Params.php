@@ -39,9 +39,7 @@ use RuntimeException;
 class Params
 {
     private string $entityType;
-    /**
-     * @var ?string[]
-     */
+    /** @var ?string[] */
     private $ids = null;
     private ?SearchParams $searchParams = null;
 

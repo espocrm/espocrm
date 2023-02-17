@@ -29,22 +29,15 @@
 
 namespace Espo\Core\MassAction;
 
+/**
+ * @immutable
+ */
 class ServiceParams
 {
-    /**
-     * @var Params
-     */
-    private $params;
+    private bool $isIdle = false;
 
-    /**
-     * @var bool
-     */
-    private $isIdle = false;
-
-    private function __construct(Params $params)
-    {
-        $this->params = $params;
-    }
+    private function __construct(private Params $params)
+    {}
 
     public static function create(Params $params): self
     {
@@ -64,7 +57,6 @@ class ServiceParams
     public function withIsIdle(bool $isIdle = true): self
     {
         $obj = clone $this;
-
         $obj->isIdle = $isIdle;
 
         return $obj;

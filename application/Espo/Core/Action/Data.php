@@ -35,7 +35,7 @@ use stdClass;
 
 class Data
 {
-    private $data;
+    private stdClass $data;
 
     private function __construct()
     {

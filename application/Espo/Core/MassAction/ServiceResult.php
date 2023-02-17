@@ -29,17 +29,13 @@
 
 namespace Espo\Core\MassAction;
 
+/**
+ * @immutable
+ */
 class ServiceResult
 {
-    /**
-     * @var ?Result
-     */
-    private $result = null;
-
-    /**
-     * @var ?string
-     */
-    private $id = null;
+    private ?Result $result = null;
+    private ?string $id = null;
 
     private function __construct() {}
 
@@ -61,7 +57,6 @@ class ServiceResult
     public static function createWithId(string $id): self
     {
         $obj = new self;
-
         $obj->id = $id;
 
         return $obj;
@@ -70,7 +65,6 @@ class ServiceResult
     public static function createWithResult(Result $result): self
     {
         $obj = new self;
-
         $obj->result = $result;
 
         return $obj;

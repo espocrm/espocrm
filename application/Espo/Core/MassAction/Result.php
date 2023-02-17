@@ -31,6 +31,9 @@ namespace Espo\Core\MassAction;
 
 use RuntimeException;
 
+/**
+ * @immutable
+ */
 class Result
 {
     private ?int $count = null;

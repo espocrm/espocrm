@@ -29,15 +29,13 @@
 
 namespace Espo\Core\Action;
 
-use Espo\Core\{
-    Exceptions\Forbidden,
-    Exceptions\ForbiddenSilent,
-    Exceptions\BadRequest,
-    Exceptions\NotFound,
-    Record\ServiceContainer as RecordServiceContainer,
-    Record\ReadParams,
-    Acl,
-};
+use Espo\Core\Acl;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Record\ReadParams;
+use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
 use Espo\ORM\Entity;
 
@@ -45,21 +43,11 @@ use stdClass;
 
 class Service
 {
-    private $factory;
-
-    private $acl;
-
-    private $recordServiceContainer;
-
     public function __construct(
-        ActionFactory $factory,
-        Acl $acl,
-        RecordServiceContainer $recordServiceContainer
-    ) {
-        $this->factory = $factory;
-        $this->acl = $acl;
-        $this->recordServiceContainer = $recordServiceContainer;
-    }
+        private ActionFactory $factory,
+        private Acl $acl,
+        private RecordServiceContainer $recordServiceContainer
+    ) {}
 
     /**
      * Perform an action.
@@ -89,8 +77,6 @@ class Service
 
         $service = $this->recordServiceContainer->get($entityType);
 
-        $entity = $service->read($id, ReadParams::create());
-
-        return $entity;
+        return $service->read($id, ReadParams::create());
     }
 }

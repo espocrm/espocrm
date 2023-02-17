@@ -41,16 +41,11 @@ use Espo\Core\Notification\AssignmentNotificator\Params;
  */
 class DefaultAssignmentNotificator implements AssignmentNotificator
 {
-    protected User $user;
-    protected EntityManager $entityManager;
-    protected UserEnabledChecker $userChecker;
-
-    public function __construct(User $user, EntityManager $entityManager, UserEnabledChecker $userChecker)
-    {
-        $this->user = $user;
-        $this->entityManager = $entityManager;
-        $this->userChecker = $userChecker;
-    }
+    public function __construct(
+        protected User $user,
+        protected EntityManager $entityManager,
+        protected UserEnabledChecker $userChecker
+    ) {}
 
     public function process(Entity $entity, Params $params): void
     {

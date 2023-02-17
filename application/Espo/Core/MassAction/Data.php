@@ -35,7 +35,7 @@ use stdClass;
 
 class Data
 {
-    private $data;
+    private stdClass $data;
 
     private function __construct()
     {
@@ -68,7 +68,6 @@ class Data
     public static function fromRaw(stdClass $data): self
     {
         $obj = new self();
-
         $obj->data = $data;
 
         return $obj;
@@ -82,7 +81,6 @@ class Data
     public function with(string $name, $value): self
     {
         $obj = clone $this;
-
         $obj->data->$name = $value;
 
         return $obj;

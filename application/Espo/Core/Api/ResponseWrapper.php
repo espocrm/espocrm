@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Api;
 
-use Psr\Http\Message\{
-    ResponseInterface as Psr7Response,
-    StreamInterface,
-};
+use Psr\Http\Message\ResponseInterface as Psr7Response;
+use Psr\Http\Message\StreamInterface;
 
 use Espo\Core\Api\Response as ApiResponse;
 
@@ -41,12 +39,8 @@ use Espo\Core\Api\Response as ApiResponse;
  */
 class ResponseWrapper implements ApiResponse
 {
-    private Psr7Response $response;
-
-    public function __construct(Psr7Response $response)
+    public function __construct(private Psr7Response $response)
     {
-        $this->response = $response;
-
         // Slim adds Authorization header. It's not needed.
         $this->response = $this->response->withoutHeader('Authorization');
     }

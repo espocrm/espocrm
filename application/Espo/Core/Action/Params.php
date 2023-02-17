@@ -36,16 +36,8 @@ use RuntimeException;
  */
 class Params
 {
-    private string $entityType;
-    private string $id;
-
-    /**
-     * @throws RuntimeException
-     */
-    public function __construct(string $entityType, string $id)
+    public function __construct(private string $entityType, private string $id)
     {
-        $this->entityType = $entityType;
-        $this->id = $id;
 
         if (!$entityType || !$id) {
             throw new RuntimeException();

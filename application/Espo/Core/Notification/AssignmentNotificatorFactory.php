@@ -40,16 +40,11 @@ class AssignmentNotificatorFactory
     /** @var class-string<AssignmentNotificator<Entity>> */
     protected string $defaultClassName = DefaultAssignmentNotificator::class;
 
-    private InjectableFactory $injectableFactory;
-    private ClassFinder $classFinder;
-    private Metadata $metadata;
-
-    public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder, Metadata $metadata)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->classFinder = $classFinder;
-        $this->metadata = $metadata;
-    }
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private ClassFinder $classFinder,
+        private Metadata $metadata
+    ) {}
 
     /**
      * @template T of Entity

@@ -42,7 +42,6 @@ use stdClass;
 
 class Merge implements Action
 {
-
     public function __construct(private Acl $acl, private Merger $merger)
     {}
 

@@ -37,22 +37,20 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\InjectableFactory;
 use Espo\Core\AclManager;
 use Espo\Core\Acl;
-
 use Espo\Core\Binding\BindingContainerBuilder;
 
 class MassActionFactory
 {
-    private Metadata $metadata;
-    private InjectableFactory $injectableFactory;
-    private AclManager $aclManager;
+    public function __construct(
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory,
+        private AclManager $aclManager
+    ) {}
 
-    public function __construct(Metadata $metadata, InjectableFactory $injectableFactory, AclManager $aclManager)
-    {
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
-        $this->aclManager = $aclManager;
-    }
-
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function create(string $action, string $entityType): MassAction
     {
         $className = $this->getClassName($action, $entityType);

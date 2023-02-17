@@ -29,48 +29,31 @@
 
 namespace Espo\Core\Action\Actions\Merge;
 
-use Espo\Core\{
-    Exceptions\Forbidden,
-    Exceptions\NotFound,
-    Action\Params,
-    Acl,
-    Acl\Table,
-    ORM\EntityManager,
-    Utils\Metadata,
-    Utils\ObjectUtil,
-    Record\ServiceContainer,
-};
+use Espo\Core\Acl;
+use Espo\Core\Acl\Table;
+use Espo\Core\Action\Params;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Record\ServiceContainer;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\ObjectUtil;
 
 use Espo\ORM\Entity;
 
-use Espo\Entities\{
-    PhoneNumber,
-    EmailAddress,
-};
+use Espo\Entities\EmailAddress;
+use Espo\Entities\PhoneNumber;
 
 use stdClass;
 
 class Merger
 {
-    private Acl $acl;
-
-    private Metadata $metadata;
-
-    private EntityManager $entityManager;
-
-    private ServiceContainer $serviceContainer;
-
     public function __construct(
-        Acl $acl,
-        Metadata $metadata,
-        EntityManager $entityManager,
-        ServiceContainer $serviceContainer
-    ) {
-        $this->acl = $acl;
-        $this->metadata = $metadata;
-        $this->entityManager = $entityManager;
-        $this->serviceContainer = $serviceContainer;
-    }
+        private Acl $acl,
+        private Metadata $metadata,
+        private EntityManager $entityManager,
+        private ServiceContainer $serviceContainer
+    ) {}
 
     /**
      * @param string[] $sourceIdList

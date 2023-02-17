@@ -29,24 +29,20 @@
 
 namespace Espo\Core\Action;
 
-use Espo\Core\{
-    Exceptions\NotFound,
-    Exceptions\Forbidden,
-    Utils\Metadata,
-    InjectableFactory,
-};
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 
 class ActionFactory
 {
-    private Metadata $metadata;
-    private InjectableFactory $injectableFactory;
+    public function __construct(private Metadata $metadata, private InjectableFactory $injectableFactory)
+    {}
 
-    public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
-    {
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
-    }
-
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function create(string $action, ?string $entityType = null): Action
     {
         $className = $this->getClassName($action, $entityType);
