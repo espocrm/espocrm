@@ -52,6 +52,16 @@ class ResponseWrapper implements ApiResponse
         return $this;
     }
 
+    public function getStatusCode(): int
+    {
+        return $this->psr7Response->getStatusCode();
+    }
+
+    public function getReasonPhrase(): string
+    {
+        return $this->psr7Response->getReasonPhrase();
+    }
+
     public function setHeader(string $name, string $value): Response
     {
         $this->psr7Response = $this->psr7Response->withHeader($name, $value);
@@ -92,6 +102,14 @@ class ResponseWrapper implements ApiResponse
         return $this->psr7Response->getHeader($name);
     }
 
+    /**
+     * @return string[]
+     */
+    public function getHeaderNames(): array
+    {
+        return array_keys($this->psr7Response->getHeaders());
+    }
+
     public function writeBody(string $string): Response
     {
         $this->psr7Response->getBody()->write($string);
@@ -104,6 +122,11 @@ class ResponseWrapper implements ApiResponse
         $this->psr7Response = $this->psr7Response->withBody($body);
 
         return $this;
+    }
+
+    public function getBody(): StreamInterface
+    {
+        return $this->psr7Response->getBody();
     }
 
     public function toPsr7(): Psr7Response

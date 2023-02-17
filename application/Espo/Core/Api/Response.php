@@ -37,6 +37,16 @@ use Psr\Http\Message\StreamInterface;
 interface Response
 {
     /**
+     * Get a status code.
+     */
+    public function getStatusCode(): int;
+
+    /**
+     * Get a status reason phrase.
+     */
+    public function getReasonPhrase(): string;
+
+    /**
      * Set a status code.
      */
     public function setStatus(int $code, ?string $reason = null): self;
@@ -62,6 +72,13 @@ interface Response
     public function hasHeader(string $name): bool;
 
     /**
+     * Get all set header names.
+     *
+     * @return string[]
+     */
+    public function getHeaderNames(): array;
+
+    /**
      * Get a header values as an array.
      *
      * @return string[]
@@ -77,4 +94,9 @@ interface Response
      * Set a body.
      */
     public function setBody(StreamInterface $body): self;
+
+    /**
+     * Get a body.
+     */
+    public function getBody(): StreamInterface;
 }

@@ -45,4 +45,17 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(['1', '2'], $wrapped->getHeaderAsArray('Test'));
     }
+
+    public function testGetHeaderNames(): void
+    {
+        $response = (new ResponseFactory())
+            ->createResponse()
+            ->withAddedHeader('Test', '1')
+            ->withAddedHeader('Test', '2')
+            ->withAddedHeader('Content-Type', 'application/json');
+
+        $wrapped = new ResponseWrapper($response);
+
+        $this->assertEquals(['Test', 'Content-Type'], $wrapped->getHeaderNames());
+    }
 }
