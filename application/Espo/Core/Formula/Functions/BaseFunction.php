@@ -30,39 +30,34 @@
 namespace Espo\Core\Formula\Functions;
 
 use Espo\ORM\Entity;
-
-use Espo\Core\Formula\{
-    Exceptions\ExecutionException,
-    Processor,
-    ArgumentList,
-    Evaluatable,
-    Exceptions\TooFewArguments,
-    Exceptions\BadArgumentType,
-    Exceptions\BadArgumentValue,
-    Exceptions\NotPassedEntity,
-    Exceptions\Error};
-
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Evaluatable;
+use Espo\Core\Formula\Exceptions\BadArgumentType;
+use Espo\Core\Formula\Exceptions\BadArgumentValue;
+use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\ExecutionException;
+use Espo\Core\Formula\Exceptions\NotPassedEntity;
+use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Processor;
 use Espo\Core\Utils\Log;
 
 use stdClass;
 
+/**
+ * A base abstract function.
+ */
 abstract class BaseFunction
 {
-    protected Processor $processor;
-
-    private ?Entity $entity;
-
-    private ?stdClass $variables;
-
-    protected string $name;
-
-    protected ?Log $log;
-
     protected function getVariables(): stdClass
     {
         return $this->variables ?? (object) [];
     }
 
+    /**
+     * Get a target entity.
+     *
+     * @throws NotPassedEntity
+     */
     protected function getEntity(): Entity
     {
         if (!$this->entity) {
@@ -73,18 +68,12 @@ abstract class BaseFunction
     }
 
     public function __construct(
-        string $name,
-        Processor $processor,
-        ?Entity $entity = null,
-        ?stdClass $variables = null,
-        ?Log $log = null
-    ) {
-        $this->name = $name;
-        $this->processor = $processor;
-        $this->entity = $entity;
-        $this->variables = $variables;
-        $this->log = $log;
-    }
+        protected string $name,
+        protected Processor $processor,
+        private ?Entity $entity = null,
+        private ?stdClass $variables = null,
+        protected ?Log $log = null
+    ) {}
 
     /**
      * Evaluates a function.
@@ -187,10 +176,8 @@ abstract class BaseFunction
 
     /**
      * Log a bad argument type.
-     *
-     * @return void
      */
-    protected function logBadArgumentType(int $index, string $type)
+    protected function logBadArgumentType(int $index, string $type): void
     {
         if (!$this->log) {
             return;
@@ -201,10 +188,8 @@ abstract class BaseFunction
 
     /**
      * Log a message.
-     *
-     * @return void
      */
-    protected function log(string $msg, string $level = 'notice')
+    protected function log(string $msg, string $level = 'notice'): void
     {
         if (!$this->log) {
             return;
