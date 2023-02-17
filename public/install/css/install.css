@@ -1,5 +1,3 @@
-
-
 body > .content {
     padding-left: 0 !important;
 }
@@ -163,4 +161,9 @@ header.step-header h4 {
 #license-agree {
     margin-right: 5px;
     margin-top: -1px;
+}
+
+#msg-box.alert {
+    min-width: 100% !important;
+    border-radius: var(--border-radius) !important;
 }
