@@ -278,7 +278,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * Find records by a SQL query.
+     * Find records by an SQL query.
      *
      * @return SthCollection<TEntity>
      */

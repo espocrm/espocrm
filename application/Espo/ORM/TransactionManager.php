@@ -41,15 +41,8 @@ class TransactionManager
 {
     private int $level = 0;
 
-    private PDO $pdo;
-
-    private QueryComposer $queryComposer;
-
-    public function __construct(PDO $pdo, QueryComposer $queryComposer)
-    {
-        $this->pdo = $pdo;
-        $this->queryComposer = $queryComposer;
-    }
+    public function __construct(private PDO $pdo, private QueryComposer $queryComposer)
+    {}
 
     /**
      * Whether a transaction is started.

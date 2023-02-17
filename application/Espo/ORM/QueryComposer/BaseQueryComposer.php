@@ -3666,7 +3666,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * Add a LIMIT part to a SQL query.
+     * Add a LIMIT part to an SQL query.
      */
     abstract protected function limit(string $sql, ?int $offset = null, ?int $limit = null): string;
 }

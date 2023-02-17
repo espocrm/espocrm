@@ -34,6 +34,7 @@ use Espo\ORM\QueryComposer\QueryComposer as QueryComposer;
 
 use IteratorAggregate;
 use Countable;
+use stdClass;
 use Traversable;
 use PDO;
 use PDOStatement;
@@ -52,20 +53,13 @@ use RuntimeException;
  */
 class SthCollection implements Collection, IteratorAggregate, Countable
 {
-    private EntityManager $entityManager;
-
     private string $entityType;
-
     private ?SelectQuery $query = null;
-
     private ?PDOStatement $sth = null;
-
     private ?string $sql = null;
 
-    private function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    private function __construct(private EntityManager $entityManager)
+    {}
 
     private function getQueryComposer(): QueryComposer
     {
@@ -134,7 +128,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function fetchRow()
     {
@@ -145,6 +139,9 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         return $this->sth->fetch(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Get count. Can be slow. Use EntityCollection if you need count.
+     */
     public function count(): int
     {
         $this->executeQueryIfNotExecuted();
@@ -158,16 +155,15 @@ class SthCollection implements Collection, IteratorAggregate, Countable
             return $rowCount;
         }
 
-        return count($this->getValueMapList());
+        return iterator_count($this);
     }
 
     protected function prepareEntity(Entity $entity): void
-    {
-    }
+    {}
 
     /**
      * @deprecated As of v6.0. Use `getValueMapList`.
-     * @return array<int,array<string,mixed>>|\stdClass[]
+     * @return array<int, array<string,mixed>>|stdClass[]
      */
     public function toArray(bool $itemsAsObjects = false): array
     {
@@ -190,15 +186,18 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         return $arr;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getValueMapList(): array
     {
-        /** @var \stdClass[] */
+        /** @var stdClass[] */
         return $this->toArray(true);
     }
 
 
     /**
-     * Whether Is fetched from DB. SthCollection is always fetched.
+     * Whether is fetched from DB. SthCollection is always fetched.
      */
     public function isFetched(): bool
     {
@@ -214,6 +213,8 @@ class SthCollection implements Collection, IteratorAggregate, Countable
     }
 
     /**
+     * Create from a query.
+     *
      * @return self<Entity>
      */
     public static function fromQuery(SelectQuery $query, EntityManager $entityManager): self
@@ -234,6 +235,8 @@ class SthCollection implements Collection, IteratorAggregate, Countable
     }
 
     /**
+     * Create from an SQL.
+     *
      * @return self<Entity>
      */
     public static function fromSql(string $entityType, string $sql, EntityManager $entityManager): self

@@ -214,7 +214,7 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * Select entities from DB by a SQL query.
+     * Select entities from DB by aт SQL query.
      *
      * @return SthCollection<Entity>
      */

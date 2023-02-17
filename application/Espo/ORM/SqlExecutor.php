@@ -32,7 +32,6 @@ namespace Espo\ORM;
 use PDO;
 use PDOStatement;
 use PDOException;
-
 use Exception;
 use RuntimeException;
 
@@ -41,14 +40,10 @@ use RuntimeException;
  */
 class SqlExecutor
 {
-    private $pdo;
-
     private const MAX_ATTEMPT_COUNT = 4;
 
-    public function __construct(PDO $pdo)
-    {
-        $this->pdo = $pdo;
-    }
+    public function __construct(private PDO $pdo)
+    {}
 
     /**
      * Execute a query.
@@ -73,9 +68,7 @@ class SqlExecutor
             $counter--;
 
             if ($counter === 0 || !$this->isExceptionIsDeadlock($e)) {
-                /**
-                 * @var PDOException $e
-                 */
+                /** @var PDOException $e */
                 throw $e;
             }
 

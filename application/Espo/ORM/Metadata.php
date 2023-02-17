@@ -29,10 +29,7 @@
 
 namespace Espo\ORM;
 
-use Espo\ORM\{
-    Defs\DefsData,
-    Defs,
-};
+use Espo\ORM\Defs\DefsData;
 
 use InvalidArgumentException;
 
@@ -41,29 +38,20 @@ use InvalidArgumentException;
  */
 class Metadata
 {
-    /**
-     * @var array<string,mixed>
-     */
+    /** @var array<string, mixed> */
     private array $data;
 
     private Defs $defs;
-
     private DefsData $defsData;
-
-    private MetadataDataProvider $dataProvider;
-
     private EventDispatcher $eventDispatcher;
 
-    public function __construct(MetadataDataProvider $dataProvider, ?EventDispatcher $eventDispatcher = null)
-    {
+    public function __construct(
+        private MetadataDataProvider $dataProvider,
+        ?EventDispatcher $eventDispatcher = null
+    ) {
         $this->data = $dataProvider->get();
-
-        $this->dataProvider = $dataProvider;
-
         $this->defsData = new DefsData($this);
-
         $this->defs = new Defs($this->defsData);
-
         $this->eventDispatcher = $eventDispatcher ?? new EventDispatcher();
     }
 
@@ -92,7 +80,7 @@ class Metadata
      *
      * @param string $entityType An entity type.
      * @param string[]|string|null $key A Key.
-     * @param mixed $default A default value.     *
+     * @param mixed $default A default value.
      * @return mixed
      */
     public function get(string $entityType, $key = null, $default = null)

@@ -39,14 +39,10 @@ use PDOStatement;
  */
 class QueryExecutor
 {
-    private SqlExecutor $sqlExecutor;
-    private QueryComposerWrapper $queryComposer;
-
-    public function __construct(SqlExecutor $sqlExecutor, QueryComposerWrapper $queryComposer)
-    {
-        $this->sqlExecutor = $sqlExecutor;
-        $this->queryComposer = $queryComposer;
-    }
+    public function __construct(
+        private SqlExecutor $sqlExecutor,
+        private QueryComposerWrapper $queryComposer
+    ) {}
 
     /**
      * Execute a query.

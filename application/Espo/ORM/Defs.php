@@ -33,6 +33,4 @@ namespace Espo\ORM;
  * Definitions.
  */
 class Defs extends Defs\Defs
-{
-
-}
+{}

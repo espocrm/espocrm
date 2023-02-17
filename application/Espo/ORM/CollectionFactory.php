@@ -36,14 +36,12 @@ use Espo\ORM\Query\Select;
  */
 class CollectionFactory
 {
-    protected EntityManager $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(protected EntityManager $entityManager)
+    {}
 
     /**
+     * Create.
+     *
      * @param array<Entity|array<string,mixed>> $dataList
      * @return EntityCollection<Entity>
      */
@@ -53,6 +51,8 @@ class CollectionFactory
     }
 
     /**
+     * Create from an SQL.
+     *
      * @return SthCollection<Entity>
      */
     public function createFromSql(string $entityType, string $sql): SthCollection
@@ -61,6 +61,8 @@ class CollectionFactory
     }
 
     /**
+     * Create from a query.
+     *
      * @return SthCollection<Entity>
      */
     public function createFromQuery(Select $query): SthCollection
@@ -69,6 +71,8 @@ class CollectionFactory
     }
 
     /**
+     * Create EntityCollection from SthCollection.
+     *
      * @template TEntity of Entity
      * @param SthCollection<TEntity> $sthCollection
      * @return EntityCollection<TEntity>

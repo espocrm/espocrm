@@ -36,15 +36,16 @@ use SeekableIterator;
 use RuntimeException;
 use OutOfBoundsException;
 use InvalidArgumentException;
+use stdClass;
 
 /**
  * A standard collection of entities. It allocates a memory for all entities.
  *
  * @template TEntity of Entity
- * @implements Iterator<int,TEntity>
+ * @implements Iterator<int, TEntity>
  * @implements Collection<TEntity>
- * @implements ArrayAccess<int,TEntity>
- * @implements SeekableIterator<int,TEntity>
+ * @implements ArrayAccess<int, TEntity>
+ * @implements SeekableIterator<int, TEntity>
  */
 class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, SeekableIterator
 {
@@ -56,7 +57,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     protected array $dataList = [];
 
     /**
-     * @param array<TEntity|array<string,mixed>> $dataList
+     * @param array<TEntity|array<string, mixed>> $dataList
      */
     public function __construct(
         array $dataList = [],
@@ -237,7 +238,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     }
 
     /**
-     * @param array<string,mixed> $dataArray
+     * @param array<string, mixed> $dataArray
      * @return TEntity
      */
     protected function buildEntityFromArray(array $dataArray): Entity
@@ -304,7 +305,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     /**
      * Whether a collection contains a specific item.
      *
-     * @param TEntity|array<string,mixed> $value
+     * @param TEntity|array<string, mixed> $value
      */
     public function contains($value): bool
     {
@@ -316,7 +317,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     }
 
     /**
-     * @param TEntity|array<string,mixed> $value
+     * @param TEntity|array<string, mixed> $value
      * @return false|int
      */
     public function indexOf($value)
@@ -361,7 +362,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
     /**
      * @deprecated As of v6.0. Use `getValueMapList`.
-     * @return array<array<string, mixed>>|\stdClass[]
+     * @return array<array<string, mixed>>|stdClass[]
      */
     public function toArray(bool $itemsAsObjects = false): array
     {
@@ -381,9 +382,12 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         return $arr;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getValueMapList(): array
     {
-        /** @var \stdClass[] */
+        /** @var stdClass[] */
         return $this->toArray(true);
     }
 
@@ -404,6 +408,8 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     }
 
     /**
+     * Create from SthCollection.
+     *
      * @param SthCollection<TEntity> $sthCollection
      * @return self<TEntity>
      */
@@ -417,7 +423,6 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
         /** @var self<TEntity> $obj */
         $obj = new EntityCollection($entityList, $sthCollection->getEntityType());
-
         $obj->setAsFetched();
 
         return $obj;
