@@ -38,7 +38,7 @@ use RuntimeException;
 class FieldData
 {
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private $actionData = [];
 

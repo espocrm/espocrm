@@ -33,19 +33,12 @@ use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Repositories\User as UserRepository;
 
-use Espo\ORM\{
-    Entity,
-    EntityManager,
-    Defs,
-};
-
+use Espo\ORM\Defs;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 use Espo\Entities\User;
 
-use Espo\Core\{
-    AclManager,
-    Acl\AssignmentChecker,
-    Acl\Table,
-};
+use Espo\Core\AclManager;
 
 /**
  * @implements AssignmentChecker<CoreEntity>
@@ -53,27 +46,16 @@ use Espo\Core\{
 class DefaultAssignmentChecker implements AssignmentChecker
 {
     protected const FIELD_ASSIGNED_USERS = 'assignedUsers';
-
     protected const FIELD_TEAMS = 'teams';
-
     protected const ATTR_ASSIGNED_USER_ID = 'assignedUserId';
-
     protected const ATTR_TEAMS_IDS = 'teamsIds';
-
     protected const ATTR_ASSIGNED_USERS_IDS = 'assignedUsersIds';
 
-    private AclManager $aclManager;
-
-    private EntityManager $entityManager;
-
-    private Defs $ormDefs;
-
-    public function __construct(AclManager $aclManager, EntityManager $entityManager, Defs $ormDefs)
-    {
-        $this->aclManager = $aclManager;
-        $this->entityManager = $entityManager;
-        $this->ormDefs = $ormDefs;
-    }
+    public function __construct(
+        private AclManager $aclManager,
+        private EntityManager $entityManager,
+        private Defs $ormDefs
+    ) {}
 
     public function check(User $user, Entity $entity): bool
     {

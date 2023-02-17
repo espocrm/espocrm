@@ -30,20 +30,17 @@
 namespace Espo\Core\Portal\Acl;
 
 use Espo\Entities\User;
-
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    Portal\AclManager as PortalAclManager,
-    Portal\Acl\AccessChecker\ScopeChecker,
-    Portal\Acl\AccessChecker\ScopeCheckerData,
-    Acl\ScopeData,
-    Acl\AccessEntityCreateChecker,
-    Acl\AccessEntityReadChecker,
-    Acl\AccessEntityEditChecker,
-    Acl\AccessEntityDeleteChecker,
-    Acl\AccessEntityStreamChecker,
-};
+use Espo\Core\Acl\AccessEntityCreateChecker;
+use Espo\Core\Acl\AccessEntityDeleteChecker;
+use Espo\Core\Acl\AccessEntityEditChecker;
+use Espo\Core\Acl\AccessEntityReadChecker;
+use Espo\Core\Acl\AccessEntityStreamChecker;
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\Portal\Acl\AccessChecker\ScopeChecker;
+use Espo\Core\Portal\Acl\AccessChecker\ScopeCheckerData;
+use Espo\Core\Portal\AclManager as PortalAclManager;
 
 /**
  * A default implementation for access checking for portal.
@@ -62,17 +59,10 @@ class DefaultAccessChecker implements
     AccessEntityDeleteChecker,
     AccessEntityStreamChecker
 {
-    private PortalAclManager $aclManager;
-
-    private ScopeChecker $scopeChecker;
-
     public function __construct(
-        PortalAclManager $aclManager,
-        ScopeChecker $scopeChecker
-    ) {
-        $this->aclManager = $aclManager;
-        $this->scopeChecker = $scopeChecker;
-    }
+        private PortalAclManager $aclManager,
+        private ScopeChecker $scopeChecker
+    ) {}
 
     private function checkEntity(User $user, Entity $entity, ScopeData $data, string $action): bool
     {

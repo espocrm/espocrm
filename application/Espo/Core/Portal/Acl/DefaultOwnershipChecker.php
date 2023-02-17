@@ -29,17 +29,13 @@
 
 namespace Espo\Core\Portal\Acl;
 
-use Espo\ORM\{
-    Entity,
-    EntityManager,
-    BaseEntity,
-};
+use Espo\ORM\BaseEntity;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
 use Espo\Entities\User;
 
-use Espo\Core\{
-    Acl\OwnershipOwnChecker,
-};
+use Espo\Core\Acl\OwnershipOwnChecker;
 
 /**
  * A default implementation for ownership checking for portal.
@@ -54,38 +50,21 @@ class DefaultOwnershipChecker implements
     OwnershipContactChecker
 {
     private const ENTITY_ACCOUNT = 'Account';
-
     private const ENTITY_CONTACT = 'Contact';
 
     private const ATTR_CREATED_BY_ID = 'createdById';
-
     private const ATTR_ACCOUNT_ID = 'accountId';
-
     private const ATTR_CONTACT_ID = 'contactId';
-
     private const ATTR_PARENT_ID = 'parentId';
-
     private const ATTR_PARENT_TYPE = 'parentType';
-
     private const FIELD_CONTACT = 'contact';
-
     private const FIELD_CONTACTS = 'contacts';
-
     private const FIELD_ACCOUNT = 'account';
-
     private const FIELD_ACCOUNTS = 'accounts';
-
     private const FIELD_PARENT = 'parent';
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     public function checkOwn(User $user, Entity $entity): bool
     {

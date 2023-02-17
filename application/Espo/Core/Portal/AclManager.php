@@ -29,55 +29,43 @@
 
 namespace Espo\Core\Portal;
 
-use Espo\ORM\{
-    Entity,
-    EntityManager,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
-use Espo\Entities\{
-    User,
-    Portal,
-};
+use Espo\Entities\Portal;
+use Espo\Entities\User;
 
-use Espo\Core\{
-    Portal\Acl\Table,
-    Portal\Acl\Table\TableFactory,
-    Portal\Acl\AccessChecker\AccessCheckerFactory,
-    Portal\Acl\OwnershipChecker\OwnershipCheckerFactory,
-    Portal\Acl\OwnershipAccountChecker,
-    Portal\Acl\OwnershipContactChecker,
-    Portal\Acl,
-    Portal\Acl\Map\MapFactory,
-    Acl\GlobalRestriction,
-    Acl\OwnerUserFieldProvider,
-    Acl\Table as TableBase,
-    Acl\Map\Map,
-    AclManager as InternalAclManager,
-};
+use Espo\Core\Acl\GlobalRestriction;
+use Espo\Core\Acl\Map\Map;
+use Espo\Core\Acl\OwnerUserFieldProvider;
+use Espo\Core\Acl\Table;
+use Espo\Core\AclManager as InternalAclManager;
+use Espo\Core\Portal\Acl\AccessChecker\AccessCheckerFactory as PortalAccessCheckerFactory;
+use Espo\Core\Portal\Acl\Map\MapFactory as PortalMapFactory;
+use Espo\Core\Portal\Acl\OwnershipAccountChecker;
+use Espo\Core\Portal\Acl\OwnershipChecker\OwnershipCheckerFactory as PortalOwnershipCheckerFactory;
+use Espo\Core\Portal\Acl\OwnershipContactChecker;
+use Espo\Core\Portal\Acl\Table as PortalTable;
+use Espo\Core\Portal\Acl\Table\TableFactory as PortalTableFactory;
 
 use stdClass;
 use RuntimeException;
 
 class AclManager extends InternalAclManager
 {
-    /**
-     * @var class-string
-     */
+    /** @var class-string */
     protected $userAclClassName = Acl::class;
 
     private InternalAclManager $internalAclManager;
-
     private ?Portal $portal = null;
-
-    private TableFactory $portalTableFactory;
-
-    private MapFactory $portalMapFactory;
+    private PortalTableFactory $portalTableFactory;
+    private PortalMapFactory $portalMapFactory;
 
     public function __construct(
-        AccessCheckerFactory $accessCheckerFactory,
-        OwnershipCheckerFactory $ownershipCheckerFactory,
-        TableFactory $portalTableFactory,
-        MapFactory $portalMapFactory,
+        PortalAccessCheckerFactory $accessCheckerFactory,
+        PortalOwnershipCheckerFactory $ownershipCheckerFactory,
+        PortalTableFactory $portalTableFactory,
+        PortalMapFactory $portalMapFactory,
         GlobalRestriction $globalRestriction,
         OwnerUserFieldProvider $ownerUserFieldProvider,
         EntityManager $entityManager,
@@ -107,7 +95,7 @@ class AclManager extends InternalAclManager
         return $this->portal;
     }
 
-    protected function getTable(User $user): TableBase
+    protected function getTable(User $user): Table
     {
         $key = $user->hasId() ? $user->getId() : spl_object_hash($user);
 
@@ -123,7 +111,7 @@ class AclManager extends InternalAclManager
         $key = $user->hasId() ? $user->getId() : spl_object_hash($user);
 
         if (!array_key_exists($key, $this->mapHashMap)) {
-            /** @var Table $table */
+            /** @var PortalTable $table */
             $table = $this->getTable($user);
 
             $this->mapHashMap[$key] = $this->portalMapFactory->create($user, $table, $this->getPortal());
@@ -200,7 +188,7 @@ class AclManager extends InternalAclManager
      */
     public function checkReadOnlyAccount(User $user, string $scope): bool
     {
-        return $this->getLevel($user, $scope, Table::ACTION_READ) === Table::LEVEL_ACCOUNT;
+        return $this->getLevel($user, $scope, PortalTable::ACTION_READ) === PortalTable::LEVEL_ACCOUNT;
     }
 
     /**
@@ -208,7 +196,7 @@ class AclManager extends InternalAclManager
      */
     public function checkReadOnlyContact(User $user, string $scope): bool
     {
-        return $this->getLevel($user, $scope, Table::ACTION_READ)=== Table::LEVEL_CONTACT;
+        return $this->getLevel($user, $scope, PortalTable::ACTION_READ)=== PortalTable::LEVEL_CONTACT;
     }
 
     public function check(User $user, $subject, ?string $action = null): bool
@@ -220,7 +208,7 @@ class AclManager extends InternalAclManager
         return parent::check($user, $subject, $action);
     }
 
-    public function checkEntity(User $user, Entity $entity, string $action = Table::ACTION_READ): bool
+    public function checkEntity(User $user, Entity $entity, string $action = PortalTable::ACTION_READ): bool
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->internalAclManager->checkEntity($user, $entity, $action);
@@ -301,8 +289,8 @@ class AclManager extends InternalAclManager
     public function getScopeForbiddenAttributeList(
         User $user,
         string $scope,
-        string $action = Table::ACTION_READ,
-        string $thresholdLevel = Table::LEVEL_NO
+        string $action = PortalTable::ACTION_READ,
+        string $thresholdLevel = PortalTable::LEVEL_NO
     ): array {
 
         if ($this->checkUserIsNotPortal($user)) {
@@ -316,8 +304,8 @@ class AclManager extends InternalAclManager
     public function getScopeForbiddenFieldList(
         User $user,
         string $scope,
-        string $action = Table::ACTION_READ,
-        string $thresholdLevel = Table::LEVEL_NO
+        string $action = PortalTable::ACTION_READ,
+        string $thresholdLevel = PortalTable::LEVEL_NO
     ): array {
 
         if ($this->checkUserIsNotPortal($user)) {
@@ -334,7 +322,7 @@ class AclManager extends InternalAclManager
     }
 
     /**
-     * @deprecated Use `getPermissionLevel` instead.
+     * @deprecated As of v6.0. Use `getPermissionLevel` instead.
      */
     public function get(User $user, string $permission): string
     {
@@ -342,7 +330,7 @@ class AclManager extends InternalAclManager
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v7.0. Use `checkOwnershipOwn`.
      */
     public function checkIsOwner(User $user, Entity $entity): bool
     {
@@ -350,7 +338,7 @@ class AclManager extends InternalAclManager
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v7.0. Use `checkOwnershipTeam`.
      */
     public function checkInTeam(User $user, Entity $entity): bool
     {
@@ -358,7 +346,7 @@ class AclManager extends InternalAclManager
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v7.0. Use `checkOwnershipAccount`.
      */
     public function checkInAccount(User $user, Entity $entity): bool
     {
@@ -366,7 +354,7 @@ class AclManager extends InternalAclManager
     }
 
     /**
-     * @deprecated
+     * @deprecated As of v7.0. Use `checkOwnershipContact`.
      */
     public function checkIsOwnContact(User $user, Entity $entity): bool
     {

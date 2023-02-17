@@ -30,43 +30,34 @@
 namespace Espo\Core\Portal;
 
 use Espo\Entities\Portal;
+use Espo\Core\InjectableFactory;
 
-use Espo\Core\{
-    InjectableFactory,
-    Portal\AclManager,
-};
-
-use Espo\Core\Exceptions\Error;
+use LogicException;
 
 /**
  * Used when logged to CRM (not to portal) to provide an access checking ability for a specific portal.
- * E.g. check whether a portal user has an access to some record within a specific portal.
+ * E.g. check whether a portal user has access to some record within a specific portal.
  */
 class AclManagerContainer
 {
     /**
-     * @var array<string,AclManager>
+     * @var array<string, AclManager>
      */
     private $data = [];
 
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private InjectableFactory $injectableFactory)
+    {}
 
     public function get(Portal $portal): AclManager
     {
-        $id = $portal->id;
-
-        if (!$id) {
-            throw new Error("AclManagerContainer: portal should have ID.");
+        if (!$portal->hasId()) {
+            throw new LogicException("AclManagerContainer: portal should have ID.");
         }
+
+        $id = $portal->getId();
 
         if (!isset($this->data[$id])) {
             $aclManager = $this->injectableFactory->create(AclManager::class);
-
             $aclManager->setPortal($portal);
 
             $this->data[$id] = $aclManager;

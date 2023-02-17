@@ -42,13 +42,9 @@ use Espo\Entities\User;
 class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 {
     private const ATTR_CREATED_BY_ID = 'createdById';
-
     private const ATTR_ASSIGNED_USER_ID = 'assignedUserId';
-
     private const ATTR_ASSIGNED_TEAMS_IDS = 'teamsIds';
-
     private const FIELD_TEAMS = 'teams';
-
     private const FIELD_ASSIGNED_USERS = 'assignedUsers';
 
     public function checkOwn(User $user, Entity $entity): bool

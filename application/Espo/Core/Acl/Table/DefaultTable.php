@@ -31,16 +31,12 @@ namespace Espo\Core\Acl\Table;
 
 use Espo\Entities\User;
 
-use Espo\Core\{
-    Acl\Table,
-    Acl\Table\RoleListProvider,
-    Acl\Table\CacheKeyProvider,
-    Acl\ScopeData,
-    Acl\FieldData,
-    Utils\Config,
-    Utils\Metadata,
-    Utils\DataCache,
-};
+use Espo\Core\Acl\FieldData;
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\Acl\Table;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\Metadata;
 
 use stdClass;
 use RuntimeException;
@@ -54,7 +50,6 @@ class DefaultTable implements Table
     private const LEVEL_NOT_SET = 'not-set';
 
     protected string $type = 'acl';
-
     protected string $defaultAclType = 'recordAllTeamOwnNo';
 
     /**
@@ -111,30 +106,20 @@ class DefaultTable implements Table
      */
     private $valuePermissionList = [];
 
-    private RoleListProvider $roleListProvider;
-
-    protected User $user;
-
-    protected Metadata $metadata;
-
     public function __construct(
-        RoleListProvider $roleListProvider,
+        private RoleListProvider $roleListProvider,
         CacheKeyProvider $cacheKeyProvider,
-        User $user,
+        protected User $user,
         Config $config,
-        Metadata $metadata,
+        protected Metadata $metadata,
         DataCache $dataCache
     ) {
-        $this->roleListProvider = $roleListProvider;
 
         $this->data = (object) [
             'scopes' => (object) [],
             'fields' => (object) [],
             'permissions' => (object) [],
         ];
-
-        $this->user = $user;
-        $this->metadata = $metadata;
 
         if (!$this->user->isFetched()) {
             throw new RuntimeException('User must be fetched before ACL check.');

@@ -29,31 +29,23 @@
 
 namespace Espo\Core\Portal\Acl\Table;
 
-use Espo\Entities\{
-    User,
-    Portal,
-};
+use Espo\Entities\Portal;
+use Espo\Entities\User;
 
-use Espo\Core\{
-    InjectableFactory,
-    Acl\Table\CacheKeyProvider,
-    Portal\Acl\Table,
-    Portal\Acl\Table\CacheKeyProvider as PortalCacheKeyProvider,
-    Acl\Table\RoleListProvider,
-    Portal\Acl\Table\RoleListProvider as PortalRoleListProvider,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Acl\Table\CacheKeyProvider;
+use Espo\Core\Acl\Table\RoleListProvider;
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Portal\Acl\Table;
+use Espo\Core\Portal\Acl\Table\CacheKeyProvider as PortalCacheKeyProvider;
+use Espo\Core\Portal\Acl\Table\RoleListProvider as PortalRoleListProvider;
 
 class TableFactory
 {
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private InjectableFactory $injectableFactory)
+    {}
 
     /**
      * Create a table.

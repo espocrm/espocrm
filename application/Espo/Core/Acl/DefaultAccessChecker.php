@@ -30,16 +30,12 @@
 namespace Espo\Core\Acl;
 
 use Espo\Entities\User;
-
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    Acl\Table,
-    Acl\AccessChecker\ScopeCheckerData,
-    Acl\AccessChecker\ScopeChecker,
-    AclManager,
-    Utils\Config,
-};
+use Espo\Core\Acl\AccessChecker\ScopeChecker;
+use Espo\Core\Acl\AccessChecker\ScopeCheckerData;
+use Espo\Core\AclManager;
+use Espo\Core\Utils\Config;
 
 use DateTime;
 use Exception;
@@ -62,28 +58,15 @@ class DefaultAccessChecker implements
     AccessEntityStreamChecker
 {
     private const ATTR_CREATED_BY_ID = 'createdById';
-
     private const ATTR_CREATED_AT = 'createdAt';
-
     private const ATTR_ASSIGNED_USER_ID = 'assignedUserId';
-
     private const ALLOW_DELETE_OWN_CREATED_PERIOD = '24 hours';
 
-    private AclManager $aclManager;
-
-    private Config $config;
-
-    private ScopeChecker $scopeChecker;
-
     public function __construct(
-        AclManager $aclManager,
-        Config $config,
-        ScopeChecker $scopeChecker
-    ) {
-        $this->aclManager = $aclManager;
-        $this->config = $config;
-        $this->scopeChecker = $scopeChecker;
-    }
+        private AclManager $aclManager,
+        private Config $config,
+        private ScopeChecker $scopeChecker
+    ) {}
 
     private function checkEntity(User $user, Entity $entity, ScopeData $data, string $action): bool
     {
@@ -235,7 +218,7 @@ class DefaultAccessChecker implements
         try {
             $dt = new DateTime($value);
         }
-        catch (Exception $e) {
+        catch (Exception) {
             return false;
         }
 

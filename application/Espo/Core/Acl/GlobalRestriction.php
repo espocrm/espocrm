@@ -29,12 +29,10 @@
 
 namespace Espo\Core\Acl;
 
-use Espo\Core\{
-    Utils\Metadata,
-    Utils\DataCache,
-    Utils\FieldUtil,
-    Utils\Config,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\FieldUtil;
+use Espo\Core\Utils\Metadata;
 
 use stdClass;
 
@@ -46,21 +44,17 @@ class GlobalRestriction
 {
     /** Totally forbidden. */
     public const TYPE_FORBIDDEN = 'forbidden';
-
     /** Reading forbidden, writing allowed. */
     public const TYPE_INTERNAL = 'internal';
-
     /** Forbidden for non-admin users. */
     public const TYPE_ONLY_ADMIN = 'onlyAdmin';
-
     /** Read-only for all users. */
     public const TYPE_READ_ONLY = 'readOnly';
-
     /** Read-only for non-admin users. */
     public const TYPE_NON_ADMIN_READ_ONLY = 'nonAdminReadOnly';
 
     /**
-     * @var array<int,self::TYPE_*>
+     * @var array<int, self::TYPE_*>
      */
     private $fieldTypeList = [
         self::TYPE_FORBIDDEN,
@@ -71,7 +65,7 @@ class GlobalRestriction
     ];
 
     /**
-     * @var array<int,self::TYPE_*>
+     * @var array<int, self::TYPE_*>
      */
     private $linkTypeList = [
         self::TYPE_FORBIDDEN,
@@ -83,7 +77,7 @@ class GlobalRestriction
 
     /**
      * Types that should also be taken from entityDefs.
-     * @var array<int,self::TYPE_*>
+     * @var array<int, self::TYPE_*>
      */
     private array $entityDefsTypeList = [
         self::TYPE_READ_ONLY,
@@ -93,19 +87,12 @@ class GlobalRestriction
 
     private string $cacheKey = 'entityAcl';
 
-    private Metadata $metadata;
-    private DataCache $dataCache;
-    private FieldUtil $fieldUtil;
-
     public function __construct(
-        Metadata $metadata,
-        DataCache $dataCache,
-        FieldUtil $fieldUtil,
+        private Metadata $metadata,
+        private DataCache $dataCache,
+        private FieldUtil $fieldUtil,
         Config $config
     ) {
-        $this->metadata = $metadata;
-        $this->dataCache = $dataCache;
-        $this->fieldUtil = $fieldUtil;
 
         $useCache = $config->get('useCache');
 

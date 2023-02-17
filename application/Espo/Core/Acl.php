@@ -338,7 +338,7 @@ class Acl
      */
     public function checkIsOwner(Entity $entity): bool
     {
-        return $this->aclManager->checkIsOwner($this->user, $entity);
+        return $this->aclManager->checkOwnershipOwn($this->user, $entity);
     }
 
     /**
@@ -346,7 +346,7 @@ class Acl
      */
     public function checkInTeam(Entity $entity): bool
     {
-        return $this->aclManager->checkInTeam($this->user, $entity);
+        return $this->aclManager->checkOwnershipTeam($this->user, $entity);
     }
 
     /**

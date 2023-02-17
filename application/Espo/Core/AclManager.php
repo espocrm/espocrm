@@ -63,24 +63,28 @@ use InvalidArgumentException;
 
 /**
  * A central access point for access checking.
+ *
+ * @todo Refactor. Replace with an interface `Espo\Core\Acl\AclManager`.
+ * Keep `Espo\Core\AclManager` as an extending interface for bc, bind it to the service.
+ * Implementation in `Espo\Core\Acl\DefaultAclManager`.
+ * The same for `Portal\AclManager`.
  */
 class AclManager
 {
     protected const PERMISSION_ASSIGNMENT = 'assignment';
 
-    /** @var array<string,AccessChecker> */
+    /** @var array<string, AccessChecker> */
     private $accessCheckerHashMap = [];
-    /** @var array<string,OwnershipChecker> */
+    /** @var array<string, OwnershipChecker> */
     private $ownershipCheckerHashMap = [];
-    /** @var array<string,Table> */
+    /** @var array<string, Table> */
     protected $tableHashMap = [];
-    /** @var array<string,Map> */
+    /** @var array<string, Map> */
     protected $mapHashMap = [];
-
     /** @var class-string */
     protected $userAclClassName = Acl::class;
 
-    /** @var array<string,class-string<AccessChecker>> */
+    /** @var array<string, class-string<AccessChecker>> */
     private $entityActionInterfaceMap = [
         Table::ACTION_CREATE => AccessEntityCreateChecker::class,
         Table::ACTION_READ => AccessEntityReadChecker::class,
@@ -88,7 +92,7 @@ class AclManager
         Table::ACTION_DELETE => AccessEntityDeleteChecker::class,
         Table::ACTION_STREAM => AccessEntityStreamChecker::class,
     ];
-    /** @var array<string,class-string<AccessChecker>> */
+    /** @var array<string, class-string<AccessChecker>> */
     private $actionInterfaceMap = [
         Table::ACTION_CREATE => AccessCreateChecker::class,
         Table::ACTION_READ => AccessReadChecker::class,
@@ -101,33 +105,25 @@ class AclManager
     protected $accessCheckerFactory;
     /** @var OwnershipCheckerFactory|Portal\Acl\OwnershipChecker\OwnershipCheckerFactory */
     protected $ownershipCheckerFactory;
-    /** @var TableFactory */
+
+    /** @var TableFactory  */
     private $tableFactory;
-    /** @var MapFactory */
+    /** @var MapFactory  */
     private $mapFactory;
-    /** @var GlobalRestriction */
-    protected $globalRestriction;
-    /** @var OwnerUserFieldProvider  */
-    protected $ownerUserFieldProvider;
-    /** @var EntityManager  */
-    protected $entityManager;
 
     public function __construct(
         AccessCheckerFactory $accessCheckerFactory,
         OwnershipCheckerFactory $ownershipCheckerFactory,
         TableFactory $tableFactory,
         MapFactory $mapFactory,
-        GlobalRestriction $globalRestriction,
-        OwnerUserFieldProvider $ownerUserFieldProvider,
-        EntityManager $entityManager
+        protected GlobalRestriction $globalRestriction,
+        protected OwnerUserFieldProvider $ownerUserFieldProvider,
+        protected EntityManager $entityManager
     ) {
         $this->accessCheckerFactory = $accessCheckerFactory;
         $this->ownershipCheckerFactory = $ownershipCheckerFactory;
         $this->tableFactory = $tableFactory;
         $this->mapFactory = $mapFactory;
-        $this->globalRestriction = $globalRestriction;
-        $this->ownerUserFieldProvider = $ownerUserFieldProvider;
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -687,7 +683,7 @@ class AclManager
     /**
      * Get a restricted link list for a specific scope by a restriction type.
      *
-     * @param GlobalRestriction::TYPE_*|array<int,GlobalRestriction::TYPE_*> $type
+     * @param GlobalRestriction::TYPE_*|array<int, GlobalRestriction::TYPE_*> $type
      * @return string[]
      */
     public function getScopeRestrictedLinkList(string $scope, $type): array
@@ -720,7 +716,7 @@ class AclManager
     }
 
     /**
-     * @deprecated Use `checkOwnershipOwn`.
+     * @deprecated As of v7.0. Use `checkOwnershipOwn`.
      */
     public function checkIsOwner(User $user, Entity $entity): bool
     {
@@ -728,7 +724,7 @@ class AclManager
     }
 
     /**
-     * @deprecated Use `checkOwnershipTeam`.
+     * @deprecated As of v7.0. Use `checkOwnershipTeam`.
      */
     public function checkInTeam(User $user, Entity $entity): bool
     {

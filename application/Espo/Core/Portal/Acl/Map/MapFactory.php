@@ -29,33 +29,25 @@
 
 namespace Espo\Core\Portal\Acl\Map;
 
-use Espo\Entities\{
-    User,
-    Portal,
-};
+use Espo\Entities\Portal;
+use Espo\Entities\User;
 
-use Espo\Core\{
-    InjectableFactory,
-    Portal\Acl\Table as PortalTable,
-    Portal\Acl\Map\MetadataProvider as PortalMetadataProvider,
-    Portal\Acl\Map\CacheKeyProvider as PortalCacheKeyProvider,
-    Acl\Map\MetadataProvider,
-    Acl\Map\CacheKeyProvider,
-    Acl\Map\Map,
-    Acl\Table,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Acl\Map\CacheKeyProvider;
+use Espo\Core\Acl\Map\Map;
+use Espo\Core\Acl\Map\MetadataProvider;
+use Espo\Core\Acl\Table;
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Portal\Acl\Map\CacheKeyProvider as PortalCacheKeyProvider;
+use Espo\Core\Portal\Acl\Map\MetadataProvider as PortalMetadataProvider;
+use Espo\Core\Portal\Acl\Table as PortalTable;
 
 class MapFactory
 {
-    private $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private InjectableFactory $injectableFactory)
+    {}
 
     public function create(User $user, PortalTable $table, Portal $portal): Map
     {
