@@ -29,25 +29,25 @@
 
 namespace Espo\Core\Api;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
+use Slim\Psr7\Factory\ResponseFactory;
+use Espo\Core\Utils\Json;
+use stdClass;
 
-/**
- * A route action.
- */
-interface Action
+class ResponseComposer
 {
     /**
-     * Process.
+     * Compose a JSON response.
      *
-     * @param Request $request A request.
-     * @return Response A response. Use ResponseComposer for building.
-     * @throws BadRequest
-     * @throws Forbidden
-     * @throws NotFound
-     * @throws Error
+     * @param array<string|int, mixed>|stdClass|scalar|null $data A data to encode.
      */
-    public function process(Request $request): Response;
+    public static function json(mixed $data): Response
+    {
+        $psr7Response = (new ResponseFactory())->createResponse();
+
+        $response = new ResponseWrapper($psr7Response);
+        $response->writeBody(Json::encode($data));
+        $response->setHeader('Content-Type', 'application/json');
+
+        return $response;
+    }
 }

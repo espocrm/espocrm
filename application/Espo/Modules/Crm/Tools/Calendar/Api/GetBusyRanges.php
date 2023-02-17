@@ -32,9 +32,9 @@ namespace Espo\Modules\Crm\Tools\Calendar\Api;
 use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Field\DateTime;
-use Espo\Core\Utils\Json;
 use Espo\Modules\Crm\Tools\Calendar\Item as CalendarItem;
 use Espo\Modules\Crm\Tools\Calendar\Service;
 
@@ -47,7 +47,7 @@ class GetBusyRanges implements Action
 {
     public function __construct(private Service $calendarService) {}
 
-    public function process(Request $request, Response $response): void
+    public function process(Request $request): Response
     {
         $from = $request->getQueryParam('from');
         $to = $request->getQueryParam('to');
@@ -73,7 +73,7 @@ class GetBusyRanges implements Action
             $result->$userId = self::itemListToRaw($itemList);
         }
 
-        $response->writeBody(Json::encode($result));
+        return ResponseComposer::json($result);
     }
 
     /**

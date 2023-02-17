@@ -32,11 +32,11 @@ namespace Espo\Modules\Crm\Tools\Calendar\Api;
 use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Acl;
 use Espo\Core\Field\DateTime;
-use Espo\Core\Utils\Json;
 use Espo\Modules\Crm\Tools\Calendar\FetchParams;
 use Espo\Modules\Crm\Tools\Calendar\Item as CalendarItem;
 use Espo\Modules\Crm\Tools\Calendar\Service;
@@ -55,7 +55,7 @@ class GetTimeline implements Action
         private Acl $acl
     ) {}
 
-    public function process(Request $request, Response $response): void
+    public function process(Request $request): Response
     {
         if (!$this->acl->check('Calendar')) {
             throw new Forbidden();
@@ -102,7 +102,7 @@ class GetTimeline implements Action
             $result->$userId = self::itemListToRaw($itemList);
         }
 
-        $response->writeBody(Json::encode($result));
+        return ResponseComposer::json($result);
     }
 
     /**

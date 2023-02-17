@@ -32,11 +32,11 @@ namespace Espo\Modules\Crm\Tools\Calendar\Api;
 use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Acl;
 use Espo\Core\Field\DateTime;
-use Espo\Core\Utils\Json;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Tools\Calendar\FetchParams;
 use Espo\Modules\Crm\Tools\Calendar\Item as CalendarItem;
@@ -57,7 +57,7 @@ class GetCalendar implements Action
         private User $user
     ) {}
 
-    public function process(Request $request, Response $response): void
+    public function process(Request $request): Response
     {
         if (!$this->acl->check('Calendar')) {
             throw new Forbidden();
@@ -99,9 +99,7 @@ class GetCalendar implements Action
                 $this->calendarService->fetchForTeams($teamIdList, $fetchParams)
             );
 
-            $response->writeBody(Json::encode($raw));
-
-            return;
+            return ResponseComposer::json($raw);
         }
 
         if ($userIdList) {
@@ -111,9 +109,7 @@ class GetCalendar implements Action
                 $this->calendarService->fetchForUsers($userIdList, $fetchParams)
             );
 
-            $response->writeBody(Json::encode($raw));
-
-            return;
+            return ResponseComposer::json($raw);
         }
 
         if (!$userId) {
@@ -128,7 +124,7 @@ class GetCalendar implements Action
             $this->calendarService->fetch($userId, $fetchParams)
         );
 
-        $response->writeBody(Json::encode($raw));
+        return ResponseComposer::json($raw);
     }
 
     /**
