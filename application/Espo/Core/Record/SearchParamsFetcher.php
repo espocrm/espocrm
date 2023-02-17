@@ -31,7 +31,6 @@ namespace Espo\Core\Record;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-
 use Espo\Core\Utils\Config;
 use Espo\Core\Api\Request;
 use Espo\Core\Select\SearchParams;
@@ -44,16 +43,14 @@ class SearchParamsFetcher
 {
     private const MAX_SIZE_LIMIT = 200;
 
-    private Config $config;
-    private TextMetadataProvider $textMetadataProvider;
-
-    public function __construct(Config $config, TextMetadataProvider $textMetadataProvider)
-    {
-        $this->config = $config;
-        $this->textMetadataProvider = $textMetadataProvider;
-    }
+    public function __construct(
+        private Config $config,
+        private TextMetadataProvider $textMetadataProvider
+    ) {}
 
     /**
+     * Fetch search params from a request.
+     *
      * @throws BadRequest
      * @throws Forbidden
      */
@@ -65,7 +62,7 @@ class SearchParamsFetcher
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      * @throws BadRequest
      * @throws Forbidden
      */
@@ -81,7 +78,7 @@ class SearchParamsFetcher
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      * @throws BadRequest
      */
     private function fetchRawJsonSearchParams(Request $request): array
@@ -89,13 +86,13 @@ class SearchParamsFetcher
         try {
             return Json::decode($request->getQueryParam('searchParams') ?? '', true);
         }
-        catch (JsonException $e) {
+        catch (JsonException) {
             throw new BadRequest("Invalid search params JSON.");
         }
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function fetchRawMultipleParams(Request $request): array
     {
@@ -171,7 +168,7 @@ class SearchParamsFetcher
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @throws BadRequest
      * @throws Forbidden
      */
@@ -186,10 +183,10 @@ class SearchParamsFetcher
 
         if (
             $q !== null &&
-            strpos($q, '*') === false &&
-            strpos($q, '"') === false &&
-            strpos($q, '+') === false &&
-            strpos($q, '-') === false &&
+            !str_contains($q, '*') &&
+            !str_contains($q, '"') &&
+            !str_contains($q, '+') &&
+            !str_contains($q, '-') &&
             $this->hasFullTextSearch($request)
         ) {
             $params['q'] = $q . '*';
@@ -214,7 +211,7 @@ class SearchParamsFetcher
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @throws Forbidden
      */
     private function handleMaxSize(array &$params): void
@@ -228,9 +225,7 @@ class SearchParamsFetcher
         }
 
         if ($value > $limit) {
-            throw new Forbidden(
-                "Max size should not exceed " . $limit . ". Use offset and limit."
-            );
+            throw new Forbidden("Max size should not exceed {$limit}. Use offset and limit.");
         }
     }
 }

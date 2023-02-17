@@ -44,18 +44,11 @@ class Collection
     public const TOTAL_HAS_MORE = -1;
     public const TOTAL_HAS_NO_MORE = -2;
 
-    /** @var OrmCollection<TEntity> */
-    private OrmCollection $collection;
-    private ?int $total;
-
     /**
      * @param OrmCollection<TEntity> $collection
      */
-    public function __construct(OrmCollection $collection, ?int $total = null)
-    {
-        $this->collection = $collection;
-        $this->total = $total;
-    }
+    public function __construct(private OrmCollection $collection, private ?int $total = null)
+    {}
 
     /**
      * Get a total number of records in DB (that matches applied search parameters).
@@ -103,6 +96,8 @@ class Collection
     }
 
     /**
+     * Create.
+     *
      * @template CEntity of \Espo\ORM\Entity
      * @param OrmCollection<CEntity> $collection
      * @return self<CEntity>
@@ -113,6 +108,8 @@ class Collection
     }
 
     /**
+     * Create w/o count.
+     *
      * @template CEntity of \Espo\ORM\Entity
      * @param OrmCollection<CEntity> $collection
      * @return self<CEntity>

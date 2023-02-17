@@ -42,7 +42,6 @@ class UpdateParams
     public function withSkipDuplicateCheck(bool $skipDuplicateCheck = true): self
     {
         $obj = clone $this;
-
         $obj->skipDuplicateCheck = $skipDuplicateCheck;
 
         return $obj;
@@ -51,7 +50,6 @@ class UpdateParams
     public function withVersionNumber(?int $versionNumber): self
     {
         $obj = clone $this;
-
         $obj->versionNumber = $versionNumber;
 
         return $obj;

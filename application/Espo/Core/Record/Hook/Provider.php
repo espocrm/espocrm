@@ -37,19 +37,10 @@ use RuntimeException;
 
 class Provider
 {
-    private Metadata $metadata;
-
-    private InjectableFactory $injectableFactory;
-
-    /**
-     *
-     * @var array<string,object[]>
-     */
+    /** @var array<string, object[]> */
     private $map = [];
 
-    /**
-     * @var array<string,class-string>
-     */
+    /** @var array<string, class-string> */
     private $typeInterfaceMap = [
         Type::BEFORE_CREATE => CreateHook::class,
         Type::BEFORE_READ => ReadHook::class,
@@ -59,11 +50,10 @@ class Provider
         Type::BEFORE_UNLINK => UnlinkHook::class,
     ];
 
-    public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
-    {
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     /**
      * @return object[]

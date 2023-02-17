@@ -41,32 +41,15 @@ use stdClass;
  */
 class EntityDuplicator
 {
-    /**
-     * @var Defs
-     */
-    private $defs;
-
-    /**
-     * @var FieldDuplicatorFactory
-     */
-    private $fieldDuplicatorFactory;
-
-    /**
-     * @var FieldUtil
-     */
-    private $fieldUtil;
-
-    public function __construct(Defs $defs, FieldDuplicatorFactory $fieldDuplicatorFactory, FieldUtil $fieldUtil)
-    {
-        $this->defs = $defs;
-        $this->fieldDuplicatorFactory = $fieldDuplicatorFactory;
-        $this->fieldUtil = $fieldUtil;
-    }
+    public function __construct(
+        private Defs $defs,
+        private FieldDuplicatorFactory $fieldDuplicatorFactory,
+        private FieldUtil $fieldUtil
+    ) {}
 
     public function duplicate(Entity $entity): stdClass
     {
         $entityType = $entity->getEntityType();
-
         $valueMap = $entity->getValueMap();
 
         unset($valueMap->id);
@@ -83,7 +66,6 @@ class EntityDuplicator
     private function processField(Entity $entity, FieldDefs $fieldDefs, stdClass $valueMap): void
     {
         $entityType = $entity->getEntityType();
-
         $field = $fieldDefs->getName();
 
         if ($fieldDefs->getParam('duplicateIgnore')) {

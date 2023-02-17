@@ -29,19 +29,16 @@
 
 namespace Espo\Core\Record\Select;
 
+use Espo\Core\Select\Applier\AdditionalApplier;
 use Espo\Core\Utils\Metadata;
 
 class ApplierClassNameListProvider
 {
-    private Metadata $metadata;
-
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     /**
-     * @return class-string<\Espo\Core\Select\Applier\AdditionalApplier>[]
+     * @return class-string<AdditionalApplier>[]
      */
     public function get(string $entityType): array
     {

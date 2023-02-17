@@ -36,6 +36,7 @@ use Espo\Core\Acl;
 use Espo\Core\AclManager;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\Util as RepositoryUtil;
+
 use RuntimeException;
 
 /**
@@ -51,25 +52,13 @@ class ServiceFactory
         'CategoryTree' => self::RECORD_TREE_SERVICE_NAME,
     ];
 
-    private Factory $serviceFactory;
-    private Metadata $metadata;
-    private User $user;
-    private Acl $acl;
-    private AclManager $aclManager;
-
     public function __construct(
-        Factory $serviceFactory,
-        Metadata $metadata,
-        User $user,
-        Acl $acl,
-        AclManager $aclManager
-    ) {
-        $this->serviceFactory = $serviceFactory;
-        $this->metadata = $metadata;
-        $this->user = $user;
-        $this->acl = $acl;
-        $this->aclManager = $aclManager;
-    }
+        private Factory $serviceFactory,
+        private Metadata $metadata,
+        private User $user,
+        private Acl $acl,
+        private AclManager $aclManager
+    ) {}
 
     /**
      * Create a record service by an entity class name.

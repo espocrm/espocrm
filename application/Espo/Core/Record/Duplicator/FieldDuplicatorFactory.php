@@ -37,18 +37,11 @@ use RuntimeException;
 
 class FieldDuplicatorFactory
 {
-    private Defs $defs;
-
-    private Metadata $metadata;
-
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(Defs $defs, Metadata $metadata, InjectableFactory $injectableFactory)
-    {
-        $this->defs = $defs;
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(
+        private Defs $defs,
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     public function create(string $entityType, string $field): FieldDuplicator
     {

@@ -42,7 +42,7 @@ use Espo\ORM\Repository\Util as RepositoryUtil;
  */
 class ServiceContainer
 {
-    /** @var array<string,Service<Entity>> */
+    /** @var array<string, Service<Entity>> */
     private $data = [];
     private ServiceFactory $serviceFactory;
 

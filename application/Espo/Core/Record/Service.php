@@ -1730,8 +1730,7 @@ class Service implements Crud,
      * @return void
      */
     protected function beforeCreateEntity(Entity $entity, $data)
-    {
-    }
+    {}
 
     /**
      * @param TEntity $entity
@@ -1739,8 +1738,7 @@ class Service implements Crud,
      * @return void
      */
     protected function afterCreateEntity(Entity $entity, $data)
-    {
-    }
+    {}
 
     /**
      * @param TEntity $entity
@@ -1748,8 +1746,7 @@ class Service implements Crud,
      * @return void
      */
     protected function beforeUpdateEntity(Entity $entity, $data)
-    {
-    }
+    {}
 
     /**
      * @param TEntity $entity
@@ -1757,22 +1754,19 @@ class Service implements Crud,
      * @return void
      */
     protected function afterUpdateEntity(Entity $entity, $data)
-    {
-    }
+    {}
 
     /**
      * @param TEntity $entity
      * @return void
      */
     protected function beforeDeleteEntity(Entity $entity)
-    {
-    }
+    {}
 
     /**
      * @param TEntity $entity
      * @return void
      */
     protected function afterDeleteEntity(Entity $entity)
-    {
-    }
+    {}
 }
