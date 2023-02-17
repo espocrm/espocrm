@@ -528,6 +528,9 @@
         "relate": "{user} linked {relatedEntityType} {relatedEntity} with {entityType} {entity}",
         "relateThis": "{user} linked {relatedEntityType} {relatedEntity} with this {entityType}",
 
+        "unrelate": "{user} unlinked {relatedEntityType} {relatedEntity} from {entityType} {entity}",
+        "unrelateThis": "{user} unlinked {relatedEntityType} {relatedEntity} from this {entityType}",
+
         "emailReceivedFromThis": "Email received from {from}",
         "emailReceivedInitialFromThis": "Email received from {from}, this {entityType} created",
 

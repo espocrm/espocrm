@@ -625,10 +625,23 @@ class HookProcessor
         $audited = $this->metadata->get(['entityDefs', $entityType, 'links', $link, 'audited']);
         $auditedForeign = $this->metadata->get(['entityDefs', $foreignEntityType, 'links', $foreignLink, 'audited']);
 
-        /** @todo Add time period. */
-
         if ($audited) {
             $note1 = $this->entityManager
+                ->getRDBRepositoryByClass(Note::class)
+                ->getNew();
+
+            $note1->set([
+                'type' => Note::TYPE_UNRELATE,
+                'parentId' => $entity->getId(),
+                'parentType' => $entityType,
+                'relatedId' => $foreignEntity->getId(),
+                'relatedType' => $foreignEntityType,
+            ]);
+
+            $this->entityManager->saveEntity($note1);
+
+            /** @todo Add time period (a few minutes). Don't create 'unrelate' if before. */
+            /*$note1 = $this->entityManager
                 ->getRDBRepository(Note::ENTITY_TYPE)
                 ->where([
                     'type' => Note::TYPE_RELATE,
@@ -641,11 +654,26 @@ class HookProcessor
 
             if ($note1) {
                 $this->entityManager->removeEntity($note1);
-            }
+            }*/
         }
 
         if ($auditedForeign) {
             $note2 = $this->entityManager
+                ->getRDBRepositoryByClass(Note::class)
+                ->getNew();
+
+            $note2->set([
+                'type' => Note::TYPE_UNRELATE,
+                'parentId' => $foreignEntity->getId(),
+                'parentType' => $foreignEntityType,
+                'relatedId' => $entity->getId(),
+                'relatedType' => $entityType,
+            ]);
+
+            $this->entityManager->saveEntity($note2);
+
+            /** @todo Add time period (a few minutes). Don't create 'unrelate' if before. */
+            /*$note2 = $this->entityManager
                 ->getRDBRepository(Note::ENTITY_TYPE)
                 ->where([
                     'type' => Note::TYPE_RELATE,
@@ -658,7 +686,7 @@ class HookProcessor
 
             if ($note2) {
                 $this->entityManager->removeEntity($note2);
-            }
+            }*/
         }
     }
 }
