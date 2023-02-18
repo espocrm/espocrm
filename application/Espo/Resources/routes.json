@@ -276,10 +276,17 @@
     {
         "route": "/Attachment/chunk/:id",
         "method": "post",
-        "params": {
-            "controller": "Attachment",
-            "action": "chunk"
-        }
+        "actionClassName": "Espo\\Tools\\Attachment\\Api\\PostChunk"
+    },
+    {
+        "route": "/Attachment/fromImageUrl",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Attachment\\Api\\PostFromImageUrl"
+    },
+    {
+        "route": "/Attachment/copy/:id",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Attachment\\Api\\PostCopy"
     },
     {
         "route": "/Oidc/authorizationData",

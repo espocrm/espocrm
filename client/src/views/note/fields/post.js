@@ -197,7 +197,7 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
                 }
 
                 Espo.Ajax
-                    .postRequest('Attachment/action/getAttachmentFromImageUrl', {
+                    .postRequest('Attachment/fromImageUrl', {
                         url: url,
                         parentType: 'Note',
                         field: 'attachments',
@@ -250,8 +250,7 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
                 }
 
                 Espo.Ajax
-                    .postRequest('Attachment/action/getCopiedAttachment', {
-                        id: id,
+                    .postRequest('Attachment/copy/' + id, {
                         parentType: 'Note',
                         field: 'attachments',
                     })

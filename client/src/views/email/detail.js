@@ -598,8 +598,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
                 Espo.Ui.notify(' ... ');
 
-                this.ajaxPostRequest('Attachment/action/getCopiedAttachment', {
-                    id: id,
+                this.ajaxPostRequest('Attachment/copy/' + id, {
                     relatedType: 'Document',
                     field: 'file',
                 }).then((attachment) => {

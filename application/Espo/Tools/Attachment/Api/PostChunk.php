@@ -27,23 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Tools\Attachment\Api;
 
+use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
-use Espo\Core\Controllers\RecordBase;
-use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Tools\Attachment\UploadService;
 
-use stdClass;
-
-class Attachment extends RecordBase
+/**
+ * Uploads attachment chunks.
+ */
+class PostChunk implements Action
 {
-    public function getActionList(Request $request, Response $response): stdClass
+    public function __construct(private UploadService $uploadService) {}
+
+    public function process(Request $request): Response
     {
-        if (!$this->user->isAdmin()) {
-            throw new Forbidden();
+        $id = $request->getRouteParam('id');
+        $body = $request->getBodyContents();
+
+        if (!$id || !$body) {
+            throw new BadRequest();
         }
 
-        return parent::getActionList($request, $response);
+        $this->uploadService->uploadChunk($id, $body);
+
+        return ResponseComposer::json(true);
     }
 }
