@@ -34,6 +34,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 
+use Espo\Core\Utils\Config;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ResponseInterface as Psr7Response;
 use Psr\Http\Message\ServerRequestInterface;
@@ -49,7 +50,8 @@ class ActionHandler implements RequestHandlerInterface
 
     public function __construct(
         private Action $action,
-        private ProcessData $processData
+        private ProcessData $processData,
+        private Config $config
     ) {}
 
     /**
@@ -73,15 +75,27 @@ class ActionHandler implements RequestHandlerInterface
 
     private function prepareResponse(Response $response): Psr7Response
     {
-        $psr7Response = $response instanceof ResponseWrapper ?
-            $response->toPsr7() :
-            self::responseToPsr7($response);
-
-        if (!$psr7Response->getHeader('Content-Type')) {
-            $psr7Response = $psr7Response->withHeader('Content-Type', self::DEFAULT_CONTENT_TYPE);
+        if (!$response->hasHeader('Content-Type')) {
+            $response->setHeader('Content-Type', self::DEFAULT_CONTENT_TYPE);
         }
 
-        return $psr7Response;
+        if (!$response->hasHeader('Cache-Control')) {
+            $response->setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+        }
+
+        if (!$response->hasHeader('Expires')) {
+            $response->setHeader('Expires', '0');
+        }
+
+        if (!$response->hasHeader('Last-Modified')) {
+            $response->setHeader('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT');
+        }
+
+        $response->setHeader('X-App-Timestamp', (string) ($this->config->get('appTimestamp') ?? '0'));
+
+        return $response instanceof ResponseWrapper ?
+            $response->toPsr7() :
+            self::responseToPsr7($response);
     }
 
     private static function responseToPsr7(Response $response): Psr7Response

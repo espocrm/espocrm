@@ -271,10 +271,7 @@
     {
         "route": "/Attachment/file/:id",
         "method": "get",
-        "params": {
-            "controller": "Attachment",
-            "action": "file"
-        }
+        "actionClassName": "Espo\\Tools\\Attachment\\Api\\GetFile"
     },
     {
         "route": "/Attachment/chunk/:id",

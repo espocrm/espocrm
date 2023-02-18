@@ -27,33 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Api;
+namespace Espo\Tools\Attachment\Api;
 
-use Slim\Psr7\Factory\ResponseFactory;
-use Espo\Core\Utils\Json;
-use stdClass;
+use Espo\Core\Api\Action as ActionAlias;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Tools\Attachment\Service;
 
-class ResponseComposer
+/**
+ * Download a file.
+ */
+class GetFile implements ActionAlias
 {
-    /**
-     * Compose a JSON response.
-     *
-     * @param array<string|int, mixed>|stdClass|scalar|null $data A data to encode.
-     */
-    public static function json(mixed $data): Response
-    {
-        return self::empty()
-            ->writeBody(Json::encode($data))
-            ->setHeader('Content-Type', 'application/json');
-    }
+    public function __construct(private Service $service) {}
 
-    /**
-     * Compose an empty response.
-     */
-    public static function empty(): Response
+    public function process(Request $request): Response
     {
-        $psr7Response = (new ResponseFactory())->createResponse();
+        $id = $request->getRouteParam('id');
 
-        return new ResponseWrapper($psr7Response);
+        if (!$id) {
+            throw new BadRequest();
+        }
+
+        $fileData = $this->service->getFileData($id);
+
+        $response = ResponseComposer::empty()
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $fileData->getName() . '"')
+            ->setHeader('Content-Length', (string) $fileData->getSize())
+            ->setBody($fileData->getStream());
+
+        if ($fileData->getType()) {
+            $response->setHeader('Content-Type', $fileData->getType());
+        }
+
+        return $response;
     }
 }

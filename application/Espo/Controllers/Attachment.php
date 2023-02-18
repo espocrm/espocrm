@@ -125,31 +125,6 @@ class Attachment extends RecordBase
     /**
      * @throws BadRequest
      * @throws Forbidden
-     * @throws NotFound
-     */
-    public function getActionFile(Request $request, Response $response): void
-    {
-        $id = $request->getRouteParam('id');
-
-        if (!$id) {
-            throw new BadRequest();
-        }
-
-        $fileData = $this->getAttachmentService()->getFileData($id);
-
-        if ($fileData->getType()) {
-            $response->setHeader('Content-Type', $fileData->getType());
-        }
-
-        $response
-            ->setHeader('Content-Disposition', 'attachment; filename="' . $fileData->getName() . '"')
-            ->setHeader('Content-Length', (string) $fileData->getSize())
-            ->setBody($fileData->getStream());
-    }
-
-    /**
-     * @throws BadRequest
-     * @throws Forbidden
      * @throws Error
      * @throws NotFound
      */

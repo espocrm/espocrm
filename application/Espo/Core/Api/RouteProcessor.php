@@ -167,6 +167,7 @@ class RouteProcessor
         $handler = new ActionHandler(
             action: $action,
             processData: $processData,
+            config: $this->config,
         );
 
         $dispatcher = new MiddlewareDispatcher($handler);
