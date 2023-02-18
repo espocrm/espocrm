@@ -31,9 +31,6 @@ namespace Espo\Core\Api;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Authentication\AuthenticationFactory;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
@@ -50,7 +47,7 @@ use Exception;
 
 /**
  * Processes routes. Handles authentication. Obtains a controller name, action, body from a request.
- * Then passes them to the action processor or processes an action class.
+ * Then processes a controller action or an action.
  *
  * @internal
  */
