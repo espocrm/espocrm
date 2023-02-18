@@ -29,16 +29,15 @@
 
 namespace Espo\ORM;
 
-use Espo\Core\ORM\QueryComposer\QueryComposerFactory;
 use Espo\ORM\Defs\Defs;
 
-use Espo\ORM\Locker\MysqlLocker;
-use Espo\ORM\Mapper\BaseMapper;
 use Espo\ORM\QueryComposer\QueryComposer;
+use Espo\ORM\QueryComposer\QueryComposerFactory;
 use Espo\ORM\QueryComposer\QueryComposerWrapper;
 
 use Espo\ORM\Mapper\Mapper;
 use Espo\ORM\Mapper\MapperFactory;
+use Espo\ORM\Mapper\BaseMapper;
 
 use Espo\ORM\Repository\RepositoryFactory;
 use Espo\ORM\Repository\Repository;
@@ -47,6 +46,7 @@ use Espo\ORM\Repository\Util as RepositoryUtil;
 
 use Espo\ORM\Locker\Locker;
 use Espo\ORM\Locker\BaseLocker;
+use Espo\ORM\Locker\MysqlLocker;
 
 use Espo\ORM\Value\ValueAccessorFactory;
 use Espo\ORM\Value\ValueFactoryFactory;
@@ -63,20 +63,13 @@ use stdClass;
  */
 class EntityManager
 {
-    private EntityFactory $entityFactory;
     private CollectionFactory $collectionFactory;
-    private RepositoryFactory $repositoryFactory;
-    private QueryComposerFactory $queryComposerFactory;
-    private ?MapperFactory $mapperFactory = null;
-    private Metadata $metadata;
-    private DatabaseParams $databaseParams;
     private QueryComposer $queryComposer;
     private QueryExecutor $queryExecutor;
     private QueryBuilder $queryBuilder;
     private SqlExecutor $sqlExecutor;
     private TransactionManager $transactionManager;
     private Locker $locker;
-    private PDOProvider $pdoProvider;
 
     private const RDB_MAPPER_NAME = 'RDB';
 
@@ -90,25 +83,17 @@ class EntityManager
      * @throws RuntimeException
      */
     public function __construct(
-        DatabaseParams $databaseParams,
-        Metadata $metadata,
-        RepositoryFactory $repositoryFactory,
-        EntityFactory $entityFactory,
-        QueryComposerFactory $queryComposerFactory,
+        private DatabaseParams $databaseParams,
+        private Metadata $metadata,
+        private RepositoryFactory $repositoryFactory,
+        private EntityFactory $entityFactory,
+        private QueryComposerFactory $queryComposerFactory,
         ValueFactoryFactory $valueFactoryFactory,
         AttributeExtractorFactory $attributeExtractorFactory,
         EventDispatcher $eventDispatcher,
-        PDOProvider $pdoProvider,
-        ?MapperFactory $mapperFactory = null
+        private PDOProvider $pdoProvider,
+        private ?MapperFactory $mapperFactory = null
     ) {
-        $this->databaseParams = $databaseParams;
-        $this->metadata = $metadata;
-        $this->queryComposerFactory = $queryComposerFactory;
-        $this->entityFactory = $entityFactory;
-        $this->repositoryFactory = $repositoryFactory;
-        $this->pdoProvider = $pdoProvider;
-        $this->mapperFactory = $mapperFactory;
-
         if (!$this->databaseParams->getPlatform()) {
             throw new RuntimeException("No 'platform' parameter.");
         }
@@ -135,14 +120,14 @@ class EntityManager
 
     private function initQueryComposer(): void
     {
-        $platform = $this->databaseParams->getPlatform() ?? 'Dummy';
+        $platform = $this->databaseParams->getPlatform() ?? '';
 
         $this->queryComposer = $this->queryComposerFactory->create($platform);
     }
 
     private function initLocker(): void
     {
-        $platform = $this->databaseParams->getPlatform() ?? 'Dummy';
+        $platform = $this->databaseParams->getPlatform() ?? '';
 
         $className = BaseLocker::class;
 
@@ -150,37 +135,35 @@ class EntityManager
             $className = MysqlLocker::class;
         }
 
-        $locker = new $className($this->pdoProvider->get(), $this->queryComposer, $this->transactionManager);
-
-        $this->locker = $locker;
+        $this->locker = new $className($this->pdoProvider->get(), $this->queryComposer, $this->transactionManager);
     }
 
     /**
-     * @todo Remove in v6.0.
-     * @deprecated As of v6.0. Use `getQueryComposer`.
+     * Get the query composer.
      */
-    public function getQuery(): QueryComposer
-    {
-        return $this->queryComposer;
-    }
-
     public function getQueryComposer(): QueryComposerWrapper
     {
         return new QueryComposerWrapper($this->queryComposer);
     }
 
+    /**
+     * Get the transaction manager.
+     */
     public function getTransactionManager(): TransactionManager
     {
         return $this->transactionManager;
     }
 
+    /**
+     * Get the locker.
+     */
     public function getLocker(): Locker
     {
         return $this->locker;
     }
 
     /**
-     * Get a Mapper.
+     * Get a mapper.
      */
     public function getMapper(string $name = self::RDB_MAPPER_NAME): Mapper
     {
@@ -314,9 +297,7 @@ class EntityManager
     public function createEntity(string $entityType, $data = [], array $options = []): Entity
     {
         $entity = $this->getNewEntity($entityType);
-
         $entity->set($data);
-
         $this->saveEntity($entity, $options);
 
         return $entity;
@@ -419,28 +400,16 @@ class EntityManager
     }
 
     /**
-     * @deprecated As of v7.0. Use the Query Builder instead. Otherwise, code will be not portable.
+     * Get the entity factory.
      */
-    public function getPDO(): PDO
-    {
-        return $this->pdoProvider->get();
-    }
-
-    /**
-     * @deprecated As of v7.0. Use `getCollectionFactory`.
-     * @param array<string, mixed> $data
-     * @return EntityCollection<Entity>
-     */
-    public function createCollection(?string $entityType = null, array $data = []): EntityCollection
-    {
-        return $this->collectionFactory->create($entityType, $data);
-    }
-
     public function getEntityFactory(): EntityFactory
     {
         return $this->entityFactory;
     }
 
+    /**
+     * Get the collection factory.
+     */
     public function getCollectionFactory(): CollectionFactory
     {
         return $this->collectionFactory;
@@ -460,5 +429,32 @@ class EntityManager
     public function getSqlExecutor(): SqlExecutor
     {
         return $this->sqlExecutor;
+    }
+
+    /**
+     * @deprecated As of v7.0. Use `getCollectionFactory`.
+     * @param array<string, mixed> $data
+     * @return EntityCollection<Entity>
+     */
+    public function createCollection(?string $entityType = null, array $data = []): EntityCollection
+    {
+        return $this->collectionFactory->create($entityType, $data);
+    }
+
+    /**
+     * @deprecated As of v7.0. Use the Query Builder instead. Otherwise, code will be not portable.
+     */
+    public function getPDO(): PDO
+    {
+        return $this->pdoProvider->get();
+    }
+
+    /**
+     * @todo Remove in v8.0.
+     * @deprecated As of v6.0. Use `getQueryComposer`.
+     */
+    public function getQuery(): QueryComposer
+    {
+        return $this->queryComposer;
     }
 }
