@@ -43,22 +43,12 @@ use Espo\Core\Utils\Metadata;
 
 class Download implements EntryPoint
 {
-    protected FileStorageManager $fileStorageManager;
-    protected Acl $acl;
-    protected EntityManager $entityManager;
-    private Metadata $metadata;
-
     public function __construct(
-        FileStorageManager $fileStorageManager,
-        Acl $acl,
-        EntityManager $entityManager,
-        Metadata $metadata
-    ) {
-        $this->fileStorageManager = $fileStorageManager;
-        $this->acl = $acl;
-        $this->entityManager = $entityManager;
-        $this->metadata = $metadata;
-    }
+        protected FileStorageManager $fileStorageManager,
+        protected Acl $acl,
+        protected EntityManager $entityManager,
+        private Metadata $metadata
+    ) {}
 
     public function run(Request $request, Response $response): void
     {
@@ -85,7 +75,7 @@ class Download implements EntryPoint
 
         $stream = $this->fileStorageManager->getStream($attachment);
 
-        $outputFileName = str_replace("\"", "\\\"", $attachment->get('name'));
+        $outputFileName = str_replace("\"", "\\\"", $attachment->getName() ?? '');
 
         $type = $attachment->getType();
 
