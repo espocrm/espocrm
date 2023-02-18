@@ -39,22 +39,23 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 use Espo\Core\ApplicationUser;
 
-use Exception;
 use Psr\Http\Message\ResponseInterface as Psr7Response;
 use Psr\Http\Message\ServerRequestInterface as Psr7Request;
+
 use Slim\MiddlewareDispatcher;
-use Slim\Psr7\Factory\ResponseFactory;
+
 use Throwable;
 use LogicException;
+use Exception;
 
 /**
- * Processes requests. Handles authentication. Obtains a controller name, action, body from a request.
+ * Processes routes. Handles authentication. Obtains a controller name, action, body from a request.
  * Then passes them to the action processor or processes an action class.
+ *
+ * @internal
  */
-class RequestProcessor
+class RouteProcessor
 {
-    private const DEFAULT_CONTENT_TYPE = 'application/json';
-
     public function __construct(
         private AuthenticationFactory $authenticationFactory,
         private AuthBuilderFactory $authBuilderFactory,
@@ -98,9 +99,6 @@ class RequestProcessor
 
     /**
      * @throws BadRequest
-     * @throws Forbidden
-     * @throws Error
-     * @throws NotFound
      */
     private function processInternal(
         ProcessData $processData,
@@ -129,7 +127,7 @@ class RequestProcessor
 
         ob_start();
 
-        $response = $this->processAfterAuth($processData, $psrRequest, $request, $response);
+        $response = $this->processAfterAuth($processData, $psrRequest, $response);
 
         ob_clean();
 
@@ -138,22 +136,56 @@ class RequestProcessor
 
     /**
      * @throws BadRequest
-     * @throws Forbidden
-     * @throws Error
-     * @throws NotFound
      */
     private function processAfterAuth(
         ProcessData $processData,
         Psr7Request $request,
-        RequestWrapper $requestWrapped,
         ResponseWrapper $responseWrapped
     ): Psr7Response {
 
         $actionClassName = $processData->getRoute()->getActionClassName();
 
         if ($actionClassName) {
-            return $this->processAction($actionClassName, $requestWrapped);
+            return $this->processAction($actionClassName, $processData, $request);
         }
+
+        return $this->processControllerAction($processData, $request, $responseWrapped);
+    }
+
+    /**
+     * @param class-string<Action> $actionClassName
+     */
+    private function processAction(
+        string $actionClassName,
+        ProcessData $processData,
+        Psr7Request $request
+    ): Psr7Response {
+
+        /** @var Action $action */
+        $action = $this->injectableFactory->create($actionClassName);
+
+        $handler = new ActionHandler(
+            action: $action,
+            processData: $processData,
+        );
+
+        $dispatcher = new MiddlewareDispatcher($handler);
+
+        foreach ($this->middlewareProvider->getActionMiddlewareList($processData->getRoute()) as $middleware) {
+            $dispatcher->addMiddleware($middleware);
+        }
+
+        return $dispatcher->handle($request);
+    }
+
+    /**
+     * @throws BadRequest
+     */
+    private function processControllerAction(
+        ProcessData $processData,
+        Psr7Request $request,
+        ResponseWrapper $responseWrapped
+    ): Psr7Response {
 
         $controller = $this->getControllerName($processData);
         $action = $processData->getRouteParams()['action'] ?? null;
@@ -168,7 +200,7 @@ class RequestProcessor
             }
         }
 
-        $handler = new ActionHandler(
+        $handler = new ControllerActionHandler(
             controllerName: $controller,
             actionName: $action,
             processData: $processData,
@@ -182,53 +214,6 @@ class RequestProcessor
         $this->addControllerMiddlewares($dispatcher, $method, $controller, $action);
 
         return $dispatcher->handle($request);
-    }
-
-    /**
-     * @param class-string<Action> $actionClassName
-     * @throws Forbidden
-     * @throws BadRequest
-     * @throws NotFound
-     * @throws Error
-     */
-    private function processAction(
-        string $actionClassName,
-        RequestWrapper $requestWrapped
-    ): Psr7Response {
-
-        /** @var Action $action */
-        $action = $this->injectableFactory->create($actionClassName);
-
-        $response = $action->process($requestWrapped);
-
-        $psr7Response = $response instanceof ResponseWrapper ?
-            $response->toPsr7() :
-            self::responseToPsr7($response);
-
-        if (!$psr7Response->getHeader('Content-Type')) {
-            $psr7Response = $psr7Response->withHeader('Content-Type', self::DEFAULT_CONTENT_TYPE);
-        }
-
-        return $psr7Response;
-    }
-
-    private static function responseToPsr7(Response $response): Psr7Response
-    {
-        $psr7Response = (new ResponseFactory())->createResponse();
-
-        $statusCode = $response->getStatusCode();
-        $reason = $response->getReasonPhrase();
-        $body = $response->getBody();
-
-        $psr7Response = $psr7Response
-            ->withStatus($statusCode, $reason)
-            ->withBody($body);
-
-        foreach ($response->getHeaderNames() as $name) {
-            $psr7Response = $psr7Response->withHeader($name, $response->getHeaderAsArray($name));
-        }
-
-        return $psr7Response;
     }
 
     private function getControllerName(ProcessData $processData): string

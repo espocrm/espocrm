@@ -33,6 +33,9 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
 use Psr\Http\Server\MiddlewareInterface;
 
+/**
+ * @internal
+ */
 class MiddlewareProvider
 {
     public function __construct(
@@ -57,6 +60,19 @@ class MiddlewareProvider
 
         /** @var class-string<MiddlewareInterface>[] $classNameList */
         $classNameList = $this->metadata->get(['app', 'api', 'routeMiddlewareClassNameListMap', $key]) ?? [];
+
+        return $this->createFromClassNameList($classNameList);
+    }
+
+    /**
+     * @return MiddlewareInterface[]
+     */
+    public function getActionMiddlewareList(Route $route): array
+    {
+        $key = strtolower($route->getMethod()) . '_' . $route->getRoute();
+
+        /** @var class-string<MiddlewareInterface>[] $classNameList */
+        $classNameList = $this->metadata->get(['app', 'api', 'actionMiddlewareClassNameListMap', $key]) ?? [];
 
         return $this->createFromClassNameList($classNameList);
     }

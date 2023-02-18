@@ -45,7 +45,7 @@ use Psr\Http\Message\ServerRequestInterface as Psr7Request;
 class Starter
 {
     public function __construct(
-        private RequestProcessor $requestProcessor,
+        private RouteProcessor $routeProcessor,
         private RouteUtil $routeUtil,
         private RouteParamsFetcher $routeParamsFetcher,
         private MiddlewareProvider $middlewareProvider,
@@ -85,8 +85,7 @@ class Starter
         $slimRoute = $slim->map(
             [$item->getMethod()],
             $item->getAdjustedRoute(),
-            function (Psr7Request $request, Psr7Response $response, array $args) use ($slim, $item)
-            {
+            function (Psr7Request $request, Psr7Response $response, array $args) use ($slim, $item) {
                 $routeParams = $this->routeParamsFetcher->fetch($item, $args);
 
                 $processData = new ProcessData(
@@ -95,11 +94,7 @@ class Starter
                     routeParams: $routeParams,
                 );
 
-                return $this->requestProcessor->process(
-                    $processData,
-                    $request,
-                    $response
-                );
+                return $this->routeProcessor->process($processData, $request, $response);
             }
         );
 
