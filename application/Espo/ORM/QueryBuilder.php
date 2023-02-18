@@ -29,17 +29,14 @@
 
 namespace Espo\ORM;
 
-use Espo\ORM\{
-    Query\SelectBuilder,
-    Query\UpdateBuilder,
-    Query\DeleteBuilder,
-    Query\InsertBuilder,
-    Query\UnionBuilder,
-    Query\Query,
-    Query\Builder,
-    Query\Part\Expression,
-    Query\Part\Selection,
-};
+use Espo\ORM\Query\DeleteBuilder;
+use Espo\ORM\Query\InsertBuilder;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Selection;
+use Espo\ORM\Query\Query;
+use Espo\ORM\Query\SelectBuilder;
+use Espo\ORM\Query\UnionBuilder;
+use Espo\ORM\Query\UpdateBuilder;
 
 use ReflectionClass;
 use RuntimeException;
@@ -112,7 +109,7 @@ class QueryBuilder
      * @return SelectBuilder|UpdateBuilder|DeleteBuilder|InsertBuilder|UnionBuilder
      * @throws RuntimeException
      */
-    public function clone(Query $query): Builder
+    public function clone(Query $query): SelectBuilder|UpdateBuilder|DeleteBuilder|InsertBuilder|UnionBuilder
     {
         $class = new ReflectionClass($query);
 

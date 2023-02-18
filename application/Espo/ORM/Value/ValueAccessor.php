@@ -29,29 +29,15 @@
 
 namespace Espo\ORM\Value;
 
-use Espo\ORM\{
-    Entity,
-    Value\GeneralValueFactory,
-    Value\GeneralAttributeExtractor,
-};
+use Espo\ORM\Entity;
 
 class ValueAccessor
 {
-    private $entity;
-
-    private $valueFactory;
-
-    private $extractor;
-
     public function __construct(
-        Entity $entity,
-        GeneralValueFactory $valueFactory,
-        GeneralAttributeExtractor $extractor
-    ) {
-        $this->entity = $entity;
-        $this->valueFactory = $valueFactory;
-        $this->extractor = $extractor;
-    }
+        private Entity $entity,
+        private GeneralValueFactory $valueFactory,
+        private GeneralAttributeExtractor $extractor
+    ) {}
 
     /**
      * Get a field value object.

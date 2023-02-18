@@ -36,7 +36,7 @@ use stdClass;
  * A collection of entities.
  *
  * @template TEntity of Entity
- * @extends Traversable<int,TEntity>
+ * @extends Traversable<int, TEntity>
  */
 interface Collection extends Traversable
 {

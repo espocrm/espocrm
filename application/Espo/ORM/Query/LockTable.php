@@ -44,7 +44,7 @@ class LockTable implements Query
     public const MODE_EXCLUSIVE = 'EXCLUSIVE';
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function validateRawParams(array $params): void
     {

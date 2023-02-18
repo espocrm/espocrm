@@ -42,7 +42,6 @@ use RuntimeException;
  */
 class MysqlLocker implements Locker
 {
-    private PDO $pdo;
     private MysqlQueryComposer $queryComposer;
     /** @phpstan-ignore-next-line */
     private TransactionManager $transactionManager;
@@ -50,17 +49,17 @@ class MysqlLocker implements Locker
     private bool $isLocked = false;
 
     public function __construct(
-        PDO $pdo,
+        private PDO $pdo,
         QueryComposer $queryComposer,
         TransactionManager $transactionManager
     ) {
+        $this->transactionManager = $transactionManager;
+
         if (!$queryComposer instanceof MysqlQueryComposer) {
             throw new RuntimeException();
         }
 
-        $this->pdo = $pdo;
         $this->queryComposer = $queryComposer;
-        $this->transactionManager = $transactionManager;
     }
 
     /**

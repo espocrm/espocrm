@@ -49,7 +49,7 @@ trait SelectingBuilderTrait
      * * `where(array $clause)`
      * * `where(string $key, string $value)`
      *
-     * @param WhereItem|array<mixed, mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<string|int, mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Omitted if the first argument is not string.
      */
     public function where($clause, $value = null): self
@@ -60,7 +60,7 @@ trait SelectingBuilderTrait
     }
 
     /**
-     * @param WhereItem|array<mixed, mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<string|int, mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Omitted if the first argument is not string.
      */
     private function applyWhereClause(string $type, $clause, $value): void
@@ -159,7 +159,7 @@ trait SelectingBuilderTrait
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param ?string $alias An alias.
-     * @param WhereItem|array<mixed, mixed>|null $conditions Join conditions.
+     * @param WhereItem|array<string|int, mixed>|null $conditions Join conditions.
      */
     public function join($target, ?string $alias = null, $conditions = null): self
     {
@@ -172,7 +172,7 @@ trait SelectingBuilderTrait
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param ?string $alias An alias.
-     * @param WhereItem|array<mixed, mixed>|null $conditions Join conditions.
+     * @param WhereItem|array<string|int, mixed>|null $conditions Join conditions.
      */
     public function leftJoin($target, ?string $alias = null, $conditions = null): self
     {
@@ -302,7 +302,7 @@ trait SelectingBuilderTrait
 
     /**
      * @param array<Expression|mixed[]> $itemList
-     * @return array<array{0:string,1?:string}|string>
+     * @return array<array{0: string, 1?: string}|string>
      */
     private function normalizeExpressionItemArray(array $itemList): array
     {
@@ -316,7 +316,7 @@ trait SelectingBuilderTrait
             }
 
             if (!is_array($item) || !count($item) || !$item[0] instanceof Expression) {
-                /** @var array{0:string,1?:string} $item */
+                /** @var array{0:string, 1?:string} $item */
                 $resultList[] = $item;
 
                 continue;

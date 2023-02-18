@@ -66,7 +66,7 @@ class Delete implements Query
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     private function validateRawParams(array $params): void
     {

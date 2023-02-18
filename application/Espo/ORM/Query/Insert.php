@@ -41,7 +41,7 @@ class Insert implements Query
     use BaseTrait;
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     private function validateRawParams(array $params): void
     {

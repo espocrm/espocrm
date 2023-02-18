@@ -35,29 +35,16 @@ use Espo\ORM\EventDispatcher;
 class ValueAccessorFactory
 {
     private ?GeneralValueFactory $generalValueFactory = null;
-
     private ?GeneralAttributeExtractor $generalAttributeExtractor = null;
-
-    private ValueFactoryFactory $valueFactoryFactory;
-
-    /**
-     * @var AttributeExtractorFactory<object>
-     */
-    private AttributeExtractorFactory $attributeExtractorFactory;
-
-    private EventDispatcher $eventDispatcher;
 
     /**
      * @param AttributeExtractorFactory<object> $attributeExtractorFactory
      */
     public function __construct(
-        ValueFactoryFactory $valueFactoryFactory,
-        AttributeExtractorFactory $attributeExtractorFactory,
-        EventDispatcher $eventDispatcher
+        private ValueFactoryFactory $valueFactoryFactory,
+        private AttributeExtractorFactory $attributeExtractorFactory,
+        private EventDispatcher $eventDispatcher
     ) {
-        $this->valueFactoryFactory = $valueFactoryFactory;
-        $this->attributeExtractorFactory = $attributeExtractorFactory;
-        $this->eventDispatcher = $eventDispatcher;
 
         $this->subscribeToMetadataUpdate();
     }

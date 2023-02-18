@@ -36,12 +36,8 @@ use RuntimeException;
 
 class Helper
 {
-    private Metadata $metadata;
-
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     /**
      * @return array{

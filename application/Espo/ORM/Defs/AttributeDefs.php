@@ -34,19 +34,15 @@ namespace Espo\ORM\Defs;
  */
 class AttributeDefs
 {
-    /**
-     * @var array<string,mixed>
-     */
+    /** @var array<string, mixed> */
     private array $data;
-
     private string $name;
 
     private function __construct()
-    {
-    }
+    {}
 
     /**
-     * @param array<string,mixed> $raw
+     * @param array<string, mixed> $raw
      */
     public static function fromRaw(array $raw, string $name): self
     {

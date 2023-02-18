@@ -32,14 +32,14 @@ namespace Espo\ORM\Query;
 trait BaseTrait
 {
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     private $params = [];
 
     /**
      * Get parameters in RAW format.
      *
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getRaw(): array
     {
@@ -49,7 +49,7 @@ trait BaseTrait
     /**
      * Create from RAW params.
      *
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     public static function fromRaw(array $params): self
     {
@@ -63,9 +63,8 @@ trait BaseTrait
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     private function validateRawParams(array $params): void
-    {
-    }
+    {}
 }

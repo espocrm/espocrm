@@ -59,35 +59,16 @@ class BaseMapper implements RDBMapper
 {
     protected const ATTRIBUTE_DELETED = 'deleted';
 
-    protected PDO $pdo;
-
-    protected EntityFactory $entityFactory;
-
-    protected CollectionFactory $collectionFactory;
-
-    protected QueryComposer $queryComposer;
-
-    protected Metadata $metadata;
-
-    protected SqlExecutor $sqlExecutor;
-
     protected Helper $helper;
 
     public function __construct(
-        PDO $pdo,
-        EntityFactory $entityFactory,
-        CollectionFactory $collectionFactory,
-        QueryComposer $queryComposer,
-        Metadata $metadata,
-        SqlExecutor $sqlExecutor
+        protected PDO $pdo,
+        protected EntityFactory $entityFactory,
+        protected CollectionFactory $collectionFactory,
+        protected QueryComposer $queryComposer,
+        protected Metadata $metadata,
+        protected SqlExecutor $sqlExecutor
     ) {
-        $this->pdo = $pdo;
-        $this->queryComposer = $queryComposer;
-        $this->entityFactory = $entityFactory;
-        $this->collectionFactory = $collectionFactory;
-        $this->metadata = $metadata;
-        $this->sqlExecutor = $sqlExecutor;
-
         $this->helper = new Helper($metadata);
     }
 
@@ -295,7 +276,6 @@ class BaseMapper implements RDBMapper
         }
 
         $entityType = $entity->getEntityType();
-
         $relType = $entity->getRelationType($relationName);
 
         $relEntityType = $this->getRelationParam($entity, $relationName, 'entity');
@@ -311,8 +291,7 @@ class BaseMapper implements RDBMapper
         if ($relType !== Entity::BELONGS_TO_PARENT) {
             if (!$relEntityType) {
                 throw new LogicException(
-                    "Missing 'entity' in definition for relationship '{$relationName}' in {entityType} entity."
-                );
+                    "Missing 'entity' in definition for relationship '{$relationName}' in {entityType} entity.");
             }
 
             $relEntity = $this->entityFactory->create($relEntityType);
@@ -1326,7 +1305,7 @@ class BaseMapper implements RDBMapper
         $update = null;
 
         if ($onDuplicateUpdateAttributeList !== null && count($onDuplicateUpdateAttributeList)) {
-            $update = $onDuplicateSetMap = $this->getInsertOnDuplicateSetMap($entity, $onDuplicateUpdateAttributeList);
+            $update = $this->getInsertOnDuplicateSetMap($entity, $onDuplicateUpdateAttributeList);
         }
 
         $sql = $this->queryComposer->composeInsert(
@@ -1660,8 +1639,8 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * @param array<string,mixed>|null $conditions
-     * @return array{string,string,array<mixed,mixed>}
+     * @param array<string, mixed>|null $conditions
+     * @return array{string, string, array<string|int, mixed>}
      */
     protected function getManyManyJoin(Entity $entity, string $relationName, ?array $conditions = null): array
     {
@@ -1708,7 +1687,7 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * @return array<array{string,string}>
+     * @return array<array{string, string}>
      */
     protected function getManyManyAdditionalSelect(Entity $entity, string $relationName): array
     {

@@ -35,17 +35,11 @@ use RuntimeException;
 
 class GeneralValueFactory
 {
-    private ValueFactoryFactory $valueFactoryFactory;
-
-    /**
-     * @var array<string,?ValueFactory>
-     */
+    /** @var array<string,?ValueFactory> */
     private array $factoryCache = [];
 
-    public function __construct(ValueFactoryFactory $valueFactoryFactory)
-    {
-        $this->valueFactoryFactory = $valueFactoryFactory;
-    }
+    public function __construct(private ValueFactoryFactory $valueFactoryFactory)
+    {}
 
     /**
      * Whether a field value object can be created from an entity.

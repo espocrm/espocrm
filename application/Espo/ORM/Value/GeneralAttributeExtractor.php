@@ -33,13 +33,11 @@ use stdClass;
 
 class GeneralAttributeExtractor
 {
-    /**
-     * @var AttributeExtractorFactory<object>
-     */
+    /** @var AttributeExtractorFactory<object> */
     private AttributeExtractorFactory $factory;
 
     /**
-     * @var array<string,AttributeExtractor<object>>
+     * @var array<string, AttributeExtractor<object>>
      */
     private $cache = [];
 
