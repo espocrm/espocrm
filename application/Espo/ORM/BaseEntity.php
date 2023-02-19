@@ -32,21 +32,15 @@ namespace Espo\ORM;
 use Espo\ORM\Value\ValueAccessorFactory;
 use Espo\ORM\Value\ValueAccessor;
 
-use const E_USER_DEPRECATED;
-
 use stdClass;
 use InvalidArgumentException;
 use RuntimeException;
+use JsonException;
+
+use const E_USER_DEPRECATED;
 
 class BaseEntity implements Entity
 {
-    /**
-     * @deprecated As of v7.0. Use `getId`. To be changed to protected.
-     * @todo Change to protected in v8.0.
-     * @var ?string
-     */
-    public $id = null;
-
     /** @var string */
     protected $entityType;
 
@@ -54,6 +48,16 @@ class BaseEntity implements Entity
     private bool $isSaved = false;
     private bool $isFetched = false;
     private bool $isBeingSaved = false;
+
+    protected ?EntityManager $entityManager;
+    private ?ValueAccessor $valueAccessor = null;
+
+    /** @var array<string, bool> */
+    private array $writtenMap = [];
+    /** @var array<string, array<string, mixed>> */
+    private array $attributes = [];
+    /** @var array<string, mixed> */
+    private array $fetchedValuesContainer = [];
 
     /**
      * @todo Make private, rename to `attributes` in v8.0. .
@@ -63,11 +67,6 @@ class BaseEntity implements Entity
     public array $fields = [];
 
     /**
-     * @var array<string, array<string, mixed>>
-     */
-    private array $attributes = [];
-
-    /**
      * @todo Make private in v8.0.
      * @deprecated As of v6.0. Use getRelationList, getRelationParam, ORM\Defs.
      * @var array<string, array<string, mixed>>
@@ -75,28 +74,19 @@ class BaseEntity implements Entity
     protected array $relations = [];
 
     /**
-     * An attribute-value map.
-     *
      * @deprecated As of v7.0. `setInContainer`, `hasInContainer`, `getFromContainer`.
      * @todo Make private in v8.0.
      * @var array<string, mixed>
      */
     protected array $valuesContainer = [];
 
+
     /**
-     * An attribute-value map of values fetched from DB (before changed).
-     *
-     * @deprecated As of v7.0. `getFromFetchedContainer`, `hasInFetchedContainer`.
-     * @todo Make private.
-     * @var array<string,mixed>
+     * @deprecated As of v7.0. Use `getId`. To be changed to protected.
+     * @todo Change to protected in v8.0.
+     * @var ?string
      */
-    private array $fetchedValuesContainer = [];
-
-    protected ?EntityManager $entityManager;
-    private ?ValueAccessor $valueAccessor = null;
-
-    /** @var array<string, bool> */
-    private array $writtenMap = [];
+    public $id = null;
 
     /**
      * @param array{
@@ -112,7 +102,6 @@ class BaseEntity implements Entity
         ?ValueAccessorFactory $valueAccessorFactory = null
     ) {
         $this->entityType = $entityType;
-
         $this->entityManager = $entityManager;
 
         $this->attributes = $defs['attributes'] ?? $defs['fields'] ?? $this->attributes;
@@ -164,16 +153,7 @@ class BaseEntity implements Entity
         $this->valuesContainer = [];
     }
 
-    /**
-     * @deprecated As of v7.0. Use `setInContainer` method.
-     *
-     * @param string $attribute
-     * @param mixed $value
-     */
-    protected function setValue($attribute, $value): void
-    {
-        $this->setInContainer($attribute, $value);
-    }
+
 
     /**
      * Set an attribute value or multiple attribute values.
@@ -182,7 +162,7 @@ class BaseEntity implements Entity
      * * `set(string $attribute, mixed $value)`
      * * `set(array|object $valueMap)`
      *
-     * @param string|stdClass|array<string,mixed> $attribute
+     * @param string|stdClass|array<string, mixed> $attribute
      * @param mixed $value
      */
     public function set($attribute, $value = null): void
@@ -439,37 +419,7 @@ class BaseEntity implements Entity
         $this->valueAccessor->set($field, $value);
     }
 
-    /**
-     * @deprecated As of v7.0. Use set instead.
-     * @todo Make protected.
-     * @param array<string,mixed> $data
-     */
-    public function populateFromArray(array $data, bool $onlyAccessible = true, bool $reset = false): void
-    {
-        if ($reset) {
-            $this->reset();
-        }
 
-        foreach ($this->getAttributeList() as $attribute) {
-            if (!array_key_exists($attribute, $data)) {
-                continue;
-            }
-
-            if ($attribute == 'id') {
-                $this->id = $data[$attribute];
-
-                continue;
-            }
-
-            if ($onlyAccessible && $this->getAttributeParam($attribute, 'notAccessible')) {
-                continue;
-            }
-
-            $value = $data[$attribute];
-
-            $this->populateFromArrayItem($attribute, $value);
-        }
-    }
 
     /**
      * @param mixed $value
@@ -494,7 +444,7 @@ class BaseEntity implements Entity
     /**
      * @param mixed $value
      * @return mixed
-     * @throws \JsonException
+     * @throws JsonException
      */
     protected function prepareAttributeValue(string $attribute, $value)
     {
@@ -535,7 +485,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @param MIXED $value
+     * @param mixed $value
      * @return mixed[]|null
      */
     private function prepareArrayAttributeValue($value): ?array
@@ -559,7 +509,7 @@ class BaseEntity implements Entity
 
     /**
      * @param mixed $value
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function prepareObjectAttributeValue($value): ?stdClass
     {
@@ -1085,14 +1035,7 @@ class BaseEntity implements Entity
         }
     }
 
-    /**
-     * @deprecated As of v6.0. Access `entityManager` property.
-     */
-    protected function getEntityManager(): EntityManager
-    {
-        /** @var EntityManager */
-        return $this->entityManager;
-    }
+
 
     /**
      * Clone an array value.
@@ -1179,5 +1122,57 @@ class BaseEntity implements Entity
         }
 
         return $copy;
+    }
+
+    /**
+     * @deprecated As of v7.0. Use `set` method instead.
+     * @todo Make protected.
+     * @param array<string, mixed> $data
+     */
+    public function populateFromArray(array $data, bool $onlyAccessible = true, bool $reset = false): void
+    {
+        if ($reset) {
+            $this->reset();
+        }
+
+        foreach ($this->getAttributeList() as $attribute) {
+            if (!array_key_exists($attribute, $data)) {
+                continue;
+            }
+
+            if ($attribute == 'id') {
+                $this->id = $data[$attribute];
+
+                continue;
+            }
+
+            if ($onlyAccessible && $this->getAttributeParam($attribute, 'notAccessible')) {
+                continue;
+            }
+
+            $value = $data[$attribute];
+
+            $this->populateFromArrayItem($attribute, $value);
+        }
+    }
+
+    /**
+     * @deprecated As of v7.0. Use `setInContainer` method.
+     *
+     * @param string $attribute
+     * @param mixed $value
+     */
+    protected function setValue($attribute, $value): void
+    {
+        $this->setInContainer($attribute, $value);
+    }
+
+    /**
+     * @deprecated As of v6.0. Access `entityManager` property.
+     */
+    protected function getEntityManager(): EntityManager
+    {
+        /** @var EntityManager */
+        return $this->entityManager;
     }
 }
