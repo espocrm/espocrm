@@ -27,61 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Tools\App\Api;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Authentication\Authentication;
+use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Api\ResponseComposer;
 use Espo\Core\InjectableFactory;
-
 use Espo\Tools\App\AppService as Service;
 
-use stdClass;
-
-class App
+/**
+ * Gets user data.
+ */
+class GetUser implements Action
 {
-    private InjectableFactory $injectableFactory;
+    public function __construct(private InjectableFactory $injectableFactory) {}
 
-    public function __construct(
-        InjectableFactory $injectableFactory
-    ) {
-        $this->injectableFactory = $injectableFactory;
-    }
-
-    public function getActionUser(): stdClass
+    public function process(Request $request): Response
     {
-        return (object) $this->getService()->getUserData();
-    }
+        $data = $this->injectableFactory
+            ->create(Service::class)
+            ->getUserData();
 
-    /**
-     * @throws BadRequest
-     * @throws Forbidden
-     */
-    public function postActionDestroyAuthToken(Request $request, Response $response): bool
-    {
-        $data = $request->getParsedBody();
-
-        if (empty($data->token)) {
-            throw new BadRequest();
-        }
-
-        $auth = $this->injectableFactory->create(Authentication::class);
-
-        try {
-            $auth->destroyAuthToken($data->token, $request, $response);
-
-            return true;
-        }
-        catch (NotFound) {
-            return false;
-        }
-    }
-
-    private function getService(): Service
-    {
-        return $this->injectableFactory->create(Service::class);
+        return ResponseComposer::json($data);
     }
 }

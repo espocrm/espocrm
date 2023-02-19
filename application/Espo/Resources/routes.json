@@ -10,10 +10,12 @@
     {
         "route": "/App/user",
         "method": "get",
-        "params": {
-            "controller": "App",
-            "action": "user"
-        }
+        "actionClassName": "Espo\\Tools\\App\\Api\\GetUser"
+    },
+    {
+        "route": "/App/destroyAuthToken",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\App\\Api\\PostDestroyAuthToken"
     },
     {
         "route": "/Metadata",

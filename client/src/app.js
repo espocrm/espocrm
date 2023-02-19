@@ -947,7 +947,7 @@ function (
                 if (arr.length > 1) {
                     logoutWait = this.appParams.logoutWait || false;
 
-                    Ajax.postRequest('App/action/destroyAuthToken', {token: arr[1]}, {fullResponse: true})
+                    Ajax.postRequest('App/destroyAuthToken', {token: arr[1]}, {fullResponse: true})
                         .then(xhr => {
                             let redirectUrl = xhr.getResponseHeader('X-Logout-Redirect-Url');
 
