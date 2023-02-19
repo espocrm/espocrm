@@ -261,12 +261,14 @@
         }
     },
     {
+        "route": "/Kanban/order",
+        "method": "put",
+        "actionClassName": "Espo\\Tools\\Kanban\\Api\\PutOrder"
+    },
+    {
         "route": "/Kanban/:entityType",
         "method": "get",
-        "params": {
-            "controller": "Kanban",
-            "action": "getData"
-        }
+        "actionClassName": "Espo\\Tools\\Kanban\\Api\\GetData"
     },
     {
         "route": "/Attachment/file/:id",

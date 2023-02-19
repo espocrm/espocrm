@@ -27,68 +27,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Tools\Kanban\Api;
 
-use Espo\Core\{
-    Api\Request,
-    Exceptions\BadRequest,
-    Record\SearchParamsFetcher,
-};
-
+use Espo\Core\Api\Action as ActionAlias;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Record\SearchParamsFetcher;
 use Espo\Tools\Kanban\KanbanService;
 
-use stdClass;
-
-class Kanban
+class GetData implements ActionAlias
 {
-    private $service;
+    public function __construct(
+        private KanbanService $service,
+        private SearchParamsFetcher $searchParamsFetcher
+    ) {}
 
-    private $searchParamsFetcher;
-
-    public function __construct(KanbanService $service, SearchParamsFetcher $searchParamsFetcher)
+    public function process(Request $request): Response
     {
-        $this->service = $service;
-        $this->searchParamsFetcher = $searchParamsFetcher;
-    }
-
-    public function getActionGetData(Request $request): stdClass
-    {
-        /** @var string $entityType */
         $entityType = $request->getRouteParam('entityType');
+
+        if (!$entityType) {
+            throw new BadRequest();
+        }
 
         $searchParams = $this->searchParamsFetcher->fetch($request);
 
         $result = $this->service->getData($entityType, $searchParams);
 
-        return (object) [
+        return ResponseComposer::json([
             'total' => $result->getTotal(),
             'list' => $result->getCollection()->getValueMapList(),
             'additionalData' => $result->getData(),
-        ];
-    }
-
-    public function postActionStoreOrder(Request $request): bool
-    {
-        $data = $request->getParsedBody();
-
-        $entityType = $data->entityType ?? null;
-        $group = $data->group ?? null;
-        $ids = $data->ids ?? null;
-
-        if (empty($entityType) || !is_string($entityType)) {
-            throw new BadRequest();
-        }
-
-        if (empty($group) || !is_string($group)) {
-            throw new BadRequest();
-        }
-
-        if (!is_array($ids)) {
-            throw new BadRequest();
-        }
-
-        $this->service->order($entityType, $group, $ids);
-
-        return true;
+        ]);
     }
 }

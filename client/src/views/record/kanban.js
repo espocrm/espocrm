@@ -567,7 +567,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         storeGroupOrder: function (group) {
-            Espo.Ajax.postRequest('Kanban/action/storeOrder', {
+            Espo.Ajax.putRequest('Kanban/order', {
                 entityType: this.entityType,
                 group: group,
                 ids: this.getGroupOrderFromDom(group),

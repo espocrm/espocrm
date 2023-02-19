@@ -38,7 +38,6 @@ use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
-use ArrayAccess;
 
 class Kanban
 {
@@ -52,25 +51,13 @@ class Kanban
     private ?string $userId = null;
     private int $maxOrderNumber = self::DEFAULT_MAX_ORDER_NUMBER;
 
-    private $metadata;
-    private $selectBuilderFactory;
-    private $entityManager;
-    private $listLoadProcessor;
-    private $recordServiceContainer;
-
     public function __construct(
-        Metadata $metadata,
-        SelectBuilderFactory $selectBuilderFactory,
-        EntityManager $entityManager,
-        ListLoadProcessor $listLoadProcessor,
-        RecordServiceContainer $recordServiceContainer
-    ) {
-        $this->metadata = $metadata;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->entityManager = $entityManager;
-        $this->listLoadProcessor = $listLoadProcessor;
-        $this->recordServiceContainer = $recordServiceContainer;
-    }
+        private Metadata $metadata,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private EntityManager $entityManager,
+        private ListLoadProcessor $listLoadProcessor,
+        private RecordServiceContainer $recordServiceContainer
+    ) {}
 
     public function setEntityType(string $entityType): self
     {
