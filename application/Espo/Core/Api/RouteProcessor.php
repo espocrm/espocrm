@@ -143,7 +143,7 @@ class RouteProcessor
         $actionClassName = $processData->getRoute()->getActionClassName();
 
         if ($actionClassName) {
-            return $this->processAction($actionClassName, $processData, $request);
+            return $this->processAction($actionClassName, $processData, $request, $responseWrapped);
         }
 
         return $this->processControllerAction($processData, $request, $responseWrapped);
@@ -155,7 +155,8 @@ class RouteProcessor
     private function processAction(
         string $actionClassName,
         ProcessData $processData,
-        Psr7Request $request
+        Psr7Request $request,
+        ResponseWrapper $responseWrapped
     ): Psr7Response {
 
         /** @var Action $action */
@@ -173,7 +174,14 @@ class RouteProcessor
             $dispatcher->addMiddleware($middleware);
         }
 
-        return $dispatcher->handle($request);
+        $response = $dispatcher->handle($request);
+
+        // Apply headers added by the authentication.
+        foreach ($responseWrapped->getHeaderNames() as $name) {
+            $response = $response->withHeader($name, $responseWrapped->getHeaderAsArray($name));
+        }
+
+        return $response;
     }
 
     /**
