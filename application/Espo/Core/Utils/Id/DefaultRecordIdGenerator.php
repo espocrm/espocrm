@@ -41,7 +41,9 @@ class DefaultRecordIdGenerator implements RecordIdGenerator
 
     public function __construct(Metadata $metadata)
     {
-        $this->isUuid = $metadata->get(['app', 'recordId', 'dbType']) === 'uuid';
+        $this->isUuid =
+            $metadata->get(['app', 'recordId', 'type']) === 'uuid4' ||
+            $metadata->get(['app', 'recordId', 'dbType']) === 'uuid';
     }
 
     public function generate(): string
