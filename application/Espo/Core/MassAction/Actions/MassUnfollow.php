@@ -58,7 +58,7 @@ class MassUnfollow implements MassAction
             throw new Forbidden();
         }
 
-        $userId = $passedUserId ?? $this->user->id;
+        $userId = $passedUserId ?? $this->user->getId();
 
         $query = $this->queryBuilder->build($params);
 

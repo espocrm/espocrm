@@ -169,11 +169,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
         $params = [
-            'id' => $user1->id,
+            'id' => $user1->getId(),
         ];
 
         $data = (object) [
-            'id' => $user1->id,
+            'id' => $user1->getId(),
             'title' => 'Test'
         ];
 
@@ -189,11 +189,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $processor->process('User', 'update', $request, $response);
 
         $params = [
-            'id' => $user2->id,
+            'id' => $user2->getId(),
         ];
 
         $data = (object) [
-            'id' => $user2->id,
+            'id' => $user2->getId(),
             'title' => 'Test'
         ];
 
@@ -212,11 +212,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         catch (Exception $e) {};
 
         $params = [
-            'id' => $user1->id,
+            'id' => $user1->getId(),
         ];
 
         $data = (object) [
-            'id' => $user1->id,
+            'id' => $user1->getId(),
             'type' => 'admin',
             'teamsIds' => ['id'],
         ];
@@ -257,11 +257,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
 
         $params = [
-            'id' => $user1->id
+            'id' => $user1->getId()
         ];
 
         $data = (object) [
-            'id' => $user1->id,
+            'id' => $user1->getId(),
             'title' => 'Test',
         ];
 

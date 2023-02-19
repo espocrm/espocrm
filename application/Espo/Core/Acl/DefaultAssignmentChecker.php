@@ -136,7 +136,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
         }
 
         if ($assignmentPermission === Table::LEVEL_NO) {
-            if ($user->id !== $assignedUserId) {
+            if ($user->getId() !== $assignedUserId) {
                 return false;
             }
         }

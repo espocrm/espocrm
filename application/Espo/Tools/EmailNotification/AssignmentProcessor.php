@@ -168,7 +168,7 @@ class AssignmentProcessor
         $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
         $recordUrl = rtrim($this->config->get('siteUrl'), '/') .
-            '/#' . $entity->getEntityType() . '/view/' . $entity->id;
+            '/#' . $entity->getEntityType() . '/view/' . $entity->getId();
 
         $templateData = [
             'userName' => $user->get('name'),

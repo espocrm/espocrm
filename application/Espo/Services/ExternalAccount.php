@@ -159,7 +159,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
     {
         list ($integration, $userId) = explode('__', $id);
 
-        if ($this->getUser()->id != $userId && !$this->user->isAdmin()) {
+        if ($this->user->getId() !== $userId && !$this->user->isAdmin()) {
             throw new Forbidden();
         }
 

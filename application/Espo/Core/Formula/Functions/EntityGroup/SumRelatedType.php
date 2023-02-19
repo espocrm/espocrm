@@ -124,7 +124,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
         }
 
         $queryBuilder->where([
-            $foreignLinkAlias . '.id' => $entity->id,
+            $foreignLinkAlias . '.id' => $entity->getId(),
         ]);
 
         if ($queryBuilder->build()->isDistinct()) {
