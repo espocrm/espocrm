@@ -30,6 +30,7 @@
 namespace Espo\Core\MassAction;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 
 interface MassAction
@@ -37,6 +38,7 @@ interface MassAction
     /**
      * @throws Forbidden
      * @throws BadRequest
+     * @throws Error
      */
     public function process(Params $params, Data $data): Result;
 }
