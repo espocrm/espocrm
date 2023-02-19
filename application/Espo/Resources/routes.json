@@ -255,10 +255,17 @@
     {
         "route": "/Export",
         "method": "post",
-        "params": {
-            "controller": "Export",
-            "action": "process"
-        }
+        "actionClassName": "Espo\\Tools\\Export\\Api\\PostProcess"
+    },
+    {
+        "route": "/Export/:id/status",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\Export\\Api\\GetStatus"
+    },
+    {
+        "route": "/Export/:id/subscribe",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Export\\Api\\PostSubscribe"
     },
     {
         "route": "/Kanban/order",

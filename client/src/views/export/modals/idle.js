@@ -113,9 +113,7 @@ define('views/export/modals/idle', ['views/modal', 'model'], function (Dep, Mode
                     return;
                 }
 
-                Espo.Ajax.postRequest('Export/action/subscribeToNotificationOnSuccess', {
-                    id: this.id,
-                });
+                Espo.Ajax.postRequest(`Export/${this.id}/subscribe`);
             });
 
             this.checkStatus();
@@ -123,9 +121,7 @@ define('views/export/modals/idle', ['views/modal', 'model'], function (Dep, Mode
 
         checkStatus: function () {
             Espo.Ajax
-                .getRequest('Export/action/status', {
-                    id: this.id,
-                })
+                .getRequest(`Export/${this.id}/status`)
                 .then(response => {
                     let status = response.status;
 

@@ -27,26 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Tools\Export\Api;
 
+use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\BadRequest;
-
 use Espo\Core\Utils\Json;
-
+use Espo\Tools\Export\Params;
 use Espo\Tools\Export\Service;
 use Espo\Tools\Export\ServiceParams;
-use Espo\Tools\Export\Params;
 
 use stdClass;
 
-class Export
+class PostProcess implements Action
 {
     public function __construct(private Service $service)
     {}
 
-    public function postActionProcess(Request $request): stdClass
+    public function process(Request $request): Response
     {
         $params = $this->fetchRawParamsFromRequest($request);
 
@@ -60,40 +60,19 @@ class Export
 
             assert($subResult !== null);
 
-            return (object) [
-                'id' => $subResult->getAttachmentId(),
-            ];
+            return ResponseComposer::json([
+                'id' => $subResult->getAttachmentId()
+            ]);
         }
 
-        return (object) [
-            'exportId' => $result->getId(),
-        ];
+        return ResponseComposer::json([
+            'exportId' => $result->getId()
+        ]);
     }
 
-    public function getActionStatus(Request $request): stdClass
-    {
-        $id = $request->getQueryParam('id');
-
-        if (!$id) {
-            throw new BadRequest();
-        }
-
-        return $this->service->getStatusData($id);
-    }
-
-    public function postActionSubscribeToNotificationOnSuccess(Request $request, Response $response): void
-    {
-        $id = $request->getParsedBody()->id ?? null;
-
-        if (!$id || !is_string($id)) {
-            throw new BadRequest();
-        }
-
-        $this->service->subscribeToNotificationOnSuccess($id);
-
-        $response->writeBody('true');
-    }
-
+    /**
+     * @throws BadRequest
+     */
     private function fetchRawParamsFromRequest(Request $request): Params
     {
         $data = $request->getParsedBody();
