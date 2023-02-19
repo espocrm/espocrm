@@ -27,40 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Tools\Currency\Api;
 
-use Espo\Core\Currency\Rates;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Tools\Currency\RateService as Service;
+use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
-use stdClass;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Tools\Currency\RateService as Service;
 
-class CurrencyRate
+/**
+ * Gets rates.
+ */
+class Get implements Action
 {
     public function __construct(private Service $service)
     {}
 
-    /**
-     * @throws Forbidden
-     */
-    public function getActionIndex(): stdClass
+    public function process(Request $request): Response
     {
-        return (object) $this->service->get()->toAssoc();
-    }
+        $result = $this->service->get()->toAssoc();
 
-    /**
-     * @throws BadRequest
-     * @throws Forbidden
-     */
-    public function putActionUpdate(Request $request): bool
-    {
-        $data = $request->getParsedBody();
-
-        $rates = Rates::fromAssoc(get_object_vars($data), '___');
-
-        $this->service->set($rates);
-
-        return true;
+        return ResponseComposer::json($result);
     }
 }

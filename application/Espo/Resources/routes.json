@@ -230,27 +230,33 @@
     },
     {
         "route": "/CurrencyRate",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\Currency\\Api\\Get"
+    },
+    {
+        "route": "/CurrencyRate",
         "method": "put",
-        "params": {
-            "controller": "CurrencyRate",
-            "action": "update"
-        }
+        "actionClassName": "Espo\\Tools\\Currency\\Api\\PutUpdate"
     },
     {
         "route": "/Action",
         "method": "post",
-        "params": {
-            "controller": "Action",
-            "action": "process"
-        }
+        "actionClassName": "Espo\\Core\\Action\\Api\\PostProcess"
     },
     {
         "route": "/MassAction",
         "method": "post",
-        "params": {
-            "controller": "MassAction",
-            "action": "process"
-        }
+        "actionClassName": "Espo\\Core\\MassAction\\Api\\PostProcess"
+    },
+    {
+        "route": "/MassAction/:id/status",
+        "method": "get",
+        "actionClassName": "Espo\\Core\\MassAction\\Api\\GetStatus"
+    },
+    {
+        "route": "/MassAction/:id/subscribe",
+        "method": "post",
+        "actionClassName": "Espo\\Core\\MassAction\\Api\\PostSubscribe"
     },
     {
         "route": "/Export",

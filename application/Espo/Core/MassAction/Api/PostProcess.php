@@ -27,37 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Core\MassAction\Api;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-
-use Espo\Core\MassAction\Service;
-use Espo\Core\MassAction\ServiceResult;
-use Espo\Core\MassAction\Params;
-use Espo\Core\MassAction\ServiceParams;
-
+use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
-
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\MassAction\Params;
+use Espo\Core\MassAction\Service;
+use Espo\Core\MassAction\ServiceParams;
+use Espo\Core\MassAction\ServiceResult;
 use Espo\Core\Utils\Json;
-
-use stdClass;
 use RuntimeException;
+use stdClass;
 
 /**
- * Mass-Action framework.
+ * Processes mass actions.
  */
-class MassAction
+class PostProcess implements Action
 {
-    private $service;
+    public function __construct(private Service $service)
+    {}
 
-    public function __construct(Service $service)
-    {
-        $this->service = $service;
-    }
-
-    public function postActionProcess(Request $request): stdClass
+    public function process(Request $request): Response
     {
         $body = $request->getParsedBody();
 
@@ -90,35 +84,13 @@ class MassAction
             $data
         );
 
-        return $this->convertResult($result);
-    }
+        $result = $this->convertResult($result);
 
-    public function getActionStatus(Request $request): stdClass
-    {
-        $id = $request->getQueryParam('id');
-
-        if (!$id) {
-            throw new BadRequest();
-        }
-
-        return $this->service->getStatusData($id);
-    }
-
-    public function postActionSubscribeToNotificationOnSuccess(Request $request, Response $response): void
-    {
-        $id = $request->getParsedBody()->id ?? null;
-
-        if (!$id || !is_string($id)) {
-            throw new BadRequest();
-        }
-
-        $this->service->subscribeToNotificationOnSuccess($id);
-
-        $response->writeBody('true');
+        return ResponseComposer::json($result);
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      * @throws BadRequest
      */
     private function prepareMassActionParams(stdClass $data): array
@@ -141,13 +113,11 @@ class MassAction
             return $params;
         }
 
-        if (!is_null($ids)) {
-            return [
-                'ids' => $ids,
-            ];
+        if (is_null($ids)) {
+            throw new BadRequest("Bad search params for mass action.");
         }
 
-        throw new BadRequest("Bad search params for mass action.");
+        return ['ids' => $ids];
     }
 
     /**

@@ -114,9 +114,7 @@ define('views/modals/mass-action', ['views/modal', 'model'], function (Dep, Mode
                     return;
                 }
 
-                Espo.Ajax.postRequest('MassAction/action/subscribeToNotificationOnSuccess', {
-                    id: this.id,
-                });
+                Espo.Ajax.postRequest(`MassAction/${this.id}/subscribe`);
             });
 
             this.checkStatus();
@@ -124,9 +122,7 @@ define('views/modals/mass-action', ['views/modal', 'model'], function (Dep, Mode
 
         checkStatus: function () {
             Espo.Ajax
-                .getRequest('MassAction/action/status', {
-                    id: this.id,
-                })
+                .getRequest(`MassAction/${this.id}/status`)
                 .then(response => {
                     let status = response.status;
 

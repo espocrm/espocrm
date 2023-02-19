@@ -27,43 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Core\MassAction\Api;
 
-use Espo\Core\{
-    Exceptions\BadRequest,
-    Action\Service,
-    Api\Request,
-};
+use Espo\Core\Api\Action;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\MassAction\Service;
 
-use stdClass;
-
-/**
- * Action framework.
- */
-class Action
+class GetStatus implements Action
 {
-    private $service;
+    public function __construct(private Service $service)
+    {}
 
-    public function __construct(Service $service)
+    public function process(Request $request): Response
     {
-        $this->service = $service;
-    }
+        $id = $request->getRouteParam('id');
 
-    public function postActionProcess(Request $request): stdClass
-    {
-        $body = $request->getParsedBody();
-
-        $entityType = $body->entityType ?? null;
-        $id = $body->id ?? null;
-        $action = $body->action ?? null;
-        $data = $body->data ?? (object) [];
-
-        if (!$entityType || !$action || !$id) {
+        if (!$id) {
             throw new BadRequest();
         }
 
-        $entity = $this->service->process($entityType, $action, $id, $data);
+        $result = $this->service->getStatusData($id);
 
-        return $entity->getValueMap();
+        return ResponseComposer::json($result);
     }
 }
