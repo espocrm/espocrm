@@ -27,42 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Tools\GlobalSearch\Api;
 
+use Espo\Core\Api\Action;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Tools\GlobalSearch\Service;
-use Espo\Core\Api\Request;
 
-use stdClass;
-
-class GlobalSearch
+/**
+ * Global search.
+ */
+class Get implements Action
 {
-    private Service $service;
+    public function __construct(private Service $service)
+    {}
 
-    public function __construct(Service $service)
+    public function process(Request $request): Response
     {
-        $this->service = $service;
-    }
+        $query = $request->getRouteParam('query');
 
-    /**
-     * @throws BadRequest
-     */
-    public function getActionSearch(Request $request): stdClass
-    {
-        $query = $request->getQueryParam('q');
-
-        if ($query === null) {
-            throw new BadRequest("No `q` parameter.");
+        if ($query === null || $query === '') {
+            throw new BadRequest();
         }
 
         $offset = intval($request->getQueryParam('offset'));
-        $maxSize = intval($request->getQueryParam('maxSize'));
+        $maxSize = $request->hasQueryParam('maxSize') ?
+            intval($request->getQueryParam('maxSize')):
+            null;
 
         $result = $this->service->find($query, $offset, $maxSize);
 
-        return (object) [
+        return ResponseComposer::json([
             'total' => $result->getTotal(),
             'list' => $result->getValueMapList(),
-        ];
+        ]);
     }
 }

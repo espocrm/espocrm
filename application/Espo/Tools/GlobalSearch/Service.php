@@ -46,38 +46,25 @@ use Espo\Core\Select\SelectBuilderFactory;
 
 class Service
 {
-    private FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory;
-    private SelectBuilderFactory $selectBuilderFactory;
-    private EntityManager $entityManager;
-    private Metadata $metadata;
-    private Acl $acl;
-    private Config $config;
-
     public function __construct(
-        FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory,
-        SelectBuilderFactory $selectBuilderFactory,
-        EntityManager $entityManager,
-        Metadata $metadata,
-        Acl $acl,
-        Config $config
-    ) {
-        $this->fullTextSearchDataComposerFactory = $fullTextSearchDataComposerFactory;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->entityManager = $entityManager;
-        $this->metadata = $metadata;
-        $this->acl = $acl;
-        $this->config = $config;
-    }
+        private FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private EntityManager $entityManager,
+        private Metadata $metadata,
+        private Acl $acl,
+        private Config $config
+    ) {}
 
     /**
-     * @param string $filter
-     * @param int $offset
-     * @param int $maxSize
+     * @param string $filter A search query.
+     * @param int $offset An offset.
+     * @param ?int $maxSize A limit.
      * @return Collection<Entity>
      */
-    public function find(string $filter, int $offset, int $maxSize): Collection
+    public function find(string $filter, int $offset = 0, ?int $maxSize = null): Collection
     {
         $entityTypeList = $this->config->get('globalSearchEntityList') ?? [];
+        $maxSize ??= (int) $this->config->get('recordsPerPage');
 
         $hasFullTextSearch = false;
 

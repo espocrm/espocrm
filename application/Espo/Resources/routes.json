@@ -82,12 +82,9 @@
         }
     },
     {
-        "route": "/GlobalSearch",
+        "route": "/GlobalSearch/:query",
         "method": "get",
-        "params": {
-            "controller": "GlobalSearch",
-            "action": "search"
-        }
+        "actionClassName": "Espo\\Tools\\GlobalSearch\\Api\\Get"
     },
     {
         "route": "/LeadCapture/:apiKey",
