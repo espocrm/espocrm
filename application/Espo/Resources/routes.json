@@ -306,6 +306,61 @@
         "actionClassName": "Espo\\Tools\\Attachment\\Api\\PostCopy"
     },
     {
+        "route": "/Email/:id/attachments/copy",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\PostAttachmentsCopy"
+    },
+    {
+        "route": "/Email/sendTest",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\PostSendTest"
+    },
+    {
+        "route": "/Email/inbox/read",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\PostInboxRead"
+    },
+    {
+        "route": "/Email/inbox/read",
+        "method": "delete",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\DeleteInboxRead"
+    },
+    {
+        "route": "/Email/inbox/important",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\PostInboxImportant"
+    },
+    {
+        "route": "/Email/inbox/important",
+        "method": "delete",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\DeleteInboxImportant"
+    },
+    {
+        "route": "/Email/inbox/inTrash",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\PostInboxInTrash"
+    },
+    {
+        "route": "/Email/inbox/inTrash",
+        "method": "delete",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\DeleteInboxInTrash"
+    },
+    {
+        "route": "/Email/inbox/folders/:folderId",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\PostFolder"
+    },
+    {
+        "route": "/Email/inbox/notReadCounts",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\GetNotReadCounts"
+    },
+    {
+        "route": "/Email/insertFieldData",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\GetInsertFieldData"
+    },
+    {
         "route": "/Oidc/authorizationData",
         "method": "get",
         "params": {

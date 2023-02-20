@@ -92,7 +92,7 @@ define('views/outbound-email/fields/test-send', 'views/fields/base', function (D
 
                     view.close();
 
-                    Espo.Ajax.postRequest('Email/action/sendTestEmail', data)
+                    Espo.Ajax.postRequest('Email/sendTest', data)
                         .then(() => {
                             this.$el.find('button').removeClass('disabled');
 

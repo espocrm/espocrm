@@ -77,7 +77,7 @@ define('views/email/modals/insert-field', ['views/modal', 'field-language'], fun
 
             this.wait(
                 Espo.Ajax
-                    .getRequest('Email/action/getInsertFieldData', {
+                    .getRequest('Email/insertFieldData', {
                         parentId: this.options.parentId,
                         parentType: this.options.parentType,
                         to: this.options.to,

@@ -27,9 +27,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Tools\Email\Api;
 
-use Espo\Core\Controllers\Record;
+use Espo\Core\Api\Action;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Tools\Email\InboxService;
 
-class Email extends Record
-{}
+class GetNotReadCounts implements Action
+{
+    public function __construct(private InboxService $inboxService) {}
+
+    public function process(Request $request): Response
+    {
+        $data = $this->inboxService->getFoldersNotReadCounts();
+
+        return ResponseComposer::json($data);
+    }
+}

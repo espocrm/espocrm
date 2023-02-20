@@ -252,25 +252,19 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
         },
 
         actionMarkAsImportant: function () {
-            Espo.Ajax.postRequest('Email/action/markAsImportant', {
-                id: this.model.id
-            });
+            Espo.Ajax.postRequest('Email/inbox/important', {id: this.model.id});
 
             this.model.set('isImportant', true);
         },
 
         actionMarkAsNotImportant: function () {
-            Espo.Ajax.postRequest('Email/action/markAsNotImportant', {
-                id: this.model.id
-            });
+            Espo.Ajax.deleteRequest('Email/inbox/important', {id: this.model.id});
 
             this.model.set('isImportant', false);
         },
 
         actionMoveToTrash: function () {
-            Espo.Ajax.postRequest('Email/action/moveToTrash', {
-                id: this.model.id
-            }).then(() => {
+            Espo.Ajax.postRequest('Email/inbox/inTrash', {id: this.model.id}).then(() => {
                 Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
             });
 
@@ -282,9 +276,7 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
         },
 
         actionRetrieveFromTrash: function () {
-            Espo.Ajax.postRequest('Email/action/retrieveFromTrash', {
-                id: this.model.id,
-            }).then(() => {
+            Espo.Ajax.deleteRequest('Email/inbox/inTrash', {id: this.model.id}).then(() => {
                 Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
             });
 
@@ -299,21 +291,19 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
             this.createView('dialog', 'views/email-folder/modals/select-folder', {}, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'select', (folderId, folderName) => {
+                this.listenToOnce(view, 'select', folderId => {
                     this.clearView('dialog');
 
-                    this.ajaxPostRequest('Email/action/moveToFolder', {
-                        id: this.model.id,
-                        folderId: folderId,
-                    }).then(() => {
-                        if (folderId === 'inbox') {
-                            folderId = null;
-                        }
+                    this.ajaxPostRequest(`Email/inbox/folders/${folderId}`, {id: this.model.id})
+                        .then(() => {
+                            if (folderId === 'inbox') {
+                                folderId = null;
+                            }
 
-                        this.model.set('folderId', folderId);
+                            this.model.set('folderId', folderId);
 
-                        Espo.Ui.success(this.translate('Done'));
-                    });
+                            Espo.Ui.success(this.translate('Done'));
+                        });
                 });
             });
         },
