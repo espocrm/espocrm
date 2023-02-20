@@ -30,6 +30,7 @@
 namespace Espo\Core\Api;
 
 use Espo\Core\Api\Route\RouteParamsFetcher;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Route as RouteUtil;
 use Espo\Core\Utils\Log;
 
@@ -51,13 +52,18 @@ class Starter
         private RouteUtil $routeUtil,
         private RouteParamsFetcher $routeParamsFetcher,
         private MiddlewareProvider $middlewareProvider,
-        private Log $log
+        private Log $log,
+        private Config $config
     ) {}
 
     public function start(): void
     {
         $slim = SlimAppFactory::create();
-        $slim->getRouteCollector()->setCacheFile($this->routeCacheFile);
+
+        if ($this->config->get('useCache')) {
+            $slim->getRouteCollector()->setCacheFile($this->routeCacheFile);
+        }
+
         $slim->setBasePath(RouteUtil::detectBasePath());
         $this->addGlobalMiddlewares($slim);
         $slim->addRoutingMiddleware();
