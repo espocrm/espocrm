@@ -30,18 +30,16 @@
 namespace Espo\Tools\EntityManager;
 
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Route;
 use Espo\Core\Utils\Util;
 use Espo\Core\ServiceFactory;
-
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 
 class NameUtil
 {
     public const MAX_ENTITY_NAME_LENGTH = 100;
-
     public const MIN_ENTITY_NAME_LENGTH = 3;
-
     public const MAX_LINK_NAME_LENGTH = 100;
 
     /**
@@ -90,18 +88,12 @@ class NameUtil
         'Base',
     ];
 
-    private Metadata $metadata;
-
-    private ServiceFactory $serviceFactory;
-
-    private EntityManager $entityManager;
-
-    public function __construct(Metadata $metadata, ServiceFactory $serviceFactory, EntityManager $entityManager)
-    {
-        $this->metadata = $metadata;
-        $this->serviceFactory = $serviceFactory;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private Metadata $metadata,
+        private ServiceFactory $serviceFactory,
+        private EntityManager $entityManager,
+        private Route $routeUtil
+    ) {}
 
     public function nameIsBad(string $name): bool
     {
@@ -171,6 +163,24 @@ class NameUtil
 
         if ($this->serviceFactory->checkExists($name)) {
             return true;
+        }
+
+        if ($this->routeExists($name)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function routeExists(string $name): bool
+    {
+        foreach ($this->routeUtil->getFullList() as $route) {
+            if (
+                $route->getRoute() === '/' . $name ||
+                str_starts_with($route->getRoute(), '/' . $name . '/')
+            ) {
+                return true;
+            }
         }
 
         return false;

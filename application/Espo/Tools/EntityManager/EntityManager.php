@@ -34,23 +34,22 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Conflict;
 
+use Espo\Core\Utils\Route;
 use Espo\Tools\EntityManager\Link\Params as LinkParams;
 use Espo\Tools\EntityManager\Link\HookProcessor as LinkHookProcessor;
 use Espo\Tools\EntityManager\Link\Type as LinkType;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    Utils\Util,
-    Utils\Json,
-    Utils\Metadata,
-    Utils\File\Manager as FileManager,
-    Utils\Language,
-    Utils\Config,
-    Utils\Config\ConfigWriter,
-    DataManager,
-    InjectableFactory,
-};
+use Espo\Core\DataManager;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Util;
 
 use Exception;
 
@@ -59,53 +58,23 @@ use Exception;
  */
 class EntityManager
 {
-    private $metadata;
-
-    private $language;
-
-    private $baseLanguage;
-
-    private $fileManager;
-
-    private $config;
-
-    private $configWriter;
-
-    private $injectableFactory;
-
-    private $dataManager;
-
-    private LinkHookProcessor $linkHookProcessor;
-
-    private NameUtil $nameUtil;
-
     public function __construct(
-        Metadata $metadata,
-        Language $language,
-        Language $baseLanguage,
-        FileManager $fileManager,
-        Config $config,
-        ConfigWriter $configWriter,
-        DataManager $dataManager,
-        InjectableFactory $injectableFactory,
-        LinkHookProcessor $linkHookProcessor,
-        NameUtil $nameUtil
-    ) {
-        $this->metadata = $metadata;
-        $this->language = $language;
-        $this->baseLanguage = $baseLanguage;
-        $this->fileManager = $fileManager;
-        $this->config = $config;
-        $this->configWriter = $configWriter;
-        $this->dataManager = $dataManager;
-        $this->injectableFactory = $injectableFactory;
-        $this->linkHookProcessor = $linkHookProcessor;
-        $this->nameUtil = $nameUtil;
-    }
+        private Metadata $metadata,
+        private Language $language,
+        private Language $baseLanguage,
+        private FileManager $fileManager,
+        private Config $config,
+        private ConfigWriter $configWriter,
+        private DataManager $dataManager,
+        private InjectableFactory $injectableFactory,
+        private LinkHookProcessor $linkHookProcessor,
+        private NameUtil $nameUtil,
+        private Route $routeUtil
+    ) {}
 
     /**
-     * @param array<string,mixed> $params
-     * @param array<string,mixed> $replaceData
+     * @param array<string, mixed> $params
+     * @param array<string, mixed> $replaceData
      * @throws BadRequest
      * @throws Error
      * @throws Conflict
@@ -821,6 +790,20 @@ class EntityManager
             throw new Conflict("Link name '{$linkForeign}' is not allowed.");
         }
 
+        foreach ($this->routeUtil->getFullList() as $route) {
+            if ($route->getRoute() === "/{$entity}/:id/{$link}") {
+                throw new Conflict("Link name '{$link}' conflicts with existing API endpoint.");
+            }
+        }
+
+        if ($entityForeign) {
+            foreach ($this->routeUtil->getFullList() as $route) {
+                if ($route->getRoute() === "/{$entityForeign}/:id/{$linkForeign}") {
+                    throw new Conflict("Link name '{$linkForeign}' conflicts with existing API endpoint.");
+                }
+            }
+        }
+
         $linkMultipleField = false;
 
         if (!empty($params['linkMultipleField'])) {
@@ -869,13 +852,13 @@ class EntityManager
 
         if ($linkForeign === lcfirst($entityForeign)) {
             throw new Conflict(
-                'Link [' .$entityForeign . '::' . $linkForeign . '] shoud not match entity type name.'
+                'Link [' .$entityForeign . '::' . $linkForeign . '] must not match entity type name.'
             );
         }
 
         if ($link === lcfirst($entity)) {
             throw new Conflict(
-                'Link [' .$entity . '::' . $link . '] shoud not match entity type name.'
+                'Link [' .$entity . '::' . $link . '] must not match entity type name.'
             );
         }
 
