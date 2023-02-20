@@ -82,7 +82,7 @@
         }
     },
     {
-        "route": "/GlobalSearch/:query",
+        "route": "/GlobalSearch",
         "method": "get",
         "actionClassName": "Espo\\Tools\\GlobalSearch\\Api\\Get"
     },
@@ -351,6 +351,16 @@
         "route": "/Email/inbox/notReadCounts",
         "method": "get",
         "actionClassName": "Espo\\Tools\\Email\\Api\\GetNotReadCounts"
+    },
+    {
+        "route": "/Email/insertFieldData",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\GetInsertFieldData"
+    },
+    {
+        "route": "/EmailAddress/search",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\EmailAddress\\Api\\GetSearch"
     },
     {
         "route": "/Email/insertFieldData",

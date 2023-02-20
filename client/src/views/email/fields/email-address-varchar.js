@@ -206,9 +206,10 @@ function (Dep, From, EmailAddress) {
                 });
 
                 this.$input.autocomplete({
-                    serviceUrl: (q) => {
-                        return 'EmailAddress/action/searchInAddressBook?onlyActual=true&maxSize=' +
-                            this.getAutocompleteMaxCount();
+                    serviceUrl: () => {
+                        return `EmailAddress/search` +
+                            `?maxSize=${this.getAutocompleteMaxCount()}` +
+                            `&onlyActual=true`;
                     },
                     paramName: 'q',
                     minChars: 1,

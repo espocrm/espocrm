@@ -29,52 +29,7 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
-
-use Espo\Tools\Email\AddressService as Service;
-
-use Espo\Core\Api\Request;
 use Espo\Core\Controllers\RecordBase;
 
 class EmailAddress extends RecordBase
-{
-    private const ADDRESS_MAX_SIZE = 50;
-
-    /**
-     * @return array<int,array<string,mixed>>
-     * @throws Forbidden
-     * @throws BadRequest
-     */
-    public function actionSearchInAddressBook(Request $request): array
-    {
-        if (!$this->acl->checkScope('Email')) {
-            throw new Forbidden();
-        }
-
-        if (!$this->acl->checkScope('Email', 'create')) {
-            throw new Forbidden();
-        }
-
-        $q = $request->getQueryParam('q');
-
-        if ($q === null) {
-            throw new BadRequest("No `q` parameter.");
-        }
-
-        $maxSize = intval($request->getQueryParam('maxSize'));
-
-        if (!$maxSize || $maxSize > self::ADDRESS_MAX_SIZE) {
-            $maxSize = (int) $this->config->get('recordsPerPage');
-        }
-
-        $onlyActual = $request->getQueryParam('onlyActual') === 'true';
-
-        return $this->getEmailAddressService()->searchInAddressBook($q, $maxSize, $onlyActual);
-    }
-
-    private function getEmailAddressService(): Service
-    {
-        return $this->injectableFactory->create(Service::class);
-    }
-}
+{}

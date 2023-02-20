@@ -59,8 +59,8 @@ define('views/email/fields/email-address', ['views/fields/base'], function (Dep)
 
             this.$input.autocomplete({
                 serviceUrl: () => {
-                    return 'EmailAddress/action/searchInAddressBook?maxSize=' +
-                        this.getAutocompleteMaxCount();
+                    return `EmailAddress/search` +
+                        `?maxSize=${this.getAutocompleteMaxCount()}`
                 },
                 paramName: 'q',
                 minChars: 1,

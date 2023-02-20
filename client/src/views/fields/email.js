@@ -341,9 +341,9 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
 
             if (this.mode === this.MODE_SEARCH && this.getAcl().check('Email', 'create')) {
                 this.$element.autocomplete({
-                    serviceUrl: (q) => {
-                        return 'EmailAddress/action/searchInAddressBook?maxSize=' +
-                            this.getAutocompleteMaxCount();
+                    serviceUrl: () => {
+                        return `EmailAddress/search` +
+                            `?maxSize=${this.getAutocompleteMaxCount()}`
                     },
                     paramName: 'q',
                     minChars: 1,

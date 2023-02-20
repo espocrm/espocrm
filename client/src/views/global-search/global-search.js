@@ -78,7 +78,7 @@ define('views/global-search/global-search', ['view'], function (Dep) {
         },
 
         search: function (text) {
-            this.collection.url = this.collection.urlRoot =  'GlobalSearch/' + encodeURIComponent(text);
+            this.collection.url = this.collection.urlRoot =  'GlobalSearch?q=' + encodeURIComponent(text);
 
             this.showPanel();
         },
