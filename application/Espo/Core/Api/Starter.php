@@ -44,6 +44,8 @@ use Psr\Http\Message\ServerRequestInterface as Psr7Request;
  */
 class Starter
 {
+    private string $routeCacheFile = 'data/cache/application/slim-routes.php';
+
     public function __construct(
         private RouteProcessor $routeProcessor,
         private RouteUtil $routeUtil,
@@ -55,7 +57,7 @@ class Starter
     public function start(): void
     {
         $slim = SlimAppFactory::create();
-
+        $slim->getRouteCollector()->setCacheFile($this->routeCacheFile);
         $slim->setBasePath(RouteUtil::detectBasePath());
         $this->addGlobalMiddlewares($slim);
         $slim->addRoutingMiddleware();
