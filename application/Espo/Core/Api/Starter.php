@@ -69,6 +69,7 @@ class Starter
         $slim->addRoutingMiddleware();
         $this->addRoutes($slim);
         $slim->addErrorMiddleware(false, true, true, $this->log);
+
         $slim->run();
     }
 
