@@ -30,9 +30,8 @@
 namespace tests\integration\Espo\Actions;
 
 use Espo\Core\Action\Actions\Merge\Merger;
+use Espo\Core\Action\Api\PostProcess;
 use Espo\Core\Action\Params;
-use Espo\Core\Api\ControllerActionProcessor;
-use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\Application;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Field\EmailAddress;
@@ -43,25 +42,17 @@ use Espo\Modules\Crm\Entities\Contact;
 
 class ActionTest extends \tests\integration\Core\BaseTestCase
 {
-    /**
-     * @var Application
-     */
+    /** @var Application */
     private $app;
 
-    /**
-     * @var EntityManager
-     */
+    /** @var EntityManager */
     private $entityManager;
 
-    /**
-     * @var ControllerActionProcessor
-     */
-    private $actionProcessor;
 
-    /**
-     * @var Merger
-     */
+    /** @var Merger */
     private $merger;
+
+    private ?PostProcess $action = null;
 
     private function init(): void
     {
@@ -71,10 +62,7 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
             ->getContainer()
             ->get('entityManager');
 
-        $this->actionProcessor = $this->app
-            ->getContainer()
-            ->get('injectableFactory')
-            ->create(ControllerActionProcessor::class);
+        $this->action = $this->getInjectableFactory()->create(PostProcess::class);
 
         $this->merger = $this->app
             ->getContainer()
@@ -100,11 +88,9 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(ResponseWrapper::class);
-
         $this->expectException(Forbidden::class);
 
-        $this->actionProcessor->process('Action', 'process', $request, $response);
+        $this->action->process($request);
     }
 
     public function testActionMerge1(): void
@@ -216,9 +202,7 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(ResponseWrapper::class);
-
-        $this->actionProcessor->process('Action', 'process', $request, $response);
+        $this->action->process($request);
 
         /* @var $contact1Reloaded Contact */
         $contact1Reloaded = $this->entityManager->getEntity('Contact', $contact1->getId());

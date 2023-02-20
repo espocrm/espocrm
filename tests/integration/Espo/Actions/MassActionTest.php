@@ -29,7 +29,7 @@
 
 namespace tests\integration\Espo\Actions;
 
-use Espo\Core\MassAction\MassActionFactory;
+use Espo\Core\MassAction\Api\PostProcess;
 use Espo\Modules\Crm\Entities\Account;
 
 use Espo\Core\MassAction\ServiceParams;
@@ -41,7 +41,6 @@ use Espo\Core\Job\Job\Data as JobData;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\InjectableFactory;
 
-use Espo\Core\Api\ControllerActionProcessor;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\Application;
 use Espo\Core\Exceptions\Error;
@@ -54,20 +53,12 @@ use Espo\Tools\MassUpdate\Processor;
 
 class MassActionTest extends \tests\integration\Core\BaseTestCase
 {
-    /**
-     * @var Application
-     */
+    /** @var Application */
     private $app;
-
-    /**
-     * @var EntityManager
-     */
+    /** @var EntityManager */
     private $entityManager;
 
-    /**
-     * @var ControllerActionProcessor
-     */
-    private $actionProcessor;
+    private ?PostProcess $action = null;
 
     private function init(): void
     {
@@ -77,10 +68,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
             ->getContainer()
             ->get('entityManager');
 
-        $this->actionProcessor = $this->app
-            ->getContainer()
-            ->get('injectableFactory')
-            ->create(ControllerActionProcessor::class);
+        $this->action = $this->getInjectableFactory()->create(PostProcess::class);
     }
 
     public function testUpdate1(): void
@@ -116,13 +104,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(ResponseWrapper::class);
-
-        $response
-            ->expects($this->once())
-            ->method('writeBody');
-
-        $this->actionProcessor->process('MassAction', 'process', $request, $response);
+        $this->action->process($request);
 
         $accountReloaded = $this->entityManager->getEntity('Account', $account->getId());
 
@@ -155,7 +137,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(Forbidden::class);
 
-        $this->actionProcessor->process('MassAction', 'process', $request, $response);
+        $this->action->process($request);
     }
 
     public function testAcl1()
