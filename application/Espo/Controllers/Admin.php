@@ -44,30 +44,15 @@ use Espo\Entities\User;
 
 class Admin
 {
-    private Container $container;
-    private Config $config;
-    private User $user;
-    private AdminNotificationManager $adminNotificationManager;
-    private SystemRequirements $systemRequirements;
-    private ScheduledJob $scheduledJob;
-    private DataManager $dataManager;
-
     public function __construct(
-        Container $container,
-        Config $config,
-        User $user,
-        AdminNotificationManager $adminNotificationManager,
-        SystemRequirements $systemRequirements,
-        ScheduledJob $scheduledJob,
-        DataManager $dataManager
+        private Container $container,
+        private Config $config,
+        private User $user,
+        private AdminNotificationManager $adminNotificationManager,
+        private SystemRequirements $systemRequirements,
+        private ScheduledJob $scheduledJob,
+        private DataManager $dataManager
     ) {
-        $this->container = $container;
-        $this->config = $config;
-        $this->user = $user;
-        $this->adminNotificationManager = $adminNotificationManager;
-        $this->systemRequirements = $systemRequirements;
-        $this->scheduledJob = $scheduledJob;
-        $this->dataManager = $dataManager;
 
         if (!$this->user->isAdmin()) {
             throw new Forbidden();

@@ -32,12 +32,10 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
-use Espo\Core\{
-    Upgrades\ExtensionManager,
-    Controllers\RecordBase,
-    Api\Request,
-    Api\Response,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Controllers\RecordBase;
+use Espo\Core\Upgrades\ExtensionManager;
 
 use stdClass;
 

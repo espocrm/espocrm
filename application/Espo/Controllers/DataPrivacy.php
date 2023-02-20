@@ -32,26 +32,17 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
-use Espo\Core\{
-    Api\Request,
-    Api\Response,
-    Acl,
-};
+use Espo\Core\Acl;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
 
 use Espo\Tools\DataPrivacy\Erasor;
 
 class DataPrivacy
 {
-    private $erasor;
-
-    private $acl;
-
-    public function __construct(Erasor $erasor, Acl $acl)
+    public function __construct(private Erasor $erasor, private Acl $acl)
     {
-        $this->erasor = $erasor;
-        $this->acl = $acl;
-
-        if ($this->acl->get('dataPrivacyPermission') === 'no') {
+        if ($this->acl->getPermissionLevel('dataPrivacyPermission') === Acl\Table::LEVEL_NO) {
             throw new Forbidden();
         }
     }

@@ -29,27 +29,20 @@
 
 namespace Espo\Controllers;
 
-use Espo\{
-    Entities\User,
-    Tools\EntityManager\EntityManager as EntityManagerTool,
-};
+use Espo\Entities\User;
+use Espo\Tools\EntityManager\EntityManager as EntityManagerTool;
 
-use Espo\Core\{
-    Exceptions\Forbidden,
-    Exceptions\BadRequest,
-    Api\Request,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 
 class EntityManager
 {
-    private $user;
 
-    private $entityManagerTool;
-
-    public function __construct(User $user, EntityManagerTool $entityManagerTool)
-    {
-        $this->user = $user;
-        $this->entityManagerTool = $entityManagerTool;
+    public function __construct(
+        private User $user,
+        private EntityManagerTool $entityManagerTool
+    ) {
 
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
