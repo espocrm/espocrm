@@ -56,7 +56,7 @@ class TdTag implements Helper
         $content = $function !== null ? $function() : '';
 
         return Result::createSafeString(
-            "<td>" . $content . "</td>"
+            "<td {$attributesPart}>{$content}</td>"
         );
     }
 }
