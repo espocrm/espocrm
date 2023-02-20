@@ -29,10 +29,9 @@
 
 namespace Espo\Core;
 
-use Espo\Core\Utils\Config\MissingDefaultParamsSaver as ConfigMissingDefaultParamsSaver;
-
 use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManagerProxy;
+use Espo\Core\Utils\Database\Helper as DatabaseHelper;
 use Espo\Core\Utils\Database\Schema\RebuildMode;
 use Espo\Core\Utils\Database\Schema\SchemaManagerProxy;
 use Espo\Core\Utils\File\Manager as FileManager;
@@ -44,6 +43,8 @@ use Espo\Core\Utils\Metadata\OrmMetadataData;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Module;
 use Espo\Core\Rebuild\RebuildActionProcessor;
+use Espo\Core\ORM\DatabaseParamsFactory;
+use Espo\Core\Utils\Config\MissingDefaultParamsSaver as ConfigMissingDefaultParamsSaver;
 
 use Throwable;
 
@@ -66,7 +67,9 @@ class DataManager
         private Module $module,
         private RebuildActionProcessor $rebuildActionProcessor,
         private ConfigMissingDefaultParamsSaver $configMissingDefaultParamsSaver,
-        private FileManager $fileManager
+        private FileManager $fileManager,
+        private DatabaseParamsFactory $databaseParamsFactory,
+        private InjectableFactory $injectableFactory
     ) {}
 
     /**
@@ -199,24 +202,18 @@ class DataManager
 
     private function setFullTextConfigParameters(): void
     {
-        $platform = $this->config->get('database.platform') ?? null;
-        $driver = $this->config->get('database.driver') ?? '';
+        $databaseParams = $this->databaseParamsFactory->create();
 
-        if ($platform !== 'Mysql' && strpos($driver, 'mysql') === false) {
+        if ($databaseParams->getPlatform() !== 'Mysql') {
             return;
         }
 
-        $fullTextSearchMinLength = null;
+        $helper = $this->injectableFactory->create(DatabaseHelper::class);
 
-        $sql = "SHOW VARIABLES LIKE 'ft_min_word_len'";
+        $fullTextSearchMinLength = $helper->getParam('ft_min_word_len');
 
-        $row = $this->entityManager
-            ->getSqlExecutor()
-            ->execute($sql)
-            ->fetch();
-
-        if ($row && isset($row['Value'])) {
-            $fullTextSearchMinLength = intval($row['Value']);
+        if ($fullTextSearchMinLength !== null) {
+            $fullTextSearchMinLength = (int) $fullTextSearchMinLength;
         }
 
         $this->configWriter->set('fullTextSearchMinLength', $fullTextSearchMinLength);
