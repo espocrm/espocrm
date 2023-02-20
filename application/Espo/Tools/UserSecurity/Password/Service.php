@@ -243,7 +243,6 @@ class Service
      *
      * @throws Forbidden
      * @throws NotFound
-     * @throws SendingError
      * @throws Error
      */
     public function generateAndSendNewPasswordForUser(string $id): void
@@ -283,7 +282,13 @@ class Service
 
         $password = $this->generator->generate();
 
-        $this->sender->sendPassword($user, $password);
+        try {
+            $this->sender->sendPassword($user, $password);
+        }
+        catch (SendingError) {
+            throw new Error("Email sending error.");
+        }
+
         $this->savePassword($user, $password);
     }
 

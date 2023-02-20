@@ -29,7 +29,6 @@
 
 namespace Espo\Services;
 
-use Espo\Core\ApplicationUser;
 use Espo\Core\Authentication\Logins\Hmac;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Entities\Team as TeamEntity;

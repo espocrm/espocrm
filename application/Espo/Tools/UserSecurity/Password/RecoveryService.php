@@ -132,7 +132,6 @@ class RecoveryService
      * @throws Forbidden
      * @throws NotFound
      * @throws Error
-     * @throws SendingError
      */
     public function request(string $emailAddress, string $userName, ?string $url): bool
     {
@@ -235,7 +234,14 @@ class RecoveryService
 
         $microtime = microtime(true);
 
-        $this->send($request->getRequestId(), $emailAddress, $user);
+        try {
+            $this->send($request->getRequestId(), $emailAddress, $user);
+        }
+        catch (SendingError $e) {
+            $this->log->error("Email sending error: " . $e->getMessage());
+
+            throw new Error("Email sending error.");
+        }
 
         $this->entityManager->saveEntity($request);
 

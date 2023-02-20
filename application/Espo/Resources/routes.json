@@ -55,24 +55,6 @@
         }
     },
     {
-        "route": "/User/passwordChangeRequest",
-        "method": "post",
-        "params": {
-            "controller": "User",
-            "action": "passwordChangeRequest"
-        },
-        "noAuth": true
-    },
-    {
-        "route": "/User/changePasswordByRequest",
-        "method": "post",
-        "params": {
-            "controller": "User",
-            "action": "changePasswordByRequest"
-        },
-        "noAuth": true
-    },
-    {
         "route": "/Stream",
         "method": "get",
         "params": {
@@ -366,6 +348,43 @@
         "route": "/Email/insertFieldData",
         "method": "get",
         "actionClassName": "Espo\\Tools\\Email\\Api\\GetInsertFieldData"
+    },
+    {
+        "route": "/User/:id/acl",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\GetUserAcl"
+    },
+    {
+        "route": "/UserSecurity/apiKey/generate",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\PostApiKeyGenerate"
+    },
+    {
+        "route": "/UserSecurity/password",
+        "method": "put",
+        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\PutPassword"
+    },
+    {
+        "route": "/UserSecurity/password/recovery",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\PostPasswordRecovery"
+    },
+    {
+        "route": "/UserSecurity/password/generate",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\PostPasswordGenerate"
+    },
+    {
+        "route": "/User/passwordChangeRequest",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\PostPasswordChangeRequest",
+        "noAuth": true
+    },
+    {
+        "route": "/User/changePasswordByRequest",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\PostChangePasswordByRequest",
+        "noAuth": true
     },
     {
         "route": "/Oidc/authorizationData",

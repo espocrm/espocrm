@@ -27,50 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Tools\UserSecurity\Api;
 
-use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
-use Espo\Core\Controllers\Record;
-use Espo\Core\Select\SearchParams;
-use Espo\Core\Select\Where\Item as WhereItem;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Entities\User;
+use Espo\Tools\UserSecurity\Password\Service;
 
-class User extends Record
+/**
+ * Changes own user password.
+ */
+class PutPassword implements Action
 {
-    public function postActionCreateLink(Request $request): bool
+    public function __construct(
+        private Service $service,
+        private User $user
+    ) {}
+
+    public function process(Request $request): Response
     {
-        if (!$this->user->isAdmin()) {
-            throw new Forbidden();
+        $data = $request->getParsedBody();
+
+        $password = $data->password ?? null;
+        $currentPassword = $data->currentPassword ?? null;
+
+        if (
+            !is_string($password) ||
+            !is_string($currentPassword)
+        ) {
+            throw new BadRequest("No `password` or `currentPassword`.");
         }
 
-        return parent::postActionCreateLink($request);
-    }
+        $this->service->changePasswordWithCheck($this->user->getId(), $password, $currentPassword);
 
-    public function deleteActionRemoveLink(Request $request): bool
-    {
-        if (!$this->user->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        return parent::deleteActionRemoveLink($request);
-    }
-
-    protected function fetchSearchParamsFromRequest(Request $request): SearchParams
-    {
-        $searchParams = parent::fetchSearchParamsFromRequest($request);
-
-        $userType = $request->getQueryParam('userType');
-
-        if (!$userType) {
-            return $searchParams;
-        }
-
-        return $searchParams->withWhereAdded(
-            WhereItem::fromRaw([
-                'type' => 'isOfType',
-                'attribute' => 'id',
-                'value' => $userType,
-            ])
-        );
+        return ResponseComposer::json(true);
     }
 }

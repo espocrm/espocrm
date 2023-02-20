@@ -114,7 +114,7 @@ define('views/modals/change-password', ['views/modal'], function (Dep) {
             this.$el.find('button[data-name="change"]').addClass('disabled');
 
             Espo.Ajax
-                .postRequest('User/action/changeOwnPassword', {
+                .putRequest('UserSecurity/password', {
                     currentPassword: this.model.get('currentPassword'),
                     password: this.model.get('password'),
                 })

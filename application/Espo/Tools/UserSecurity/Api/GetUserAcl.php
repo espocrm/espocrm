@@ -27,50 +27,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Tools\UserSecurity\Api;
 
-use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\AclManager;
+use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
-use Espo\Core\Controllers\Record;
-use Espo\Core\Select\SearchParams;
-use Espo\Core\Select\Where\Item as WhereItem;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Entities\User;
+use Espo\ORM\EntityManager;
 
-class User extends Record
+/**
+ * User ACL data.
+ */
+class GetUserAcl implements Action
 {
-    public function postActionCreateLink(Request $request): bool
+    public function __construct(
+        private EntityManager $entityManager,
+        private AclManager $aclManager,
+        private User $user
+    ) {}
+
+    public function process(Request $request): Response
     {
-        if (!$this->user->isAdmin()) {
+        $userId = $request->getRouteParam('id');
+
+        if (!$userId) {
+            throw new BadRequest();
+        }
+
+        if (
+            !$this->user->isAdmin() &&
+            $this->user->getId() !== $userId
+        ) {
             throw new Forbidden();
         }
 
-        return parent::postActionCreateLink($request);
-    }
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
-    public function deleteActionRemoveLink(Request $request): bool
-    {
-        if (!$this->user->isAdmin()) {
-            throw new Forbidden();
+        if (!$user) {
+            throw new NotFound();
         }
 
-        return parent::deleteActionRemoveLink($request);
-    }
+        $data = $this->aclManager->getMapData($user);
 
-    protected function fetchSearchParamsFromRequest(Request $request): SearchParams
-    {
-        $searchParams = parent::fetchSearchParamsFromRequest($request);
-
-        $userType = $request->getQueryParam('userType');
-
-        if (!$userType) {
-            return $searchParams;
-        }
-
-        return $searchParams->withWhereAdded(
-            WhereItem::fromRaw([
-                'type' => 'isOfType',
-                'attribute' => 'id',
-                'value' => $userType,
-            ])
-        );
+        return ResponseComposer::json($data);
     }
 }

@@ -289,13 +289,7 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
         actionAccess: function () {
             Espo.Ui.notify(' ... ');
 
-            $.ajax({
-                url: 'User/action/acl',
-                type: 'GET',
-                data: {
-                    id: this.model.id,
-                }
-            }).then((aclData) => {
+            Espo.Ajax.getRequest(`User/${this.model.id}/acl`).then(aclData => {
                 this.createView('access', 'views/user/modals/access', {
                     aclData: aclData,
                     model: this.model,
@@ -378,11 +372,10 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
         actionGenerateNewApiKey: function () {
             this.confirm(this.translate('confirmation', 'messages'), () => {
-                this.ajaxPostRequest('User/action/generateNewApiKey', {
-                    id: this.model.id,
-                }).then((data) => {
-                    this.model.set(data);
-                });
+                this.ajaxPostRequest('UserSecurity/apiKey/generate', {id: this.model.id})
+                    .then((data) => {
+                        this.model.set(data);
+                    });
             });
         },
 
@@ -402,11 +395,10 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
             .then(() => {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-                Espo.Ajax.postRequest('User/action/sendPasswordChangeLink', {
-                    id: this.model.id,
-                }).then(() => {
-                    Espo.Ui.success(this.translate('Done'));
-                });
+                Espo.Ajax.postRequest('UserSecurity/password/recovery', {id: this.model.id})
+                    .then(() => {
+                        Espo.Ui.success(this.translate('Done'));
+                    });
             });
         },
 
@@ -416,11 +408,10 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
             ).then(() => {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-                Espo.Ajax.postRequest('User/action/generateNewPassword', {
-                    id: this.model.id,
-                }).then(() => {
-                    Espo.Ui.success(this.translate('Done'));
-                });
+                Espo.Ajax.postRequest('UserSecurity/password/generate', {id: this.model.id})
+                    .then(() => {
+                        Espo.Ui.success(this.translate('Done'));
+                    });
             });
         },
 
