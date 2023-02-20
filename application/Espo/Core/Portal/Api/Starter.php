@@ -34,6 +34,7 @@ use Espo\Core\Api\Starter as StarterBase;
 use Espo\Core\Portal\Utils\Route as RouteUtil;
 use Espo\Core\Api\RouteProcessor;
 use Espo\Core\Api\Route\RouteParamsFetcher;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 
 class Starter extends StarterBase
@@ -43,14 +44,16 @@ class Starter extends StarterBase
         RouteUtil $routeUtil,
         RouteParamsFetcher $routeParamsFetcher,
         MiddlewareProvider $middlewareProvider,
-        Log $log
+        Log $log,
+        Config $config
     ) {
         parent::__construct(
             $requestProcessor,
             $routeUtil,
             $routeParamsFetcher,
             $middlewareProvider,
-            $log
+            $log,
+            $config
         );
     }
 }
