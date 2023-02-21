@@ -44,6 +44,10 @@
         "smsProvider": {
             "level": "admin"
         },
+        "authAnotherUserDisabled": {
+            "level": "admin",
+            "readOnly": true
+        },
         "workingTimeCalendar": {
             "level": "admin"
         },

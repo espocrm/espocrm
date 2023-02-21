@@ -97,7 +97,6 @@ return [
         'clientSecurityHeadersDisabled',
         'clientCspDisabled',
         'clientCspScriptSourceList',
-        'authAnotherUserDisabled',
         'authTokenSecretDisabled',
     ],
     'adminItems' => [
@@ -188,6 +187,7 @@ return [
         'emailReminderPortionSize',
         'outboundSmsFromNumber',
         'currencyNoJoinMode',
+        'authAnotherUserDisabled',
         'latestVersion',
     ],
     'superAdminItems' => [

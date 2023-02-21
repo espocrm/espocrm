@@ -122,7 +122,13 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 });
             }
 
-            if (this.getUser().isAdmin() && this.model.isRegular()) {
+            console.log(this.getConfig().get('authAnotherUserDisabled'));
+
+            if (
+                this.getUser().isAdmin() &&
+                this.model.isRegular() &&
+                !this.getConfig().get('authAnotherUserDisabled')
+            ) {
                 this.addDropdownItem({
                     label: 'Log in',
                     name: 'login',
