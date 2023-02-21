@@ -32,29 +32,18 @@ namespace Espo\Tools\EmailTemplate;
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Record\ServiceContainer;
 use Espo\Entities\EmailTemplate;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 
 class Service
 {
-    private Processor $processor;
-    private User $user;
-    private Acl $acl;
-    private EntityManager $entityManager;
-
     public function __construct(
-        Processor $processor,
-        User $user,
-        Acl $acl,
-        EntityManager $entityManager
-    ) {
-        $this->processor = $processor;
-        $this->user = $user;
-        $this->acl = $acl;
-        $this->entityManager = $entityManager;
-    }
+        private Processor $processor,
+        private User $user,
+        private Acl $acl,
+        private EntityManager $entityManager
+    ) {}
 
     /**
      * Prepare an email data with an applied template.

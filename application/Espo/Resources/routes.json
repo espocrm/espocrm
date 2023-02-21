@@ -315,6 +315,11 @@
         "actionClassName": "Espo\\Tools\\Attachment\\Api\\PostCopy"
     },
     {
+        "route": "/EmailTemplate/:id/prepare",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\EmailTemplate\\Api\\PostPrepare"
+    },
+    {
         "route": "/Email/:id/attachments/copy",
         "method": "post",
         "actionClassName": "Espo\\Tools\\Email\\Api\\PostAttachmentsCopy"

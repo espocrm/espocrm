@@ -63,8 +63,7 @@ define('views/email/fields/select-template', ['views/fields/link'], function (De
             }
 
             Espo.Ajax
-                .getRequest('EmailTemplate/action/parse', {
-                    id: id,
+                .postRequest(`EmailTemplate/${id}/prepare`, {
                     emailAddress: emailAddress,
                     parentType: this.model.get('parentType'),
                     parentId: this.model.get('parentId'),
