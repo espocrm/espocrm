@@ -75,6 +75,10 @@ class Service
         Params $params
     ): Result {
 
+        if (!$this->acl->checkScope(ImportEntity::ENTITY_TYPE)) {
+            throw new Forbidden("No access to Import scope.");
+        }
+
         if (!$this->acl->check($entityType, Table::ACTION_CREATE)) {
             throw new Forbidden("No create access for '{$entityType}'.");
         }
@@ -113,7 +117,7 @@ class Service
         }
 
         /** @var ?ImportEntity $source */
-        $source = $this->entityManager->getEntity(ImportEntity::ENTITY_TYPE, $importParamsId);
+        $source = $this->entityManager->getEntityById(ImportEntity::ENTITY_TYPE, $importParamsId);
 
         if (!$source) {
             throw new Error("Import '{$importParamsId}' not found.");
@@ -193,14 +197,18 @@ class Service
      */
     public function revert(string $id): void
     {
-        $import = $this->entityManager->getEntity('Import', $id);
+        if (!$this->acl->checkScope(ImportEntity::ENTITY_TYPE)) {
+            throw new Forbidden("No access to Import scope.");
+        }
+
+        $import = $this->entityManager->getEntityById(ImportEntity::ENTITY_TYPE, $id);
 
         if (!$import) {
             throw new NotFound("Could not find import record.");
         }
 
         if (!$this->acl->checkEntityDelete($import)) {
-            throw new Forbidden("No access import record.");
+            throw new Forbidden("No access to import record.");
         }
 
         $importEntityList = $this->entityManager
@@ -272,9 +280,14 @@ class Service
 
     /**
      * @return string Attachment ID.
+     * @throws Forbidden
      */
     public function uploadFile(string $contents): string
     {
+        if (!$this->acl->checkScope(ImportEntity::ENTITY_TYPE)) {
+            throw new Forbidden("No access to Import scope.");
+        }
+
         $attachment = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
 
         $attachment->set('type', 'text/csv');
@@ -293,7 +306,11 @@ class Service
      */
     public function removeDuplicates(string $id): void
     {
-        $import = $this->entityManager->getEntity(ImportEntity::ENTITY_TYPE, $id);
+        if (!$this->acl->checkScope(ImportEntity::ENTITY_TYPE)) {
+            throw new Forbidden("No access to Import scope.");
+        }
+
+        $import = $this->entityManager->getEntityById(ImportEntity::ENTITY_TYPE, $id);
 
         if (!$import) {
             throw new NotFound("Import '{$id}' not found.");
@@ -349,9 +366,14 @@ class Service
 
     /**
      * @throws NotFound
+     * @throws Forbidden
      */
     public function unmarkAsDuplicate(string $importId, string $entityType, string $entityId): void
     {
+        if (!$this->acl->checkScope(ImportEntity::ENTITY_TYPE)) {
+            throw new Forbidden("No access to Import scope.");
+        }
+
         $entity = $this->entityManager
             ->getRDBRepository(ImportEntityEntity::ENTITY_TYPE)
             ->where([

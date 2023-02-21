@@ -255,6 +255,36 @@
         "actionClassName": "Espo\\Tools\\Export\\Api\\PostSubscribe"
     },
     {
+        "route": "/Import",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Import\\Api\\Post"
+    },
+    {
+        "route": "/Import/file",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Import\\Api\\PostFile"
+    },
+    {
+        "route": "/Import/:id/revert",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Import\\Api\\PostRevert"
+    },
+    {
+        "route": "/Import/:id/removeDuplicates",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Import\\Api\\PostRemoveDuplicates"
+    },
+    {
+        "route": "/Import/:id/unmarkDuplicates",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Import\\Api\\PostUnmarkDuplicates"
+    },
+    {
+        "route": "/Import/:id/exportErrors",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Import\\Api\\PostExportErrors"
+    },
+    {
         "route": "/Kanban/order",
         "method": "put",
         "actionClassName": "Espo\\Tools\\Kanban\\Api\\PutOrder"
@@ -343,11 +373,6 @@
         "route": "/EmailAddress/search",
         "method": "get",
         "actionClassName": "Espo\\Tools\\EmailAddress\\Api\\GetSearch"
-    },
-    {
-        "route": "/Email/insertFieldData",
-        "method": "get",
-        "actionClassName": "Espo\\Tools\\Email\\Api\\GetInsertFieldData"
     },
     {
         "route": "/User/:id/acl",

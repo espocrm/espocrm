@@ -148,7 +148,7 @@ define('views/import/detail', 'views/detail', function (Dep) {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
                 Espo.Ajax
-                    .postRequest('Import/action/revert', {id: this.model.id})
+                    .postRequest(`Import/${this.model.id}/revert`)
                     .then(() => {
                         this.getRouter().navigate('#Import/list', {trigger: true});
                     });
@@ -162,7 +162,7 @@ define('views/import/detail', 'views/detail', function (Dep) {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
                 Espo.Ajax
-                    .postRequest('Import/action/removeDuplicates', {id: this.model.id})
+                    .postRequest(`Import/${this.model.id}/removeDuplicates`)
                     .then(() => {
                         this.removeMenuItem('removeDuplicates', true);
 

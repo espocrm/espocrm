@@ -32,26 +32,16 @@ namespace Espo\Classes\ConsoleCommands;
 use Espo\Tools\Import\Service;
 
 use Espo\Core\Utils\File\Manager as FileManager;
-
-use Espo\Core\{
-    Console\Command,
-    Console\Command\Params,
-    Console\IO,
-};
+use Espo\Core\Console\Command;
+use Espo\Core\Console\Command\Params;
+use Espo\Core\Console\IO;
 
 use Throwable;
 
 class Import implements Command
 {
-    private Service $service;
-
-    private FileManager $fileManager;
-
-    public function __construct(Service $service, FileManager $fileManager)
-    {
-        $this->service = $service;
-        $this->fileManager = $fileManager;
-    }
+    public function __construct(private Service $service, private FileManager $fileManager)
+    {}
 
     public function run(Params $params, IO $io) : void
     {

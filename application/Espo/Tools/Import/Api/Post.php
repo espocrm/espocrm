@@ -27,48 +27,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Tools\Import\Api;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-
-use Espo\Core\Exceptions\NotFound;
-use Espo\Tools\Import\Params as ImportParams;
-use Espo\Tools\Import\Service as Service;
-
+use Espo\Core\Acl;
+use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
-use Espo\Core\Controllers\Record;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Entities\Import;
+use Espo\Tools\Import\Params as ImportParams;
+use Espo\Tools\Import\Service;
 
-use Espo\Core\Di\InjectableFactoryAware;
-use Espo\Core\Di\InjectableFactorySetter;
-
-use stdClass;
-
-class Import extends Record
-
-    implements InjectableFactoryAware
+/**
+ * Creates imports.
+ */
+class Post implements Action
 {
-    use InjectableFactorySetter;
+    public function __construct(private Service $service, private Acl $acl) {}
 
-    protected function checkAccess(): bool
+    public function process(Request $request): Response
     {
-        return $this->acl->check('Import');
-    }
+        if (!$this->acl->checkScope(Import::ENTITY_TYPE)) {
+            throw new Forbidden();
+        }
 
-    public function putActionUpdate(Request $request, Response $response): stdClass
-    {
-        throw new Forbidden();
-    }
+        $data = $request->getParsedBody();
 
-    public function postActionCreateLink(Request $request): bool
-    {
-        throw new Forbidden();
-    }
+        $entityType = $data->entityType ?? null;
+        $attributeList = $data->attributeList ?? null;
+        $attachmentId = $data->attachmentId ?? null;
 
-    public function deleteActionRemoveLink(Request $request): bool
-    {
-        throw new Forbidden();
+        if (!is_array($attributeList)) {
+            throw new BadRequest("No `attributeList`.");
+        }
+
+        if (!$attachmentId) {
+            throw new BadRequest("No `attachmentId`.");
+        }
+
+        if (!$entityType) {
+            throw new BadRequest("No `entityType`.");
+        }
+
+        $params = ImportParams::fromRaw($data);
+
+        $result = $this->service->import($entityType, $attributeList, $attachmentId, $params);
+
+        return ResponseComposer::json($result->getValueMap());
     }
 }

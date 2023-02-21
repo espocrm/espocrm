@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/import/record/panels/duplicates', 'views/import/record/panels/imported', function (Dep) {
+define('views/import/record/panels/duplicates', ['views/import/record/panels/imported'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,23 +34,22 @@ Espo.define('views/import/record/panels/duplicates', 'views/import/record/panels
 
         setup: function () {
             this.title = this.title || this.translate('Duplicates', 'labels', 'Import');
+
             Dep.prototype.setup.call(this);
         },
 
         actionUnmarkAsDuplicate: function (data) {
-            var id = data.id;
-            var type = data.type;
+            let id = data.id;
+            let type = data.type;
 
-            this.confirm(this.translate('confirmation', 'messages'), function () {
-                this.ajaxPostRequest('Import/action/unmarkAsDuplicate', {
-                    id: this.model.id,
+            this.confirm(this.translate('confirmation', 'messages'), () => {
+                Espo.Ajax.postRequest(`Import/${this.model.id}/unmarkDuplicates`, {
                     entityId: id,
-                    entityType: type
-                }).then(function () {
+                    entityType: type,
+                }).then(() => {
                     this.collection.fetch();
                 });
-            }, this);
-        }
-
+            });
+        },
     });
 });

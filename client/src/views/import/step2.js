@@ -512,7 +512,7 @@ define('views/import/step2', 'view', function (Dep) {
 
             this.notify('File uploading...');
 
-            Espo.Ajax.postRequest('Import/action/uploadFile', null, {
+            Espo.Ajax.postRequest('Import/file', null, {
                 timeout: 0,
                 contentType: 'text/csv',
                 data: this.getParentView().fileContents,

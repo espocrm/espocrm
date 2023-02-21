@@ -35,9 +35,7 @@ define('handlers/import', ['action-handler'], function (Dep) {
 
         actionErrorExport() {
             Espo.Ajax
-                .postRequest('Import/action/exportErrors', {
-                    id: this.view.model.id
-                })
+                .postRequest(`Import/${this.view.model.id}/exportErrors`)
                 .then(data => {
                     if (!data.attachmentId) {
                         let message = this.view.translate('noErrors', 'messages', 'Import');
@@ -47,7 +45,7 @@ define('handlers/import', ['action-handler'], function (Dep) {
                         return;
                     }
 
-                    window.location = this.view.getBasePath() +'?entryPoint=download&id=' + data.attachmentId;
+                    window.location = this.view.getBasePath() + '?entryPoint=download&id=' + data.attachmentId;
                 });
         }
     }
