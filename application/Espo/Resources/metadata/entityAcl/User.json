@@ -17,7 +17,7 @@
             "nonAdminReadOnly": true
         },
         "authLogRecordId": {
-            "internal": true
+            "forbidden": true
         },
         "authMethod": {
             "onlyAdmin": true
@@ -60,7 +60,7 @@
             "onlyAdmin": true
         },
         "userData": {
-            "internal": true
+            "forbidden": true
         }
     },
     "links": {
@@ -89,7 +89,7 @@
             "onlyAdmin": true
         },
         "userData": {
-            "internal": true
+            "forbidden": true
         }
     }
 }

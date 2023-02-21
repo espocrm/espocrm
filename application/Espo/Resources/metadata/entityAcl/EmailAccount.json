@@ -7,10 +7,10 @@
             "internal": true
         },
         "imapHandler": {
-            "internal": true
+            "forbidden": true
         },
         "smtpHandler": {
-            "internal": true
+            "forbidden": true
         },
         "fetchData": {
             "readOnly": true

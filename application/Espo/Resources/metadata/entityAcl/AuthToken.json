@@ -1,15 +1,15 @@
 {
     "fields": {
         "hash": {
-            "internal": true,
+            "forbidden": true,
             "readOnly": true
         },
         "token": {
-            "internal": true,
+            "forbidden": true,
             "readOnly": true
         },
         "secret": {
-            "internal": true,
+            "forbidden": true,
             "readOnly": true
         },
         "portal": {
