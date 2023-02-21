@@ -70,6 +70,7 @@ class NameUtil
         'null',
         'false',
         'true',
+        'layout',
     ];
 
     /**
@@ -86,6 +87,7 @@ class NameUtil
         'False',
         'True',
         'Base',
+        'Layout',
     ];
 
     public function __construct(
