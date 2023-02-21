@@ -125,7 +125,7 @@ class LanguageService
                     continue;
                 }
 
-                if ($this->metadata->get(['entityAcl', $scope, 'languageAclDisabled'])) {
+                if ($this->metadata->get(['scopes', $scope, 'languageAclDisabled'])) {
                     continue;
                 }
 
