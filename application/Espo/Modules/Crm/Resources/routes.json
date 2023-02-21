@@ -1,14 +1,18 @@
 [
     {
-        "route": "/Activities/:scope/:id/:name",
+        "route": "/Activities/:parentType/:id/:type",
         "method": "get",
-        "params": {
-            "controller": "Activities",
-            "action": "list",
-            "scope": ":scope",
-            "id": ":id",
-            "name": ":name"
-        }
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\Activities\\Api\\Get"
+    },
+    {
+        "route": "/Activities/:parentType/:id/:type/list/:targetType",
+        "method": "get",
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\Activities\\Api\\GetListTyped"
+    },
+    {
+        "route": "/Activities/upcoming",
+        "method": "get",
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\Activities\\Api\\GetUpcoming"
     },
     {
         "route": "/Activities",
@@ -24,18 +28,6 @@
         "route": "/Timeline/busyRanges",
         "method": "get",
         "actionClassName": "Espo\\Modules\\Crm\\Tools\\Calendar\\Api\\GetBusyRanges"
-    },
-    {
-        "route": "/Activities/:scope/:id/:name/list/:entityType",
-        "method": "get",
-        "params": {
-            "controller": "Activities",
-            "action": "entityTypeList",
-            "scope": ":scope",
-            "id": ":id",
-            "name": ":name",
-            "entityType": ":entityType"
-        }
     },
     {
         "route": "/Meeting/:id/attendees",

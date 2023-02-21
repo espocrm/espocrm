@@ -27,33 +27,57 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+namespace Espo\Modules\Crm\Tools\Activities\Api;
 
-use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Record\SearchParamsFetcher;
+use Espo\Entities\User;
 use Espo\Modules\Crm\Tools\Activities\Service as Service;
 
-class Activities
+/**
+ * Upcoming activities.
+ */
+class GetUpcoming implements Action
 {
     public function __construct(
+        private User $user,
+        private SearchParamsFetcher $searchParamsFetcher,
         private Service $service
     ) {}
 
-    /**
-     * @throws BadRequest
-     */
-    public function postActionRemovePopupNotification(Request $request): bool
+    public function process(Request $request): Response
     {
-        $data = $request->getParsedBody();
+        $userId = $request->getQueryParam('userId');
 
-        if (empty($data->id)) {
-            throw new BadRequest();
+        if (!$userId) {
+            $userId = $this->user->getId();
         }
 
-        $id = $data->id;
+        $searchParams = $this->searchParamsFetcher->fetch($request);
 
-        $this->service->removeReminder($id);
+        $offset = $searchParams->getOffset();
+        $maxSize = $searchParams->getMaxSize();
 
-        return true;
+        $entityTypeList = (array) ($request->getQueryParams()['entityTypeList'] ?? null);
+
+        $futureDays = intval($request->getQueryParam('futureDays'));
+
+        $recordCollection = $this->service->getUpcomingActivities(
+            $userId,
+            [
+                'offset' => $offset,
+                'maxSize' => $maxSize,
+            ],
+            $entityTypeList,
+            $futureDays
+        );
+
+        return ResponseComposer::json([
+            'total' => $recordCollection->getTotal(),
+            'list' => $recordCollection->getValueMapList(),
+        ]);
     }
 }

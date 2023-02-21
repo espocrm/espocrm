@@ -141,8 +141,9 @@ define(
         afterRender: function () {
             this.collection = new MultiCollection();
             this.collection.seeds = this.seeds;
-            this.collection.url = 'Activities/action/listUpcoming';
-            this.collection.maxSize = this.getOption('displayRecords') || this.getConfig().get('recordsPerPageSmall') || 5;
+            this.collection.url = 'Activities/upcoming';
+            this.collection.maxSize = this.getOption('displayRecords') ||
+                this.getConfig().get('recordsPerPageSmall') || 5;
             this.collection.data.entityTypeList = this.scopeList;
             this.collection.data.futureDays = this.getOption('futureDays');
 

@@ -27,33 +27,65 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+namespace Espo\Modules\Crm\Tools\Activities\Api;
 
-use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Record\SearchParamsFetcher;
 use Espo\Modules\Crm\Tools\Activities\Service as Service;
 
-class Activities
+/**
+ * Activities of specific entity type related to a record.
+ */
+class GetListTyped implements Action
 {
     public function __construct(
+        private SearchParamsFetcher $searchParamsFetcher,
         private Service $service
     ) {}
 
-    /**
-     * @throws BadRequest
-     */
-    public function postActionRemovePopupNotification(Request $request): bool
+    public function process(Request $request): Response
     {
-        $data = $request->getParsedBody();
+        $parentType = $request->getRouteParam('parentType');
+        $id = $request->getRouteParam('id');
+        $type = $request->getRouteParam('type');
+        $targetType = $request->getRouteParam('targetType');
 
-        if (empty($data->id)) {
+        if (
+            !$parentType ||
+            !$id ||
+            !$type ||
+            !$targetType
+        ) {
             throw new BadRequest();
         }
 
-        $id = $data->id;
+        if ($type === 'activities') {
+            $isHistory = false;
+        }
+        else  if ($type === 'history') {
+            $isHistory = true;
+        }
+        else {
+            throw new BadRequest("Bad type.");
+        }
 
-        $this->service->removeReminder($id);
+        $searchParams = $this->searchParamsFetcher->fetch($request);
 
-        return true;
+        $result = $this->service->findActivitiesEntityType(
+            $parentType,
+            $id,
+            $targetType,
+            $isHistory,
+            $searchParams
+        );
+
+        return ResponseComposer::json([
+            'total' => $result->getTotal(),
+            'list' => $result->getValueMapList(),
+        ]);
     }
 }
