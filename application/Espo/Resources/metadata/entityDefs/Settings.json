@@ -1,4 +1,5 @@
 {
+    "skipRebuild": true,
     "fields": {
         "useCache": {
             "type": "bool",
