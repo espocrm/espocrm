@@ -40,8 +40,6 @@ return [
     'Preferences' => [
         'fields' => [
             'id' => [
-                'dbType' => 'varchar',
-                'len' => 24,
                 'type' => 'id',
             ],
             'data' => [
