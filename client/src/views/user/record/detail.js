@@ -122,8 +122,6 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 });
             }
 
-            console.log(this.getConfig().get('authAnotherUserDisabled'));
-
             if (
                 this.getUser().isAdmin() &&
                 this.model.isRegular() &&
