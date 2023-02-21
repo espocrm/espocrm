@@ -101,6 +101,8 @@ class Functions
         'FLOOR',
         'CEIL',
         'ROUND',
+        'GREATEST',
+        'LEAST',
         'COALESCE',
         'IF',
         'LIKE',
