@@ -2,7 +2,8 @@
     "fields": {
         "id": {
             "type": "id",
-            "maxLength": 3
+            "maxLength": 3,
+            "dbType": "string"
         },
         "rate": {
             "type": "float"
