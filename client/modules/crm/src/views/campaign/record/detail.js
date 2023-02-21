@@ -87,14 +87,12 @@ define('crm:views/campaign/record/detail', ['views/record/detail'], function (De
 
                     Espo.Ui.notify(' ... ');
 
-                    Espo.Ajax.postRequest('Campaign/action/generateMailMergePdf', {
-                        campaignId: this.model.id,
-                        link: link,
-                    }).then(response => {
-                        Espo.Ui.notify(false);
+                    Espo.Ajax.postRequest(`Campaign/${this.model.id}/generateMailMerge`, {link: link})
+                        .then(response => {
+                            Espo.Ui.notify(false);
 
-                        window.open('?entryPoint=download&id=' + response.id, '_blank');
-                    });
+                            window.open('?entryPoint=download&id=' + response.id, '_blank');
+                        });
                 });
             });
         },

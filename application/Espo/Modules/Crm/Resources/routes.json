@@ -44,5 +44,10 @@
             "controller": "Call",
             "action": "attendees"
         }
+    },
+    {
+        "route": "/Campaign/:id/generateMailMerge",
+        "method": "post",
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\Campaign\\Api\\PostGenerateMailMerge"
     }
 ]
