@@ -36,8 +36,7 @@ use ReflectionClass;
 
 /**
  * DI container for services. Lazy initialization is used. Services are instantiated only once.
- *
- * See https://docs.espocrm.com/development/di/.
+ * @see https://docs.espocrm.com/development/di/.
  */
 interface Container extends ContainerInterface
 {
@@ -67,4 +66,14 @@ interface Container extends ContainerInterface
      * @throws NotFoundExceptionInterface If not gettable.
      */
     public function getClass(string $id): ReflectionClass;
+
+    /**
+     * Get a service by a class name. A service should be bound to a class or interface.
+     *
+     * @template T of object
+     * @param class-string<T> $className A class name or interface name.
+     * @return T A service instance.
+     * @throws NotFoundExceptionInterface If not gettable.
+     */
+    public function getByClass(string $className): object;
 }

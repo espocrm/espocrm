@@ -29,6 +29,7 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Binding\Binding;
 use Espo\Core\Container\Exceptions\NotFoundException;
 use Espo\Core\Container\Exceptions\NotSettableException;
 use Espo\Core\Container\Loader;
@@ -45,7 +46,7 @@ use RuntimeException;
 
 /**
  * DI container for services. Lazy initialization is used. Services are instantiated only once.
- * See https://docs.espocrm.com/development/di/.
+ * @see https://docs.espocrm.com/development/di/.
  */
 class Container implements ContainerInterface
 {
@@ -60,7 +61,6 @@ class Container implements ContainerInterface
     private array $loaderClassNames;
 
     private ?Configuration $configuration = null;
-    private ?BindingContainer $bindingContainer = null;
     private InjectableFactory $injectableFactory;
 
     /**
@@ -71,9 +71,9 @@ class Container implements ContainerInterface
      */
     public function __construct(
         string $configurationClassName,
+        private BindingContainer $bindingContainer,
         array $loaderClassNames = [],
-        array $services = [],
-        ?BindingContainer $bindingContainer = null
+        array $services = []
     ) {
         $this->loaderClassNames = $loaderClassNames;
 
@@ -85,8 +85,6 @@ class Container implements ContainerInterface
             $this->setForced($name, $service);
         }
 
-        $this->bindingContainer = $bindingContainer;
-
         /** @var InjectableFactory $injectableFactory */
         $injectableFactory = $this->get(self::ID_INJECTABLE_FACTORY);
         $this->injectableFactory = $injectableFactory;
@@ -95,9 +93,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * Obtain a service object.
-     *
-     * @throws NotFoundExceptionInterface If not gettable.
+     * @inheritDoc
      */
     public function get(string $id): object
     {
@@ -113,7 +109,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * Check whether a service can be obtained.
+     * @inheritDoc
      */
     public function has(string $id): bool
     {
@@ -144,6 +140,31 @@ class Container implements ContainerInterface
         }
 
         return false;
+    }
+
+    /**
+     * @inheritDoc
+     * @template T of object
+     * @param class-string<T> $className A class name or interface name.
+     * @return T A service instance.
+     * @throws NotFoundExceptionInterface If not gettable.
+     */
+    public function getByClass(string $className): object
+    {
+        $binding = $this->bindingContainer->getByInterface($className);
+
+        if ($binding->getType() !== Binding::CONTAINER_SERVICE) {
+            throw new NotFoundException("No service bound to `{$className}`.");
+        }
+
+        $id = $binding->getValue();
+
+        if (!is_string($id)) {
+            throw new LogicException();
+        }
+
+        /** @var T */
+        return $this->get($id);
     }
 
     private function isSet(string $id): bool
@@ -243,9 +264,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * Set a service object. Must be configured as settable.
-     *
-     * @throws NotSettableException Is not settable or already set.
+     * @inheritDoc
      */
     public function set(string $id, object $object): void
     {

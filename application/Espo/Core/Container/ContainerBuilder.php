@@ -30,7 +30,6 @@
 namespace Espo\Core\Container;
 
 use Espo\Core\Container;
-use Espo\Core\Container\ContainerConfiguration;
 use Espo\Core\Container\Container as ContainerInterface;
 
 use Espo\Core\Binding\BindingContainer;
@@ -194,9 +193,9 @@ class ContainerBuilder
 
         return new $this->containerClassName(
             $this->containerConfigurationClassName,
+            $bindingContainer,
             $this->loaderClassNames,
-            $this->services,
-            $bindingContainer
+            $this->services
         );
     }
 }
