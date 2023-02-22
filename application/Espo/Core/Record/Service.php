@@ -32,6 +32,7 @@ namespace Espo\Core\Record;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Binding\ContextualBinder;
 use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Exceptions\Error\Body as ErrorBody;
 use Espo\Core\Exceptions\BadRequest;
@@ -790,6 +791,8 @@ class Service implements Crud,
      *
      * @return RecordCollection<TEntity>
      * @throws Forbidden
+     * @throws BadRequest
+     * @throws Error
      */
     public function find(SearchParams $searchParams, ?FindParams $params = null): RecordCollection
     {
@@ -917,6 +920,8 @@ class Service implements Crud,
      * @return RecordCollection<Entity>
      * @throws NotFound If a record not found.
      * @throws Forbidden If no access.
+     * @throws BadRequest
+     * @throws Error
      */
     public function findLinked(string $id, string $link, SearchParams $searchParams): RecordCollection
     {
