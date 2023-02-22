@@ -101,7 +101,9 @@ class LogLoader
 
         $formatter = new LineFormatter(
             self::LINE_FORMAT,
-            self::DATE_FORMAT
+            self::DATE_FORMAT,
+            false,
+            true
         );
 
         $handler->setFormatter($formatter);
