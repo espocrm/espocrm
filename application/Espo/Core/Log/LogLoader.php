@@ -29,43 +29,30 @@
 
 namespace Espo\Core\Log;
 
-use Espo\Core\{
-    InjectableFactory,
-    Utils\Config,
-    Utils\Log,
-    Log\HandlerListLoader,
-    Log\Handler\EspoRotatingFileHandler,
-    Log\Handler\EspoFileHandler,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Log\Handler\EspoFileHandler;
+use Espo\Core\Log\Handler\EspoRotatingFileHandler;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
 
-use Monolog\{
-    Logger,
-    ErrorHandler as MonologErrorHandler,
-    Formatter\LineFormatter,
-    Handler\HandlerInterface,
-};
+use Monolog\ErrorHandler as MonologErrorHandler;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\HandlerInterface;
+use Monolog\Logger;
 
 class LogLoader
 {
-    const LINE_FORMAT = "[%datetime%] %level_name%: %message% %context% %extra%\n";
+    private const LINE_FORMAT = "[%datetime%] %level_name%: %message% %context% %extra%\n";
+    private const DATE_FORMAT = 'Y-m-d H:i:s';
+    private const PATH = 'data/logs/espo.log';
 
-    const DATE_FORMAT = 'Y-m-d H:i:s';
+    private const MAX_FILE_NUMBER = 30;
+    private const DEFAULT_LEVEL = 'WARNING';
 
-    const PATH = 'data/logs/espo.log';
-
-    const MAX_FILE_NUMBER = 30;
-
-    const DEFAULT_LEVEL = 'WARNING';
-
-    protected Config $config;
-
-    protected InjectableFactory $injectableFactory;
-
-    public function __construct(Config $config, InjectableFactory $injectableFactory)
-    {
-        $this->config = $config;
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(
+        private Config $config,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     public function load(): Log
     {
@@ -77,13 +64,10 @@ class LogLoader
             $level = $this->config->get('logger.level');
 
             $loader = $this->injectableFactory->create(HandlerListLoader::class);
-
             $handlerList = $loader->load($handlerDataList, $level);
         }
         else {
-            $handler = $this->createDefaultHandler();
-
-            $handlerList = [$handler];
+            $handlerList = [$this->createDefaultHandler()];
         }
 
         foreach ($handlerList as $handler) {

@@ -29,24 +29,16 @@
 
 namespace Espo\Core\Log;
 
-use Espo\Core\{
-    Log\Handler\EspoRotatingFileHandler,
-    Utils\Config,
-};
+use Espo\Core\Log\Handler\EspoRotatingFileHandler;
+use Espo\Core\Utils\Config;
 
-use Monolog\{
-    Logger,
-    Handler\HandlerInterface,
-};
+use Monolog\Handler\HandlerInterface;
+use Monolog\Logger;
 
 class EspoRotatingFileHandlerLoader implements HandlerLoader
 {
-    private $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private Config $config)
+    {}
 
     public function load(array $params): HandlerInterface
     {

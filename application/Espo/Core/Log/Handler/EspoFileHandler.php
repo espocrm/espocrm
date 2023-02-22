@@ -29,15 +29,11 @@
 
 namespace Espo\Core\Log\Handler;
 
-use Monolog\{
-    Logger,
-    Handler\StreamHandler as MonologStreamHandler,
-};
+use Monolog\Handler\StreamHandler as MonologStreamHandler;
+use Monolog\Logger;
 
-use Espo\Core\{
-    Utils\File\Manager as FileManager,
-    Utils\Config,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
 
 use RuntimeException;
 use Throwable;
@@ -46,13 +42,15 @@ class EspoFileHandler extends MonologStreamHandler
 {
     protected FileManager $fileManager;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $maxErrorMessageLength = 5000;
 
-    public function __construct(Config $config, string $filename, int $level = Logger::DEBUG, bool $bubble = true)
-    {
+    public function __construct(
+        Config $config,
+        string $filename,
+        int $level = Logger::DEBUG,
+        bool $bubble = true
+    ) {
         parent::__construct($filename, $level, $bubble);
 
         $defaultPermissions = $config->get('defaultPermissions');
@@ -69,9 +67,7 @@ class EspoFileHandler extends MonologStreamHandler
     protected function write(array $record): void
     {
         if (!$this->url) {
-            throw new RuntimeException(
-                "Missing a logger file path. Check logger params in config."
-            );
+            throw new RuntimeException("Missing a logger file path. Check logger params in config.");
         }
 
         try {

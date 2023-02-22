@@ -34,7 +34,7 @@ use Monolog\Handler\HandlerInterface;
 interface HandlerLoader
 {
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     public function load(array $params): HandlerInterface;
 }

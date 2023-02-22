@@ -31,30 +31,17 @@ namespace Espo\Core\Log\Handler;
 
 use Monolog\Logger;
 
-use Espo\Core\{
-    Utils\Config,
-};
+use Espo\Core\Utils\Config;
 
 class EspoRotatingFileHandler extends EspoFileHandler
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $dateFormat = 'Y-m-d';
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $filenameFormat = '{filename}-{date}';
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $filename;
-
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $maxFiles;
 
     public function __construct(
@@ -125,8 +112,8 @@ class EspoRotatingFileHandler extends EspoFileHandler
         $fileInfo = pathinfo($this->filename);
 
         $glob = str_replace(
-            array('{filename}', '{date}'),
-            array($fileInfo['filename'], '.*'),
+            ['{filename}', '{date}'],
+            [$fileInfo['filename'], '.*'],
             $this->filenameFormat
         );
 
@@ -134,8 +121,6 @@ class EspoRotatingFileHandler extends EspoFileHandler
             $glob .= '\.'.$fileInfo['extension'];
         }
 
-        $glob = '^'.$glob.'$';
-
-        return $glob;
+        return '^' . $glob . '$';
     }
 }

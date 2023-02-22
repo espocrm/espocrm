@@ -27,19 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\Console;
+namespace tests\unit\Espo\Core\Log;
 
-use Espo\Core\{
-    InjectableFactory,
-    Log\HandlerListLoader,
-    Log\EspoRotatingFileHandlerLoader,
-    Log\DefaultHandlerLoader,
-    Log\Handler\EspoRotatingFileHandler,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Log\DefaultHandlerLoader;
+use Espo\Core\Log\EspoRotatingFileHandlerLoader;
+use Espo\Core\Log\Handler\EspoRotatingFileHandler;
+use Espo\Core\Log\HandlerListLoader;
 
-use Monolog\{
-    Logger,
-};
+use Monolog\Logger;
 
 class HandlerListLoaderTest extends \PHPUnit\Framework\TestCase
 {

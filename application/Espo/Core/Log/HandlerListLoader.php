@@ -29,27 +29,20 @@
 
 namespace Espo\Core\Log;
 
-use Monolog\{
-    Logger,
-    Handler\HandlerInterface,
-};
+use Monolog\Handler\HandlerInterface;
+use Monolog\Logger;
 
 use Espo\Core\InjectableFactory;
 
 class HandlerListLoader
 {
-    protected InjectableFactory $injectableFactory;
-
-    protected DefaultHandlerLoader $defaultLoader;
-
-    public function __construct(InjectableFactory $injectableFactory, DefaultHandlerLoader $defaultLoader)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->defaultLoader = $defaultLoader;
-    }
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private DefaultHandlerLoader $defaultLoader
+    ) {}
 
     /**
-     * @param array<array<string,mixed>> $dataList
+     * @param array<array<string, mixed>> $dataList
      * @return HandlerInterface[]
      */
     public function load(array $dataList, ?string $defaultLevel = null): array
@@ -70,31 +63,26 @@ class HandlerListLoader
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     protected function loadHandler(array $data, ?string $defaultLevel = null): ?HandlerInterface
     {
         $params = $data['params'] ?? [];
-
         $level = $data['level'] ?? $defaultLevel;
 
         if ($level) {
             $params['level'] = Logger::toMonologLevel($level);
         }
 
-        /** @var ?class-string<\Espo\Core\Log\HandlerLoader> $loaderClassName */
+        /** @var ?class-string<HandlerLoader> $loaderClassName */
         $loaderClassName = $data['loaderClassName'] ?? null;
 
         if ($loaderClassName) {
             $loader = $this->injectableFactory->create($loaderClassName);
 
-            $handler = $loader->load($params);
-
-            return $handler;
+            return $loader->load($params);
         }
 
-        $handler = $this->defaultLoader->load($data, $defaultLevel);
-
-        return $handler;
+        return $this->defaultLoader->load($data, $defaultLevel);
     }
 }

@@ -29,38 +29,40 @@
 
 namespace Espo\Core\Log;
 
-use Monolog\{
-    Logger,
-    Handler\HandlerInterface,
-    Handler\FormattableHandlerInterface,
-    Formatter\FormatterInterface,
-};
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Handler\FormattableHandlerInterface;
+use Monolog\Handler\HandlerInterface;
+use Monolog\Logger;
 
 use ReflectionClass;
 use RuntimeException;
 
+/**
+ * @phpstan-type DefaultHandlerLoaderData array{
+ *     className?: ?class-string<HandlerInterface>,
+ *     params?: ?array<string, mixed>,
+ *     level?: ?string,
+ *     formatter?: ?FormatterData,
+ * }
+ * @phpstan-type FormatterData array{
+ *     className?: ?class-string<FormatterInterface>,
+ *     params?: ?array<string, mixed>,
+ * }
+ */
 class DefaultHandlerLoader
 {
     /**
-     * @param array{
-     *   className?: ?class-string<HandlerInterface>,
-     *   params?: ?array<string,mixed>,
-     *   level?: ?string,
-     * } $data
+     * @param DefaultHandlerLoaderData $data
      */
     public function load(array $data, ?string $defaultLevel = null): HandlerInterface
     {
-        /** @var array<mixed,mixed> $data */
-
         $params = $data['params'] ?? [];
-
         $level = $data['level'] ?? $defaultLevel;
 
         if ($level) {
             $params['level'] = Logger::toMonologLevel($level);
         }
 
-        /** @var ?class-string<HandlerInterface> $className */
         $className = $data['className'] ?? null;
 
         if (!$className) {
@@ -79,23 +81,16 @@ class DefaultHandlerLoader
     }
 
     /**
-     * @param array{
-     *   formatter?: ?string,
-     *   className?: ?class-string<FormatterInterface>,
-     *   params?: ?array<string,mixed>
-     * } $data
+     * @param DefaultHandlerLoaderData $data
      */
     protected function loadFormatter(array $data): ?FormatterInterface
     {
-        /** @var array<mixed,mixed> $data */
-
         $formatterData = $data['formatter'] ?? null;
 
         if (!$formatterData || !is_array($formatterData)) {
             return null;
         }
 
-        /** @var ?class-string<FormatterInterface> $className */
         $className = $formatterData['className'] ?? null;
 
         if (!$className) {
@@ -110,7 +105,7 @@ class DefaultHandlerLoader
     /**
      * @template T of object
      * @param class-string<T> $className
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @return T
      */
     protected function createInstance(string $className, array $params): object
