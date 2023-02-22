@@ -65,13 +65,34 @@ class IO
      */
     public function readLine(): string
     {
+        return $this->readLineInternal();
+    }
+
+    /**
+     * Read a secret line from input. A string is trimmed.
+     */
+    public function readSecretLine(): string
+    {
+        return $this->readLineInternal(true);
+    }
+
+    private function readLineInternal(bool $secret = false): string
+    {
         $resource = fopen('php://stdin', 'r');
 
         if ($resource === false) {
             throw new RuntimeException("Could not open stdin.");
         }
 
+        if ($secret && !self::isWindows()) {
+            shell_exec('stty -echo');
+        }
+
         $readString = fgets($resource);
+
+        if ($secret && !self::isWindows()) {
+            shell_exec('stty echo');
+        }
 
         if ($readString === false) {
             $readString = '';
@@ -82,6 +103,11 @@ class IO
         fclose($resource);
 
         return $string;
+    }
+
+    private static function isWindows(): bool
+    {
+        return strcasecmp(substr(PHP_OS, 0, 3), 'WIN') === 0;
     }
 
     /**

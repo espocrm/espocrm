@@ -76,7 +76,7 @@ class SetPassword implements Command
 
         $io->writeLine("Enter a new password:");
 
-        $password = $io->readLine();
+        $password = $io->readSecretLine();
 
         if (!$password) {
             $io->writeLine("Password can not be empty.");
