@@ -48,7 +48,7 @@ class Expression implements WhereItem
             throw new RuntimeException("Expression can't be empty.");
         }
 
-        if (substr($expression, -1) === ':') {
+        if (str_ends_with($expression, ':')) {
             throw new RuntimeException("Expression should not end with `:`.");
         }
 
@@ -651,6 +651,22 @@ class Expression implements WhereItem
     public static function round(Expression $number, int $precision = 0): self
     {
         return self::composeFunction('ROUND', $number, $precision);
+    }
+
+    /**
+     * 'GREATEST' function. A max value from a list of expressions.
+     */
+    public static function greatest(Expression ...$expressionList): self
+    {
+        return self::composeFunction('GREATEST', ...$expressionList);
+    }
+
+    /**
+     * 'LEAST' function. A min value from a list of expressions.
+     */
+    public static function least(Expression ...$expressionList): self
+    {
+        return self::composeFunction('LEAST', ...$expressionList);
     }
 
     /**
