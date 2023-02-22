@@ -845,8 +845,12 @@ class EntityManager
         }
 
         if ($entity === $entityForeign) {
-            if ($link === ucfirst($entity) || $linkForeign === ucfirst($entity)) {
-                throw new Conflict();
+            if (
+                $link === lcfirst($entity) ||
+                $linkForeign === lcfirst($entity) ||
+                $link === $linkForeign
+            ) {
+                throw new Conflict("Link names {$entityForeign}, {$linkForeign} conflict.");
             }
         }
 
