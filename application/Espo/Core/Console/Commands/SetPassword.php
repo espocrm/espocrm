@@ -46,7 +46,7 @@ class SetPassword implements Command
         $userName = $params->getArgument(0);
 
         if (!$userName) {
-            $io->writeLine("User name must be specified.");
+            $io->writeLine("Username must be specified as the first argument.");
             $io->setExitStatus(1);
 
             return;
@@ -54,7 +54,7 @@ class SetPassword implements Command
 
         $em = $this->entityManager;
 
-        $user = $em->getRDBRepository(User::ENTITY_TYPE)
+        $user = $em->getRDBRepositoryByClass(User::class)
             ->where(['userName' => $userName])
             ->findOne();
 
@@ -65,9 +65,16 @@ class SetPassword implements Command
             return;
         }
 
-        if (!in_array($user->get('type'), ['admin', 'super-admin', 'portal', 'regular'])) {
-            $userType = $user->get('type');
+        $userType = $user->getType();
 
+        $allowedTypes = [
+            User::TYPE_ADMIN,
+            User::TYPE_SUPER_ADMIN,
+            User::TYPE_PORTAL,
+            User::TYPE_REGULAR,
+        ];
+
+        if (!in_array($userType, $allowedTypes)) {
             $io->writeLine("Can't set password for a user of the type '{$userType}'.");
             $io->setExitStatus(1);
 
@@ -79,7 +86,7 @@ class SetPassword implements Command
         $password = $io->readSecretLine();
 
         if (!$password) {
-            $io->writeLine("Password can not be empty.");
+            $io->writeLine("Password cannot be empty.");
             $io->setExitStatus(1);
 
             return;
@@ -89,6 +96,6 @@ class SetPassword implements Command
 
         $em->saveEntity($user);
 
-        $io->writeLine("Password for user '{$userName}' is changed.");
+        $io->writeLine("Password for user '{$userName}' has been changed.");
     }
 }
