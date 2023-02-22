@@ -30,25 +30,16 @@
 namespace Espo\Core\Console\Commands;
 
 use Espo\Entities\User;
-use Espo\Core\{
-    ORM\EntityManager,
-    Utils\PasswordHash,
-    Console\Command,
-    Console\Command\Params,
-    Console\IO,
-};
+use Espo\Core\Console\Command;
+use Espo\Core\Console\Command\Params;
+use Espo\Core\Console\IO;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\PasswordHash;
 
 class SetPassword implements Command
 {
-    private $entityManager;
-
-    private $passwordHash;
-
-    public function __construct(EntityManager $entityManager, PasswordHash $passwordHash)
-    {
-        $this->entityManager = $entityManager;
-        $this->passwordHash = $passwordHash;
-    }
+    public function __construct(private EntityManager $entityManager, private PasswordHash $passwordHash)
+    {}
 
     public function run(Params $params, IO $io): void
     {
