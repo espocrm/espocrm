@@ -149,6 +149,10 @@ class Converter
                 $ormMetadata[$entityType]['skipRebuild'] = true;
             }
 
+            if ($entityMetadata['modifierClassName'] ?? null) {
+                $ormMetadata[$entityType]['modifierClassName'] = $entityMetadata['modifierClassName'];
+            }
+
             /** @var array<string, array<string, mixed>> $ormMetadata */
             $ormMetadata = Util::merge(
                 $ormMetadata,

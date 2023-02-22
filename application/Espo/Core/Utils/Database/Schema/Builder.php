@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
+use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Database\ConfigDataProvider;
 use Espo\Core\Utils\Database\MetadataProvider as MetadataProvider;
 use Espo\Core\Utils\File\Manager as FileManager;
@@ -50,6 +51,8 @@ use Doctrine\DBAL\Schema\Schema as DbalSchema;
 use Doctrine\DBAL\Types\Type as DbalType;
 use Espo\ORM\Type\AttributeType;
 
+use const E_USER_DEPRECATED;
+
 /**
  * Schema representation builder.
  */
@@ -70,6 +73,7 @@ class Builder
         private Metadata $metadata,
         private FileManager $fileManager,
         private Log $log,
+        private InjectableFactory $injectableFactory,
         private PathProvider $pathProvider,
         ConfigDataProvider $configDataProvider,
         ColumnPreparatorFactory $columnPreparatorFactory,
@@ -136,6 +140,14 @@ class Builder
 
         $entityType = $entityDefs->getName();
 
+        $modifier = $this->getEntityDefsModifier($entityDefs);
+
+        if ($modifier) {
+            $modifiedEntityDefs = $modifier->modify($entityDefs);
+
+            $entityDefs = EntityDefs::fromRaw($modifiedEntityDefs->toAssoc(), $entityType);
+        }
+
         $this->log->debug("Schema\Builder: Entity {$entityType}");
 
         $tableName = Util::toUnderScore($entityType);
@@ -194,6 +206,18 @@ class Builder
         $table->setPrimaryKey($primaryColumns);
 
         $this->addIndexes($table, $entityDefs->getIndexList());
+    }
+
+    private function getEntityDefsModifier(EntityDefs $entityDefs): ?EntityDefsModifier
+    {
+        /** @var ?class-string<EntityDefsModifier> $modifierClassName */
+        $modifierClassName = $entityDefs->getParam('modifierClassName');
+
+        if (!$modifierClassName) {
+            return null;
+        }
+
+        return $this->injectableFactory->create($modifierClassName);
     }
 
     /**
@@ -463,6 +487,13 @@ class Builder
             $customTables,
             $this->loadData($this->pathProvider->getCustom() . $this->tablesPath)
         );
+
+        if ($customTables !== []) {
+            trigger_error(
+                'Definitions in Database\\Schema\\tables are deprecated and will be remove in v8.0.',
+                E_USER_DEPRECATED
+            );
+        }
 
         return $customTables;
     }

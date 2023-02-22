@@ -186,5 +186,6 @@
             "default": false
         }
     },
-    "noDeletedAttribute": true
+    "noDeletedAttribute": true,
+    "modifierClassName": "Espo\\Core\\Utils\\Database\\Schema\\EntityDefsModifiers\\JsonData"
 }

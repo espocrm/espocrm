@@ -27,24 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return [
-    'unset' => [
-        '__APPEND__',
-        'Preferences',
-    ],
-    'unsetIgnore' => [
-        '__APPEND__',
-        ['Preferences', 'fields', 'id'],
-        ['Preferences', 'fields', 'data'],
-    ],
-    'Preferences' => [
-        'fields' => [
-            'id' => [
-                'type' => 'id',
-            ],
-            'data' => [
-                'type' => 'text',
-            ]
-        ]
-    ],
-];
+namespace Espo\Core\Utils\Database\Schema;
+
+use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
+use Espo\ORM\Defs\EntityDefs as OrmEntityDefs;
+
+/**
+ * Modifies definitions before building a schema.
+ */
+interface EntityDefsModifier
+{
+    public function modify(OrmEntityDefs $entityDefs): EntityDefs;
+}
