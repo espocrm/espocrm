@@ -264,25 +264,30 @@ define('views/admin/link-manager/index', ['view'], function (Dep) {
             this.linkDataList.forEach(item => {
                 let matched = false;
 
+                let label = item.label || '';
+                let link = item.link || '';
+                let entityForeign = item.entityForeign || '';
+                let labelEntityForeign = item.labelEntityForeign || '';
+
                 if (
-                    item.label.toLowerCase().indexOf(lowerCaseText) === 0 ||
-                    item.link.toLowerCase().indexOf(lowerCaseText) === 0 ||
-                    item.entityForeign.toLowerCase().indexOf(lowerCaseText) === 0 ||
-                    item.labelEntityForeign.toLowerCase().indexOf(lowerCaseText) === 0
+                    label.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                    link.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                    entityForeign.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                    labelEntityForeign.toLowerCase().indexOf(lowerCaseText) === 0
                 ) {
                     matched = true;
                 }
 
                 if (!matched) {
-                    let wordList = item.link.split(' ')
+                    let wordList = link.split(' ')
                         .concat(
-                            item.label.split(' ')
+                            label.split(' ')
                         )
                         .concat(
-                            item.entityForeign.split(' ')
+                            entityForeign.split(' ')
                         )
                         .concat(
-                            item.labelEntityForeign.split(' ')
+                            labelEntityForeign.split(' ')
                         );
 
                     wordList.forEach((word) => {
@@ -293,7 +298,7 @@ define('views/admin/link-manager/index', ['view'], function (Dep) {
                 }
 
                 if (matched) {
-                    matchedList.push(item.link);
+                    matchedList.push(link);
                 }
             });
 
