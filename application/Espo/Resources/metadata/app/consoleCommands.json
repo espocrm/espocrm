@@ -27,6 +27,10 @@
     "version": {
         "listed": true
     },
+    "createAdminUser": {
+        "className": "Espo\\Classes\\ConsoleCommands\\CreateAdminUser",
+        "listed": true
+    },
     "rebuildCategoryPaths": {
         "className": "Espo\\Classes\\ConsoleCommands\\RebuildCategoryPaths",
         "listed": false
