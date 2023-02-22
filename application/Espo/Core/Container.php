@@ -299,14 +299,14 @@ class Container implements ContainerInterface
      */
     private function load(string $id): void
     {
-        if ($id === 'container') {
-            $this->setForced('container', $this->loadContainer());
+        if ($id === self::ID_CONTAINER) {
+            $this->setForced(self::ID_CONTAINER, $this->loadContainer());
 
             return;
         }
 
-        if ($id === 'injectableFactory') {
-            $this->setForced('injectableFactory', $this->loadInjectableFactory());
+        if ($id === self::ID_INJECTABLE_FACTORY) {
+            $this->setForced(self::ID_INJECTABLE_FACTORY, $this->loadInjectableFactory());
 
             return;
         }

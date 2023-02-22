@@ -52,46 +52,22 @@ use Espo\Core\Loaders\Metadata as MetadataLoader;
  */
 class ContainerBuilder
 {
-    /**
-     * @var class-string<\Espo\Core\Container\Container>
-     */
+    /** @var class-string<ContainerInterface> */
     private string $containerClassName = Container::class;
-
-    /**
-     * @var class-string<\Espo\Core\Container\Configuration>
-     */
+    /** @var class-string<Configuration> */
     private string $containerConfigurationClassName = ContainerConfiguration::class;
-
-    /**
-     * @var class-string
-     */
+    /** @var class-string */
     private string $configClassName = Config::class;
-
-    /**
-     * @var class-string
-     */
+    /** @var class-string */
     private string $fileManagerClassName = FileManager::class;
-
-    /**
-     * @var class-string
-     */
+    /** @var class-string */
     private string $dataCacheClassName = DataCache::class;
-
-    /**
-     * @var class-string<Module>
-     */
+    /** @var class-string<Module> */
     private string $moduleClassName = Module::class;
-
     private ?BindingLoader $bindingLoader = null;
-
-    /**
-     * @var array<string,object>
-     */
+    /** @var array<string, object> */
     private $services = [];
-
-    /**
-     * @var array<string,class-string<\Espo\Core\Container\Loader>>
-     */
+    /** @var array<string, class-string<Loader>> */
     protected $loaderClassNames = [
         'log' => LogLoader::class,
         'dataManager' => DataManagerLoader::class,
@@ -106,7 +82,7 @@ class ContainerBuilder
     }
 
     /**
-     * @param array<string,object> $services
+     * @param array<string, object> $services
      */
     public function withServices(array $services): self
     {
@@ -118,7 +94,7 @@ class ContainerBuilder
     }
 
     /**
-     * @param array<string,class-string<\Espo\Core\Container\Loader>> $classNames
+     * @param array<string, class-string<Loader>> $classNames
      */
     public function withLoaderClassNames(array $classNames): self
     {
@@ -130,7 +106,7 @@ class ContainerBuilder
     }
 
     /**
-     * @param class-string<\Espo\Core\Container\Container> $containerClassName
+     * @param class-string<ContainerInterface> $containerClassName
      */
     public function withContainerClassName(string $containerClassName): self
     {
@@ -140,7 +116,7 @@ class ContainerBuilder
     }
 
     /**
-     * @param class-string<\Espo\Core\Container\Configuration> $containerConfigurationClassName
+     * @param class-string<Configuration> $containerConfigurationClassName
      */
     public function withContainerConfigurationClassName(string $containerConfigurationClassName): self
     {
