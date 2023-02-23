@@ -27,9 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Repositories;
+namespace Espo\Modules\Crm\Hooks\Call;
 
-use Espo\Core\Repositories\Event as EventRepository;
+use Espo\Modules\Crm\Hooks\Meeting\ParentLink as MeetingParentLink;
 
-class Meeting extends EventRepository
+class ParentLink extends MeetingParentLink
 {}
