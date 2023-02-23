@@ -37,6 +37,9 @@ class Contact extends Person
 {
     public const ENTITY_TYPE = 'Contact';
 
+    /**
+     * An assigned user.
+     */
     public function getAssignedUser(): ?Link
     {
         /** @var ?Link */
@@ -52,15 +55,29 @@ class Contact extends Person
         return $this->getValueObject('account');
     }
 
+    /**
+     * Accounts.
+     */
     public function getAccounts(): LinkMultiple
     {
         /** @var LinkMultiple */
         return $this->getValueObject('accounts');
     }
 
+    /**
+     * Teams.
+     */
     public function getTeams(): LinkMultiple
     {
         /** @var LinkMultiple */
         return $this->getValueObject('teams');
+    }
+
+    /**
+     * A title (for a primary account).
+     */
+    public function getTitle(): ?string
+    {
+        return $this->get('title');
     }
 }

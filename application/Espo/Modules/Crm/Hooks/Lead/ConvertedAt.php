@@ -27,12 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Repositories;
+namespace Espo\Modules\Crm\Hooks\Lead;
 
-use Espo\Core\Repositories\Database;
+use Espo\Core\Field\DateTime;
+use Espo\Core\Hook\Hook\BeforeSave;
+use Espo\Modules\Crm\Entities\Lead;
+use Espo\ORM\Entity;
+use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
- * @extends Database<\Espo\Modules\Crm\Entities\Contact>
+ * @implements BeforeSave<Lead>
  */
-class Contact extends Database
-{}
+class ConvertedAt implements BeforeSave
+{
+    /**
+     * @param Lead $entity
+     */
+    public function beforeSave(Entity $entity, SaveOptions $options): void
+    {
+        if (!$entity->isAttributeChanged('status')) {
+            return;
+        }
+
+        if ($entity->getConvertedAt() ) {
+            return;
+        }
+
+        if ($entity->getStatus() !== Lead::STATUS_CONVERTED) {
+            return;
+        }
+
+        $entity->setValueObject('convertedAt', DateTime::createNow());
+    }
+}

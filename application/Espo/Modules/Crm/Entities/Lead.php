@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Entities;
 
+use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 
@@ -128,5 +129,11 @@ class Lead extends \Espo\Core\Entities\Person
     {
         /** @var ?Link */
         return $this->getValueObject('createdOpportunity');
+    }
+
+    public function getConvertedAt(): ?DateTime
+    {
+        /** @var ?DateTime */
+        return $this->getValueObject('convertedAt');
     }
 }

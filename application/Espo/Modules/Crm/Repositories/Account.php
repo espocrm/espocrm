@@ -29,19 +29,11 @@
 
 namespace Espo\Modules\Crm\Repositories;
 
-use Espo\ORM\Entity;
+use Espo\Core\Repositories\Database;
+use Espo\Modules\Crm\Entities\Account as AccountEntity;
 
 /**
- * @extends \Espo\Core\Repositories\Database<\Espo\Modules\Crm\Entities\Account>
+ * @extends Database<AccountEntity>
  */
-class Account extends \Espo\Core\Repositories\Database
-{
-    public function afterSave(Entity $entity, array $options = [])
-    {
-        parent::afterSave($entity, $options);
-
-        if ($entity->has('targetListId')) {
-        	$this->relate($entity, 'targetLists', $entity->get('targetListId'));
-        }
-    }
-}
+class Account extends Database
+{}
