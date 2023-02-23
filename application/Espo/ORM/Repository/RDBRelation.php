@@ -453,7 +453,7 @@ class RDBRelation
     /**
      * Unrelate from an entity by ID.
      *
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function unrelateById(string $id, array $options = []): void
     {
