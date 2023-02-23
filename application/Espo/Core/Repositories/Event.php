@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Repositories;
 
+use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Reminder;
 use Espo\ORM\Entity;
@@ -42,7 +43,7 @@ use RuntimeException;
 use Exception;
 
 /**
- * @extends Database<\Espo\Core\ORM\Entity>
+ * @extends Database<CoreEntity>
  */
 class Event extends Database implements
 
@@ -52,16 +53,14 @@ class Event extends Database implements
     use Di\DateTimeSetter;
     use Di\ConfigSetter;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $reminderSkippingStatusList = [
         Meeting::STATUS_HELD,
         Meeting::STATUS_NOT_HELD,
     ];
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function beforeSave(Entity $entity, array $options = [])
@@ -114,7 +113,7 @@ class Event extends Database implements
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function afterRemove(Entity $entity, array $options = [])
