@@ -30,38 +30,31 @@
 namespace Espo\Hooks\Common;
 
 use Espo\ORM\Entity;
+use Espo\ORM\Repository\Option\SaveOptions;
 
-use Espo\Core\{
-    Utils\Metadata,
-    Formula\Manager as FormulaManager,
-    Utils\Log,
-};
+use Espo\Core\Hook\Hook\BeforeSave;
+use Espo\Core\Formula\Manager as FormulaManager;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
 
 use Exception;
 
-class Formula
+/**
+ * @implements BeforeSave<Entity>
+ */
+class Formula implements BeforeSave
 {
     public static int $order = 11;
 
-    private Metadata $metadata;
+    public function __construct(
+        private Metadata $metadata,
+        private FormulaManager $formulaManager,
+        private Log $log
+    ) {}
 
-    private FormulaManager $formulaManager;
-
-    private Log $log;
-
-    public function __construct(Metadata $metadata, FormulaManager $formulaManager, Log $log)
+    public function beforeSave(Entity $entity, SaveOptions $options): void
     {
-        $this->metadata = $metadata;
-        $this->formulaManager = $formulaManager;
-        $this->log = $log;
-    }
-
-    /**
-     * @param array<string,mixed> $options
-     */
-    public function beforeSave(Entity $entity, array $options): void
-    {
-        if (!empty($options['skipFormula'])) {
+        if ($options->get('skipFormula')) {
             return;
         }
 
@@ -74,19 +67,21 @@ class Formula
                 $this->formulaManager->run($script, $entity, $variables);
             }
             catch (Exception $e) {
-                $this->log->error('Formula failed: ' . $e->getMessage());
+                $this->log->error('Before-save formula script failed: ' . $e->getMessage());
             }
         }
 
         $customScript = $this->metadata->get(['formula', $entity->getEntityType(), 'beforeSaveCustomScript']);
 
-        if ($customScript) {
-            try {
-                $this->formulaManager->run($customScript, $entity, $variables);
-            }
-            catch (Exception $e) {
-                $this->log->error('Formula failed: ' . $e->getMessage());
-            }
+        if (!$customScript) {
+            return;
+        }
+
+        try {
+            $this->formulaManager->run($customScript, $entity, $variables);
+        }
+        catch (Exception $e) {
+            $this->log->error('Before-save formula script failed: ' . $e->getMessage());
         }
     }
 }
