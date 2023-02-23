@@ -80,7 +80,7 @@ class CreateAdminUser implements Command
             ->findOne();
 
         if ($existingUser) {
-            $io->writeLine("A user with the same already exists.");
+            $io->writeLine("A user with the same username already exists.");
             $io->setExitStatus(1);
 
             return;
