@@ -30,89 +30,9 @@
 namespace Espo\Modules\Crm\Repositories;
 
 use Espo\Core\Repositories\Database;
-use Espo\Entities\User;
-use Espo\ORM\Entity;
-use Espo\Tools\Stream\Service as StreamService;
-use Espo\Core\Di;
 
 /**
  * @extends Database<\Espo\Modules\Crm\Entities\CaseObj>
  */
-class CaseObj extends Database implements
-    Di\InjectableFactoryAware
-{
-    use Di\InjectableFactorySetter;
-
-    protected ?StreamService $streamService = null;
-
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        parent::afterSave($entity, $options);
-
-        $this->handleAfterSaveContacts($entity);
-    }
-
-    protected function getStreamService(): StreamService
-    {
-        if (!$this->streamService) {
-            $this->streamService = $this->injectableFactory->create(StreamService::class);
-        }
-
-        return $this->streamService;
-    }
-
-    /**
-     * @todo Move to hooks.
-     */
-    protected function handleAfterSaveContacts(Entity $entity): void
-    {
-        if (!$entity->isAttributeChanged('contactId')) {
-            return;
-        }
-
-        $contactId = $entity->get('contactId');
-        $contactIdList = $entity->get('contactsIds') ?? [];
-        $fetchedContactId = $entity->getFetched('contactId');
-
-        if ($fetchedContactId) {
-            $previousPortalUser = $this->entityManager
-                ->getRDBRepository(User::ENTITY_TYPE)
-                ->select(['id'])
-                ->where([
-                    'contactId' => $fetchedContactId,
-                    'type' => User::TYPE_PORTAL,
-                ])
-                ->findOne();
-
-            if ($previousPortalUser) {
-                $this->getStreamService()->unfollowEntity($entity, $previousPortalUser->getId());
-            }
-        }
-
-        if (!$contactId) {
-            if ($fetchedContactId) {
-                $this->unrelate($entity, 'contacts', $fetchedContactId);
-            }
-
-            return;
-        }
-
-        $portalUser = $this->entityManager
-            ->getRDBRepository(User::ENTITY_TYPE)
-            ->select(['id'])
-            ->where([
-                'contactId' => $contactId,
-                'type' => User::TYPE_PORTAL,
-                'isActive' => true,
-            ])
-            ->findOne();
-
-        if ($portalUser) {
-            $this->getStreamService()->followEntity($entity, $portalUser->getId(), true);
-        }
-
-        if (!in_array($contactId, $contactIdList) && !$this->isRelated($entity, 'contacts', $contactId)) {
-            $this->relate($entity, 'contacts', $contactId);
-        }
-    }
-}
+class CaseObj extends Database
+{}
