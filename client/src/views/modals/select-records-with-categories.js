@@ -26,7 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/select-records-with-categories', ['views/modals/select-records', 'views/list-with-categories'], function (Dep, List) {
+define('views/modals/select-records-with-categories',
+['views/modals/select-records', 'views/list-with-categories'],
+function (Dep, List) {
 
     return Dep.extend({
 

@@ -70,10 +70,12 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
         nestedCollectionIsBeingFetched: false,
 
         data: function () {
-            var data = {};
+            let data = {};
 
             data.hasTree = (this.isExpanded || this.hasNavigationPanel) && !this.categoriesDisabled;
             data.hasNestedCategories = !this.isExpanded;
+
+            data.fallback = !data.hasTree && !data.hasNestedCategories;
 
             return data;
         },
