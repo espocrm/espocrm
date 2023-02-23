@@ -27,13 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Repositories;
+namespace Espo\Modules\Crm\Hooks\Opportunity;
 
-use Espo\Modules\Crm\Entities\Opportunity as OpportunityEntity;
-use Espo\Core\Repositories\Database;
+use Espo\Core\Hook\Hook\AfterSave;
+use Espo\Modules\Crm\Entities\Opportunity;
+use Espo\ORM\Entity;
+use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
- * @extends Database<OpportunityEntity>
+ * @implements AfterSave<Opportunity>
  */
-class Opportunity extends Database
-{}
+class AmountWeightedConverted implements AfterSave
+{
+    /**
+     * @param Opportunity $entity
+     */
+    public function afterSave(Entity $entity, SaveOptions $options): void
+    {
+        if (
+            !$entity->isAttributeChanged('amount') &&
+            !$entity->isAttributeChanged('probability')
+        ) {
+            return;
+        }
+
+        $amountConverted = $entity->get('amountConverted');
+        $probability = $entity->get('probability');
+
+        $amountWeightedConverted = round($amountConverted * $probability / 100, 2);
+
+        $entity->set('amountWeightedConverted', $amountWeightedConverted);
+    }
+}
