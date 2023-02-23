@@ -30,10 +30,8 @@
 namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
-
 use Espo\Core\Utils\Util;
-
-use \Espo\Core\Repositories\Database;
+use Espo\Core\Repositories\Database;
 
 /**
  * @extends Database<\Espo\Entities\Webhook>
@@ -73,8 +71,6 @@ class Webhook extends Database
         if (count($arr) !== 2 && count($arr) !== 3) {
             return;
         }
-
-        $arr = explode('.', $event);
 
         $entityType = $arr[0];
         $type = $arr[1];

@@ -32,11 +32,10 @@ namespace Espo\Repositories;
 use Espo\Entities\Import as ImportEntity;
 use Espo\Entities\ImportEntity as ImportEntityEntity;
 
-use Espo\ORM\{
-    Entity,
-    Query\Select as Query,
-    Collection,
-};
+use Espo\ORM\Collection;
+use Espo\ORM\Entity;
+use Espo\ORM\Query\Select as Query;
+use Espo\ORM\Query\SelectBuilder;
 
 use Espo\Entities\Attachment as AttachmentEntity;
 
@@ -99,8 +98,7 @@ class Import extends Database
                 return $query;
         }
 
-        /** @var \Espo\ORM\Query\SelectBuilder $builder */
-        $builder = $this->entityManager->getQueryBuilder()->clone($query);
+        $builder = SelectBuilder::create()->clone($query);
 
         $builder->join(
             'ImportEntity',

@@ -49,7 +49,7 @@ class User extends Database
 
     /**
      * @param UserEntity $entity
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      * @throws Conflict
      * @throws Error
@@ -141,7 +141,7 @@ class User extends Database
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function afterSave(Entity $entity, array $options = [])
@@ -154,7 +154,7 @@ class User extends Database
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function afterRemove(Entity $entity, array $options = [])

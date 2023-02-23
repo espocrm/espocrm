@@ -29,9 +29,10 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\Repositories\CategoryTree;
+
 /**
- * @extends \Espo\Core\Repositories\CategoryTree<\Espo\Entities\EmailTemplateCategory>
+ * @extends CategoryTree<\Espo\Entities\EmailTemplateCategory>
  */
-class EmailTemplateCategory extends \Espo\Core\Repositories\CategoryTree
-{
-}
+class EmailTemplateCategory extends CategoryTree
+{}
