@@ -178,6 +178,7 @@ class DefsTest extends \PHPUnit\Framework\TestCase
                         'relationName' => 'r2Name',
                         'midKeys' => ['k1', 'k2'],
                         'foreign' => 'f2',
+                        'conditions' => ['type' => 'Test'],
                     ],
                 ],
             ],
@@ -212,6 +213,8 @@ class DefsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('k1', $entityDefs->getRelation('r2')->getMidKey());
 
         $this->assertEquals('k2', $entityDefs->getRelation('r2')->getForeignMidKey());
+
+        $this->assertEquals(['type' => 'Test'], $entityDefs->getRelation('r2')->getConditions());
     }
 
     public function testRelationNotExisting()

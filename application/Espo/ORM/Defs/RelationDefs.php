@@ -304,6 +304,20 @@ class RelationDefs
     }
 
     /**
+     * Get additional middle table conditions.
+     *
+     * @return array<string, ?scalar>
+     */
+    public function getConditions(): array
+    {
+        if ($this->getType() !== Entity::MANY_MANY) {
+            throw new RuntimeException("Can't get conditions for non many-many relationship.");
+        }
+
+        return $this->getParam('conditions') ?? [];
+    }
+
+    /**
      * Whether a parameter is set.
      */
     public function hasParam(string $name): bool
