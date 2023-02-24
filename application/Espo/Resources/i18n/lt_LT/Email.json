@@ -52,7 +52,8 @@
     "icsEventUid": "ICS įvykio UID",
     "createdEvent": "Sukurtas įvykis",
     "event": "Renginys",
-    "icsEventDateStart": "ICS Renginio data Pradžia"
+    "icsEventDateStart": "ICS Renginio data Pradžia",
+    "groupFolder": "Grupės aplankas"
   },
   "links": {
     "replied": "Atsakyta",
@@ -66,7 +67,8 @@
     "toEmailAddresses": "El. Pašto adresai",
     "ccEmailAddresses": "CC el. Pašto adresai",
     "bccEmailAddresses": "BCC el. Pašto adresai",
-    "replyToEmailAddresses": "Atsakymas į el. Pašto adresus"
+    "replyToEmailAddresses": "Atsakymas į el. Pašto adresus",
+    "groupFolder": "Grupės aplankas"
   },
   "options": {
     "status": {
@@ -108,7 +110,9 @@
     "View Users": "Peržiūrėti naudotojus",
     "No Subject": "Nėra temos",
     "Insert Field": "Įterpti lauką",
-    "Event": "Renginys"
+    "Event": "Renginys",
+    "Moving to folder": "Perkėlimas į aplanką",
+    "Group Folders": "Grupės aplankai"
   },
   "messages": {
     "testEmailSent": "Bandomasis el. laiškas išsiųstas",

@@ -12,7 +12,8 @@
     "roles": "Rolės",
     "inboundEmails": "Grupės el. pašto paskyros",
     "layoutSet": "Maketų rinkinys",
-    "workingTimeCalendar": "Darbo laiko kalendorius"
+    "workingTimeCalendar": "Darbo laiko kalendorius",
+    "groupEmailFolders": "Grupės el. pašto aplankai"
   },
   "tooltips": {
     "roles": "Prieigos rolės. Šios komandos vartotojai gauna prieigos kontrolės lygį iš pasirinktų rolių.",

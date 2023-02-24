@@ -6,9 +6,9 @@
   },
   "fields": {
     "order": "Ordina",
-    "childList": "Elenco child"
+    "childList": "Elenco Bambini"
   },
   "links": {
-    "emailTemplates": "Modelli email"
+    "emailTemplates": "Modelli Email"
   }
 }

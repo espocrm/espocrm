@@ -3,7 +3,7 @@
     "name": "Nome",
     "amount": "Importo",
     "probability": "Probabilità, %",
-    "leadSource": "Sorgente Lead",
+    "leadSource": "Provenienza Lead",
     "doNotCall": "Non chiamare",
     "closeDate": "Data di chiusura",
     "contacts": "Contatti",

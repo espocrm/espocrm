@@ -44,7 +44,7 @@
     "toEmailAddresses": "A Email Destinatario",
     "bccEmailAddresses": "CCN Email Destinatario",
     "replyToEmailAddresses": "Rispondi-a indirizzo email",
-    "fromEmailAddress": "Dall'indirizzo (collegamento)",
+    "fromEmailAddress": "Dall'Indirizzo (collegamento)",
     "replyToName": "Rispondi a Nome",
     "replyToAddress": "Indirizzo di Risposta",
     "icsContents": "Contenuti ICS",
@@ -52,7 +52,8 @@
     "icsEventUid": "Evento ICS UID",
     "createdEvent": "Evento Creato",
     "event": "Evento",
-    "icsEventDateStart": "Data Inizio Evento ICS"
+    "icsEventDateStart": "Data Inizio Evento ICS",
+    "groupFolder": "Cartella di Gruppo"
   },
   "links": {
     "replied": "Risposto",
@@ -66,7 +67,8 @@
     "toEmailAddresses": "A Indirizzo email",
     "ccEmailAddresses": "CC Indirizzi Email",
     "bccEmailAddresses": "CCN Indirizzi email",
-    "replyToEmailAddresses": "Indirizzi Email di Risposta"
+    "replyToEmailAddresses": "Indirizzi Email di Risposta",
+    "groupFolder": "Cartella di Gruppo"
   },
   "options": {
     "status": {
@@ -108,7 +110,9 @@
     "View Users": "Visualizza utenti",
     "No Subject": "Nessun Oggetto",
     "Insert Field": "Inserisci Campo",
-    "Event": "Evento"
+    "Event": "Evento",
+    "Moving to folder": "Sposta in una Cartella",
+    "Group Folders": "Cartelle di Gruppo"
   },
   "messages": {
     "testEmailSent": "L'email di prova è stata inviata",
@@ -129,7 +133,7 @@
     "important": "Importante"
   },
   "massActions": {
-    "markAsRead": "Contrassegna come Letto",
+    "markAsRead": "Segna come Letto",
     "markAsNotRead": "Contrassegna come non Letto",
     "markAsImportant": "Contrassegna come Importante",
     "markAsNotImportant": "Deseleziona come Importante",

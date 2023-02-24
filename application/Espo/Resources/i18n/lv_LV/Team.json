@@ -12,7 +12,8 @@
     "roles": "Lomas",
     "inboundEmails": "Grupas e-pasta konti",
     "layoutSet": "Izkārtojuma komplekts",
-    "workingTimeCalendar": "Darba laika kalendārs"
+    "workingTimeCalendar": "Darba laika kalendārs",
+    "groupEmailFolders": "Grupas e-pasta mapes"
   },
   "tooltips": {
     "roles": "Piekļuves lomas. Šīs grupas lietotāji iegūs piekļuves kontroles līmeni no atlasītajām lomām.",

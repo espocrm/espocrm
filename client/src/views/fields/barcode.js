@@ -77,6 +77,8 @@ function (Dep, JsBarcode, QRCode) {
 
                 this.controlWidth();
             }.bind(this));
+
+            this.listenTo(this.recordHelper, 'panel-show', () => this.controlWidth());
         },
 
         onRemove: function () {

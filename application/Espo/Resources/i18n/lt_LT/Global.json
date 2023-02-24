@@ -55,7 +55,8 @@
     "Note": "Pastaba",
     "ImportError": "Importo klaida",
     "WorkingTimeCalendar": "Darbo laiko kalendorius",
-    "WorkingTimeRange": "Darbo laiko diapazonas"
+    "WorkingTimeRange": "Darbo laiko diapazonas",
+    "GroupEmailFolder": "Grupės el. pašto aplankas"
   },
   "scopeNamesPlural": {
     "Email": "El. laiškai",
@@ -102,7 +103,8 @@
     "Note": "Pastabos",
     "ImportError": "Importo klaidos",
     "WorkingTimeCalendar": "Darbo laiko kalendoriai",
-    "WorkingTimeRange": "Darbo laiko intervalai"
+    "WorkingTimeRange": "Darbo laiko intervalai",
+    "GroupEmailFolder": "Grupės el. pašto aplankai"
   },
   "labels": {
     "Misc": "Įvairūs",
@@ -275,7 +277,9 @@
     "Log in": "Prisijungti",
     "Log in as": "Prisijunkite kaip",
     "Sign in": "Prisijunkite",
-    "Global Search": "Visuotinė paieška"
+    "Global Search": "Visuotinė paieška",
+    "Show Navigation Panel": "Rodyti navigacijos skydelį",
+    "Hide Navigation Panel": "Paslėpti navigacijos skydelį"
   },
   "messages": {
     "pleaseWait": "Prašome palaukti...",
@@ -356,7 +360,13 @@
     "validationFailure": "Galinio patvirtinimo klaida.\n\nLaukas: `{field}`\nPatvirtinimas: `{type}`",
     "confirmAppRefresh": "Paraiška buvo atnaujinta. Rekomenduojama atnaujinti puslapį, kad jis veiktų tinkamai.",
     "error404": "Jūsų prašomas url adresas negali būti tvarkomas.",
-    "error403": "Jūs neturite prieigos prie šios srities."
+    "error403": "Jūs neturite prieigos prie šios srities.",
+    "extensionLicenseInvalid": "Netinkama '{name}' plėtinio licencija.",
+    "extensionLicenseExpired": "Pratęsimo \"{name}\" licencijos prenumerata baigėsi.",
+    "extensionLicenseSoftExpired": "Pratęsimo \"{name}\" licencijos prenumerata baigėsi.",
+    "loggedOutLeaveOut": "Išregistruotas. Sesija yra neaktyvi. Po puslapio atnaujinimo galite prarasti neišsaugotus formos duomenis. Gali tekti pasidaryti kopiją.",
+    "noAccessToRecord": "Operacijai reikia `{action}` prieigos prie įrašo.",
+    "noAccessToForeignRecord": "Operacijai reikalinga `{veiksmų}` prieiga prie svetimo įrašo."
   },
   "boolFilters": {
     "onlyMy": "Tik mano",
@@ -414,7 +424,9 @@
     "type": "Įveskite",
     "phoneNumberIsOptedOut": "Telefono numeris yra išjungtas",
     "types": "Tipai",
-    "middleName": "Vidurinis vardas"
+    "middleName": "Vidurinis vardas",
+    "emailAddressIsInvalid": "El. pašto adresas yra neteisingas",
+    "phoneNumberIsInvalid": "Telefono numeris negalioja"
   },
   "links": {
     "assignedUser": "Priskirtas darbuotojas",

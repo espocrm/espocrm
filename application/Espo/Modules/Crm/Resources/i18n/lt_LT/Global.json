@@ -115,5 +115,16 @@
       "Popup": "Iššokantis langas",
       "Email": "El. paštas"
     }
+  },
+  "notificationMessages": {
+    "eventAttendee": "{naudotojas} pridėjo jus prie {subjekto tipo} {entity}"
+  },
+  "streamMessages": {
+    "eventConfirmationAccepted": "{vietos gavėjas} sutiko dalyvauti {įstaigosType} {subjektas}",
+    "eventConfirmationDeclined": "{vietėjas} atsisakė dalyvauti {subjekto tipo} veikloje {entitetas}",
+    "eventConfirmationTentative": "{vietėjas} nesiryžta dalyvauti {subjekto tipo} veikloje {įstaiga}",
+    "eventConfirmationAcceptedThis": "{vietos gavėjas} pritarė dalyvavimui",
+    "eventConfirmationDeclinedThis": "{vietos gavėjas} atsisakė dalyvauti",
+    "eventConfirmationTentativeThis": "{viešinimo dalyvis} nėra tvirtai apsisprendęs dėl dalyvavimo"
   }
 }

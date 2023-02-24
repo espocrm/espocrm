@@ -6,13 +6,16 @@
     "type": "Tipo",
     "startDate": "Data inizio",
     "endDate": "Data termine",
-    "targetLists": "Liste di destinazione",
-    "excludingTargetLists": "Esclusioni da liste di destinazione",
+    "targetLists": "Liste di Destinazione",
+    "excludingTargetLists": "Liste di Destinazione Escluse",
     "sentCount": "Inviato",
     "openedCount": "Aperto",
     "clickedCount": "Cliccato",
     "optedOutCount": "Escluso",
-    "leadCreatedCount": "Leads Creato",
+    "bouncedCount": "Respinto",
+    "hardBouncedCount": "Respinto Hard",
+    "softBouncedCount": "Respinto Soft",
+    "leadCreatedCount": "Lead Creati",
     "revenue": "Entrata",
     "revenueConverted": "Entrata (convertita)",
     "budgetConverted": "Budget (convertito)",
@@ -25,16 +28,17 @@
     "budgetCurrency": "Valuta di bilancio"
   },
   "links": {
-    "targetLists": "Liste di destinazione",
-    "excludingTargetLists": "Esclusioni da liste di destinazione",
+    "targetLists": "Liste di Destinazione",
+    "excludingTargetLists": "Liste di Destinazione Escluse",
     "accounts": "Account",
     "contacts": "Contatti",
     "opportunities": "Opportunità",
     "massEmails": "Email Massive",
-    "contactsTemplate": "Modello contatti",
-    "leadsTemplate": "Modello Leads",
-    "accountsTemplate": "Modello di account",
-    "usersTemplate": "Modello utenti"
+    "trackingUrls": "URL di Tracciamento",
+    "contactsTemplate": "Modello Contatti",
+    "leadsTemplate": "Modello Lead",
+    "accountsTemplate": "Modello Account",
+    "usersTemplate": "Modello Utenti"
   },
   "options": {
     "type": {
@@ -49,7 +53,7 @@
   },
   "labels": {
     "Create Campaign": "Crea campagna",
-    "Target Lists": "Liste di destinazione",
+    "Target Lists": "Liste di Destinazione",
     "Statistics": "Statistiche",
     "hard": "Duro",
     "soft": "Leggeto",
@@ -68,7 +72,7 @@
     "unsubscribed": "Sei stato rimosso dalla nostra mailing list."
   },
   "tooltips": {
-    "targetLists": "Obiettivi che devono ricevere i messaggi .",
-    "excludingTargetLists": "Obiettivi che non dovrebbe ricevere messaggi."
+    "targetLists": "Obiettivi che devono ricevere messaggi.",
+    "excludingTargetLists": "Obiettivi che non devono ricevere messaggi."
   }
 }

@@ -13,7 +13,7 @@
     "Available placeholders": "Segnaposto disponibili"
   },
   "tooltips": {
-    "oneOff": "Controllare se avete intenzione di utilizzare questo modello una sola volta. Per esempio. per Email Massive."
+    "oneOff": "Seleziona se hai intenzione di utilizzare questo modello una sola volta. Per esempio. per Email Massive."
   },
   "presetFilters": {
     "actual": "Attivo"
@@ -26,6 +26,6 @@
     "optOutUrl": "URL per un link di disiscrizione"
   },
   "messages": {
-    "infoText": "placeholders disponibili:\n\n{optOutUrl} &#8211; URL per un link di disiscrizione;\n\n{optOutLink} &#8211; un link di disiscrizione."
+    "infoText": "Segnaposti disponibili:\n\n{optOutUrl} &#8211; URL per un link di disiscrizione;\n\n{optOutLink} &#8211; un link di disiscrizione."
   }
 }

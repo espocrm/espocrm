@@ -62,7 +62,7 @@ class ForeignOnlyTeam implements Filter
 
         $alias = $link . 'Access';
 
-        $queryBuilder->leftJoin($alias, $alias);
+        $queryBuilder->leftJoin($link, $alias);
 
         $ownerAttribute = $this->getOwnerAttribute($link);
 

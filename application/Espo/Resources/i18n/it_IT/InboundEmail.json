@@ -12,7 +12,7 @@
     "caseDistribution": "Caso di Distribuzione",
     "replyEmailTemplate": "Modello Email di Risposta",
     "replyFromAddress": "Replica da (indirizzo)",
-    "replyToAddress": "Replica a (indirizzo)",
+    "replyToAddress": "Rispondi a (indirizzo)",
     "replyFromName": "Rispondi da (nome)",
     "targetUserPosition": "Obiettivo posizione utente",
     "fetchSince": "Recupera da",
@@ -33,28 +33,31 @@
     "useImap": "Scarica email",
     "keepFetchedEmailsUnread": "Mantieni le email non lette",
     "smtpAuthMechanism": "Meccanismo di autenticazione SMTP",
-    "security": "Sicurezza"
+    "security": "Sicurezza",
+    "groupEmailFolder": "Cartella Email di Gruppo"
   },
   "tooltips": {
     "reply": "Notifica ai mittenti che le loro email sono state ricevute.\n\nVerrà inviata una sola email per destinatario, in un determinato periodo di tempo, per evitare loops.",
     "createCase": "Creazione automatica di un Caso all'arrivo di una email.",
     "replyToAddress": "Indicare l'indirizzo email di questo account di posta, per indirizzare qui le risposte.",
-    "caseDistribution": "Come verranno assegnati i Ticket . Assegnato direttamente all'utente o all'interno del team.",
+    "caseDistribution": "Come verranno assegnati i Ticket. Assegnato direttamente all'utente o all'interno del team.",
     "assignToUser": "Assegnatari dei processi utente.",
     "team": "Assegnatari dei processi dei teams.",
-    "teams": "Assegnatari delle email dei teams.",
+    "teams": "Team a cui verranno assegnate le email.",
     "addAllTeamUsers": "I Messaggi di posta elettronica vengono visualizzati nella cartella di Posta in arrivo di tutti gli utenti di un gruppo specifico.",
     "targetUserPosition": "Gli utenti con posizione specifica verranno distribuiti con i tickets.",
     "monitoredFolders": "Se più cartelle, devono essere separate da virgola",
     "smtpIsShared": "Se selezionato, gli utenti saranno in grado di inviare e-mail utilizzando questo SMTP. La disponibilità è controllata dai ruoli tramite l'autorizzazione dell'account e-mail di gruppo.",
     "smtpIsForMassEmail": "Se selezionato, SMTP sarà disponibile per l'e-mail di massa.",
     "storeSentEmails": "Le email inviate saranno memorizzate sul server IMAP",
-    "useSmtp": "La possibilità di inviare email."
+    "useSmtp": "La possibilità di inviare email.",
+    "groupEmailFolder": "Metti le email in arrivo in una cartella di gruppo."
   },
   "links": {
     "filters": "Filtri",
     "emails": "Email",
-    "assignToUser": "Assegna all'utente"
+    "assignToUser": "Assegna all'utente",
+    "groupEmailFolder": "Cartella Email di Gruppo"
   },
   "options": {
     "status": {

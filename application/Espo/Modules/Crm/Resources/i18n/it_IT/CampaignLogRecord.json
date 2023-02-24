@@ -3,6 +3,7 @@
     "action": "Azione",
     "actionDate": "Data",
     "campaign": "Campagna",
+    "parent": "Obiettivo",
     "object": "Oggetto",
     "application": "Applicazione",
     "queueItem": "Articolo in coda",
@@ -18,6 +19,7 @@
       "Sent": "Inviato",
       "Opened": "Aperto",
       "Opted Out": "Escluso",
+      "Bounced": "Respinto",
       "Clicked": "Cliccato",
       "Lead Created": "Lead Creato",
       "Opted In": "Iscritto"
@@ -30,7 +32,9 @@
     "sent": "Inviato",
     "opened": "Aperto",
     "optedOut": "Escluso",
+    "bounced": "Respinto",
     "clicked": "Cliccato",
+    "leadCreated": "Lead Creato",
     "optedIn": "Iscritto"
   }
 }

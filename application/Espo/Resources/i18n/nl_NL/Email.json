@@ -49,7 +49,8 @@
     "icsEventUid": "ICS-gebeurtenis UID",
     "createdEvent": "Gecreëerd evenement",
     "event": "Evenement",
-    "icsEventDateStart": "ICS-gebeurtenis Startdatum"
+    "icsEventDateStart": "ICS-gebeurtenis Startdatum",
+    "groupFolder": "Groepsmap"
   },
   "links": {
     "replied": "Beantwoord",
@@ -63,7 +64,8 @@
     "toEmailAddresses": "Naar e-mailadressen",
     "ccEmailAddresses": "CC e-mailadressen",
     "bccEmailAddresses": "BCC e-mail Adressen",
-    "replyToEmailAddresses": "Antwoord Aan e-mail adressen"
+    "replyToEmailAddresses": "Antwoord Aan e-mail adressen",
+    "groupFolder": "Groepsmap"
   },
   "options": {
     "status": {
@@ -104,7 +106,9 @@
     "View Users": "Gebruikers bekijken",
     "No Subject": "Geen onderwerp",
     "Insert Field": "Veld invoegen",
-    "Event": "Evenement"
+    "Event": "Evenement",
+    "Moving to folder": "Verplaatsen naar map",
+    "Group Folders": "Groepsmappen"
   },
   "messages": {
     "testEmailSent": "Test e-mail is verzonden",

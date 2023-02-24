@@ -11,13 +11,13 @@
   "options": {
     "job": {
       "Cleanup": "Pulizia",
-      "CheckInboundEmails": "Controlla Gruppo Account di posta elettronica",
-      "CheckEmailAccounts": "Controlla account email personale",
-      "SendEmailReminders": "Invia promemoria via email",
-      "AuthTokenControl": "Controllo token di autenticazione",
-      "SendEmailNotifications": "Invia notifiche email",
-      "CheckNewVersion": "Controlla nuove versioni",
-      "ProcessWebhookQueue": "Elabora coda Webhook"
+      "CheckInboundEmails": "Controllo Caselle Email Condivise",
+      "CheckEmailAccounts": "Controllo Caselle Email Personali",
+      "SendEmailReminders": "Invio Promemoria via Email",
+      "AuthTokenControl": "Controllo Token di Autenticazione",
+      "SendEmailNotifications": "Invio Notifiche Email",
+      "CheckNewVersion": "Controllo Nuove Versioni",
+      "ProcessWebhookQueue": "Elaborazione Coda Webhook"
     },
     "cronSetup": {
       "linux": "Nota: aggiungi questa riga al file crontab per eseguire le attività pianificate di EspoCRM:",

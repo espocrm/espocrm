@@ -9,12 +9,12 @@
     "campaign": "Campagna"
   },
   "labels": {
-    "Create CampaignTrackingUrl": "Creazione URL di monitoraggio"
+    "Create CampaignTrackingUrl": "Crea URL di Tracciamento"
   },
   "options": {
     "action": {
       "Redirect": "Reindirizza",
-      "Show Message": "Vedi messaggio"
+      "Show Message": "Mostra Messaggio"
     }
   },
   "tooltips": {

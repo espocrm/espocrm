@@ -34,7 +34,8 @@
     "useImap": "Ophalen van e-mails",
     "keepFetchedEmailsUnread": "Laat opgehaalde E-mails als ongelezen staan",
     "smtpAuthMechanism": "SMTP Auth Mechanisme",
-    "security": "Beveiliging"
+    "security": "Beveiliging",
+    "groupEmailFolder": "Groep e-mail map"
   },
   "tooltips": {
     "reply": "E-mail afzenders melden dat hun e-mails zijn ontvangen.\n\nEr wordt gedurende een bepaalde periode slechts één e-mail naar een bepaalde ontvanger gestuurd om looping te voorkomen.",
@@ -50,7 +51,8 @@
     "smtpIsShared": "Indien ingeschakeld, kunnen gebruikers E-mails verzenden met behulp van deze SMTP. De beschikbaarheid wordt bepaald door functies via de toestemming van de groep e-mailaccounts.",
     "smtpIsForMassEmail": "Indien ingeschakeld, is SMTP beschikbaar voor verzamel e-mail.",
     "storeSentEmails": "Verzonden e-mails worden opgeslagen op de IMAP-server.",
-    "useSmtp": "De mogelijkheid om e-mails te verzenden."
+    "useSmtp": "De mogelijkheid om e-mails te verzenden.",
+    "groupEmailFolder": "Zet inkomende e-mails in een groepsmap."
   },
   "options": {
     "status": {
@@ -78,6 +80,7 @@
   },
   "links": {
     "emails": "E-mails",
-    "assignToUser": "Toewijzen aan gebruiker"
+    "assignToUser": "Toewijzen aan gebruiker",
+    "groupEmailFolder": "Groep e-mail map"
   }
 }

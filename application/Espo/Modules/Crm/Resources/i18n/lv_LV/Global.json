@@ -115,5 +115,16 @@
       "Popup": "Uznirstošs",
       "Email": "E-pasts"
     }
+  },
+  "notificationMessages": {
+    "eventAttendee": "{lietotājs} jūs pievienojis {entityType} {entitāte}"
+  },
+  "streamMessages": {
+    "eventConfirmationAccepted": "{aicinājuma ņēmējs} piekrita dalībai {entityType} {entitāte}",
+    "eventConfirmationDeclined": "{ieinteresētā persona} atteicās no dalības {entityType} {entitāte}",
+    "eventConfirmationTentative": "{ieinteresētā persona} nav pārliecināta par dalību {entityType} {entitāte}",
+    "eventConfirmationAcceptedThis": "{ieaicinātais} piekrita dalībai",
+    "eventConfirmationDeclinedThis": "{ieteicējs} atteicās no dalības",
+    "eventConfirmationTentativeThis": "{aicinājuma ņēmējs} ir nedrošs par dalību"
   }
 }

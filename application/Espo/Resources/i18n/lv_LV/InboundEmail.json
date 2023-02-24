@@ -37,7 +37,8 @@
     "useImap": "Ienest e-pastus",
     "keepFetchedEmailsUnread": "Saņemto e-pasta ziņojumu saglabāšana kā nelasītu",
     "smtpAuthMechanism": "SMTP autentificēšanas mehānisms",
-    "security": "Drošība"
+    "security": "Drošība",
+    "groupEmailFolder": "Grupas e-pasta mape"
   },
   "tooltips": {
     "reply": "Paziņot e-pasta nosūtītājiem, ka e-pasts ir saņemts.\n\nLai novērstu ieciklošanos, noteiktam lietotājam zināmā periodā iespējams nosūtīt tikai vienu e-pastu.",
@@ -53,12 +54,14 @@
     "smtpIsShared": "Ja būs atzīmēta šī izvēle, lietotāji varēs nosūtīt e-pastus, izmantojot šo SMTP. Pieejamību kontrolēs lomas ar grupas e-pasta konta atļaujas starpniecību.",
     "smtpIsForMassEmail": "Ja būs atzīmēta šī izvēle, masveida e-pastiem būs pieejams SMTP",
     "storeSentEmails": "Nosūtītie e-pasti tiks uzglabāti IMAP serverī.",
-    "useSmtp": "Iespēja sūtīt e-pasta ziņojumus."
+    "useSmtp": "Iespēja sūtīt e-pasta ziņojumus.",
+    "groupEmailFolder": "Ienākošos e-pasta ziņojumus ievietojiet grupas mapē."
   },
   "links": {
     "filters": "Filtri",
     "emails": "E-pasti",
-    "assignToUser": "Piešķirt lietotājam"
+    "assignToUser": "Piešķirt lietotājam",
+    "groupEmailFolder": "Grupas e-pasta mape"
   },
   "options": {
     "status": {

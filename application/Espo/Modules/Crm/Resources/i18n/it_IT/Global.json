@@ -24,12 +24,13 @@
     "Document": "Documenti",
     "DocumentFolder": "Cartella documenti",
     "Campaign": "Campagna",
-    "TargetList": "Lista di destinazione",
+    "TargetList": "Lista di Destinazione",
     "MassEmail": "Email massima",
     "EmailQueueItem": "Elemento di coda e-mail",
+    "CampaignTrackingUrl": "URL di Tracciamento",
     "Activities": "Attività",
-    "KnowledgeBaseArticle": "Articoli Conoscenza di Base",
-    "KnowledgeBaseCategory": "Categoria Conoscenza di Base",
+    "KnowledgeBaseArticle": "Articoli Base di Conoscenza",
+    "KnowledgeBaseCategory": "Categoria Base di Conoscenza",
     "CampaignLogRecord": "Registro della campagna"
   },
   "scopeNamesPlural": {
@@ -44,12 +45,13 @@
     "Document": "Documenti",
     "DocumentFolder": "Cartella documenti",
     "Campaign": "Campagne",
-    "TargetList": "Liste di destinazione",
+    "TargetList": "Liste di Destinazione",
     "MassEmail": "Email Massive",
     "EmailQueueItem": "Elementi della coda e-mail",
+    "CampaignTrackingUrl": "URL di Tracciamento",
     "Activities": "Attività",
-    "KnowledgeBaseArticle": "Conoscenza di Base",
-    "KnowledgeBaseCategory": "Conoscenza di Base Categorie",
+    "KnowledgeBaseArticle": "Base di Conoscenza",
+    "KnowledgeBaseCategory": "Categorie Base di Conoscenza",
     "CampaignLogRecord": "Registro delle campagne"
   },
   "dashlets": {
@@ -72,8 +74,8 @@
     "History": "Storico",
     "Attendees": "Partecipanti",
     "Schedule Meeting": "Pianifica Riunione",
-    "Schedule Call": "Pianifica chiamata",
-    "Compose Email": "Componi email",
+    "Schedule Call": "Pianifica Chiamata",
+    "Compose Email": "Componi Email",
     "Log Meeting": "Registra Riunione",
     "Log Call": "Registra Chiamata",
     "Archive Email": "Archivia Email",
@@ -98,5 +100,16 @@
     "shippingAddressState": "Stato (Spedizione)",
     "shippingAddressPostalCode": "Codice Postale (Spedizione)",
     "shippingAddressMap": "Mappa (Spedizione)"
+  },
+  "notificationMessages": {
+    "eventAttendee": "{user} ti ha aggiunto a {entityType} {entity}"
+  },
+  "streamMessages": {
+    "eventConfirmationAccepted": "{invitee} ha accettato di partecipare a {entityType} {entity}",
+    "eventConfirmationDeclined": "{invitee} ha rifiutato la partecipazione a {entityType} {entity}",
+    "eventConfirmationTentative": "{invitee} è incerto sulla partecipazione a {entityType} {entity}",
+    "eventConfirmationAcceptedThis": "{invitee} ha accettato la partecipazione",
+    "eventConfirmationDeclinedThis": "{invitee} ha rifiutato la partecipazione",
+    "eventConfirmationTentativeThis": "{invitee} è incerto sulla partecipazione"
   }
 }

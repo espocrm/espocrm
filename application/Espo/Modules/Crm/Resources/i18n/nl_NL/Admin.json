@@ -6,6 +6,7 @@
   },
   "templates": {
     "invitation": "Uitnodiging",
-    "reminder": "Herinnering"
+    "reminder": "Herinnering",
+    "cancellation": "Annulering"
   }
 }

@@ -76,7 +76,8 @@
     "Job Settings": "Taakinstellingen",
     "Configuration Instructions": "Configuratie-instructies",
     "Formula Sandbox": "Formule Sandbox",
-    "Working Time Calendars": "Werktijd kalenders"
+    "Working Time Calendars": "Werktijd kalenders",
+    "Group Email Folders": "Groep e-mailmappen"
   },
   "layouts": {
     "list": "Lijst",
@@ -260,7 +261,9 @@
     "layoutSets": "Verzamelingen van lay-outs die kunnen worden toegewezen aan groepen & portalen.",
     "jobsSettings": "Instellingen voor taakverwerking. Taken worden op de achtergrond uitgevoerd.",
     "sms": "SMS instellingen.",
-    "formulaSandbox": "Formulescripts schrijven en testen."
+    "formulaSandbox": "Formulescripts schrijven en testen.",
+    "workingTimeCalendars": "Werkschema.",
+    "groupEmailFolders": "E-mailmappen gedeeld voor teams."
   },
   "options": {
     "previewSize": {

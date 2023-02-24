@@ -6,7 +6,9 @@
     "bodyContains": "Pamatteksts satur",
     "action": "Darbība",
     "isGlobal": "Ir globāls",
-    "emailFolder": "Mape"
+    "emailFolder": "Mape",
+    "groupEmailFolder": "Grupas e-pasta mape",
+    "markAsRead": "Atzīmēt kā izlasītu"
   },
   "labels": {
     "Create EmailFilter": "Izveidot e-pasta filtru",
@@ -23,7 +25,13 @@
   "options": {
     "action": {
       "Skip": "Ignorēt",
-      "Move to Folder": "Ielikt mapē"
+      "Move to Folder": "Ielikt mapē",
+      "None": "Nav",
+      "Move to Group Folder": "Ielieciet grupas mapē"
     }
+  },
+  "links": {
+    "emailFolder": "Mapes",
+    "groupEmailFolder": "Grupas e-pasta mape"
   }
 }

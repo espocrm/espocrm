@@ -1,12 +1,12 @@
 {
   "fields": {
     "width": "Larghezza (%)",
-    "notSortable": "Non ordinabile",
+    "notSortable": "Non Ordinabile",
     "align": "Allinea",
     "panelName": "Nome del pannello",
     "style": "Stile",
     "sticked": "Fissato",
-    "isLarge": "Misura carattere grande",
+    "isLarge": "Carattere Grande",
     "dynamicLogicVisible": "Condizioni che rendono visibile il pannello",
     "hidden": "Nascosto",
     "dynamicLogicStyled": "Condizioni che applicano lo stile.",
@@ -21,6 +21,7 @@
       "right": "Destra"
     },
     "style": {
+      "default": "Predefinito",
       "success": "Successo",
       "danger": "Pericolo",
       "warning": "Avvertimento",

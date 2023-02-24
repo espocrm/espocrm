@@ -12,7 +12,8 @@
     "roles": "Functies",
     "inboundEmails": "Groep e-mailaccounts",
     "layoutSet": "Lay-out set",
-    "workingTimeCalendar": "Werktijd Kalender"
+    "workingTimeCalendar": "Werktijd Kalender",
+    "groupEmailFolders": "Groep e-mailmappen"
   },
   "tooltips": {
     "roles": "Alle gebruikers van deze groep krijgen de rechten uit de geselecteerde rollen.",
