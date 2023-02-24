@@ -29,6 +29,9 @@
 
 namespace Espo\Tools\Import;
 
+use Espo\ORM\Entity;
+use Espo\ORM\Query\DeleteBuilder;
+use Espo\ORM\Type\RelationType;
 use GuzzleHttp\Psr7\Utils as Psr7Utils;
 
 use Espo\Core\ORM\Repository\Option\SaveOption;
@@ -257,6 +260,10 @@ class Service
                 continue;
             }
 
+            if ($removeFromDb) {
+                $this->deleteRelations($entity);
+            }
+
             $this->entityManager->removeEntity($entity, [
                 'noStream' => true,
                 'noNotifications' => true,
@@ -276,6 +283,39 @@ class Service
         $this->recordServiceContainer
             ->get(ImportEntity::ENTITY_TYPE)
             ->processActionHistoryRecord('delete', $import);
+    }
+
+    private function deleteRelations(Entity $entity): void
+    {
+        $relationDefsList = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType())
+            ->getRelationList();
+
+        foreach ($relationDefsList as $relationDefs) {
+            if ($relationDefs->getType() !== RelationType::MANY_MANY) {
+                continue;
+            }
+
+            $middleEntityType = ucfirst($relationDefs->getRelationshipName());
+
+            $midKey = $relationDefs->getMidKey();
+
+            $where = [$midKey => $entity->getId()];
+
+            foreach ($relationDefs->getConditions() as $key => $value) {
+                $where[$key] = $value;
+            }
+
+            $deleteQuery = DeleteBuilder::create()
+                ->from($middleEntityType)
+                ->where($where)
+                ->build();
+
+            $this->entityManager
+                ->getQueryExecutor()
+                ->execute($deleteQuery);
+        }
     }
 
     /**
@@ -350,6 +390,8 @@ class Service
             if (!$entity) {
                 continue;
             }
+
+            $this->deleteRelations($entity);
 
             $this->entityManager->removeEntity($entity, [
                 'noStream' => true,
