@@ -65,10 +65,7 @@ class Expression implements WhereItem
         return $this->expression . ':';
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRawValue()
+    public function getRawValue(): mixed
     {
         return null;
     }

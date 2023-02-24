@@ -55,7 +55,7 @@ class Exists implements WhereItem
     /**
      * @return array<string, mixed>
      */
-    public function getRawValue()
+    public function getRawValue(): array
     {
         return $this->rawValue;
     }

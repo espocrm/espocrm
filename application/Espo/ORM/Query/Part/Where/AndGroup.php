@@ -41,13 +41,11 @@ use Espo\ORM\Query\Part\{
  */
 class AndGroup implements WhereItem
 {
-    /**
-     * @var array<mixed,mixed>
-     */
+    /** @var array<string|int, mixed> */
     private $rawValue = [];
 
     /**
-     * @return array<mixed,mixed>
+     * @return array<string|int, mixed>
      */
     public function getRaw(): array
     {
@@ -60,9 +58,9 @@ class AndGroup implements WhereItem
     }
 
     /**
-     * @return array<mixed,mixed>
+     * @return array<string|int, mixed>
      */
-    public function getRawValue()
+    public function getRawValue(): array
     {
         return $this->rawValue;
     }
@@ -76,7 +74,7 @@ class AndGroup implements WhereItem
     }
 
     /**
-     * @param array<mixed,mixed> $whereClause
+     * @param array<string|int, mixed> $whereClause
      * @return self
      */
     public static function fromRaw(array $whereClause): self

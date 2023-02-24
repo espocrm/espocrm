@@ -35,14 +35,11 @@ namespace Espo\ORM\Query\Part;
 interface WhereItem
 {
     /**
-     * @return array<mixed,mixed>
+     * @return array<string|int, mixed>
      */
     public function getRaw(): array;
 
     public function getRawKey(): string;
 
-    /**
-     * @return mixed
-     */
-    public function getRawValue();
+    public function getRawValue(): mixed;
 }

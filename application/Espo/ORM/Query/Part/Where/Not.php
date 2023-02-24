@@ -38,7 +38,7 @@ use Espo\ORM\Query\Part\WhereItem;
  */
 class Not implements WhereItem
 {
-    /** @var array<mixed,mixed> */
+    /** @var array<string|int, mixed> */
     private $rawValue = [];
 
     public function getRaw(): array
@@ -52,15 +52,15 @@ class Not implements WhereItem
     }
 
     /**
-     * @return array<mixed,mixed>
+     * @return array<string|int, mixed>
      */
-    public function getRawValue()
+    public function getRawValue(): array
     {
         return $this->rawValue;
     }
 
     /**
-     * @param array<mixed,mixed> $whereClause
+     * @param array<string|int, mixed> $whereClause
      */
     public static function fromRaw(array $whereClause): self
     {

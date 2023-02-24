@@ -79,10 +79,7 @@ class Comparison implements WhereItem
         return $this->rawKey;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRawValue()
+    public function getRawValue(): mixed
     {
         return $this->rawValue;
     }
