@@ -2903,7 +2903,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * Sanitize an alias for a SELECT statement.
-     * @todo Make protected in 6.5.
+     * @todo Make protected in 8.0.
      * @deprecated As of v6.0. Not to be used outside.
      */
     public function sanitizeSelectAlias(string $string): string
@@ -2924,7 +2924,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * @param array<string, mixed> $params
-     * @param array<mixed, mixed> $joinConditions
+     * @param array<string|int, mixed> $joinConditions
      * @param array<string, mixed[]> $joins
      */
     protected function getJoinsTypePart(
@@ -3131,7 +3131,7 @@ abstract class BaseQueryComposer implements QueryComposer
     /**
      * @param array<string, mixed> $params
      * @param array<string, mixed> $joinParams
-     * @param array<mixed, mixed> $conditions
+     * @param array<string|int, mixed> $conditions
      */
     protected function getJoinItemPart(
         Entity $entity,
