@@ -60,6 +60,7 @@ class Contacts implements AfterSave
             return;
         }
 
+        /** @var ?string $contactId */
         $contactId = $entity->get('contactId');
         $contactIdList = $entity->get('contactsIds') ?? [];
         $fetchedContactId = $entity->getFetched('contactId');
@@ -121,7 +122,7 @@ class Contacts implements AfterSave
             return;
         }
 
-        $relation->relate($contactId);
+        $relation->relateById($contactId);
     }
 
     private function getStreamService(): StreamService
