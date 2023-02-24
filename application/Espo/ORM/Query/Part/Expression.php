@@ -73,6 +73,9 @@ class Expression implements WhereItem
         return null;
     }
 
+    /**
+     * Get a string expression.
+     */
     public function getValue(): string
     {
         return $this->expression;
@@ -198,12 +201,12 @@ class Expression implements WhereItem
      * 'NULLIF' function. If $arg1 = $arg2, returns NULL,
      * otherwise returns the first argument.
      *
-     * @param Expression|string|int|float|bool $arg1
-     * @param Expression|string|int|float|bool $arg2
+     * @param Expression|string|int|float|bool $argument1
+     * @param Expression|string|int|float|bool $argument2
      */
-    public static function nullIf($arg1, $arg2): self
+    public static function nullIf($argument1, $argument2): self
     {
-        return self::composeFunction('NULLIF', $arg1, $arg2);
+        return self::composeFunction('NULLIF', $argument1, $argument2);
     }
 
     /**
@@ -309,30 +312,30 @@ class Expression implements WhereItem
      * 'IN' operator. Check whether a value is within a set of values.
      *
      * @param Expression $expression
-     * @param Expression[]|string[]|int[]|float[]|bool[] $valueList
+     * @param Expression[]|string[]|int[]|float[]|bool[] $values
      */
-    public static function in(Expression $expression, array $valueList): self
+    public static function in(Expression $expression, array $values): self
     {
-        return self::composeFunction('IN', $expression, ...$valueList);
+        return self::composeFunction('IN', $expression, ...$values);
     }
 
     /**
      * 'NOT IN' operator. Check whether a value is not within a set of values.
      *
      * @param Expression $expression
-     * @param Expression[]|string[]|int[]|float[]|bool[] $valueList
+     * @param Expression[]|string[]|int[]|float[]|bool[] $values
      */
-    public static function notIn(Expression $expression, array $valueList): self
+    public static function notIn(Expression $expression, array $values): self
     {
-        return self::composeFunction('NOT_IN', $expression, ...$valueList);
+        return self::composeFunction('NOT_IN', $expression, ...$values);
     }
 
     /**
      * 'COALESCE' function. Returns the first non-NULL value in the list.
      */
-    public static function coalesce(Expression ...$expressionList): self
+    public static function coalesce(Expression ...$expressions): self
     {
-        return self::composeFunction('COALESCE', ...$expressionList);
+        return self::composeFunction('COALESCE', ...$expressions);
     }
 
     /**
@@ -398,15 +401,15 @@ class Expression implements WhereItem
      * 'YEAR' function taking into account a fiscal year start.
      *
      * @param Expression $date
-     * @param int $firscalYearStart A month number of a fiscal year start. 1..12.
+     * @param int $fiscalYearStart A month number of a fiscal year start. 1..12.
      */
-    public static function yearFiscal(Expression $date, int $firscalYearStart = 1): self
+    public static function yearFiscal(Expression $date, int $fiscalYearStart = 1): self
     {
-        if ($firscalYearStart < 1 || $firscalYearStart > 12) {
+        if ($fiscalYearStart < 1 || $fiscalYearStart > 12) {
             throw new RuntimeException("Bad fiscal year start.");
         }
 
-        return self::composeFunction('YEAR_' . strval($firscalYearStart), $date);
+        return self::composeFunction('YEAR_' . strval($fiscalYearStart), $date);
     }
 
     /**
@@ -562,71 +565,71 @@ class Expression implements WhereItem
     /**
      * 'ADD' function. Adds two or more numbers.
      *
-     * @param Expression|int|float ...$argumentList
+     * @param Expression|int|float ...$arguments
      */
-    public static function add(...$argumentList): self
+    public static function add(...$arguments): self
     {
-        if (count($argumentList) < 2) {
+        if (count($arguments) < 2) {
             throw new RuntimeException("Too few arguments");
         }
 
-        return self::composeFunction('ADD', ...$argumentList);
+        return self::composeFunction('ADD', ...$arguments);
     }
 
     /**
      * 'SUB' function. Subtraction.
      *
-     * @param Expression|int|float ...$argumentList
+     * @param Expression|int|float ...$arguments
      */
-    public static function subtract(...$argumentList): self
+    public static function subtract(...$arguments): self
     {
-        if (count($argumentList) < 2) {
+        if (count($arguments) < 2) {
             throw new RuntimeException("Too few arguments");
         }
 
-        return self::composeFunction('SUB', ...$argumentList);
+        return self::composeFunction('SUB', ...$arguments);
     }
 
     /**
      * 'MUL' function. Multiplication.
      *
-     * @param Expression|int|float ...$argumentList
+     * @param Expression|int|float ...$arguments
      */
-    public static function multiply(...$argumentList): self
+    public static function multiply(...$arguments): self
     {
-        if (count($argumentList) < 2) {
+        if (count($arguments) < 2) {
             throw new RuntimeException("Too few arguments");
         }
 
-        return self::composeFunction('MUL', ...$argumentList);
+        return self::composeFunction('MUL', ...$arguments);
     }
 
     /**
      * 'DIV' function. Division.
      *
-     * @param Expression|int|float ...$argumentList
+     * @param Expression|int|float ...$arguments
      */
-    public static function divide(...$argumentList): self
+    public static function divide(...$arguments): self
     {
-        if (count($argumentList) < 2) {
+        if (count($arguments) < 2) {
             throw new RuntimeException("Too few arguments");
         }
 
-        return self::composeFunction('DIV', ...$argumentList);
+        return self::composeFunction('DIV', ...$arguments);
     }
 
     /**
      * 'MOD' function. Returns a remainder of a number divided by another number.
      *
-     * @param Expression|int|float ...$argumentList
+     * @param Expression|int|float ...$arguments
      */
-    public static function modulo(...$argumentList): self
+    public static function modulo(...$arguments): self
     {
-        if (count($argumentList) < 2) {
+        if (count($arguments) < 2) {
             throw new RuntimeException("Too few arguments");
         }
 
-        return self::composeFunction('MOD', ...$argumentList);
+        return self::composeFunction('MOD', ...$arguments);
     }
 
     /**
@@ -656,33 +659,33 @@ class Expression implements WhereItem
     /**
      * 'GREATEST' function. A max value from a list of expressions.
      */
-    public static function greatest(Expression ...$expressionList): self
+    public static function greatest(Expression ...$arguments): self
     {
-        return self::composeFunction('GREATEST', ...$expressionList);
+        return self::composeFunction('GREATEST', ...$arguments);
     }
 
     /**
      * 'LEAST' function. A min value from a list of expressions.
      */
-    public static function least(Expression ...$expressionList): self
+    public static function least(Expression ...$arguments): self
     {
-        return self::composeFunction('LEAST', ...$expressionList);
+        return self::composeFunction('LEAST', ...$arguments);
     }
 
     /**
      * 'AND' operator. Returns TRUE if all arguments are TRUE.
      */
-    public static function and(Expression ...$argumentList): self
+    public static function and(Expression ...$arguments): self
     {
-        return self::composeFunction('AND', ...$argumentList);
+        return self::composeFunction('AND', ...$arguments);
     }
 
     /**
-     * 'OR' operator. Returns TRUE if at least one arguments is TRUE.
+     * 'OR' operator. Returns TRUE if at least one argument is TRUE.
      */
-    public static function or(Expression ...$argumentList): self
+    public static function or(Expression ...$arguments): self
     {
-        return self::composeFunction('OR', ...$argumentList);
+        return self::composeFunction('OR', ...$arguments);
     }
 
     /**
@@ -694,18 +697,18 @@ class Expression implements WhereItem
     }
 
     /**
-     * @param Expression|bool|int|float|string|null ...$argumentList
+     * @param Expression|bool|int|float|string|null ...$arguments
      */
-    private static function composeFunction(string $function, ...$argumentList): self
+    private static function composeFunction(string $function, ...$arguments): self
     {
-        return Util::composeFunction($function, ...$argumentList);
+        return Util::composeFunction($function, ...$arguments);
     }
 
     /**
-     * @param Expression|bool|int|float|string|null $arg
+     * @param Expression|bool|int|float|string|null $argument
      */
-    private static function stringifyArgument($arg): string
+    private static function stringifyArgument($argument): string
     {
-        return Util::stringifyArgument($arg);
+        return Util::stringifyArgument($argument);
     }
 }
