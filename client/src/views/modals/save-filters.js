@@ -53,7 +53,7 @@ define('views/modals/save-filters', ['views/modal', 'model'], function (Dep, Mod
                 }
             ];
 
-            this.headerText = this.translate('Save Filters');
+            this.headerText = this.translate('Save Filter');
 
             var model = new Model();
 
