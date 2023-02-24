@@ -91,7 +91,7 @@ class Expression implements WhereItem
      *
      * @param string|float|int|bool|null $value A scalar or NULL.
      */
-    public static function value($value): self
+    public static function value(string|float|int|bool|null $value): self
     {
         return self::create(self::stringifyArgument($value));
     }
@@ -173,12 +173,16 @@ class Expression implements WhereItem
     /**
      * 'IF' function. Return $then if a condition is true, $else otherwise.
      *
-     * @param Expression $condition
-     * @param Expression|string|int|float|bool|null $then
-     * @param Expression|string|int|float|bool|null $else
+     * @param Expression $condition A condition.
+     * @param Expression|string|int|float|bool|null $then Then.
+     * @param Expression|string|int|float|bool|null $else Else.
      */
-    public static function if(Expression $condition, $then, $else): self
-    {
+    public static function if(
+        Expression $condition,
+        Expression|string|int|float|bool|null $then,
+        Expression|string|int|float|bool|null $else
+    ): self {
+
         return self::composeFunction('IF', $condition, $then, $else);
     }
 
@@ -186,10 +190,10 @@ class Expression implements WhereItem
      * 'IFNULL' function. If the first argument is not NULL, returns it,
      * otherwise returns the second argument.
      *
-     * @param Expression $value
-     * @param Expression|string|int|float|bool $fallbackValue
+     * @param Expression $value A value.
+     * @param Expression|string|int|float|bool $fallbackValue A fallback value.
      */
-    public static function ifNull(Expression $value, $fallbackValue): self
+    public static function ifNull(Expression $value, Expression|string|int|float|bool $fallbackValue): self
     {
         return self::composeFunction('IFNULL', $value, $fallbackValue);
     }
@@ -201,8 +205,11 @@ class Expression implements WhereItem
      * @param Expression|string|int|float|bool $argument1
      * @param Expression|string|int|float|bool $argument2
      */
-    public static function nullIf($argument1, $argument2): self
-    {
+    public static function nullIf(
+        Expression|string|int|float|bool $argument1,
+        Expression|string|int|float|bool $argument2
+    ): self {
+
         return self::composeFunction('NULLIF', $argument1, $argument2);
     }
 
@@ -211,10 +218,10 @@ class Expression implements WhereItem
      *
      * Example: `like(Expression:column('test'), 'test%'`.
      *
-     * @param Expression $subject
-     * @param Expression|string $pattern
+     * @param Expression $subject A subject.
+     * @param Expression|string $pattern A pattern.
      */
-    public static function like(Expression $subject, $pattern): self
+    public static function like(Expression $subject, Expression|string $pattern): self
     {
         return self::composeFunction('LIKE', $subject, $pattern);
     }
@@ -225,8 +232,11 @@ class Expression implements WhereItem
      * @param Expression|string|int|float|bool $argument1
      * @param Expression|string|int|float|bool $argument2
      */
-    public static function equal($argument1, $argument2): self
-    {
+    public static function equal(
+        Expression|string|int|float|bool $argument1,
+        Expression|string|int|float|bool $argument2
+    ): self {
+
         return self::composeFunction('EQUAL', $argument1, $argument2);
     }
 
@@ -236,8 +246,11 @@ class Expression implements WhereItem
      * @param Expression|string|int|float|bool $argument1
      * @param Expression|string|int|float|bool $argument2
      */
-    public static function notEqual($argument1, $argument2): self
-    {
+    public static function notEqual(
+        Expression|string|int|float|bool $argument1,
+        Expression|string|int|float|bool $argument2
+    ): self {
+
         return self::composeFunction('NOT_EQUAL', $argument1, $argument2);
     }
 
@@ -247,8 +260,11 @@ class Expression implements WhereItem
      * @param Expression|string|int|float|bool $argument1
      * @param Expression|string|int|float|bool $argument2
      */
-    public static function greater($argument1, $argument2): self
-    {
+    public static function greater(
+        Expression|string|int|float|bool $argument1,
+        Expression|string|int|float|bool $argument2
+    ): self {
+
         return self::composeFunction('GREATER_THAN', $argument1, $argument2);
     }
 
@@ -258,8 +274,11 @@ class Expression implements WhereItem
      * @param Expression|string|int|float|bool $argument1
      * @param Expression|string|int|float|bool $argument2
      */
-    public static function less($argument1, $argument2): self
-    {
+    public static function less(
+        Expression|string|int|float|bool $argument1,
+        Expression|string|int|float|bool $argument2
+    ): self {
+
         return self::composeFunction('LESS_THAN', $argument1, $argument2);
     }
 
@@ -269,8 +288,11 @@ class Expression implements WhereItem
      * @param Expression|string|int|float|bool $argument1
      * @param Expression|string|int|float|bool $argument2
      */
-    public static function greaterOrEqual($argument1, $argument2): self
-    {
+    public static function greaterOrEqual(
+        Expression|string|int|float|bool $argument1,
+        Expression|string|int|float|bool $argument2
+    ): self {
+
         return self::composeFunction('GREATER_THAN_OR_EQUAL', $argument1, $argument2);
     }
 
@@ -280,8 +302,11 @@ class Expression implements WhereItem
      * @param Expression|string|int|float|bool $argument1
      * @param Expression|string|int|float|bool $argument2
      */
-    public static function lessOrEqual($argument1, $argument2): self
-    {
+    public static function lessOrEqual(
+        Expression|string|int|float|bool $argument1,
+        Expression|string|int|float|bool $argument2
+    ): self {
+
         return self::composeFunction('LESS_THAN_OR_EQUAL', $argument1, $argument2);
     }
 
@@ -480,11 +505,11 @@ class Expression implements WhereItem
     /**
      * 'CONCAT' function. Concatenates multiple strings.
      *
-     * @param Expression|string ...$stringList
+     * @param Expression|string ...$strings Strings.
      */
-    public static function concat(...$stringList): self
+    public static function concat(Expression|string ...$strings): self
     {
-        return self::composeFunction('CONCAT', ...$stringList);
+        return self::composeFunction('CONCAT', ...$strings);
     }
 
     /**
@@ -542,8 +567,12 @@ class Expression implements WhereItem
      * @param Expression|string $needle A string to be replaced.
      * @param Expression|string $replaceWith A string to replace with.
      */
-    public static function replace(Expression $haystack, $needle, $replaceWith): self
-    {
+    public static function replace(
+        Expression $haystack,
+        Expression|string $needle,
+        Expression|string $replaceWith
+    ): self {
+
         return self::composeFunction('REPLACE', $haystack, $needle, $replaceWith);
     }
 
@@ -564,7 +593,7 @@ class Expression implements WhereItem
      *
      * @param Expression|int|float ...$arguments
      */
-    public static function add(...$arguments): self
+    public static function add(Expression|int|float ...$arguments): self
     {
         if (count($arguments) < 2) {
             throw new RuntimeException("Too few arguments");
@@ -578,7 +607,7 @@ class Expression implements WhereItem
      *
      * @param Expression|int|float ...$arguments
      */
-    public static function subtract(...$arguments): self
+    public static function subtract(Expression|int|float ...$arguments): self
     {
         if (count($arguments) < 2) {
             throw new RuntimeException("Too few arguments");
@@ -592,7 +621,7 @@ class Expression implements WhereItem
      *
      * @param Expression|int|float ...$arguments
      */
-    public static function multiply(...$arguments): self
+    public static function multiply(Expression|int|float ...$arguments): self
     {
         if (count($arguments) < 2) {
             throw new RuntimeException("Too few arguments");
@@ -606,7 +635,7 @@ class Expression implements WhereItem
      *
      * @param Expression|int|float ...$arguments
      */
-    public static function divide(...$arguments): self
+    public static function divide(Expression|int|float ...$arguments): self
     {
         if (count($arguments) < 2) {
             throw new RuntimeException("Too few arguments");
@@ -620,7 +649,7 @@ class Expression implements WhereItem
      *
      * @param Expression|int|float ...$arguments
      */
-    public static function modulo(...$arguments): self
+    public static function modulo(Expression|int|float ...$arguments): self
     {
         if (count($arguments) < 2) {
             throw new RuntimeException("Too few arguments");
@@ -693,18 +722,15 @@ class Expression implements WhereItem
         return self::composeFunction('NOT', $argument);
     }
 
-    /**
-     * @param Expression|bool|int|float|string|null ...$arguments
-     */
-    private static function composeFunction(string $function, ...$arguments): self
-    {
+    private static function composeFunction(
+        string $function,
+        Expression|bool|int|float|string|null ...$arguments
+    ): self {
+
         return Util::composeFunction($function, ...$arguments);
     }
 
-    /**
-     * @param Expression|bool|int|float|string|null $argument
-     */
-    private static function stringifyArgument($argument): string
+    private static function stringifyArgument(Expression|bool|int|float|string|null $argument): string
     {
         return Util::stringifyArgument($argument);
     }

@@ -29,65 +29,60 @@
 
 namespace Espo\ORM\Query\Part\Expression;
 
-use Espo\ORM\Query\Part\Expression as Expr;
-
-use InvalidArgumentException;
+use Espo\ORM\Query\Part\Expression;
 
 class Util
 {
     /**
      * Compose an expression by a function name and arguments.
      *
-     * @param Expr|bool|int|float|string|null ...$argumentList
+     * @param Expression|bool|int|float|string|null ...$arguments Arguments
      */
-    public static function composeFunction(string $function, ...$argumentList): Expr
-    {
-        $stringifiedItemList = array_map(
+    public static function composeFunction(
+        string $function,
+        Expression|bool|int|float|string|null ...$arguments
+    ): Expression {
+
+        $stringifiedItems = array_map(
             function ($item) {
                 return self::stringifyArgument($item);
             },
-            $argumentList
+            $arguments
         );
 
-        $expression = $function . ':(' . implode(', ', $stringifiedItemList) . ')';
+        $expression = $function . ':(' . implode(', ', $stringifiedItems) . ')';
 
-        return Expr::create($expression);
+        return Expression::create($expression);
     }
 
     /**
      * Stringify an argument.
      *
-     * @param Expr|bool|int|float|string|null $arg
-     * @throws InvalidArgumentException
+     * @param Expression|bool|int|float|string|null $argument
      */
-    public static function stringifyArgument($arg): string
+    public static function stringifyArgument(Expression|bool|int|float|string|null $argument): string
     {
-        /** @phpstan-var mixed $arg */
 
-        if ($arg instanceof Expr) {
-            return $arg->getValue();
+        if ($argument instanceof Expression) {
+            return $argument->getValue();
         }
 
-        if (is_null($arg)) {
+        if (is_null($argument)) {
             return 'NULL';
         }
 
-       if (is_bool($arg)) {
-            return $arg ? 'TRUE': 'FALSE';
+       if (is_bool($argument)) {
+            return $argument ? 'TRUE': 'FALSE';
         }
 
-        if (is_int($arg)) {
-            return strval($arg);
-        }
+       if (is_int($argument)) {
+           return strval($argument);
+       }
 
-        if (is_float($arg)) {
-            return strval($arg);
-        }
+       if (is_float($argument)) {
+           return strval($argument);
+       }
 
-        if (is_string($arg)) {
-            return '\'' . str_replace('\'', '\\\'', $arg) . '\'';
-        }
-
-        throw new InvalidArgumentException("Bad argument type.");
+       return '\'' . str_replace('\'', '\\\'', $argument) . '\'';
     }
 }

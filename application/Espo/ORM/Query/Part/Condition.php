@@ -43,23 +43,22 @@ use Espo\ORM\Query\Select;
 class Condition
 {
     private function __construct()
-    {
-    }
+    {}
 
     /**
      * Create 'AND' group.
      */
-    public static function and(WhereItem ...$itemList): AndGroup
+    public static function and(WhereItem ...$items): AndGroup
     {
-        return AndGroup::create(...$itemList);
+        return AndGroup::create(...$items);
     }
 
     /**
      * Create 'OR' group.
      */
-    public static function or(WhereItem ...$itemList): OrGroup
+    public static function or(WhereItem ...$items): OrGroup
     {
-        return OrGroup::create(...$itemList);
+        return OrGroup::create(...$items);
     }
 
     /**
@@ -91,23 +90,23 @@ class Condition
     /**
      * Create '=' comparison.
      *
-     * @param Expression $arg1 An expression.
-     * @param Expression|string|int|float|bool|null $arg2 A value (if scalar) or expression.
+     * @param Expression $argument1 An expression.
+     * @param Expression|string|int|float|bool|null $argument2 A value (if scalar) or expression.
      */
-    public static function equal(Expression $arg1, $arg2): Comparison
+    public static function equal(Expression $argument1, Expression|string|int|float|bool|null $argument2): Comparison
     {
-        return Comparison::equal($arg1, $arg2);
+        return Comparison::equal($argument1, $argument2);
     }
 
     /**
      * Create '!=' comparison.
      *
-     * @param Expression $arg1 An expression.
-     * @param Expression|string|int|float|bool|null $arg2 A value (if scalar) or expression.
+     * @param Expression $argument1 An expression.
+     * @param Expression|string|int|float|bool|null $argument2 A value (if scalar) or expression.
      */
-    public static function notEqual(Expression $arg1, $arg2): Comparison
+    public static function notEqual(Expression $argument1, Expression|string|int|float|bool|null $argument2): Comparison
     {
-        return Comparison::notEqual($arg1, $arg2);
+        return Comparison::notEqual($argument1, $argument2);
     }
 
     /**
@@ -116,7 +115,7 @@ class Condition
      * @param Expression $subject What to test.
      * @param Expression|string $pattern A pattern.
      */
-    public static function like(Expression $subject, $pattern): Comparison
+    public static function like(Expression $subject, Expression|string $pattern): Comparison
     {
         return Comparison::like($subject, $pattern);
     }
@@ -127,7 +126,7 @@ class Condition
      * @param Expression $subject What to test.
      * @param Expression|string $pattern A pattern.
      */
-    public static function notLike(Expression $subject, $pattern): Comparison
+    public static function notLike(Expression $subject, Expression|string $pattern): Comparison
     {
         return Comparison::notLike($subject, $pattern);
     }
@@ -135,45 +134,45 @@ class Condition
     /**
      * Create '>' comparison.
      *
-     * @param Expression $arg1 An expression.
-     * @param Expression|string|int|float $arg2 A value (if scalar) or expression.
+     * @param Expression $argument1 An expression.
+     * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
      */
-    public static function greater(Expression $arg1, $arg2): Comparison
+    public static function greater(Expression $argument1, Expression|string|int|float $argument2): Comparison
     {
-        return Comparison::greater($arg1, $arg2);
+        return Comparison::greater($argument1, $argument2);
     }
 
     /**
      * Create '>=' comparison.
      *
-     * @param Expression $arg1 An expression.
-     * @param Expression|string|int|float $arg2 A value (if scalar) or expression.
+     * @param Expression $argument1 An expression.
+     * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
      */
-    public static function greaterOrEqual(Expression $arg1, $arg2): Comparison
+    public static function greaterOrEqual(Expression $argument1, Expression|string|int|float $argument2): Comparison
     {
-        return Comparison::greaterOrEqual($arg1, $arg2);
+        return Comparison::greaterOrEqual($argument1, $argument2);
     }
 
     /**
      * Create '<' comparison.
      *
-     * @param Expression $arg1 An expression.
-     * @param Expression|string|int|float $arg2 A value (if scalar) or expression.
+     * @param Expression $argument1 An expression.
+     * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
      */
-    public static function less(Expression $arg1, $arg2): Comparison
+    public static function less(Expression $argument1, Expression|string|int|float $argument2): Comparison
     {
-        return Comparison::less($arg1, $arg2);
+        return Comparison::less($argument1, $argument2);
     }
 
     /**
      * Create '<=' comparison.
      *
-     * @param Expression $arg1 An expression.
-     * @param Expression|string|int|float $arg2 A value (if scalar) or expression.
+     * @param Expression $argument1 An expression.
+     * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
      */
-    public static function lessOrEqual(Expression $arg1, $arg2): Comparison
+    public static function lessOrEqual(Expression $argument1, Expression|string|int|float $argument2): Comparison
     {
-        return Comparison::lessOrEqual($arg1, $arg2);
+        return Comparison::lessOrEqual($argument1, $argument2);
     }
 
     /**
@@ -182,7 +181,7 @@ class Condition
      * @param Expression $subject What to test.
      * @param Select|scalar[] $set A set of values. A select query or array of scalars.
      */
-    public static function in(Expression $subject, $set): Comparison
+    public static function in(Expression $subject, Select|array $set): Comparison
     {
         return Comparison::in($subject, $set);
     }
@@ -193,7 +192,7 @@ class Condition
      * @param Expression $subject What to test.
      * @param Select|scalar[] $set A set of values. A select query or array of scalars.
      */
-    public static function notIn(Expression $subject, $set): Comparison
+    public static function notIn(Expression $subject, Select|array $set): Comparison
     {
         return Comparison::notIn($subject, $set);
     }

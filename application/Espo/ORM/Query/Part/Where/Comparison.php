@@ -34,7 +34,6 @@ use Espo\ORM\Query\Part\WhereItem;
 use Espo\ORM\Query\Select;
 
 use RuntimeException;
-use InvalidArgumentException;
 
 /**
  * Compares an expression to a value or another expression. Immutable.
@@ -85,7 +84,7 @@ class Comparison implements WhereItem
      * @param Expression|string|int|float|bool|null $argument2 A value (if scalar) or expression.
      * @return self
      */
-    public static function equal(Expression $argument1, $argument2): self
+    public static function equal(Expression $argument1, Expression|string|int|float|bool|null $argument2): self
     {
         return self::createComparison(self::OPERATOR_EQUAL, $argument1, $argument2);
     }
@@ -97,7 +96,7 @@ class Comparison implements WhereItem
      * @param Expression|string|int|float|bool|null $argument2 A value (if scalar) or expression.
      * @return self
      */
-    public static function notEqual(Expression $argument1, $argument2): self
+    public static function notEqual(Expression $argument1, Expression|string|int|float|bool|null $argument2): self
     {
         return self::createComparison(self::OPERATOR_NOT_EQUAL, $argument1, $argument2);
     }
@@ -109,7 +108,7 @@ class Comparison implements WhereItem
      * @param Expression|string $pattern A pattern.
      * @return self
      */
-    public static function like(Expression $subject, $pattern): self
+    public static function like(Expression $subject, Expression|string $pattern): self
     {
         return self::createComparison(self::OPERATOR_LIKE, $subject, $pattern);
     }
@@ -121,7 +120,7 @@ class Comparison implements WhereItem
      * @param Expression|string $pattern A pattern.
      * @return self
      */
-    public static function notLike(Expression $subject, $pattern): self
+    public static function notLike(Expression $subject, Expression|string $pattern): self
     {
         return self::createComparison(self::OPERATOR_NOT_LIKE, $subject, $pattern);
     }
@@ -133,7 +132,7 @@ class Comparison implements WhereItem
      * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
      * @return self
      */
-    public static function greater(Expression $argument1, $argument2): self
+    public static function greater(Expression $argument1, Expression|string|int|float $argument2): self
     {
         return self::createComparison(self::OPERATOR_GREATER, $argument1, $argument2);
     }
@@ -145,7 +144,7 @@ class Comparison implements WhereItem
      * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
      * @return self
      */
-    public static function greaterOrEqual(Expression $argument1, $argument2): self
+    public static function greaterOrEqual(Expression $argument1, Expression|string|int|float $argument2): self
     {
         return self::createComparison(self::OPERATOR_GREATER_OR_EQUAL, $argument1, $argument2);
     }
@@ -157,7 +156,7 @@ class Comparison implements WhereItem
      * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
      * @return self
      */
-    public static function less(Expression $argument1, $argument2): self
+    public static function less(Expression $argument1, Expression|string|int|float $argument2): self
     {
         return self::createComparison(self::OPERATOR_LESS, $argument1, $argument2);
     }
@@ -169,7 +168,7 @@ class Comparison implements WhereItem
      * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
      * @return self
      */
-    public static function lessOrEqual(Expression $argument1, $argument2): self
+    public static function lessOrEqual(Expression $argument1, Expression|string|int|float $argument2): self
     {
         return self::createComparison(self::OPERATOR_LESS_OR_EQUAL, $argument1, $argument2);
     }
@@ -181,7 +180,7 @@ class Comparison implements WhereItem
      * @param Select|scalar[] $set A set of values. A select query or array of scalars.
      * @return self
      */
-    public static function in(Expression $subject, $set): self
+    public static function in(Expression $subject, Select|array $set): self
     {
         if ($set instanceof Select) {
             return self::createInOrNotInSubQuery(self::OPERATOR_IN_SUB_QUERY, $subject, $set);
@@ -197,7 +196,7 @@ class Comparison implements WhereItem
      * @param Select|scalar[] $set A set of values. A select query or array of scalars.
      * @return self
      */
-    public static function notIn(Expression $subject, $set): self
+    public static function notIn(Expression $subject, Select|array $set): self
     {
         if ($set instanceof Select) {
             return self::createInOrNotInSubQuery(self::OPERATOR_NOT_IN_SUB_QUERY, $subject, $set);
@@ -206,14 +205,11 @@ class Comparison implements WhereItem
         return self::createInOrNotInArray(self::OPERATOR_NOT_EQUAL, $subject, $set);
     }
 
-    /**
-     * @param Expression|string $argument1
-     * @param Expression|string|int|float|bool|null $argument2
-     */
-    private static function createComparison(string $operator, $argument1, $argument2): self
-    {
-        /** @phpstan-var mixed $argument1 */
-        /** @phpstan-var mixed $argument2 */
+    private static function createComparison(
+        string $operator,
+        Expression|string $argument1,
+        Expression|string|int|float|bool|null $argument2
+    ): self {
 
         if (is_string($argument1)) {
             $key = $argument1;
@@ -222,11 +218,8 @@ class Comparison implements WhereItem
                 throw new RuntimeException("Expression can't be empty.");
             }
         }
-        else if ($argument1 instanceof Expression) {
-            $key = $argument1->getValue();
-        }
         else {
-            throw new InvalidArgumentException("First argument must be Expression or string.");
+            $key = $argument1->getValue();
         }
 
         if (str_ends_with($key, ':')) {
@@ -240,9 +233,6 @@ class Comparison implements WhereItem
 
             $value = $argument2->getValue();
         }
-        else if (!is_scalar($argument2) && !is_null($argument2)) {
-            throw new InvalidArgumentException("Second argument must be scalar or Expression.");
-        }
         else {
             $value = $argument2;
         }
@@ -251,18 +241,19 @@ class Comparison implements WhereItem
     }
 
     /**
-     * @param Expression|string $argument1
      * @param scalar[] $valueList
      */
-    private static function createInOrNotInArray(string $operator, $argument1, array $valueList): self
-    {
+    private static function createInOrNotInArray(
+        string $operator,
+        Expression|string $argument1,
+        array $valueList
+    ): self {
+
         foreach ($valueList as $item) {
             if (!is_scalar($item)) {
                 throw new RuntimeException("Array items must be scalar.");
             }
         }
-
-        /** @phpstan-var mixed $argument1 */
 
         if (is_string($argument1)) {
             $key = $argument1;
@@ -275,11 +266,8 @@ class Comparison implements WhereItem
                 throw new RuntimeException("Expression can't end with `:`.");
             }
         }
-        else if ($argument1 instanceof Expression) {
-            $key = $argument1->getValue();
-        }
         else {
-            throw new InvalidArgumentException("First argument must be Expression or string.");
+            $key = $argument1->getValue();
         }
 
         $key .= $operator;
@@ -287,12 +275,11 @@ class Comparison implements WhereItem
         return new self($key, $valueList);
     }
 
-    /**
-     * @param Expression|string $argument1
-     */
-    private static function createInOrNotInSubQuery(string $operator, $argument1, Select $query): self
-    {
-        /** @phpstan-var mixed $argument1 */
+    private static function createInOrNotInSubQuery(
+        string $operator,
+        Expression|string $argument1,
+        Select $query
+    ): self {
 
         if (is_string($argument1)) {
             $key = $argument1;
@@ -305,11 +292,8 @@ class Comparison implements WhereItem
                 throw new RuntimeException("Expression can't end with `:`.");
             }
         }
-        else if ($argument1 instanceof Expression) {
-            $key = $argument1->getValue();
-        }
         else {
-            throw new InvalidArgumentException("First argument must be Expression or string.");
+            $key = $argument1->getValue();
         }
 
         $key .= $operator;

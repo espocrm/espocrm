@@ -36,14 +36,10 @@ namespace Espo\ORM\Query\Part;
  */
 class Selection
 {
-    private $expression;
-    private $alias = null;
-
-    private function __construct(Expression $expression, ?string $alias = null)
-    {
-        $this->expression = $expression;
-        $this->alias = $alias;
-    }
+    private function __construct(
+        private Expression $expression,
+        private ?string $alias = null
+    ) {}
 
     public function getExpression(): Expression
     {

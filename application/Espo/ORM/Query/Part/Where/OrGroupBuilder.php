@@ -33,10 +33,8 @@ use Espo\ORM\Query\Part\WhereItem;
 
 class OrGroupBuilder
 {
-    /**
-     * @var array<mixed,mixed>
-     */
-    private $raw = [];
+    /** @var array<string|int, mixed> */
+    private array $raw = [];
 
     public function build(): OrGroup
     {
@@ -83,8 +81,8 @@ class OrGroupBuilder
     }
 
     /**
-     * @param array<mixed,mixed> $raw
-     * @return array<mixed,mixed>
+     * @param array<string|int, mixed> $raw
+     * @return array<string|int, mixed>
      */
     private static function normalizeRaw(array $raw): array
     {

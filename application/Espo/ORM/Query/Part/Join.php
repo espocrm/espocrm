@@ -38,16 +38,13 @@ use RuntimeException;
  */
 class Join
 {
-    private string $target;
-    private ?string $alias = null;
     private ?WhereItem $conditions = null;
     private bool $onlyMiddle = false;
 
-    private function __construct(string $target, ?string $alias = null)
-    {
-        $this->target = $target;
-        $this->alias = $alias;
-
+    private function __construct(
+        private string $target,
+        private ?string $alias = null
+    ) {
         if ($target === '' || $alias === '') {
             throw new RuntimeException("Bad join.");
         }
