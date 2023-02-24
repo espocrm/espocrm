@@ -31,6 +31,7 @@ namespace Espo\Core\ORM;
 
 use Espo\ORM\BaseEntity;
 
+use Espo\ORM\Query\Part\Order;
 use LogicException;
 use stdClass;
 
@@ -158,7 +159,7 @@ class Entity extends BaseEntity
     }
 
     /**
-     * @param ?array<string,string> $columns
+     * @param ?array<string, string> $columns
      */
     public function loadLinkMultipleField(string $field, $columns = null): void
     {
@@ -198,12 +199,21 @@ class Entity extends BaseEntity
 
         if ($orderParams) {
             $orderBy = $orderParams['orderBy'] ?? null;
+            /** @var string|bool|null $order */
             $order = $orderParams['order'] ?? null;
         }
 
         if ($orderBy) {
             if (is_string($orderBy) && !in_array($orderBy, $select)) {
                 $selectBuilder->select($orderBy);
+            }
+
+            if (is_string($order)) {
+                $order = strtoupper($order);
+
+                if ($order !== Order::ASC && $order !== Order::DESC) {
+                    $order = Order::ASC;
+                }
             }
 
             $selectBuilder->order($orderBy, $order);

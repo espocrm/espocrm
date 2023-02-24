@@ -318,7 +318,7 @@ class RDBSelectBuilder
      * @param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
      * An attribute to order by or an array or order items.
      * Passing an array will reset a previously set order.
-     * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.
+     * @param (Order::ASC|Order::DESC)|bool|null $direction A direction.
      * @return RDBSelectBuilder<TEntity>
      */
     public function order($orderBy = 'id', $direction = null): self

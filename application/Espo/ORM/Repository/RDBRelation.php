@@ -197,7 +197,7 @@ class RDBRelation
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array<mixed, mixed>|null $conditions Join conditions.
+     * @param WhereItem|array<string|int, mixed>|null $conditions Join conditions.
      */
     public function join($target, ?string $alias = null, $conditions = null): Builder
     {
@@ -210,7 +210,7 @@ class RDBRelation
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array<mixed, mixed>|null $conditions Join conditions.
+     * @param WhereItem|array<string|int, mixed>|null $conditions Join conditions.
      */
     public function leftJoin($target, ?string $alias = null, $conditions = null): Builder
     {
@@ -241,7 +241,7 @@ class RDBRelation
      * * `where(array $clause)`
      * * `where(string $key, string $value)`
      *
-     * @param WhereItem|array<mixed, mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<string|int, mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
      */
     public function where($clause = [], $value = null): Builder
@@ -257,7 +257,7 @@ class RDBRelation
      * * `having(array $clause)`
      * * `having(string $key, string $value)`
      *
-     * @param WhereItem|array<mixed, mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<string|int, mixed>|string $clause A key or where clause.
      * @param mixed[]|string|null $value A value. Should be omitted if the first argument is not string.
      */
     public function having($clause = [], $value = null): Builder
@@ -277,7 +277,7 @@ class RDBRelation
      * @param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
      *   An attribute to order by or an array or order items.
      *   Passing an array will reset a previously set order.
-     * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.
+     * @param (Order::ASC|Order::DESC)|bool|null $direction A direction.
      */
     public function order($orderBy = 'id', $direction = null): Builder
     {

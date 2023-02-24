@@ -76,7 +76,6 @@ class UnionBuilder implements Builder
     public function query(Select $query): self
     {
         $this->params['queries'] = $this->params['queries'] ?? [];
-
         $this->params['queries'][] = $query;
 
         return $this;
@@ -96,10 +95,10 @@ class UnionBuilder implements Builder
     /**
      * Apply ORDER.
      *
-     * @param string|array<array{string, bool|string}|array{string}> $orderBy A select alias.
-     * @param string|bool $direction OrderExpression::ASC|OrderExpression::DESC. TRUE for DESC order.
+     * @param string|array<array{string, (Order::ASC|Order::DESC)|bool}|array{string}> $orderBy A select alias.
+     * @param (Order::ASC|Order::DESC)|bool $direction A direction. True for DESC.
      */
-    public function order($orderBy, $direction = Order::ASC): self
+    public function order($orderBy, string|bool $direction = Order::ASC): self
     {
         if (is_bool($direction)) {
             $direction = $direction ? Order::DESC : Order::ASC;
@@ -114,7 +113,7 @@ class UnionBuilder implements Builder
                 /** @var mixed[] $item */
 
                 if (count($item) === 2) {
-                    /** @var array{string, bool|string} $item */
+                    /** @var array{string, bool|(Order::ASC|Order::DESC)} $item */
                     $this->order($item[0], $item[1]);
 
                     continue;
@@ -140,7 +139,6 @@ class UnionBuilder implements Builder
         }
 
         $this->params['orderBy'] = $this->params['orderBy'] ?? [];
-
         $this->params['orderBy'][] = [$orderBy, $direction];
 
         return $this;

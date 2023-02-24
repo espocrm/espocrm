@@ -63,7 +63,7 @@ class PopulateNumbers implements Command
         $field = $params->getArgument(1);
 
         $orderBy = $params->getOption('orderBy') ?? 'createdAt';
-        $order = $params->getOption('order') ?? Order::ASC;
+        $order = strtoupper($params->getOption('order') ?? Order::ASC);
 
         if (!$entityType) {
             throw new ArgumentNotSpecified("No entity type argument.");
@@ -71,6 +71,10 @@ class PopulateNumbers implements Command
 
         if (!$field) {
             throw new ArgumentNotSpecified("No field argument.");
+        }
+
+        if ($order !== Order::ASC && $order !== Order::DESC) {
+            throw new InvalidArgument("Bad order option.");
         }
 
         $fieldType = $this->entityManager
