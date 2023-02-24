@@ -392,11 +392,11 @@ class Import
      * @param string[] $row
      * @throws Error
      * @return array{
-     *   'id'?: string,
-     *   'isError'?: boolean,
-     *   'isDuplicate'?: boolean,
-     *   'isImported'?: boolean,
-     *   'isUpdated'?: boolean,
+     *   id?: string,
+     *   isError?: boolean,
+     *   isDuplicate?: boolean,
+     *   isImported?: boolean,
+     *   isUpdated?: boolean,
      * }|null
      */
     private function importRow(
@@ -699,9 +699,9 @@ class Import
             return;
         }
 
-        if (!in_array($foreignEntityType, ['User', 'Team'])) {
+        //if (!in_array($foreignEntityType, ['User', 'Team'])) {
             // @todo Create related record with name $name and relate.
-        }
+        //}
     }
 
     /**
@@ -803,7 +803,7 @@ class Import
 
             if (
                 $value === '' &&
-                !in_array($attributeType, [Entity::BOOL])
+                $attributeType != Entity::BOOL
             ) {
                 return;
             }
@@ -856,7 +856,7 @@ class Import
         }
 
         if (
-            strpos($attribute, 'emailAddress') === 0 && $attribute !== 'emailAddress' &&
+            str_starts_with($attribute, 'emailAddress') && $attribute !== 'emailAddress' &&
             $entity->hasAttribute('emailAddress') &&
             $entity->hasAttribute('emailAddressData') &&
             is_numeric(substr($attribute, 12)) &&
@@ -953,9 +953,7 @@ class Import
                 return false;
 
             case Entity::JSON_OBJECT:
-                $value = Json::decode($value);
-
-                return $value;
+                return Json::decode($value);
 
             case Entity::JSON_ARRAY:
                 if (!is_string($value)) {
@@ -967,14 +965,10 @@ class Import
                 }
 
                 if ($value[0] === '[') {
-                    $value = Json::decode($value);
-
-                    return $value;
+                    return Json::decode($value);
                 }
 
-                $value = explode(',', $value);
-
-                return $value;
+                return explode(',', $value);
         }
 
         return $this->prepareAttributeValue($entity, $attribute, $value);
@@ -1008,8 +1002,6 @@ class Import
     {
         $firstName = null;
         $lastName = $value;
-
-        $middleName = null;
 
         switch ($format) {
             case 'f l':
@@ -1104,10 +1096,8 @@ class Import
     private function readCsvString(
         string &$string,
         string $separator = ';',
-        string $enclosure = '"',
-        string $linebreak = "\n"
+        string $enclosure = '"'
     ): array {
-
         $o = [];
 
         $cnt = strlen($string);
@@ -1120,11 +1110,12 @@ class Import
         while ($i < $cnt) {
             $s = $string[$i];
 
-            if ($s == $linebreak) {
+            if ($s == "\n") {
                 if ($esc) {
                     $o[$num].= $s;
                 } else {
                     $i++;
+
                     break;
                 }
             } else if ($s == $separator) {
@@ -1132,19 +1123,22 @@ class Import
                     $o[$num].= $s;
                 } else {
                     $num++;
+
                     $esc = false;
                     $escesc = false;
                 }
             } else if ($s == $enclosure) {
                 if ($escesc) {
                     $o[$num].= $enclosure;
-                    $escesc = false;
                 }
+
                 if ($esc) {
                     $esc = false;
+
                     $escesc = true;
                 } else {
                     $esc = true;
+
                     $escesc = false;
                 }
             } else {
@@ -1154,6 +1148,7 @@ class Import
 
                 if ($escesc) {
                     $o[$num] .= $enclosure;
+
                     $escesc = false;
                 }
 
