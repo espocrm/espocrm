@@ -143,6 +143,8 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected string $identifierQuoteCharacter = '`';
 
+    protected int $aliasMaxLength = 256;
+
     protected bool $indexHints = true;
 
     protected EntityFactory $entityFactory;
@@ -2908,8 +2910,8 @@ abstract class BaseQueryComposer implements QueryComposer
     {
         $string = preg_replace('/[^A-Za-z\r\n0-9_:\'" .,\-\(\)]+/', '', $string) ?? '';
 
-        if (strlen($string) > 256) {
-            $string = substr($string, 0, 256);
+        if (strlen($string) > $this->aliasMaxLength) {
+            $string = substr($string, 0, $this->aliasMaxLength);
         }
 
         return $string;
