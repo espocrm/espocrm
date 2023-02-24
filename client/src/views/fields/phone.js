@@ -51,7 +51,7 @@ function (Dep, /** module:ui/select*/Select) {
                     let msg = this.translate('fieldIsRequired', 'messages')
                         .replace('{field}', this.getLabelText());
 
-                    this.showValidationMessage(msg, 'div.phone-number-block:nth-child(1) input');
+                    this.showValidationMessage(msg, 'div.phone-number-block:nth-child(1) input.phone-number');
 
                     return true;
                 }
@@ -82,7 +82,7 @@ function (Dep, /** module:ui/select*/Select) {
                         .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg, 'div.phone-number-block:nth-child(' + (i + 1)
-                        .toString() + ') input');
+                        .toString() + ') input.phone-number');
                 }
 
                 let numberClean = String(number).replace(/[\s\+]/g, '');
@@ -92,7 +92,7 @@ function (Dep, /** module:ui/select*/Select) {
                         .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg, 'div.phone-number-block:nth-child(' + (i + 1)
-                        .toString() + ') input');
+                        .toString() + ') input.phone-number');
 
                     notValid = true;
 
