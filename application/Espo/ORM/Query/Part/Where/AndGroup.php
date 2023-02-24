@@ -29,10 +29,8 @@
 
 namespace Espo\ORM\Query\Part\Where;
 
-use Espo\ORM\Query\Part\{
-    WhereItem,
-    WhereClause,
-};
+use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Query\Part\WhereItem;
 
 /**
  * AND-group. Immutable.
