@@ -35,63 +35,69 @@ use Espo\Entities\PhoneNumber as PhoneNumberEntity;
 use Espo\Core\Repositories\Database;
 use Espo\Core\Di;
 
+use stdClass;
+
 /**
+ * Not to be used directly. Use utilities from `Espo\Tools\PhoneNumber` instead.
+ * @internal
  * @extends Database<PhoneNumberEntity>
  */
 class PhoneNumber extends Database implements
 
     Di\ApplicationStateAware,
-    Di\AclManagerAware
+    Di\AclManagerAware,
+    Di\ConfigAware
 {
     use Di\ApplicationStateSetter;
     use Di\AclManagerSetter;
+    use Di\ConfigSetter;
 
     protected $hooksDisabled = true;
 
-    const ERASED_PREFIX = 'ERASED:';
+    private const ERASED_PREFIX = 'ERASED:';
+
+    private const LOOKUP_SMALL_MAX_SIZE = 20;
+    private const LOOKUP_MAX_SIZE = 50;
 
     /**
-     * @param string [] $numberList
+     * @param string[] $numberList
      * @return string[]
      */
     public function getIds($numberList = []): array
     {
+        if (empty($numberList)) {
+            return [];
+        }
+
         $ids = [];
 
-        if (!empty($numberList)) {
-            $phoneNumbers = $this
-                ->where([
-                    [
-                        'name' => $numberList,
-                        'hash' => null,
-                    ]
-                ])
-                ->find();
+        $phoneNumbers = $this
+            ->where([
+                'name' => $numberList,
+                'hash' => null,
+            ])
+            ->find();
 
-            $ids = [];
-            $exist = [];
+        $exist = [];
 
-            foreach ($phoneNumbers as $phoneNumber) {
-                $ids[] = $phoneNumber->getId();
-                $exist[] = $phoneNumber->get('name');
+        foreach ($phoneNumbers as $phoneNumber) {
+            $ids[] = $phoneNumber->getId();
+            $exist[] = $phoneNumber->get('name');
+        }
+
+        foreach ($numberList as $number) {
+            $number = trim($number);
+
+            if (empty($number)) {
+                continue;
             }
 
-            foreach ($numberList as $number) {
-                $number = trim($number);
+            if (!in_array($number, $exist)) {
+                $phoneNumber = $this->getNew();
+                $phoneNumber->set('name', $number);
+                $this->save($phoneNumber);
 
-                if (empty($number)) {
-                    continue;
-                }
-
-                if (!in_array($number, $exist)) {
-                    $phoneNumber = $this->getNew();
-
-                    $phoneNumber->set('name', $number);
-
-                    $this->save($phoneNumber);
-
-                    $ids[] = $phoneNumber->getId();
-                }
+                $ids[] = $phoneNumber->getId();
             }
         }
 
@@ -99,7 +105,7 @@ class PhoneNumber extends Database implements
     }
 
     /**
-     * @return array<int,\stdClass>
+     * @return array<int, stdClass>
      */
     public function getPhoneNumberData(Entity $entity): array
     {
@@ -172,6 +178,7 @@ class PhoneNumber extends Database implements
             ->sth()
             ->select(['entityType', 'entityId'])
             ->where($where)
+            ->limit(0, self::LOOKUP_MAX_SIZE)
             ->find();
 
         foreach ($itemList as $item) {
@@ -198,29 +205,36 @@ class PhoneNumber extends Database implements
         return $entityList;
     }
 
-    public function getEntityByPhoneNumberId(string $phoneNumberId, ?string $entityType = null): ?Entity
-    {
-        $where = [
-            'phoneNumberId' => $phoneNumberId,
-        ];
+    /**
+     * @param string[] $order
+     */
+    public function getEntityByPhoneNumberId(
+        string $phoneNumberId,
+        ?string $entityType = null,
+        ?array $order = null
+    ): ?Entity {
+
+        $order ??= $this->config->get('phoneNumberEntityLookupDefaultOrder') ?? [];
+
+        $where = ['phoneNumberId' => $phoneNumberId];
 
         if ($entityType) {
             $where[] = ['entityType' => $entityType];
         }
 
-        $itemList = $this->entityManager
+        $collection = $this->entityManager
             ->getRDBRepository(PhoneNumberEntity::RELATION_ENTITY_PHONE_NUMBER)
             ->sth()
             ->select(['entityType', 'entityId'])
             ->where($where)
-            ->limit(0, 20)
+            ->limit(0, self::LOOKUP_SMALL_MAX_SIZE)
             ->order([
+                ['LIST:entityType:' . implode(',', $order)],
                 ['primary', 'DESC'],
-                ['LIST:entityType:User,Contact,Lead,Account'],
             ])
             ->find();
 
-        foreach ($itemList as $item) {
+        foreach ($collection as $item) {
             $itemEntityType = $item->get('entityType');
             $itemEntityId = $item->get('entityId');
 
@@ -255,7 +269,7 @@ class PhoneNumber extends Database implements
         if ($entity->has('name')) {
             $number = $entity->get('name');
 
-            if (is_string($number) && strpos($number, self::ERASED_PREFIX) !== 0) {
+            if (is_string($number) && !str_starts_with($number, self::ERASED_PREFIX)) {
                 $numeric = preg_replace('/[^0-9]/', '', $number);
             }
             else {

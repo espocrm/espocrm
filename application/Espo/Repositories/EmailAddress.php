@@ -35,17 +35,26 @@ use Espo\ORM\Entity;
 use Espo\Entities\EmailAddress as EmailAddressEntity;
 use Espo\Core\Di;
 
+use stdClass;
+
 /**
+ * Not to be used directly. Use utilities from `Espo\Tools\EmailAddress` instead.
+ * @internal
  * @extends Database<EmailAddressEntity>
  */
 class EmailAddress extends Database implements
     Di\ApplicationStateAware,
-    Di\AclManagerAware
+    Di\AclManagerAware,
+    Di\ConfigAware
 {
     use Di\ApplicationStateSetter;
     use Di\AclManagerSetter;
+    use Di\ConfigSetter;
 
     protected $hooksDisabled = true;
+
+    private const LOOKUP_SMALL_MAX_SIZE = 20;
+    private const LOOKUP_MAX_SIZE = 50;
 
     /**
      * @param string[] $addressList
@@ -63,45 +72,44 @@ class EmailAddress extends Database implements
      */
     public function getIds(array $addressList = []): array
     {
+        if (empty($addressList)) {
+            return [];
+        }
+
         $ids = [];
 
-        if (!empty($addressList)) {
-            $lowerAddressList = [];
+        $lowerAddressList = [];
 
-            foreach ($addressList as $address) {
-                $lowerAddressList[] = trim(strtolower($address));
+        foreach ($addressList as $address) {
+            $lowerAddressList[] = trim(strtolower($address));
+        }
+
+        $eaCollection = $this
+            ->where(['lower' => $lowerAddressList])
+            ->find();
+
+        $exist = [];
+
+        foreach ($eaCollection as $ea) {
+            $ids[] = $ea->getId();
+            $exist[] = $ea->get('lower');
+        }
+
+        foreach ($addressList as $address) {
+            $address = trim($address);
+
+            if (empty($address) || !filter_var($address, FILTER_VALIDATE_EMAIL)) {
+                continue;
             }
 
-            $eaCollection = $this
-                ->where([
-                    ['lower' => $lowerAddressList]
-                ])
-                ->find();
+            if (!in_array(strtolower($address), $exist)) {
+                $ea = $this->getNew();
 
-            $ids = [];
-            $exist = [];
+                $ea->set('name', $address);
 
-            foreach ($eaCollection as $ea) {
+                $this->save($ea);
+
                 $ids[] = $ea->getId();
-                $exist[] = $ea->get('lower');
-            }
-
-            foreach ($addressList as $address) {
-                $address = trim($address);
-
-                if (empty($address) || !filter_var($address, FILTER_VALIDATE_EMAIL)) {
-                    continue;
-                }
-
-                if (!in_array(strtolower($address), $exist)) {
-                    $ea = $this->getNew();
-
-                    $ea->set('name', $address);
-
-                    $this->save($ea);
-
-                    $ids[] = $ea->getId();
-                }
             }
         }
 
@@ -109,7 +117,7 @@ class EmailAddress extends Database implements
     }
 
     /**
-     * @return \stdClass[]
+     * @return stdClass[]
      */
     public function getEmailAddressData(Entity $entity): array
     {
@@ -193,6 +201,7 @@ class EmailAddress extends Database implements
             ->sth()
             ->select(['entityType', 'entityId'])
             ->where($where)
+            ->limit(0, self::LOOKUP_MAX_SIZE)
             ->find();
 
         foreach ($itemList as $item) {
@@ -257,7 +266,7 @@ class EmailAddress extends Database implements
             ->sth()
             ->select(['entityType', 'entityId'])
             ->where($where)
-            ->limit(0, 20)
+            ->limit(0, self::LOOKUP_SMALL_MAX_SIZE)
             ->order([
                 ['primary', 'DESC'],
                 ['LIST:entityType:User,Contact,Lead,Account'],
@@ -310,16 +319,9 @@ class EmailAddress extends Database implements
     /**
      * @param string[] $order
      */
-    public function getEntityByAddress(
-        string $address,
-        ?string $entityType = null,
-        array $order = [
-            'User',
-            'Contact',
-            'Lead',
-            'Account',
-        ]
-    ): ?Entity {
+    public function getEntityByAddress(string $address, ?string $entityType = null, ?array $order = null): ?Entity
+    {
+        $order ??= $this->config->get('emailAddressEntityLookupDefaultOrder') ?? [];
 
         $selectBuilder = $this->entityManager
             ->getRDBRepository(EmailAddressEntity::RELATION_ENTITY_EMAIL_ADDRESS)
@@ -337,7 +339,8 @@ class EmailAddress extends Database implements
             ->order([
                 ['LIST:entityType:' . implode(',', $order)],
                 ['primary', 'DESC'],
-            ]);
+            ])
+            ->limit(0, self::LOOKUP_MAX_SIZE);
 
         if ($entityType) {
             $selectBuilder->where('entityType=', $entityType);

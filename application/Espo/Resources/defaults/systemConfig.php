@@ -188,6 +188,8 @@ return [
         'outboundSmsFromNumber',
         'currencyNoJoinMode',
         'authAnotherUserDisabled',
+        'emailAddressEntityLookupDefaultOrder',
+        'phoneNumberEntityLookupDefaultOrder',
         'latestVersion',
     ],
     'superAdminItems' => [

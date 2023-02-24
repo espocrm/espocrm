@@ -145,6 +145,8 @@ return [
     'personalEmailMaxPortionSize' => 50,
     'inboundEmailMaxPortionSize' => 50,
     'emailAddressLookupEntityTypeList' => ['User', 'Contact', 'Lead', 'Account'],
+    'emailAddressEntityLookupDefaultOrder' => ['User', 'Contact', 'Lead', 'Account'],
+    'phoneNumberEntityLookupDefaultOrder' => ['User', 'Contact', 'Lead', 'Account'],
     'authTokenLifetime' => 0,
     'authTokenMaxIdleTime' => 48,
     'userNameRegularExpression' => '[^a-z0-9\-@_\.\s]',
