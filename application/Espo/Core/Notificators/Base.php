@@ -30,7 +30,8 @@
 namespace Espo\Core\Notificators;
 
 /**
- * @deprecated
+ * @deprecated As of v6.0.
+ * @todo Remove in v8.0.
  */
 class Base extends DefaultNotificator
 {

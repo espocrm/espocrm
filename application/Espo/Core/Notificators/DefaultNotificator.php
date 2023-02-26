@@ -41,7 +41,8 @@ use Espo\Core\{
 };
 
 /**
- * @deprecated
+ * @deprecated As of v7.0. Use plain classes that implement `Espo\Core\Notification\AssignmentNotificator`.
+ * @todo Remove in v8.0.
  */
 class DefaultNotificator
 {
