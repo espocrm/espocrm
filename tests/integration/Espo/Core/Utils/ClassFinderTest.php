@@ -29,22 +29,22 @@
 
 namespace tests\integration\Espo\Core\Utils;
 
-class ClassFinder extends \tests\integration\Core\BaseTestCase
+class ClassFinderTest extends \tests\integration\Core\BaseTestCase
 {
     public function testFind1()
     {
         $classFinder = $this->getContainer()->get('classFinder');
 
         $this->assertEquals(
-            '\\Espo\\Modules\\Crm\\Services\\Account',
+            'Espo\\Modules\\Crm\\Services\\Account',
             $classFinder->find('Services', 'Account')
         );
 
         $this->assertEquals(
-            '\\Espo\\Services\\Record',
+            'Espo\\Services\\Record',
             $classFinder->find('Services', 'Record')
         );
 
-        $this->assertTrue(file_exists('data/cache/application/classmap_services.php'));
+        $this->assertTrue(file_exists('data/cache/application/classmapServices.php'));
     }
 }
