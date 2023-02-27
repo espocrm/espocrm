@@ -506,7 +506,7 @@ class Tester
                     $userData[$fieldName] = [];
                 }
 
-                $userData[$fieldName][] = $role->id;
+                $userData[$fieldName][] = $role->getId();
             }
         }
 
