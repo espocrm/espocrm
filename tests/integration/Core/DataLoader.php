@@ -29,147 +29,168 @@
 
 namespace tests\integration\Core;
 
+use Espo\Core\Application;
+use Espo\Core\Container;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Database\Helper as DatabaseHelper;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\PasswordHash;
+use Espo\Entities\Preferences;
+use Espo\Entities\User;
+use Espo\ORM\EntityManager;
+use Exception;
+
 class DataLoader
 {
-    private $application;
+    private Application $application;
+    private PasswordHash $passwordHash;
 
-    private $passwordHash;
-
-    public function __construct($application)
+    public function __construct(Application $application)
     {
         $this->application = $application;
 
-        $config = $this->getContainer()->get('config');
-        $this->passwordHash = new \Espo\Core\Utils\PasswordHash($config);
+        $config = $this->getContainer()->getByClass(Config::class);
+
+        $this->passwordHash = new PasswordHash($config);
     }
 
-    protected function getApplication()
-    {
-        return $this->application;
-    }
-
-    protected function getContainer()
+    private function getContainer(): Container
     {
         return $this->application->getContainer();
     }
 
-    protected function getPasswordHash()
+    private function getPasswordHash(): PasswordHash
     {
         return $this->passwordHash;
     }
 
-    public function loadData($dataFile)
+    public function loadData(string $dataFile): void
     {
         if (!file_exists($dataFile)) {
             return;
         }
 
         $data = include($dataFile);
+
         $this->handleData($data);
     }
 
-    public function setData(array $data)
+    public function setData(array $data): void
     {
         $this->handleData($data);
     }
 
-    protected function handleData(array $fullData)
+    protected function handleData(array $fullData): void
     {
         foreach ($fullData as $type => $data) {
             $methodName = 'load' . ucfirst($type);
+
             if (!method_exists($this, $methodName)) {
-                throw new \Exception('DataLoader: Data type is not supported in dataFile ['.$dataFile.'].');
+                throw new Exception('DataLoader: Data type is not supported in dataFile.');
             }
 
             $this->$methodName($data);
         }
     }
 
-    public function loadFiles($path)
+    public function loadFiles(string $path): void
     {
         try {
-            $fileManager = $this->getContainer()->get('fileManager');
+            $fileManager = $this->getContainer()->getByClass(FileManager::class);
+
             $fileManager->copy($path, '.', true);
-        } catch (Exception $e) {
-            throw new \Exception('Error loadFiles: ' . $e->getMessage());
+        }
+        catch (Exception $e) {
+            throw new Exception('Error loadFiles: ' . $e->getMessage());
         }
     }
 
     protected function loadEntities(array $data)
     {
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        foreach($data as $entityName => $entities) {
-
+        foreach ($data as $entityType => $entities) {
             foreach($entities as $entityData) {
-                $entity = $entityManager->getEntity($entityName, $entityData['id']);
+                $entity = $entityManager->getEntityById($entityType, $entityData['id']);
+
                 if (empty($entity)) {
-                    $entity = $entityManager->getEntity($entityName);
+                    $entity = $entityManager->getNewEntity($entityType);
                 }
 
                 foreach($entityData as $field => $value) {
-                    if ($field == "password" && $entityName == "User") {
+                    if ($field == 'password' && $entityType == User::ENTITY_TYPE) {
                         $value = $this->getPasswordHash()->hash($value);
                     }
+
                     $entity->set($field, $value);
                 }
 
                 try {
                     $entityManager->saveEntity($entity);
-                } catch (\Exception $e) {
-                    throw new \Exception('Error loadEntities: ' . $e->getMessage() . ', ' . print_r($entityData, true));
+                }
+                catch (Exception $e) {
+                    throw new Exception('Error loadEntities: ' . $e->getMessage() . ', ' . print_r($entityData, true));
                 }
             }
         }
     }
 
-    protected function loadConfig(array $data)
+    private function loadConfig(array $data): void
     {
         if (empty($data)) {
             return;
         }
 
-        $config = $this->getContainer()->get('config');
+        $config = $this->getContainer()->getByClass(Config::class);
         $config->set($data);
 
         try {
             $config->save();
-        } catch (\Exception $e) {
-            throw new \Exception('Error loadConfig: ' . $e->getMessage());
+        }
+        catch (Exception $e) {
+            throw new Exception('Error loadConfig: ' . $e->getMessage());
         }
     }
 
-    protected function loadPreferences(array $data)
+    private function loadPreferences(array $data): void
     {
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
         foreach ($data as $userId => $params) {
-            $entityManager->getRepository('Preferences')->resetToDefaults($userId);
-            $preferences = $entityManager->getEntity('Preferences', $userId);
+            $entityManager->getRepository(Preferences::ENTITY_TYPE)->resetToDefaults($userId);
+
+            $preferences = $entityManager->getEntityById(Preferences::ENTITY_TYPE, $userId);
             $preferences->set($params);
 
             try {
                 $entityManager->saveEntity($preferences);
-            } catch (\Exception $e) {
-                throw new \Exception('Error loadPreferences: ' . $e->getMessage());
+            }
+            catch (Exception $e) {
+                throw new Exception('Error loadPreferences: ' . $e->getMessage());
             }
         }
     }
 
-    protected function loadSql(array $data)
+    /*private function loadSql(array $data): void
     {
         if (empty($data)) {
             return;
         }
 
-        $pdo = $this->getContainer()->get('entityManager')->getPDO();
+        $helper = $this->getContainer()
+            ->getByClass(InjectableFactory::class)
+            ->create(DatabaseHelper::class);
+
+        $pdo = $helper->getPDO();
 
         foreach ($data as $sql) {
             try {
                 $pdo->query($sql);
-            } catch (Exception $e) {
-                throw new \Exception('Error loadSql: ' . $e->getMessage() . ', sql: ' . $sql);
+            }
+            catch (Exception $e) {
+                throw new Exception('Error loadSql: ' . $e->getMessage() . ', sql: ' . $sql);
             }
         }
-    }
+    }*/
 }

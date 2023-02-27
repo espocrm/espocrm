@@ -30,20 +30,20 @@
 namespace tests\integration\Espo\Account;
 
 use Espo\Core\Record\CreateParams;
+use Espo\Core\Record\ServiceContainer;
 
 class CreateTest extends \tests\integration\Core\BaseTestCase
 {
-    protected $dataFile = 'Account/ChangeFields.php';
+    protected ?string $dataFile = 'Account/ChangeFields.php';
 
-    protected $userName = 'admin';
-
-    protected $password = '1';
+    protected ?string $userName = 'admin';
+    protected ?string $password = '1';
 
     public function testCreate()
     {
         $service = $this->getContainer()
-            ->get('serviceFactory')
-            ->create('Account');
+            ->getByClass(ServiceContainer::class)
+            ->get('Account');
 
         $entity = $service->create((object) [
             'name' => 'Test Account',
@@ -52,6 +52,6 @@ class CreateTest extends \tests\integration\Core\BaseTestCase
         ], CreateParams::create());
 
         $this->assertInstanceOf('Espo\\ORM\\Entity', $entity);
-        $this->assertTrue(!empty($entity->id));
+        $this->assertTrue(!empty($entity->getId()));
     }
 }

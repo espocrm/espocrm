@@ -33,9 +33,8 @@ use Espo\Core\Utils\Util;
 
 class CheckCreatedIndexTest extends \tests\integration\Core\BaseTestCase
 {
-    protected $dataFile = 'InitData.php';
-
-    protected $pathToFiles = 'Core/FulltextIndex/customFiles';
+    protected ?string $dataFile = 'InitData.php';
+    protected ?string $pathToFiles = 'Core/FulltextIndex/customFiles';
 
     public function entitylist()
     {

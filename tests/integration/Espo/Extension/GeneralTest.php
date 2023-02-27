@@ -33,15 +33,14 @@ use Espo\Core\Upgrades\ExtensionManager;
 
 class GeneralTest extends \tests\integration\Core\BaseTestCase
 {
-    protected $dataFile = 'InitData.php';
+    protected ?string $dataFile = 'InitData.php';
 
-    protected $userName = 'admin';
-
-    protected $password = '1';
+    protected ?string $userName = 'admin';
+    protected ?string $password = '1';
 
     protected $packagePath = 'Extension/General.zip';
 
-    protected function beforeSetUp()
+    protected function beforeSetUp(): void
     {
         $this->fullReset();
     }

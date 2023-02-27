@@ -32,7 +32,6 @@ namespace tests\integration\Espo\User;
 use Espo\Core\Api\ControllerActionProcessor;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\Field\Date;
-use Espo\Core\FieldValidation\Exceptions\ValidationError;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;
@@ -47,11 +46,10 @@ use Exception;
 
 class AclTest extends \tests\integration\Core\BaseTestCase
 {
-    protected $dataFile = 'User/Login.php';
+    protected ?string $dataFile = 'User/Login.php';
 
-    protected $userName = 'admin';
-
-    protected $password = '1';
+    protected ?string $userName = 'admin';
+    protected ?string $password = '1';
 
     private function setFieldsDefs($app, $entityType, $data)
     {
@@ -68,29 +66,29 @@ class AclTest extends \tests\integration\Core\BaseTestCase
     {
         $this->expectException(Forbidden::class);
 
-        $this->createUser('tester', array(
+        $this->createUser('tester', [
             'assignmentPermission' => 'team',
             'userPermission' => 'team',
             'portalPermission' => 'not-set',
-            'data' => array(
+            'data' => [
                 'Account' => false,
                 'Call' =>
-                array (
+                [
                     'create' => 'yes',
                     'read' => 'team',
                     'edit' => 'team',
                     'delete' => 'no'
-                )
-            ),
-            'fieldData' => array(
-                'Call' => array(
-                    'direction' => array(
+                ]
+            ],
+            'fieldData' => [
+                'Call' => [
+                    'direction' => [
                         'read' => 'yes',
                         'edit' => 'no'
-                    )
-                )
-            )
-        ));
+                    ]
+                ]
+            ]
+        ]);
 
         $this->auth('tester');
 
@@ -112,28 +110,28 @@ class AclTest extends \tests\integration\Core\BaseTestCase
     {
         $this->expectException(Forbidden::class);
 
-        $newUser = $this->createUser(array(
+        $newUser = $this->createUser([
                 'userName' => 'tester',
                 'lastName' => 'tester',
-                'portalsIds' => array(
+                'portalsIds' => [
                     'testPortalId'
-                )
-            ), array(
+                ]
+        ], [
             'assignmentPermission' => 'team',
             'userPermission' => 'team',
             'portalPermission' => 'not-set',
-            'data' => array (
+            'data' => [
                 'Account' => false,
-            ),
-            'fieldData' => array (
-                'Call' => array (
-                    'direction' => array (
+            ],
+            'fieldData' => [
+                'Call' => [
+                    'direction' => [
                         'read' => 'yes',
                         'edit' => 'no'
-                    )
-                )
-            )
-        ), true);
+                    ]
+                ]
+            ]
+        ], true);
 
         $this->auth('tester', null, 'testPortalId');
 
@@ -652,6 +650,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         ], UpdateParams::create());
 
         $result = null;
+
         try {
             // Don't allow to add not own contact.
             $result = $service->update($opp2->getId(), (object) [
@@ -659,6 +658,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
                 'contactsIds' => [$contact1->getId(), $contact2->getId()],
             ], UpdateParams::create());
         } catch (Forbidden) {}
+
         $this->assertNull($result);
 
         // Disallow not own contact.

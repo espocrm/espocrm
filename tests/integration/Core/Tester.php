@@ -33,13 +33,20 @@ use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\AuthenticationData;
 
 use Espo\Core\Application;
+use Espo\Core\InjectableFactory;
 use Espo\Core\Portal\Application as PortalApplication;
 use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\ApplicationRunners\Rebuild;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\PasswordHash;
 
+use Espo\Entities\PortalRole;
+use Espo\Entities\Role;
 use Espo\Entities\User;
+
+use Espo\ORM\EntityManager;
 
 use Slim\Psr7\Factory\RequestFactory;
 use Slim\Psr7\Response;
@@ -49,29 +56,31 @@ class Tester
     protected string $configPath = 'tests/integration/config.php';
     private string $envConfigPath = 'tests/integration/config-env.php';
 
-    protected $buildPath = 'build';
-    protected $installPath = 'build/test';
-    protected $testDataPath = 'tests/integration/testData';
-    protected $packageJsonPath = 'package.json';
+    protected string $buildPath = 'build';
+    protected string $installPath = 'build/test';
+    protected string $testDataPath = 'tests/integration/testData';
+    protected string $packageJsonPath = 'package.json';
 
-    private $application;
-    private $apiClient;
-    private $dataLoader;
-    protected $params;
+    private ?Application $application = null;
+    private ?ApiClient $apiClient = null;
+    private ?DataLoader $dataLoader = null;
+    protected array $params;
 
-    protected $userName = null;
-    protected $password = null;
+    protected ?string $userName = null;
+    protected ?string $password = null;
 
-    protected $portalId = null;
-    protected $authenticationMethod = null;
-    protected $defaultUserPassword = '1';
+    protected ?string $portalId = null;
+    protected ?string $authenticationMethod = null;
+    protected string $defaultUserPassword = '1';
+
+    protected ?RequestWrapper $request = null;
 
     public function __construct(array $params)
     {
         $this->params = $this->normalizeParams($params);
     }
 
-    protected function normalizeParams(array $params)
+    protected function normalizeParams(array $params): array
     {
         $namespaceToRemove = 'tests\\integration\\Espo';
 
@@ -107,7 +116,7 @@ class Tester
         return $params;
     }
 
-    protected function getParam($name, $returns = null)
+    protected function getParam(string $name, mixed $returns = null): mixed
     {
         if (isset($this->params[$name])) {
             return $this->params[$name];
@@ -121,7 +130,7 @@ class Tester
         $this->params[$name] = $value;
     }
 
-    protected function getTestConfigData()
+    protected function getTestConfigData(): array
     {
         $this->changeDirToBase();
 
@@ -144,19 +153,19 @@ class Tester
         return $data;
     }
 
-    protected function saveTestConfigData($optionName, $data)
+    protected function saveTestConfigData(string $optionName, $data): void
     {
         $configData = $this->getTestConfigData();
 
         if (array_key_exists($optionName, $configData) && $configData[$optionName] === $data) {
-            return true;
+            return;
         }
 
         $configData[$optionName] = $data;
 
-        $fileManager = new \Espo\Core\Utils\File\Manager();
+        $fileManager = new FileManager();
 
-        return $fileManager->putPhpContents($this->configPath, $configData);
+        $fileManager->putPhpContents($this->configPath, $configData);
     }
 
     public function auth(
@@ -190,20 +199,20 @@ class Tester
 
             $this->application = !$portalId ? new Application() : new PortalApplication($portalId);
 
-            $auth = $this->application->getContainer()
-                ->get('injectableFactory')
-                ->createWith(Authentication::class, [
-                    'allowAnyAccess' => false,
-                ]);
+            $auth = $this->application
+                ->getContainer()
+                ->getByClass(InjectableFactory::class)
+                ->createWith(Authentication::class, ['allowAnyAccess' => false]);
 
-            $request = $this->request ?? new RequestWrapper(
-                (new RequestFactory())->createRequest('POST', '')
-            );
+            $request = $this->request ??
+                new RequestWrapper(
+                    (new RequestFactory())->createRequest('POST', '')
+                );
 
             $response = new ResponseWrapper(new Response());
 
             if (isset($this->userName) || $this->authenticationMethod) {
-                $this->password = isset($this->password) ? $this->password : $this->defaultUserPassword;
+                $this->password = $this->password ?? $this->defaultUserPassword;
 
                 $authenticationData = AuthenticationData::create()
                     ->withUsername($this->userName)
@@ -220,7 +229,7 @@ class Tester
         return $this->application;
     }
 
-    protected function getApiClient()
+    protected function getApiClient(): ApiClient
     {
         if (!isset($this->apiClient)) {
             $this->apiClient = new ApiClient($this->getParam('siteUrl'));
@@ -229,7 +238,7 @@ class Tester
         return $this->apiClient;
     }
 
-    protected function getDataLoader()
+    protected function getDataLoader(): DataLoader
     {
         if (!isset($this->dataLoader)) {
             $this->dataLoader = new DataLoader($this->getApplication());
@@ -238,7 +247,7 @@ class Tester
         return $this->dataLoader;
     }
 
-    public function initialize()
+    public function initialize(): void
     {
         $this->install();
         $this->loadData();
@@ -254,7 +263,7 @@ class Tester
         set_include_path($baseDir);
     }
 
-    public function terminate()
+    public function terminate(): void
     {
         $this->changeDirToBase();
 
@@ -263,13 +272,13 @@ class Tester
         }
     }
 
-    protected function install()
+    protected function install(): void
     {
-        $fileManager = new \Espo\Core\Utils\File\Manager();
+        $fileManager = new FileManager();
 
         $configData = $this->getTestConfigData();
 
-        $latestEspoDir = Utils::getLatestBuildedPath($this->buildPath);
+        $latestEspoDir = Utils::getLatestBuiltPath($this->buildPath);
 
         if (empty($latestEspoDir)) {
             die("EspoCRM build is not found. Please run \"grunt\" in your terminal.\n");
@@ -295,7 +304,7 @@ class Tester
             die("Permission denied for directory [".$this->installPath."].\n");
         }
 
-        //reset DB, remove and copy Espo files
+        // reset DB, remove and copy Espo files
         Utils::checkCreateDatabase($configData['database']);
         $this->reset($fileManager, $latestEspoDir);
 
@@ -323,7 +332,7 @@ class Tester
         $installer->setSuccess();
     }
 
-    protected function reset($fileManager, $latestEspoDir)
+    protected function reset($fileManager, $latestEspoDir): void
     {
         $configData = $this->getTestConfigData();
 
@@ -354,7 +363,7 @@ class Tester
                 $fileManager->copy($latestEspoDir, $this->installPath, true);
             }
 
-            return true;
+            return;
         }
 
         //Utils::truncateTables($configData['database']);
@@ -363,20 +372,22 @@ class Tester
         $fileManager->removeInDir($this->installPath . '/custom/Espo/Custom');
         $fileManager->removeInDir($this->installPath . '/client/custom');
         $fileManager->unlink($this->installPath . '/install/config.php');
-
-        return true;
     }
 
-    protected function cleanDirectory($fileManager, $path, array $ignoreList = [])
+    protected function cleanDirectory(string $path, array $ignoreList = []): void
     {
         if (!file_exists($path)) {
-            return true;
+            return;
         }
+
+        $fileManager = new FileManager();
 
         $list = $fileManager->getFileList($path);
 
         foreach ($list as $itemName) {
-            if (in_array($itemName, $ignoreList)) continue;
+            if (in_array($itemName, $ignoreList)) {
+                continue;
+            }
 
             $itemPath = $path . '/' . $itemName;
 
@@ -386,16 +397,15 @@ class Tester
                 $fileManager->removeInDir($itemPath, true);
             }
         }
-
-        return true;
     }
 
-    protected function loadData()
+    protected function loadData(): void
     {
         $applyChanges = false;
 
         if (!empty($this->params['pathToFiles']) && file_exists($this->params['pathToFiles'])) {
-            $result = $this->getDataLoader()->loadFiles($this->params['pathToFiles']);
+            $this->getDataLoader()->loadFiles($this->params['pathToFiles']);
+
             $this->getApplication(true, true)->run(Rebuild::class);
         }
 
@@ -414,36 +424,37 @@ class Tester
         }
     }
 
-    public function setData(array $data)
+    public function setData(array $data): void
     {
         $this->getDataLoader()->setData($data);
         $this->getApplication(true, true)->run(Rebuild::class);
     }
 
-    public function clearCache()
+    public function clearCache(): void
     {
         $this->clearVars();
 
-        $fileManager = new \Espo\Core\Utils\File\Manager();
-        return $fileManager->removeInDir('data/cache');
+        $fileManager = new FileManager();
+
+        $fileManager->removeInDir('data/cache');
     }
 
-    protected function clearVars()
+    protected function clearVars(): void
     {
         $this->dataLoader = null;
         $this->application = null;
         $this->apiClient = null;
     }
 
-    public function sendRequest($method, $action, $data = null)
+    /*public function sendRequest($method, $action, $data = null)
     {
         $apiClient = $this->getApiClient();
         $apiClient->setUserName($this->userName);
-        $apiClient->setPassword(isset($this->password) ? $this->password : $this->defaultUserPassword);
+        $apiClient->setPassword($this->password ?? $this->defaultUserPassword);
         $apiClient->setPortalId($this->portalId);
 
         return $apiClient->request($method, $action, $data);
-    }
+    }*/
 
     /**
      * Create a user with roles.
@@ -479,8 +490,8 @@ class Tester
 
         $application = $this->getApplication();
 
-        $entityManager = $application->getContainer()->get('entityManager');
-        $config = $application->getContainer()->get('config');
+        $entityManager = $application->getContainer()->getByClass(EntityManager::class);
+        $config = $application->getContainer()->getByClass(Config::class);
 
         if (!isset($userData['password'])) {
             $userData['password'] = $this->defaultUserPassword;
@@ -494,8 +505,7 @@ class Tester
             $userData['type'] = 'portal';
         }
 
-        $user = $entityManager->getEntity('User');
-
+        $user = $entityManager->getNewEntity(User::ENTITY_TYPE);
         $user->set($userData);
 
         $entityManager->saveEntity($user);
@@ -505,7 +515,7 @@ class Tester
 
     protected function createRole(array $roleData, $isPortal = false)
     {
-        $entityName = $isPortal ? 'PortalRole' : 'Role';
+        $entityName = $isPortal ? PortalRole::ENTITY_TYPE : Role::ENTITY_TYPE;
 
         if (isset($roleData['data']) && is_array($roleData['data'])) {
             $roleData['data'] = json_encode($roleData['data']);
@@ -526,12 +536,12 @@ class Tester
         return $role;
     }
 
-    public function normalizePath($path)
+    public function normalizePath($path): string
     {
         return $this->getParam('testDataPath') . '/' . $path;
     }
 
-    protected function isShellEnabled()
+    protected function isShellEnabled(): bool
     {
         if (!function_exists('exec') || !is_callable('shell_exec')) {
             return false;

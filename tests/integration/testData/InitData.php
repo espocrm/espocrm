@@ -27,10 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array(
-    'entities' => array(
+return [
+    'entities' => [
         'User' => [
-            array(
+            [
                 'id' => '1',
                 'isAdmin' => true,
                 'type' => 'admin',
@@ -41,14 +41,14 @@ return array(
                 'lastName' => 'Admin',
                 'title' => '',
                 'emailAddress' => 'demo@espocrm.com',
-                'phoneNumberData' => array(
-                    (object) array(
+                'phoneNumberData' => [
+                    (object) [
                         'phoneNumber' => '111',
                         'primary' => true,
                         'type' => 'Office',
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
         ]
-    ),
-);
+    ],
+];

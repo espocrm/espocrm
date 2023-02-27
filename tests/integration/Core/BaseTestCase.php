@@ -29,62 +29,47 @@
 
 namespace tests\integration\Core;
 
-use Espo\Core\{
-    Api\RequestWrapper,
-    Api\ResponseWrapper,
-    Application,
-    Container,
-    DataManager,
-    InjectableFactory,
-    Utils\Config,
-    Utils\File\Manager as FileManager,
-    Utils\Metadata};
-
+use Espo\Core\Api\RequestWrapper;
+use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\Application;
+use Espo\Core\Container;
+use Espo\Core\DataManager;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
-
 use Espo\ORM\EntityManager;
+
+use PHPUnit\Framework\TestCase;
+
 use Slim\Psr7\Factory\RequestFactory;
 use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Factory\StreamFactory;
 
-abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
+abstract class BaseTestCase extends TestCase
 {
+    private ?Tester $espoTester = null;
+    private ?Application $espoApplication = null;
+    private ?string $authenticationMethod = null;
+
+    /** Path to file with data. */
+    protected ?string $dataFile = null;
+    /** Path to files which needs to be copied. */
+    protected ?string $pathToFiles = null;
+    /** Username used for authentication. */
+    protected ?string $userName = null;
+    /** Password used for authentication. */
+    protected ?string $password = null;
     /**
-     * @var Tester
+     * @var ?array{
+     *     entities?: array<string, array<string, mixed>>,
+     *     files?: string,
+     *     config?: array<string, mixed>,
+     *     preferences?: array<string, mixed>,
+     * }
      */
-    protected $espoTester;
-
-    private $espoApplication;
-
-    /**
-     * Path to file with data.
-     *
-     * @var string|null
-     */
-    protected $dataFile = null;
-
-    /**
-     * Path to files which needs to be copied.
-     *
-     * @var string|null
-     */
-    protected $pathToFiles = null;
-
-    /**
-     * Username used for authentication.
-     */
-    protected $userName = null;
-
-    /**
-     * Password used for authentication.
-     */
-    protected $password = null;
-
-    protected $portalId = null;
-
     protected $initData = null;
-
-    protected $authenticationMethod = null;
 
     protected function createApplication(bool $clearCache = true, ?string $portalId = null): Application
     {
@@ -106,7 +91,6 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
 
         $this->userName = $userName;
         $this->password = $password;
-        $this->portalId = $portalId;
         $this->authenticationMethod = $authenticationMethod;
 
         if (isset($this->espoTester)) {
@@ -160,15 +144,15 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         return $this->getApplication()->getContainer()->get('config');
     }
 
-    protected function normalizePath($path)
+    protected function normalizePath(string $path): string
     {
         return $this->espoTester->normalizePath($path);
     }
 
-    protected function sendRequest($method, $action, $data = null)
+    /*protected function sendRequest($method, $action, $data = null)
     {
         return $this->espoTester->sendRequest($method, $action, $data);
-    }
+    }*/
 
     protected function setUp(): void
     {
@@ -182,15 +166,10 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         $this->espoTester = new Tester($params);
 
         $this->beforeSetUp();
-
         $this->espoTester->initialize();
-
         $this->auth($this->userName, $this->password, null, $this->authenticationMethod);
-
         $this->beforeStartApplication();
-
         $this->espoApplication = $this->createApplication();
-
         $this->afterStartApplication();
     }
 
@@ -205,8 +184,8 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
     protected function tearDown(): void
     {
         $this->espoTester->terminate();
-        $this->espoTester = NULL;
-        $this->espoApplication = NULL;
+        $this->espoTester = null;
+        $this->espoApplication = null;
     }
 
     protected function createUser($userData, ?array $role = null, bool $isPortal = false): User
@@ -214,20 +193,14 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         return $this->espoTester->createUser($userData, $role, $isPortal);
     }
 
-    protected function beforeSetUp()
-    {
+    protected function beforeSetUp(): void
+    {}
 
-    }
+    protected function beforeStartApplication(): void
+    {}
 
-    protected function beforeStartApplication()
-    {
-
-    }
-
-    protected function afterStartApplication()
-    {
-
-    }
+    protected function afterStartApplication(): void
+    {}
 
     protected function createRequest(
         string $method,

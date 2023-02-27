@@ -33,11 +33,10 @@ use Espo\Core\Upgrades\UpgradeManager;
 
 class GeneralTest extends \tests\integration\Core\BaseTestCase
 {
-    protected $dataFile = 'InitData.php';
+    protected ?string $dataFile = 'InitData.php';
 
-    protected $userName = 'admin';
-
-    protected $password = '1';
+    protected ?string $userName = 'admin';
+    protected ?string $password = '1';
 
     protected $packagePath = 'Upgrade/General.zip';
 
@@ -63,7 +62,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
 
         $upgradeManager = new UpgradeManager($this->getContainer());
 
-        $upgradeManager->install(array('id' => $upgradeId));
+        $upgradeManager->install(['id' => $upgradeId]);
 
         $this->assertFileDoesNotExist('data/upload/upgrades/' . $upgradeId . 'z');
         $this->assertFileDoesNotExist('data/upload/upgrades/' . $upgradeId);
@@ -79,7 +78,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
 
     public function testUninstall()
     {
-        $this->expectException('\\Espo\\Core\\Exceptions\\Error');
+        $this->expectException('Espo\\Core\\Exceptions\\Error');
 
         $upgradeId = $this->testInstall();
 
@@ -89,11 +88,11 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
 
     public function testDelete()
     {
-        $this->expectException('\\Espo\\Core\\Exceptions\\Error');
+        $this->expectException('Espo\\Core\\Exceptions\\Error');
 
         $upgradeId = $this->testInstall();
 
         $upgradeManager = new UpgradeManager($this->getContainer());
-        $upgradeManager->delete(array('id' => $upgradeId));
+        $upgradeManager->delete(['id' => $upgradeId]);
     }
 }

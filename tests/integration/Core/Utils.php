@@ -29,22 +29,27 @@
 
 namespace tests\integration\Core;
 
+use Espo\Core\Exceptions\Error;
+use PDO;
+
 class Utils
 {
     /**
-     * Get latest EspoCRM builded path
+     * Get the latest EspoCRM built path.
      *
-     * @param  string $path
-     *
-     * @return string|null
+     * @param string $path
+     * @return ?string
      */
-    public static function getLatestBuildedPath($path)
+    public static function getLatestBuiltPath($path): ?string
     {
         $archives = [];
 
         $buildDir = dir($path);
+
         while ($folderName = $buildDir->read()) {
-            if ($folderName === '.'|| $folderName === '..' || empty($folderName)) continue;
+            if ($folderName === '.'|| $folderName === '..' || empty($folderName)) {
+                continue;
+            }
 
             $pattern = '/^EspoCRM-([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-((a|alpha|b|beta|pre|rc)([0-9]+)?)?)?$/';
 
@@ -55,16 +60,19 @@ class Utils
 
         if (count($archives) > 0) {
             static::sortVersions($archives);
+
             return $path . '/' . $archives[count($archives) - 1];
         }
+
+        return null;
     }
 
-    protected static function sortVersions(& $existVersions)
+    private static function sortVersions(&$existVersions)
     {
         usort($existVersions, ["\\tests\\integration\\Core\\Utils", "versionCmp"]);
     }
 
-    public static function versionCmp($a, $b)
+    public static function versionCmp($a, $b): int
     {
         $order = ['a' => 0, 'alpha' => 1, 'b' => 2, 'beta' => 3, 'pre' => 4, 'rc' => 5];
 
@@ -78,72 +86,88 @@ class Utils
         if ($ma[1] != $mb[1]) {
             return (int) $ma[1] < (int) $mb[1] ? -1 : 1;
         }
+
         if ($ma[2] != $mb[2]) {
             return (int) $ma[2] < (int) $mb[2] ? -1 : 1;
         }
+
         if (!isset($ma[3])) {
             $ma[3] = 0;
         }
+
         if (!isset($mb[3])) {
             $mb[3] = 0;
         }
+
         if ($ma[3] != $mb[3]) {
             return (int) $ma[3] < (int) $mb[3] ? -1 : 1;
         }
+
         if (isset($ma[4]) && !isset($mb[4])) {
             return -1;
         }
+
         if (!isset($ma[4]) && isset($mb[4])) {
             return 1;
         }
+
         if (@$ma[5] != @$mb[5]) {
             return ($order[$ma[5]] < $order[$mb[5]]) ? -1 : 1;
         }
+
         if (@$ma[4] != @$mb[4]) {
             return ($ma[4] < $mb[4]) ? -1 : 1;
         }
+
         return 0;
     }
 
-    public static function fixUndefinedVariables()
+    public static function fixUndefinedVariables(): void
     {
-        /*SET UNDEFINED $_SERVER VARIABLES*/
-        $list = array(
+        $list = [
             'REQUEST_METHOD',
             'REMOTE_ADDR',
             'SERVER_NAME',
             'SERVER_PORT',
             'REQUEST_URI',
             'HTTPS',
-        );
+        ];
 
         foreach ($list as $name) {
             if (!array_key_exists($name, $_SERVER)) {
                 $_SERVER[$name] = '';
             }
-        } /*END: SET UNDEFINED VARIABLES*/
+        }
     }
 
-    public static function checkCreateDatabase(array $options)
+    public static function checkCreateDatabase(array $options): void
     {
         if (!isset($options['dbname'])) {
-            throw new \Espo\Core\Exceptions\Error('Option "dbname" is not found.');
+            throw new Error('Option "dbname" is not found.');
         }
 
         $dbname = $options['dbname'];
         unset($options['dbname']);
 
+        $sql = "CREATE DATABASE IF NOT EXISTS `{$dbname}`";
+
         $pdo = static::createPdoConnection($options);
-        $pdo->query("CREATE DATABASE IF NOT EXISTS `". $dbname ."`");
+
+        $pdo->query($sql);
     }
 
-    public static function dropTables(array $options)
+    public static function dropTables(array $options): void
     {
         $pdo = static::createPdoConnection($options);
 
-        $result = $pdo->query("show tables");
-        while ($row = $result->fetch(\PDO::FETCH_NUM)) {
-            $pdo->query("DROP TABLE IF EXISTS `".$row[0]."`;");
+        $result = $pdo->query("SHOW TABLES");
+
+        while ($row = $result->fetch(PDO::FETCH_NUM)) {
+            $table = $row[0];
+
+            $sql = "DROP TABLE IF EXISTS `{$table}`";
+
+            $pdo->query($sql);
         }
     }
 
@@ -151,21 +175,25 @@ class Utils
     {
         $pdo = static::createPdoConnection($options);
 
-        $result = $pdo->query("show tables");
-        while ($row = $result->fetch(\PDO::FETCH_NUM)) {
-            $pdo->query("TRUNCATE TABLE `".$row[0]."`;");
+        $result = $pdo->query("SHOW TABLES");
+
+        while ($row = $result->fetch(PDO::FETCH_NUM)) {
+            $table = $row[0];
+
+            $sql = "TRUNCATE TABLE `{$table}`";
+
+            $pdo->query($sql);
         }
     }
 
-    public static function createPdoConnection(array $params)
+    public static function createPdoConnection(array $params): PDO
     {
         $platform = !empty($params['platform']) ? strtolower($params['platform']) : 'mysql';
         $port = empty($params['port']) ? '' : ';port=' . $params['port'];
         $dbname = empty($params['dbname']) ? '' : ';dbname=' . $params['dbname'];
 
-        $dsn = $platform . ':host='.$params['host'].$port.$dbname;
-        $dbh = new \PDO($dsn, $params['user'], $params['password']);
+        $dsn = $platform . ':host=' . $params['host'] . $port . $dbname;
 
-        return $dbh;
+        return new PDO($dsn, $params['user'], $params['password']);
     }
 }

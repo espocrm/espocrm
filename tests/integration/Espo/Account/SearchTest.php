@@ -29,32 +29,34 @@
 
 namespace tests\integration\Espo\Account;
 
+use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Select\SearchParams;
 
 class SearchTest extends \tests\integration\Core\BaseTestCase
 {
-    protected $dataFile = 'Account/ChangeFields.php';
+    protected ?string $dataFile = 'Account/ChangeFields.php';
 
-    protected $userName = 'admin';
+    protected ?string $userName = 'admin';
+    protected ?string $password = '1';
 
-    protected $password = '1';
-
-    public function testSearchByName()
+    public function testSearchByName(): void
     {
-        $service = $this->getContainer()->get('serviceFactory')->create('Account');
+        $service = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->get('Account');
 
-        $params = array(
-            'where' => array(
-                array(
+        $params = [
+            'where' => [
+                [
                     'type' => 'textFilter',
                     'value' => 'Besha',
-                ),
-            ),
+                ],
+            ],
             'offset' => 0,
             'maxSize' => 20,
             'asc' => true,
             'sortBy' => 'name',
-        );
+        ];
 
         $result = $service->find(SearchParams::fromRaw($params));
 
@@ -62,8 +64,8 @@ class SearchTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertInstanceOf('Espo\\ORM\\EntityCollection', $result->getCollection());
 
-        $list = $result->getCollection()->toArray();
+        $list = $result->getCollection()->getValueMapList();
 
-        $this->assertEquals('53203b942850b', $list[0]['id']);
+        $this->assertEquals('53203b942850b', $list[0]->id);
     }
 }

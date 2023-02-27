@@ -32,23 +32,14 @@ namespace tests\integration\Core;
 class ApiClient
 {
     private $url;
-
     private $userName;
-
     private $password;
-
     private $portalId;
-
     protected $apiPath = '/api/v1/';
-
     protected $portalApiPath = '/api/v1/portal-access/{PORTAL_ID}/';
-
     protected $userAgent =
         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36';
-
     private $lastCh;
-
-    private $lastResponse;
 
     public function __construct($url = null, $userName = null, $password = null, $portalId = null)
     {
@@ -90,19 +81,18 @@ class ApiClient
     }
 
     /**
-     * Send request to EspoCRM
+     * Send request to EspoCRM.
      *
-     * @param  string     $method
-     * @param  string     $action
-     * @param  array|string|null $jsonData
+     * @param string $method
+     * @param string $action
+     * @param array|string|null $jsonData
      *
-     * @return array | \Exception
+     * @return array|\Exception
      */
     public function request($method, $action, $jsonData = null)
     {
         $this->checkParams();
 
-        $this->lastResponse = null;
         $this->lastCh = null;
 
         if (is_array($jsonData)) {
@@ -135,10 +125,10 @@ class ApiClient
             }
         }
 
-        $this->lastResponse = curl_exec($ch);
+        $lastResponse = curl_exec($ch);
         $this->lastCh = $ch;
 
-        $parsedResponse = $this->parseResponce($this->lastResponse);
+        $parsedResponse = $this->parseResponse($lastResponse);
 
         if ($this->getResponseHttpCode() == 200 && !empty($parsedResponse['body'])) {
             curl_close($ch);
@@ -197,16 +187,17 @@ class ApiClient
         if (isset($this->lastCh)) {
             return curl_getinfo($this->lastCh, $option);
         }
+
+        return null;
     }
 
     /**
-     * Parse response to get header and body
+     * Parse response to get header and body.
      *
-     * @param  string $response
-     *
+     * @param string $response
      * @return array
      */
-    protected function parseResponce($response)
+    protected function parseResponse($response)
     {
         $headerSize = $this->getInfo(CURLINFO_HEADER_SIZE);
 
@@ -217,10 +208,9 @@ class ApiClient
     }
 
     /**
-     * Convert header string to array
+     * Convert header string to array.
      *
-     * @param  string $header
-     *
+     * @param string $header
      * @return array
      */
     protected function normalizeHeader($header)
@@ -228,6 +218,7 @@ class ApiClient
         preg_match_all('/(.*): (.*)\r\n/', $header, $matches);
 
         $headerArray = [];
+
         foreach ($matches[1] as $index => $name) {
             if (isset($matches[2][$index])) {
                 $headerArray[$name] = trim($matches[2][$index]);

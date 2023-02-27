@@ -31,8 +31,8 @@ namespace tests\integration\Espo\User;
 
 class LoginTest extends \tests\integration\Core\BaseTestCase
 {
-    protected $userName = 'admin';
-    protected $password = '1';
+    protected ?string $userName = 'admin';
+    protected ?string $password = '1';
 
     public function testLogin()
     {
