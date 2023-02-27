@@ -238,6 +238,9 @@ abstract class BaseTestCase extends TestCase
         $this->espoTester->setData($data);
     }
 
+    /**
+     * @todo Revise whether needed.
+     */
     protected function fullReset(): void
     {
         $this->espoTester->setParam('fullReset', true);

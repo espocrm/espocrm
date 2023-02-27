@@ -42,10 +42,34 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
 
     protected function beforeSetUp(): void
     {
-        $this->fullReset();
+        //$this->fullReset();
     }
 
-    public function testUpload()
+    /**
+     * If this test fails, an instance may become broken for consecutive test runs.
+     */
+    public function testExtensionUploadInstallUninstallDelete(): void
+    {
+        $extensionId = $this->testUninstall();
+
+        $extensionManager = new ExtensionManager($this->getContainer());
+        $extensionManager->delete(['id' => $extensionId]);
+
+        $this->assertFileDoesNotExist('data/.backup/extensions/' . $extensionId);
+        $this->assertFileDoesNotExist('data/upload/extensions/' . $extensionId);
+        $this->assertFileDoesNotExist('data/upload/extensions/' . $extensionId . 'z');
+
+        $this->assertFileDoesNotExist('application/Espo/Modules/Test');
+        $this->assertFileDoesNotExist('application/Espo/Modules/Test/Resources/metadata/scopes/TestEntity.json');
+        $this->assertFileDoesNotExist('client/modules/test');
+        $this->assertFileDoesNotExist('client/modules/test/src/views/test-entity/fields/custom-type.js');
+
+        $this->assertFileExists('vendor/symfony');
+        $this->assertFileExists('extension.php');
+        $this->assertFileExists('upgrade.php');
+    }
+
+    private function testUpload(): string
     {
         $fileData = file_get_contents($this->normalizePath($this->packagePath));
         $fileData = 'data:application/zip;base64,' . base64_encode($fileData);
@@ -55,75 +79,54 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertStringMatchesFormat('%x', $extensionId);
         $this->assertFileExists('data/upload/extensions/' . $extensionId . 'z');
-        $this->assertFileExists('data/upload/extensions/' . $extensionId); //directory
+        $this->assertFileExists('data/upload/extensions/' . $extensionId);
 
         return $extensionId;
     }
 
-    public function testInstall()
+    private function testInstall(): string
     {
         $extensionId = $this->testUpload();
 
         $extensionManager = new ExtensionManager($this->getContainer());
-        $extensionManager->install(array('id' => $extensionId));
+        $extensionManager->install(['id' => $extensionId]);
 
         $this->assertFileExists('data/upload/extensions/' . $extensionId . 'z');
-        $this->assertFileDoesNotExist('data/upload/extensions/' . $extensionId); //directory
-        $this->assertFileExists('data/.backup/extensions/' . $extensionId); //directory
+        $this->assertFileDoesNotExist('data/upload/extensions/' . $extensionId);
+        $this->assertFileExists('data/.backup/extensions/' . $extensionId);
 
-        $this->assertFileExists('application/Espo/Modules/Test'); //directory
+        $this->assertFileExists('application/Espo/Modules/Test');
         $this->assertFileExists('application/Espo/Modules/Test/Resources/metadata/scopes/TestEntity.json');
-        $this->assertFileExists('client/modules/test'); //directory
+        $this->assertFileExists('client/modules/test');
         $this->assertFileExists('client/modules/test/src/views/test-entity/fields/custom-type.js');
 
-        $this->assertFileDoesNotExist('vendor/symfony'); //directory
+        $this->assertFileDoesNotExist('vendor/symfony');
         $this->assertFileDoesNotExist('extension.php');
         $this->assertFileDoesNotExist('upgrade.php');
 
         return $extensionId;
     }
 
-    public function testUninstall()
+    private function testUninstall(): string
     {
         $extensionId = $this->testInstall();
 
         $extensionManager = new ExtensionManager($this->getContainer());
-        $extensionManager->uninstall(array('id' => $extensionId));
+        $extensionManager->uninstall(['id' => $extensionId]);
 
-        $this->assertFileDoesNotExist('data/.backup/extensions/' . $extensionId); //directory
-        $this->assertFileDoesNotExist('data/upload/extensions/' . $extensionId); //directory
+        $this->assertFileDoesNotExist('data/.backup/extensions/' . $extensionId);
+        $this->assertFileDoesNotExist('data/upload/extensions/' . $extensionId);
         $this->assertFileExists('data/upload/extensions/' . $extensionId . 'z');
 
-        $this->assertFileDoesNotExist('application/Espo/Modules/Test'); //directory
+        $this->assertFileDoesNotExist('application/Espo/Modules/Test');
         $this->assertFileDoesNotExist('application/Espo/Modules/Test/Resources/metadata/scopes/TestEntity.json');
-        $this->assertFileDoesNotExist('client/modules/test'); //directory
+        $this->assertFileDoesNotExist('client/modules/test');
         $this->assertFileDoesNotExist('client/modules/test/src/views/test-entity/fields/custom-type.js');
 
-        $this->assertFileExists('vendor/symfony'); //directory
+        $this->assertFileExists('vendor/symfony');
         $this->assertFileExists('extension.php');
         $this->assertFileExists('upgrade.php');
 
         return $extensionId;
-    }
-
-    public function testDelete()
-    {
-        $extensionId = $this->testUninstall();
-
-        $extensionManager = new ExtensionManager($this->getContainer());
-        $extensionManager->delete(array('id' => $extensionId));
-
-        $this->assertFileDoesNotExist('data/.backup/extensions/' . $extensionId); //directory
-        $this->assertFileDoesNotExist('data/upload/extensions/' . $extensionId); //directory
-        $this->assertFileDoesNotExist('data/upload/extensions/' . $extensionId . 'z');
-
-        $this->assertFileDoesNotExist('application/Espo/Modules/Test'); //directory
-        $this->assertFileDoesNotExist('application/Espo/Modules/Test/Resources/metadata/scopes/TestEntity.json');
-        $this->assertFileDoesNotExist('client/modules/test'); //directory
-        $this->assertFileDoesNotExist('client/modules/test/src/views/test-entity/fields/custom-type.js');
-
-        $this->assertFileExists('vendor/symfony'); //directory
-        $this->assertFileExists('extension.php');
-        $this->assertFileExists('upgrade.php');
     }
 }

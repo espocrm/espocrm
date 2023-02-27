@@ -41,7 +41,7 @@ abstract class Base extends \tests\integration\Core\BaseTestCase
 
     protected function beforeSetUp(): void
     {
-        $this->fullReset();
+        //$this->fullReset();
     }
 
     protected function getColumnInfo($entityName, $fieldName)
