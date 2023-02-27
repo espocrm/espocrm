@@ -25,12 +25,12 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 ob_start();
 $result = array('success' => true, 'errorMsg' => '');
 
-$installer->buildDatabase();
+$installer->rebuild();
 
 ob_clean();
 echo json_encode($result);

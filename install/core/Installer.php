@@ -29,6 +29,7 @@
 
 use Espo\Core\Application;
 use Espo\Core\Container;
+use Espo\Core\DataManager;
 use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\Utils\Id\RecordIdGenerator;
@@ -408,20 +409,16 @@ class Installer
         return true;
     }
 
-    public function buildDatabase()
+    public function rebuild(): void
     {
         try {
-            $this->app->getContainer()->get('dataManager')->rebuild();
-
-            return true;
+            $this->app->getContainer()->getByClass(DataManager::class)->rebuild();
         }
         catch (Exception) {
             $this->auth();
 
-            $this->app->getContainer()->get('dataManager')->rebuild();
+            $this->app->getContainer()->getByClass(DataManager::class)->rebuild();
         }
-
-        return true;
     }
 
     public function savePreferences(array $rawPreferences)

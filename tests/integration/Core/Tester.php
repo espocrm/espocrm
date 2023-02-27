@@ -330,7 +330,7 @@ class Tester
         $this->dropTables();
 
         $installer = new \Installer(); //reload installer to get all config data
-        $installer->buildDatabase();
+        $installer->rebuild();
         $installer->setSuccess();
     }
 
