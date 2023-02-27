@@ -84,6 +84,11 @@ class Binding implements BindingProcessor
         );
 
         $binder->bindService(
+            'Espo\\Core\\Utils\\File\\Manager',
+            'fileManager'
+        );
+
+        $binder->bindService(
             'Espo\\ORM\\EntityManager',
             'entityManager'
         );
