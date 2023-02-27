@@ -39,6 +39,7 @@ use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\ApplicationRunners\Rebuild;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Database\Helper as DatabaseHelper;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\PasswordHash;
 
@@ -46,6 +47,7 @@ use Espo\Entities\PortalRole;
 use Espo\Entities\Role;
 use Espo\Entities\User;
 
+use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 use Slim\Psr7\Factory\RequestFactory;
@@ -53,34 +55,34 @@ use Slim\Psr7\Response;
 
 class Tester
 {
-    protected string $configPath = 'tests/integration/config.php';
+    private string $configPath = 'tests/integration/config.php';
     private string $envConfigPath = 'tests/integration/config-env.php';
 
-    protected string $buildPath = 'build';
-    protected string $installPath = 'build/test';
-    protected string $testDataPath = 'tests/integration/testData';
-    protected string $packageJsonPath = 'package.json';
+    private string $buildPath = 'build';
+    private string $installPath = 'build/test';
+    private string $testDataPath = 'tests/integration/testData';
+    private string $packageJsonPath = 'package.json';
 
     private ?Application $application = null;
     private ?ApiClient $apiClient = null;
     private ?DataLoader $dataLoader = null;
-    protected array $params;
+    private array $params;
 
-    protected ?string $userName = null;
-    protected ?string $password = null;
+    private ?string $userName = null;
+    private ?string $password = null;
 
-    protected ?string $portalId = null;
-    protected ?string $authenticationMethod = null;
-    protected string $defaultUserPassword = '1';
+    private ?string $portalId = null;
+    private ?string $authenticationMethod = null;
+    private string $defaultUserPassword = '1';
 
-    protected ?RequestWrapper $request = null;
+    private ?RequestWrapper $request = null;
 
     public function __construct(array $params)
     {
         $this->params = $this->normalizeParams($params);
     }
 
-    protected function normalizeParams(array $params): array
+    private function normalizeParams(array $params): array
     {
         $namespaceToRemove = 'tests\\integration\\Espo';
 
@@ -116,13 +118,13 @@ class Tester
         return $params;
     }
 
-    protected function getParam(string $name, mixed $returns = null): mixed
+    private function getParam(string $name): mixed
     {
         if (isset($this->params[$name])) {
             return $this->params[$name];
         }
 
-        return $returns;
+        return null;
     }
 
     public function setParam($name, $value)
@@ -153,7 +155,7 @@ class Tester
         return $data;
     }
 
-    protected function saveTestConfigData(string $optionName, $data): void
+    private function saveTestConfigData(string $optionName, $data): void
     {
         $configData = $this->getTestConfigData();
 
@@ -229,7 +231,7 @@ class Tester
         return $this->application;
     }
 
-    protected function getApiClient(): ApiClient
+    private function getApiClient(): ApiClient
     {
         if (!isset($this->apiClient)) {
             $this->apiClient = new ApiClient($this->getParam('siteUrl'));
@@ -238,7 +240,7 @@ class Tester
         return $this->apiClient;
     }
 
-    protected function getDataLoader(): DataLoader
+    private function getDataLoader(): DataLoader
     {
         if (!isset($this->dataLoader)) {
             $this->dataLoader = new DataLoader($this->getApplication());
@@ -304,10 +306,8 @@ class Tester
             die("Permission denied for directory [".$this->installPath."].\n");
         }
 
-        // reset DB, remove and copy Espo files
         Utils::checkCreateDatabase($configData['database']);
         $this->reset($fileManager, $latestEspoDir);
-
         Utils::fixUndefinedVariables();
 
         chdir($this->installPath);
@@ -327,12 +327,38 @@ class Tester
 
         $installer->saveConfig($configData);
 
+        $this->dropTables();
+
         $installer = new \Installer(); //reload installer to get all config data
         $installer->buildDatabase();
         $installer->setSuccess();
     }
 
-    protected function reset($fileManager, $latestEspoDir): void
+    private function dropTables(): void
+    {
+        $app = new Application();
+
+        $databaseHelper = $app->getContainer()
+            ->getByClass(InjectableFactory::class)
+            ->create(DatabaseHelper::class);
+
+        $pdo = $databaseHelper->getPDO();
+        $platform = $databaseHelper->getDbalConnection()->getDatabasePlatform();
+
+        $rows = $pdo->query("SHOW TABLES");
+
+        while ($row = $rows->fetch(\PDO::FETCH_NUM)) {
+            $table = $row[0];
+
+            $quotedTable = $platform->quoteIdentifier($table);
+
+            $sql = "DROP TABLE IF EXISTS {$quotedTable}";
+
+            $pdo->query($sql);
+        }
+    }
+
+    private function reset($fileManager, $latestEspoDir): void
     {
         $configData = $this->getTestConfigData();
 
@@ -353,8 +379,6 @@ class Tester
         }
 
         if ($fullReset) {
-            Utils::dropTables($configData['database']);
-
             if ($this->isShellEnabled()) {
                 shell_exec('rm -rf "' . $this->installPath . '"');
                 shell_exec('cp -r "' . $latestEspoDir . '" "' . $this->installPath . '"');
@@ -366,15 +390,13 @@ class Tester
             return;
         }
 
-        //Utils::truncateTables($configData['database']);
-        Utils::dropTables($configData['database']);
         $fileManager->removeInDir($this->installPath . '/data');
         $fileManager->removeInDir($this->installPath . '/custom/Espo/Custom');
         $fileManager->removeInDir($this->installPath . '/client/custom');
         $fileManager->unlink($this->installPath . '/install/config.php');
     }
 
-    protected function cleanDirectory(string $path, array $ignoreList = []): void
+    /*private function cleanDirectory(string $path, array $ignoreList = []): void
     {
         if (!file_exists($path)) {
             return;
@@ -397,9 +419,9 @@ class Tester
                 $fileManager->removeInDir($itemPath, true);
             }
         }
-    }
+    }*/
 
-    protected function loadData(): void
+    private function loadData(): void
     {
         $applyChanges = false;
 
@@ -439,7 +461,7 @@ class Tester
         $fileManager->removeInDir('data/cache');
     }
 
-    protected function clearVars(): void
+    private function clearVars(): void
     {
         $this->dataLoader = null;
         $this->application = null;
@@ -513,9 +535,9 @@ class Tester
         return $user;
     }
 
-    protected function createRole(array $roleData, $isPortal = false)
+    private function createRole(array $roleData, bool $isPortal = false): Entity
     {
-        $entityName = $isPortal ? PortalRole::ENTITY_TYPE : Role::ENTITY_TYPE;
+        $entityType = $isPortal ? PortalRole::ENTITY_TYPE : Role::ENTITY_TYPE;
 
         if (isset($roleData['data']) && is_array($roleData['data'])) {
             $roleData['data'] = json_encode($roleData['data']);
@@ -526,11 +548,10 @@ class Tester
         }
 
         $application = $this->getApplication();
-        $entityManager = $application->getContainer()->get('entityManager');
+        $entityManager = $application->getContainer()->getByClass(EntityManager::class);
 
-        $role = $entityManager->getEntity($entityName);
+        $role = $entityManager->getNewEntity($entityType);
         $role->set($roleData);
-
         $entityManager->saveEntity($role);
 
         return $role;
@@ -541,7 +562,7 @@ class Tester
         return $this->getParam('testDataPath') . '/' . $path;
     }
 
-    protected function isShellEnabled(): bool
+    private function isShellEnabled(): bool
     {
         if (!function_exists('exec') || !is_callable('shell_exec')) {
             return false;

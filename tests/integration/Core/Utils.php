@@ -140,53 +140,23 @@ class Utils
         }
     }
 
-    public static function checkCreateDatabase(array $options): void
+    public static function checkCreateDatabase(array $databaseParams): void
     {
-        if (!isset($options['dbname'])) {
-            throw new Error('Option "dbname" is not found.');
+        if (!isset($databaseParams['dbname'])) {
+            throw new \RuntimeException('Option "dbname" is not found.');
         }
 
-        $dbname = $options['dbname'];
-        unset($options['dbname']);
+        $dbname = $databaseParams['dbname'];
+        unset($databaseParams['dbname']);
 
         $sql = "CREATE DATABASE IF NOT EXISTS `{$dbname}`";
 
-        $pdo = static::createPdoConnection($options);
+        $pdo = static::createPdoConnection($databaseParams);
 
         $pdo->query($sql);
     }
 
-    public static function dropTables(array $options): void
-    {
-        $pdo = static::createPdoConnection($options);
-
-        $result = $pdo->query("SHOW TABLES");
-
-        while ($row = $result->fetch(PDO::FETCH_NUM)) {
-            $table = $row[0];
-
-            $sql = "DROP TABLE IF EXISTS `{$table}`";
-
-            $pdo->query($sql);
-        }
-    }
-
-    public static function truncateTables(array $options)
-    {
-        $pdo = static::createPdoConnection($options);
-
-        $result = $pdo->query("SHOW TABLES");
-
-        while ($row = $result->fetch(PDO::FETCH_NUM)) {
-            $table = $row[0];
-
-            $sql = "TRUNCATE TABLE `{$table}`";
-
-            $pdo->query($sql);
-        }
-    }
-
-    public static function createPdoConnection(array $params): PDO
+    private static function createPdoConnection(array $params): PDO
     {
         $platform = !empty($params['platform']) ? strtolower($params['platform']) : 'mysql';
         $port = empty($params['port']) ? '' : ';port=' . $params['port'];
