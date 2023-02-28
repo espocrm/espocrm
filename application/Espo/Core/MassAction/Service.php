@@ -147,7 +147,8 @@ class Service
         $entity = $this->entityManager->createEntity(MassActionEntity::ENTITY_TYPE, [
             'entityType' => $entityType,
             'action' => $action,
-            'params' => serialize($params),
+            // Additional encoding to handle null-character issue in PostgreSQL.
+            'params' => base64_encode(serialize($params)),
             'data' => $data,
         ]);
 

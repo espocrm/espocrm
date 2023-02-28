@@ -133,7 +133,8 @@ class Service
     private function schedule(Params $params): ServiceResult
     {
         $entity = $this->entityManager->createEntity(ExportEntity::ENTITY_TYPE, [
-            'params' => serialize($params),
+            // Additional encoding to handle null-character issue in PostgreSQL.
+            'params' => base64_encode(serialize($params)),
         ]);
 
         $this->jobSchedulerFactory

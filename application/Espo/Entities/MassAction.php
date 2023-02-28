@@ -61,7 +61,7 @@ class MassAction extends Entity
         }
 
         /** @var Params $params */
-        $params = unserialize($raw);
+        $params = unserialize(base64_decode($raw));
 
         return $params;
     }
