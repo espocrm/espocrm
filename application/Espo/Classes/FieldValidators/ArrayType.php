@@ -38,17 +38,10 @@ use stdClass;
 
 class ArrayType
 {
-    private Metadata $metadata;
+    private const DEFAULT_MAX_ITEM_LENGTH = 100;
 
-    private Defs $defs;
-
-    private const DEFAULT_MAX_LENGTH = 100;
-
-    public function __construct(Metadata $metadata, Defs $defs)
-    {
-        $this->metadata = $metadata;
-        $this->defs = $defs;
-    }
+    public function __construct(private Metadata $metadata, private Defs $defs)
+    {}
 
     public function checkRequired(Entity $entity, string $field): bool
     {
@@ -181,9 +174,9 @@ class ArrayType
         return false;
     }
 
-    public function checkMaxLength(Entity $entity, string $field, ?int $validationValue): bool
+    public function checkMaxItemLength(Entity $entity, string $field, ?int $validationValue): bool
     {
-        $maxLength = $validationValue ?? self::DEFAULT_MAX_LENGTH;
+        $maxLength = $validationValue ?? self::DEFAULT_MAX_ITEM_LENGTH;
 
         /** @var string[] $value */
         $value = $entity->get($field) ?? [];

@@ -63,7 +63,7 @@
         "valid",
         "required",
         "maxCount",
-        "maxLength",
+        "maxItemLength",
         "pattern",
         "noEmptyString"
     ],
@@ -71,7 +71,7 @@
         "array",
         "arrayOfString",
         "valid",
-        "maxLength"
+        "maxItemLength"
     ],
     "filter": true,
     "notCreatable": false,
