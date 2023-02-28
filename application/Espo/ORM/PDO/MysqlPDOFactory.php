@@ -35,6 +35,8 @@ use RuntimeException;
 
 class MysqlPDOFactory implements PDOFactory
 {
+    private const DEFAULT_CHARSET = 'utf8mb4';
+
     public function create(DatabaseParams $databaseParams): PDO
     {
         $platform = strtolower($databaseParams->getPlatform() ?? '');
@@ -42,7 +44,7 @@ class MysqlPDOFactory implements PDOFactory
         $host = $databaseParams->getHost();
         $port = $databaseParams->getPort();
         $dbname = $databaseParams->getName();
-        $charset = $databaseParams->getCharset();
+        $charset = $databaseParams->getCharset() ?? self::DEFAULT_CHARSET;
         $username = $databaseParams->getUsername();
         $password = $databaseParams->getPassword();
 
@@ -64,9 +66,7 @@ class MysqlPDOFactory implements PDOFactory
             $dsn .= ';' . 'dbname=' . $dbname;
         }
 
-        if ($charset) {
-            $dsn .= ';' . 'charset=' . $charset;
-        }
+        $dsn .= ';' . 'charset=' . $charset;
 
         $options = Options::getOptionsFromDatabaseParams($databaseParams);
 

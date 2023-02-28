@@ -63,6 +63,10 @@ if ($result['success'] && !empty($allPostData['dbName']) && !empty($allPostData[
     $dbUserName = trim($allPostData['dbUserName']);
     $dbUserPass = trim($allPostData['dbUserPass']);
 
+    if (!$port) {
+        $port = null;
+    }
+
     $databaseParams = [
         'host' => $hostName,
         'port' => $port,

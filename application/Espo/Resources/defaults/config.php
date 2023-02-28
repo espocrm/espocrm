@@ -29,10 +29,9 @@
 
 return [
     'database' => [
-        'driver' => 'pdo_mysql',
         'host' => 'localhost',
-        'port' => '',
-        'charset' => 'utf8mb4',
+        'port' => null,
+        'charset' => null,
         'dbname' => '',
         'user' => '',
         'password' => '',

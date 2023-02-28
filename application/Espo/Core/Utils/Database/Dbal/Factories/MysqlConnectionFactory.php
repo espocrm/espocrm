@@ -42,6 +42,8 @@ use RuntimeException;
 
 class MysqlConnectionFactory implements ConnectionFactory
 {
+    private const DEFAULT_CHARSET = 'utf8mb4';
+
     public function __construct(
         private PDO $pdo
     ) {}
@@ -76,9 +78,7 @@ class MysqlConnectionFactory implements ConnectionFactory
             $params['password'] = $databaseParams->getPassword();
         }
 
-        if ($databaseParams->getCharset() !== null) {
-            $params['charset'] = $databaseParams->getCharset();
-        }
+        $params['charset'] = $databaseParams->getCharset() ?? self::DEFAULT_CHARSET;
 
         return new Connection($params, $driver);
     }

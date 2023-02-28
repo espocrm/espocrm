@@ -57,7 +57,7 @@ $fields = array(
         'default' => $config->get('database.user', ''),
     ),
     'db-user-password' => array(
-        'default' => $config->get('database.password', ''),
+        //'default' => $config->get('database.password', ''),
     ),
 );
 

@@ -43,6 +43,8 @@ use RuntimeException;
 
 class PostgresqlConnectionFactory implements ConnectionFactory
 {
+    private const DEFAULT_CHARSET = 'utf8';
+
     public function __construct(
         private PDO $pdo,
         private Helper $helper
@@ -60,7 +62,10 @@ class PostgresqlConnectionFactory implements ConnectionFactory
         }
 
         $platform = new PostgresqlPlatform();
-        $platform->setTextSearchConfig($this->helper->getParam('default_text_search_config'));
+
+        if ($databaseParams->getName()) {
+            $platform->setTextSearchConfig($this->helper->getParam('default_text_search_config'));
+        }
 
         $params = [
             'platform' => $platform,
@@ -82,9 +87,7 @@ class PostgresqlConnectionFactory implements ConnectionFactory
             $params['password'] = $databaseParams->getPassword();
         }
 
-        if ($databaseParams->getCharset() !== null) {
-            $params['charset'] = $databaseParams->getCharset();
-        }
+        $params['charset'] = $databaseParams->getCharset() ?? self::DEFAULT_CHARSET;
 
         return new Connection($params, $driver);
     }

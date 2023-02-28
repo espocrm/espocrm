@@ -47,9 +47,6 @@
     "webhookManager": {
         "className": "Espo\\Core\\Webhook\\Manager"
     },
-    "scheduledJob": {
-        "className": "Espo\\Core\\Utils\\ScheduledJob"
-    },
     "hookManager": {
         "className": "Espo\\Core\\HookManager"
     },
