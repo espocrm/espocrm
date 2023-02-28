@@ -1,0 +1,63 @@
+name: Test Integration on PostgreSQL
+
+on:
+    schedule:
+        - cron:  '0 11 * * *'
+
+jobs:
+  test:
+    name: Test on PHP ${{ matrix.php-versions }}
+    runs-on: ubuntu-20.04
+    env:
+      TEST_DATABASE_HOST: '127.0.0.1'
+      TEST_DATABASE_PLATFORM: 'Postgresql'
+      TEST_DATABASE_CHARSET: 'utf8'
+      TEST_DATABASE_PORT: '8888'
+      TEST_DATABASE_NAME: integration_test
+      TEST_DATABASE_USER: root
+      TEST_DATABASE_PASSWORD: password
+    services:
+      postgres:
+        image: postgres:15.2
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: integration_test
+        ports:
+          - '8888:5432'
+        options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['8.2']
+        branches: ['master']
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ matrix.branches }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 16.x
+
+    - name: Setup PHP with Composer
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        tools: composer:v2
+        ini-values: memory_limit=1024M
+
+    - name: NPM install
+      run: npm install
+
+    - name: Build
+      run: grunt test
+
+    - name: Integration testing
+      run: vendor/bin/phpunit --testsuite integration-pg
