@@ -29,6 +29,7 @@
 
 namespace tests\integration\Core;
 
+use Doctrine\DBAL\Schema\Table;
 use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\AuthenticationData;
 
@@ -64,7 +65,6 @@ class Tester
     private string $packageJsonPath = 'package.json';
 
     private ?Application $application = null;
-    private ?ApiClient $apiClient = null;
     private ?DataLoader $dataLoader = null;
     private array $params;
 
@@ -231,15 +231,6 @@ class Tester
         return $this->application;
     }
 
-    private function getApiClient(): ApiClient
-    {
-        if (!isset($this->apiClient)) {
-            $this->apiClient = new ApiClient($this->getParam('siteUrl'));
-        }
-
-        return $this->apiClient;
-    }
-
     private function getDataLoader(): DataLoader
     {
         if (!isset($this->dataLoader)) {
@@ -327,26 +318,24 @@ class Tester
 
         $installer->saveConfig($configData);
 
-        $this->createDatabase();
-        $this->dropTables();
+        $app = new Application();
 
-        $installer = new \Installer(); //reload installer to get all config data
+        //$this->createDatabase($app);
+        $this->dropTables($app);
+
+        $installer = new \Installer(); // reload installer to have all config data
         $installer->rebuild();
         $installer->setSuccess();
     }
 
-    private function createDatabase(): void
+    // PDO can't be instantiated as dbname is set but database does not exist.
+    /*private function createDatabase(Application $app): void
     {
-        $app = new Application();
-
         $databaseHelper = $app->getContainer()
             ->getByClass(InjectableFactory::class)
             ->create(DatabaseHelper::class);
 
         $config = $app->getContainer()->getByClass(Config::class);
-
-        $pdo = $databaseHelper->getPDO();
-        $platform = $databaseHelper->getDbalConnection()->getDatabasePlatform();
 
         $dbname = $config->get('database.dbname');
 
@@ -354,55 +343,31 @@ class Tester
             throw new \RuntimeException('No "dbname" in database config.');
         }
 
-        $quotedDbname = $platform->quoteIdentifier($dbname);
+        $schemaManager = $databaseHelper->getDbalConnection()->createSchemaManager();
+        $platform = $databaseHelper->getDbalConnection()->getDatabasePlatform();
 
-        $sql = "CREATE DATABASE IF NOT EXISTS {$quotedDbname}";
-
-        if ($config->get('database.platform') === 'Postgresql') {
-            $sqlCheck = "SELECT datname FROM pg_database WHERE datname = " . $platform->quoteStringLiteral($dbname);
-
-            $sth = $pdo->prepare($sqlCheck);
-            $sth->execute();
-
-            if ($sth->fetch()) {
-                return;
-            }
-
-            $sql = "CREATE DATABASE {$quotedDbname}";
+        if (in_array($dbname, $schemaManager->listDatabases())) {
+            return;
         }
 
-        $pdo->query($sql);
-    }
+        $schemaManager->createDatabase($platform->quoteIdentifier($dbname));
+    }*/
 
-    private function dropTables(): void
+    private function dropTables(Application $app): void
     {
-        $app = new Application();
-
         $databaseHelper = $app->getContainer()
             ->getByClass(InjectableFactory::class)
             ->create(DatabaseHelper::class);
 
-        $pdo = $databaseHelper->getPDO();
+        $schemaManager = $databaseHelper->getDbalConnection()->createSchemaManager();
         $platform = $databaseHelper->getDbalConnection()->getDatabasePlatform();
 
-        $config = $app->getContainer()->getByClass(Config::class);
+        $pdo = $databaseHelper->getPDO();
 
-        $showTablesSql = "SHOW TABLES";
+        $tables = $schemaManager->listTableNames();
 
-        if ($config->get('database.platform') === 'Postgresql') {
-            $showTablesSql =
-                "SELECT table_name FROM information_schema.tables " .
-                "WHERE table_schema='public' AND table_type='BASE TABLE'";
-        }
-
-        $rows = $pdo->query($showTablesSql);
-
-        while ($row = $rows->fetch(\PDO::FETCH_NUM)) {
-            $table = $row[0];
-
-            $quotedTable = $platform->quoteIdentifier($table);
-
-            $sql = "DROP TABLE IF EXISTS {$quotedTable}";
+        foreach ($tables as $table) {
+            $sql = $platform->getDropTableSQL(new Table($table));
 
             $pdo->query($sql);
         }
@@ -515,18 +480,7 @@ class Tester
     {
         $this->dataLoader = null;
         $this->application = null;
-        $this->apiClient = null;
     }
-
-    /*public function sendRequest($method, $action, $data = null)
-    {
-        $apiClient = $this->getApiClient();
-        $apiClient->setUserName($this->userName);
-        $apiClient->setPassword($this->password ?? $this->defaultUserPassword);
-        $apiClient->setPortalId($this->portalId);
-
-        return $apiClient->request($method, $action, $data);
-    }*/
 
     /**
      * Create a user with roles.
@@ -549,15 +503,13 @@ class Tester
 
             $role = $this->createRole($roleData, $isPortal);
 
-            if (isset($role)) {
-                $fieldName = $isPortal ? 'portalRolesIds' : 'rolesIds';
+            $fieldName = $isPortal ? 'portalRolesIds' : 'rolesIds';
 
-                if (!isset($userData[$fieldName])) {
-                    $userData[$fieldName] = [];
-                }
-
-                $userData[$fieldName][] = $role->getId();
+            if (!isset($userData[$fieldName])) {
+                $userData[$fieldName] = [];
             }
+
+            $userData[$fieldName][] = $role->getId();
         }
 
         $application = $this->getApplication();
