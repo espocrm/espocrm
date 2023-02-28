@@ -71,9 +71,12 @@ class PostgresqlConnectionFactory implements ConnectionFactory
             'platform' => $platform,
             'pdo' => $this->pdo,
             'host' => $databaseParams->getHost(),
-            'dbname' => $databaseParams->getName(),
             'driverOptions' => PdoOptions::getOptionsFromDatabaseParams($databaseParams),
         ];
+
+        if ($databaseParams->getName() !== null) {
+            $params['dbname'] = $databaseParams->getName();
+        }
 
         if ($databaseParams->getPort() !== null) {
             $params['port'] = $databaseParams->getPort();
