@@ -306,6 +306,13 @@ return [
         'relations' => [
 
         ],
+        'indexes' => [
+            'postIdTagId' => [
+                'key' => 'UNIQ_POST_ID_TAG_ID',
+                'type' => 'unique',
+                'columns' => ['postId', 'tagId'],
+            ],
+        ],
     ],
 
     'Note' => [

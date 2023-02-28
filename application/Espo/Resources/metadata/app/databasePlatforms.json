@@ -15,6 +15,12 @@
         }
     },
     "Postgresql": {
-        "dbalConnectionFactoryClassName": "Espo\\Core\\Utils\\Database\\Dbal\\Factories\\PostgresqlConnectionFactory"
+        "detailsProviderClassName": "Espo\\Core\\Utils\\Database\\DetailsProviders\\PostgresqlDetailsProvider",
+        "dbalConnectionFactoryClassName": "Espo\\Core\\Utils\\Database\\Dbal\\Factories\\PostgresqlConnectionFactory",
+        "indexHelperClassName": "Espo\\Core\\Utils\\Database\\Orm\\IndexHelpers\\PostgresqlIndexHelper",
+        "columnPreparatorClassName": "Espo\\Core\\Utils\\Database\\Schema\\ColumnPreparators\\PostgresqlColumnPreparator",
+        "dbalTypeClassNameMap": {
+            "uuid": "Espo\\Core\\Utils\\Database\\Dbal\\Types\\UuidType"
+        }
     }
 }
