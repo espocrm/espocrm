@@ -29,9 +29,6 @@
 
 namespace tests\integration\Core;
 
-use Espo\Core\Exceptions\Error;
-use PDO;
-
 class Utils
 {
     /**
@@ -138,32 +135,5 @@ class Utils
                 $_SERVER[$name] = '';
             }
         }
-    }
-
-    public static function checkCreateDatabase(array $databaseParams): void
-    {
-        if (!isset($databaseParams['dbname'])) {
-            throw new \RuntimeException('Option "dbname" is not found.');
-        }
-
-        $dbname = $databaseParams['dbname'];
-        unset($databaseParams['dbname']);
-
-        $sql = "CREATE DATABASE IF NOT EXISTS `{$dbname}`";
-
-        $pdo = static::createPdoConnection($databaseParams);
-
-        $pdo->query($sql);
-    }
-
-    private static function createPdoConnection(array $params): PDO
-    {
-        $platform = !empty($params['platform']) ? strtolower($params['platform']) : 'mysql';
-        $port = empty($params['port']) ? '' : ';port=' . $params['port'];
-        $dbname = empty($params['dbname']) ? '' : ';dbname=' . $params['dbname'];
-
-        $dsn = $platform . ':host=' . $params['host'] . $port . $dbname;
-
-        return new PDO($dsn, $params['user'], $params['password']);
     }
 }

@@ -306,8 +306,8 @@ class Tester
             die("Permission denied for directory [".$this->installPath."].\n");
         }
 
-        Utils::checkCreateDatabase($configData['database']);
         $this->reset($fileManager, $latestEspoDir);
+
         Utils::fixUndefinedVariables();
 
         chdir($this->installPath);
@@ -327,11 +327,51 @@ class Tester
 
         $installer->saveConfig($configData);
 
+        $this->createDatabase();
         $this->dropTables();
 
         $installer = new \Installer(); //reload installer to get all config data
         $installer->rebuild();
         $installer->setSuccess();
+    }
+
+    private function createDatabase(): void
+    {
+        $app = new Application();
+
+        $databaseHelper = $app->getContainer()
+            ->getByClass(InjectableFactory::class)
+            ->create(DatabaseHelper::class);
+
+        $config = $app->getContainer()->getByClass(Config::class);
+
+        $pdo = $databaseHelper->getPDO();
+        $platform = $databaseHelper->getDbalConnection()->getDatabasePlatform();
+
+        $dbname = $config->get('database.dbname');
+
+        if (!$dbname) {
+            throw new \RuntimeException('No "dbname" in database config.');
+        }
+
+        $quotedDbname = $platform->quoteIdentifier($dbname);
+
+        $sql = "CREATE DATABASE IF NOT EXISTS {$quotedDbname}";
+
+        if ($config->get('database.platform') === 'Postgresql') {
+            $sqlCheck = "SELECT datname FROM pg_database WHERE datname = " . $platform->quoteStringLiteral($dbname);
+
+            $sth = $pdo->prepare($sqlCheck);
+            $sth->execute();
+
+            if ($sth->fetch()) {
+                return;
+            }
+
+            $sql = "CREATE DATABASE {$quotedDbname}";
+        }
+
+        $pdo->query($sql);
     }
 
     private function dropTables(): void
@@ -345,7 +385,17 @@ class Tester
         $pdo = $databaseHelper->getPDO();
         $platform = $databaseHelper->getDbalConnection()->getDatabasePlatform();
 
-        $rows = $pdo->query("SHOW TABLES");
+        $config = $app->getContainer()->getByClass(Config::class);
+
+        $showTablesSql = "SHOW TABLES";
+
+        if ($config->get('database.platform') === 'Postgresql') {
+            $showTablesSql =
+                "SELECT table_name FROM information_schema.tables " .
+                "WHERE table_schema='public' AND table_type='BASE TABLE'";
+        }
+
+        $rows = $pdo->query($showTablesSql);
 
         while ($row = $rows->fetch(\PDO::FETCH_NUM)) {
             $table = $row[0];
