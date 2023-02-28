@@ -55,8 +55,8 @@ class PostgresqlConnectionFactory implements ConnectionFactory
     {
         $driver = new PostgreSQLDriver();
 
-        if (!$databaseParams->getHost() || !$databaseParams->getName()) {
-            throw new RuntimeException("No required database params.");
+        if (!$databaseParams->getHost()) {
+            throw new RuntimeException("No database host in config.");
         }
 
         $platform = new PostgresqlPlatform();

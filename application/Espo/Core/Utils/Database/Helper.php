@@ -85,13 +85,9 @@ class Helper
     /**
      * Create a PDO connection.
      */
-    public function createPDO(?DatabaseParams $params = null, bool $skipDatabaseName = false): PDO
+    public function createPDO(?DatabaseParams $params = null): PDO
     {
         $params = $params ?? $this->databaseParamsFactory->create();
-
-        if ($skipDatabaseName) {
-            $params = $params->withName(null);
-        }
 
         return $this->pdoFactoryFactory
             ->create($params->getPlatform() ?? '')

@@ -35,11 +35,13 @@ use Espo\Core\Authentication\AuthenticationData;
 
 use Espo\Core\Application;
 use Espo\Core\InjectableFactory;
+use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\Portal\Application as PortalApplication;
 use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\ApplicationRunners\Rebuild;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Database\Dbal\ConnectionFactoryFactory;
 use Espo\Core\Utils\Database\Helper as DatabaseHelper;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\PasswordHash;
@@ -320,7 +322,7 @@ class Tester
 
         $app = new Application();
 
-        //$this->createDatabase($app);
+        $this->createDatabase($app);
         $this->dropTables($app);
 
         $installer = new \Installer(); // reload installer to have all config data
@@ -329,29 +331,39 @@ class Tester
     }
 
     // PDO can't be instantiated as dbname is set but database does not exist.
-    /*private function createDatabase(Application $app): void
+    private function createDatabase(Application $app): void
     {
-        $databaseHelper = $app->getContainer()
-            ->getByClass(InjectableFactory::class)
-            ->create(DatabaseHelper::class);
+        $injectableFactory = $app->getContainer()->getByClass(InjectableFactory::class);
 
-        $config = $app->getContainer()->getByClass(Config::class);
+        $databaseHelper = $injectableFactory->create(DatabaseHelper::class);
+        $databaseParamsFactory = $injectableFactory->create(DatabaseParamsFactory::class);
+        $connectionFactoryFactory = $injectableFactory->create(ConnectionFactoryFactory::class);
 
-        $dbname = $config->get('database.dbname');
+        $params = $databaseParamsFactory->create();
+
+        $dbname = $params->getName();
 
         if (!$dbname) {
             throw new \RuntimeException('No "dbname" in database config.');
         }
 
-        $schemaManager = $databaseHelper->getDbalConnection()->createSchemaManager();
-        $platform = $databaseHelper->getDbalConnection()->getDatabasePlatform();
+        $params = $params->withName(null);
+
+        $pdo = $databaseHelper->createPDO($params);
+
+        $connection = $connectionFactoryFactory
+            ->create($params->getPlatform(), $pdo)
+            ->create($params);
+
+        $schemaManager = $connection->createSchemaManager();
+        $platform = $connection->getDatabasePlatform();
 
         if (in_array($dbname, $schemaManager->listDatabases())) {
             return;
         }
 
         $schemaManager->createDatabase($platform->quoteIdentifier($dbname));
-    }*/
+    }
 
     private function dropTables(Application $app): void
     {

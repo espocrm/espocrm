@@ -32,7 +32,9 @@ use Espo\Core\Container;
 use Espo\Core\DataManager;
 use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\DatabaseParamsFactory;
+use Espo\Core\Utils\Database\Dbal\ConnectionFactoryFactory;
 use Espo\Core\Utils\Id\RecordIdGenerator;
+use Espo\Core\Utils\ScheduledJob as ScheduledJobUtil;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Config\ConfigFileManager;
 use Espo\Core\Utils\Config;
@@ -130,8 +132,9 @@ class Installer
             $config->get('defaultPermissions') ?? null
         );
 
-        /** @var InjectableFactory $injectableFactory */
-        $injectableFactory = (new Application())->getContainer()->get('injectableFactory');
+        $injectableFactory = (new Application())
+            ->getContainer()
+            ->getByClass(InjectableFactory::class);
 
         $configWriter = $injectableFactory->createWithBinding(
             ConfigWriter::class,
@@ -159,26 +162,22 @@ class Installer
 
     private function getEntityManager(): EntityManager
     {
-        /** @var EntityManager */
-        return $this->getContainer()->get('entityManager');
+        return $this->getContainer()->getByClass(EntityManager::class);
     }
 
     public function getMetadata(): Metadata
     {
-        /** @var Metadata */
-        return $this->app->getContainer()->get('metadata');
+        return $this->app->getContainer()->getByClass(Metadata::class);
     }
 
     public function getInjectableFactory(): InjectableFactory
     {
-        /** @var InjectableFactory */
-        return $this->app->getContainer()->get('injectableFactory');
+        return $this->app->getContainer()->getByClass(InjectableFactory::class);
     }
 
     public function getConfig(): Config
     {
-        /** @var Config */
-        return $this->app->getContainer()->get('config');
+        return $this->app->getContainer()->getByClass(Config::class);
     }
 
     public function createConfigWriter(): ConfigWriter
@@ -191,11 +190,6 @@ class Installer
         return $this->systemHelper;
     }
 
-    private function getDatabaseHelper(): DatabaseHelper
-    {
-        return $this->databaseHelper;
-    }
-
     private function getInstallerConfig(): InstallerConfig
     {
         return $this->installerConfig;
@@ -203,8 +197,7 @@ class Installer
 
     private function getFileManager(): FileManager
     {
-        /** @var FileManager */
-        return $this->app->getContainer()->get('fileManager');
+        return $this->app->getContainer()->getByClass(FileManager::class);
     }
 
     private function getPasswordHash(): PasswordHash
@@ -251,7 +244,13 @@ class Installer
     {
         if (!isset($this->language)) {
             try {
-                $this->language = $this->app->getContainer()->get('defaultLanguage');
+                $language = $this->app->getContainer()->get('defaultLanguage');
+
+                if (!$language instanceof Language) {
+                    throw new RuntimeException("Can't get default language.");
+                }
+
+                $this->language = $language;
             }
             catch (Throwable $e) {
                 echo "Error: " . $e->getMessage();
@@ -303,42 +302,51 @@ class Installer
         /** @var SystemRequirements $systemRequirementManager */
          $systemRequirementManager = $this->app
             ->getContainer()
-            ->get('injectableFactory')
+            ->getByClass(InjectableFactory::class)
             ->create(SystemRequirements::class);
 
          return $systemRequirementManager->getRequiredListByType($type, $requiredOnly, $additionalData);
     }
 
-    public function checkDatabaseConnection(
-        array $params,
-        bool $createDatabase = false
-    ) {
-        $databaseParams = $this->databaseParamsFactory->createWithMergedAssoc($params);
+    public function checkDatabaseConnection(array $rawParams, bool $createDatabase = false): void
+    {
+        $params = $this->databaseParamsFactory->createWithMergedAssoc($rawParams);
+
+        $dbname = $params->getName();
 
         try {
-            $this->getDatabaseHelper()->createPDO($databaseParams);
+            $this->databaseHelper->createPDO($params);
         }
         catch (Exception $e) {
-            if ($createDatabase && $e->getCode() == '1049') {
-                $pdo = $this->getDatabaseHelper()->createPDO($databaseParams, true);
-
-                $dbname = preg_replace('/[^A-Za-z0-9_\-@$#\(\)]+/', '', $params['dbname']);
-
-                if ($dbname !== $params['dbname']) {
-                    throw new Exception("Bad database name.");
-                }
-
-                $pdo->query(
-                    "CREATE DATABASE IF NOT EXISTS `{$dbname}`"
-                );
-
-                return $this->checkDatabaseConnection($params, false);
+            if (!$createDatabase) {
+                throw $e;
             }
 
-            throw $e;
-        }
+            if ((int) $e->getCode() !== 1049) {
+                throw $e;
+            }
 
-        return true;
+            if ($dbname !== preg_replace('/[^A-Za-z0-9_\-@$#\(\)]+/', '', $dbname)) {
+                throw new Exception("Bad database name.");
+            }
+
+            $params = $params->withName(null);
+
+            $pdo = $this->databaseHelper->createPDO($params);
+
+            $connectionFactoryFactory = $this->getInjectableFactory()->create(ConnectionFactoryFactory::class);
+
+            $connection = $connectionFactoryFactory
+                ->create($params->getPlatform(), $pdo)
+                ->create($params);
+
+            $schemaManager = $connection->createSchemaManager();
+            $platform = $connection->getDatabasePlatform();
+
+            $schemaManager->createDatabase($platform->quoteIdentifier($dbname));
+
+            $this->checkDatabaseConnection($rawParams, false);
+        }
     }
 
     /**
@@ -360,7 +368,7 @@ class Installer
 
         $databaseDefaults = $this->app
             ->getContainer()
-            ->get('config')
+            ->getByClass(Config::class)
             ->get('database');
 
         $siteUrl = !empty($saveData['siteUrl']) ? $saveData['siteUrl'] : $this->getSystemHelper()->getBaseUrl();
@@ -401,9 +409,7 @@ class Installer
     public function saveConfig($data)
     {
         $configWriter = $this->createConfigWriter();
-
         $configWriter->setMultiple($data);
-
         $configWriter->save();
 
         return true;
@@ -438,22 +444,18 @@ class Installer
         return $this->saveConfig($preferences);
     }
 
-    private function createRecords()
+    private function createRecords(): void
     {
         $records = include('install/core/afterInstall/records.php');
 
-        $result = true;
-
         foreach ($records as $entityName => $recordList) {
             foreach ($recordList as $data) {
-                $result &= $this->createRecord($entityName, $data);
+                $this->createRecord($entityName, $data);
             }
         }
-
-        return $result;
     }
 
-    private function createRecord(string $entityType, array $data): bool
+    private function createRecord(string $entityType, array $data): void
     {
         $id = $data['id'] ?? null;
 
@@ -507,8 +509,6 @@ class Installer
         $entity->set($data);
 
         $this->getEntityManager()->saveEntity($entity);
-
-        return true;
     }
 
     public function createUser(string $userName, string $password): bool
@@ -564,30 +564,19 @@ class Installer
         return $this->getFileManager()->getPermissionUtils()->getLastErrorRules();
     }
 
-    public function setSuccess()
+    public function setSuccess(): void
     {
         $this->auth();
-
-        /** afterInstall scripts */
-        $result = $this->createRecords();
-        $result &= $this->executeQueries();
-
+        $this->createRecords();
         $this->executeFinalScript();
-        /** END: afterInstall scripts */
 
         $installerConfig = $this->getInstallerConfig();
-
         $installerConfig->set('isInstalled', true);
-
         $installerConfig->save();
 
         $configWriter = $this->createConfigWriter();
-
         $configWriter->set('isInstalled', true);
-
         $configWriter->save();
-
-        return $result;
     }
 
     /**
@@ -724,40 +713,19 @@ class Installer
         return $settingDefs;
     }
 
-    public function getCronMessage()
+    public function getCronMessage(): array
     {
-        return $this->getContainer()->get('scheduledJob')->getSetupMessage();
+        return $this->getInjectableFactory()
+            ->create(ScheduledJobUtil::class)
+            ->getSetupMessage();
     }
 
-    private function executeQueries()
-    {
-        $queries = include('install/core/afterInstall/queries.php');
-
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $result = true;
-
-        foreach ($queries as $query) {
-            $sth = $pdo->prepare($query);
-
-            try {
-                $result &= $sth->execute();
-            }
-            catch (Exception) {
-                $GLOBALS['log']->warning('Error executing the query: ' . $query);
-            }
-
-        }
-
-        return $result;
-    }
-
-    private function executeFinalScript()
+    private function executeFinalScript(): void
     {
         $this->prepareDummyJob();
     }
 
-    private function prepareDummyJob()
+    private function prepareDummyJob(): void
     {
         $scheduledJob = $this->getEntityManager()
             ->getRDBRepository(ScheduledJob::ENTITY_TYPE)

@@ -27,6 +27,4 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array(
-
-);
+return [];
