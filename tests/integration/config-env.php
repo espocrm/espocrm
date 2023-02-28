@@ -26,9 +26,10 @@
 * In accordance with Section 7(b) of the GNU General Public License version 3,
 * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
 ************************************************************************/
+
 return [
   'database' => [
-    'driver' => 'pdo_mysql',
+    'platform' => getenv('TEST_DATABASE_PLATFORM') ?: 'Mysql',
     'charset' => 'utf8mb4',
     'host' => getenv('TEST_DATABASE_HOST'),
     'port' => getenv('TEST_DATABASE_PORT'),
