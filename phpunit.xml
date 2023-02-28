@@ -12,6 +12,7 @@
     <testsuite name="integration-pg">
       <directory>tests/integration</directory>
       <exclude>tests/integration/Espo/Core/Utils/Database</exclude>
+      <exclude>tests/integration/Espo/Core/FulltextIndex/CheckCreatedIndexTest.php</exclude>
     </testsuite>
   </testsuites>
 </phpunit>
