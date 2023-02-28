@@ -9,5 +9,9 @@
     <testsuite name="integration">
       <directory>tests/integration</directory>
     </testsuite>
+    <testsuite name="integration-pg">
+      <directory>tests/integration</directory>
+      <exclude>tests/integration/Espo/Core/Utils/Database</exclude>
+    </testsuite>
   </testsuites>
 </phpunit>
