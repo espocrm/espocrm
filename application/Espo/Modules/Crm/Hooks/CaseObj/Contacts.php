@@ -63,6 +63,7 @@ class Contacts implements AfterSave
         /** @var ?string $contactId */
         $contactId = $entity->get('contactId');
         $contactIdList = $entity->get('contactsIds') ?? [];
+        /** @var ?string $fetchedContactId */
         $fetchedContactId = $entity->getFetched('contactId');
 
         $relation = $this->entityManager
@@ -85,7 +86,7 @@ class Contacts implements AfterSave
         }
 
         if (!$contactId && $fetchedContactId) {
-            $relation->unrelate($fetchedContactId);
+            $relation->unrelateById($fetchedContactId);
 
             return;
         }
