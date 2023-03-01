@@ -14,13 +14,13 @@ jobs:
       TEST_DATABASE_CHARSET: 'utf8'
       TEST_DATABASE_PORT: '8888'
       TEST_DATABASE_NAME: integration_test
-      TEST_DATABASE_USER: root
+      TEST_DATABASE_USER: postgres
       TEST_DATABASE_PASSWORD: password
     services:
       postgres:
         image: postgres:15.2
         env:
-          POSTGRES_USER: root
+          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
           POSTGRES_DB: integration_test
         ports:
