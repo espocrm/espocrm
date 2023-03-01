@@ -239,10 +239,15 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                 return
                     "CASE WHEN EXTRACT(MONTH FROM {$part}) >= {$fiscalFirstMonth} " .
                     "THEN " .
-                    "CONCAT(EXTRACT(YEAR FROM {$part}), '_', " .
-                        "FLOOR((EXTRACT(MONTH FROM {$part}) - {$fiscalFirstMonth}) / 3) + 1) " .
-                    "ELSE CONCAT(EXTRACT(YEAR FROM {$part}) - 1, '_', " .
-                        "CEIL(EXTRACT(MONTH FROM {$part}) + {$fiscalDistractedMonth}) / 3)) " .
+                    "CONCAT(" .
+                    "EXTRACT(YEAR FROM {$part}), '_', " .
+                    "FLOOR((EXTRACT(MONTH FROM {$part}) - {$fiscalFirstMonth}) / 3) + 1" .
+                    ") " .
+                    "ELSE " .
+                    "CONCAT(" .
+                    "EXTRACT(YEAR FROM {$part}) - 1, '_', " .
+                    "CEIL((EXTRACT(MONTH FROM {$part}) + {$fiscalDistractedMonth}) / 3)" .
+                    ") " .
                     "END";
             }
         }
