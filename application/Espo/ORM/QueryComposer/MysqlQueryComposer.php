@@ -39,7 +39,9 @@ class MysqlQueryComposer extends BaseQueryComposer
     {
         $params = $query->getRaw();
 
-        $table = $this->toDb($this->sanitize($params['table']));
+        $entityType = $this->sanitize($params['table']);
+
+        $table = $this->toDb($entityType);
 
         $mode = $params['mode'];
 
@@ -59,6 +61,13 @@ class MysqlQueryComposer extends BaseQueryComposer
         ];
 
         $sql .= $modeMap[$mode];
+
+        if (str_contains($table, '_')) {
+            // MySQL has an issue that aliased tables must be locked with alias.
+            $sql .= ", " .
+                $this->quoteIdentifier($table) . " AS " .
+                $this->quoteIdentifier(lcfirst($entityType)) . " " . $modeMap[$mode];
+        }
 
         return $sql;
     }

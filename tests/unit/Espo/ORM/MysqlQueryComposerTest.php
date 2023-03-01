@@ -2668,7 +2668,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
-    public function testLockTableExclusive()
+    public function testLockTableExclusive1()
     {
         $builder = new LockTableBuilder();
 
@@ -2680,6 +2680,22 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($query);
 
         $expectedSql = "LOCK TABLES `account` WRITE";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testLockTableExclusive2()
+    {
+        $builder = new LockTableBuilder();
+
+        $query = $builder
+            ->table('EntityTeam')
+            ->inExclusiveMode()
+            ->build();
+
+        $sql = $this->query->compose($query);
+
+        $expectedSql = "LOCK TABLES `entity_team` WRITE, `entity_team` AS `entityTeam` WRITE";
 
         $this->assertEquals($expectedSql, $sql);
     }
