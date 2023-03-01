@@ -262,6 +262,10 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             case 'WEEK':
             case 'WEEK_0':
             case 'WEEK_1':
+                if (str_starts_with($part, "'")) {
+                    $part = "DATE " . $part;
+                }
+
                 return "CONCAT(TO_CHAR({$part}, 'YYYY'), '/', TRIM(LEADING '0' FROM TO_CHAR({$part}, 'IW')))";
 
             case 'QUARTER':
