@@ -184,7 +184,7 @@ class EntityManager
                 $this->collectionFactory,
                 $this->queryComposer,
                 $this->metadata,
-                $this->sqlExecutor
+                $this->queryExecutor
             );
 
             $this->mappers[$name] = $mapper;

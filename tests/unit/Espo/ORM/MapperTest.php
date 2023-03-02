@@ -29,25 +29,25 @@
 
 namespace tests\unit\Espo\ORM;
 
-use Espo\ORM\{
-    Mapper\BaseMapper,
-    Metadata,
-    EntityManager,
-    EntityFactory,
-    CollectionFactory,
-    EntityCollection,
-    SthCollection,
-    SqlExecutor,
-    QueryComposer\MysqlQueryComposer as QueryComposer,
-    Query\Select,
-    MetadataDataProvider};
+use Espo\ORM\CollectionFactory;
+use Espo\ORM\EntityCollection;
+use Espo\ORM\EntityFactory;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Mapper\BaseMapper;
+use Espo\ORM\Metadata;
+use Espo\ORM\MetadataDataProvider;
+use Espo\ORM\Query\Select;
+use Espo\ORM\Query\SelectBuilder;
+use Espo\ORM\QueryComposer\MysqlQueryComposer as QueryComposer;
+use Espo\ORM\QueryComposer\QueryComposerWrapper;
+use Espo\ORM\QueryExecutor;
+use Espo\ORM\SqlExecutor;
+use Espo\ORM\SthCollection;
 
-use tests\unit\testData\DB\{
-    Post,
-    Comment,
-    Tag,
-    Note,
-};
+use tests\unit\testData\DB\Comment;
+use tests\unit\testData\DB\Note;
+use tests\unit\testData\DB\Post;
+use tests\unit\testData\DB\Tag;
 
 use PDO;
 use PDOStatement;
@@ -62,6 +62,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     protected $note;
     protected $comment;
     protected $entityFactory;
+    private ?CollectionFactory $collectionFactory = null;
 
     protected function setUp() : void
     {
@@ -123,13 +124,15 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         $this->query = new QueryComposer($this->pdo, $this->entityFactory, $this->metadata);
 
+        $queryExecutor = new QueryExecutor($this->sqlExecutor, new QueryComposerWrapper($this->query));
+
         $this->db = new BaseMapper(
             $this->pdo,
             $this->entityFactory,
             $this->collectionFactory,
             $this->query,
             $this->metadata,
-            $this->sqlExecutor
+            $queryExecutor
         );
 
         $this->post = $entityFactory->create('Post');
@@ -255,21 +258,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($post->id, '1');
     }
 
-    public function testSelect1()
+    public function testSelect1(): void
     {
-        $sql =
-            "SELECT post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(COALESCE(createdBy.salutation_name, ''), " .
-            "COALESCE(createdBy.first_name, ''), ' ', COALESCE(createdBy.last_name, ''))), '') AS `createdByName`, " .
-            "post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
-            "FROM `post` AS `post` ".
-            "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
-            "JOIN `post_tag` AS `tagsMiddle` ON post.id = tagsMiddle.post_id AND tagsMiddle.deleted = 0 ".
-            "JOIN `tag` AS `tags` ON tags.id = tagsMiddle.tag_id AND tags.deleted = 0 ".
-            "JOIN `comment` AS `comments` ON post.id = comments.post_id AND comments.deleted = 0 ".
-            "WHERE post.name = 'test_1' AND (post.id = '100' OR post.name LIKE 'test_%') AND tags.name = 'yoTag' AND post.deleted = 0 ".
-            "ORDER BY post.name DESC ".
-            "LIMIT 0, 10";
-
         $post1 = $this->entityFactory->create('Post');
         $post1->set([
             'id' => '2',
@@ -285,10 +275,10 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $collection = $this->createCollectionMock([$post1, $post2]);
-        $this->mockSqlCollection('Post', $sql, $collection);
 
-        $selectParams = [
+        $query = Select::fromRaw([
             'from' => 'Post',
+            'fromAlias' => 'post',
             'whereClause' => [
                 'name' => 'test_1',
                 'OR' => [
@@ -304,9 +294,15 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'tags',
                 'comments',
             ],
-        ];
+        ]);
 
-        $list = $this->db->select(Select::fromRaw($selectParams));
+        $this->collectionFactory
+            ->expects($this->once())
+            ->method('createFromQuery')
+            ->with($query)
+            ->willReturn($collection);
+
+        $list = $this->db->select($query);
 
         $entity = null;
         foreach ($list as $item) {
@@ -319,20 +315,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($entity->id, '2');
     }
 
-    public function testSelectWithSpecifiedParams()
+    public function testSelectWithSpecifiedParams(): void
     {
-        $sql =
-            "SELECT contact.id AS `id`, TRIM(CONCAT(contact.first_name, ' ', contact.last_name)) AS `name`, " .
-            "contact.first_name AS `firstName`, contact.last_name AS `lastName`, contact.deleted AS `deleted` ".
-            "FROM `contact` AS `contact` ".
-            "WHERE " .
-            "(contact.first_name LIKE 'test%' OR contact.last_name LIKE 'test%' OR ".
-            "CONCAT(contact.first_name, ' ', contact.last_name) LIKE 'test%') ".
-            "AND contact.deleted = 0 ".
-            "ORDER BY contact.first_name DESC, contact.last_name DESC ".
-            "LIMIT 0, 10";
-
-
         $contact = $this->entityFactory->create('Post');
         $contact->set([
             'id' => '1',
@@ -341,30 +325,29 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $collection = $this->createCollectionMock([$contact]);
-        $this->mockSqlCollection('Contact', $sql, $collection);
 
-        $selectParams = [
+        $query = Select::fromRaw([
             'from' => 'Contact',
+            'fromAlias' => 'contact',
             'whereClause' => [
                 'name*' => 'test%',
             ],
             'order' => 'DESC',
             'orderBy' => 'name',
             'limit' => 10,
-        ];
+        ]);
 
-        $list = $this->db->select(Select::fromRaw($selectParams));
+        $this->collectionFactory
+            ->expects($this->once())
+            ->method('createFromQuery')
+            ->with($query)
+            ->willReturn($collection);
+
+        $this->db->select($query);
     }
 
-    public function testJoin()
+    public function testJoin(): void
     {
-        $sql =
-            "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `postName`, comment.name AS `name`, " .
-            "comment.deleted AS `deleted` ".
-            "FROM `comment` AS `comment` ".
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id ".
-            "WHERE comment.deleted = 0";
-
         $comment = $this->entityFactory->create('Comment');
         $comment->set([
             'id' => '11',
@@ -373,14 +356,21 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             'name' => 'test_comment',
             'deleted' => false,
         ]);
+
         $collection = $this->createCollectionMock([$comment]);
-        $this->mockSqlCollection('Comment', $sql, $collection);
 
-        $selectParams = [
+        $query = Select::fromRaw([
             'from' => 'Comment',
-        ];
+            'fromAlias' => 'comment',
+        ]);
 
-        $list = $this->db->select(Select::fromRaw($selectParams));
+        $this->collectionFactory
+            ->expects($this->once())
+            ->method('createFromQuery')
+            ->with($query)
+            ->willReturn($collection);
+
+        $list = $this->db->select($query);
 
         $entity = null;
         foreach ($list as $item) {
@@ -395,12 +385,6 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
     public function testSelectRelatedManyMany1()
     {
-        $sql =
-            "SELECT tag.id AS `id`, tag.name AS `name`, tag.deleted AS `deleted`, postTag.role AS `postRole` ".
-            "FROM `tag` AS `tag` ".
-            "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 ".
-            "WHERE tag.deleted = 0";
-
         $tag = $this->entityFactory->create('Tag');
         $tag->set([
             'id' => '1',
@@ -408,9 +392,28 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             'deleted' => false,
         ]);
         $collection = $this->createCollectionMock([$tag]);
-        $this->mockSqlCollection('Tag', $sql, $collection);
 
         $this->post->id = '1';
+
+        $query = SelectBuilder::create()
+            ->from('Tag', 'tag')
+            ->select([
+                '*',
+                ['postTag.role', 'postRole']
+            ])
+            ->join('PostTag', 'postTag', [
+                'tagId:' => 'id',
+                'postId' => '1',
+                'deleted' => false,
+            ])
+            ->where([])
+            ->build();
+
+        $this->collectionFactory
+            ->expects($this->once())
+            ->method('createFromQuery')
+            ->with($query)
+            ->willReturn($collection);
 
         $list = $this->db->selectRelated($this->post, 'tags');
 
@@ -427,12 +430,6 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
     public function testSelectRelatedManyMany2()
     {
-        $sql =
-            "SELECT tag.id AS `id`, postTag.role AS `postRole` ".
-            "FROM `tag` AS `tag` ".
-            "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 ".
-            "WHERE tag.deleted = 0";
-
         $select = Select::fromRaw([
             'select' => ['id', 'postRole'],
             'from' => 'Tag',
@@ -445,20 +442,34 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             'deleted' => false,
         ]);
         $collection = $this->createCollectionMock([$tag]);
-        $this->mockSqlCollection('Tag', $sql, $collection);
 
         $this->post->id = '1';
 
-        $list = $this->db->selectRelated($this->post, 'tags', $select);
+        $query = SelectBuilder::create()
+            ->from('Tag', 'tag')
+            ->select([
+                'id',
+                ['postTag.role', 'postRole'],
+            ])
+            ->join('PostTag', 'postTag', [
+                'tagId:' => 'id',
+                'postId' => '1',
+                'deleted' => false,
+            ])
+            ->where([])
+            ->build();
+
+        $this->collectionFactory
+            ->expects($this->once())
+            ->method('createFromQuery')
+            ->with($query)
+            ->willReturn($collection);
+
+        $this->db->selectRelated($this->post, 'tags', $select);
     }
 
     public function testSelectRelatedManyManyWithConditions()
     {
-        $sql =
-            "SELECT team.id AS `id`, team.name AS `name`, team.deleted AS `deleted`, entityTeam.team_id AS `stub` FROM `team` AS `team` ".
-            "JOIN `entity_team` AS `entityTeam` ON entityTeam.team_id = team.id AND entityTeam.entity_id = '1' AND " .
-            "entityTeam.deleted = 0 AND entityTeam.entity_type = 'Account' WHERE team.deleted = 0";
-
         $team = $this->entityFactory->create('Team');
         $team->set([
             'id' => '1',
@@ -466,9 +477,29 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             'deleted' => false,
         ]);
         $collection = $this->createCollectionMock([$team]);
-        $this->mockSqlCollection('Team', $sql, $collection);
 
         $this->account->id = '1';
+
+        $query = SelectBuilder::create()
+            ->from('Team', 'team')
+            ->select([
+                '*',
+                ['entityTeam.teamId', 'stub'],
+            ])
+            ->join('EntityTeam', 'entityTeam', [
+                'teamId:' => 'id',
+                'entityId' => '1',
+                'entityType' => 'Account',
+                'deleted' => false,
+            ])
+            ->where([])
+            ->build();
+
+        $this->collectionFactory
+            ->expects($this->once())
+            ->method('createFromQuery')
+            ->with($query)
+            ->willReturn($collection);
 
         $select = Select::fromRaw([
             'from' => 'Team',
@@ -478,17 +509,11 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ],
         ]);
 
-        $list = $this->db->selectRelated($this->account, 'teams', $select);
+        $this->db->selectRelated($this->account, 'teams', $select);
     }
 
     public function testSelectRelatedHasChildren()
     {
-        $sql =
-            "SELECT ".
-            "note.id AS `id`, note.name AS `name`, note.parent_id AS `parentId`, note.parent_type AS `parentType`, note.deleted AS `deleted` ".
-            "FROM `note` AS `note` ".
-            "WHERE note.parent_id = '1' AND note.parent_type = 'Post' AND note.deleted = 0";
-
         $note = $this->entityFactory->create('Note');
 
         $note->set([
@@ -499,7 +524,19 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         $collection = $this->createCollectionMock([$note]);
 
-        $this->mockSqlCollection('Note', $sql, $collection);
+        $query = SelectBuilder::create()
+            ->from('Note', 'note')
+            ->where([
+                'parentId' => '1',
+                'parentType' => 'Post'
+            ])
+            ->build();
+
+        $this->collectionFactory
+            ->expects($this->once())
+            ->method('createFromQuery')
+            ->with($query)
+            ->willReturn($collection);
 
         $this->post->id = '1';
         $list = $this->db->selectRelated($this->post, 'notes');
@@ -1154,11 +1191,13 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testMax()
     {
         $query = "SELECT MAX(post.id) AS `value` FROM `post` AS `post` WHERE post.deleted = 0";
-        $return =[
+
+        $return = [
             [
                 'value' => 10,
             ]
         ];
+
         $this->mockQuery($query, $return);
 
         $value = $this->db->max(Select::fromRaw(['from' => 'Post']), 'id');
