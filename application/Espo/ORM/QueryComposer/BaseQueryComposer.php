@@ -3346,7 +3346,7 @@ abstract class BaseQueryComposer implements QueryComposer
                     . " AS "
                     . $this->quoteIdentifier($alias) . " ON "
                     . "{$leftIdColumn} = {$rightIdColumn} AND "
-                    . "{$leftTypeColumn} = " . $this->pdo->quote($entity->getEntityType()) . " AND "
+                    . "{$leftTypeColumn} = " . $this->quote($entity->getEntityType()) . " AND "
                     . "{$leftDeletedColumn} = " . $this->quote(false);
 
                 $joinSqlList = [];
