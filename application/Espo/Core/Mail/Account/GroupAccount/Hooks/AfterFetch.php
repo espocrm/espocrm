@@ -321,19 +321,19 @@ class AfterFetch implements AfterFetchInterface
             $senderParams = SenderParams::create();
 
             if ($inboundEmail->getFromName()) {
-                $senderParams->withFromName($inboundEmail->getFromName());
+                $senderParams = $senderParams->withFromName($inboundEmail->getFromName());
             }
 
             if ($inboundEmail->getReplyFromAddress()) {
-                $senderParams->withFromAddress($inboundEmail->getReplyFromAddress());
+                $senderParams = $senderParams->withFromAddress($inboundEmail->getReplyFromAddress());
             }
 
             if ($inboundEmail->getReplyFromName()) {
-                $senderParams->withFromName($inboundEmail->getReplyFromName());
+                $senderParams = $senderParams->withFromName($inboundEmail->getReplyFromName());
             }
 
             if ($inboundEmail->getReplyToAddress()) {
-                $senderParams->withReplyToAddress($inboundEmail->getReplyToAddress());
+                $senderParams = $senderParams->withReplyToAddress($inboundEmail->getReplyToAddress());
             }
 
             $sender
