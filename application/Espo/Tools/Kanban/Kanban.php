@@ -32,12 +32,14 @@ namespace Espo\Tools\Kanban;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\FieldProcessing\ListLoadProcessor;
 use Espo\Core\FieldProcessing\Loader\Params as FieldLoaderParams;
+use Espo\Core\InjectableFactory;
 use Espo\Core\Record\Collection;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
+use Espo\Core\Record\Select\ApplierClassNameListProvider;
 
 class Kanban
 {
@@ -56,7 +58,8 @@ class Kanban
         private SelectBuilderFactory $selectBuilderFactory,
         private EntityManager $entityManager,
         private ListLoadProcessor $listLoadProcessor,
-        private RecordServiceContainer $recordServiceContainer
+        private RecordServiceContainer $recordServiceContainer,
+        private InjectableFactory $injectableFactory,
     ) {}
 
     public function setEntityType(string $entityType): self
@@ -137,6 +140,9 @@ class Kanban
             ->from($this->entityType)
             ->withStrictAccessControl()
             ->withSearchParams($searchParams)
+            ->withAdditionalApplierClassNameList(
+                $this->createSelectApplierClassNameListProvider()->get($this->entityType)
+            )
             ->build();
 
         $collection = $this->entityManager
@@ -248,6 +254,11 @@ class Kanban
             ($hasMore ? Collection::TOTAL_HAS_MORE : Collection::TOTAL_HAS_NO_MORE);
 
         return new Result($collection, $total, $additionalData);
+    }
+
+    private function createSelectApplierClassNameListProvider(): ApplierClassNameListProvider
+    {
+        return $this->injectableFactory->create(ApplierClassNameListProvider::class);
     }
 
     /**
