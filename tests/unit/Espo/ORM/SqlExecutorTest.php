@@ -29,8 +29,8 @@
 
 namespace tests\unit\Espo\ORM;
 
+use Espo\ORM\Executor\DefaultSqlExecutor;
 use Espo\ORM\PDO\PDOProvider;
-use Espo\ORM\SqlExecutor;
 
 use PDO;
 use PDOStatement;
@@ -50,7 +50,7 @@ class SqlExecutorTest extends \PHPUnit\Framework\TestCase
 
         $this->sth = $this->getMockBuilder(PDOStatement::class)->disableOriginalConstructor()->getMock();
 
-        $this->executor = new SqlExecutor($pdoProvider);
+        $this->executor = new DefaultSqlExecutor($pdoProvider);
     }
 
     public function testExecute1()

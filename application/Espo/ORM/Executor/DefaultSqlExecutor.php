@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM;
+namespace Espo\ORM\Executor;
 
 use Espo\ORM\PDO\PDOProvider;
 use Psr\Log\LoggerInterface;
@@ -38,10 +38,7 @@ use PDOException;
 use Exception;
 use RuntimeException;
 
-/**
- * Executes SQL queries.
- */
-class SqlExecutor
+class DefaultSqlExecutor implements SqlExecutor
 {
     private const MAX_ATTEMPT_COUNT = 4;
 

@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Collection;
 use Espo\ORM\Query\SelectBuilder;
-use Espo\ORM\QueryExecutor;
+use Espo\ORM\Executor\QueryExecutor;
 use Espo\ORM\SthCollection;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\CollectionFactory;

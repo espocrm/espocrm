@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\Metadata;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\ORM\Repository\Repository;
-use Espo\ORM\SqlExecutor;
+use Espo\ORM\Executor\SqlExecutor;
 use Espo\Core\Container;
 
 class EntityManagerProxy

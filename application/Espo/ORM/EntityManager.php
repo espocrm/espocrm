@@ -31,6 +31,10 @@ namespace Espo\ORM;
 
 use Espo\ORM\Defs\Defs;
 
+use Espo\ORM\Executor\DefaultQueryExecutor;
+use Espo\ORM\Executor\DefaultSqlExecutor;
+use Espo\ORM\Executor\QueryExecutor;
+use Espo\ORM\Executor\SqlExecutor;
 use Espo\ORM\QueryComposer\QueryComposer;
 use Espo\ORM\QueryComposer\QueryComposerFactory;
 use Espo\ORM\QueryComposer\QueryComposerWrapper;
@@ -93,6 +97,7 @@ class EntityManager
         EventDispatcher $eventDispatcher,
         private PDOProvider $pdoProvider,
         private ?MapperFactory $mapperFactory = null,
+        ?QueryExecutor $queryExecutor = null,
         ?SqlExecutor $sqlExecutor = null
     ) {
         if (!$this->databaseParams->getPlatform()) {
@@ -110,8 +115,9 @@ class EntityManager
 
         $this->initQueryComposer();
 
-        $this->sqlExecutor = $sqlExecutor ?? new SqlExecutor($this->pdoProvider);
-        $this->queryExecutor = new QueryExecutor($this->sqlExecutor, $this->getQueryComposer());
+        $this->sqlExecutor = $sqlExecutor ?? new DefaultSqlExecutor($this->pdoProvider);
+        $this->queryExecutor = $queryExecutor ??
+            new DefaultQueryExecutor($this->sqlExecutor, $this->getQueryComposer());
         $this->queryBuilder = new QueryBuilder();
         $this->collectionFactory = new CollectionFactory($this);
         $this->transactionManager = new TransactionManager($this->pdoProvider->get(), $this->queryComposer);

@@ -27,30 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM;
+namespace Espo\ORM\Executor;
 
 use Espo\ORM\Query\Query;
-use Espo\ORM\QueryComposer\QueryComposerWrapper;
 
 use PDOStatement;
 
 /**
  * Executes queries by given query params instances.
  */
-class QueryExecutor
+interface QueryExecutor
 {
-    public function __construct(
-        private SqlExecutor $sqlExecutor,
-        private QueryComposerWrapper $queryComposer
-    ) {}
-
     /**
      * Execute a query.
      */
-    public function execute(Query $query): PDOStatement
-    {
-        $sql = $this->queryComposer->compose($query);
-
-        return $this->sqlExecutor->execute($sql, true);
-    }
+    public function execute(Query $query): PDOStatement;
 }

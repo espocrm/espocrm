@@ -33,6 +33,7 @@ use Espo\ORM\CollectionFactory;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Executor\DefaultQueryExecutor;
 use Espo\ORM\Mapper\BaseMapper;
 use Espo\ORM\Metadata;
 use Espo\ORM\MetadataDataProvider;
@@ -40,8 +41,8 @@ use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\QueryComposer\MysqlQueryComposer as QueryComposer;
 use Espo\ORM\QueryComposer\QueryComposerWrapper;
-use Espo\ORM\QueryExecutor;
-use Espo\ORM\SqlExecutor;
+use Espo\ORM\Executor\QueryExecutor;
+use Espo\ORM\Executor\SqlExecutor;
 use Espo\ORM\SthCollection;
 
 use tests\unit\testData\DB\Comment;
@@ -87,15 +88,14 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         $this->metadata = new Metadata($metadataDataProvider);
 
-        $this->sqlExecutor = $this->getMockBuilder(SqlExecutor::class)->disableOriginalConstructor()->getMock();
-
-        $entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
+        $this->sqlExecutor = $this->createMock(SqlExecutor::class);
+        $entityManager = $this->createMock(EntityManager::class);
 
         $entityManager
             ->method('getMetadata')
             ->will($this->returnValue($this->metadata));
 
-        $this->entityFactory = $this->getMockBuilder(EntityFactory::class)->disableOriginalConstructor()->getMock();
+        $this->entityFactory = $this->createMock(EntityFactory::class);
 
         $this->entityFactory
             ->expects($this->any())
@@ -124,7 +124,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         $this->query = new QueryComposer($this->pdo, $this->entityFactory, $this->metadata);
 
-        $queryExecutor = new QueryExecutor($this->sqlExecutor, new QueryComposerWrapper($this->query));
+        $queryExecutor = new DefaultQueryExecutor($this->sqlExecutor, new QueryComposerWrapper($this->query));
 
         $this->db = new BaseMapper(
             $this->pdo,
