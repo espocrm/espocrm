@@ -30,7 +30,6 @@
 namespace Espo\ORM;
 
 use Espo\ORM\Defs\Defs;
-
 use Espo\ORM\Executor\DefaultQueryExecutor;
 use Espo\ORM\Executor\DefaultSqlExecutor;
 use Espo\ORM\Executor\QueryExecutor;
@@ -38,24 +37,19 @@ use Espo\ORM\Executor\SqlExecutor;
 use Espo\ORM\QueryComposer\QueryComposer;
 use Espo\ORM\QueryComposer\QueryComposerFactory;
 use Espo\ORM\QueryComposer\QueryComposerWrapper;
-
 use Espo\ORM\Mapper\Mapper;
 use Espo\ORM\Mapper\MapperFactory;
 use Espo\ORM\Mapper\BaseMapper;
-
 use Espo\ORM\Repository\RepositoryFactory;
 use Espo\ORM\Repository\Repository;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\ORM\Repository\Util as RepositoryUtil;
-
 use Espo\ORM\Locker\Locker;
 use Espo\ORM\Locker\BaseLocker;
 use Espo\ORM\Locker\MysqlLocker;
-
 use Espo\ORM\Value\ValueAccessorFactory;
 use Espo\ORM\Value\ValueFactoryFactory;
 use Espo\ORM\Value\AttributeExtractorFactory;
-
 use Espo\ORM\PDO\PDOProvider;
 
 use PDO;
