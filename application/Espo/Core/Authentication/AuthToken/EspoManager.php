@@ -35,9 +35,15 @@ use Espo\Entities\AuthToken as AuthTokenEntity;
 
 use RuntimeException;
 
+/**
+ * A default auth token manager. Auth tokens are stored in database.
+ * Consider creating a custom implementation if you need to store auth tokens
+ * in another storage. E.g. a single Redis data store can be utilized with
+ * multiple Espo replicas (for scalability purposes).
+ * Defined at metadata > app > containerServices > authTokenManager.
+ */
 class EspoManager implements Manager
 {
-    private EntityManager $entityManager;
     /** @var RDBRepository<AuthTokenEntity> */
     private RDBRepository $repository;
 
@@ -45,19 +51,13 @@ class EspoManager implements Manager
 
     public function __construct(EntityManager $entityManager)
     {
-        $this->entityManager = $entityManager;
-
-        /** @var RDBRepository<AuthTokenEntity> $repository */
-        $repository = $entityManager->getRDBRepository(AuthTokenEntity::ENTITY_TYPE);
-
-        $this->repository = $repository;
+        $this->repository = $entityManager->getRDBRepositoryByClass(AuthTokenEntity::class);
     }
 
     public function get(string $token): ?AuthToken
     {
         /** @var ?AuthTokenEntity $authToken */
-        $authToken = $this->entityManager
-            ->getRDBRepository(AuthTokenEntity::ENTITY_TYPE)
+        $authToken = $this->repository
             ->select([
                 'id',
                 'isActive',
@@ -70,9 +70,7 @@ class EspoManager implements Manager
                 'lastAccess',
                 'modifiedAt',
             ])
-            ->where([
-                'token' => $token,
-            ])
+            ->where(['token' => $token])
             ->findOne();
 
         return $authToken;
@@ -83,17 +81,16 @@ class EspoManager implements Manager
         /** @var AuthTokenEntity $authToken */
         $authToken = $this->repository->getNew();
 
-        $authToken->set([
-            'userId' => $data->getUserId(),
-            'portalId' => $data->getPortalId(),
-            'hash' => $data->getHash(),
-            'ipAddress' => $data->getIpAddress(),
-            'lastAccess' => date('Y-m-d H:i:s'),
-            'token' => $this->generateToken(),
-        ]);
+        $authToken
+            ->setUserId($data->getUserId())
+            ->setPortalId($data->getPortalId())
+            ->setHash($data->getHash())
+            ->setIpAddress($data->getIpAddress())
+            ->setToken($this->generateToken())
+            ->setLastAccessNow();
 
         if ($data->toCreateSecret()) {
-            $authToken->set('secret', $this->generateToken());
+            $authToken->setSecret($this->generateToken());
         }
 
         $this->validate($authToken);
@@ -111,7 +108,7 @@ class EspoManager implements Manager
 
         $this->validateNotChanged($authToken);
 
-        $authToken->set('isActive', false);
+        $authToken->setIsActive(false);
 
         $this->repository->save($authToken);
     }
@@ -128,12 +125,12 @@ class EspoManager implements Manager
             throw new RuntimeException("Can renew only not new auth token.");
         }
 
-        $authToken->set('lastAccess', date('Y-m-d H:i:s'));
+        $authToken->setLastAccessNow();
 
         $this->repository->save($authToken);
     }
 
-    protected function validate(AuthToken $authToken): void
+    private function validate(AuthToken $authToken): void
     {
         if (!$authToken->getToken()) {
             throw new RuntimeException("Empty token.");
@@ -144,7 +141,7 @@ class EspoManager implements Manager
         }
     }
 
-    protected function validateNotChanged(AuthTokenEntity $authToken): void
+    private function validateNotChanged(AuthTokenEntity $authToken): void
     {
         if (
             $authToken->isAttributeChanged('token') ||
@@ -157,7 +154,7 @@ class EspoManager implements Manager
         }
     }
 
-    protected function generateToken(): string
+    private function generateToken(): string
     {
         $length = self::TOKEN_RANDOM_LENGTH;
 
