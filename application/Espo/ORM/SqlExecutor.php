@@ -29,6 +29,9 @@
 
 namespace Espo\ORM;
 
+use Espo\ORM\PDO\PDOProvider;
+use Psr\Log\LoggerInterface;
+
 use PDO;
 use PDOStatement;
 use PDOException;
@@ -42,14 +45,25 @@ class SqlExecutor
 {
     private const MAX_ATTEMPT_COUNT = 4;
 
-    public function __construct(private PDO $pdo)
-    {}
+    private PDO $pdo;
+
+    public function __construct(
+        PDOProvider $pdoProvider,
+        private ?LoggerInterface $logger = null,
+        private bool $logAll = false
+    ) {
+        $this->pdo = $pdoProvider->get();
+    }
 
     /**
      * Execute a query.
      */
     public function execute(string $sql, bool $rerunIfDeadlock = false): PDOStatement
     {
+        if ($this->logAll) {
+            $this->logger?->info("SQL: " . $sql);
+        }
+
         if (!$rerunIfDeadlock) {
             return $this->executeSqlWithDeadlockHandling($sql, 1);
         }

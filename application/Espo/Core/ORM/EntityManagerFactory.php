@@ -35,6 +35,7 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\ORM\QueryComposer\Part\FunctionConverterFactory;
 
+use Espo\Core\Utils\Log;
 use Espo\ORM\Metadata;
 use Espo\ORM\EventDispatcher;
 use Espo\ORM\DatabaseParams;
@@ -42,6 +43,7 @@ use Espo\ORM\PDO\PDOFactory;
 use Espo\ORM\QueryComposer\QueryComposerFactory as QueryComposerFactoryInterface;
 use Espo\ORM\Repository\RepositoryFactory as RepositoryFactoryInterface;
 use Espo\ORM\EntityFactory as EntityFactoryInterface;
+use Espo\ORM\SqlExecutor;
 use Espo\ORM\Value\ValueFactoryFactory as ValueFactoryFactoryInterface;
 use Espo\ORM\Value\AttributeExtractorFactory as AttributeExtractorFactoryInterface;
 use Espo\ORM\PDO\PDOProvider;
@@ -56,7 +58,9 @@ class EntityManagerFactory
         private MetadataDataProvider $metadataDataProvider,
         private EventDispatcher $eventDispatcher,
         private PDOFactoryFactory $pdoFactoryFactory,
-        private DatabaseParamsFactory $databaseParamsFactory
+        private DatabaseParamsFactory $databaseParamsFactory,
+        private ConfigDataProvider $configDataProvider,
+        private Log $log
     ) {}
 
     public function create(): EntityManager
@@ -115,6 +119,8 @@ class EntityManagerFactory
                 ->build()
         );
 
+        $sqlExecutor = new SqlExecutor($pdoProvider, $this->log, $this->configDataProvider->logSql());
+
         $binding = BindingContainerBuilder::create()
             ->bindInstance(DatabaseParams::class, $databaseParams)
             ->bindInstance(Metadata::class, $metadata)
@@ -126,6 +132,7 @@ class EntityManagerFactory
             ->bindInstance(EventDispatcher::class, $this->eventDispatcher)
             ->bindInstance(PDOProvider::class, $pdoProvider)
             ->bindInstance(FunctionConverterFactoryInterface::class, $functionConverterFactory)
+            ->bindInstance(SqlExecutor::class, $sqlExecutor)
             ->build();
 
         return $this->injectableFactory->createWithBinding(EntityManager::class, $binding);

@@ -92,7 +92,8 @@ class EntityManager
         AttributeExtractorFactory $attributeExtractorFactory,
         EventDispatcher $eventDispatcher,
         private PDOProvider $pdoProvider,
-        private ?MapperFactory $mapperFactory = null
+        private ?MapperFactory $mapperFactory = null,
+        ?SqlExecutor $sqlExecutor = null
     ) {
         if (!$this->databaseParams->getPlatform()) {
             throw new RuntimeException("No 'platform' parameter.");
@@ -109,7 +110,7 @@ class EntityManager
 
         $this->initQueryComposer();
 
-        $this->sqlExecutor = new SqlExecutor($this->pdoProvider->get());
+        $this->sqlExecutor = $sqlExecutor ?? new SqlExecutor($this->pdoProvider);
         $this->queryExecutor = new QueryExecutor($this->sqlExecutor, $this->getQueryComposer());
         $this->queryBuilder = new QueryBuilder();
         $this->collectionFactory = new CollectionFactory($this);
