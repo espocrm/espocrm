@@ -98,6 +98,7 @@ return [
         'clientCspDisabled',
         'clientCspScriptSourceList',
         'authTokenSecretDisabled',
+        'authApiUserLogDisabled',
     ],
     'adminItems' => [
         'devMode',
@@ -192,6 +193,7 @@ return [
         'phoneNumberEntityLookupDefaultOrder',
         'authFailedAttemptsPeriod',
         'authMaxFailedAttemptNumber',
+        'authLogDisabled',
         'latestVersion',
     ],
     'superAdminItems' => [

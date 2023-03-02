@@ -129,6 +129,11 @@ class ConfigDataProvider
         return (bool) $this->config->get('authAnotherUserDisabled');
     }
 
+    public function isApiUserAuthLogDisabled(): bool
+    {
+        return (bool) $this->config->get('authApiUserLogDisabled');
+    }
+
     /**
      * @return MetadataParams[]
      */
