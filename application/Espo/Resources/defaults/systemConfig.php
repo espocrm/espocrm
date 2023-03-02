@@ -190,6 +190,8 @@ return [
         'authAnotherUserDisabled',
         'emailAddressEntityLookupDefaultOrder',
         'phoneNumberEntityLookupDefaultOrder',
+        'authFailedAttemptsPeriod',
+        'authMaxFailedAttemptNumber',
         'latestVersion',
     ],
     'superAdminItems' => [
