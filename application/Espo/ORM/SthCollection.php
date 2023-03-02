@@ -30,7 +30,6 @@
 namespace Espo\ORM;
 
 use Espo\ORM\Query\Select as SelectQuery;
-use Espo\ORM\QueryComposer\QueryComposer as QueryComposer;
 
 use IteratorAggregate;
 use Countable;
@@ -39,6 +38,7 @@ use Traversable;
 use PDO;
 use PDOStatement;
 use RuntimeException;
+use LogicException;
 
 /**
  * Reasonable to use when selecting a large number of records.
@@ -61,43 +61,19 @@ class SthCollection implements Collection, IteratorAggregate, Countable
     private function __construct(private EntityManager $entityManager)
     {}
 
-    private function getQueryComposer(): QueryComposer
-    {
-        return $this->entityManager->getQueryComposer();
-    }
-
-    private function getEntityFactory(): EntityFactory
-    {
-        return $this->entityManager->getEntityFactory();
-    }
-
-    private function getSqlExecutor(): SqlExecutor
-    {
-        return $this->entityManager->getSqlExecutor();
-    }
-
     private function executeQuery(): void
     {
-        $sql = $this->getSql();
+        if ($this->query) {
+            $this->sth = $this->entityManager->getQueryExecutor()->execute($this->query);
 
-        $sth = $this->getSqlExecutor()->execute($sql);
-
-        $this->sth = $sth;
-    }
-
-    private function getSql(): string
-    {
-        if (!$this->sql) {
-            $this->sql = $this->getQueryComposer()->composeSelect($this->getQuery());
+            return;
         }
 
-        return $this->sql;
-    }
+        if (!$this->sql) {
+            throw new LogicException("No query & sql.");
+        }
 
-    private function getQuery(): SelectQuery
-    {
-        /** @var SelectQuery */
-        return $this->query;
+        $this->sth = $this->entityManager->getSqlExecutor()->execute($this->sql);
     }
 
     public function getIterator(): Traversable
@@ -108,7 +84,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
             }
 
             while ($row = $this->fetchRow()) {
-                $entity = $this->getEntityFactory()->create($this->entityType);
+                $entity = $this->entityManager->getEntityFactory()->create($this->entityType);
 
                 $entity->set($row);
                 $entity->setAsFetched();
