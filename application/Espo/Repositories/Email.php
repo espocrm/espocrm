@@ -34,6 +34,7 @@ use Espo\Entities\EmailFilter;
 use Espo\Entities\InboundEmail;
 use Espo\Entities\User as UserEntity;
 use Espo\Modules\Crm\Entities\Account;
+use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 
@@ -478,8 +479,10 @@ class Email extends Database implements
                 $entity->getParentId() &&
                 $entity->isAttributeChanged('parentId')
             ) {
-                /** @var \Espo\ORM\Collection<EmailEntity> $replyList */
-                $replyList = $this->findRelated($entity, 'replies');
+                /** @var Collection<EmailEntity> $replyList */
+                $replyList = $this
+                    ->getRelation($entity, 'replies')
+                    ->find();
 
                 foreach ($replyList as $reply) {
                     if ($reply->getId() === $entity->getId()) {
