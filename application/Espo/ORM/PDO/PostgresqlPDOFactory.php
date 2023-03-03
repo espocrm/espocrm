@@ -35,6 +35,8 @@ use RuntimeException;
 
 class PostgresqlPDOFactory implements PDOFactory
 {
+    private const DEFAULT_CHARSET = 'utf8';
+
     public function create(DatabaseParams $databaseParams): PDO
     {
         $platform = strtolower($databaseParams->getPlatform() ?? '');
@@ -42,7 +44,7 @@ class PostgresqlPDOFactory implements PDOFactory
         $host = $databaseParams->getHost();
         $port = $databaseParams->getPort();
         $dbname = $databaseParams->getName();
-        //$charset = $databaseParams->getCharset();
+        $charset = $databaseParams->getCharset() ?? self::DEFAULT_CHARSET;
         $username = $databaseParams->getUsername();
         $password = $databaseParams->getPassword();
 
@@ -64,9 +66,7 @@ class PostgresqlPDOFactory implements PDOFactory
             $dsn .= ';' . 'dbname=' . $dbname;
         }
 
-        /*if ($charset) {
-            $dsn .= ';' . 'options=' . "'--client_encoding={$charset}'";
-        }*/
+        $dsn .= ';' . 'options=' . "'--client_encoding={$charset}'";
 
         $options = Options::getOptionsFromDatabaseParams($databaseParams);
 
