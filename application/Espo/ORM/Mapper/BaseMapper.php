@@ -613,11 +613,11 @@ class BaseMapper implements RDBMapper
                     $where[$k] = $value;
                 }
 
-                $query = Update::fromRaw([
-                    'from' => $middleName,
-                    'whereClause' => $where,
-                    'set' => $update,
-                ]);
+                $query = UpdateBuilder::create()
+                    ->in($middleName)
+                    ->where($where)
+                    ->set($update)
+                    ->build();
 
                 $this->queryExecutor->execute($query);
 
@@ -678,11 +678,11 @@ class BaseMapper implements RDBMapper
             $where[$k] = $value;
         }
 
-        $query = Select::fromRaw([
-            'from' => $middleName,
-            'select' => [[$column, 'value']],
-            'whereClause' => $where,
-        ]);
+        $query = SelectBuilder::create()
+            ->from($middleName)
+            ->select($column, 'value')
+            ->where($where)
+            ->build();
 
         $sth = $this->queryExecutor->execute($query);
         $row = $sth->fetch();
@@ -713,8 +713,6 @@ class BaseMapper implements RDBMapper
      */
     public function massRelate(Entity $entity, string $relationName, Select $select): void
     {
-        $params = $select->getRaw();
-
         if (!$entity->hasId()) {
             throw new RuntimeException("Entity w/o ID.");
         }
@@ -746,13 +744,12 @@ class BaseMapper implements RDBMapper
 
                 $middleName = ucfirst($this->getRelationParam($entity, $relationName, 'relationName'));
 
-                $columns = [];
-                $columns[] = $nearKey;
-
                 $valueList = [];
                 $valueList[] = $entity->getId();
 
                 $conditions = $this->getRelationParam($entity, $relationName, 'conditions') ?? [];
+
+                $columns = [$nearKey];
 
                 foreach ($conditions as $left => $value) {
                     $columns[] = $left;
@@ -761,27 +758,26 @@ class BaseMapper implements RDBMapper
 
                 $columns[] = $distantKey;
 
-                $params['select'] = [];
+                $selectColumns = [];
 
                 foreach ($valueList as $i => $value) {
-                   $params['select'][] = ['VALUE:' . $value, 'v' . strval($i)];
+                   $selectColumns[] = ['VALUE:' . $value, 'v' . strval($i)];
                 }
 
-                $params['select'][] = 'id';
+                $selectColumns[] = 'id';
 
-                unset($params['orderBy']);
-                unset($params['order']);
+                $subQuery = SelectBuilder::create()
+                    ->clone($select)
+                    ->select($selectColumns)
+                    ->order([])
+                    ->build();
 
-                $params['from'] = $foreignEntityType;
-
-                $query = Insert::fromRaw([
-                    'into' => $middleName,
-                    'columns' => $columns,
-                    'valuesQuery' => Select::fromRaw($params),
-                    'updateSet' => [
-                        self::ATTR_DELETED => false,
-                    ],
-                ]);
+                $query = InsertBuilder::create()
+                    ->into($middleName)
+                    ->columns($columns)
+                    ->valuesQuery($subQuery)
+                    ->updateSet([self::ATTR_DELETED => false])
+                    ->build();
 
                 $this->queryExecutor->execute($query);
 
@@ -792,7 +788,7 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * @param array<string, mixed>|null $data
+     * @param ?array<string, mixed> $data
      */
     private function addRelation(
         Entity $entity,
@@ -846,17 +842,15 @@ class BaseMapper implements RDBMapper
                     $foreignRelationName &&
                     $this->getRelationParam($relEntity, $foreignRelationName, 'type') === Entity::HAS_ONE
                 ) {
-                    $query0 = Update::fromRaw([
-                        'from' => $entityType,
-                        'whereClause' => [
-                            'id!=' => $entity->getId(),
+                    $query0 = UpdateBuilder::create()
+                        ->in($entityType)
+                        ->where([
+                            self::ATTR_ID . '!=' => $entity->getId(),
                             $key => $id,
                             self::ATTR_DELETED => false,
-                        ],
-                        'set' => [
-                            $key => null,
-                        ],
-                    ]);
+                        ])
+                        ->set([$key => null])
+                        ->build();
 
                     $this->queryExecutor->execute($query0);
                 }
@@ -864,16 +858,14 @@ class BaseMapper implements RDBMapper
                 $entity->set($key, $relEntity->getId());
                 $entity->setFetched($key, $relEntity->getId());
 
-                $query = Update::fromRaw([
-                    'from' => $entityType,
-                    'whereClause' => [
-                        'id' => $entity->getId(),
+                $query = UpdateBuilder::create()
+                    ->in($entityType)
+                    ->where([
+                        self::ATTR_ID => $entity->getId(),
                         self::ATTR_DELETED => false,
-                    ],
-                    'set' => [
-                        $key => $relEntity->getId(),
-                    ],
-                ]);
+                    ])
+                    ->set([$key => $relEntity->getId()])
+                    ->build();
 
                 $this->queryExecutor->execute($query);
 
@@ -888,17 +880,17 @@ class BaseMapper implements RDBMapper
                 $entity->setFetched($key, $relEntity->getId());
                 $entity->setFetched($typeKey, $relEntity->getEntityType());
 
-                $query = Update::fromRaw([
-                    'from' => $entityType,
-                    'whereClause' => [
-                        'id' => $entity->getId(),
+                $query = UpdateBuilder::create()
+                    ->in($entityType)
+                    ->where([
+                        self::ATTR_ID => $entity->getId(),
                         self::ATTR_DELETED => false,
-                    ],
-                    'set' => [
+                    ])
+                    ->set([
                         $key => $relEntity->getId(),
                         $typeKey => $relEntity->getEntityType(),
-                    ],
-                ]);
+                    ])
+                    ->build();
 
                 $this->queryExecutor->execute($query);
 
@@ -907,40 +899,35 @@ class BaseMapper implements RDBMapper
             case Entity::HAS_ONE:
                 $foreignKey = $keySet['foreignKey'];
 
-                $selectForCount = Select::fromRaw([
-                    'from' => $relEntity->getEntityType(),
-                    'whereClause' => ['id' => $id],
-                ]);
+                $selectForCount = SelectBuilder::create()
+                    ->from($relEntity->getEntityType())
+                    ->where([self::ATTR_ID => $id])
+                    ->build();
 
                 if ($this->count($selectForCount) === 0) {
                     return false;
                 }
 
-                $query1 = Update::fromRaw([
-                    'from' => $relEntity->getEntityType(),
-                    'whereClause' => [
+                $query1 = UpdateBuilder::create()
+                    ->in($relEntity->getEntityType())
+                    ->where([
                         $foreignKey => $entity->getId(),
                         self::ATTR_DELETED => false,
-                    ],
-                    'set' => [
-                        $foreignKey => null,
-                    ],
-                ]);
+                    ])
+                    ->set([$foreignKey => null])
+                    ->build();
 
-                $query2 = Update::fromRaw([
-                    'from' => $relEntity->getEntityType(),
-                    'whereClause' => [
-                        'id' => $id,
+                $query2 = UpdateBuilder::create()
+                    ->in($relEntity->getEntityType())
+                    ->where([
+                        self::ATTR_ID => $id,
                         self::ATTR_DELETED => false,
-                    ],
-                    'set' => [
-                        $foreignKey => $entity->getId(),
-                    ],
-                ]);
+                    ])
+                    ->set([$foreignKey => $entity->getId()])
+                    ->build();
 
                 $this->queryExecutor->execute($query1);
                 $this->queryExecutor->execute($query2);
-
 
                 return true;
 
@@ -948,18 +935,16 @@ class BaseMapper implements RDBMapper
             case Entity::HAS_MANY:
                 $foreignKey = $keySet['foreignKey'];
 
-                $selectForCount = Select::fromRaw([
-                    'from' => $relEntity->getEntityType(),
-                    'whereClause' => ['id' => $id],
-                ]);
+                $selectForCount = SelectBuilder::create()
+                    ->from($relEntity->getEntityType())
+                    ->where([self::ATTR_ID => $id])
+                    ->build();
 
                 if ($this->count($selectForCount) === 0) {
                     return false;
                 }
 
-                $set = [
-                    $foreignKey => $entity->get('id'),
-                ];
+                $set = [$foreignKey => $entity->getId()];
 
                 if ($relType == Entity::HAS_CHILDREN) {
                     $foreignType = $keySet['foreignType'] ?? null;
@@ -971,14 +956,14 @@ class BaseMapper implements RDBMapper
                     $set[$foreignType] = $entity->getEntityType();
                 }
 
-                $query = Update::fromRaw([
-                    'from' => $relEntity->getEntityType(),
-                    'whereClause' => [
-                        'id' => $id,
+                $query = UpdateBuilder::create()
+                    ->in($relEntity->getEntityType())
+                    ->where([
+                        self::ATTR_ID => $id,
                         self::ATTR_DELETED => false,
-                    ],
-                    'set' => $set,
-                ]);
+                    ])
+                    ->set($set)
+                    ->build();
 
                 $this->queryExecutor->execute($query);
 
@@ -992,10 +977,10 @@ class BaseMapper implements RDBMapper
                     throw new RuntimeException("Bad relation key.");
                 }
 
-                $selectForCount = Select::fromRaw([
-                    'from' => $relEntity->getEntityType(),
-                    'whereClause' => ['id' => $id],
-                ]);
+                $selectForCount = SelectBuilder::create()
+                    ->from($relEntity->getEntityType())
+                    ->where([self::ATTR_ID => $id])
+                    ->build();
 
                 if ($this->count($selectForCount) === 0) {
                     return false;
@@ -1006,6 +991,7 @@ class BaseMapper implements RDBMapper
                 }
 
                 $middleName = ucfirst($this->getRelationParam($entity, $relationName, 'relationName'));
+                /** @var array<string, ?scalar> $conditions */
                 $conditions = $this->getRelationParam($entity, $relationName, 'conditions') ?? [];
 
                 $data = $data ?? [];
@@ -1019,12 +1005,12 @@ class BaseMapper implements RDBMapper
                     $where[$f] = $v;
                 }
 
-                $selectQuery = Select::fromRaw([
-                    'from' => $middleName,
-                    'select' => ['id'],
-                    'whereClause' => $where,
-                    'withDeleted' => true,
-                ]);
+                $selectQuery = SelectBuilder::create()
+                    ->from($middleName)
+                    ->select(['id'])
+                    ->where($where)
+                    ->withDeleted()
+                    ->build();
 
                 $sth = $this->queryExecutor->execute($selectQuery);
 
@@ -1034,23 +1020,20 @@ class BaseMapper implements RDBMapper
                     $values = $where;
                     $columns = array_keys($values);
 
-                    $update = [
-                        self::ATTR_DELETED => false,
-                    ];
+                    $update = [self::ATTR_DELETED => false];
 
                     foreach ($data as $column => $value) {
                         $columns[] = $column;
-
                         $values[$column] = $value;
                         $update[$column] = $value;
                     }
 
-                    $insertQuery = Insert::fromRaw([
-                        'into' => $middleName,
-                        'columns' => $columns,
-                        'values' => $values,
-                        'updateSet' => $update,
-                    ]);
+                    $insertQuery = InsertBuilder::create()
+                        ->into($middleName)
+                        ->columns($columns)
+                        ->values($values)
+                        ->updateSet($update)
+                        ->build();
 
                     $this->queryExecutor->execute($insertQuery);
 
@@ -1063,11 +1046,11 @@ class BaseMapper implements RDBMapper
                     $update[$column] = $value;
                 }
 
-                $updateQuery = Update::fromRaw([
-                    'from' => $middleName,
-                    'whereClause' => $where,
-                    'set' => $update,
-                ]);
+                $updateQuery = UpdateBuilder::create()
+                    ->in($middleName)
+                    ->where($where)
+                    ->set($update)
+                    ->build();
 
                 $this->queryExecutor->execute($updateQuery);
 
@@ -1159,11 +1142,11 @@ class BaseMapper implements RDBMapper
 
                 $where[self::ATTR_DELETED] = false;
 
-                $query = Update::fromRaw([
-                    'from' => $entityType,
-                    'whereClause' => $where,
-                    'set' => $update,
-                ]);
+                $query = UpdateBuilder::create()
+                    ->in($entityType)
+                    ->where($where)
+                    ->set($update)
+                    ->build();
 
                 $this->queryExecutor->execute($query);
 
@@ -1181,7 +1164,7 @@ class BaseMapper implements RDBMapper
                 $where = [];
 
                 if (!$all && $relType !== Entity::HAS_ONE) {
-                    $where['id'] = $id;
+                    $where[self::ATTR_ID] = $id;
                 }
 
                 $where[$foreignKey] = $entity->getId();
@@ -1201,11 +1184,11 @@ class BaseMapper implements RDBMapper
 
                 /** @var Entity $relEntity */
 
-                $query = Update::fromRaw([
-                    'from' => $relEntity->getEntityType(),
-                    'whereClause' => $where,
-                    'set' => $update,
-                ]);
+                $query = UpdateBuilder::create()
+                    ->in($relEntity->getEntityType())
+                    ->where($where)
+                    ->set($update)
+                    ->build();
 
                 $this->queryExecutor->execute($query);
 
@@ -1236,11 +1219,11 @@ class BaseMapper implements RDBMapper
                     $where[$f] = $v;
                 }
 
-                $query = Update::fromRaw([
-                    'from' => $middleName,
-                    'whereClause' => $where,
-                    'set' => [self::ATTR_DELETED => true],
-                ]);
+                $query = UpdateBuilder::create()
+                    ->in($middleName)
+                    ->where($where)
+                    ->set([self::ATTR_DELETED => true])
+                    ->build();
 
                 $this->queryExecutor->execute($query);
 
@@ -1500,11 +1483,11 @@ class BaseMapper implements RDBMapper
             throw new RuntimeException("Can't restore an empty entity type or ID.");
         }
 
-        $query = Update::fromRaw([
-            'from' => $entityType,
-            'whereClause' => ['id' => $id],
-            'set' => [self::ATTR_DELETED => false],
-        ]);
+        $query = UpdateBuilder::create()
+            ->in($entityType)
+            ->where([self::ATTR_ID => $id])
+            ->set([self::ATTR_DELETED => false])
+            ->build();
 
         $this->queryExecutor->execute($query);
     }
