@@ -626,6 +626,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $select = SelectBuilder::create()
             ->from('Post')
             ->distinct()
+            ->order('id')
             ->build();
 
         $this->mockQuery($sql, ['value' => 1]);
