@@ -182,7 +182,6 @@ class EntityManager
                 $this->pdoProvider->get(),
                 $this->entityFactory,
                 $this->collectionFactory,
-                $this->queryComposer,
                 $this->metadata,
                 $this->queryExecutor
             );

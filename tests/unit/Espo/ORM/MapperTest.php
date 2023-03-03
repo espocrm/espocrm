@@ -129,7 +129,6 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             $this->pdo,
             $this->entityFactory,
             $this->collectionFactory,
-            $this->query,
             $this->metadata,
             $queryExecutor
         );

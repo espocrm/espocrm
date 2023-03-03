@@ -86,14 +86,14 @@ interface RDBMapper extends Mapper
         string $relationName,
         string $id,
         string $column
-    );
+    ): string|int|float|bool|null;
 
     /**
      * Select related entities from DB.
      *
      * @return Collection<Entity>|Entity|null
      */
-    public function selectRelated(Entity $entity, string $relationName, ?Select $select = null);
+    public function selectRelated(Entity $entity, string $relationName, ?Select $select = null): Collection|Entity|null;
 
     /**
      * Get a number of related entities in DB.

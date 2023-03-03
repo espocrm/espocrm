@@ -38,7 +38,6 @@ use Espo\ORM\SthCollection;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\CollectionFactory;
 use Espo\ORM\Metadata;
-use Espo\ORM\QueryComposer\QueryComposer;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\Update;
 use Espo\ORM\Query\Delete;
@@ -56,18 +55,17 @@ use RuntimeException;
  */
 class BaseMapper implements RDBMapper
 {
-    protected const ATTR_DELETED = 'deleted';
+    private const ATTR_DELETED = 'deleted';
     private const FUNC_COUNT = 'COUNT';
 
-    protected Helper $helper;
+    private Helper $helper;
 
     public function __construct(
-        protected PDO $pdo,
-        protected EntityFactory $entityFactory,
-        protected CollectionFactory $collectionFactory,
-        protected QueryComposer $queryComposer,
-        protected Metadata $metadata,
-        protected QueryExecutor $queryExecutor
+        private PDO $pdo,
+        private EntityFactory $entityFactory,
+        private CollectionFactory $collectionFactory,
+        private Metadata $metadata,
+        private QueryExecutor $queryExecutor
     ) {
         $this->helper = new Helper($metadata);
     }
@@ -140,7 +138,7 @@ class BaseMapper implements RDBMapper
         return $this->castToNumber($value);
     }
 
-    protected function castToNumber(mixed $value): int|float
+    private function castToNumber(mixed $value): int|float
     {
         if (is_int($value) || is_float($value)) {
             return $value;
@@ -257,25 +255,31 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * Select related entities from DB.
+     * {@inheritDoc}
      *
      * @return Collection<Entity>|Entity|null
      */
-    public function selectRelated(Entity $entity, string $relationName, ?Select $select = null)
+    public function selectRelated(Entity $entity, string $relationName, ?Select $select = null): Collection|Entity|null
     {
-        /** @var Collection<Entity>|Entity|null */
-        return $this->selectRelatedInternal($entity, $relationName, $select);
+        $result = $this->selectRelatedInternal($entity, $relationName, $select);
+
+        if (is_int($result)) {
+            throw new LogicException();
+        }
+
+        return $result;
     }
 
     /**
      * @return Collection<Entity>|Entity|int|null
      */
-    protected function selectRelatedInternal(
+    private function selectRelatedInternal(
         Entity $entity,
         string $relationName,
         ?Select $select = null,
         bool $returnTotalCount = false
-    ) {
+    ): Collection|Entity|int|null {
+
         $params = [];
 
         if ($select) {
@@ -494,7 +498,7 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * Get a number of related entities in DB.
+     * {@inheritDoc}
      */
     public function countRelated(Entity $entity, string $relationName, ?Select $select = null): int
     {
@@ -505,7 +509,7 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * Relate an entity with another entity.
+     * {@inheritDoc}
      */
     public function relate(
         Entity $entity,
@@ -518,7 +522,7 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * Unrelate an entity from another entity.
+     * {@inheritDoc}
      */
     public function unrelate(Entity $entity, string $relationName, Entity $foreignEntity): void
     {
@@ -526,7 +530,7 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * Unrelate an entity from another entity by a given ID.
+     * {@inheritDoc}
      */
     public function relateById(Entity $entity, string $relationName, string $id, ?array $columnData = null): bool
     {
@@ -534,7 +538,7 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * Unrelate an entity from another entity by a given ID.
+     * {@inheritDoc}
      */
     public function unrelateById(Entity $entity, string $relationName, string $id): void
     {
@@ -550,7 +554,7 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * Update relationship columns.
+     * {@inheritDoc}
      */
     public function updateRelationColumns(
         Entity $entity,
@@ -597,7 +601,7 @@ class BaseMapper implements RDBMapper
                 $where = [
                     $nearKey => $entity->getId(),
                     $distantKey => $id,
-                    static::ATTR_DELETED => false,
+                    self::ATTR_DELETED => false,
                 ];
 
                 $conditions = $this->getRelationParam($entity, $relationName, 'conditions') ?? [];
@@ -621,12 +625,15 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * Get a relationship column value.
-     *
-     * @return string|int|float|bool|null A relationship column value.
+     * {@inheritDoc}
      */
-    public function getRelationColumn(Entity $entity, string $relationName, string $id, string $column)
-    {
+    public function getRelationColumn(
+        Entity $entity,
+        string $relationName,
+        string $id,
+        string $column
+    ): string|int|float|bool|null {
+
         $type = $entity->getRelationType($relationName);
 
         if ($type !== Entity::MANY_MANY) {
@@ -659,7 +666,7 @@ class BaseMapper implements RDBMapper
         $where = [
             $nearKey => $entity->getId(),
             $distantKey => $id,
-            static::ATTR_DELETED => false,
+            self::ATTR_DELETED => false,
         ];
 
         $conditions = $this->getRelationParam($entity, $relationName, 'conditions') ?? [];
@@ -769,7 +776,7 @@ class BaseMapper implements RDBMapper
                     'columns' => $columns,
                     'valuesQuery' => Select::fromRaw($params),
                     'updateSet' => [
-                        static::ATTR_DELETED => false,
+                        self::ATTR_DELETED => false,
                     ],
                 ]);
 
@@ -784,7 +791,7 @@ class BaseMapper implements RDBMapper
     /**
      * @param array<string, mixed>|null $data
      */
-    protected function addRelation(
+    private function addRelation(
         Entity $entity,
         string $relationName,
         ?string $id = null,
@@ -841,7 +848,7 @@ class BaseMapper implements RDBMapper
                         'whereClause' => [
                             'id!=' => $entity->getId(),
                             $key => $id,
-                            static::ATTR_DELETED => false,
+                            self::ATTR_DELETED => false,
                         ],
                         'set' => [
                             $key => null,
@@ -858,7 +865,7 @@ class BaseMapper implements RDBMapper
                     'from' => $entityType,
                     'whereClause' => [
                         'id' => $entity->getId(),
-                        static::ATTR_DELETED => false,
+                        self::ATTR_DELETED => false,
                     ],
                     'set' => [
                         $key => $relEntity->getId(),
@@ -882,7 +889,7 @@ class BaseMapper implements RDBMapper
                     'from' => $entityType,
                     'whereClause' => [
                         'id' => $entity->getId(),
-                        static::ATTR_DELETED => false,
+                        self::ATTR_DELETED => false,
                     ],
                     'set' => [
                         $key => $relEntity->getId(),
@@ -910,7 +917,7 @@ class BaseMapper implements RDBMapper
                     'from' => $relEntity->getEntityType(),
                     'whereClause' => [
                         $foreignKey => $entity->getId(),
-                        static::ATTR_DELETED => false,
+                        self::ATTR_DELETED => false,
                     ],
                     'set' => [
                         $foreignKey => null,
@@ -921,7 +928,7 @@ class BaseMapper implements RDBMapper
                     'from' => $relEntity->getEntityType(),
                     'whereClause' => [
                         'id' => $id,
-                        static::ATTR_DELETED => false,
+                        self::ATTR_DELETED => false,
                     ],
                     'set' => [
                         $foreignKey => $entity->getId(),
@@ -965,7 +972,7 @@ class BaseMapper implements RDBMapper
                     'from' => $relEntity->getEntityType(),
                     'whereClause' => [
                         'id' => $id,
-                        static::ATTR_DELETED => false,
+                        self::ATTR_DELETED => false,
                     ],
                     'set' => $set,
                 ]);
@@ -1025,7 +1032,7 @@ class BaseMapper implements RDBMapper
                     $columns = array_keys($values);
 
                     $update = [
-                        static::ATTR_DELETED => false,
+                        self::ATTR_DELETED => false,
                     ];
 
                     foreach ($data as $column => $value) {
@@ -1047,7 +1054,7 @@ class BaseMapper implements RDBMapper
                     return true;
                 }
 
-                $update = [static::ATTR_DELETED => false];
+                $update = [self::ATTR_DELETED => false];
 
                 foreach ($data as $column => $value) {
                     $update[$column] = $value;
@@ -1067,7 +1074,7 @@ class BaseMapper implements RDBMapper
         throw new LogicException("Relation type '{$relType}' is not supported.");
     }
 
-    protected function removeRelation(
+    private function removeRelation(
         Entity $entity,
         string $relationName,
         ?string $id = null,
@@ -1147,7 +1154,7 @@ class BaseMapper implements RDBMapper
                     $entity->setFetched($typeKey, null);
                 }
 
-                $where[static::ATTR_DELETED] = false;
+                $where[self::ATTR_DELETED] = false;
 
                 $query = Update::fromRaw([
                     'from' => $entityType,
@@ -1187,7 +1194,7 @@ class BaseMapper implements RDBMapper
                     $update[$foreignType] = null;
                 }
 
-                $where[static::ATTR_DELETED] = false;
+                $where[self::ATTR_DELETED] = false;
 
                 /** @var Entity $relEntity */
 
@@ -1229,7 +1236,7 @@ class BaseMapper implements RDBMapper
                 $query = Update::fromRaw([
                     'from' => $middleName,
                     'whereClause' => $where,
-                    'set' => [static::ATTR_DELETED => true],
+                    'set' => [self::ATTR_DELETED => true],
                 ]);
 
                 $this->queryExecutor->execute($query);
@@ -1261,7 +1268,7 @@ class BaseMapper implements RDBMapper
     /**
      * @param string[]|null $onDuplicateUpdateAttributeList
      */
-    protected function insertInternal(Entity $entity, ?array $onDuplicateUpdateAttributeList = null): void
+    private function insertInternal(Entity $entity, ?array $onDuplicateUpdateAttributeList = null): void
     {
         $update = null;
 
@@ -1283,7 +1290,7 @@ class BaseMapper implements RDBMapper
         }
     }
 
-    protected function setLastInsertIdWithinConnection(Entity $entity): void
+    private function setLastInsertIdWithinConnection(Entity $entity): void
     {
         $id = $this->pdo->lastInsertId();
 
@@ -1340,7 +1347,7 @@ class BaseMapper implements RDBMapper
     /**
      * @return string[]
      */
-    protected function getInsertColumnList(Entity $entity): array
+    private function getInsertColumnList(Entity $entity): array
     {
         $columnList = [];
 
@@ -1356,7 +1363,7 @@ class BaseMapper implements RDBMapper
     /**
      * @return string[]
      */
-    protected function getInsertValueMap(Entity $entity): array
+    private function getInsertValueMap(Entity $entity): array
     {
         $map = [];
 
@@ -1373,7 +1380,7 @@ class BaseMapper implements RDBMapper
      * @param string[] $attributeList
      * @return string[]
      */
-    protected function getInsertOnDuplicateSetMap(Entity $entity, array $attributeList)
+    private function getInsertOnDuplicateSetMap(Entity $entity, array $attributeList)
     {
         $list = [];
 
@@ -1389,7 +1396,7 @@ class BaseMapper implements RDBMapper
     /**
      * @return array<string, mixed>
      */
-    protected function getValueMapForUpdate(Entity $entity): array
+    private function getValueMapForUpdate(Entity $entity): array
     {
         $valueMap = [];
 
@@ -1429,7 +1436,7 @@ class BaseMapper implements RDBMapper
             'from' => $entity->getEntityType(),
             'whereClause' => [
                 'id' => $entity->getId(),
-                static::ATTR_DELETED => false,
+                self::ATTR_DELETED => false,
             ],
             'set' => $valueMap,
         ]);
@@ -1437,7 +1444,7 @@ class BaseMapper implements RDBMapper
         $this->queryExecutor->execute($query);
     }
 
-    protected function prepareValueForInsert(?string $type, mixed $value): mixed
+    private function prepareValueForInsert(?string $type, mixed $value): mixed
     {
         if ($type == Entity::JSON_ARRAY && is_array($value)) {
             $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
@@ -1466,7 +1473,7 @@ class BaseMapper implements RDBMapper
         $whereClause = ['id' => $id];
 
         if ($onlyDeleted) {
-            $whereClause[static::ATTR_DELETED] = true;
+            $whereClause[self::ATTR_DELETED] = true;
         }
 
         $query = Delete::fromRaw([
@@ -1489,7 +1496,7 @@ class BaseMapper implements RDBMapper
         $query = Update::fromRaw([
             'from' => $entityType,
             'whereClause' => ['id' => $id],
-            'set' => [static::ATTR_DELETED => false],
+            'set' => [self::ATTR_DELETED => false],
         ]);
 
         $this->queryExecutor->execute($query);
@@ -1500,7 +1507,7 @@ class BaseMapper implements RDBMapper
      */
     public function delete(Entity $entity): void
     {
-        $entity->set(static::ATTR_DELETED, true);
+        $entity->set(self::ATTR_DELETED, true);
 
         $this->update($entity);
     }
@@ -1508,7 +1515,7 @@ class BaseMapper implements RDBMapper
     /**
      * @return array<string, mixed>
      */
-    protected function toValueMap(Entity $entity, bool $onlyStorable = true): array
+    private function toValueMap(Entity $entity, bool $onlyStorable = true): array
     {
         $data = [];
 
@@ -1544,7 +1551,7 @@ class BaseMapper implements RDBMapper
     /**
      * @param array<string,mixed> $data
      */
-    protected function populateEntityFromRow(Entity $entity, $data): void
+    private function populateEntityFromRow(Entity $entity, $data): void
     {
         $entity->set($data);
     }
@@ -1553,7 +1560,7 @@ class BaseMapper implements RDBMapper
      * @param array<mixed> $select
      * @return array<mixed>
      */
-    protected function getModifiedSelectForManyToMany(Entity $entity, string $relationName, array $select): array
+    private function getModifiedSelectForManyToMany(Entity $entity, string $relationName, array $select): array
     {
         $additionalSelect = $this->getManyManyAdditionalSelect($entity, $relationName);
 
@@ -1584,7 +1591,7 @@ class BaseMapper implements RDBMapper
      * @param array<string, mixed>|null $conditions
      * @return array{string, string, array<string|int, mixed>}
      */
-    protected function getManyManyJoin(Entity $entity, string $relationName, ?array $conditions = null): array
+    private function getManyManyJoin(Entity $entity, string $relationName, ?array $conditions = null): array
     {
         $middleName = $this->getRelationParam($entity, $relationName, 'relationName');
 
@@ -1611,7 +1618,7 @@ class BaseMapper implements RDBMapper
             [
                 "{$distantKey}:" => $foreignKey,
                 "{$nearKey}" => $entity->get($key),
-                static::ATTR_DELETED => false,
+                self::ATTR_DELETED => false,
             ],
         ];
 
@@ -1631,7 +1638,7 @@ class BaseMapper implements RDBMapper
     /**
      * @return array<array{string, string}>
      */
-    protected function getManyManyAdditionalSelect(Entity $entity, string $relationName): array
+    private function getManyManyAdditionalSelect(Entity $entity, string $relationName): array
     {
         $foreign = $this->getRelationParam($entity, $relationName, 'foreign');
         $foreignEntityType = $this->getRelationParam($entity, $relationName, 'entity');
@@ -1661,7 +1668,7 @@ class BaseMapper implements RDBMapper
     /**
      * @return mixed
      */
-    protected function getAttributeParam(Entity $entity, string $attribute, string $param)
+    private function getAttributeParam(Entity $entity, string $attribute, string $param)
     {
         if ($entity instanceof BaseEntity) {
             return $entity->getAttributeParam($attribute, $param);
@@ -1678,7 +1685,7 @@ class BaseMapper implements RDBMapper
         return $entityDefs->getAttribute($attribute)->getParam($param);
     }
 
-    protected function getRelationParam(Entity $entity, string $relation, string $param): mixed
+    private function getRelationParam(Entity $entity, string $relation, string $param): mixed
     {
         if ($entity instanceof BaseEntity) {
             return $entity->getRelationParam($relation, $param);
