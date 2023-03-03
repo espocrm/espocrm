@@ -89,7 +89,7 @@ class InsertBuilder implements Builder
     /**
      * What values to insert. A key-value map or a list of key-value maps.
      *
-     * @param array<string, ?scalar> $values
+     * @param array<string, ?scalar>|array<string, ?scalar>[] $values
      */
     public function values(array $values): self
     {

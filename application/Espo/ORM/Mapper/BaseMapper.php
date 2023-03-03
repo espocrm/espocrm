@@ -32,15 +32,17 @@ namespace Espo\ORM\Mapper;
 use Espo\ORM\Entity;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Collection;
+use Espo\ORM\Query\DeleteBuilder;
+use Espo\ORM\Query\InsertBuilder;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Executor\QueryExecutor;
+use Espo\ORM\Query\UpdateBuilder;
 use Espo\ORM\SthCollection;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\CollectionFactory;
 use Espo\ORM\Metadata;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\Update;
-use Espo\ORM\Query\Delete;
 use Espo\ORM\Query\Insert;
 
 use PDO;
@@ -55,6 +57,7 @@ use RuntimeException;
  */
 class BaseMapper implements RDBMapper
 {
+    private const ATTR_ID = 'id';
     private const ATTR_DELETED = 'deleted';
     private const FUNC_COUNT = 'COUNT';
 
@@ -1276,12 +1279,12 @@ class BaseMapper implements RDBMapper
             $update = $this->getInsertOnDuplicateSetMap($entity, $onDuplicateUpdateAttributeList);
         }
 
-        $query = Insert::fromRaw([
-            'into' => $entity->getEntityType(),
-            'columns' => $this->getInsertColumnList($entity),
-            'values' => $this->getInsertValueMap($entity),
-            'updateSet' => $update,
-        ]);
+        $query = InsertBuilder::create()
+            ->into($entity->getEntityType())
+            ->columns($this->getInsertColumnList($entity))
+            ->values($this->getInsertValueMap($entity))
+            ->updateSet($update ?? [])
+            ->build();
 
         $this->queryExecutor->execute($query);
 
@@ -1333,13 +1336,17 @@ class BaseMapper implements RDBMapper
             $values[] = $this->getInsertValueMap($entity);
         }
 
+        if (!$entityType) {
+            throw new LogicException();
+        }
+
         /** @var Entity $firstEntity */
 
-        $query = Insert::fromRaw([
-            'into' => $entityType,
-            'columns' => $this->getInsertColumnList($firstEntity),
-            'values' => $values,
-        ]);
+        $query = InsertBuilder::create()
+            ->into($entityType)
+            ->columns($this->getInsertColumnList($firstEntity))
+            ->values($values)
+            ->build();
 
         $this->queryExecutor->execute($query);
     }
@@ -1361,7 +1368,7 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * @return string[]
+     * @return array<string, ?scalar>
      */
     private function getInsertValueMap(Entity $entity): array
     {
@@ -1432,14 +1439,14 @@ class BaseMapper implements RDBMapper
             return;
         }
 
-        $query = Update::fromRaw([
-            'from' => $entity->getEntityType(),
-            'whereClause' => [
-                'id' => $entity->getId(),
+        $query = UpdateBuilder::create()
+            ->in($entity->getEntityType())
+            ->set($valueMap)
+            ->where([
+                self::ATTR_ID => $entity->getId(),
                 self::ATTR_DELETED => false,
-            ],
-            'set' => $valueMap,
-        ]);
+            ])
+            ->build();
 
         $this->queryExecutor->execute($query);
     }
@@ -1470,16 +1477,16 @@ class BaseMapper implements RDBMapper
             throw new RuntimeException("Can't delete an empty entity type or ID from DB.");
         }
 
-        $whereClause = ['id' => $id];
+        $whereClause = [self::ATTR_ID => $id];
 
         if ($onlyDeleted) {
             $whereClause[self::ATTR_DELETED] = true;
         }
 
-        $query = Delete::fromRaw([
-            'from' => $entityType,
-            'whereClause' => $whereClause,
-        ]);
+        $query = DeleteBuilder::create()
+            ->from($entityType)
+            ->where($whereClause)
+            ->build();
 
         $this->queryExecutor->execute($query);
     }
