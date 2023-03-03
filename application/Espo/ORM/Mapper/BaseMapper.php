@@ -42,8 +42,6 @@ use Espo\ORM\EntityFactory;
 use Espo\ORM\CollectionFactory;
 use Espo\ORM\Metadata;
 use Espo\ORM\Query\Select;
-use Espo\ORM\Query\Update;
-use Espo\ORM\Query\Insert;
 
 use PDO;
 use stdClass;
