@@ -121,7 +121,10 @@ class LinkCheck
 
             $hasLinkMultiple =
                 $entityDefs->hasField($name) &&
-                $entityDefs->getField($name)->getType() === 'linkMultiple';
+                (
+                    $entityDefs->getField($name)->getType() === 'linkMultiple' ||
+                    $entityDefs->getField($name)->getType() === 'attachmentMultiple'
+                );
 
             if (
                 !$hasLinkMultiple &&
