@@ -29,18 +29,20 @@
 
 namespace tests\unit\Espo\ORM;
 
-use Espo\ORM\{
-    Metadata,
-    MetadataDataProvider,
-};
+use Espo\ORM\Defs\Defs;
+use Espo\ORM\Metadata;
+use Espo\ORM\MetadataDataProvider;
 
 use RuntimeException;
 
 class DefsTest extends \PHPUnit\Framework\TestCase
 {
+    protected ?MetadataDataProvider $metadataDataProvider = null;
+    protected ?Metadata $metadata = null;
+    protected ?Defs $defs = null;
+
     protected function setUp() : void
-    {
-    }
+    {}
 
     protected function initMetadata(array $data)
     {
@@ -69,16 +71,13 @@ class DefsTest extends \PHPUnit\Framework\TestCase
         $this->initMetadata($data);
 
         $this->assertEquals(['Test1'], $this->defs->getEntityTypeList());
-
         $this->assertEquals('Test1', $this->defs->getEntityList()[0]->getName());
-
         $this->assertEquals('Test1', $this->defs->getEntity('Test1')->getName());
-
         $this->assertEquals('1', $this->defs->getEntity('Test1')->getParam('test'));
-
         $this->assertTrue($this->defs->hasEntity('Test1'));
-
         $this->assertFalse($this->defs->hasEntity('Test2'));
+        $this->assertNotNull($this->defs->tryGetEntity('Test1'));
+        $this->assertNull($this->defs->tryGetEntity('Test2'));
     }
 
     public function testEntityNotExisting()
@@ -117,31 +116,22 @@ class DefsTest extends \PHPUnit\Framework\TestCase
         $this->initMetadata($data);
 
         $entityDefs = $this->defs->getEntity('Test');
-
         $this->assertTrue($entityDefs->hasAttribute('a1'));
-
         $this->assertFalse($entityDefs->hasAttribute('aNotExisting'));
-
+        $this->assertNotNull($entityDefs->tryGetAttribute('a1'));
+        $this->assertNull($entityDefs->tryGetAttribute('aNotExisting'));
         $this->assertEquals(['a1', 'a2'], $entityDefs->getAttributeNameList());
-
         $this->assertEquals('a1', $entityDefs->getAttributeList()[0]->getName());
-
         $this->assertEquals('a1', $entityDefs->getAttribute('a1')->getName());
         $this->assertEquals('a2', $entityDefs->getAttribute('a2')->getName());
-
         $this->assertEquals('varchar', $entityDefs->getAttribute('a1')->getType());
         $this->assertEquals('int', $entityDefs->getAttribute('a2')->getType());
-
         $this->assertEquals(false, $entityDefs->getAttribute('a1')->isNotStorable());
         $this->assertEquals(true, $entityDefs->getAttribute('a2')->isNotStorable());
-
         $this->assertEquals(null, $entityDefs->getAttribute('a1')->getLength());
         $this->assertEquals(20, $entityDefs->getAttribute('a2')->getLength());
-
         $this->assertTrue($entityDefs->getAttribute('a1')->hasParam('type'));
-
         $this->assertEquals('varchar', $entityDefs->getAttribute('a1')->getParam('type'));
-
         $this->assertFalse($entityDefs->getAttribute('a1')->hasParam('len'));
     }
 
@@ -188,32 +178,20 @@ class DefsTest extends \PHPUnit\Framework\TestCase
 
         $entityDefs = $this->defs->getEntity('Test');
 
+        $this->assertNotNull($entityDefs->tryGetRelation('r1'));
         $this->assertEquals(['r1', 'r2'], $entityDefs->getRelationNameList());
-
         $this->assertEquals('r1', $entityDefs->getRelation('r1')->getName());
-
         $this->assertEquals('manyMany', $entityDefs->getRelation('r2')->getType());
-
         $this->assertTrue($entityDefs->getRelation('r2')->isManyToMany());
-
         $this->assertTrue($entityDefs->getRelation('r1')->hasForeignRelationName());
-
         $this->assertEquals('f1', $entityDefs->getRelation('r1')->getForeignRelationName());
-
-        $this->assertFalse( $entityDefs->getRelation('r1')->hasRelationshipName());
-
+        $this->assertFalse($entityDefs->getRelation('r1')->hasRelationshipName());
         $this->assertEquals('r2Name', $entityDefs->getRelation('r2')->getRelationshipName());
-
         $this->assertEquals('Foreign1', $entityDefs->getRelation('r1')->getForeignEntityType());
-
         $this->assertEquals('r1Id', $entityDefs->getRelation('r1')->getKey());
-
         $this->assertEquals('id', $entityDefs->getRelation('r1')->getForeignKey());
-
         $this->assertEquals('k1', $entityDefs->getRelation('r2')->getMidKey());
-
         $this->assertEquals('k2', $entityDefs->getRelation('r2')->getForeignMidKey());
-
         $this->assertEquals(['type' => 'Test'], $entityDefs->getRelation('r2')->getConditions());
     }
 
@@ -221,10 +199,13 @@ class DefsTest extends \PHPUnit\Framework\TestCase
     {
         $data = [
             'Test' => [
+                'fields' => [],
             ],
         ];
 
         $this->initMetadata($data);
+
+        $this->assertNull($this->defs->getEntity('Test')->tryGetRelation('r1'));
 
         $this->expectException(RuntimeException::class);
 
@@ -271,10 +252,13 @@ class DefsTest extends \PHPUnit\Framework\TestCase
     {
         $data = [
             'Test' => [
+                'fields' => [],
             ],
         ];
 
         $this->initMetadata($data);
+
+        $this->assertNull($this->defs->getEntity('Test')->tryGetIndex('i1'));
 
         $this->expectException(RuntimeException::class);
 
@@ -304,16 +288,13 @@ class DefsTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(['f1', 'f2'], $entityDefs->getFieldNameList());
 
+        $this->assertNotNull($entityDefs->tryGetField('f1'));
+        $this->assertNull($entityDefs->tryGetField('fBad'));
         $this->assertTrue($entityDefs->hasField('f1'));
-
         $this->assertFalse($entityDefs->hasField('fBad'));
-
         $this->assertEquals('varchar', $entityDefs->getField('f1')->getType());
-
         $this->assertEquals('f1', $entityDefs->getField('f1')->getName());
-
         $this->assertEquals(100, $entityDefs->getField('f1')->getParam('length'));
-
         $this->assertTrue($entityDefs->getField('f2')->isNotStorable());
     }
 

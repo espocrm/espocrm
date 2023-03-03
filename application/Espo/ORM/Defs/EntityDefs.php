@@ -177,7 +177,7 @@ class EntityDefs
     }
 
     /**
-     * Whether has an attribute.
+     * Has an attribute.
      */
     public function hasAttribute(string $name): bool
     {
@@ -187,7 +187,7 @@ class EntityDefs
     }
 
     /**
-     * Whether has a relation.
+     * Has a relation.
      */
     public function hasRelation(string $name): bool
     {
@@ -197,7 +197,7 @@ class EntityDefs
     }
 
     /**
-     * Whether has an index.
+     * Has an index.
      */
     public function hasIndex(string $name): bool
     {
@@ -207,7 +207,7 @@ class EntityDefs
     }
 
     /**
-     * Whether has a field.
+     * Has a field.
      */
     public function hasField(string $name): bool
     {
@@ -217,7 +217,7 @@ class EntityDefs
     }
 
     /**
-     * Get an attribute definitions.
+     * Get attribute definitions.
      *
      * @throws RuntimeException
      */
@@ -234,7 +234,8 @@ class EntityDefs
     }
 
     /**
-     * Get a relation definitions.
+     * Get relation definitions.
+     *
      * @throws RuntimeException
      */
     public function getRelation(string $name): RelationDefs
@@ -250,7 +251,7 @@ class EntityDefs
     }
 
     /**
-     * Get an index definitions.
+     * Get index definitions.
      *
      * @throws RuntimeException
      */
@@ -267,7 +268,7 @@ class EntityDefs
     }
 
     /**
-     * Get a field definitions.
+     * Get field definitions.
      *
      * @throws RuntimeException
      */
@@ -281,6 +282,54 @@ class EntityDefs
 
         /** @var FieldDefs */
         return $this->fieldCache[$name];
+    }
+
+    /**
+     * Try to get attribute definitions.
+     */
+    public function tryGetAttribute(string $name): ?AttributeDefs
+    {
+        if (!$this->hasAttribute($name)) {
+            return null;
+        }
+
+        return $this->getAttribute($name);
+    }
+
+    /**
+     * Try to get field definitions.
+     */
+    public function tryGetField(string $name): ?FieldDefs
+    {
+        if (!$this->hasField($name)) {
+            return null;
+        }
+
+        return $this->getField($name);
+    }
+
+    /**
+     * Try to get relation definitions.
+     */
+    public function tryGetRelation(string $name): ?RelationDefs
+    {
+        if (!$this->hasRelation($name)) {
+            return null;
+        }
+
+        return $this->getRelation($name);
+    }
+
+    /**
+     * Try to get index definitions.
+     */
+    public function tryGetIndex(string $name): ?IndexDefs
+    {
+        if (!$this->hasIndex($name)) {
+            return null;
+        }
+
+        return $this->getIndex($name);
     }
 
     /**

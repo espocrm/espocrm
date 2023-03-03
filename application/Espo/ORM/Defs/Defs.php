@@ -66,7 +66,7 @@ class Defs
     }
 
     /**
-     * Whether has an entity.
+     * Has an entity type.
      */
     public function hasEntity(string $entityType): bool
     {
@@ -83,5 +83,17 @@ class Defs
         }
 
         return $this->data->getEntity($entityType);
+    }
+
+    /**
+     * Try to get entity definitions, if an entity type does not exist, then return null.
+     */
+    public function tryGetEntity(string $entityType): ?EntityDefs
+    {
+        if (!$this->hasEntity($entityType)) {
+            return null;
+        }
+
+        return $this->getEntity($entityType);
     }
 }
