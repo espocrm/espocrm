@@ -41,7 +41,6 @@ use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\QueryComposer\MysqlQueryComposer as QueryComposer;
 use Espo\ORM\QueryComposer\QueryComposerWrapper;
-use Espo\ORM\Executor\QueryExecutor;
 use Espo\ORM\Executor\SqlExecutor;
 use Espo\ORM\SthCollection;
 
@@ -603,6 +602,35 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $count = $this->db->countRelated($this->post, 'tags');
 
         $this->assertEquals($count, 1);
+    }
+
+    public function testCount1(): void
+    {
+        $sql = "SELECT COUNT(post.id) AS `value` FROM `post` AS `post` WHERE post.deleted = 0";
+
+        $select = SelectBuilder::create()
+            ->from('Post')
+            ->build();
+
+        $this->mockQuery($sql, ['value' => 1]);
+
+        $this->db->count($select);
+    }
+
+    public function testCountWithDistinct(): void
+    {
+        $sql = "SELECT COUNT(asq.id) AS `value` FROM (" .
+            "SELECT DISTINCT post.id AS `id` FROM `post` AS `post` WHERE post.deleted = 0" .
+            ") AS `asq`";
+
+        $select = SelectBuilder::create()
+            ->from('Post')
+            ->distinct()
+            ->build();
+
+        $this->mockQuery($sql, ['value' => 1]);
+
+        $this->db->count($select);
     }
 
     public function testInsert()

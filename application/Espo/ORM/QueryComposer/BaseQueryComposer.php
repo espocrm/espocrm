@@ -72,8 +72,6 @@ abstract class BaseQueryComposer implements QueryComposer
         'leftJoins',
         'distinct',
         'joinConditions',
-        'aggregation',
-        'aggregationBy',
         'groupBy',
         'havingClause',
         'customHaving',
@@ -562,10 +560,6 @@ abstract class BaseQueryComposer implements QueryComposer
         $params['leftJoins'] = $params['leftJoins'] ?? [];
 
         if ($method !== self::SELECT_METHOD) {
-            if (isset($params['aggregation'])) {
-                throw new RuntimeException("ORM Query: Param 'aggregation' is not allowed for '{$method}'.");
-            }
-
             if (isset($params['offset'])) {
                 throw new RuntimeException("ORM Query: Param 'offset' is not allowed for '{$method}'.");
             }
@@ -593,6 +587,9 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $entityType = $params['from'] ?? null;
         $fromQuery = $params['fromQuery'] ?? null;
+        $fromAlias = $params['fromAlias'] ?? null;
+        $whereClause = $params['whereClause'] ?? [];
+        $havingClause = $params['havingClause'] ?? [];
 
         if ($entityType === null && !$fromQuery) {
             return $this->createSelectQueryNoFrom($params);
@@ -600,57 +597,18 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $entity = $this->getSeed($entityType);
 
-        $isAggregation = (bool) ($params['aggregation'] ?? null);
-
-        $whereClause = $params['whereClause'] ?? [];
-        $havingClause = $params['havingClause'] ?? [];
-
         if (!$params['withDeleted'] && $entity->hasAttribute('deleted')) {
             $whereClause = $whereClause + ['deleted' => false];
         }
 
-        $selectPart = null;
-        $orderPart = null;
-        $havingPart = null;
-        $tailPart = null;
-
         $wherePart = $this->getWherePart($entity, $whereClause, 'AND', $params);
-
-        if (!empty($havingClause)) {
-            $havingPart = $this->getWherePart($entity, $havingClause, 'AND', $params);
-        }
-
-        if (!$isAggregation) {
-            $orderPart = $this->getOrderPart($entity, $params['orderBy'], $params['order'], $params);
-
-            $selectPart = $this->getSelectPart($entity, $params);
-
-            $additionalSelectPart = $this->getAdditionalSelect($entity, $params);
-
-            if ($additionalSelectPart) {
-                $selectPart .= $additionalSelectPart;
-            }
-
-            $tailPart = $this->getSelectTailPart($params);
-        }
-
-        if ($isAggregation) {
-            $aggregationDistinct = false;
-
-            if ($params['distinct'] && $params['aggregation'] == 'COUNT') {
-                $aggregationDistinct = true;
-            }
-
-            $params['select'] = [];
-
-            $selectPart = $this->getAggregationSelectPart(
-                $entity,
-                $params['aggregation'],
-                $params['aggregationBy'],
-                $aggregationDistinct,
-                $params
-            );
-        }
+        $havingPart = $havingClause ? $this->getWherePart($entity, $havingClause, 'AND', $params) : null;
+        $orderPart = $this->getOrderPart($entity, $params['orderBy'], $params['order'], $params);
+        $selectPart = $this->getSelectPart($entity, $params);
+        $selectPart .= $this->getAdditionalSelect($entity, $params) ?? '';
+        $tailPart = $this->getSelectTailPart($params);
+        $joinsPart = $this->getJoinsPart($entity, $params, true);
+        $groupByPart = $this->getGroupByPart($entity, $params);
 
         // @todo remove 'customWhere' support
         if (!empty($params['customWhere'])) {
@@ -670,61 +628,23 @@ abstract class BaseQueryComposer implements QueryComposer
             $havingPart .= $params['customHaving'];
         }
 
-        $joinsPart = $this->getJoinsPart($entity, $params, !$isAggregation);
+        $indexKeyList = $entityType ?
+            $this->getIndexKeyList($entityType, $params) : null;
 
-        $groupByPart = $this->getGroupByPart($entity, $params);
+        $fromAlias = $fromAlias ?
+            $this->sanitize($fromAlias) : null;
 
-        $indexKeyList = [];
-
-        if ($entityType) {
-            $indexKeyList = $this->getIndexKeyList($entityType, $params);
-        }
-
-        $fromAlias = $params['fromAlias'] ?? null;
-
-        if ($fromAlias) {
-            $fromAlias = $this->sanitize($fromAlias);
-        }
-
-        $fromPart = null;
-
-        if ($entityType) {
-            $fromPart = $this->quoteIdentifier(
-                $this->toDb($entityType)
+        $fromPart = $fromQuery ?
+            '(' . $this->composeSelecting($fromQuery) . ')' :
+            (
+                $entityType ?
+                    $this->quoteIdentifier($this->toDb($entityType)) : null
             );
-        }
-
-        if ($fromQuery) {
-            $fromPart = '(' . $this->composeSelecting($fromQuery) . ')';
-        }
 
         /** @var string $selectPart */
         /** @var string $fromAlias */
 
-        if ($isAggregation) {
-            $sql = $this->composeSelectQuery(
-                $fromPart,
-                $selectPart,
-                $fromAlias,
-                $joinsPart,
-                $wherePart,
-                null,
-                null,
-                null,
-                false,
-                $groupByPart,
-                $havingPart,
-                $indexKeyList
-            );
-
-            if ($params['aggregation'] === 'COUNT' && $groupByPart && $havingPart) {
-                return $this->wrapCountSql($sql);
-            }
-
-            return $sql;
-        }
-
-        $sql = $this->composeSelectQuery(
+        return $this->composeSelectQuery(
             $fromPart,
             $selectPart,
             $fromAlias,
@@ -739,15 +659,6 @@ abstract class BaseQueryComposer implements QueryComposer
             $indexKeyList,
             $tailPart
         );
-
-        return $sql;
-    }
-
-    protected function wrapCountSql(string $sql): string
-    {
-        return
-            "SELECT COUNT(*) AS " . $this->quoteIdentifier('value') . " ".
-            "FROM ({$sql}) AS " . $this->quoteIdentifier('countAlias');
     }
 
     /**
@@ -757,12 +668,7 @@ abstract class BaseQueryComposer implements QueryComposer
     {
         $selectPart = $this->getSelectPart(null, $params);
 
-        $sql = $this->composeSelectQuery(
-            null,
-            $selectPart
-        );
-
-        return $sql;
+        return $this->composeSelectQuery(null, $selectPart);
     }
 
     /**
@@ -1126,17 +1032,6 @@ abstract class BaseQueryComposer implements QueryComposer
 
             case 'POSITION_IN_LIST':
                 return 'FIELD(' . implode(', ', $argumentPartList) . ')';
-        }
-
-        if ($distinct) {
-            $fromAlias = $this->getFromAlias($params, $entityType);
-
-            $idPart = $fromAlias . ".id";
-
-            switch ($function) {
-                case 'COUNT':
-                    return $function . "({$part}) * COUNT(DISTINCT {$idPart}) / COUNT({$idPart})";
-            }
         }
 
         return $function . '(' . $part . ')';
@@ -2228,33 +2123,6 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         return $this->getAttributePath($entity, $orderBy, $params);
-    }
-
-    /**
-     * @param array<string, mixed> $params
-     */
-    protected function getAggregationSelectPart(
-        Entity $entity,
-        string $aggregation,
-        string $aggregationBy,
-        bool $distinct,
-        array $params
-    ): ?string {
-
-        if (!$entity->hasAttribute($aggregationBy)) {
-            return null;
-        }
-
-        $aggregationPart = $this->sanitize(strtoupper($aggregation));
-
-        $distinctPart = $distinct ? 'DISTINCT ' : '';
-
-        $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
-
-        $columnPart = "{$fromAlias}." . $this->toDb($this->sanitize($aggregationBy));
-        $columnPart = $this->quoteColumn($columnPart);
-
-        return "{$aggregationPart}({$distinctPart}{$columnPart}) AS " . $this->quoteIdentifier('value');
     }
 
     /**
