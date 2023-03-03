@@ -302,6 +302,7 @@ class DefsTest extends \PHPUnit\Framework\TestCase
     {
         $data = [
             'Test' => [
+                'fields' => [],
             ],
         ];
 
@@ -346,7 +347,6 @@ class DefsTest extends \PHPUnit\Framework\TestCase
         $attributeAfter = $entityDefsAfter->getAttribute('a1');
 
         $this->assertNotSame($entityDefs, $entityDefsAfter);
-
         $this->assertNotSame($attribute, $attributeAfter);
     }
 }
