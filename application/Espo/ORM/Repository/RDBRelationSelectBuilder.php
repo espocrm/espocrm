@@ -30,6 +30,7 @@
 namespace Espo\ORM\Repository;
 
 use Espo\ORM\Collection;
+use Espo\ORM\Mapper\RDBMapper;
 use Espo\ORM\SthCollection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -39,10 +40,10 @@ use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\Part\WhereItem;
 use Espo\ORM\Query\Part\Selection;
 use Espo\ORM\Query\Part\Join;
-use Espo\ORM\Mapper\Mapper;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Order;
 
+use LogicException;
 use RuntimeException;
 use InvalidArgumentException;
 
@@ -55,7 +56,7 @@ class RDBRelationSelectBuilder
     private Entity $entity;
     private string $foreignEntityType;
     private string $relationName;
-    private ?string $relationType = null;
+    private ?string $relationType;
     private SelectBuilder $builder;
     private ?string $middleTableAlias = null;
     private bool $returnSthCollection = false;
@@ -110,9 +111,15 @@ class RDBRelationSelectBuilder
         return new SelectBuilder();
     }
 
-    protected function getMapper(): Mapper
+    protected function getMapper(): RDBMapper
     {
-        return $this->entityManager->getMapper();
+        $mapper = $this->entityManager->getMapper();
+
+        if (!$mapper instanceof RDBMapper) {
+            throw new LogicException();
+        }
+
+        return $mapper;
     }
 
     /**
@@ -145,8 +152,8 @@ class RDBRelationSelectBuilder
     }
 
     /**
-     * @param array<mixed,mixed> $where
-     * @return array<mixed,mixed>
+     * @param array<string|int, mixed> $where
+     * @return array<string|int, mixed>
      */
     protected function applyMiddleAliasToWhere(array $where): array
     {
@@ -158,14 +165,10 @@ class RDBRelationSelectBuilder
             $transformedKey = $key;
             $transformedValue = $value;
 
-            if (is_int($key)) {
-                $transformedKey = $key;
-            }
-
             if (
                 is_string($key) &&
                 strlen($key) &&
-                strpos($key, '.') === false &&
+                !str_contains($key, '.') &&
                 $key[0] === strtolower($key[0])
             ) {
                 $transformedKey = $middleName . '.' . $key;

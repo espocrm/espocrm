@@ -42,6 +42,7 @@ use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Repository\RDBRelationSelectBuilder as Builder;
 
+use LogicException;
 use RuntimeException;
 
 /**
@@ -131,8 +132,11 @@ class RDBRelation
 
     private function getMapper(): RDBMapper
     {
-        /** @var RDBMapper $mapper */
         $mapper = $this->entityManager->getMapper();
+
+        if (!$mapper instanceof RDBMapper) {
+            throw new LogicException();
+        }
 
         return $mapper;
     }
@@ -167,8 +171,13 @@ class RDBRelation
     public function findOne(): ?Entity
     {
         if ($this->isBelongsToParentType()) {
-            /** @var ?Entity */
-            return $this->getMapper()->selectRelated($this->entity, $this->relationName);
+            $entity = $this->getMapper()->selectRelated($this->entity, $this->relationName);
+
+            if ($entity && !$entity instanceof Entity) {
+                throw new LogicException();
+            }
+
+            return $entity;
         }
 
         $collection = $this
@@ -503,8 +512,8 @@ class RDBRelation
     /**
      * Relate with an entity.
      *
-     * @param array<string,mixed>|null $columnData Role values.
-     * @param array<string,mixed> $options
+     * @param array<string, mixed>|null $columnData Role values.
+     * @param array<string, mixed> $options
      */
     public function relate(Entity $entity, ?array $columnData = null, array $options = []): void
     {
@@ -523,7 +532,7 @@ class RDBRelation
     /**
      * Unrelate from an entity.
      *
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function unrelate(Entity $entity, array $options = []): void
     {
