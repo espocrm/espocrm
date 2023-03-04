@@ -39,6 +39,9 @@ use LogicException;
  */
 class ApplicationState
 {
+    private const KEY_USER = 'user';
+    private const KEY_PORTAL = 'portal';
+
     public function __construct(private Container $container)
     {}
 
@@ -47,7 +50,7 @@ class ApplicationState
      */
     public function isPortal(): bool
     {
-        return $this->container->has('portal');
+        return $this->container->has(self::KEY_PORTAL);
     }
 
     /**
@@ -72,7 +75,7 @@ class ApplicationState
         }
 
         /** @var PortalEntity */
-        return $this->container->get('portal');
+        return $this->container->get(self::KEY_PORTAL);
     }
 
     /**
@@ -80,7 +83,7 @@ class ApplicationState
      */
     public function hasUser(): bool
     {
-        return $this->container->has('user');
+        return $this->container->has(self::KEY_USER);
     }
 
     /**
@@ -93,7 +96,7 @@ class ApplicationState
         }
 
         /** @var UserEntity */
-        return $this->container->get('user');
+        return $this->container->get(self::KEY_USER);
     }
 
     /**
@@ -109,7 +112,7 @@ class ApplicationState
      */
     public function isLogged(): bool
     {
-        if (!$this->container->has('user')) {
+        if (!$this->container->has(self::KEY_USER)) {
             return false;
         }
 

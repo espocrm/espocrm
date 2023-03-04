@@ -29,24 +29,17 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\{
-    Container\Loader,
-    Container,
-    AclManager as AclManagerService,
-};
+use Espo\Core\AclManager as AclManagerService;
+use Espo\Core\Container;
+use Espo\Core\Container\Loader;
 
 class InternalAclManager implements Loader
 {
-    private $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
+    public function __construct(private Container $container)
+    {}
 
     public function load(): AclManagerService
     {
-        /** @var AclManagerService */
-        return $this->container->get('aclManager');
+        return $this->container->getByClass(AclManagerService::class);
     }
 }

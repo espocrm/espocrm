@@ -30,25 +30,21 @@
 namespace Espo\Core\Console\Commands;
 
 use Espo\Entities\User;
-use Espo\Core\AclManager;
 use Espo\ORM\EntityManager;
+use Espo\Core\AclManager;
+use Espo\Core\Console\Command;
+use Espo\Core\Console\Command\Params;
+use Espo\Core\Console\IO;
+use Espo\Core\Container;
+use Espo\Core\Portal\Application as PortalApplication;
 
-use Espo\Core\{
-    Portal\Application as PortalApplication,
-    Container,
-    Console\Command,
-    Console\Command\Params,
-    Console\IO,
-};
-
+/**
+ * Checks access for websocket topic subscription. Prints `true` if access allowed.
+ */
 class AclCheck implements Command
 {
-    private Container $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
+    public function __construct(private Container $container)
+    {}
 
     public function run(Params $params, IO $io): void
     {
@@ -59,24 +55,14 @@ class AclCheck implements Command
         $id = $options['id'] ?? null;
         $action = $options['action'] ?? null;
 
-        if (empty($userId)) {
-            return;
-        }
-
-        if (empty($scope)) {
-            return;
-        }
-
-        if (empty($id)) {
+        if (!$userId || !$scope || !$id) {
             return;
         }
 
         $container = $this->container;
+        $entityManager = $this->container->getByClass(EntityManager::class);
 
-        /** @var \Espo\ORM\EntityManager $entityManager */
-        $entityManager = $container->get('entityManager');
-
-        $user = $entityManager->getEntity('User', $userId);
+        $user = $entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             return;
@@ -88,13 +74,10 @@ class AclCheck implements Command
 
             foreach ($portalIdList as $portalId) {
                 $application = new PortalApplication($portalId);
-
                 $containerPortal = $application->getContainer();
+                $entityManager = $containerPortal->getByClass(EntityManager::class);
 
-                /** @var \Espo\ORM\EntityManager $entityManager */
-                $entityManager = $containerPortal->get('entityManager');
-
-                $user = $entityManager->getEntity('User', $userId);
+                $user = $entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
                 if (!$user) {
                     return;
@@ -114,8 +97,6 @@ class AclCheck implements Command
 
         if ($this->check($user, $scope, $id, $action, $container)) {
             $io->write('true');
-
-            return;
         }
     }
 
@@ -127,22 +108,16 @@ class AclCheck implements Command
         Container $container
     ): bool {
 
-        /** @var EntityManager $entityManager */
-        $entityManager = $container->get('entityManager');
+        $entityManager = $container->getByClass(EntityManager::class);
 
-        $entity = $entityManager->getEntity($scope, $id);
+        $entity = $entityManager->getEntityById($scope, $id);
 
         if (!$entity) {
             return false;
         }
 
-        /** @var AclManager $aclManager */
-        $aclManager = $container->get('aclManager');
+        $aclManager = $container->getByClass(AclManager::class);
 
-        if ($aclManager->check($user, $entity, $action)) {
-            return true;
-        }
-
-        return false;
+        return $aclManager->check($user, $entity, $action);
     }
 }

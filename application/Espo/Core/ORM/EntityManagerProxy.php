@@ -46,10 +46,7 @@ class EntityManagerProxy
     private function getEntityManager(): EntityManager
     {
         if (!$this->entityManager) {
-            /** @var EntityManager $entityManager */
-            $entityManager = $this->container->get('entityManager');
-
-            $this->entityManager = $entityManager;
+            $this->entityManager = $this->container->getByClass(EntityManager::class);
         }
 
         return $this->entityManager;
@@ -71,7 +68,7 @@ class EntityManagerProxy
     }
 
     /**
-     * @param array<mixed,string> $options
+     * @param array<mixed, string> $options
      * @return void
      */
     public function saveEntity(Entity $entity, array $options = [])

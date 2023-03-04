@@ -49,9 +49,7 @@ class Application extends BaseApplication
         date_default_timezone_set('UTC');
 
         $this->initContainer();
-
         $this->initPortal($portalId);
-
         $this->initAutoloads();
         $this->initPreloads();
     }
@@ -85,8 +83,7 @@ class Application extends BaseApplication
             throw new Error("Portal ID was not passed to Portal\Application.");
         }
 
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->container->get('entityManager');
+        $entityManager = $this->container->getByClass(EntityManager::class);
 
         $portal = $entityManager->getEntity(Portal::ENTITY_TYPE, $portalId);
 

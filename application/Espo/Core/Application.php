@@ -100,32 +100,27 @@ class Application
 
     protected function getInjectableFactory(): InjectableFactory
     {
-        /** @var InjectableFactory */
-        return $this->container->get('injectableFactory');
+        return $this->container->getByClass(InjectableFactory::class);
     }
 
     protected function getApplicationUser(): ApplicationUser
     {
-        /** @var ApplicationUser */
-        return $this->container->get('applicationUser');
+        return $this->container->getByClass(ApplicationUser::class);
     }
 
     protected function getClientManager(): ClientManager
     {
-        /** @var ClientManager */
-        return $this->container->get('clientManager');
+        return $this->container->getByClass(ClientManager::class);
     }
 
     protected function getMetadata(): Metadata
     {
-        /** @var Metadata */
-        return $this->container->get('metadata');
+        return $this->container->getByClass(Metadata::class);
     }
 
     protected function getConfig(): Config
     {
-        /** @var Config */
-        return $this->container->get('config');
+        return $this->container->getByClass(Config::class);
     }
 
     protected function initAutoloads(): void

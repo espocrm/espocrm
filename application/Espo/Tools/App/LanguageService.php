@@ -30,7 +30,6 @@
 namespace Espo\Tools\App;
 
 use Espo\Core\Utils\Language as LanguageUtil;
-
 use Espo\Core\Acl;
 use Espo\Core\Container;
 use Espo\Core\Utils\Metadata;
@@ -39,22 +38,12 @@ use Espo\Entities\User;
 
 class LanguageService
 {
-    private Metadata $metadata;
-    private Acl $acl;
-    private User $user;
-    private Container $container;
-
     public function __construct(
-        Metadata $metadata,
-        Acl $acl,
-        User $user,
-        Container $container
-    ) {
-        $this->metadata = $metadata;
-        $this->acl = $acl;
-        $this->user = $user;
-        $this->container = $container;
-    }
+        private Metadata $metadata,
+        private Acl $acl,
+        private User $user,
+        private Container $container
+    ) {}
 
     // @todo Use proxy.
     protected function getDefaultLanguage(): LanguageUtil
