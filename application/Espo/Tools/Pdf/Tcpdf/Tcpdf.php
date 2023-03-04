@@ -128,20 +128,7 @@ class Tcpdf extends TcpdfOriginal
 
         $html = $this->headerHtml;
 
-        if ($this->useGroupNumbers) {
-            $html = str_replace('{pageNumber}', '{{:png:}}', $html);
-            $html = str_replace('{pageAbsoluteNumber}', '{{:pnp:}}', $html);
-        } else {
-            $html = str_replace('{pageNumber}', '{{:pnp:}}', $html);
-            $html = str_replace('{pageAbsoluteNumber}', '{{:pnp:}}', $html);
-        }
-
-        /** @phpstan-ignore-next-line */
-        if ($this->isUnicodeFont()) {
-            $html = str_replace('{totalPageNumber}', '{{:ptp:}}', $html);
-        } else {
-            $html = str_replace('{totalPageNumber}', '{:ptp:}', $html);
-        }
+        $html = $this->setPageNumbers($html);
 
         $this->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, '', 0, false);
     }
@@ -160,24 +147,41 @@ class Tcpdf extends TcpdfOriginal
 
         $html = $this->footerHtml;
 
-        if ($this->useGroupNumbers) {
-            $html = str_replace('{pageNumber}', '{{:png:}}', $html);
-            $html = str_replace('{pageAbsoluteNumber}', '{{:pnp:}}', $html);
-        } else {
-            $html = str_replace('{pageNumber}', '{{:pnp:}}', $html);
-            $html = str_replace('{pageAbsoluteNumber}', '{{:pnp:}}', $html);
-        }
-
-        /** @phpstan-ignore-next-line */
-        if ($this->isUnicodeFont()) {
-            $html = str_replace('{totalPageNumber}', '{{:ptp:}}', $html);
-        } else {
-            $html = str_replace('{totalPageNumber}', '{:ptp:}', $html);
-        }
+        $html = $this->setPageNumbers($html);
 
         $this->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, '', 0, false);
 
         $this->SetAutoPageBreak($autoPageBreak, $breakMargin);
+    }
+
+    /**
+     * @param string $html
+     * @return string
+     */
+    private function setPageNumbers($html): string {
+        if ($this->useGroupNumbers) {
+            $html = str_replace('{pageNumber}', '{{:png:}}', $html);
+            $html = str_replace('{pageAbsoluteNumber}', '{{:pnp:}}', $html);
+
+            /** @phpstan-ignore-next-line */
+            if ($this->isUnicodeFont()) {
+                $html = str_replace('{totalPageNumber}', '{{:ptg:}}', $html);
+            } else {
+                $html = str_replace('{totalPageNumber}', '{:ptg:}', $html);
+            }
+        } else {
+            $html = str_replace('{pageNumber}', '{{:pnp:}}', $html);
+            $html = str_replace('{pageAbsoluteNumber}', '{{:pnp:}}', $html);
+
+            /** @phpstan-ignore-next-line */
+            if ($this->isUnicodeFont()) {
+                $html = str_replace('{totalPageNumber}', '{{:ptp:}}', $html);
+            } else {
+                $html = str_replace('{totalPageNumber}', '{:ptp:}', $html);
+            }
+        }
+
+        return $html;
     }
 
     /**
