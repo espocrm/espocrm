@@ -36,8 +36,5 @@ namespace Espo\Tools\App;
  */
 interface AppParam
 {
-    /**
-     * @return mixed
-     */
-    public function get();
+    public function get(): mixed;
 }
