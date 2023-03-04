@@ -411,6 +411,16 @@ class Htmlizer
                         $data[$attribute] = $this->language->translateOption(
                             $data[$attribute], $attribute, $entity->getEntityType()
                         );
+
+                        if ($this->metadata) {
+                            $translation = $this->metadata->get(
+                                ['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'translation']
+                            );
+
+                            if ($translation) {
+                                $data[$attribute] = $this->language->get($translation . '.' . $data[$attribute]);
+                            }
+                        }
                     }
                 }
 
