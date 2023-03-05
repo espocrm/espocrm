@@ -98,6 +98,7 @@ return [
         'clientCspDisabled',
         'clientCspScriptSourceList',
         'authTokenSecretDisabled',
+        'authLogDisabled',
         'authApiUserLogDisabled',
     ],
     'adminItems' => [

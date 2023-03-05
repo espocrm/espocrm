@@ -600,6 +600,10 @@ class Authentication
             $authLogRecord->set('portalId', $this->getPortal()->getId());
         }
 
+        if ($this->configDataProvider->isAuthLogDisabled()) {
+            return null;
+        }
+
         if ($user && $user->isApi() && $this->configDataProvider->isApiUserAuthLogDisabled()) {
             return null;
         }
