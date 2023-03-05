@@ -32,31 +32,25 @@ namespace Espo\Core\Authentication\Hook\Hooks;
 use Espo\Core\Authentication\Hook\BeforeLogin;
 use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Api\Request;
-
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Authentication\ConfigDataProvider;
-use Espo\ORM\EntityManager;
 use Espo\Core\Utils\Log;
-
+use Espo\ORM\EntityManager;
 use Espo\Entities\AuthLogRecord;
 
 use DateTime;
 
 class FailedAttemptsLimit implements BeforeLogin
 {
-    private $configDataProvider;
+    public function __construct(
+        private ConfigDataProvider $configDataProvider,
+        private EntityManager $entityManager,
+        private Log $log
+    ) {}
 
-    private $entityManager;
-
-    private $log;
-
-    public function __construct(ConfigDataProvider $configDataProvider, EntityManager $entityManager, Log $log)
-    {
-        $this->configDataProvider = $configDataProvider;
-        $this->entityManager = $entityManager;
-        $this->log = $log;
-    }
-
+    /**
+     * @throws Forbidden
+     */
     public function process(AuthenticationData $data, Request $request): void
     {
         $isByTokenOnly = !$data->getMethod() && $request->getHeader('Espo-Authorization-By-Token') === 'true';
