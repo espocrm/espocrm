@@ -315,7 +315,7 @@ class Authentication
 
         if (
             !$authLogRecord &&
-            $authToken instanceof AuthLogRecord &&
+            $authToken instanceof AuthTokenEntity &&
             $authToken->hasId()
         ) {
             $authLogRecord = $this->entityManager
