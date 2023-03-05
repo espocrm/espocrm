@@ -296,9 +296,7 @@ class Authentication
         $loggedUser->set('token', $authToken->getToken());
         $loggedUser->set('authTokenId', $authTokenId);
 
-        if ($authLogRecord) {
-            $authLogRecord->set('authTokenId', $authTokenId);
-        }
+        $authLogRecord?->setAuthTokenId($authTokenId);
 
         return $authToken;
     }
@@ -405,8 +403,7 @@ class Authentication
             if (!$isPortalRelatedToUser) {
                 $this->log->info(
                     "AUTH: Trying to login to portal as user '" . $user->getUserName() . "' ".
-                    "which is portal user but does not belongs to portal."
-                );
+                    "which is portal user but does not belongs to portal.");
 
                 $this->logDenied($authLogRecord, AuthLogRecord::DENIAL_REASON_USER_IS_NOT_IN_PORTAL);
 
@@ -575,6 +572,10 @@ class Authentication
             return null;
         }
 
+        if ($this->configDataProvider->isAuthLogDisabled()) {
+            return null;
+        }
+
         /** @var AuthLogRecord $authLogRecord */
         $authLogRecord = $this->entityManager->getNewEntity(AuthLogRecord::ENTITY_TYPE);
 
@@ -587,35 +588,28 @@ class Authentication
             $username = $user->getUserName();
         }
 
-        $authLogRecord->set([
-            'username' => $username,
-            'ipAddress' => $request->getServerParam('REMOTE_ADDR'),
-            'requestTime' => $request->getServerParam('REQUEST_TIME_FLOAT'),
-            'requestMethod' => $request->getMethod(),
-            'requestUrl' => $requestUrl,
-            'authenticationMethod' => $method,
-        ]);
-
-        if ($this->isPortal()) {
-            $authLogRecord->set('portalId', $this->getPortal()->getId());
-        }
-
-        if ($this->configDataProvider->isAuthLogDisabled()) {
-            return null;
-        }
+        $authLogRecord
+            ->setUsername($username)
+            ->setIpAddress($request->getServerParam('REMOTE_ADDR'))
+            ->setRequestTime($request->getServerParam('REQUEST_TIME_FLOAT'))
+            ->setRequestMethod($request->getMethod())
+            ->setRequestUrl($requestUrl)
+            ->setAuthenticationMethod($method)
+            ->setPortalId($this->isPortal() ? $this->getPortal()->getId() : null);
 
         if ($user && $user->isApi() && $this->configDataProvider->isApiUserAuthLogDisabled()) {
             return null;
         }
 
         if ($user) {
-            $authLogRecord->set('userId', $user->hasId() ? $user->getId() : null);
+            $authLogRecord->setUserId($user->hasId() ? $user->getId() : null);
 
             return $authLogRecord;
         }
 
-        $authLogRecord->set('isDenied', true);
-        $authLogRecord->set('denialReason', AuthLogRecord::DENIAL_REASON_CREDENTIALS);
+        $authLogRecord
+            ->setIsDenied()
+            ->setDenialReason(AuthLogRecord::DENIAL_REASON_CREDENTIALS);
 
         $this->entityManager->saveEntity($authLogRecord);
 
@@ -628,7 +622,9 @@ class Authentication
             return;
         }
 
-        $authLogRecord->set('denialReason', $denialReason);
+        $authLogRecord
+            ->setIsDenied()
+            ->setDenialReason($denialReason);
 
         $this->entityManager->saveEntity($authLogRecord);
     }

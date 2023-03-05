@@ -59,6 +59,10 @@ class FailedAttemptsLimit implements BeforeLogin
             return;
         }
 
+        if ($this->configDataProvider->isAuthLogDisabled()) {
+            return;
+        }
+
         $failedAttemptsPeriod = $this->configDataProvider->getFailedAttemptsPeriod();
         $maxFailedAttempts = $this->configDataProvider->getMaxFailedAttemptNumber();
 
