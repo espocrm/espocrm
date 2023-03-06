@@ -798,7 +798,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $extraSelect = [];
 
             foreach ($params['extraAdditionalSelect'] as $item) {
-                if (!in_array($item, $params['select'])) {
+                if (!in_array($item, $params['select'] ?? [])) {
                     $extraSelect[] = $item;
                 }
             }
