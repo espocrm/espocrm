@@ -41,38 +41,34 @@ use Espo\Entities\GroupEmailFolder;
 use Espo\Entities\User;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
+use Espo\Tools\Email\Folder;
 
 class Service
 {
     /** @var string[] */
-    protected $systemFolderList = ['inbox', 'important', 'sent'];
+    protected $systemFolderList = [
+        Folder::INBOX,
+        Folder::IMPORTANT,
+        Folder::SENT,
+    ];
     /** @var string[] */
-    protected $systemFolderEndList = ['drafts', 'trash'];
+    protected $systemFolderEndList = [
+        Folder::DRAFTS,
+        Folder::TRASH,
+    ];
 
     private const FOLDER_MAX_COUNT = 100;
 
-    private EntityManager $entityManager;
-    private Acl $acl;
-    private Config $config;
-    private User $user;
-    private Language $language;
-
     public function __construct(
-        EntityManager $entityManager,
-        Acl $acl,
-        Config $config,
-        User $user,
-        Language $language
-    ) {
-        $this->entityManager = $entityManager;
-        $this->acl = $acl;
-        $this->config = $config;
-        $this->user = $user;
-        $this->language = $language;
-    }
+        private EntityManager $entityManager,
+        private Acl $acl,
+        private Config $config,
+        private User $user,
+        private Language $language
+    ) {}
 
     /**
-     * @return array<array<string,mixed>>
+     * @return array<array<string, mixed>>
      */
     public function listAll()
     {
