@@ -1290,7 +1290,8 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                     if (
                         this.model.hasField('teams') &&
                         !this.model.getFieldParam('teams', 'default') &&
-                        this.model.getLinkParam('teams', 'relationName') === 'entityTeam'
+                        Espo.Utils
+                            .lowerCaseFirst(this.model.getLinkParam('teams', 'relationName') || '') === 'entityTeam'
                     ) {
                         defaultHash['teamsIds'] = [defaultTeamId];
                         defaultHash['teamsNames'] = {};

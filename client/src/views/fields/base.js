@@ -1277,13 +1277,13 @@ define('views/fields/base', ['view', 'ui/select'], function (Dep, /** module:ui/
                 return Promise.resolve();
             }
 
+            if (!noReset) {
+                this.model.set(this.initialAttributes, {skipReRender: true});
+            }
+
             let promise = this.setDetailMode()
                 .then(() => this.reRender(true))
                 .then(() => this.removeInlineEditLinks());
-
-            if (!noReset) {
-                this.model.set(this.initialAttributes);
-            }
 
             this.trigger('after:inline-edit-off', {noReset: noReset});
 

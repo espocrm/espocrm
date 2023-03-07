@@ -29,36 +29,31 @@
 
 namespace tests\unit\Espo\Core\Select\Applier;
 
-use Espo\Core\{
-    Select\Applier\Factory as ApplierFactory,
-    Select\SelectManagerFactory,
-    Select\SelectManager,
-    Select\Where\Applier as WhereApplier,
-    Select\Select\Applier as SelectApplier,
-    Select\Order\Applier as OrderApplier,
-    Select\Applier\Appliers\Limit as LimitApplier,
-    Select\AccessControl\Applier as AccessControlFilterApplier,
-    Select\Primary\Applier as PrimaryFilterApplier,
-    Select\Bool\Applier as BoolFilterListApplier,
-    Select\Text\Applier as TextFilterApplier,
-    Select\Applier\Appliers\Additional as AdditionalApplier,
-    Utils\Metadata,
-    InjectableFactory,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Select\AccessControl\Applier as AccessControlFilterApplier;
+use Espo\Core\Select\Applier\Appliers\Additional as AdditionalApplier;
+use Espo\Core\Select\Applier\Appliers\Limit as LimitApplier;
+use Espo\Core\Select\Applier\Factory as ApplierFactory;
+use Espo\Core\Select\Bool\Applier as BoolFilterListApplier;
+use Espo\Core\Select\Order\Applier as OrderApplier;
+use Espo\Core\Select\Primary\Applier as PrimaryFilterApplier;
+use Espo\Core\Select\Select\Applier as SelectApplier;
+use Espo\Core\Select\SelectManager;
+use Espo\Core\Select\SelectManagerFactory;
+use Espo\Core\Select\Text\Applier as TextFilterApplier;
+use Espo\Core\Select\Where\Applier as WhereApplier;
 
-use Espo\{
-    Entities\User,
-};
+use Espo\Entities\User;
 
 class FactoryTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp(): void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
-        $this->metadata = $this->createMock(Metadata::class);
+        $this->selectManagerFactory = $this->createMock(SelectManagerFactory::class);
         $this->selectManagerFactory = $this->createMock(SelectManagerFactory::class);
         $this->user = $this->createMock(User::class);
 
@@ -66,60 +61,59 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
 
         $this->factory = new ApplierFactory(
             $this->injectableFactory,
-            $this->metadata,
             $this->selectManagerFactory
         );
     }
 
     public function testCreate1()
     {
-        $this->prepareFactoryTest(null, SelectApplier::class, ApplierFactory::SELECT, 'createSelect');
+        $this->prepareFactoryTest(SelectApplier::class, ApplierFactory::SELECT, 'createSelect');
     }
 
     public function testCreate2()
     {
         $this->prepareFactoryTest(
-            'SomeClass', BoolFilterListApplier::class, ApplierFactory::BOOL_FILTER_LIST, 'createBoolFilterList');
+            BoolFilterListApplier::class, ApplierFactory::BOOL_FILTER_LIST, 'createBoolFilterList');
     }
 
     public function testCreate3()
     {
-        $this->prepareFactoryTest(null, TextFilterApplier::class, ApplierFactory::TEXT_FILTER, 'createTextFilter');
+        $this->prepareFactoryTest(TextFilterApplier::class, ApplierFactory::TEXT_FILTER, 'createTextFilter');
     }
 
     public function testCreate4()
     {
-        $this->prepareFactoryTest(null, WhereApplier::class, ApplierFactory::WHERE, 'createWhere');
+        $this->prepareFactoryTest(WhereApplier::class, ApplierFactory::WHERE, 'createWhere');
     }
 
     public function testCreate5()
     {
-        $this->prepareFactoryTest(null, OrderApplier::class, ApplierFactory::ORDER, 'createOrder');
+        $this->prepareFactoryTest(OrderApplier::class, ApplierFactory::ORDER, 'createOrder');
     }
 
     public function testCreate6()
     {
-        $this->prepareFactoryTest(null, LimitApplier::class, ApplierFactory::LIMIT, 'createLimit');
+        $this->prepareFactoryTest(LimitApplier::class, ApplierFactory::LIMIT, 'createLimit');
     }
 
     public function testCreate7()
     {
-        $this->prepareFactoryTest(null, AdditionalApplier::class, ApplierFactory::ADDITIONAL, 'createAdditional');
+        $this->prepareFactoryTest(AdditionalApplier::class, ApplierFactory::ADDITIONAL, 'createAdditional');
     }
 
     public function testCreate8()
     {
         $this->prepareFactoryTest(
-            null, PrimaryFilterApplier::class, ApplierFactory::PRIMARY_FILTER, 'createPrimaryFilter');
+            PrimaryFilterApplier::class, ApplierFactory::PRIMARY_FILTER, 'createPrimaryFilter');
     }
 
     public function testCreate9()
     {
-        $this->prepareFactoryTest
-            (null, AccessControlFilterApplier::class, ApplierFactory::ACCESS_CONTROL_FILTER, 'createAccessControlFilter');
+        $this->prepareFactoryTest(
+            AccessControlFilterApplier::class, ApplierFactory::ACCESS_CONTROL_FILTER, 'createAccessControlFilter');
     }
 
-    protected function prepareFactoryTest(?string $className, string $defaultClassName, string $type, string $method)
+    protected function prepareFactoryTest(string $defaultClassName, string $type, string $method)
     {
         $entityType = 'Test';
 
@@ -128,12 +122,6 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
             ->method('create')
             ->with('Test', $this->user)
             ->willReturn($this->selectManager);
-
-        $this->metadata
-            ->expects($this->once())
-            ->method('get')
-            ->with(['selectDefs', $entityType, 'applierClassNameMap', $type])
-            ->willReturn($className);
 
         $applierClassName = $className ?? $defaultClassName;
 

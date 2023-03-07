@@ -34,12 +34,15 @@ define('crm:views/call/record/list', ['views/record/list'], function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.massActionList.push('setHeld');
-            this.massActionList.push('setNotHeld');
+
+            if (this.getAcl().checkScope(this.entityType, 'edit')) {
+                this.massActionList.push('setHeld');
+                this.massActionList.push('setNotHeld');
+            }
         },
 
         actionSetHeld: function (data) {
-            var id = data.id;
+            let id = data.id;
 
             if (!id) {
                 return;
@@ -55,6 +58,7 @@ define('crm:views/call/record/list', ['views/record/list'], function (Dep) {
 
             this.listenToOnce(model, 'sync', () => {
                 this.notify(false);
+
                 this.collection.fetch();
             });
 
@@ -64,13 +68,13 @@ define('crm:views/call/record/list', ['views/record/list'], function (Dep) {
         },
 
         actionSetNotHeld: function (data) {
-            var id = data.id;
+            let id = data.id;
 
             if (!id) {
                 return;
             }
 
-            var model = this.collection.get(id);
+            let model = this.collection.get(id);
 
             if (!model) {
                 return;
@@ -84,59 +88,54 @@ define('crm:views/call/record/list', ['views/record/list'], function (Dep) {
             });
 
             this.notify('Saving...');
+
             model.save();
         },
 
         massActionSetHeld: function () {
             Espo.Ui.notify(this.translate('saving', 'messages'));
 
-            var data = {};
+            let data = {};
 
             data.ids = this.checkedList;
 
-            $.ajax({
-                url: this.collection.url + '/action/massSetHeld',
-                type: 'POST',
-                data: JSON.stringify(data)
-            }).then(result => {
-                this.notify(false);
+            Espo.Ajax.postRequest(this.collection.entityType + '/action/massSetHeld', data)
+                .then(() => {
+                    Espo.Ui.notify(false);
 
-                this.listenToOnce(this.collection, 'sync', () => {
-                    data.ids.forEach(id => {
-                        if (this.collection.get(id)) {
-                            this.checkRecord(id);
-                        }
+                    this.listenToOnce(this.collection, 'sync', () => {
+                        data.ids.forEach(id => {
+                            if (this.collection.get(id)) {
+                                this.checkRecord(id);
+                            }
+                        });
                     });
-                });
 
-                this.collection.fetch();
-            });
+                    this.collection.fetch();
+                });
         },
 
         massActionSetNotHeld: function () {
             Espo.Ui.notify(this.translate('saving', 'messages'));
 
-            var data = {};
+            let data = {};
 
             data.ids = this.checkedList;
 
-            $.ajax({
-                url: this.collection.url + '/action/massSetNotHeld',
-                type: 'POST',
-                data: JSON.stringify(data)
-            }).then(result => {
-                this.notify(false);
+            Espo.Ajax.postRequest(this.collection.entityType + '/action/massSetNotHeld', data)
+                .then(() => {
+                    Espo.Ui.notify(false);
 
-                this.listenToOnce(this.collection, 'sync', () => {
-                    data.ids.forEach(id => {
-                        if (this.collection.get(id)) {
-                            this.checkRecord(id);
-                        }
+                    this.listenToOnce(this.collection, 'sync', () => {
+                        data.ids.forEach(id => {
+                            if (this.collection.get(id)) {
+                                this.checkRecord(id);
+                            }
+                        });
                     });
-                });
 
-                this.collection.fetch();
-            });
+                    this.collection.fetch();
+                });
         },
     });
 });

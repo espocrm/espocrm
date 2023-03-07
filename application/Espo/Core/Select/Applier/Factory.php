@@ -44,7 +44,6 @@ use Espo\Core\Binding\BindingData;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Select\SelectManager;
 use Espo\Core\Select\SelectManagerFactory;
-use Espo\Core\Utils\Metadata;
 
 use Espo\Entities\User;
 use RuntimeException;
@@ -78,21 +77,12 @@ class Factory
 
     public function __construct(
         private InjectableFactory $injectableFactory,
-        private Metadata $metadata,
         private SelectManagerFactory $selectManagerFactory
     ) {}
 
     private function create(string $entityType, User $user, string $type): object
     {
-        /** @var class-string $className */
-        $className = $this->metadata->get(
-            [
-                'selectDefs',
-                $entityType,
-                'applierClassNameMap',
-                $type,
-            ]
-        ) ?? $this->getDefaultClassName($type);
+        $className = $this->getDefaultClassName($type);
 
         // SelectManager is used for backward compatibility.
         $selectManager = $this->selectManagerFactory->create($entityType, $user);

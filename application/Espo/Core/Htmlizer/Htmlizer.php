@@ -413,12 +413,12 @@ class Htmlizer
                         );
 
                         if ($this->metadata) {
-                            $translation = $this->metadata->get(
+                            $translationPath = $this->metadata->get(
                                 ['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'translation']
                             );
 
-                            if ($translation) {
-                                $data[$attribute] = $this->language->get($translation . '.' . $data[$attribute]);
+                            if ($translationPath) {
+                                $data[$attribute] = $this->language->get($translationPath . '.' . $attribute, $data[$attribute]);
                             }
                         }
                     }

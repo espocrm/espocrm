@@ -30,40 +30,37 @@
 namespace Espo\Classes\Select\Email\AdditionalAppliers;
 
 use Espo\Core\Select\Applier\AdditionalApplier;
+use Espo\Entities\Email;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Core\Select\SearchParams;
 
 use Espo\Classes\Select\Email\Helpers\JoinHelper;
 
 use Espo\Entities\User;
+use Espo\Tools\Email\Folder;
 
 class Main implements AdditionalApplier
 {
-    private $user;
-
-    private $joinHelper;
-
-    public function __construct(User $user, JoinHelper $joinHelper)
-    {
-        $this->user = $user;
-        $this->joinHelper = $joinHelper;
-    }
+    public function __construct(
+        private User $user,
+        private JoinHelper $joinHelper
+    ) {}
 
     public function apply(SelectBuilder $queryBuilder, SearchParams $searchParams): void
     {
         $folder = $this->retrieveFolder($searchParams);
 
-        if ($folder === 'drafts') {
+        if ($folder === Folder::DRAFTS) {
             $queryBuilder->useIndex('createdById');
         }
-        else if ($folder === 'important') {
+        else if ($folder === Folder::IMPORTANT) {
             // skip
         }
         else if ($this->checkApplyDateSentIndex($queryBuilder, $searchParams)) {
             $queryBuilder->useIndex('dateSent');
         }
 
-        if ($folder !== 'drafts') {
+        if ($folder !== Folder::DRAFTS) {
             $this->joinEmailUser($queryBuilder);
         }
     }
@@ -77,10 +74,10 @@ class Main implements AdditionalApplier
         }
 
         $itemList = [
-            'isRead',
-            'isImportant',
-            'inTrash',
-            'folderId',
+            Email::USERS_COLUMN_IS_READ,
+            Email::USERS_COLUMN_IS_IMPORTANT,
+            Email::USERS_COLUMN_IN_TRASH,
+            Email::USERS_COLUMN_FOLDER_ID,
         ];
 
         foreach ($itemList as $item) {

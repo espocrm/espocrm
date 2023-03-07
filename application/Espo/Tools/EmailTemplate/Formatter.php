@@ -73,7 +73,17 @@ class Formatter
                 return '';
             }
 
-            return (string) $this->language->translateOption($value, $attribute, $entity->getEntityType());
+            $label = $this->language->translateOption($value, $attribute, $entity->getEntityType());
+
+            $translationPath = $this->metadata->get(
+                ['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'translation']
+            );
+
+            if ($translationPath) {
+                $label = $this->language->get($translationPath . '.' . $value, $label);
+            }
+
+            return $label;
         }
 
         if ($fieldType === 'array' || $fieldType === 'multiEnum' || $fieldType === 'checklist') {

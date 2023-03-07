@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,17 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/record/list-expanded',
-['views/record/list-expanded', 'crm:views/meeting/record/list'], function (Dep, List) {
+namespace Espo\Tools\Email;
 
-    return Dep.extend({
-
-        actionSetHeld: function (data) {
-            List.prototype.actionSetHeld.call(this, data);
-        },
-
-        actionSetNotHeld: function (data) {
-            List.prototype.actionSetNotHeld.call(this, data);
-        },
-    });
-});
+class Folder
+{
+    public const ALL = 'all';
+    public const INBOX = 'inbox';
+    public const SENT = 'sent';
+    public const DRAFTS = 'drafts';
+    public const IMPORTANT = 'important';
+    public const TRASH = 'trash';
+}

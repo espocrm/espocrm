@@ -53,6 +53,7 @@ class ConfigMetadataCheck implements RebuildAction
     public function process(): void
     {
         $levelList = [
+            Access::LEVEL_DEFAULT,
             Access::LEVEL_INTERNAL,
             Access::LEVEL_ADMIN,
             Access::LEVEL_GLOBAL,
