@@ -140,7 +140,7 @@ class Meeting extends Record
      */
     public function postActionMassSetHeld(Request $request): bool
     {
-        $ids = $request->getParsedBody()->id ?? null;
+        $ids = $request->getParsedBody()->ids ?? null;
 
         if (!is_array($ids)) {
             throw new BadRequest("No `ids`.");
@@ -159,7 +159,7 @@ class Meeting extends Record
      */
     public function postActionMassSetNotHeld(Request $request): bool
     {
-        $ids = $request->getParsedBody()->id ?? null;
+        $ids = $request->getParsedBody()->ids ?? null;
 
         if (!is_array($ids)) {
             throw new BadRequest("No `ids`.");
