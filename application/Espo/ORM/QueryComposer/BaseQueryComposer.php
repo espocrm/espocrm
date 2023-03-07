@@ -950,6 +950,28 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         switch ($function) {
+            case 'SWITCH':
+                if (count($argumentPartList) < 2) {
+                    throw new RuntimeException("Not enough arguments for SWITCH function.");
+                }
+
+                $part = "CASE";
+
+                for ($i = 0; $i < floor(count($argumentPartList) / 2); $i++) {
+                    $whenPart = $argumentPartList[$i * 2];
+                    $thenPart = $argumentPartList[$i * 2 + 1];
+
+                    $part .= " WHEN {$whenPart} THEN {$thenPart}";
+                }
+
+                if (count($argumentPartList) % 2) {
+                    $part .= " ELSE " . end($argumentPartList);
+                }
+
+                $part .= " END";
+
+                return $part;
+
             case 'MONTH':
                 return "DATE_FORMAT({$part}, '%Y-%m')";
 

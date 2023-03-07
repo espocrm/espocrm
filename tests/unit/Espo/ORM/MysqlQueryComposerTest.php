@@ -2888,4 +2888,32 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             $this->query->composeSelect($query)
         );
     }
+
+    public function testSwitch1(): void
+    {
+        $sql = "SELECT CASE WHEN 1 THEN '1' WHEN 0 THEN '0' ELSE NULL END AS `value`";
+
+        $query = SelectBuilder::create()
+            ->select('SWITCH:(1, "1", 0, "0", null)', 'value')
+            ->build();
+
+        $this->assertEquals(
+            $sql,
+            $this->query->composeSelect($query)
+        );
+    }
+
+    public function testSwitch2(): void
+    {
+        $sql = "SELECT CASE WHEN 1 THEN '1' WHEN 0 THEN '0' END AS `value`";
+
+        $query = SelectBuilder::create()
+            ->select('SWITCH:(1, "1", 0, "0")', 'value')
+            ->build();
+
+        $this->assertEquals(
+            $sql,
+            $this->query->composeSelect($query)
+        );
+    }
 }

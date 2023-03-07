@@ -122,6 +122,7 @@ class Functions
         'NOT_IN',
         'IFNULL',
         'NULLIF',
+        'SWITCH',
         'BINARY',
         'MD5',
         'UNIX_TIMESTAMP',
