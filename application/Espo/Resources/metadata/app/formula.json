@@ -317,6 +317,10 @@
             "insertText": "record\\update(ENTITY_TYPE, ID, ATTRIBUTE1, VALUE1, ATTRIBUTE2, VALUE2)"
         },
         {
+            "name": "record\\delete",
+            "insertText": "record\\delete(ENTITY_TYPE, ID)"
+        },
+        {
             "name": "record\\relationColumn",
             "insertText": "record\\relationColumn(ENTITY_TYPE, ID, LINK, FOREIGN_ID, COLUMN)",
             "returnType": "mixed"

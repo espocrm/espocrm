@@ -29,6 +29,10 @@
 
 namespace tests\integration\Espo\Core\Formula;
 
+use Espo\Core\Formula\Manager;
+use Espo\Modules\Crm\Entities\Meeting;
+use Espo\ORM\EntityManager;
+
 class FormulaTest extends \tests\integration\Core\BaseTestCase
 {
 
@@ -418,12 +422,25 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals('1', $m->get('assignedUserId'));
 
         $script = "record\\update('Meeting', '{$id}', 'name', 'test-chanhed', 'assignedUserId', '2')";
-        $result = $fm->run($script);
-
-        $this->assertTrue($result);
+        $fm->run($script);
 
         $m = $em->getEntity('Meeting', $id);
         $this->assertEquals('2', $m->get('assignedUserId'));
+    }
+
+    public function testRecordDelete(): void
+    {
+        $em = $this->getContainer()->getByClass(EntityManager::class);
+        $fm = $this->getContainer()->getByClass(Manager::class);
+
+        $entity = $em->createEntity(Meeting::ENTITY_TYPE, ['name' => 'Test']);
+
+        $script = "record\\delete('Meeting', '{$entity->getId()}')";
+        $fm->run($script);
+
+        $entity = $em->getEntityById(Meeting::ENTITY_TYPE, $entity->getId());
+
+        $this->assertNull($entity);
     }
 
     public function testPasswordGenerate()
