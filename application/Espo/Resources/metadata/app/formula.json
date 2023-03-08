@@ -74,6 +74,11 @@
             "returnType": "string[]|null"
         },
         {
+            "name": "string\\matchExtract",
+            "insertText": "string\\matchExtract(STRING, REGULAR_EXPRESSION)",
+            "returnType": "string[]|null"
+        },
+        {
             "name": "string\\replace",
             "insertText": "string\\replace(STRING, SEARCH, REPLACE)",
             "returnType": "string"
