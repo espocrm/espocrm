@@ -29,6 +29,8 @@
 
 namespace tests\unit\Espo\ORM;
 
+use Espo\ORM\Query\Part\Join;
+use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\QueryComposer\Part\FunctionConverterFactory;
 use Espo\ORM\QueryComposer\Part\FunctionConverter;
@@ -940,9 +942,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
-    public function testJoinOnlyMiddle()
+    public function testJoinOnlyMiddle1()
     {
-        $sql = $this->query->compose(Select::fromRaw([
+        $sql = $this->query->composeSelect(Select::fromRaw([
             'from' => 'Post',
             'select' => ['id'],
             'leftJoins' => [['tags', null, null, ['onlyMiddle' => true]]]
@@ -954,6 +956,28 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "WHERE post.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testJoinOnlyMiddle2(): void
+    {
+        $sql =
+            "SELECT post.id AS `id` FROM `post` " .
+            "JOIN `post_tag` AS `tags` ON post.id = tags.post_id AND tags.deleted = 0 AND tags.post_id = '1' " .
+            "WHERE post.deleted = 0";
+
+        $query = SelectBuilder::create()
+            ->select('id')
+            ->from('Post')
+            ->join(
+                Join::create('tags')->withOnlyMiddle()
+                    ->withConditions(WhereClause::fromRaw(['tags.postId' => '1']))
+            )
+            ->build();
+
+        $this->assertEquals(
+            $sql,
+            $this->query->composeSelect($query)
+        );
     }
 
     public function testWhereNotValue1()
