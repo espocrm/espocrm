@@ -26,22 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:acl-portal/contact', 'acl-portal', function (Dep) {
+define('crm:acl-portal/contact', ['acl-portal'], function (Dep) {
 
     return Dep.extend({
 
         checkIsOwnContact: function (model) {
             var contactId = this.getUser().get('contactId');
+
             if (!contactId) {
                 return false;
             }
+
             if (contactId === model.id) {
                 return true;
             }
+
             return false;
-        }
-
+        },
     });
-
 });
-

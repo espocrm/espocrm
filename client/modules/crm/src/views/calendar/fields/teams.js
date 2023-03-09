@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/calendar/fields/teams', 'views/fields/link-multiple', function (Dep) {
+define('crm:views/calendar/fields/teams', ['views/fields/link-multiple'], function (Dep) {
 
     return Dep.extend({
 

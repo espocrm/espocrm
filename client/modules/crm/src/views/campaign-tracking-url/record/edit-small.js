@@ -26,10 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/campaign-tracking-url/record/edit-small', 'views/record/edit-small', function (Dep) {
+define('crm:views/campaign-tracking-url/record/edit-small', ['views/record/edit-small'], function (Dep) {
 
     return Dep.extend({
-
     });
 });
 

@@ -26,25 +26,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/contact/fields/account-role', 'views/fields/varchar', function (Dep) {
+define('crm:views/contact/fields/account-role', ['views/fields/varchar'], function (Dep) {
 
     return Dep.extend({
 
         detailTemplate: 'crm:contact/fields/account-role/detail',
-
         listTemplate: 'crm:contact/fields/account-role/detail',
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.listenTo(this.model, 'change:title', function (model, value, o) {
+
+            this.listenTo(this.model, 'change:title', () => {
                 this.model.set('accountRole', this.model.get('title'));
-            }, this);
+            });
         },
 
         getAttributeList: function () {
             var list = Dep.prototype.getAttributeList.call(this);
+
             list.push('title');
             list.push('accountIsInactive');
+
             return list;
         },
 
@@ -54,8 +56,8 @@ Espo.define('crm:views/contact/fields/account-role', 'views/fields/varchar', fun
             if (this.model.has('accountIsInactive')) {
                 data.accountIsInactive = this.model.get('accountIsInactive');
             }
+
             return data;
         }
     });
-
 });

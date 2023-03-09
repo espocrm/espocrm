@@ -26,19 +26,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/document/fields/name', 'views/fields/varchar', function (Dep) {
+define('crm:views/document/fields/name', ['views/fields/varchar'], function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             if (this.model.isNew()) {
-                this.listenTo(this.model, 'change:fileName', function () {
+                this.listenTo(this.model, 'change:fileName', () => {
                     this.model.set('name', this.model.get('fileName'));
-                }, this);
+                });
             }
         },
-
     });
-
 });
