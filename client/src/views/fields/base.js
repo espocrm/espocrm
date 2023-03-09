@@ -1278,7 +1278,7 @@ define('views/fields/base', ['view', 'ui/select'], function (Dep, /** module:ui/
             }
 
             if (!noReset) {
-                this.model.set(this.initialAttributes, {skipReRender: true});
+                this.model.set(this.initialAttributes);
             }
 
             let promise = this.setDetailMode()
