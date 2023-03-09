@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/opportunity/fields/last-stage', 'views/fields/enum', function (Dep) {
+define('crm:views/opportunity/fields/last-stage', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
@@ -36,17 +36,21 @@ Espo.define('crm:views/opportunity/fields/last-stage', 'views/fields/enum', func
 
             this.params.options = [];
 
-            optionList.forEach(function (item) {
-                if (!probabilityMap[item]) return;
-                if (probabilityMap[item] === 100) return;
+            optionList.forEach(item => {
+                if (!probabilityMap[item]) {
+                    return;
+                }
+
+                if (probabilityMap[item] === 100) {
+                    return;
+                }
+
                 this.params.options.push(item);
-            }, this);
+            });
 
             this.params.translation = 'Opportunity.options.stage';
 
             Dep.prototype.setup.call(this);
-        }
-
+        },
     });
-
 });

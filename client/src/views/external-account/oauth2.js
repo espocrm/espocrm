@@ -26,21 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/external-account/oauth2', ['view', 'model'], function (Dep, Model) {
+define('views/external-account/oauth2', ['view', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
         template: 'external-account/oauth2',
 
-        events: {
-
-        },
-
         data: function () {
             return {
                 integration: this.integration,
                 helpText: this.helpText,
-                isConnected: this.isConnected
+                isConnected: this.isConnected,
             };
         },
 
@@ -63,6 +59,7 @@ Espo.define('views/external-account/oauth2', ['view', 'model'], function (Dep, M
             this.id = this.options.id;
 
             this.helpText = false;
+
             if (this.getLanguage().has(this.integration, 'help', 'ExternalAccount')) {
                 this.helpText = this.translate(this.integration, 'help', 'ExternalAccount');
             }
@@ -89,22 +86,23 @@ Espo.define('views/external-account/oauth2', ['view', 'model'], function (Dep, M
 
             this.model.populateDefaults();
 
-            this.listenToOnce(this.model, 'sync', function () {
+            this.listenToOnce(this.model, 'sync', () => {
                 this.createFieldView('bool', 'enabled');
 
                 $.ajax({
                     url: 'ExternalAccount/action/getOAuth2Info?id=' + this.id,
                     dataType: 'json'
-                }).done(function (respose) {
-                    this.clientId = respose.clientId;
-                    this.redirectUri = respose.redirectUri;
-                    if (respose.isConnected) {
+                }).done(response => {
+                    this.clientId = response.clientId;
+                    this.redirectUri = response.redirectUri;
+
+                    if (response.isConnected) {
                         this.isConnected = true;
                     }
-                    this.wait(false);
-                }.bind(this));
 
-            }, this);
+                    this.wait(false);
+                });
+            });
 
             this.model.fetch();
         },
@@ -112,7 +110,9 @@ Espo.define('views/external-account/oauth2', ['view', 'model'], function (Dep, M
         hideField: function (name) {
             this.$el.find('label[data-name="'+name+'"]').addClass('hide');
             this.$el.find('div.field[data-name="'+name+'"]').addClass('hide');
+
             var view = this.getView(name);
+
             if (view) {
                 view.disabled = true;
             }
@@ -121,7 +121,9 @@ Espo.define('views/external-account/oauth2', ['view', 'model'], function (Dep, M
         showField: function (name) {
             this.$el.find('label[data-name="'+name+'"]').removeClass('hide');
             this.$el.find('div.field[data-name="'+name+'"]').removeClass('hide');
+
             var view = this.getView(name);
+
             if (view) {
                 view.disabled = false;
             }
@@ -132,13 +134,13 @@ Espo.define('views/external-account/oauth2', ['view', 'model'], function (Dep, M
                 this.$el.find('.data-panel').addClass('hidden');
             }
 
-            this.listenTo(this.model, 'change:enabled', function () {
+            this.listenTo(this.model, 'change:enabled', () => {
                 if (this.model.get('enabled')) {
                     this.$el.find('.data-panel').removeClass('hidden');
                 } else {
                     this.$el.find('.data-panel').addClass('hidden');
                 }
-            }, this);
+            });
         },
 
         createFieldView: function (type, name, readOnly, params) {
@@ -152,33 +154,37 @@ Espo.define('views/external-account/oauth2', ['view', 'model'], function (Dep, M
                 mode: readOnly ? 'detail' : 'edit',
                 readOnly: readOnly,
             });
+
             this.fieldList.push(name);
         },
 
         save: function () {
-            this.fieldList.forEach(function (field) {
+            this.fieldList.forEach(field => {
                 var view = this.getView(field);
+
                 if (!view.readOnly) {
                     view.fetchToModel();
                 }
-            }, this);
+            });
 
             var notValid = false;
-            this.fieldList.forEach(function (field) {
+
+            this.fieldList.forEach((field) => {
                 notValid = this.getView(field).validate() || notValid;
-            }, this);
+            });
 
             if (notValid) {
                 this.notify('Not valid', 'error');
                 return;
             }
 
-            this.listenToOnce(this.model, 'sync', function () {
+            this.listenToOnce(this.model, 'sync', () => {
                 this.notify('Saved', 'success');
+
                 if (!this.model.get('enabled')) {
                     this.setNotConnected();
                 }
-            }, this);
+            });
 
             this.notify('Saving...');
             this.model.save();
@@ -262,54 +268,60 @@ Espo.define('views/external-account/oauth2', ['view', 'model'], function (Dep, M
                     scope: this.getMetadata().get('integrations.' + this.integration + '.params.scope'),
                     response_type: 'code',
                     access_type: 'offline',
-                    approval_prompt: 'force'
+                    approval_prompt: 'force',
                 }
             }, function (res) {
-                if (res.errror) {
+                if (res.error) {
                     this.notify(false);
+
                     return;
                 }
+
                 if (res.code) {
                     this.$el.find('[data-action="connect"]').addClass('disabled');
+
                     $.ajax({
                         url: 'ExternalAccount/action/authorizationCode',
                         type: 'POST',
                         data: JSON.stringify({
                             'id': this.id,
-                            'code': res.code
+                            'code': res.code,
                         }),
                         dataType: 'json',
-                        error: function () {
+                        error: () => {
                             this.$el.find('[data-action="connect"]').removeClass('disabled');
-                        }.bind(this)
-                    }).done(function (response) {
-                        this.notify(false);
-                        if (response === true) {
-                            this.setConnected();
-                        } else {
-                            this.setNotConneted();
                         }
-                        this.$el.find('[data-action="connect"]').removeClass('disabled');
-                    }.bind(this));
+                    })
+                        .done(response => {
+                            this.notify(false);
+
+                            if (response === true) {
+                                this.setConnected();
+                            } else {
+                                this.setNotConneted();
+                            }
+
+                            this.$el.find('[data-action="connect"]').removeClass('disabled');
+                        });
 
                 } else {
-                    this.notify('Error occured', 'error');
+                    this.notify('Error occurred', 'error');
                 }
             });
         },
 
         setConnected: function () {
             this.isConnected = true;
+
             this.$el.find('[data-action="connect"]').addClass('hidden');;
             this.$el.find('.connected-label').removeClass('hidden');
         },
 
         setNotConnected: function () {
             this.isConnected = false;
+
             this.$el.find('[data-action="connect"]').removeClass('hidden');;
             this.$el.find('.connected-label').addClass('hidden');
         },
-
     });
-
 });

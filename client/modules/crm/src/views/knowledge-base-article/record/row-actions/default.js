@@ -26,14 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/knowledge-base-article/record/row-actions/default', 'views/record/row-actions/default', function (Dep) {
+define('crm:views/knowledge-base-article/record/row-actions/default', ['views/record/row-actions/default'], function (Dep) {
 
     return Dep.extend({
 
         getActionList: function () {
             var actionList = Dep.prototype.getActionList.call(this);
 
-            if (this.options.acl.edit && this.model.collection && this.model.collection.orderBy == 'order' && this.model.collection.order === 'asc') {
+            if (
+                this.options.acl.edit && this.model.collection &&
+                this.model.collection.orderBy === 'order' && this.model.collection.order === 'asc'
+            ) {
                 actionList.push({
                     action: 'moveToTop',
                     label: 'Move to Top',
@@ -41,6 +44,7 @@ Espo.define('crm:views/knowledge-base-article/record/row-actions/default', 'view
                         id: this.model.id
                     }
                 });
+
                 actionList.push({
                     action: 'moveUp',
                     label: 'Move Up',
@@ -48,6 +52,7 @@ Espo.define('crm:views/knowledge-base-article/record/row-actions/default', 'view
                         id: this.model.id
                     }
                 });
+
                 actionList.push({
                     action: 'moveDown',
                     label: 'Move Down',
@@ -55,6 +60,7 @@ Espo.define('crm:views/knowledge-base-article/record/row-actions/default', 'view
                         id: this.model.id
                     }
                 });
+
                 actionList.push({
                     action: 'moveToBottom',
                     label: 'Move to Bottom',
@@ -67,5 +73,4 @@ Espo.define('crm:views/knowledge-base-article/record/row-actions/default', 'view
             return actionList;
         }
     });
-
 });

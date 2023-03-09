@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/lead-capture/record/detail', 'views/record/detail', function (Dep) {
+define('views/lead-capture/record/detail', ['views/record/detail'], function (Dep) {
 
     return Dep.extend({
 
@@ -35,19 +35,17 @@ Espo.define('views/lead-capture/record/detail', 'views/record/detail', function 
 
             this.dropdownItemList.push({
                 'label': 'Generate New API Key',
-                'name': 'generateNewApiKey'
+                'name': 'generateNewApiKey',
             });
         },
 
         actionGenerateNewApiKey: function () {
-            this.confirm(this.translate('confirmation', 'messages'), function () {
-                this.ajaxPostRequest('LeadCapture/action/generateNewApiKey', {
-                    id: this.model.id
-                }).then(function (data) {
-                    this.model.set(data);
-                }.bind(this));
-            }.bind(this));
-        }
-
+            this.confirm(this.translate('confirmation', 'messages'), () => {
+                this.ajaxPostRequest('LeadCapture/action/generateNewApiKey', {id: this.model.id})
+                    .then(data => {
+                        this.model.set(data);
+                    });
+            });
+        },
     });
 });

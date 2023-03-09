@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/system-requirements/index', 'view', function (Dep) {
+define('views/admin/system-requirements/index', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -36,18 +36,20 @@ Espo.define('views/admin/system-requirements/index', 'view', function (Dep) {
             return {
                 phpRequirementList: this.requirementList.php,
                 databaseRequirementList: this.requirementList.database,
-                permissionRequirementList: this.requirementList.permission
+                permissionRequirementList: this.requirementList.permission,
             };
         },
 
         setup: function () {
             this.requirementList = [];
-            this.ajaxGetRequest('Admin/action/systemRequirementList').then(function (requirementList) {
+
+            this.ajaxGetRequest('Admin/action/systemRequirementList').then(requirementList => {
                 this.requirementList = requirementList;
+
                 if (this.isRendered() || this.isBeingRendered()) {
                     this.reRender();
                 }
-            }.bind(this));
+            });
         },
     });
 });

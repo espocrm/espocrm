@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/preferences/fields/default-currency', 'views/fields/enum', function (Dep) {
+define('views/preferences/fields/default-currency', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
@@ -35,9 +35,8 @@ Espo.define('views/preferences/fields/default-currency', 'views/fields/enum', fu
             this.params.options.unshift('');
 
             this.translatedOptions = this.translatedOptions || {};
-            this.translatedOptions[''] = this.translate('Default') + ' (' + this.getConfig().get('defaultCurrency') +')';
+            this.translatedOptions[''] = this.translate('Default') +
+                ' (' + this.getConfig().get('defaultCurrency') +')';
         },
-
     });
-
 });

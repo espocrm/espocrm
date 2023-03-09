@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/opportunity/fields/contact-role', 'views/fields/enum', function (Dep) {
+define('crm:views/opportunity/fields/contact-role', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,8 +37,6 @@ Espo.define('crm:views/opportunity/fields/contact-role', 'views/fields/enum', fu
             this.params.translation = 'Contact.options.opportunityRole';
 
             Dep.prototype.setup.call(this);
-        }
-
+        },
     });
-
 });

@@ -26,10 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/field-manager/fields/entity-list', 'views/fields/entity-type-list', function (Dep) {
+define('views/admin/field-manager/fields/entity-list', ['views/fields/entity-type-list'], function (Dep) {
 
     return Dep.extend({
-
     });
-
 });

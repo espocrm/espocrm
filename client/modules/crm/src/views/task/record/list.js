@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/task/record/list', 'views/record/list', function (Dep) {
+define('crm:views/task/record/list', ['views/record/list'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,25 +34,26 @@ Espo.define('crm:views/task/record/list', 'views/record/list', function (Dep) {
 
         actionSetCompleted: function (data) {
             var id = data.id;
+
             if (!id) {
                 return;
             }
+
             var model = this.collection.get(id);
+
             if (!model) {
                 return;
             }
 
             model.set('status', 'Completed');
 
-            this.listenToOnce(model, 'sync', function () {
+            this.listenToOnce(model, 'sync', () => {
                 this.notify(false);
                 this.collection.fetch();
-            }, this);
+            });
 
             this.notify('Saving...');
             model.save();
-        }
-
+        },
     });
-
 });

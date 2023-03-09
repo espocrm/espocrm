@@ -26,13 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-Espo.define('crm:views/lead/record/detail', 'views/record/detail', function (Dep) {
+define('crm:views/lead/record/detail', ['views/record/detail'], function (Dep) {
 
     return Dep.extend({
 
         selfAssignAction: true,
-
         sideView: 'crm:views/lead/record/detail-side',
 
         setup: function () {
@@ -41,15 +39,15 @@ Espo.define('crm:views/lead/record/detail', 'views/record/detail', function (Dep
 
         getSelfAssignAttributes: function () {
             if (this.model.get('status') === 'New') {
-                if (~(this.getMetadata().get(['entityDefs', 'Lead', 'fields', 'status', 'options']) || []).indexOf('Assigned')) {
+                if (
+                    ~(this.getMetadata().get(['entityDefs', 'Lead', 'fields', 'status', 'options']) || [])
+                        .indexOf('Assigned')
+                ) {
                     return {
-                        'status': 'Assigned'
+                        'status': 'Assigned',
                     };
                 }
             }
-        }
-
+        },
     });
 });
-
-

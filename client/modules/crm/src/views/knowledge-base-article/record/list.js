@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/knowledge-base-article/record/list', 'views/record/list', function (Dep) {
+define('crm:views/knowledge-base-article/record/list', ['views/record/list'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,10 +34,16 @@ Espo.define('crm:views/knowledge-base-article/record/list', 'views/record/list',
 
         actionMoveToTop: function (data) {
             var model = this.collection.get(data.id);
-            if (!model) return;
+
+            if (!model) {
+                return;
+            }
 
             var index = this.collection.indexOf(model);
-            if (index === 0) return;
+
+            if (index === 0) {
+                return;
+            }
 
             this.ajaxPostRequest('knowledgeBaseArticle/action/moveToTop', {
                 id: model.id,
@@ -49,10 +55,16 @@ Espo.define('crm:views/knowledge-base-article/record/list', 'views/record/list',
 
         actionMoveUp: function (data) {
             var model = this.collection.get(data.id);
-            if (!model) return;
+
+            if (!model) {
+                return;
+            }
 
             var index = this.collection.indexOf(model);
-            if (index === 0) return;
+
+            if (index === 0) {
+                return;
+            }
 
             this.ajaxPostRequest('knowledgeBaseArticle/action/moveUp', {
                 id: model.id,
@@ -64,10 +76,16 @@ Espo.define('crm:views/knowledge-base-article/record/list', 'views/record/list',
 
         actionMoveDown: function (data) {
             var model = this.collection.get(data.id);
-            if (!model) return;
+
+            if (!model) {
+                return;
+            }
 
             var index = this.collection.indexOf(model);
-            if ((index === this.collection.length - 1) && (this.collection.length === this.collection.total)) return;
+
+            if ((index === this.collection.length - 1) && (this.collection.length === this.collection.total)) {
+                return;
+            }
 
             this.ajaxPostRequest('knowledgeBaseArticle/action/moveDown', {
                 id: model.id,
@@ -79,10 +97,16 @@ Espo.define('crm:views/knowledge-base-article/record/list', 'views/record/list',
 
         actionMoveToBottom: function (data) {
             var model = this.collection.get(data.id);
-            if (!model) return;
+
+            if (!model) {
+                return;
+            }
 
             var index = this.collection.indexOf(model);
-            if ((index === this.collection.length - 1) && (this.collection.length === this.collection.total)) return;
+
+            if ((index === this.collection.length - 1) && (this.collection.length === this.collection.total)) {
+                return;
+            }
 
             this.ajaxPostRequest('knowledgeBaseArticle/action/moveToBottom', {
                 id: model.id,
@@ -90,8 +114,6 @@ Espo.define('crm:views/knowledge-base-article/record/list', 'views/record/list',
             }).then(function () {
                 this.collection.fetch();
             }.bind(this));
-        }
-
+        },
     });
 });
-

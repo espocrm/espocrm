@@ -25,17 +25,18 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/dashlets/fields/records/sort-by', 'views/fields/enum', function (Dep) {
+
+define('views/dashlets/fields/records/sort-by', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:entityType', function () {
+            this.listenTo(this.model, 'change:entityType', () => {
                 this.setupOptions();
                 this.reRender();
-            }, this);
+            });
         },
 
         setupOptions: function () {
@@ -44,28 +45,32 @@ Espo.define('views/dashlets/fields/records/sort-by', 'views/fields/enum', functi
 
             if (!entityType) {
                 this.params.options = [];
+
                 return;
             }
+
             var fieldDefs = this.getMetadata().get('entityDefs.' + scope + '.fields') || {};
 
-            var orderableFieldList = Object.keys(fieldDefs).filter(function (item) {
-                if (fieldDefs[item].notStorable) {
-                    return false;
-                }
-                return true;
-            }, this).sort(function (v1, v2) {
-                return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
-            }.bind(this));
+            var orderableFieldList = Object.keys(fieldDefs)
+                .filter(item => {
+                    if (fieldDefs[item].notStorable) {
+                        return false;
+                    }
+
+                    return true;
+                })
+                .sort((v1, v2) => {
+                    return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
+                });
 
             var translatedOptions = {};
-            orderableFieldList.forEach(function (item) {
+
+            orderableFieldList.forEach(item => {
                 translatedOptions[item] = this.translate(item, 'fields', scope);
-            }, this);
+            });
 
             this.params.options = orderableFieldList;
             this.translatedOptions = translatedOptions;
-        }
-
+        },
     });
-
 });

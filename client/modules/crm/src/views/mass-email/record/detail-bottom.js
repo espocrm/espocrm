@@ -26,8 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-Espo.define('crm:views/mass-email/record/detail-bottom', 'views/record/detail-bottom', function (Dep) {
+define('crm:views/mass-email/record/detail-bottom', ['views/record/detail-bottom'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,15 +41,12 @@ Espo.define('crm:views/mass-email/record/detail-bottom', 'views/record/detail-bo
                 create: false,
                 layout: 'listForMassEmail',
                 rowActionsView: 'views/record/row-actions/empty',
-                filterList: ['all', 'pending', 'sent', 'failed']
+                filterList: ['all', 'pending', 'sent', 'failed'],
             });
         },
 
         afterRender: function () {
             Dep.prototype.setupPanels.call(this);
-        }
-
+        },
     });
 });
-
-

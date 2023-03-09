@@ -26,17 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/knowledge-base-article/fields/status', 'views/fields/enum', function (Dep) {
+define('crm:views/knowledge-base-article/fields/status', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             var publishDateWasSet = false;
-            this.on('change', function () {
+
+            this.on('change', () => {
                 if (this.model.get('status') === 'Published') {
                     if (!this.model.get('publishDate')) {
                         publishDateWasSet = true;
+
                         this.model.set('publishDate', this.getDateTime().getToday());
                     }
                 } else {
@@ -44,9 +47,7 @@ Espo.define('crm:views/knowledge-base-article/fields/status', 'views/fields/enum
                         this.model.set('publishDate', null);
                     }
                 }
-            }, this);
-        }
-
+            });
+        },
     });
-
 });

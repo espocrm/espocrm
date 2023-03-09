@@ -25,20 +25,36 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/lead-capture/fields/field-list', 'views/fields/multi-enum', function (Dep) {
+
+define('views/lead-capture/fields/field-list', ['views/fields/multi-enum'], function (Dep) {
 
     return Dep.extend({
 
         setupOptions: function () {
             this.params.options = [];
             this.translatedOptions = {};
-            var fields = this.getMetadata().get(['entityDefs', 'Lead', 'fields']) || {};
-            var ignoreFieldList = this.getMetadata().get(['entityDefs', 'LeadCapture', 'fields', 'fieldList', 'ignoreFieldList']) || [];
-            for (var field in fields) {
+
+            var fields = this.getMetadata()
+                .get(['entityDefs', 'Lead', 'fields']) || {};
+
+            var ignoreFieldList = this.getMetadata()
+                .get(['entityDefs', 'LeadCapture', 'fields', 'fieldList', 'ignoreFieldList']) || [];
+
+            for (let field in fields) {
                 var defs = fields[field];
-                if (defs.disabled) continue;
-                if (defs.readOnly) continue;
-                if (~ignoreFieldList.indexOf(field)) continue;
+
+                if (defs.disabled) {
+                    continue;
+                }
+
+                if (defs.readOnly) {
+                    continue;
+                }
+
+                if (~ignoreFieldList.indexOf(field)) {
+                    continue;
+                }
+
                 this.params.options.push(field);
                 this.translatedOptions[field] = this.translate(field, 'fields', 'Lead');
             }
