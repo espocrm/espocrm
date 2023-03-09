@@ -26,23 +26,51 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/foreign-int',
-['views/fields/int', 'helpers/misc/foreign-field'], function (Dep, Helper) {
+define('helpers/misc/foreign-field', [], function () {
 
-    return Dep.extend({
+    /**
+     * @memberOf module:helpers/misc/foreign-field
+     */
+     class Class {
+        /**
+         * @param {module:views/fields/base.Class} view A feild view.
+         */
+        constructor(view) {
+            /**
+             * @private
+             * @type {module:views/fields/base.Class}
+             */
+            this.view = view;
 
-        type: 'foreign',
+            let metadata = view.getMetadata();
+            let model = view.model;
+            let field = view.params.field;
+            let link = view.params.link;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+            let entityType = metadata
+                .get(['entityDefs', model.entityType, 'links', link, 'entity']) ||
+                model.entityType;
 
-            /** @var {module:helpers/misc/foreign-field.Class} */
-            let helper = new Helper(this);
+            let fieldDefs = metadata.get(['entityDefs', entityType, 'fields', field]) || {};
+            let type = fieldDefs.type;
 
-            let foreignParams = helper.getForeignParams();
+            /** @private */
+            this.foreignParams = {};
 
-            this.disableFormatting = foreignParams.disableFormatting;
-        },
-    });
+            view.getFieldManager().getParamList(type).forEach(defs => {
+                let name = defs.name;
+
+                this.foreignParams[name] = fieldDefs[name] || null;
+            });
+        }
+
+        /**
+         * @return {Object.<string, *>}
+         */
+        getForeignParams() {
+            return Espo.Utils.cloneDeep(this.foreignParams);
+        }
+    }
+
+    return Class;
 });
-
