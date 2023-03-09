@@ -138,7 +138,7 @@ define('views/main', ['view'], function (Dep) {
 
             this.menu = Espo.Utils.cloneDeep(this.menu);
 
-            var globalMenu = {};
+            let globalMenu = {};
 
             if (this.name) {
                 globalMenu = Espo.Utils.cloneDeep(
@@ -237,7 +237,7 @@ define('views/main', ['view'], function (Dep) {
                 return {};
             }
 
-            var menu = {};
+            let menu = {};
 
             if (this.menu) {
                 this.headerActionItemTypeList.forEach(type => {
@@ -348,7 +348,7 @@ define('views/main', ['view'], function (Dep) {
          * @param {Object} data
          */
         actionShowModal: function (data) {
-            var view = data.view;
+            let view = data.view;
 
             if (!view) {
                 return;
@@ -384,10 +384,10 @@ define('views/main', ['view'], function (Dep) {
             if (item) {
                 item.name = item.name || item.action;
 
-                var name = item.name;
+                let name = item.name;
 
                 if (name) {
-                    var index = -1;
+                    let index = -1;
 
                     this.menu[type].forEach((data, i) => {
                         data = data || {};
@@ -403,7 +403,7 @@ define('views/main', ['view'], function (Dep) {
                 }
             }
 
-            var method = 'push';
+            let method = 'push';
 
             if (toBeginning) {
                 method  = 'unshift';
@@ -433,8 +433,8 @@ define('views/main', ['view'], function (Dep) {
          * @param {boolean} [doNotReRender] Skip re-render.
          */
         removeMenuItem: function (name, doNotReRender) {
-            var index = -1;
-            var type = false;
+            let index = -1;
+            let type = false;
 
             this.headerActionItemTypeList.forEach(t => {
                 (this.menu[t] || []).forEach((item, i) => {
@@ -507,11 +507,11 @@ define('views/main', ['view'], function (Dep) {
             e.stopPropagation();
 
             this.getRouter().checkConfirmLeaveOut(() => {
-                var options = {
+                let options = {
                     isReturn: true,
                 };
 
-                var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+                let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 
                 this.getRouter().navigate(rootUrl, {trigger: false});
                 this.getRouter().dispatch(this.scope, null, options);
@@ -579,7 +579,7 @@ define('views/main', ['view'], function (Dep) {
          * @returns {boolean}
          */
         hasMenuVisibleDropdownItems: function () {
-            var hasItems = false;
+            let hasItems = false;
 
             (this.menu.dropdown || []).forEach(item => {
                 if (!item.hidden) {
