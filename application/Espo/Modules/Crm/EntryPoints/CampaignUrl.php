@@ -204,16 +204,6 @@ class CampaignUrl implements EntryPoint
         $params = ActionRenderer\Params::create('crm:controllers/tracking-url', 'displayMessage', $data);
 
         $this->actionRenderer->write($response, $params);
-
-        /*$runScript = "
-            Espo.require('crm:controllers/tracking-url', function (Controller) {
-                var controller = new Controller(app.baseController.params, app.getControllerInjection());
-                controller.masterView = app.masterView;
-                controller.doAction('displayMessage', " . json_encode($data) . ");
-            });
-        ";
-
-        $this->clientManager->display($runScript);*/
     }
 
     private function getEmailAddressRepository(): EmailAddressRepository
