@@ -33,25 +33,19 @@ define('crm:views/task/detail', ['views/detail'], function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            if (!~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
-                if (this.getAcl().checkModel(this.model, 'edit')) {
-                    this.addMenuItem('buttons', {
-                        'label': 'Complete',
-                        'action': 'setCompletedMain',
-                        'iconHtml': '<span class="fas fa-check fa-sm"></span>',
-                        'acl': 'edit',
-                    }, true);
-                }
+            this.controlCompleteButton();
+            this.listenTo(this.model, 'sync', () => this.controlCompleteButton());
+        },
 
-                this.listenTo(this.model, 'sync', () => {
-                    if (~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
-                        this.hideHeaderActionItem('setCompletedMain');
-                    }
-                });
+        controlCompleteButton: function () {
+            let status = this.model.get('status');
+
+            if (['Completed', 'Canceled'].includes(status)) {
+                this.hideHeaderActionItem('setCompletedMain');
             }
         },
 
-        actionSetCompletedMain: function (data) {
+        actionSetCompletedMain: function () {
             this.model
                 .save({status: 'Completed'}, {patch: true})
                 .then(() => {
