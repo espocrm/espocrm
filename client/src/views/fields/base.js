@@ -827,6 +827,10 @@ define('views/fields/base', ['view', 'ui/select'], function (Dep, /** module:ui/
                             return;
                         }
 
+                        if (options.skipReRenderInEditMode && this.isEditMode()) {
+                            return;
+                        }
+
                         if (!options.skipReRender) {
                             this.reRender();
                         }
@@ -1278,7 +1282,7 @@ define('views/fields/base', ['view', 'ui/select'], function (Dep, /** module:ui/
             }
 
             if (!noReset) {
-                this.model.set(this.initialAttributes);
+                this.model.set(this.initialAttributes, {skipReRenderInEditMode: true});
             }
 
             let promise = this.setDetailMode()
