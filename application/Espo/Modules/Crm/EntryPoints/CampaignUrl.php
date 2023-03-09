@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
+use Espo\Core\Utils\Client\ActionRenderer;
 use Espo\Entities\EmailAddress;
 use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Modules\Crm\Tools\Campaign\LogService;
@@ -43,13 +44,9 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\HookManager;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\ClientManager;
 use Espo\Core\Utils\Hasher;
 use Espo\Core\Utils\Metadata;
 
-/**
- * @todo Use ActionRenderer.
- */
 class CampaignUrl implements EntryPoint
 {
     use NoAuth;
@@ -59,8 +56,8 @@ class CampaignUrl implements EntryPoint
         private LogService $service,
         private Hasher $hasher,
         private HookManager $hookManager,
-        private ClientManager $clientManager,
-        private Metadata $metadata
+        private Metadata $metadata,
+        private ActionRenderer $actionRenderer
     ) {}
 
     /**
@@ -108,7 +105,7 @@ class CampaignUrl implements EntryPoint
         }
 
         if ($trackingUrl->getAction() === CampaignTrackingUrl::ACTION_SHOW_MESSAGE) {
-            $this->displayMessage($trackingUrl->getMessage());
+            $this->displayMessage($response, $trackingUrl->getMessage());
 
             return;
         }
@@ -196,7 +193,7 @@ class CampaignUrl implements EntryPoint
         ]);
     }
 
-    private function displayMessage(?string $message): void
+    private function displayMessage(Response $response, ?string $message): void
     {
         $data = [
             'message' => $message ?? '',
@@ -204,7 +201,11 @@ class CampaignUrl implements EntryPoint
             'template' => $this->metadata->get(['clientDefs', 'Campaign', 'trackingUrlMessageTemplate']),
         ];
 
-        $runScript = "
+        $params = ActionRenderer\Params::create('crm:controllers/tracking-url', 'displayMessage', $data);
+
+        $this->actionRenderer->write($response, $params);
+
+        /*$runScript = "
             Espo.require('crm:controllers/tracking-url', function (Controller) {
                 var controller = new Controller(app.baseController.params, app.getControllerInjection());
                 controller.masterView = app.masterView;
@@ -212,7 +213,7 @@ class CampaignUrl implements EntryPoint
             });
         ";
 
-        $this->clientManager->display($runScript);
+        $this->clientManager->display($runScript);*/
     }
 
     private function getEmailAddressRepository(): EmailAddressRepository

@@ -30,12 +30,14 @@
 namespace Espo\Modules\Crm\EntryPoints;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Client\ActionRenderer;
 use Espo\Entities\EmailAddress;
 use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Modules\Crm\Entities\EmailQueueItem;
 use Espo\Modules\Crm\Entities\MassEmail;
 use Espo\Modules\Crm\Entities\TargetList;
 use Espo\Modules\Crm\Tools\Campaign\LogService;
+use Espo\ORM\Collection;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Modules\Crm\Tools\MassEmail\Util as MassEmailUtil;
 
@@ -47,25 +49,21 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\HookManager;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\ClientManager;
 use Espo\Core\Utils\Hasher;
 use Espo\Core\Utils\Metadata;
 
-/**
- * @todo Use ActionRenderer.
- */
 class Unsubscribe implements EntryPoint
 {
     use NoAuth;
 
     public function __construct(
         private EntityManager $entityManager,
-        private ClientManager $clientManager,
         private HookManager $hookManager,
         private Metadata $metadata,
         private Hasher $hasher,
         private LogService $service,
-        private MassEmailUtil $util
+        private MassEmailUtil $util,
+        private ActionRenderer $actionRenderer
     ) {}
 
     /**
@@ -80,7 +78,7 @@ class Unsubscribe implements EntryPoint
         $hash = $request->getQueryParam('hash') ?? null;
 
         if ($emailAddress && $hash) {
-            $this->processWithHash($emailAddress, $hash);
+            $this->processWithHash($response, $emailAddress, $hash);
 
             return;
         }
@@ -99,7 +97,6 @@ class Unsubscribe implements EntryPoint
         }
 
         $campaign = null;
-        $campaignId = null;
         $target = null;
         $massEmail = null;
         $massEmailId = $queueItem->getMassEmailId();
@@ -126,7 +123,7 @@ class Unsubscribe implements EntryPoint
                 throw new NotFound();
             }
 
-            if ($massEmail->get('optOutEntirely')) {
+            if ($massEmail->optOutEntirely()) {
                 $emailAddress = $target->get('emailAddress');
 
                 if ($emailAddress) {
@@ -141,36 +138,41 @@ class Unsubscribe implements EntryPoint
 
             $link = $this->util->getLinkByEntityType($target->getEntityType());
 
+            /** @var Collection<TargetList> $targetListList */
             $targetListList = $this->entityManager
                 ->getRDBRepository(MassEmail::ENTITY_TYPE)
                 ->getRelation($massEmail, 'targetLists')
                 ->find();
 
             foreach ($targetListList as $targetList) {
-                $optedOutResult = $this->entityManager
+                $relation = $this->entityManager
                     ->getRDBRepository(TargetList::ENTITY_TYPE)
-                    ->updateRelation($targetList, $link, $target->getId(), ['optedOut' => true]);
+                    ->getRelation($targetList, $link);
 
-                if ($optedOutResult) {
-                    $hookData = [
-                       'link' => $link,
-                       'targetId' => $targetId,
-                       'targetType' => $targetType,
-                    ];
-
-                    $this->hookManager->process(
-                        TargetList::ENTITY_TYPE,
-                        'afterOptOut',
-                        $targetList,
-                        [],
-                        $hookData
-                    );
+                if ($relation->getColumn($target, 'optedOut')) {
+                    continue;
                 }
+
+                $relation->updateColumnsById($target->getId(), ['optedOut' => true]);
+
+                $hookData = [
+                   'link' => $link,
+                   'targetId' => $targetId,
+                   'targetType' => $targetType,
+                ];
+
+                $this->hookManager->process(
+                    TargetList::ENTITY_TYPE,
+                    'afterOptOut',
+                    $targetList,
+                    [],
+                    $hookData
+                );
             }
 
             $this->hookManager->process($target->getEntityType(), 'afterOptOut', $target, [], []);
 
-            $this->display(['queueItemId' => $queueItemId]);
+            $this->display($response, ['queueItemId' => $queueItemId]);
         }
 
         if ($campaign && $target) {
@@ -179,9 +181,9 @@ class Unsubscribe implements EntryPoint
     }
 
     /**
-     * @param array<string,mixed> $actionData
+     * @param array<string, mixed> $actionData
      */
-    protected function display(array $actionData): void
+    protected function display(Response $response, array $actionData): void
     {
         $data = [
             'actionData' => $actionData,
@@ -189,21 +191,15 @@ class Unsubscribe implements EntryPoint
             'template' => $this->metadata->get(['clientDefs', 'Campaign', 'unsubscribeTemplate']),
         ];
 
-        $runScript = "
-            Espo.require('crm:controllers/unsubscribe', function (Controller) {
-                var controller = new Controller(app.baseController.params, app.getControllerInjection());
-                controller.masterView = app.masterView;
-                controller.doAction('unsubscribe', ".json_encode($data).");
-            });
-        ";
+        $params = ActionRenderer\Params::create('crm:controllers/unsubscribe', 'unsubscribe', $data);
 
-        $this->clientManager->display($runScript);
+        $this->actionRenderer->write($response, $params);
     }
 
     /**
      * @throws NotFound
      */
-    protected function processWithHash(string $emailAddress, string $hash): void
+    protected function processWithHash(Response $response, string $emailAddress, string $hash): void
     {
         $hash2 = $this->hasher->hash($emailAddress);
 
@@ -231,7 +227,7 @@ class Unsubscribe implements EntryPoint
             }
         }
 
-        $this->display([
+        $this->display($response,[
             'emailAddress' => $emailAddress,
             'hash' => $hash,
         ]);
