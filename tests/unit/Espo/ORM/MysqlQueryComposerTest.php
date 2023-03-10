@@ -1136,6 +1136,58 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testSelectWithSubquery5()
+    {
+        $subQuery = SelectBuilder::create()
+            ->from('Post')
+            ->select('id')
+            ->where(['name' => 'test'])
+            ->build();
+
+        $sql = $this->query->composeSelect(
+            SelectBuilder::create()
+                ->from('Post')
+                ->select('id')
+                ->where(
+                    Comparison::equal(Expression::value('1'), $subQuery)
+                )
+                ->build()
+        );
+
+        $expectedSql =
+            "SELECT post.id AS `id` FROM `post` ".
+            "WHERE '1' = (SELECT post.id AS `id` FROM `post` ".
+            "WHERE post.name = 'test' AND post.deleted = 0) AND post.deleted = 0";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectWithSubquery6()
+    {
+        $subQuery = SelectBuilder::create()
+            ->from('Post')
+            ->select('id')
+            ->where(['name' => 'test'])
+            ->build();
+
+        $sql = $this->query->composeSelect(
+            SelectBuilder::create()
+                ->from('Post')
+                ->select('id')
+                ->where(
+                    Comparison::greaterOrEqual(Expression::value('1'), $subQuery)
+                )
+                ->build()
+        );
+
+        $expectedSql =
+            "SELECT post.id AS `id` FROM `post` ".
+            "WHERE '1' >= (SELECT post.id AS `id` FROM `post` ".
+            "WHERE post.name = 'test' AND post.deleted = 0) AND post.deleted = 0";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testSelectExists1(): void
     {
         $expectedSql =

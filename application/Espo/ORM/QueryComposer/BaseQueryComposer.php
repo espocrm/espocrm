@@ -2462,6 +2462,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return $this->quote(false);
         }
 
+        // @todo Operators (<s, >s, <=s, =>s) producing 'operator ANY (sub-query)'.
         if ($operatorOrm === '=s' || $operatorOrm === '!=s') {
             if ($value instanceof Select) {
                 $subSql = $this->composeSelect($value);
@@ -2492,6 +2493,16 @@ abstract class BaseQueryComposer implements QueryComposer
             $subSql = $this->createSelectQueryInternal($subQuerySelectParams);
 
             return "{$leftPart} {$operator} ({$subSql})";
+        }
+
+        if ($value instanceof Select) {
+            if ($operatorOrm === '*' || $operatorOrm === '!*') {
+                throw new RuntimeException("LIKE operator is not compatible with sub-query.");
+            }
+
+            $subQueryPart = $this->composeSelect($value);
+
+            return "{$leftPart} {$operator} ({$subQueryPart})";
         }
 
         if (is_array($value)) {

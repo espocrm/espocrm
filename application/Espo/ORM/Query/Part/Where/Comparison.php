@@ -81,11 +81,14 @@ class Comparison implements WhereItem
      * Create '=' comparison.
      *
      * @param Expression $argument1 An expression.
-     * @param Expression|string|int|float|bool|null $argument2 A value (if scalar) or expression.
+     * @param Expression|Select|string|int|float|bool|null $argument2 A scalar, expression or sub-query.
      * @return self
      */
-    public static function equal(Expression $argument1, Expression|string|int|float|bool|null $argument2): self
-    {
+    public static function equal(
+        Expression $argument1,
+        Expression|Select|string|int|float|bool|null $argument2
+    ): self {
+
         return self::createComparison(self::OPERATOR_EQUAL, $argument1, $argument2);
     }
 
@@ -93,11 +96,14 @@ class Comparison implements WhereItem
      * Create '!=' comparison.
      *
      * @param Expression $argument1 An expression.
-     * @param Expression|string|int|float|bool|null $argument2 A value (if scalar) or expression.
+     * @param Expression|Select|string|int|float|bool|null $argument2 A scalar, expression or sub-query.
      * @return self
      */
-    public static function notEqual(Expression $argument1, Expression|string|int|float|bool|null $argument2): self
-    {
+    public static function notEqual(
+        Expression $argument1,
+        Expression|Select|string|int|float|bool|null $argument2
+    ): self {
+
         return self::createComparison(self::OPERATOR_NOT_EQUAL, $argument1, $argument2);
     }
 
@@ -129,10 +135,10 @@ class Comparison implements WhereItem
      * Create '>' comparison.
      *
      * @param Expression $argument1 An expression.
-     * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
+     * @param Expression|Select|string|int|float $argument2 A scalar, expression or sub-query.
      * @return self
      */
-    public static function greater(Expression $argument1, Expression|string|int|float $argument2): self
+    public static function greater(Expression $argument1, Expression|Select|string|int|float $argument2): self
     {
         return self::createComparison(self::OPERATOR_GREATER, $argument1, $argument2);
     }
@@ -141,10 +147,10 @@ class Comparison implements WhereItem
      * Create '>=' comparison.
      *
      * @param Expression $argument1 An expression.
-     * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
+     * @param Expression|Select|string|int|float $argument2 A scalar, expression or sub-query.
      * @return self
      */
-    public static function greaterOrEqual(Expression $argument1, Expression|string|int|float $argument2): self
+    public static function greaterOrEqual(Expression $argument1, Expression|Select|string|int|float $argument2): self
     {
         return self::createComparison(self::OPERATOR_GREATER_OR_EQUAL, $argument1, $argument2);
     }
@@ -153,10 +159,10 @@ class Comparison implements WhereItem
      * Create '<' comparison.
      *
      * @param Expression $argument1 An expression.
-     * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
+     * @param Expression|Select|string|int|float $argument2 A scalar, expression or sub-query.
      * @return self
      */
-    public static function less(Expression $argument1, Expression|string|int|float $argument2): self
+    public static function less(Expression $argument1, Expression|Select|string|int|float $argument2): self
     {
         return self::createComparison(self::OPERATOR_LESS, $argument1, $argument2);
     }
@@ -165,10 +171,10 @@ class Comparison implements WhereItem
      * Create '<=' comparison.
      *
      * @param Expression $argument1 An expression.
-     * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
+     * @param Expression|Select|string|int|float $argument2 A scalar, expression or sub-query.
      * @return self
      */
-    public static function lessOrEqual(Expression $argument1, Expression|string|int|float $argument2): self
+    public static function lessOrEqual(Expression $argument1, Expression|Select|string|int|float $argument2): self
     {
         return self::createComparison(self::OPERATOR_LESS_OR_EQUAL, $argument1, $argument2);
     }
@@ -208,7 +214,7 @@ class Comparison implements WhereItem
     private static function createComparison(
         string $operator,
         Expression|string $argument1,
-        Expression|string|int|float|bool|null $argument2
+        Expression|Select|string|int|float|bool|null $argument2
     ): self {
 
         if (is_string($argument1)) {
