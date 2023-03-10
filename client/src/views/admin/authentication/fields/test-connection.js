@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/authentication/fields/test-connection', 'views/fields/base', function (Dep) {
+define('views/admin/authentication/fields/test-connection', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
-        _template: `
+        templateContent: `
             <button
                 class="btn btn-default"
                 data-action="testConnection"
@@ -48,7 +48,7 @@ define('views/admin/authentication/fields/test-connection', 'views/fields/base',
         },
 
         getConnectionData: function () {
-            var data = {
+            return {
                 'host': this.model.get('ldapHost'),
                 'port': this.model.get('ldapPort'),
                 'useSsl': this.model.get('ldapSecurity'),
@@ -58,30 +58,30 @@ define('views/admin/authentication/fields/test-connection', 'views/fields/base',
                 'bindRequiresDn': this.model.get('ldapBindRequiresDn'),
                 'accountDomainName': this.model.get('ldapAccountDomainName'),
                 'accountDomainNameShort': this.model.get('ldapAccountDomainNameShort'),
-                'accountCanonicalForm': this.model.get('ldapAccountCanonicalForm')
+                'accountCanonicalForm': this.model.get('ldapAccountCanonicalForm'),
             };
-
-            return data;
         },
 
         testConnection: function () {
-            var data = this.getConnectionData();
+            let data = this.getConnectionData();
 
             this.$el.find('button').prop('disabled', true);
 
             this.notify('Connecting', null, null, 'Settings');
 
-            $.ajax({
-                url: 'Ldap/action/testConnection',
-                type: 'POST',
-                data: JSON.stringify(data),
-                error: (xhr, status) => {
-                    var statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
+            Espo.Ajax
+                .postRequest('Ldap/action/testConnection', data)
+                .then(() => {
+                    this.$el.find('button').prop('disabled', false);
 
+                    Espo.Ui.success(this.translate('ldapTestConnection', 'messages', 'Settings'));
+                })
+                .catch(xhr => {
+                    let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
                     statusReason = statusReason.replace(/ $/, '');
                     statusReason = statusReason.replace(/,$/, '');
 
-                    var msg = this.translate('Error') + ' ' + xhr.status;
+                    let msg = this.translate('Error') + ' ' + xhr.status;
 
                     if (statusReason) {
                         msg += ': ' + statusReason;
@@ -94,14 +94,7 @@ define('views/admin/authentication/fields/test-connection', 'views/fields/base',
                     xhr.errorIsHandled = true;
 
                     this.$el.find('button').prop('disabled', false);
-                }
-            }).then(() => {
-                this.$el.find('button').prop('disabled', false);
-
-                Espo.Ui.success(this.translate('ldapTestConnection', 'messages', 'Settings'));
-            });
-
+                });
         },
-
     });
 });

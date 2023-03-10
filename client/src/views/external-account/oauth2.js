@@ -89,19 +89,17 @@ define('views/external-account/oauth2', ['view', 'model'], function (Dep, Model)
             this.listenToOnce(this.model, 'sync', () => {
                 this.createFieldView('bool', 'enabled');
 
-                $.ajax({
-                    url: 'ExternalAccount/action/getOAuth2Info?id=' + this.id,
-                    dataType: 'json'
-                }).done(response => {
-                    this.clientId = response.clientId;
-                    this.redirectUri = response.redirectUri;
+                Espo.Ajax.getRequest('ExternalAccount/action/getOAuth2Info?id=' + this.id)
+                    .then(response => {
+                        this.clientId = response.clientId;
+                        this.redirectUri = response.redirectUri;
 
-                    if (response.isConnected) {
-                        this.isConnected = true;
-                    }
+                        if (response.isConnected) {
+                            this.isConnected = true;
+                        }
 
-                    this.wait(false);
-                });
+                        this.wait(false);
+                    });
             });
 
             this.model.fetch();
@@ -280,20 +278,13 @@ define('views/external-account/oauth2', ['view', 'model'], function (Dep, Model)
                 if (res.code) {
                     this.$el.find('[data-action="connect"]').addClass('disabled');
 
-                    $.ajax({
-                        url: 'ExternalAccount/action/authorizationCode',
-                        type: 'POST',
-                        data: JSON.stringify({
-                            'id': this.id,
-                            'code': res.code,
-                        }),
-                        dataType: 'json',
-                        error: () => {
-                            this.$el.find('[data-action="connect"]').removeClass('disabled');
-                        }
-                    })
-                        .done(response => {
-                            this.notify(false);
+                    Espo.Ajax
+                        .postRequest('ExternalAccount/action/authorizationCode', {
+                            id: this.id,
+                            code: res.code,
+                        })
+                        .then(response => {
+                            Espo.Ui.notify(false);
 
                             if (response === true) {
                                 this.setConnected();
@@ -302,8 +293,10 @@ define('views/external-account/oauth2', ['view', 'model'], function (Dep, Model)
                             }
 
                             this.$el.find('[data-action="connect"]').removeClass('disabled');
+                        })
+                        .catch(() => {
+                            this.$el.find('[data-action="connect"]').removeClass('disabled');
                         });
-
                 } else {
                     this.notify('Error occurred', 'error');
                 }
