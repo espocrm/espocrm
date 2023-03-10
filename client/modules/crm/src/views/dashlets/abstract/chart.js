@@ -30,26 +30,18 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
 
     return Dep.extend({
 
-        _template: '<div class="chart-container"></div><div class="legend-container"></div>',
+        templateContent: '<div class="chart-container"></div><div class="legend-container"></div>',
 
         decimalMark: '.',
-
         thousandSeparator: ',',
 
         defaultColorList: ['#6FA8D6', '#4E6CAD', '#EDC555', '#ED8F42', '#DE6666', '#7CC4A4', '#8A7CC2', '#D4729B'],
-
         successColor: '#85b75f',
-
         gridColor: '#ddd',
-
         tickColor: '#e8eced',
-
         textColor: '#333',
-
         hoverColor: '#FF3F19',
-
         legendColumnWidth: 110,
-
         legendColumnNumber: 6,
 
         labelFormatter: function (v) {
@@ -111,10 +103,11 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
 
         formatNumber: function (value, isCurrency, useSiMultiplier) {
             if (value !== null) {
-                var maxDecimalPlaces = 2;
+                let maxDecimalPlaces = 2;
                 var currencyDecimalPlaces = this.getConfig().get('currencyDecimalPlaces');
 
                 var siSuffix = '';
+
                 if (useSiMultiplier) {
                     if (value >= 1000000) {
                         siSuffix = 'M';
@@ -129,15 +122,18 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
                     if (currencyDecimalPlaces === 0) {
                         value = Math.round(value);
                     } else if (currencyDecimalPlaces) {
-                        value = Math.round(value * Math.pow(10, currencyDecimalPlaces)) / (Math.pow(10, currencyDecimalPlaces));
+                        value = Math.round(value * Math.pow(10, currencyDecimalPlaces)) /
+                            (Math.pow(10, currencyDecimalPlaces));
                     } else {
                         value = Math.round(value * Math.pow(10, maxDecimalPlaces)) / (Math.pow(10, maxDecimalPlaces));
                     }
                 } else {
-                    var maxDecimalPlaces = 4;
+                    let maxDecimalPlaces = 4;
+
                     if (useSiMultiplier) {
                         maxDecimalPlaces = 2;
                     }
+
                     value = Math.round(value * Math.pow(10, maxDecimalPlaces)) / (Math.pow(10, maxDecimalPlaces));
                 }
 
@@ -147,8 +143,10 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
                 if (isCurrency) {
                     if (currencyDecimalPlaces === 0) {
                         delete parts[1];
-                    } else if (currencyDecimalPlaces) {
+                    }
+                    else if (currencyDecimalPlaces) {
                         var decimalPartLength = 0;
+
                         if (parts.length > 1) {
                             decimalPartLength = parts[1].length;
                         } else {
@@ -164,15 +162,16 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
                     }
                 }
 
-                var value = parts.join(this.decimalMark) + siSuffix;
-                return value;
+                return parts.join(this.decimalMark) + siSuffix;
             }
+
             return '';
         },
 
         getLegendColumnNumber: function () {
             var width = this.$el.closest('.panel-body').width();
             var legendColumnNumber = Math.floor(width / this.legendColumnWidth);
+
             return legendColumnNumber || this.legendColumnNumber;
         },
 
@@ -186,25 +185,28 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
             if (lineNumber > 0) {
                 legendHeight = lineHeight * lineNumber + paddingTopHeight;
             }
+
             return legendHeight;
         },
 
         adjustContainer: function () {
             var legendHeight = this.getLegendHeight();
             var heightCss = 'calc(100% - ' + legendHeight.toString() + 'px)';
+
             this.$container.css('height', heightCss);
         },
 
         adjustLegend: function () {
             var number = this.getLegendColumnNumber();
-            if (!number) return;
+
+            if (!number) {
+                return;
+            }
 
             var dashletChartLegendBoxWidth = this.getThemeManager().getParam('dashletChartLegendBoxWidth') || 21;
 
             var containerWidth = this.$legendContainer.width();
-
             var width = Math.floor((containerWidth - dashletChartLegendBoxWidth * number) / number);
-
             var columnNumber = this.$legendContainer.find('> table tr:first-child > td').length / 2;
 
             var tableWidth = (width + dashletChartLegendBoxWidth) * columnNumber;
@@ -216,15 +218,15 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
             this.$legendContainer.find('td.flotr-legend-label').attr('width', width);
             this.$legendContainer.find('td.flotr-legend-color-box').attr('width', dashletChartLegendBoxWidth);
 
-            this.$legendContainer.find('td.flotr-legend-label > span').each(function(i, span) {
+            this.$legendContainer.find('td.flotr-legend-label > span').each((i, span) => {
                 span.setAttribute('title', span.textContent);
-            }.bind(this));
+            });
         },
 
         afterRender: function () {
             this.$el.closest('.panel-body').css({
                 'overflow-y': 'visible',
-                'overflow-x': 'visible'
+                'overflow-x': 'visible',
             });
 
             this.$legendContainer = this.$el.find('.legend-container');
@@ -237,13 +239,17 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
 
                 if (this.isNoData()) {
                     this.showNoData();
+
                     return;
                 }
 
-                setTimeout(function () {
-                    if (!this.$container.length || !this.$container.is(":visible")) return;
+                setTimeout(() => {
+                    if (!this.$container.length || !this.$container.is(":visible")) {
+                        return;
+                    }
+
                     this.draw();
-                }.bind(this), 1);
+                }, 1);
             });
         },
 
@@ -258,13 +264,10 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
         },
 
         fetch: function (callback) {
-            $.ajax({
-                type: 'get',
-                url: this.url(),
-                success: function (response) {
+            Espo.Ajax.getRequest(this.url())
+                .then(response => {
                     callback.call(this, response);
-                }.bind(this)
-            });
+                });
         },
 
         getDateFilter: function () {
@@ -278,11 +281,12 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
 
             var $text = $('<span>').html(this.translate('No Data')).addClass('text-muted');
 
-            var $div = $('<div>').css('text-align', 'center')
-                                 .css('font-size', textFontSize + 'px')
-                                 .css('display', 'table')
-                                 .css('width', '100%')
-                                 .css('height', '100%');
+            var $div = $('<div>')
+                .css('text-align', 'center')
+                 .css('font-size', textFontSize + 'px')
+                 .css('display', 'table')
+                 .css('width', '100%')
+                 .css('height', '100%');
 
             $text
                 .css('display', 'table-cell')
@@ -293,7 +297,6 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
             $div.append($text);
 
             this.$container.append($div);
-        }
-
+        },
     });
 });

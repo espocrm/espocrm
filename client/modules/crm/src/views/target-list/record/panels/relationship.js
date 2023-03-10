@@ -34,39 +34,35 @@ define('crm:views/target-list/record/panels/relationship', ['views/record/panels
 
         actionOptOut: function (data) {
             this.confirm(this.translate('confirmation', 'messages'), () => {
-                $.ajax({
-                    url: 'TargetList/action/optOut',
-                    type: 'POST',
-                    data: JSON.stringify({
+                Espo.Ajax
+                    .postRequest('TargetList/action/optOut', {
                         id: this.model.id,
                         targetId: data.id,
                         targetType: data.type,
                     })
-                }).done(() => {
-                    this.collection.fetch();
-                    Espo.Ui.success(this.translate('Done'));
-                    this.model.trigger('opt-out');
-                });
+                    .then(() => {
+                        this.collection.fetch();
+                        Espo.Ui.success(this.translate('Done'));
+                        this.model.trigger('opt-out');
+                    });
             });
         },
 
         actionCancelOptOut: function (data) {
             this.confirm(this.translate('confirmation', 'messages'), () => {
-                $.ajax({
-                    url: 'TargetList/action/cancelOptOut',
-                    type: 'POST',
-                    data: JSON.stringify({
+                Espo.Ajax
+                    .postRequest('TargetList/action/cancelOptOut', {
                         id: this.model.id,
                         targetId: data.id,
                         targetType: data.type,
                     })
-                }).done(() => {
-                    this.collection.fetch();
-                    Espo.Ui.success(this.translate('Done'));
+                    .then(() => {
+                        this.collection.fetch();
+                        Espo.Ui.success(this.translate('Done'));
 
-                    this.collection.fetch();
-                    this.model.trigger('cancel-opt-out');
-                });
+                        this.collection.fetch();
+                        this.model.trigger('cancel-opt-out');
+                    });
             });
         },
     });
