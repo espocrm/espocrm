@@ -50,11 +50,11 @@ class IsOfType implements ItemConverter
                     User::TYPE_SYSTEM,
                 ],
             ]),
+            User::TYPE_PORTAL => WhereClause::fromRaw([
+                'type' => User::TYPE_PORTAL,
+            ]),
             User::TYPE_API => WhereClause::fromRaw([
                 'type' => User::TYPE_API,
-            ]),
-            User::TYPE_SYSTEM => WhereClause::fromRaw([
-                'type' => User::TYPE_SYSTEM,
             ]),
             default => WhereClause::fromRaw(['id' => null]),
         };
