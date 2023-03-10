@@ -34,6 +34,7 @@ use Espo\ORM\EntityFactory;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Metadata;
 use Espo\ORM\Mapper\Helper;
+use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Query;
 use Espo\ORM\Query\SelectingQuery;
 use Espo\ORM\Query\Select;
@@ -2505,6 +2506,12 @@ abstract class BaseQueryComposer implements QueryComposer
             return "{$leftPart} {$operator} ({$subQueryPart})";
         }
 
+        if ($value instanceof Expression) {
+            $isNotValue = true;
+
+            $value = $value->getValue();
+        }
+
         if (is_array($value)) {
             $valuePartList = $value;
 
@@ -2983,6 +2990,12 @@ abstract class BaseQueryComposer implements QueryComposer
             }
 
             $sql .= $this->quoteColumn("{$leftAlias}.{$column}");
+        }
+
+        if ($right instanceof Expression) {
+            $isNotValue = true;
+
+            $right = $right->getValue();
         }
 
         if (is_array($right)) {

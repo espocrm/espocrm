@@ -913,7 +913,12 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Post',
             'select' => ['id', 'name'],
-            'leftJoins' => [['NoteTable', 'note', ['note.parentId=:' => 'post.id', 'note.parentType' => 'Post']]]
+            'leftJoins' => [[
+                'NoteTable', 'note', [
+                    'note.parentId' => Expression::column('post.id'),
+                    'note.parentType' => 'Post',
+                ]
+            ]]
         ]));
 
         $expectedSql =
@@ -1012,6 +1017,23 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
             "WHERE post.name";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testWhereNotValue3()
+    {
+        $sql = $this->query->composeSelect(Select::fromRaw([
+            'from' => 'Post',
+            'select' => ['id', 'name'],
+            'whereClause' => [
+                'name!=' => Expression::column('post.id')
+            ]
+        ]));
+
+        $expectedSql =
+            "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
+            "WHERE post.name <> post.id AND post.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
