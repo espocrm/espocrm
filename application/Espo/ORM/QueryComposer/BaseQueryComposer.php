@@ -2471,7 +2471,7 @@ abstract class BaseQueryComposer implements QueryComposer
             }
 
             if (!is_array($value)) {
-                return $this->quote(false);
+                throw new RuntimeException("Bad `=s` operator usage, value must be sub-query.");
             }
 
             $subQuerySelectParams = !empty($value['selectParams']) ?
