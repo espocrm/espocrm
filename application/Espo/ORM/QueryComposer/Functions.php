@@ -32,6 +32,7 @@ namespace Espo\ORM\QueryComposer;
 class Functions
 {
     public const FUNCTION_LIST = [
+        'ROW',
         'COUNT',
         'SUM',
         'AVG',

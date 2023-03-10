@@ -737,6 +737,14 @@ class Expression implements WhereItem
         return self::composeFunction('NOT', $argument);
     }
 
+    /**
+     * 'ROW' constructor.
+     */
+    public static function row(Expression ...$arguments): self
+    {
+        return self::composeFunction('ROW', ...$arguments);
+    }
+
     private static function composeFunction(
         string $function,
         Expression|bool|int|float|string|null ...$arguments
