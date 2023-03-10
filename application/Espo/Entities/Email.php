@@ -237,11 +237,11 @@ class Email extends Entity
             '<',
             '>',
             ' ',
-            chr(161),
-            chr(162),
-            chr(163),
-            chr(169),
-            chr(174),
+            '¡',
+            '¢',
+            '£',
+            '©',
+            '®',
         ];
 
         foreach ($reList as $i => $re) {
