@@ -30,6 +30,7 @@
 namespace tests\unit\Espo\ORM;
 
 use Espo\ORM\Query\Part\Join;
+use Espo\ORM\Query\Part\Where\Comparison;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\QueryComposer\Part\FunctionConverterFactory;
@@ -1104,6 +1105,32 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` ".
             "WHERE post.id IN (SELECT post.id AS `id` FROM `post` ".
+            "WHERE post.name = 'test' AND post.deleted = 0) AND post.deleted = 0";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectWithSubquery4()
+    {
+        $subQuery = SelectBuilder::create()
+            ->from('Post')
+            ->select('id')
+            ->where(['name' => 'test'])
+            ->build();
+
+        $sql = $this->query->composeSelect(
+            SelectBuilder::create()
+                ->from('Post')
+                ->select('id')
+                ->where(
+                    Comparison::in(Expression::value('1'), $subQuery)
+                )
+                ->build()
+        );
+
+        $expectedSql =
+            "SELECT post.id AS `id` FROM `post` ".
+            "WHERE '1' IN (SELECT post.id AS `id` FROM `post` ".
             "WHERE post.name = 'test' AND post.deleted = 0) AND post.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
