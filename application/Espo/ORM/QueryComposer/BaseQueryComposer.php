@@ -34,14 +34,13 @@ use Espo\ORM\EntityFactory;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Metadata;
 use Espo\ORM\Mapper\Helper;
-use Espo\ORM\Query\Query as Query;
-use Espo\ORM\Query\Select;
+use Espo\ORM\Query\Query;
 use Espo\ORM\Query\SelectingQuery;
-use Espo\ORM\Query\Select as SelectQuery;
-use Espo\ORM\Query\Update as UpdateQuery;
-use Espo\ORM\Query\Insert as InsertQuery;
-use Espo\ORM\Query\Delete as DeleteQuery;
-use Espo\ORM\Query\Union as UnionQuery;
+use Espo\ORM\Query\Select;
+use Espo\ORM\Query\Update;
+use Espo\ORM\Query\Insert;
+use Espo\ORM\Query\Delete;
+use Espo\ORM\Query\Union;
 use Espo\ORM\QueryComposer\Part\FunctionConverterFactory;
 
 use PDO;
@@ -223,46 +222,46 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected function composeSelecting(SelectingQuery $query): string
     {
-        if ($query instanceof SelectQuery) {
+        if ($query instanceof Select) {
             return $this->composeSelect($query);
         }
 
-        if ($query instanceof UnionQuery) {
+        if ($query instanceof Union) {
             return $this->composeUnion($query);
         }
 
         throw new RuntimeException("Unknown query type.");
     }
 
-    public function composeSelect(SelectQuery $query): string
+    public function composeSelect(Select $query): string
     {
         $params = $query->getRaw();
 
         return $this->createSelectQueryInternal($params);
     }
 
-    public function composeUpdate(UpdateQuery $query): string
+    public function composeUpdate(Update $query): string
     {
         $params = $query->getRaw();
 
         return $this->createUpdateQuery($params);
     }
 
-    public function composeDelete(DeleteQuery $query): string
+    public function composeDelete(Delete $query): string
     {
         $params = $query->getRaw();
 
         return $this->createDeleteQuery($params);
     }
 
-    public function composeInsert(InsertQuery $query): string
+    public function composeInsert(Insert $query): string
     {
         $params = $query->getRaw();
 
         return $this->createInsertQuery($params);
     }
 
-    public function composeUnion(UnionQuery $query): string
+    public function composeUnion(Union $query): string
     {
         $params = $query->getRaw();
 
@@ -280,7 +279,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $params['from'] = $entityType;
 
-        return $this->composeSelect(SelectQuery::fromRaw($params));
+        return $this->composeSelect(Select::fromRaw($params));
     }
 
     /**
@@ -423,7 +422,7 @@ abstract class BaseQueryComposer implements QueryComposer
         foreach ($selectQueryList as $select) {
             $rawSelectParams = $select->getRaw();
             $rawSelectParams['strictSelect'] = true;
-            $select = SelectQuery::fromRaw($rawSelectParams);
+            $select = Select::fromRaw($rawSelectParams);
 
             $subSqlList[] = '(' . $this->composeSelect($select) . ')';
         }
