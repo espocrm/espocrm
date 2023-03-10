@@ -663,14 +663,16 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             'from' => 'Test',
             'fromAlias' => 'test',
             'whereClause' => [
-                'EXISTS' => [
-                    'select' => ['id'],
-                    'from' => 'Test',
-                    'fromAlias' => 'sq',
-                    'whereClause' => [
-                        'test.id=:' => 'sq.id',
-                    ],
-                ],
+                'EXISTS' => (new SelectBuilder())
+                    ->select('id')
+                    ->from('Test', 'sq')
+                    ->where(
+                        Cond::equal(
+                            Cond::column('test.id'),
+                            Cond::column('sq.id')
+                        )
+                    )
+                    ->build()
             ],
         ];
 

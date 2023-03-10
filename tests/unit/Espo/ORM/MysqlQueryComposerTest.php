@@ -1015,22 +1015,22 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
-    public function testSelectWithSubquery()
+    public function testSelectWithSubquery1()
     {
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Post',
             'select' => ['id', 'name'],
-            'whereClause' => array(
-                'post.id=s' => array(
+            'whereClause' => [
+                'post.id=s' => [
                     'entityType' => 'Post',
-                    'selectParams' => array(
+                    'selectParams' => [
                         'select' => ['id'],
-                        'whereClause' => array(
+                        'whereClause' => [
                             'name' => 'test'
-                        )
-                    )
-                )
-            )
+                        ]
+                    ]
+                ]
+            ]
         ]));
 
         $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` ".
@@ -1041,26 +1041,23 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Post',
             'select' => ['id', 'name'],
-            'whereClause' => array(
-                'post.id!=s' => array(
+            'whereClause' => [
+                'post.id!=s' => [
                     'entityType' => 'Post',
-                    'selectParams' => array(
+                    'selectParams' => [
                         'select' => ['id'],
-                        'whereClause' => array(
+                        'whereClause' => [
                             'name' => 'test'
-                        )
-                    )
-                )
-            )
+                        ]
+                    ]
+                ]
+            ]
         ]));
 
         $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` ".
             "WHERE post.id NOT IN (SELECT post.id AS `id` FROM `post` ".
             "WHERE post.name = 'test' AND post.deleted = 0) AND post.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
-
-
-
     }
 
     public function testSelectWithSubquery2()
@@ -1089,8 +1086,37 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testSelectWithSubquery3()
+    {
+        $subQuery = SelectBuilder::create()
+            ->from('Post')
+            ->select('id')
+            ->where(['name' => 'test'])
+            ->build();
+
+        $sql = $this->query->compose(Select::fromRaw([
+            'from' => 'Post',
+            'select' => ['id', 'name'],
+            'whereClause' => [
+                'post.id=s' => $subQuery
+            ]
+        ]));
+
+        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` ".
+            "WHERE post.id IN (SELECT post.id AS `id` FROM `post` ".
+            "WHERE post.name = 'test' AND post.deleted = 0) AND post.deleted = 0";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testSelectExists1(): void
     {
+        $expectedSql =
+            "SELECT post.id AS `id` FROM `post` AS `post` " .
+            "WHERE EXISTS (" .
+            "SELECT sq.id AS `id` FROM `post` AS `sq` WHERE sq.id = post.id AND sq.deleted = 0" .
+            ") AND post.deleted = 0";
+
         $query = (new QueryBuilder())
             ->select('id')
             ->from('Post', 'post')
@@ -1100,18 +1126,10 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
                     ->from('Post', 'sq')
                     ->where(['sq.id:' => 'post.id'])
                     ->build()
-                    ->getRaw()
             ])
             ->build();
 
         $sql = $this->query->compose($query);
-
-        $expectedSql =
-            "SELECT post.id AS `id` FROM `post` AS `post` " .
-            "WHERE EXISTS (" .
-                "SELECT sq.id AS `id` FROM `post` AS `sq` WHERE sq.id = post.id AND sq.deleted = 0" .
-            ") AND post.deleted = 0";
-
         $this->assertEquals($expectedSql, $sql);
     }
 

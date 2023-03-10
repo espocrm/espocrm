@@ -298,6 +298,6 @@ class Comparison implements WhereItem
 
         $key .= $operator;
 
-        return new self($key, $query->getRaw());
+        return new self($key, $query);
     }
 }

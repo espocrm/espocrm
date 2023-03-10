@@ -29,31 +29,27 @@
 
 namespace tests\unit\Espo\Core\Select\Where;
 
-use Espo\Core\{
-    Select\Where\Converter,
-    Select\Where\Item,
-    Select\Where\Scanner,
-    Select\Where\ItemConverterFactory,
-    Select\Where\ItemGeneralConverter,
-    Select\Where\DateTimeItemTransformer,
-    Select\Where\ItemConverter,
-    Select\Helpers\RandomStringGenerator,
-    Utils\Config,
-    Utils\Metadata,
-};
+use Espo\Core\Select\Helpers\RandomStringGenerator;
+use Espo\Core\Select\Where\Converter;
+use Espo\Core\Select\Where\DateTimeItemTransformer;
+use Espo\Core\Select\Where\Item;
+use Espo\Core\Select\Where\ItemConverter;
+use Espo\Core\Select\Where\ItemConverterFactory;
+use Espo\Core\Select\Where\ItemGeneralConverter;
+use Espo\Core\Select\Where\Scanner;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 
-use Espo\{
-    ORM\EntityManager,
-    ORM\Entity,
-    ORM\Metadata as ormMetadata,
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\WhereClause,
-    ORM\QueryBuilder as BaseQueryBuilder,
-    ORM\Query\Select,
-    ORM\Defs as ORMDefs,
-    ORM\Defs\EntityDefs,
-    Entities\User,
-};
+use Espo\Entities\User;
+use Espo\ORM\Defs as ORMDefs;
+use Espo\ORM\Defs\EntityDefs;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Metadata as ormMetadata;
+use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Query\Select;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\QueryBuilder as BaseQueryBuilder;
 
 class ConverterTest extends \PHPUnit\Framework\TestCase
 {
@@ -468,7 +464,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
         $whereClause = $this->converter->convert($this->queryBuilder, $item);
 
         $expected = [
-            'id=s' => [
+            'id=s' => Select::fromRaw([
                 'select' => ['id'],
                 'from' => $this->entityType,
                 'whereClause' => [
@@ -478,7 +474,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
                 ],
                 'leftJoins' => [],
                 'joins' => [],
-            ],
+            ]),
         ];
 
         $this->assertEquals($expected, $whereClause->getRaw());
@@ -537,14 +533,14 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
             );
 
         $expected = [
-            'id=s' => [
+            'id=s' => Select::fromRaw([
                 'select' => ['id'],
                 'from' => 'Test',
                 'leftJoins' => [
                     [
                         'test',
                         $alias,
-                        [ $alias . '.localId=:' => 'id'],
+                        [$alias . '.localId=:' => 'id'],
                         [
                             'noLeftAlias' => true,
                             'onlyMiddle' => true,
@@ -554,7 +550,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
                 'whereClause' => [
                     $alias . '.foreignId' => $value,
                 ],
-            ],
+            ]),
         ];
 
         $whereClause = $this->converter->convert($this->queryBuilder, $item);

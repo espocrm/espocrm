@@ -35,6 +35,7 @@ use Espo\ORM\BaseEntity;
 use Espo\ORM\Metadata;
 use Espo\ORM\Mapper\Helper;
 use Espo\ORM\Query\Query as Query;
+use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectingQuery;
 use Espo\ORM\Query\Select as SelectQuery;
 use Espo\ORM\Query\Update as UpdateQuery;
@@ -2390,11 +2391,12 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($field === self::EXISTS_OPERATOR) {
-            if (!is_array($value)) {
+            if ($value instanceof Select) {
+                $subQueryPart = $this->composeSelect($value);
+            }
+            else {
                 throw new RuntimeException("Bad EXISTS usage in where-clause.");
             }
-
-            $subQueryPart = $this->createSelectQueryInternal($value);
 
             return "EXISTS ({$subQueryPart})";
         }
@@ -2462,6 +2464,12 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($operatorOrm === '=s' || $operatorOrm === '!=s') {
+            if ($value instanceof Select) {
+                $subSql = $this->composeSelect($value);
+
+                return "{$leftPart} {$operator} ({$subSql})";
+            }
+
             if (!is_array($value)) {
                 return $this->quote(false);
             }

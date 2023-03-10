@@ -42,6 +42,7 @@ use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Join;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
+use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 use DateTime;
@@ -258,13 +259,13 @@ class ItemGeneralConverter implements ItemConverter
         $key = $type === Type::SUBQUERY_IN ? 'id=s' : 'id!=s';
 
         return [
-            $key => [
+            $key => Select::fromRaw([
                 'select' => ['id'],
                 'from' => $this->entityType,
                 'whereClause' => $whereClause,
                 'leftJoins' => $rawParams['leftJoins'] ?? [],
                 'joins' => $rawParams['joins'] ?? [],
-            ],
+            ]),
         ];
     }
 
@@ -460,7 +461,7 @@ class ItemGeneralConverter implements ItemConverter
                 ])
                 ->build();
 
-            return [$idPart . '=s' => $subQuery->getRaw()];
+            return [$idPart . '=s' => $subQuery];
         }
 
         if ($type === Type::ARRAY_ALL_OF) {
@@ -486,7 +487,6 @@ class ItemGeneralConverter implements ItemConverter
                             'deleted' => false,
                         ])
                         ->build()
-                        ->getRaw()
                 ];
             }
 
@@ -1223,7 +1223,7 @@ class ItemGeneralConverter implements ItemConverter
                 ->where(["{$alias}.{$key}" => null])
                 ->build();
 
-            return ['id=s' =>  $subQuery->getRaw()];
+            return ['id=s' =>  $subQuery];
         }
 
         if (
@@ -1238,7 +1238,7 @@ class ItemGeneralConverter implements ItemConverter
                 ->where([$alias . '.id' => null])
                 ->build();
 
-            return ['id=s' =>  $subQuery->getRaw()];
+            return ['id=s' =>  $subQuery];
         }
 
         throw new Error("Bad where item. Not supported relation type.");
@@ -1274,7 +1274,7 @@ class ItemGeneralConverter implements ItemConverter
                 ->where(["{$alias}.{$key}!=" => null])
                 ->build();
 
-            return ['id=s' =>  $subQuery->getRaw()];
+            return ['id=s' =>  $subQuery];
         }
 
         if (
@@ -1289,7 +1289,7 @@ class ItemGeneralConverter implements ItemConverter
                 ->where([$alias . '.id!=' => null])
                 ->build();
 
-            return ['id=s' =>  $subQuery->getRaw()];
+            return ['id=s' =>  $subQuery];
         }
 
         throw new Error("Bad where item. Not supported relation type.");
