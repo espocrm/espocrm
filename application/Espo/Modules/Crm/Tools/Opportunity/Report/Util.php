@@ -67,7 +67,7 @@ class Util
             ->build();
 
         $queryBuilder->where([
-            'id=s' => $subQuery->getRaw(),
+            'id=s' => $subQuery,
         ]);
     }
 

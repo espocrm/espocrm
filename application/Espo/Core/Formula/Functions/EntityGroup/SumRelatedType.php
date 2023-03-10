@@ -137,7 +137,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
                 ->select(['id']);
 
             $queryBuilder->where([
-                'id=s' => $sqQueryBuilder->build()->getRaw(),
+                'id=s' => $sqQueryBuilder->build(),
             ]);
         }
 

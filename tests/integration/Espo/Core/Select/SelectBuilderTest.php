@@ -37,6 +37,7 @@ use Espo\Core\{
 };
 
 use Espo\Classes\Select\Email\AdditionalAppliers\Main as EmailAdditionalApplier;
+use Espo\ORM\Query\Select;
 
 class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 {
@@ -174,7 +175,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                 ],
             ],
             'whereClause' => [
-                'id=s' => [
+                'id=s' => Select::fromRaw([
                     'select' => [
                         'id',
                     ],
@@ -197,7 +198,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                                 'assignedUserId' => $userId,
                             ],
                     ],
-                ],
+                ]),
                 'OR' => [
                     [
                         'assignedUserId' => $userId,
@@ -243,56 +244,55 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
             'from' => 'Meeting',
             'whereClause' =>
                 [
-                    'id=s' =>
-                        [
-                            'select' =>
-                                [
-                                    0 => 'id',
-                                ],
-                            'from' => 'Meeting',
-                            'leftJoins' =>
-                                [
-                                    0 =>
-                                        [
-                                            0 => 'EntityTeam',
-                                            1 => 'entityTeam',
-                                            2 =>
-                                                [
-                                                    'entityTeam.entityId:' => 'id',
-                                                    'entityTeam.entityType' => 'Meeting',
-                                                    'entityTeam.deleted' => false,
-                                                ],
-                                        ],
-                                    1 =>
-                                        [
-                                            0 => 'MeetingUser',
-                                            1 => 'usersMiddle',
-                                            2 =>
-                                                [
-                                                    'usersMiddle.meetingId:' => 'id',
-                                                    'usersMiddle.deleted' => false,
-                                                ],
-                                        ],
-                                ],
-                            'whereClause' =>
-                                [
-                                    'OR' =>
-                                        [
-                                            0 =>
-                                                [
-                                                    'entityTeam.teamId=' => [],
-                                                ],
-                                            1 =>
-                                                [
-                                                    'usersMiddle.userId=' => $userId,
-                                                ],
-                                            2 =>
-                                                [
-                                                    'assignedUserId=' => $userId,
-                                                ],
-                                        ],
-                                ],
-                        ],
+                    'id=s' => Select::fromRaw([
+                        'select' =>
+                            [
+                                0 => 'id',
+                            ],
+                        'from' => 'Meeting',
+                        'leftJoins' =>
+                            [
+                                0 =>
+                                    [
+                                        0 => 'EntityTeam',
+                                        1 => 'entityTeam',
+                                        2 =>
+                                            [
+                                                'entityTeam.entityId:' => 'id',
+                                                'entityTeam.entityType' => 'Meeting',
+                                                'entityTeam.deleted' => false,
+                                            ],
+                                    ],
+                                1 =>
+                                    [
+                                        0 => 'MeetingUser',
+                                        1 => 'usersMiddle',
+                                        2 =>
+                                            [
+                                                'usersMiddle.meetingId:' => 'id',
+                                                'usersMiddle.deleted' => false,
+                                            ],
+                                    ],
+                            ],
+                        'whereClause' =>
+                            [
+                                'OR' =>
+                                    [
+                                        0 =>
+                                            [
+                                                'entityTeam.teamId=' => [],
+                                            ],
+                                        1 =>
+                                            [
+                                                'usersMiddle.userId=' => $userId,
+                                            ],
+                                        2 =>
+                                            [
+                                                'assignedUserId=' => $userId,
+                                            ],
+                                    ],
+                            ],
+                    ]),
                 ],
         ];
 
@@ -375,7 +375,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
             'whereClause' =>
                 [
                     'id=s' =>
-                        [
+                        Select::fromRaw([
                             'select' =>
                                 [
                                     0 => 'id',
@@ -414,7 +414,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                                             'emailUser.userId' => $userId,
                                         ],
                                 ],
-                        ],
+                        ]),
                 ],
         ];
 

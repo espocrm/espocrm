@@ -1359,7 +1359,7 @@ class ItemGeneralConverter implements ItemConverter
                 ->where([$alias . '.id' => $value])
                 ->build();
 
-            return ['id=s' =>  $subQuery->getRaw()];
+            return ['id=s' => $subQuery];
         }
 
         if ($relationType == Entity::BELONGS_TO) {
@@ -1485,7 +1485,7 @@ class ItemGeneralConverter implements ItemConverter
                     ])
                     ->build();
 
-                $whereList[] = ['id=s' => $sq->getRaw()];
+                $whereList[] = ['id=s' => $sq];
             }
 
             return $whereList;
@@ -1502,7 +1502,7 @@ class ItemGeneralConverter implements ItemConverter
                     ->where([$link . '.id' => $targetId])
                     ->build();
 
-                $whereList[] = ['id=s' => $sq->getRaw()];
+                $whereList[] = ['id=s' => $sq];
             }
 
             return $whereList;
