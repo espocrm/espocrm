@@ -30,6 +30,7 @@
 namespace Espo\Core\Api;
 
 use Espo\Core\Api\Route\RouteParamsFetcher;
+use Espo\Core\ApplicationState;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Route as RouteUtil;
 use Espo\Core\Utils\Log;
@@ -53,8 +54,11 @@ class Starter
         private RouteParamsFetcher $routeParamsFetcher,
         private MiddlewareProvider $middlewareProvider,
         private Log $log,
-        private Config $config
-    ) {}
+        private Config $config,
+        ?string $routeCacheFile = null
+    ) {
+        $this->routeCacheFile = $routeCacheFile ?? $this->routeCacheFile;
+    }
 
     public function start(): void
     {
