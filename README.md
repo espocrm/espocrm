@@ -2,11 +2,15 @@
 
 [![PHPStan level 8](https://img.shields.io/badge/PHPStan-level%208-brightgreen)](#espocrm)
 
-[EspoCRM is an Open Source CRM](https://www.espocrm.com) (Customer Relationship Management) software that allows you to see, enter and evaluate all your company relationships regardless of the type. People, companies or opportunities – all in an easy and intuitive interface.
+[EspoCRM is an Open Source CRM](https://www.espocrm.com) (Customer Relationship Management)
+software that allows you to see, enter and evaluate all your company relationships regardless
+of the type. People, companies or opportunities – all in an easy and intuitive interface.
 
-It's a web application with a frontend designed as a single page application and REST API backend written in PHP.
+It's a web application with a frontend designed as a single page application and REST API
+backend written in PHP.
 
-[Download](https://www.espocrm.com/download/) the latest release from our website.
+[Download](https://www.espocrm.com/download/) the latest release from our website. Release notes
+and release packages are available at Releases on GitHub.
 
 ### Requirements
 
@@ -22,7 +26,7 @@ The documentation for administrators, users and developers is available [here](h
 ### Bug reporting
 
 Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our [forum](https://forum.espocrm.com/forum/bug-reports).
-We'd appreciate if you prefer posting reports on weekdays rather than weekends.
+We'd appreciate if you prefer posting issues on weekdays rather than weekends.
 
 ### Installing the stable version
 
