@@ -55,6 +55,18 @@ class PostgresqlQueryComposer extends BaseQueryComposer
         '!=' => '<>',
         '!*' => 'NOT ILIKE',
         '*' => 'ILIKE',
+        '>=any' => '>= ANY',
+        '<=any' => '<= ANY',
+        '>any' => '> ANY',
+        '<any' => '< ANY',
+        '!=any' => '<> ANY',
+        '=any' => '= ANY',
+        '>=all' => '>= ALL',
+        '<=all' => '<= ALL',
+        '>all' => '> ALL',
+        '<all' => '< ALL',
+        '!=all' => '<> ALL',
+        '=all' => '= ALL',
     ];
 
     /** @var array<string, string> */

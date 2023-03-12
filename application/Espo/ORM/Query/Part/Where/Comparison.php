@@ -52,6 +52,16 @@ class Comparison implements WhereItem
     private const OPERATOR_NOT_LIKE = '!*';
     private const OPERATOR_IN_SUB_QUERY = '=s';
     private const OPERATOR_NOT_IN_SUB_QUERY = '!=s';
+    private const OPERATOR_NOT_EQUAL_ANY = '!=any';
+    private const OPERATOR_GREATER_ANY = '>any';
+    private const OPERATOR_GREATER_OR_EQUAL_ANY = '>=any';
+    private const OPERATOR_LESS_ANY = '<any';
+    private const OPERATOR_LESS_OR_EQUAL_ANY = '<=any';
+    private const OPERATOR_EQUAL_ALL = '=all';
+    private const OPERATOR_GREATER_ALL = '>all';
+    private const OPERATOR_GREATER_OR_EQUAL_ALL = '>=all';
+    private const OPERATOR_LESS_ALL = '<all';
+    private const OPERATOR_LESS_OR_EQUAL_ALL = '<=all';
 
     private string $rawKey;
     private mixed $rawValue;
@@ -209,6 +219,126 @@ class Comparison implements WhereItem
         }
 
         return self::createInOrNotInArray(self::OPERATOR_NOT_EQUAL, $subject, $set);
+    }
+
+    /**
+     * Create '!= ANY' comparison.
+     *
+     * @param Expression $argument An expression.
+     * @param Select $subQuery A sub-query.
+     * @return self
+     */
+    public static function notEqualAny(Expression $argument, Select $subQuery): self
+    {
+        return self::createComparison(self::OPERATOR_NOT_EQUAL_ANY, $argument, $subQuery);
+    }
+
+    /**
+     * Create '> ANY' comparison.
+     *
+     * @param Expression $argument An expression.
+     * @param Select $subQuery A sub-query.
+     * @return self
+     */
+    public static function greaterAny(Expression $argument, Select $subQuery): self
+    {
+        return self::createComparison(self::OPERATOR_GREATER_ANY, $argument, $subQuery);
+    }
+
+    /**
+     * Create '< ANY' comparison.
+     *
+     * @param Expression $argument An expression.
+     * @param Select $subQuery A sub-query.
+     * @return self
+     */
+    public static function lessAny(Expression $argument, Select $subQuery): self
+    {
+        return self::createComparison(self::OPERATOR_LESS_ANY, $argument, $subQuery);
+    }
+
+    /**
+     * Create '>= ANY' comparison.
+     *
+     * @param Expression $argument An expression.
+     * @param Select $subQuery A sub-query.
+     * @return self
+     */
+    public static function greaterOrEqualAny(Expression $argument, Select $subQuery): self
+    {
+        return self::createComparison(self::OPERATOR_GREATER_OR_EQUAL_ANY, $argument, $subQuery);
+    }
+
+    /**
+     * Create '<= ANY' comparison.
+     *
+     * @param Expression $argument An expression.
+     * @param Select $subQuery A sub-query.
+     * @return self
+     */
+    public static function lessOrEqualAny(Expression $argument, Select $subQuery): self
+    {
+        return self::createComparison(self::OPERATOR_LESS_OR_EQUAL_ANY, $argument, $subQuery);
+    }
+
+    /**
+     * Create '= ALL' comparison.
+     *
+     * @param Expression $argument An expression.
+     * @param Select $subQuery A sub-query.
+     * @return self
+     */
+    public static function equalAll(Expression $argument, Select $subQuery): self
+    {
+        return self::createComparison(self::OPERATOR_EQUAL_ALL, $argument, $subQuery);
+    }
+
+    /**
+     * Create '> ALL' comparison.
+     *
+     * @param Expression $argument An expression.
+     * @param Select $subQuery A sub-query.
+     * @return self
+     */
+    public static function greaterAll(Expression $argument, Select $subQuery): self
+    {
+        return self::createComparison(self::OPERATOR_GREATER_ALL, $argument, $subQuery);
+    }
+
+    /**
+     * Create '< ALL' comparison.
+     *
+     * @param Expression $argument An expression.
+     * @param Select $subQuery A sub-query.
+     * @return self
+     */
+    public static function lessAll(Expression $argument, Select $subQuery): self
+    {
+        return self::createComparison(self::OPERATOR_LESS_ALL, $argument, $subQuery);
+    }
+
+    /**
+     * Create '>= ALL' comparison.
+     *
+     * @param Expression $argument An expression.
+     * @param Select $subQuery A sub-query.
+     * @return self
+     */
+    public static function greaterOrEqualAll(Expression $argument, Select $subQuery): self
+    {
+        return self::createComparison(self::OPERATOR_GREATER_OR_EQUAL_ALL, $argument, $subQuery);
+    }
+
+    /**
+     * Create '<= ALL' comparison.
+     *
+     * @param Expression $argument An expression.
+     * @param Select $subQuery A sub-query.
+     * @return self
+     */
+    public static function lessOrEqualAll(Expression $argument, Select $subQuery): self
+    {
+        return self::createComparison(self::OPERATOR_LESS_OR_EQUAL_ALL, $argument, $subQuery);
     }
 
     private static function createComparison(

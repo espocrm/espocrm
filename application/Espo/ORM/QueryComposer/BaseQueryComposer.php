@@ -108,6 +108,18 @@ abstract class BaseQueryComposer implements QueryComposer
         '>',
         '<',
         '=',
+        '>=any',
+        '<=any',
+        '>any',
+        '<any',
+        '!=any',
+        '=any',
+        '>=all',
+        '<=all',
+        '>all',
+        '<all',
+        '!=all',
+        '=all',
     ];
 
     /** @var array<string, string> */
@@ -117,6 +129,18 @@ abstract class BaseQueryComposer implements QueryComposer
         '!=' => '<>',
         '!*' => 'NOT LIKE',
         '*' => 'LIKE',
+        '>=any' => '>= ANY',
+        '<=any' => '<= ANY',
+        '>any' => '> ANY',
+        '<any' => '< ANY',
+        '!=any' => '<> ANY',
+        '=any' => '= ANY',
+        '>=all' => '>= ALL',
+        '<=all' => '<= ALL',
+        '>all' => '> ALL',
+        '<all' => '< ALL',
+        '!=all' => '<> ALL',
+        '=all' => '= ALL',
     ];
 
     /** @var array<string, string> */
@@ -2424,12 +2448,12 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($field === self::EXISTS_OPERATOR) {
-            if ($value instanceof Select) {
-                $subQueryPart = $this->composeSelect($value);
-            }
-            else {
+            if (!$value instanceof Select) {
                 throw new RuntimeException("Bad EXISTS usage in where-clause.");
+
             }
+
+            $subQueryPart = $this->composeSelect($value);
 
             return "EXISTS ({$subQueryPart})";
         }
@@ -2482,7 +2506,6 @@ abstract class BaseQueryComposer implements QueryComposer
             return $this->quote(false);
         }
 
-        // @todo Operators (<s, >s, <=s, =>s) producing 'operator ANY (sub-query)'.
         if ($operatorOrm === '=s' || $operatorOrm === '!=s') {
             if ($value instanceof Select) {
                 $subSql = $this->composeSelect($value);
@@ -2523,6 +2546,10 @@ abstract class BaseQueryComposer implements QueryComposer
             $subQueryPart = $this->composeSelect($value);
 
             return "{$leftPart} {$operator} ({$subQueryPart})";
+        }
+
+        if (str_ends_with($operatorOrm, 'any') || str_ends_with($operatorOrm, 'all')) {
+            throw new RuntimeException("ANY/ALL operators can be used only with sub-query.");
         }
 
         if ($value instanceof Expression) {
