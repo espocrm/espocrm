@@ -96,18 +96,27 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected const EXISTS_OPERATOR = 'EXISTS';
 
+    /** @var string[] */
+    private array $comparisonOperators = [
+        '!=s',
+        '=s',
+        '!=',
+        '!*',
+        '*',
+        '>=',
+        '<=',
+        '>',
+        '<',
+        '=',
+    ];
+
     /** @var array<string, string> */
-    protected array $comparisonOperators = [
+    protected array $comparisonOperatorMap = [
         '!=s' => 'NOT IN',
         '=s' => 'IN',
         '!=' => '<>',
         '!*' => 'NOT LIKE',
         '*' => 'LIKE',
-        '>=' => '>=',
-        '<=' => '<=',
-        '>' => '>',
-        '<' => '<',
-        '=' => '=',
     ];
 
     /** @var array<string, string> */
@@ -2351,6 +2360,30 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
+     * @return array{string, string, string}
+     */
+    private function splitWhereLeftItem(string $item): array
+    {
+        if (preg_match('/^[a-z0-9]+$/i', $item)) {
+            return [$item, '=', '='];
+        }
+
+        foreach ($this->comparisonOperators as $operator) {
+            $sqlOperator = $this->comparisonOperatorMap[$operator] ?? $operator;
+
+            if (!str_ends_with($item, $operator)) {
+                continue;
+            }
+
+            $expression = trim(substr($item, 0, -strlen($operator)));
+
+            return [$expression, $sqlOperator, $operator];
+        }
+
+        return [$item, '=', '='];
+    }
+
+    /**
      * @param array<string, mixed> $params
      */
     protected function getWherePartItem(
@@ -2410,21 +2443,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $isNotValue = true;
         }
 
-        $operator = '=';
-        $operatorOrm = '=';
-
-        if (!preg_match('/^[a-z0-9]+$/i', $field)) {
-            foreach ($this->comparisonOperators as $op => $opDb) {
-                if (str_ends_with($field, $op)) {
-                    $field = trim(substr($field, 0, -strlen($op)));
-
-                    $operatorOrm = $op;
-                    $operator = $opDb;
-
-                    break;
-                }
-            }
-        }
+        [$field, $operator, $operatorOrm] = $this->splitWhereLeftItem($field);
 
         $leftPart = null;
 
@@ -2946,8 +2965,6 @@ abstract class BaseQueryComposer implements QueryComposer
             return $sql;
         }
 
-        $operator = '=';
-
         $isNotValue = false;
         $isComplex = false;
 
@@ -2956,16 +2973,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $isNotValue = true;
         }
 
-        if (!preg_match('/^[a-z0-9]+$/i', $left)) {
-            foreach ($this->comparisonOperators as $op => $opDb) {
-                if (str_ends_with($left, $op)) {
-                    $left = trim(substr($left, 0, -strlen($op)));
-                    $operator = $opDb;
-
-                    break;
-                }
-            }
-        }
+        [$left, $operator] = $this->splitWhereLeftItem($left);
 
         if (Util::isComplexExpression($left)) {
             $isComplex = true;

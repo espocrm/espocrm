@@ -29,6 +29,9 @@
 
 namespace Espo\ORM\QueryComposer;
 
+/**
+ * @internal
+ */
 class Functions
 {
     public const FUNCTION_LIST = [
