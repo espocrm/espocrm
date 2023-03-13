@@ -30,6 +30,8 @@
 namespace Espo\Core\Mail;
 
 /**
+ * Sender parameters.
+ *
  * @immutable
  */
 class SenderParams
@@ -53,7 +55,7 @@ class SenderParams
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
@@ -69,7 +71,7 @@ class SenderParams
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     public static function fromArray(array $params): self
     {
@@ -107,7 +109,6 @@ class SenderParams
     public function withFromAddress(?string $fromAddress): self
     {
         $obj = clone $this;
-
         $obj->fromAddress = $fromAddress;
 
         return $obj;
@@ -116,7 +117,6 @@ class SenderParams
     public function withFromName(?string $fromName): self
     {
         $obj = clone $this;
-
         $obj->fromName = $fromName;
 
         return $obj;
@@ -125,7 +125,6 @@ class SenderParams
     public function withReplyToAddress(?string $replyToAddress): self
     {
         $obj = clone $this;
-
         $obj->replyToAddress = $replyToAddress;
 
         return $obj;
@@ -134,7 +133,6 @@ class SenderParams
     public function withReplyToName(?string $replyToName): self
     {
         $obj = clone $this;
-
         $obj->replyToName = $replyToName;
 
         return $obj;

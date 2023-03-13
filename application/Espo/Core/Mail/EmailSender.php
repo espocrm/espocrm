@@ -31,13 +31,12 @@ namespace Espo\Core\Mail;
 
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\InjectableFactory;
-use Espo\Entities\Attachment;
-use Laminas\Mail\Message;
-
-use Espo\Entities\Email;
-
 use Espo\Core\Mail\Account\SendingAccountProvider;
 use Espo\Core\Utils\Config;
+use Espo\Entities\Attachment;
+use Espo\Entities\Email;
+
+use Laminas\Mail\Message;
 
 /**
  * A service for email sending. Can send with SMTP parameters of the system email account or with specific parameters.
@@ -45,19 +44,11 @@ use Espo\Core\Utils\Config;
  */
 class EmailSender
 {
-    private Config $config;
-    private SendingAccountProvider $accountProvider;
-    private InjectableFactory $injectableFactory;
-
     public function __construct(
-        Config $config,
-        SendingAccountProvider $accountProvider,
-        InjectableFactory $injectableFactory
-    ) {
-        $this->config = $config;
-        $this->accountProvider = $accountProvider;
-        $this->injectableFactory = $injectableFactory;
-    }
+        private Config $config,
+        private SendingAccountProvider $accountProvider,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     private function createSender(): Sender
     {
