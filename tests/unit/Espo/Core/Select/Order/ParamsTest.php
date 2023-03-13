@@ -43,7 +43,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
 
     public function testFromArray()
     {
-        $item = Params::fromArray([
+        $item = Params::fromAssoc([
             'order' => 'DESC',
             'orderBy' => 'test',
             //'forbidComplexExpressions' => true,
@@ -55,7 +55,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         //$this->assertTrue($item->forbidComplexExpressions());
         $this->assertTrue($item->forceDefault());
 
-        $item = Params::fromArray([
+        $item = Params::fromAssoc([
             //'forbidComplexExpressions' => false,
             'forceDefault' => false,
         ]);
@@ -66,7 +66,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
 
     public function testEmpty()
     {
-        $item = Params::fromArray([
+        $item = Params::fromAssoc([
         ]);
 
         $this->assertEquals(null, $item->getOrder());
@@ -79,7 +79,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $params = Params::fromArray([
+        $params = Params::fromAssoc([
             'order' => 'd',
         ]);
     }
@@ -88,7 +88,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $params = Params::fromArray([
+        $params = Params::fromAssoc([
             'bad' => 'd',
         ]);
     }

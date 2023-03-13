@@ -45,9 +45,12 @@ class Params
     {}
 
     /**
-     * @param array<string, mixed> $params
+     * @param array{
+     *     applyPermissionCheck?: bool,
+     *     forbidComplexExpressions?: bool,
+     * } $params
      */
-    public static function fromArray(array $params): self
+    public static function fromAssoc(array $params): self
     {
         $object = new self();
 

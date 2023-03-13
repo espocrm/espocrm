@@ -396,7 +396,7 @@ class SelectBuilder
 
         $order = $this->searchParams?->getOrder();
 
-        $params = OrderParams::fromArray([
+        $params = OrderParams::fromAssoc([
             'forceDefault' => true,
             'order' => $order,
         ]);
@@ -429,7 +429,7 @@ class SelectBuilder
     {
         assert($this->queryBuilder !== null);
 
-        $params = WhereParams::fromArray([
+        $params = WhereParams::fromAssoc([
             'applyPermissionCheck' => $this->applyWherePermissionCheck,
             'forbidComplexExpressions' => $this->applyComplexExpressionsForbidden,
         ]);
@@ -458,7 +458,7 @@ class SelectBuilder
             !$this->applyDefaultOrder &&
             ($this->searchParams->getOrderBy() || $this->searchParams->getOrder())
         ) {
-            $params = OrderParams::fromArray([
+            $params = OrderParams::fromAssoc([
                 //'forbidComplexExpressions' => $this->applyComplexExpressionsForbidden,
                 'orderBy' => $this->searchParams->getOrderBy(),
                 'order' => $this->searchParams->getOrder(),

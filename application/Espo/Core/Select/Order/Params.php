@@ -50,9 +50,13 @@ class Params
     private function __construct() {}
 
     /**
-     * @param array<string, mixed> $params
+     * @param array{
+     *     forceDefault?: bool,
+     *     orderBy?: ?string,
+     *     order?: SearchParams::ORDER_ASC|SearchParams::ORDER_DESC|null,
+     * } $params
      */
-    public static function fromArray(array $params): self
+    public static function fromAssoc(array $params): self
     {
         $object = new self();
 
@@ -71,10 +75,13 @@ class Params
             throw new InvalidArgumentException("Bad orderBy.");
         }
 
+        /** @var ?string $order */
+        $order = $object->order;
+
         if (
-            $object->order &&
-            $object->order !== SearchParams::ORDER_ASC &&
-            $object->order !== SearchParams::ORDER_DESC
+            $order &&
+            $order !== SearchParams::ORDER_ASC &&
+            $order !== SearchParams::ORDER_DESC
         ) {
             throw new InvalidArgumentException("Bad order.");
         }

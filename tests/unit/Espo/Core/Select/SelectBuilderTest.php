@@ -195,7 +195,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 
         $whereItem = $searchParams->getWhere();
 
-        $whereParams = WhereParams::fromArray([
+        $whereParams = WhereParams::fromAssoc([
             'applyPermissionCheck' => true,
             'forbidComplexExpressions' => true,
         ]);
@@ -209,7 +209,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
                 $whereParams
             );
 
-        $orderParams = OrderParams::fromArray([
+        $orderParams = OrderParams::fromAssoc([
             //'forbidComplexExpressions' => true,
             'orderBy' => $searchParams->getOrderBy(),
             'order' => $searchParams->getOrder(),
@@ -248,7 +248,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 
         $searchParams = SearchParams::fromRaw($raw);
 
-        $orderParams = OrderParams::fromArray([
+        $orderParams = OrderParams::fromAssoc([
             'forceDefault' => true,
             'order' => null,
         ]);

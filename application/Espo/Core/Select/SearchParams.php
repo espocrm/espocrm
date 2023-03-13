@@ -51,7 +51,7 @@ class SearchParams
     private function __construct() {}
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getRaw(): array
     {
@@ -320,7 +320,7 @@ class SearchParams
     /**
      * Create an instance from a raw.
      *
-     * @param stdClass|array<string,mixed> $params
+     * @param stdClass|array<string, mixed> $params
      */
     public static function fromRaw($params): self
     {
@@ -493,7 +493,7 @@ class SearchParams
     /**
      * For compatibility with the legacy definition.
      *
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     private function adjustParams(array &$params): void
     {
