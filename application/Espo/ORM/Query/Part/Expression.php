@@ -188,7 +188,7 @@ class Expression implements WhereItem
 
     /**
      * 'CASE' expression. Even arguments define 'WHEN' conditions, following odd arguments
-     * define 'THEN' values. The last unmatched argument defines 'ELSE'.
+     * define 'THEN' values. The last unmatched argument defines the 'ELSE' value.
      *
      * @param Expression|scalar|null ...$arguments Arguments.
      */
@@ -199,6 +199,22 @@ class Expression implements WhereItem
         }
 
         return self::composeFunction('SWITCH', ...$arguments);
+    }
+
+    /**
+     * 'CASE' expression that maps keys to values. The first argument is the value to map.
+     * Odd arguments define keys, the following even arguments define mapped values.
+     * The last unmatched argument defines the 'ELSE' value.
+     *
+     * @param Expression|scalar|null ...$arguments Arguments.
+     */
+    public static function map(Expression|string|int|float|bool|null ...$arguments): self
+    {
+        if (count($arguments) < 3) {
+            throw new RuntimeException("Too few arguments.");
+        }
+
+        return self::composeFunction('MAP', ...$arguments);
     }
 
     /**

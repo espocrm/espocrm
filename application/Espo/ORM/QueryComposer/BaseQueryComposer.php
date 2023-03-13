@@ -1006,6 +1006,30 @@ abstract class BaseQueryComposer implements QueryComposer
 
                 return $part;
 
+            case 'MAP':
+                if (count($argumentPartList) < 3) {
+                    throw new RuntimeException("Not enough arguments for MAP function.");
+                }
+
+                $part = "CASE " . $argumentPartList[0];
+
+                array_shift($argumentPartList);
+
+                for ($i = 0; $i < floor(count($argumentPartList) / 2); $i++) {
+                    $whenPart = $argumentPartList[$i * 2];
+                    $thenPart = $argumentPartList[$i * 2 + 1];
+
+                    $part .= " WHEN {$whenPart} THEN {$thenPart}";
+                }
+
+                if (count($argumentPartList) % 2) {
+                    $part .= " ELSE " . end($argumentPartList);
+                }
+
+                $part .= " END";
+
+                return $part;
+
             case 'MONTH':
                 return "DATE_FORMAT({$part}, '%Y-%m')";
 

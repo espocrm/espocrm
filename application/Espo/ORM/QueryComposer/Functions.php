@@ -127,6 +127,7 @@ class Functions
         'IFNULL',
         'NULLIF',
         'SWITCH',
+        'MAP',
         'BINARY',
         'MD5',
         'UNIX_TIMESTAMP',

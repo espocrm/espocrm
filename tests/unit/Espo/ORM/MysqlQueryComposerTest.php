@@ -3111,4 +3111,21 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             $this->query->composeSelect($query)
         );
     }
+
+    public function testMap1(): void
+    {
+        $sql =
+            "SELECT CASE post.number WHEN 1 THEN '1' WHEN 0 THEN '0' ELSE NULL END AS `value` " .
+            "FROM `post` WHERE post.deleted = 0";
+
+        $query = SelectBuilder::create()
+            ->select('MAP:(post.number, 1, "1", 0, "0", null)', 'value')
+            ->from('Post')
+            ->build();
+
+        $this->assertEquals(
+            $sql,
+            $this->query->composeSelect($query)
+        );
+    }
 }
