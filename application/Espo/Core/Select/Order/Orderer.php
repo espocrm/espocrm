@@ -31,6 +31,9 @@ namespace Espo\Core\Select\Order;
 
 use Espo\ORM\Query\SelectBuilder;
 
+/**
+ * A custom orderer. Should call SelectBuilder::order.
+ */
 interface Orderer
 {
     public function apply(SelectBuilder $queryBuilder, Item $item): void;

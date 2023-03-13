@@ -31,6 +31,9 @@ namespace Espo\Core\Select\Order;
 
 use Espo\ORM\Query\Part\OrderList;
 
+/**
+ * Converts an order item (passed from front-end) to an ORM order list.
+ */
 interface ItemConverter
 {
     public function convert(Item $item): OrderList;
