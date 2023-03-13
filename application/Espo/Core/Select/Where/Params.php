@@ -32,6 +32,8 @@ namespace Espo\Core\Select\Where;
 use InvalidArgumentException;
 
 /**
+ * Where parameters.
+ *
  * @immutable
  */
 class Params
@@ -43,7 +45,7 @@ class Params
     {}
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     public static function fromArray(array $params): self
     {
@@ -61,11 +63,17 @@ class Params
         return $object;
     }
 
+    /**
+     * Apply permission check.
+     */
     public function applyPermissionCheck(): bool
     {
         return $this->applyPermissionCheck;
     }
 
+    /**
+     * Forbid complex expressions.
+     */
     public function forbidComplexExpressions(): bool
     {
         return $this->forbidComplexExpressions;

@@ -34,6 +34,8 @@ use Espo\Core\Select\SearchParams;
 use InvalidArgumentException;
 
 /**
+ * Order parameters.
+ *
  * @immutable
  */
 class Params
@@ -85,11 +87,17 @@ class Params
         return $this->forbidComplexExpressions;
     }*/
 
+    /**
+     * Force default order.
+     */
     public function forceDefault(): bool
     {
         return $this->forceDefault;
     }
 
+    /**
+     * An order-By field.
+     */
     public function getOrderBy(): ?string
     {
         /** @var ?string */
@@ -97,6 +105,8 @@ class Params
     }
 
     /**
+     * An order direction.
+     *
      * @return SearchParams::ORDER_ASC|SearchParams::ORDER_DESC|null
      */
     public function getOrder(): ?string
