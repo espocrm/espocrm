@@ -30,13 +30,13 @@
 namespace Espo\Core\FieldProcessing\Reminder;
 
 use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Modules\Crm\Entities\Reminder;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\FieldProcessing\Saver as SaverInterface;
 use Espo\Core\FieldProcessing\Saver\Params;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\Util;
 
 use stdClass;
 use DateInterval;
@@ -45,15 +45,20 @@ use DateTime;
 /**
  * @internal This class should not be removed as it's used by custom entities.
  *
- * @implements SaverInterface<Entity>
+ * @implements SaverInterface<CoreEntity>
  */
 class Saver implements SaverInterface
 {
     protected string $dateAttribute = 'dateStart';
 
-    public function __construct(private EntityManager $entityManager)
-    {}
+    public function __construct(
+        private EntityManager $entityManager,
+        private RecordIdGenerator $idGenerator
+    ) {}
 
+    /**
+     * @param CoreEntity $entity
+     */
     public function process(Entity $entity, Params $params): void
     {
         $entityType = $entity->getEntityType();
@@ -66,8 +71,6 @@ class Saver implements SaverInterface
         if (!$hasReminder) {
             return;
         }
-
-        assert($entity instanceof CoreEntity);
 
         $dateAttribute = $this->entityManager
             ->getDefs()
@@ -163,7 +166,7 @@ class Saver implements SaverInterface
             $remindAt->sub(new DateInterval('PT' . $seconds . 'S'));
 
             foreach ($userIdList as $userId) {
-                $reminderId = Util::generateId();
+                $reminderId = $this->idGenerator->generate();
 
                 $query = $this->entityManager
                     ->getQueryBuilder()
@@ -177,7 +180,7 @@ class Saver implements SaverInterface
                         'userId',
                         'remindAt',
                         'startAt',
-                        'seconds'
+                        'seconds',
                     ])
                     ->values([
                         'id' => $reminderId,
