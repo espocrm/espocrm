@@ -38,7 +38,7 @@ use InvalidArgumentException;
  */
 class Params
 {
-    private bool $forbidComplexExpressions = false;
+    //private bool $forbidComplexExpressions = false;
     private bool $forceDefault = false;
     /** @var mixed */
     private $orderBy = null;
@@ -54,7 +54,7 @@ class Params
     {
         $object = new self();
 
-        $object->forbidComplexExpressions = $params['forbidComplexExpressions'] ?? false;
+        //$object->forbidComplexExpressions = $params['forbidComplexExpressions'] ?? false;
         $object->forceDefault = $params['forceDefault'] ?? false;
         $object->orderBy = $params['orderBy'] ?? null;
         $object->order = $params['order'] ?? null;
@@ -80,10 +80,10 @@ class Params
         return $object;
     }
 
-    public function forbidComplexExpressions(): bool
+    /*public function forbidComplexExpressions(): bool
     {
         return $this->forbidComplexExpressions;
-    }
+    }*/
 
     public function forceDefault(): bool
     {

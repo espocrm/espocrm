@@ -46,21 +46,21 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         $item = Params::fromArray([
             'order' => 'DESC',
             'orderBy' => 'test',
-            'forbidComplexExpressions' => true,
+            //'forbidComplexExpressions' => true,
             'forceDefault' => true,
         ]);
 
         $this->assertEquals('DESC', $item->getOrder());
         $this->assertEquals('test', $item->getOrderBy());
-        $this->assertTrue($item->forbidComplexExpressions());
+        //$this->assertTrue($item->forbidComplexExpressions());
         $this->assertTrue($item->forceDefault());
 
         $item = Params::fromArray([
-            'forbidComplexExpressions' => false,
+            //'forbidComplexExpressions' => false,
             'forceDefault' => false,
         ]);
 
-        $this->assertFalse($item->forbidComplexExpressions());
+        //$this->assertFalse($item->forbidComplexExpressions());
         $this->assertFalse($item->forceDefault());
     }
 
@@ -71,7 +71,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(null, $item->getOrder());
         $this->assertEquals(null, $item->getOrderBy());
-        $this->assertEquals(false, $item->forbidComplexExpressions());
+        //$this->assertEquals(false, $item->forbidComplexExpressions());
         $this->assertEquals(false, $item->forceDefault());
     }
 

@@ -62,7 +62,7 @@ class Applier
 
         $orderBy = $params->getOrderBy();
 
-        if ($params->forbidComplexExpressions() && $orderBy) {
+        if (/*$params->forbidComplexExpressions() && */$orderBy) {
             if (
                 !is_string($orderBy) ||
                 str_contains($orderBy, '.') ||
@@ -169,8 +169,8 @@ class Applier
             $resultOrderBy .= 'Type';
         }
         else if (
-            !str_contains($orderBy, '.') &&
-            !str_contains($orderBy, ':') &&
+            /*!str_contains($orderBy, '.') &&
+            !str_contains($orderBy, ':') &&*/
             !$this->metadataProvider->hasAttribute($this->entityType, $orderBy)
         ) {
             throw new Error("Order by non-existing field '{$orderBy}'.");

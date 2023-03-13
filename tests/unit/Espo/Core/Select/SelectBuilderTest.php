@@ -210,7 +210,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             );
 
         $orderParams = OrderParams::fromArray([
-            'forbidComplexExpressions' => true,
+            //'forbidComplexExpressions' => true,
             'orderBy' => $searchParams->getOrderBy(),
             'order' => $searchParams->getOrder(),
         ]);

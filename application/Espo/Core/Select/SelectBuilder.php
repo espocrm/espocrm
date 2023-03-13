@@ -459,7 +459,7 @@ class SelectBuilder
             ($this->searchParams->getOrderBy() || $this->searchParams->getOrder())
         ) {
             $params = OrderParams::fromArray([
-                'forbidComplexExpressions' => $this->applyComplexExpressionsForbidden,
+                //'forbidComplexExpressions' => $this->applyComplexExpressionsForbidden,
                 'orderBy' => $this->searchParams->getOrderBy(),
                 'order' => $this->searchParams->getOrder(),
             ]);
