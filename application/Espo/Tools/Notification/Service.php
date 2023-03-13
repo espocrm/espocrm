@@ -29,13 +29,13 @@
 
 namespace Espo\Tools\Notification;
 
+use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Entities\Note;
 use Espo\Entities\Notification;
 use Espo\Entities\User;
 use Espo\Entities\Email;
 
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Util;
 use Espo\Core\AclManager;
 use Espo\Core\WebSocket\Submission;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
@@ -45,22 +45,13 @@ use Espo\ORM\EntityManager;
 
 class Service
 {
-    private EntityManager $entityManager;
-    private Config $config;
-    private AclManager $aclManager;
-    private Submission $webSocketSubmission;
-
     public function __construct(
-        EntityManager $entityManager,
-        Config $config,
-        AclManager $aclManager,
-        Submission $webSocketSubmission
-    ) {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->aclManager = $aclManager;
-        $this->webSocketSubmission = $webSocketSubmission;
-    }
+        private EntityManager $entityManager,
+        private Config $config,
+        private AclManager $aclManager,
+        private Submission $webSocketSubmission,
+        private RecordIdGenerator $idGenerator
+    ) {}
 
     public function notifyAboutMentionInPost(string $userId, Note $note): void
     {
@@ -131,7 +122,7 @@ class Service
             $notification = $this->entityManager->getNewEntity(Notification::ENTITY_TYPE);
 
             $notification->set([
-                'id' => Util::generateId(),
+                'id' => $this->idGenerator->generate(),
                 'data' => [
                     'noteId' => $note->getId(),
                 ],
