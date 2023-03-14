@@ -29,6 +29,7 @@
 
 namespace tests\integration\Espo\Currency;
 
+use Espo\Core\Formula\Manager as FormulaManager;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\Tools\Currency\RateService;
 use Espo\Core\Currency\Rates;
@@ -97,5 +98,28 @@ class CurrencyTest extends \tests\integration\Core\BaseTestCase
         $this->assertInstanceOf(Currency::class, $value);
         $this->assertEquals('10.2000', $value->getAmountAsString());
         $this->assertEquals(0, $value->compare(Currency::create('10.2', 'USD')));
+    }
+
+    public function testFormulaConvert(): void
+    {
+        $formulaManager = $this->getContainer()->getByClass(FormulaManager::class);
+
+        $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);
+
+        $configWriter->set('currencyList', ['USD', 'EUR']);
+        $configWriter->set('defaultCurrency', 'USD');
+        $configWriter->set('baseCurrency', 'USD');
+        $configWriter->set('currencyRates', [
+            'EUR' => 2.0,
+        ]);
+        $configWriter->save();
+
+        $script = "ext\\currency\\convert('0.5', 'EUR')";
+        $value = $formulaManager->run($script);
+        $this->assertEquals(1.0, (float) $value);
+
+        $script = "ext\\currency\\convert('0.5', 'EUR', 'USD')";
+        $value = $formulaManager->run($script);
+        $this->assertEquals(1.0, (float) $value);
     }
 }

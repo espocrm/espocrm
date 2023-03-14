@@ -495,6 +495,16 @@
         {
             "name": "ext\\user\\sendAccessInfo",
             "insertText": "ext\\user\\sendAccessInfo(USER_ID)"
+        },
+        {
+            "name": "ext\\email\\send",
+            "insertText": "ext\\email\\send(EMAIL_ID)",
+            "returnType": "bool"
+        },
+        {
+            "name": "ext\\currency\\convert",
+            "insertText": "ext\\currency\\convert(AMOUNT, FROM_CODE)",
+            "returnType": "string"
         }
     ]
 }
