@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/meeting/fields/date-start', 'views/fields/datetime-optional', function (Dep) {
+define('crm:views/meeting/fields/date-start', ['views/fields/datetime-optional'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,6 +34,7 @@ Espo.define('crm:views/meeting/fields/date-start', 'views/fields/datetime-option
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.noneOption = this.translate('All-Day', 'labels', 'Meeting');
         },
 
@@ -58,7 +59,9 @@ Espo.define('crm:views/meeting/fields/date-start', 'views/fields/datetime-option
         },
 
         controlTimePartVisibility: function () {
-            if (!this.isEditMode()) return;
+            if (!this.isEditMode()) {
+                return;
+            }
 
             if (this.isInlineEditMode()) {
                 if (this.model.get('isAllDay')) {
@@ -69,7 +72,6 @@ Espo.define('crm:views/meeting/fields/date-start', 'views/fields/datetime-option
                     this.$el.find('.time-picker-btn').removeClass('hidden');
                 }
             }
-        }
-
+        },
     });
 });

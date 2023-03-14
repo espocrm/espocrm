@@ -32,6 +32,8 @@ namespace Espo\Core\Mail;
 use RuntimeException;
 
 /**
+ * SMTP parameters.
+ *
  * @immutable
  */
 class SmtpParams
@@ -40,7 +42,7 @@ class SmtpParams
     private int $port;
     private ?string $fromAddress = null;
     private ?string $fromName = null;
-    /** @var ?array<string,mixed> */
+    /** @var ?array<string, mixed> */
     private ?array $connectionOptions = null;
     private bool $auth = false;
     private ?string $authMechanism = null;
@@ -77,7 +79,7 @@ class SmtpParams
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
@@ -93,7 +95,7 @@ class SmtpParams
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     public static function fromArray(array $params): self
     {
@@ -152,7 +154,7 @@ class SmtpParams
     }
 
     /**
-     * @return array<string,mixed>|null
+     * @return ?array<string, mixed>
      */
     public function getConnectionOptions(): ?array
     {
@@ -209,7 +211,7 @@ class SmtpParams
     }
 
     /**
-     * @param array<string,mixed>|null $connectionOptions
+     * @param ?array<string, mixed> $connectionOptions
      */
     public function withConnectionOptions(?array $connectionOptions): self
     {

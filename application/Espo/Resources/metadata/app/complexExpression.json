@@ -80,6 +80,14 @@
             "insertText": "IF:(CONDITION, THEN_VALUE, ELSE_VALUE)"
         },
         {
+            "name": "SWITCH",
+            "insertText": "SWITCH:(CONDITION1, VALUE1, CONDITION2, VALUE2, ELSE_VALUE)"
+        },
+        {
+            "name": "MAP",
+            "insertText": "MAP:(EXPR, WHEN_VALUE1, THEN_VALUE1, WHEN_VALUE2, THEN_VALUE2, ELSE_VALUE)"
+        },
+        {
             "name": "MONTH_NUMBER",
             "insertText": "MONTH_NUMBER:(DATE_VALUE)",
             "returnType": "int"

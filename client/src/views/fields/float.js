@@ -67,7 +67,7 @@ define('views/fields/float', ['views/fields/int'], function (Dep) {
          */
         setupAutoNumericOptions: function () {
             this.autoNumericOptions = {
-                digitGroupSeparator: this.thousandSeparator,
+                digitGroupSeparator: this.thousandSeparator || '',
                 decimalCharacter: this.decimalMark,
                 modifyValueOnWheel: false,
                 selectOnFocus: false,

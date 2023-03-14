@@ -55,17 +55,14 @@ class JobScheduler
     private ?Data $data = null;
     private ?DateTimeImmutable $time = null;
     private ?DateInterval $delay = null;
-    private EntityManager $entityManager;
 
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     /**
      * A class name of the job. Should implement the `Job` interface.
      *
-     * @param class-string $className
+     * @param class-string<Job> $className
      */
     public function setClassName(string $className): self
     {
@@ -87,7 +84,7 @@ class JobScheduler
     /**
      * In what queue to run the job.
      *
-     * @param string|null $queue A queue name. Available names are defined in the `QueueName` class.
+     * @param ?string $queue A queue name. Available names are defined in the `QueueName` class.
      */
     public function setQueue(?string $queue): self
     {
@@ -100,7 +97,7 @@ class JobScheduler
      * In what group to run the job. Jobs within a group will run one-by-one. Jobs with different group
      * can run in parallel. The job can't have both queue and group set.
      *
-     * @param string|null $group A group. Any string ID value can be used as a group name. E.g. a user ID.
+     * @param ?string $group A group. Any string ID value can be used as a group name. E.g. a user ID.
      */
     public function setGroup(?string $group): self
     {
@@ -140,7 +137,7 @@ class JobScheduler
     /**
      * Set data to be passed to the job.
      *
-     * @param Data|array<string,mixed>|null $data
+     * @param Data|array<string, mixed>|null $data
      */
     public function setData($data): self
     {
@@ -177,7 +174,8 @@ class JobScheduler
 
         $data = $this->data ?? Data::create();
 
-        $entity = $this->entityManager->createEntity(JobEntity::ENTITY_TYPE, [
+        /** @var JobEntity */
+        return $this->entityManager->createEntity(JobEntity::ENTITY_TYPE, [
             'name' => $this->className,
             'className' => $this->className,
             'queue' => $this->queue,
@@ -187,8 +185,5 @@ class JobScheduler
             'data' => $data->getRaw(),
             'executeTime' => $time->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
         ]);
-
-        /** @var JobEntity $entity */
-        return $entity;
     }
 }

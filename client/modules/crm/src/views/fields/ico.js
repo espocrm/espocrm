@@ -25,28 +25,31 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('crm:views/fields/ico', 'views/fields/base', function (Dep) {
+
+define('crm:views/fields/ico', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
-        setup: function () {
-            var tpl;
+        templateContent: `
+            <span
+                class="{{iconClass}} text-muted action icon"
+                style="cursor: pointer"
+                title="{{viewLabel}}"
+                data-action="quickView"
+                data-id="{{id}}"
+                {{#if notRelationship}}data-scope="{{scope}}"{{/if}}
+            ></span>
+        `,
 
-            var icoTpl;
-            if (this.params.notRelationship) {
-                icoTpl = '<span class="{iconClass} text-muted action icon" style="cursor: pointer" title="'+this.translate('View')+'" data-action="quickView" data-id="'+this.model.id+'" data-scope="'+this.model.name+'"></span>';
-            } else {
-                icoTpl = '<span class="{iconClass} text-muted action icon" style="cursor: pointer" title="'+this.translate('View')+'" data-action="quickView" data-id="'+this.model.id+'"></span>';
-            }
-
-            var iconClass = this.getMetadata().get(['clientDefs', this.model.name, 'iconClass']) || 'far fa-calendar-times';
-
-            tpl = icoTpl.replace('{iconClass}', iconClass);
-
-
-            this._template = tpl;
-        }
-
+        data: function () {
+            return {
+                notRelationship: this.params.notRelationship,
+                viewLabel: this.translate('View'),
+                id: this.model.id,
+                scope: this.model.entityType,
+                iconClass: this.getMetadata().get(['clientDefs', this.model.entityType, 'iconClass']) ||
+                    'far fa-calendar-times',
+            };
+        },
     });
-
 });

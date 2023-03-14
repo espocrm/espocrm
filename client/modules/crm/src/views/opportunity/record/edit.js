@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/opportunity/record/edit', 'views/record/edit', function (Dep) {
+define('crm:views/opportunity/record/edit', ['views/record/edit'], function (Dep) {
 
     return Dep.extend({
 
@@ -36,10 +36,10 @@ Espo.define('crm:views/opportunity/record/edit', 'views/record/edit', function (
             var probabilityMap = this.getMetadata().get('entityDefs.Opportunity.fields.stage.probabilityMap') || {};
 
             var stage = this.model.get('stage');
+
             if (stage in probabilityMap) {
                 this.model.set('probability', probabilityMap[stage], {silent: true});
             }
-        }
+        },
     });
 });
-

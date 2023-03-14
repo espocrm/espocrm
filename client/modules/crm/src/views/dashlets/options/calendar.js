@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/dashlets/options/calendar', 'views/dashlets/options/base', function (Dep) {
+define('crm:views/dashlets/options/calendar', ['views/dashlets/options/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -40,6 +40,7 @@ Espo.define('crm:views/dashlets/options/calendar', 'views/dashlets/options/base'
 
         init: function () {
             Dep.prototype.init.call(this);
+
             this.fields.enabledScopeList.options = this.getConfig().get('calendarEntityList') || [];
         },
 
@@ -60,9 +61,9 @@ Espo.define('crm:views/dashlets/options/calendar', 'views/dashlets/options/base'
                 if (o && o.ui) {
                     this.model.set('teamsIds', []);
                 }
+
                 this.hideField('teams');
             }
-        }
-
+        },
     });
 });

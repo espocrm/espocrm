@@ -39,8 +39,7 @@ use Espo\ORM\Query\Select;
  */
 class Exists implements WhereItem
 {
-    /** @var array<string, mixed> */
-    private $rawValue = [];
+    private function __construct(private Select $rawValue) {}
 
     public function getRaw(): array
     {
@@ -52,19 +51,13 @@ class Exists implements WhereItem
         return 'EXISTS';
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    public function getRawValue(): array
+    public function getRawValue(): Select
     {
         return $this->rawValue;
     }
 
     public static function create(Select $subQuery): self
     {
-        $obj = new self();
-        $obj->rawValue = $subQuery->getRaw();
-
-        return $obj;
+        return new self($subQuery);
     }
 }

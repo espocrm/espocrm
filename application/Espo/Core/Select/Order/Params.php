@@ -34,11 +34,13 @@ use Espo\Core\Select\SearchParams;
 use InvalidArgumentException;
 
 /**
+ * Order parameters.
+ *
  * @immutable
  */
 class Params
 {
-    private bool $forbidComplexExpressions = false;
+    //private bool $forbidComplexExpressions = false;
     private bool $forceDefault = false;
     /** @var mixed */
     private $orderBy = null;
@@ -48,13 +50,17 @@ class Params
     private function __construct() {}
 
     /**
-     * @param array<string, mixed> $params
+     * @param array{
+     *     forceDefault?: bool,
+     *     orderBy?: ?string,
+     *     order?: SearchParams::ORDER_ASC|SearchParams::ORDER_DESC|null,
+     * } $params
      */
-    public static function fromArray(array $params): self
+    public static function fromAssoc(array $params): self
     {
         $object = new self();
 
-        $object->forbidComplexExpressions = $params['forbidComplexExpressions'] ?? false;
+        //$object->forbidComplexExpressions = $params['forbidComplexExpressions'] ?? false;
         $object->forceDefault = $params['forceDefault'] ?? false;
         $object->orderBy = $params['orderBy'] ?? null;
         $object->order = $params['order'] ?? null;
@@ -69,10 +75,13 @@ class Params
             throw new InvalidArgumentException("Bad orderBy.");
         }
 
+        /** @var ?string $order */
+        $order = $object->order;
+
         if (
-            $object->order &&
-            $object->order !== SearchParams::ORDER_ASC &&
-            $object->order !== SearchParams::ORDER_DESC
+            $order &&
+            $order !== SearchParams::ORDER_ASC &&
+            $order !== SearchParams::ORDER_DESC
         ) {
             throw new InvalidArgumentException("Bad order.");
         }
@@ -80,16 +89,22 @@ class Params
         return $object;
     }
 
-    public function forbidComplexExpressions(): bool
+    /*public function forbidComplexExpressions(): bool
     {
         return $this->forbidComplexExpressions;
-    }
+    }*/
 
+    /**
+     * Force default order.
+     */
     public function forceDefault(): bool
     {
         return $this->forceDefault;
     }
 
+    /**
+     * An order-By field.
+     */
     public function getOrderBy(): ?string
     {
         /** @var ?string */
@@ -97,6 +112,8 @@ class Params
     }
 
     /**
+     * An order direction.
+     *
      * @return SearchParams::ORDER_ASC|SearchParams::ORDER_DESC|null
      */
     public function getOrder(): ?string

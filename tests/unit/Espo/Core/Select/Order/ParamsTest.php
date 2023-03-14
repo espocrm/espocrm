@@ -43,35 +43,35 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
 
     public function testFromArray()
     {
-        $item = Params::fromArray([
+        $item = Params::fromAssoc([
             'order' => 'DESC',
             'orderBy' => 'test',
-            'forbidComplexExpressions' => true,
+            //'forbidComplexExpressions' => true,
             'forceDefault' => true,
         ]);
 
         $this->assertEquals('DESC', $item->getOrder());
         $this->assertEquals('test', $item->getOrderBy());
-        $this->assertTrue($item->forbidComplexExpressions());
+        //$this->assertTrue($item->forbidComplexExpressions());
         $this->assertTrue($item->forceDefault());
 
-        $item = Params::fromArray([
-            'forbidComplexExpressions' => false,
+        $item = Params::fromAssoc([
+            //'forbidComplexExpressions' => false,
             'forceDefault' => false,
         ]);
 
-        $this->assertFalse($item->forbidComplexExpressions());
+        //$this->assertFalse($item->forbidComplexExpressions());
         $this->assertFalse($item->forceDefault());
     }
 
     public function testEmpty()
     {
-        $item = Params::fromArray([
+        $item = Params::fromAssoc([
         ]);
 
         $this->assertEquals(null, $item->getOrder());
         $this->assertEquals(null, $item->getOrderBy());
-        $this->assertEquals(false, $item->forbidComplexExpressions());
+        //$this->assertEquals(false, $item->forbidComplexExpressions());
         $this->assertEquals(false, $item->forceDefault());
     }
 
@@ -79,7 +79,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $params = Params::fromArray([
+        $params = Params::fromAssoc([
             'order' => 'd',
         ]);
     }
@@ -88,7 +88,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $params = Params::fromArray([
+        $params = Params::fromAssoc([
             'bad' => 'd',
         ]);
     }

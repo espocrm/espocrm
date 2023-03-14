@@ -36,6 +36,8 @@ use InvalidArgumentException;
 use RuntimeException;
 
 /**
+ * A where item.
+ *
  * @immutable
  */
 class Item

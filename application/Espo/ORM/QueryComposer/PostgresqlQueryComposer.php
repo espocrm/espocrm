@@ -49,17 +49,24 @@ class PostgresqlQueryComposer extends BaseQueryComposer
     protected int $aliasMaxLength = 128;
 
     /** @var array<string, string> */
-    protected array $comparisonOperators = [
+    protected array $comparisonOperatorMap = [
         '!=s' => 'NOT IN',
         '=s' => 'IN',
         '!=' => '<>',
         '!*' => 'NOT ILIKE',
         '*' => 'ILIKE',
-        '>=' => '>=',
-        '<=' => '<=',
-        '>' => '>',
-        '<' => '<',
-        '=' => '=',
+        '>=any' => '>= ANY',
+        '<=any' => '<= ANY',
+        '>any' => '> ANY',
+        '<any' => '< ANY',
+        '!=any' => '<> ANY',
+        '=any' => '= ANY',
+        '>=all' => '>= ALL',
+        '<=all' => '<= ALL',
+        '>all' => '> ALL',
+        '<all' => '< ALL',
+        '!=all' => '<> ALL',
+        '=all' => '= ALL',
     ];
 
     /** @var array<string, string> */

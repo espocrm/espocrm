@@ -100,7 +100,7 @@ define('views/fields/int', ['views/fields/base', 'lib!autonumeric'], function (D
          */
         setupAutoNumericOptions: function () {
             this.autoNumericOptions = {
-                digitGroupSeparator: !this.disableFormatting ? this.thousandSeparator : null,
+                digitGroupSeparator: (!this.disableFormatting ? this.thousandSeparator : null) || '',
                 modifyValueOnWheel: false,
                 decimalPlaces: 0,
                 selectOnFocus: false,

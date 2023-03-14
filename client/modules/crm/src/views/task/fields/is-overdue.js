@@ -26,33 +26,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/task/fields/is-overdue', 'views/fields/base', function (Dep) {
+define('crm:views/task/fields/is-overdue', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
         readOnly: true,
 
-        _template: '{{#if isOverdue}}<span class="label label-danger">' +
-            '{{translate "overdue" scope="Task"}}</span>{{/if}}',
+        templateContent: `
+            {{#if isOverdue}}
+            <span class="label label-danger">{{translate "overdue" scope="Task"}}</span>
+            {{/if}}
+        `,
 
         data: function () {
             var isOverdue = false;
-            if (['Completed', 'Canceled'].indexOf(this.model.get('status')) == -1) {
+
+            if (['Completed', 'Canceled'].indexOf(this.model.get('status')) === -1) {
                 if (this.model.has('dateEnd')) {
                     if (!this.isDate()) {
-                        var value = this.model.get('dateEnd');
+                        let value = this.model.get('dateEnd');
+
                         if (value) {
-                            var d = this.getDateTime().toMoment(value);
-                            var now = moment().tz(this.getDateTime().timeZone || 'UTC');
+                            let d = this.getDateTime().toMoment(value);
+                            let now = moment().tz(this.getDateTime().timeZone || 'UTC');
+
                             if (d.unix() < now.unix()) {
                                 isOverdue = true;
                             }
                         }
                     } else {
-                        var value = this.model.get('dateEndDate');
+                        let value = this.model.get('dateEndDate');
+
                         if (value) {
-                            var d = moment.utc(value + ' 23:59', this.getDateTime().internalDateTimeFormat);
-                            var now = this.getDateTime().getNowMoment();
+                            let d = moment.utc(value + ' 23:59', this.getDateTime().internalDateTimeFormat);
+                            let now = this.getDateTime().getNowMoment();
+
                             if (d.unix() < now.unix()) {
                                 isOverdue = true;
                             }
@@ -61,8 +69,9 @@ Espo.define('crm:views/task/fields/is-overdue', 'views/fields/base', function (D
 
                 }
             }
+
             return {
-                isOverdue: isOverdue
+                isOverdue: isOverdue,
             };
         },
 
@@ -72,12 +81,12 @@ Espo.define('crm:views/task/fields/is-overdue', 'views/fields/base', function (D
 
         isDate: function () {
             var dateValue = this.model.get('dateEnd');
-            if (dateValue && dateValue != '') {
+
+            if (dateValue) {
                 return true;
             }
+
             return false;
         },
-
     });
-
 });

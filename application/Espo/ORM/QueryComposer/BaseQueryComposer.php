@@ -34,13 +34,14 @@ use Espo\ORM\EntityFactory;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Metadata;
 use Espo\ORM\Mapper\Helper;
-use Espo\ORM\Query\Query as Query;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Query;
 use Espo\ORM\Query\SelectingQuery;
-use Espo\ORM\Query\Select as SelectQuery;
-use Espo\ORM\Query\Update as UpdateQuery;
-use Espo\ORM\Query\Insert as InsertQuery;
-use Espo\ORM\Query\Delete as DeleteQuery;
-use Espo\ORM\Query\Union as UnionQuery;
+use Espo\ORM\Query\Select;
+use Espo\ORM\Query\Update;
+use Espo\ORM\Query\Insert;
+use Espo\ORM\Query\Delete;
+use Espo\ORM\Query\Union;
 use Espo\ORM\QueryComposer\Part\FunctionConverterFactory;
 
 use PDO;
@@ -95,18 +96,51 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected const EXISTS_OPERATOR = 'EXISTS';
 
+    /** @var string[] */
+    private array $comparisonOperators = [
+        '!=s',
+        '=s',
+        '!=',
+        '!*',
+        '*',
+        '>=',
+        '<=',
+        '>',
+        '<',
+        '=',
+        '>=any',
+        '<=any',
+        '>any',
+        '<any',
+        '!=any',
+        '=any',
+        '>=all',
+        '<=all',
+        '>all',
+        '<all',
+        '!=all',
+        '=all',
+    ];
+
     /** @var array<string, string> */
-    protected array $comparisonOperators = [
+    protected array $comparisonOperatorMap = [
         '!=s' => 'NOT IN',
         '=s' => 'IN',
         '!=' => '<>',
         '!*' => 'NOT LIKE',
         '*' => 'LIKE',
-        '>=' => '>=',
-        '<=' => '<=',
-        '>' => '>',
-        '<' => '<',
-        '=' => '=',
+        '>=any' => '>= ANY',
+        '<=any' => '<= ANY',
+        '>any' => '> ANY',
+        '<any' => '< ANY',
+        '!=any' => '<> ANY',
+        '=any' => '= ANY',
+        '>=all' => '>= ALL',
+        '<=all' => '<= ALL',
+        '>all' => '> ALL',
+        '<all' => '< ALL',
+        '!=all' => '<> ALL',
+        '=all' => '= ALL',
     ];
 
     /** @var array<string, string> */
@@ -222,46 +256,46 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected function composeSelecting(SelectingQuery $query): string
     {
-        if ($query instanceof SelectQuery) {
+        if ($query instanceof Select) {
             return $this->composeSelect($query);
         }
 
-        if ($query instanceof UnionQuery) {
+        if ($query instanceof Union) {
             return $this->composeUnion($query);
         }
 
         throw new RuntimeException("Unknown query type.");
     }
 
-    public function composeSelect(SelectQuery $query): string
+    public function composeSelect(Select $query): string
     {
         $params = $query->getRaw();
 
         return $this->createSelectQueryInternal($params);
     }
 
-    public function composeUpdate(UpdateQuery $query): string
+    public function composeUpdate(Update $query): string
     {
         $params = $query->getRaw();
 
         return $this->createUpdateQuery($params);
     }
 
-    public function composeDelete(DeleteQuery $query): string
+    public function composeDelete(Delete $query): string
     {
         $params = $query->getRaw();
 
         return $this->createDeleteQuery($params);
     }
 
-    public function composeInsert(InsertQuery $query): string
+    public function composeInsert(Insert $query): string
     {
         $params = $query->getRaw();
 
         return $this->createInsertQuery($params);
     }
 
-    public function composeUnion(UnionQuery $query): string
+    public function composeUnion(Union $query): string
     {
         $params = $query->getRaw();
 
@@ -279,7 +313,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $params['from'] = $entityType;
 
-        return $this->composeSelect(SelectQuery::fromRaw($params));
+        return $this->composeSelect(Select::fromRaw($params));
     }
 
     /**
@@ -422,7 +456,7 @@ abstract class BaseQueryComposer implements QueryComposer
         foreach ($selectQueryList as $select) {
             $rawSelectParams = $select->getRaw();
             $rawSelectParams['strictSelect'] = true;
-            $select = SelectQuery::fromRaw($rawSelectParams);
+            $select = Select::fromRaw($rawSelectParams);
 
             $subSqlList[] = '(' . $this->composeSelect($select) . ')';
         }
@@ -798,7 +832,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $extraSelect = [];
 
             foreach ($params['extraAdditionalSelect'] as $item) {
-                if (!in_array($item, $params['select'])) {
+                if (!in_array($item, $params['select'] ?? [])) {
                     $extraSelect[] = $item;
                 }
             }
@@ -950,6 +984,52 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         switch ($function) {
+            case 'SWITCH':
+                if (count($argumentPartList) < 2) {
+                    throw new RuntimeException("Not enough arguments for SWITCH function.");
+                }
+
+                $part = "CASE";
+
+                for ($i = 0; $i < floor(count($argumentPartList) / 2); $i++) {
+                    $whenPart = $argumentPartList[$i * 2];
+                    $thenPart = $argumentPartList[$i * 2 + 1];
+
+                    $part .= " WHEN {$whenPart} THEN {$thenPart}";
+                }
+
+                if (count($argumentPartList) % 2) {
+                    $part .= " ELSE " . end($argumentPartList);
+                }
+
+                $part .= " END";
+
+                return $part;
+
+            case 'MAP':
+                if (count($argumentPartList) < 3) {
+                    throw new RuntimeException("Not enough arguments for MAP function.");
+                }
+
+                $part = "CASE " . $argumentPartList[0];
+
+                array_shift($argumentPartList);
+
+                for ($i = 0; $i < floor(count($argumentPartList) / 2); $i++) {
+                    $whenPart = $argumentPartList[$i * 2];
+                    $thenPart = $argumentPartList[$i * 2 + 1];
+
+                    $part .= " WHEN {$whenPart} THEN {$thenPart}";
+                }
+
+                if (count($argumentPartList) % 2) {
+                    $part .= " ELSE " . end($argumentPartList);
+                }
+
+                $part .= " END";
+
+                return $part;
+
             case 'MONTH':
                 return "DATE_FORMAT({$part}, '%Y-%m')";
 
@@ -2328,6 +2408,30 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
+     * @return array{string, string, string}
+     */
+    private function splitWhereLeftItem(string $item): array
+    {
+        if (preg_match('/^[a-z0-9]+$/i', $item)) {
+            return [$item, '=', '='];
+        }
+
+        foreach ($this->comparisonOperators as $operator) {
+            $sqlOperator = $this->comparisonOperatorMap[$operator] ?? $operator;
+
+            if (!str_ends_with($item, $operator)) {
+                continue;
+            }
+
+            $expression = trim(substr($item, 0, -strlen($operator)));
+
+            return [$expression, $sqlOperator, $operator];
+        }
+
+        return [$item, '=', '='];
+    }
+
+    /**
      * @param array<string, mixed> $params
      */
     protected function getWherePartItem(
@@ -2368,11 +2472,12 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($field === self::EXISTS_OPERATOR) {
-            if (!is_array($value)) {
+            if (!$value instanceof Select) {
                 throw new RuntimeException("Bad EXISTS usage in where-clause.");
+
             }
 
-            $subQueryPart = $this->createSelectQueryInternal($value);
+            $subQueryPart = $this->composeSelect($value);
 
             return "EXISTS ({$subQueryPart})";
         }
@@ -2386,21 +2491,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $isNotValue = true;
         }
 
-        $operator = '=';
-        $operatorOrm = '=';
-
-        if (!preg_match('/^[a-z0-9]+$/i', $field)) {
-            foreach ($this->comparisonOperators as $op => $opDb) {
-                if (str_ends_with($field, $op)) {
-                    $field = trim(substr($field, 0, -strlen($op)));
-
-                    $operatorOrm = $op;
-                    $operator = $opDb;
-
-                    break;
-                }
-            }
-        }
+        [$field, $operator, $operatorOrm] = $this->splitWhereLeftItem($field);
 
         $leftPart = null;
 
@@ -2440,8 +2531,14 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($operatorOrm === '=s' || $operatorOrm === '!=s') {
+            if ($value instanceof Select) {
+                $subSql = $this->composeSelect($value);
+
+                return "{$leftPart} {$operator} ({$subSql})";
+            }
+
             if (!is_array($value)) {
-                return $this->quote(false);
+                throw new RuntimeException("Bad `=s` operator usage, value must be sub-query.");
             }
 
             $subQuerySelectParams = !empty($value['selectParams']) ?
@@ -2463,6 +2560,26 @@ abstract class BaseQueryComposer implements QueryComposer
             $subSql = $this->createSelectQueryInternal($subQuerySelectParams);
 
             return "{$leftPart} {$operator} ({$subSql})";
+        }
+
+        if ($value instanceof Select) {
+            if ($operatorOrm === '*' || $operatorOrm === '!*') {
+                throw new RuntimeException("LIKE operator is not compatible with sub-query.");
+            }
+
+            $subQueryPart = $this->composeSelect($value);
+
+            return "{$leftPart} {$operator} ({$subQueryPart})";
+        }
+
+        if (str_ends_with($operatorOrm, 'any') || str_ends_with($operatorOrm, 'all')) {
+            throw new RuntimeException("ANY/ALL operators can be used only with sub-query.");
+        }
+
+        if ($value instanceof Expression) {
+            $isNotValue = true;
+
+            $value = $value->getValue();
         }
 
         if (is_array($value)) {
@@ -2899,8 +3016,6 @@ abstract class BaseQueryComposer implements QueryComposer
             return $sql;
         }
 
-        $operator = '=';
-
         $isNotValue = false;
         $isComplex = false;
 
@@ -2909,16 +3024,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $isNotValue = true;
         }
 
-        if (!preg_match('/^[a-z0-9]+$/i', $left)) {
-            foreach ($this->comparisonOperators as $op => $opDb) {
-                if (str_ends_with($left, $op)) {
-                    $left = trim(substr($left, 0, -strlen($op)));
-                    $operator = $opDb;
-
-                    break;
-                }
-            }
-        }
+        [$left, $operator] = $this->splitWhereLeftItem($left);
 
         if (Util::isComplexExpression($left)) {
             $isComplex = true;
@@ -2943,6 +3049,12 @@ abstract class BaseQueryComposer implements QueryComposer
             }
 
             $sql .= $this->quoteColumn("{$leftAlias}.{$column}");
+        }
+
+        if ($right instanceof Expression) {
+            $isNotValue = true;
+
+            $right = $right->getValue();
         }
 
         if (is_array($right)) {

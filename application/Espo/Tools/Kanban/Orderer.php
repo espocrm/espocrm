@@ -29,22 +29,17 @@
 
 namespace Espo\Tools\Kanban;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    Utils\Metadata,
-};
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Id\RecordIdGenerator;
+use Espo\Core\Utils\Metadata;
 
 class Orderer
 {
-    private $entityManager;
-
-    private $metadata;
-
-    public function __construct(EntityManager $entityManager, Metadata $metadata)
-    {
-        $this->entityManager = $entityManager;
-        $this->metadata = $metadata;
-    }
+    public function __construct(
+        private EntityManager $entityManager,
+        private Metadata $metadata,
+        private RecordIdGenerator $idGenerator
+    ) {}
 
     public function setEntityType(string $entityType): OrdererProcessor
     {
@@ -70,7 +65,8 @@ class Orderer
     {
         return new OrdererProcessor(
             $this->entityManager,
-            $this->metadata
+            $this->metadata,
+            $this->idGenerator
         );
     }
 }

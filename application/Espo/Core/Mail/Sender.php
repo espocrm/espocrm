@@ -76,27 +76,14 @@ class Sender
     /** @var iterable<Attachment>|null */
     private $attachmentList = null;
 
-    private Config $config;
-    private EntityManager $entityManager;
-    private Log $log;
-    private TransportFactory $transportFactory;
-    private SendingAccountProvider $accountProvider;
-    private FileStorageManager $fileStorageManager;
-
     public function __construct(
-        Config $config,
-        EntityManager $entityManager,
-        Log $log,
-        TransportFactory $transportFactory,
-        SendingAccountProvider $accountProvider,
-        FileStorageManager $fileStorageManager
+        private Config $config,
+        private EntityManager $entityManager,
+        private Log $log,
+        private TransportFactory $transportFactory,
+        private SendingAccountProvider $accountProvider,
+        private FileStorageManager $fileStorageManager
     ) {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->log = $log;
-        $this->transportFactory = $transportFactory;
-        $this->accountProvider = $accountProvider;
-        $this->fileStorageManager = $fileStorageManager;
 
         $this->useGlobal();
     }

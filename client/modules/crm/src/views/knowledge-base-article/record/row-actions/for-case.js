@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/knowledge-base-article/record/row-actions/for-case', 'views/record/row-actions/relationship-view-and-unlink', function (Dep) {
+define('crm:views/knowledge-base-article/record/row-actions/for-case',
+['views/record/row-actions/relationship-view-and-unlink'], function (Dep) {
 
     return Dep.extend({
 
@@ -38,13 +39,12 @@ Espo.define('crm:views/knowledge-base-article/record/row-actions/for-case', 'vie
                     action: 'sendInEmail',
                     label: 'Send in Email',
                     data: {
-                        id: this.model.id
-                    }
+                        id: this.model.id,
+                    },
                 });
             }
 
             return actionList;
-        }
+        },
     });
-
 });

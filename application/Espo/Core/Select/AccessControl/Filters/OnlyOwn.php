@@ -65,7 +65,7 @@ class OnlyOwn implements Filter
                 ->where(["assignedUsersMiddle.{$key2}" => $this->user->getId()])
                 ->build();
 
-            $queryBuilder->where(['id=s' => $subQuery->getRaw()]);
+            $queryBuilder->where(['id=s' => $subQuery]);
 
             return;
         }

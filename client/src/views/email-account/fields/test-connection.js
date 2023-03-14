@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-account/fields/test-connection', 'views/fields/base', function (Dep) {
+define('views/email-account/fields/test-connection', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -67,7 +67,7 @@ define('views/email-account/fields/test-connection', 'views/fields/base', functi
         },
 
         getData: function () {
-            var data = {
+            return {
                 'host': this.model.get('host'),
                 'port': this.model.get('port'),
                 'security': this.model.get('security'),
@@ -77,31 +77,31 @@ define('views/email-account/fields/test-connection', 'views/fields/base', functi
                 emailAddress: this.model.get('emailAddress'),
                 userId: this.model.get('assignedUserId'),
             };
-
-            return data;
         },
 
         test: function () {
-            var data = this.getData();
+            let data = this.getData();
 
-            var $btn = this.$el.find('button');
+            let $btn = this.$el.find('button');
 
             $btn.addClass('disabled');
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-            $.ajax({
-                url: this.url,
-                type: 'POST',
-                data: JSON.stringify(data),
-                error: (xhr, status) => {
-                    var statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
+            Espo.Ajax.postRequest(this.url, data)
+                .then(() => {
+                    $btn.removeClass('disabled');
+
+                    Espo.Ui.success(this.translate('connectionIsOk', 'messages', 'EmailAccount'));
+                })
+                .catch(xhr => {
+                    let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
                     statusReason = statusReason.replace(/ $/, '');
                     statusReason = statusReason.replace(/,$/, '');
 
-                    var msg = this.translate('Error');
+                    let msg = this.translate('Error');
 
-                    if (xhr.status != 200) {
+                    if (parseInt(xhr.status) !== 200) {
                         msg += ' ' + xhr.status;
                     }
 
@@ -116,13 +116,7 @@ define('views/email-account/fields/test-connection', 'views/fields/base', functi
                     xhr.errorIsHandled = true;
 
                     $btn.removeClass('disabled');
-                }
-            }).then(() => {
-                $btn.removeClass('disabled');
-
-                Espo.Ui.success(this.translate('connectionIsOk', 'messages', 'EmailAccount'));
-            });
+                });
         },
-
     });
 });

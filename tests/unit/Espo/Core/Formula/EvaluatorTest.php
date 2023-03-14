@@ -176,6 +176,21 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('{token2}', $actual);
     }
 
+    public function testStringMatchExtract(): void
+    {
+        $expression = "string\\matchExtract('test: 1000', '/phone\: (.*)$/')";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(null, $actual);
+
+        $expression = "string\\matchExtract('phone: 1000', '/phone\: (.*)$/')";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(['1000'], $actual);
+
+        $expression = "string\\matchExtract('phone: 1000 2000', '/phone\: (.*) (.*)$/')";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(['1000', '2000'], $actual);
+    }
+
     public function testStringReplace()
     {
         $expression = "string\\replace('hello {test} hello', '{test}', 'hello')";

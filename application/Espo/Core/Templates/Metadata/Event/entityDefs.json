@@ -115,7 +115,7 @@
         "teams": {
             "type": "hasMany",
             "entity": "Team",
-            "relationName": "EntityTeam",
+            "relationName": "entityTeam",
             "layoutRelationshipsDisabled": true
         }
     },

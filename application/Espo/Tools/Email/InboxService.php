@@ -46,28 +46,16 @@ use Exception;
 
 class InboxService
 {
-    private const FOLDER_INBOX = 'inbox';
-    private const FOLDER_DRAFTS = 'drafts';
-
-    private User $user;
-    private EntityManager $entityManager;
-    private AclManager $aclManager;
-    private Log $log;
-    private SelectBuilderFactory $selectBuilderFactory;
+    private const FOLDER_INBOX = Folder::INBOX;
+    private const FOLDER_DRAFTS = Folder::DRAFTS;
 
     public function __construct(
-        User $user,
-        EntityManager $entityManager,
-        AclManager $aclManager,
-        Log $log,
-        SelectBuilderFactory $selectBuilderFactory
-    ) {
-        $this->user = $user;
-        $this->entityManager = $entityManager;
-        $this->aclManager = $aclManager;
-        $this->log = $log;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-    }
+        private User $user,
+        private EntityManager $entityManager,
+        private AclManager $aclManager,
+        private Log $log,
+        private SelectBuilderFactory $selectBuilderFactory
+    ) {}
 
     /**
      * @param string[] $idList
@@ -78,7 +66,7 @@ class InboxService
             try {
                 $this->moveToFolder($id, $folderId, $userId);
             }
-            catch (Exception $e) {}
+            catch (Exception) {}
         }
     }
 

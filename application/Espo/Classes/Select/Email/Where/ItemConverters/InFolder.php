@@ -39,46 +39,29 @@ use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
 use Espo\Classes\Select\Email\Helpers\JoinHelper;
+use Espo\Tools\Email\Folder;
 
 class InFolder implements ItemConverter
 {
-    private User $user;
-    private EntityManager $entityManager;
-    private JoinHelper $joinHelper;
-
-    public function __construct(User $user, EntityManager $entityManager, JoinHelper $joinHelper)
-    {
-        $this->user = $user;
-        $this->entityManager = $entityManager;
-        $this->joinHelper = $joinHelper;
-    }
+    public function __construct(
+        private User $user,
+        private EntityManager $entityManager,
+        private JoinHelper $joinHelper
+    ) {}
 
     public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
     {
         $folderId = $item->getValue();
 
-        switch ($folderId) {
-            case 'all':
-                return WhereClause::fromRaw([]);
-
-            case 'inbox':
-                return $this->convertInbox($queryBuilder);
-
-            case 'important':
-                return $this->convertImportant($queryBuilder);
-
-            case 'sent':
-                return $this->convertSent($queryBuilder);
-
-            case 'trash':
-                return $this->convertTrash($queryBuilder);
-
-            case 'drafts':
-                return $this->convertDraft($queryBuilder);
-
-            default:
-                return $this->convertFolderId($queryBuilder, $folderId);
-        }
+        return match ($folderId) {
+            Folder::ALL => WhereClause::fromRaw([]),
+            Folder::INBOX => $this->convertInbox($queryBuilder),
+            Folder::IMPORTANT => $this->convertImportant($queryBuilder),
+            Folder::SENT => $this->convertSent($queryBuilder),
+            Folder::TRASH => $this->convertTrash($queryBuilder),
+            Folder::DRAFTS => $this->convertDraft($queryBuilder),
+            default => $this->convertFolderId($queryBuilder, $folderId),
+        };
     }
 
     protected function convertInbox(QueryBuilder $queryBuilder): WhereClauseItem
@@ -171,7 +154,7 @@ class InFolder implements ItemConverter
     {
         $this->joinEmailUser($queryBuilder);
 
-        if (substr($folderId, 0, 6) === 'group:') {
+        if (str_starts_with($folderId, 'group:')) {
             $groupFolderId = substr($folderId, 6);
 
             if ($groupFolderId === '') {

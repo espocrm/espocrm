@@ -1236,7 +1236,7 @@ class Service
             ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
                 'isActive' => true,
-                'id=s' => $subQuery->getRaw(),
+                'id=s' => $subQuery,
             ])
             ->select(['id', 'type'])
             ->find();

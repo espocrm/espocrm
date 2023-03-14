@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/lead/fields/acceptance-status', 'views/fields/enum-column', function (Dep) {
+define('crm:views/lead/fields/acceptance-status', ['views/fields/enum-column'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,8 +37,6 @@ Espo.define('crm:views/lead/fields/acceptance-status', 'views/fields/enum-column
             this.params.translation = 'Meeting.options.acceptanceStatus';
 
             Dep.prototype.setup.call(this);
-        }
-
+        },
     });
-
 });

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/integrations/edit', ['view', 'model'], function (Dep, Model) {
+define('views/admin/integrations/edit', ['view', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -53,6 +53,7 @@ Espo.define('views/admin/integrations/edit', ['view', 'model'], function (Dep, M
             this.integration = this.options.integration;
 
             this.helpText = false;
+
             if (this.getLanguage().has(this.integration, 'help', 'Integration')) {
                 this.helpText = this.translate(this.integration, 'help', 'Integration');
             }
@@ -70,30 +71,31 @@ Espo.define('views/admin/integrations/edit', ['view', 'model'], function (Dep, M
                 fields: {
                     enabled: {
                         required: true,
-                        type: 'bool'
+                        type: 'bool',
                     },
                 }
             };
 
             this.wait(true);
 
-            var fields = this.fields = this.getMetadata().get('integrations.' + this.integration + '.fields');
+            this.fields = this.getMetadata().get('integrations.' + this.integration + '.fields');
 
-            Object.keys(this.fields).forEach(function (name) {
+            Object.keys(this.fields).forEach(name => {
                 this.model.defs.fields[name] = this.fields[name];
                 this.dataFieldList.push(name);
-            }, this);
+            });
 
             this.model.populateDefaults();
 
-            this.listenToOnce(this.model, 'sync', function () {
+            this.listenToOnce(this.model, 'sync', () => {
                 this.createFieldView('bool', 'enabled');
-                Object.keys(this.fields).forEach(function (name) {
+
+                Object.keys(this.fields).forEach(name => {
                     this.createFieldView(this.fields[name]['type'], name, null, this.fields[name]);
-                }, this);
+                });
 
                 this.wait(false);
-            }, this);
+            });
 
             this.model.fetch();
         },
@@ -101,7 +103,9 @@ Espo.define('views/admin/integrations/edit', ['view', 'model'], function (Dep, M
         hideField: function (name) {
             this.$el.find('label[data-name="'+name+'"]').addClass('hide');
             this.$el.find('div.field[data-name="'+name+'"]').addClass('hide');
+
             var view = this.getView(name);
+
             if (view) {
                 view.disabled = true;
             }
@@ -110,7 +114,9 @@ Espo.define('views/admin/integrations/edit', ['view', 'model'], function (Dep, M
         showField: function (name) {
             this.$el.find('label[data-name="'+name+'"]').removeClass('hide');
             this.$el.find('div.field[data-name="'+name+'"]').removeClass('hide');
+
             var view = this.getView(name);
+
             if (view) {
                 view.disabled = false;
             }
@@ -118,26 +124,27 @@ Espo.define('views/admin/integrations/edit', ['view', 'model'], function (Dep, M
 
         afterRender: function () {
             if (!this.model.get('enabled')) {
-                this.dataFieldList.forEach(function (name) {
+                this.dataFieldList.forEach(name => {
                     this.hideField(name);
-                }, this);
+                });
             }
 
-            this.listenTo(this.model, 'change:enabled', function () {
+            this.listenTo(this.model, 'change:enabled', () => {
                 if (this.model.get('enabled')) {
-                    this.dataFieldList.forEach(function (name) {
+                    this.dataFieldList.forEach(name => {
                         this.showField(name);
-                    }, this);
+                    });
                 } else {
-                    this.dataFieldList.forEach(function (name) {
+                    this.dataFieldList.forEach(name => {
                         this.hideField(name);
-                    }, this);
+                    });
                 }
-            }, this);
+            });
         },
 
         createFieldView: function (type, name, readOnly, params) {
             var viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+
             this.createView(name, viewName, {
                 model: this.model,
                 el: this.options.el + ' .field[data-name="'+name+'"]',
@@ -148,38 +155,41 @@ Espo.define('views/admin/integrations/edit', ['view', 'model'], function (Dep, M
                 mode: readOnly ? 'detail' : 'edit',
                 readOnly: readOnly,
             });
+
             this.fieldList.push(name);
         },
 
         save: function () {
-            this.fieldList.forEach(function (field) {
+            this.fieldList.forEach(field => {
                 var view = this.getView(field);
+
                 if (!view.readOnly) {
                     view.fetchToModel();
                 }
-            }, this);
+            });
 
             var notValid = false;
-            this.fieldList.forEach(function (field) {
+
+            this.fieldList.forEach(field => {
                 var fieldView = this.getView(field);
+
                 if (fieldView && !fieldView.disabled) {
                     notValid = fieldView.validate() || notValid;
                 }
-            }, this);
+            });
 
             if (notValid) {
                 this.notify('Not valid', 'error');
+
                 return;
             }
 
-            this.listenToOnce(this.model, 'sync', function () {
+            this.listenToOnce(this.model, 'sync', () => {
                 this.notify('Saved', 'success');
-            }, this);
+            });
 
             this.notify('Saving...');
             this.model.save();
         },
-
     });
-
 });

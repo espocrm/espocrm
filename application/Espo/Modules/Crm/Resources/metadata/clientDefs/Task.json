@@ -11,6 +11,19 @@
     "modalViews": {
         "detail": "crm:views/task/modals/detail"
     },
+    "menu": {
+        "detail": {
+            "buttons": [
+                {
+                    "label": "Complete",
+                    "name": "setCompletedMain",
+                    "action": "setCompletedMain",
+                    "iconHtml": "<span class=\"fas fa-check fa-sm\"></span>",
+                    "acl": "edit"
+                }
+            ]
+        }
+    },
     "dynamicLogic": {
         "fields": {
             "dateCompleted": {

@@ -26,11 +26,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/foreign-int', ['views/fields/int'], function (Dep) {
+define('views/fields/foreign-int',
+['views/fields/int', 'helpers/misc/foreign-field'], function (Dep, Helper) {
 
     return Dep.extend({
 
         type: 'foreign',
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            /** @var {module:helpers/misc/foreign-field.Class} */
+            let helper = new Helper(this);
+
+            let foreignParams = helper.getForeignParams();
+
+            this.disableFormatting = foreignParams.disableFormatting;
+        },
     });
 });
 

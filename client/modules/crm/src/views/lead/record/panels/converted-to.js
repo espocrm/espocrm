@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/lead/record/panels/converted-to', 'views/record/panels/side', function (Dep) {
+define('crm:views/lead/record/panels/converted-to', ['views/record/panels/side'], function (Dep) {
 
     return Dep.extend({
 
@@ -40,10 +40,10 @@ Espo.define('crm:views/lead/record/panels/converted-to', 'views/record/panels/si
             if (this.getAcl().check('Contact') && !this.getMetadata().get('scopes.Contact.disabled')) {
                 this.fieldList.push('createdContact');
             }
+
             if (this.getAcl().check('Opportunity') && !this.getMetadata().get('scopes.Opportunity.disabled')) {
                 this.fieldList.push('createdOpportunity');
             }
         },
-
     });
 });

@@ -43,7 +43,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
 
     public function testFromArray()
     {
-        $item = Params::fromArray([
+        $item = Params::fromAssoc([
             'applyPermissionCheck' => true,
             'forbidComplexExpressions' => true,
         ]);
@@ -51,7 +51,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($item->applyPermissionCheck());
         $this->assertTrue($item->forbidComplexExpressions());
 
-        $item = Params::fromArray([
+        $item = Params::fromAssoc([
             'applyPermissionCheck' => false,
             'forbidComplexExpressions' => false,
         ]);
@@ -59,7 +59,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($item->applyPermissionCheck());
         $this->assertFalse($item->forbidComplexExpressions());
 
-        $item = Params::fromArray([
+        $item = Params::fromAssoc([
             'applyPermissionCheck' => false,
             'forbidComplexExpressions' => true,
         ]);
@@ -70,7 +70,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
 
     public function testEmpty()
     {
-        $item = Params::fromArray([
+        $item = Params::fromAssoc([
         ]);
 
         $this->assertFalse($item->applyPermissionCheck());
@@ -81,7 +81,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $params = Params::fromArray([
+        $params = Params::fromAssoc([
             'bad' => 'd',
         ]);
     }

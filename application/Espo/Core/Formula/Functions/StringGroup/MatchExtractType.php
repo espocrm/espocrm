@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,27 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/target/detail', ['views/detail'], function (Dep) {
+namespace Espo\Core\Formula\Functions\StringGroup;
 
-    return Dep.extend({
+use Espo\Core\Formula\EvaluatedArgumentList;
+use Espo\Core\Formula\Exceptions\BadArgumentType;
+use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Func;
 
-        actionConvertToLead: function () {
-            var id = this.model.id;
-            var self = this;
+class MatchExtractType implements Func
+{
+    /**
+     * {@inheritDoc}
+     * @return ?string[]
+     */
+    public function process(EvaluatedArgumentList $arguments): ?array
+    {
+        if (count($arguments) < 2) {
+            throw TooFewArguments::create(2);
+        }
 
-            this.confirm(this.translate('confirmation', 'messages'), function () {
-                self.notify('Please wait...');
-                $.ajax({
-                    url: 'Target/action/convert',
-                    data: JSON.stringify({id: id}),
-                    type: 'POST',
-                    success: function (data) {
-                        self.getRouter().navigate('#Lead/view/' + data.id, {trigger: true});
-                        self.notify('Converted', 'success');
-                    }
-                });
-            }, this);
-        },
+        $string = $arguments[0];
+        $pattern = $arguments[1];
 
-    });
-});
+        if (!is_string($string)) {
+            throw BadArgumentType::create(1, 'string');
+        }
+
+        if (!is_string($pattern)) {
+            throw BadArgumentType::create(2, 'string');
+        }
+
+        $result = preg_match($pattern, $string, $matches);
+
+        if (!$result) {
+            return null;
+        }
+
+        return array_slice($matches, 1);
+    }
+}

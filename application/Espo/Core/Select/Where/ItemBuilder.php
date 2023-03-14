@@ -31,6 +31,9 @@ namespace Espo\Core\Select\Where;
 
 use Espo\Core\Select\Where\Item\Data;
 
+/**
+ * A where-item builder.
+ */
 class ItemBuilder
 {
     private ?string $type = null;

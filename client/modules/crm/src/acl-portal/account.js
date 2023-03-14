@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:acl-portal/account', 'acl-portal', function (Dep) {
+define('crm:acl-portal/account', ['acl-portal'], function (Dep) {
 
     return Dep.extend({
 
@@ -40,10 +40,8 @@ Espo.define('crm:acl-portal/account', 'acl-portal', function (Dep) {
             if (~accountIdList.indexOf(model.id)) {
                 return true;
             }
+
             return false;
-        }
-
+        },
     });
-
 });
-

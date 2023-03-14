@@ -749,6 +749,10 @@ class Import
                     $phoneNumberData = $entity->get('phoneNumberData');
                     $phoneNumberData = $phoneNumberData ?? [];
 
+                    if (str_starts_with($value, "'+")) {
+                        $value = substr($value, 1);
+                    }
+
                     $o = (object) [
                         'phoneNumber' => $value,
                         'primary' => true,
@@ -841,6 +845,10 @@ class Import
 
             $type = str_replace('phoneNumber', '', $attribute);
             $type = str_replace('_', ' ', $type);
+
+            if (str_starts_with($value, "'+")) {
+                $value = substr($value, 1);
+            }
 
             $o = (object) [
                 'phoneNumber' => $value,

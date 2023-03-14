@@ -92,6 +92,6 @@ class OnlyTeam implements Filter
             ->where(['OR' => $orGroup])
             ->build();
 
-        $queryBuilder->where(['id=s' => $subQuery->getRaw()]);
+        $queryBuilder->where(['id=s' => $subQuery]);
     }
 }

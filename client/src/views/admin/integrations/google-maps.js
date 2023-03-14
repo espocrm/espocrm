@@ -26,10 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/integrations/google-maps', 'views/admin/integrations/edit', function (Dep) {
+define('views/admin/integrations/google-maps', ['views/admin/integrations/edit'], function (Dep) {
 
     return Dep.extend({
-
     });
-
 });

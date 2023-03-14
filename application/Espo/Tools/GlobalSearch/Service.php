@@ -153,9 +153,14 @@ class Service
             ->withStrictAccessControl()
             ->withTextFilter($filter);
 
+        $entityDefs = $this->entityManager->getDefs()->getEntity($entityType);
+
+        $nameAttribute = $entityDefs->hasField('name') ?
+            'name' : 'id';
+
         $selectList = [
             'id',
-            'name',
+            $nameAttribute,
             ['VALUE:' . $entityType, 'entityType'],
             [(string) $i, 'order'],
         ];
@@ -202,7 +207,7 @@ class Service
             $queryBuilder->select(Expr::value(1.1), 'relevance');
         }
 
-        $queryBuilder->order('name');
+        $queryBuilder->order($nameAttribute);
 
         return $queryBuilder->build();
     }

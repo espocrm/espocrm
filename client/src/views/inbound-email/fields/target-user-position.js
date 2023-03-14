@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/inbound-email/fields/target-user-position', 'views/fields/enum', function (Dep) {
+define('views/inbound-email/fields/target-user-position', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
@@ -38,44 +38,45 @@ Espo.define('views/inbound-email/fields/target-user-position', 'views/fields/enu
             };
 
             this.params.options = [''];
+
             if (this.model.get('targetUserPosition') && this.model.get('teamId')) {
                 this.params.options.push(this.model.get('targetUserPosition'));
             }
 
-            this.loadRoleList(function () {
-                if (this.mode == 'edit') {
+            this.loadRoleList(() => {
+                if (this.mode === 'edit') {
                     if (this.isRendered()) {
                         this.render();
                     }
                 }
-            }, this);
+            });
 
-            this.listenTo(this.model, 'change:teamId', function () {
-                this.loadRoleList(function () {
+            this.listenTo(this.model, 'change:teamId', () => {
+                this.loadRoleList(() => {
                     this.render();
-                }, this);
-            }, this);
+                });
+            });
         },
 
         loadRoleList: function (callback, context) {
             var teamId = this.model.get('teamId');
+
             if (!teamId) {
                 this.params.options = [''];
             }
 
-            this.getModelFactory().create('Team', function (team) {
+            this.getModelFactory().create('Team', (team) => {
                 team.id = teamId;
 
-                this.listenToOnce(team, 'sync', function () {
+                this.listenToOnce(team, 'sync', () => {
                     this.params.options = team.get('positionList') || [];
                     this.params.options.unshift('');
+
                     callback.call(context);
-                }, this);
+                });
 
                 team.fetch();
-            }, this);
-
+            });
         },
-
     });
 });

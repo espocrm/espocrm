@@ -85,4 +85,9 @@ class MassEmail extends Entity
     {
         return (bool) $this->get('storeSentEmails');
     }
+
+    public function optOutEntirely(): bool
+    {
+        return (bool) $this->get('optOutEntirely');
+    }
 }

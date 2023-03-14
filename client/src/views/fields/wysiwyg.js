@@ -362,6 +362,22 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 $iframe[0].dispatchEvent(event);
             });
 
+            // Make shortcuts working.
+            $document.on('keydown', e => {
+                /** @var {KeyboardEvent} originalEvent */
+                let originalEvent = e.originalEvent;
+
+                let event = new KeyboardEvent('keydown', {
+                    bubbles: true,
+                    code: originalEvent.code,
+                    ctrlKey: originalEvent.ctrlKey,
+                    metaKey: originalEvent.metaKey,
+                    altKey: originalEvent.altKey,
+                });
+
+                $iframe[0].dispatchEvent(event);
+            });
+
             let processWidth = function () {
                 let bodyElement = $body.get(0);
 

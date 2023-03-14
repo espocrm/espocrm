@@ -26,48 +26,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/target-list/record/panels/relationship', 'views/record/panels/relationship', function (Dep) {
+define('crm:views/target-list/record/panels/relationship', ['views/record/panels/relationship'], function (Dep) {
 
     return Dep.extend({
 
         fetchOnModelAfterRelate: true,
 
         actionOptOut: function (data) {
-            this.confirm(this.translate('confirmation', 'messages'), function () {
-                $.ajax({
-                    url: 'TargetList/action/optOut',
-                    type: 'POST',
-                    data: JSON.stringify({
+            this.confirm(this.translate('confirmation', 'messages'), () => {
+                Espo.Ajax
+                    .postRequest('TargetList/action/optOut', {
                         id: this.model.id,
                         targetId: data.id,
-                        targetType: data.type
+                        targetType: data.type,
                     })
-                }).done(function () {
-                    this.collection.fetch();
-                    Espo.Ui.success(this.translate('Done'));
-                    this.model.trigger('opt-out');
-                }.bind(this));
-            }, this);
+                    .then(() => {
+                        this.collection.fetch();
+                        Espo.Ui.success(this.translate('Done'));
+                        this.model.trigger('opt-out');
+                    });
+            });
         },
 
         actionCancelOptOut: function (data) {
-            this.confirm(this.translate('confirmation', 'messages'), function () {
-                $.ajax({
-                    url: 'TargetList/action/cancelOptOut',
-                    type: 'POST',
-                    data: JSON.stringify({
+            this.confirm(this.translate('confirmation', 'messages'), () => {
+                Espo.Ajax
+                    .postRequest('TargetList/action/cancelOptOut', {
                         id: this.model.id,
                         targetId: data.id,
-                        targetType: data.type
+                        targetType: data.type,
                     })
-                }).done(function () {
-                    this.collection.fetch();
-                    Espo.Ui.success(this.translate('Done'));
-                    this.collection.fetch();
-                    this.model.trigger('cancel-opt-out');
-                }.bind(this));
-            }, this);
-        }
+                    .then(() => {
+                        this.collection.fetch();
+                        Espo.Ui.success(this.translate('Done'));
 
+                        this.collection.fetch();
+                        this.model.trigger('cancel-opt-out');
+                    });
+            });
+        },
     });
 });

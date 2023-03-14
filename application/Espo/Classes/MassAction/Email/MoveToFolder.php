@@ -41,29 +41,20 @@ use Espo\Entities\EmailFolder;
 use Espo\Entities\GroupEmailFolder;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Espo\Tools\Email\Folder;
 use Espo\Tools\Email\InboxService as EmailService;
 use Exception;
 
 class MoveToFolder implements MassAction
 {
-    private const FOLDER_INBOX = 'inbox';
-
-    private QueryBuilder $queryBuilder;
-    private EntityManager $entityManager;
-    private EmailService $service;
-    private User $user;
+    private const FOLDER_INBOX = Folder::INBOX;
 
     public function __construct(
-        QueryBuilder $queryBuilder,
-        EntityManager $entityManager,
-        EmailService $service,
-        User $user
-    ) {
-        $this->queryBuilder = $queryBuilder;
-        $this->entityManager = $entityManager;
-        $this->service = $service;
-        $this->user = $user;
-    }
+        private QueryBuilder $queryBuilder,
+        private EntityManager $entityManager,
+        private EmailService $service,
+        private User $user
+    ) {}
 
     /**
      * @throws BadRequest
@@ -77,7 +68,7 @@ class MoveToFolder implements MassAction
             throw new BadRequest("No folder ID.");
         }
 
-        if ($folderId !== self::FOLDER_INBOX && strpos($folderId, 'group:') !== 0) {
+        if ($folderId !== self::FOLDER_INBOX && !str_starts_with($folderId, 'group:')) {
             $folder = $this->entityManager
                 ->getRDBRepositoryByClass(EmailFolder::class)
                 ->where([
@@ -91,7 +82,7 @@ class MoveToFolder implements MassAction
             }
         }
 
-        if ($folderId && strpos($folderId, 'group:') === 0) {
+        if ($folderId && str_starts_with($folderId, 'group:')) {
             $folder = $this->entityManager
                 ->getRDBRepositoryByClass(GroupEmailFolder::class)
                 ->where(['id' => substr($folderId, 6)])
@@ -117,7 +108,7 @@ class MoveToFolder implements MassAction
             try {
                 $this->service->moveToFolder($email->getId(), $folderId, $this->user->getId());
             }
-            catch (Exception $e) {
+            catch (Exception) {
                 continue;
             }
 

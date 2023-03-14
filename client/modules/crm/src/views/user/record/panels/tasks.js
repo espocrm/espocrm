@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/user/record/panels/tasks', 'crm:views/record/panels/tasks', function (Dep) {
+define('crm:views/user/record/panels/tasks', ['crm:views/record/panels/tasks'], function (Dep) {
 
     return Dep.extend({
 
@@ -38,13 +38,13 @@ Espo.define('crm:views/user/record/panels/tasks', 'crm:views/record/panels/tasks
                         link: true,
                     },
                     {
-                        name: 'isOverdue'
+                        name: 'isOverdue',
                     }
                 ],
                 [
                     {name: 'status'},
-                    {name: 'dateEnd'}
-                ]
+                    {name: 'dateEnd'},
+                ],
             ]
         },
 
@@ -53,12 +53,11 @@ Espo.define('crm:views/user/record/panels/tasks', 'crm:views/record/panels/tasks
 
             if (this.getMetadata().get(['entityDefs', 'Task', 'fields', 'assignedUsers'])) {
                 var foreignLink = this.getMetadata().get(['entityDefs', 'Task', 'links', 'assignedUsers', 'foreign']);
+
                 if (foreignLink) {
                     this.link = foreignLink;
                 }
             }
-        }
-
+        },
     });
-
 });

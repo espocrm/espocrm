@@ -45,8 +45,7 @@ class Data
     private bool $createSecret = false;
 
     private function __construct()
-    {
-    }
+    {}
 
     public function getUserId(): string
     {
@@ -74,7 +73,7 @@ class Data
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     public static function create(array $data): self
     {

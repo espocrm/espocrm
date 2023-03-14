@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,44 +26,51 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Services;
+define('helpers/misc/foreign-field', [], function () {
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
+    /**
+     * @memberOf module:helpers/misc/foreign-field
+     */
+     class Class {
+        /**
+         * @param {module:views/fields/base.Class} view A feild view.
+         */
+        constructor(view) {
+            /**
+             * @private
+             * @type {module:views/fields/base.Class}
+             */
+            this.view = view;
 
-use Espo\ORM\Entity;
+            let metadata = view.getMetadata();
+            let model = view.model;
+            let field = view.params.field;
+            let link = view.params.link;
 
-/**
- * @deprecated
- * @extends \Espo\Services\Record<\Espo\Modules\Crm\Entities\Target>
- */
-class Target extends \Espo\Services\Record
-{
-    public function convert(string $id): Entity
-    {
-        $entityManager = $this->getEntityManager();
+            let entityType = metadata
+                .get(['entityDefs', model.entityType, 'links', link, 'entity']) ||
+                model.entityType;
 
-        $target = $this->getEntity($id);
+            let fieldDefs = metadata.get(['entityDefs', entityType, 'fields', field]) || {};
+            let type = fieldDefs.type;
 
-        if (!$target) {
-            throw new NotFound();
+            /** @private */
+            this.foreignParams = {};
+
+            view.getFieldManager().getParamList(type).forEach(defs => {
+                let name = defs.name;
+
+                this.foreignParams[name] = fieldDefs[name] || null;
+            });
         }
 
-        if (!$this->getAcl()->check($target, 'delete')) {
-            throw new Forbidden();
+        /**
+         * @return {Object.<string, *>}
+         */
+        getForeignParams() {
+            return Espo.Utils.cloneDeep(this.foreignParams);
         }
-
-        if (!$this->getAcl()->check('Lead', 'read')) {
-            throw new Forbidden();
-        }
-
-        $lead = $entityManager->getNewEntity('Lead');
-
-        $lead->set($target->getValueMap());
-
-        $entityManager->removeEntity($target);
-        $entityManager->saveEntity($lead);
-
-        return $lead;
     }
-}
+
+    return Class;
+});

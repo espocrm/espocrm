@@ -29,10 +29,10 @@
 
 namespace Espo\Tools\Kanban;
 
+use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Entities\KanbanOrder;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\Util;
 
 use LogicException;
 
@@ -47,14 +47,11 @@ class OrdererProcessor
 
     private int $maxNumber = self::DEFAULT_MAX_NUMBER;
 
-    private EntityManager $entityManager;
-    private Metadata $metadata;
-
-    public function __construct(EntityManager $entityManager, Metadata $metadata)
-    {
-        $this->entityManager = $entityManager;
-        $this->metadata = $metadata;
-    }
+    public function __construct(
+        private EntityManager $entityManager,
+        private Metadata $metadata,
+        private RecordIdGenerator $idGenerator
+    ) {}
 
     public function setEntityType(string $entityType): self
     {
@@ -165,7 +162,7 @@ class OrdererProcessor
             $item = $this->entityManager->getNewEntity(KanbanOrder::ENTITY_TYPE);
 
             $item->set([
-                'id' => Util::generateId(),
+                'id' => $this->idGenerator->generate(),
                 'entityId' => $id,
                 'entityType' => $this->entityType,
                 'group' => $this->group,

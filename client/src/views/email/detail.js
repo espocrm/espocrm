@@ -36,8 +36,6 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             var status = this.model.get('status');
 
             if (status === 'Draft') {
-                this.backedMenu = this.menu;
-
                 this.menu = {
                     'buttons': [],
                     'dropdown': [],
@@ -344,7 +342,9 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             attributes.parentType = this.model.get('parentType');
             attributes.emailId = this.model.id;
 
-            attributes.description = '[' + this.translate('Email', 'scopeNames') + ']' +
+            let subject = this.model.get('name');
+
+            attributes.description = '[' + this.translate('Email', 'scopeNames') + ': ' + subject +']' +
                 '(#Email/view/' + this.model.id + ')\n';
 
             var viewName = this.getMetadata().get('clientDefs.Task.modalViews.edit') || 'views/modals/edit';

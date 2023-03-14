@@ -439,13 +439,11 @@ class WhereTest extends \PHPUnit\Framework\TestCase
             Cond::in(Expr::column('id'), $query)
             ->getRaw();
 
-        $expextedRaw = [
-            'id=s' => [
-                'from' => 'Test',
-            ],
+        $expectedRaw = [
+            'id=s' => $query
         ];
 
-        $this->assertEquals($expextedRaw, $raw);
+        $this->assertEquals($expectedRaw, $raw);
     }
 
     public function testNotInQuery(): void
@@ -456,13 +454,11 @@ class WhereTest extends \PHPUnit\Framework\TestCase
             Cond::notIn(Expr::column('id'), $query)
             ->getRaw();
 
-        $expextedRaw = [
-            'id!=s' => [
-                'from' => 'Test',
-            ],
+        $expectedRaw = [
+            'id!=s' => $query
         ];
 
-        $this->assertEquals($expextedRaw, $raw);
+        $this->assertEquals($expectedRaw, $raw);
     }
 
     public function testInList(): void
@@ -471,11 +467,11 @@ class WhereTest extends \PHPUnit\Framework\TestCase
             Cond::in(Expr::column('status'), ['1', '2'])
             ->getRaw();
 
-        $expextedRaw = [
+        $expectedRaw = [
             'status=' => ['1', '2']
         ];
 
-        $this->assertEquals($expextedRaw, $raw);
+        $this->assertEquals($expectedRaw, $raw);
     }
 
     public function testNotInList(): void
@@ -484,10 +480,10 @@ class WhereTest extends \PHPUnit\Framework\TestCase
             Cond::notIn(Expr::column('status'), ['1', '2'])
             ->getRaw();
 
-        $expextedRaw = [
+        $expectedRaw = [
             'status!=' => ['1', '2']
         ];
 
-        $this->assertEquals($expextedRaw, $raw);
+        $this->assertEquals($expectedRaw, $raw);
     }
 }

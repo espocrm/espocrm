@@ -224,6 +224,11 @@ class Binding implements BindingProcessor
         );
 
         $binder->bindService(
+            'Espo\\Core\\Utils\\ClientManager',
+            'clientManager'
+        );
+
+        $binder->bindService(
             'Espo\\Core\\ExternalAccount\\ClientManager',
             'externalAccountClientManager'
         );

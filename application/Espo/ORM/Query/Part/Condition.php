@@ -91,10 +91,13 @@ class Condition
      * Create '=' comparison.
      *
      * @param Expression $argument1 An expression.
-     * @param Expression|string|int|float|bool|null $argument2 A value (if scalar) or expression.
+     * @param Expression|Select|string|int|float|bool|null $argument2 A scalar, expression or sub-query.
      */
-    public static function equal(Expression $argument1, Expression|string|int|float|bool|null $argument2): Comparison
-    {
+    public static function equal(
+        Expression $argument1,
+        Expression|Select|string|int|float|bool|null $argument2
+    ): Comparison {
+
         return Comparison::equal($argument1, $argument2);
     }
 
@@ -102,10 +105,13 @@ class Condition
      * Create '!=' comparison.
      *
      * @param Expression $argument1 An expression.
-     * @param Expression|string|int|float|bool|null $argument2 A value (if scalar) or expression.
+     * @param Expression|Select|string|int|float|bool|null $argument2 A scalar, expression or sub-query.
      */
-    public static function notEqual(Expression $argument1, Expression|string|int|float|bool|null $argument2): Comparison
-    {
+    public static function notEqual(
+        Expression $argument1,
+        Expression|Select|string|int|float|bool|null $argument2
+    ): Comparison {
+
         return Comparison::notEqual($argument1, $argument2);
     }
 
@@ -135,10 +141,13 @@ class Condition
      * Create '>' comparison.
      *
      * @param Expression $argument1 An expression.
-     * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
+     * @param Expression|Select|string|int|float $argument2 A scalar, expression or sub-query.
      */
-    public static function greater(Expression $argument1, Expression|string|int|float $argument2): Comparison
-    {
+    public static function greater(
+        Expression $argument1,
+        Expression|Select|string|int|float $argument2
+    ): Comparison {
+
         return Comparison::greater($argument1, $argument2);
     }
 
@@ -146,10 +155,13 @@ class Condition
      * Create '>=' comparison.
      *
      * @param Expression $argument1 An expression.
-     * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
+     * @param Expression|Select|string|int|float $argument2 A scalar, expression or sub-query.
      */
-    public static function greaterOrEqual(Expression $argument1, Expression|string|int|float $argument2): Comparison
-    {
+    public static function greaterOrEqual(
+        Expression $argument1,
+        Expression|Select|string|int|float $argument2
+    ): Comparison {
+
         return Comparison::greaterOrEqual($argument1, $argument2);
     }
 
@@ -157,10 +169,13 @@ class Condition
      * Create '<' comparison.
      *
      * @param Expression $argument1 An expression.
-     * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
+     * @param Expression|Select|string|int|float $argument2 A scalar, expression or sub-query.
      */
-    public static function less(Expression $argument1, Expression|string|int|float $argument2): Comparison
-    {
+    public static function less(
+        Expression $argument1,
+        Expression|Select|string|int|float $argument2
+    ): Comparison {
+
         return Comparison::less($argument1, $argument2);
     }
 
@@ -168,10 +183,13 @@ class Condition
      * Create '<=' comparison.
      *
      * @param Expression $argument1 An expression.
-     * @param Expression|string|int|float $argument2 A value (if scalar) or expression.
+     * @param Expression|Select|string|int|float $argument2 A scalar, expression or sub-query.
      */
-    public static function lessOrEqual(Expression $argument1, Expression|string|int|float $argument2): Comparison
-    {
+    public static function lessOrEqual(
+        Expression $argument1,
+        Expression|Select|string|int|float $argument2
+    ): Comparison {
+
         return Comparison::lessOrEqual($argument1, $argument2);
     }
 

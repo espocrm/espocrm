@@ -53,8 +53,11 @@ class Starter
         private RouteParamsFetcher $routeParamsFetcher,
         private MiddlewareProvider $middlewareProvider,
         private Log $log,
-        private Config $config
-    ) {}
+        private Config $config,
+        ?string $routeCacheFile = null
+    ) {
+        $this->routeCacheFile = $routeCacheFile ?? $this->routeCacheFile;
+    }
 
     public function start(): void
     {

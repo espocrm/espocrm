@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/import/record/row-actions/duplicates', 'views/record/row-actions/default', function (Dep) {
+define('views/import/record/row-actions/duplicates', ['views/record/row-actions/default'], function (Dep) {
 
     return Dep.extend({
 
@@ -38,15 +38,11 @@ Espo.define('views/import/record/row-actions/duplicates', 'views/record/row-acti
                 label: 'Set as Not Duplicate',
                 data: {
                     id: this.model.id,
-                    type: this.model.name
-                }
+                    type: this.model.name,
+                },
             });
 
             return list;
-        }
-
+        },
     });
-
 });
-
-

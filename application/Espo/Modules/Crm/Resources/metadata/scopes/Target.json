@@ -7,5 +7,6 @@
     "customizable": false,
     "importable": false,
     "notifications": false,
-    "object": true
+    "object": true,
+    "disabled": true
 }

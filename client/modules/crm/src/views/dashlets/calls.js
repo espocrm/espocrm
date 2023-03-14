@@ -26,18 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/dashlets/calls', 'views/dashlets/abstract/record-list', function (Dep) {
+define('crm:views/dashlets/calls', ['views/dashlets/abstract/record-list'], function (Dep) {
 
     return Dep.extend({
 
         name: 'Calls',
-
         scope: 'Call',
-
         listView: 'crm:views/call/record/list-expanded',
-
-        rowActionsView: 'crm:views/call/record/row-actions/dashlet'
-
+        rowActionsView: 'crm:views/call/record/row-actions/dashlet',
     });
 });
 
