@@ -40,7 +40,7 @@ class BadArgumentType extends Error
     /**
      * Create.
      *
-     * @param int $position An argument position.
+     * @param int $position An argument position. Starts from 1.
      * @param string $type A required argument type.
      */
     public static function create(int $position, string $type): self
