@@ -326,8 +326,8 @@ class Saver implements SaverInterface
 
             $foreignType = $ormDefs
                 ->getEntity($foreignEntityType)
-                ->getRelation($foreignRelationName)
-                ->getType();
+                ->tryGetRelation($foreignRelationName)
+                ?->getType();
 
             if ($foreignType !== Entity::HAS_ONE) {
                 continue;
