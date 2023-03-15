@@ -3181,8 +3181,6 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 this.checkedList.splice(index, 1);
             }
 
-            this.removeRowHtml(id);
-
             let key = id;
 
             this.clearView(key);
@@ -3192,6 +3190,8 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             if (~index) {
                 this.rowList.splice(index, 1);
             }
+
+            this.removeRowHtml(id);
         },
 
         /**
