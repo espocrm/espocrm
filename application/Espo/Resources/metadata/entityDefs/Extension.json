@@ -53,7 +53,7 @@
         }
     },
     "collection": {
-        "orderBy": "createdAt",
-        "order": "desc"
+        "orderBy": "name",
+        "order": "asc"
     }
 }
