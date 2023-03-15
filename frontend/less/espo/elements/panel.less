@@ -322,7 +322,7 @@ body {
                 }
             }
 
-            .btn-group {                
+            .btn-group {
                 &,
                 &.open {
                     > .dropdown-toggle.btn {
@@ -597,14 +597,21 @@ body {
         border-top-right-radius: var(--panel-border-radius);
     }
 
-    > .panel-body > .list-container:last-child > .list {
-        border-bottom-left-radius: var(--panel-border-radius);
-        border-bottom-right-radius: var(--panel-border-radius);
+    > .panel-body {
+        > .list-container:last-child > .list {
+            border-bottom-left-radius: var(--panel-border-radius);
+            border-bottom-right-radius: var(--panel-border-radius);
 
-        > table,
-        > .list-group,
-        > .list-group:last-child > .list-group-item:last-child,
-        > .show-more > a {
+            > table,
+            > .list-group,
+            > .list-group:last-child > .list-group-item:last-child,
+            > .show-more > a {
+                border-bottom-left-radius: var(--panel-border-radius);
+                border-bottom-right-radius: var(--panel-border-radius);
+            }
+        }
+
+        > .no-margin > table {
             border-bottom-left-radius: var(--panel-border-radius);
             border-bottom-right-radius: var(--panel-border-radius);
         }
