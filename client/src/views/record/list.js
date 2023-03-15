@@ -2341,14 +2341,14 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
                 let field = item.name;
 
-                let fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
+                let fieldType = this.getMetadata().get(['entityDefs', this.entityType, 'fields', field, 'type']);
 
                 if (!fieldType) {
                     return;
                 }
 
                 this.getFieldManager()
-                    .getEntityTypeFieldAttributeList(this.scope, field)
+                    .getEntityTypeFieldAttributeList(this.entityType, field)
                     .forEach((attribute) => {
                         list.push(attribute);
                     });
