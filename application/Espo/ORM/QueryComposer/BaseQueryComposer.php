@@ -1879,7 +1879,10 @@ abstract class BaseQueryComposer implements QueryComposer
             return null;
         }
 
-        if ($this->getAttributeParam($entity, $attribute, 'notStorable') && $attributeType !== Entity::FOREIGN) {
+        if (
+            $this->getAttributeParam($entity, $attribute, 'notStorable') &&
+            $attributeType !== Entity::FOREIGN
+        ) {
             return null;
         }
 
@@ -2327,7 +2330,10 @@ abstract class BaseQueryComposer implements QueryComposer
             }
         }
 
-        if ($this->getAttributeParam($entity, $attribute, 'notStorable') && $attributeType !== 'foreign') {
+        if (
+            $this->getAttributeParam($entity, $attribute, 'notStorable') &&
+            $attributeType !== Entity::FOREIGN
+        ) {
             return null;
         }
 
