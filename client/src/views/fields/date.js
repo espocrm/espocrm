@@ -231,6 +231,9 @@ define('views/fields/date', ['views/fields/base'], function (Dep) {
                         leftArrow: '<span class="fas fa-chevron-left fa-sm"></span>',
                         rightArrow: '<span class="fas fa-chevron-right fa-sm"></span>',
                     },
+                    container: this.$el.closest('.modal-body').length ?
+                        this.$el.closest('.modal-body') :
+                        'body',
                 };
 
                 let language = this.getConfig().get('language');
