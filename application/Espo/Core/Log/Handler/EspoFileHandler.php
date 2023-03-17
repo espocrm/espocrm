@@ -43,7 +43,7 @@ class EspoFileHandler extends MonologStreamHandler
     protected FileManager $fileManager;
 
     /** @var int */
-    protected $maxErrorMessageLength = 5000;
+    protected $maxErrorMessageLength = 10000;
 
     public function __construct(
         Config $config,
