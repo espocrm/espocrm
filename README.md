@@ -12,6 +12,10 @@ backend written in PHP.
 [Download](https://www.espocrm.com/download/) the latest release from our website. Release notes
 and release packages are available at Releases on GitHub.
 
+![screenshot](https://user-images.githubusercontent.com/1006792/226090729-7bf3cc76-9a9d-441b-bacd-4e622682f2a6.png)
+
+Try the online [demo](https://www.espocrm.com/demo/).
+
 ### Requirements
 
 * PHP 8.0 and later;
