@@ -34,7 +34,7 @@ We'd appreciate if you prefer posting issues on weekdays rather than weekends.
 
 ### Installing the stable version
 
-See the [instructions](https://docs.espocrm.com/administration/installation/) about installation.
+See the [instructions](https://docs.espocrm.com/administration/installation/) on installation.
 
 ### Development
 
