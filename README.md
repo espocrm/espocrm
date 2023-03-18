@@ -51,7 +51,7 @@ are usually merged to the GitHub repository before minor releases.
 
 Branches:
 
-* *fix* – upcoming maintenance release; fixes should be pushed to this branch;
+* *fix* – upcoming maintenance release; minor fixes should be pushed to this branch;
 * *master* – develop branch; new features should be pushed to this branch;
 * *stable* – last stable release.
 
