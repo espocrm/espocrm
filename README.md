@@ -44,7 +44,7 @@ See the [instructions](https://docs.espocrm.com/administration/installation/) on
 
 ### Contributing
 
-Before we can merge your pull request you need to accept our CLA [here](https://github.com/espocrm/cla). It's very simple to do.
+Before we can merge your pull request, you need to accept our CLA [here](https://github.com/espocrm/cla). It's very simple to do.
 
 Contribute translations to [POEditor](https://poeditor.com/join/project/gLDKZtUF4i). Changes
 are usually merged to the GitHub repository before minor releases.
