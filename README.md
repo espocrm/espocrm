@@ -10,7 +10,7 @@ It's a web application with a frontend designed as a single page application and
 backend written in PHP.
 
 [Download](https://www.espocrm.com/download/) the latest release from our website. Release notes
-and release packages are available at Releases on GitHub.
+and release packages are available at [Releases](https://github.com/espocrm/espocrm/releases) on GitHub.
 
 ![Screenshot](https://user-images.githubusercontent.com/1006792/226094559-995dfd2a-a18f-4619-a21b-79a4e671990a.png)
 
