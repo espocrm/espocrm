@@ -3,7 +3,7 @@
 Before we can merge your pull request, you need to accept our CLA [here](https://github.com/espocrm/cla).
 
 It's desirable that one PR solves one specific problem. Do not include code style changes to PRs
-(unless the main purpose of PR is code style fixes).
+(unless the main purpose of the PR is code style fixes).
 
 If you would like to contribute something that is not a small fix, it's reasonable to create an issue first
 (a bug report or feature request).
