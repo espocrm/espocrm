@@ -1,12 +1,17 @@
 ## Pull Requests
 
-Before we can merge your pull request you need to accept our CLA [here](https://github.com/espocrm/cla). It's very simple to do.
+Before we can merge your pull request, you need to accept our CLA [here](https://github.com/espocrm/cla).
+
+It's desirable that one PR solves one specific problem. Do not include code style changes to PRs
+(unless the main purpose of PR is code style fixes).
+
+If you would like to contribute something that is not a small fix, it's reasonable to create an issue first
+(a bug report or feature request).
 
 Branches:
 
 * *master* – the develop branch; new features should be pushed to here;
-* *fix* – the upcoming maintenance release; small fixes should be pushed to here;
-* *stable* – the latest stable release.
+* *fix* – the upcoming maintenance release; small fixes should be pushed to here.
 
 ## Issues
 
