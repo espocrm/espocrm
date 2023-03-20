@@ -117,7 +117,7 @@ class Currency
     public function subtract(self $value): self
     {
         if ($this->getCode() !== $value->getCode()) {
-            throw new RuntimeException("Can't substract a currency value with a different code.");
+            throw new RuntimeException("Can't subtract a currency value with a different code.");
         }
 
         $amount = CalculatorUtil::subtract(
