@@ -45,7 +45,8 @@ class Currency
     private string $code;
 
     /**
-     * @param string|float $amount
+     * @param string|float $amount An amount.
+     * @param string $code A currency code.
      * @throws RuntimeException
      */
     public function __construct($amount, string $code)
@@ -195,7 +196,8 @@ class Currency
     /**
      * Create from an amount and code.
      *
-     * @param string|float $amount
+     * @param string|float $amount An amount.
+     * @param string $code A currency code.
      * @throws RuntimeException
      */
     public static function create($amount, string $code): self
