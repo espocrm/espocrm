@@ -166,7 +166,7 @@ class ItemGeneralConverter implements ItemConverter
             case Type::ARRAY_ANY_OF:
             case Type::ARRAY_NONE_OF:
             case Type::ARRAY_IS_EMPTY:
-            case Type::ARRAY_IS_EMPTY:
+            case Type::ARRAY_IS_NOT_EMPTY:
             case Type::ARRAY_ALL_OF:
 
                 return WhereClause::fromRaw(
