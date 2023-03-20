@@ -247,7 +247,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         allActionItemsDisabled: false,
 
         /**
-         * An DOM element ID. Only for reading.
+         * A DOM element ID. Only for reading.
          *
          * @private
          * @type {string}

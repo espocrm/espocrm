@@ -56,7 +56,7 @@ class Service
     }
 
     /**
-     * Copy email attachments for re-using (e.g. in an forward email).
+     * Copy email attachments for re-using (e.g. in a forward email).
      *
      * @return Attachment[]
      * @throws NotFound
