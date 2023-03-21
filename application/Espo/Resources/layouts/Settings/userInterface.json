@@ -1,15 +1,31 @@
 [
     {
-        "label": "Configuration",
         "rows": [
-            [{"name": "companyLogo"}, {"name": "theme"}],
-            [{"name": "applicationName"}, {"name": "userThemesDisabled"}],
-            [{"name": "recordsPerPage"},{"name": "displayListViewRecordCount"}],
-            [{"name": "recordsPerPageSmall"}, {"name": "avatarsDisabled"}],
-            [{"name": "recordsPerPageSelect"}, false],
-            [{"name": "tabList"},{"name": "quickCreateList"}],
+            [{"name": "companyLogo"}, {"name": "applicationName"}]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "theme"}, {"name": "userThemesDisabled"}],
+            [false, {"name": "avatarsDisabled"}]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "recordsPerPage"}, {"name": "recordsPerPageSelect"}],
+            [{"name": "recordsPerPageSmall"}, false],
+            [{"name": "displayListViewRecordCount"}, false]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "tabList"}, {"name": "quickCreateList"}],
             [{"name": "scopeColorsDisabled"}, {"name": "tabColorsDisabled"}],
-            [{"name": "tabIconsDisabled"}, false],
+            [{"name": "tabIconsDisabled"}, false]
+        ]
+    },
+    {
+        "rows": [
             [{"name": "dashboardLayout", "fullWidth": true}]
         ]
     }
