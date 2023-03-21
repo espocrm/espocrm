@@ -216,7 +216,7 @@ class SearchParamsFetcher
      */
     private function handleMaxSize(array &$params): void
     {
-        $value = $params['maxSize'];
+        $value = $params['maxSize'] ?? null;
 
         $limit = $this->config->get('recordListMaxSizeLimit') ?? self::MAX_SIZE_LIMIT;
 
