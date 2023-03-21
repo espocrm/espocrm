@@ -14,7 +14,9 @@ and release packages are available at [Releases](https://github.com/espocrm/espo
 
 ![Screenshot](https://user-images.githubusercontent.com/1006792/226094559-995dfd2a-a18f-4619-a21b-79a4e671990a.png)
 
-Try the online [demo](https://www.espocrm.com/demo/).
+### Demo
+
+Give EspoCRM a try. Visit the online [demo](https://www.espocrm.com/demo/).
 
 ### Requirements
 
