@@ -31,27 +31,24 @@ namespace Espo\Classes\DuplicateWhereBuilders;
 
 use Espo\Core\ORM\Entity as CoreEntity;
 
-use Espo\Core\{
-    Duplicate\WhereBuilder,
-    Field\EmailAddressGroup,
-};
+use Espo\Core\Duplicate\WhereBuilder;
+use Espo\Core\Field\EmailAddressGroup;
 
-use Espo\ORM\{
-    Query\Part\Condition as Cond,
-    Query\Part\WhereItem,
-    Query\Part\Where\OrGroup,
-    Entity,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\Part\Where\OrGroup;
+use Espo\ORM\Query\Part\WhereItem;
 
 /**
  * @implements WhereBuilder<CoreEntity>
  */
 class Person implements WhereBuilder
 {
+    /**
+     * @param CoreEntity $entity
+     */
     public function build(Entity $entity): ?WhereItem
     {
-        assert($entity instanceof CoreEntity);
-
         $orBuilder = OrGroup::createBuilder();
 
         $toCheck = false;
