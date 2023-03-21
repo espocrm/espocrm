@@ -13,7 +13,7 @@
     {
         "rows": [
             [{"name": "recordsPerPage"}, {"name": "recordsPerPageSelect"}],
-            [{"name": "recordsPerPageSmall"}, false],
+            [{"name": "recordsPerPageSmall"}, {"name": "recordsPerPageKanban"}],
             [{"name": "displayListViewRecordCount"}, false]
         ]
     },

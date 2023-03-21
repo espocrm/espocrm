@@ -407,7 +407,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
          */
         setViewModeKanban: function () {
             this.collection.url = 'Kanban/' + this.scope;
-            this.collection.maxSize = this.getConfig().get('recordsPerPageSmall');
+            this.collection.maxSize = this.getConfig().get('recordsPerPageKanban');
             this.collection.resetOrderToDefault();
         },
 

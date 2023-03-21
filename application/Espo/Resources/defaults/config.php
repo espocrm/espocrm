@@ -51,6 +51,7 @@ return [
     'recordsPerPage' => 20,
     'recordsPerPageSmall' => 5,
     'recordsPerPageSelect' => 10,
+    'recordsPerPageKanban' => 5,
     'applicationName' => 'EspoCRM',
     'version' => '@@version',
     'timeZone' => 'UTC',
