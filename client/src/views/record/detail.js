@@ -693,7 +693,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 ) {
                     this.addDropdownItem({
                         'label': 'Duplicate',
-                        'name': 'duplicate'
+                        'name': 'duplicate',
                     });
                 }
             }
@@ -2605,7 +2605,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         manageAccessEdit: function (second) {
-            if (this.isNew) return;
+            if (this.isNew) {
+                return;
+            }
 
             let editAccess = this.getAcl().checkModel(this.model, 'edit', true);
 
@@ -2614,19 +2616,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                 this.hideActionItem('edit');
 
-                if (this.duplicateAction) {
-                    this.hideActionItem('duplicate');
-                }
-
                 if (this.selfAssignAction) {
                     this.hideActionItem('selfAssign');
                 }
             } else {
                 this.showActionItem('edit');
-
-                if (this.duplicateAction) {
-                    this.showActionItem('duplicate');
-                }
 
                 if (this.selfAssignAction) {
                     this.hideActionItem('selfAssign');

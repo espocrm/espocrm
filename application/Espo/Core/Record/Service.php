@@ -1618,6 +1618,12 @@ class Service implements Crud,
             unset($attributes->$attribute);
         }
 
+        if ($this->acl->getPermissionLevel('assignment') === AclTable::LEVEL_NO) {
+            unset($attributes->assignedUserId);
+            unset($attributes->assignedUserName);
+            unset($attributes->assignedUsersIds);
+        }
+
         return $attributes;
     }
 
