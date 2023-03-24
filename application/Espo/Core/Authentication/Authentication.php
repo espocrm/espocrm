@@ -464,15 +464,20 @@ class Authentication
             $request->getHeader(self::HEADER_CREATE_TOKEN_SECRET) === 'true' &&
             !$this->configDataProvider->isAuthTokenSecretDisabled();
 
-        $arrayData = [
-            'hash' => $user->get('password'),
-            'ipAddress' => $request->getServerParam('REMOTE_ADDR'),
-            'userId' => $user->hasId() ? $user->getId() : null,
+        /** @var ?string $password */
+        $password = $user->get('password');
+        /** @var ?string $ipAddress */
+        $ipAddress = $request->getServerParam('REMOTE_ADDR');
+
+        $authTokenData = AuthTokenData::create([
+            'hash' => $password,
+            'ipAddress' => $ipAddress,
+            'userId' => $user->getId(),
             'portalId' => $this->isPortal() ? $this->getPortal()->getId() : null,
             'createSecret' => $createSecret,
-        ];
+        ]);
 
-        $authToken = $this->authTokenManager->create(AuthTokenData::create($arrayData));
+        $authToken = $this->authTokenManager->create($authTokenData);
 
         if ($createSecret) {
             $this->setSecretInCookie($authToken->getSecret(), $response, $request);
