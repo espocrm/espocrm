@@ -439,6 +439,13 @@ class Upgrade implements Command
         curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, \CURLOPT_URL, $url);
 
+        // proxy support
+        $proxy = null;
+        $proxy = $this->config->get('proxyUrl', $proxy);
+        $proxyauth = $this->config->get('proxyAuth', $proxyauth);
+        curl_setopt($ch, CURLOPT_PROXY, $proxy);
+        curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyauth);
+
         $result = curl_exec($ch);
 
         curl_close($ch);
@@ -480,6 +487,14 @@ class Upgrade implements Command
             $ch = curl_init();
 
             curl_setopt_array($ch, $options);
+
+            // proxy support
+            $proxy = null;
+            $proxy = $this->config->get('proxyUrl', $proxy);
+            $proxyauth = null;
+            $proxyauth = $this->config->get('proxyAuth', $proxyauth);
+            curl_setopt($ch, CURLOPT_PROXY, $proxy);
+            curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyauth);
 
             curl_exec($ch);
 
