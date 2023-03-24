@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-If you believe you have discovered a vulnerability in EspoCRM please contacts us via [this](https://www.espocrm.com/contacts/) or [this](https://www.espocrm.com/support/) forms.
+If you believe you have discovered a vulnerability in EspoCRM, please contacts us via [this](https://www.espocrm.com/contacts/) or [this](https://www.espocrm.com/support/) forms. Or create a private vulnerability report on GitHub.
 
 ## Supported versions
 
