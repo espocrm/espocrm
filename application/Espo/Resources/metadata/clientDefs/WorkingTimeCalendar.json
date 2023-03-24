@@ -1,6 +1,7 @@
 {
     "controller": "controllers/record",
     "searchPanelDisabled": true,
+    "iconClass": "fas fa-calendar-week",
     "menu": {
         "list": {
             "buttons": [
