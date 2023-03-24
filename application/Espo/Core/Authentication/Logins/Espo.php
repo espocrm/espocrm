@@ -29,15 +29,13 @@
 
 namespace Espo\Core\Authentication\Logins;
 
-use Espo\Core\{
-    Api\Request,
-    Utils\PasswordHash,
-    Authentication\Login,
-    Authentication\Login\Data,
-    Authentication\Result,
-    Authentication\Helper\UserFinder,
-    Authentication\Result\FailReason,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Authentication\Helper\UserFinder;
+use Espo\Core\Authentication\Login;
+use Espo\Core\Authentication\Login\Data;
+use Espo\Core\Authentication\Result;
+use Espo\Core\Authentication\Result\FailReason;
+use Espo\Core\Utils\PasswordHash;
 
 use RuntimeException;
 
@@ -45,14 +43,10 @@ class Espo implements Login
 {
     public const NAME = 'Espo';
 
-    private UserFinder $userFinder;
-    private PasswordHash $passwordHash;
-
-    public function __construct(UserFinder $userFinder, PasswordHash $passwordHash)
-    {
-        $this->userFinder = $userFinder;
-        $this->passwordHash = $passwordHash;
-    }
+    public function __construct(
+        private UserFinder $userFinder,
+        private PasswordHash $passwordHash
+    ) {}
 
     public function login(Data $data, Request $request): Result
     {
