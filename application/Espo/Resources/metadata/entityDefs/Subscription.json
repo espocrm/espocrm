@@ -2,7 +2,7 @@
     "fields": {
         "id": {
             "type": "id",
-            "dbType": "bigInt",
+            "dbType": "bigint",
             "autoincrement": true
         },
         "entity": {
