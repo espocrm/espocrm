@@ -30,13 +30,11 @@
 namespace Espo\Classes\Select\Email\AdditionalAppliers;
 
 use Espo\Core\Select\Applier\AdditionalApplier;
-use Espo\Entities\Email;
-use Espo\ORM\Query\SelectBuilder;
 use Espo\Core\Select\SearchParams;
-
 use Espo\Classes\Select\Email\Helpers\JoinHelper;
-
+use Espo\Entities\Email;
 use Espo\Entities\User;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\Email\Folder;
 
 class Main implements AdditionalApplier
@@ -50,22 +48,35 @@ class Main implements AdditionalApplier
     {
         $folder = $this->retrieveFolder($searchParams);
 
-        if ($folder === Folder::DRAFTS) {
-            $queryBuilder->useIndex('createdById');
-        }
-        else if ($folder === Folder::IMPORTANT) {
-            // skip
-        }
-        else if ($this->checkApplyDateSentIndex($queryBuilder, $searchParams)) {
-            $queryBuilder->useIndex('dateSent');
-        }
+        $this->applyIndexes($folder, $queryBuilder, $searchParams);
 
         if ($folder !== Folder::DRAFTS) {
             $this->joinEmailUser($queryBuilder);
         }
     }
 
-    protected function joinEmailUser(SelectBuilder $queryBuilder): void
+    private function applyIndexes(?string $folder, SelectBuilder $queryBuilder, SearchParams $searchParams): void
+    {
+        if ($searchParams->getTextFilter()) {
+            return;
+        }
+
+        if ($folder === Folder::IMPORTANT) {
+            return;
+        }
+
+        if ($folder === Folder::DRAFTS) {
+            $queryBuilder->useIndex('createdById');
+
+            return;
+        }
+
+        if ($this->checkApplyDateSentIndex($queryBuilder, $searchParams)) {
+            $queryBuilder->useIndex('dateSent');
+        }
+    }
+
+    private function joinEmailUser(SelectBuilder $queryBuilder): void
     {
         $this->joinHelper->joinEmailUser($queryBuilder, $this->user->getId());
 
@@ -85,7 +96,7 @@ class Main implements AdditionalApplier
         }
     }
 
-    protected function retrieveFolder(SearchParams $searchParams): ?string
+    private function retrieveFolder(SearchParams $searchParams): ?string
     {
         if (!$searchParams->getWhere()) {
             return null;
@@ -100,7 +111,7 @@ class Main implements AdditionalApplier
         return null;
     }
 
-    protected function checkApplyDateSentIndex(SelectBuilder $queryBuilder, SearchParams $searchParams): bool
+    private function checkApplyDateSentIndex(SelectBuilder $queryBuilder, SearchParams $searchParams): bool
     {
         if ($searchParams->getTextFilter()) {
             return false;
