@@ -6,6 +6,7 @@
     "searchPanelDisabled": true,
     "massUpdateDisabled": true,
     "mergeDisabled": true,
+    "massRemoveDisabled": true,
     "relationshipPanels": {
         "emails": {
             "select": false,
