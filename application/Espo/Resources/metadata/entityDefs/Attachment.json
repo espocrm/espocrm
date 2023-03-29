@@ -13,6 +13,7 @@
         },
         "size": {
             "type": "int",
+            "dbType": "bigint",
             "min": 0
         },
         "parent": {
