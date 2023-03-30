@@ -1,0 +1,236 @@
+body[data-navbar="side"] {
+    @media screen and (min-width: @screen-sm-min) {
+        &,
+        &.minimized.side-menu-opened {
+            #navbar .navbar {
+                .nav > li.more > .dropdown-menu,
+                .nav > li.more > .dropdown-menu > li.tab-group > ul.dropdown-menu,
+                .nav > li.tab-group > .dropdown-menu {
+                    left: auto;
+                    right: @navbar-width;
+                }
+
+                .nav > li.more > .dropdown-menu,
+                .nav > li.tab-group > .dropdown-menu {
+                    border-right-width: 0;
+                    border-left-width: var(--dropdown-border-width);
+                }
+
+                .nav li.tab-group {
+                    span.full-label {
+                        padding-left: 8px;
+                        padding-right: @navbar-tab-text-left-padding;
+                    }
+
+                    .group-caret {
+                        right: auto;
+                        left: 13px;
+                        transform: rotate(180deg);
+                    }
+                }
+
+                a.minimizer {
+                    margin-right: @navbar-tab-left-padding + 3px;
+                    margin-left: 0;
+                }
+
+                a.minimizer > span.left {
+                    display: none;
+                }
+
+                a.minimizer > span.right {
+                    display: inline;
+                }
+
+                .side-menu-backdrop {
+                    right: 0;
+                    margin-right: @navbar-width;
+                    left: 0;
+                    margin-left: 0;
+                }
+            }
+
+            #navbar {
+                .navbar-right {
+                    left: auto;
+                    right: 0;
+                    margin-right: @navbar-width;
+                    padding-left: @navbar-width;
+                    margin-left: 0;
+                    padding-right: 0;
+                }
+
+                ul.tabs {
+                    li {
+                        float: none !important;
+                    }
+
+                    li > a {
+                        padding-right: @navbar-tab-left-padding;
+                        padding-left: @navbar-tab-right-padding;
+                    }
+
+                    li.tab > a {
+                        padding-right: @navbar-tab-left-padding - @navbar-color-border-width;
+                        padding-left: @navbar-tab-right-padding;
+                    }
+                }
+            }
+        }
+
+        &.minimized.side-menu-opened {
+            #navbar > .navbar {
+                .navbar-logo-container {
+                    float: left;
+                }
+
+                a.minimizer > span.left {
+                    display: inline;
+                }
+
+                a.minimizer > span.right {
+                    display: none;
+                }
+
+                a.navbar-brand {
+                    float: right;
+                }
+            }
+        }
+    }
+
+    #navbar {
+        ul.tabs {
+            > li.more > ul > li > a > span.full-label {
+                padding-left: 0;
+                padding-right: @navbar-tab-text-left-padding;
+            }
+
+            > li a > span.full-label {
+                padding-left: 0;
+                padding-right: @navbar-tab-text-left-padding;
+            }
+        }
+
+        .navbar-header {
+            > a.minimizer span {
+                margin-right: 8px;
+                margin-left: 0;
+            }
+        }
+
+        .navbar li.tab > a {
+            border-right-width: @navbar-color-border-width;
+            border-right-style: solid;
+        }
+    }
+
+    @media screen and (min-width: @screen-sm-min) {
+        &.minimized {
+            #navbar {
+                .nav > li.more > ul.dropdown-menu,
+                .nav > li.tab-group > .dropdown-menu {
+                    left: auto;
+                    right: @navbar-minimized-width;
+                }
+
+                a.minimizer > span.left {
+                    display: inline;
+                }
+
+                a.minimizer > span.right {
+                    display: none;
+                }
+
+                ul.tabs {
+                    > li > a {
+                        padding-right: @navbar-tab-left-padding;
+                        padding-left: 0;
+                    }
+
+                    > li.tab > a {
+                        padding-right: @navbar-tab-left-padding - @navbar-color-border-width;
+                        padding-left: 0;
+                    }
+
+                    > li > a > span.short-label > .short-label-text {
+                        left: auto;
+                        right: -1px;
+                    }
+
+                    > li.tab-group .group-caret {
+                        left: 5px;
+                        right: auto;
+                    }
+                }
+
+                .navbar-right {
+                    margin-left: 0;
+                    padding-right: 0;
+                    margin-right: @navbar-minimized-width;
+                    padding-left: @navbar-minimized-width;
+                }
+            }
+
+            #content {
+                padding-left: 15px;
+                padding-right: @navbar-minimized-width + @container-padding;
+            }
+
+            #footer {
+                margin-left: 0;
+                margin-right: @navbar-minimized-width;
+            }
+
+            > .side-menu-backdrop {
+                margin-left: 0;
+                margin-right: @navbar-width;
+            }
+        }
+
+        &.has-navbar > .content {
+            padding-left: 15px;
+            padding-right: @navbar-width + @container-padding;
+        }
+
+        > footer {
+            margin-left: 0;
+            margin-right: @navbar-width;
+        }
+    }
+
+    .list-buttons-container .sticked-bar {
+        left: auto;
+        right: @navbar-width;
+    }
+
+    &.minimized .list-buttons-container .sticked-bar {
+        left: auto;
+        right: @navbar-minimized-width;
+    }
+
+    @media screen and (min-width: @screen-sm-min) {
+        .folders-container.sticked {
+            left: auto;
+            right: @navbar-width;
+        }
+    }
+
+    &.minimized {
+        @media screen and (min-width: @screen-sm-min) {
+            .folders-container.sticked {
+                left: auto;
+                right: @navbar-minimized-width;
+            }
+        }
+    }
+
+    @media screen and (min-width: @screen-sm-min) {
+        .notifications-badge-container {
+            > .notifications-button > .number-badge {
+                left: auto;
+                right: 22px;
+            }
+        }
+    }
+}
