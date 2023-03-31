@@ -595,6 +595,8 @@ class EntityManager
 
         $this->metadata->delete('entityDefs', $name);
         $this->metadata->delete('clientDefs', $name);
+        $this->metadata->delete('recordDefs', $name);
+        $this->metadata->delete('selectDefs', $name);
         $this->metadata->delete('scopes', $name);
 
         foreach ($this->metadata->get(['entityDefs', $name, 'links'], []) as $link => $item) {
@@ -606,6 +608,8 @@ class EntityManager
 
         $this->fileManager->removeFile("custom/Espo/Custom/Resources/metadata/entityDefs/{$name}.json");
         $this->fileManager->removeFile("custom/Espo/Custom/Resources/metadata/clientDefs/{$name}.json");
+        $this->fileManager->removeFile("custom/Espo/Custom/Resources/metadata/recordDefs/{$name}.json");
+        $this->fileManager->removeFile("custom/Espo/Custom/Resources/metadata/selectDefs/{$name}.json");
         $this->fileManager->removeFile("custom/Espo/Custom/Resources/metadata/scopes/{$name}.json");
 
         $this->fileManager->removeFile("custom/Espo/Custom/Entities/{$normalizedName}.php");
