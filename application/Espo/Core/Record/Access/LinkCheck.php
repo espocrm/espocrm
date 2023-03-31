@@ -128,7 +128,7 @@ class LinkCheck
 
             if (
                 !$hasLinkMultiple &&
-                !$this->acl->getScopeForbiddenLinkList($entityType, AclTable::ACTION_EDIT)
+                in_array($name, $this->acl->getScopeForbiddenLinkList($entityType, AclTable::ACTION_EDIT))
             ) {
                 throw ForbiddenSilent::createWithBody(
                     "No access to link {$name}.",
