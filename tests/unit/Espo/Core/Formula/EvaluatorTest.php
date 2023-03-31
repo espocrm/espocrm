@@ -1196,4 +1196,104 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->evaluator->process($expression);
     }
+
+    public function testNoTrailingSemicolon1(): void
+    {
+        $expression = "1;2 ";
+
+        $this->evaluator->process($expression);
+
+        $this->assertTrue(true);
+    }
+
+    public function testNoTrailingSemicolon2(): void
+    {
+        $expression = "1;2 ";
+
+        $this->evaluator->process($expression);
+
+        $this->assertTrue(true);
+    }
+
+    public function testNoTrailingSemicolon3(): void
+    {
+        $expression = "1; 2 ";
+
+        $this->evaluator->process($expression);
+
+        $this->assertTrue(true);
+    }
+
+    public function testNoTrailingSemicolon4(): void
+    {
+        $expression = "ifThen(1, \$a = 1; \$a = \$a + 1)";
+
+        $vars = (object) [];
+
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals(2, $vars->a);;
+    }
+
+    public function testSemicolonAndParentheses1(): void
+    {
+        $expression = "(2);";
+
+        $this->evaluator->process($expression);
+
+        $this->assertTrue(true);
+    }
+
+    public function testSemicolonAndParentheses2(): void
+    {
+        $expression = "(2 );";
+
+        $this->evaluator->process($expression);
+
+        $this->assertTrue(true);
+    }
+
+    public function testSemicolonAndParentheses3(): void
+    {
+        $expression = "(2);3;";
+
+        $this->evaluator->process($expression);
+
+        $this->assertTrue(true);
+    }
+
+    public function testSemicolonAndParentheses4(): void
+    {
+        $expression = "(2); (2);";
+
+        $this->evaluator->process($expression);
+
+        $this->assertTrue(true);
+    }
+
+    public function testSemicolonAndParentheses5(): void
+    {
+        $expression = "
+            \$j = 0;
+            \$a = list(0, 1);
+
+            ifThen(
+                1,
+                \$i = 0;
+                while(
+                    \$i < array\length(\$a),
+                    (
+                        \$j = \$j + 1;
+                    );
+                    \$i = \$i + 1;
+                )
+            );
+        ";
+
+        $vars = (object) [];
+
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals(2, $vars->j);;
+    }
 }
