@@ -51,7 +51,11 @@ define('views/admin/integrations/index', 'view', function (Dep) {
         },
 
         setup: function () {
-            this.integrationList = Object.keys(this.getMetadata().get('integrations') || {});
+            this.integrationList = Object
+                .keys(this.getMetadata().get('integrations') || {})
+                .sort(
+                    (v1, v2) => this.translate(v1, 'titles', 'Integration').localeCompare(this.translate(v2, 'titles', 'Integration'))
+                );
 
             this.integration = this.options.integration || null;
 
