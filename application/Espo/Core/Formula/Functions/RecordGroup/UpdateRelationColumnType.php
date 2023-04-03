@@ -76,6 +76,10 @@ class UpdateRelationColumnType extends BaseFunction implements
             $this->throwError("Empty column.");
         }
 
+        if (!is_string($column)) {
+            $this->throwError("Column is not string.");
+        }
+
         $em = $this->entityManager;
 
         if (!$em->hasRepository($entityType)) {
