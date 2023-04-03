@@ -39,6 +39,8 @@ use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -251,6 +253,22 @@ class LinkCheck
 
         if ($this->acl->check($foreignEntity, $action)) {
             return;
+        }
+
+        if ($this->user->isPortal()) {
+            if (
+                $foreignEntity->getEntityType() === Account::ENTITY_TYPE &&
+                $this->user->getAccounts()->hasId($foreignEntity->getId())
+            ) {
+                return;
+            }
+
+            if (
+                $foreignEntity->getEntityType() === Contact::ENTITY_TYPE &&
+                $this->user->getContactId() === $foreignEntity->getId()
+            ) {
+                return;
+            }
         }
 
         $body = ErrorBody::create();
