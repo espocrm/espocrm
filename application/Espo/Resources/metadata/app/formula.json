@@ -260,6 +260,10 @@
             "returnType": "mixed"
         },
         {
+            "name": "entity\\setLinkMultipleColumn",
+            "insertText": "entity\\setLinkMultipleColumn(LINK, ID, COLUMN, VALUE)"
+        },
+        {
             "name": "entity\\isRelated",
             "insertText": "entity\\isRelated(LINK, ID)",
             "returnType": "bool"
