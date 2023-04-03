@@ -65,6 +65,8 @@ class GetLinkColumnType extends \Espo\Core\Formula\Functions\Base implements
         $entityType = $this->getEntity()->getEntityType();
         $repository = $this->entityManager->getRDBRepository($entityType);
 
-        return $repository->getRelationColumn($this->getEntity(), $link, $id, $column);
+        return $repository
+            ->getRelation($this->getEntity(), $link)
+            ->getColumnById($id, $column);
     }
 }
