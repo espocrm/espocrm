@@ -88,6 +88,10 @@ class UpdateRelationColumnType extends BaseFunction implements
             return null;
         }
 
-        return $em->getRDBRepository($entityType)->updateRelation($entity, $link, $foreignId, [$column => $value]);
+        $em->getRDBRepository($entityType)
+            ->getRelation($entity, $link)
+            ->updateColumnsById($foreignId, [$column => $value]);
+
+        return true;
     }
 }
