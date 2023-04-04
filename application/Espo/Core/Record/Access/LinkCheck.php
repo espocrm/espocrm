@@ -41,11 +41,9 @@ use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
-use Espo\ORM\Defs\FieldDefs;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
-use stdClass;
 
 /**
  * Check access for record linking.
