@@ -41,9 +41,11 @@ use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
+use Espo\ORM\Defs\FieldDefs;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use stdClass;
 
 /**
  * Check access for record linking.
@@ -176,13 +178,7 @@ class LinkCheck
             );
         }
 
-        $entityDefs = $this->entityManager->getDefs()->getEntity($entityType);
-
-        $readAccess =
-            $entityDefs->hasField($link) &&
-            $entityDefs->getField($link)->getType() === 'linkMultiple';
-
-        $this->linkForeignAccessCheck($entityType, $link, $foreignEntity, true, $readAccess);
+        $this->linkForeignAccessCheck($entityType, $link, $foreignEntity, true);
         $this->linkEntityAccessCheck($entity, $foreignEntity, $link);
     }
 
@@ -233,8 +229,7 @@ class LinkCheck
         string $entityType,
         string $link,
         Entity $foreignEntity,
-        bool $fromUpdate = false,
-        bool $readAccess = false
+        bool $fromUpdate = false
     ): void {
 
         $action = in_array($link, $this->noEditAccessRequiredLinkList) ?
@@ -247,8 +242,29 @@ class LinkCheck
                 AclTable::ACTION_EDIT;
         }
 
-        if ($readAccess) {
+        $fieldDefs = $fromUpdate ?
+            $this->entityManager
+                ->getDefs()
+                ->getEntity($entityType)
+                ->tryGetField($link) :
+            null;
+
+        if (
+            $fromUpdate &&
+            $fieldDefs &&
+            in_array($fieldDefs->getType(), ['linkMultiple', 'attachmentMultiple'])
+        ) {
             $action = AclTable::ACTION_READ;
+
+            // Allow defaults.
+            $defaultAttributes = (object) ($fieldDefs->getParam('defaultAttributes') ?? []);
+            $attribute = $link . 'Ids';
+            /** @var string[] $defaultIds */
+            $defaultIds = $defaultAttributes->$attribute ?? [];
+
+            if (in_array($foreignEntity->getId(), $defaultIds)) {
+                return;
+            }
         }
 
         if ($this->acl->check($foreignEntity, $action)) {
