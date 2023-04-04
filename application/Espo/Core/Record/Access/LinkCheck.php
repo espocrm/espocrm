@@ -242,6 +242,13 @@ class LinkCheck
                 AclTable::ACTION_EDIT;
         }
 
+        if (
+            $this->metadata
+                ->get(['recordDefs', $entityType, 'relationships', $link, 'linkForeignAccessCheckDisabled'])
+        ) {
+            return;
+        }
+
         $fieldDefs = $fromUpdate ?
             $this->entityManager
                 ->getDefs()
