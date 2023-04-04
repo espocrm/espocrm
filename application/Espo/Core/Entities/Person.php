@@ -29,22 +29,18 @@
 
 namespace Espo\Core\Entities;
 
-use Espo\Core\{
-    ORM\Entity,
-    ORM\Helper,
-    Field\EmailAddressGroup,
-    Field\PhoneNumberGroup,
-    Field\Address,
-};
+use Espo\Core\Field\Address;
+use Espo\Core\Field\EmailAddressGroup;
+use Espo\Core\Field\PhoneNumberGroup;
+use Espo\Core\ORM\Entity;
+use Espo\Core\ORM\Helper;
 
-use Espo\ORM\{
-    EntityManager,
-    Value\ValueAccessorFactory,
-};
+use Espo\ORM\EntityManager;
+use Espo\ORM\Value\ValueAccessorFactory;
 
 class Person extends Entity
 {
-    private $helper;
+    private Helper $helper;
 
     public function __construct(
         string $entityType,
