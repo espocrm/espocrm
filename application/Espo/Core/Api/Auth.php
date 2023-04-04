@@ -30,7 +30,6 @@
 namespace Espo\Core\Api;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\HasBody;
 use Espo\Core\Exceptions\ServiceUnavailable;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Authentication\ConfigDataProvider;
@@ -70,7 +69,7 @@ class Auth
         $authenticationMethod = $this->obtainAuthenticationMethodFromRequest($request);
 
         if (!$authenticationMethod) {
-            list($username, $password) = $this->obtainUsernamePasswordFromRequest($request);
+            [$username, $password] = $this->obtainUsernamePasswordFromRequest($request);
         }
 
         $authenticationData = AuthenticationData::create()
@@ -297,7 +296,7 @@ class Auth
     private function obtainUsernamePasswordFromRequest(Request $request): array
     {
         if ($request->hasHeader(self::HEADER_ESPO_AUTHORIZATION)) {
-            list($username, $password) = $this->decodeAuthorizationString(
+            [$username, $password] = $this->decodeAuthorizationString(
                 $request->getHeader(self::HEADER_ESPO_AUTHORIZATION) ?? ''
             );
 
@@ -318,7 +317,7 @@ class Auth
             $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
 
         if ($cgiAuthString) {
-            list($username, $password) = $this->decodeAuthorizationString(substr($cgiAuthString, 6));
+            [$username, $password] = $this->decodeAuthorizationString(substr($cgiAuthString, 6));
 
             return [$username, $password];
         }
