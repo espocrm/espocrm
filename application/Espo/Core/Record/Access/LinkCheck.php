@@ -255,7 +255,7 @@ class LinkCheck
             return;
         }
 
-        if ($this->user->isPortal()) {
+        if ($this->user->isPortal() && $action === AclTable::ACTION_READ) {
             if (
                 $foreignEntity->getEntityType() === Account::ENTITY_TYPE &&
                 $this->user->getAccounts()->hasId($foreignEntity->getId())
