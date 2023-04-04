@@ -199,7 +199,7 @@ class Auth
         return explode(':', $stringDecoded, 2);
     }
 
-    protected function handleSecondStepRequired(Response $response, Result $result): void
+    private function handleSecondStepRequired(Response $response, Result $result): void
     {
         $response->setStatus(401);
         $response->setHeader('X-Status-Reason', 'second-step-required');
@@ -218,7 +218,7 @@ class Auth
     /**
      * @throws Exception
      */
-    protected function handleException(Response $response, Exception $e): void
+    private function handleException(Response $response, Exception $e): void
     {
         if (
             $e instanceof BadRequest ||
