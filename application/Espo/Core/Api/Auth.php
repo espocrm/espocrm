@@ -183,7 +183,7 @@ class Auth
     }
 
     /**
-     * @return array{string,string}
+     * @return array{string, string}
      * @throws BadRequest
      */
     private function decodeAuthorizationString(string $string): array
@@ -195,7 +195,7 @@ class Auth
             throw new BadRequest("Auth: Bad authorization string provided.");
         }
 
-        /** @var array{string,string} */
+        /** @var array{string, string} */
         return explode(':', $stringDecoded, 2);
     }
 
