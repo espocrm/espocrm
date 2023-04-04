@@ -290,7 +290,7 @@ class Auth
     }
 
     /**
-     * @return array{?string,?string}
+     * @return array{?string, ?string}
      * @throws BadRequest
      */
     private function obtainUsernamePasswordFromRequest(Request $request): array
