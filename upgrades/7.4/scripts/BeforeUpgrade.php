@@ -46,6 +46,7 @@ class BeforeUpgrade
         $errorMessageList = [];
 
         $this->processCheckExtension('Advanced Pack', '2.13.9', $errorMessageList);
+        $this->processCheckExtension('Real Estate', '1.6.2', $errorMessageList);
 
         if (!count($errorMessageList)) {
             return;
