@@ -41,6 +41,7 @@ use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
+use LogicException;
 
 class Converter
 {
@@ -160,11 +161,11 @@ class Converter
             );
         }
 
-        foreach ($ormMetadata as $entityOrmMetadata) {
+        foreach ($ormMetadata as $entityType => $entityOrmMetadata) {
             /** @var array<string, array<string, mixed>> $ormMetadata */
             $ormMetadata = Util::merge(
                 $ormMetadata,
-                $this->createEntityTypesFromRelations($entityOrmMetadata)
+                $this->createEntityTypesFromRelations($entityType, $entityOrmMetadata)
             );
 
             /** @var array<string, array<string, mixed>> $ormMetadata */
@@ -846,7 +847,7 @@ class Converter
      * @param array<string, mixed> $defs
      * @return array<string, mixed>
      */
-    private function createEntityTypesFromRelations(array $defs): array
+    private function createEntityTypesFromRelations(string $entityType, array $defs): array
     {
         $result = [];
 
@@ -872,6 +873,11 @@ class Converter
                     ],
                 ],
             ];
+
+            if (!$relationDefs->hasMidKey()) {
+                throw new LogicException(
+                    "Bad manyMany relation {$name} in {$entityType}. Might be not defined on the other side.");
+            }
 
             $key1 = $relationDefs->getMidKey();
             $key2 = $relationDefs->getForeignMidKey();
