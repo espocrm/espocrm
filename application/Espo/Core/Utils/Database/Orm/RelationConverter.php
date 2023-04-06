@@ -41,6 +41,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
+use LogicException;
 use RuntimeException;
 
 class RelationConverter
@@ -87,8 +88,12 @@ class RelationConverter
             $params['relationName'] = $relationshipName;
         }
 
-        $linkType = $params['type'];
+        $linkType = $params['type'] ?? null;
         $foreignLinkType = $foreignParams ? $foreignParams['type'] : null;
+
+        if (!$linkType) {
+            throw new LogicException("Link {$entityType}.{$name} has no type.");
+        }
 
         $params['hasField'] = (bool) $this->metadata
             ->get(['entityDefs', $entityType, 'fields', $name]);
