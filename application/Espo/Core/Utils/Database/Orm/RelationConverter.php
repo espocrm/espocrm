@@ -36,12 +36,13 @@ use Espo\Core\Utils\Database\Orm\LinkConverters\HasChildren;
 use Espo\Core\Utils\Database\Orm\LinkConverters\HasMany;
 use Espo\Core\Utils\Database\Orm\LinkConverters\HasOne;
 use Espo\Core\Utils\Database\Orm\LinkConverters\ManyMany;
+use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
-use LogicException;
+
 use RuntimeException;
 
 class RelationConverter
@@ -60,7 +61,8 @@ class RelationConverter
 
     public function __construct(
         private Metadata $metadata,
-        private InjectableFactory $injectableFactory
+        private InjectableFactory $injectableFactory,
+        private Log $log
     ) {}
 
     /**
@@ -92,7 +94,9 @@ class RelationConverter
         $foreignLinkType = $foreignParams ? $foreignParams['type'] : null;
 
         if (!$linkType) {
-            throw new LogicException("Link {$entityType}.{$name} has no type.");
+            $this->log->warning("Link {$entityType}.{$name} has no type.");
+
+            return null;
         }
 
         $params['hasField'] = (bool) $this->metadata
