@@ -204,6 +204,7 @@ return [
     'useWebSocket' => false,
     'webSocketMessager' => 'ZeroMQ',
     'auth2FAMethodList' => ['Totp'],
+    'auth2FAInPortal' => false,
     'personNameFormat' => 'firstLast',
     'newNotificationCountInTitle' => false,
     'pdfEngine' => 'Dompdf',

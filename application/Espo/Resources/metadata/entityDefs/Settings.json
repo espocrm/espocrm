@@ -289,6 +289,9 @@
         "auth2FAForced": {
             "type": "bool"
         },
+        "auth2FAInPortal": {
+            "type": "bool"
+        },
         "passwordRecoveryDisabled": {
             "type": "bool"
         },

@@ -51,10 +51,16 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 }
             }
 
+            let isPortalUser = this.model.isPortal() ||
+                this.model.id === this.getUser().id && this.getUser().isPortal();
+
             if (
-                (this.model.id == this.getUser().id || this.getUser().isAdmin()) &&
-                (this.model.isRegular() || this.model.isAdmin()) &&
-                this.getConfig().get('auth2FA')
+                (this.model.id === this.getUser().id || this.getUser().isAdmin()) &&
+                this.getConfig().get('auth2FA') &&
+                (
+                    (this.model.isRegular() || this.model.isAdmin()) ||
+                    isPortalUser && this.getConfig().get('auth2FAInPortal')
+                )
             ) {
                 this.addButton({
                     name: 'viewSecurity',

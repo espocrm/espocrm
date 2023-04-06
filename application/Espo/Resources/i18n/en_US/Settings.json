@@ -141,6 +141,7 @@
         "auth2FA": "Enable 2-Factor Authentication",
         "auth2FAForced": "Force regular users to set up 2FA",
         "auth2FAMethodList": "Available 2FA methods",
+        "auth2FAInPortal": "Allow 2FA in portals",
         "workingTimeCalendar": "Working Time Calendar",
         "oidcClientId": "OIDC Client ID",
         "oidcClientSecret": "OIDC Client Secret",
