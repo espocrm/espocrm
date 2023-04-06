@@ -39,10 +39,6 @@ class AfterUpgrade
 
     private function updateMetadata(Metadata $metadata): void
     {
-        $metadata->set('app', 'recordId', [
-            'length' => 24,
-        ]);
-
         $this->fixParent($metadata);
 
         $metadata->save();
