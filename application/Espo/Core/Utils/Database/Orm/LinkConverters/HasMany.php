@@ -33,12 +33,15 @@ use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
 use Espo\Core\Utils\Database\Orm\LinkConverter;
+use Espo\Core\Utils\Log;
 use Espo\ORM\Defs\RelationDefs as LinkDefs;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
 
 class HasMany implements LinkConverter
 {
+    public function __construct(private Log $log) {}
+
     public function convert(LinkDefs $linkDefs, string $entityType): EntityDefs
     {
         if (!$linkDefs->hasForeignRelationName() && $linkDefs->getParam('disabled')) {
@@ -52,9 +55,20 @@ class HasMany implements LinkConverter
         $foreignRelationName = $linkDefs->getForeignRelationName();
         $hasField = $linkDefs->getParam('hasField');
 
-        $type = $linkDefs->hasRelationshipName() ?
+        $type = RelationType::HAS_MANY;
+
+        /*$type = $linkDefs->hasRelationshipName() ?
             RelationType::MANY_MANY : // Revise.
-            RelationType::HAS_MANY;
+            RelationType::HAS_MANY;*/
+
+        if ($linkDefs->hasRelationshipName()) {
+            $this->log->warning(
+                "Issue with the link '{$name}' in '{$entityType}' entity type. Might be the foreign link " .
+                "'{$foreignRelationName}' in '{$foreignEntityType}' entity type is missing. " .
+                "Remove the problem link manually.");
+
+            return EntityDefs::create();
+        }
 
         return EntityDefs::create()
             ->withAttribute(
