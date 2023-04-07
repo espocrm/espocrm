@@ -119,6 +119,12 @@ function (Dep, /** module:ui/select*/Select) {
                 showWarnings: false,
                 formulaMode: true,
             };
+
+            if (this.decimalPlaces === null) {
+                this.autoNumericOptions.decimalPlaces = this.decimalPlacesRawValue;
+                this.autoNumericOptions.decimalPlacesRawValue = this.decimalPlacesRawValue;
+                this.autoNumericOptions.allowDecimalPadding = false;
+            }
         },
 
         getCurrencyFormat: function () {
