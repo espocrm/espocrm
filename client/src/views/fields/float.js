@@ -60,6 +60,14 @@ define('views/fields/float', ['views/fields/int'], function (Dep) {
             else if (this.getConfig().has('decimalMark')) {
                 this.decimalMark = this.getConfig().get('decimalMark');
             }
+
+            if (!this.decimalMark) {
+                this.decimalMark = '.';
+            }
+
+            if (this.decimalMark === this.thousandSeparator) {
+                this.thousandSeparator = '';
+            }
         },
 
         /**
