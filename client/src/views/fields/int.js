@@ -99,8 +99,16 @@ define('views/fields/int', ['views/fields/base', 'lib!autonumeric'], function (D
          * @protected
          */
         setupAutoNumericOptions: function () {
+            let separator = (!this.disableFormatting ? this.thousandSeparator : null) || '';
+            let decimalCharacter = '.';
+
+            if (separator === '.') {
+                decimalCharacter = ',';
+            }
+
             this.autoNumericOptions = {
-                digitGroupSeparator: (!this.disableFormatting ? this.thousandSeparator : null) || '',
+                digitGroupSeparator: separator,
+                decimalCharacter: decimalCharacter,
                 modifyValueOnWheel: false,
                 decimalPlaces: 0,
                 selectOnFocus: false,
@@ -162,6 +170,10 @@ define('views/fields/int', ['views/fields/base', 'lib!autonumeric'], function (D
                 }
             }
 
+            if (this.isEditMode()) {
+                data.value = this.model.get(this.name);
+            }
+
             return data;
         },
 
@@ -176,11 +188,7 @@ define('views/fields/int', ['views/fields/base', 'lib!autonumeric'], function (D
                 return value;
             }
 
-            if (this.isReadMode()) {
-                return this.formatNumberDetail(value);
-            }
-
-            return this.formatNumberEdit(value);
+            return this.formatNumberDetail(value);
         },
 
         formatNumberDetail: function (value) {
@@ -195,6 +203,9 @@ define('views/fields/int', ['views/fields/base', 'lib!autonumeric'], function (D
             return stringValue;
         },
 
+        /**
+         * @todo Remove. Used in range.
+         */
         formatNumberEdit: function (value) {
             if (value === null) {
                 return '';

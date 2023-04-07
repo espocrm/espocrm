@@ -98,13 +98,12 @@ define('views/fields/float', ['views/fields/int'], function (Dep) {
                 return value;
             }
 
-            if (this.isReadMode()) {
-                return this.formatNumberDetail(value);
-            }
-
-            return this.formatNumberEdit(value);
+            return this.formatNumberDetail(value);
         },
 
+        /**
+         * @todo Remove. Used in range.
+         */
         formatNumberEdit: function (value) {
             if (value === null) {
                 return '';

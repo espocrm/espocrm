@@ -155,13 +155,12 @@ function (Dep, /** module:ui/select*/Select) {
         },
 
         formatNumber: function (value) {
-            if (this.isReadMode()) {
-                return this.formatNumberDetail(value);
-            }
-
-            return this.formatNumberEdit(value);
+            return this.formatNumberDetail(value);
         },
 
+        /**
+         * @todo Remove. Used in range.
+         */
         formatNumberEdit: function (value) {
             let currencyDecimalPlaces = this.decimalPlaces;
 
