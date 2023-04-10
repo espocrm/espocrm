@@ -158,54 +158,6 @@ function (Dep, /** module:ui/select*/Select) {
             return this.formatNumberDetail(value);
         },
 
-        /**
-         * @todo Remove. Used in range.
-         */
-        formatNumberEdit: function (value) {
-            let currencyDecimalPlaces = this.decimalPlaces;
-
-            if (value !== null) {
-                var parts = value.toString().split(".");
-
-                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
-
-                if (parts.length > 1) {
-                    if (
-                        currencyDecimalPlaces &&
-                        parts[1].length < currencyDecimalPlaces
-                    ) {
-                        var limit = currencyDecimalPlaces - parts[1].length;
-
-                        for (var i = 0; i < limit; i++) {
-                            parts[1] += '0';
-                        }
-                    }
-
-                    if (
-                        this.params.decimal &&
-                        currencyDecimalPlaces &&
-                        parts[1].length > currencyDecimalPlaces
-                    ) {
-                        let i = parts[1].length - 1;
-
-                        while (i >= currencyDecimalPlaces) {
-                            if (parts[1][i] !== '0') {
-                                break;
-                            }
-
-                            i--;
-                        }
-
-                        parts[1] = parts[1].substring(0, i + 1);
-                    }
-                }
-
-                return parts.join(this.decimalMark);
-            }
-
-            return '';
-        },
-
         formatNumberDetail: function (value) {
             if (value !== null) {
                 let currencyDecimalPlaces = this.decimalPlaces;

@@ -5,10 +5,18 @@
     ],
     "fields": {
         "from": {
-            "type": "int"
+            "type": "int",
+            "layoutAvailabilityList": [
+                "filters",
+                "massUpdate"
+            ]
         },
         "to": {
-            "type": "int"
+            "type": "int",
+            "layoutAvailabilityList": [
+                "filters",
+                "massUpdate"
+            ]
         }
     },
     "naming": "prefix",

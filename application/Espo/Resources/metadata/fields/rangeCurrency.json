@@ -5,10 +5,18 @@
     ],
     "fields": {
         "from": {
-            "type": "currency"
+            "type": "currency",
+            "layoutAvailabilityList": [
+                "filters",
+                "massUpdate"
+            ]
         },
         "to": {
-            "type": "currency"
+            "type": "currency",
+            "layoutAvailabilityList": [
+                "filters",
+                "massUpdate"
+            ]
         }
     },
     "naming": "prefix",

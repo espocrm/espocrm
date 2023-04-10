@@ -203,21 +203,6 @@ define('views/fields/int', ['views/fields/base', 'lib!autonumeric'], function (D
             return stringValue;
         },
 
-        /**
-         * @todo Remove. Used in range.
-         */
-        formatNumberEdit: function (value) {
-            if (value === null) {
-                return '';
-            }
-
-            let stringValue = value.toString();
-
-            stringValue = stringValue.replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
-
-            return stringValue;
-        },
-
         setupSearch: function () {
             this.events = _.extend({
                 'change select.search-type': (e) => {
