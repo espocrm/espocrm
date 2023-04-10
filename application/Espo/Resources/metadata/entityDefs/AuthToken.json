@@ -19,7 +19,8 @@
         },
         "user": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/user"
         },
         "portal": {
             "type": "link",
