@@ -26,22 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'views/dashlets/abstract/record-list',
-    ['views/dashlets/abstract/base', 'search-manager'],
-    function (Dep, SearchManager) {
+define('views/dashlets/abstract/record-list',
+['views/dashlets/abstract/base', 'search-manager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
         scope: null,
 
         listViewColumn: 'views/record/list',
-
         listViewExpanded: 'views/record/list-expanded',
 
         listView: null,
 
-        _template: '<div class="list-container">{{{list}}}</div>',
+        templateContent: '<div class="list-container">{{{list}}}</div>',
 
         layoutType: 'expanded',
 
