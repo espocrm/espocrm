@@ -47,53 +47,71 @@ class Data
     private function __construct()
     {}
 
+    /**
+     * A user ID.
+     */
     public function getUserId(): string
     {
         return $this->userId;
     }
 
+    /**
+     * A portal ID.
+     */
     public function getPortalId(): ?string
     {
         return $this->portalId;
     }
 
+    /**
+     * A hash.
+     */
     public function getHash(): ?string
     {
         return $this->hash;
     }
 
+    /**
+     * An ID address.
+     */
     public function getIpAddress(): ?string
     {
         return $this->ipAddress;
     }
 
+    /**
+     * To create a secret.
+     */
     public function toCreateSecret(): bool
     {
         return $this->createSecret;
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param array{
+     *     userId: string,
+     *     portalId?: ?string,
+     *     hash?: ?string,
+     *     ipAddress?: ?string,
+     *     createSecret?: ?bool,
+     * } $data
      */
     public static function create(array $data): self
     {
-        $object = new self();
+        $obj = new self();
 
-        $object->userId = $data['userId'] ?? null;
-        $object->portalId = $data['portalId'] ?? null;
-        $object->hash = $data['hash'] ?? null;
-        $object->ipAddress = $data['ipAddress'] ?? null;
-        $object->createSecret = $data['createSecret'] ?? false;
+        $userId = $data['userId'] ?? null;
 
-        $object->validate();
-
-        return $object;
-    }
-
-    private function validate(): void
-    {
-        if (!$this->userId) {
+        if (!$userId) {
             throw new RuntimeException("No user ID.");
         }
+
+        $obj->userId = $userId;
+        $obj->portalId = $data['portalId'] ?? null;
+        $obj->hash = $data['hash'] ?? null;
+        $obj->ipAddress = $data['ipAddress'] ?? null;
+        $obj->createSecret = $data['createSecret'] ?? false;
+
+        return $obj;
     }
 }
