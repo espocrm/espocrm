@@ -3,6 +3,8 @@
     "viewSetupHandlers": {
         "record/edit": "handlers/working-time-range"
     },
+    "mergeDisabled": true,
+    "massUpdateDisabled": true,
     "menu": {
         "list": {
             "buttons": [
