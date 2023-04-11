@@ -31,23 +31,18 @@ namespace Espo\Tools\App;
 
 use Espo\Core\Acl;
 use Espo\Core\Utils\Metadata as MetadataUtil;
-
 use Espo\Entities\User;
-
+use Espo\Tools\App\Metadata\AclDependencyProvider;
 use stdClass;
 
 class MetadataService
 {
-    private Acl $acl;
-    private MetadataUtil $metadata;
-    private User $user;
-
-    public function __construct(Acl $acl, MetadataUtil $metadata, User $user)
-    {
-        $this->acl = $acl;
-        $this->metadata = $metadata;
-        $this->user = $user;
-    }
+    public function __construct(
+        private Acl $acl,
+        private MetadataUtil $metadata,
+        private User $user,
+        private AclDependencyProvider $aclDependencyProvider
+    ) {}
 
     public function getDataForFrontend(): stdClass
     {
@@ -164,7 +159,45 @@ class MetadataService
         unset($data->authenticationMethods);
         unset($data->formula);
 
-        foreach (($this->metadata->get(['app', 'metadata', 'aclDependencies']) ?? []) as $target => $item) {
+        foreach ($this->aclDependencyProvider->get() as $dependencyItem) {
+            $aclScope = $dependencyItem->getScope();
+            $aclField = $dependencyItem->getField();
+
+            if (!$aclScope) {
+                continue;
+            }
+
+            if (!$this->acl->tryCheck($aclScope)) {
+                continue;
+            }
+
+            if (
+                $aclField &&
+                in_array($aclField, $this->acl->getScopeForbiddenFieldList($aclScope))
+            ) {
+                continue;
+            }
+
+            $targetArr = explode('.', $dependencyItem->getTarget());
+
+            $pointer = $data;
+
+            foreach ($targetArr as $i => $k) {
+                if ($i === count($targetArr) - 1) {
+                    $pointer->$k = $this->metadata->get($targetArr);
+
+                    break;
+                }
+
+                if (!isset($pointer->$k)) {
+                    $pointer->$k = (object) [];
+                }
+
+                $pointer = $pointer->$k;
+            }
+        }
+
+        /*foreach (($this->metadata->get(['app', 'metadata', 'aclDependencies']) ?? []) as $target => $item) {
             $targetArr = explode('.', $target);
 
             if (is_string($item)) {
@@ -211,7 +244,7 @@ class MetadataService
 
                 $pointer = $pointer->$k;
             }
-        }
+        }*/
 
         return $data;
     }
