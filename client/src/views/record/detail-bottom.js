@@ -81,7 +81,7 @@ define('views/record/detail-bottom', ['views/record/panels-container'], function
          * Set up a stream panel.
          */
         setupStreamPanel: function () {
-            var streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
+            let streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
 
             if (streamAllowed === null) {
                 this.listenToOnce(this.model, 'sync', () => {
@@ -149,7 +149,7 @@ define('views/record/detail-bottom', ['views/record/panels-container'], function
                     );
                 })
             ]).then(() => {
-                var panelNameList = [];
+                let panelNameList = [];
 
                 this.panelList = this.panelList.filter(p => {
                     panelNameList.push(p.name);
@@ -170,15 +170,15 @@ define('views/record/detail-bottom', ['views/record/panels-container'], function
                 });
 
                 if (this.relationshipPanels) {
-                    var linkDefs = (this.model.defs || {}).links || {};
+                    let linkDefs = (this.model.defs || {}).links || {};
 
                     if (this.layoutData) {
-                        for (var name in this.layoutData) {
+                        for (let name in this.layoutData) {
                             if (!linkDefs[name]) {
                                 continue;
                             }
 
-                            var p = this.layoutData[name];
+                            let p = this.layoutData[name];
 
                             if (!~panelNameList.indexOf(name) && !p.disbled) {
                                 this.addRelationshipPanel(name, p);
@@ -188,7 +188,7 @@ define('views/record/detail-bottom', ['views/record/panels-container'], function
                 }
 
                 this.panelList = this.panelList.map((p) => {
-                    var item = Espo.Utils.clone(p);
+                    let item = Espo.Utils.clone(p);
 
                     if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                         item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
@@ -223,10 +223,10 @@ define('views/record/detail-bottom', ['views/record/panels-container'], function
          * @private
          */
         addRelationshipPanel: function (name, item) {
-            var scope = this.scope;
-            var scopesDefs = this.getMetadata().get('scopes') || {};
+            let scope = this.scope;
+            let scopesDefs = this.getMetadata().get('scopes') || {};
 
-            var p;
+            let p;
 
             if (typeof item === 'string' || item instanceof String) {
                 p = {name: item};
@@ -244,12 +244,13 @@ define('views/record/detail-bottom', ['views/record/panels-container'], function
 
             name = p.name;
 
-            var links = (this.model.defs || {}).links || {};
+            let links = (this.model.defs || {}).links || {};
+
             if (!(name in links)) {
                 return;
             }
 
-            var foreignScope = links[name].entity;
+            let foreignScope = links[name].entity;
 
             if ((scopesDefs[foreignScope] || {}).disabled) {
                 return;
@@ -259,10 +260,10 @@ define('views/record/detail-bottom', ['views/record/panels-container'], function
                 return;
             }
 
-            var defs = this.getMetadata().get(['clientDefs', scope, 'relationshipPanels', name]) || {};
+            let defs = this.getMetadata().get(['clientDefs', scope, 'relationshipPanels', name]) || {};
             defs = Espo.Utils.clone(defs);
 
-            for (var i in defs) {
+            for (let i in defs) {
                 if (i in p) {
                     continue;
                 }
