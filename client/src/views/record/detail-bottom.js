@@ -180,7 +180,7 @@ define('views/record/detail-bottom', ['views/record/panels-container'], function
 
                             let p = this.layoutData[name];
 
-                            if (!~panelNameList.indexOf(name) && !p.disbled) {
+                            if (!~panelNameList.indexOf(name) && !p.disabled) {
                                 this.addRelationshipPanel(name, p);
                             }
                         }
