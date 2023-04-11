@@ -68,6 +68,7 @@ class Attachment extends Record
         unset($data->relatedId);
         unset($data->relatedType);
         unset($data->isBeingUploaded);
+        unset($data->storage);
     }
 
     /**
@@ -158,9 +159,14 @@ class Attachment extends Record
     {
         $storage = $entity->getStorage();
 
+        $availableStorageList = $this->config->get('attachmentAvailableStorageList') ?? [];
+
         if (
             $storage &&
-            !$this->metadata->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])
+            (
+                !in_array($storage, $availableStorageList) ||
+                !$this->metadata->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])
+            )
         ) {
             $entity->clear('storage');
         }
@@ -169,7 +175,6 @@ class Attachment extends Record
             $entity->set('role', AttachmentEntity::ROLE_ATTACHMENT);
         }
 
-        $role = $entity->getRole();
         $size = $entity->getSize();
 
         $maxSize = $this->getDetailsObtainer()->getUploadMaxSize($entity);
@@ -185,18 +190,6 @@ class Attachment extends Record
     private function getChecker(): Checker
     {
         return $this->injectableFactory->create(Checker::class);
-    }
-
-    protected function beforeUpdateEntity(Entity $entity, $data)
-    {
-        $storage = $entity->get('storage');
-
-        if (
-            $storage &&
-            !$this->metadata->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])
-        ) {
-            $entity->clear('storage');
-        }
     }
 
     private function getDetailsObtainer(): DetailsObtainer

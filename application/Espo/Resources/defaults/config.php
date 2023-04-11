@@ -189,6 +189,7 @@ return [
     'currencyDecimalPlaces' => 2,
     'aclAllowDeleteCreated' => false,
     'aclAllowDeleteCreatedThresholdPeriod' => '24 hours',
+    'attachmentAvailableStorageList' => null,
     'attachmentUploadMaxSize' => 256,
     'attachmentUploadChunkSize' => 4,
     'inlineAttachmentUploadMaxSize' => 20,
