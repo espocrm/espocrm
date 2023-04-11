@@ -1,6 +1,9 @@
 {
     "controller": "controllers/record",
     "searchPanelDisabled": true,
+    "massUpdateDisabled": true,
+    "mergeDisabled": true,
+    "massRemoveDisabled": true,
     "iconClass": "fas fa-calendar-week",
     "menu": {
         "list": {
