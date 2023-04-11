@@ -17,6 +17,12 @@
             "view": "views/admin/field-manager/fields/options/default"
         },
         {
+            "name": "optionsReference",
+            "type": "varchar",
+            "view": "views/admin/field-manager/fields/options-reference",
+            "tooltip": true
+        },
+        {
             "name": "isSorted",
             "type": "bool"
         },

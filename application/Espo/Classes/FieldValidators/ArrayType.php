@@ -128,6 +128,14 @@ class ArrayType
 
         /** @var ?string $path */
         $path = $fieldDefs->getParam('optionsPath');
+        /** @var ?string $path */
+        $ref = $fieldDefs->getParam('optionsReference');
+
+        if (!$path && $ref && str_contains($ref, '.')) {
+            [$refEntityType, $refField] = explode('.', $ref);
+
+            $path = "entityDefs.{$refEntityType}.fields.{$refField}.options";
+        }
 
         /** @var string[]|null|false $optionList */
         $optionList = $path ?

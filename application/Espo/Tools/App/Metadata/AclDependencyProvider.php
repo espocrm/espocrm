@@ -32,10 +32,19 @@ namespace Espo\Tools\App\Metadata;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Defs;
 
 class AclDependencyProvider
 {
     private const CACHE_KEY = 'metadataAclDependency';
+
+    /** @var string[] */
+    private array $enumFieldTypeList = [
+        'enum',
+        'multiEnum',
+        'array',
+        'checklist',
+    ];
 
     /** @var ?AclDependencyItem[] */
     private ?array $data = null;
@@ -44,7 +53,8 @@ class AclDependencyProvider
     public function __construct(
         private DataCache $dataCache,
         private Metadata $metadata,
-        Config $config
+        Config $config,
+        private Defs $ormDefs
     ) {
         $this->useCache = $config->get('useCache');
     }
@@ -96,6 +106,41 @@ class AclDependencyProvider
                 'scope' => $scope,
                 'field' => $field,
             ];
+        }
+
+        foreach ($this->ormDefs->getEntityList() as $entityDefs) {
+            if (!$this->metadata->get(['scopes', $entityDefs->getName(), 'object'])) {
+                continue;
+            }
+
+            foreach ($entityDefs->getFieldList() as $fieldDefs) {
+                if (!in_array($fieldDefs->getType(), $this->enumFieldTypeList)) {
+                    continue;
+                }
+
+                $optionsPath = $fieldDefs->getParam('optionsPath');
+                $optionsReference = $fieldDefs->getParam('optionsReference');
+
+                if (
+                    !$optionsPath &&
+                    $optionsReference &&
+                    str_contains($optionsReference, '.')
+                ) {
+                    [$refEntityType, $refField] = explode('.', $optionsReference);
+
+                    $optionsPath = "entityDefs.{$refEntityType}.fields.{$refField}.options";
+                }
+
+                if (!$optionsPath) {
+                    continue;
+                }
+
+                $data[] = [
+                    'target' => $optionsPath,
+                    'scope' => $entityDefs->getName(),
+                    'field' => $fieldDefs->getName(),
+                ];
+            }
         }
 
         if ($this->useCache) {

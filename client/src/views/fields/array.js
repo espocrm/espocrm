@@ -138,10 +138,18 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
                 this.selected = [];
             }
 
-            if (this.params.optionsPath) {
-                this.params.options = Espo.Utils.clone(
-                    this.getMetadata().get(this.params.optionsPath) || []
-                );
+            let optionsPath = this.params.optionsPath;
+            /** @type {?string} */
+            let optionsReference = this.params.optionsReference;
+
+            if (!optionsPath && optionsReference) {
+                let [refEntityType, refField] = optionsReference.split('.');
+
+                optionsPath = `entityDefs.${refEntityType}.fields.${refField}.options`;
+            }
+
+            if (optionsPath) {
+                this.params.options = Espo.Utils.clone(this.getMetadata().get(optionsPath)) || [];
             }
 
             this.styleMap = this.params.style || {};
@@ -214,8 +222,18 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
         setupTranslation: function () {
             let t = {};
 
-            if (this.params.translation) {
-                let arr = this.params.translation.split('.');
+            let translation = this.params.translation;
+            /** @type {?string} */
+            let optionsReference = this.params.optionsReference;
+
+            if (!translation && optionsReference) {
+                let [refEntityType, refField] = optionsReference.split('.');
+
+                translation = `${refEntityType}.options.${refField}`;
+            }
+
+            if (translation) {
+                let arr = translation.split('.');
 
                 let pointer = this.getLanguage().data;
 

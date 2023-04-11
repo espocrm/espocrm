@@ -162,6 +162,7 @@
         "default": "Default",
         "maxLength": "Max Length",
         "options": "Options",
+        "optionsReference": "Options Reference",
         "after": "After (field)",
         "before": "Before (field)",
         "link": "Link",
