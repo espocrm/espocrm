@@ -55,6 +55,19 @@
                         }
                     ]
                 }
+            },
+            "reminders": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "assignedUserId",
+                            "data": {
+                                "field": "assignedUser"
+                            }
+                        }
+                    ]
+                }
             }
         }
     }
