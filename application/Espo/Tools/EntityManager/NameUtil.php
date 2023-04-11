@@ -71,6 +71,7 @@ class NameUtil
         'false',
         'true',
         'layout',
+        'system',
     ];
 
     /**

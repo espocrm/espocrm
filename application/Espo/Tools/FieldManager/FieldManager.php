@@ -71,6 +71,7 @@ class FieldManager
         'null',
         'false',
         'true',
+        'system',
     ];
 
     const MAX_NAME_LENGTH = 100;
