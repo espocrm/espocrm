@@ -12,7 +12,8 @@
             "create": false,
             "rowActionsView": "views/record/row-actions/relationship-unlink-only",
             "layout": "listForTeam",
-            "selectPrimaryFilterName": "active"
+            "selectPrimaryFilterName": "active",
+            "filterList": ["all", "active"]
         }
     },
     "recordViews": {
