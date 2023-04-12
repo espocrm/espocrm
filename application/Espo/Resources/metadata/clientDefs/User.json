@@ -1,111 +1,111 @@
 {
-   "controller": "controllers/user",
-   "model": "models/user",
-   "acl": "acl/user",
-   "views": {
-      "detail": "views/user/detail",
-      "list": "views/user/list"
-   },
-   "recordViews":{
-      "detail":"views/user/record/detail",
-      "detailSmall":"views/user/record/detail-quick",
-      "edit":"views/user/record/edit",
-      "editSmall":"views/user/record/edit-quick",
-      "list":"views/user/record/list"
-   },
-   "modalViews": {
-      "selectFollowers": "views/user/modals/select-followers",
-      "detail": "views/user/modals/detail",
-      "massUpdate": "views/user/modals/mass-update"
-   },
-   "defaultSidePanel": {
-      "detail": {
-        "name": "default",
-        "label": false,
-        "view": "views/user/record/panels/default-side",
-        "isForm": true
-      },
-      "detailSmall": {
-        "name": "default",
-        "label": false,
-        "view": "views/user/record/panels/default-side",
-        "isForm": true
-      },
-      "edit": {
-        "name": "default",
-        "label": false,
-        "view": "views/user/record/panels/default-side",
-        "isForm": true
-      },
-      "editSmall": {
-        "name": "default",
-        "label": false,
-        "view": "views/user/record/panels/default-side",
-        "isForm": true
-      }
-   },
-   "defaultSidePanelFieldLists": {
-      "detail": [
-        "avatar",
-        "createdAt",
-        "lastAccess",
-        "auth2FA"
-      ],
-      "detailSmall": [
-        "avatar",
-        "lastAccess"
-      ],
-      "edit": [
-        "avatar"
-      ],
-      "editSmall": [
-        "avatar"
-      ]
-   },
-   "sidePanels": {
-      "detail": [
-         {
-            "name":"activities",
-            "label":"Activities",
-            "view":"crm:views/record/panels/activities",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"history",
-            "label":"History",
-            "view":"crm:views/record/panels/history",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"tasks",
-            "label":"Tasks",
-            "view":"crm:views/user/record/panels/tasks",
-            "aclScope": "Task"
-         }
-      ],
-      "detailSmall": [
-         {
-            "name":"activities",
-            "label":"Activities",
-            "view":"crm:views/record/panels/activities",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"history",
-            "label":"History",
-            "view":"crm:views/record/panels/history",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"tasks",
-            "label":"Tasks",
-            "view":"crm:views/user/record/panels/tasks",
-            "aclScope": "Task"
-         }
-      ]
-   },
-    "relationshipPanels":{
-        "targetLists":{
+    "controller": "controllers/user",
+    "model": "models/user",
+    "acl": "acl/user",
+    "views": {
+        "detail": "views/user/detail",
+        "list": "views/user/list"
+    },
+    "recordViews": {
+        "detail": "views/user/record/detail",
+        "detailSmall": "views/user/record/detail-quick",
+        "edit": "views/user/record/edit",
+        "editSmall": "views/user/record/edit-quick",
+        "list": "views/user/record/list"
+    },
+    "modalViews": {
+        "selectFollowers": "views/user/modals/select-followers",
+        "detail": "views/user/modals/detail",
+        "massUpdate": "views/user/modals/mass-update"
+    },
+    "defaultSidePanel": {
+        "detail": {
+            "name": "default",
+            "label": false,
+            "view": "views/user/record/panels/default-side",
+            "isForm": true
+        },
+        "detailSmall": {
+            "name": "default",
+            "label": false,
+            "view": "views/user/record/panels/default-side",
+            "isForm": true
+        },
+        "edit": {
+            "name": "default",
+            "label": false,
+            "view": "views/user/record/panels/default-side",
+            "isForm": true
+        },
+        "editSmall": {
+            "name": "default",
+            "label": false,
+            "view": "views/user/record/panels/default-side",
+            "isForm": true
+        }
+    },
+    "defaultSidePanelFieldLists": {
+        "detail": [
+            "avatar",
+            "createdAt",
+            "lastAccess",
+            "auth2FA"
+        ],
+        "detailSmall": [
+            "avatar",
+            "lastAccess"
+        ],
+        "edit": [
+            "avatar"
+        ],
+        "editSmall": [
+            "avatar"
+        ]
+    },
+    "sidePanels": {
+        "detail": [
+            {
+                "name": "activities",
+                "label": "Activities",
+                "view": "crm:views/record/panels/activities",
+                "aclScope": "Activities"
+            },
+            {
+                "name": "history",
+                "label": "History",
+                "view": "crm:views/record/panels/history",
+                "aclScope": "Activities"
+            },
+            {
+                "name": "tasks",
+                "label": "Tasks",
+                "view": "crm:views/user/record/panels/tasks",
+                "aclScope": "Task"
+            }
+        ],
+        "detailSmall": [
+            {
+                "name": "activities",
+                "label": "Activities",
+                "view": "crm:views/record/panels/activities",
+                "aclScope": "Activities"
+            },
+            {
+                "name": "history",
+                "label": "History",
+                "view": "crm:views/record/panels/history",
+                "aclScope": "Activities"
+            },
+            {
+                "name": "tasks",
+                "label": "Tasks",
+                "view": "crm:views/user/record/panels/tasks",
+                "aclScope": "Task"
+            }
+        ]
+    },
+    "relationshipPanels": {
+        "targetLists": {
             "create": false,
             "rowActionsView": "crm:views/record/row-actions/relationship-target",
             "layout": "listForTarget",
@@ -116,7 +116,9 @@
     "filterList": [
         "active"
     ],
-    "boolFilterList": ["onlyMyTeam"],
+    "boolFilterList": [
+        "onlyMyTeam"
+    ],
     "selectDefaultFilters": {
         "filter": "active"
     },
@@ -128,7 +130,10 @@
         "options": {
             "authMethod": [
                 {
-                    "optionList": ["ApiKey", "Hmac"],
+                    "optionList": [
+                        "ApiKey",
+                        "Hmac"
+                    ],
                     "conditionGroup": [
                         {
                             "type": "equals",
