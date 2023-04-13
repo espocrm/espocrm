@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/campaign/unsubscribe', 'view', function (Dep) {
+define('crm:views/campaign/unsubscribe', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -36,16 +36,14 @@ define('crm:views/campaign/unsubscribe', 'view', function (Dep) {
             var revertUrl;
 
             var actionData = this.options.actionData;
-            if (actionData.hash && actionData.emailAddress)
-                revertUrl = '?entryPoint=subscribeAgain&emailAddress=' + actionData.emailAddress + '&hash=' + actionData.hash;
-            else
-                revertUrl = '?entryPoint=subscribeAgain&id=' + actionData.queueItemId;
 
-            var data = {
+            revertUrl = actionData.hash && actionData.emailAddress ?
+                '?entryPoint=subscribeAgain&emailAddress=' + actionData.emailAddress + '&hash=' + actionData.hash :
+                '?entryPoint=subscribeAgain&id=' + actionData.queueItemId;
+
+            return {
                 revertUrl: revertUrl,
             };
-            return data;
-        }
-
+        },
     });
 });

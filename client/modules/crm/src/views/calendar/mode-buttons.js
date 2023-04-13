@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/calendar/mode-buttons', 'view', function (Dep) {
+define('crm:views/calendar/mode-buttons', ['view'], function (Dep) {
 
     return Dep.extend({
 

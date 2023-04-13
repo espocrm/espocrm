@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/knowledge-base-article/record/detail', 'views/record/detail', function (Dep) {
+define('crm:views/knowledge-base-article/record/detail', ['views/record/detail'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,7 +42,7 @@ define('crm:views/knowledge-base-article/record/detail', 'views/record/detail', 
             if (this.getAcl().checkScope('Email', 'create')) {
                 this.dropdownItemList.push({
                     'label': 'Send in Email',
-                    'name': 'sendInEmail'
+                    'name': 'sendInEmail',
                 });
             }
 
@@ -50,11 +50,12 @@ define('crm:views/knowledge-base-article/record/detail', 'views/record/detail', 
                 if (!this.getAcl().checkScope(this.scope, 'edit')) {
                     if (!this.model.getLinkMultipleIdList('attachments').length) {
                         this.hideField('attachments');
-                        this.listenToOnce(this.model, 'sync', function () {
+
+                        this.listenToOnce(this.model, 'sync', () => {
                             if (this.model.getLinkMultipleIdList('attachments').length) {
                                 this.showField('attachments');
                             }
-                        }, this);
+                        });
                     }
                 }
             }
@@ -63,29 +64,32 @@ define('crm:views/knowledge-base-article/record/detail', 'views/record/detail', 
         actionSendInEmail: function () {
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-            Espo.require('crm:knowledge-base-helper', function (Helper) {
+            Espo.require('crm:knowledge-base-helper', Helper => {
                 var helper = new Helper(this.getLanguage());
 
-                helper.getAttributesForEmail(this.model, {}, function (attributes) {
-                    var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') || 'views/modals/compose-email';
+                helper.getAttributesForEmail(this.model, {}, (attributes) => {
+                    var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
+                        'views/modals/compose-email';
+
                     this.createView('composeEmail', viewName, {
                         attributes: attributes,
                         selectTemplateDisabled: true,
-                        signatureDisabled: true
-                    }, function (view) {
+                        signatureDisabled: true,
+                    }, (view) => {
                         Espo.Ui.notify(false);
+
                         view.render();
-                    }, this);
-                }.bind(this));
-            }, this);
+                    });
+                });
+            });
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
             if (this.getUser().isPortal()) {
                 this.$el.find('.field[data-name="body"]').css('minHeight', '400px');
             }
         },
-
     });
 });
