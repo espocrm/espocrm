@@ -30,7 +30,7 @@ define('views/admin/dynamic-logic/modals/add-field', ['views/modal', 'model'], f
 
     return Dep.extend({
 
-        _template: '<div class="field" data-name="field">{{{field}}}</div>',
+        templateContent: '<div class="field" data-name="field">{{{field}}}</div>',
 
         events: {
             'click a[data-action="addField"]': function (e) {

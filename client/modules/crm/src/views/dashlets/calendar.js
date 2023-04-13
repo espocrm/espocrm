@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', function (Dep) {
+define('crm:views/dashlets/calendar', ['views/dashlets/abstract/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,7 +34,7 @@ define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', function (
 
         noPadding: true,
 
-        _template: '<div class="calendar-container">{{{calendar}}} </div>',
+        templateContent: '<div class="calendar-container">{{{calendar}}} </div>',
 
         init: function () {
             Dep.prototype.init.call(this);

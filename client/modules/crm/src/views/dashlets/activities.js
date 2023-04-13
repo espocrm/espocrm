@@ -26,16 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'crm:views/dashlets/activities',
-    ['views/dashlets/abstract/base', 'multi-collection'],
-    function (Dep, MultiCollection) {
+define('crm:views/dashlets/activities',
+['views/dashlets/abstract/base', 'multi-collection'], function (Dep, MultiCollection) {
 
     return Dep.extend({
 
         name: 'Activities',
 
-        _template: '<div class="list-container">{{{list}}}</div>',
+        templateContent: '<div class="list-container">{{{list}}}</div>',
 
         rowActionsView: 'crm:views/record/row-actions/activities-dashlet',
 

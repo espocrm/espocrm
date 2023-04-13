@@ -32,7 +32,7 @@ define('views/email/modals/body-plain', ['views/modal'], function (Dep) {
 
         backdrop: true,
 
-        _template: '<div class="field" data-name="body-plain">{{{bodyPlain}}}</div>',
+        templateContent: '<div class="field" data-name="body-plain">{{{bodyPlain}}}</div>',
 
         setup: function () {
             Dep.prototype.setup.call(this);
