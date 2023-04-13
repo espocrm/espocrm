@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/fields/assignment-notifications-ignore-entity-type-list', 'views/fields/checklist', function (Dep) {
+define('views/preferences/fields/assignment-notifications-ignore-entity-type-list',
+['views/fields/checklist'], function (Dep) {
 
     return Dep.extend({
 
@@ -35,6 +36,5 @@ define('views/preferences/fields/assignment-notifications-ignore-entity-type-lis
         setupOptions: function () {
             this.params.options = Espo.Utils.clone(this.getConfig().get('assignmentNotificationsEntityList')) || [];
         },
-
     });
 });

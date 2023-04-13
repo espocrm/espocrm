@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/record/row-actions/relationship-followers', 'views/record/row-actions/relationship', function (Dep) {
+define('views/user/record/row-actions/relationship-followers', ['views/record/row-actions/relationship'], function (Dep) {
 
     return Dep.extend({
 

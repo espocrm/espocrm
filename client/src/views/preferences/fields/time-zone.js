@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/fields/time-zone', 'views/fields/enum', function (Dep) {
+define('views/preferences/fields/time-zone', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
@@ -35,8 +35,7 @@ define('views/preferences/fields/time-zone', 'views/fields/enum', function (Dep)
             this.params.options.unshift('');
 
             this.translatedOptions = this.translatedOptions || {};
-            this.translatedOptions[''] = this.translate('Default') + ' (' + this.getConfig().get('timeZone') +')';
+            this.translatedOptions[''] = this.translate('Default') + ' (' + this.getConfig().get('timeZone') + ')';
         },
-
     });
 });

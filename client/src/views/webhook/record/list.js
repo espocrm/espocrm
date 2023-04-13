@@ -26,12 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/webhook/record/list', 'views/record/list', function (Dep) {
+define('views/webhook/record/list', ['views/record/list'], function (Dep) {
 
     return Dep.extend({
 
         massActionList: ['remove', 'massUpdate', 'export'],
 
     });
-
 });

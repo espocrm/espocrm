@@ -26,21 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/auth-two-fa-method-list', 'views/fields/multi-enum', function (Dep) {
+define('views/settings/fields/auth-two-fa-method-list', ['views/fields/multi-enum'], function (Dep) {
 
     return Dep.extend({
 
         setupOptions: function () {
             this.params.options = [];
 
-            var defs = this.getMetadata().get(['app', 'authentication2FAMethods']) || {};
+            let defs = this.getMetadata().get(['app', 'authentication2FAMethods']) || {};
 
-            for (var method in defs) {
+            for (let method in defs) {
                 if (defs[method].settings && defs[method].settings.isAvailable) {
                     this.params.options.push(method);
                 }
             }
         },
-
     });
 });

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/template/record/detail', 'views/record/detail', function (Dep) {
+define('views/template/record/detail', ['views/record/detail'], function (Dep) {
 
     return Dep.extend({
 
@@ -40,6 +40,7 @@ define('views/template/record/detail', 'views/record/detail', function (Dep) {
             this.on('after:set-edit-mode', function () {
                 this.showField('variables');
             }, this);
+
             this.on('after:set-detail-mode', function () {
                 this.hideField('variables');
             }, this);

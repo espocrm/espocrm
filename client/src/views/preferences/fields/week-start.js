@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/fields/week-start', 'views/fields/enum-int', function (Dep) {
+define('views/preferences/fields/week-start', ['views/fields/enum-int'], function (Dep) {
 
     return Dep.extend({
 
@@ -39,9 +39,9 @@ define('views/preferences/fields/week-start', 'views/fields/enum-int', function 
 
             var dayList = this.getLanguage().get('Global', 'lists', 'dayNames') || [];
 
-            dayList.forEach(function (item, i) {
+            dayList.forEach((item, i) => {
                 this.translatedOptions[i] = item;
-            }, this);
+            });
 
             var defaultWeekStart = this.getConfig().get('weekStart');
 
@@ -50,5 +50,4 @@ define('views/preferences/fields/week-start', 'views/fields/enum-int', function 
                 ')';
         },
     });
-
 });

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/template/fields/font-face', 'views/fields/enum', function (Dep) {
+define('views/template/fields/font-face', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
@@ -43,6 +43,5 @@ define('views/template/fields/font-face', 'views/fields/enum', function (Dep) {
 
             this.params.options = fontFaceList;
         },
-
     });
 });

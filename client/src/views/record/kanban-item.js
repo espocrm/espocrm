@@ -26,22 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/kanban-item', 'view', function (Dep) {
+define('views/record/kanban-item', ['view'], function (Dep) {
 
     return Dep.extend({
 
         template: 'record/kanban-item',
 
-
         data: function () {
             return {
                 layoutDataList: this.layoutDataList,
-                rowActionsDisabled: this.rowActionsDisabled
+                rowActionsDisabled: this.rowActionsDisabled,
             };
         },
 
         events: {
-
         },
 
         setup: function () {
@@ -87,16 +85,16 @@ define('views/record/kanban-item', 'view', function (Dep) {
             if (!this.rowActionsDisabled) {
                 var acl =  {
                     edit: this.getAcl().checkModel(this.model, 'edit'),
-                    delete: this.getAcl().checkModel(this.model, 'delete')
+                    delete: this.getAcl().checkModel(this.model, 'delete'),
                 };
+
                 this.createView('itemMenu', this.rowActionsView, {
                     el: this.getSelector() + ' .item-menu-container',
                     model: this.model,
                     acl: acl,
-                    statusFieldIsEditable: this.options.statusFieldIsEditable
+                    statusFieldIsEditable: this.options.statusFieldIsEditable,
                 });
             }
-        }
-
+        },
     });
 });
