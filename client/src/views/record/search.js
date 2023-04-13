@@ -152,19 +152,23 @@ define('views/record/search', ['view'], function (Dep) {
 
             let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType) || [];
 
-            this._helper.layoutManager.get(this.entityType, 'filters', list => {
-                this.moreFieldList = [];
+            this.wait(
+                new Promise(resolve => {
+                    this._helper.layoutManager.get(this.entityType, 'filters', list => {
+                        this.moreFieldList = [];
 
-                (list || []).forEach((field) => {
-                    if (~forbiddenFieldList.indexOf(field)) {
-                        return;
-                    }
+                        (list || []).forEach(field => {
+                            if (~forbiddenFieldList.indexOf(field)) {
+                                return;
+                            }
 
-                    this.moreFieldList.push(field);
-                });
+                            this.moreFieldList.push(field);
+                        });
 
-                this.tryReady();
-            });
+                        resolve();
+                    });
+                })
+            );
 
             let filterList = this.options.filterList ||
                 this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || [];
