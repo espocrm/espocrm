@@ -707,7 +707,7 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
 
             text = text.replace(
                 /<a href="mailto:(.*)"/gm,
-                '<a type="button" class="selectable" data-email-address="$1" data-action="mailTo"'
+                '<a role="button" class="selectable" data-email-address="$1" data-action="mailTo"'
             );
 
             return new Handlebars.SafeString(text);
