@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/site/footer', 'view', function (Dep) {
+define('views/site/footer', ['view'], function (Dep) {
 
     return Dep.extend({
 

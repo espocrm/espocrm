@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/person-string-data-for-expanded', 'views/email/fields/person-string-data', function (Dep) {
+define('views/email/fields/person-string-data-for-expanded', ['views/email/fields/person-string-data'], function (Dep) {
 
     return Dep.extend({
 

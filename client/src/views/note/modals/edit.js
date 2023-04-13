@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/note/modals/edit', 'views/modals/edit', function (Dep) {
+define('views/note/modals/edit', ['views/modals/edit'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,21 +34,24 @@ define('views/note/modals/edit', 'views/modals/edit', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.once('ready', function () {
-                var recordView = this.getView('edit') || this.getView('record');
+
+            this.once('ready', () => {
+                let recordView = this.getView('edit') || this.getView('record');
+
                 if (recordView) {
                     var fieldView = recordView.getFieldView('post');
+
                     if (fieldView) {
-                        this.listenTo(fieldView, 'add-files', function (files) {
+                        this.listenTo(fieldView, 'add-files', files => {
                             var attachmentsView = recordView.getFieldView('attachments');
+
                             if (attachmentsView) {
                                 recordView.getFieldView('attachments').uploadFiles(files);
                             }
-                        }, this);
+                        });
                     }
                 }
-            }, this);
+            });
         },
-
     });
 });

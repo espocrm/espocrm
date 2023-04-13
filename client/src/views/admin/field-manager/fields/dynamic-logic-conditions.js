@@ -26,12 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/fields/base', function (Dep) {
+define('views/admin/field-manager/fields/dynamic-logic-conditions', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
         detailTemplate: 'admin/field-manager/fields/dynamic-logic-conditions/detail',
-
         editTemplate: 'admin/field-manager/fields/dynamic-logic-conditions/edit',
 
         events: {

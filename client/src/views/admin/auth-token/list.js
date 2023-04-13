@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/auth-token/list', 'views/list', function (Dep) {
+define('views/admin/auth-token/list', ['views/list'], function (Dep) {
 
     return Dep.extend({
 

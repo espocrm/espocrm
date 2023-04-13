@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/entity-manager/record/edit', 'views/record/edit', function (Dep) {
+define('views/admin/entity-manager/record/edit', ['views/record/edit'], function (Dep) {
 
     return Dep.extend({
 
