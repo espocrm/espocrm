@@ -162,6 +162,10 @@ class LinkCheck
             return;
         }
 
+        if ($this->metadata->get(['recordDefs', $entityType, 'relationships', $link, 'linkCheckDisabled'])) {
+            return;
+        }
+
         $foreignEntityType = $defs->getForeignEntityType();
 
         $foreignEntity = $this->entityManager->getEntityById($foreignEntityType, $id);

@@ -2525,7 +2525,7 @@ table.table td.cell .html-container {
     }
     h2, h3 {
         font-weight: 600;
-        margin-top: (@line-height-computed / 2);
+        margin-top: (@line-height-computed / 2) * 1.2;
         margin-bottom: (@line-height-computed / 2);
     }
     h4, h5, h6 {
@@ -2536,7 +2536,10 @@ table.table td.cell .html-container {
     h1 {
         font-size: floor(@font-size-base * 1.2);
     }
-    h2, h3, h4, h5, h6 {
+    h2 {
+        font-size: floor(@font-size-base * 1.1);
+    }
+    h3, h4, h5, h6 {
         font-size: floor(@font-size-base);
     }
 

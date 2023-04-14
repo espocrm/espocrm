@@ -66,7 +66,7 @@ define(() => {
                 return Promise.reject();
             }
 
-            if (!this.acl.checkScope(model.entityType, 'read')) {
+            if (model && !this.acl.checkScope(model.entityType, 'read')) {
                 return Promise.reject();
             }
 

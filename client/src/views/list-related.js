@@ -326,8 +326,20 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
 
         /**
          * Set up a search panel.
+         *
+         * @protected
          */
         setupSearchPanel: function () {
+            this.createSearchView();
+        },
+
+        /**
+         * Create a search view.
+         *
+         * @return {Promise<module:view.Class>}
+         * @protected
+         */
+        createSearchView: function () {
             let filterList = Espo.Utils
                 .clone(this.getMetadata().get(['clientDefs', this.foreignScope, 'filterList']) || []);
 
@@ -358,7 +370,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                 filterList = [];
             }
 
-            this.createView('search', this.searchView, {
+            return this.createView('search', this.searchView, {
                 collection: this.collection,
                 el: '#main > .search-container',
                 searchManager: this.searchManager,
@@ -369,7 +381,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                 filterList: filterList,
             }, view => {
                 if (this.viewModeList.length > 1) {
-                    this.listenTo(view, 'change-view-mode', this.switchViewMode, this);
+                    this.listenTo(view, 'change-view-mode', () => this.switchViewMode());
                 }
             });
         },

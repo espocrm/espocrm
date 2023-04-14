@@ -68,6 +68,8 @@ define('views/email/list', ['views/list'], function (Dep) {
             'drafts',
         ],
 
+        stickableTop: null,
+
         /**
          * @inheritDoc
          */
@@ -297,6 +299,22 @@ define('views/email/list', ['views/list'], function (Dep) {
             data.foldersDisabled = this.foldersDisabled;
 
             return data;
+        },
+
+        /**
+         * @inheritDoc
+         */
+        createSearchView: function () {
+            /** @type {Promise<module:view.Class>}*/
+            let promise = Dep.prototype.createSearchView.call(this);
+
+            promise.then(view => {
+                this.listenTo(view, 'update-ui', () => {
+                    this.stickableTop = null;
+                });
+            });
+
+            return promise;
         },
 
         initEmailShortcuts: function () {
@@ -587,9 +605,15 @@ define('views/email/list', ['views/list'], function (Dep) {
                 return value - offset;
             };
 
-            let start = getOffsetTop($list);
+            this.stickableTop = getOffsetTop($list);
 
             let control = () => {
+                let start = this.stickableTop;
+
+                if (start === null) {
+                    start = this.stickableTop = getOffsetTop($list);
+                }
+
                 let scrollTop = $window.scrollTop();
 
                 if (scrollTop <= start || isSmallScreen) {
@@ -606,17 +630,18 @@ define('views/email/list', ['views/list'], function (Dep) {
                 }
 
                 if (scrollTop > start) {
-                    let maxHeight = $window.height() - start - bottomSpaceHeight;
-
                     let scroll = $window.scrollTop() - start;
 
                     $container
                         .addClass('sticked')
                         .width($left.outerWidth(true))
-                        .scrollTop(scroll)
-                        .css({
-                            maxHeight: maxHeight,
-                        });
+                        .scrollTop(scroll);
+
+                    let topStickPosition = parseInt(window.getComputedStyle($container.get(0)).top);
+
+                    let maxHeight = $window.height() - topStickPosition - bottomSpaceHeight;
+
+                    $container.css({maxHeight: maxHeight});
                 }
             };
 
