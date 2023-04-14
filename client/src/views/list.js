@@ -338,9 +338,21 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
 
         /**
          * Set up a search panel.
+         *
+         * @protected
          */
         setupSearchPanel: function () {
-            this.createView('search', this.searchView, {
+            this.createSearchView();
+        },
+
+        /**
+         * Create a search view.
+         *
+         * @return {Promise<module:view.Class>}
+         * @protected
+         */
+        createSearchView: function () {
+            return this.createView('search', this.searchView, {
                 collection: this.collection,
                 el: '#main > .search-container',
                 searchManager: this.searchManager,
@@ -348,13 +360,11 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                 viewMode: this.viewMode,
                 viewModeList: this.viewModeList,
                 isWide: true,
-            }, (view) => {
-                this.listenTo(view, 'reset', () => {
-                    this.resetSorting();
-                });
+            }, view => {
+                this.listenTo(view, 'reset', () => this.resetSorting());
 
                 if (this.viewModeList.length > 1) {
-                    this.listenTo(view, 'change-view-mode', this.switchViewMode, this);
+                    this.listenTo(view, 'change-view-mode', () => this.switchViewMode());
                 }
             });
         },
