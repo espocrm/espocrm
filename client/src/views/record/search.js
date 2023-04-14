@@ -545,6 +545,8 @@ define('views/record/search', ['view'], function (Dep) {
             this.selectPreset(this.presetName, true);
 
             this.hideApplyFiltersButton();
+
+            this.trigger('update-ui');
         },
 
         savePreset: function (name) {
@@ -629,6 +631,8 @@ define('views/record/search', ['view'], function (Dep) {
             else {
                 this.$el.find('button.add-filter-button').removeClass('disabled');
             }
+
+            this.trigger('update-ui');
         },
 
         afterRender: function () {
