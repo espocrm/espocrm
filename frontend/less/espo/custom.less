@@ -2513,8 +2513,8 @@ table.table td.cell .html-container {
     h5:first-child,
     h6:first-child,
     p:first-child,
-    ul:first-child,
-    ol:first-child,
+    > ul:first-child,
+    > ol:first-child,
     pre:first-child,
     blockquote:first-child {
         margin-top: 0 !important;
@@ -2553,11 +2553,21 @@ table.table td.cell .html-container {
     }
 
     p:last-child,
-    ul:last-child,
-    ol:last-child,
+    > ul:last-child,
+    > ol:last-child,
     blockquote:last-child,
     pre:last-child {
         margin-bottom: 0;
+    }
+
+    ul,
+    ol {
+        > li {
+            ul, ol{
+                margin-top: 4px;
+                margin-bottom: 4px;
+            }
+        }
     }
 
     ul > li {
