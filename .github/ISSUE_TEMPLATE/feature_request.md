@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for EspoCRM
+about: Suggest an idea for EspoCRM.
 title: ''
 labels: ''
 assignees: ''
