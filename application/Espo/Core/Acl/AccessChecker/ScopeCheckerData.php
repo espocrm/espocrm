@@ -29,19 +29,17 @@
 
 namespace Espo\Core\Acl\AccessChecker;
 
+use Closure;
+
 /**
  * Scope checker data.
  */
 class ScopeCheckerData
 {
-    private $isOwnChecker;
-    private $inTeamChecker;
-
-    public function __construct(callable $isOwnChecker, callable $inTeamChecker)
-    {
-        $this->isOwnChecker = $isOwnChecker;
-        $this->inTeamChecker = $inTeamChecker;
-    }
+    public function __construct(
+        private Closure $isOwnChecker,
+        private Closure $inTeamChecker
+    ) {}
 
     public function isOwn(): bool
     {

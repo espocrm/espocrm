@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Portal\Acl\AccessChecker;
 
-use Espo\Core\{
-    Acl\ScopeData,
-    Portal\Acl\Table,
-};
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\Portal\Acl\Table;
 
 /**
  * Checks scope access.
@@ -40,8 +38,7 @@ use Espo\Core\{
 class ScopeChecker
 {
     public function __construct()
-    {
-    }
+    {}
 
     public function check(ScopeData $data, ?string $action = null, ?ScopeCheckerData $checkerData = null): bool
     {
