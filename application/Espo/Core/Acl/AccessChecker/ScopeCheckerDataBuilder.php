@@ -37,7 +37,6 @@ use Closure;
 class ScopeCheckerDataBuilder
 {
     private $isOwnChecker;
-
     private $inTeamChecker;
 
     public function __construct()

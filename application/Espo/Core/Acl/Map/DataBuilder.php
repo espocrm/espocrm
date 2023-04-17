@@ -29,18 +29,14 @@
 
 namespace Espo\Core\Acl\Map;
 
-use Espo\Core\{
-    Acl\Table,
-    Utils\FieldUtil,
-};
+use Espo\Core\Acl\Table;
+use Espo\Core\Utils\FieldUtil;
 
 use stdClass;
 
 class DataBuilder
 {
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $actionList = [
         Table::ACTION_READ,
         Table::ACTION_STREAM,
@@ -48,32 +44,19 @@ class DataBuilder
         Table::ACTION_DELETE,
         Table::ACTION_CREATE,
     ];
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $fieldActionList = [
         Table::ACTION_READ,
         Table::ACTION_EDIT,
     ];
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $fieldLevelList = [
         Table::LEVEL_YES,
         Table::LEVEL_NO,
     ];
 
-    private MetadataProvider $metadataProvider;
-
-    private FieldUtil $fieldUtil;
-
-    public function __construct(MetadataProvider $metadataProvider, FieldUtil $fieldUtil)
-    {
-        $this->metadataProvider = $metadataProvider;
-        $this->fieldUtil = $fieldUtil;
-    }
+    public function __construct(private MetadataProvider $metadataProvider, private FieldUtil $fieldUtil)
+    {}
 
     public function build(Table $table): stdClass
     {

@@ -35,12 +35,8 @@ class MetadataProvider
 {
     protected string $type = 'acl';
 
-    private Metadata $metadata;
-
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     /**
      * @return string[]
@@ -66,7 +62,7 @@ class MetadataProvider
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     public function getPermissionList(): array
     {
@@ -74,7 +70,7 @@ class MetadataProvider
 
         return array_map(
             function (string $item): string {
-                if (substr($item, -10) === 'Permission') {
+                if (str_ends_with($item, 'Permission')) {
                     return substr($item, 0, -10);
                 }
 

@@ -29,37 +29,28 @@
 
 namespace Espo\Core\Acl\AssignmentChecker;
 
-use Espo\Core\{
-    Utils\Metadata,
-    InjectableFactory,
-    Acl\AssignmentChecker,
-    Acl\DefaultAssignmentChecker,
-    Acl\Exceptions\NotImplemented,
-};
+use Espo\Core\Acl\AssignmentChecker;
+use Espo\Core\Acl\DefaultAssignmentChecker;
+use Espo\Core\Acl\Exceptions\NotImplemented;
+use Espo\Core\InjectableFactory;
+use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\Entity;
 
 class AssignmentCheckerFactory
 {
-    /**
-     * @var class-string<AssignmentChecker<\Espo\Core\ORM\Entity>>
-     */
+    /** @var class-string<AssignmentChecker<CoreEntity>> */
     private string $defaultClassName = DefaultAssignmentChecker::class;
 
-    private Metadata $metadata;
-
-    private InjectableFactory $injectableFactory;
-
     public function __construct(
-        Metadata $metadata,
-        InjectableFactory $injectableFactory
-    ) {
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
-    }
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     /**
      * Create an access checker.
      *
-     * @return AssignmentChecker<\Espo\ORM\Entity>
+     * @return AssignmentChecker<Entity>
      * @throws NotImplemented
      */
     public function create(string $scope): AssignmentChecker
@@ -70,12 +61,12 @@ class AssignmentCheckerFactory
     }
 
     /**
-     * @return class-string<AssignmentChecker<\Espo\ORM\Entity>>
+     * @return class-string<AssignmentChecker<Entity>>
      * @throws NotImplemented
      */
     private function getClassName(string $scope): string
     {
-        /** @var ?class-string<AssignmentChecker<\Espo\ORM\Entity>> $className */
+        /** @var ?class-string<AssignmentChecker<Entity>> $className */
         $className = $this->metadata->get(['aclDefs', $scope, 'assignmentCheckerClassName']);
 
         if ($className) {
@@ -86,7 +77,7 @@ class AssignmentCheckerFactory
             throw new NotImplemented();
         }
 
-        /** @var class-string<AssignmentChecker<\Espo\ORM\Entity>> */
+        /** @var class-string<AssignmentChecker<Entity>> */
         return $this->defaultClassName;
     }
 }

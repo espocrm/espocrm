@@ -35,7 +35,6 @@ namespace Espo\Core\Acl\AccessChecker;
 class ScopeCheckerData
 {
     private $isOwnChecker;
-
     private $inTeamChecker;
 
     public function __construct(callable $isOwnChecker, callable $inTeamChecker)

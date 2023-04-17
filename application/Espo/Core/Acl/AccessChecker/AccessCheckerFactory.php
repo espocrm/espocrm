@@ -29,41 +29,27 @@
 
 namespace Espo\Core\Acl\AccessChecker;
 
-use Espo\Core\{
-    Utils\ClassFinder,
-    Utils\Metadata,
-    InjectableFactory,
-    Acl\Exceptions\NotImplemented,
-    Acl\DefaultAccessChecker,
-    Acl\AccessChecker,
-    AclManager,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Acl\AccessChecker;
+use Espo\Core\Acl\DefaultAccessChecker;
+use Espo\Core\Acl\Exceptions\NotImplemented;
+use Espo\Core\AclManager;
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\ClassFinder;
+use Espo\Core\Utils\Metadata;
 
 class AccessCheckerFactory
 {
-    /**
-     * @var class-string<AccessChecker>
-     */
+    /** @var class-string<AccessChecker> */
     private string $defaultClassName = DefaultAccessChecker::class;
 
-    private ClassFinder $classFinder;
-
-    private Metadata $metadata;
-
-    private InjectableFactory $injectableFactory;
-
     public function __construct(
-        ClassFinder $classFinder,
-        Metadata $metadata,
-        InjectableFactory $injectableFactory
-    ) {
-        $this->classFinder = $classFinder;
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
-    }
+        private ClassFinder $classFinder,
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     /**
      * Create an access checker.
@@ -112,7 +98,6 @@ class AccessCheckerFactory
         $bindingData = new BindingData();
 
         $binder = new Binder($bindingData);
-
         $binder->bindInstance(AclManager::class, $aclManager);
 
         return new BindingContainer($bindingData);

@@ -30,24 +30,16 @@
 namespace Espo\Core\Acl\AssignmentChecker;
 
 use Espo\ORM\Entity;
-
 use Espo\Entities\User;
-
 use Espo\Core\Acl\AssignmentChecker;
 
 class AssignmentCheckerManager
 {
-    /**
-     * @var array<string,AssignmentChecker<Entity>>
-     */
+    /** @var array<string, AssignmentChecker<Entity>> */
     private $checkerCache = [];
 
-    private AssignmentCheckerFactory $factory;
-
-    public function __construct(AssignmentCheckerFactory $factory)
-    {
-        $this->factory = $factory;
-    }
+    public function __construct(private AssignmentCheckerFactory $factory)
+    {}
 
     public function check(User $user, Entity $entity): bool
     {
