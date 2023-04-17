@@ -31,12 +31,10 @@ namespace Espo\Core\Acl\Map;
 
 use Espo\Entities\User;
 
-use Espo\Core\{
-    Acl\Table,
-    Utils\Config,
-    Utils\DataCache,
-    Utils\ObjectUtil,
-};
+use Espo\Core\Acl\Table;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\ObjectUtil;
 
 use stdClass;
 use RuntimeException;
@@ -47,50 +45,24 @@ use RuntimeException;
 class Map
 {
     private stdClass $data;
-
     private string $cacheKey;
-
-    /**
-     * @var array<string,string[]>
-     */
+    /** @var array<string, string[]> */
     private $forbiddenFieldsCache = [];
-
-    /**
-     * @var array<string,string[]>
-     */
+    /** @var array<string, string[]> */
     private $forbiddenAttributesCache;
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $fieldLevelList = [
         Table::LEVEL_YES,
         Table::LEVEL_NO,
     ];
 
-    private User $user;
-
-    private Table $table;
-
-    private Config $config;
-
-    private DataCache $dataCache;
-
-    private DataBuilder $dataBuilder;
-
     public function __construct(
-        User $user,
         Table $table,
-        DataBuilder $dataBuilder,
-        Config $config,
-        DataCache $dataCache,
+        private DataBuilder $dataBuilder,
+        private Config $config,
+        private DataCache $dataCache,
         CacheKeyProvider $cacheKeyProvider
     ) {
-        $this->user = $user;
-        $this->table = $table;
-        $this->dataBuilder = $dataBuilder;
-        $this->config = $config;
-        $this->dataCache = $dataCache;
 
         $this->cacheKey = $cacheKeyProvider->get();
 
