@@ -29,8 +29,6 @@
 
 namespace Espo\Core\Acl\Map;
 
-use Espo\Entities\User;
-
 use Espo\Core\Acl\Table;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DataCache;
