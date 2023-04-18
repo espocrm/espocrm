@@ -40,25 +40,15 @@ use DateTime;
 
 class QueueUtil
 {
-    private Config $config;
-    private EntityManager $entityManager;
-    private ScheduleUtil $scheduleUtil;
-    private MetadataProvider $metadataProvider;
-
     private const NOT_EXISTING_PROCESS_PERIOD = 300;
     private const READY_NOT_STARTED_PERIOD = 60;
 
     public function __construct(
-        Config $config,
-        EntityManager $entityManager,
-        ScheduleUtil $scheduleUtil,
-        MetadataProvider $metadataProvider
-    ) {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->scheduleUtil = $scheduleUtil;
-        $this->metadataProvider = $metadataProvider;
-    }
+        private Config $config,
+        private EntityManager $entityManager,
+        private ScheduleUtil $scheduleUtil,
+        private MetadataProvider $metadataProvider
+    ) {}
 
     public function isJobPending(string $id): bool
     {

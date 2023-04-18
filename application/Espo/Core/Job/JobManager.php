@@ -29,10 +29,12 @@
 
 namespace Espo\Core\Job;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Log;
 use Espo\Entities\Job as JobEntity;
+
 use RuntimeException;
 use Throwable;
 
@@ -45,33 +47,16 @@ class JobManager
 
     protected string $lastRunTimeFile = 'data/cache/application/cronLastRunTime.php';
 
-    private Config $config;
-    private FileManager $fileManager;
-    private JobRunner $jobRunner;
-    private Log $log;
-    private ScheduleProcessor $scheduleProcessor;
-    private QueueUtil $queueUtil;
-    private AsyncPoolFactory $asyncPoolFactory;
-    private QueueProcessorFactory $queueProcessorFactory;
-
     public function __construct(
-        Config $config,
-        FileManager $fileManager,
-        JobRunner $jobRunner,
-        Log $log,
-        ScheduleProcessor $scheduleProcessor,
-        QueueUtil $queueUtil,
-        AsyncPoolFactory $asyncPoolFactory,
-        QueueProcessorFactory $queueProcessorFactory
+        private Config $config,
+        private FileManager $fileManager,
+        private JobRunner $jobRunner,
+        private Log $log,
+        private ScheduleProcessor $scheduleProcessor,
+        private QueueUtil $queueUtil,
+        private AsyncPoolFactory $asyncPoolFactory,
+        private QueueProcessorFactory $queueProcessorFactory
     ) {
-        $this->config = $config;
-        $this->fileManager = $fileManager;
-        $this->jobRunner = $jobRunner;
-        $this->log = $log;
-        $this->scheduleProcessor = $scheduleProcessor;
-        $this->queueUtil = $queueUtil;
-        $this->asyncPoolFactory = $asyncPoolFactory;
-        $this->queueProcessorFactory = $queueProcessorFactory;
 
         if ($this->config->get('jobRunInParallel')) {
             if ($this->asyncPoolFactory->isSupported()) {
@@ -96,14 +81,10 @@ class JobManager
         }
 
         $this->updateLastRunTime();
-
         $this->queueUtil->markJobsFailed();
         $this->queueUtil->updateFailedJobAttempts();
-
         $this->scheduleProcessor->process();
-
         $this->queueUtil->removePendingJobDuplicates();
-
         $this->processMainQueue();
     }
 
@@ -158,7 +139,7 @@ class JobManager
     /**
      * Run a specific job by ID. A job status should be set to 'Ready'.
      *
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      * @throws Throwable
      */
     public function runJobById(string $id): void
@@ -185,7 +166,7 @@ class JobManager
             try {
                 $data = $this->fileManager->getPhpContents($this->lastRunTimeFile);
             }
-            catch (RuntimeException $e) {
+            catch (RuntimeException) {
                 $data = null;
             }
 
@@ -202,9 +183,7 @@ class JobManager
      */
     private function updateLastRunTime(): void
     {
-        $data = [
-            'time' => time(),
-        ];
+        $data = ['time' => time()];
 
         $this->fileManager->putPhpContents($this->lastRunTimeFile, $data, false, true);
     }

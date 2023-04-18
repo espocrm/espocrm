@@ -36,38 +36,22 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\System;
-
 use Espo\Core\Job\Job\Data;
 use Espo\Core\Job\Job\Status;
-
 use Espo\Entities\Job as JobEntity;
 
 use Throwable;
 
 class JobRunner
 {
-    private JobFactory $jobFactory;
-    private ScheduleUtil $scheduleUtil;
-    private EntityManager $entityManager;
-    private ServiceFactory $serviceFactory;
-    private Log $log;
-    private Config $config;
-
     public function __construct(
-        JobFactory $jobFactory,
-        ScheduleUtil $scheduleUtil,
-        EntityManager $entityManager,
-        ServiceFactory $serviceFactory,
-        Log $log,
-        Config $config
-    ) {
-        $this->jobFactory = $jobFactory;
-        $this->scheduleUtil = $scheduleUtil;
-        $this->entityManager = $entityManager;
-        $this->serviceFactory = $serviceFactory;
-        $this->log = $log;
-        $this->config = $config;
-    }
+        private JobFactory $jobFactory,
+        private ScheduleUtil $scheduleUtil,
+        private EntityManager $entityManager,
+        private ServiceFactory $serviceFactory,
+        private Log $log,
+        private Config $config
+    ) {}
 
     /**
      * Run a job entity. Does not throw exceptions.
@@ -102,8 +86,8 @@ class JobRunner
             throw new Error();
         }
 
-        /** @var JobEntity|null $jobEntity */
-        $jobEntity = $this->entityManager->getEntity(JobEntity::ENTITY_TYPE, $id);
+        /** @var ?JobEntity $jobEntity */
+        $jobEntity = $this->entityManager->getEntityById(JobEntity::ENTITY_TYPE, $id);
 
         if (!$jobEntity) {
             throw new Error("Job '{$id}' not found.");
@@ -124,7 +108,6 @@ class JobRunner
     private function runInternal(JobEntity $jobEntity, bool $throwException = false): void
     {
         $isSuccess = true;
-
         $exception = null;
 
         if ($jobEntity->getStatus() !== Status::RUNNING) {
@@ -210,14 +193,15 @@ class JobRunner
         $this->runJob($job, $jobEntity);
     }
 
+    /**
+     * @throws Error
+     */
     private function runScheduledJob(JobEntity $jobEntity): void
     {
         $jobName = $jobEntity->getScheduledJobJob();
 
         if (!$jobName) {
-            throw new Error(
-                "Can't run job '" . $jobEntity->getId() . "'. Not a scheduled job."
-            );
+            throw new Error("Can't run job '" . $jobEntity->getId() . "'. Not a scheduled job.");
         }
 
         $job = $this->jobFactory->create($jobName);

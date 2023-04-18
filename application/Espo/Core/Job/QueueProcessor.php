@@ -29,35 +29,25 @@
 
 namespace Espo\Core\Job;
 
+use Spatie\Async\Pool as AsyncPool;
+
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\System;
 use Espo\Entities\Job as JobEntity;
 use Espo\Core\Job\Job\Status;
 
-use Spatie\Async\Pool as AsyncPool;
+use Throwable;
 
 class QueueProcessor
 {
-    private QueueProcessorParams $params;
-    private QueueUtil $queueUtil;
-    private JobRunner $jobRunner;
-    private AsyncPoolFactory $asyncPoolFactory;
-    private EntityManager $entityManager;
-
     public function __construct(
-        QueueProcessorParams $params,
-        QueueUtil $queueUtil,
-        JobRunner $jobRunner,
-        AsyncPoolFactory $asyncPoolFactory,
-        EntityManager $entityManager
-    ) {
-        $this->params = $params;
-        $this->queueUtil = $queueUtil;
-        $this->jobRunner = $jobRunner;
-        $this->asyncPoolFactory = $asyncPoolFactory;
-        $this->entityManager = $entityManager;
-    }
+        private QueueProcessorParams $params,
+        private QueueUtil $queueUtil,
+        private JobRunner $jobRunner,
+        private AsyncPoolFactory $asyncPoolFactory,
+        private EntityManager $entityManager
+    ) {}
 
     public function process(): void
     {
@@ -77,18 +67,15 @@ class QueueProcessor
             $this->processJob($job, $pool);
         }
 
-        if ($pool) {
-            $pool->wait();
-        }
+        $pool?->wait();
     }
 
     private function processJob(JobEntity $job, ?AsyncPool $pool = null): void
     {
         $useProcessPool = $this->params->useProcessPool();
-
         $noLock = $this->params->noLock();
 
-        $lockTable = (bool) $job->getScheduledJobId() && !$noLock;
+        $lockTable = $job->getScheduledJobId() && !$noLock;
 
         $skip = false;
 
