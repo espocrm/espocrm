@@ -591,8 +591,6 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
                 .addClass('list-group-item')
                 .attr('data-value', value)
                 .css('cursor', 'default')
-                .text(text)
-                .append('&nbsp;')
                 .append(
                     $('<a>')
                         .attr('role', 'button')
@@ -603,6 +601,11 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
                         .append(
                             $('<span>').addClass('fas fa-times')
                         )
+                )
+                .append(
+                    $('<span>')
+                        .text(text)
+                        .append('&nbsp;')
                 )
                 .get(0)
                 .outerHTML;
