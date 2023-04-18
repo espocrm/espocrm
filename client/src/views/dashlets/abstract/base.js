@@ -28,14 +28,26 @@
 
 define('views/dashlets/abstract/base', ['view'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @memberOf module:views/dashlets/abstract/base
+     * @extends module:view.Class
+     */
+    return Dep.extend(/** @lends module:views/dashlets/abstract/base.Class# */{
 
         optionsData: null,
 
+        /**
+         * Refresh.
+         */
         actionRefresh: function () {
             this.render();
         },
 
+        /**
+         * Show options.
+         */
         actionOptions: function () {},
 
         optionsFields: {
@@ -46,7 +58,7 @@ define('views/dashlets/abstract/base', ['view'], function (Dep) {
             "autorefreshInterval": {
                 "type": "enumFloat",
                 "options": [0, 0.5, 1, 2, 5, 10],
-            }
+            },
         },
 
         disabledForReadOnlyActionList: ['options', 'remove'],
@@ -149,20 +161,45 @@ define('views/dashlets/abstract/base', ['view'], function (Dep) {
 
         buttonList: [],
 
+        /**
+         * Set up default options.
+         */
         setupDefaultOptions: function () {},
 
+        /**
+         * Set up actions.
+         */
         setupActionList: function () {},
 
+        /**
+         * Set up buttons.
+         */
         setupButtonList: function () {},
 
+        /**
+         * Has an option.
+         *
+         * @param {string} key
+         * @return {boolean}
+         */
         hasOption: function (key) {
             return key in this.optionsData;
         },
 
+        /**
+         * Get an option value.
+         *
+         * @param {string} key
+         * @return {*}
+         */
         getOption: function (key) {
             return this.optionsData[key];
         },
 
+        /**
+         * Get a title.
+         * @return {string|null}
+         */
         getTitle: function () {
             let title = this.getOption('title');
 
