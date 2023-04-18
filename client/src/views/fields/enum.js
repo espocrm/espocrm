@@ -97,6 +97,14 @@ function (Dep, /** module:ui/multi-select*/MultiSelect, /** module:ui/select*/Se
 
             data.valueIsSet = this.model.has(this.name);
 
+            if (data.isNotEmpty) {
+                data.valueTranslated =
+                    this.translatedOptions ?
+                        (this.translatedOptions[value] || value) :
+                        this.getLanguage().translateOption(value, this.name, this.entityType);
+
+            }
+
             return data;
         },
 
