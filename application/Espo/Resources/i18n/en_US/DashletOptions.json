@@ -17,7 +17,8 @@
         "expandedLayout": "Layout",
         "skipOwn": "Don't show own records",
         "url": "URL",
-        "dateFilter": "Date Filter"
+        "dateFilter": "Date Filter",
+        "text": "Text"
     },
     "options": {
     	"mode": {

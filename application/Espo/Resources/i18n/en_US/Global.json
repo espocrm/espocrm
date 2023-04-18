@@ -460,7 +460,8 @@
         "Stream": "Stream",
         "Emails": "My Inbox",
         "Iframe": "Iframe",
-        "Records": "Record List"
+        "Records": "Record List",
+        "Memo": "Memo"
     },
     "notificationMessages": {
         "assign": "{entityType} {entity} has been assigned to you",

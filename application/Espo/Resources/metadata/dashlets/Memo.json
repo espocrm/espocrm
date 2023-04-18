@@ -1,0 +1,26 @@
+{
+    "view": "views/dashlets/memo",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar"
+            },
+            "text": {
+                "type": "text"
+            }
+        },
+        "defaults": {},
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"}
+                    ],
+                    [
+                        {"name": "text"}
+                    ]
+                ]
+            }
+        ]
+    }
+}
