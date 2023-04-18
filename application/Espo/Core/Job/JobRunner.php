@@ -40,6 +40,7 @@ use Espo\Core\Job\Job\Data;
 use Espo\Core\Job\Job\Status;
 use Espo\Entities\Job as JobEntity;
 
+use LogicException;
 use Throwable;
 
 class JobRunner
@@ -55,12 +56,15 @@ class JobRunner
 
     /**
      * Run a job entity. Does not throw exceptions.
-     *
-     * @throws Throwable
      */
     public function run(JobEntity $jobEntity): void
     {
-        $this->runInternal($jobEntity, false);
+        try {
+            $this->runInternal($jobEntity);
+        }
+        catch (Throwable $e) {
+            throw new LogicException($e->getMessage());
+        }
     }
 
     /**
@@ -78,7 +82,6 @@ class JobRunner
      * Used when running jobs in parallel processes.
      *
      * @throws Error
-     * @throws Throwable
      */
     public function runById(string $id): void
     {

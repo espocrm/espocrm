@@ -37,8 +37,6 @@ use Espo\Core\Utils\System;
 use Espo\Entities\Job as JobEntity;
 use Espo\Core\Job\Job\Status;
 
-use Throwable;
-
 class QueueProcessor
 {
     public function __construct(
@@ -51,11 +49,9 @@ class QueueProcessor
 
     public function process(): void
     {
-        $pool = null;
-
-        if ($this->params->useProcessPool()) {
-            $pool = $this->asyncPoolFactory->create();
-        }
+        $pool = $this->params->useProcessPool() ?
+            $this->asyncPoolFactory->create() :
+            null;
 
         $pendingJobList = $this->queueUtil->getPendingJobList(
             $this->params->getQueue(),
