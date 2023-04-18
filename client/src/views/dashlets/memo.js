@@ -38,7 +38,10 @@ define('views/dashlets/memo', ['views/dashlets/abstract/base'], (Dep) => {
 
         name: 'Iframe',
 
-        templateContent: `{{#if text}}<div>{{complexText text}}</div>{{/if}}`,
+        templateContent:
+            `{{#if text}}
+                <div class="complex-text complex-text-memo">{{complexText text}}</div>{{/if}}
+        `,
 
         data: function () {
             return {

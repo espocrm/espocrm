@@ -2502,6 +2502,28 @@ table.table td.cell .html-container {
     white-space: normal;
 }
 
+.complex-text.complex-text-memo {
+    h1 {
+        font-size: floor(@font-size-base * 1.8);
+        font-weight: 500;
+        margin-top: (@line-height-computed / 2) * 2;
+        margin-bottom: (@line-height-computed / 2) * 1.3;
+    }
+
+    h2 {
+        font-size: floor(@font-size-base * 1.5);
+        font-weight: 500;
+        margin-top: (@line-height-computed / 2) * 1.4;
+        margin-bottom: (@line-height-computed / 2) * 1.2;
+    }
+
+    h3, h4, h5, h6 {
+        font-size: floor(@font-size-base * 1.1);
+        margin-top: (@line-height-computed / 2) * 1.2;
+        margin-bottom: (@line-height-computed / 2);
+    }
+}
+
 .complex-text,
 .confirm-message,
 .alert > .message,
