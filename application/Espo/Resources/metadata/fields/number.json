@@ -20,6 +20,11 @@
             "required": true,
             "min": 1,
             "max": 20
+        },
+        {
+            "name": "copyToClipboard",
+            "type": "bool",
+            "default": false
         }
     ],
     "filter": true,

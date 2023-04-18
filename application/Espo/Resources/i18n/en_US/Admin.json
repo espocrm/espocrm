@@ -220,7 +220,8 @@
         "conversionDisabled": "Disable Conversion",
         "decimalPlaces": "Decimal Places",
         "pattern": "Pattern",
-        "globalRestrictions": "Global Restrictions"
+        "globalRestrictions": "Global Restrictions",
+        "copyToClipboard": "Copy to clipboard button"
     },
     "strings" : {
         "rebuildRequired": "Rebuild is required"

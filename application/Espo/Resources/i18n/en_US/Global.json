@@ -285,7 +285,9 @@
         "Download": "Download",
         "Global Search": "Global Search",
         "Show Navigation Panel": "Show Navigation Panel",
-        "Hide Navigation Panel": "Hide Navigation Panel"
+        "Hide Navigation Panel": "Hide Navigation Panel",
+        "Copy to Clipboard": "Copy to Clipboard",
+        "Copied to clipboard": "Copied to clipboard"
     },
     "messages": {
         "pleaseWait": "Please wait...",

@@ -30,6 +30,11 @@
             "view": "views/admin/field-manager/fields/pattern"
         },
         {
+            "name": "copyToClipboard",
+            "type": "bool",
+            "default": false
+        },
+        {
             "name": "audited",
             "type": "bool",
             "tooltip": true
