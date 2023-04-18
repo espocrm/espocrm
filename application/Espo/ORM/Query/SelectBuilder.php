@@ -106,7 +106,6 @@ class SelectBuilder implements Builder
         }
 
         $this->params['fromQuery'] = $query;
-
         $this->params['fromAlias'] = $alias;
 
         return $this;
@@ -243,7 +242,7 @@ class SelectBuilder implements Builder
      * * `having(array $clause)`
      * * `having(string $key, string $value)`
      *
-     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param WhereItem|array<int|string, mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Omitted if the first argument is not string.
      */
     public function having($clause, $value = null): self
@@ -293,7 +292,7 @@ class SelectBuilder implements Builder
 
     /**
      * @param array<Expression|Selection|mixed[]> $itemList
-     * @return array<array{0:string,1?:string}|string>
+     * @return array<array{0: string, 1?: string}|string>
      */
     private function normalizeSelectExpressionArray(array $itemList): array
     {
@@ -327,11 +326,9 @@ class SelectBuilder implements Builder
                 $newItem[] = $item[1];
             }
 
-            /** @var array{0:string,1?:string} $newItem */
+            /** @var array{0: string, 1?: string} $newItem */
 
             $resultList[] = $newItem;
-
-            continue;
         }
 
         return $resultList;
