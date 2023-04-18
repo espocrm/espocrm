@@ -364,7 +364,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                 this.listenTo(view, 'reset', () => this.resetSorting());
 
                 if (this.viewModeList.length > 1) {
-                    this.listenTo(view, 'change-view-mode', () => this.switchViewMode());
+                    this.listenTo(view, 'change-view-mode', mode => this.switchViewMode(mode));
                 }
             });
         },
