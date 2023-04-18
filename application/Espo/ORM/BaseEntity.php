@@ -60,7 +60,7 @@ class BaseEntity implements Entity
     private array $fetchedValuesContainer = [];
 
     /**
-     * @todo Make private, rename to `attributes` in v8.0. .
+     * @todo Make private, rename to `attributes` in v8.0.
      * @deprecated As of v6.0. Use getAttributeList, getAttributeParam, ORM\Defs.
      * @var array<string, array<string, mixed>>
      */
