@@ -311,6 +311,13 @@ define('views/email/list', ['views/list'], function (Dep) {
             promise.then(view => {
                 this.listenTo(view, 'update-ui', () => {
                     this.stickableTop = null;
+
+                    setTimeout(() => {
+                        $(window).trigger('scroll')
+
+                        // If search fields are not yet rendered, the value may be wrong.
+                        this.stickableTop = null;
+                    }, 100);
                 });
             });
 
