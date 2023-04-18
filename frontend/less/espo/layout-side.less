@@ -630,23 +630,33 @@ body[data-navbar="side"] {
     }
 
     @media screen and (min-width: (@container-max-width + @navbar-width)) {
-        #content #main .nested-categories-container + .list-container > .list,
-        #content #main > .list-container > .list {
-            margin-left: 0;
-            margin-right: 0;
-
-            > table td:first-child,
-            > table th:first-child {
-                padding-left: @panel-padding;
-            }
-
-            > table td:last-child,
-            > table th:last-child {
-                padding-right: @panel-padding;
-            }
-        }
-
         #content {
+            #main {
+                .nested-categories-container + .list-container > .list,
+                > .list-container > .list {
+                    margin-left: 0;
+                    margin-right: 0;
+
+                    > table td:first-child,
+                    > table th:first-child {
+                        padding-left: @panel-padding;
+                    }
+
+                    > table td:last-child,
+                    > table th:last-child {
+                        padding-right: @panel-padding;
+                    }
+
+                    .list-with-border-radius();
+                }
+
+                > .row > .left-container + .list-container > .list {
+                    margin-right: 0;
+
+                    .list-with-border-radius();
+                }
+            }
+
             .list-categories-column + .list-main-column .list-container,
             .folders-container + .list-container {
                 .list {
@@ -658,20 +668,31 @@ body[data-navbar="side"] {
 
     @media screen and (min-width: (@container-max-width + @navbar-minimized-width)) {
         &.minimized {
-            #content #main > .list-container > .list,
-            #content #main .nested-categories-container + .list-container > .list {
+            #content {
+                #main {
+                    > .list-container > .list,
+                    .nested-categories-container + .list-container > .list {
+                        margin-left: 0;
+                        margin-right: 0;
 
-                margin-left: 0;
-                margin-right: 0;
+                        > table td:first-child,
+                        > table th:first-child {
+                            padding-left: @panel-padding;
+                        }
 
-                > table td:first-child,
-                > table th:first-child {
-                    padding-left: @panel-padding;
-                }
+                        > table td:last-child,
+                        > table th:last-child {
+                            padding-right: @panel-padding;
+                        }
 
-                > table td:last-child,
-                > table th:last-child {
-                    padding-right: @panel-padding;
+                        .list-with-border-radius();
+                    }
+
+                    > .row > .left-container + .list-container > .list {
+                        margin-right: 0;
+
+                        .list-with-border-radius();
+                    }
                 }
             }
 
