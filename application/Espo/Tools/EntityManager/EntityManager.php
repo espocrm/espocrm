@@ -624,7 +624,7 @@ class EntityManager
         $this->fileManager->removeInDir("custom/Espo/Custom/Resources/layouts/{$normalizedName}");
         $this->fileManager->removeDir("custom/Espo/Custom/Resources/layouts/{$normalizedName}");
 
-        $languageList = $this->config->get('languageList', []);
+        $languageList = $this->metadata->get(['app', 'language', 'list'], []);
 
         foreach ($languageList as $language) {
             $filePath = 'custom/Espo/Custom/Resources/i18n/' . $language . '/' . $normalizedName . '.json';
