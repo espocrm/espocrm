@@ -51,11 +51,15 @@ define('views/admin/index', ['view'], function (Dep) {
         },
 
         afterRender: function () {
+            let $quickSearch = this.$el.find('input[data-name="quick-search"]');
+
             if (this.quickSearchText) {
-                this.$el.find('input[data-name="quick-search"]').val(this.quickSearchText);
+                $quickSearch.val(this.quickSearchText);
 
                 this.processQuickSearch(this.quickSearchText);
             }
+
+            $quickSearch.get(0).focus({preventScroll: true});
         },
 
         setup: function () {
