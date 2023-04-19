@@ -49,5 +49,6 @@ let stripSourceMappingUrl = path => {
 buildUtils.getCopyLibDataList(libs)
     .filter(item => !item.minify)
     .forEach(item => {
+        fs.copyFileSync(item.src, item.dest);
         stripSourceMappingUrl(item.dest);
     });
