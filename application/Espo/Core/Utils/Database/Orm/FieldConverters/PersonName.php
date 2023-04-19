@@ -178,6 +178,6 @@ class PersonName implements FieldConverter
             $item = "IFNULL:({$item}, '')";
         }
 
-        return "NULLIF:(TRIM:(CONCAT:(" . implode(", ", $fullList) . ")), '')";
+        return "COALESCE:(TRIM:(CONCAT:(" . implode(", ", $fullList) . ")), '')";
     }
 }
