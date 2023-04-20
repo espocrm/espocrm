@@ -34,28 +34,24 @@ use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Mail\Importer\DuplicateFinder;
 use Espo\Core\Mail\Importer\ParentFinder;
 use Espo\Core\ORM\Repository\Option\SaveOption;
-use Espo\Entities\Email;
-use Espo\Entities\EmailFilter;
-use Espo\Repositories\Email as EmailRepository;
-
-use Espo\ORM\EntityManager;
-
 use Espo\Core\Utils\DateTime as DateTimeUtil;
-
 use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\AssignmentNotificatorFactory;
 use Espo\Core\Notification\AssignmentNotificator\Params as AssignmentNotificatorParams;
 use Espo\Core\Mail\Importer\Data;
-
 use Espo\Core\Utils\Config;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
 use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
 use Espo\Core\Job\QueueName;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Entities\Email;
+use Espo\Entities\EmailFilter;
+use Espo\Repositories\Email as EmailRepository;
+use Espo\ORM\EntityManager;
+use Espo\Tools\Stream\Jobs\ProcessNoteAcl;
 
 use DateTime;
 use DateTimeZone;
-use Espo\Tools\Stream\Jobs\ProcessNoteAcl;
 use Exception;
 
 /**
@@ -66,35 +62,20 @@ class Importer
     private const SUBJECT_MAX_LENGTH = 255;
     private const PROCESS_ACL_DELAY_PERIOD = '5 seconds';
 
-    private EntityManager $entityManager;
-    private Config $config;
     /** @var AssignmentNotificator<Email>  */
     private AssignmentNotificator $notificator;
     private FiltersMatcher $filtersMatcher;
-    private ParserFactory $parserFactory;
-    private LinkMultipleSaver $linkMultipleSaver;
-    private DuplicateFinder $duplicateFinder;
-    private JobSchedulerFactory $jobSchedulerFactory;
-    private ParentFinder $parentFinder;
 
     public function __construct(
-        EntityManager $entityManager,
-        Config $config,
+        private EntityManager $entityManager,
+        private Config $config,
         AssignmentNotificatorFactory $notificatorFactory,
-        ParserFactory $parserFactory,
-        LinkMultipleSaver $linkMultipleSaver,
-        DuplicateFinder $duplicateFinder,
-        JobSchedulerFactory $jobSchedulerFactory,
-        ParentFinder $parentFinder
+        private ParserFactory $parserFactory,
+        private LinkMultipleSaver $linkMultipleSaver,
+        private DuplicateFinder $duplicateFinder,
+        private JobSchedulerFactory $jobSchedulerFactory,
+        private ParentFinder $parentFinder
     ) {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->parserFactory = $parserFactory;
-        $this->linkMultipleSaver = $linkMultipleSaver;
-        $this->duplicateFinder = $duplicateFinder;
-        $this->jobSchedulerFactory = $jobSchedulerFactory;
-        $this->parentFinder = $parentFinder;
-
         $this->notificator = $notificatorFactory->createByClass(Email::class);
         $this->filtersMatcher = new FiltersMatcher();
     }
