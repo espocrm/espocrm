@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Job;
 
 use Espo\Core\{
-    Job\QueueProcessorParams,
+    Job\QueueProcessor\Params,
 };
 
 class QueueProcessorParamsTest extends \PHPUnit\Framework\TestCase
@@ -41,7 +41,7 @@ class QueueProcessorParamsTest extends \PHPUnit\Framework\TestCase
 
     public function testParams1()
     {
-        $params = QueueProcessorParams
+        $params = \Espo\Core\Job\QueueProcessor\Params
             ::create()
             ->withLimit(10);
 
@@ -55,7 +55,7 @@ class QueueProcessorParamsTest extends \PHPUnit\Framework\TestCase
 
     public function testParams2()
     {
-        $params = QueueProcessorParams
+        $params = \Espo\Core\Job\QueueProcessor\Params
             ::create()
             ->withLimit(10)
             ->withUseProcessPool(true)

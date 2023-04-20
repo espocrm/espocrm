@@ -30,6 +30,7 @@
 namespace Espo\Core\Job;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Job\QueueProcessor\Params;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Log;
@@ -44,7 +45,6 @@ use Throwable;
 class JobManager
 {
     private bool $useProcessPool = false;
-
     protected string $lastRunTimeFile = 'data/cache/application/cronLastRunTime.php';
 
     public function __construct(
@@ -55,15 +55,13 @@ class JobManager
         private ScheduleProcessor $scheduleProcessor,
         private QueueUtil $queueUtil,
         private AsyncPoolFactory $asyncPoolFactory,
-        private QueueProcessorFactory $queueProcessorFactory
+        private QueueProcessor $queueProcessor
     ) {
-
         if ($this->config->get('jobRunInParallel')) {
             if ($this->asyncPoolFactory->isSupported()) {
                 $this->useProcessPool = true;
-            }
-            else {
-                $this->log->warning("JobManager: useProcessPool requires pcntl and posix extensions.");
+            } else {
+                $this->log->warning("Enabled `jobRunInParallel` parameter requires pcntl and posix extensions.");
             }
         }
     }
@@ -93,16 +91,14 @@ class JobManager
      */
     public function processQueue(string $queue, int $limit): void
     {
-        $params = QueueProcessorParams
+        $params = Params
             ::create()
             ->withQueue($queue)
             ->withLimit($limit)
             ->withUseProcessPool(false)
             ->withNoLock(true);
 
-        $processor = $this->queueProcessorFactory->create($params);
-
-        $processor->process();
+        $this->queueProcessor->process($params);
     }
 
     /**
@@ -110,30 +106,26 @@ class JobManager
      */
     public function processGroup(string $group, int $limit): void
     {
-        $params = QueueProcessorParams
+        $params = Params
             ::create()
             ->withGroup($group)
             ->withLimit($limit)
             ->withUseProcessPool(false)
             ->withNoLock(true);
 
-        $processor = $this->queueProcessorFactory->create($params);
-
-        $processor->process();
+        $this->queueProcessor->process($params);
     }
 
     private function processMainQueue(): void
     {
         $limit = (int) $this->config->get('jobMaxPortion', 0);
 
-        $params = QueueProcessorParams
+        $params = Params
             ::create()
             ->withUseProcessPool($this->useProcessPool)
             ->withLimit($limit);
 
-        $processor = $this->queueProcessorFactory->create($params);
-
-        $processor->process();
+        $this->queueProcessor->process($params);
     }
 
     /**
