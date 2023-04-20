@@ -29,18 +29,15 @@
 
 namespace Espo\Entities;
 
-use Espo\Core\ApplicationUser;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Utils\Util;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Field\DateTime;
-
-use Espo\Repositories\Email as EmailRepository;
-
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Field\Link;
-
+use Espo\Repositories\Email as EmailRepository;
 use Espo\Tools\Email\Util as EmailUtil;
+
 use RuntimeException;
 
 class Email extends Entity
@@ -602,6 +599,12 @@ class Email extends Entity
     {
         /** @var ?Link */
         return $this->getValueObject('createdBy');
+    }
+
+    public function getSentBy(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('sentBy');
     }
 
     public function getGroupFolder(): ?Link

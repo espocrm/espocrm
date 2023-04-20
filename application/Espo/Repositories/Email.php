@@ -432,36 +432,36 @@ class Email extends Database implements
 
     public function applyUsersFilters(EmailEntity $entity): void
     {
-        /** @var string[] $userIdList */
-        $userIdList = $entity->getLinkMultipleIdList('users');
+        $userIdList = $entity->getLinkMultipleIdList('users') ?? [];
 
         foreach ($userIdList as $userId) {
-            if ($entity->getStatus() === EmailEntity::STATUS_SENT) {
-                if ($entity->get('sentById') && $entity->get('sentById') === $userId) {
-                    continue;
-                }
+            if (
+                $entity->getStatus() === EmailEntity::STATUS_SENT &&
+                $entity->getSentBy()?->getId() === $userId
+            ) {
+                continue;
             }
 
             $filter = $this->emailFilterManager->getMatchingFilter($entity, $userId);
 
-            if ($filter) {
-                $action = $filter->getAction();
+            if (!$filter) {
+                continue;
+            }
 
-                if ($action === EmailFilter::ACTION_SKIP) {
-                    $entity->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IN_TRASH, $userId, true);
-                }
-                else if ($action === EmailFilter::ACTION_MOVE_TO_FOLDER) {
-                    $folderId = $filter->getEmailFolderId();
+            if ($filter->getAction() === EmailFilter::ACTION_SKIP) {
+                $entity->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IN_TRASH, $userId, true);
+            }
+            else if ($filter->getAction() === EmailFilter::ACTION_MOVE_TO_FOLDER) {
+                $folderId = $filter->getEmailFolderId();
 
-                    if ($folderId) {
-                        $entity
-                            ->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_FOLDER_ID, $userId, $folderId);
-                    }
+                if ($folderId) {
+                    $entity
+                        ->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_FOLDER_ID, $userId, $folderId);
                 }
+            }
 
-                if ($filter->markAsRead()) {
-                    $entity->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IS_READ, $userId, true);
-                }
+            if ($filter->markAsRead()) {
+                $entity->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IS_READ, $userId, true);
             }
         }
     }
