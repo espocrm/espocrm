@@ -32,7 +32,6 @@ namespace Espo\Core\Mail\Account;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Mail\Account\Storage\Flag;
-use Espo\Core\Mail\Account\Storage;
 use Espo\Core\Mail\Importer;
 use Espo\Core\Mail\Importer\Data as ImporterData;
 use Espo\Core\Mail\ParserFactory;
