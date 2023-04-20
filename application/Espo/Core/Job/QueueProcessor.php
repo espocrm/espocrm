@@ -67,21 +67,14 @@ class QueueProcessor
 
     private function processJob(Params $params, JobEntity $job, ?AsyncPool $pool = null): void
     {
-        $useProcessPool = $params->useProcessPool();
         $noLock = $params->noLock();
-
         $lockTable = $job->getScheduledJobId() && !$noLock;
 
         $skip = false;
 
-        if (!$noLock) {
-            if ($lockTable) {
-                // MySQL doesn't allow to lock non-existent rows. We resort to locking an entire table.
-                $this->entityManager->getLocker()->lockExclusive(JobEntity::ENTITY_TYPE);
-            }
-            else {
-                $this->entityManager->getTransactionManager()->start();
-            }
+        if ($lockTable) {
+            // MySQL doesn't allow to lock non-existent rows. We resort to locking an entire table.
+            $this->entityManager->getLocker()->lockExclusive(JobEntity::ENTITY_TYPE);
         }
 
         if ($noLock || $this->queueUtil->isJobPending($job->getId())) {
@@ -100,13 +93,8 @@ class QueueProcessor
             $skip = true;
         }
 
-        if ($skip && !$noLock) {
-            if ($lockTable) {
-                $this->entityManager->getLocker()->rollback();
-            }
-            else {
-                $this->entityManager->getTransactionManager()->rollback();
-            }
+        if ($skip && $lockTable) {
+            $this->entityManager->getLocker()->rollback();
         }
 
         if ($skip) {
@@ -115,7 +103,7 @@ class QueueProcessor
 
         $job->setStartedAtNow();
 
-        if ($useProcessPool) {
+        if ($pool) {
             $job->setStatus(Status::READY);
         }
         else {
@@ -125,23 +113,18 @@ class QueueProcessor
 
         $this->entityManager->saveEntity($job);
 
-        if (!$noLock) {
-            if ($lockTable) {
-                $this->entityManager->getLocker()->commit();
-            }
-            else {
-                $this->entityManager->getTransactionManager()->commit();
-            }
+        if ($lockTable) {
+            $this->entityManager->getLocker()->commit();
         }
 
-        if ($useProcessPool && $pool) {
-            $task = new JobTask($job->getId());
-
-            $pool->add($task);
+        if (!$pool) {
+            $this->jobRunner->run($job);
 
             return;
         }
 
-        $this->jobRunner->run($job);
+        $task = new JobTask($job->getId());
+
+        $pool->add($task);
     }
 }
