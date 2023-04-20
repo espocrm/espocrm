@@ -33,20 +33,14 @@ use Espo\Core\Utils\Config;
 
 class QueuePortionNumberProvider
 {
-    private Config $config;
-
-    /**
-     * @var array<string,int>
-     */
+    /** @var array<string, int> */
     private $queueNumberMap = [
         QueueName::Q0 => self::Q0_PORTION_NUMBER,
         QueueName::Q1 => self::Q1_PORTION_NUMBER,
         QueueName::E0 => self::E0_PORTION_NUMBER,
     ];
 
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string, string> */
     private $queueParamNameMap = [
         QueueName::Q0 => 'jobQ0MaxPortion',
         QueueName::Q1 => 'jobQ1MaxPortion',
@@ -54,17 +48,12 @@ class QueuePortionNumberProvider
     ];
 
     private const Q0_PORTION_NUMBER = 200;
-
     private const Q1_PORTION_NUMBER = 500;
-
     private const E0_PORTION_NUMBER = 100;
-
     private const DEFAULT_PORTION_NUMBER = 200;
 
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private Config $config)
+    {}
 
     public function get(string $queue): int
     {

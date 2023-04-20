@@ -34,14 +34,10 @@ use Espo\Core\Exceptions\Error;
 
 class PreparatorFactory
 {
-    private MetadataProvider $metadataProvider;
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(MetadataProvider $metadataProvider, InjectableFactory $injectableFactory)
-    {
-        $this->metadataProvider = $metadataProvider;
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(
+        private MetadataProvider $metadataProvider,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     /**
      * Create a preparator.

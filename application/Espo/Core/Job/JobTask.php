@@ -29,13 +29,12 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\{
-    Application,
-    ApplicationRunners\Job as JobRunner,
-    Application\Runner\Params as RunnerParams,
-};
-
 use Spatie\Async\Task as AsyncTask;
+
+use Espo\Core\Application;
+use Espo\Core\Application\Runner\Params as RunnerParams;
+use Espo\Core\ApplicationRunners\Job as JobRunner;
+use Espo\Core\Utils\Log;
 
 use Throwable;
 
@@ -52,8 +51,7 @@ class JobTask extends AsyncTask
      * @return void
      */
     public function configure()
-    {
-    }
+    {}
 
     /**
      * @return void
@@ -62,20 +60,15 @@ class JobTask extends AsyncTask
     {
         $app = new Application();
 
-        $params = RunnerParams::fromArray([
-            'id' => $this->jobId,
-        ]);
+        $params = RunnerParams::fromArray(['id' => $this->jobId]);
 
         try {
             $app->run(JobRunner::class, $params);
         }
         catch (Throwable $e) {
-            /** @var \Espo\Core\Utils\Log $log */
-            $log = $app->getContainer()->get('log');
+            $log = $app->getContainer()->getByClass(Log::class);
 
-            $log->error(
-                "JobTask: Failed to run job '{$this->jobId}'. Error: " . $e->getMessage()
-            );
+            $log->error("JobTask: Failed to run job '{$this->jobId}'. Error: " . $e->getMessage());
         }
     }
 }

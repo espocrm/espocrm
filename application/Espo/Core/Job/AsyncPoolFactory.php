@@ -35,12 +35,8 @@ use Spatie\Async\Pool;
 
 class AsyncPoolFactory
 {
-    private $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private Config $config)
+    {}
 
     public function isSupported(): bool
     {

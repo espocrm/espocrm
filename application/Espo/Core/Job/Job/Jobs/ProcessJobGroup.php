@@ -38,17 +38,10 @@ class ProcessJobGroup implements Job
 {
     private const PORTION_NUMBER = 100;
 
-    private JobManager $jobManager;
-
-    private Config $config;
-
     public function __construct(
-        JobManager $jobManager,
-        Config $config
-    ) {
-        $this->jobManager = $jobManager;
-        $this->config = $config;
-    }
+        private JobManager $jobManager,
+        private Config $config
+    ) {}
 
     public function run(Data $data): void
     {
