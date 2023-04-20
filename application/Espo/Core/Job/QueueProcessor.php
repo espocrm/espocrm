@@ -70,26 +70,23 @@ class QueueProcessor
         $noLock = $params->noLock();
         $lockTable = $job->getScheduledJobId() && !$noLock;
 
-        $skip = false;
-
         if ($lockTable) {
             // MySQL doesn't allow to lock non-existent rows. We resort to locking an entire table.
             $this->entityManager->getLocker()->lockExclusive(JobEntity::ENTITY_TYPE);
         }
 
-        if ($noLock || $this->queueUtil->isJobPending($job->getId())) {
-            if (
-                $job->getScheduledJobId() &&
-                $this->queueUtil->isScheduledJobRunning(
-                    $job->getScheduledJobId(),
-                    $job->getTargetId(),
-                    $job->getTargetType(),
-                    $job->getTargetGroup()
-                )
-            ) {
-                $skip = true;
-            }
-        } else {
+        $skip = !$noLock && !$this->queueUtil->isJobPending($job->getId());
+
+        if (
+            !$skip &&
+            $job->getScheduledJobId() &&
+            $this->queueUtil->isScheduledJobRunning(
+                $job->getScheduledJobId(),
+                $job->getTargetId(),
+                $job->getTargetType(),
+                $job->getTargetGroup()
+            )
+        ) {
             $skip = true;
         }
 
