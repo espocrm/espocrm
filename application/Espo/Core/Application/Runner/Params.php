@@ -34,17 +34,15 @@ namespace Espo\Core\Application\Runner;
  */
 class Params
 {
-    /** @var array<string,mixed> */
+    /** @var array<string, mixed> */
     private $data = [];
 
     public function __construct() {}
 
     /**
      * Get a parameter value.
-     *
-     * @return mixed
      */
-    public function get(string $name)
+    public function get(string $name): mixed
     {
         return $this->data[$name] ?? null;
     }
@@ -59,13 +57,10 @@ class Params
 
     /**
      * Clone with a parameter value.
-     *
-     * @param mixed $value
      */
-    public function with(string $name, $value): self
+    public function with(string $name, mixed $value): self
     {
         $obj = clone $this;
-
         $obj->data[$name] = $value;
 
         return $obj;
@@ -74,12 +69,11 @@ class Params
     /**
      * Create from an associative array.
      *
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     public static function fromArray(array $data): self
     {
         $obj = new self();
-
         $obj->data = $data;
 
         return $obj;

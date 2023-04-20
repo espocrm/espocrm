@@ -33,7 +33,6 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\System;
 use Espo\Core\Job\Job\Data;
@@ -41,6 +40,7 @@ use Espo\Core\Job\Job\Status;
 use Espo\Entities\Job as JobEntity;
 
 use LogicException;
+use RuntimeException;
 use Throwable;
 
 class JobRunner
@@ -80,24 +80,22 @@ class JobRunner
     /**
      * Run a job by ID. A job must have status 'Ready'.
      * Used when running jobs in parallel processes.
-     *
-     * @throws Error
      */
     public function runById(string $id): void
     {
         if ($id === '') {
-            throw new Error();
+            throw new RuntimeException("Empty job ID.");
         }
 
         /** @var ?JobEntity $jobEntity */
         $jobEntity = $this->entityManager->getEntityById(JobEntity::ENTITY_TYPE, $id);
 
         if (!$jobEntity) {
-            throw new Error("Job '{$id}' not found.");
+            throw new RuntimeException("Job '{$id}' not found.");
         }
 
         if ($jobEntity->getStatus() !== Status::READY) {
-            throw new Error("Can't run job '{$id}' with no status Ready.");
+            throw new RuntimeException("Can't run job '{$id}' with not Ready status.");
         }
 
         $this->setJobRunning($jobEntity);
@@ -157,10 +155,10 @@ class JobRunner
 
         $status = $isSuccess ? Status::SUCCESS : Status::FAILED;
 
-        $jobEntity->set('status', $status);
+        $jobEntity->setStatus($status);
 
         if ($isSuccess) {
-            $jobEntity->set('executedAt', DateTimeUtil::getSystemNowString());
+            $jobEntity->setExecutedAtNow();
         }
 
         $this->entityManager->saveEntity($jobEntity);
@@ -271,11 +269,11 @@ class JobRunner
     private function setJobRunning(JobEntity $jobEntity): void
     {
         if (!$jobEntity->getStartedAt()) {
-            $jobEntity->set('startedAt', DateTimeUtil::getSystemNowString());
+            $jobEntity->setStartedAtNow();
         }
 
-        $jobEntity->set('status', Status::RUNNING);
-        $jobEntity->set('pid', System::getPid());
+        $jobEntity->setStatus(Status::RUNNING);
+        $jobEntity->setPid(System::getPid());
 
         $this->entityManager->saveEntity($jobEntity);
     }

@@ -202,7 +202,17 @@ class Job extends Entity
      */
     public function setStartedAtNow(): self
     {
-        $this->set('startedAt', date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT));
+        $this->set('startedAt', DateTimeUtil::getSystemNowString());
+
+        return $this;
+    }
+
+    /**
+     * Set executed-at to now.
+     */
+    public function setExecutedAtNow(): self
+    {
+        $this->set('executedAt', DateTimeUtil::getSystemNowString());
 
         return $this;
     }

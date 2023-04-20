@@ -60,7 +60,7 @@ class JobTask extends AsyncTask
     {
         $app = new Application();
 
-        $params = RunnerParams::fromArray(['id' => $this->jobId]);
+        $params = RunnerParams::create()->with('id', $this->jobId);
 
         try {
             $app->run(JobRunner::class, $params);
