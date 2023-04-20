@@ -30,7 +30,8 @@
 namespace Espo\Core\Job;
 
 use Espo\Core\InjectableFactory;
-use Espo\Core\Exceptions\Error;
+
+use RuntimeException;
 
 class PreparatorFactory
 {
@@ -41,8 +42,6 @@ class PreparatorFactory
 
     /**
      * Create a preparator.
-     *
-     * @throws Error
      */
     public function create(string $name): Preparator
     {
@@ -50,7 +49,7 @@ class PreparatorFactory
         $className = $this->metadataProvider->getPreparatorClassName($name);
 
         if (!$className) {
-            throw new Error("Preparator for job '{$name}' not found.");
+            throw new RuntimeException("Preparator for job '{$name}' not found.");
         }
 
         return $this->injectableFactory->create($className);
