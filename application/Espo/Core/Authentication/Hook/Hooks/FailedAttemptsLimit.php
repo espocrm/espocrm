@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Authentication\Hook\Hooks;
 
+use Espo\Core\Api\Util;
 use Espo\Core\Authentication\Hook\BeforeLogin;
 use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Api\Request;
@@ -70,7 +71,7 @@ class FailedAttemptsLimit implements BeforeLogin
 
         $requestTimeFrom = (new DateTime('@' . $requestTime))->modify('-' . $failedAttemptsPeriod);
 
-        $ip = $request->getServerParam('REMOTE_ADDR');
+        $ip = Util::obtainIpFromRequest($request);
 
         $where = [
             'requestTime>' => $requestTimeFrom->format('U'),

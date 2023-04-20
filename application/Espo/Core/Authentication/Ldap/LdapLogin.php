@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Authentication\Ldap;
 
+use Espo\Core\Api\Util;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
 use Espo\Core\FieldProcessing\EmailAddress\Saver as EmailAddressSaver;
 use Espo\Core\FieldProcessing\PhoneNumber\Saver as PhoneNumberSaver;
@@ -135,7 +136,7 @@ class LdapLogin implements Login
         $isPortal = $this->isPortal;
 
         if ($authToken) {
-            $user = $this->loginByToken($username, $authToken);
+            $user = $this->loginByToken($username, $authToken, $request);
 
             if ($user) {
                 return Result::success($user);
@@ -278,9 +279,9 @@ class LdapLogin implements Login
     /**
      * Login by authorization token.
      */
-    private function loginByToken(?string $username, AuthToken $authToken = null): ?User
+    private function loginByToken(?string $username, AuthToken $authToken, Request $request): ?User
     {
-        if (!isset($authToken) || $username === null) {
+        if ($username === null) {
             return null;
         }
 
@@ -296,11 +297,9 @@ class LdapLogin implements Login
         $tokenUsername = $user->getUserName() ?? '';
 
         if (strtolower($username) !== strtolower($tokenUsername)) {
-            $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+            $ip = Util::obtainIpFromRequest($request);
 
-            $this->log->alert(
-                'Unauthorized access attempt for user [' . $username . '] from IP [' . $ip . ']'
-            );
+            $this->log->alert('Unauthorized access attempt for user [' . $username . '] from IP [' . $ip . ']');
 
             return null;
         }

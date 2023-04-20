@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Authentication;
 
+
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Repositories\UserData as UserDataRepository;
@@ -37,7 +38,6 @@ use Espo\Entities\User;
 use Espo\Entities\AuthLogRecord;
 use Espo\Entities\AuthToken as AuthTokenEntity;
 use Espo\Entities\UserData;
-
 use Espo\Core\Exceptions\Error\Body;
 use Espo\Core\Authentication\Logout\Params as LogoutParams;
 use Espo\Core\Authentication\Util\MethodProvider;
@@ -52,6 +52,7 @@ use Espo\Core\ApplicationUser;
 use Espo\Core\ApplicationState;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
+use Espo\Core\Api\Util;
 use Espo\Core\Utils\Log;
 use Espo\Core\ORM\EntityManagerProxy;
 use Espo\Core\Exceptions\ServiceUnavailable;
@@ -219,7 +220,7 @@ class Authentication
             $user->loadLinkMultipleField('teams');
         }
 
-        $user->set('ipAddress', $request->getServerParam('REMOTE_ADDR') ?? null);
+        $user->set('ipAddress', Util::obtainIpFromRequest($request));
 
         [$loggedUser, $anotherUserFailReason] = $this->getLoggedUser($request, $user);
 
@@ -466,8 +467,7 @@ class Authentication
 
         /** @var ?string $password */
         $password = $user->get('password');
-        /** @var ?string $ipAddress */
-        $ipAddress = $request->getServerParam('REMOTE_ADDR');
+        $ipAddress = Util::obtainIpFromRequest($request);
 
         $authTokenData = AuthTokenData::create([
             'hash' => $password,
@@ -595,7 +595,7 @@ class Authentication
 
         $authLogRecord
             ->setUsername($username)
-            ->setIpAddress($request->getServerParam('REMOTE_ADDR'))
+            ->setIpAddress(Util::obtainIpFromRequest($request))
             ->setRequestTime($request->getServerParam('REQUEST_TIME_FLOAT'))
             ->setRequestMethod($request->getMethod())
             ->setRequestUrl($requestUrl)

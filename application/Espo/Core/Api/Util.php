@@ -33,6 +33,16 @@ use stdClass;
 
 class Util
 {
+    private const IP_PARAM_LIST = [
+        'HTTP_CLIENT_IP',
+        'HTTP_X_FORWARDED_FOR',
+        'HTTP_X_FORWARDED',
+        'HTTP_X_CLUSTER_CLIENT_IP',
+        'HTTP_FORWARDED_FOR',
+        'HTTP_FORWARDED',
+        'REMOTE_ADDR',
+    ];
+
     public static function cloneObject(stdClass $source): stdClass
     {
         $cloned = (object) [];
@@ -69,5 +79,26 @@ class Util
         }
 
         return $item;
+    }
+
+    public static function obtainIpFromRequest(Request $request): ?string
+    {
+        foreach (self::IP_PARAM_LIST as $var){
+            $value = $request->getServerParam($var);
+
+            if (!is_string($value)) {
+                continue;
+            }
+
+            foreach (explode(',', $value) as $item) {
+                $item = trim($item);
+
+                if (filter_var($item, FILTER_VALIDATE_IP) !== false) {
+                    return $item;
+                }
+            }
+        }
+
+        return null;
     }
 }
