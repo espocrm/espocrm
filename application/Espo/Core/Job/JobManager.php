@@ -31,7 +31,6 @@ namespace Espo\Core\Job;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Job\QueueProcessor\Params;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Log;
 use Espo\Entities\Job as JobEntity;
@@ -48,16 +47,16 @@ class JobManager
     protected string $lastRunTimeFile = 'data/cache/application/cronLastRunTime.php';
 
     public function __construct(
-        private Config $config,
         private FileManager $fileManager,
         private JobRunner $jobRunner,
         private Log $log,
         private ScheduleProcessor $scheduleProcessor,
         private QueueUtil $queueUtil,
         private AsyncPoolFactory $asyncPoolFactory,
-        private QueueProcessor $queueProcessor
+        private QueueProcessor $queueProcessor,
+        private ConfigDataProvider $configDataProvider
     ) {
-        if ($this->config->get('jobRunInParallel')) {
+        if ($this->configDataProvider->runInParallel()) {
             if ($this->asyncPoolFactory->isSupported()) {
                 $this->useProcessPool = true;
             } else {
@@ -118,7 +117,7 @@ class JobManager
 
     private function processMainQueue(): void
     {
-        $limit = (int) $this->config->get('jobMaxPortion', 0);
+        $limit = $this->configDataProvider->getMaxPortion();
 
         $params = Params
             ::create()
@@ -167,7 +166,7 @@ class JobManager
             }
         }
 
-        return time() - intval($this->config->get('cronMinInterval', 0)) - 1;
+        return time() - $this->configDataProvider->getCronMinInterval() - 1;
     }
 
     /**
@@ -185,7 +184,7 @@ class JobManager
         $currentTime = time();
         $lastRunTime = $this->getLastRunTime();
 
-        $cronMinInterval = $this->config->get('cronMinInterval', 0);
+        $cronMinInterval = $this->configDataProvider->getCronMinInterval();
 
         if ($currentTime > ($lastRunTime + $cronMinInterval)) {
             return true;
