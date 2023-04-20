@@ -32,7 +32,6 @@ namespace Espo\Core\Job;
 use Espo\Entities\Job as JobEntity;
 use Espo\Core\Job\QueueProcessor\Params;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\System;
 use Espo\Core\Job\Job\Status;
 
@@ -114,14 +113,14 @@ class QueueProcessor
             return;
         }
 
-        $job->set('startedAt', date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT));
+        $job->setStartedAtNow();
 
         if ($useProcessPool) {
-            $job->set('status', Status::READY);
+            $job->setStatus(Status::READY);
         }
         else {
-            $job->set('status', Status::RUNNING);
-            $job->set('pid', System::getPid());
+            $job->setStatus(Status::RUNNING);
+            $job->setPid(System::getPid());
         }
 
         $this->entityManager->saveEntity($job);
