@@ -460,7 +460,7 @@ class Importer
 
     /**
      * @param string[] $userIdList
-     * @param array<string,string> $folderData
+     * @param array<string, string> $folderData
      * @param string[] $teamIdList
      */
     private function processDuplicate(
@@ -517,6 +517,7 @@ class Importer
             $this->entityManager
                 ->getRDBRepository(Email::ENTITY_TYPE)
                 ->getRelation($duplicate, 'users')
+                // Can cause skip-notification bypass.
                 ->updateColumnsById($uId, ['folderId' => $folderId]);
         }
 
