@@ -46,7 +46,8 @@ class FailedAttemptsLimit implements BeforeLogin
     public function __construct(
         private ConfigDataProvider $configDataProvider,
         private EntityManager $entityManager,
-        private Log $log
+        private Log $log,
+        private Util $util
     ) {}
 
     /**
@@ -71,7 +72,7 @@ class FailedAttemptsLimit implements BeforeLogin
 
         $requestTimeFrom = (new DateTime('@' . $requestTime))->modify('-' . $failedAttemptsPeriod);
 
-        $ip = Util::obtainIpFromRequest($request);
+        $ip = $this->util->obtainIpFromRequest($request);
 
         $where = [
             'requestTime>' => $requestTimeFrom->format('U'),

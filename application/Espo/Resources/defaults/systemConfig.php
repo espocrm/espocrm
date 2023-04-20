@@ -100,6 +100,7 @@ return [
         'authTokenSecretDisabled',
         'authLogDisabled',
         'authApiUserLogDisabled',
+        'ipAddressServerParam',
     ],
     'adminItems' => [
         'devMode',

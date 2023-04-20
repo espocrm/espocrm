@@ -86,7 +86,8 @@ class Authentication
         private HookManager $hookManager,
         private Log $log,
         private LogoutFactory $logoutFactory,
-        private MethodProvider $methodProvider
+        private MethodProvider $methodProvider,
+        private Util $util
     ) {}
 
     /**
@@ -220,7 +221,7 @@ class Authentication
             $user->loadLinkMultipleField('teams');
         }
 
-        $user->set('ipAddress', Util::obtainIpFromRequest($request));
+        $user->set('ipAddress', $this->util->obtainIpFromRequest($request));
 
         [$loggedUser, $anotherUserFailReason] = $this->getLoggedUser($request, $user);
 
@@ -467,7 +468,7 @@ class Authentication
 
         /** @var ?string $password */
         $password = $user->get('password');
-        $ipAddress = Util::obtainIpFromRequest($request);
+        $ipAddress = $this->util->obtainIpFromRequest($request);
 
         $authTokenData = AuthTokenData::create([
             'hash' => $password,
@@ -595,7 +596,7 @@ class Authentication
 
         $authLogRecord
             ->setUsername($username)
-            ->setIpAddress(Util::obtainIpFromRequest($request))
+            ->setIpAddress($this->util->obtainIpFromRequest($request))
             ->setRequestTime($request->getServerParam('REQUEST_TIME_FLOAT'))
             ->setRequestMethod($request->getMethod())
             ->setRequestUrl($requestUrl)

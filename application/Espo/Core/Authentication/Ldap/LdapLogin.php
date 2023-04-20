@@ -57,44 +57,24 @@ class LdapLogin implements Login
 {
     private LDAPUtils $utils;
     private ?Client $client = null;
-    private bool $isPortal;
 
-    private Config $config;
-    private EntityManager $entityManager;
-    private PasswordHash $passwordHash;
     private Language $language;
-    private Log $log;
-    private Espo $baseLogin;
-    private ClientFactory $clientFactory;
-    private LinkMultipleSaver $linkMultipleSaver;
-    private EmailAddressSaver $emailAddressSaver;
-    private PhoneNumberSaver $phoneNumberSaver;
 
     public function __construct(
-        Config $config,
-        EntityManager $entityManager,
-        PasswordHash $passwordHash,
+        private Config $config,
+        private EntityManager $entityManager,
+        private PasswordHash $passwordHash,
         Language $defaultLanguage,
-        Log $log,
-        Espo $baseLogin,
-        ClientFactory $clientFactory,
-        LinkMultipleSaver $linkMultipleSaver,
-        EmailAddressSaver $emailAddressSaver,
-        PhoneNumberSaver $phoneNumberSaver,
-        bool $isPortal = false
+        private Log $log,
+        private Espo $baseLogin,
+        private ClientFactory $clientFactory,
+        private LinkMultipleSaver $linkMultipleSaver,
+        private EmailAddressSaver $emailAddressSaver,
+        private PhoneNumberSaver $phoneNumberSaver,
+        private Util $util,
+        private bool $isPortal = false
     ) {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->passwordHash = $passwordHash;
         $this->language = $defaultLanguage;
-        $this->log = $log;
-        $this->baseLogin = $baseLogin;
-        $this->clientFactory = $clientFactory;
-        $this->linkMultipleSaver = $linkMultipleSaver;
-        $this->emailAddressSaver = $emailAddressSaver;
-        $this->phoneNumberSaver = $phoneNumberSaver;
-
-        $this->isPortal = $isPortal;
 
         $this->utils = new LDAPUtils($config);
     }
@@ -297,7 +277,7 @@ class LdapLogin implements Login
         $tokenUsername = $user->getUserName() ?? '';
 
         if (strtolower($username) !== strtolower($tokenUsername)) {
-            $ip = Util::obtainIpFromRequest($request);
+            $ip = $this->util->obtainIpFromRequest($request);
 
             $this->log->alert('Unauthorized access attempt for user [' . $username . '] from IP [' . $ip . ']');
 
