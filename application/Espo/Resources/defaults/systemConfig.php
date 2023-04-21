@@ -101,6 +101,7 @@ return [
         'authLogDisabled',
         'authApiUserLogDisabled',
         'ipAddressServerParam',
+        'jobNoTableLocking',
     ],
     'adminItems' => [
         'devMode',

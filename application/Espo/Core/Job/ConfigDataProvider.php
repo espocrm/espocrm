@@ -49,4 +49,9 @@ class ConfigDataProvider
     {
         return (int) $this->config->get('cronMinInterval', 0);
     }
+
+    public function noTableLocking(): bool
+    {
+        return (bool) $this->config->get('jobNoTableLocking');
+    }
 }

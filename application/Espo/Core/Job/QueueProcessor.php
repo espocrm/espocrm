@@ -39,12 +39,17 @@ use Spatie\Async\Pool as AsyncPool;
 
 class QueueProcessor
 {
+    private bool $noTableLocking;
+
     public function __construct(
         private QueueUtil $queueUtil,
         private JobRunner $jobRunner,
         private AsyncPoolFactory $asyncPoolFactory,
-        private EntityManager $entityManager
-    ) {}
+        private EntityManager $entityManager,
+        ConfigDataProvider $configDataProvider
+    ) {
+        $this->noTableLocking = $configDataProvider->noTableLocking();
+    }
 
     public function process(Params $params): void
     {
@@ -68,7 +73,7 @@ class QueueProcessor
     private function processJob(Params $params, JobEntity $job, ?AsyncPool $pool = null): void
     {
         $noLock = $params->noLock();
-        $lockTable = $job->getScheduledJobId() && !$noLock;
+        $lockTable = $job->getScheduledJobId() && !$noLock && !$this->noTableLocking;
 
         if ($lockTable) {
             // MySQL doesn't allow to lock non-existent rows. We resort to locking an entire table.
