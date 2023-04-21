@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Tools\Lead;
 
 use Espo\Core\Acl;
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\ConflictSilent;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\ServiceContainer;
@@ -37,6 +38,7 @@ use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
+use Espo\Entities\Email;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Call;
@@ -47,43 +49,28 @@ use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\Modules\Crm\Tools\Lead\Convert\Params;
 use Espo\Modules\Crm\Tools\Lead\Convert\Values;
+use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Tools\Stream\Service as StreamService;
 
 class ConvertService
 {
-    private Acl $acl;
-    private ServiceContainer $recordServiceContainer;
-    private EntityManager $entityManager;
-    private User $user;
-    private StreamService $streamService;
-    private Metadata $metadata;
-    private FieldUtil $fieldUtil;
-
     public function __construct(
-        Acl $acl,
-        ServiceContainer $recordServiceContainer,
-        EntityManager $entityManager,
-        User $user,
-        StreamService $streamService,
-        Metadata $metadata,
-        FieldUtil $fieldUtil
-    ) {
-        $this->acl = $acl;
-        $this->recordServiceContainer = $recordServiceContainer;
-        $this->entityManager = $entityManager;
-        $this->user = $user;
-        $this->streamService = $streamService;
-        $this->metadata = $metadata;
-        $this->fieldUtil = $fieldUtil;
-    }
+        private Acl $acl,
+        private ServiceContainer $recordServiceContainer,
+        private EntityManager $entityManager,
+        private User $user,
+        private StreamService $streamService,
+        private Metadata $metadata,
+        private FieldUtil $fieldUtil
+    ) {}
 
     /**
      * Convert a lead.
      *
      * @throws Forbidden
-     * @throws ConflictSilent
+     * @throws Conflict
      */
     public function convert(string $id, Values $records, Params $params): Lead
     {
@@ -204,7 +191,8 @@ class ConvertService
                 if ($contact && $contact->hasId()) {
                     $this->entityManager
                         ->getRDBRepository(Contact::ENTITY_TYPE)
-                        ->relate($contact, 'opportunities', $opportunity);
+                        ->getRelation($contact, 'opportunities')
+                        ->relate($opportunity);
                 }
 
                 $lead->set('createdOpportunityId', $opportunity->getId());
@@ -212,12 +200,7 @@ class ConvertService
         }
 
         if ($duplicateCheck && count($duplicateList)) {
-            $reason = [
-                'reason' => 'duplicate',
-                'duplicates' => $duplicateList,
-            ];
-
-            throw new ConflictSilent(Json::encode($reason));
+            throw ConflictSilent::createWithBody('duplicate', Json::encode($duplicateList));
         }
 
         $lead->set('status', Lead::STATUS_CONVERTED);
@@ -226,6 +209,7 @@ class ConvertService
 
         $leadRepository = $this->entityManager->getRDBRepository(Lead::ENTITY_TYPE);
 
+        /** @var Collection<Meeting> $meetings */
         $meetings = $leadRepository
             ->getRelation($lead, 'meetings')
             ->select(['id', 'parentId', 'parentType'])
@@ -235,7 +219,8 @@ class ConvertService
             if ($contact && $contact->hasId()) {
                 $this->entityManager
                     ->getRDBRepository(Meeting::ENTITY_TYPE)
-                    ->relate($meeting, 'contacts', $contact);
+                    ->getRelation($meeting, 'contacts')
+                    ->relate($contact);
             }
 
             if ($opportunity && $opportunity->hasId()) {
@@ -252,6 +237,7 @@ class ConvertService
             }
         }
 
+        /** @var Collection<Call> $calls */
         $calls = $leadRepository
             ->getRelation($lead, 'calls')
             ->select(['id', 'parentId', 'parentType'])
@@ -261,7 +247,8 @@ class ConvertService
             if ($contact && $contact->hasId()) {
                 $this->entityManager
                     ->getRDBRepository(Call::ENTITY_TYPE)
-                    ->relate($call, 'contacts', $contact);
+                    ->getRelation($call, 'contacts')
+                    ->relate($contact);
             }
 
             if ($opportunity && $opportunity->hasId()) {
@@ -278,6 +265,7 @@ class ConvertService
             }
         }
 
+        /** @var Collection<Email> $emails */
         $emails = $leadRepository
             ->getRelation($lead, 'emails')
             ->select(['id', 'parentId', 'parentType'])
@@ -298,6 +286,7 @@ class ConvertService
             }
         }
 
+        /** @var Collection<Document> $documents */
         $documents = $leadRepository
             ->getRelation($lead, 'documents')
             ->select(['id'])
@@ -307,13 +296,15 @@ class ConvertService
             if ($account && $account->hasId()) {
                 $this->entityManager
                     ->getRDBRepository(Document::ENTITY_TYPE)
-                    ->relate($document, 'accounts', $account);
+                    ->getRelation($document, 'accounts')
+                    ->relate($account);
             }
 
             if ($opportunity && $opportunity->hasId()) {
                 $this->entityManager
                     ->getRDBRepository(Document::ENTITY_TYPE)
-                    ->relate($document, 'opportunities', $opportunity);
+                    ->getRelation($document, 'opportunities')
+                    ->relate($opportunity);
             }
         }
 
