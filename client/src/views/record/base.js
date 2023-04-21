@@ -1121,22 +1121,26 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * @param {module:views/record/base~saveOptions} [options] Options.
          */
         handleSaveError: function (xhr, options) {
-            let response = null;
+            let handlerData = null;
 
             if (~[409, 500].indexOf(xhr.status)) {
                 let statusReason = xhr.getResponseHeader('X-Status-Reason');
 
-                if (statusReason) {
-                    try {
-                        response = JSON.parse(statusReason);
-                    }
-                    catch (e) {}
+                if (!statusReason) {
+                    return;
+                }
 
-                    if (!response && xhr.responseText) {
-                        response = {
-                            reason: statusReason.toString(),
-                        };
+                try {
+                    handlerData = JSON.parse(statusReason);
+                }
+                catch (e) {}
 
+                if (!handlerData) {
+                    handlerData = {
+                        reason: statusReason.toString(),
+                    };
+
+                    if (xhr.responseText) {
                         let data;
 
                         try {
@@ -1148,16 +1152,16 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                             return;
                         }
 
-                        response.data = data;
+                        handlerData.data = data;
                     }
                 }
             }
 
-            if (!response || !response.reason) {
+            if (!handlerData || !handlerData.reason) {
                 return;
             }
 
-            let reason = response.reason;
+            let reason = handlerData.reason;
 
             let handlerName =
                 this.getMetadata()
@@ -1166,10 +1170,10 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                     .get(['clientDefs', 'Global', 'saveErrorHandlers', reason]);
 
             if (handlerName) {
-                require(handlerName, (Handler) => {
+                require(handlerName, Handler => {
                     let handler = new Handler(this);
 
-                    handler.process(response.data, options);
+                    handler.process(handlerData.data, options);
                 });
 
                 xhr.errorIsHandled = true;
@@ -1182,7 +1186,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
             if (methodName in this) {
                 xhr.errorIsHandled = true;
 
-                this[methodName](response.data, options);
+                this[methodName](handlerData.data, options);
             }
         },
 
