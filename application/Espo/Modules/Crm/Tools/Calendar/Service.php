@@ -579,7 +579,7 @@ class Service
         }
 
         if ($this->acl->getPermissionLevel('userPermission') === Table::LEVEL_TEAM) {
-            $userTeamIdList = $this->user->getLinkMultipleIdList('teams') ?? [];
+            $userTeamIdList = $this->user->getLinkMultipleIdList('teams');
 
             foreach ($teamIdList as $teamId) {
                 if (!in_array($teamId, $userTeamIdList)) {

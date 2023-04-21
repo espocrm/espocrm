@@ -432,7 +432,7 @@ class Email extends Database implements
 
     public function applyUsersFilters(EmailEntity $entity): void
     {
-        $userIdList = $entity->getLinkMultipleIdList('users') ?? [];
+        $userIdList = $entity->getLinkMultipleIdList('users');
 
         foreach ($userIdList as $userId) {
             if (

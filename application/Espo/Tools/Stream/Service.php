@@ -29,7 +29,6 @@
 
 namespace Espo\Tools\Stream;
 
-use Espo\Core\ApplicationUser;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
@@ -1305,7 +1304,7 @@ class Service
 
             if ($usersAttributeIsChanged || $forceProcessNoteNotifications) {
                 if ($fieldDefs->getType() === 'linkMultiple') {
-                    $userIdList = $entity->getLinkMultipleIdList($ownerUserField) ?? [];
+                    $userIdList = $entity->getLinkMultipleIdList($ownerUserField);
                 }
                 else {
                     $userId = $entity->get($ownerUserIdAttribute);
@@ -1321,7 +1320,7 @@ class Service
             }
 
             if ($teamsAttributeIsChanged || $forceProcessNoteNotifications) {
-                $teamIdList = $entity->getLinkMultipleIdList('teams') ?? [];
+                $teamIdList = $entity->getLinkMultipleIdList('teams');
             }
         }
 

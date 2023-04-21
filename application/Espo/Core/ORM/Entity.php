@@ -30,13 +30,20 @@
 namespace Espo\Core\ORM;
 
 use Espo\ORM\BaseEntity;
-
 use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Type\RelationType;
+
 use LogicException;
 use stdClass;
 
+/**
+ * An entity.
+ */
 class Entity extends BaseEntity
 {
+    /**
+     * Has a link-multiple field.
+     */
     public function hasLinkMultipleField(string $field): bool
     {
         return
@@ -44,11 +51,17 @@ class Entity extends BaseEntity
             $this->getAttributeParam($field . 'Ids', 'isLinkMultipleIdList');
     }
 
+    /**
+     * Has a link field.
+     */
     public function hasLinkField(string $field): bool
     {
         return $this->hasAttribute($field . 'Id') && $this->hasRelation($field);
     }
 
+    /**
+     * Has a link-parent field.
+     */
     public function hasLinkParentField(string $field): bool
     {
         return
@@ -57,10 +70,13 @@ class Entity extends BaseEntity
             $this->hasRelation($field);
     }
 
+    /**
+     * Load a parent-name field.
+     */
     public function loadParentNameField(string $field): void
     {
-        if (!$this->hasAttribute($field. 'Id') || !$this->hasAttribute($field . 'Type')) {
-            throw new LogicException("There's no link-parent field '{$field}'.");
+        if (!$this->hasLinkParentField($field)) {
+            throw new LogicException("Called `loadParentNameField` on non-link-parent field `$field`.");
         }
 
         $parentId = $this->get($field . 'Id');
@@ -70,27 +86,27 @@ class Entity extends BaseEntity
             throw new LogicException("No entity-manager.");
         }
 
-        if ($parentId && $parentType) {
-            if (!$this->entityManager->hasRepository($parentType)) {
-                return;
-            }
-
-            $repository = $this->entityManager->getRDBRepository($parentType);
-
-            $select = ['id', 'name'];
-
-            $foreignEntity = $repository
-                ->select($select)
-                ->where(['id' => $parentId])
-                ->findOne();
-
-            if ($foreignEntity) {
-                $this->set($field . 'Name', $foreignEntity->get('name'));
-
-                return;
-            }
-
+        if (!$parentId || !$parentType) {
             $this->set($field . 'Name', null);
+
+            return;
+        }
+
+        if (!$this->entityManager->hasRepository($parentType)) {
+            return;
+        }
+
+        $repository = $this->entityManager->getRDBRepository($parentType);
+
+        $select = ['id', 'name'];
+
+        $foreignEntity = $repository
+            ->select($select)
+            ->where(['id' => $parentId])
+            ->findOne();
+
+        if ($foreignEntity) {
+            $this->set($field . 'Name', $foreignEntity->get('name'));
 
             return;
         }
@@ -99,11 +115,10 @@ class Entity extends BaseEntity
     }
 
     /**
-     *
      * @param string $link
      * @return ?array{
-     *   orderBy: string|array<int,array{string,string}>|null,
-     *   order: ?string,
+     *     orderBy: string|array<int, array{string, string}>|null,
+     *     order: ?string,
      * }
      */
     protected function getRelationOrderParams(string $link): ?array
@@ -161,12 +176,10 @@ class Entity extends BaseEntity
     /**
      * @param ?array<string, string> $columns
      */
-    public function loadLinkMultipleField(string $field, $columns = null): void
+    public function loadLinkMultipleField(string $field, ?array $columns = null): void
     {
-        if (!$this->hasRelation($field) || !$this->hasAttribute($field . 'Ids')) {
-            return;
-            // @todo Throw exception on v7.2.
-            // throw new LogicException("There's no link-multiple field '{$field}'.");
+        if (!$this->hasLinkMultipleField($field)) {
+            throw new LogicException("Called `loadLinkMultipleField` on non-link-multiple field `$field`.");
         }
 
         if (!$this->entityManager) {
@@ -237,12 +250,14 @@ class Entity extends BaseEntity
                 $types->$id = $e->get('type');
             }
 
-            if (!empty($columns)) {
-                $columnsData->$id = (object) [];
+            if (empty($columns)) {
+                continue;
+            }
 
-                foreach ($columns as $column => $f) {
-                    $columnsData->$id->$column = $e->get($f);
-                }
+            $columnsData->$id = (object) [];
+
+            foreach ($columns as $column => $f) {
+                $columnsData->$id->$column = $e->get($f);
             }
         }
 
@@ -265,14 +280,20 @@ class Entity extends BaseEntity
         }
     }
 
+    /**
+     * Load a link field.
+     */
     public function loadLinkField(string $field): void
     {
-        if (!$this->hasRelation($field) || !$this->hasAttribute($field . 'Id')) {
-            throw new LogicException("There's no link field '{$field}'.");
+        if (!$this->hasLinkField($field)) {
+            throw new LogicException("Called `loadLinkField` on non-link field '$field'.");
         }
 
-        if ($this->getRelationType($field) !== 'hasOne' && $this->getRelationType($field) !== 'belongsTo') {
-            throw new LogicException("Can't load link '{$field}'.");
+        if (
+            $this->getRelationType($field) !== RelationType::HAS_ONE &&
+            $this->getRelationType($field) !== RelationType::BELONGS_TO
+        ) {
+            throw new LogicException("Can't load link '$field'.");
         }
 
         if (!$this->entityManager) {
@@ -302,42 +323,52 @@ class Entity extends BaseEntity
         }
 
         $this->set($idAttribute, $entityId);
-
         $this->set($field . 'Name', $entityName);
     }
 
     /**
-     * @return mixed
+     * Get a link-multiple name.
      */
-    public function getLinkMultipleName(string $field, string $id)
+    public function getLinkMultipleName(string $field, string $id): ?string
     {
         $namesAttribute = $field . 'Names';
 
+        if (!$this->hasAttribute($namesAttribute)) {
+            throw new LogicException("Called `getLinkMultipleName` on non-link-multiple field `$field.");
+        }
+
         if (!$this->has($namesAttribute)) {
-            return;
+            return null;
         }
 
-        $names = $this->get($namesAttribute);
+        $object = $this->get($namesAttribute) ?? (object) [];
 
-        if ($names instanceof stdClass && isset($names->$id) && isset($names->$id)) {
-            return $names->$id;
+        if (!$object instanceof stdClass) {
+            throw new LogicException("Non-object value in `$namesAttribute`.");
         }
 
-        return null;
+        return $object?->$id ?? null;
     }
 
+    /**
+     * Set a link-multiple name.
+     */
     public function setLinkMultipleName(string $field, string $id, ?string $value): void
     {
         $namesAttribute = $field . 'Names';
 
+        if (!$this->hasAttribute($namesAttribute)) {
+            throw new LogicException("Called `setLinkMultipleName` on non-link-multiple field `$field.");
+        }
+
         if (!$this->has($namesAttribute)) {
             return;
         }
 
-        $object = $this->get($namesAttribute);
+        $object = $this->get($namesAttribute) ?? (object) [];
 
-        if (!isset($object) || !($object instanceof stdClass)) {
-            $object = (object) [];
+        if (!$object instanceof stdClass) {
+            throw new LogicException("Non-object value in `$namesAttribute`.");
         }
 
         $object->$id = $value;
@@ -346,71 +377,77 @@ class Entity extends BaseEntity
     }
 
     /**
-     * @return mixed
+     * Get a link-multiple column value.
      */
-    public function getLinkMultipleColumn(string $field, string $column, string $id)
+    public function getLinkMultipleColumn(string $field, string $column, string $id): mixed
     {
         $columnsAttribute = $field . 'Columns';
+
+        if (!$this->hasAttribute($columnsAttribute)) {
+            throw new LogicException("Called `getLinkMultipleColumn` on not supported field `$field.");
+        }
 
         if (!$this->has($columnsAttribute)) {
             return null;
         }
 
-        $columns = $this->get($columnsAttribute);
+        $object = $this->get($columnsAttribute) ?? (object) [];
 
-        if ($columns instanceof stdClass && isset($columns->$id) && isset($columns->$id->$column)) {
-            return $columns->$id->$column;
+        if (!$object instanceof stdClass) {
+            throw new LogicException("Non-object value in `$columnsAttribute`.");
         }
 
-        return null;
+        return $object?->$id?->$column ?? null;
     }
 
     /**
-     * @param mixed $value
+     * Set a link-multiple column value.
      */
-    public function setLinkMultipleColumn(string $field, string $column, string $id, $value): void
+    public function setLinkMultipleColumn(string $field, string $column, string $id, mixed $value): void
     {
         $columnsAttribute = $field . 'Columns';
 
         if (!$this->hasAttribute($columnsAttribute)) {
-            return;
+            throw new LogicException("Called `setLinkMultipleColumn` on non-link-multiple field `$field.");
         }
 
-        $object = $this->get($columnsAttribute);
+        $object = $this->get($columnsAttribute) ?? (object) [];
 
-        if (!isset($object) || !($object instanceof stdClass)) {
-            $object = (object) [];
+        if (!$object instanceof stdClass) {
+            throw new LogicException("Non-object value in `$columnsAttribute`.");
         }
 
-        if (!isset($object->$id)) {
-            $object->$id = (object) [];
-        }
-
-        if (!isset($object->$id->$column)) {
-            $object->$id->$column = (object) [];
-        }
-
+        $object->$id ??= (object) [];
         $object->$id->$column = $value;
 
         $this->set($columnsAttribute, $object);
     }
 
     /**
+     * Set link-multiple IDs.
+     *
      * @param string[] $idList
      */
     public function setLinkMultipleIdList(string $field, array $idList): void
     {
         $idsAttribute = $field . 'Ids';
 
+        if (!$this->hasAttribute($idsAttribute)) {
+            throw new LogicException("Called `setLinkMultipleIdList` on non-link-multiple field `$field.");
+        }
+
         $this->set($idsAttribute, $idList);
     }
 
+    /**
+     * Add an ID to a link-multiple field.
+     */
     public function addLinkMultipleId(string $field, string $id): void
     {
         $idsAttribute = $field . 'Ids';
 
         if (!$this->hasAttribute($idsAttribute)) {
-            return;
+            throw new LogicException("Called `addLinkMultipleId` on non-link-multiple field `$field.");
         }
 
         if (!$this->has($idsAttribute)) {
@@ -427,40 +464,56 @@ class Entity extends BaseEntity
 
         $idList = $this->get($idsAttribute);
 
-        if (!in_array($id, $idList)) {
-            $idList[] = $id;
-            $this->set($idsAttribute, $idList);
+        if ($idList === null) {
+            throw new LogicException("Null value set in `$idsAttribute`.");
         }
-    }
 
-    public function removeLinkMultipleId(string $field, string $id): void
-    {
-        if ($this->hasLinkMultipleId($field, $id)) {
-            /** @var string[] $list */
-            $list = $this->getLinkMultipleIdList($field);
-
-            $index = array_search($id, $list);
-
-            if ($index !== false) {
-                unset($list[$index]);
-
-                $list = array_values($list);
-            }
-
-            $this->setLinkMultipleIdList($field, $list);
+        if (!is_array($idList)) {
+            throw new LogicException("Non-array value set in `$idsAttribute`.");
         }
+
+        if (in_array($id, $idList)) {
+            return;
+        }
+
+        $idList[] = $id;
+
+        $this->set($idsAttribute, $idList);
     }
 
     /**
-     * @return ?string[]
-     * @todo Throw exception if the link does not exist.
+     * Remove an ID from link-multiple field.
      */
-    public function getLinkMultipleIdList(string $field): ?array
+    public function removeLinkMultipleId(string $field, string $id): void
+    {
+        if (!$this->hasLinkMultipleId($field, $id)) {
+            return;
+        }
+
+        $list = $this->getLinkMultipleIdList($field);
+
+        $index = array_search($id, $list);
+
+        if ($index !== false) {
+            unset($list[$index]);
+
+            $list = array_values($list);
+        }
+
+        $this->setLinkMultipleIdList($field, $list);
+    }
+
+    /**
+     * Get link-multiple field IDs.
+     *
+     * @return string[]
+     */
+    public function getLinkMultipleIdList(string $field): array
     {
         $idsAttribute = $field . 'Ids';
 
         if (!$this->hasAttribute($idsAttribute)) {
-            return null;
+            throw new LogicException("Called `getLinkMultipleIdList` for non-link-multiple field `$field.");
         }
 
         if (!$this->has($idsAttribute)) {
@@ -469,21 +522,19 @@ class Entity extends BaseEntity
             }
         }
 
-        $valueList = $this->get($idsAttribute);
-
-        if (empty($valueList)) {
-            return [];
-        }
-
-        return $valueList;
+        /** @var string[] */
+        return $this->get($idsAttribute) ?? [];
     }
 
+    /**
+     * Has an ID in a link-multiple field.
+     */
     public function hasLinkMultipleId(string $field, string $id): bool
     {
         $idsAttribute = $field . 'Ids';
 
         if (!$this->hasAttribute($idsAttribute)) {
-            return false;
+            throw new LogicException("Called `hasLinkMultipleId` for non-link-multiple field `$field.");
         }
 
         if (!$this->has($idsAttribute)) {
@@ -496,12 +547,9 @@ class Entity extends BaseEntity
             return false;
         }
 
-        $idList = $this->get($idsAttribute);
+        /** @var string[] $idList */
+        $idList = $this->get($idsAttribute) ?? [];
 
-        if (in_array($id, $idList)) {
-            return true;
-        }
-
-        return false;
+        return in_array($id, $idList);
     }
 }

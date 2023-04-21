@@ -127,7 +127,7 @@ class MailMergeService
         $campaign->loadLinkMultipleField('targetLists');
         $campaign->loadLinkMultipleField('excludingTargetLists');
 
-        if (count($campaign->getLinkMultipleIdList('targetLists') ?? []) === 0) {
+        if (count($campaign->getLinkMultipleIdList('targetLists')) === 0) {
             throw new Error("Could not mail merge campaign w/o any specified target list.");
         }
 

@@ -36,16 +36,12 @@ use Espo\Entities\User;
 
 class PortalOnlyAccount implements Filter
 {
-    private $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
+    public function __construct(private User $user)
+    {}
 
     public function apply(SelectBuilder $queryBuilder): void
     {
-        $accountIdList = $this->user->getLinkMultipleIdList(User::LINK_ACCOUNTS) ?? [];
+        $accountIdList = $this->user->getLinkMultipleIdList(User::LINK_ACCOUNTS);
 
         if (!count($accountIdList)) {
             $queryBuilder->where([

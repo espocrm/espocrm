@@ -131,8 +131,8 @@ class AccessChecker implements AccessEntityCREDChecker
 
         if ($note->getTargetType() === Note::TARGET_PORTALS) {
             $intersect = array_intersect(
-                $note->getLinkMultipleIdList('portals') ?? [],
-                $user->getLinkMultipleIdList('portals') ?? []
+                $note->getLinkMultipleIdList('portals'),
+                $user->getLinkMultipleIdList('portals')
             );
 
             if (count($intersect)) {
