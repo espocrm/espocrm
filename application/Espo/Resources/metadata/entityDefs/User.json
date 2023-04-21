@@ -391,6 +391,15 @@
             "layoutDetailDisabled": true,
             "directAccessDisabled": true,
             "exportDisabled": true
+        },
+        "deleteId": {
+            "type": "varchar",
+            "maxLength": 17,
+            "readOnly": true,
+            "notNull": true,
+            "default": "0",
+            "disabled": true,
+            "customizationDisabled": true
         }
     },
     "links": {
@@ -508,5 +517,14 @@
         "orderBy": "userName",
         "order": "asc",
         "textFilterFields": ["name", "userName", "emailAddress"]
+    },
+    "indexes": {
+        "userNameDeleteId": {
+            "type": "unique",
+            "columns": [
+                "userName",
+                "deleteId"
+            ]
+        }
     }
 }
