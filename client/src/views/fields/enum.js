@@ -100,8 +100,8 @@ function (Dep, /** module:ui/multi-select*/MultiSelect, /** module:ui/select*/Se
             if (data.isNotEmpty) {
                 data.valueTranslated =
                     this.translatedOptions ?
-                        (this.translatedOptions[value] || value) :
-                        this.getLanguage().translateOption(value, this.name, this.entityType);
+                        (this.translatedOptions[translationKey] || value) :
+                        this.getLanguage().translateOption(translationKey, this.name, this.entityType);
 
             }
 
