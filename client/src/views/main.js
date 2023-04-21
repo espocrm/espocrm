@@ -561,15 +561,23 @@ define('views/main', ['view'], function (Dep) {
                 });
             });
 
+            let processUi = () => {
+                this.$headerActionsContainer.find('li > .action[data-name="'+name+'"]').parent().removeClass('hidden');
+                this.$headerActionsContainer.find('a.action[data-name="'+name+'"]').removeClass('hidden');
+
+                this.controlMenuDropdownVisibility();
+                this.adjustButtons();
+            };
+
             if (!this.isRendered()) {
+                if (this.isBeingRendered()) {
+                    this.whenRendered().then(() => processUi());
+                }
+
                 return;
             }
 
-            this.$headerActionsContainer.find('li > .action[data-name="'+name+'"]').parent().removeClass('hidden');
-            this.$headerActionsContainer.find('a.action[data-name="'+name+'"]').removeClass('hidden');
-
-            this.controlMenuDropdownVisibility();
-            this.adjustButtons();
+            processUi();
         },
 
         /**
