@@ -164,6 +164,11 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
                 hidden: !(this.model.get('isHtml') && this.model.get('bodyPlain'))
             });
 
+            this.addDropdownItem({
+                label: 'Print',
+                name: 'print',
+            });
+
             this.listenTo(this.model, 'change:isImportant', () => {
                 if (this.model.get('isImportant')) {
                     this.hideActionItem('markAsImportant');
@@ -479,6 +484,43 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
                         this.setFieldReadOnly('bcc');
                     }
                 });
+        },
+
+        actionPrint: function () {
+            /** @type {module:views/fields/wysiwyg.Class} */
+            let bodyView = this.getFieldView('body');
+
+            if (!bodyView) {
+                return;
+            }
+
+            let iframe = bodyView.$el.find('iframe').get(0);
+
+            if (iframe) {
+                iframe.contentWindow.print();
+
+                return;
+            }
+
+            let el = bodyView.$el.get(0);
+            /** @type {Element} */
+            let recordElement = this.$el.get(0);
+
+            iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+
+            recordElement.append(iframe);
+
+            let contentWindow = iframe.contentWindow;
+
+            contentWindow.document.open();
+            contentWindow.document.write(el.innerHTML);
+            contentWindow.document.close();
+            contentWindow.focus();
+            contentWindow.print();
+            contentWindow.onafterprint = () => {
+                recordElement.removeChild(iframe);
+            }
         },
 
         errorHandlerSendingFail: function (data) {
