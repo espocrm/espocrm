@@ -173,28 +173,19 @@ define('views/modals/password-change-request', ['views/modal'], function (Dep) {
                     $submit.addClass('hidden');
 
                     this.$el.find('.msg-box').removeClass('hidden');
-
                     this.$el.find('.msg-box').html('<span class="text-success">' + msg + '</span>');
                 })
                 .catch(xhr => {
                     if (xhr.status === 404) {
-                        this.notify(this.translate('userNameEmailAddressNotFound', 'messages', 'User'), 'error');
+                        Espo.Ui.error(this.translate('userNameEmailAddressNotFound', 'messages', 'User'));
+
                         xhr.errorIsHandled = true;
                     }
 
-                    if (xhr.status === 403) {
-                        let statusReasonHeader = xhr.getResponseHeader('X-Status-Reason');
+                    if (xhr.status === 403 && xhr.getResponseHeader('X-Status-Reason') === 'Already-Sent') {
+                        Espo.Ui.error(this.translate('forbidden', 'messages', 'User'), true);
 
-                        if (statusReasonHeader) {
-                            try {
-                                let response = JSON.parse(statusReasonHeader);
-
-                                if (response.reason === 'Already-Sent') {
-                                    xhr.errorIsHandled = true;
-                                    Espo.Ui.error(this.translate('forbidden', 'messages', 'User'), true);
-                                }
-                            } catch (e) {}
-                        }
+                        xhr.errorIsHandled = true;
                     }
 
                     $submit.removeClass('disabled');
