@@ -196,41 +196,40 @@ define('crm:views/lead/convert', ['view'], function (Dep) {
 
                     this.$el.find('[data-action="convert"]').removeClass('disabled');
 
+                    if (xhr.status !== 409) {
+                        return;
+                    }
+
+                    if (xhr.getResponseHeader('X-Status-Reason') !== 'duplicate') {
+                        return;
+                    }
+
                     let response = null;
 
-                    if (~[409].indexOf(xhr.status)) {
-                        let statusReasonHeader = xhr.getResponseHeader('X-Status-Reason');
+                    try {
+                        response = JSON.parse(xhr.responseText);
+                    } catch (e) {
+                        console.error('Could not parse response header.');
 
-                        if (statusReasonHeader) {
-                            try {
-                                response = JSON.parse(statusReasonHeader);
-                            } catch (e) {
-                                console.error('Could not parse X-Status-Reason header');
-                            }
-                        }
-
-                        if (response && response.reason === 'duplicate') {
-                            xhr.errorIsHandled = true;
-
-                            this.createView('duplicate', 'views/modals/duplicate', {
-                                duplicates: response.duplicates,
-                            }, view => {
-                                view.render();
-
-                                this.listenToOnce(view, 'save', () => {
-                                    data.skipDuplicateCheck = true;
-
-                                    process(data);
-                                });
-                            });
-                        }
+                        return;
                     }
+
+                    xhr.errorIsHandled = true;
+
+                    this.createView('duplicate', 'views/modals/duplicate', {duplicates: response}, view => {
+                        view.render();
+
+                        this.listenToOnce(view, 'save', () => {
+                            data.skipDuplicateCheck = true;
+
+                            process(data);
+                        });
+                    });
                 });
             };
 
             if (notValid) {
                 this.notify('Not Valid', 'error');
-
 
                 return;
             }
