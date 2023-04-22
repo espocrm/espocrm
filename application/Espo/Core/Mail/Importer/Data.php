@@ -29,28 +29,22 @@
 
 namespace Espo\Core\Mail\Importer;
 
+use Espo\Entities\EmailFilter;
+
 /**
  * @immutable
  */
 class Data
 {
     private ?string $assignedUserId = null;
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private array $teamIdList = [];
-    /**
-     * @var string[]
-     */
-    private $userIdList = [];
-    /**
-     * @var iterable<\Espo\Entities\EmailFilter>
-     */
-    private $filterList = [];
+    /** @var string[] */
+    private array $userIdList = [];
+    /** @var iterable<EmailFilter> */
+    private iterable $filterList = [];
     private bool $fetchOnlyHeader = false;
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string, string> */
     private array $folderData = [];
     private ?string $groupEmailFolderId = null;
 
@@ -81,7 +75,7 @@ class Data
     }
 
     /**
-     * @return iterable<\Espo\Entities\EmailFilter>
+     * @return iterable<EmailFilter>
      */
     public function getFilterList(): iterable
     {
@@ -94,7 +88,7 @@ class Data
     }
 
     /**
-     * @return array<string,string>
+     * @return array<string, string>
      */
     public function getFolderData(): array
     {
@@ -139,7 +133,7 @@ class Data
     }
 
     /**
-     * @param iterable<\Espo\Entities\EmailFilter> $filterList
+     * @param iterable<EmailFilter> $filterList
      */
     public function withFilterList(iterable $filterList): self
     {
@@ -158,7 +152,7 @@ class Data
     }
 
     /**
-     * @param array<string,string> $folderData
+     * @param array<string, string> $folderData
      */
     public function withFolderData(array $folderData): self
     {
