@@ -29,19 +29,15 @@
 
 namespace Espo\Core\Webhook;
 
-use Espo\Core\{
-    Utils\Config,
-    Utils\DataCache,
-    Utils\FieldUtil,
-    ORM\EntityManager,
-    ORM\Entity,
-    Utils\Log,
-};
+use Espo\Core\ORM\Entity;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\FieldUtil;
+use Espo\Core\Utils\Log;
 
-use Espo\Entities\{
-    WebhookEventQueueItem,
-    Webhook,
-};
+use Espo\Entities\Webhook;
+use Espo\Entities\WebhookEventQueueItem;
 
 use RuntimeException;
 
@@ -52,38 +48,23 @@ class Manager
 {
     private string $cacheKey = 'webhooks';
 
-    /**
-     * @var string[]
-     */
-    protected $skipAttributeList = ['isFollowed', 'modifiedAt', 'modifiedBy'];
+    /** @var string[] */
+    protected $skipAttributeList = [
+        'isFollowed',
+        'modifiedAt',
+        'modifiedBy'
+    ];
 
-    /**
-     * @var ?array<string,bool>
-     */
+    /** @var ?array<string, bool> */
     private $data = null;
 
-    private Config $config;
-
-    private DataCache $dataCache;
-
-    private EntityManager $entityManager;
-
-    private FieldUtil $fieldUtil;
-
-    private Log $log;
-
     public function __construct(
-        Config $config,
-        DataCache $dataCache,
-        EntityManager $entityManager,
-        FieldUtil $fieldUtil,
-        Log $log
+        private Config $config,
+        private DataCache $dataCache,
+        private EntityManager $entityManager,
+        private FieldUtil $fieldUtil,
+        private Log $log
     ) {
-        $this->config = $config;
-        $this->dataCache = $dataCache;
-        $this->entityManager = $entityManager;
-        $this->fieldUtil = $fieldUtil;
-        $this->log = $log;
 
         $this->loadData();
     }
@@ -91,7 +72,7 @@ class Manager
     private function loadData(): void
     {
         if ($this->config->get('useCache') && $this->dataCache->has($this->cacheKey)) {
-            /** @var array<string,bool> $data */
+            /** @var array<string, bool> $data */
             $data = $this->dataCache->get($this->cacheKey);
 
             $this->data = $data;
@@ -116,7 +97,7 @@ class Manager
     }
 
     /**
-     * @return array<string,bool>
+     * @return array<string, bool>
      */
     private function buildData(): array
     {

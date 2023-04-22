@@ -46,39 +46,30 @@ use Ratchet\Wamp\WampServer;
  */
 class ServerStarter
 {
-    private $subscriber;
-
-    private $categoriesData;
-
-    private $phpExecutablePath;
-
+    /** @var array<string, array<string, mixed>> */
+    private array $categoriesData;
+    private ?string $phpExecutablePath;
     private bool $isDebugMode;
-
     private bool $useSecureServer;
+    private string $port;
 
-    /**
-     * @var string
-     */
-    private $port;
-
-    private $config;
-
-    public function __construct(Subscriber $subscriber, Config $config, Metadata $metadata)
-    {
-        $this->subscriber = $subscriber;
-        $this->config = $config;
-
+    public function __construct(
+        private Subscriber $subscriber,
+        private Config $config,
+        Metadata $metadata
+    ) {
         $this->categoriesData = $metadata->get(['app', 'webSocket', 'categories'], []);
-
         $this->phpExecutablePath = $config->get('phpExecutablePath');
         $this->isDebugMode = (bool) $config->get('webSocketDebugMode');
         $this->useSecureServer = (bool) $config->get('webSocketUseSecureServer');
 
-        $this->port = $this->config->get('webSocketPort');
+        $port = $this->config->get('webSocketPort');
 
-        if (!$this->port) {
-            $this->port = $this->useSecureServer ? '8443' : '8080';
+        if (!$port) {
+            $port = $this->useSecureServer ? '8443' : '8080';
         }
+
+        $this->port = $port;
     }
 
     /**
@@ -113,7 +104,7 @@ class ServerStarter
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     protected function getSslParams(): array
     {

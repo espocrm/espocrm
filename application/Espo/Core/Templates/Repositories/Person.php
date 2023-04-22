@@ -29,5 +29,11 @@
 
 namespace Espo\Core\Templates\Repositories;
 
-class Person extends \Espo\Core\Repositories\Database
+use Espo\Core\ORM\Entity;
+use Espo\Core\Repositories\Database;
+
+/**
+ * @extends Database<Entity>
+ */
+class Person extends Database
 {}

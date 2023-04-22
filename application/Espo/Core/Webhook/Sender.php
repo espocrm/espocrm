@@ -30,11 +30,9 @@
 namespace Espo\Core\Webhook;
 
 use Espo\Core\Exceptions\Error;
-
-use Espo\Entities\Webhook;
-
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
+use Espo\Entities\Webhook;
 
 /**
  * Sends a portion.
@@ -42,18 +40,13 @@ use Espo\Core\Utils\Json;
 class Sender
 {
     private const CONNECT_TIMEOUT = 5;
-
     private const TIMEOUT = 10;
 
-    private Config $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private Config $config)
+    {}
 
     /**
-     * @param array<int,mixed> $dataList
+     * @param array<int, mixed> $dataList
      * @throws Error
      */
     public function send(Webhook $webhook, array $dataList): int
