@@ -48,28 +48,14 @@ class SendingAccountProvider
     private ?Account $system = null;
     private bool $systemIsCached = false;
 
-    private EntityManager $entityManager;
-    private Config $config;
-    private GroupAccountFactory $groupAccountFactory;
-    private PersonalAccountFactory $personalAccountFactory;
-    private AclManager $aclManager;
-    private SystemSettingsAccount $systemSettingsAccount;
-
     public function __construct(
-        EntityManager $entityManager,
-        Config $config,
-        GroupAccountFactory $groupAccountFactory,
-        PersonalAccountFactory $personalAccountFactory,
-        AclManager $aclManager,
-        SystemSettingsAccount $systemSettingsAccount
-    ) {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->groupAccountFactory = $groupAccountFactory;
-        $this->personalAccountFactory = $personalAccountFactory;
-        $this->aclManager = $aclManager;
-        $this->systemSettingsAccount = $systemSettingsAccount;
-    }
+        private EntityManager $entityManager,
+        private Config $config,
+        private GroupAccountFactory $groupAccountFactory,
+        private PersonalAccountFactory $personalAccountFactory,
+        private AclManager $aclManager,
+        private SystemSettingsAccount $systemSettingsAccount
+    ) {}
 
     public function getShared(User $user, string $emailAddress): ?Account
     {

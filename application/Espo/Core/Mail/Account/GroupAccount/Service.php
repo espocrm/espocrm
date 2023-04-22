@@ -30,29 +30,20 @@
 namespace Espo\Core\Mail\Account\GroupAccount;
 
 use Espo\Core\Mail\Account\Account as Account;
-use Laminas\Mail\Message;
-
 use Espo\Core\Exceptions\Error;
-
 use Espo\Core\Mail\Account\Fetcher;
 use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\StorageFactory;
 
+use Laminas\Mail\Message;
+
 class Service
 {
-    private Fetcher $fetcher;
-    private AccountFactory $accountFactory;
-    private StorageFactory $storageFactory;
-
     public function __construct(
-        Fetcher $fetcher,
-        AccountFactory $accountFactory,
-        StorageFactory $storageFactory
-    ) {
-        $this->fetcher = $fetcher;
-        $this->accountFactory = $accountFactory;
-        $this->storageFactory = $storageFactory;
-    }
+        private Fetcher $fetcher,
+        private AccountFactory $accountFactory,
+        private StorageFactory $storageFactory
+    ) {}
 
     /**
      * @param string $id Account ID.

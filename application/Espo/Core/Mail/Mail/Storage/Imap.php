@@ -70,7 +70,7 @@ class Imap extends \Laminas\Mail\Storage\Imap
         $flags = [];
 
         foreach ($data['FLAGS'] as $flag) {
-            $flags[] = isset(static::$knownFlags[$flag]) ? static::$knownFlags[$flag] : $flag;
+            $flags[] = static::$knownFlags[$flag] ?? $flag;
         }
 
         return [

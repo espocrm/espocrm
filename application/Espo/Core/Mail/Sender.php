@@ -67,13 +67,13 @@ class Sender
 {
     private ?SmtpTransport $transport = null;
     private bool $isGlobal = false;
-    /** @var array<string,mixed>  */
+    /** @var array<string, mixed>  */
     private array $params = [];
-    /** @var array<string,mixed> */
+    /** @var array<string, mixed> */
     private array $overrideParams = [];
     private ?Envelope $envelope = null;
     private ?Message $message = null;
-    /** @var iterable<Attachment>|null */
+    /** @var ?iterable<Attachment> */
     private $attachmentList = null;
 
     public function __construct(
@@ -138,7 +138,7 @@ class Sender
     /**
      * With specific SMTP parameters.
      *
-     * @param SmtpParams|array<string,mixed> $params
+     * @param SmtpParams|array<string, mixed> $params
      */
     public function withSmtpParams($params): self
     {

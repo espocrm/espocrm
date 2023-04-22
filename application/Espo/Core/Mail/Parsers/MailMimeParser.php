@@ -37,11 +37,11 @@ use Espo\Entities\Attachment;
 use Espo\Core\Mail\Message;
 use Espo\Core\Mail\Parser;
 use Espo\Core\Mail\Message\Part;
-
 use Espo\Core\Mail\Message\MailMimeParser\Part as WrapperPart;
 
 use Espo\ORM\EntityManager;
 
+use ZBateson\MailMimeParser\Header\AddressHeader;
 use ZBateson\MailMimeParser\MailMimeParser as WrappeeParser;
 use ZBateson\MailMimeParser\Message\Part\MessagePart;
 use ZBateson\MailMimeParser\Message\Part\MimePart;
@@ -54,9 +54,7 @@ use stdClass;
  */
 class MailMimeParser implements Parser
 {
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string, string> */
     private array $extMimeTypeMap = [
         'jpg' => 'image/jpg',
         'jpeg' => 'image/jpeg',
@@ -69,7 +67,7 @@ class MailMimeParser implements Parser
     private ?WrappeeParser $parser = null;
 
     /**
-     * @var array<string,ParserMessage>
+     * @var array<string, ParserMessage>
      */
     private array $messageHash = [];
 
@@ -157,7 +155,7 @@ class MailMimeParser implements Parser
                 continue;
             }
 
-            /** @var \ZBateson\MailMimeParser\Header\AddressHeader $header */
+            /** @var AddressHeader $header */
 
             $list = $header->getAddresses();
 
@@ -178,7 +176,7 @@ class MailMimeParser implements Parser
     {
         $header = $this->getMessage($message)->getHeader($type);
 
-        /** @var ?\ZBateson\MailMimeParser\Header\AddressHeader $header */
+        /** @var ?AddressHeader $header */
 
         if ($header && method_exists($header, 'getAddresses')) {
             foreach ($header->getAddresses() as $item) {
@@ -201,7 +199,7 @@ class MailMimeParser implements Parser
 
         $header = $this->getMessage($message)->getHeader($type);
 
-        /** @var ?\ZBateson\MailMimeParser\Header\AddressHeader $header */
+        /** @var ?AddressHeader $header */
 
         if ($header && method_exists($header, 'getAddresses')) {
             $list = $header->getAddresses();
@@ -376,7 +374,7 @@ class MailMimeParser implements Parser
 
         if (!empty($body)) {
             foreach ($inlineIds as $cid => $attachmentId) {
-                if (strpos($body, 'cid:' . $cid) !== false) {
+                if (str_contains($body, 'cid:' . $cid)) {
                     $body = str_replace('cid:' . $cid, '?entryPoint=attachment&amp;id=' . $attachmentId, $body);
                 }
                 else {
@@ -387,7 +385,7 @@ class MailMimeParser implements Parser
             $email->set('body', $body);
         }
 
-        /** @var MessagePart|null $textCalendarPart  */
+        /** @var ?MessagePart $textCalendarPart  */
         $textCalendarPart =
             $this->getMessage($message)->getAllPartsByMimeType('text/calendar')[0] ??
             $this->getMessage($message)->getAllPartsByMimeType('application/ics')[0] ??
@@ -419,7 +417,7 @@ class MailMimeParser implements Parser
 
     private function getAttachmentFilenameExtension(MimePart $part): ?string
     {
-        /** @var string|null $filename */
+        /** @var ?string $filename */
         $filename = $part->getHeaderParameter('Content-Disposition', 'filename', null);
 
         if ($filename === null) {

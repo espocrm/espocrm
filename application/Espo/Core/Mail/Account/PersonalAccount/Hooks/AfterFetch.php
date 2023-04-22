@@ -32,24 +32,16 @@ namespace Espo\Core\Mail\Account\PersonalAccount\Hooks;
 use Espo\Core\Mail\Account\Account;
 use Espo\Core\Mail\Account\Hook\BeforeFetchResult;
 use Espo\Core\Mail\Account\Hook\AfterFetch as AfterFetchInterface;
-
 use Espo\Tools\Stream\Service as StreamService;
 use Espo\Entities\Email;
-
 use Espo\ORM\EntityManager;
 
 class AfterFetch implements AfterFetchInterface
 {
-    private EntityManager $entityManager;
-    private StreamService $streamService;
-
     public function __construct(
-        EntityManager $entityManager,
-        StreamService $streamService
-    ) {
-        $this->entityManager = $entityManager;
-        $this->streamService = $streamService;
-    }
+        private EntityManager $entityManager,
+        private StreamService $streamService
+    ) {}
 
     public function process(Account $account, Email $email, BeforeFetchResult $beforeFetchResult): void
     {

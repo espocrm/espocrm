@@ -32,17 +32,13 @@ namespace Espo\Core\Mail\Account\PersonalAccount;
 use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\StorageFactory as StorageFactoryInterface;
 use Espo\Core\Mail\Account\Account;
-
 use Espo\Core\Mail\Exceptions\NoImap;
 use Espo\Core\Mail\Mail\Storage\Imap;
 use Espo\Core\Mail\Account\Storage\LaminasStorage;
-
 use Espo\Core\Utils\Log;
 use Espo\Core\InjectableFactory;
-
 use Espo\Entities\UserData;
 use Espo\Repositories\UserData as UserDataRepository;
-
 use Espo\ORM\EntityManager;
 
 use LogicException;
@@ -50,19 +46,11 @@ use Throwable;
 
 class StorageFactory implements StorageFactoryInterface
 {
-    private Log $log;
-    private InjectableFactory $injectableFactory;
-    private EntityManager $entityManager;
-
     public function __construct(
-        Log $log,
-        InjectableFactory $injectableFactory,
-        EntityManager $entityManager
-    ) {
-        $this->log = $log;
-        $this->injectableFactory = $injectableFactory;
-        $this->entityManager = $entityManager;
-    }
+        private Log $log,
+        private InjectableFactory $injectableFactory,
+        private EntityManager $entityManager
+    ) {}
 
     /**
      * @throws NoImap

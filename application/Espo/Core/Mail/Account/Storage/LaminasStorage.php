@@ -37,12 +37,8 @@ use RecursiveIteratorIterator;
 
 class LaminasStorage implements Storage
 {
-    private Imap $imap;
-
-    public function __construct(Imap $imap)
-    {
-        $this->imap = $imap;
-    }
+    public function __construct(private Imap $imap)
+    {}
 
     /**
      * @param string[] $flags

@@ -34,42 +34,24 @@ namespace Espo\Core\Mail\Account\Storage;
  */
 class Params
 {
-    private ?string $host = null;
-    private ?int $port = null;
-    private ?string $username = null;
-    private ?string $password = null;
-    private ?string $security = null;
-    /**
-     * @var ?class-string<object>
-     */
-    private ?string $imapHandlerClassName = null;
-    private ?string $id = null;
-    private ?string $userId = null;
-    private ?string $emailAddress = null;
+    /** @var ?class-string<object> */
+    private ?string $imapHandlerClassName;
 
     /**
      * @param ?class-string<object> $imapHandlerClassName
      */
     public function __construct(
-        ?string $host,
-        ?int $port,
-        ?string $username,
-        ?string $password,
-        ?string $security,
+        private ?string $host,
+        private ?int $port,
+        private ?string $username,
+        private ?string $password,
+        private ?string $security,
         ?string $imapHandlerClassName,
-        ?string $id,
-        ?string $userId,
-        ?string $emailAddress
+        private ?string $id,
+        private ?string $userId,
+        private ?string $emailAddress
     ) {
-        $this->host = $host;
-        $this->port = $port;
-        $this->username = $username;
-        $this->password = $password;
-        $this->security = $security;
         $this->imapHandlerClassName = $imapHandlerClassName;
-        $this->id = $id;
-        $this->userId = $userId;
-        $this->emailAddress = $emailAddress;
     }
 
     public static function createBuilder(): ParamsBuilder

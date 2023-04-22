@@ -32,21 +32,15 @@ namespace Espo\Core\Mail\Account\PersonalAccount;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Binding\BindingContainerBuilder;
-
 use Espo\Entities\EmailAccount;
-
 use Espo\ORM\EntityManager;
 
 class AccountFactory
 {
-    private InjectableFactory $injectableFactory;
-    private EntityManager $entityManager;
-
-    public function __construct(InjectableFactory $injectableFactory, EntityManager $entityManager)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private EntityManager $entityManager
+    ) {}
 
     /**
      * @throws Error
