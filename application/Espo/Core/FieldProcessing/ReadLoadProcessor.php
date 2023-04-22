@@ -32,31 +32,21 @@ namespace Espo\Core\FieldProcessing;
 use Espo\ORM\Entity;
 
 use Espo\Core\FieldProcessing\Loader\Params;
-
-use Espo\Core\{
-    InjectableFactory,
-    Utils\Metadata,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 
 /**
  * Processes loading special fields (before output).
  */
 class ReadLoadProcessor
 {
-    private InjectableFactory $injectableFactory;
-
-    private Metadata $metadata;
-
-    /**
-     * @var array<string,Loader<Entity>[]>
-     */
+    /** @var array<string, Loader<Entity>[]> */
     private $loaderListMapCache = [];
 
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
-    }
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata)
+    {}
 
     public function process(Entity $entity, ?Params $params = null): void
     {

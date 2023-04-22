@@ -30,29 +30,27 @@
 namespace Espo\Core\FileStorage;
 
 use Espo\Entities\Attachment as AttachmentEntity;
-
 use Psr\Http\Message\StreamInterface;
+
+use GuzzleHttp\Psr7\Utils;
 
 use RuntimeException;
 
-use GuzzleHttp\Psr7\Utils;
 
 /**
  * An access point for file storing and fetching. Files are represented as Attachment entities.
  */
 class Manager
 {
-    /**
-     * @var array<string,Storage>
-     */
-    private $implHash = [];
+    /** @var array<string, Storage> */
+    private array $implHash = [];
 
     private const DEFAULT_STORAGE = 'EspoUploadDir';
 
     private Factory $factory;
 
     /**
-     * @var array<string,resource>
+     * @var array<string, resource>
      * @phpstan-ignore-next-line Used to prevent deleting from memory.
      */
     private $resourceMap = [];

@@ -29,16 +29,13 @@
 
 namespace Espo\Core\FileStorage\Storages;
 
-use Espo\Core\{
-    Utils\File\Manager as FileManager,
-    FileStorage\Storage,
-    FileStorage\Local,
-    FileStorage\Attachment,
-};
+use Espo\Core\FileStorage\Attachment;
+use Espo\Core\FileStorage\Local;
+use Espo\Core\FileStorage\Storage;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\File\Exceptions\FileError;
 
 use Psr\Http\Message\StreamInterface;
-
-use Espo\Core\Utils\File\Exceptions\FileError;
 
 use GuzzleHttp\Psr7\Stream;
 

@@ -31,16 +31,11 @@ namespace Espo\Core\FieldValidation;
 
 class Failure
 {
-    private string $entityType;
-    private string $field;
-    private string $type;
-
-    public function __construct(string $entityType, string $field, string $type)
-    {
-        $this->entityType = $entityType;
-        $this->field = $field;
-        $this->type = $type;
-    }
+    public function __construct(
+        private string $entityType,
+        private string $field,
+        private string $type
+    ) {}
 
     public function getEntityType(): string
     {

@@ -45,26 +45,20 @@ use ReflectionClass;
  */
 class FieldValidationManager
 {
-    /** @var array<string,?object> */
+    /** @var array<string, ?object> */
     private $checkerCache = [];
-    /** @var array<string,?Validator<Entity>> */
+    /** @var array<string, ?Validator<Entity>> */
     private $validatorCache = [];
 
-    private Metadata $metadata;
-    private FieldUtil $fieldUtil;
     private CheckerFactory $checkerFactory;
-    private ValidatorFactory $validatorFactory;
 
     public function __construct(
-        Metadata $metadata,
-        FieldUtil $fieldUtil,
+        private Metadata $metadata,
+        private FieldUtil $fieldUtil,
         CheckerFactory $factory,
-        ValidatorFactory $validatorFactory
+        private ValidatorFactory $validatorFactory
     ) {
-        $this->metadata = $metadata;
-        $this->fieldUtil = $fieldUtil;
         $this->checkerFactory = $factory;
-        $this->validatorFactory = $validatorFactory;
     }
 
     /**
