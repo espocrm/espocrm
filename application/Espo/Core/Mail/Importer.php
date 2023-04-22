@@ -168,7 +168,7 @@ class Importer
         $email->set('addressNameMap', $addressNameMap);
 
         foreach ($folderData as $uId => $folderId) {
-            $email->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
+            $email->setLinkMultipleColumn('users', Email::USERS_COLUMN_FOLDER_ID, $uId, $folderId);
         }
 
         $matchedFilter = $this->filtersMatcher->findMatch($email, $filterList, true);
@@ -193,10 +193,9 @@ class Importer
             $email->set('messageId', $messageId);
 
             if ($parser->hasHeader($message, 'delivered-To')) {
-                $email->set(
-                    'messageIdInternal',
-                    $messageId . '-' . $parser->getHeader($message, 'delivered-To')
-                );
+                $messageIdInternal = $messageId . '-' . $parser->getHeader($message, 'delivered-To');
+
+                $email->set('messageIdInternal', $messageIdInternal);
             }
 
             if (stripos($messageId, '@espo-system') !== false) {
@@ -206,18 +205,15 @@ class Importer
 
         if ($parser->hasHeader($message, 'date')) {
             try {
-                /** @var string $dateHeaderValue */
-                $dateHeaderValue = $parser->getHeader($message, 'date');
+                $dateHeaderValue = $parser->getHeader($message, 'date') ?? 'now';
 
-                $dt = new DateTime($dateHeaderValue);
-
-                $dateSent = $dt
+                $dateSent = (new DateTime($dateHeaderValue))
                     ->setTimezone(new DateTimeZone('UTC'))
                     ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
                 $email->set('dateSent', $dateSent);
             }
-            catch (Exception $e) {}
+            catch (Exception) {}
         }
 
         $duplicate = $this->findDuplicate($email, $message);
@@ -255,7 +251,7 @@ class Importer
 
                 $email->set('deliveryDate', $deliveryDate);
             }
-            catch (Exception $e) {}
+            catch (Exception) {}
         }
 
         $inlineAttachmentList = [];
@@ -481,8 +477,6 @@ class Importer
         }
 
         $duplicate->loadLinkMultipleField('users');
-
-        /** @var string[] $fetchedUserIdList */
         $fetchedUserIdList = $duplicate->getLinkMultipleIdList('users');
 
         $duplicate->setLinkMultipleIdList('users', []);
@@ -509,7 +503,7 @@ class Importer
 
         foreach ($folderData as $uId => $folderId) {
             if (!in_array($uId, $fetchedUserIdList)) {
-                $duplicate->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
+                $duplicate->setLinkMultipleColumn('users', Email::USERS_COLUMN_FOLDER_ID, $uId, $folderId);
 
                 continue;
             }
@@ -518,7 +512,7 @@ class Importer
                 ->getRDBRepository(Email::ENTITY_TYPE)
                 ->getRelation($duplicate, 'users')
                 // Can cause skip-notification bypass.
-                ->updateColumnsById($uId, ['folderId' => $folderId]);
+                ->updateColumnsById($uId, [Email::USERS_COLUMN_FOLDER_ID => $folderId]);
         }
 
         $duplicate->set('isBeingImported', true);
@@ -540,7 +534,6 @@ class Importer
             );
         }
 
-        /** @var string[] $fetchedTeamIdList */
         $fetchedTeamIdList = $duplicate->getLinkMultipleIdList('teams');
 
         foreach ($teamIdList as $teamId) {
