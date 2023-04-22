@@ -29,33 +29,21 @@
 
 namespace Espo\Core\ORM;
 
-use Espo\Core\{
-    Utils\Metadata,
-    InjectableFactory,
-};
-
-use Espo\ORM\{
-    Value\ValueFactoryFactory as ValueFactoryFactoryInteface,
-    Value\ValueFactory,
-    Metadata as OrmMetadata,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\Metadata as OrmMetadata;
+use Espo\ORM\Value\ValueFactory;
+use Espo\ORM\Value\ValueFactoryFactory as ValueFactoryFactoryInteface;
 
 use RuntimeException;
 
 class ValueFactoryFactory implements ValueFactoryFactoryInteface
 {
-    private Metadata $metadata;
-
-    private OrmMetadata $ormMetadata;
-
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(Metadata $metadata, OrmMetadata $ormMetadata, InjectableFactory $injectableFactory)
-    {
-        $this->metadata = $metadata;
-        $this->ormMetadata = $ormMetadata;
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(
+        private Metadata $metadata,
+        private OrmMetadata $ormMetadata,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     public function isCreatable(string $entityType, string $field): bool
     {

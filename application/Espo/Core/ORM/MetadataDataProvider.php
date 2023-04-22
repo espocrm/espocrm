@@ -29,23 +29,16 @@
 
 namespace Espo\Core\ORM;
 
-use Espo\{
-    Core\Utils\Metadata\OrmMetadataData,
-    Core\Utils\Metadata,
-    ORM\MetadataDataProvider as MetadataDataProviderInterface,
-};
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Metadata\OrmMetadataData;
+use Espo\ORM\MetadataDataProvider as MetadataDataProviderInterface;
 
 class MetadataDataProvider implements MetadataDataProviderInterface
 {
-    private $ormMetadataData;
-
-    private $metadata;
-
-    public function __construct(OrmMetadataData $ormMetadataData, Metadata $metadata)
-    {
-        $this->ormMetadataData = $ormMetadataData;
-        $this->metadata = $metadata;
-    }
+    public function __construct(
+        private OrmMetadataData $ormMetadataData,
+        private Metadata $metadata
+    ) {}
 
     public function get(): array
     {

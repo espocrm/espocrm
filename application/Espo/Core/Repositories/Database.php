@@ -34,11 +34,9 @@ use Espo\Core\Utils\SystemUser;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\RDBRepository;
-
 use Espo\Core\ORM\EntityFactory;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ORM\Repository\HookMediator;
-
 use Espo\Core\ApplicationState;
 use Espo\Core\HookManager;
 use Espo\Core\Utils\DateTime as DateTimeUtil;

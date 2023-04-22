@@ -47,8 +47,10 @@ class Collection
     /**
      * @param OrmCollection<TEntity> $collection
      */
-    public function __construct(private OrmCollection $collection, private ?int $total = null)
-    {}
+    public function __construct(
+        private OrmCollection $collection,
+        private ?int $total = null
+    ) {}
 
     /**
      * Get a total number of records in DB (that matches applied search parameters).

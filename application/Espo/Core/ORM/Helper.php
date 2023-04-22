@@ -30,17 +30,12 @@
 namespace Espo\Core\ORM;
 
 use Espo\Core\Utils\Config;
-
 use Espo\ORM\Entity;
 
 class Helper
 {
-    private $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private Config $config)
+    {}
 
     public function formatPersonName(Entity $entity, string $field): ?string
     {
