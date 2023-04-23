@@ -29,10 +29,8 @@
 
 namespace Espo\Classes\AddressFormatters;
 
-use Espo\Core\{
-    Field\Address,
-    Field\Address\AddressFormatter,
-};
+use Espo\Core\Field\Address;
+use Espo\Core\Field\Address\AddressFormatter;
 
 class Formatter2 implements AddressFormatter
 {
