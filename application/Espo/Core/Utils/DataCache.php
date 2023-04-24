@@ -55,7 +55,7 @@ class DataCache
     /**
      * Get a stored value.
      *
-     * @return array<mixed,mixed>|stdClass
+     * @return array<int|string, mixed>|stdClass
      */
     public function get(string $key)
     {
@@ -67,7 +67,7 @@ class DataCache
     /**
      * Store in cache.
      *
-     * @param array<mixed, mixed>|stdClass $data
+     * @param array<int|string, mixed>|stdClass $data
      */
     public function store(string $key, $data): void
     {
@@ -90,7 +90,7 @@ class DataCache
      * @param mixed $data
      * @return bool
      */
-    protected function checkDataIsValid($data)
+    private function checkDataIsValid($data)
     {
         $isInvalid =
             !is_array($data) &&
@@ -99,13 +99,13 @@ class DataCache
         return !$isInvalid;
     }
 
-    protected function getCacheFile(string $key): string
+    private function getCacheFile(string $key): string
     {
         if (
             $key === '' ||
             preg_match('/[^a-zA-Z0-9_\/\-]/i', $key) ||
             $key[0] === '/' ||
-            substr($key, -1) === '/'
+            str_ends_with($key, '/')
         ) {
             throw new InvalidArgumentException("Bad cache key.");
         }
