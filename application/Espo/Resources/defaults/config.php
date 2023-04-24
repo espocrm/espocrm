@@ -132,6 +132,7 @@ return [
     'streamEmailNotificationsTypeList' => ['Post', 'Status', 'EmailReceived'],
     'emailNotificationsDelay' => 30,
     'emailMessageMaxSize' => 10,
+    'emailRecipientAddressMaxCount' => 100,
     'notificationsCheckInterval' => 10,
     'popupNotificationsCheckInterval' => 15,
     'maxEmailAccountCount' => 2,

@@ -33,7 +33,6 @@ function (Dep, From, EmailAddress) {
     return Dep.extend({
 
         detailTemplate: 'email/fields/email-address-varchar/detail',
-
         editTemplate: 'email/fields/email-address-varchar/edit',
 
         emailAddressRegExp: /[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/gi,
@@ -42,6 +41,7 @@ function (Dep, From, EmailAddress) {
             let data = Dep.prototype.data.call(this);
 
             data.valueIsSet = this.model.has(this.name);
+            data.maxLength = 254;
 
             return data;
         },

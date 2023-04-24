@@ -148,7 +148,7 @@ class Email extends Database implements
 
         $arr = [];
 
-        foreach ($names as $address) {
+        foreach (get_object_vars($names) as $address) {
             $arr[] = $address;
         }
 
@@ -167,7 +167,7 @@ class Email extends Database implements
 
         $arr = [];
 
-        foreach ($names as $address) {
+        foreach (get_object_vars($names) as $address) {
             $arr[] = $address;
         }
 
@@ -186,7 +186,7 @@ class Email extends Database implements
 
         $arr = [];
 
-        foreach ($names as $address) {
+        foreach (get_object_vars($names) as $address) {
             $arr[] = $address;
         }
 
