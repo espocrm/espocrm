@@ -87,6 +87,16 @@ class DataCache
     }
 
     /**
+     * Removes in cache.
+     */
+    public function clear(string $key): void
+    {
+        $cacheFile = $this->getCacheFile($key);
+
+        $this->fileManager->removeFile($cacheFile);
+    }
+
+    /**
      * @param mixed $data
      * @return bool
      */
