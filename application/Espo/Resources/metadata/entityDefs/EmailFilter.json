@@ -29,6 +29,10 @@
             "type": "array",
             "tooltip": true
         },
+        "bodyContainsAll": {
+            "type": "array",
+            "tooltip": true
+        },
         "isGlobal": {
             "type": "bool",
             "tooltip": true,

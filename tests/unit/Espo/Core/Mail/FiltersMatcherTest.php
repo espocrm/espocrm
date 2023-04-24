@@ -31,7 +31,6 @@ namespace tests\unit\Espo\Core\Mail;
 
 use Espo\Entities\Email;
 use Espo\Entities\EmailFilter;
-
 use Espo\Core\Mail\FiltersMatcher;
 use Espo\ORM\EntityManager;
 
@@ -45,45 +44,48 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
 
         $this->entityManager = $this->createMock(EntityManager::class);
 
-        $this->emailDefs = array(
-            'fields' => array(
-                'from' => array(
+        $this->emailDefs = [
+            'fields' => [
+                'from' => [
                     'type' => 'varchar'
-                ),
-                'to' => array(
+                ],
+                'to' => [
                     'type' => 'varchar'
-                ),
-                'name' => array(
+                ],
+                'name' => [
                     'type' => 'varchar'
-                ),
-                'subject' => array(
+                ],
+                'subject' => [
                     'type' => 'varchar'
-                ),
-                'body' => array(
+                ],
+                'body' => [
                     'type' => 'text'
-                ),
-                'bodyPlain' => array(
+                ],
+                'bodyPlain' => [
                     'type' => 'text'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
-        $this->filterDefs = array(
-            'fields' => array(
-                'from' => array(
+        $this->filterDefs = [
+            'fields' => [
+                'from' => [
                     'type' => 'varchar'
-                ),
-                'to' => array(
+                ],
+                'to' => [
                     'type' => 'varchar'
-                ),
-                'subject' => array(
+                ],
+                'subject' => [
                     'type' => 'varchar'
-                ),
-                'bodyContains' => array(
+                ],
+                'bodyContains' => [
                     'type' => 'jsonArray'
-                )
-            )
-        );
+                ],
+                'bodyContainsAll' => [
+                    'type' => 'jsonArray'
+                ],
+            ]
+        ];
     }
 
     protected function tearDown() : void
@@ -96,15 +98,15 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
         return new $className($entityType, $defs, $this->entityManager);
     }
 
-    public function testMatch()
+    public function testMatch(): void
     {
         $email = $this->createEntity('Email', Email::class, $this->emailDefs);
         $email->set('from', 'test@tester');
         $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
 
-        $filter->set(array(
+        $filter->set([
             'from' => 'test@tester'
-        ));
+        ]);
 
         $filterList = [$filter];
 
@@ -114,9 +116,9 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
         $email->set('from', 'test@tester');
         $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
 
-        $filter->set(array(
+        $filter->set([
             'from' => '*@tester'
-        ));
+        ]);
 
         $filterList = [$filter];
         $this->assertNotNull($this->object->findMatch($email, $filterList));
@@ -126,9 +128,9 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
 
         $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
 
-        $filter->set(array(
+        $filter->set([
             'to' => 'baraka@tester'
-        ));
+        ]);
 
         $filterList = [$filter];
         $this->assertNotNull($this->object->findMatch($email, $filterList));
@@ -136,27 +138,27 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
         $email->set('from', 'test@tester');
         $email->set('to', 'test@tester;baraka@man');
         $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
-        $filter->set(array(
+        $filter->set([
             'to' => '*@tester'
-        ));
+        ]);
         $filterList = [$filter];
         $this->assertNotNull($this->object->findMatch($email, $filterList));
 
         $email->set('subject', 'test hello man');
         $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
 
-        $filter->set(array(
+        $filter->set([
             'subject' => '*hello*'
-        ));
+        ]);
 
         $filterList = [$filter];
         $this->assertNotNull($this->object->findMatch($email, $filterList));
 
         $email->set('name', 'test hello man');
         $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
-        $filter->set(array(
+        $filter->set([
             'subject' => 'hello'
-        ));
+        ]);
         $filterList = [$filter];
         $this->assertNull($this->object->findMatch($email, $filterList));
 
@@ -164,20 +166,20 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
         $email->set('name', 'test hello man');
         $email->set('from', 'test@tester');
         $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
-        $filter->set(array(
+        $filter->set([
             'subject' => '*hello*',
             'from' => 'test@tester'
-        ));
+        ]);
         $filterList = [$filter];
         $this->assertNotNull($this->object->findMatch($email, $filterList));
 
         $email->set('name', 'test hello man');
         $email->set('from', 'hello@tester');
         $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
-        $filter->set(array(
+        $filter->set([
             'subject' => '*hello*',
             'from' => 'test@tester'
-        ));
+        ]);
         $filterList = [$filter];
         $this->assertNull($this->object->findMatch($email, $filterList));
 
@@ -185,23 +187,22 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
         $email->set('name', 'test hello man');
         $email->set('body', 'one hello three');
         $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
-        $filter->set(array(
+        $filter->set([
             'subject' => 'test hello man',
             'bodyContains' => ['hello']
-        ));
+        ]);
         $filterList = [$filter];
         $this->assertNull($this->object->findMatch($email, $filterList, true));
 
         $email->set('name', 'test hello man');
         $email->set('body', 'one hello three');
         $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
-        $filter->set(array(
+        $filter->set([
             'subject' => 'test hello man',
             'bodyContains' => ['hello']
-        ));
+        ]);
         $filterList = [$filter];
         $this->assertNotNull($this->object->findMatch($email, $filterList));
-
 
         $email->set('name', 'Access information to the EspoCRM cloud');
         $email->set('from', 'no-reply@test.com');
@@ -216,6 +217,31 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->assertTrue($this->object->match($email, $filter));
+
+        $email->set('body', 'test hello');
+        $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
+        $filter->set([
+            'bodyContainsAll' => ['test', 'hello'],
+        ]);
+        $filterList = [$filter];
+        $this->assertNotNull($this->object->findMatch($email, $filterList));
+
+        $email->set('body', 'test');
+        $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
+        $filter->set([
+            'bodyContainsAll' => ['test', 'hello'],
+        ]);
+        $filterList = [$filter];
+        $this->assertNull($this->object->findMatch($email, $filterList));
+
+        $email->set('body', 'test hello one');
+        $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
+        $filter->set([
+            'bodyContains' => ['test', 'one'],
+            'bodyContainsAll' => ['test', 'hello'],
+        ]);
+        $filterList = [$filter];
+        $this->assertNotNull($this->object->findMatch($email, $filterList));
     }
 
     public function testMatchBody()
@@ -223,9 +249,9 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
         $email = $this->createEntity('Email', Email::class, $this->emailDefs);
         $email->set('body', 'hello Man tester');
         $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
-        $filter->set(array(
+        $filter->set([
             'bodyContains' => ['man', 'red']
-        ));
+        ]);
         $filterList = [$filter];
         $this->assertNotNull($this->object->findMatch($email, $filterList));
 
@@ -234,10 +260,10 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
         $email->set('from', 'hello@test');
 
         $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
-        $filter->set(array(
+        $filter->set([
             'bodyContains' => ['man', 'red'],
             'from' => 'test@tester'
-        ));
+        ]);
         $filterList = [$filter];
         $this->assertNull($this->object->findMatch($email, $filterList));
     }

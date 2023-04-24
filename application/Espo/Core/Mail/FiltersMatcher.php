@@ -35,8 +35,8 @@ use Espo\Entities\EmailFilter;
 class FiltersMatcher
 {
     /**
-     * @param Email $email
      * @param iterable<EmailFilter> $filterList
+     * @param bool $skipBody Not to match if the body-contains is not empty.
      */
     public function findMatch(Email $email, $filterList, bool $skipBody = false): ?EmailFilter
     {
@@ -49,6 +49,9 @@ class FiltersMatcher
         return null;
     }
 
+    /**
+     * @param bool $skipBody Not to match if the body-contains is not empty.
+     */
     public function match(Email $email, EmailFilter $filter, bool $skipBody = false): bool
     {
         $filterCount = 0;
@@ -95,6 +98,18 @@ class FiltersMatcher
             }
 
             if (!$this->matchBody($email, $filter)) {
+                return false;
+            }
+        }
+
+        if (count($filter->getBodyContainsAll())) {
+            $filterCount++;
+
+            if ($skipBody) {
+                return false;
+            }
+
+            if (!$this->matchBodyAll($email, $filter)) {
                 return false;
             }
         }
@@ -151,6 +166,28 @@ class FiltersMatcher
         }
 
         return false;
+    }
+
+    private function matchBodyAll(Email $email, EmailFilter $filter): bool
+    {
+        $phraseList = $filter->getBodyContainsAll();
+        $body = $email->getBody() ?? $email->getBodyPlain() ?? '';
+
+        if ($phraseList === []) {
+            return true;
+        }
+
+        foreach ($phraseList as $phrase) {
+            if ($phrase === '') {
+                continue;
+            }
+
+            if (stripos($body, $phrase) === false) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function matchString(string $pattern, string $value): bool
