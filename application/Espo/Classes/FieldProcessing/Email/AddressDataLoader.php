@@ -30,31 +30,27 @@
 namespace Espo\Classes\FieldProcessing\Email;
 
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    FieldProcessing\Loader,
-    FieldProcessing\Loader\Params,
-    ORM\EntityManager,
-};
-
+use Espo\Core\FieldProcessing\Loader;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\ORM\EntityManager;
 use Espo\Repositories\Email as EmailRepository;
+use Espo\Entities\Email;
 
 /**
- * @implements Loader<\Espo\Entities\Email>
+ * @implements Loader<Email>
  */
 class AddressDataLoader implements Loader
 {
-    private $entityManager;
+    public function __construct(private EntityManager $entityManager)
+    {}
 
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
+    /**
+     * @param Email $entity
+     */
     public function process(Entity $entity, Params $params): void
     {
         /** @var EmailRepository $repository */
-        $repository = $this->entityManager->getRepository('Email');
+        $repository = $this->entityManager->getRepository(Email::ENTITY_TYPE);
 
         $repository->loadFromField($entity);
         $repository->loadToField($entity);
