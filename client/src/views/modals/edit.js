@@ -39,23 +39,14 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
     return Dep.extend(/** @lends module:views/modals/edit.Class# */{
 
         cssName: 'edit-modal',
-
         template: 'modals/edit',
-
         saveDisabled: false,
-
         fullFormDisabled: false,
-
         editView: null,
-
         escapeDisabled: true,
-
         fitHeight: true,
-
         className: 'dialog dialog-record',
-
         sideDisabled: false,
-
         bottomDisabled: false,
 
         shortcutKeys: {
@@ -252,7 +243,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                     .get(0).outerHTML;
             }
             else {
-                let text = this.getLanguage().translate('Edit') + ': ' +
+                let text = this.getLanguage().translate('Edit') + ' · ' +
                     this.getLanguage().translate(this.scope, 'scopeNames');
 
                 html = $('<span>')
