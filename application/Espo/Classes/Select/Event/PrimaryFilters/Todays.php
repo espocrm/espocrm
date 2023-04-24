@@ -27,19 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Classes\Select\Call\PrimaryFilters;
+namespace Espo\Classes\Select\Event\PrimaryFilters;
 
 use Espo\Core\Exceptions\Error;
-use Espo\Entities\User;
-
 use Espo\Core\Select\Primary\Filter;
 use Espo\Core\Select\Helpers\UserTimeZoneProvider;
 use Espo\Core\Select\Where\ConverterFactory;
 use Espo\Core\Select\Where\Item;
-
 use Espo\ORM\Query\SelectBuilder;
-
-use Espo\Modules\Crm\Entities\Call;
+use Espo\Entities\User;
 use LogicException;
 
 class Todays implements Filter
@@ -47,7 +43,8 @@ class Todays implements Filter
     public function __construct(
         private User $user,
         private UserTimeZoneProvider $userTimeZoneProvider,
-        private ConverterFactory $converterFactory
+        private ConverterFactory $converterFactory,
+        private string $entityType
     ) {}
 
     public function apply(SelectBuilder $queryBuilder): void
@@ -61,7 +58,7 @@ class Todays implements Filter
 
         try {
             $whereItem = $this->converterFactory
-                ->create(Call::ENTITY_TYPE, $this->user)
+                ->create($this->entityType, $this->user)
                 ->convert($queryBuilder, $item);
         }
         catch (Error $e) {

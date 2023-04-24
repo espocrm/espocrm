@@ -27,47 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Classes\Select\Call\PrimaryFilters;
-
-use Espo\Core\Exceptions\Error;
-use Espo\Entities\User;
+namespace Espo\Classes\Select\Event\PrimaryFilters;
 
 use Espo\Core\Select\Primary\Filter;
-use Espo\Core\Select\Helpers\UserTimeZoneProvider;
-use Espo\Core\Select\Where\ConverterFactory;
-use Espo\Core\Select\Where\Item;
-
+use Espo\Core\Templates\Entities\Event;
 use Espo\ORM\Query\SelectBuilder;
 
-use Espo\Modules\Crm\Entities\Call;
-use LogicException;
-
-class Todays implements Filter
+class Planned implements Filter
 {
-    public function __construct(
-        private User $user,
-        private UserTimeZoneProvider $userTimeZoneProvider,
-        private ConverterFactory $converterFactory
-    ) {}
-
     public function apply(SelectBuilder $queryBuilder): void
     {
-        $item = Item::fromRaw([
-            'type' => Item\Type::TODAY,
-            'attribute' => 'dateStart',
-            'timeZone' => $this->userTimeZoneProvider->get(),
-            'dateTime' => true,
+        $queryBuilder->where([
+            'status' => Event::STATUS_PLANNED,
         ]);
-
-        try {
-            $whereItem = $this->converterFactory
-                ->create(Call::ENTITY_TYPE, $this->user)
-                ->convert($queryBuilder, $item);
-        }
-        catch (Error $e) {
-            throw new LogicException($e->getMessage());
-        }
-
-        $queryBuilder->where($whereItem);
     }
 }
