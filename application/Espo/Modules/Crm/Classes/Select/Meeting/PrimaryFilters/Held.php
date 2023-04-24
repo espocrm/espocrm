@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Classes\Select\Meeting\PrimaryFilters;
 
 use Espo\Core\Select\Primary\Filter;
+use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Query\SelectBuilder;
 
 class Held implements Filter
@@ -37,7 +38,7 @@ class Held implements Filter
     public function apply(SelectBuilder $queryBuilder): void
     {
         $queryBuilder->where([
-            'status' => 'Held',
+            'status' => Meeting::STATUS_HELD,
         ]);
     }
 }
