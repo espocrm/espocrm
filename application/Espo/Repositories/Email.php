@@ -45,6 +45,7 @@ use Espo\Core\Di;
 use Espo\Entities\Email as EmailEntity;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Entities\EmailAddress;
+use stdClass;
 
 /**
  * @extends Database<EmailEntity>
@@ -138,50 +139,58 @@ class Email extends Database implements
     public function loadToField(EmailEntity $entity): void
     {
         $entity->loadLinkMultipleField('toEmailAddresses');
-
+        /** @var ?stdClass $names */
         $names = $entity->get('toEmailAddressesNames');
 
-        if (!empty($names)) {
-            $arr = [];
-
-            foreach ($names as $address) {
-                $arr[] = $address;
-            }
-
-            $entity->set('to', implode(';', $arr));
+        if ($names === null) {
+            return;
         }
+
+        $arr = [];
+
+        foreach ($names as $address) {
+            $arr[] = $address;
+        }
+
+        $entity->set('to', implode(';', $arr));
     }
 
     public function loadCcField(EmailEntity $entity): void
     {
         $entity->loadLinkMultipleField('ccEmailAddresses');
+        /** @var ?stdClass $names */
         $names = $entity->get('ccEmailAddressesNames');
 
-        if (!empty($names)) {
-            $arr = [];
-
-            foreach ($names as $address) {
-                $arr[] = $address;
-            }
-
-            $entity->set('cc', implode(';', $arr));
+        if ($names === null) {
+            return;
         }
+
+        $arr = [];
+
+        foreach ($names as $address) {
+            $arr[] = $address;
+        }
+
+        $entity->set('cc', implode(';', $arr));
     }
 
     public function loadBccField(EmailEntity $entity): void
     {
         $entity->loadLinkMultipleField('bccEmailAddresses');
+        /** @var ?stdClass $names */
         $names = $entity->get('bccEmailAddressesNames');
 
-        if (!empty($names)) {
-            $arr = [];
-
-            foreach ($names as $address) {
-                $arr[] = $address;
-            }
-
-            $entity->set('bcc', implode(';', $arr));
+        if ($names === null) {
+            return;
         }
+
+        $arr = [];
+
+        foreach ($names as $address) {
+            $arr[] = $address;
+        }
+
+        $entity->set('bcc', implode(';', $arr));
     }
 
     public function loadReplyToField(EmailEntity $entity): void
