@@ -2302,6 +2302,14 @@ td > span.color-icon {
     margin-bottom: 4px;
 }
 
+.stream-head-container .internal-badge {
+    position: absolute; top: 32px; left: 19px;
+}
+
+.stream-head-container .internal-badge > span {
+    color: @brand-danger;
+}
+
 .stream-head-container > img.avatar {
     display: inline-block;
     margin-top: -3px;
@@ -2309,12 +2317,8 @@ td > span.color-icon {
     margin-bottom: -2px;
 }
 
-.stream-head-container .internal-badge {
-    position: absolute; top: 32px; left: 19px;
-}
-
-.stream-head-container .internal-badge > span {
-    color: @brand-danger;
+img.avatar {
+    border-radius: var(--border-radius-small);
 }
 
 img.avatar.avatar-link {
@@ -2331,9 +2335,10 @@ img.avatar.avatar-link {
     }
 }
 
-stream-head-text-container .span {
-    overflow-wrap: break-word;
-    word-wrap: break-word;
+div[data-scope="User"] .field[data-name="avatar"] {
+    img {
+        border-radius: var(--border-radius);
+    }
 }
 
 .stream-post-container .cell-post {
