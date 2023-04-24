@@ -60,7 +60,7 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
 
         searchTypeList: ['isNotEmpty', 'isEmpty'],
 
-        ROW_HEIGHT: 35,
+        ROW_HEIGHT: 37,
 
         events: {
             'click a.remove-attachment': function (e) {
