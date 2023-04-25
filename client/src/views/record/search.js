@@ -695,12 +695,6 @@ define('views/record/search', ['view', 'helpers/misc/stored-text-search'], funct
         },
 
         initTextSearchAutocomplete: function () {
-            /*this.$textFilter.on('blur.autocomplete', e => {
-                e.stopPropagation();
-                e.preventDefault();
-                console.log('b');
-            });*/
-
             let options = {
                 minChars: 0,
                 noCache: true,
