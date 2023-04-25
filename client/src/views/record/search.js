@@ -39,29 +39,19 @@ define('views/record/search', ['view'], function (Dep) {
         template: 'record/search',
 
         scope: null,
-
         searchManager: null,
 
         fieldList: ['name'],
-
         textFilter: '',
-
         primary: null,
-
         presetFilterList: null,
-
         advanced: null,
-
         bool: null,
 
         disableSavePreset: false,
-
         textFilterDisabled: false,
-
         toShowApplyFiltersButton: false,
-
         toShowResetFiltersText: false,
-
         isSearchedWithAdvancedFilter: false,
 
         viewModeIconClassMap: {
