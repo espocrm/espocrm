@@ -3748,6 +3748,27 @@ a.close:hover {
     }
 }
 
+body > .autocomplete-suggestions.text-search-suggestions {
+    > .autocomplete-suggestion {
+        padding-top: 0;
+        padding-bottom: 0;
+
+        > span {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            display: inline-block;
+            width: ~"calc(100% - 20px)";
+            height: 24px;
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
+
+        > a {
+            margin-top: 3px;
+        }
+    }
+}
+
 @import "elements/site.less";
 @import "elements/modal.less";
 @import "elements/buttons.less";

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/search', ['view'], function (Dep) {
+define('views/record/search', ['view', 'helpers/misc/stored-text-search'], function (Dep, StoredTextSearch) {
 
     /**
      * @class
@@ -39,6 +39,7 @@ define('views/record/search', ['view'], function (Dep) {
         template: 'record/search',
 
         scope: null,
+        /** @type {module:search-manager.Class} */
         searchManager: null,
         fieldFilterList: null,
         /** @type {Object.<string, string>|null}*/
@@ -62,6 +63,8 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         FIELD_QUICK_SEARCH_COUNT_THRESHOLD: 4,
+
+        autocompleteLimit: 7,
 
         data: function () {
             return {
@@ -90,7 +93,14 @@ define('views/record/search', ['view'], function (Dep) {
             this.entityType = this.collection.name;
             this.scope = this.options.scope || this.entityType;
 
+            /** @type {module:search-manager.Class} */
             this.searchManager = this.options.searchManager;
+
+            /**
+             * @type {module:helpers/misc/stored-text-search.Class}
+             * @private
+             */
+            this.storedTextSearchHelper = new StoredTextSearch(this.scope, this.getHelper().storage);
 
             this.textFilterDisabled = this.options.textFilterDisabled || this.textFilterDisabled ||
                 this.getMetadata().get(['clientDefs', this.scope, 'textFilterDisabled']);
@@ -671,6 +681,8 @@ define('views/record/search', ['view'], function (Dep) {
             this.$fieldQuickSearch = this.$filterList.find('input.field-filter-quick-search-input');
             /** @type {JQuery} */
             this.$addFilterButton = this.$el.find('button.add-filter-button');
+            /** @type {JQuery} */
+            this.$textFilter = this.$el.find('input.text-filter');
 
             this.updateAddFilterButton();
 
@@ -679,6 +691,75 @@ define('views/record/search', ['view'], function (Dep) {
             this.manageLabels();
             this.controlResetButtonVisibility();
             this.initQuickSearchUi();
+            this.initTextSearchAutocomplete();
+        },
+
+        initTextSearchAutocomplete: function () {
+            /*this.$textFilter.on('blur.autocomplete', e => {
+                e.stopPropagation();
+                e.preventDefault();
+                console.log('b');
+            });*/
+
+            let options = {
+                minChars: 0,
+                noCache: true,
+                triggerSelectOnValidInput: false,
+                beforeRender: ($container) => {
+                    $container.addClass('text-search-suggestions');
+
+                    $container.find('a[data-action="clearStoredTextSearch"]').on('click', e => {
+                        e.stopPropagation();
+                        e.preventDefault();
+
+                        let text = e.currentTarget.getAttribute('data-value');
+
+                        this.storedTextSearchHelper.remove(text);
+
+                        setTimeout(() => {
+                            this.$textFilter.focus();
+                        }, 205);
+                    });
+                },
+                formatResult: item => {
+                    return $('<span>')
+                        .append(
+                            $('<a>')
+                                .attr('data-action', 'clearStoredTextSearch')
+                                .attr('role', 'button')
+                                .attr('data-value', item.value)
+                                .attr('title', this.translate('Remove'))
+                                .html('<span class="fas fa-times fa-sm"></span>')
+                                .addClass('pull-right text-soft'),
+                            $('<span>')
+                                .text(item.value)
+                        )
+                        .get(0).innerHTML;
+                },
+                lookup: (text, done) => {
+                    let suggestions = this.storedTextSearchHelper.match(text, this.autocompleteLimit)
+                        .map(item => {
+                            return {value: item};
+                        });
+
+                    done({suggestions: suggestions});
+                },
+                onSelect: () => {
+                    this.$textFilter.focus();
+                    this.$textFilter.autocomplete('hide');
+                },
+            };
+
+            this.$textFilter.autocomplete(options);
+
+            this.$textFilter.on('focus', () => {
+                if (this.$textFilter.val()) {
+                    this.$textFilter.autocomplete('hide');
+                }
+            });
+
+            this.once('render', () => this.$textFilter.autocomplete('dispose'));
+            this.once('remove', () => this.$textFilter.autocomplete('dispose'));
         },
 
         initQuickSearchUi: function () {
@@ -839,6 +920,7 @@ define('views/record/search', ['view'], function (Dep) {
             this.updateSearch();
             this.updateCollection();
             this.controlResetButtonVisibility();
+            this.storeTextSearch();
 
             this.isSearchedWithAdvancedFilter = this.hasAdvancedFilter();
         },
@@ -1196,6 +1278,14 @@ define('views/record/search', ['view'], function (Dep) {
             this.$addFilterButton.parent()
                 .find('[data-toggle="dropdown"]')
                 .dropdown('toggle');
+        },
+
+        storeTextSearch: function () {
+            if (!this.textFilter) {
+                return;
+            }
+
+            this.storedTextSearchHelper.store(this.textFilter);
         },
     });
 });
