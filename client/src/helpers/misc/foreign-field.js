@@ -33,7 +33,7 @@ define('helpers/misc/foreign-field', [], function () {
      */
      class Class {
         /**
-         * @param {module:views/fields/base.Class} view A feild view.
+         * @param {module:views/fields/base.Class} view A field view.
          */
         constructor(view) {
             /**
