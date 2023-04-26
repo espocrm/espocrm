@@ -128,6 +128,22 @@ class LinkMultiple
     }
 
     /**
+     * Clone with an added IDs.
+     *
+     * @param string[] $idList IDs.
+     */
+    public function withAddedIdList(array $idList): self
+    {
+        $obj = $this;
+
+        foreach ($idList as $id) {
+            $obj = $obj->withAddedId($id);
+        }
+
+        return $obj;
+    }
+
+    /**
      * Clone with an added item.
      */
     public function withAdded(LinkMultipleItem $item): self
