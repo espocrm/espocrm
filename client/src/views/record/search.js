@@ -695,12 +695,24 @@ define('views/record/search', ['view', 'helpers/misc/stored-text-search'], funct
         },
 
         initTextSearchAutocomplete: function () {
+            let preventCloseOnBlur = false;
+
             let options = {
                 minChars: 0,
                 noCache: true,
                 triggerSelectOnValidInput: false,
                 beforeRender: ($container) => {
                     $container.addClass('text-search-suggestions');
+
+                    $container.off('mousedown');
+                    $container.on('mousedown', e => {
+                        if (e.originalEvent.button !== 0) {
+                            return;
+                        }
+
+                        preventCloseOnBlur = true;
+                        setTimeout(() => preventCloseOnBlur = false, 201);
+                    });
 
                     $container.find('a[data-action="clearStoredTextSearch"]').on('click', e => {
                         e.stopPropagation();
@@ -710,9 +722,7 @@ define('views/record/search', ['view', 'helpers/misc/stored-text-search'], funct
 
                         this.storedTextSearchHelper.remove(text);
 
-                        setTimeout(() => {
-                            this.$textFilter.focus();
-                        }, 205);
+                        setTimeout(() => this.$textFilter.focus(), 205);
                     });
                 },
                 formatResult: item => {
@@ -745,6 +755,14 @@ define('views/record/search', ['view', 'helpers/misc/stored-text-search'], funct
             };
 
             this.$textFilter.autocomplete(options);
+
+            this.$textFilter.on('blur', () => {
+                if (preventCloseOnBlur) {
+                    return;
+                }
+
+                setTimeout(() => this.$textFilter.autocomplete('hide'), 1);
+            });
 
             this.$textFilter.on('focus', () => {
                 if (this.$textFilter.val()) {
