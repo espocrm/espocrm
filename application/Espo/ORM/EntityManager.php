@@ -278,7 +278,7 @@ class EntityManager
             throw new RuntimeException("Can't refresh an entity w/o ID.");
         }
 
-        $fetchedEntity = $this->getEntity($entity->getEntityType(), $entity->getId());
+        $fetchedEntity = $this->getEntityById($entity->getEntityType(), $entity->getId());
 
         if (!$fetchedEntity) {
             throw new RuntimeException("Can't refresh a non-existent entity.");
