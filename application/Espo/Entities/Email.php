@@ -637,4 +637,67 @@ class Email extends Entity
         /** @var EmailRepository */
         return $this->entityManager->getRepository(self::ENTITY_TYPE);
     }
+
+    public function setRepliedId(?string $repliedId): self
+    {
+        $this->set('repliedId', $repliedId);
+
+        return $this;
+    }
+
+    public function setMessageId(?string $messageId): self
+    {
+        $this->set('messageId', $messageId);
+
+        return $this;
+    }
+
+    public function setGroupFolderId(?string $groupFolderId): self
+    {
+        $this->set('groupFolderId', $groupFolderId);
+
+        return $this;
+    }
+
+    public function setDateSent(?DateTime $dateSent): self
+    {
+        $this->setValueObject('dateSent', $dateSent);
+
+        return $this;
+    }
+
+    public function setAssignedUserId(?string $assignedUserId): self
+    {
+        $this->set('assignedUserId', $assignedUserId);
+
+        return $this;
+    }
+
+    public function addAssignedUserId(string $assignedUserId): self
+    {
+        $this->addLinkMultipleId('assignedUsers', $assignedUserId);
+
+        return $this;
+    }
+
+    public function addUserId(string $userId): self
+    {
+        $this->addLinkMultipleId('users', $userId);
+
+        return $this;
+    }
+
+    public function addTeamId(string $teamId): self
+    {
+        $this->addLinkMultipleId('teams', $teamId);
+
+        return $this;
+    }
+
+    public function setTeams(LinkMultiple $teams): self
+    {
+        $this->setValueObject('teams', $teams);
+
+        return $this;
+    }
 }

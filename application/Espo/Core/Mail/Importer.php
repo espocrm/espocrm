@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Mail;
 
+use Espo\Core\Field\DateTime as DateTimeField;
+use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Field\LinkParent;
 use Espo\Core\Job\Job\Data as JobData;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Mail\Importer\DuplicateFinder;
@@ -116,20 +119,20 @@ class Importer
             $subject = substr($subject, 0, self::SUBJECT_MAX_LENGTH);
         }
 
-        $email->set('isHtml', false);
-        $email->set('name', $subject);
-        $email->set('status', Email::STATUS_ARCHIVED);
-        $email->set('attachmentsIds', []);
-        $email->set('teamsIds', $teamIdList);
-        $email->set('groupFolderId', $groupEmailFolderId);
+        $email->setSubject($subject);
+        $email->setStatus(Email::STATUS_ARCHIVED);
+        $email->setIsHtml(false);
+        $email->setGroupFolderId($groupEmailFolderId);
+        $email->setTeams(LinkMultiple::create()->withAddedIdList($teamIdList));
+        //$email->set('attachmentsIds', []);
 
         if ($assignedUserId) {
-            $email->set('assignedUserId', $assignedUserId);
-            $email->addLinkMultipleId('assignedUsers', $assignedUserId);
+            $email->setAssignedUserId($assignedUserId);
+            $email->addAssignedUserId($assignedUserId);
         }
 
         foreach ($userIdList as $uId) {
-            $email->addLinkMultipleId('users', $uId);
+            $email->addUserId($uId);
         }
 
         $fromAddressData = $parser->getAddressData($message, 'from');
@@ -180,7 +183,7 @@ class Importer
         if ($matchedFilter && $matchedFilter->getAction() === EmailFilter::ACTION_MOVE_TO_GROUP_FOLDER) {
             $groupEmailFolderId = $matchedFilter->getGroupEmailFolderId();
 
-            $email->set('groupFolderId', $groupEmailFolderId);
+            $email->setGroupFolderId($groupEmailFolderId);
         }
 
         if (
@@ -190,7 +193,7 @@ class Importer
             /** @var string $messageId */
             $messageId = $parser->getMessageId($message);
 
-            $email->set('messageId', $messageId);
+            $email->setMessageId($messageId);
 
             if ($parser->hasHeader($message, 'delivered-To')) {
                 $messageIdInternal = $messageId . '-' . $parser->getHeader($message, 'delivered-To');
@@ -207,11 +210,9 @@ class Importer
             try {
                 $dateHeaderValue = $parser->getHeader($message, 'date') ?? 'now';
 
-                $dateSent = (new DateTime($dateHeaderValue))
-                    ->setTimezone(new DateTimeZone('UTC'))
-                    ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
+                $dateSent = new DateTime($dateHeaderValue);
 
-                $email->set('dateSent', $dateSent);
+                $email->setDateSent(DateTimeField::fromDateTime($dateSent));
             }
             catch (Exception) {}
         }
@@ -219,8 +220,7 @@ class Importer
         $duplicate = $this->findDuplicate($email, $message);
 
         if ($duplicate && $duplicate->getStatus() !== Email::STATUS_BEING_IMPORTED) {
-            /** @var Email $duplicate */
-            $duplicate = $this->entityManager->getEntityById(Email::ENTITY_TYPE, $duplicate->getId());
+            $this->entityManager->refreshEntity($duplicate);
 
             $this->processDuplicate(
                 $duplicate,
@@ -235,7 +235,7 @@ class Importer
         }
 
         if (!$email->getDateSent()) {
-            $email->set('dateSent', date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT));
+            $email->setDateSent(DateTimeField::createNow());
         }
 
         if ($parser->hasHeader($message, 'delivery-Date')) {
@@ -268,12 +268,12 @@ class Importer
             if ($matchedFilter && $matchedFilter->getAction() === EmailFilter::ACTION_MOVE_TO_GROUP_FOLDER) {
                 $groupEmailFolderId = $matchedFilter->getGroupEmailFolderId();
 
-                $email->set('groupFolderId', $groupEmailFolderId);
+                $email->setGroupFolderId($groupEmailFolderId);
             }
         }
         else {
-            $email->set('body', 'Not fetched. The email size exceeds the limit.');
-            $email->set('isHtml', false);
+            $email->setBody('Not fetched. The email size exceeds the limit.');
+            $email->setIsHtml(false);
         }
 
         if (
@@ -296,13 +296,12 @@ class Importer
                     ->findOne();
 
                 if ($replied) {
-                    $email->set('repliedId', $replied->getId());
+                    $email->setRepliedId($replied->getId());
 
-                    /** @var string[] $repliedTeamIdList */
                     $repliedTeamIdList = $replied->getLinkMultipleIdList('teams');
 
                     foreach ($repliedTeamIdList as $repliedTeamId) {
-                        $email->addLinkMultipleId('teams', $repliedTeamId);
+                        $email->addTeamId($repliedTeamId);
                     }
                 }
             }
@@ -311,8 +310,7 @@ class Importer
         $parentFound = $this->parentFinder->find($email, $message);
 
         if ($parentFound) {
-            $email->set('parentType', $parentFound->getEntityType());
-            $email->set('parentId', $parentFound->getId());
+            $email->setParent(LinkParent::create($parentFound->getEntityType(), $parentFound->getId()));
         }
 
         if (!$duplicate) {
@@ -324,8 +322,7 @@ class Importer
                 $this->entityManager->getLocker()->rollback();
 
                 if ($duplicate->getStatus() !== Email::STATUS_BEING_IMPORTED) {
-                    /** @var Email $duplicate */
-                    $duplicate = $this->entityManager->getEntityById(Email::ENTITY_TYPE, $duplicate->getId());
+                    $this->entityManager->refreshEntity($duplicate);
 
                     $this->processDuplicate(
                         $duplicate,
@@ -342,23 +339,7 @@ class Importer
         }
 
         if ($duplicate) {
-            $duplicate->set([
-                'from' => $email->get('from'),
-                'to' => $email->get('to'),
-                'cc' => $email->get('cc'),
-                'bcc' => $email->get('bcc'),
-                'replyTo' => $email->get('replyTo'),
-                'name' => $email->get('name'),
-                'dateSent' => $email->get('dateSent'),
-                'body' => $email->get('body'),
-                'bodyPlain' => $email->get('bodyPlain'),
-                'parentType' => $email->get('parentType'),
-                'parentId' => $email->get('parentId'),
-                'isHtml' => $email->get('isHtml'),
-                'messageId' => $email->get('messageId'),
-                'fromString' => $email->get('fromString'),
-                'replyToString' => $email->get('replyToString'),
-            ]);
+            $this->copyAttributesToDuplicate($email, $duplicate);
 
             /** @var EmailRepository $emailRepository */
             $emailRepository = $this->entityManager->getRDBRepository(Email::ENTITY_TYPE);
@@ -381,7 +362,7 @@ class Importer
             $email->setDummyMessageId();
         }
 
-        $email->set('status', Email::STATUS_BEING_IMPORTED);
+        $email->setStatus(Email::STATUS_BEING_IMPORTED);
 
         $this->entityManager->saveEntity($email, [
             SaveOption::SKIP_ALL => true,
@@ -394,21 +375,48 @@ class Importer
             $this->processEmailWithParent($email);
         }
 
-        $email->set('status', Email::STATUS_ARCHIVED);
+        $email->setStatus(Email::STATUS_ARCHIVED);
+
+        $this->entityManager->getTransactionManager()->start();
+        $this->entityManager
+            ->getRDBRepositoryByClass(Email::class)
+            ->forUpdate()
+            ->where(['id' => $email->getId()])
+            ->findOne();
 
         $this->entityManager->saveEntity($email, ['isBeingImported' => true]);
 
+        $this->entityManager->getTransactionManager()->commit();
+
         foreach ($inlineAttachmentList as $attachment) {
-            $attachment->set([
-                'relatedId' => $email->getId(),
-                'relatedType' => Email::ENTITY_TYPE,
-                'field' => 'body',
-            ]);
+            $attachment->setTargetField('body');
+            $attachment->setRelated(LinkParent::create(Email::ENTITY_TYPE, $email->getId()));
 
             $this->entityManager->saveEntity($attachment);
         }
 
         return $email;
+    }
+
+    private function copyAttributesToDuplicate(Email $email, Email $duplicate): void
+    {
+        $duplicate->set([
+            'from' => $email->get('from'),
+            'to' => $email->get('to'),
+            'cc' => $email->get('cc'),
+            'bcc' => $email->get('bcc'),
+            'replyTo' => $email->get('replyTo'),
+            'name' => $email->get('name'),
+            'dateSent' => $email->get('dateSent'),
+            'body' => $email->get('body'),
+            'bodyPlain' => $email->get('bodyPlain'),
+            'parentType' => $email->get('parentType'),
+            'parentId' => $email->get('parentId'),
+            'isHtml' => $email->get('isHtml'),
+            'messageId' => $email->get('messageId'),
+            'fromString' => $email->get('fromString'),
+            'replyToString' => $email->get('replyToString'),
+        ]);
     }
 
     private function processEmailWithParent(Email $email): void
@@ -431,7 +439,7 @@ class Importer
             return;
         }
 
-        $parent = $this->entityManager->getEntity($parentType, $parentId);
+        $parent = $this->entityManager->getEntityById($parentType, $parentId);
 
         if (!$parent) {
             return;
@@ -441,11 +449,8 @@ class Importer
             return;
         }
 
-        /** @var string[] $parentTeamIdList */
-        $parentTeamIdList = $parent->getLinkMultipleIdList('teams');
-
-        foreach ($parentTeamIdList as $parentTeamId) {
-            $email->addLinkMultipleId('teams', $parentTeamId);
+        foreach ($parent->getLinkMultipleIdList('teams') as $parentTeamId) {
+            $email->addTeamId($parentTeamId);
         }
     }
 
@@ -471,7 +476,7 @@ class Importer
         /** @var EmailRepository $emailRepository */
         $emailRepository = $this->entityManager->getRDBRepository(Email::ENTITY_TYPE);
 
-        if ($duplicate->getStatus() == Email::STATUS_ARCHIVED) {
+        if ($duplicate->getStatus() === Email::STATUS_ARCHIVED) {
             $emailRepository->loadFromField($duplicate);
             $emailRepository->loadToField($duplicate);
         }
@@ -487,17 +492,17 @@ class Importer
             if (!in_array($assignedUserId, $fetchedUserIdList)) {
                 $processNoteAcl = true;
 
-                $duplicate->addLinkMultipleId('users', $assignedUserId);
+                $duplicate->addUserId($assignedUserId);
             }
 
-            $duplicate->addLinkMultipleId('assignedUsers', $assignedUserId);
+            $duplicate->addAssignedUserId($assignedUserId);
         }
 
         foreach ($userIdList as $uId) {
             if (!in_array($uId, $fetchedUserIdList)) {
                 $processNoteAcl = true;
 
-                $duplicate->addLinkMultipleId('users', $uId);
+                $duplicate->addUserId($uId);
             }
         }
 
