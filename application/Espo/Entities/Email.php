@@ -413,6 +413,46 @@ class Email extends Entity
         return $this;
     }
 
+    /**
+     * @param string[] $addressList
+     */
+    public function setToAddressList(array $addressList): self
+    {
+        $this->set('to', implode(';', $addressList));
+
+        return $this;
+    }
+
+    /**
+     * @param string[] $addressList
+     */
+    public function setCcAddressList(array $addressList): self
+    {
+        $this->set('cc', implode(';', $addressList));
+
+        return $this;
+    }
+
+    /**
+     * @param string[] $addressList
+     */
+    public function setBccAddressList(array $addressList): self
+    {
+        $this->set('bcc', implode(';', $addressList));
+
+        return $this;
+    }
+
+    /**
+     * @param string[] $addressList
+     */
+    public function setReplyToAddressList(array $addressList): self
+    {
+        $this->set('replyTo', implode(';', $addressList));
+
+        return $this;
+    }
+
     public function addToAddress(string $address): self
     {
         $list = $this->getToAddressList();

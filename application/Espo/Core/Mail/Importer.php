@@ -158,13 +158,10 @@ class Importer
         $ccArr = $parser->getAddressList($message, 'cc');
         $replyToArr = $parser->getAddressList($message, 'reply-To');
 
-        if (count($fromArr)) {
-            $email->set('from', $fromArr[0]);
-        }
-
-        $email->set('to', implode(';', $toArr));
-        $email->set('cc', implode(';', $ccArr));
-        $email->set('replyTo', implode(';', $replyToArr));
+        $email->setFromAddress($fromArr[0] ?? null);
+        $email->setToAddressList($toArr);
+        $email->setCcAddressList($ccArr);
+        $email->setReplyToAddressList($replyToArr);
 
         $addressNameMap = $parser->getAddressNameMap($message);
 
