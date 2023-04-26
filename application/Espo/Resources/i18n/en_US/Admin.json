@@ -136,6 +136,7 @@
         "phone": "Phone",
         "text": "Text",
         "url": "Url",
+        "urlMultiple": "Url Multiple",
         "varchar": "Varchar",
         "file": "File",
         "image": "Image",

@@ -40,7 +40,7 @@ class ArrayType
 {
     private const DEFAULT_MAX_ITEM_LENGTH = 100;
 
-    public function __construct(private Metadata $metadata, private Defs $defs)
+    public function __construct(protected Metadata $metadata, private Defs $defs)
     {}
 
     public function checkRequired(Entity $entity, string $field): bool

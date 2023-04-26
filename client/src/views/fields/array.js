@@ -386,7 +386,7 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
                         this.trigger('change');
                     },
                     distance: 5,
-                    cancel: 'input,textarea,button,select,option,a',
+                    cancel: 'input,textarea,button,select,option,a[role="button"]',
                     cursor: 'grabbing',
                 });
             }
@@ -604,9 +604,10 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
                 )
                 .append(
                     $('<span>')
+                        .addClass('text')
                         .text(text)
-                        .append('&nbsp;')
                 )
+                .append('')
                 .get(0)
                 .outerHTML;
         },

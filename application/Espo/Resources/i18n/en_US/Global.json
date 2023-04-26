@@ -308,6 +308,7 @@
         "fieldNotMatchingPattern$latinLettersDigitsWhitespace": "{field} can contain only latin letters, digits and whitespace",
         "fieldNotMatchingPattern$latinLettersWhitespace": "{field} can contain only latin letters and whitespace",
         "fieldNotMatchingPattern$digits": "{field} can contain only digits",
+        "fieldNotMatchingPattern$uriOptionalProtocol": "{field} must be a valid URL",
         "fieldInvalid": "{field} is invalid",
         "fieldIsRequired": "{field} is required",
         "fieldPhoneInvalidCharacters": "Only digits, latin letters and characters `-+_@:#().` are allowed",
