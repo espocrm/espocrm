@@ -14,7 +14,7 @@
                 {"name": "size"}, {"name": "isBeingUploaded"}
             ],
             [
-                {"name": "storage"}, {"name": "sourceId"}
+                {"name": "storage"}, {"name": "sourceId", "view": "views/fields/varchar"}
             ]
         ]
     }
