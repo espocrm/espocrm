@@ -52,7 +52,7 @@ class DompdfInitializer
         $pdf = new Dompdf($options);
 
         $size = $template->getPageFormat() === Template::PAGE_FORMAT_CUSTOM ?
-            [$template->getPageWidth(), $template->getPageHeight()] :
+            [0.0, 0.0, $template->getPageWidth(), $template->getPageHeight()] :
             $template->getPageFormat();
 
         $orientation = $template->getPageOrientation() === Template::PAGE_ORIENTATION_PORTRAIT ?
