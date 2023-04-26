@@ -180,6 +180,7 @@ class Email extends Entity
 
     /**
      * @todo Revise.
+     * @deprecated
      */
     public function addAttachment(Attachment $attachment): void
     {
@@ -378,6 +379,13 @@ class Email extends Entity
     public function setBody(?string $body): self
     {
         $this->set('body', $body);
+
+        return $this;
+    }
+
+    public function setBodyPlain(?string $bodyPlain): self
+    {
+        $this->set('bodyPlain', $bodyPlain);
 
         return $this;
     }

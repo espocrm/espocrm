@@ -272,21 +272,21 @@ class MailMimeParser implements Parser
         }
 
         if ($bodyHtml) {
-            $email->set('isHtml', true);
-            $email->set('body', $bodyHtml);
+            $email->setIsHtml(true);
+            $email->setBody($bodyHtml);
 
             if ($bodyPlain) {
-                $email->set('bodyPlain', $bodyPlain);
+                $email->setBodyPlain($bodyPlain);
             }
         }
         else {
-            $email->set('isHtml', false);
-            $email->set('body', $bodyPlain);
-            $email->set('bodyPlain', $bodyPlain);
+            $email->setIsHtml(false);
+            $email->setBody($bodyPlain);
+            $email->setBodyPlain($bodyPlain);
         }
 
-        if (!$email->get('body') && $email->hasBodyPlain()) {
-            $email->set('body', $email->get('bodyPlain'));
+        if (!$email->getBody() && $email->hasBodyPlain()) {
+            $email->setBody($email->getBodyPlain());
         }
 
         $attachmentPartList = $this->getMessage($message)->getAllAttachmentParts();
@@ -299,13 +299,13 @@ class MailMimeParser implements Parser
             }
 
             /** @var Attachment $attachment */
-            $attachment = $this->entityManager->getEntity('Attachment');
+            $attachment = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
 
             $contentType = $this->detectAttachmentContentType($attachmentPart);
 
             $disposition = $attachmentPart->getHeaderValue('Content-Disposition');
 
-            /** @var string|null $filename */
+            /** @var ?string $filename */
             $filename = $attachmentPart->getHeaderParameter('Content-Disposition', 'filename', null);
 
             if ($filename === null) {
@@ -316,8 +316,8 @@ class MailMimeParser implements Parser
                 $contentType = strtolower($contentType);
             }
 
-            $attachment->set('name', $filename);
-            $attachment->set('type', $contentType);
+            $attachment->setName($filename);
+            $attachment->setType($contentType);
 
             $content = '';
 
@@ -335,15 +335,17 @@ class MailMimeParser implements Parser
             }
 
             if ($disposition === 'inline') {
-                $attachment->set('role', Attachment::ROLE_INLINE_ATTACHMENT);
+                $attachment->setRole(Attachment::ROLE_INLINE_ATTACHMENT);
+                $attachment->setTargetField('body');
             }
             else {
                 $disposition = 'attachment';
 
-                $attachment->set('role', Attachment::ROLE_ATTACHMENT);
+                $attachment->setRole(Attachment::ROLE_ATTACHMENT);
+                $attachment->setTargetField('attachments');
             }
 
-            $attachment->set('contents', $content);
+            $attachment->setContents($content);
 
             $this->entityManager->saveEntity($attachment);
 
@@ -357,8 +359,7 @@ class MailMimeParser implements Parser
                 continue;
             }
 
-            // inline
-
+            // inline disposition
             if ($contentId) {
                 $inlineIds[$contentId] = $attachment->getId();
 
@@ -370,22 +371,23 @@ class MailMimeParser implements Parser
             $email->addLinkMultipleId('attachments', $attachment->getId());
         }
 
-        $body = $email->get('body');
+        $body = $email->getBody();
 
         if (!empty($body)) {
             foreach ($inlineIds as $cid => $attachmentId) {
                 if (str_contains($body, 'cid:' . $cid)) {
                     $body = str_replace('cid:' . $cid, '?entryPoint=attachment&amp;id=' . $attachmentId, $body);
+
+                    continue;
                 }
-                else {
-                    $email->addLinkMultipleId('attachments', $attachmentId);
-                }
+
+                $email->addLinkMultipleId('attachments', $attachmentId);
             }
 
-            $email->set('body', $body);
+            $email->setBody($body);
         }
 
-        /** @var ?MessagePart $textCalendarPart  */
+        /** @var ?MessagePart $textCalendarPart */
         $textCalendarPart =
             $this->getMessage($message)->getAllPartsByMimeType('text/calendar')[0] ??
             $this->getMessage($message)->getAllPartsByMimeType('application/ics')[0] ??
