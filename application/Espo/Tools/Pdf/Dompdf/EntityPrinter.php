@@ -46,7 +46,7 @@ class EntityPrinter implements EntityPrinterInterface
 
     public function print(Template $template, Entity $entity, Params $params, Data $data): Contents
     {
-        $pdf = $this->dompdfInitializer->initialize($template, $entity);
+        $pdf = $this->dompdfInitializer->initialize($template);
 
         $headHtml = $this->htmlComposer->composeHead($template, $entity);
         $headerFooterHtml = $this->htmlComposer->composeHeaderFooter($template, $entity, $params, $data);
