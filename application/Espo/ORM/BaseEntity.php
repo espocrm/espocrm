@@ -153,8 +153,6 @@ class BaseEntity implements Entity
         $this->valuesContainer = [];
     }
 
-
-
     /**
      * Set an attribute value or multiple attribute values.
      *
@@ -419,12 +417,7 @@ class BaseEntity implements Entity
         $this->valueAccessor->set($field, $value);
     }
 
-
-
-    /**
-     * @param mixed $value
-     */
-    protected function populateFromArrayItem(string $attribute, $value): void
+    protected function populateFromArrayItem(string $attribute, mixed $value): void
     {
         $preparedValue = $this->prepareAttributeValue($attribute, $value);
 
@@ -441,15 +434,10 @@ class BaseEntity implements Entity
         $this->writtenMap[$attribute] = true;
     }
 
-    /**
-     * @param mixed $value
-     * @return mixed
-     * @throws JsonException
-     */
-    protected function prepareAttributeValue(string $attribute, $value)
+    protected function prepareAttributeValue(string $attribute, mixed $value): mixed
     {
         if (is_null($value)) {
-            return $value;
+            return null;
         }
 
         $attributeType = $this->getAttributeType($attribute);
@@ -509,7 +497,6 @@ class BaseEntity implements Entity
 
     /**
      * @param mixed $value
-     * @throws JsonException
      */
     private function prepareObjectAttributeValue($value): ?stdClass
     {
@@ -1065,7 +1052,7 @@ class BaseEntity implements Entity
 
         $copy = [];
 
-        /** @var array<int,stdClass|mixed[]|scalar|null> $value */
+        /** @var array<int, stdClass|mixed[]|scalar|null> $value */
 
         foreach ($value as $i => $item) {
             if (is_object($item)) {
