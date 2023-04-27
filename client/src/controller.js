@@ -613,7 +613,7 @@ define('controller', [], function () {
 
     }, Backbone.Events);
 
-    Controller.extend = Backbone.Router.extend;
+    Controller.extend = Bull.View.extend;
 
     return Controller;
 });

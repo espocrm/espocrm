@@ -1438,7 +1438,7 @@ function (
 
     }, Backbone.Events);
 
-    App.extend = Backbone.Router.extend;
+    App.extend = Bull.View.extend;
 
     return App;
 });

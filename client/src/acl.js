@@ -318,7 +318,7 @@ define('acl', [], function () {
 
     });
 
-    Acl.extend = Backbone.Router.extend;
+    Acl.extend = Bull.View.extend;
 
     return Acl;
 });

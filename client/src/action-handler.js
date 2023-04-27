@@ -138,7 +138,7 @@ define('action-handler', [], function () {
         },
     });
 
-    ActionHandler.extend = Backbone.Router.extend;
+    ActionHandler.extend = Bull.View.extend;
 
     return ActionHandler;
 });

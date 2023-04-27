@@ -91,7 +91,7 @@ define('collection', ['model'], function (Model) {
      * @extends Backbone.Collection.prototype
      * @mixes Backbone.Events
      */
-    return Backbone.Collection.extend(/** @lends module:collection.Class# */ {
+    let Collection = Backbone.Collection.extend(/** @lends module:collection.Class# */ {
 
         /**
          * A number of records.
@@ -494,4 +494,8 @@ define('collection', ['model'], function (Model) {
             return collection;
         },
     });
+
+    Collection.extend = Bull.View.extend;
+
+    return Collection;
 });
