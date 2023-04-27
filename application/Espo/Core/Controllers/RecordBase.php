@@ -30,6 +30,7 @@
 namespace Espo\Core\Controllers;
 
 use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ForbiddenSilent;
@@ -71,12 +72,6 @@ class RecordBase extends Base implements
     /** @var string */
     public static $defaultAction = 'list';
 
-    protected SearchParamsFetcher $searchParamsFetcher;
-    protected CreateParamsFetcher $createParamsFetcher;
-    protected ReadParamsFetcher $readParamsFetcher;
-    protected UpdateParamsFetcher $updateParamsFetcher;
-    protected DeleteParamsFetcher $deleteParamsFetcher;
-    protected FindParamsFetcher $findParamsFetcher;
     /** @var RecordServiceContainer */
     protected $recordServiceContainer;
     /** @var Config */
@@ -93,28 +88,23 @@ class RecordBase extends Base implements
     protected $entityManager;
 
     public function __construct(
-        SearchParamsFetcher $searchParamsFetcher,
-        CreateParamsFetcher $createParamsFetcher,
-        ReadParamsFetcher $readParamsFetcher,
-        UpdateParamsFetcher $updateParamsFetcher,
-        DeleteParamsFetcher $deleteParamsFetcher,
+        protected SearchParamsFetcher $searchParamsFetcher,
+        protected CreateParamsFetcher $createParamsFetcher,
+        protected ReadParamsFetcher $readParamsFetcher,
+        protected UpdateParamsFetcher $updateParamsFetcher,
+        protected DeleteParamsFetcher $deleteParamsFetcher,
         RecordServiceContainer $recordServiceContainer,
-        FindParamsFetcher $findParamsFetcher,
+        protected FindParamsFetcher $findParamsFetcher,
         Config $config,
         User $user,
         Acl $acl,
-        Container $container, // for backward compatibility
-        AclManager $aclManager, // for backward compatibility
-        Preferences $preferences, // for backward compatibility
-        Metadata $metadata, // for backward compatibility
-        ServiceFactory $serviceFactory // for backward compatibility
+        // Parameters below are for backward compatibility.
+        Container $container,
+        AclManager $aclManager,
+        Preferences $preferences,
+        Metadata $metadata,
+        ServiceFactory $serviceFactory
     ) {
-        $this->searchParamsFetcher = $searchParamsFetcher;
-        $this->createParamsFetcher = $createParamsFetcher;
-        $this->readParamsFetcher = $readParamsFetcher;
-        $this->updateParamsFetcher = $updateParamsFetcher;
-        $this->deleteParamsFetcher = $deleteParamsFetcher;
-        $this->findParamsFetcher = $findParamsFetcher;
         $this->recordServiceContainer = $recordServiceContainer;
         $this->config = $config;
         $this->user = $user;
@@ -237,6 +227,8 @@ class RecordBase extends Base implements
      * List records.
      *
      * @throws Forbidden
+     * @throws BadRequest
+     * @throws Error
      */
     public function getActionList(Request $request, Response $response): stdClass
     {
