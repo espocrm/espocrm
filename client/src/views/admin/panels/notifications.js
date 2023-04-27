@@ -41,7 +41,7 @@ define('views/admin/panels/notifications', ['view'], function (Dep) {
         setup: function () {
             this.notificationList = [];
 
-            this.ajaxGetRequest('Admin/action/adminNotificationList').then(notificationList => {
+            Espo.Ajax.getRequest('Admin/action/adminNotificationList').then(notificationList => {
                 this.notificationList = notificationList;
 
                 if (this.isRendered() || this.isBeingRendered()) {

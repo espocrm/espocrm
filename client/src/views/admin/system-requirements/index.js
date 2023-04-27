@@ -43,7 +43,7 @@ define('views/admin/system-requirements/index', ['view'], function (Dep) {
         setup: function () {
             this.requirementList = [];
 
-            this.ajaxGetRequest('Admin/action/systemRequirementList').then(requirementList => {
+            Espo.Ajax.getRequest('Admin/action/systemRequirementList').then(requirementList => {
                 this.requirementList = requirementList;
 
                 if (this.isRendered() || this.isBeingRendered()) {

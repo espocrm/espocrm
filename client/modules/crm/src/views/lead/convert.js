@@ -105,7 +105,7 @@ define('crm:views/lead/convert', ['view'], function (Dep) {
             ];
 
             if (scopeList.length) {
-                this.ajaxPostRequest('Lead/action/getConvertAttributes', {id: this.model.id})
+                Espo.Ajax.postRequest('Lead/action/getConvertAttributes', {id: this.model.id})
                     .then(data => {
                         scopeList.forEach(scope => {
                             this.getModelFactory().create(scope, model => {

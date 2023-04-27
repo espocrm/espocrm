@@ -302,7 +302,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                     return;
                 }
 
-                this.ajaxPostRequest(`Email/${this.model.id}/attachments/copy`, {
+                Espo.Ajax.postRequest(`Email/${this.model.id}/attachments/copy`, {
                     parentType: 'Case',
                     field: 'attachments',
                 }).then(data => {
@@ -597,7 +597,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
                 Espo.Ui.notify(' ... ');
 
-                this.ajaxPostRequest('Attachment/copy/' + id, {
+                Espo.Ajax.postRequest('Attachment/copy/' + id, {
                     relatedType: 'Document',
                     field: 'file',
                 }).then((attachment) => {

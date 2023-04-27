@@ -52,12 +52,14 @@ define('views/admin/label-manager/index', ['view'], function (Dep) {
         events: {
             'click [data-action="selectScope"]': function (e) {
                 var scope = $(e.currentTarget).data('name');
+
                 this.getRouter().checkConfirmLeaveOut(function () {
                     this.selectScope(scope);
                 }, this);
             },
             'change select[data-name="language"]': function (e) {
                 var language = $(e.currentTarget).val();
+
                 this.getRouter().checkConfirmLeaveOut(function () {
                     this.selectLanguage(language);
                 }, this);
@@ -66,46 +68,54 @@ define('views/admin/label-manager/index', ['view'], function (Dep) {
 
         setup: function () {
             this.languageList = this.getMetadata().get(['app', 'language', 'list']) || ['en_US'];
-            this.languageList.sort(function (v1, v2) {
-                return this.getLanguage().translateOption(v1, 'language').localeCompare(this.getLanguage().translateOption(v2, 'language'));
-            }.bind(this));
+
+            this.languageList.sort((v1, v2) => {
+                return this.getLanguage().translateOption(v1, 'language')
+                    .localeCompare(this.getLanguage().translateOption(v2, 'language'));
+            });
 
             this.wait(true);
 
-            this.ajaxPostRequest('LabelManager/action/getScopeList').then(function (scopeList) {
+            Espo.Ajax.postRequest('LabelManager/action/getScopeList').then(scopeList => {
                 this.scopeList = scopeList;
 
-                this.scopeList.sort(function (v1, v2) {
+                this.scopeList.sort((v1, v2) => {
                     return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
-                }.bind(this));
+                });
 
-                this.scopeList = this.scopeList.filter(function (scope) {
-                    if (scope === 'Global') return;
-                    if (this.getMetadata().get(['scopes', scope])) {
-                        if (this.getMetadata().get(['scopes', scope, 'disabled'])) return;
+                this.scopeList = this.scopeList.filter(scope => {
+                    if (scope === 'Global') {
+                        return;
                     }
+
+                    if (this.getMetadata().get(['scopes', scope])) {
+                        if (this.getMetadata().get(['scopes', scope, 'disabled'])) {
+                            return;
+                        }
+                    }
+
                     return true;
-                }, this);
+                });
 
                 this.scopeList.unshift('Global');
 
                 this.wait(false);
-            }.bind(this));
-
+            });
 
             this.scope = this.options.scope || 'Global';
             this.language = this.options.language || this.getConfig().get('language');
 
-            this.once('after:render', function () {
+            this.once('after:render', () => {
                 this.selectScope(this.scope, true);
-            }, this);
+            });
         },
 
         selectLanguage: function (language) {
             this.language = language;
 
             if (this.scope) {
-                this.getRouter().navigate('#Admin/labelManager/scope=' + this.scope + '&language=' + this.language, {trigger: false});
+                this.getRouter().navigate('#Admin/labelManager/scope=' + this.scope + '&language=' + this.language,
+                    {trigger: false});
             } else {
                 this.getRouter().navigate('#Admin/labelManager/language=' + this.language, {trigger: false});
             }
@@ -117,11 +127,17 @@ define('views/admin/label-manager/index', ['view'], function (Dep) {
             this.scope = scope;
 
             if (!skipRouter) {
-                this.getRouter().navigate('#Admin/labelManager/scope=' + scope + '&language=' + this.language, {trigger: false});
+                this.getRouter().navigate('#Admin/labelManager/scope=' + scope + '&language=' + this.language,
+                    {trigger: false});
             }
 
-            this.$el.find('[data-action="selectScope"]').removeClass('disabled').removeAttr('disabled');
-            this.$el.find('[data-name="'+scope+'"][data-action="selectScope"]').addClass('disabled').attr('disabled', 'disabled');
+            this.$el.find('[data-action="selectScope"]')
+                .removeClass('disabled')
+                .removeAttr('disabled');
+
+            this.$el.find('[data-name="'+scope+'"][data-action="selectScope"]')
+                .addClass('disabled')
+                .attr('disabled', 'disabled');
 
             this.createRecordView();
         },
@@ -133,12 +149,12 @@ define('views/admin/label-manager/index', ['view'], function (Dep) {
                 el: this.getSelector() + ' .language-record',
                 scope: this.scope,
                 language: this.language,
-            }, function (view) {
+            }, (view) => {
                 view.render();
+
                 Espo.Ui.notify(false);
                 $(window).scrollTop(0);
-
-            }, this);
+            });
         },
 
         updatePageTitle: function () {

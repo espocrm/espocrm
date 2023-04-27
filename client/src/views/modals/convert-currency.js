@@ -45,8 +45,7 @@ define('views/modals/convert-currency', ['views/modals/mass-convert-currency'], 
             var currency = this.model.get('currency');
             var currencyRates = this.model.get('currencyRates');
 
-            this
-                .ajaxPostRequest('Action', {
+            Espo.Ajax.postRequest('Action', {
                     entityType: this.options.entityType,
                     action: 'convertCurrency',
                     id: this.options.model.id,

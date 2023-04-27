@@ -89,7 +89,7 @@ define('views/personal-data/modals/personal-data', ['views/modal'], function (De
             }, () => {
                 this.disableButton('erase');
 
-                this.ajaxPostRequest('DataPrivacy/action/erase', {
+                Espo.Ajax.postRequest('DataPrivacy/action/erase', {
                     fieldList: this.fieldList,
                     entityType: this.scope,
                     id: this.model.id,

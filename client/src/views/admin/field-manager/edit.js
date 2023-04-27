@@ -196,7 +196,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         return;
                     }
 
-                    this.ajaxGetRequest('Admin/fieldManager/' + this.scope + '/' + this.field)
+                    Espo.Ajax.getRequest('Admin/fieldManager/' + this.scope + '/' + this.field)
                         .then(data => {
                             this.defs = data;
 

@@ -41,7 +41,7 @@ define('views/lead-capture/record/detail', ['views/record/detail'], function (De
 
         actionGenerateNewApiKey: function () {
             this.confirm(this.translate('confirmation', 'messages'), () => {
-                this.ajaxPostRequest('LeadCapture/action/generateNewApiKey', {id: this.model.id})
+                Espo.Ajax.postRequest('LeadCapture/action/generateNewApiKey', {id: this.model.id})
                     .then(data => {
                         this.model.set(data);
                     });

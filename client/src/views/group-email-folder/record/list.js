@@ -45,7 +45,7 @@ define('views/group-email-folder/record/list', ['views/record/list'], function (
                 return;
             }
 
-            this.ajaxPostRequest('GroupEmailFolder/action/moveUp', {id: model.id})
+            Espo.Ajax.postRequest('GroupEmailFolder/action/moveUp', {id: model.id})
                 .then(() => {
                     this.collection.fetch();
                 });
@@ -64,7 +64,7 @@ define('views/group-email-folder/record/list', ['views/record/list'], function (
                 return;
             }
 
-            this.ajaxPostRequest('GroupEmailFolder/action/moveDown', {id: model.id})
+            Espo.Ajax.postRequest('GroupEmailFolder/action/moveDown', {id: model.id})
                 .then(() => {
                     this.collection.fetch();
                 });

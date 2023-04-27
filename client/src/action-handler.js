@@ -113,21 +113,21 @@ define('action-handler', [], function () {
          * @deprecated Use `Espo.Ajax`.
          */
         ajaxPostRequest: function () {
-            return this.view.ajaxPostRequest.apply(this.view, arguments);
+            return Espo.Ajax.postRequest.apply(this.view, arguments);
         },
 
         /**
          * @deprecated Use `Espo.Ajax`.
          */
         ajaxPutRequest: function () {
-            return this.view.ajaxPutRequest.apply(this.view, arguments);
+            return Espo.Ajax.putRequest.apply(this.view, arguments);
         },
 
         /**
          * @deprecated Use `Espo.Ajax`.
          */
         ajaxGetRequest: function () {
-            return this.view.ajaxGetRequest.apply(this.view, arguments);
+            return Espo.Ajax.getRequest.apply(this.view, arguments);
         },
 
         /**

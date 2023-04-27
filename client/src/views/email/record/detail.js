@@ -299,7 +299,7 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
                 this.listenToOnce(view, 'select', folderId => {
                     this.clearView('dialog');
 
-                    this.ajaxPostRequest(`Email/inbox/folders/${folderId}`, {id: this.model.id})
+                    Espo.Ajax.postRequest(`Email/inbox/folders/${folderId}`, {id: this.model.id})
                         .then(() => {
                             if (folderId === 'inbox') {
                                 folderId = null;

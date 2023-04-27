@@ -642,7 +642,7 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
 
                 this.disableButtons();
 
-                this.ajaxPostRequest('EntityManager/action/resetToDefault', {
+                Espo.Ajax.postRequest('EntityManager/action/resetToDefault', {
                     scope: this.scope,
                 })
                 .then(() => {

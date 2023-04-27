@@ -1058,7 +1058,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
             url += '&scopeList=' + encodeURIComponent(this.enabledScopeList.join(','));
 
-            this.ajaxGetRequest(url).then(data => {
+            Espo.Ajax.getRequest(url).then(data => {
                 this.fetchedStart = from.clone();
                 this.fetchedEnd = to.clone();
 

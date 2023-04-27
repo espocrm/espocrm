@@ -1487,7 +1487,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
             this.createView('pdfTemplate', 'views/modals/select-template', {
                 entityType: this.entityType,
-            }, (view) => {
+            }, view => {
                 view.render();
 
                 this.listenToOnce(view, 'select', (templateModel) => {
@@ -1495,20 +1495,19 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
                     Espo.Ui.notify(' ... ');
 
-                    this.ajaxPostRequest(
-                            'Pdf/action/massPrint',
-                            {
-                                idList: idList,
-                                entityType: this.entityType,
-                                templateId: templateModel.id,
-                            },
-                            {timeout: 0}
-                        )
-                        .then((result) => {
-                            Espo.Ui.notify(false);
+                    Espo.Ajax.postRequest(
+                        'Pdf/action/massPrint',
+                        {
+                            idList: idList,
+                            entityType: this.entityType,
+                            templateId: templateModel.id,
+                        },
+                        {timeout: 0}
+                    ).then(result => {
+                        Espo.Ui.notify(false);
 
-                            window.open('?entryPoint=download&id=' + result.id, '_blank');
-                        });
+                        window.open('?entryPoint=download&id=' + result.id, '_blank');
+                    });
                 });
             });
         },

@@ -238,7 +238,7 @@ define('views/email-folder/list-side', ['view'], function (Dep) {
 
             this.countsIsBeingLoaded = true;
 
-            this.ajaxGetRequest('Email/inbox/notReadCounts').then(data => {
+            Espo.Ajax.getRequest('Email/inbox/notReadCounts').then(data => {
                 this.countsData = data;
 
                 if (this.isRendered()) {
@@ -252,7 +252,6 @@ define('views/email-folder/list-side', ['view'], function (Dep) {
                     this.renderCounts();
                     this.countsIsBeingLoaded = false;
                 });
-
             });
         },
 

@@ -84,7 +84,7 @@ define('views/admin/template-manager/edit', ['view', 'model'], function (Dep, Mo
 
             this.attributes = {};
 
-            this.ajaxGetRequest('TemplateManager/action/getTemplate', {
+            Espo.Ajax.getRequest('TemplateManager/action/getTemplate', {
                 name: this.name,
                 scope: this.scope
             }).then(function (data) {
@@ -152,7 +152,7 @@ define('views/admin/template-manager/edit', ['view', 'model'], function (Dep, Mo
 
             Espo.Ui.notify(this.translate('saving', 'messages'));
 
-            this.ajaxPostRequest('TemplateManager/action/saveTemplate', data)
+            Espo.Ajax.postRequest('TemplateManager/action/saveTemplate', data)
             .then(() => {
                 this.setConfirmLeaveOut(false);
 
@@ -196,7 +196,7 @@ define('views/admin/template-manager/edit', ['view', 'model'], function (Dep, Mo
 
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-                this.ajaxPostRequest('TemplateManager/action/resetTemplate', data)
+                Espo.Ajax.postRequest('TemplateManager/action/resetTemplate', data)
                     .then(returnData => {
                         this.$save.removeClass('disabled').removeAttr('disabled');
                         this.$cancel.removeClass('disabled').removeAttr('disabled');

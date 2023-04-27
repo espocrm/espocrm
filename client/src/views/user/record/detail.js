@@ -381,7 +381,7 @@ define('views/user/record/detail', ['views/record/detail'], function (Dep) {
 
         actionGenerateNewApiKey: function () {
             this.confirm(this.translate('confirmation', 'messages'), () => {
-                this.ajaxPostRequest('UserSecurity/apiKey/generate', {id: this.model.id})
+                Espo.Ajax.postRequest('UserSecurity/apiKey/generate', {id: this.model.id})
                     .then((data) => {
                         this.model.set(data);
                     });
