@@ -172,7 +172,7 @@ class MailMimeParser implements Parser
         return $map;
     }
 
-    public function getAddressData(Message $message, string $type): ?stdClass
+    public function getAddressData(Message $message, string $type): ?object
     {
         $header = $this->getMessage($message)->getHeader($type);
 
