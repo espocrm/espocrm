@@ -53,7 +53,6 @@ class EvaluatedArgumentList implements Iterator, Countable, ArrayAccess, Seekabl
     public function __construct(private array $dataList)
     {}
 
-
     private function getLastValidKey(): int
     {
         $keys = array_keys($this->dataList);
