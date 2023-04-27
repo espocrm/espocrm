@@ -49,9 +49,6 @@
 
 #layout ul.panels ul.cells[data-cell-count="1"] > li {
     width: 94%;
-    a[data-action="minusCell"] {
-        display: none;
-    }
 }
 
 #layout ul.panels ul.cells[data-cell-count="2"] > li {
