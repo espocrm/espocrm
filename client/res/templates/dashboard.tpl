@@ -19,12 +19,14 @@
                             <span class="item-text">{{translate 'Edit Dashboard'}}</span>
                         </a>
                     </li>
+                    {{#if hasAdd}}
                     <li>
                         <a role="button" tabindex="0" data-action="addDashlet">
                             <span class="fas fa-plus"></span>
                             <span class="item-text">{{translate 'Add Dashlet'}}</span>
                         </a>
                     </li>
+                    {{/if}}
                 </ul>
             </div>
             {{/unless}}

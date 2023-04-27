@@ -50,6 +50,9 @@
         "dashletsOptions": {
             "type": "jsonObject"
         },
+        "dashboardLocked": {
+            "type": "bool"
+        },
         "importParams": {
             "type": "jsonObject"
         },

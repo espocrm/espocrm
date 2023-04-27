@@ -31,7 +31,6 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
     return Dep.extend({
 
         detailTemplate: 'settings/fields/dashboard-layout/detail',
-
         editTemplate: 'settings/fields/dashboard-layout/edit',
 
         validationElementSelector: 'button[data-action="addDashlet"]',
@@ -77,9 +76,17 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
             };
         },
 
+        hasLocked: function () {
+            return this.model.entityType === 'Preferences';
+        },
+
         setup: function () {
             this.dashboardLayout = Espo.Utils.cloneDeep(this.model.get(this.name) || []);
             this.dashletsOptions = Espo.Utils.cloneDeep(this.model.get('dashletsOptions') || {});
+
+            if (this.hasLocked()) {
+                this.dashboardLocked = this.model.get('dashboardLocked') || false;
+            }
 
             this.listenTo(this.model, 'change', () => {
                 if (this.model.hasChanged(this.name)) {
@@ -96,6 +103,10 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                             this.selectTab(0);
                         }
                     }
+                }
+
+                if (this.hasLocked()) {
+                    this.dashboardLocked = this.model.get('dashboardLocked') || false;
                 }
             });
 
@@ -198,18 +209,24 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
         },
 
         editTabs: function () {
-            this.createView('editTabs', 'views/modals/edit-dashboard', {
+            let options = {
                 dashboardLayout: this.dashboardLayout,
                 tabListIsNotRequired: true,
-            }, (view) => {
+            };
+
+            if (this.hasLocked()) {
+                options.dashboardLocked = this.dashboardLocked;
+            }
+
+            this.createView('editTabs', 'views/modals/edit-dashboard', options, view => {
                 view.render();
 
-                this.listenToOnce(view, 'after:save', (data) => {
+                this.listenToOnce(view, 'after:save', data => {
                     view.close();
 
-                    var dashboardLayout = [];
+                    let dashboardLayout = [];
 
-                    (data.dashboardTabList).forEach((name) => {
+                    data.dashboardTabList.forEach(name => {
                         var layout = [];
                         var id = this.generateId();
 
@@ -232,6 +249,10 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                     });
 
                     this.dashboardLayout = dashboardLayout;
+
+                    if (this.hasLocked()) {
+                        this.dashboardLocked = data.dashboardLocked;
+                    }
 
                     this.selectTab(0);
 
@@ -307,7 +328,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                 return;
             }
 
-            let layout = _.map(this.$gridstack.find('.grid-stack-item'), el => {
+            this.dashboardLayout[this.currentTab].layout = _.map(this.$gridstack.find('.grid-stack-item'), el => {
                 var $el = $(el);
 
                 let x = $el.attr('gs-x');
@@ -324,8 +345,6 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                     height: h,
                 };
             });
-
-            this.dashboardLayout[this.currentTab].layout = layout;
 
             this.setupCurrentTabLayout();
         },
@@ -475,7 +494,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
         },
 
         fetch: function () {
-            var data = {};
+            let data = {};
 
             if (!this.dashboardLayout || !this.dashboardLayout.length) {
                 data[this.name] = null;
@@ -486,7 +505,11 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
 
             data[this.name] = Espo.Utils.cloneDeep(this.dashboardLayout);
 
-            data['dashletsOptions'] = Espo.Utils.cloneDeep(this.dashletsOptions);
+            data.dashletsOptions = Espo.Utils.cloneDeep(this.dashletsOptions);
+
+            if (this.hasLocked()) {
+                data.dashboardLocked = this.dashboardLocked;
+            }
 
             return data;
         },

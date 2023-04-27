@@ -54,57 +54,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 });
             },
             'click .dashboard-buttons [data-action="editTabs"]': function () {
-                this.createView('editTabs', 'views/modals/edit-dashboard', {
-                    dashboardLayout: this.dashboardLayout,
-                }, view => {
-                    view.render();
-
-                    this.listenToOnce(view, 'after:save', data => {
-                        view.close();
-
-                        let dashboardLayout = [];
-
-                        (data.dashboardTabList).forEach(name => {
-                            let layout = [];
-                            let id = null;
-
-                            this.dashboardLayout.forEach(d => {
-                                if (d.name === name) {
-                                    layout = d.layout;
-                                    id = d.id;
-                                }
-                            });
-
-                            if (name in data.renameMap) {
-                                name = data.renameMap[name];
-                            }
-
-                            let o = {
-                                name: name,
-                                layout: layout,
-                            };
-
-                            if (id) {
-                                o.id = id;
-                            }
-
-                            dashboardLayout.push(o);
-                        });
-
-                        this.dashletIdList.forEach(item => {
-                            this.clearView('dashlet-' + item);
-                        });
-
-                        this.dashboardLayout = dashboardLayout;
-                        this.saveLayout();
-
-                        this.storeCurrentTab(0);
-                        this.currentTab = 0;
-                        this.setupCurrentTabLayout();
-
-                        this.reRender();
-                    });
-                });
+                this.editTabs();
             },
         },
 
@@ -115,6 +65,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 tabCount: this.dashboardLayout.length,
                 dashboardLayout: this.dashboardLayout,
                 layoutReadOnly: this.layoutReadOnly,
+                hasAdd: !this.layoutReadOnly && !this.getPreferences().get('dashboardLocked'),
             };
         },
 
@@ -192,7 +143,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
             this.screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
-            if (this.getUser().get('portalId')) {
+            if (this.getUser().isPortal()) {
                 this.layoutReadOnly = true;
                 this.dashletsReadOnly = true;
             }
@@ -382,7 +333,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             let disableDrag = false;
             let disableResize = false;
 
-            if (this.getUser().isPortal()) {
+            if (this.getUser().isPortal() || this.getPreferences().get('dashboardLocked')) {
                 disableDrag = true;
                 disableResize = true;
             }
@@ -527,14 +478,17 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             return $item;
         },
 
-        saveLayout: function () {
+        saveLayout: function (attributes) {
             if (this.layoutReadOnly) {
                 return;
             }
 
-            this.getPreferences().save({
-                dashboardLayout: this.dashboardLayout,
-            }, {patch: true});
+            attributes = {
+                ...(attributes || {}),
+                ...{dashboardLayout: this.dashboardLayout},
+            };
+
+            this.getPreferences().save(attributes, {patch: true});
 
             this.getPreferences().trigger('update');
         },
@@ -665,6 +619,67 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 if (callback) {
                     callback.call(this, view);
                 }
+            });
+        },
+
+        editTabs: function () {
+            let dashboardLocked = this.getPreferences().get('dashboardLocked');
+
+            this.createView('editTabs', 'views/modals/edit-dashboard', {
+                dashboardLayout: this.dashboardLayout,
+                dashboardLocked: dashboardLocked,
+                fromDashboard: true,
+            }, view => {
+                view.render();
+
+                this.listenToOnce(view, 'after:save', data => {
+                    view.close();
+
+                    let dashboardLayout = [];
+
+                    data.dashboardTabList.forEach(name => {
+                        let layout = [];
+                        let id = null;
+
+                        this.dashboardLayout.forEach(d => {
+                            if (d.name === name) {
+                                layout = d.layout;
+                                id = d.id;
+                            }
+                        });
+
+                        if (name in data.renameMap) {
+                            name = data.renameMap[name];
+                        }
+
+                        let o = {
+                            name: name,
+                            layout: layout,
+                        };
+
+                        if (id) {
+                            o.id = id;
+                        }
+
+                        dashboardLayout.push(o);
+                    });
+
+                    this.dashletIdList.forEach(item => {
+                        this.clearView('dashlet-' + item);
+                    });
+
+                    this.dashboardLayout = dashboardLayout;
+
+                    this.saveLayout({
+                        dashboardLocked: data.dashboardLocked,
+                    });
+
+                    this.storeCurrentTab(0);
+                    this.currentTab = 0;
+                    this.setupCurrentTabLayout();
+
+                    this.reRender();
+                });
             });
         },
     });

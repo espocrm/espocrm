@@ -31,18 +31,20 @@ define('views/modals/edit-dashboard', ['views/modal', 'model'], function (Dep, M
     return Dep.extend({
 
         className: 'dialog dialog-record',
-
         cssName: 'edit-dashboard',
 
         template: 'modals/edit-dashboard',
 
         data: function () {
-            return {};
+            return {
+                hasLocked: this.hasLocked,
+            };
         },
 
         events: {
             'click button.add': function (e) {
-                var name = $(e.currentTarget).data('name');
+                let name = $(e.currentTarget).data('name');
+
                 this.getParentView().addDashlet(name);
                 this.close();
             },
@@ -56,7 +58,7 @@ define('views/modals/edit-dashboard', ['views/modal', 'model'], function (Dep, M
             this.buttonList = [
                 {
                     name: 'save',
-                    label: 'Save',
+                    label: this.options.fromDashboard ? 'Save': 'Apply',
                     style: 'primary',
                     title: 'Ctrl+Enter',
                 },
@@ -67,20 +69,27 @@ define('views/modals/edit-dashboard', ['views/modal', 'model'], function (Dep, M
                 }
             ];
 
-            var dashboardLayout = this.options.dashboardLayout || [];
+            let dashboardLayout = this.options.dashboardLayout || [];
 
-            var dashboardTabList = [];
+            let dashboardTabList = [];
 
-            dashboardLayout.forEach((item) => {
+            dashboardLayout.forEach(item => {
                 if (item.name) {
                     dashboardTabList.push(item.name);
                 }
             });
 
-            var model = new Model();
+            let model = this.model = new Model();
             model.name = 'Preferences';
 
             model.set('dashboardTabList', dashboardTabList);
+
+            this.hasLocked = 'dashboardLocked' in this.options;
+
+            if (this.hasLocked) {
+                model.set('dashboardLocked', this.options.dashboardLocked || false);
+            }
+
             this.createView('dashboardTabList', 'views/preferences/fields/dashboard-tab-list', {
                 el: this.options.el + ' .field[data-name="dashboardTabList"]',
                 defs: {
@@ -94,27 +103,46 @@ define('views/modals/edit-dashboard', ['views/modal', 'model'], function (Dep, M
                 model: model,
             });
 
+            if (this.hasLocked) {
+                this.createView('dashboardLocked', 'views/fields/bool', {
+                    el: this.options.el + ' .field[data-name="dashboardLocked"]',
+                    mode: 'edit',
+                    model: model,
+                    defs: {
+                        name: 'dashboardLocked',
+                    },
+                })
+            }
+
             this.headerText = this.translate('Edit Dashboard');
 
             this.dashboardLayout = this.options.dashboardLayout;
         },
 
         actionSave: function () {
-            var dashboardTabListView = this.getView('dashboardTabList');
-
+            let dashboardTabListView = this.getView('dashboardTabList');
             dashboardTabListView.fetchToModel();
+
+            if (this.hasLocked) {
+                let dashboardLockedView = this.getView('dashboardLocked');
+                dashboardLockedView.fetchToModel();
+            }
 
             if (dashboardTabListView.validate()) {
                 return;
             }
 
-            var attributes = {};
+            let attributes = {};
 
-            attributes.dashboardTabList = dashboardTabListView.model.get('dashboardTabList');
+            attributes.dashboardTabList = this.model.get('dashboardTabList');
 
-            var names = dashboardTabListView.model.get('translatedOptions');
+            if (this.hasLocked) {
+                attributes.dashboardLocked = this.model.get('dashboardLocked');
+            }
 
-            var renameMap = {};
+            let names = this.model.get('translatedOptions');
+
+            let renameMap = {};
 
             for (let name in names) {
                 if (name !== names[name]) {

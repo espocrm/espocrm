@@ -24,6 +24,7 @@
         "tabList": "Tab List",
         "emailReplyToAllByDefault": "Email Reply to all by default",
         "dashboardLayout": "Dashboard Layout",
+        "dashboardLocked": "Lock Dashboard",
         "emailReplyForceHtml": "Email Reply in HTML",
         "doNotFillAssignedUserIfNotRequired": "Do not pre-fill assigned user on record creation",
         "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
