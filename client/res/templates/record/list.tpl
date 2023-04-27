@@ -109,7 +109,10 @@
 
     {{#if displayTotalCount}}
         <div class="text-muted total-count">
-        {{translate 'Total'}}: <span class="total-count-span">{{totalCountFormatted}}</span>
+            <span
+                title="{{translate 'Total'}}: {{totalCountFormatted}}"
+                class="total-count-span"
+            >{{totalCountFormatted}}</span>
         </div>
     {{/if}}
 </div>
