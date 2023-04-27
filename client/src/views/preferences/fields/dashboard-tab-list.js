@@ -30,6 +30,8 @@ define('views/preferences/fields/dashboard-tab-list', ['views/fields/array'], fu
 
     return Dep.extend({
 
+        maxItemLength: 36,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -59,10 +61,12 @@ define('views/preferences/fields/dashboard-tab-list', ['views/fields/array'], fu
                         .css('display', 'inline-block')
                         .append(
                             $('<input>')
+                                .attr('maxLength', this.maxItemLength)
                                 .attr('data-name', 'translatedValue')
                                 .attr('data-value', value)
                                 .addClass('role form-control input-sm')
                                 .attr('value', translatedValue)
+                                .css('width', '65%')
                         )
                 )
                 .append(
