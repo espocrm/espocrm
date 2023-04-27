@@ -168,13 +168,7 @@ class DataUtil
         /** @var mixed $overrideData */
 
         if (empty($data) && empty($overrideData)) {
-            /** @var mixed $data */
-            /** @var mixed $overrideData */
-
-            if (is_object($data) || is_object($overrideData)) {
-                return (object) [];
-            }
-            else if (is_array($data) || is_array($overrideData)) {
+            if (is_array($data) || is_array($overrideData)) {
                 return [];
             }
 

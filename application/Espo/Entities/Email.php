@@ -171,7 +171,7 @@ class Email extends Entity
      */
     public function isManuallyArchived(): bool
     {
-        if ($this->getStatus() !== self::STATUS_ARCHIVED) {
+        if ($this->getStatus() !== Email::STATUS_ARCHIVED) {
             return false;
         }
 
@@ -189,7 +189,7 @@ class Email extends Entity
         }
 
         $attachment->set('parentId', $this->id);
-        $attachment->set('parentType', self::ENTITY_TYPE);
+        $attachment->set('parentType', Email::ENTITY_TYPE);
 
         if (!$this->entityManager) {
             throw new RuntimeException();
@@ -345,7 +345,7 @@ class Email extends Entity
     }
 
     /**
-     * @param self::STATUS_* $status
+     * @param Email::STATUS_* $status
      */
     public function setStatus(string $status): self
     {
@@ -683,7 +683,7 @@ class Email extends Entity
         }
 
         /** @var EmailRepository */
-        return $this->entityManager->getRepository(self::ENTITY_TYPE);
+        return $this->entityManager->getRepository(Email::ENTITY_TYPE);
     }
 
     public function setRepliedId(?string $repliedId): self

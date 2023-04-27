@@ -129,7 +129,7 @@ class Sms extends Entity implements SmsInterface
 
     public function setAsSent(): self
     {
-        $this->set('status', self::STATUS_SENT);
+        $this->set('status', Sms::STATUS_SENT);
 
         if (!$this->get('dateSent')) {
             $this->set('dateSent', DateTime::createNow()->getString());
@@ -152,7 +152,7 @@ class Sms extends Entity implements SmsInterface
         }
 
         /** @var SmsRepository */
-        return $this->entityManager->getRepository(self::ENTITY_TYPE);
+        return $this->entityManager->getRepository(Sms::ENTITY_TYPE);
     }
 
     public function getTeams(): LinkMultiple

@@ -48,19 +48,21 @@ class EvaluatedArgumentList implements Iterator, Countable, ArrayAccess, Seekabl
     private int $position = 0;
 
     /**
-     * @param mixed[] $dataList
+     * @param array<int, mixed> $dataList
      */
     public function __construct(private array $dataList)
     {}
 
-    /**
-     * @return int
-     */
-    private function getLastValidKey()
+
+    private function getLastValidKey(): int
     {
         $keys = array_keys($this->dataList);
 
         $i = end($keys);
+
+        if ($i === false) {
+            return -1;
+        }
 
         while ($i > 0) {
             if (array_key_exists($i, $this->dataList)) {
