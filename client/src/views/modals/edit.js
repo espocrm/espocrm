@@ -183,6 +183,10 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
             });
         },
 
+        /**
+         * @param {module:model.Class} model
+         * @param {function} [callback]
+         */
         createRecordView: function (model, callback) {
             let viewName =
                 this.editView ||
@@ -207,6 +211,17 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
             this.createView('edit', viewName, options, callback)
                 .then(view => {
                     this.listenTo(view, 'before:save', () => this.trigger('before:save', model));
+
+                    if (this.options.relate && ('link' in this.options.relate)) {
+                        let link = this.options.relate.link;
+
+                        if (
+                            model.hasField(link) &&
+                            ['link'].includes(model.getFieldType(link))
+                        ) {
+                            view.setFieldReadOnly(link);
+                        }
+                    }
                 });
         },
 
