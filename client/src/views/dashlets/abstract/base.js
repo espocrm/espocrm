@@ -63,6 +63,8 @@ define('views/dashlets/abstract/base', ['view'], function (Dep) {
 
         disabledForReadOnlyActionList: ['options', 'remove'],
 
+        disabledForLockedActionList: ['remove'],
+
         init: function () {
             this.name = this.options.name || this.name;
             this.id = this.options.id;
@@ -135,6 +137,11 @@ define('views/dashlets/abstract/base', ['view'], function (Dep) {
 
                     return true;
                 })
+            }
+
+            if (this.options.locked) {
+                this.actionList = this.actionList
+                    .filter(item => !this.disabledForLockedActionList.includes(item.name));
             }
 
             this.setupActionList();

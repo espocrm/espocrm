@@ -601,6 +601,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 id: id,
                 el: this.options.el + ' > .dashlets .dashlet-container[data-id="'+id+'"]',
                 readOnly: this.dashletsReadOnly,
+                locked: this.getPreferences().get('dashboardLocked'),
             }, view => {
                 this.dashletIdList.push(id);
 

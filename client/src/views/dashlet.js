@@ -161,7 +161,8 @@ define('views/dashlet', ['view'], function (Dep) {
                 el: this.options.el + ' .dashlet-body',
                 id: this.id,
                 name: this.name,
-                readOnly: this.options.readOnly
+                readOnly: this.options.readOnly,
+                locked: this.options.locked,
             });
         },
 
