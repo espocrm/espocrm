@@ -512,7 +512,7 @@ class SearchParams
 
                 unset($where[$i]);
             }
-            else if ($type == 'textFilter' && $value) {
+            else if ($type === 'textFilter') {
                 $params['textFilter'] = $value;
 
                 unset($where[$i]);
