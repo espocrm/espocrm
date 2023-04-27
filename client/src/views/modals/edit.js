@@ -140,9 +140,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
             });
 
             this.scope = this.scope || this.options.scope;
-
             this.entityType = this.options.entityType || this.scope;
-
             this.id = this.options.id;
 
             this.headerHtml = this.composeHeaderHtml();
@@ -186,8 +184,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
         },
 
         createRecordView: function (model, callback) {
-            var viewName =
-                this.editViewName ||
+            let viewName =
                 this.editView ||
                 this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editSmall']) ||
                 this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editQuick']) ||
@@ -202,7 +199,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                 sideDisabled: this.sideDisabled,
                 bottomDisabled: this.bottomDisabled,
                 focusForCreate: this.options.focusForCreate,
-                exit: function () {},
+                exit: () => {},
             };
 
             this.handleRecordViewOptions(options);
