@@ -3188,7 +3188,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     model: this.model,
                     scope: this.scope,
                     type: this.type,
-                    _layout: layout,
+                    layoutDefs: layout,
                     el: el + ' .middle',
                     layoutData: {
                         model: this.model,

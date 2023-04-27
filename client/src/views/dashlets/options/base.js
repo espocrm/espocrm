@@ -125,7 +125,7 @@ function (Dep, Detail, Model, ViewRecordHelper) {
             this.createView('record', 'views/record/detail-middle', {
                 model: model,
                 recordHelper: this.recordHelper,
-                _layout: {
+                layoutDefs: {
                     type: 'record',
                     layout: Detail.prototype.convertDetailLayout.call(this, this.getDetailLayout())
                 },

@@ -2732,7 +2732,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                     el: this.options.el + ' .list-row[data-id="'+key+'"]',
                     optionsToPass: ['acl'],
                     noCache: true,
-                    _layout: {
+                    layoutDefs: {
                         type: this._internalLayoutType,
                         layout: internalLayout
                     },
