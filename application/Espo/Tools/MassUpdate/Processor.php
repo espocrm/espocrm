@@ -29,6 +29,8 @@
 
 namespace Espo\Tools\MassUpdate;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\FieldProcessing\LinkMultiple\ListLoader as LinkMultipleLoader;
 use Espo\Core\FieldProcessing\Loader\Params as LoaderParams;
 use Espo\Core\MassAction\QueryBuilder;
@@ -72,7 +74,9 @@ class Processor
     ) {}
 
     /**
+     * @throws BadRequest
      * @throws Forbidden
+     * @throws Error
      */
     public function process(Params $params, Data $data): Result
     {
