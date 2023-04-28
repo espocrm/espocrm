@@ -37,7 +37,7 @@ use stdClass;
 /**
  * Contains an ORM collection and total number of records.
  *
- * @template TEntity of \Espo\ORM\Entity
+ * @template-covariant TEntity of \Espo\ORM\Entity
  */
 class Collection
 {

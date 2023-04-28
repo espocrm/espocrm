@@ -251,7 +251,7 @@ class Service implements Crud,
         $entity = $this->getEntity($id);
 
         if (!$entity) {
-            throw new NotFoundSilent("Record {$id} does not exist.");
+            throw new NotFoundSilent("Record $id does not exist.");
         }
 
         $this->recordHookManager->processBeforeRead($entity, $params);
@@ -712,7 +712,7 @@ class Service implements Crud,
             $this->getRepository()->getById($id);
 
         if (!$entity) {
-            throw new NotFound("Record {$id} not found.");
+            throw new NotFound("Record $id not found.");
         }
 
         if (!$this->getEntityBeforeUpdate) {
@@ -773,7 +773,7 @@ class Service implements Crud,
         $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
-            throw new NotFound("Record {$id} not found.");
+            throw new NotFound("Record $id not found.");
         }
 
         if (!$this->acl->check($entity, AclTable::ACTION_DELETE)) {
@@ -946,10 +946,8 @@ class Service implements Crud,
 
         $this->processForbiddenLinkReadCheck($link);
 
-        $methodName = 'findLinked' . ucfirst($link);
-
-        if (method_exists($this, $methodName)) {
-            return $this->$methodName($id, $searchParams);
+        if ($methodResult = $this->processFindLinkedMethod($id, $link, $searchParams)) {
+            return $methodResult;
         }
 
         $foreignEntityType = $this->entityManager
@@ -1029,6 +1027,27 @@ class Service implements Crud,
     }
 
     /**
+     * @param string $link
+     * @return ?RecordCollection<Entity>
+     * @throws Forbidden
+     * @throws NotFound
+     */
+    private function processFindLinkedMethod(string $id, string $link, SearchParams $searchParams): ?RecordCollection
+    {
+        if ($link === 'followers') {
+            return $this->findLinkedFollowers($id, $searchParams);
+        }
+
+        $methodName = 'findLinked' . ucfirst($link);
+
+        if (method_exists($this, $methodName)) {
+            return $this->$methodName($id, $searchParams);
+        }
+
+        return null;
+    }
+
+    /**
      * Link records.
      *
      * @throws BadRequest
@@ -1059,18 +1078,14 @@ class Service implements Crud,
 
         $this->getLinkCheck()->processLink($entity, $link);
 
-        $methodName = 'link' . ucfirst($link);
-
-        if ($link !== 'entity' && $link !== 'entityMass' && method_exists($this, $methodName)) {
-            $this->$methodName($id, $foreignId);
-
+        if ($this->processLinkMethod($id, $link, $foreignId)) {
             return;
         }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
         if (!$foreignEntityType) {
-            throw new LogicException("Entity '{$this->entityType}' has not relation '{$link}'.");
+            throw new LogicException("Entity '$this->entityType' has not relation '$link'.");
         }
 
         $foreignEntity = $this->entityManager->getEntityById($foreignEntityType, $foreignId);
@@ -1119,18 +1134,14 @@ class Service implements Crud,
 
         $this->getLinkCheck()->processLink($entity, $link);
 
-        $methodName = 'unlink' . ucfirst($link);
-
-        if ($link !== 'entity' && method_exists($this, $methodName)) {
-            $this->$methodName($id, $foreignId);
-
+        if ($this->processUnlinkMethod($id, $link, $foreignId)) {
             return;
         }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
         if (!$foreignEntityType) {
-            throw new LogicException("Entity '{$this->entityType}' has not relation '{$link}'.");
+            throw new LogicException("Entity '$this->entityType' has not relation '$link'.");
         }
 
         $foreignEntity = $this->entityManager->getEntityById($foreignEntityType, $foreignId);
@@ -1151,9 +1162,62 @@ class Service implements Crud,
     /**
      * @throws Forbidden
      * @throws NotFound
+     */
+    private function processLinkMethod(string $id, string $link, string $foreignId): bool
+    {
+        if ($link === 'followers') {
+            $this->linkFollowers($id, $foreignId);
+
+            return true;
+        }
+
+        $methodName = 'link' . ucfirst($link);
+
+        if (
+            $link !== 'entity' &&
+            $link !== 'entityMass' &&
+            method_exists($this, $methodName)
+        ) {
+            $this->$methodName($id, $foreignId);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
+    private function processUnlinkMethod(string $id, string $link, string $foreignId): bool
+    {
+        if ($link === 'followers') {
+            $this->unlinkFollowers($id, $foreignId);
+
+            return true;
+        }
+
+        $methodName = 'unlink' . ucfirst($link);
+
+        if (
+            $link !== 'entity' &&
+            method_exists($this, $methodName)
+        ) {
+            $this->$methodName($id, $foreignId);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @throws Forbidden
+     * @throws NotFound
      * @throws ForbiddenSilent
      */
-    public function linkFollowers(string $id, string $foreignId): void
+    protected function linkFollowers(string $id, string $foreignId): void
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new Forbidden();
@@ -1169,8 +1233,8 @@ class Service implements Crud,
             throw new NotFound();
         }
 
-        /** @var User|null $user */
-        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $foreignId);
+        /** @var ?User $user */
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $foreignId);
 
         if (!$user) {
             throw new NotFound();
@@ -1223,7 +1287,7 @@ class Service implements Crud,
      * @throws NotFound
      * @throws ForbiddenSilent
      */
-    public function unlinkFollowers(string $id, string $foreignId): void
+    protected function unlinkFollowers(string $id, string $foreignId): void
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new Forbidden();
@@ -1277,6 +1341,7 @@ class Service implements Crud,
      * @throws BadRequest
      * @throws Forbidden
      * @throws NotFound
+     * @throws Error
      */
     public function massLink(string $id, string $link, SearchParams $searchParams): bool
     {
@@ -1313,7 +1378,7 @@ class Service implements Crud,
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
         if (empty($foreignEntityType)) {
-            throw new LogicException("Link '{$link}' has no 'entity'.");
+            throw new LogicException("Link '$link' has no 'entity'.");
         }
 
         $accessActionRequired = AclTable::ACTION_EDIT;
@@ -1372,7 +1437,7 @@ class Service implements Crud,
     protected function processForbiddenLinkReadCheck(string $link): void
     {
         $forbiddenLinkList = $this->acl
-            ->getScopeForbiddenLinkList($this->entityType, AclTable::ACTION_READ);
+            ->getScopeForbiddenLinkList($this->entityType);
 
         if (in_array($link, $forbiddenLinkList)) {
             throw new Forbidden();
@@ -1554,8 +1619,7 @@ class Service implements Crud,
             }
         }
 
-        $forbiddenAttributeList = $this->acl
-            ->getScopeForbiddenAttributeList($entity->getEntityType(), AclTable::ACTION_READ);
+        $forbiddenAttributeList = $this->acl->getScopeForbiddenAttributeList($entity->getEntityType());
 
         foreach ($forbiddenAttributeList as $attribute) {
             $entity->clear($attribute);
@@ -1667,12 +1731,16 @@ class Service implements Crud,
                 ->find();
 
             foreach ($linkedList as $linked) {
-                $repository->relate($entity, $link, $linked);
+                $repository
+                    ->getRelation($entity, $link)
+                    ->relate($linked);
             }
         }
     }
 
     /**
+     * @deprecated
+     * @todo Remove in v7.6.
      * @param string $type
      * @return string[]
      */
