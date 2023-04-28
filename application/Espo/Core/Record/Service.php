@@ -369,8 +369,9 @@ class Service implements Crud,
     }
 
     /**
-     * @param TEntity $entity
      * Check whether assignment can be applied for an entity.
+     *
+     * @param TEntity $entity
      */
     public function checkAssignment(Entity $entity): bool
     {
