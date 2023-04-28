@@ -31,15 +31,12 @@ define('views/admin/entity-manager/record/edit', ['views/record/edit'], function
     return Dep.extend({
 
         bottomView: null,
-
         sideView: null,
 
         dropdownItemList: [],
 
         accessControlDisabled: true,
-
         saveAndContinueEditingAction: false,
-
         saveAndNewAction: false,
 
         shortcutKeys: {
@@ -97,7 +94,6 @@ define('views/admin/entity-manager/record/edit', ['views/record/edit'], function
                 this.hideField('statusField');
                 this.hideField('fullTextSearch');
                 this.hideField('countDisabled');
-                this.hideField('optimisticConcurrencyControl');
                 this.hideField('kanbanViewMode');
                 this.hideField('kanbanStatusIgnoreList');
                 this.hideField('disabled');

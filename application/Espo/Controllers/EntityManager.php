@@ -29,6 +29,8 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Error;
 use Espo\Entities\User;
 use Espo\Tools\EntityManager\EntityManager as EntityManagerTool;
 
@@ -38,7 +40,9 @@ use Espo\Core\Exceptions\Forbidden;
 
 class EntityManager
 {
-
+    /**
+     * @throws Forbidden
+     */
     public function __construct(
         private User $user,
         private EntityManagerTool $entityManagerTool
@@ -49,6 +53,11 @@ class EntityManager
         }
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     * @throws Conflict
+     */
     public function postActionCreateEntity(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -130,6 +139,10 @@ class EntityManager
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     */
     public function postActionUpdateEntity(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -153,6 +166,11 @@ class EntityManager
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     */
     public function postActionRemoveEntity(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -176,6 +194,11 @@ class EntityManager
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     * @throws Conflict
+     */
     public function postActionCreateLink(Request $request): bool
     {
         $data = $request->getParsedBody();

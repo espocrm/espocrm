@@ -26,11 +26,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Model) {
+define('views/admin/entity-manager/edit', ['view', 'model'],
+/**
+ * @param {module:view.Class#} Dep
+ * @param {typeof module:model.Class} Model
+ */
+function (Dep, Model) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:view.Class
+     * @memberOf module:views/admin/entity-manager/edit
+     */
+    return Dep.extend(/** @lends module:views/admin/entity-manager/edit.Class# */{
 
         template: 'admin/entity-manager/edit',
+
+        /**
+         * @type {{
+         *     string: {
+         *         fieldDefs: Object.<string, *>,
+         *         location?: string,
+         *     }
+         * }|null}
+         */
+        additionalParams: null,
+        defaultParamLocation: 'scopes',
 
         data: function () {
             return {
@@ -40,16 +62,14 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
         },
 
         setupData: function () {
-            var scope = this.scope;
-
+            let scope = this.scope;
             this.hasStreamField = true;
 
             if (scope) {
-                this.hasStreamField =
-                    (
-                        this.getMetadata().get('scopes.' + scope + '.customizable') &&
-                        this.getMetadata().get('scopes.' + scope + '.object')
-                    ) || false;
+                this.hasStreamField = (
+                    this.getMetadata().get(['scopes', scope, 'customizable']) &&
+                    this.getMetadata().get(['scopes', scope, 'object'])
+                ) || false;
             }
 
             if (scope === 'User') {
@@ -59,6 +79,11 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
             this.hasColorField = !this.getConfig().get('scopeColorsDisabled');
 
             if (scope) {
+                this.additionalParams = Espo.Utils.cloneDeep({
+                    ...this.getMetadata().get(['app', 'entityManagerParams', 'Global']),
+                    ...this.getMetadata().get(['app', 'entityManagerParams', scope])
+                });
+
                 this.model.set('name', scope);
                 this.model.set('labelSingular', this.translate(scope, 'scopeNames'));
                 this.model.set('labelPlural', this.translate(scope, 'scopeNamesPlural'));
@@ -69,17 +94,15 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
                 this.model.set('sortBy', this.getMetadata().get('entityDefs.' + scope + '.collection.orderBy'));
                 this.model.set('sortDirection', this.getMetadata().get('entityDefs.' + scope + '.collection.order'));
 
-                this.model.set(
-                    'textFilterFields',
+                this.model.set('textFilterFields',
                     this.getMetadata().get(['entityDefs', scope, 'collection', 'textFilterFields']) || ['name']
                 );
 
-                this.model.set(
-                    'fullTextSearch',
+                this.model.set('fullTextSearch',
                     this.getMetadata().get(['entityDefs', scope, 'collection', 'fullTextSearch']) || false
                 );
-                this.model.set(
-                    'countDisabled',
+
+                this.model.set('countDisabled',
                     this.getMetadata().get(['entityDefs', scope, 'collection', 'countDisabled']) || false
                 );
 
@@ -101,10 +124,16 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
                     this.getMetadata().get(['scopes', scope, 'kanbanStatusIgnoreList']) || []
                 );
 
-                this.model.set(
-                    'optimisticConcurrencyControl',
-                    this.getMetadata().get(['entityDefs', scope, 'optimisticConcurrencyControl']) || false
-                );
+                for (let param in this.additionalParams) {
+                    /** @type {{fieldDefs: Object, location?: string}} */
+                    let defs = this.additionalParams[param];
+                    let location = defs.location || this.defaultParamLocation;
+                    let defaultValue = defs.fieldDefs.type === 'bool' ? false : null;
+
+                    let value = this.getMetadata().get([location, scope, param]) || defaultValue;
+
+                    this.model.set(param, value);
+                }
             }
 
             if (scope) {
@@ -112,7 +141,7 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
 
                 this.orderableFieldList = Object.keys(fieldDefs)
                     .filter(item => {
-                        if (!this.getFieldManager().isScopeFieldAvailable(scope, item)) {
+                        if (!this.getFieldManager().isEntityTypeFieldAvailable(scope, item)) {
                             return false;
                         }
 
@@ -139,10 +168,10 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
 
                 this.filtersOptionList.forEach(item => {
                     if (~item.indexOf('.')) {
-                        var link = item.split('.')[0];
-                        var foreignField = item.split('.')[1];
+                        let link = item.split('.')[0];
+                        let foreignField = item.split('.')[1];
 
-                        var foreignEntityType = this.getMetadata()
+                        let foreignEntityType = this.getMetadata()
                             .get(['entityDefs', scope, 'links', link, 'entity']);
 
                         this.textFilterFieldsTranslation[item] =
@@ -164,8 +193,6 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
                         if (fieldDefs[item].type === 'enum') {
                             return true;
                         }
-
-                        return;
                     })
                     .sort((v1, v2) => {
                         return this.translate(v1, 'fields', scope)
@@ -259,12 +286,6 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
                         ],
                         [
                             {
-                                name: 'optimisticConcurrencyControl',
-                            },
-                            false,
-                        ],
-                        [
-                            {
                                 name: 'kanbanViewMode',
                             },
                             {
@@ -275,17 +296,40 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
                             },
                         ],
                     ]
-                }
+                },
             ];
+
+            if (this.scope) {
+                let rows = [];
+
+                Object.keys(this.additionalParams).forEach((param, i) => {
+                    if (i % 2 === 0) {
+                        rows.push([]);
+                    }
+
+                    let row = rows[rows.length - 1];
+
+                    row.push({
+                        name: param,
+                    });
+
+                    if (
+                        i === Object.keys(this.additionalParams).length - 1 &&
+                        row.length === 1
+                    ) {
+                        row.push(false);
+                    }
+                });
+
+                this.detailLayout.push({rows: rows});
+            }
         },
 
         setup: function () {
-            var scope = this.scope = this.options.scope || false;
-
+            let scope = this.scope = this.options.scope || false;
             this.isNew = !scope;
 
-            var model = this.model = new Model();
-
+            let model = this.model = new Model();
             model.name = 'EntityManager';
 
             if (!this.isNew) {
@@ -293,8 +337,17 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
             }
 
             this.setupData();
+            this.setupDefs();
 
-            this.model.setDefs({
+            this.model.fetchedAttributes = this.model.getClonedAttributes();
+
+            this.createRecordView();
+        },
+
+        setupDefs: function () {
+            let scope = this.scope;
+
+            let defs = {
                 fields: {
                     type: {
                         type: 'enum',
@@ -370,16 +423,14 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
                         type: 'multiEnum',
                         options: this.statusOptionList,
                     },
-                    optimisticConcurrencyControl: {
-                        type: 'bool',
-                        tooltip: true,
-                    },
                 },
-            });
+            };
 
-            this.model.fetchedAttributes = this.model.getClonedAttributes();
+            for (let param in this.additionalParams) {
+                defs.fields[param] = this.additionalParams[param].fieldDefs;
+            }
 
-            this.createRecordView();
+            this.model.setDefs(defs);
         },
 
         createRecordView: function () {
@@ -450,7 +501,7 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
         },
 
         actionSave: function () {
-            var fieldList = [
+            let fieldList = [
                 'name',
                 'type',
                 'labelSingular',
@@ -469,16 +520,17 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
                 fieldList.push('sortDirection');
                 fieldList.push('kanbanViewMode');
                 fieldList.push('kanbanStatusIgnoreList');
-                fieldList.push('optimisticConcurrencyControl');
+
+                fieldList = fieldList.concat((Object.keys(this.additionalParams)));
             }
 
             if (this.hasColorField) {
                 fieldList.push('color');
             }
 
-            var fetchedAttributes = Espo.Utils.cloneDeep(this.model.fetchedAttributes) || {};
+            let fetchedAttributes = Espo.Utils.cloneDeep(this.model.fetchedAttributes) || {};
 
-            var notValid = false;
+            let notValid = false;
 
             fieldList.forEach(item => {
                 if (!this.getFieldView(item)) {
@@ -510,15 +562,15 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
 
             this.disableButtons();
 
-            var url = 'EntityManager/action/createEntity';
+            let url = 'EntityManager/action/createEntity';
 
             if (this.scope) {
                 url = 'EntityManager/action/updateEntity';
             }
 
-            var name = this.model.get('name');
+            let name = this.model.get('name');
 
-            var data = {
+            let data = {
                 name: name,
                 labelSingular: this.model.get('labelSingular'),
                 labelPlural: this.model.get('labelPlural'),
@@ -545,7 +597,14 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
                 data.sortDirection = this.model.get('sortDirection');
                 data.kanbanViewMode = this.model.get('kanbanViewMode');
                 data.kanbanStatusIgnoreList = this.model.get('kanbanStatusIgnoreList');
-                data.optimisticConcurrencyControl = this.model.get('optimisticConcurrencyControl');
+
+                for (let param in this.additionalParams) {
+                    let type = this.additionalParams[param].fieldDefs.type;
+
+                    this.getFieldManager().getAttributeList(type, param).forEach(attribute => {
+                        data[attribute] = this.model.get(attribute);
+                    })
+                }
             }
 
             if (!this.isNew) {
@@ -560,19 +619,14 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-            Espo.Ajax
-            .postRequest(url, data)
-            .then(() => {
+            Espo.Ajax.postRequest(url, data).then(() => {
                 this.model.fetchedAttributes = this.model.getClonedAttributes();
 
-                if (this.scope) {
-                    Espo.Ui.success(this.translate('Saved'));
-                }
-                else {
-                    Espo.Ui.success(this.translate('entityCreated', 'messages', 'EntityManager'));
-                }
+                this.scope ?
+                    Espo.Ui.success(this.translate('Saved')) :
+                    Espo.Ui.success(this.translate('entityCreated', 'messages', 'EntityManager'))
 
-                var global = ((this.getLanguage().data || {}) || {}).Global;
+                let global = ((this.getLanguage().data || {}) || {}).Global;
 
                 (global.scopeNames || {})[name] = this.model.get('labelSingular');
                 (global.scopeNamesPlural || {})[name] = this.model.get('labelPlural');
@@ -585,7 +639,7 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
                     ])
                 )
                 .then(() => {
-                    var rebuildRequired =
+                    let rebuildRequired =
                         data.fullTextSearch && !fetchedAttributes.fullTextSearch;
 
                     this.broadcastUpdate();
@@ -642,26 +696,24 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
 
                 this.disableButtons();
 
-                Espo.Ajax.postRequest('EntityManager/action/resetToDefault', {
-                    scope: this.scope,
-                })
-                .then(() => {
-                    this.getMetadata()
-                        .loadSkipCache()
-                        .then(() => this.getLanguage().loadSkipCache())
-                        .then(() => {
-                            this.setupData();
+                Espo.Ajax.postRequest('EntityManager/action/resetToDefault', {scope: this.scope})
+                    .then(() => {
+                        this.getMetadata()
+                            .loadSkipCache()
+                            .then(() => this.getLanguage().loadSkipCache())
+                            .then(() => {
+                                this.setupData();
 
-                            this.model.fetchedAttributes = this.model.getClonedAttributes();
+                                this.model.fetchedAttributes = this.model.getClonedAttributes();
 
-                            this.notify('Done', 'success');
+                                Espo.Ui.notify(this.translate('Done'), 'success');
 
-                            this.enableButtons();
-                            this.broadcastUpdate();
+                                this.enableButtons();
+                                this.broadcastUpdate();
 
-                            this.getView('record').setIsNotChanged();
-                        });
-                });
+                                this.getView('record').setIsNotChanged();
+                            });
+                    });
             });
         },
 
