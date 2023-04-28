@@ -137,9 +137,9 @@ class Service implements Crud,
     protected $nonAdminReadOnlyLinkList = [];
     /** @var string[] */
     protected $onlyAdminLinkList = [];
-    /** @var array<string,array<string, mixed>> */
+    /** @var array<string, array<string, mixed>> */
     protected $linkParams = [];
-    /** @var array<string,string[]> */
+    /** @var array<string, string[]> */
     protected $linkMandatorySelectAttributeList = [];
     /** @var string[] */
     protected $noEditAccessRequiredLinkList = [];
@@ -471,7 +471,6 @@ class Service implements Crud,
         unset($data->versionNumber);
 
         $this->filterInput($data);
-
         $this->handleInput($data);
         $this->handleCreateInput($data);
     }
@@ -489,7 +488,6 @@ class Service implements Crud,
         unset($data->versionNumber);
 
         $this->filterInput($data);
-
         $this->handleInput($data);
     }
 
@@ -559,7 +557,7 @@ class Service implements Crud,
      * @param TEntity $entity
      * @throws Conflict
      */
-    protected function processDuplicateCheck(Entity $entity, stdClass $data): void
+    protected function processDuplicateCheck(Entity $entity): void
     {
         $duplicateList = $this->findDuplicates($entity);
 
@@ -668,7 +666,7 @@ class Service implements Crud,
         $this->getLinkCheck()->process($entity);
 
         if (!$params->skipDuplicateCheck()) {
-            $this->processDuplicateCheck($entity, $data);
+            $this->processDuplicateCheck($entity);
         }
 
         $this->recordHookManager->processBeforeCreate($entity, $params);
@@ -738,7 +736,7 @@ class Service implements Crud,
             $this->checkForDuplicatesInUpdate;
 
         if ($checkForDuplicates && !$params->skipDuplicateCheck()) {
-            $this->processDuplicateCheck($entity, $data);
+            $this->processDuplicateCheck($entity);
         }
 
         $this->recordHookManager->processBeforeUpdate($entity, $params);
