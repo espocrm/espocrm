@@ -33,7 +33,6 @@ use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Binding\ContextualBinder;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Exceptions\Error\Body as ErrorBody;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ConflictSilent;
@@ -41,15 +40,9 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
+use Espo\Core\Field\LinkParent;
+use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Record\Access\LinkCheck;
-use Espo\Entities\ActionHistoryRecord;
-use Espo\ORM\Entity;
-use Espo\ORM\Repository\RDBRepository;
-use Espo\ORM\Collection;
-use Espo\ORM\EntityManager;
-use Espo\ORM\Query\Part\WhereClause;
-use Espo\Entities\User;
-use Espo\Tools\Stream\Service as StreamService;
 use Espo\Core\Utils\Json;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table as AclTable;
@@ -65,6 +58,14 @@ use Espo\Core\Record\Select\ApplierClassNameListProvider;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Di;
+use Espo\ORM\Entity;
+use Espo\ORM\Repository\RDBRepository;
+use Espo\ORM\Collection;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Part\WhereClause;
+use Espo\Tools\Stream\Service as StreamService;
+use Espo\Entities\User;
+use Espo\Entities\ActionHistoryRecord;
 use stdClass;
 use InvalidArgumentException;
 use LogicException;
@@ -204,6 +205,11 @@ class Service implements Crud,
         return $this->entityManager->getRDBRepository($this->entityType);
     }
 
+    /**
+     * Add an action-history record.
+     *
+     * @param ActionHistoryRecord::ACTION_* $action
+     */
     public function processActionHistoryRecord(string $action, Entity $entity): void
     {
         if ($this->actionHistoryDisabled) {
@@ -214,18 +220,16 @@ class Service implements Crud,
             return;
         }
 
+        /** @var ActionHistoryRecord $historyRecord */
         $historyRecord = $this->entityManager->getNewEntity(ActionHistoryRecord::ENTITY_TYPE);
 
-        $historyRecord->set('action', $action);
-        $historyRecord->set('userId', $this->user->getId());
-        $historyRecord->set('authTokenId', $this->user->get('authTokenId'));
-        $historyRecord->set('ipAddress', $this->user->get('ipAddress'));
-        $historyRecord->set('authLogRecordId', $this->user->get('authLogRecordId'));
-
-        $historyRecord->set([
-            'targetType' => $entity->getEntityType(),
-            'targetId' => $entity->getId()
-        ]);
+        $historyRecord
+            ->setAction($action)
+            ->setUserId($this->user->getId())
+            ->setAuthTokenId($this->user->get('authTokenId'))
+            ->setAuthLogRecordId($this->user->get('authLogRecordId'))
+            ->setIpAddress($this->user->get('ipAddress'))
+            ->setTarget(LinkParent::createFromEntity($entity));
 
         $this->entityManager->saveEntity($historyRecord);
     }
