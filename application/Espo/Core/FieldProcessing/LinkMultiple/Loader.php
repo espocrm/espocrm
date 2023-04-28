@@ -48,7 +48,7 @@ class Loader implements LoaderInterface
     private OrmDefs $ormDefs;
 
     /**
-     * @var array<string,string[]>
+     * @var array<string, string[]>
      */
     private $fieldListCacheMap = [];
 

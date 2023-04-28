@@ -103,15 +103,15 @@ class Params
      *
      * @param array{
      *   entityType?: string,
-     *   where?: array<int,array<string,mixed>>,
+     *   where?: array<int, array<string, mixed>>,
      *   ids?: ?string[],
-     *   searchParams?: ?array<string,mixed>,
+     *   searchParams?: ?array<string, mixed>,
      * } $params
      * @throws RuntimeException
      */
     public static function fromRaw(array $params, ?string $entityType = null): self
     {
-        /** @var array<string,mixed> $params */
+        /** @var array<string, mixed> $params */
 
         $obj = new self();
 

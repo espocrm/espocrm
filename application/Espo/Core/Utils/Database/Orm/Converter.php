@@ -407,7 +407,7 @@ class Converter
                     $output[$attribute] = $fieldDefs;
                 }
 
-                /** @var array<string,array<string,mixed>> $output */
+                /** @var array<string, array<string, mixed>> $output */
             }
 
             if (isset($fieldTypeMetadata['linkDefs'])) {

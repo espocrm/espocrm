@@ -134,7 +134,7 @@ trait SelectingTrait
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     private static function validateRawParamsSelecting(array $params): void
     {
