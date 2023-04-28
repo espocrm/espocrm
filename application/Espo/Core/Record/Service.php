@@ -255,7 +255,7 @@ class Service implements Crud,
         }
 
         $this->recordHookManager->processBeforeRead($entity, $params);
-        $this->processActionHistoryRecord('read', $entity);
+        $this->processActionHistoryRecord(ActionHistoryRecord::ACTION_READ, $entity);
 
         return $entity;
     }
@@ -679,7 +679,7 @@ class Service implements Crud,
         $this->afterCreateProcessDuplicating($entity, $params);
         $this->loadAdditionalFields($entity);
         $this->prepareEntityForOutput($entity);
-        $this->processActionHistoryRecord('create', $entity);
+        $this->processActionHistoryRecord(ActionHistoryRecord::ACTION_CREATE, $entity);
 
         return $entity;
     }
@@ -746,7 +746,7 @@ class Service implements Crud,
 
         $this->afterUpdateEntity($entity, $data);
         $this->prepareEntityForOutput($entity);
-        $this->processActionHistoryRecord('update', $entity);
+        $this->processActionHistoryRecord(ActionHistoryRecord::ACTION_UPDATE, $entity);
 
         return $entity;
     }
@@ -782,7 +782,7 @@ class Service implements Crud,
         $this->beforeDeleteEntity($entity);
         $this->getRepository()->remove($entity);
         $this->afterDeleteEntity($entity);
-        $this->processActionHistoryRecord('delete', $entity);
+        $this->processActionHistoryRecord(ActionHistoryRecord::ACTION_DELETE, $entity);
     }
 
     /**

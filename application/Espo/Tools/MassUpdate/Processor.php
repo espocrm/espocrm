@@ -46,6 +46,7 @@ use Espo\Core\Record\Service;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Entities\ActionHistoryRecord;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 
@@ -197,7 +198,7 @@ class Processor
             'modifiedById' => $this->user->getId(),
         ]);
 
-        $service->processActionHistoryRecord('update', $entity);
+        $service->processActionHistoryRecord(ActionHistoryRecord::ACTION_UPDATE, $entity);
 
         return true;
     }
