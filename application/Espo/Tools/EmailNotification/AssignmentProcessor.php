@@ -30,6 +30,9 @@
 namespace Espo\Tools\EmailNotification;
 
 use Espo\Core\ORM\Entity;
+use Espo\Entities\Email;
+use Espo\Entities\Preferences;
+use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Core\Htmlizer\Htmlizer;
 use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
@@ -75,7 +78,7 @@ class AssignmentProcessor
             throw new LogicException();
         }
 
-        $user = $this->entityManager->getEntity('User', $userId);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             return;
@@ -85,7 +88,7 @@ class AssignmentProcessor
             return;
         }
 
-        $preferences = $this->entityManager->getEntity('Preferences', $userId);
+        $preferences = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $userId);
 
         if (!$preferences) {
             return;
@@ -101,9 +104,9 @@ class AssignmentProcessor
             return;
         }
 
-        $assignerUser = $this->entityManager->getEntity('User', $assignerUserId);
+        $assignerUser = $this->entityManager->getEntityById(User::ENTITY_TYPE, $assignerUserId);
 
-        $entity = $this->entityManager->getEntity($entityType, $entityId);
+        $entity = $this->entityManager->getEntityById($entityType, $entityId);
 
         if (!$entity) {
             return;
@@ -131,7 +134,8 @@ class AssignmentProcessor
             return;
         }
 
-        $email = $this->entityManager->getNewEntity('Email');
+        /** @var Email $email */
+        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
         $subjectTpl = $this->templateFileManager->getTemplate('assignment', 'subject', $entity->getEntityType());
         $bodyTpl = $this->templateFileManager->getTemplate('assignment', 'body', $entity->getEntityType());
