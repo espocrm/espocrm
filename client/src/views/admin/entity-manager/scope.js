@@ -56,6 +56,9 @@ define('views/admin/entity-manager/scope', ['view'], function (Dep) {
             'click [data-action="removeEntity"]': function () {
                 this.removeEntity();
             },
+            'click [data-action="editFormula"]': function () {
+                this.editFormula();
+            },
         },
 
         setup: function () {
@@ -86,7 +89,6 @@ define('views/admin/entity-manager/scope', ['view'], function (Dep) {
             this.hasFields = this.isCustomizable;
             this.hasRelationships = this.isCustomizable;
 
-
             if ('edit' in entityManagerData) {
                 this.isEditable = entityManagerData.edit;
             }
@@ -108,6 +110,24 @@ define('views/admin/entity-manager/scope', ['view'], function (Dep) {
             }
 
             this.label = this.getLanguage().translate(this.scope, 'scopeNames');
+        },
+
+        editFormula: function () {
+            Espo.Ui.notify(' ... ');
+
+            Espo.loader.requirePromise('views/admin/entity-manager/modals/select-formula')
+                .then(View => {
+                    /** @type {module:views/modal.Class} */
+                    let view = new View({
+                        scope: this.scope,
+                    });
+
+                    this.assignView('dialog', view).then(() => {
+                        Espo.Ui.notify(false);
+
+                        view.render();
+                    });
+                });
         },
 
         removeEntity: function () {
@@ -160,6 +180,5 @@ define('views/admin/entity-manager/scope', ['view'], function (Dep) {
             this.getHelper().broadcastChannel.postMessage('update:metadata');
             this.getHelper().broadcastChannel.postMessage('update:settings');
         },
-
     });
 });

@@ -43,6 +43,7 @@ use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Record\Access\LinkCheck;
+use Espo\Core\Record\Formula\Processor as FormulaProcessor;
 use Espo\Core\Utils\Json;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table as AclTable;
@@ -673,6 +674,7 @@ class Service implements Crud,
             $this->processDuplicateCheck($entity);
         }
 
+        $this->processApiBeforeCreateApiScript($entity, $params);
         $this->recordHookManager->processBeforeCreate($entity, $params);
 
         $this->beforeCreateEntity($entity, $data);
@@ -743,6 +745,7 @@ class Service implements Crud,
             $this->processDuplicateCheck($entity);
         }
 
+        $this->processApiBeforeUpdateApiScript($entity, $params);
         $this->recordHookManager->processBeforeUpdate($entity, $params);
         $this->beforeUpdateEntity($entity, $data);
 
@@ -1804,6 +1807,26 @@ class Service implements Crud,
         );
 
         return $searchParams->withSelect($select);
+    }
+
+    /**
+     * @param TEntity $entity
+     */
+    private function processApiBeforeCreateApiScript(Entity $entity, CreateParams $params): void
+    {
+        $processor = $this->injectableFactory->create(FormulaProcessor::class);
+
+        $processor->processBeforeCreate($entity, $params);
+    }
+
+    /**
+     * @param TEntity $entity
+     */
+    private function processApiBeforeUpdateApiScript(Entity $entity, UpdateParams $params): void
+    {
+        $processor = $this->injectableFactory->create(FormulaProcessor::class);
+
+        $processor->processBeforeUpdate($entity, $params);
     }
 
     /**

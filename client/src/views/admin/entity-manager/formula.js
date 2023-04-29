@@ -56,30 +56,37 @@ define('views/admin/entity-manager/formula', ['view', 'lib!espo', 'model'], func
         data: function () {
             return {
                 scope: this.scope,
+                type: this.type,
             };
         },
 
         setup: function () {
             let scope = this.scope = this.options.scope || false;
+            this.type = this.options.type;
 
-            var model = this.model = new Model();
+            if (!['beforeSaveCustomScript', 'beforeSaveApiScript'].includes(this.type)) {
+                Espo.Ui.error('No allowed formula type.', true);
+
+                throw new Espo.Exceptions.NotFound('No allowed formula type specified.');
+            }
+
+            let model = this.model = new Model();
 
             model.name = 'EntityManager';
 
             this.wait(
                 Espo.Ajax
-                    .getRequest('Metadata/action/get', {
-                        key: 'formula.' + scope
-                    })
+                    .getRequest('Metadata/action/get', {key: 'formula.' + scope})
                     .then(formulaData => {
                         formulaData = formulaData || {};
 
-                        model.set('beforeSaveCustomScript', formulaData.beforeSaveCustomScript || null);
+                        model.set(this.type, formulaData[this.type] || null);
 
                         this.createView('record', 'views/admin/entity-manager/record/edit-formula', {
-                            el: this.getSelector() + ' .record',
+                            selector: '.record',
                             model: model,
                             targetEntityType: this.scope,
+                            type: this.type,
                         });
                     })
             );
@@ -108,7 +115,7 @@ define('views/admin/entity-manager/formula', ['view', 'lib!espo', 'model'], func
         actionSave: function () {
             this.disableButtons();
 
-            var data = this.getView('record').fetch();
+            let data = this.getView('record').fetch();
 
             this.model.set(data);
 
@@ -116,8 +123,8 @@ define('views/admin/entity-manager/formula', ['view', 'lib!espo', 'model'], func
                 return;
             }
 
-            if (data.beforeSaveCustomScript === '') {
-                data.beforeSaveCustomScript = null;
+            if (data[this.type] === '') {
+                data[this.type] = null;
             }
 
             Espo.Ui.notify(' ... ');
@@ -125,13 +132,12 @@ define('views/admin/entity-manager/formula', ['view', 'lib!espo', 'model'], func
             Espo.Ajax
                 .postRequest('EntityManager/action/formula', {
                     data: data,
-                    scope: this.scope
+                    scope: this.scope,
                 })
                 .then(() => {
                     Espo.Ui.success(this.translate('Saved'));
 
                     this.enableButtons();
-
                     this.setIsNotChanged();
                 })
                 .catch(() => this.enableButtons());
@@ -160,6 +166,5 @@ define('views/admin/entity-manager/formula', ['view', 'lib!espo', 'model'], func
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate('Formula', 'labels', 'EntityManager'));
         },
-
     });
 });

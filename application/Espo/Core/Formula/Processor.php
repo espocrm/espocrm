@@ -95,9 +95,10 @@ class Processor
         $function = $this->functionFactory->create($item->getType(), $this->entity, $this->variables);
 
         if ($function instanceof Func) {
-            $evaluatedArguments = array_map(function ($item) {
-                return $this->process($item);
-            }, iterator_to_array($item->getArgumentList()));
+            $evaluatedArguments = array_map(
+                fn($item) => $this->process($item),
+                iterator_to_array($item->getArgumentList())
+            );
 
             try {
                 return $function->process(new EvaluatedArgumentList($evaluatedArguments));
@@ -155,7 +156,6 @@ class Processor
     /**
      * @return mixed[]
      * @throws Error
-     * @throws ExecutionException
      */
     private function processList(ArgumentList $args): array
     {

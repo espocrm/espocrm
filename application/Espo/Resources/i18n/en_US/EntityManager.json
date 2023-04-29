@@ -31,6 +31,7 @@
         "auditedForeign": "Foreign Audited",
         "statusField": "Status Field",
         "beforeSaveCustomScript": "Before Save Custom Script",
+        "beforeSaveApiScript": "API Before Save Script",
         "color": "Color",
         "kanbanViewMode": "Kanban View",
         "kanbanStatusIgnoreList": "Ignored groups in Kanban view",
@@ -69,7 +70,9 @@
         "confirmRemove": "Are you sure you want to remove the entity type from the system?",
         "entityCreated": "Entity has been created",
         "linkAlreadyExists": "Link name conflict.",
-        "linkConflict": "Name conflict: link or field with the same name already exists."
+        "linkConflict": "Name conflict: link or field with the same name already exists.",
+        "beforeSaveCustomScript": "A script called every time before an entity is saved. Use for setting calculated fields.",
+        "beforeSaveApiScript": "A script called on create and update API requests before an entity is saved. Use for custom validation and duplicate checking."
     },
     "tooltips": {
         "optimisticConcurrencyControl": "Prevents writing conflicts.",

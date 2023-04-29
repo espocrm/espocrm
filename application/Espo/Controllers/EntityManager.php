@@ -377,6 +377,10 @@ class EntityManager
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     */
     public function postActionFormula(Request $request): bool
     {
         $data = $request->getParsedBody();
