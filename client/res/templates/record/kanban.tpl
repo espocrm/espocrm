@@ -4,7 +4,7 @@
     {{#if displayTotalCount}}
         <div class="text-muted total-count">
             <span
-                title="{{translate 'Total'}}: {{totalCountFormatted}}"
+                title="{{translate 'Total'}}"
                 class="total-count-span"
             >{{totalCountFormatted}}</span>
         </div>
