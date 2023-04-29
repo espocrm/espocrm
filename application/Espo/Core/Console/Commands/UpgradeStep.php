@@ -74,7 +74,7 @@ class UpgradeStep implements Command
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     private function runUpgradeStep(string $stepName, array $params): bool
     {

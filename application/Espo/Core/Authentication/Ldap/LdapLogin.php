@@ -310,7 +310,7 @@ class LdapLogin implements Login
     /**
      * Create Espo user with data gets from LDAP server.
      *
-     * @param array<string,mixed> $userData
+     * @param array<string, mixed> $userData
      */
     private function createUser(array $userData, bool $isPortal = false): ?User
     {
@@ -394,7 +394,7 @@ class LdapLogin implements Login
             '(' . $options['userNameAttribute'] . '=' . $username . ')' .
             $loginFilterString . ')';
 
-        /** @var array<int,array{dn: string}> $result */
+        /** @var array<int, array{dn: string}> $result */
         $result = $ldapClient->search($searchString, null, Client::SEARCH_SCOPE_SUB);
 
         $this->log->debug('LDAP: user search string: "' . $searchString . '"');
@@ -427,7 +427,7 @@ class LdapLogin implements Login
     /**
      * Load fields for a user.
      *
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function loadFields(string $type): array
     {

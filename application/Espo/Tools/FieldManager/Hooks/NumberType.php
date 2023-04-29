@@ -37,8 +37,8 @@ class NumberType implements Di\EntityManagerAware
     use Di\EntityManagerSetter;
 
     /**
-     * @param array<string,mixed> $defs
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $defs
+     * @param array<string, mixed> $options
      */
     public function onRead(string $scope, string $name, &$defs, $options): void
     {
@@ -68,8 +68,8 @@ class NumberType implements Di\EntityManagerAware
     }
 
     /**
-     * @param array<string,mixed> $defs
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $defs
+     * @param array<string, mixed> $options
      */
     public function afterSave(string $scope, string $name, $defs, $options): void
     {
@@ -98,8 +98,8 @@ class NumberType implements Di\EntityManagerAware
     }
 
     /**
-     * @param array<string,mixed> $defs
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $defs
+     * @param array<string, mixed> $options
      */
     public function afterRemove(string $scope, string $name, $defs, $options): void
     {

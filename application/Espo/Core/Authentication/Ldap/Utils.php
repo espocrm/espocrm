@@ -143,9 +143,9 @@ class Utils
     /**
      * Normalize options to LDAP client format
      *
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      *
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function normalizeOptions(array $options): array
     {
@@ -179,7 +179,7 @@ class Utils
     /**
      * Get Laminas options for using Laminas\Ldap.
      *
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getLdapClientOptions(): array
     {

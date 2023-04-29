@@ -106,7 +106,7 @@ class Client
     protected $certificateFile = null;
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     protected $curlOptions = [];
 
@@ -173,7 +173,7 @@ class Client
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     public function setCurlOptions($options)

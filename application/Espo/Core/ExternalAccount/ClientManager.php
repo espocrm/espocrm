@@ -69,7 +69,7 @@ class ClientManager
 
     /**
      *
-     * @var array<string,array<string,mixed>>
+     * @var array<string, array<string, mixed>>
      */
     protected $clientMap = [];
 

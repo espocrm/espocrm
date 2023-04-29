@@ -1478,7 +1478,7 @@ class EntityManager
     }
 
     /**
-     * @param ?array<string,mixed> $params
+     * @param ?array<string, mixed> $params
      */
     protected function processHook(string $methodName, string $type, string $name, &$params = null): void
     {

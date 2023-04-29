@@ -284,7 +284,7 @@ class Manager
      * Get array or stdClass data from PHP file.
      * If a file is not yet written, it will wait until it's ready.
      *
-     * @return array<mixed,mixed>|stdClass
+     * @return array<mixed, mixed>|stdClass
      * @throws FileError
      */
     public function getPhpSafeContents(string $path)
@@ -455,7 +455,7 @@ class Manager
     /**
      * Merge JSON file contents with existing and override the file.
      *
-     * @param array<mixed,mixed> $data
+     * @param array<string|int, mixed> $data
      */
     public function mergeJsonContents(string $path, array $data): bool
     {
@@ -1036,7 +1036,7 @@ class Manager
     /**
      * Wrap data for export to PHP file.
      *
-     * @param array<mixed,mixed>|object|null $data
+     * @param array<string|int, mixed>|object|null $data
      * @return string|false
      */
     public function wrapForDataExport($data, bool $withObjects = false)

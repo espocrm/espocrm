@@ -198,7 +198,7 @@ class Sender
 
     /**
      * @deprecated As of 6.0. Use withSmtpParams.
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     public function useSmtp(array $params = []): self
     {

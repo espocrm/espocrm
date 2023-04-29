@@ -39,8 +39,8 @@ class AutoincrementType implements Di\MetadataAware
     use Di\MetadataSetter;
 
     /**
-     * @param array<string,mixed> $defs
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $defs
+     * @param array<string, mixed> $options
      * @throws Error
      */
     public function beforeSave(string $scope, string $name, $defs, $options): void

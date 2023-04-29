@@ -62,7 +62,7 @@ abstract class Base
     protected $data;
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     protected $params = null;
 
@@ -107,7 +107,7 @@ abstract class Base
     protected $packagePostfix = 'z';
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     protected $scriptParams = [];
 
@@ -890,7 +890,7 @@ abstract class Base
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      * @throws Error
      */
     public function getManifest()
@@ -930,7 +930,7 @@ abstract class Base
     /**
      * Check if the manifest is correct.
      *
-     * @param array<string,mixed> $manifest
+     * @param array<string, mixed> $manifest
      * @return bool
      */
     protected function checkManifest(array $manifest)
@@ -1047,7 +1047,7 @@ abstract class Base
      * Execute an action. For ex., execute uninstall action in install.
      *
      * @param string $actionName
-     * @param string|array<string,mixed> $data
+     * @param string|array<string, mixed> $data
      * @return void
      * @throws Error
      */

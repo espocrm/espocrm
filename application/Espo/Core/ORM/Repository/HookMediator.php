@@ -41,8 +41,8 @@ class HookMediator extends EmptyHookMediator
     {}
 
     /**
-     * @param ?array<string,mixed> $columnData
-     * @param array<string,mixed> $options
+     * @param ?array<string, mixed> $columnData
+     * @param array<string, mixed> $options
      */
     public function afterRelate(
         Entity $entity,
@@ -73,7 +73,7 @@ class HookMediator extends EmptyHookMediator
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function afterUnrelate(Entity $entity, string $relationName, Entity $foreignEntity, array $options): void
     {

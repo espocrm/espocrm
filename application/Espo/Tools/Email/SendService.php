@@ -610,7 +610,7 @@ class SendService
 
     /**
      * @internal For bc.
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     private function applyUserHandlerInternal(string $userId, string $emailAddress, array &$params): bool
     {

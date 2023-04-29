@@ -1537,7 +1537,7 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     private function populateEntityFromRow(Entity $entity, $data): void
     {

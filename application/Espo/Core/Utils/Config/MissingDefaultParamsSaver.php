@@ -59,7 +59,7 @@ class MissingDefaultParamsSaver
             throw new RuntimeException();
         }
 
-        /** @var array<string,mixed> $data */
+        /** @var array<string, mixed> $data */
 
         $newData = [];
 

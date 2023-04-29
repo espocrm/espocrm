@@ -175,7 +175,7 @@ class FieldUtil
         }
 
         if (!array_key_exists($type, $this->fieldByTypeListCache[$entityType])) {
-            /** @var array<string,array<string,mixed>> $fieldDefs */
+            /** @var array<string, array<string, mixed>> $fieldDefs */
             $fieldDefs = $this->metadata->get(['entityDefs', $entityType, 'fields'], []);
 
             $list = [];

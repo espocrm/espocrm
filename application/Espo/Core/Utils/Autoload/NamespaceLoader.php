@@ -45,15 +45,15 @@ class NamespaceLoader
 {
     /**
      * @var ?array{
-     *   psr-4?: array<string,mixed>,
-     *   psr-0?: array<string,mixed>,
-     *   classmap?: array<string,mixed>,
+     *   psr-4?: array<string, mixed>,
+     *   psr-0?: array<string, mixed>,
+     *   classmap?: array<string, mixed>,
      * }
      */
     private $namespaces = null;
 
     /**
-     * @var ?array<string,mixed>
+     * @var ?array<string, mixed>
      */
     private $vendorNamespaces = null;
 
@@ -100,8 +100,8 @@ class NamespaceLoader
 
     /**
      * @param array{
-     *   psr-4?: array<string,mixed>,
-     *   psr-0?: array<string,mixed>
+     *   psr-4?: array<string, mixed>,
+     *   psr-0?: array<string, mixed>
      * } $data
      */
     public function register(array $data): void
@@ -113,9 +113,9 @@ class NamespaceLoader
 
     /**
      * @return array{
-     *   psr-4?: array<string,mixed>,
-     *   psr-0?: array<string,mixed>,
-     *   classmap?: array<string,mixed>,
+     *   psr-4?: array<string, mixed>,
+     *   psr-0?: array<string, mixed>,
+     *   classmap?: array<string, mixed>,
      * }
      */
     private function loadNamespaces(string $basePath = ''): array
@@ -142,9 +142,9 @@ class NamespaceLoader
     /**
      *
      * @return array{
-     *   psr-4?: array<string,mixed>,
-     *   psr-0?: array<string,mixed>,
-     *   classmap?: array<string,mixed>,
+     *   psr-4?: array<string, mixed>,
+     *   psr-0?: array<string, mixed>,
+     *   classmap?: array<string, mixed>,
      * }
      */
     private function getNamespaces(): array
@@ -201,7 +201,7 @@ class NamespaceLoader
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     private function addListToClassLoader(array $data, bool $skipVendorNamespaces = false): void
     {
@@ -249,7 +249,7 @@ class NamespaceLoader
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function getVendorNamespaces(string $path): array
     {
@@ -259,7 +259,7 @@ class NamespaceLoader
             $this->vendorNamespaces = [];
 
             if ($useCache && $this->dataCache->has($this->cacheKey)) {
-                /** @var ?array<string,mixed> $cachedData */
+                /** @var ?array<string, mixed> $cachedData */
                 $cachedData = $this->dataCache->get($this->cacheKey);
 
                 $this->vendorNamespaces = $cachedData;

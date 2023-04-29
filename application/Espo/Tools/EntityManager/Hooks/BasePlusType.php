@@ -37,7 +37,7 @@ class BasePlusType implements Di\ConfigAware, Di\MetadataAware
     use Di\MetadataSetter;
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     public function afterCreate(string $name, $params): void
     {

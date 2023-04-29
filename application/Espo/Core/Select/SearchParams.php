@@ -42,7 +42,7 @@ use stdClass;
  */
 class SearchParams
 {
-    /** @var array<string,mixed> */
+    /** @var array<string, mixed> */
     private array $rawParams = [];
 
     public const ORDER_ASC = 'ASC';

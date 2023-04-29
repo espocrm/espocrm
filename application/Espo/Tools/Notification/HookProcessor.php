@@ -106,7 +106,7 @@ class HookProcessor
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function beforeRemove(Entity $entity, array $options): void
     {

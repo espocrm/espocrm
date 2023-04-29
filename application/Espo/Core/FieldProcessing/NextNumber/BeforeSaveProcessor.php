@@ -71,7 +71,7 @@ class BeforeSaveProcessor
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function process(Entity $entity, array $options): void
     {
@@ -83,7 +83,7 @@ class BeforeSaveProcessor
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     private function processItem(Entity $entity, string $field, array $options, bool $populate = false): void
     {

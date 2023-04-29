@@ -219,7 +219,7 @@ class Database extends RDBRepository
      * @param string $relationName
      * @param Entity|string $foreign
      * @param \stdClass|array<string, mixed>|null $data
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])

@@ -459,7 +459,7 @@ class AfterFetch implements AfterFetchInterface
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     private function emailToCase(Email $email, array $params): CaseObj
     {

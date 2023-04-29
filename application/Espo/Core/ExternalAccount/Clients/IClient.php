@@ -45,7 +45,7 @@ interface IClient
     public function setParam($name, $value);
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @return mixed
      */
     public function setParams(array $params);

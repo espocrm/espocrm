@@ -51,7 +51,7 @@ class EmailTemplate extends Record implements
     /**
      * @deprecated For bc. Use `Espo\Tools\EmailTemplate\Processor`.
      *
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @return array{
      *   subject: string,
      *   body: string,
@@ -97,8 +97,8 @@ class EmailTemplate extends Record implements
     /**
      * @deprecated For bc. Use `Espo\Tools\EmailTemplate\Service`.
      *
-     * @param array<string,mixed> $params
-     * @return array<string,mixed>
+     * @param array<string, mixed> $params
+     * @return array<string, mixed>
      * @throws Forbidden
      * @throws NotFound
      */

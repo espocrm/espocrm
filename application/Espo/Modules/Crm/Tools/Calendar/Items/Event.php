@@ -135,7 +135,7 @@ class Event implements Item
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getAttributes(): array
     {

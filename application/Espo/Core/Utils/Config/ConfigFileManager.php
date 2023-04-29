@@ -58,7 +58,7 @@ class ConfigFileManager
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @throws RuntimeException
      */
     protected function putPhpContentsInternal(string $path, array $data, bool $useRenaming = false): void
@@ -71,7 +71,7 @@ class ConfigFileManager
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     public function putPhpContents(string $path, array $data): void
     {
@@ -79,7 +79,7 @@ class ConfigFileManager
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     public function putPhpContentsNoRenaming(string $path, array $data): void
     {
@@ -87,7 +87,7 @@ class ConfigFileManager
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getPhpContents(string $path): array
     {
@@ -97,7 +97,7 @@ class ConfigFileManager
             throw new RuntimeException("Bad data stored in '{$path}.");
         }
 
-        /** @var array<string,mixed> */
+        /** @var array<string, mixed> */
         return $data;
     }
 }

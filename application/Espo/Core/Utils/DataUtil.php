@@ -122,7 +122,7 @@ class DataUtil
     /**
      * @param array<string|int, mixed>|stdClass $data
      * @param mixed $needle
-     * @return array<string|int,mixed>|stdClass
+     * @return array<string|int, mixed>|stdClass
      */
     public static function unsetByValue(&$data, $needle)
     {

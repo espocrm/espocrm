@@ -37,7 +37,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     /**
      * Main installation process.
      *
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return void
      * @throws Error
      */
@@ -81,7 +81,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return void
      * @throws Error
      */
@@ -108,7 +108,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return void
      * @throws Error
      */
@@ -132,7 +132,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return void
      * @throws Error
      */
@@ -150,7 +150,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return void
      * @throws Error
      */
@@ -168,7 +168,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return void
      * @throws Error
      */
@@ -200,7 +200,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return void
      * @throws Error
      */
@@ -220,7 +220,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return void
      * @throws Error
      */
@@ -239,7 +239,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return void
      * @throws Error
      */
@@ -258,7 +258,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return void
      * @throws Error
      */
@@ -286,7 +286,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return void
      * @throws Error
      */

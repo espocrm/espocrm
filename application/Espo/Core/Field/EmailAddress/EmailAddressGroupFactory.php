@@ -130,7 +130,7 @@ class EmailAddressGroupFactory implements ValueFactory
     }
 
     /**
-     * @param array<int,array<string,mixed>|stdClass> $dataList
+     * @param array<int, array<string, mixed>|stdClass> $dataList
      * @return stdClass[]
      */
     private function sanitizeDataList(array $dataList): array

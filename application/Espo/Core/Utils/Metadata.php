@@ -110,7 +110,7 @@ class Metadata
         }
 
         if ($this->dataCache->has($this->cacheKey) && !$reload) {
-            /** @var array<string,mixed> $data */
+            /** @var array<string, mixed> $data */
             $data = $this->dataCache->get($this->cacheKey);
 
             $this->data = $data;
@@ -387,7 +387,7 @@ class Metadata
      * Set and save metadata in custom directory.
      * The data is not merging with existing data. Use getCustom() to get existing data.
      *
-     * @param array<string,mixed>|stdClass $data
+     * @param array<string, mixed>|stdClass $data
      */
     public function saveCustom(string $key1, string $key2, $data): void
     {

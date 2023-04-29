@@ -91,7 +91,7 @@ class RecordTree extends Record
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @return ?Collection<Entity>
      */
     protected function getTreeInternal(

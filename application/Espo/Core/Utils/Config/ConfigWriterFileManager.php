@@ -75,7 +75,7 @@ class ConfigWriterFileManager
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     protected function putPhpContentsInternal(string $path, array $data, bool $useRenaming = false): void
     {
@@ -87,7 +87,7 @@ class ConfigWriterFileManager
     }
 
     /**
-     * @param array<string,mixed> $data $data
+     * @param array<string, mixed> $data $data
      */
     public function putPhpContents(string $path, array $data): void
     {
@@ -95,7 +95,7 @@ class ConfigWriterFileManager
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     public function putPhpContentsNoRenaming(string $path, array $data): void
     {
@@ -105,7 +105,7 @@ class ConfigWriterFileManager
 
     /**
      * Supposed to return array. False means the file is being written or corrupted.
-     * @return array<string,mixed>|false
+     * @return array<string, mixed>|false
      */
     public function getPhpContents(string $path)
     {
@@ -120,7 +120,7 @@ class ConfigWriterFileManager
             return false;
         }
 
-        /** @var array<string,mixed> */
+        /** @var array<string, mixed> */
         return $data;
     }
 }

@@ -164,7 +164,7 @@ class Service
         if (is_null($this->statusFields)) {
             $this->statusFields = [];
 
-            /** @var array<string,array<string,mixed>> $scopes */
+            /** @var array<string, array<string, mixed>> $scopes */
             $scopes = $this->metadata->get('scopes', []);
 
             foreach ($scopes as $scope => $data) {
@@ -595,7 +595,7 @@ class Service
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function noteCreate(Entity $entity, array $options = []): void
     {
@@ -680,7 +680,7 @@ class Service
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function noteCreateRelated(
         Entity $entity,
@@ -719,7 +719,7 @@ class Service
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function noteRelate(Entity $entity, string $parentType, string $parentId, array $options = []): void
     {
@@ -809,7 +809,7 @@ class Service
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function noteAssign(Entity $entity, array $options = []): void
     {
@@ -857,7 +857,7 @@ class Service
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function noteStatus(Entity $entity, string $field, array $options = []): void
     {
@@ -920,7 +920,7 @@ class Service
             return $this->auditedFieldsCache[$entityType];
         }
 
-        /** @var array<string,array<string,mixed>> $fields */
+        /** @var array<string, array<string, mixed>> $fields */
         $fields = $this->metadata->get(['entityDefs', $entityType, 'fields']);
 
         $auditedFields = [];
@@ -958,7 +958,7 @@ class Service
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function handleAudited(Entity $entity, array $options = []): void
     {

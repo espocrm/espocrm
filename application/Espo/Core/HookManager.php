@@ -144,7 +144,7 @@ class HookManager
     private function loadHooks(): void
     {
         if ($this->config->get('useCache') && $this->dataCache->has($this->cacheKey)) {
-            /** @var array<string,array<string,mixed>> $cachedData */
+            /** @var array<string, array<string, mixed>> $cachedData */
             $cachedData = $this->dataCache->get($this->cacheKey);
 
             $this->data = $cachedData;
@@ -255,8 +255,8 @@ class HookManager
     /**
      * Sort hooks by the order parameter.
      *
-     * @param array<string,array<string,mixed>> $hooks
-     * @return array<string,array<string,mixed>>
+     * @param array<string, array<string, mixed>> $hooks
+     * @return array<string, array<string, mixed>>
      */
     private function sortHooks(array $hooks): array
     {
@@ -307,7 +307,7 @@ class HookManager
      * Check if hook exists in the list.
      *
      * @param class-string $className
-     * @param array<string,mixed> $hookData
+     * @param array<string, mixed> $hookData
      */
     private function hookExists(string $className, array $hookData): bool
     {
@@ -323,8 +323,8 @@ class HookManager
     }
 
     /**
-     * @param array<string,mixed> $a
-     * @param array<string,mixed> $b
+     * @param array<string, mixed> $a
+     * @param array<string, mixed> $b
      */
     private function cmpHooks($a, $b): int
     {

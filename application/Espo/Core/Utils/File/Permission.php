@@ -45,12 +45,12 @@ class Permission
     protected $permissionError = [];
 
     /**
-     * @var ?array<string,mixed>
+     * @var ?array<string, mixed>
      */
     protected $permissionErrorRules = null;
 
     /**
-     * @var array<string,array<string,mixed>>
+     * @var array<string, array<string, mixed>>
      */
     protected $writableMap = [
         'data' => [
@@ -97,7 +97,7 @@ class Permission
     ];
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     public function __construct(Manager $fileManager, array $params = null)
     {
@@ -131,7 +131,7 @@ class Permission
     }
 
     /**
-     * @return array<string,array<string,mixed>>
+     * @return array<string, array<string, mixed>>
      */
     public function getWritableMap(): array
     {

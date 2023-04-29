@@ -61,11 +61,11 @@ class Reader
     /**
      * Read resource data as an associative array.
      *
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function readAsArray(string $path, Params $params): array
     {
-        /** @var array<string,mixed> */
+        /** @var array<string, mixed> */
         return $this->unifier->unify($path, $params->noCustom(), $params->getForceAppendPathList());
     }
 }

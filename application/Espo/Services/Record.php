@@ -222,8 +222,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated
-     * @param array<string,mixed> $params
-     * @return array<string,mixed>
+     * @param array<string, mixed> $params
+     * @return array<string, mixed>
      */
     protected function getSelectParams($params)
     {
@@ -250,7 +250,7 @@ class Record extends RecordService implements
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @param Collection<TEntity> $collection
      * @throws ForbiddenSilent
      * @deprecated

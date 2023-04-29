@@ -34,7 +34,7 @@ use Espo\Core\Exceptions\Error;
 class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
 {
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return never
      * @throws Error
      */

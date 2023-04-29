@@ -111,7 +111,7 @@ abstract class OAuth2Abstract implements IClient
     const LOCK_CHECK_STEP = 0.5;
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     public function __construct(
         Client $client,
@@ -158,7 +158,7 @@ abstract class OAuth2Abstract implements IClient
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @return void
      */
     public function setParams(array $params)
@@ -188,7 +188,7 @@ abstract class OAuth2Abstract implements IClient
     }
 
     /**
-     * @param array<string,mixed> $result
+     * @param array<string, mixed> $result
      * @return array{
      *   accessToken: ?string,
      *   tokenType: ?string,
@@ -248,7 +248,7 @@ abstract class OAuth2Abstract implements IClient
 
         if ($response['code'] == 200) {
             if (!empty($response['result'])) {
-                /** @var array<string,mixed> $result */
+                /** @var array<string, mixed> $result */
                 $result = $response['result'];
 
                 $data = $this->getAccessTokenDataFromResponseResult($result);
@@ -400,7 +400,7 @@ abstract class OAuth2Abstract implements IClient
 
     /**
      * @param string $url
-     * @param array<string,mixed>|string|null $params
+     * @param array<string, mixed>|string|null $params
      * @param string $httpMethod
      * @param ?string $contentType
      * @param bool $allowRenew
@@ -533,7 +533,7 @@ abstract class OAuth2Abstract implements IClient
     }
 
     /**
-     * @param array<string,mixed> $r
+     * @param array<string, mixed> $r
      * @return ?array{
      *   action: string,
      * }

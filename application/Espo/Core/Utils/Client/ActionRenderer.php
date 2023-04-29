@@ -64,7 +64,7 @@ class ActionRenderer
 
     /**
      * @deprecated Use`write`.
-     * @param ?array<string,mixed> $data
+     * @param ?array<string, mixed> $data
      */
     public function render(string $controller, string $action, ?array $data = null, bool $initAuth = false): string
     {

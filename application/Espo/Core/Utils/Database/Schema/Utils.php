@@ -113,11 +113,11 @@ class Utils
     /**
      * @deprecated
      *
-     * @param array<string,mixed> $ormMeta
+     * @param array<string, mixed> $ormMeta
      * @param int $indexMaxLength
-     * @param ?array<string,mixed> $indexList
+     * @param ?array<string, mixed> $indexList
      * @param int $characterLength
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public static function getFieldListExceededIndexMaxLength(
         array $ormMeta,

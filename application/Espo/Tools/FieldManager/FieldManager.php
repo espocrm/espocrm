@@ -85,7 +85,7 @@ class FieldManager
     ) {}
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      * @throws Error
      */
     public function read(string $scope, string $name): array
@@ -106,7 +106,7 @@ class FieldManager
     }
 
     /**
-     * @param array<string,mixed> $fieldDefs
+     * @param array<string, mixed> $fieldDefs
      * @return bool
      * @throws BadRequest
      * @throws Conflict
@@ -158,7 +158,7 @@ class FieldManager
     }
 
     /**
-     * @param array<string,mixed> $fieldDefs
+     * @param array<string, mixed> $fieldDefs
      * @return bool
      */
     public function update(string $scope, string $name, array $fieldDefs, bool $isNew = false)
@@ -382,7 +382,7 @@ class FieldManager
     }
 
     /**
-     * @param array<string,mixed> $clientDefs
+     * @param array<string, mixed> $clientDefs
      * @param string $name
      */
     protected function prepareClientDefsFieldsDynamicLogic(&$clientDefs, $name): void
@@ -401,7 +401,7 @@ class FieldManager
     }
 
     /**
-     * @param array<string,mixed> $clientDefs
+     * @param array<string, mixed> $clientDefs
      * @param string $name
      */
     protected function prepareClientDefsOptionsDynamicLogic(&$clientDefs, $name): void
@@ -567,7 +567,7 @@ class FieldManager
 
     /**
      * @param ?stdClass $default
-     * @return ?array<string,mixed>
+     * @return ?array<string, mixed>
      */
     protected function getFieldDefs(string $scope, string $name, $default = null)
     {
@@ -581,8 +581,8 @@ class FieldManager
     }
 
     /**
-     * @param ?array<string,mixed> $default
-     * @return ?array<string,mixed>
+     * @param ?array<string, mixed> $default
+     * @return ?array<string, mixed>
      */
     protected function getCustomFieldDefs(string $scope, string $name, $default = null)
     {
@@ -628,7 +628,7 @@ class FieldManager
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     protected function getLinkDefs(string $scope, string $name)
     {
@@ -636,8 +636,8 @@ class FieldManager
     }
 
     /**
-     * @param array<string,mixed> $fieldDefs
-     * @return array<string,mixed>
+     * @param array<string, mixed> $fieldDefs
+     * @return array<string, mixed>
      */
     protected function prepareFieldDefs(string $scope, string $name, $fieldDefs)
     {
@@ -747,12 +747,12 @@ class FieldManager
             }
         }
 
-        /** @var array<string,mixed> */
+        /** @var array<string, mixed> */
         return $filteredFieldDefs;
     }
 
     /**
-     * @param array<string,mixed> $fieldDefs
+     * @param array<string, mixed> $fieldDefs
      */
     protected function normalizeDefs(string $scope, string $fieldName, array $fieldDefs): stdClass
     {
@@ -803,8 +803,8 @@ class FieldManager
 
     /**
      * @param string $name
-     * @param array<string,mixed> $defs
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $defs
+     * @param array<string, mixed> $options
      */
     protected function processHook(
         string $methodName,

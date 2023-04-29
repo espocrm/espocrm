@@ -40,7 +40,7 @@ use RuntimeException;
 class ConfigWriter
 {
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     private $changedData = [];
 
@@ -98,7 +98,7 @@ class ConfigWriter
     /**
      * Set multiple parameters.
      *
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     public function setMultiple(array $params): void
     {
@@ -186,7 +186,7 @@ class ConfigWriter
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     private function saveData(string $path, array &$data, string $timeParam): void
     {

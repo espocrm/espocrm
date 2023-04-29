@@ -79,20 +79,20 @@ class Unifier
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function unifyArray(string $path, bool $noCustom = false)
     {
-        /** @var array<string,mixed> $data */
+        /** @var array<string, mixed> $data */
         $data = $this->unifySingle($this->pathProvider->getCore() . $path, true);
 
         foreach ($this->getModuleList() as $moduleName) {
             $filePath = $this->pathProvider->getModule($moduleName) . $path;
 
-            /** @var array<string,mixed> $newData */
+            /** @var array<string, mixed> $newData */
             $newData = $this->unifySingle($filePath, true);
 
-            /** @var array<string,mixed> $data */
+            /** @var array<string, mixed> $data */
             $data = Util::merge($data, $newData);
         }
 
@@ -102,10 +102,10 @@ class Unifier
 
         $customFilePath = $this->pathProvider->getCustom() . $path;
 
-        /** @var array<string,mixed> $newData */
+        /** @var array<string, mixed> $newData */
         $newData = $this->unifySingle($customFilePath, true);
 
-        /** @var array<string,mixed> */
+        /** @var array<string, mixed> */
         return Util::merge($data, $newData);
     }
 
@@ -146,7 +146,7 @@ class Unifier
     }
 
     /**
-     * @return array<string,mixed>|\stdClass
+     * @return array<string, mixed>|\stdClass
      */
     private function unifySingle(string $dirPath, bool $recursively)
     {
@@ -182,7 +182,7 @@ class Unifier
                     continue;
                 }
 
-                /** @var array<string,mixed> $data */
+                /** @var array<string, mixed> $data */
 
                 $data[$dirName] = $itemValue;
 
@@ -217,7 +217,7 @@ class Unifier
                 continue;
             }
 
-            /** @var array<string,mixed> $data */
+            /** @var array<string, mixed> $data */
 
             $data[$name] = $itemValue;
         }
@@ -229,14 +229,14 @@ class Unifier
             return DataUtil::unsetByKey($data, $unsets);
         }
 
-        /** @var array<string,mixed> $data */
+        /** @var array<string, mixed> $data */
 
-        /** @var array<string,mixed> */
+        /** @var array<string, mixed> */
         return Util::unsetInArray($data, $unsets);
     }
 
     /**
-     * @return \stdClass|array<string,mixed>
+     * @return \stdClass|array<string, mixed>
      * @throws JsonException
      */
     private function getContents(string $path)
