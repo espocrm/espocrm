@@ -34,6 +34,10 @@ use Espo\ORM\Entity;
 
 class Helper
 {
+    private const FORMAT_LAST_FIRST = 'lastFirst';
+    private const FORMAT_LAST_FIRST_MIDDLE = 'lastFirstMiddle';
+    private const FORMAT_FIRST_MIDDLE_LAST = 'firstMiddleLast';
+
     public function __construct(private Config $config)
     {}
 
@@ -46,7 +50,7 @@ class Helper
         $middle = $entity->get('middle' . ucfirst($field));
 
         switch ($format) {
-            case 'lastFirst':
+            case self::FORMAT_LAST_FIRST:
                 if (!$first && !$last) {
                     return null;
                 }
@@ -61,7 +65,7 @@ class Helper
 
                 return $last . ' ' . $first;
 
-            case 'lastFirstMiddle':
+            case self::FORMAT_LAST_FIRST_MIDDLE:
                 if (!$first && !$last && !$middle) {
                     return null;
                 }
@@ -82,7 +86,7 @@ class Helper
 
                 return implode(' ', $arr);
 
-            case 'firstMiddleLast':
+            case self::FORMAT_FIRST_MIDDLE_LAST:
                 if (!$first && !$last && !$middle) {
                     return null;
                 }
