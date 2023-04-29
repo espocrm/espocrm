@@ -124,7 +124,7 @@ abstract class Base
     /**
      * Package types.
      *
-     * @var array<string,string>
+     * @var array<string, string>
      */
     protected $packageTypes = array(
         'upgrade' => 'upgrade',
@@ -488,7 +488,7 @@ abstract class Base
     }
 
     /**
-     * @param array<string,string[]> $dependencyList
+     * @param array<string, string[]> $dependencyList
      * @return bool
      */
     protected function checkDependencies($dependencyList)

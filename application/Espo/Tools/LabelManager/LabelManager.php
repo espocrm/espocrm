@@ -220,7 +220,7 @@ class LabelManager implements
     }
 
     /**
-     * @param array<string,string> $labels
+     * @param array<string, string> $labels
      */
     public function saveLabels(string $language, string $scope, array $labels): stdClass
     {

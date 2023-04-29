@@ -188,7 +188,7 @@ class InjectableFactory
 
     /**
      * @param ReflectionClass<object> $class
-     * @param ?array<string,mixed> $with
+     * @param ?array<string, mixed> $with
      * @return mixed[]
      */
     private function getConstructorInjectionList(
@@ -216,7 +216,7 @@ class InjectableFactory
 
     /**
      * @param ?ReflectionClass<object> $class
-     * @param ?array<string,mixed> $with
+     * @param ?array<string, mixed> $with
      * @return mixed
      */
     private function getMethodParamInjection(
@@ -468,7 +468,7 @@ class InjectableFactory
      *
      * @template T of object
      * @param class-string<T> $className
-     * @param ?array<string,mixed> $with
+     * @param ?array<string, mixed> $with
      * @return T
      */
     public function createByClassName(string $className, ?array $with = null): object

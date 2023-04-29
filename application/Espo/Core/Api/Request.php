@@ -51,7 +51,7 @@ interface Request
     /**
      * Get all query parameters.
      *
-     * @return array<string,string|array<scalar,mixed>>
+     * @return array<string, string|array<scalar, mixed>>
      */
     public function getQueryParams(): array;
 
@@ -68,7 +68,7 @@ interface Request
     /**
      * Get all route parameters.
      *
-     * @return array<string,string>
+     * @return array<string, string>
      */
     public function getRouteParams(): array;
 

@@ -117,7 +117,7 @@ class LinkMultipleType
             return true;
         }
 
-        /** @var ?array<string,string> $columnsMap */
+        /** @var ?array<string, string> $columnsMap */
         $columnsMap = $fieldDefs->getParam('columns');
 
         if ($columnsMap === null || $columnsMap === []) {

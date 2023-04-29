@@ -65,9 +65,9 @@ use LogicException;
 
 class Service
 {
-    /** @var ?array<string,string> */
+    /** @var ?array<string, string> */
     private $statusStyles = null;
-    /** @var ?array<string,string> */
+    /** @var ?array<string, string> */
     private $statusFields = null;
     /** @var string[] */
     private $successDefaultStyleList = [
@@ -145,7 +145,7 @@ class Service
     }
 
     /**
-     * @return array<string,string>
+     * @return array<string, string>
      */
     private function getStatusStyles(): array
     {
@@ -157,7 +157,7 @@ class Service
     }
 
     /**
-     * @return array<string,string>
+     * @return array<string, string>
      */
     private function getStatusFields(): array
     {

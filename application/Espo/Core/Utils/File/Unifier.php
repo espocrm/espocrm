@@ -66,8 +66,8 @@ class Unifier
     /**
      * Merge data of resource files.
      *
-     * @param array<int,string[]> $forceAppendPathList
-     * @return array<string,mixed>|\stdClass
+     * @param array<int, string[]> $forceAppendPathList
+     * @return array<string, mixed>|\stdClass
      */
     public function unify(string $path, bool $noCustom = false, array $forceAppendPathList = [])
     {
@@ -110,7 +110,7 @@ class Unifier
     }
 
     /**
-     * @param array<int,string[]> $forceAppendPathList
+     * @param array<int, string[]> $forceAppendPathList
      * @return \stdClass
      */
     private function unifyObject(string $path, bool $noCustom = false, array $forceAppendPathList = [])
@@ -262,7 +262,7 @@ class Unifier
     }
 
     /**
-     * @param array<int,string[]> $forceAppendPathList
+     * @param array<int, string[]> $forceAppendPathList
      */
     private function prepareItemDataObject(stdClass $data, array $forceAppendPathList): void
     {

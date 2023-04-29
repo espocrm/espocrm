@@ -504,7 +504,7 @@ class FieldManager
     }
 
     /**
-     * @param array<string,string> $value
+     * @param array<string, string> $value
      */
     protected function setTranslatedOptions(
         string $scope,

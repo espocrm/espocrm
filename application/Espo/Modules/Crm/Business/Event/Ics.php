@@ -56,7 +56,7 @@ class Ics
     private string $status;
 
     /**
-     * @param array<string,string|int|null> $attributes
+     * @param array<string, string|int|null> $attributes
      * @throws RuntimeException
      */
     public function __construct(string $prodid, array $attributes = [])

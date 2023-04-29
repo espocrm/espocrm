@@ -42,7 +42,7 @@ class CollectionFactory
     /**
      * Create.
      *
-     * @param array<Entity|array<string,mixed>> $dataList
+     * @param array<Entity|array<string, mixed>> $dataList
      * @return EntityCollection<Entity>
      */
     public function create(?string $entityType = null, array $dataList = []): EntityCollection

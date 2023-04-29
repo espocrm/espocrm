@@ -117,7 +117,7 @@ class Metadata
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @param string[]|string|null $key
      * @param mixed $default A default value.
      * @return mixed

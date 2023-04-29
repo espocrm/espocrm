@@ -191,7 +191,7 @@ class AdminNotificationManager
     }
 
     /**
-     * @param array<string,string> $data
+     * @param array<string, string> $data
      */
     private function prepareMessage(string $message, array $data = []): string
     {

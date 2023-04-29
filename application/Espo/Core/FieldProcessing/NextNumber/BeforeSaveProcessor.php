@@ -45,7 +45,7 @@ class BeforeSaveProcessor
     private EntityManager $entityManager;
 
     /**
-     * @var array<string,string[]>
+     * @var array<string, string[]>
      */
     private $fieldListMapCache = [];
 

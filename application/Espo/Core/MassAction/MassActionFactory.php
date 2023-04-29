@@ -83,7 +83,7 @@ class MassActionFactory
     }
 
     /**
-     * @param array<string,mixed> $with
+     * @param array<string, mixed> $with
      * @throws NotFound
      * @todo Remove.
      * @deprecated As of v7.1. Use create.

@@ -35,7 +35,7 @@ namespace Espo\ORM;
 interface MetadataDataProvider
 {
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function get(): array;
 }

@@ -60,7 +60,7 @@ class NamespaceLoader
     private string $autoloadFilePath = 'vendor/autoload.php';
 
     /**
-     * @var array<'psr-4'|'psr-0'|'classmap',string>
+     * @var array<'psr-4'|'psr-0'|'classmap', string>
      */
     private $namespacesPaths = [
         'psr-4' => 'vendor/composer/autoload_psr4.php',
@@ -69,7 +69,7 @@ class NamespaceLoader
     ];
 
     /**
-     * @var array<'psr-4'|'psr-0',string>
+     * @var array<'psr-4'|'psr-0', string>
      */
     private $methodNameMap = [
         'psr-4' => 'addPsr4',
@@ -169,7 +169,7 @@ class NamespaceLoader
 
     /**
      * @param 'psr-4'|'psr-0'|'classmap' $type
-     * @param string|array<string,string> $path
+     * @param string|array<string, string> $path
      */
     private function addNamespace(string $type, string $name, $path): void
     {

@@ -218,7 +218,7 @@ class Permission
      * Change permissions.
      *
      * @param string $path
-     * @param int|array<int|string,string|int|null>|string $octal Ex. `0755`, `[0644, 0755]`, `['file' => 0644, 'dir' => 0755]`.
+     * @param int|array<int|string, string|int|null>|string $octal Ex. `0755`, `[0644, 0755]`, `['file' => 0644, 'dir' => 0755]`.
      * @param bool $recurse
      */
     public function chmod(string $path, $octal, bool $recurse = false): bool
@@ -563,7 +563,7 @@ class Permission
     /**
      * Get last permission error rules.
      *
-     * @return ?array<string,array<string,string>>
+     * @return ?array<string, array<string, string>>
      */
     public function getLastErrorRules()
     {

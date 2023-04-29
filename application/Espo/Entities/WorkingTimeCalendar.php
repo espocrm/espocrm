@@ -29,13 +29,14 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\ORM\Entity;
 use Espo\Tools\WorkingTime\Calendar\WorkingWeekday;
 use Espo\Tools\WorkingTime\Calendar\TimeRange;
 use Espo\Tools\WorkingTime\Calendar\Time;
 
 use DateTimeZone;
 
-class WorkingTimeCalendar extends \Espo\Core\ORM\Entity
+class WorkingTimeCalendar extends Entity
 {
     public const ENTITY_TYPE = 'WorkingTimeCalendar';
 
@@ -102,7 +103,7 @@ class WorkingTimeCalendar extends \Espo\Core\ORM\Entity
     }
 
     /**
-     * @param array{string,string}[] $ranges
+     * @param array{string, string}[] $ranges
      * @return TimeRange[]
      */
     private static function convertRanges(array $ranges): array
@@ -121,9 +122,9 @@ class WorkingTimeCalendar extends \Espo\Core\ORM\Entity
 
     private static function convertTime(string $time): Time
     {
-        /** @var int<0,23> $h */
+        /** @var int<0, 23> $h */
         $h = (int) explode(':', $time)[0];
-        /** @var int<0,59> $m */
+        /** @var int<0, 59> $m */
         $m = (int) explode(':', $time)[1];
 
         return new Time($h, $m);

@@ -65,7 +65,7 @@ class TargetList extends Record implements
     protected $linkMandatorySelectAttributeList = [];
 
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
     protected $entityTypeLinkMap = [];
 

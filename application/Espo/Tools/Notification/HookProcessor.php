@@ -48,36 +48,22 @@ class HookProcessor
 {
     /** @var array<string, AssignmentNotificator<Entity>> */
     private $notificatorsHash = [];
-    /** @var array<string,bool> */
+    /** @var array<string, bool> */
     private $hasStreamCache = [];
-    /** @var array<string,string> */
+    /** @var array<string, string> */
     private $userNameHash = [];
 
-    private Metadata $metadata;
-    private Config $config;
-    private EntityManager $entityManager;
-    private StreamService $streamService;
-    private AssignmentNotificatorFactory $notificatorFactory;
-    private User $user;
-
     public function __construct(
-        Metadata $metadata,
-        Config $config,
-        EntityManager $entityManager,
-        StreamService $streamService,
-        AssignmentNotificatorFactory $notificatorFactory,
-        User $user
-    ) {
-        $this->metadata = $metadata;
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->streamService = $streamService;
-        $this->notificatorFactory = $notificatorFactory;
-        $this->user = $user;
-    }
+        private Metadata $metadata,
+        private Config $config,
+        private EntityManager $entityManager,
+        private StreamService $streamService,
+        private AssignmentNotificatorFactory $notificatorFactory,
+        private User $user
+    ) {}
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function afterSave(Entity $entity, array $options): void
     {

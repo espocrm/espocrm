@@ -106,7 +106,7 @@ class Manager
      * If TRUE - returns only file list, if FALSE - only directory list.
      * @param bool $returnSingleArray Return a single array.
      *
-     * @return string[]|array<string,string[]>
+     * @return string[]|array<string, string[]>
      */
     public function getFileList(
         string $path,
@@ -174,7 +174,7 @@ class Manager
             return $this->getSingleFileList($result, $onlyFileType, $path);
         }
 
-        /** @var array<string,string[]> */
+        /** @var array<string, string[]> */
         return $result;
     }
 
@@ -492,7 +492,7 @@ class Manager
      * Unset specific items in a JSON file and override the file.
      * Items are specified as an array of JSON paths.
      *
-     * @param array<mixed,string> $unsets
+     * @param array<mixed, string> $unsets
      */
     public function unsetJsonContents(string $path, array $unsets): bool
     {

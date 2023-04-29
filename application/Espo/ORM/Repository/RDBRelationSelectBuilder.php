@@ -240,7 +240,7 @@ class RDBRelationSelectBuilder
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
+     * @param WhereItem|array<string|int, mixed>|null $conditions Join conditions.
      */
     public function join($target, ?string $alias = null, $conditions = null): self
     {

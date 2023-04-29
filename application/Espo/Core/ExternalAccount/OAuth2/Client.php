@@ -210,11 +210,11 @@ class Client
 
     /**
      * @param string $url
-     * @param array<string,mixed>|string|null $params
+     * @param array<string, mixed>|string|null $params
      * @param string $httpMethod
-     * @param array<string,string> $httpHeaders
+     * @param array<string, string> $httpHeaders
      * @return array{
-     *   result: array<string,mixed>|string,
+     *   result: array<string, mixed>|string,
      *   code: int,
      *   contentType: string|false,
      *   header: string,
@@ -254,9 +254,9 @@ class Client
 
     /**
      * @param string $url
-     * @param array<string,mixed>|string|null $params
+     * @param array<string, mixed>|string|null $params
      * @param string $httpMethod
-     * @param array<string,string> $httpHeaders
+     * @param array<string, string> $httpHeaders
      * @return array{
      *   result: array<string, mixed>|string,
      *   code: int,

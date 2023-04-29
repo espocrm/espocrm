@@ -670,7 +670,7 @@ class BaseEntity implements Entity
 
     /**
      * @deprecated As of v6.0. Use `getValueMap`.
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getValues()
     {
@@ -680,7 +680,7 @@ class BaseEntity implements Entity
     /**
      * @deprecated As of v6.0. Use `getValueMap`.
      * @todo Make protected.
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function toArray()
     {
@@ -733,7 +733,7 @@ class BaseEntity implements Entity
 
     /**
      * @deprecated As of v7.0. Use ORM\Defs instead.
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getRelations()
     {

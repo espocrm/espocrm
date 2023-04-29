@@ -80,7 +80,7 @@ class LdapLogin implements Login
     }
 
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private $ldapFieldMap = [
         'userName' => 'userNameAttribute',
@@ -92,7 +92,7 @@ class LdapLogin implements Login
     ];
 
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private $userFieldMap = [
         'teamsIds' => 'userTeamsIds',
@@ -100,7 +100,7 @@ class LdapLogin implements Login
     ];
 
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private $portalUserFieldMap = [
         'portalsIds' => 'portalUserPortalsIds',
