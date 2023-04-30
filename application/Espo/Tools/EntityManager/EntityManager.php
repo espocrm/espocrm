@@ -390,6 +390,10 @@ class EntityManager
 
         $isCustom = $this->metadata->get(['scopes', $name, 'isCustom']);
 
+        if ($this->metadata->get(['scopes', $name, 'statusFieldLocked'])) {
+            unset($data['statusField']);
+        }
+
         $initialData = [
             'optimisticConcurrencyControl' =>
                 $this->metadata->get(['entityDefs', $name, 'optimisticConcurrencyControl']) ?? false,

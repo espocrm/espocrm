@@ -426,6 +426,10 @@ function (Dep, Model) {
                 },
             };
 
+            if (this.getMetadata().get(['scopes', this.scope, 'statusFieldLocked'])) {
+                defs.fields.statusField.readOnly = true;
+            }
+
             for (let param in this.additionalParams) {
                 defs.fields[param] = this.additionalParams[param].fieldDefs;
             }

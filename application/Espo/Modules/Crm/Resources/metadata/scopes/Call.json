@@ -13,5 +13,6 @@
     "object": true,
     "activityStatusList": ["Planned"],
     "historyStatusList": ["Held", "Not Held"],
-    "statusField": "status"
+    "statusField": "status",
+    "statusFieldLocked": true
 }

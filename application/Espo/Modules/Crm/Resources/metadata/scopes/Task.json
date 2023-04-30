@@ -15,5 +15,6 @@
     "object": true,
     "statusField": "status",
     "stream": true,
-    "kanbanStatusIgnoreList": ["Canceled", "Deferred"]
+    "kanbanStatusIgnoreList": ["Canceled", "Deferred"],
+    "statusFieldLocked": true
 }
