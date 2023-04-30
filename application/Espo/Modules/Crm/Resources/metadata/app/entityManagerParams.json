@@ -1,0 +1,35 @@
+{
+    "Meeting": {
+        "historyStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/history-status-list"
+            }
+        }
+    },
+    "Call": {
+        "historyStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/history-status-list"
+            }
+        }
+    },
+    "@Event": {
+        "historyStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/history-status-list"
+            }
+        }
+    }
+}

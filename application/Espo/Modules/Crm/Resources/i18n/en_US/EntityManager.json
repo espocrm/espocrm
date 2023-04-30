@@ -1,0 +1,8 @@
+{
+    "fields": {
+        "historyStatusList": "History Statuses"
+    },
+    "tooltips": {
+        "historyStatusList": "Status values determining that a record should be displayed in the History panel."
+    }
+}
