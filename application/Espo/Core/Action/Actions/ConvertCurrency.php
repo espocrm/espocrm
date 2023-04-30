@@ -34,26 +34,22 @@ use Espo\Core\Action\Action;
 use Espo\Core\Action\Data;
 use Espo\Core\Action\Params;
 use Espo\Core\Currency\ConfigDataProvider as CurrencyConfigDataProvider;
-use Espo\Core\Currency\Converter as CurrencyConverter;
+use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Currency\Rates as CurrencyRates;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Field\Currency;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\FieldUtil;
-use Espo\Core\Utils\Metadata;
-use Espo\ORM\Entity;
+use Espo\Tools\Currency\Conversion\EntityConverterFactory;
+use RuntimeException;
 
 class ConvertCurrency implements Action
 {
     public function __construct(
+        private EntityConverterFactory $converterFactory,
         private Acl $acl,
         private EntityManager $entityManager,
-        private FieldUtil $fieldUtil,
-        private Metadata $metadata,
-        private CurrencyConfigDataProvider $configDataProvider,
-        private CurrencyConverter $currencyConverter
+        private CurrencyConfigDataProvider $configDataProvider
     ) {}
 
     public function process(Params $params, Data $data): void
@@ -65,22 +61,14 @@ class ConvertCurrency implements Action
             throw new Forbidden();
         }
 
-        $fieldList = $this->getFieldList($entityType, $data);
-
-        if (empty($fieldList)) {
-            throw new Forbidden("No fields to convert.");
-        }
-
         $baseCurrency = $this->configDataProvider->getBaseCurrency();
-
         $targetCurrency = $data->get('targetCurrency');
 
         if (!$targetCurrency) {
             throw new BadRequest("No target currency.");
         }
 
-        $rates =
-            $this->getRatesFromData($data) ??
+        $rates = $this->getRatesFromData($data) ??
             $this->configDataProvider->getCurrencyRates();
 
         if ($targetCurrency !== $baseCurrency && !$rates->hasRate($targetCurrency)) {
@@ -94,56 +82,19 @@ class ConvertCurrency implements Action
         }
 
         if (!$this->acl->checkEntityEdit($entity)) {
-            throw new Forbidden();
+            throw new Forbidden("No 'edit' access.");
         }
 
-        $this->convertEntity($entity, $fieldList, $targetCurrency, $rates);
-    }
-
-    /**
-     * @param string[] $fieldList
-     */
-    protected function convertEntity(
-        Entity $entity,
-        array $fieldList,
-        string $targetCurrency,
-        CurrencyRates $rates
-    ): void {
-
-        $entityDefs = $this->entityManager
-            ->getDefs()
-            ->getEntity($entity->getEntityType());
-
-        foreach ($fieldList as $field) {
-            $disabled = $entityDefs->getField($field)->getParam('conversionDisabled');
-
-            if ($disabled) {
-                continue;
-            }
-
-            $amount = $entity->get($field);
-            $code = $entity->get($field . 'Currency');
-
-            if ($amount === null) {
-                continue;
-            }
-
-            if ($targetCurrency === $code) {
-                continue;
-            }
-
-            $value = new Currency($amount, $code);
-
-            $convertedValue = $this->currencyConverter->convertWithRates($value, $targetCurrency, $rates);
-
-            $entity->set($field, $convertedValue->getAmount());
-            $entity->set($field . 'Currency', $convertedValue->getCode());
+        if (!$entity instanceof CoreEntity) {
+            throw new RuntimeException("Only Core-Entity allowed.");
         }
 
-        $this->entityManager->saveEntity($entity);
+        $converter = $this->converterFactory->create($entityType);
+
+        $converter->convert($entity, $targetCurrency, $rates);
     }
 
-    protected function getRatesFromData(Data $data): ?CurrencyRates
+    private function getRatesFromData(Data $data): ?CurrencyRates
     {
         if ($data->get('rates') === null) {
             return null;
@@ -152,37 +103,8 @@ class ConvertCurrency implements Action
         $baseCurrency = $this->configDataProvider->getBaseCurrency();
 
         $ratesArray = get_object_vars($data->get('rates'));
-
         $ratesArray[$baseCurrency] = 1.0;
 
         return CurrencyRates::fromAssoc($ratesArray, $baseCurrency);
-    }
-
-    /**
-     * @return string[]
-     */
-    protected function getFieldList(string $entityType, Data $data): array
-    {
-        $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($entityType, 'edit');
-
-        $resultList = [];
-
-        $fieldList = $data->get('fieldList') ?? $this->fieldUtil->getEntityTypeFieldList($entityType);
-
-        foreach ($fieldList as $field) {
-            $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
-
-            if ($type !== 'currency') {
-                continue;
-            }
-
-            if (in_array($field, $forbiddenFieldList)) {
-                continue;
-            }
-
-            $resultList[] = $field;
-        }
-
-        return $resultList;
     }
 }
