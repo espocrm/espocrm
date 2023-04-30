@@ -1883,6 +1883,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this.duplicateAction = false;
             }
 
+            if ((this.getConfig().get('currencyList') || []).length <= 1) {
+                this.convertCurrencyAction = false;
+            }
+
             this.readOnlyLocked = this.readOnly;
 
             this.inlineEditDisabled = this.inlineEditDisabled ||
