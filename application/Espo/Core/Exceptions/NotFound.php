@@ -34,6 +34,7 @@ use Exception;
 
 /**
  * A not-found exception. Main purpose is for the 404 Not Found HTTP error.
+ * If uncaught within an API request, the message will be printed to the X-Status-Reason header.
  */
 class NotFound extends Exception implements HasLogLevel
 {

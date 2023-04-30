@@ -29,10 +29,14 @@
 
 namespace Espo\Core\Api;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\HasBody;
-
 use Espo\Core\Exceptions\HasLogLevel;
 use Espo\Core\Exceptions\HasLogMessage;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 
@@ -67,11 +71,13 @@ class ErrorOutput
         503,
     ];
 
-    /**
-     * @var class-string[]
-     */
-    private $ignorePrintXStatusReasonExceptionClassNameList = [
-        'PDOException',
+    /** @var class-string<Throwable>[] */
+    private array $printStatusReasonExceptionClassNameList = [
+        Error::class,
+        Forbidden::class,
+        Conflict::class,
+        BadRequest::class,
+        NotFound::class,
     ];
 
     public function __construct(private Log $log, private Config $config)
@@ -141,18 +147,13 @@ class ErrorOutput
 
         $this->log->log($logLevel, $logMessage);
 
-        $toPrintBodyXStatusReason = !in_array(
-            get_class($exception),
-            $this->ignorePrintXStatusReasonExceptionClassNameList
-        );
-
         if (!in_array($statusCode, $this->allowedStatusCodeList)) {
             $statusCode = 500;
         }
 
         $response->setStatus($statusCode);
 
-        if ($toPrintBodyXStatusReason) {
+        if ($this->toPrintExceptionStatusReason($exception)) {
             $response->setHeader('X-Status-Reason', $this->stripInvalidCharactersFromHeaderValue($message));
         }
 
@@ -255,5 +256,17 @@ class ErrorOutput
     private function toPrintTrace(): bool
     {
         return (bool) $this->config->get('logger.printTrace');
+    }
+
+    private function toPrintExceptionStatusReason(Throwable $exception): bool
+    {
+        foreach ($this->printStatusReasonExceptionClassNameList as $clasName) {
+
+            if ($exception instanceof ($clasName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
