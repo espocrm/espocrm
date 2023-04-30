@@ -119,9 +119,12 @@ class ConvertService
 
                 if ($rDuplicateList) {
                     foreach ($rDuplicateList as $e) {
-                        $item = $e->getValueMap();
-                        $item->_entityType = $e->getEntityType();
-                        $duplicateList[] = $item;
+                        $duplicateList[] = (object) [
+                            'id' => $e->getId(),
+                            'name' => $e->getName(),
+                            '_entityType' => $e->getEntityType(),
+                        ];
+
                         $skipSave = true;
                     }
                 }
@@ -151,10 +154,11 @@ class ConvertService
 
                 if ($rDuplicateList) {
                     foreach ($rDuplicateList as $e) {
-                        $item = $e->getValueMap();
-                        $item->_entityType = $e->getEntityType();
-
-                        $duplicateList[] = $item;
+                        $duplicateList[] = (object) [
+                            'id' => $e->getId(),
+                            'name' => $e->getName(),
+                            '_entityType' => $e->getEntityType(),
+                        ];
 
                         $skipSave = true;
                     }
@@ -189,9 +193,11 @@ class ConvertService
 
                 if ($rDuplicateList) {
                     foreach ($rDuplicateList as $e) {
-                        $item = $e->getValueMap();
-                        $item->_entityType = $e->getEntityType();
-                        $duplicateList[] = $item;
+                        $duplicateList[] = (object) [
+                            'id' => $e->getId(),
+                            'name' => $e->getName(),
+                            '_entityType' => $e->getEntityType(),
+                        ];
 
                         $skipSave = true;
                     }

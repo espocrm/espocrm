@@ -569,7 +569,10 @@ class Service implements Crud,
         $list = [];
 
         foreach ($duplicateList as $e) {
-            $list[] = $e->getValueMap();
+            $list[] = (object) [
+                'id' => $e->getId(),
+                'name' => $e->get('name'),
+            ];
         }
 
         throw ConflictSilent::createWithBody('duplicate', Json::encode($list));
