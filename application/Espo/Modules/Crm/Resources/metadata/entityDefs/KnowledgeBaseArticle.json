@@ -10,12 +10,14 @@
             "type": "enum",
             "options": ["Draft", "In Review", "Published", "Archived"],
             "view": "crm:views/knowledge-base-article/fields/status",
-            "default": "Draft"
+            "default": "Draft",
+            "customizationOptionsReferenceDisabled": true
         },
         "language": {
             "type": "enum",
             "view": "crm:views/knowledge-base-article/fields/language",
-            "customizationOptionsDisabled": true
+            "customizationOptionsDisabled": true,
+            "customizationOptionsReferenceDisabled": true
         },
         "type": {
             "type": "enum",

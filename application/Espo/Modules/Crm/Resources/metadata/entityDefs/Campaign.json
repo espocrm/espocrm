@@ -9,12 +9,14 @@
         "status": {
             "type": "enum",
             "options": ["Planning", "Active", "Inactive", "Complete"],
-            "default": "Planning"
+            "default": "Planning",
+            "customizationOptionsReferenceDisabled": true
         },
         "type": {
             "type": "enum",
             "options": ["Email", "Newsletter", "Web", "Television", "Radio", "Mail"],
-            "default": "Email"
+            "default": "Email",
+            "customizationOptionsReferenceDisabled": true
         },
         "startDate": {
             "type": "date",

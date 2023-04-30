@@ -183,13 +183,15 @@
                     "name": "probabilityMap",
                     "view": "crm:views/opportunity/admin/field-manager/fields/probability-map"
                 }
-            ]
+            ],
+            "customizationOptionsReferenceDisabled": true
         },
         "lastStage": {
             "type": "enum",
             "view": "crm:views/opportunity/fields/last-stage",
             "customizationOptionsDisabled": true,
-            "customizationDefaultDisabled": true
+            "customizationDefaultDisabled": true,
+            "customizationOptionsReferenceDisabled": true
         },
         "probability": {
             "type": "int",

@@ -34,11 +34,13 @@
             "style": {
                 "Canceled": "danger",
                 "Expired": "danger"
-            }
+            },
+            "customizationOptionsReferenceDisabled": true
         },
         "type": {
             "type": "enum",
-            "options": ["", "Contract", "NDA", "EULA", "License Agreement"]
+            "options": ["", "Contract", "NDA", "EULA", "License Agreement"],
+            "customizationOptionsReferenceDisabled": true
         },
         "publishDate": {
             "type": "date",

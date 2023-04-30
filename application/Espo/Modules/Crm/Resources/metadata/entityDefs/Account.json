@@ -22,7 +22,8 @@
         },
         "type": {
             "type": "enum",
-            "options": ["", "Customer", "Investor", "Partner", "Reseller"]
+            "options": ["", "Customer", "Investor", "Partner", "Reseller"],
+            "customizationOptionsReferenceDisabled": true
         },
         "industry": {
             "type": "enum",
@@ -80,7 +81,8 @@
                 "Wholesale",
                 "Water"
             ],
-            "isSorted": true
+            "isSorted": true,
+            "customizationOptionsReferenceDisabled": true
         },
         "sicCode": {
             "type": "varchar",

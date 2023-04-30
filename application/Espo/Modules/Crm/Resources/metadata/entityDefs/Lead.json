@@ -46,7 +46,8 @@
                     "view": "views/admin/field-manager/fields/not-actual-options"
                 }
             ],
-            "notActualOptions": ["Converted", "Recycled", "Dead"]
+            "notActualOptions": ["Converted", "Recycled", "Dead"],
+            "customizationOptionsReferenceDisabled": true
         },
         "source": {
             "type": "enum",
@@ -60,7 +61,8 @@
                 "Web Site",
                 "Campaign",
                 "Other"
-            ]
+            ],
+            "customizationOptionsReferenceDisabled": true
         },
         "industry": {
             "type": "enum",

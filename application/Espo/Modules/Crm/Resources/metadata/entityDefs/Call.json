@@ -13,7 +13,8 @@
             "style": {
                 "Held": "success"
             },
-            "audited": true
+            "audited": true,
+            "customizationOptionsReferenceDisabled": true
         },
         "dateStart": {
             "type": "datetime",
@@ -87,6 +88,7 @@
             "customizationIsSortedDisabled": true,
             "customizationReadOnlyDisabled": true,
             "customizationAuditedDisabled": true,
+            "customizationOptionsReferenceDisabled": true,
             "where": {
                 "=": {
                     "whereClause": {
