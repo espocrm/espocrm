@@ -63,6 +63,8 @@ function (Dep, Model) {
 
         setupData: function () {
             let scope = this.scope;
+            let templateType = this.getMetadata().get(['scopes', scope, 'type']) || null;
+
             this.hasStreamField = true;
 
             if (scope) {
@@ -81,7 +83,8 @@ function (Dep, Model) {
             if (scope) {
                 this.additionalParams = Espo.Utils.cloneDeep({
                     ...this.getMetadata().get(['app', 'entityManagerParams', 'Global']),
-                    ...this.getMetadata().get(['app', 'entityManagerParams', scope])
+                    ...this.getMetadata().get(['app', 'entityManagerParams', '@' + (templateType || '_')]),
+                    ...this.getMetadata().get(['app', 'entityManagerParams', scope]),
                 });
 
                 this.model.set('name', scope);

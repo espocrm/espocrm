@@ -1698,9 +1698,12 @@ class EntityManager
      */
     private function getAdditionalParamLocationMap(string $entityType): array
     {
+        $templateType = $this->metadata->get(['scopes', $entityType, 'type']);
+
         /** @var array<string, array<string, mixed>> $params */
         $params = [
             ...($this->metadata->get(['app', 'entityManagerParams', 'Global']) ?? []),
+            ...($this->metadata->get(['app', 'entityManagerParams', '@' . ($templateType ?? '_')]) ?? []),
             ...($this->metadata->get(['app', 'entityManagerParams', $entityType]) ?? []),
         ];
 
