@@ -43,6 +43,7 @@ use Espo\Core\MassAction\Result;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\User;
 use Espo\Tools\Currency\Conversion\EntityConverterFactory;
 use RuntimeException;
 
@@ -54,7 +55,8 @@ class MassConvertCurrency implements MassAction
         private EntityManager $entityManager,
         private Metadata $metadata,
         private CurrencyConfigDataProvider $configDataProvider,
-        private EntityConverterFactory $converterFactory
+        private EntityConverterFactory $converterFactory,
+        private User $user
     ) {}
 
     public function process(Params $params, Data $data): Result
@@ -114,6 +116,8 @@ class MassConvertCurrency implements MassAction
             }
 
             $converter->convert($entity, $targetCurrency, $rates);
+
+            $this->entityManager->saveEntity($entity, ['modifiedById' => $this->user->getId()]);
 
             $ids[] = $entity->getId();
             $count++;

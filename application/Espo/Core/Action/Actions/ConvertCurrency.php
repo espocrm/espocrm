@@ -42,6 +42,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\User;
 use Espo\Tools\Currency\Conversion\EntityConverterFactory;
 use RuntimeException;
 
@@ -52,7 +53,8 @@ class ConvertCurrency implements Action
         private Acl $acl,
         private EntityManager $entityManager,
         private Metadata $metadata,
-        private CurrencyConfigDataProvider $configDataProvider
+        private CurrencyConfigDataProvider $configDataProvider,
+        private User $user
     ) {}
 
     public function process(Params $params, Data $data): void
@@ -97,6 +99,8 @@ class ConvertCurrency implements Action
         $converter = $this->converterFactory->create($entityType);
 
         $converter->convert($entity, $targetCurrency, $rates);
+
+        $this->entityManager->saveEntity($entity, ['modifiedById' => $this->user->getId()]);
     }
 
     private function getRatesFromData(Data $data): ?CurrencyRates
