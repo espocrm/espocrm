@@ -303,28 +303,44 @@ function (Dep, Model) {
             ];
 
             if (this.scope) {
-                let rows = [];
+                let rows1 = [];
+                let rows2 = [];
 
-                Object.keys(this.additionalParams).forEach((param, i) => {
-                    if (i % 2 === 0) {
-                        rows.push([]);
-                    }
+                let paramList1 = Object.keys(this.additionalParams)
+                    .filter(item => !!this.getMetadata().get(['app', 'entityManagerParams', 'Global', item]));
 
-                    let row = rows[rows.length - 1];
+                let paramList2 = Object.keys(this.additionalParams)
+                    .filter(item => !paramList1.includes(item));
 
-                    row.push({
-                        name: param,
+                let add = function (rows, list) {
+                    list.forEach((param, i) => {
+                        if (i % 2 === 0) {
+                            rows.push([]);
+                        }
+
+                        let row = rows[rows.length - 1];
+
+                        row.push({name: param});
+
+                        if (
+                            i === list.length - 1 &&
+                            row.length === 1
+                        ) {
+                            row.push(false);
+                        }
                     });
+                };
 
-                    if (
-                        i === Object.keys(this.additionalParams).length - 1 &&
-                        row.length === 1
-                    ) {
-                        row.push(false);
-                    }
-                });
+                add(rows1, paramList1);
+                add(rows2, paramList2);
 
-                this.detailLayout.push({rows: rows});
+                if (rows1.length) {
+                    this.detailLayout.push({rows: rows1});
+                }
+
+                if (rows2.length) {
+                    this.detailLayout.push({rows: rows2});
+                }
             }
         },
 
