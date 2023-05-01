@@ -42,8 +42,6 @@ use Espo\ORM\EntityManager;
 use LogicException;
 
 /**
- * Converts currencies. Does not save an entity.
- *
  * @implements EntityConverter<CoreEntity>
  */
 class DefaultEntityConverter implements EntityConverter
