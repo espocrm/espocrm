@@ -33,6 +33,8 @@ use Espo\Core\Currency\Rates;
 use Espo\ORM\Entity;
 
 /**
+ * Converts entity currency values. Is not supposed to save the entity.
+ *
  * @template TEntity of Entity
  */
 interface EntityConverter

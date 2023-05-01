@@ -36,7 +36,6 @@ use Espo\Core\Currency\Rates;
 use Espo\Core\Field\Currency;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Metadata;
-use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use LogicException;
@@ -50,8 +49,7 @@ class DefaultEntityConverter implements EntityConverter
         private Converter $converter,
         private EntityManager $entityManager,
         private Metadata $metadata,
-        private Acl $acl,
-        private User $user
+        private Acl $acl
     ) {}
 
     /**
@@ -88,8 +86,6 @@ class DefaultEntityConverter implements EntityConverter
 
             $entity->setValueObject($field, $convertedValue);
         }
-
-        $this->entityManager->saveEntity($entity, ['modifiedById' => $this->user->getId()]);
     }
 
     /**
