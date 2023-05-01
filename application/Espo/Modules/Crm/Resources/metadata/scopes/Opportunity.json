@@ -11,5 +11,6 @@
     "notifications": true,
     "object": true,
     "statusField": "stage",
-    "kanbanStatusIgnoreList": ["Closed Lost"]
+    "kanbanStatusIgnoreList": ["Closed Lost"],
+    "mainCurrencyFieldList": ["amount"]
 }

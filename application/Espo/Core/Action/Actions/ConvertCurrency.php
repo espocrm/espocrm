@@ -30,6 +30,7 @@
 namespace Espo\Core\Action\Actions;
 
 use Espo\Core\Acl;
+use Espo\Core\Acl\Table;
 use Espo\Core\Action\Action;
 use Espo\Core\Action\Data;
 use Espo\Core\Action\Params;
@@ -40,6 +41,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Metadata;
 use Espo\Tools\Currency\Conversion\EntityConverterFactory;
 use RuntimeException;
 
@@ -49,6 +51,7 @@ class ConvertCurrency implements Action
         private EntityConverterFactory $converterFactory,
         private Acl $acl,
         private EntityManager $entityManager,
+        private Metadata $metadata,
         private CurrencyConfigDataProvider $configDataProvider
     ) {}
 
@@ -60,6 +63,8 @@ class ConvertCurrency implements Action
         if (!$this->acl->checkScope($entityType, Acl\Table::ACTION_EDIT)) {
             throw new Forbidden();
         }
+
+        $this->checkFieldAccess($entityType);
 
         $baseCurrency = $this->configDataProvider->getBaseCurrency();
         $targetCurrency = $data->get('targetCurrency');
@@ -106,5 +111,24 @@ class ConvertCurrency implements Action
         $ratesArray[$baseCurrency] = 1.0;
 
         return CurrencyRates::fromAssoc($ratesArray, $baseCurrency);
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function checkFieldAccess(string $entityType): void
+    {
+        /** @var string[] $mainCurrencyFieldList */
+        $mainCurrencyFieldList = $this->metadata->get(['scopes', $entityType, 'mainCurrencyFieldList']);
+
+        if ($mainCurrencyFieldList === null) {
+            return;
+        }
+
+        foreach ($mainCurrencyFieldList as $field) {
+            if (!$this->acl->checkField($entityType, $field, Table::ACTION_EDIT)) {
+                throw new Forbidden("No edit access to field `$field`.");
+            }
+        }
     }
 }

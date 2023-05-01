@@ -35,6 +35,7 @@ use Espo\Core\Currency\Converter;
 use Espo\Core\Currency\Rates;
 use Espo\Core\Field\Currency;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -48,6 +49,7 @@ class DefaultEntityConverter implements EntityConverter
     public function __construct(
         private Converter $converter,
         private EntityManager $entityManager,
+        private Metadata $metadata,
         private Acl $acl,
         private User $user
     ) {}
@@ -97,6 +99,11 @@ class DefaultEntityConverter implements EntityConverter
     {
         $resultList = [];
 
+        /** @var string[] $mainCurrencyFieldList */
+        $mainCurrencyFieldList = $this->metadata->get(['scopes', $entityType, 'mainCurrencyFieldList']);
+
+        $allFields = $mainCurrencyFieldList !== null;
+
         $fieldDefsList = $this->entityManager
             ->getDefs()
             ->getEntity($entityType)
@@ -110,7 +117,10 @@ class DefaultEntityConverter implements EntityConverter
                 continue;
             }
 
-            if (!$this->acl->checkField($entityType, $field, Table::ACTION_EDIT)) {
+            if (
+                !$allFields &&
+                !$this->acl->checkField($entityType, $field, Table::ACTION_EDIT)
+            ) {
                 continue;
             }
 

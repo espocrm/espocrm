@@ -42,6 +42,7 @@ use Espo\Core\MassAction\QueryBuilder;
 use Espo\Core\MassAction\Result;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Metadata;
 use Espo\Tools\Currency\Conversion\EntityConverterFactory;
 use RuntimeException;
 
@@ -51,6 +52,7 @@ class MassConvertCurrency implements MassAction
         private QueryBuilder $queryBuilder,
         private Acl $acl,
         private EntityManager $entityManager,
+        private Metadata $metadata,
         private CurrencyConfigDataProvider $configDataProvider,
         private EntityConverterFactory $converterFactory
     ) {}
@@ -66,6 +68,8 @@ class MassConvertCurrency implements MassAction
         if ($this->acl->getPermissionLevel('massUpdate') !== Table::LEVEL_YES) {
             throw new Forbidden("No mass-update permission.");
         }
+
+        $this->checkFieldAccess($entityType);
 
         $dataRaw = $data->getRaw();
 
@@ -130,5 +134,24 @@ class MassConvertCurrency implements MassAction
         $ratesArray[$baseCurrency] = 1.0;
 
         return CurrencyRates::fromAssoc($ratesArray, $baseCurrency);
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function checkFieldAccess(string $entityType): void
+    {
+        /** @var string[] $mainCurrencyFieldList */
+        $mainCurrencyFieldList = $this->metadata->get(['scopes', $entityType, 'mainCurrencyFieldList']);
+
+        if ($mainCurrencyFieldList === null) {
+            return;
+        }
+
+        foreach ($mainCurrencyFieldList as $field) {
+            if (!$this->acl->checkField($entityType, $field, Table::ACTION_EDIT)) {
+                throw new Forbidden("No edit access to field `$field`.");
+            }
+        }
     }
 }
