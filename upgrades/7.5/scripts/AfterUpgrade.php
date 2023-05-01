@@ -47,8 +47,6 @@ class AfterUpgrade
     {
         $defs = $metadata->get(['scopes']);
 
-        $toSave = false;
-
         $path1 = "application/Espo/Core/Templates/Metadata/Event/selectDefs.json";
         $contents1 = $fileManager->getContents($path1);
         $data1 = Json::decode($contents1, true);
@@ -63,8 +61,6 @@ class AfterUpgrade
                 continue;
             }
 
-            $toSave = true;
-
             $data1 = $metadata->getCustom('selectDefs', $entityType);
             $data1->primaryFilterClassNameMap = $primaryFilterClassNameMap;
 
@@ -75,10 +71,6 @@ class AfterUpgrade
             $data2->canceledStatusList = ['Not Held'];
 
             $metadata->saveCustom('scopes', $entityType, $data2);
-        }
-
-        if ($toSave) {
-            $metadata->save();
         }
     }
 }
