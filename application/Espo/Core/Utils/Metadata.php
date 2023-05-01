@@ -393,7 +393,10 @@ class Metadata
     {
         if (is_object($data)) {
             foreach (get_object_vars($data) as $key => $item) {
-                if ($item == new stdClass()) {
+                if (
+                    $item instanceof stdClass &&
+                    count(get_object_vars($data)) === 0
+                ) {
                     unset($data->$key);
                 }
             }
