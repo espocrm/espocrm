@@ -33,33 +33,17 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
         template: 'crm:calendar/timeline',
 
         eventAttributes: [],
-
         colors: {},
-
         scopeList: [],
-
-        canceledStatusList: [],
-
-        completedStatusList: [],
-
         header: true,
-
         modeList: [],
-
         defaultMode: 'timeline',
-
         maxRange: 120,
-
         rangeMarginThreshold: 12 * 3600,
-
         leftMargin: 24 * 3600,
-
         rightMargin: 48 * 3600,
-
         calendarType: 'single',
-
         calendarTypeList: ['single', 'shared'],
-
         zoomPercentage: 1,
 
         data: function () {
@@ -150,10 +134,6 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 .clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors || {});
             this.modeList = this.getMetadata()
                 .get('clientDefs.Calendar.modeList') || this.modeList || [];
-            this.canceledStatusList = this.getMetadata()
-                .get('app.calendar.canceledStatusList') || this.canceledStatusList || [];
-            this.completedStatusList = this.getMetadata()
-                .get('app.calendar.completedStatusList') || this.completedStatusList || [];
             this.scopeList = this.getConfig()
                 .get('calendarEntityList') || Espo.Utils.clone(this.scopeList) || [];
             this.allDayScopeList = this.getMetadata()
@@ -509,6 +489,22 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             return event;
         },
 
+        /**
+         * @param {string} scope
+         * @return {string[]}
+         */
+        getEventTypeCompletedStatusList: function (scope) {
+            return this.getMetadata().get(['scopes', scope, 'completedStatusList']) || [];
+        },
+
+        /**
+         * @param {string} scope
+         * @return {string[]}
+         */
+        getEventTypeCanceledStatusList: function (scope) {
+            return this.getMetadata().get(['scopes', scope, 'canceledStatusList']) || [];
+        },
+
         fillColor: function (event) {
             let key = event.scope;
 
@@ -529,8 +525,8 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             if (
                 event.status &&
                 (
-                    ~this.completedStatusList.indexOf(event.status) ||
-                    ~this.canceledStatusList.indexOf(event.status)
+                    this.getEventTypeCompletedStatusList(event.scope).includes(event.status) ||
+                    this.getEventTypeCanceledStatusList(event.scope).includes(event.status)
                 )
             ) {
             	color = this.shadeColor(color, 0.4);
@@ -542,7 +538,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
         },
 
         handleStatus: function (event) {
-            if (~this.canceledStatusList.indexOf(event.status)) {
+            if (this.getEventTypeCanceledStatusList(event.scope).includes(event.status)) {
                 event.className += ' event-canceled';
             }
         },

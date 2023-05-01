@@ -62,6 +62,8 @@ use RuntimeException;
 class Service
 {
     private const BUSY_RANGES_MAX_RANGE_DAYS = 10;
+    /** @var array<string, string[]> */
+    private array $entityTypeCanceledStatusListCacheMap = [];
 
     public function __construct(
         private EntityManager $entityManager,
@@ -757,8 +759,6 @@ class Service
             }
         }
 
-        $canceledStatusList = $this->metadata->get(['app', 'calendar', 'canceledStatusList']) ?? [];
-
         foreach ($eventList as $event) {
             if (!$event instanceof Event) {
                 continue;
@@ -773,7 +773,7 @@ class Service
                 continue;
             }
 
-            if (in_array($status, $canceledStatusList)) {
+            if (in_array($status, $this->getEntityTypeCanceledStatusList($event->getEntityType()))) {
                 continue;
             }
 
@@ -850,7 +850,18 @@ class Service
     }
 
     /**
-     * @return array<int,WorkingRange|NonWorkingRange>
+     * @return string[]
+     */
+    private function getEntityTypeCanceledStatusList(string $entityType): array
+    {
+        $this->entityTypeCanceledStatusListCacheMap[$entityType] ??=
+            $this->metadata->get(['scopes', $entityType, 'canceledStatusList']) ?? [];
+
+        return $this->entityTypeCanceledStatusListCacheMap[$entityType];
+    }
+
+    /**
+     * @return array<int, WorkingRange|NonWorkingRange>
      */
     private function getWorkingRangeList(WorkingCalendar $calendar, FetchParams $fetchParams): array
     {

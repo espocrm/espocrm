@@ -12,6 +12,8 @@
     "notifications": true,
     "activityStatusList": ["Planned"],
     "historyStatusList": ["Held", "Not Held"],
+    "completedStatusList": ["Held"],
+    "canceledStatusList": ["Not Held"],
     "statusField": "status",
     "statusFieldLocked": true
 }

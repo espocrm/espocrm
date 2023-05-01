@@ -1,8 +1,14 @@
 {
     "fields": {
-        "historyStatusList": "History Statuses"
+        "activityStatusList": "Activity Statuses",
+        "historyStatusList": "History Statuses",
+        "completedStatusList": "Completed Statues",
+        "canceledStatusList": "Canceled Statues"
     },
     "tooltips": {
-        "historyStatusList": "Status values determining that a record should be displayed in the History panel."
+        "activityStatusList": "Status values determining that an activity record should be displayed in the Activity panel and considered as actual.",
+        "historyStatusList": "Status values determining that an activity record should be displayed in the History panel.",
+        "completedStatusList": "Status values determining that an activity is completed.",
+        "canceledStatusList": "Status values determining that an activity is canceled and won't be taken into account in free/busy ranges."
     }
 }

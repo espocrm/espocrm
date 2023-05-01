@@ -30,15 +30,20 @@
 namespace Espo\Modules\Crm\Classes\Select\Meeting\PrimaryFilters;
 
 use Espo\Core\Select\Primary\Filter;
-use Espo\Modules\Crm\Entities\Meeting;
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\Query\SelectBuilder;
 
 class Planned implements Filter
 {
+    public function __construct(
+        private string $entityType,
+        private Metadata $metadata
+    ) {}
+
     public function apply(SelectBuilder $queryBuilder): void
     {
-        $queryBuilder->where([
-            'status' => Meeting::STATUS_PLANNED,
-        ]);
+        $statusList = $this->metadata->get(['scopes', $this->entityType, 'activityStatusList']) ?? [];
+
+        $queryBuilder->where(['status' => $statusList]);
     }
 }

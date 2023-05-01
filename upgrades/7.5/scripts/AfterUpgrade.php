@@ -65,11 +65,16 @@ class AfterUpgrade
 
             $toSave = true;
 
-            $data = $metadata->getCustom('selectDefs', $entityType);
+            $data1 = $metadata->getCustom('selectDefs', $entityType);
+            $data1->primaryFilterClassNameMap = $primaryFilterClassNameMap;
 
-            $data->primaryFilterClassNameMap = $primaryFilterClassNameMap;
+            $metadata->saveCustom('selectDefs', $entityType, $data1);
 
-            $metadata->saveCustom('selectDefs', $entityType, $data);
+            $data2 = $metadata->getCustom('scopes', $entityType);
+            $data2->completedStatusList = ['Held'];
+            $data2->canceledStatusList = ['Not Held'];
+
+            $metadata->saveCustom('scopes', $entityType, $data2);
         }
 
         if ($toSave) {

@@ -33,21 +33,11 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
         template: 'crm:calendar/calendar',
 
         eventAttributes: [],
-
         colors: {},
-
         allDayScopeList: ['Task'],
-
         scopeList: ['Meeting', 'Call', 'Task'],
-
-        canceledStatusList: [],
-
-        completedStatusList: [],
-
         header: true,
-
         modeList: [],
-
         fullCalendarModeList: [
             'month',
             'agendaWeek',
@@ -56,11 +46,8 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
             'basicDay',
             'listWeek',
         ],
-
         defaultMode: 'agendaWeek',
-
         slotDuration: 30,
-
         titleFormat: {
             month: 'MMMM YYYY',
             week: 'MMMM YYYY',
@@ -133,10 +120,6 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 .clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors);
             this.modeList = this.getMetadata()
                 .get('clientDefs.Calendar.modeList') || this.modeList;
-            this.canceledStatusList = this.getMetadata()
-                .get('app.calendar.canceledStatusList') || this.canceledStatusList;
-            this.completedStatusList = this.getMetadata()
-                .get('app.calendar.completedStatusList') || this.completedStatusList;
             this.scopeList = this.getConfig()
                 .get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
             this.allDayScopeList = this.getMetadata()
@@ -424,6 +407,22 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
             return event;
         },
 
+        /**
+         * @param {string} scope
+         * @return {string[]}
+         */
+        getEventTypeCompletedStatusList: function (scope) {
+            return this.getMetadata().get(['scopes', scope, 'completedStatusList']) || [];
+        },
+
+        /**
+         * @param {string} scope
+         * @return {string[]}
+         */
+        getEventTypeCanceledStatusList: function (scope) {
+            return this.getMetadata().get(['scopes', scope, 'canceledStatusList']) || [];
+        },
+
         fillColor: function (event) {
             let color = this.colors[event.scope];
 
@@ -437,7 +436,10 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
             if (
                 color &&
-                ~this.completedStatusList.indexOf(event.status) || ~this.canceledStatusList.indexOf(event.status)
+                (
+                    this.getEventTypeCompletedStatusList(event.scope).includes(event.status) ||
+                    this.getEventTypeCanceledStatusList(event.scope).includes(event.status)
+                )
             ) {
             	color = this.shadeColor(color, 0.4);
             }
@@ -446,7 +448,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
         },
 
         handleStatus: function (event) {
-        	if (~this.canceledStatusList.indexOf(event.status)) {
+        	if (this.getEventTypeCanceledStatusList(event.scope).includes(event.status)) {
                 event.className = ['event-canceled'];
         	} else {
                 event.className = [];

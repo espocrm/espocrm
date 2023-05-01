@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/admin/entity-manager/fields/history-status-list', ['views/fields/multi-enum'], function (Dep) {
+define('crm:views/admin/entity-manager/fields/status-list', ['views/fields/multi-enum'], function (Dep) {
 
     return Dep.extend({
 
@@ -35,8 +35,6 @@ define('crm:views/admin/entity-manager/fields/history-status-list', ['views/fiel
 
             this.params.options = Espo.Utils.clone(
                 this.getMetadata().get(['entityDefs', entityType, 'fields', 'status', 'options'])) || [];
-
-            this.params.options = this.params.options.filter(item => item !== 'Planned');
 
             this.params.translation = `${entityType}.options.status`;
         },
