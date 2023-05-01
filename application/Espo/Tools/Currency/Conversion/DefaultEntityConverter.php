@@ -99,10 +99,10 @@ class DefaultEntityConverter implements EntityConverter
     {
         $resultList = [];
 
-        /** @var string[] $mainCurrencyFieldList */
-        $mainCurrencyFieldList = $this->metadata->get(['scopes', $entityType, 'mainCurrencyFieldList']);
+        /** @var string[] $requiredFieldList */
+        $requiredFieldList = $this->metadata->get(['scopes', $entityType, 'currencyConversionAccessRequiredFieldList']);
 
-        $allFields = $mainCurrencyFieldList !== null;
+        $allFields = $requiredFieldList !== null;
 
         $fieldDefsList = $this->entityManager
             ->getDefs()

@@ -141,14 +141,14 @@ class MassConvertCurrency implements MassAction
      */
     private function checkFieldAccess(string $entityType): void
     {
-        /** @var string[] $mainCurrencyFieldList */
-        $mainCurrencyFieldList = $this->metadata->get(['scopes', $entityType, 'mainCurrencyFieldList']);
+        /** @var string[] $requiredFieldList */
+        $requiredFieldList = $this->metadata->get(['scopes', $entityType, 'currencyConversionAccessRequiredFieldList']);
 
-        if ($mainCurrencyFieldList === null) {
+        if ($requiredFieldList === null) {
             return;
         }
 
-        foreach ($mainCurrencyFieldList as $field) {
+        foreach ($requiredFieldList as $field) {
             if (!$this->acl->checkField($entityType, $field, Table::ACTION_EDIT)) {
                 throw new Forbidden("No edit access to field `$field`.");
             }

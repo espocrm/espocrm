@@ -12,5 +12,5 @@
     "object": true,
     "statusField": "stage",
     "kanbanStatusIgnoreList": ["Closed Lost"],
-    "mainCurrencyFieldList": ["amount"]
+    "currencyConversionAccessRequiredFieldList": ["amount"]
 }
