@@ -29,44 +29,26 @@
 
 namespace Espo\Core\Utils\Acl;
 
+use Espo\Entities\Portal;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Core\AclManager;
 use Espo\Core\Portal\AclManagerContainer as PortalAclManagerContainer;
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\ApplicationState;
+use RuntimeException;
 
 class UserAclManagerProvider
 {
-    private EntityManager $entityManager;
-
-    private AclManager $aclManager;
-
-    private PortalAclManagerContainer $portalAclManagerContainer;
-
-    private ApplicationState $applicationState;
-
-    /**
-     * @var array<string,AclManager>
-     */
+    /** @var array<string, AclManager> */
     private $map = [];
 
     public function __construct(
-        EntityManager $entityManager,
-        AclManager $aclManager,
-        PortalAclManagerContainer $portalAclManagerContainer,
-        ApplicationState $applicationState
-    ) {
-        $this->entityManager = $entityManager;
-        $this->aclManager = $aclManager;
-        $this->portalAclManagerContainer = $portalAclManagerContainer;
-        $this->applicationState = $applicationState;
-    }
+        private EntityManager $entityManager,
+        private AclManager $aclManager,
+        private PortalAclManagerContainer $portalAclManagerContainer,
+        private ApplicationState $applicationState
+    ) {}
 
-    /**
-     * @throws Error
-     */
     public function get(User $user): AclManager
     {
         $key = $user->hasId() ? $user->getId() : spl_object_hash($user);
@@ -83,14 +65,14 @@ class UserAclManagerProvider
         $aclManager = $this->aclManager;
 
         if ($user->isPortal() && !$this->applicationState->isPortal()) {
-            /** @var ?\Espo\Entities\Portal $portal */
+            /** @var ?Portal $portal */
             $portal = $this->entityManager
                 ->getRDBRepository(User::ENTITY_TYPE)
                 ->getRelation($user, 'portals')
                 ->findOne();
 
             if (!$portal) {
-                throw new Error("No portal for portal user '" . $user->getId() . "'.");
+                throw new RuntimeException("No portal for portal user '" . $user->getId() . "'.");
             }
 
             $aclManager = $this->portalAclManagerContainer->get($portal);

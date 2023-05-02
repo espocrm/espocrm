@@ -29,13 +29,11 @@
 
 namespace Espo\Core\Utils\Autoload;
 
-use Espo\Core\{
-    Utils\Util,
-    Utils\Config,
-    Utils\DataCache,
-    Utils\File\Manager as FileManager,
-    Utils\Log,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Util;
 
 use Composer\Autoload\ClassLoader;
 
@@ -51,49 +49,30 @@ class NamespaceLoader
      * }
      */
     private $namespaces = null;
-
-    /**
-     * @var ?array<string, mixed>
-     */
+    /** @var ?array<string, mixed> */
     private $vendorNamespaces = null;
-
     private string $autoloadFilePath = 'vendor/autoload.php';
-
-    /**
-     * @var array<'psr-4'|'psr-0'|'classmap', string>
-     */
+    /** @var array<'psr-4'|'psr-0'|'classmap', string> */
     private $namespacesPaths = [
         'psr-4' => 'vendor/composer/autoload_psr4.php',
         'psr-0' => 'vendor/composer/autoload_namespaces.php',
         'classmap' => 'vendor/composer/autoload_classmap.php',
     ];
-
-    /**
-     * @var array<'psr-4'|'psr-0', string>
-     */
+    /** @var array<'psr-4'|'psr-0', string> */
     private $methodNameMap = [
         'psr-4' => 'addPsr4',
         'psr-0' => 'add',
     ];
-
     private string $cacheKey = 'autoloadVendorNamespaces';
 
     private ClassLoader $classLoader;
 
-    private Config $config;
-
-    private DataCache $dataCache;
-
-    private FileManager $fileManager;
-
-    private Log $log;
-
-    public function __construct(Config $config, DataCache $dataCache, FileManager $fileManager, Log $log)
-    {
-        $this->config = $config;
-        $this->dataCache = $dataCache;
-        $this->fileManager = $fileManager;
-        $this->log = $log;
+    public function __construct(
+        private Config $config,
+        private DataCache $dataCache,
+        private FileManager $fileManager,
+        private Log $log
+    ) {
 
         $this->classLoader = new ClassLoader();
     }

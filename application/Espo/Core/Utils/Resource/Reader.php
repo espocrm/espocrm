@@ -40,14 +40,10 @@ use stdClass;
  */
 class Reader
 {
-    private Unifier $unifier;
-    private UnifierObj $unifierObj;
-
-    public function __construct(Unifier $unifier, UnifierObj $unifierObj)
-    {
-        $this->unifier = $unifier;
-        $this->unifierObj = $unifierObj;
-    }
+    public function __construct(
+        private Unifier $unifier,
+        private UnifierObj $unifierObj
+    ) {}
 
     /**
      * Read resource data.

@@ -35,7 +35,6 @@ use Throwable;
 
 class Permission
 {
-    private Manager $fileManager;
 
     /**
      * Last permission error.
@@ -99,10 +98,8 @@ class Permission
     /**
      * @param array<string, mixed> $params
      */
-    public function __construct(Manager $fileManager, array $params = null)
+    public function __construct(private Manager $fileManager, array $params = null)
     {
-        $this->fileManager = $fileManager;
-
         if ($params) {
             foreach ($params as $paramName => $paramValue) {
                 switch ($paramName) {
@@ -609,7 +606,7 @@ class Permission
     }
 
     /**
-     * Get count of a search string in a array.
+     * Get count of a search string in an array.
      *
      * @param string $search
      * @param string[] $array

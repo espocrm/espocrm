@@ -29,11 +29,8 @@
 
 namespace Espo\Core\Utils\File;
 
-use Espo\Core\{
-    Utils\Util,
-    Utils\Json,
-};
-
+use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Util;
 use Espo\Core\Utils\File\Exceptions\FileError;
 use Espo\Core\Utils\File\Exceptions\PermissionError;
 
@@ -47,9 +44,7 @@ class Manager
 {
     private Permission $permission;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $permissionDeniedList = [];
 
     protected string $tmpDir = 'data/tmp';

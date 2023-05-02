@@ -29,14 +29,12 @@
 
 namespace Espo\Core\Utils\File;
 
-use Espo\Core\{
-    Utils\File\Manager as FileManager,
-    Utils\Module,
-    Utils\Util,
-    Utils\DataUtil,
-    Utils\Json,
-    Utils\Resource\PathProvider,
-};
+use Espo\Core\Utils\DataUtil;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Module;
+use Espo\Core\Utils\Resource\PathProvider;
+use Espo\Core\Utils\Util;
 
 use JsonException;
 use LogicException;
@@ -45,29 +43,21 @@ use stdClass;
 class Unifier
 {
     protected bool $useObjects = false;
-
     private string $unsetFileName = 'unset.json';
-
     private const APPEND_VALUE = '__APPEND__';
-
     private const ANY_KEY = '__ANY__';
 
-    private FileManager $fileManager;
-    private Module $module;
-    private PathProvider $pathProvider;
-
-    public function __construct(FileManager $fileManager, Module $module, PathProvider $pathProvider)
-    {
-        $this->fileManager = $fileManager;
-        $this->module = $module;
-        $this->pathProvider = $pathProvider;
-    }
+    public function __construct(
+        private FileManager $fileManager,
+        private Module $module,
+        private PathProvider $pathProvider
+    ) {}
 
     /**
      * Merge data of resource files.
      *
      * @param array<int, string[]> $forceAppendPathList
-     * @return array<string, mixed>|\stdClass
+     * @return array<string, mixed>|stdClass
      */
     public function unify(string $path, bool $noCustom = false, array $forceAppendPathList = [])
     {
@@ -111,22 +101,22 @@ class Unifier
 
     /**
      * @param array<int, string[]> $forceAppendPathList
-     * @return \stdClass
+     * @return stdClass
      */
     private function unifyObject(string $path, bool $noCustom = false, array $forceAppendPathList = [])
     {
-        /** @var \stdClass $data */
+        /** @var stdClass $data */
         $data = $this->unifySingle($this->pathProvider->getCore() . $path, true);
 
         foreach ($this->getModuleList() as $moduleName) {
             $filePath = $this->pathProvider->getModule($moduleName) . $path;
 
-            /** @var \stdClass $itemData */
+            /** @var stdClass $itemData */
             $itemData = $this->unifySingle($filePath, true);
 
             $this->prepareItemDataObject($itemData, $forceAppendPathList);
 
-            /** @var \stdClass $data */
+            /** @var stdClass $data */
             $data = DataUtil::merge($data, $itemData);
         }
 
@@ -136,17 +126,17 @@ class Unifier
 
         $customFilePath = $this->pathProvider->getCustom() . $path;
 
-        /** @var \stdClass $itemData */
+        /** @var stdClass $itemData */
         $itemData = $this->unifySingle($customFilePath, true);
 
         $this->prepareItemDataObject($itemData, $forceAppendPathList);
 
-        /** @var \stdClass */
+        /** @var stdClass */
         return DataUtil::merge($data, $itemData);
     }
 
     /**
-     * @return array<string, mixed>|\stdClass
+     * @return array<string, mixed>|stdClass
      */
     private function unifySingle(string $dirPath, bool $recursively)
     {
@@ -175,7 +165,7 @@ class Unifier
                 );
 
                 if ($this->useObjects) {
-                    /** @var \stdClass $data */
+                    /** @var stdClass $data */
 
                     $data->$dirName = $itemValue;
 
@@ -210,7 +200,7 @@ class Unifier
             $name = $this->fileManager->getFileName($fileName, '.json');
 
             if ($this->useObjects) {
-                /** @var \stdClass $data */
+                /** @var stdClass $data */
 
                 $data->$name = $itemValue;
 
@@ -223,9 +213,9 @@ class Unifier
         }
 
         if ($this->useObjects) {
-            /** @var \stdClass $data */
+            /** @var stdClass $data */
 
-            /** @var \stdClass */
+            /** @var stdClass */
             return DataUtil::unsetByKey($data, $unsets);
         }
 
@@ -236,7 +226,7 @@ class Unifier
     }
 
     /**
-     * @return \stdClass|array<string, mixed>
+     * @return stdClass|array<string, mixed>
      * @throws JsonException
      */
     private function getContents(string $path)
@@ -246,10 +236,8 @@ class Unifier
         try {
             return Json::decode($fileContent, !$this->useObjects);
         }
-        catch (JsonException $e) {
-            throw new JsonException(
-                "JSON syntax error in '{$path}'."
-            );
+        catch (JsonException) {
+            throw new JsonException("JSON syntax error in '$path'.");
         }
     }
 

@@ -29,48 +29,30 @@
 
 namespace Espo\Core\Utils\File;
 
-use Espo\Core\{
-    Utils\Util,
-    Utils\File\Manager as FileManager,
-    Utils\Config,
-    Utils\Module,
-    Utils\DataCache,
-    Utils\Module\PathProvider,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Module;
+use Espo\Core\Utils\Module\PathProvider;
+use Espo\Core\Utils\Util;
 
 use ReflectionClass;
 
 class ClassMap
 {
-    private FileManager $fileManager;
-
-    private Config $config;
-
-    private Module $module;
-
-    private DataCache $dataCache;
-
-    private PathProvider $pathProvider;
-
     public function __construct(
-        FileManager $fileManager,
-        Config $config,
-        Module $module,
-        DataCache $dataCache,
-        PathProvider $pathProvider
-    ) {
-        $this->fileManager = $fileManager;
-        $this->config = $config;
-        $this->module = $module;
-        $this->dataCache = $dataCache;
-        $this->pathProvider = $pathProvider;
-    }
+        private FileManager $fileManager,
+        private Config $config,
+        private Module $module,
+        private DataCache $dataCache,
+        private PathProvider $pathProvider
+    ) {}
 
     /**
      * Return paths to class files.
      *
      * @param ?string[] $allowedMethods If specified, classes w/o specified method will be ignored.
-     * @return array<string,class-string>
+     * @return array<string, class-string>
      */
     public function getData(
         string $path,

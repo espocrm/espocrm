@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Utils\Config;
 
-use Espo\Core\{
-    Utils\File\Manager as FileManager,
-    Utils\Config,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
 
 use RuntimeException;
 
@@ -112,7 +110,7 @@ class ConfigWriterFileManager
         try {
             $data = $this->fileManager->getPhpContents($path);
         }
-        catch (RuntimeException $e) {
+        catch (RuntimeException) {
             return false;
         }
 

@@ -36,20 +36,13 @@ use RuntimeException;
 
 class MissingDefaultParamsSaver
 {
-    private Config $config;
-
-    private ConfigWriter $configWriter;
-
-    private FileManager $fileManager;
-
     private string $defaultConfigPath = 'application/Espo/Resources/defaults/config.php';
 
-    public function __construct(Config $config, ConfigWriter $configWriter, FileManager $fileManager)
-    {
-        $this->config = $config;
-        $this->configWriter = $configWriter;
-        $this->fileManager = $fileManager;
-    }
+    public function __construct(
+        private Config $config,
+        private ConfigWriter $configWriter,
+        private FileManager $fileManager
+    ) {}
 
     public function process(): void
     {

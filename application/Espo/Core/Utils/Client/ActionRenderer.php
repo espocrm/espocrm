@@ -39,12 +39,9 @@ use Espo\Core\Utils\ClientManager;
  */
 class ActionRenderer
 {
-    private ClientManager $clientManager;
 
-    public function __construct(ClientManager $clientManager)
-    {
-        $this->clientManager = $clientManager;
-    }
+    public function __construct(private ClientManager $clientManager)
+    {}
 
     /**
      * Writes to a body.

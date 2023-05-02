@@ -33,15 +33,10 @@ use Espo\Core\Utils\File\Manager as FileManager;
 
 class Loader
 {
-    private NamespaceLoader $namespaceLoader;
-
-    private FileManager $fileManager;
-
-    public function __construct(NamespaceLoader $namespaceLoader, FileManager $fileManager)
-    {
-        $this->namespaceLoader = $namespaceLoader;
-        $this->fileManager = $fileManager;
-    }
+    public function __construct(
+        private NamespaceLoader $namespaceLoader,
+        private FileManager $fileManager
+    ) {}
 
     /**
      *
