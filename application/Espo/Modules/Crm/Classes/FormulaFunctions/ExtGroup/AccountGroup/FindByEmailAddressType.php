@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Classes\FormulaFunctions\ExtGroup\AccountGroup;
 
+use Espo\Core\Utils\Json;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Core\Formula\ArgumentList;
@@ -42,6 +43,12 @@ class FindByEmailAddressType extends BaseFunction implements
 {
     use Di\EntityManagerSetter;
     use Di\FileManagerSetter;
+
+    /** @var string[]  */
+    private array $domainFileList = [
+        'application/Espo/Modules/Crm/Resources/data/freeEmailProviderDomains.json',
+        'custom/Espo/Custom/Resources/data/freeEmailProviderDomains.json',
+    ];
 
     public function process(ArgumentList $args)
     {
@@ -65,8 +72,8 @@ class FindByEmailAddressType extends BaseFunction implements
 
         $domain = $emailAddress;
 
-        if (strpos($emailAddress, '@') !== false) {
-            list($p1, $domain) = explode('@', $emailAddress);
+        if (str_contains($emailAddress, '@')) {
+            [, $domain] = explode('@', $emailAddress);
         }
 
         $domain = strtolower($domain);
@@ -74,24 +81,28 @@ class FindByEmailAddressType extends BaseFunction implements
         $em = $this->entityManager;
 
         $account = $em->getRDBRepository(Account::ENTITY_TYPE)
-            ->where([
-                'emailAddress' => $emailAddress,
-            ])
+            ->where(['emailAddress' => $emailAddress])
             ->findOne();
 
         if ($account) {
             return $account->getId();
         }
 
-        $ignoreList = json_decode(
-            $this->fileManager
-                ->getContents('application/Espo/Modules/Crm/Resources/data/freeEmailProviderDomains.json')
-        ) ?? [];
+        $ignoreList = [];
+
+        foreach ($this->domainFileList as $file) {
+            if (!$this->fileManager->isFile($file)) {
+                continue;
+            }
+
+            $ignoreList = array_merge(
+                $ignoreList,
+                Json::decode($this->fileManager->getContents($file))
+            );
+        }
 
         $contact = $em->getRDBRepository(Contact::ENTITY_TYPE)
-            ->where([
-                'emailAddress' => $emailAddress,
-            ])
+            ->where(['emailAddress' => $emailAddress])
             ->findOne();
 
         if ($contact) {
@@ -120,9 +131,7 @@ class FindByEmailAddressType extends BaseFunction implements
         }
 
         $account = $em->getRDBRepository(Account::ENTITY_TYPE)
-            ->where([
-                'emailAddress*' => '%@' . $domain,
-            ])
+            ->where(['emailAddress*' => '%@' . $domain])
             ->findOne();
 
         if (!$account) {
