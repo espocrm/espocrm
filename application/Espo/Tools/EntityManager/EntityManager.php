@@ -175,18 +175,6 @@ class EntityManager
 
         $this->fileManager->putContents($filePath, $contents);
 
-        if (file_exists($templatePath . '/SelectManagers/' . $type . '.php')) {
-            $contents = "<" . "?" . "php\n\n".
-                "namespace Espo\Custom\SelectManagers;\n\n".
-                "class $normalizedName extends $templateNamespace\SelectManagers\\$type\n".
-                "{\n".
-                "}\n";
-
-            $filePath = "custom/Espo/Custom/SelectManagers/$normalizedName.php";
-
-            $this->fileManager->putContents($filePath, $contents);
-        }
-
         $stream = false;
 
         if (!empty($params['stream'])) {
