@@ -738,11 +738,11 @@ class Service
     }
 
     /**
-    * @param Event[] $ignoreEventList
-    * @return BusyRange[]
-    * @throws NotFound
-    * @throws Forbidden
-    */
+     * @param Event[] $ignoreEventList
+     * @return BusyRange[]
+     * @throws NotFound
+     * @throws Forbidden
+     */
     public function fetchBusyRanges(string $userId, FetchParams $fetchParams, array $ignoreEventList = []): array
     {
         $rangeList = [];
