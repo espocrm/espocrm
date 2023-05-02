@@ -31,15 +31,20 @@ namespace Espo\Core\Formula\Functions\RecordServiceGroup;
 
 use Espo\Core\Di\EntityManagerAware;
 use Espo\Core\Di\EntityManagerSetter;
+use Espo\Core\Di\RecordServiceContainerAware;
+use Espo\Core\Di\RecordServiceContainerSetter;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\ConflictSilent;
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Utils\Json;
 
-class ThrowDuplicateConflictType extends BaseFunction implements EntityManagerAware
+class ThrowDuplicateConflictType extends BaseFunction implements
+    EntityManagerAware,
+    RecordServiceContainerAware
 {
     use EntityManagerSetter;
+    use RecordServiceContainerSetter;
 
     /**
      * @inheritDoc
@@ -72,10 +77,16 @@ class ThrowDuplicateConflictType extends BaseFunction implements EntityManagerAw
         foreach ($ids as $id) {
             $entity = $this->entityManager->getEntityById($entityType, $id);
 
-            $name = $entity ? $entity->get('name') : $id;
+            if ($entity) {
+                $this->recordServiceContainer->get($entityType)->prepareEntityForOutput($entity);
+            }
 
+            if (!$entity) {
+                $entity = $this->entityManager->getNewEntity($entityType);
+                $entity->set('name', $id);
+            }
 
-            $list[] = (object) ['id' => $id, 'name' => $name];
+            $list[] = $entity->getValueMap();
         }
 
         throw ConflictSilent::createWithBody('duplicate', Json::encode($list));

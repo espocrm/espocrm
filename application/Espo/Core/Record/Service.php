@@ -564,22 +564,17 @@ class Service implements Crud,
      */
     protected function processDuplicateCheck(Entity $entity): void
     {
-        $duplicateList = $this->findDuplicates($entity);
+        $duplicates = $this->findDuplicates($entity);
 
-        if (empty($duplicateList)) {
+        if (!$duplicates) {
             return;
         }
 
-        $list = [];
-
-        foreach ($duplicateList as $e) {
-            $list[] = (object) [
-                'id' => $e->getId(),
-                'name' => $e->get('name'),
-            ];
+        foreach ($duplicates as $e) {
+            $this->prepareEntityForOutput($e);
         }
 
-        throw ConflictSilent::createWithBody('duplicate', Json::encode($list));
+        throw ConflictSilent::createWithBody('duplicate', Json::encode($duplicates->getValueMapList()));
     }
 
     /**
