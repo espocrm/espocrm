@@ -89,6 +89,14 @@ class Event implements Item
         return $obj;
     }
 
+    public function withId(string $id): self
+    {
+        $obj = clone $this;
+        $obj->attributes['id'] = $id;
+
+        return $obj;
+    }
+
     public function withUserIdAdded(string $userId): self
     {
         $obj = clone $this;

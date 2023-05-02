@@ -1,5 +1,19 @@
 {
     "functionClassNameMap": {
-        "ext\\account\\findByEmailAddress": "Espo\\Modules\\Crm\\Classes\\FormulaFunctions\\ExtGroup\\AccountGroup\\FindByEmailAddressType"
-    }
+        "ext\\account\\findByEmailAddress": "Espo\\Modules\\Crm\\Classes\\FormulaFunctions\\ExtGroup\\AccountGroup\\FindByEmailAddressType",
+        "ext\\calendar\\userIsBusy": "Espo\\Modules\\Crm\\Classes\\FormulaFunctions\\ExtGroup\\CalendarGroup\\UserIsBusyType"
+    },
+    "functionList": [
+        "__APPEND__",
+        {
+            "name": "ext\\account\\findByEmailAddress",
+            "insertText": "ext\\account\\findByEmailAddress(EMAIL_ADDRESS)",
+            "returnType": "string"
+        },
+        {
+            "name": "ext\\calendar\\userIsBusy",
+            "insertText": "ext\\calendar\\userIsBusy(USER_ID, FROM, TO)",
+            "returnType": "bool"
+        }
+    ]
 }

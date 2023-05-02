@@ -752,7 +752,7 @@ class Service
         $ignoreHash = (object) [];
 
         foreach ($ignoreEventList as $event) {
-            $id = $event->getAttribute('id');
+            $id = $event->getId();
 
             if ($id) {
                 $ignoreHash->$id = true;
@@ -767,7 +767,7 @@ class Service
             $start = $event->getStart();
             $end = $event->getEnd();
             $status = $event->getAttribute('status');
-            $id = $event->getAttribute('id');
+            $id = $event->getId();
 
             if (!$start || !$end) {
                 continue;
@@ -782,7 +782,7 @@ class Service
             }
 
             try {
-                foreach ($rangeList as &$range) {
+                foreach ($rangeList as $range) {
                     if (
                         $start->getTimestamp() < $range->start->getTimestamp() &&
                         $end->getTimestamp() > $range->end->getTimestamp()

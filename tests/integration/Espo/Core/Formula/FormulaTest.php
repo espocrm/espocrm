@@ -29,7 +29,10 @@
 
 namespace tests\integration\Espo\Core\Formula;
 
+use Espo\Core\Field\DateTime;
+use Espo\Core\Field\DateTimeOptional;
 use Espo\Core\Formula\Manager;
+use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\EntityManager;
 
@@ -770,5 +773,59 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $script = "env\\userAttribute('id')";
         $id = $fm->run($script);
         $this->assertEquals($id, $user->getId());
+    }
+
+    public function testCalendarUserBusy(): void
+    {
+        $fm = $this->getContainer()->getByClass(Manager::class);
+        $user = $this->getContainer()->getByClass(User::class);
+        $em = $this->getContainer()->getByClass(EntityManager::class);
+
+        $dateStart = DateTimeOptional::createNow();
+        $dateEnd = $dateStart->addHours(1);
+
+        /** @var Meeting $meeting */
+        $meeting = $em->getRDBRepositoryByClass(Meeting::class)->getNew();
+
+        $meeting
+            ->setDateStart($dateStart)
+            ->setDateEnd($dateEnd)
+            ->setAssignedUserId($user->getId());
+
+        $em->saveEntity($meeting);
+
+        $script = sprintf(
+            "ext\\calendar\\userIsBusy('%s', '%s', '%s')",
+            $user->getId(),
+            $dateStart->getString(),
+            $dateEnd->getString()
+        );
+        $this->assertTrue($fm->run($script));
+
+        $script = sprintf(
+            "ext\\calendar\\userIsBusy('%s', '%s', '%s')",
+            $user->getId(),
+            $dateStart->addHours(-1)->getString(),
+            $dateEnd->addHours(1)->getString()
+        );
+        $this->assertTrue($fm->run($script));
+
+        $script = sprintf(
+            "ext\\calendar\\userIsBusy('%s', '%s', '%s')",
+            $user->getId(),
+            $dateStart->addDays(-1)->getString(),
+            $dateEnd->addDays(-1)->getString()
+        );
+        $this->assertFalse($fm->run($script));
+
+        $script = sprintf(
+            "ext\\calendar\\userIsBusy('%s', '%s', '%s', '%s', '%s')",
+            $user->getId(),
+            $dateStart->getString(),
+            $dateEnd->getString(),
+            $meeting->getEntityType(),
+            $meeting->getId()
+        );
+        $this->assertFalse($fm->run($script));
     }
 }
