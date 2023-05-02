@@ -29,12 +29,13 @@
 
 namespace Espo\Core;
 
+use Psr\Container\NotFoundExceptionInterface;
+
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\Binding;
 use Espo\Core\Binding\Factory;
 use Espo\Core\Interfaces\Injectable;
 
-use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
 use ReflectionParameter;
 use ReflectionFunction;
@@ -52,14 +53,10 @@ use Closure;
  */
 class InjectableFactory
 {
-    private Container $container;
-    private ?BindingContainer $bindingContainer;
-
-    public function __construct(Container $container, ?BindingContainer $bindingContainer = null)
-    {
-        $this->container = $container;
-        $this->bindingContainer = $bindingContainer;
-    }
+    public function __construct(
+        private Container $container,
+        private ?BindingContainer $bindingContainer = null
+    ) {}
 
     /**
      * Create an instance by a class name.
