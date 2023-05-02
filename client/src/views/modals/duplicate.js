@@ -42,7 +42,7 @@ define('views/modals/duplicate', ['views/modal'], function (Dep) {
         },
 
         setup: function () {
-            var saveLabel = 'Save';
+            let saveLabel = 'Save';
 
             if (this.model && this.model.isNew()) {
                 saveLabel = 'Create';
@@ -53,10 +53,10 @@ define('views/modals/duplicate', ['views/modal'], function (Dep) {
                     name: 'save',
                     label: saveLabel,
                     style: 'danger',
-                    onClick: function (dialog) {
+                    onClick: dialog => {
                         this.trigger('save');
                         dialog.close();
-                    }.bind(this),
+                    },
                 },
                 {
                     name: 'cancel',
@@ -65,7 +65,37 @@ define('views/modals/duplicate', ['views/modal'], function (Dep) {
             ];
             this.scope = this.options.scope;
             this.duplicates = this.options.duplicates;
+
+            if (this.scope) {
+                this.setupRecord();
+            }
         },
 
+        setupRecord: function () {
+            let promise = new Promise(resolve => {
+                this.getHelper().layoutManager.get(this.scope, 'listSmall', layout => {
+                    layout = Espo.Utils.cloneDeep(layout);
+                    layout.forEach(item => item.notSortable = true);
+
+                    this.getCollectionFactory().create(this.scope)
+                        .then(collection => {
+                            collection.add(this.duplicates);
+
+                            this.createView('record', 'views/record/list', {
+                                selector: '.list-container',
+                                collection: collection,
+                                listLayout: layout,
+                                buttonsDisabled: true,
+                                massActionsDisabled: true,
+                                rowActionsDisabled: true,
+                            });
+
+                            resolve();
+                        });
+                });
+            })
+
+            this.wait(promise);
+        },
     });
 });

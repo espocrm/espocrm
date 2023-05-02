@@ -1,8 +1,11 @@
 <h4>{{translate 'duplicate' category="messages"}}</h4>
 
-<div style="margin-top: 20px;">
+{{#if scope}}
+<div class="list-container margin-top-2x">{{{record}}}</div>
+{{else}}
+<div class="margin-top-2x">
     <table class="table table-panel">
-    {{#each duplicates}}
+        {{#each duplicates}}
         <tr>
             <td>
                 <a
@@ -12,6 +15,7 @@
                 {{#if _entityType}}({{translate _entityType category='scopeNames'}}){{/if}}
             </td>
         </tr>
-    {{/each}}
+        {{/each}}
     </table>
+    {{/if}}
 </div>
