@@ -29,5 +29,8 @@
 
 namespace Espo\Core\Templates\SelectManagers;
 
+/**
+ * @deprecated As of v7.0. For backward compatibility.
+ */
 class Event extends \Espo\Core\Select\SelectManager
 {}
