@@ -29,71 +29,64 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Formula\ArgumentList;
-use Espo\Core\Formula\Functions\BaseFunction;
+use Espo\Core\Formula\EvaluatedArgumentList;
+use Espo\Core\Formula\Exceptions\BadArgumentType;
+use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Func;
+use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use stdClass;
 
-use Espo\Core\Di;
-
-class RelateType extends BaseFunction implements
-    Di\EntityManagerAware
+class FetchType implements Func
 {
-    use Di\EntityManagerSetter;
+    public function __construct(private EntityManager $entityManager) {}
 
-    public function process(ArgumentList $args)
+    public function process(EvaluatedArgumentList $arguments): ?stdClass
     {
-        if (count($args) < 4) {
-            $this->throwTooFewArguments(4);
+        if (count($arguments) < 2) {
+            throw TooFewArguments::create(1);
         }
 
-        $entityType = $this->evaluate($args[0]);
-        $id = $this->evaluate($args[1]);
-        $link = $this->evaluate($args[2]);
-        $foreignId = $this->evaluate($args[3]);
+        $entityType = $arguments[0] ?? null;
+        $id = $arguments[1] ?? null;
 
-        if (!$entityType || !is_string($entityType)) {
-            $this->throwBadArgumentType(1, 'string');
+        if (!is_string($entityType)) {
+            throw BadArgumentType::create(1, 'string');
         }
 
-        if (!$id) {
-            return null;
+        if (!is_string($id)) {
+            throw BadArgumentType::create(2, 'string');
         }
 
-        if (!$link || !is_string($link)) {
-            $this->throwBadArgumentType(3, 'string');
-        }
-
-        if (!$foreignId) {
-            return null;
-        }
-
-        $em = $this->entityManager;
-
-        if (!$em->hasRepository($entityType)) {
-            $this->throwError("Repository does not exist.");
-        }
-
-        $entity = $em->getEntityById($entityType, $id);
+        $entity = $this->entityManager->getEntityById($entityType, $id);
 
         if (!$entity) {
             return null;
         }
 
-        $relation = $em->getRDBRepository($entityType)->getRelation($entity, $link);
+        $this->load($entity);
 
-        if (is_array($foreignId)) {
-            foreach ($foreignId as $itemId) {
-                $relation->relateById($itemId);
+        return $entity->getValueMap();
+    }
+
+    private function load(Entity $entity): void
+    {
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
+
+        $fieldDefsList = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType())
+            ->getFieldList();
+
+        foreach ($fieldDefsList as $fieldDefs) {
+            $field = $fieldDefs->getName();
+
+            if ($fieldDefs->getType() === 'linkMultiple') {
+                $entity->loadLinkMultipleField($field);
             }
-
-            return true;
         }
-
-        if (!is_string($foreignId)) {
-            $this->throwError("foreignId type is wrong.");
-        }
-
-        $relation->relateById($foreignId);
-
-        return true;
     }
 }
