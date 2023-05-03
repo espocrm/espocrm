@@ -32,7 +32,8 @@
         "followCreatedEntityTypeList": "Auto-follow created records of specific entity types",
         "emailUseExternalClient": "Use an external email client",
         "scopeColorsDisabled": "Disable scope colors",
-        "tabColorsDisabled": "Disable tab colors"
+        "tabColorsDisabled": "Disable tab colors",
+        "textSearchStoringDisabled": "Disable storing text filters"
     },
     "links": {
     },

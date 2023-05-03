@@ -187,6 +187,10 @@
         "tabColorsDisabled": {
             "type": "bool",
             "default": false
+        },
+        "textSearchStoringDisabled": {
+            "type": "bool",
+            "default": false
         }
     },
     "noDeletedAttribute": true,

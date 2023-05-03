@@ -102,6 +102,8 @@ define('views/record/search', ['view', 'helpers/misc/stored-text-search'], funct
              */
             this.storedTextSearchHelper = new StoredTextSearch(this.scope, this.getHelper().storage);
 
+            this.textSearchStoringDisabled = this.getPreferences().get('textSearchStoringDisabled');
+
             this.textFilterDisabled = this.options.textFilterDisabled || this.textFilterDisabled ||
                 this.getMetadata().get(['clientDefs', this.scope, 'textFilterDisabled']);
 
@@ -695,6 +697,10 @@ define('views/record/search', ['view', 'helpers/misc/stored-text-search'], funct
         },
 
         initTextSearchAutocomplete: function () {
+            if (this.textSearchStoringDisabled) {
+                return;
+            }
+
             let preventCloseOnBlur = false;
 
             let options = {
@@ -1294,6 +1300,10 @@ define('views/record/search', ['view', 'helpers/misc/stored-text-search'], funct
 
         storeTextSearch: function () {
             if (!this.textFilter) {
+                return;
+            }
+
+            if (this.textSearchStoringDisabled) {
                 return;
             }
 
