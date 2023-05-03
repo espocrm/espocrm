@@ -329,11 +329,11 @@ class Record extends RecordService implements
      * @return void
      */
     public function loadAdditionalFieldsForExport(Entity $entity)
-    {
-    }
+    {}
 
     /**
      * @deprecated
+     * @todo Remove in v8.0.
      * @return string[]
      */
     protected function getConvertCurrencyFieldList()
@@ -362,6 +362,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `Espo\Core\Currency\Converter`.
+     * @todo Remove in v8.0.
      * @param ?string[] $fieldList
      * @return stdClass
      */
