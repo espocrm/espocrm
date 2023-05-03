@@ -354,6 +354,11 @@
             "returnType": "string"
         },
         {
+            "name": "util\\generateRecordId",
+            "insertText": "util\\generateRecordId()",
+            "returnType": "string"
+        },
+        {
             "name": "object\\create",
             "insertText": "object\\create()",
             "returnType": "object"
