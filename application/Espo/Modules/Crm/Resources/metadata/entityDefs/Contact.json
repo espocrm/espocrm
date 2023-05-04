@@ -10,14 +10,12 @@
         },
         "firstName": {
             "type": "varchar",
-            "maxLength": 100,
-            "default": ""
+            "maxLength": 100
         },
         "lastName": {
             "type": "varchar",
             "maxLength": 100,
-            "required": true,
-            "default": ""
+            "required": true
         },
         "accountAnyId": {
             "notStorable": true,

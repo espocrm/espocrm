@@ -113,8 +113,7 @@
         },
         "signature": {
             "type": "wysiwyg",
-            "view": "views/preferences/fields/signature",
-            "default": ""
+            "view": "views/preferences/fields/signature"
         },
         "defaultReminders": {
             "type": "jsonArray",
