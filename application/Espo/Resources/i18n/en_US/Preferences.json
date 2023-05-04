@@ -33,7 +33,7 @@
         "emailUseExternalClient": "Use an external email client",
         "scopeColorsDisabled": "Disable scope colors",
         "tabColorsDisabled": "Disable tab colors",
-        "textSearchStoringDisabled": "Disable storing text filters"
+        "textSearchStoringDisabled": "Disable text filter storing"
     },
     "links": {
     },
