@@ -96,14 +96,12 @@
         },
         "firstName": {
             "type": "varchar",
-            "maxLength": 100,
-            "trim": true
+            "maxLength": 100
         },
         "lastName": {
             "type": "varchar",
             "maxLength": 100,
-            "required": true,
-            "trim": true
+            "required": true
         },
         "isActive": {
             "type": "bool",
@@ -115,7 +113,6 @@
         "title": {
             "type": "varchar",
             "maxLength": 100,
-            "trim": true,
             "pattern": "$noBadCharacters",
             "customizationAuditedDisabled": true
         },
@@ -173,7 +170,6 @@
                 }
             },
             "directUpdateDisabled": true,
-            "trim": true,
             "readOnly": true,
             "importDisabled": true,
             "exportDisabled": true,

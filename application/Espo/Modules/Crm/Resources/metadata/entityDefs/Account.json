@@ -4,7 +4,6 @@
             "type": "varchar",
             "maxLength": 249,
             "required": true,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "website": {
@@ -87,7 +86,6 @@
         "sicCode": {
             "type": "varchar",
             "maxLength": 40,
-            "trim": true,
             "pattern": "$noBadCharacters",
             "noSpellCheck": true
         },
@@ -112,8 +110,7 @@
             "disabled": true
         },
         "billingAddress": {
-            "type": "address",
-            "trim": true
+            "type": "address"
         },
         "billingAddressStreet": {
             "type": "text",
@@ -121,20 +118,16 @@
             "dbType": "varchar"
         },
         "billingAddressCity": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "billingAddressState": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "billingAddressCountry": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "billingAddressPostalCode": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "shippingAddress": {
             "type": "address",
@@ -143,24 +136,19 @@
         "shippingAddressStreet": {
             "type": "text",
             "maxLength": 255,
-            "dbType": "varchar",
-            "trim": true
+            "dbType": "varchar"
         },
         "shippingAddressCity": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "shippingAddressState": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "shippingAddressCountry": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "shippingAddressPostalCode": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "description": {
             "type": "text"

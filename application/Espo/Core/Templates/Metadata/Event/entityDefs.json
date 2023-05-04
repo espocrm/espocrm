@@ -3,7 +3,6 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "status": {

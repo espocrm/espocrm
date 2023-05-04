@@ -4,7 +4,6 @@
             "type": "varchar",
             "required": true,
             "view": "crm:views/document/fields/name",
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "file": {

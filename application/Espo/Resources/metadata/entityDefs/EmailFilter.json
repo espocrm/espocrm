@@ -5,20 +5,17 @@
             "required": true,
             "maxLength": 100,
             "tooltip": true,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "from": {
             "type": "varchar",
             "maxLength": 255,
-            "tooltip": true,
-            "trim": true
+            "tooltip": true
         },
         "to": {
             "type": "varchar",
             "maxLength": 255,
-            "tooltip": true,
-            "trim": true
+            "tooltip": true
         },
         "subject": {
             "type": "varchar",

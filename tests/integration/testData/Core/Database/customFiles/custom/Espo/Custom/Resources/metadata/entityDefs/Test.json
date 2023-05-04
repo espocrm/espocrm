@@ -2,8 +2,7 @@
     "fields": {
         "name": {
             "type": "varchar",
-            "required": true,
-            "trim": true
+            "required": true
         },
         "description": {
             "type": "text"
@@ -82,7 +81,6 @@
         "testVarchar": {
             "type": "varchar",
             "maxLength": 100,
-            "trim": true,
             "options": []
         }
     },

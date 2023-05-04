@@ -3,8 +3,7 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "maxLength": 100,
-            "trim": true
+            "maxLength": 100
         },
         "layoutList": {
             "type": "multiEnum",

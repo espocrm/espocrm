@@ -2,8 +2,7 @@
     "fields": {
         "name": {
             "type": "varchar",
-            "required": true,
-            "trim": true
+            "required": true
         },
         "job": {
             "type": "varchar",
@@ -19,8 +18,7 @@
             "type": "varchar",
             "required": true,
             "view": "views/scheduled-job/fields/scheduling",
-            "tooltip": true,
-            "trim": true
+            "tooltip": true
         },
         "lastRun": {
             "type": "datetime",

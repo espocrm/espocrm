@@ -4,7 +4,6 @@
             "type": "varchar",
             "required": true,
             "maxLength": 64,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "order": {

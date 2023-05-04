@@ -7,8 +7,7 @@
         },
         {
             "name": "default",
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         {
             "name": "maxLength",

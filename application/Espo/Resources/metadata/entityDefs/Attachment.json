@@ -3,7 +3,6 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "trim": true,
             "view": "views/attachment/fields/name",
             "maxLength": 255
         },

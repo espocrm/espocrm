@@ -3,7 +3,6 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "trim": true,
             "layoutDefaultSidePanelDisabled": true
         },
         "subject": {
@@ -11,8 +10,7 @@
             "required": true,
             "notStorable": true,
             "view": "views/email/fields/subject",
-            "disabled": true,
-            "trim": true
+            "disabled": true
         },
         "fromName": {
             "type": "varchar",

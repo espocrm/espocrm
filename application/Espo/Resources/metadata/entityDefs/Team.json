@@ -3,7 +3,6 @@
         "name": {
             "type": "varchar",
             "maxLength": 100,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "roles": {

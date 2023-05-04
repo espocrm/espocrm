@@ -14,7 +14,6 @@
         },
         "city": {
             "type":"varchar",
-            "trim": true,
             "maxLength": 255,
             "view": "views/fields/address-city",
             "customizationOptionsDisabled": true,
@@ -22,7 +21,6 @@
         },
         "state": {
             "type":"varchar",
-            "trim": true,
             "maxLength": 255,
             "view": "views/fields/address-state",
             "customizationOptionsDisabled": true,
@@ -30,7 +28,6 @@
         },
         "country": {
             "type":"varchar",
-            "trim": true,
             "maxLength": 255,
             "view": "views/fields/address-country",
             "customizationOptionsDisabled": true,
@@ -39,7 +36,6 @@
         "postalCode": {
             "type":"varchar",
             "maxLength": 40,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "map": {

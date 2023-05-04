@@ -197,13 +197,11 @@
         },
         "outboundEmailFromName": {
             "type": "varchar",
-            "default": "EspoCRM",
-            "trim": true
+            "default": "EspoCRM"
         },
         "outboundEmailFromAddress": {
             "type": "varchar",
             "default": "crm@example.com",
-            "trim": true,
             "tooltip": true,
             "view": "views/settings/fields/outbound-email-from-address"
         },
@@ -214,8 +212,7 @@
         },
         "smtpServer": {
             "type": "varchar",
-            "tooltip": true,
-            "trim": true
+            "tooltip": true
         },
         "smtpPort": {
             "type": "int",
@@ -706,8 +703,7 @@
         },
         "outboundEmailBccAddress": {
             "type": "varchar",
-            "view": "views/fields/email-address",
-            "trim": true
+            "view": "views/fields/email-address"
         },
         "cleanupDeletedRecords": {
             "type": "bool",
@@ -767,8 +763,7 @@
             "type": "jsonObject"
         },
         "outboundSmsFromNumber": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "smsProvider": {
             "type": "enum",

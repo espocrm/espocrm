@@ -3,7 +3,6 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "description": {
@@ -30,20 +29,16 @@
             "dbType": "varchar"
         },
         "billingAddressCity": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "billingAddressState": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "billingAddressCountry": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "billingAddressPostalCode": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "shippingAddress": {
             "type": "address",
@@ -55,20 +50,16 @@
             "dbType": "varchar"
         },
         "shippingAddressCity": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "shippingAddressState": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "shippingAddressCountry": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "shippingAddressPostalCode": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "createdAt": {
             "type": "datetime",

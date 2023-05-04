@@ -11,15 +11,13 @@
         "firstName": {
             "type": "varchar",
             "maxLength": 100,
-            "default":"",
-            "trim": true
+            "default": ""
         },
         "lastName": {
             "type": "varchar",
             "maxLength": 100,
             "required": true,
-            "default":"",
-            "trim": true
+            "default": ""
         },
         "accountAnyId": {
             "notStorable": true,
@@ -167,7 +165,6 @@
                     "distinct": true
                 }
             },
-            "trim": true,
             "customizationOptionsDisabled": true,
             "textFilterDisabled": true
         },
@@ -197,20 +194,16 @@
             "dbType": "varchar"
         },
         "addressCity": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "addressState": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "addressCountry": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "addressPostalCode": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "account": {
             "type": "link",
