@@ -36,10 +36,13 @@ define('views/admin/field-manager/modals/add-field', ['views/modal'], function (
 
         events: {
             'click a[data-action="addField"]': function (e) {
-                var type = $(e.currentTarget).data('type');
+                let type = $(e.currentTarget).data('type');
 
                 this.addField(type);
-            }
+            },
+            'keyup input[data-name="quick-search"]': function (e) {
+                this.processQuickSearch(e.currentTarget.value);
+            },
         },
 
         data: function () {
@@ -53,7 +56,7 @@ define('views/admin/field-manager/modals/add-field', ['views/modal'], function (
 
             this.typeList = [];
 
-            var fieldDefs = this.getMetadata().get('fields');
+            let fieldDefs = this.getMetadata().get('fields');
 
             Object.keys(this.getMetadata().get('fields')).forEach(type => {
                 if (type in fieldDefs) {
@@ -61,6 +64,13 @@ define('views/admin/field-manager/modals/add-field', ['views/modal'], function (
                         this.typeList.push(type);
                     }
                 }
+            });
+
+            this.typeDataList = this.typeList.map(type => {
+                return {
+                    type: type,
+                    label: this.translate(type, 'fieldTypes', 'Admin'),
+                };
             });
 
             this.typeList.sort((v1, v2) => {
@@ -75,10 +85,12 @@ define('views/admin/field-manager/modals/add-field', ['views/modal'], function (
         },
 
         afterRender: function () {
-            this.typeList.forEach(type => {
-                var text = this.translate(type, 'fieldInfo', 'FieldManager');
+            this.$noData = this.$el.find('.no-data');
 
-                var $el = this.$el.find('a.info[data-name="'+type+'"]');
+            this.typeList.forEach(type => {
+                let text = this.translate(type, 'fieldInfo', 'FieldManager');
+
+                let $el = this.$el.find('a.info[data-name="'+type+'"]');
 
                 if (text === type) {
                     $el.addClass('hidden');
@@ -92,6 +104,54 @@ define('views/admin/field-manager/modals/add-field', ['views/modal'], function (
                     content: text,
                     placement: 'left',
                 }, this);
+            });
+        },
+
+        processQuickSearch: function (text) {
+            text = text.trim();
+
+            let $noData = this.$noData;
+
+            $noData.addClass('hidden');
+
+            if (!text) {
+                this.$el.find('ul .list-group-item').removeClass('hidden');
+
+                return;
+            }
+
+            let matchedList = [];
+
+            let lowerCaseText = text.toLowerCase();
+
+            this.typeDataList.forEach(item => {
+                let matched =
+                    item.label.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                    item.type.toLowerCase().indexOf(lowerCaseText) === 0;
+
+                if (matched) {
+                    matchedList.push(item.type);
+                }
+            });
+
+            if (matchedList.length === 0) {
+                this.$el.find('ul .list-group-item').addClass('hidden');
+
+                $noData.removeClass('hidden');
+
+                return;
+            }
+
+            this.typeDataList.forEach(item => {
+                let $row = this.$el.find(`ul .list-group-item[data-name="${item.type}"]`);
+
+                if (!~matchedList.indexOf(item.type)) {
+                    $row.addClass('hidden');
+
+                    return;
+                }
+
+                $row.removeClass('hidden');
             });
         },
     });
