@@ -180,14 +180,16 @@ define('views/admin/field-manager/list', ['view'], function (Dep) {
 
             this.fieldDefsArray
                 .map(item => item.name)
-                .forEach(scope => {
-                    if (!~matchedList.indexOf(scope)) {
-                        this.$el.find('table tr.field-row[data-name="'+scope+'"]').addClass('hidden');
+                .forEach(field => {
+                    let $row = this.$el.find(`table tr.field-row[data-name="${field}"]`);
+
+                    if (!~matchedList.indexOf(field)) {
+                        $row.addClass('hidden');
 
                         return;
                     }
 
-                    this.$el.find('table tr.field-row[data-name="'+scope+'"]').removeClass('hidden');
+                    $row.removeClass('hidden');
                 });
         },
     });
