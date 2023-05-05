@@ -830,7 +830,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
          *
          * @typedef {Object} Espo.Ui~PopoverOptions
          *
-         * @property {'bottom'|'top'} [placement='bottom'] A placement.
+         * @property {'bottom'|'top'|'left'|'right'} [placement='bottom'] A placement.
          * @property {string|JQuery} [container] A container selector.
          * @property {string} [content] An HTML content.
          * @property {string} [text] A text.
