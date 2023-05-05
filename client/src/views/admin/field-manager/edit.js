@@ -182,9 +182,10 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                     this.hasPersonalData = true;
                 }
 
-                this.hasInlineEditDisabled = this.type !== 'foreign' &&
-                    !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field,
-                        'customizationInlineEditDisabledDisabled']);
+                this.hasInlineEditDisabled = !['foreign', 'autoincrement'].includes(this.type) &&
+                    !this.getMetadata()
+                        .get(['entityDefs', this.scope, 'fields', this.field,
+                            'customizationInlineEditDisabledDisabled']);
 
                 this.hasTooltipText = !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field,
                     'customizationTooltipTextDisabled']);
