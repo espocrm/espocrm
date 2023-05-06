@@ -308,6 +308,16 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                     if (!data.bypassClose) {
                         this.dialog.close();
 
+                        if (wasNew) {
+                            let url = '#' + this.scope + '/view/' + model.id;
+                            let name = model.get('name');
+
+                            let msg = this.translate('Created')  + '\n' +
+                                `[${name}](${url})`;
+
+                            Espo.Ui.notify(msg, 'success', 4000, true);
+                        }
+
                         return;
                     }
 
