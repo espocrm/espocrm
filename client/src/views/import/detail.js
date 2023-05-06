@@ -31,14 +31,14 @@ define('views/import/detail', ['views/detail'], function (Dep) {
     return Dep.extend({
 
         getHeader: function () {
-            var name = Handlebars.Utils.escapeExpression(
-                this.getDateTime().toDisplay(this.model.get('createdAt'))
-            );
+            let name = this.getDateTime().toDisplay(this.model.get('createdAt'));
 
             return this.buildHeaderHtml([
-                '<a href="#' + this.model.name + '/list">' +
-                    this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>',
-                name
+                $('<a>')
+                    .attr('href', '#' + this.model.name + '/list')
+                    .text(this.getLanguage().translate(this.model.name, 'scopeNamesPlural')),
+                $('<span>')
+                    .text(name)
             ]);
         },
 
