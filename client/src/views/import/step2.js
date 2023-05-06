@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/import/step2', 'view', function (Dep) {
+define('views/import/step2', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,19 +42,22 @@ define('views/import/step2', 'view', function (Dep) {
                 this.next();
             },
             'click a[data-action="addField"]': function (e) {
-                var field = $(e.currentTarget).data('name');
+                let field = $(e.currentTarget).data('name');
+
                 this.addField(field);
             },
 
             'click a[data-action="removeField"]': function (e) {
-                var field = $(e.currentTarget).data('name');
+                let field = $(e.currentTarget).data('name');
 
                 this.$el.find('a[data-action="addField"]').parent().removeClass('hidden');
 
-                var index = this.additionalFields.indexOf(field);
+                let index = this.additionalFields.indexOf(field);
+
                 if (~index) {
                     this.additionalFields.splice(index, 1);
                 }
+
                 this.$el.find('.field[data-name="' + field + '"]').parent().remove();
             },
         },
@@ -68,39 +71,44 @@ define('views/import/step2', 'view', function (Dep) {
 
         setup: function () {
             this.formData = this.options.formData;
-
             this.scope = this.formData.entityType;
 
-            var mapping = [];
+            let mapping = [];
 
             this.additionalFields = [];
 
             if (this.formData.previewArray) {
-                var index = 0;
+                let index = 0;
+
                 if (this.formData.headerRow) {
                     index = 1;
                 }
+
                 if (this.formData.previewArray.length > index) {
-                    this.formData.previewArray[index].forEach(function (value, i) {
+                    this.formData.previewArray[index].forEach((value, i) => {
                         var d = {
                             value: value
                         };
                         if (this.formData.headerRow) {
                             d.name = this.formData.previewArray[0][i];
                         }
+
                         mapping.push(d);
-                    }, this);
+                    });
                 }
             }
 
             this.wait(true);
-            this.getModelFactory().create(this.scope, function (model) {
+
+            this.getModelFactory().create(this.scope, model => {
                 this.model = model;
+
                 if (this.formData.defaultValues) {
                     this.model.set(this.formData.defaultValues);
                 }
+
                 this.wait(false);
-            }, this);
+            });
 
             this.mapping = mapping;
         },
@@ -108,26 +116,36 @@ define('views/import/step2', 'view', function (Dep) {
         afterRender: function () {
             let $container = $('#mapping-container');
 
-            var $table = $('<table>').addClass('table').addClass('table-bordered').css('table-layout', 'fixed');
+            let $table = $('<table>')
+                .addClass('table')
+                .addClass('table-bordered')
+                .css('table-layout', 'fixed');
 
-            var $tbody = $('<tbody>').appendTo($table);
+            let $tbody = $('<tbody>').appendTo($table);
 
-            var $row = $('<tr>');
+            let $row = $('<tr>');
 
             if (this.formData.headerRow) {
-                $cell = $('<th>').attr('width', '25%').html(this.translate('Header Row Value', 'labels', 'Import'));
+                $cell = $('<th>')
+                    .attr('width', '25%')
+                    .text(this.translate('Header Row Value', 'labels', 'Import'));
 
                 $row.append($cell);
             }
 
-            var $cell = $('<th>').attr('width', '25%').html(this.translate('Field', 'labels', 'Import'));
+            let $cell = $('<th>')
+                .attr('width', '25%')
+                .text(this.translate('Field', 'labels', 'Import'));
+
             $row.append($cell);
 
-            var $cell = $('<th>').html(this.translate('First Row Value', 'labels', 'Import'));
+            $cell = $('<th>').text(this.translate('First Row Value', 'labels', 'Import'));
+
             $row.append($cell);
 
             if (~['update', 'createAndUpdate'].indexOf(this.formData.action)) {
-                $cell = $('<th>').html(this.translate('Update by', 'labels', 'Import'));
+                $cell = $('<th>').text(this.translate('Update by', 'labels', 'Import'));
+
                 $row.append($cell);
             }
 
@@ -137,11 +155,13 @@ define('views/import/step2', 'view', function (Dep) {
                 $row = $('<tr>');
 
                 if (this.formData.headerRow) {
-                    $cell = $('<td>').html(d.name);
+                    $cell = $('<td>')
+                        .text(d.name);
+
                     $row.append($cell);
                 }
 
-                var selectedName = d.name;
+                let selectedName = d.name;
 
                 if (this.formData.attributeList) {
                     if (this.formData.attributeList[i]) {
@@ -150,7 +170,6 @@ define('views/import/step2', 'view', function (Dep) {
                         selectedName = null;
                     }
                 }
-
 
                 let $select = this.getFieldDropdown(i, selectedName);
 
@@ -161,15 +180,19 @@ define('views/import/step2', 'view', function (Dep) {
                 var value = d.value || '';
 
                 if (value.length > 200) {
-                    value = value.substr(0, 200) + '...';
+                    value = value.substring(0, 200) + '...';
                 }
 
-                $cell = $('<td>').css('overflow', 'hidden').html(value);
+                $cell = $('<td>')
+                    .css('overflow', 'hidden')
+                    .text(value);
 
                 $row.append($cell);
 
                 if (~['update', 'createAndUpdate'].indexOf(this.formData.action)) {
-                    var $checkbox = $('<input>').attr('type', 'checkbox').attr('id', 'update-by-' + i.toString());
+                    let $checkbox = $('<input>')
+                        .attr('type', 'checkbox')
+                        .attr('id', 'update-by-' + i.toString());
 
                     if (!this.formData.updateBy) {
                         if (d.name === 'id') {
@@ -192,7 +215,6 @@ define('views/import/step2', 'view', function (Dep) {
             $container.empty();
             $container.append($table);
 
-
             if (this.formData.defaultFieldList) {
                 this.formData.defaultFieldList.forEach((name) => {
                     this.addField(name);
@@ -201,18 +223,17 @@ define('views/import/step2', 'view', function (Dep) {
         },
 
         getFieldList: function () {
-            var defs = this.getMetadata().get('entityDefs.' + this.scope + '.fields');
+            let defs = this.getMetadata().get('entityDefs.' + this.scope + '.fields');
+            let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit');
 
-            var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit');
+            let fieldList = [];
 
-            var fieldList = [];
-
-            for (var field in defs) {
+            for (let field in defs) {
                 if (~forbiddenFieldList.indexOf(field)) {
                     continue;
                 }
 
-                var d = defs[field];
+                let d = defs[field];
 
                 if (!~this.allowedFieldList.indexOf(field) && (d.disabled || d.importDisabled)) {
                     continue;
@@ -230,20 +251,19 @@ define('views/import/step2', 'view', function (Dep) {
         },
 
         getAttributeList: function () {
-            var fields = this.getMetadata().get(['entityDefs', this.scope, 'fields']) || {};
+            let fields = this.getMetadata().get(['entityDefs', this.scope, 'fields']) || {};
+            let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit');
 
-            var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit');
-
-            var attributeList = [];
+            let attributeList = [];
 
             attributeList.push('id');
 
-            for (var field in fields) {
+            for (let field in fields) {
                 if (~forbiddenFieldList.indexOf(field)) {
                     continue;
                 }
 
-                var d = fields[field];
+                let d = fields[field];
 
                 if (
                     !~this.allowedFieldList.indexOf(field) &&
@@ -301,7 +321,8 @@ define('views/import/step2', 'view', function (Dep) {
             }
 
             attributeList = attributeList.sort((v1, v2) => {
-                return this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope));
+                return this.translate(v1, 'fields', this.scope)
+                    .localeCompare(this.translate(v2, 'fields', this.scope));
             });
 
             return attributeList;
@@ -310,61 +331,77 @@ define('views/import/step2', 'view', function (Dep) {
         getFieldDropdown: function (num, name) {
             name = name || false;
 
-            var fieldList = this.getAttributeList();
+            let fieldList = this.getAttributeList();
 
-            var $select = $('<select>').addClass('form-control').attr('id', 'column-' + num.toString());
-            var $option = $('<option>').val('').html('-' + this.translate('Skip', 'labels', 'Import') + '-');
+            let $select = $('<select>')
+                .addClass('form-control')
+                .attr('id', 'column-' + num.toString());
 
-            var scope = this.formData.entityType;
+            let $option = $('<option>')
+                .val('')
+                .text('-' + this.translate('Skip', 'labels', 'Import') + '-');
+
+            let scope = this.formData.entityType;
 
             $select.append($option);
 
-            fieldList.forEach(function (field) {
-                var label = '';
+            fieldList.forEach(field => {
+                let label = '';
 
-                if (this.getLanguage().has(field, 'fields', scope) || this.getLanguage().has(field, 'fields', 'Global')) {
+                if (
+                    this.getLanguage().has(field, 'fields', scope) ||
+                    this.getLanguage().has(field, 'fields', 'Global')
+                ) {
                     label = this.translate(field, 'fields', scope);
                 }
                 else {
                     if (field.indexOf('Id') === field.length - 2) {
-                        var baseField = field.substr(0, field.length - 2);
+                        let baseField = field.substr(0, field.length - 2);
 
                         if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
-                            label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('id', 'fields') + ')';
+                            label = this.translate(baseField, 'fields', scope) +
+                                ' (' + this.translate('id', 'fields') + ')';
                         }
                     }
                     else if (field.indexOf('Name') === field.length - 4) {
-                        var baseField = field.substr(0, field.length - 4);
+                        let baseField = field.substr(0, field.length - 4);
 
                         if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
-                            label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('name', 'fields') + ')';
+                            label = this.translate(baseField, 'fields', scope) +
+                                ' (' + this.translate('name', 'fields') + ')';
                         }
                     }
                     else if (field.indexOf('Type') === field.length - 4) {
-                        var baseField = field.substr(0, field.length - 4);
+                        let baseField = field.substr(0, field.length - 4);
 
                         if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
-                            label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('type', 'fields') + ')';
+                            label = this.translate(baseField, 'fields', scope) +
+                                ' (' + this.translate('type', 'fields') + ')';
                         }
                     }
                     else if (field.indexOf('phoneNumber') === 0) {
-                        var phoneNumberType = field.substr(11);
+                        let phoneNumberType = field.substr(11);
 
-                        var phoneNumberTypeLabel = this.getLanguage().translateOption(phoneNumberType, 'phoneNumber', scope);
+                        let phoneNumberTypeLabel = this.getLanguage()
+                            .translateOption(phoneNumberType, 'phoneNumber', scope);
 
-                        label = this.translate('phoneNumber', 'fields', scope) + ' (' + phoneNumberTypeLabel + ')';
+                        label = this.translate('phoneNumber', 'fields', scope) +
+                            ' (' + phoneNumberTypeLabel + ')';
                     }
                     else if (
-                        field.indexOf('emailAddress') === 0 && parseInt(field.substr(12)).toString() === field.substr(12)) {
-                        var emailAddressNum = field.substr(12);
+                        field.indexOf('emailAddress') === 0 &&
+                        parseInt(field.substr(12)).toString() === field.substr(12)
+                    ) {
+                        let emailAddressNum = field.substr(12);
 
-                        label = this.translate('emailAddress', 'fields', scope) + ' ' + emailAddressNum.toString();;
+                        label = this.translate('emailAddress', 'fields', scope) + ' ' + emailAddressNum.toString();
                     }
                     else if (field.indexOf('Ids') === field.length - 3) {
-                        var baseField = field.substr(0, field.length - 3);
+                        let baseField = field.substr(0, field.length - 3);
 
                         if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
-                            label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('ids', 'fields') + ')';
+                            label = this.translate(baseField, 'fields', scope) +
+                                ' (' + this.translate('ids', 'fields') + ')';
                         }
                     }
                 }
@@ -373,47 +410,53 @@ define('views/import/step2', 'view', function (Dep) {
                     label = field;
                 }
 
-                $option = $('<option>').val(field).html(label);
+                $option = $('<option>')
+                    .val(field)
+                    .text(label);
 
                 if (name) {
-                    if (field == name) {
+                    if (field === name) {
                         $option.prop('selected', true);
                     }
                     else {
-                        if (name.toLowerCase().replace('_', '') == field.toLowerCase()) {
+                        if (name.toLowerCase().replace('_', '') === field.toLowerCase()) {
                             $option.prop('selected', true);
                         }
                     }
                 }
 
                 $select.append($option);
-            }, this);
+            });
 
             return $select;
         },
 
         addField: function (name) {
-            this.$el.find('[data-action="addField"][data-name="'+name+'"]').parent().addClass('hidden');
+            this.$el.find('[data-action="addField"][data-name="' + name + '"]')
+                .parent()
+                .addClass('hidden');
 
             $(this.containerSelector + ' button[data-name="update"]').removeClass('disabled');
 
             Espo.Ui.notify(' ... ');
 
-            var label = this.translate(name, 'fields', this.scope);
+            let label = this.translate(name, 'fields', this.scope);
+            label = this.getHelper().escapeString(label);
 
-            var removeLink = '<a role="button" class="pull-right" data-action="removeField" data-name="'+name+'">'+
+            let removeLink =
+                '<a role="button" class="pull-right" data-action="removeField" data-name="' + name + '">' +
                 '<span class="fas fa-times"></span></a>';
 
-            var html = '<div class="cell form-group">'+removeLink+'<label class="control-label">' + label +
-                '</label><div class="field" data-name="'+name+'"/></div>';
+            let html =
+                '<div class="cell form-group">' + removeLink + '<label class="control-label">' + label +
+                '</label><div class="field" data-name="' + name + '"/></div>';
 
             $('#default-values-container').append(html);
 
-            var type = Espo.Utils.upperCaseFirst(this.model.getFieldParam(name, 'type'));
+            let type = Espo.Utils.upperCaseFirst(this.model.getFieldParam(name, 'type'));
 
-            var viewName =
-                this.getMetadata().get(['entityDefs', this.scope, 'fields', name, 'view'])
-                ||
+            let viewName =
+                this.getMetadata().get(['entityDefs', this.scope, 'fields', name, 'view']) ||
                 this.getFieldManager().getViewName(type);
 
             this.createView(name, viewName, {
@@ -423,8 +466,8 @@ define('views/import/step2', 'view', function (Dep) {
                     name: name,
                 },
                 mode: 'edit',
-                readOnlyDisabled: true
-            }, (view) => {
+                readOnlyDisabled: true,
+            }, view => {
                 this.additionalFields.push(name);
 
                 view.render();
@@ -443,22 +486,23 @@ define('views/import/step2', 'view', function (Dep) {
         },
 
         fetch: function (skipValidation) {
-            var attributes = {};
+            let attributes = {};
 
-            this.additionalFields.forEach(function (field) {
-                var view = this.getView(field);
+            this.additionalFields.forEach(field => {
+                let view = this.getView(field);
+
                 _.extend(attributes, view.fetch());
-            }, this);
+            });
 
             this.model.set(attributes);
 
-            var notValid = false;
+            let notValid = false;
 
-            this.additionalFields.forEach(function (field) {
-                var view = this.getView(field);
+            this.additionalFields.forEach(field => {
+                let view = this.getView(field);
+
                 notValid = view.validate() || notValid;
-            }, this);
-
+            });
 
             if (!notValid) {
                 this.formData.defaultValues = attributes;
@@ -472,26 +516,25 @@ define('views/import/step2', 'view', function (Dep) {
 
             var attributeList = [];
 
-            this.mapping.forEach(function (d, i) {
+            this.mapping.forEach((d, i) => {
                 attributeList.push($('#column-' + i).val());
-            }, this);
+            });
 
             this.formData.attributeList = attributeList;
 
             if (~['update', 'createAndUpdate'].indexOf(this.formData.action)) {
-                var updateBy = [];
+                let updateBy = [];
 
-                this.mapping.forEach(function (d, i) {
+                this.mapping.forEach((d, i) => {
                     if ($('#update-by-' + i).get(0).checked) {
                         updateBy.push(i);
                     }
-                }, this);
+                });
 
                 this.formData.updateBy = updateBy;
             }
 
             this.getParentView().formData = this.formData;
-
             this.getParentView().trigger('change');
 
             return true;
@@ -510,7 +553,7 @@ define('views/import/step2', 'view', function (Dep) {
 
             this.disableButtons();
 
-            this.notify('File uploading...');
+            Espo.Ui.notify(' ... ');
 
             Espo.Ajax.postRequest('Import/file', null, {
                 timeout: 0,
@@ -518,7 +561,7 @@ define('views/import/step2', 'view', function (Dep) {
                 data: this.getParentView().fileContents,
             }).then(result => {
                 if (!result.attachmentId) {
-                    this.notify('Bad response', 'error');
+                    Espo.Ui.error(this.translate('Bad response'));
 
                     return;
                 }
@@ -528,54 +571,58 @@ define('views/import/step2', 'view', function (Dep) {
         },
 
         runImport: function (attachmentId) {
-            this.getRouter().confirmLeaveOut = false;
-
             this.formData.attachmentId = attachmentId;
 
-            this.notify('Import running...');
+            this.getRouter().confirmLeaveOut = false;
+
+            Espo.Ui.notify(this.translate('importRunning', 'messages', 'Import'));
 
             Espo.Ajax.postRequest('Import', this.formData, {timeout: 0})
                 .then(result => {
-                    var id = result.id;
+                    let id = result.id;
 
                     this.getParentView().trigger('done');
 
-                    if (id) {
-                        if (this.formData.manualMode) {
-                            this.createView('dialog', 'views/modal', {
-                                templateContent: "{{complexText viewObject.options.msg}}",
-                                headerText: ' ',
-                                backdrop: 'static',
-                                msg:
-                                    this.translate('commandToRun', 'strings', 'Import') + ':\n\n' +
-                                    '```php command.php import --id='+id+'```',
-                                buttonList: [
-                                    {
-                                        name: 'close',
-                                        label: this.translate('Close'),
-                                    }
-                                ],
-                            }, function (view) {
-                                view.render();
+                    if (!id) {
+                        Espo.Ui.error(this.translate('Error'), true);
 
-                                this.listenToOnce(view, 'close', () => {
-                                    this.getRouter().navigate('#Import/view/' + id, {trigger: true});
-                                });
-                            });
-                        }
-                        else {
-                            this.getRouter().navigate('#Import/view/' + id, {trigger: true});
-                        }
-                    }
-                    else {
-                        this.notify('Error', 'error');
                         this.enableButtons();
+
+                        return;
                     }
 
-                    this.notify(false);
+                    if (!this.formData.manualMode) {
+                        this.getRouter().navigate('#Import/view/' + id, {trigger: true});
+
+                        Espo.Ui.notify(false);
+
+                        return;
+                    }
+
+                    this.createView('dialog', 'views/modal', {
+                        templateContent: "{{complexText viewObject.options.msg}}",
+                        headerText: ' ',
+                        backdrop: 'static',
+                        msg:
+                            this.translate('commandToRun', 'strings', 'Import') + ':\n\n' +
+                            '```php command.php import --id='+id+'```',
+                        buttonList: [
+                            {
+                                name: 'close',
+                                label: this.translate('Close'),
+                            }
+                        ],
+                    }, view => {
+                        view.render();
+
+                        this.listenToOnce(view, 'close', () => {
+                            this.getRouter().navigate('#Import/view/' + id, {trigger: true});
+                        });
+                    });
+
+                    Espo.Ui.notify(false);
                 })
                 .catch(() => this.enableButtons());
-        }
-
+        },
     });
 });
