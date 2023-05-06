@@ -908,10 +908,10 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          */
         afterSave: function () {
             if (this.isNew) {
-                this.notify('Created', 'success');
+                Espo.Ui.success(this.translate('Created'));
             }
             else {
-                this.notify('Saved', 'success');
+                Espo.Ui.success(this.translate('Saved'));
             }
 
             this.setIsNotChanged();
@@ -926,7 +926,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * Processed before save.
          */
         beforeSave: function () {
-            this.notify('Saving...');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
         },
 
         /**
@@ -938,9 +938,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * Processed after save a not modified record.
          */
         afterNotModified: function () {
-            let msg = this.translate('notModified', 'messages');
-
-            Espo.Ui.warning(msg);
+            Espo.Ui.warning(this.translate('notModified', 'messages'));
 
             this.setIsNotChanged();
         },
@@ -949,7 +947,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * Processed after save not valid.
          */
         afterNotValid: function () {
-            this.notify('Not valid', 'error');
+            Espo.Ui.error(this.translate('Not valid'));
         },
 
         /**

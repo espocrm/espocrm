@@ -2441,7 +2441,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         beforeSave: function () {
-            this.notify('Saving...');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
 
             this.blockUpdateWebSocket();
         },

@@ -471,18 +471,16 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
         },
 
         actionUnlinkRelated: function (data) {
-            var id = data.id;
+            let id = data.id;
 
             this.confirm({
                 message: this.translate('unlinkRecordConfirmation', 'messages'),
                 confirmText: this.translate('Unlink'),
             }, () => {
-                this.notify('Unlinking...');
+                Espo.Ui.notify(' ... ');
 
-                Espo.Ajax.deleteRequest(this.collection.url, {
-                    id: id,
-                }).then(() => {
-                    this.notify('Unlinked', 'success');
+                Espo.Ajax.deleteRequest(this.collection.url, {id: id}).then(() => {
+                    Espo.Ui.success(this.translate('Unlinked'));
 
                     this.collection.fetch();
 
@@ -496,9 +494,9 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
             let actionName = this.defs.createAction || 'createRelated';
             let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
 
-            var p = this.getParentView();
+            let p = this.getParentView();
 
-            var view = null;
+            let view = null;
 
             while (p) {
                 if (p[methodName]) {
@@ -520,9 +518,9 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
             let actionName = this.defs.selectAction || 'selectRelated';
             let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
 
-            var p = this.getParentView();
+            let p = this.getParentView();
 
-            var view = null;
+            let view = null;
 
             while (p) {
                 if (p[methodName]) {

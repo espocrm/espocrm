@@ -755,7 +755,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                     this.handleAllDay(event, true);
                     this.fillColor(event);
 
-                    this.notify('Saving...');
+                    Espo.Ui.notify(this.translate('saving', 'messages'));
 
                     this.getModelFactory().create(event.scope, (model) => {
                         model.id = event.recordId;
@@ -782,7 +782,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
                     this.fillColor(event);
 
-                    this.notify('Saving...');
+                    Espo.Ui.notify(this.translate('saving', 'messages'));
 
                     this.getModelFactory().create(event.scope, (model) => {
                         model.id = event.recordId;

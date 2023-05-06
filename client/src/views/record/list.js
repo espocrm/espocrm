@@ -1381,7 +1381,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 message: this.translate('removeSelectedRecordsConfirmation', 'messages', this.scope),
                 confirmText: this.translate('Remove'),
             }, () => {
-                Espo.Ui.notify(this.translate('Removing...'));
+                Espo.Ui.notify(' ... ');
 
                 let helper = new MassActionHelper(this);
                 let params = this.getMassActionSelectionPostData();
@@ -3146,7 +3146,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 this.collection.trigger('model-removing', id);
                 this.collection.remove(model);
 
-                this.notify('Removing...');
+                Espo.Ui.notify(' ... ');
 
                 model
                     .destroy({wait: true, fromList: true})

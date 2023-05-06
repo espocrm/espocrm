@@ -188,7 +188,8 @@ define('views/admin/integrations/edit', ['view', 'model'], function (Dep, Model)
                 this.notify('Saved', 'success');
             });
 
-            this.notify('Saving...');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
+
             this.model.save();
         },
     });

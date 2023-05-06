@@ -693,7 +693,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.broadcastUpdate();
             });
 
-            this.notify('Saving...');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
 
             if (this.isNew) {
                 this.model

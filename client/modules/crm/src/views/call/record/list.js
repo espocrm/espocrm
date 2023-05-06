@@ -87,7 +87,7 @@ define('crm:views/call/record/list', ['views/record/list'], function (Dep) {
                 this.collection.fetch();
             });
 
-            this.notify('Saving...');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
 
             model.save();
         },

@@ -72,7 +72,7 @@ define('views/admin/layouts/base', ['view'], function (Dep) {
 
         actionSave: function () {
             this.disableButtons();
-            this.notify('Saving...');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
             this.save(this.enableButtons.bind(this));
         },
 

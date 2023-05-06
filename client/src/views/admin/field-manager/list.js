@@ -95,7 +95,7 @@ define('views/admin/field-manager/list', ['view'], function (Dep) {
 
         removeField: function (field) {
             this.confirm(this.translate('confirmation', 'messages'), () => {
-                Espo.Ui.notify(this.translate('Removing...'));
+                Espo.Ui.notify(' ... ');
 
                 Espo.Ajax.request('Admin/fieldManager/' + this.scope + '/' + field, 'delete').then(() => {
                     Espo.Ui.success(this.translate('Removed'));

@@ -59,6 +59,7 @@
         "Export": "Export"
     },
     "messages": {
+        "importRunning": "Import running...",
         "noErrors": "No errors.",
         "utf8": "Should be UTF-8 encoded",
         "duplicatesRemoved": "Duplicates removed",
