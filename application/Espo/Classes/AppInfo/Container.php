@@ -29,23 +29,14 @@
 
 namespace Espo\Classes\AppInfo;
 
-use Espo\Core\{
-    Container as ContainerService,
-    Utils\Metadata,
-    Console\Command\Params,
-};
+use Espo\Core\Console\Command\Params;
+use Espo\Core\Container as ContainerService;
+use Espo\Core\Utils\Metadata;
 
 class Container
 {
-    private $container;
-
-    private $metadata;
-
-    public function __construct(ContainerService $container, Metadata $metadata)
-    {
-        $this->container = $container;
-        $this->metadata = $metadata;
-    }
+    public function __construct(private ContainerService $container, private Metadata $metadata)
+    {}
 
     public function process(Params $params): string
     {

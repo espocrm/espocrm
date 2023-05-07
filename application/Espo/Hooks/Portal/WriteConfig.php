@@ -30,25 +30,14 @@
 namespace Espo\Hooks\Portal;
 
 use Espo\ORM\Entity;
-
 use Espo\Entities\Portal;
-
-use Espo\Core\{
-    Utils\Config,
-    Utils\Config\ConfigWriter,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ConfigWriter;
 
 class WriteConfig
 {
-    private $config;
-
-    private $configWriter;
-
-    public function __construct(Config $config, ConfigWriter $configWriter)
-    {
-        $this->config = $config;
-        $this->configWriter = $configWriter;
-    }
+    public function __construct(private Config $config, private ConfigWriter $configWriter)
+    {}
 
     /**
      * @param Portal $entity

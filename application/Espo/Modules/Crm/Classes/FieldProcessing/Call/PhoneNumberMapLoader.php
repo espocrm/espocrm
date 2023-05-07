@@ -29,31 +29,24 @@
 
 namespace Espo\Modules\Crm\Classes\FieldProcessing\Call;
 
+use Espo\Modules\Crm\Entities\Call;
 use Espo\ORM\Entity;
-
 use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Core\{
-    FieldProcessing\Loader,
-    FieldProcessing\Loader\Params,
-    ORM\EntityManager,
-};
+use Espo\Core\FieldProcessing\Loader;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\ORM\EntityManager;
 
 use stdClass;
 
 /**
- * @implements Loader<\Espo\Modules\Crm\Entities\Call>
+ * @implements Loader<Call>
  */
 class PhoneNumberMapLoader implements Loader
 {
     private const ERASED_PART = 'ERASED:';
 
-    private $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     public function process(Entity $entity, Params $params): void
     {

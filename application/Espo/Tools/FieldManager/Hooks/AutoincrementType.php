@@ -29,10 +29,8 @@
 
 namespace Espo\Tools\FieldManager\Hooks;
 
-use Espo\Core\{
-    Di,
-    Exceptions\Error,
-};
+use Espo\Core\Di;
+use Espo\Core\Exceptions\Error;
 
 class AutoincrementType implements Di\MetadataAware
 {

@@ -33,19 +33,16 @@ use Espo\ORM\Entity;
 
 use Espo\Repositories\Portal as PortalRepository;
 use Espo\Entities\Portal;
-
-use Espo\Core\{
-    FieldProcessing\Loader,
-    FieldProcessing\Loader\Params,
-    ORM\EntityManager,
-};
+use Espo\Core\FieldProcessing\Loader;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\ORM\EntityManager;
 
 /**
- * @implements Loader<\Espo\Entities\Portal>
+ * @implements Loader<Portal>
  */
 class UrlLoader implements Loader
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {

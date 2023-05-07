@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Select\Bool;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\Where\OrGroupBuilder,
-};
+use Espo\ORM\Query\Part\Where\OrGroupBuilder;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 /**
  * Applies a bool filter. A where item should be added to OrGroupBuilder.

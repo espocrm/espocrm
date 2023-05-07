@@ -30,23 +30,17 @@
 namespace Espo\Core\Portal\Loaders;
 
 use Espo\Core\Portal\AclManager as PortalAclManager;
+use Espo\Core\AclManager;
+use Espo\Core\Container\Loader;
+use Espo\Core\Portal\Acl as AclService;
+use Espo\Entities\User;
 
 use InvalidArgumentException;
 
-use Espo\Core\{
-    Container\Loader,
-    AclManager,
-    Portal\Acl as AclService,
-};
-
-use Espo\Entities\User;
-
 class Acl implements Loader
 {
-    /** @var PortalAclManager */
-    private $aclManager;
-
-    private $user;
+    private PortalAclManager $aclManager;
+    private User $user;
 
     public function __construct(AclManager $aclManager, User $user)
     {

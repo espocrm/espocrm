@@ -29,21 +29,15 @@
 
 namespace Espo\Core\Console\Commands;
 
-use Espo\Core\{
-    Utils\Config,
-    Console\Command,
-    Console\Command\Params,
-    Console\IO,
-};
+use Espo\Core\Console\Command;
+use Espo\Core\Console\Command\Params;
+use Espo\Core\Console\IO;
+use Espo\Core\Utils\Config;
 
 class Version implements Command
 {
-    private $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private Config $config)
+    {}
 
     public function run(Params $params, IO $io): void
     {

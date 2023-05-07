@@ -29,25 +29,16 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\{
-    Api\Request,
-    Record\SearchParamsFetcher,
-};
-
+use Espo\Core\Api\Request;
+use Espo\Core\Record\SearchParamsFetcher;
 use Espo\Tools\ActionHistory\Service as Service;
 
 use stdClass;
 
 class LastViewed
 {
-    private SearchParamsFetcher $searchParamsFetcher;
-    private Service $service;
-
-    public function __construct(SearchParamsFetcher $searchParamsFetcher, Service $service)
-    {
-        $this->searchParamsFetcher = $searchParamsFetcher;
-        $this->service = $service;
-    }
+    public function __construct(private SearchParamsFetcher $searchParamsFetcher, private Service $service)
+    {}
 
     public function getActionIndex(Request $request): stdClass
     {

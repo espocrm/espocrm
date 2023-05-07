@@ -29,18 +29,14 @@
 
 namespace Espo\Core\Field\LinkMultiple;
 
-use Espo\{
-    ORM\Entity,
-    ORM\Value\ValueFactory,
-    ORM\Defs,
-    ORM\EntityManager,
-};
+use Espo\ORM\Defs;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Value\ValueFactory;
 
-use Espo\Core\{
-    Field\LinkMultiple,
-    Field\LinkMultipleItem,
-    ORM\Entity as CoreEntity,
-};
+use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Field\LinkMultipleItem;
+use Espo\Core\ORM\Entity as CoreEntity;
 
 use RuntimeException;
 use InvalidArgumentException;
@@ -48,15 +44,8 @@ use stdClass;
 
 class LinkMultipleFactory implements ValueFactory
 {
-    private Defs $ormDefs;
-
-    private EntityManager $entityManager;
-
-    public function __construct(Defs $ormDefs, EntityManager $entityManager)
-    {
-        $this->ormDefs = $ormDefs;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private Defs $ormDefs, private EntityManager $entityManager)
+    {}
 
     public function isCreatableFromEntity(Entity $entity, string $field): bool
     {

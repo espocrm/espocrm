@@ -29,13 +29,11 @@
 
 namespace Espo\Core\Console\Commands;
 
-use Espo\Core\{
-    Application,
-    Upgrades\UpgradeManager,
-    Console\Command,
-    Console\Command\Params,
-    Console\IO,
-};
+use Espo\Core\Application;
+use Espo\Core\Console\Command;
+use Espo\Core\Console\Command\Params;
+use Espo\Core\Console\IO;
+use Espo\Core\Upgrades\UpgradeManager;
 
 use Exception;
 

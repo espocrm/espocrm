@@ -30,24 +30,18 @@
 namespace Espo\Core\AclPortal;
 
 use Espo\Core\Interfaces\Injectable;
-
 use Espo\ORM\Entity;
-
 use Espo\Entities\User;
-
 use Espo\Core\AclManager;
-
-use Espo\Core\{
-    ORM\EntityManager,
-    Portal\AclManager as PortalAclManager,
-    Utils\Config,
-    Acl\AccessChecker,
-    Acl\ScopeData,
-    Portal\Acl\Table,
-    Portal\Acl\AccessChecker\ScopeChecker,
-    Portal\Acl\AccessChecker\ScopeCheckerData,
-    Portal\Acl\DefaultAccessChecker,
-};
+use Espo\Core\Acl\AccessChecker;
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Portal\Acl\AccessChecker\ScopeChecker;
+use Espo\Core\Portal\Acl\AccessChecker\ScopeCheckerData;
+use Espo\Core\Portal\Acl\DefaultAccessChecker;
+use Espo\Core\Portal\Acl\Table;
+use Espo\Core\Portal\AclManager as PortalAclManager;
+use Espo\Core\Utils\Config;
 
 /**
  * @deprecated Use AccessChecker interfaces instead.

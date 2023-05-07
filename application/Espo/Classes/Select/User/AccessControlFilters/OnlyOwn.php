@@ -30,26 +30,16 @@
 namespace Espo\Classes\Select\User\AccessControlFilters;
 
 use Espo\ORM\Query\SelectBuilder;
-
-use Espo\Core\{
-    Select\AccessControl\Filter,
-    AclManager,
-    Acl\Table,
-};
+use Espo\Core\Acl\Table;
+use Espo\Core\AclManager;
+use Espo\Core\Select\AccessControl\Filter;
 
 use Espo\Entities\User;
 
 class OnlyOwn implements Filter
 {
-    private $user;
-
-    private $aclManager;
-
-    public function __construct(User $user, AclManager $aclManager)
-    {
-        $this->user = $user;
-        $this->aclManager = $aclManager;
-    }
+    public function __construct(private User $user, private AclManager $aclManager)
+    {}
 
     public function apply(SelectBuilder $queryBuilder): void
     {
@@ -57,7 +47,7 @@ class OnlyOwn implements Filter
             $queryBuilder->where([
                 'OR' => [
                     'id' => $this->user->getId(),
-                    'type' => 'portal',
+                    'type' => User::TYPE_PORTAL,
                 ],
             ]);
 

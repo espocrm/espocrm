@@ -31,23 +31,17 @@ namespace Espo\Core\FieldProcessing\LinkParent;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    FieldProcessing\Loader as LoaderInterface,
-    FieldProcessing\Loader\Params,
-};
+use Espo\Core\FieldProcessing\Loader as LoaderInterface;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\ORM\EntityManager;
 
 /**
  * @implements LoaderInterface<Entity>
  */
 class TargetLoader implements LoaderInterface
 {
-    private EntityManager $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     public function process(Entity $entity, Params $params): void
     {

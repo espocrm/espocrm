@@ -30,17 +30,12 @@
 namespace Espo\Core\FieldProcessing\Stream;
 
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    FieldProcessing\Loader as LoaderInterface,
-    FieldProcessing\Loader\Params,
-    Utils\Metadata,
-    Utils\Config,
-    Acl,
-};
-
+use Espo\Core\Acl;
+use Espo\Core\FieldProcessing\Loader as LoaderInterface;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
-
 use Espo\Tools\Stream\Service as StreamService;
 
 /**
@@ -50,25 +45,13 @@ class FollowersLoader implements LoaderInterface
 {
     private const FOLLOWERS_LIMIT = 6;
 
-    private StreamService $streamService;
-    private Metadata $metadata;
-    private User $user;
-    private Acl $acl;
-    private Config $config;
-
     public function __construct(
-        StreamService $streamService,
-        Metadata $metadata,
-        User $user,
-        Acl $acl,
-        Config $config
-    ) {
-        $this->streamService = $streamService;
-        $this->metadata = $metadata;
-        $this->user = $user;
-        $this->acl = $acl;
-        $this->config = $config;
-    }
+        private StreamService $streamService,
+        private Metadata $metadata,
+        private User $user,
+        private Acl $acl,
+        private Config $config
+    ) {}
 
     public function process(Entity $entity, Params $params): void
     {

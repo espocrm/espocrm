@@ -30,14 +30,10 @@
 namespace Espo\Core\ExternalAccount\Clients;
 
 use Espo\Core\Exceptions\Error;
-
 use Espo\Core\Utils\Json;
-
-use Espo\Core\{
-    ExternalAccount\OAuth2\Client,
-    ExternalAccount\ClientManager,
-    Utils\Log,
-};
+use Espo\Core\ExternalAccount\ClientManager;
+use Espo\Core\ExternalAccount\OAuth2\Client;
+use Espo\Core\Utils\Log;
 
 use Exception;
 use DateTime;

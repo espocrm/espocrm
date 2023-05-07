@@ -29,9 +29,7 @@
 
 namespace Espo\Core\Portal\Utils;
 
-use Espo\Core\{
-    Utils\Config as BaseConfig,
-};
+use Espo\Core\Utils\Config as BaseConfig;
 
 use RuntimeException;
 use stdClass;

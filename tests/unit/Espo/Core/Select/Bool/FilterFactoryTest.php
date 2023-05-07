@@ -29,19 +29,15 @@
 
 namespace tests\unit\Espo\Core\Select\Bool;
 
-use Espo\Core\{
-    Select\Bool\FilterFactory as BoolFilterFactory,
-    Select\Bool\Filters\Followed,
-    Utils\Metadata,
-    InjectableFactory,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Select\Bool\FilterFactory as BoolFilterFactory;
+use Espo\Core\Select\Bool\Filters\Followed;
+use Espo\Core\Utils\Metadata;
 
-use Espo\{
-    Entities\User,
-};
+use Espo\Entities\User;
 
 class FilterFactoryTest extends \PHPUnit\Framework\TestCase
 {

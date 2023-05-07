@@ -29,12 +29,10 @@
 
 namespace tests\integration\Espo\Core\Select;
 
-use Espo\Core\{
-    Application,
-    Container,
-    Select\SelectBuilderFactory,
-    Select\SearchParams,
-};
+use Espo\Core\Application;
+use Espo\Core\Container;
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\SelectBuilderFactory;
 
 use Espo\Classes\Select\Email\AdditionalAppliers\Main as EmailAdditionalApplier;
 use Espo\ORM\Query\Select;

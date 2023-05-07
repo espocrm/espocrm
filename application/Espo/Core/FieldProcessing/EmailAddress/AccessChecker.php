@@ -32,29 +32,18 @@ namespace Espo\Core\FieldProcessing\EmailAddress;
 use Espo\Repositories\EmailAddress as Repository;
 use Espo\ORM\Entity;
 
-use Espo\Entities\{
-    User,
-    EmailAddress,
-};
+use Espo\Entities\EmailAddress;
+use Espo\Entities\User;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    AclManager,
-};
+use Espo\Core\AclManager;
+use Espo\Core\ORM\EntityManager;
 
 class AccessChecker
 {
-    private $entityManager;
-
-    private $aclManager;
-
     public function __construct(
-        EntityManager $entityManager,
-        AclManager $aclManager
-    ) {
-        $this->entityManager = $entityManager;
-        $this->aclManager = $aclManager;
-    }
+        private EntityManager $entityManager,
+        private AclManager $aclManager
+    ) {}
 
     public function checkEdit(User $user, EmailAddress $emailAddress, Entity $excludeEntity): bool
     {

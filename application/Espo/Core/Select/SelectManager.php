@@ -29,26 +29,20 @@
 
 namespace Espo\Core\Select;
 
-use Espo\Core\Exceptions\{
-    Error,
-    Forbidden,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 
-use Espo\Core\{
-    Acl,
-    AclManager,
-    InjectableFactory,
-    Utils\Metadata,
-    Utils\Config,
-    Utils\FieldUtil,
-    ORM\EntityManager,
-};
+use Espo\Core\Acl;
+use Espo\Core\AclManager;
+use Espo\Core\InjectableFactory;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\FieldUtil;
+use Espo\Core\Utils\Metadata;
 
-use Espo\ORM\{
-    QueryComposer\BaseQueryComposer as QueryComposer,
-    Query\Select as SelectQuery,
-    Entity,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\Query\Select as SelectQuery;
+use Espo\ORM\QueryComposer\BaseQueryComposer as QueryComposer;
 
 use Espo\Entities\User;
 

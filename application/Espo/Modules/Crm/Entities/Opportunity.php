@@ -29,12 +29,11 @@
 
 namespace Espo\Modules\Crm\Entities;
 
-use Espo\Core\{
-    Field\Link,
-    Field\LinkMultiple,
-    ORM\Entity,
-    Field\Currency,
-    Field\Date};
+use Espo\Core\Field\Currency;
+use Espo\Core\Field\Date;
+use Espo\Core\Field\Link;
+use Espo\Core\Field\LinkMultiple;
+use Espo\Core\ORM\Entity;
 
 class Opportunity extends Entity
 {

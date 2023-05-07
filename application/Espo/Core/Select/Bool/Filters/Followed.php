@@ -29,32 +29,24 @@
 
 namespace Espo\Core\Select\Bool\Filters;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\WhereClause,
-    ORM\Query\Part\Where\OrGroupBuilder,
-    Core\Select\Bool\Filter,
-    Entities\User,
-};
+use Espo\Core\Select\Bool\Filter;
+use Espo\Entities\Subscription;
+use Espo\Entities\User;
+use Espo\ORM\Query\Part\Where\OrGroupBuilder;
+use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class Followed implements Filter
 {
-    private $entityType;
-
-    private $user;
-
-    public function __construct(string $entityType, User $user)
-    {
-        $this->entityType = $entityType;
-        $this->user = $user;
-    }
+    public function __construct(private string $entityType, private User $user)
+    {}
 
     public function apply(QueryBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {
         $alias = 'subscriptionFollowedBoolFilter';
 
         $queryBuilder->leftJoin(
-            'Subscription',
+            Subscription::ENTITY_TYPE,
             $alias,
             [
                 $alias . '.entityType' => $this->entityType,

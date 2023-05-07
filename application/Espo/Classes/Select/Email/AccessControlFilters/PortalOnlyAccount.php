@@ -29,27 +29,15 @@
 
 namespace Espo\Classes\Select\Email\AccessControlFilters;
 
-use Espo\Core\{
-    Select\AccessControl\Filter,
-};
-
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Classes\Select\Email\Helpers\JoinHelper,
-    Entities\User,
-};
+use Espo\Core\Select\AccessControl\Filter;
+use Espo\Classes\Select\Email\Helpers\JoinHelper;
+use Espo\Entities\User;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class PortalOnlyAccount implements Filter
 {
-    private $user;
-
-    private $joinHelper;
-
-    public function __construct(User $user, JoinHelper $joinHelper)
-    {
-        $this->user = $user;
-        $this->joinHelper = $joinHelper;
-    }
+    public function __construct(private User $user, private JoinHelper $joinHelper)
+    {}
 
     public function apply(QueryBuilder $queryBuilder): void
     {

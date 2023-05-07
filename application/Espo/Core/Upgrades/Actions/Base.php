@@ -33,17 +33,14 @@ use Espo\Core\Utils\Util;
 use Espo\Core\Utils\System;
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\Error;
-
 use Espo\Core\Utils\File\Manager as FileManager;
-
-use Espo\Core\{
-    Container,
-    InjectableFactory,
-    Upgrades\ActionManager,
-    Utils\File\ZipArchive,
-    Utils\Config\ConfigWriter,
-    Utils\Database\Helper as DatabaseHelper,
-    Utils\Log};
+use Espo\Core\Container;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Upgrades\ActionManager;
+use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\Database\Helper as DatabaseHelper;
+use Espo\Core\Utils\File\ZipArchive;
+use Espo\Core\Utils\Log;
 
 use Composer\Semver\Semver;
 

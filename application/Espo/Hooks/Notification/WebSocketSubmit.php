@@ -31,24 +31,15 @@ namespace Espo\Hooks\Notification;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    Utils\Config,
-    WebSocket\Submission as WebSocketSubmission,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\WebSocket\Submission as WebSocketSubmission;
 
 class WebSocketSubmit
 {
     public static int $order = 20;
 
-    private WebSocketSubmission $webSocketSubmission;
-
-    private $config;
-
-    public function __construct(WebSocketSubmission $webSocketSubmission, Config $config)
-    {
-        $this->webSocketSubmission = $webSocketSubmission;
-        $this->config = $config;
-    }
+    public function __construct(private WebSocketSubmission $webSocketSubmission, private Config $config)
+    {}
 
     public function afterSave(Entity $entity): void
     {

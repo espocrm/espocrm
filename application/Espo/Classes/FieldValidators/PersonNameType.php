@@ -30,19 +30,12 @@
 namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Utils\FieldUtil,
-};
+use Espo\Core\Utils\FieldUtil;
 
 class PersonNameType
 {
-    private $fieldUtil;
-
-    public function __construct(FieldUtil $fieldUtil)
-    {
-        $this->fieldUtil = $fieldUtil;
-    }
+    public function __construct(private FieldUtil $fieldUtil)
+    {}
 
     public function checkRequired(Entity $entity, string $field): bool
     {

@@ -29,20 +29,14 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\{
-    Container\Loader,
-    Utils\Config,
-    Utils\DateTime as DateTimeService,
-};
+use Espo\Core\Container\Loader;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeService;
 
 class DateTime implements Loader
 {
-    private Config $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private Config $config)
+    {}
 
     public function load(): DateTimeService
     {

@@ -30,28 +30,16 @@
 namespace Espo\Core\Acl\Table;
 
 use Espo\Entities\User;
-
-use Espo\Core\{
-    InjectableFactory,
-    Acl\Table,
-    Acl\Table\DefaultTable,
-    Acl\Table\CacheKeyProvider,
-    Acl\Table\DefaultCacheKeyProvider,
-    Acl\Table\RoleListProvider,
-    Acl\Table\DefaultRoleListProvider,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Acl\Table;
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
 
 class DefaultTableFactory implements TableFactory
 {
-    private $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private InjectableFactory $injectableFactory)
+    {}
 
     /**
      * Create a table.

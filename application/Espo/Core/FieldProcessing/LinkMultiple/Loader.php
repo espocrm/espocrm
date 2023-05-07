@@ -30,14 +30,9 @@
 namespace Espo\Core\FieldProcessing\LinkMultiple;
 
 use Espo\ORM\Entity;
-
 use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Core\{
-    FieldProcessing\Loader as LoaderInterface,
-    FieldProcessing\Loader\Params,
-};
-
+use Espo\Core\FieldProcessing\Loader as LoaderInterface;
+use Espo\Core\FieldProcessing\Loader\Params;
 use Espo\ORM\Defs as OrmDefs;
 
 /**
@@ -45,17 +40,11 @@ use Espo\ORM\Defs as OrmDefs;
  */
 class Loader implements LoaderInterface
 {
-    private OrmDefs $ormDefs;
+    /** @var array<string, string[]> */
+    private array $fieldListCacheMap = [];
 
-    /**
-     * @var array<string, string[]>
-     */
-    private $fieldListCacheMap = [];
-
-    public function __construct(OrmDefs $ormDefs)
-    {
-        $this->ormDefs = $ormDefs;
-    }
+    public function __construct(private OrmDefs $ormDefs)
+    {}
 
     public function process(Entity $entity, Params $params): void
     {

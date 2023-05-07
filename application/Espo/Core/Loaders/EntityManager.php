@@ -29,15 +29,13 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\{
-    Container\Loader,
-    ORM\EntityManagerFactory,
-    ORM\EntityManager as EntityManagerService,
-};
+use Espo\Core\Container\Loader;
+use Espo\Core\ORM\EntityManager as EntityManagerService;
+use Espo\Core\ORM\EntityManagerFactory;
 
 class EntityManager implements Loader
 {
-    private $entityManagerFactory;
+    private EntityManagerFactory $entityManagerFactory;
 
     public function __construct(EntityManagerFactory $entityManagerFactory)
     {

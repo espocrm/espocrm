@@ -29,12 +29,10 @@
 
 namespace Espo\Modules\Crm\Entities;
 
-use Espo\Core\{
-    Field\Link,
-    Field\LinkMultiple,
-    ORM\Entity,
-    Field\DateTimeOptional,
-};
+use Espo\Core\Field\DateTimeOptional;
+use Espo\Core\Field\Link;
+use Espo\Core\Field\LinkMultiple;
+use Espo\Core\ORM\Entity;
 
 class Task extends Entity
 {
