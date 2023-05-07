@@ -193,15 +193,12 @@ class FieldManager
             $isLabelChanged = true;
         }
 
-        $type = isset($fieldDefs['type']) ?
-            $fieldDefs['type'] :
-            $type = $this->metadata->get(['entityDefs', $scope, 'fields', $name, 'type']);
+        $type = $fieldDefs['type'] ?? $this->metadata->get(['entityDefs', $scope, 'fields', $name, 'type']);
 
-        $this->processHook('beforeSave', $type, $scope, $name, $fieldDefs, array('isNew' => $isNew));
+        $this->processHook('beforeSave', $type, $scope, $name, $fieldDefs, ['isNew' => $isNew]);
 
         if ($this->metadata->get(['fields', $type, 'translatedOptions'])) {
             if (isset($fieldDefs['translatedOptions'])) {
-                $translatedOptions = $fieldDefs['translatedOptions'];
                 $translatedOptions = json_decode(Json::encode($fieldDefs['translatedOptions']), true);
 
                 if (isset($translatedOptions['_empty_'])) {
@@ -375,7 +372,7 @@ class FieldManager
         }
 
         if ($this->isChanged) {
-            $this->processHook('afterSave', $type, $scope, $name, $fieldDefs, array('isNew' => $isNew));
+            $this->processHook('afterSave', $type, $scope, $name, $fieldDefs, ['isNew' => $isNew]);
         }
 
         return (bool) $result;
