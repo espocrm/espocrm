@@ -30,6 +30,7 @@
 namespace Espo\Tools\EntityManager\Hooks;
 
 use Espo\Core\Di;
+use Espo\Modules\Crm\Entities\Task;
 
 class BasePlusType implements Di\ConfigAware, Di\MetadataAware
 {
@@ -39,12 +40,13 @@ class BasePlusType implements Di\ConfigAware, Di\MetadataAware
     /**
      * @param array<string, mixed> $params
      */
-    public function afterCreate(string $name, $params): void
+    public function afterCreate(string $name, array $params): void
     {
         $activitiesEntityTypeList = $this->config->get('activitiesEntityList', []);
         $historyEntityTypeList = $this->config->get('historyEntityList', []);
+
         $entityTypeList = array_merge($activitiesEntityTypeList, $historyEntityTypeList);
-        $entityTypeList[] = 'Task';
+        $entityTypeList[] = Task::ENTITY_TYPE;
         $entityTypeList = array_unique($entityTypeList);
 
         foreach ($entityTypeList as $entityType) {
@@ -53,15 +55,16 @@ class BasePlusType implements Di\ConfigAware, Di\MetadataAware
             }
 
             $list = $this->metadata->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'], []);
+
             if (!in_array($name, $list)) {
                 $list[] = $name;
-                $data = array(
-                    'fields' => array(
-                        'parent' => array(
-                            'entityList' => $list
-                        )
-                    )
-                );
+
+                $data = [
+                    'fields' => [
+                        'parent' => ['entityList' => $list]
+                    ]
+                ];
+
                 $this->metadata->set('entityDefs', $entityType, $data);
             }
         }
@@ -73,8 +76,9 @@ class BasePlusType implements Di\ConfigAware, Di\MetadataAware
     {
         $activitiesEntityTypeList = $this->config->get('activitiesEntityList', []);
         $historyEntityTypeList = $this->config->get('historyEntityList', []);
+
         $entityTypeList = array_merge($activitiesEntityTypeList, $historyEntityTypeList);
-        $entityTypeList[] = 'Task';
+        $entityTypeList[] = Task::ENTITY_TYPE;
         $entityTypeList = array_unique($entityTypeList);
 
         foreach ($entityTypeList as $entityType) {
@@ -91,13 +95,11 @@ class BasePlusType implements Di\ConfigAware, Di\MetadataAware
 
                 $list = array_values($list);
 
-                $data = array(
-                    'fields' => array(
-                        'parent' => array(
-                            'entityList' => $list
-                        )
-                    )
-                );
+                $data = [
+                    'fields' => [
+                        'parent' => ['entityList' => $list]
+                    ]
+                ];
 
                 $this->metadata->set('entityDefs', $entityType, $data);
             }
