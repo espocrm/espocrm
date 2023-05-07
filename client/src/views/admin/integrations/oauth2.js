@@ -26,19 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/integrations/oauth2', 'views/admin/integrations/edit', function (Dep) {
+define('views/admin/integrations/oauth2', ['views/admin/integrations/edit'], function (Dep) {
 
     return Dep.extend({
 
         template: 'admin/integrations/oauth2',
 
         data: function () {
-            var redirectUri = this.redirectUri || (this.getConfig().get('siteUrl') + '?entryPoint=oauthCallback');
+            let redirectUri = this.redirectUri ||
+                (this.getConfig().get('siteUrl') + '?entryPoint=oauthCallback');
 
             return _.extend({
                 redirectUri: redirectUri,
             }, Dep.prototype.data.call(this));
         },
-
     });
 });
