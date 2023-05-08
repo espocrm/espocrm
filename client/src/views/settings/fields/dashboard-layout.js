@@ -46,7 +46,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                 var id = $(e.currentTarget).data('id');
                 this.removeDashlet(id);
             },
-            'click a[data-action="editDashlet"]': function (e) {
+            'click [data-action="editDashlet"]': function (e) {
                 var id = $(e.currentTarget).data('id');
                 var name = $(e.currentTarget).data('name');
 
@@ -395,9 +395,8 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
         },
 
         prepareGridstackItem: function (id, name) {
-            var $item = $('<div>').addClass('grid-stack-item');
-            var actionsHtml = '';
-            var actions2Html = '';
+            let $item = $('<div>').addClass('grid-stack-item');
+            let actionsHtml = '';
 
             if (this.isEditMode()) {
                 actionsHtml +=
@@ -408,6 +407,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                                 .addClass('btn btn-default')
                                 .attr('data-action', 'removeDashlet')
                                 .attr('data-id', id)
+                                .attr('title', this.translate('Remove'))
                                 .append(
                                     $('<span>').addClass('fas fa-times')
                                 )
@@ -415,14 +415,24 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                         .get(0)
                         .outerHTML;
 
-                actions2Html += $('<a>')
-                    .attr('role', 'button')
-                    .attr('tabindex', '0')
-                    .addClass('pull-right')
-                    .attr('data-action', 'editDashlet')
-                    .attr('data-id', id)
-                    .attr('data-name', name)
-                    .text(this.translate('Edit'))
+                actionsHtml += $('<div>')
+                    .addClass('btn-group pull-right')
+                    .append(
+                        $('<button>')
+                            .addClass('btn btn-default')
+                            .attr('data-action', 'editDashlet')
+                            .attr('data-id', id)
+                            .attr('data-name', name)
+                            .attr('title', this.translate('Edit'))
+                            .append(
+                                $('<span>')
+                                    .addClass('fas fa-pencil-alt fa-sm')
+                                    .css({
+                                        position: 'relative',
+                                        top: '-1px',
+                                    })
+                            )
+                    )
                     .get(0)
                     .outerHTML;
             }
@@ -444,12 +454,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
             let $container =
                 $('<div>')
                     .addClass('grid-stack-item-content panel panel-default')
-                    .append(headerHtml)
-                    .append(
-                        $('<div>')
-                            .addClass('panel-body')
-                            .append(actions2Html)
-                    );
+                    .append(headerHtml);
 
             $container.attr('data-id', id);
             $container.attr('data-name', name);
