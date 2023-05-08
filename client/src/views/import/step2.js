@@ -86,9 +86,8 @@ define('views/import/step2', ['view'], function (Dep) {
 
                 if (this.formData.previewArray.length > index) {
                     this.formData.previewArray[index].forEach((value, i) => {
-                        var d = {
-                            value: value
-                        };
+                        let d = {value: value};
+
                         if (this.formData.headerRow) {
                             d.name = this.formData.previewArray[0][i];
                         }
@@ -126,7 +125,7 @@ define('views/import/step2', ['view'], function (Dep) {
             let $row = $('<tr>');
 
             if (this.formData.headerRow) {
-                $cell = $('<th>')
+                let $cell = $('<th>')
                     .attr('width', '25%')
                     .text(this.translate('Header Row Value', 'labels', 'Import'));
 
