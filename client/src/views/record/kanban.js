@@ -399,9 +399,9 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     return;
                 }
 
-                let stickTop = this.$listKanban.position().top - topBarHeight;
+                let stickTop = this.$listKanban.offset().top - topBarHeight;
 
-                let edge = $middle.position().top + $middle.outerHeight(true);
+                let edge = $middle.offset().top + $middle.outerHeight(true);
                 let scrollTop = $window.scrollTop();
 
                 if (scrollTop < edge) {
