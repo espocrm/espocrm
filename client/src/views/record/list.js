@@ -936,12 +936,15 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 }
             }
 
+            let displayTotalCount = this.displayTotalCount && this.collection.total > 0;
+
             let topBar =
                 paginationTop ||
                 this.checkboxes ||
                 (this.buttonList.length && !this.buttonsDisabled) ||
                 (this.dropdownItemList.length && !this.buttonsDisabled) ||
-                this.forceDisplayTopBar;
+                this.forceDisplayTopBar ||
+                displayTotalCount;
 
             return {
                 scope: this.scope,
@@ -963,7 +966,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 checkAllResultDisabled: checkAllResultDisabled,
                 buttonList: this.buttonList,
                 dropdownItemList: this.dropdownItemList,
-                displayTotalCount: this.displayTotalCount && this.collection.total > 0,
+                displayTotalCount: displayTotalCount,
                 displayActionsButtonGroup: this.checkboxes ||
                     this.massActionList || this.buttonList.length || this.dropdownItemList.length,
                 totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),

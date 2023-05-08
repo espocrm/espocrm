@@ -108,14 +108,16 @@
     {{/if}}
 
     {{#if displayTotalCount}}
-        <div class="text-muted total-count">
-            <span
-                title="{{translate 'Total'}}"
-                class="total-count-span"
-            >{{totalCountFormatted}}</span>
-        </div>
+    <div class="text-muted total-count">
+        <span
+            title="{{translate 'Total'}}"
+            class="total-count-span"
+        >{{totalCountFormatted}}</span>
+    </div>
     {{/if}}
 </div>
+{{else}}
+<div class="list-buttons-container"></div>
 {{/if}}
 
 <div class="list{{#if tableMinWidth}} scrollable{{/if}}" data-scope="{{scope}}">
