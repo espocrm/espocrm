@@ -64,6 +64,9 @@ define('views/record/list-expanded', ['views/record/list'], function (Dep) {
 
                 view.reRender();
             });
+
+            // Prevents displaying an empty buttons container.
+            this.displayTotalCount = false;
         },
 
         _loadListLayout: function (callback) {
