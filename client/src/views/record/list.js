@@ -254,6 +254,12 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         checkboxesDisabled: false,
 
         /**
+         * Force displaying the top bar even if empty. Can be overridden by an option parameter.
+         * @protected
+         */
+        forceDisplayTopBar: false,
+
+        /**
          * Where to display the pagination. Can be overridden by an option parameter.
          *
          * @protected

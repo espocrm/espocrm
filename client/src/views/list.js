@@ -574,6 +574,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                 scope: this.scope,
                 skipBuildRows: true,
                 shortcutKeysEnabled: true,
+                forceDisplayTopBar: true,
             };
 
             this.optionsToPass.forEach(option => {

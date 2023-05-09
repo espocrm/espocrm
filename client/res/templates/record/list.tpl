@@ -116,8 +116,6 @@
     </div>
     {{/if}}
 </div>
-{{else}}
-<div class="list-buttons-container"></div>
 {{/if}}
 
 <div class="list{{#if tableMinWidth}} scrollable{{/if}}" data-scope="{{scope}}">

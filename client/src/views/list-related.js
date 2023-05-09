@@ -576,6 +576,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                 unlinkMassAction: !massUnlinkDisabled,
                 skipBuildRows: true,
                 buttonsDisabled: true,
+                forceDisplayTopBar: true,
                 rowActionsOptions:  {
                     unlinkDisabled: this.panelDefs.unlinkDisabled || this.unlinkDisabled,
                 },
