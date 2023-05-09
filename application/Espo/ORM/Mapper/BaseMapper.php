@@ -230,8 +230,7 @@ class BaseMapper implements RDBMapper
             ->build();
 
         $wrap = $aggregation === self::FUNC_COUNT && (
-            $select->isDistinct() ||
-            $select->getGroup() && $select->getHaving()
+            $select->isDistinct() || $select->getGroup()
         );
 
         if (!$wrap) {
