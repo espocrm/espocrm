@@ -28,31 +28,48 @@
 
 define('crm:view-setup-handlers/document/record-list-drag-n-drop', [], function () {
 
-    var Handler = function (view) {
+    let Handler = function (view) {
         this.view = view;
     };
 
     _.extend(Handler.prototype, {
 
         process: function () {
-            this.listenTo(this.view, 'after:render', function () {
-                this.initDragDrop();
-            }, this);
+            this.listenTo(this.view, 'after:render', () => this.initDragDrop());
+            this.listenTo(this.view, 'remove', () => this.disable());
+        },
+
+        disable: function () {
+            let $el = this.view.$el.parent();
+            /** @type {Element} */
+            let el = $el.get(0);
+
+            $el.off('drop');
+
+            if (!el) {
+                return;
+            }
+
+            if (!this.onDragoverBind) {
+                return;
+            }
+
+            el.removeEventListener('dragover', this.onDragoverBind);
+            el.removeEventListener('dragenter', this.onDragenterBind);
+            el.removeEventListener('dragleave', this.onDragleaveBind);
         },
 
         initDragDrop: function () {
-            var $el = this.view.$el.parent();
+            this.disable();
 
-            $el.off('drop');
-            $el.off('dragover');
-            $el.off('dragleave');
+            let $el = this.view.$el.parent();
+            let el = $el.get(0);
 
-            $el.on('drop', function (e) {
+            $el.on('drop', e => {
                 e.preventDefault();
-
                 e.stopPropagation();
 
-                var e = e.originalEvent;
+                e = e.originalEvent;
 
                 if (
                     e.dataTransfer &&
@@ -68,65 +85,31 @@ define('crm:view-setup-handlers/document/record-list-drag-n-drop', [], function 
                 }
 
                 this.removeDrop($el);
-            }.bind(this));
-
-            $el.get(0).addEventListener('dragover', function (e) {
-                e.preventDefault();
             });
+
 
             this.dropEntered = false;
 
-            $el.get(0).addEventListener('dragenter', function (e) {
-                e.preventDefault();
+            this.onDragoverBind = this.onDragover.bind(this);
+            this.onDragenterBind = this.onDragenter.bind(this);
+            this.onDragleaveBind = this.onDragleave.bind(this);
 
-                if (!e.dataTransfer.types || !e.dataTransfer.types.length) {
-                    return;
-                }
-
-                if (!~e.dataTransfer.types.indexOf('Files')) {
-                    return;
-                }
-
-                if (!this.dropEntered) {
-                    this.renderDrop();
-                }
-            }.bind(this));
-
-            $el.get(0).addEventListener('dragleave', function (e) {
-                e.preventDefault();
-
-                if (!this.dropEntered) {
-                    return;
-                }
-
-                var fromElement = e.fromElement || e.relatedTarget;
-
-                if (fromElement && $.contains($el.get(0), fromElement)) {
-                    return;
-                }
-
-                if (
-                    fromElement &&
-                    fromElement.parentNode &&
-                    fromElement.parentNode.toString() === '[object ShadowRoot]'
-                ) {
-                    return;
-                }
-
-                this.removeDrop();
-
-            }.bind(this));
+            el.addEventListener('dragover', this.onDragoverBind);
+            el.addEventListener('dragenter', this.onDragenterBind);
+            el.addEventListener('dragleave', this.onDragleaveBind);
         },
 
         renderDrop: function () {
             this.dropEntered = true;
 
             let $backdrop =
-                $('<div class="dd-backdrop" />')
+                $('<div class="dd-backdrop">')
                     .css('pointer-events', 'none')
-                    .html(
-                        '<span class="fas fa-paperclip"></span> ' +
-                        this.view.getLanguage().translate('Create Document', 'labels', 'Document')
+                    .append('<span class="fas fa-paperclip"></span>')
+                    .append(' ')
+                    .append(
+                        $('<span>')
+                            .text(this.view.getLanguage().translate('Create Document', 'labels', 'Document'))
                     );
 
             this.view.$el.append($backdrop);
@@ -141,31 +124,84 @@ define('crm:view-setup-handlers/document/record-list-drag-n-drop', [], function 
         create: function (file) {
             this.view
                 .actionQuickCreate()
-                .then(
-                    function (view) {
-                        var fileView = view.getRecordView().getFieldView('file');
+                .then(view => {
+                    let fileView = view.getRecordView().getFieldView('file');
 
-                        if (!fileView) {
-                            var msg = "No 'file' field on the layout.";
+                    if (!fileView) {
+                        let msg = "No 'file' field on the layout.";
 
-                            Espo.Ui.error(msg);
-                            console.error(msg);
+                        Espo.Ui.error(msg);
+                        console.error(msg);
 
-                            return;
-                        }
+                        return;
+                    }
 
-                        if (fileView.isRendered()) {
-                            fileView.uploadFile(file);
+                    if (fileView.isRendered()) {
+                        fileView.uploadFile(file);
 
-                            return;
-                        }
+                        return;
+                    }
 
-                        this.listenToOnce(fileView, 'after:render', function () {
-                            fileView.uploadFile(file);
-                        });
-                    }.bind(this)
-                );
+                    this.listenToOnce(fileView, 'after:render', () => {
+                        fileView.uploadFile(file);
+                    });
+                });
+        },
 
+        /**
+         * @param {DragEvent} e
+         */
+        onDragover: function (e) {
+            e.preventDefault();
+        },
+
+        /**
+         * @param {DragEvent} e
+         */
+        onDragenter: function (e) {
+            e.preventDefault();
+
+            if (!e.dataTransfer.types || !e.dataTransfer.types.length) {
+                return;
+            }
+
+            if (!~e.dataTransfer.types.indexOf('Files')) {
+                return;
+            }
+
+            if (!this.dropEntered) {
+                this.renderDrop();
+            }
+        },
+
+        /**
+         * @param {DragEvent} e
+         */
+        onDragleave: function (e) {
+            e.preventDefault();
+
+            if (!this.dropEntered) {
+                return;
+            }
+
+            let fromElement = e.fromElement || e.relatedTarget;
+
+            if (
+                fromElement &&
+                $.contains(this.view.$el.parent().get(0), fromElement)
+            ) {
+                return;
+            }
+
+            if (
+                fromElement &&
+                fromElement.parentNode &&
+                fromElement.parentNode.toString() === '[object ShadowRoot]'
+            ) {
+                return;
+            }
+
+            this.removeDrop();
         },
     });
 
