@@ -41,7 +41,7 @@ use Espo\Core\Utils\Metadata;
 class ReadLoadProcessor
 {
     /** @var array<string, Loader<Entity>[]> */
-    private $loaderListMapCache = [];
+    private array $loaderListMapCache = [];
 
     public function __construct(
         private InjectableFactory $injectableFactory,

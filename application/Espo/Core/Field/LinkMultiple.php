@@ -38,17 +38,12 @@ use RuntimeException;
  */
 class LinkMultiple
 {
-    private $list = [];
-
     /**
      * @param LinkMultipleItem[] $list
-     *
      * @throws RuntimeException
      */
-    public function __construct(array $list = [])
+    public function __construct(private array $list = [])
     {
-        $this->list = $list;
-
         $this->validateList();
     }
 

@@ -35,9 +35,7 @@ use Espo\Core\Job\Job\Data as JobData;
 use Espo\Core\MassAction\MassActionFactory;
 use Espo\Core\MassAction\Result;
 use Espo\Core\Utils\Language;
-
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\MassAction as MassActionEntity;
 use Espo\Entities\Notification;
 use Espo\Entities\User;
@@ -46,21 +44,11 @@ use Throwable;
 
 class Process implements Job
 {
-    private $entityManager;
-
-    private $factory;
-
-    private $language;
-
     public function __construct(
-        EntityManager $entityManager,
-        MassActionFactory $factory,
-        Language $language
-    ) {
-        $this->entityManager = $entityManager;
-        $this->factory = $factory;
-        $this->language = $language;
-    }
+        private EntityManager $entityManager,
+        private MassActionFactory $factory,
+        private Language $language
+    ) {}
 
     public function run(JobData $data): void
     {

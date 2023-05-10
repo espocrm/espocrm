@@ -185,10 +185,8 @@ class Service implements Crud,
     protected $selectBuilderFactory;
     /** @var RecordHookManager */
     protected $recordHookManager;
-    /** @var ?ListLoadProcessor */
-    private $listLoadProcessor = null;
-    /** @var ?DuplicateFinder */
-    private $duplicateFinder = null;
+    private ?ListLoadProcessor $listLoadProcessor = null;
+    private ?DuplicateFinder $duplicateFinder = null;
     private ?LinkCheck $linkCheck = null;
 
     protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;

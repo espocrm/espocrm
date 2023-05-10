@@ -46,9 +46,9 @@ use ReflectionClass;
 class FieldValidationManager
 {
     /** @var array<string, ?object> */
-    private $checkerCache = [];
+    private array $checkerCache = [];
     /** @var array<string, ?Validator<Entity>> */
-    private $validatorCache = [];
+    private array $validatorCache = [];
 
     private CheckerFactory $checkerFactory;
 

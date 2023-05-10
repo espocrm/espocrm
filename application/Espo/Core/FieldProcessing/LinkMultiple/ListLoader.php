@@ -41,15 +41,11 @@ use Espo\ORM\Defs as OrmDefs;
  */
 class ListLoader implements LoaderInterface
 {
-    private OrmDefs $ormDefs;
-
     /** @var array<string, string[]> */
-    private $fieldListCacheMap = [];
+    private array $fieldListCacheMap = [];
 
-    public function __construct(OrmDefs $ormDefs)
-    {
-        $this->ormDefs = $ormDefs;
-    }
+    public function __construct(private OrmDefs $ormDefs)
+    {}
 
     public function process(Entity $entity, Params $params): void
     {

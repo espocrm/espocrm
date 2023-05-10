@@ -34,10 +34,8 @@ namespace Espo\Core\FieldProcessing\Loader;
  */
 class Params
 {
-    /**
-     * @var ?string[]
-     */
-    private $select = null;
+    /** @var ?string[] */
+    private ?array $select = null;
 
     public function __construct() {}
 

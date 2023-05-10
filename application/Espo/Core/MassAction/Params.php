@@ -40,7 +40,7 @@ class Params
 {
     private string $entityType;
     /** @var ?string[] */
-    private $ids = null;
+    private ?array $ids = null;
     private ?SearchParams $searchParams = null;
 
     private function __construct() {}

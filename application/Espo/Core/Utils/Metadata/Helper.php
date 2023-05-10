@@ -44,7 +44,7 @@ class Helper
      *
      * @var string[]
      */
-    private $copiedDefParams = [
+    private array $copiedDefParams = [
         'readOnly',
         'disabled',
         'notStorable',
