@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a bug report.
+about: Create a bug report. Not to be used for help requests, server configuration or installation issues. Create a topic on the forum instead.
 title: ''
 labels: ''
 assignees: ''
