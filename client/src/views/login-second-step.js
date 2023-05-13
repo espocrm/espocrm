@@ -110,6 +110,8 @@ define('views/login-second-step', ['view'], function (Dep) {
         afterRender: function () {
             this.$code = $('[data-name="field-code"]');
             this.$submit = this.$el.find('#btn-send');
+
+            this.$code.focus();
         },
 
         /**
