@@ -27,6 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+//de HACK
+//de Must pass Espo-Portal-ID header:
+//de i.e. nginx: proxy_set_header Espo-Portal-ID $espocrm_portal;
+
+if (function_exists('apache_request_headers') ) {
+        $headers = apache_request_headers();
+        if (array_key_exists("Espo-Portal-ID", $headers)) {
+                $_SERVER['ESPO_PORTAL_ID'] = apache_request_headers()['Espo-Portal-ID'];
+                if ($_SERVER['ESPO_PORTAL_ID']) {
+                        $_SERVER['ESPO_PORTAL_IS_CUSTOM_URL'] = true;
+                }
+        }
+}
+
 include "../../bootstrap.php";
 
 use Espo\Core\Application;
