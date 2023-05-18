@@ -163,6 +163,11 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                     model
                         .fetch()
                         .then(() => {
+                            const {id, ...attributes} = this.options.attributes || {};
+                            if (attributes) {
+                                model.set(attributes);
+                            }
+
                             this.createRecordView(model);
                         });
 
