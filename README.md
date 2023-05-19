@@ -35,7 +35,7 @@ Create a [GitHub issue](https://github.com/espocrm/espocrm/issues/new/choose) or
 
 ### Installing stable version
 
-See the on instructions installation:
+See installation instructions:
 
 * [Manual installation](https://docs.espocrm.com/administration/installation/) 
 * [Installation by script](https://docs.espocrm.com/administration/installation-by-script/)
