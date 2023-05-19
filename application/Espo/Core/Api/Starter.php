@@ -67,6 +67,24 @@ class Starter
             $slim->getRouteCollector()->setCacheFile($this->routeCacheFile);
         }
 
+        if($this->config->get("apiEnableCORS")) {
+            if(isset($_SERVER['HTTP_ORIGIN']) and in_array($_SERVER['HTTP_ORIGIN'], $this->config->get("apiCORSOrigins"))) {
+                header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+                header("Access-Control-Allow-Credentials: true");
+                header("Access-Control-Max-Age: {$this->config->get("apiCORSCacheMaxAge", 86400)}");
+            }
+
+            if($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+                if(isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
+                    header("Access-Control-Allow-Methods:" . implode(", ", $this->config->get("apiCORSAllowedMethods", [])));
+
+                if(isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
+                    header("Access-Control-Allow-Headers:" . implode(", ", $this->config->get("apiCORSAllowedHeaders", [])));
+
+              return;
+            }
+        }
+
         $slim->setBasePath(RouteUtil::detectBasePath());
         $this->addGlobalMiddlewares($slim);
         $slim->addRoutingMiddleware();
