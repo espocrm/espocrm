@@ -35,6 +35,8 @@ Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our
 
 ### Installing the stable version
 
+See the on instructions installation:
+
 * [Manual installation](https://docs.espocrm.com/administration/installation/) 
 * [Installation by script](https://docs.espocrm.com/administration/installation-by-script/)
 * [Installation with Docker](https://docs.espocrm.com/administration/docker/installation/)
