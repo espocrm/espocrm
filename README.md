@@ -44,9 +44,9 @@ See the on instructions installation:
 
 ### Development
 
-* [Getting started](https://docs.espocrm.com/development/how-to-start)
-* [Running tests](https://docs.espocrm.com/development/tests)
-* [Making translation](https://docs.espocrm.com/development/translation)
+See the [developer documentation](https://docs.espocrm.com/development/).
+
+We highly recommend using IDE for development. The backend codebase follows SOLID principles, utilizes interfaces, static typing and generics. We recommend to start learning EspoCRM from the Dependency Injection article in the documentation.
 
 ### Contributing
 
