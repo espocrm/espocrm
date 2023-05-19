@@ -27,13 +27,13 @@ For more information about server configuration see [this article](https://docs.
 
 ### Documentation
 
-The documentation for administrators, users and developers is available [here](https://docs.espocrm.com).
+See the [documentation](https://docs.espocrm.com) for administrators, users and developers.
 
 ### Bug reporting
 
-Create a GitHub issue [here](https://github.com/espocrm/espocrm/issues/new/choose) or post on our [forum](https://forum.espocrm.com/forum/bug-reports).
+Create a [GitHub issue](https://github.com/espocrm/espocrm/issues/new/choose) or post on our [forum](https://forum.espocrm.com/forum/bug-reports).
 
-### Installing the stable version
+### Installing stable version
 
 See the on instructions installation:
 
@@ -41,8 +41,6 @@ See the on instructions installation:
 * [Installation by script](https://docs.espocrm.com/administration/installation-by-script/)
 * [Installation with Docker](https://docs.espocrm.com/administration/docker/installation/)
 * [Installation with Traefik](https://docs.espocrm.com/administration/docker/traefik/)
-
-See the [instructions](https://docs.espocrm.com/administration/installation/) on installation.
 
 ### Development
 
