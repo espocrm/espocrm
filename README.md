@@ -31,7 +31,7 @@ The documentation for administrators, users and developers is available [here](h
 
 ### Bug reporting
 
-Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our [forum](https://forum.espocrm.com/forum/bug-reports).
+Create a GitHub issue [here](https://github.com/espocrm/espocrm/issues/new/choose) or post on our [forum](https://forum.espocrm.com/forum/bug-reports).
 
 ### Installing the stable version
 
@@ -65,6 +65,10 @@ Branches:
 If you want to improve existing translation or add a language that is not available yet, you can contribute on our [POEditor](https://poeditor.com/join/project/gLDKZtUF4i) project. See instructions [here](https://www.espocrm.com/blog/how-to-use-poeditor-to-translate-espocrm/).
 
 Changes on POEditor are usually merged to the GitHub repository before minor releases.
+
+### Community & Support
+
+If you have a question regarding some features, need help or customizations, want to get in touch with other EspoCRM users, or add a feature request, please use our [Community Forum](https://forum.espocrm.com/). We believe that using a forum to ask for help and share experience allows everyone in the community to contribute and use this knowledge later.
 
 ### License
 
