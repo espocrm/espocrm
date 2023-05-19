@@ -29,6 +29,7 @@
 
 namespace Espo\Core\MassAction\Actions;
 
+use Espo\Entities\ActionHistoryRecord;
 use Espo\Entities\User;
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\Forbidden;
@@ -96,7 +97,7 @@ class MassDelete implements MassAction
 
             $count++;
 
-            $service->processActionHistoryRecord('delete', $entity);
+            $service->processActionHistoryRecord(ActionHistoryRecord::ACTION_DELETE, $entity);
         }
 
         $result = [

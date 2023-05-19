@@ -30,12 +30,9 @@
 namespace Espo\Tools\LabelManager;
 
 use Espo\Core\Utils\Json;
-
-use Espo\Core\{
-    Di,
-    Utils\Language,
-    InjectableFactory,
-};
+use Espo\Core\Di;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Language;
 
 use stdClass;
 
@@ -57,12 +54,8 @@ class LabelManager implements
         'Global.sets',
     ];
 
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private InjectableFactory $injectableFactory)
+    {}
 
     /**
      * @return string[]
@@ -220,7 +213,7 @@ class LabelManager implements
     }
 
     /**
-     * @param array<string,string> $labels
+     * @param array<string, string> $labels
      */
     public function saveLabels(string $language, string $scope, array $labels): stdClass
     {

@@ -34,25 +34,13 @@ namespace Espo\Core\Mail\Account;
  */
 class ImapParams
 {
-    private string $host;
-    private int $port;
-    private string $username;
-    private ?string $password;
-    private ?string $security;
-
     public function __construct(
-        string $host,
-        int $port,
-        string $username,
-        ?string $password,
-        ?string $security
-    ) {
-        $this->host = $host;
-        $this->port = $port;
-        $this->username = $username;
-        $this->password = $password;
-        $this->security = $security;
-    }
+        private string $host,
+        private int $port,
+        private string $username,
+        private ?string $password,
+        private ?string $security
+    ) {}
 
     public function getHost(): string
     {

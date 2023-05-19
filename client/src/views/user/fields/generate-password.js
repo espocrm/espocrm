@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/fields/generate-password', 'views/fields/base', function (Dep) {
+define('views/user/fields/generate-password', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 

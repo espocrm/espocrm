@@ -29,24 +29,17 @@
 
 namespace Espo\Core\Portal\Loaders;
 
-use Espo\Core\{
-    Container\Loader,
-    InjectableFactory,
-    AclManager as InternalAclManager,
-    Portal\AclManager as PortalAclManager,
-};
+use Espo\Core\AclManager as InternalAclManager;
+use Espo\Core\Container\Loader;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Portal\AclManager as PortalAclManager;
 
 class AclManager implements Loader
 {
-    private $injectableFactory;
-
-    private $internalAclManager;
-
-    public function __construct(InjectableFactory $injectableFactory, InternalAclManager $internalAclManager)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->internalAclManager = $internalAclManager;
-    }
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private InternalAclManager $internalAclManager
+    ) {}
 
     public function load(): PortalAclManager
     {

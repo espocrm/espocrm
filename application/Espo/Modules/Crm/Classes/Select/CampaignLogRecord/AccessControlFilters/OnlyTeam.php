@@ -36,18 +36,14 @@ use Espo\Entities\User;
 
 class OnlyTeam implements Filter
 {
-    private $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
+    public function __construct(private User $user)
+    {}
 
     public function apply(SelectBuilder $queryBuilder): void
     {
         $queryBuilder->leftJoin('campaign', 'campaignAccess');
 
-        $teamIdList = $this->user->getLinkMultipleIdList('teams') ?? [];
+        $teamIdList = $this->user->getLinkMultipleIdList('teams');
 
         if (count($teamIdList) === 0) {
             $queryBuilder->where([

@@ -29,20 +29,16 @@
 
 namespace Espo\Core\Controllers;
 
-use Espo\Core\{
-    Exceptions\Forbidden,
-    Container,
-    Acl,
-    AclManager,
-    Utils\Config,
-    Utils\Metadata,
-    ServiceFactory,
-};
+use Espo\Core\Acl;
+use Espo\Core\AclManager;
+use Espo\Core\Container;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\ServiceFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 
-use Espo\Entities\{
-    User,
-    Preferences,
-};
+use Espo\Entities\Preferences;
+use Espo\Entities\User;
 
 /**
  * @deprecated Don't extend.

@@ -247,7 +247,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         allActionItemsDisabled: false,
 
         /**
-         * An DOM element ID. Only for reading.
+         * A DOM element ID. Only for reading.
          *
          * @private
          * @type {string}
@@ -693,7 +693,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 ) {
                     this.addDropdownItem({
                         'label': 'Duplicate',
-                        'name': 'duplicate'
+                        'name': 'duplicate',
                     });
                 }
             }
@@ -1883,6 +1883,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this.duplicateAction = false;
             }
 
+            if ((this.getConfig().get('currencyList') || []).length <= 1) {
+                this.convertCurrencyAction = false;
+            }
+
             this.readOnlyLocked = this.readOnly;
 
             this.inlineEditDisabled = this.inlineEditDisabled ||
@@ -2437,7 +2441,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         beforeSave: function () {
-            this.notify('Saving...');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
 
             this.blockUpdateWebSocket();
         },
@@ -2605,7 +2609,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         manageAccessEdit: function (second) {
-            if (this.isNew) return;
+            if (this.isNew) {
+                return;
+            }
 
             let editAccess = this.getAcl().checkModel(this.model, 'edit', true);
 
@@ -2614,19 +2620,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                 this.hideActionItem('edit');
 
-                if (this.duplicateAction) {
-                    this.hideActionItem('duplicate');
-                }
-
                 if (this.selfAssignAction) {
                     this.hideActionItem('selfAssign');
                 }
             } else {
                 this.showActionItem('edit');
-
-                if (this.duplicateAction) {
-                    this.showActionItem('duplicate');
-                }
 
                 if (this.selfAssignAction) {
                     this.hideActionItem('selfAssign');
@@ -3194,7 +3192,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     model: this.model,
                     scope: this.scope,
                     type: this.type,
-                    _layout: layout,
+                    layoutDefs: layout,
                     el: el + ' .middle',
                     layoutData: {
                         model: this.model,

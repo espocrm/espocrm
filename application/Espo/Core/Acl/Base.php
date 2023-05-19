@@ -32,16 +32,12 @@ namespace Espo\Core\Acl;
 use Espo\Core\Interfaces\Injectable;
 
 use Espo\ORM\Entity;
-
 use Espo\Entities\User;
-
-use Espo\Core\{
-    ORM\EntityManager,
-    Acl\AccessChecker\ScopeCheckerData,
-    Acl\AccessChecker\ScopeChecker,
-    AclManager,
-    Utils\Config,
-};
+use Espo\Core\Acl\AccessChecker\ScopeChecker;
+use Espo\Core\Acl\AccessChecker\ScopeCheckerData;
+use Espo\Core\AclManager;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
 
 /**
  * @deprecated As of v6.0. Use AccessChecker interfaces instead.

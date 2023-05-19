@@ -29,32 +29,20 @@
 
 namespace Espo\Classes\Select\Email\Where\ItemConverters;
 
-use Espo\Core\{
-    Select\Where\ItemConverter,
-    Select\Where\Item,
-    Select\Helpers\RandomStringGenerator,
-};
-
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\WhereItem as WhereClauseItem,
-    ORM\Query\Part\WhereClause,
-    Classes\Select\Email\Helpers\EmailAddressHelper,
-};
+use Espo\Core\Select\Helpers\RandomStringGenerator;
+use Espo\Core\Select\Where\Item;
+use Espo\Core\Select\Where\ItemConverter;
+use Espo\Classes\Select\Email\Helpers\EmailAddressHelper;
+use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class EmailAddressEquals implements ItemConverter
 {
-    private $emailAddressHelper;
-
-    private $randomStringGenerator;
-
     public function __construct(
-        EmailAddressHelper $emailAddressHelper,
-        RandomStringGenerator $randomStringGenerator
-    ) {
-        $this->emailAddressHelper = $emailAddressHelper;
-        $this->randomStringGenerator = $randomStringGenerator;
-    }
+        private EmailAddressHelper $emailAddressHelper,
+        private RandomStringGenerator $randomStringGenerator
+    ) {}
 
     public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
     {

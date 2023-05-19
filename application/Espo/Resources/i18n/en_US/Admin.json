@@ -136,6 +136,7 @@
         "phone": "Phone",
         "text": "Text",
         "url": "Url",
+        "urlMultiple": "Url Multiple",
         "varchar": "Varchar",
         "file": "File",
         "image": "Image",
@@ -162,6 +163,7 @@
         "default": "Default",
         "maxLength": "Max Length",
         "options": "Options",
+        "optionsReference": "Options Reference",
         "after": "After (field)",
         "before": "Before (field)",
         "link": "Link",
@@ -219,7 +221,8 @@
         "conversionDisabled": "Disable Conversion",
         "decimalPlaces": "Decimal Places",
         "pattern": "Pattern",
-        "globalRestrictions": "Global Restrictions"
+        "globalRestrictions": "Global Restrictions",
+        "copyToClipboard": "Copy to clipboard button"
     },
     "strings" : {
         "rebuildRequired": "Rebuild is required"

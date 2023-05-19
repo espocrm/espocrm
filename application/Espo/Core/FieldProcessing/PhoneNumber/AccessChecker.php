@@ -30,32 +30,18 @@
 namespace Espo\Core\FieldProcessing\PhoneNumber;
 
 use Espo\Repositories\PhoneNumber as Repository;
-
 use Espo\ORM\Entity;
-
-use Espo\Entities\{
-    User,
-    PhoneNumber,
-};
-
-use Espo\Core\{
-    ORM\EntityManager,
-    AclManager,
-};
+use Espo\Entities\PhoneNumber;
+use Espo\Entities\User;
+use Espo\Core\AclManager;
+use Espo\Core\ORM\EntityManager;
 
 class AccessChecker
 {
-    private $entityManager;
-
-    private $aclManager;
-
     public function __construct(
-        EntityManager $entityManager,
-        AclManager $aclManager
-    ) {
-        $this->entityManager = $entityManager;
-        $this->aclManager = $aclManager;
-    }
+        private EntityManager $entityManager,
+        private AclManager $aclManager
+    ) {}
 
     public function checkEdit(User $user, PhoneNumber $phoneNumber, Entity $excludeEntity): bool
     {

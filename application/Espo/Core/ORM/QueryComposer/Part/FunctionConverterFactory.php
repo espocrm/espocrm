@@ -32,7 +32,6 @@ namespace Espo\Core\ORM\QueryComposer\Part;
 use Espo\ORM\QueryComposer\Part\FunctionConverterFactory as FunctionConverterFactoryInterface;
 use Espo\ORM\QueryComposer\Part\FunctionConverter;
 use Espo\ORM\DatabaseParams;
-
 use Espo\Core\Utils\Metadata;
 use Espo\Core\InjectableFactory;
 
@@ -40,26 +39,14 @@ use LogicException;
 
 class FunctionConverterFactory implements FunctionConverterFactoryInterface
 {
-    /**
-     * @var array<string,FunctionConverter>
-     */
+    /** @var array<string, FunctionConverter> */
     private $hash = [];
 
-    private Metadata $metadata;
-
-    private DatabaseParams $databaseParams;
-
-    private InjectableFactory $injectableFactory;
-
     public function __construct(
-        Metadata $metadata,
-        InjectableFactory $injectableFactory,
-        DatabaseParams $databaseParams
-    ) {
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
-        $this->databaseParams = $databaseParams;
-    }
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory,
+        private DatabaseParams $databaseParams
+    ) {}
 
     public function create(string $name): FunctionConverter
     {
@@ -69,9 +56,7 @@ class FunctionConverterFactory implements FunctionConverterFactoryInterface
             throw new LogicException();
         }
 
-        $converter = $this->injectableFactory->create($className);
-
-        return $converter;
+        return $this->injectableFactory->create($className);
     }
 
     public function isCreatable(string $name): bool

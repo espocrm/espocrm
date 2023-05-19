@@ -29,19 +29,13 @@
 
 namespace Espo\Classes\Jobs;
 
-use Espo\Core\{
-    Job\JobDataLess,
-    Webhook\Queue,
-};
+use Espo\Core\Job\JobDataLess;
+use Espo\Core\Webhook\Queue;
 
 class ProcessWebhookQueue implements JobDataLess
 {
-    private $queue;
-
-    public function __construct(Queue $queue)
-    {
-        $this->queue = $queue;
-    }
+    public function __construct(private Queue $queue)
+    {}
 
     public function run(): void
     {

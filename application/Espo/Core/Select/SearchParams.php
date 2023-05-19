@@ -42,7 +42,7 @@ use stdClass;
  */
 class SearchParams
 {
-    /** @var array<string,mixed> */
+    /** @var array<string, mixed> */
     private array $rawParams = [];
 
     public const ORDER_ASC = 'ASC';
@@ -512,7 +512,7 @@ class SearchParams
 
                 unset($where[$i]);
             }
-            else if ($type == 'textFilter' && $value) {
+            else if ($type === 'textFilter') {
                 $params['textFilter'] = $value;
 
                 unset($where[$i]);

@@ -118,7 +118,7 @@ class AccessChecker implements AccessEntityCREDChecker
         }
 
         if ($entity->getTargetType() === Note::TARGET_PORTALS) {
-            return in_array($user->getPortalId(), $entity->getLinkMultipleIdList('portals') ?? []);
+            return in_array($user->getPortalId(), $entity->getLinkMultipleIdList('portals'));
         }
 
         return false;

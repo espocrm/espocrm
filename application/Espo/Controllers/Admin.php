@@ -83,7 +83,7 @@ class Admin
 
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @param string $data
      * @return array{
      *   id: string,
@@ -145,7 +145,7 @@ class Admin
     }
 
     /**
-     * @return array<int,array{id:string,type:string,message:string}>
+     * @return array<int, array{id: string, type: string, message: string}>
      */
     public function actionAdminNotificationList(): array
     {
@@ -154,9 +154,9 @@ class Admin
 
     /**
      * @return array{
-     *   php: array<string,array<string,mixed>>,
-     *   database: array<string,array<string,mixed>>,
-     *   permission: array<string,array<string,mixed>>,
+     *   php: array<string, array<string, mixed>>,
+     *   database: array<string, array<string, mixed>>,
+     *   permission: array<string, array<string, mixed>>,
      * }
      */
     public function actionSystemRequirementList(): array

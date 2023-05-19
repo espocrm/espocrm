@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Field;
 
+use Espo\ORM\Entity;
 use RuntimeException;
 
 /**
@@ -98,5 +99,13 @@ class LinkParent
     public static function create(string $entityType, string $id): self
     {
         return new self($entityType, $id);
+    }
+
+    /**
+     * Create from an entity.
+     */
+    public static function createFromEntity(Entity $entity): self
+    {
+        return new self($entity->getEntityType(), $entity->getId());
     }
 }

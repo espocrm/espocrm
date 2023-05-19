@@ -44,7 +44,7 @@ class ActionManager
     private $container;
 
     /**
-     * @var array<string,array<string,\Espo\Core\Upgrades\Actions\Base>>
+     * @var array<string, array<string, \Espo\Core\Upgrades\Actions\Base>>
      */
     private $objects;
 
@@ -54,14 +54,14 @@ class ActionManager
     protected $currentAction;
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     protected $params;
 
     /**
      * @param string $managerName
      * @param \Espo\Core\Container $container
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     public function __construct($managerName, $container, $params)
     {
@@ -108,7 +108,7 @@ class ActionManager
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getParams()
     {
@@ -138,7 +138,7 @@ class ActionManager
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      * @throws Error
      */
     public function getManifest()

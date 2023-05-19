@@ -50,6 +50,9 @@
         "dashletsOptions": {
             "type": "jsonObject"
         },
+        "dashboardLocked": {
+            "type": "bool"
+        },
         "importParams": {
             "type": "jsonObject"
         },
@@ -110,8 +113,7 @@
         },
         "signature": {
             "type": "wysiwyg",
-            "view": "views/preferences/fields/signature",
-            "default": ""
+            "view": "views/preferences/fields/signature"
         },
         "defaultReminders": {
             "type": "jsonArray",
@@ -182,6 +184,10 @@
             "default": false
         },
         "tabColorsDisabled": {
+            "type": "bool",
+            "default": false
+        },
+        "textSearchStoringDisabled": {
             "type": "bool",
             "default": false
         }

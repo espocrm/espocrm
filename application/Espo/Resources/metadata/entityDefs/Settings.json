@@ -30,6 +30,13 @@
             "required": true,
             "tooltip": true
         },
+        "recordsPerPageKanban": {
+            "type": "int",
+            "min": 1,
+            "max": 100,
+            "required": true,
+            "tooltip": true
+        },
         "timeZone": {
             "type": "enum",
             "default": "UTC",
@@ -190,13 +197,11 @@
         },
         "outboundEmailFromName": {
             "type": "varchar",
-            "default": "EspoCRM",
-            "trim": true
+            "default": "EspoCRM"
         },
         "outboundEmailFromAddress": {
             "type": "varchar",
             "default": "crm@example.com",
-            "trim": true,
             "tooltip": true,
             "view": "views/settings/fields/outbound-email-from-address"
         },
@@ -207,8 +212,7 @@
         },
         "smtpServer": {
             "type": "varchar",
-            "tooltip": true,
-            "trim": true
+            "tooltip": true
         },
         "smtpPort": {
             "type": "int",
@@ -280,6 +284,9 @@
             "view": "views/settings/fields/auth-two-fa-method-list"
         },
         "auth2FAForced": {
+            "type": "bool"
+        },
+        "auth2FAInPortal": {
             "type": "bool"
         },
         "passwordRecoveryDisabled": {
@@ -696,8 +703,7 @@
         },
         "outboundEmailBccAddress": {
             "type": "varchar",
-            "view": "views/fields/email-address",
-            "trim": true
+            "view": "views/fields/email-address"
         },
         "cleanupDeletedRecords": {
             "type": "bool",
@@ -757,8 +763,7 @@
             "type": "jsonObject"
         },
         "outboundSmsFromNumber": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "smsProvider": {
             "type": "enum",

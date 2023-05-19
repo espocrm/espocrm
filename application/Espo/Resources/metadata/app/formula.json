@@ -260,6 +260,10 @@
             "returnType": "mixed"
         },
         {
+            "name": "entity\\setLinkMultipleColumn",
+            "insertText": "entity\\setLinkMultipleColumn(LINK, ID, COLUMN, VALUE)"
+        },
+        {
             "name": "entity\\isRelated",
             "insertText": "entity\\isRelated(LINK, ID)",
             "returnType": "bool"
@@ -305,6 +309,11 @@
             "returnType": "string[]"
         },
         {
+            "name": "record\\fetch",
+            "insertText": "record\\fetch(ENTITY_TYPE, ID)",
+            "returnType": "?object"
+        },
+        {
             "name": "record\\relate",
             "insertText": "record\\relate(ENTITY_TYPE, ID, LINK, FOREIGN_ID)"
         },
@@ -342,6 +351,11 @@
         {
             "name": "util\\generateId",
             "insertText": "util\\generateId()",
+            "returnType": "string"
+        },
+        {
+            "name": "util\\generateRecordId",
+            "insertText": "util\\generateRecordId()",
             "returnType": "string"
         },
         {
@@ -495,6 +509,16 @@
         {
             "name": "ext\\user\\sendAccessInfo",
             "insertText": "ext\\user\\sendAccessInfo(USER_ID)"
+        },
+        {
+            "name": "ext\\email\\send",
+            "insertText": "ext\\email\\send(EMAIL_ID)",
+            "returnType": "bool"
+        },
+        {
+            "name": "ext\\currency\\convert",
+            "insertText": "ext\\currency\\convert(AMOUNT, FROM_CODE)",
+            "returnType": "string"
         }
     ]
 }

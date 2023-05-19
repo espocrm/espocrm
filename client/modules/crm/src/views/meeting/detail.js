@@ -173,17 +173,6 @@ define('crm:views/meeting/detail', ['views/detail', 'lib!moment'], function (Dep
             }
 
             if (show) {
-                let dateEnd = this.model.get('dateEnd');
-
-                if (
-                    dateEnd &&
-                    this.getDateTime().toMoment(dateEnd).isBefore(moment.now())
-                ) {
-                    show = false;
-                }
-            }
-
-            if (show) {
                 this.addMenuItem('buttons', {
                     text: this.translate('Send Invitations', 'labels', 'Meeting'),
                     action: 'sendInvitations',

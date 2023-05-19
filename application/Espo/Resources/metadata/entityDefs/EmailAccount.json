@@ -3,14 +3,12 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "emailAddress": {
             "type": "varchar",
             "required": true,
             "maxLength": 100,
-            "trim": true,
             "tooltip": true,
             "view": "views/email-account/fields/email-address"
         },
@@ -20,8 +18,7 @@
             "default": "Active"
         },
         "host": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "port": {
             "type": "int",
@@ -35,8 +32,7 @@
             "options": ["", "SSL", "TLS"]
         },
         "username": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "password": {
             "type": "password"
@@ -96,8 +92,7 @@
             "tooltip": true
         },
         "smtpHost": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "smtpPort": {
             "type": "int",
@@ -115,8 +110,7 @@
             "options": ["", "SSL", "TLS"]
         },
         "smtpUsername": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "smtpPassword": {
             "type": "password"

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/search', ['view'], function (Dep) {
+define('views/record/search', ['view', 'helpers/misc/stored-text-search'], function (Dep, StoredTextSearch) {
 
     /**
      * @class
@@ -39,29 +39,22 @@ define('views/record/search', ['view'], function (Dep) {
         template: 'record/search',
 
         scope: null,
-
+        /** @type {module:search-manager.Class} */
         searchManager: null,
-
-        fieldList: ['name'],
+        fieldFilterList: null,
+        /** @type {Object.<string, string>|null}*/
+        fieldFilterTranslations: null,
 
         textFilter: '',
-
         primary: null,
-
         presetFilterList: null,
-
         advanced: null,
-
         bool: null,
 
         disableSavePreset: false,
-
         textFilterDisabled: false,
-
         toShowApplyFiltersButton: false,
-
         toShowResetFiltersText: false,
-
         isSearchedWithAdvancedFilter: false,
 
         viewModeIconClassMap: {
@@ -69,14 +62,19 @@ define('views/record/search', ['view'], function (Dep) {
             kanban: 'fas fa-align-left fa-rotate-90',
         },
 
+        FIELD_QUICK_SEARCH_COUNT_THRESHOLD: 4,
+
+        autocompleteLimit: 7,
+
         data: function () {
-             return {
+            return {
                 scope: this.scope,
                 entityType: this.entityType,
                 textFilter: this.textFilter,
                 bool: this.bool || {},
                 boolFilterList: this.boolFilterList,
-                advancedFields: this.getAdvancedDefs(),
+                hasFieldQuickSearch: this.fieldFilterList.length >= this.FIELD_QUICK_SEARCH_COUNT_THRESHOLD,
+                filterFieldDataList: this.getFilterFieldDataList(),
                 filterDataList: this.getFilterDataList(),
                 presetName: this.presetName,
                 presetFilterList: this.getPresetFilterList(),
@@ -95,7 +93,16 @@ define('views/record/search', ['view'], function (Dep) {
             this.entityType = this.collection.name;
             this.scope = this.options.scope || this.entityType;
 
+            /** @type {module:search-manager.Class} */
             this.searchManager = this.options.searchManager;
+
+            /**
+             * @type {module:helpers/misc/stored-text-search.Class}
+             * @private
+             */
+            this.storedTextSearchHelper = new StoredTextSearch(this.scope, this.getHelper().storage);
+
+            this.textSearchStoringDisabled = this.getPreferences().get('textSearchStoringDisabled');
 
             this.textFilterDisabled = this.options.textFilterDisabled || this.textFilterDisabled ||
                 this.getMetadata().get(['clientDefs', this.scope, 'textFilterDisabled']);
@@ -108,7 +115,7 @@ define('views/record/search', ['view'], function (Dep) {
             this.viewModeList = this.options.viewModeList;
 
             this.addReadyCondition(() => {
-                return this.fieldList != null && this.moreFieldList != null;
+                return this.fieldFilterList !== null;
             });
 
             this.boolFilterList = Espo.Utils
@@ -150,21 +157,28 @@ define('views/record/search', ['view'], function (Dep) {
                     return item.name;
                 });
 
+            this.fieldFilterTranslations = {};
+
             let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType) || [];
 
-            this._helper.layoutManager.get(this.entityType, 'filters', list => {
-                this.moreFieldList = [];
+            this.wait(
+                new Promise(resolve => {
+                    this.getHelper().layoutManager.get(this.entityType, 'filters', list => {
+                        this.fieldFilterList = [];
 
-                (list || []).forEach((field) => {
-                    if (~forbiddenFieldList.indexOf(field)) {
-                        return;
-                    }
+                        (list || []).forEach(field => {
+                            if (~forbiddenFieldList.indexOf(field)) {
+                                return;
+                            }
 
-                    this.moreFieldList.push(field);
-                });
+                            this.fieldFilterList.push(field);
+                            this.fieldFilterTranslations[field] = this.translate(field, 'fields', this.entityType);
+                        });
 
-                this.tryReady();
-            });
+                        resolve();
+                    });
+                })
+            );
 
             let filterList = this.options.filterList ||
                 this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || [];
@@ -426,6 +440,22 @@ define('views/record/search', ['view'], function (Dep) {
 
                 this.setViewMode(mode, false, true);
             },
+
+            'keyup input.field-filter-quick-search-input': function (e) {
+                this.processFieldFilterQuickSearch(e.currentTarget.value);
+            },
+
+            'keydown input.field-filter-quick-search-input': function (e) {
+                if (e.code === 'Enter') {
+                    this.addFirstFieldFilter();
+
+                    return;
+                }
+
+                if (e.code === 'Escape') {
+                    this.closeAddFieldDropdown();
+                }
+            },
         },
 
         removeFilter: function (name) {
@@ -545,6 +575,8 @@ define('views/record/search', ['view'], function (Dep) {
             this.selectPreset(this.presetName, true);
 
             this.hideApplyFiltersButton();
+
+            this.trigger('update-ui');
         },
 
         savePreset: function (name) {
@@ -623,12 +655,19 @@ define('views/record/search', ['view'], function (Dep) {
         updateAddFilterButton: function () {
             let $ul = this.$el.find('ul.filter-list');
 
-            if ($ul.children().not('.hidden').not('.dropdown-header').length === 0) {
-                this.$el.find('button.add-filter-button').addClass('disabled');
+            if (
+                $ul.children()
+                    .not('.hidden')
+                    .not('.dropdown-header')
+                    .not('.quick-search-list-item').length === 0
+            ) {
+                this.$addFilterButton.addClass('disabled');
             }
             else {
-                this.$el.find('button.add-filter-button').removeClass('disabled');
+                this.$addFilterButton.removeClass('disabled');
             }
+
+            this.trigger('update-ui');
         },
 
         afterRender: function () {
@@ -638,14 +677,125 @@ define('views/record/search', ['view'], function (Dep) {
             this.$resetButton = this.$el.find('[data-action="reset"]');
             this.$applyFiltersContainer = this.$el.find('.advanced-filters-apply-container');
             this.$applyFilters = this.$applyFiltersContainer.find('[data-action="applyFilters"]');
+            /** @type {JQuery} */
+            this.$filterList = this.$el.find('ul.filter-list');
+            /** @type {JQuery} */
+            this.$fieldQuickSearch = this.$filterList.find('input.field-filter-quick-search-input');
+            /** @type {JQuery} */
+            this.$addFilterButton = this.$el.find('button.add-filter-button');
+            /** @type {JQuery} */
+            this.$textFilter = this.$el.find('input.text-filter');
 
             this.updateAddFilterButton();
 
             this.$advancedFiltersPanel = this.$el.find('.advanced-filters');
 
             this.manageLabels();
-
             this.controlResetButtonVisibility();
+            this.initQuickSearchUi();
+            this.initTextSearchAutocomplete();
+        },
+
+        initTextSearchAutocomplete: function () {
+            if (this.textSearchStoringDisabled) {
+                return;
+            }
+
+            let preventCloseOnBlur = false;
+
+            let options = {
+                minChars: 0,
+                noCache: true,
+                triggerSelectOnValidInput: false,
+                beforeRender: ($container) => {
+                    $container.addClass('text-search-suggestions');
+
+                    $container.off('mousedown');
+                    $container.on('mousedown', e => {
+                        if (e.originalEvent.button !== 0) {
+                            return;
+                        }
+
+                        preventCloseOnBlur = true;
+                        setTimeout(() => preventCloseOnBlur = false, 201);
+                    });
+
+                    $container.find('a[data-action="clearStoredTextSearch"]').on('click', e => {
+                        e.stopPropagation();
+                        e.preventDefault();
+
+                        let text = e.currentTarget.getAttribute('data-value');
+
+                        this.storedTextSearchHelper.remove(text);
+
+                        setTimeout(() => this.$textFilter.focus(), 205);
+                    });
+                },
+                formatResult: item => {
+                    return $('<span>')
+                        .append(
+                            $('<a>')
+                                .attr('data-action', 'clearStoredTextSearch')
+                                .attr('role', 'button')
+                                .attr('data-value', item.value)
+                                .attr('title', this.translate('Remove'))
+                                .html('<span class="fas fa-times fa-sm"></span>')
+                                .addClass('pull-right text-soft'),
+                            $('<span>')
+                                .text(item.value)
+                        )
+                        .get(0).innerHTML;
+                },
+                lookup: (text, done) => {
+                    let suggestions = this.storedTextSearchHelper.match(text, this.autocompleteLimit)
+                        .map(item => {
+                            return {value: item};
+                        });
+
+                    done({suggestions: suggestions});
+                },
+                onSelect: () => {
+                    this.$textFilter.focus();
+                    this.$textFilter.autocomplete('hide');
+                },
+            };
+
+            this.$textFilter.autocomplete(options);
+
+            this.$textFilter.on('blur', () => {
+                if (preventCloseOnBlur) {
+                    return;
+                }
+
+                setTimeout(() => this.$textFilter.autocomplete('hide'), 1);
+            });
+
+            this.$textFilter.on('focus', () => {
+                if (this.$textFilter.val()) {
+                    this.$textFilter.autocomplete('hide');
+                }
+            });
+
+            this.once('render', () => this.$textFilter.autocomplete('dispose'));
+            this.once('remove', () => this.$textFilter.autocomplete('dispose'));
+        },
+
+        initQuickSearchUi: function () {
+            this.$addFilterButton.parent().on('show.bs.dropdown', () => {
+                setTimeout(() => {
+                    this.$fieldQuickSearch.focus();
+
+                    let width = this.$fieldQuickSearch.outerWidth();
+
+                    this.$fieldQuickSearch.css('minWidth', width);
+                }, 1);
+            });
+
+            this.$addFilterButton.parent().on('hide.bs.dropdown', () => {
+                this.resetFieldFilterQuickSearch();
+
+                this.$fieldQuickSearch.css('minWidth', '');
+            });
         },
 
         manageLabels: function () {
@@ -788,6 +938,7 @@ define('views/record/search', ['view'], function (Dep) {
             this.updateSearch();
             this.updateCollection();
             this.controlResetButtonVisibility();
+            this.storeTextSearch();
 
             this.isSearchedWithAdvancedFilter = this.hasAdvancedFilter();
         },
@@ -996,15 +1147,16 @@ define('views/record/search', ['view'], function (Dep) {
             });
         },
 
-        getAdvancedDefs: function () {
+        getFilterFieldDataList: function () {
             let defs = [];
 
-            for (let i in this.moreFieldList) {
-                let field = this.moreFieldList[i];
+            for (let i in this.fieldFilterList) {
+                let field = this.fieldFilterList[i];
 
                 let o = {
                     name: field,
                     checked: (field in this.advanced),
+                    label: this.fieldFilterTranslations[field] || field,
                 };
 
                 defs.push(o);
@@ -1078,6 +1230,84 @@ define('views/record/search', ['view'], function (Dep) {
             let preset = list[index];
 
             this.selectPreset(preset.name);
+        },
+
+        /**
+         * @private
+         * @param {string} text
+         */
+        processFieldFilterQuickSearch: function (text) {
+            text = text.trim();
+            text = text.toLowerCase();
+
+            /** @type {JQuery} */
+            let $li = this.$filterList.find('li.filter-item');
+
+            if (text === '') {
+                $li.removeClass('search-hidden');
+
+                return;
+            }
+
+            $li.addClass('search-hidden');
+
+            this.fieldFilterList.forEach(field => {
+                let label = this.fieldFilterTranslations[field] || field;
+                label = label.toLowerCase();
+
+                let wordList = label.split(' ');
+
+                let matched = label.indexOf(text) === 0;
+
+                if (!matched) {
+                    matched = wordList
+                        .filter(word => word.length > 3 && word.indexOf(text) === 0)
+                        .length > 0;
+                }
+
+                if (matched) {
+                    $li.filter(`[data-name="${field}"]`).removeClass('search-hidden');
+                }
+            });
+        },
+
+        resetFieldFilterQuickSearch: function () {
+            this.$fieldQuickSearch.val('');
+            this.$filterList.find('li.filter-item').removeClass('search-hidden');
+        },
+
+        addFirstFieldFilter: function () {
+            let $first = this.$filterList.find('li.filter-item:not(.hidden):not(.search-hidden)').first();
+
+            if (!$first.length) {
+                return;
+            }
+
+            let name = $first.attr('data-name');
+
+            $first.addClass('hidden');
+
+            this.closeAddFieldDropdown();
+            this.addFilter(name);
+            this.resetFieldFilterQuickSearch();
+        },
+
+        closeAddFieldDropdown: function () {
+            this.$addFilterButton.parent()
+                .find('[data-toggle="dropdown"]')
+                .dropdown('toggle');
+        },
+
+        storeTextSearch: function () {
+            if (!this.textFilter) {
+                return;
+            }
+
+            if (this.textSearchStoringDisabled) {
+                return;
+            }
+
+            this.storedTextSearchHelper.store(this.textFilter);
         },
     });
 });

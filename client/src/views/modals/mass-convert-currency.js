@@ -118,8 +118,7 @@ define('views/modals/mass-convert-currency', ['views/modal', 'model', 'helpers/m
 
             let idle = hasWhere && helper.checkIsIdle(this.options.totalCount);
 
-            this
-                .ajaxPostRequest('MassAction', {
+            Espo.Ajax.postRequest('MassAction', {
                     entityType: this.options.entityType,
                     action: 'convertCurrency',
                     params: {

@@ -31,17 +31,13 @@ namespace Espo\Modules\Crm\Business\Reminder;
 
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
-
 use Espo\Core\Utils\Util;
-
-use Espo\Core\{
-    ORM\EntityManager,
-    Utils\TemplateFileManager,
-    Mail\EmailSender,
-    Utils\Config,
-    Htmlizer\HtmlizerFactory as HtmlizerFactory,
-    Utils\Language,
-};
+use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
+use Espo\Core\Mail\EmailSender;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\TemplateFileManager;
 
 class EmailReminder
 {

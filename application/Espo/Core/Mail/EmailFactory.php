@@ -37,12 +37,8 @@ use Espo\Entities\Email;
  */
 class EmailFactory
 {
-    private EntityManager $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     /**
      * Create an email instance.

@@ -29,24 +29,24 @@
 
 namespace Espo\Core\MassAction\Actions;
 
-use Espo\Entities\User;
 use Espo\Core\Acl\Table;
 use Espo\Core\Acl;
 use Espo\Core\Currency\ConfigDataProvider as CurrencyConfigDataProvider;
-use Espo\Core\Currency\Converter as CurrencyConverter;
 use Espo\Core\Currency\Rates as CurrencyRates;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Field\Currency;
 use Espo\Core\MassAction\Data;
 use Espo\Core\MassAction\MassAction;
 use Espo\Core\MassAction\Params;
 use Espo\Core\MassAction\QueryBuilder;
 use Espo\Core\MassAction\Result;
+use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\FieldUtil;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Metadata;
-use Espo\ORM\Entity;
+use Espo\Entities\User;
+use Espo\Tools\Currency\Conversion\EntityConverterFactory;
+use RuntimeException;
 
 class MassConvertCurrency implements MassAction
 {
@@ -54,10 +54,9 @@ class MassConvertCurrency implements MassAction
         private QueryBuilder $queryBuilder,
         private Acl $acl,
         private EntityManager $entityManager,
-        private FieldUtil $fieldUtil,
         private Metadata $metadata,
         private CurrencyConfigDataProvider $configDataProvider,
-        private CurrencyConverter $currencyConverter,
+        private EntityConverterFactory $converterFactory,
         private User $user
     ) {}
 
@@ -73,6 +72,8 @@ class MassConvertCurrency implements MassAction
             throw new Forbidden("No mass-update permission.");
         }
 
+        $this->checkFieldAccess($entityType);
+
         $dataRaw = $data->getRaw();
 
         if (empty($dataRaw->targetCurrency)) {
@@ -83,18 +84,10 @@ class MassConvertCurrency implements MassAction
             throw new BadRequest();
         }
 
-        $fieldList = $this->getFieldList($entityType, $data);
-
-        if (empty($fieldList)) {
-            throw new Forbidden("No fields to convert.");
-        }
-
         $baseCurrency = $this->configDataProvider->getBaseCurrency();
-
         $targetCurrency = $dataRaw->targetCurrency;
 
-        $rates =
-            $this->getRatesFromData($data) ??
+        $rates = $this->getRatesFromData($data) ??
             $this->configDataProvider->getCurrencyRates();
 
         if ($targetCurrency !== $baseCurrency && !$rates->hasRate($targetCurrency)) {
@@ -110,85 +103,37 @@ class MassConvertCurrency implements MassAction
             ->find();
 
         $ids = [];
-
         $count = 0;
+
+        $converter = $this->converterFactory->create($entityType);
 
         foreach ($collection as $entity) {
             if (!$this->acl->checkEntity($entity, Table::ACTION_EDIT)) {
                 continue;
             }
 
-            $this->convertEntity($entity, $fieldList, $targetCurrency, $rates);
+            if (!$entity instanceof CoreEntity) {
+                throw new RuntimeException("Only Core-Entity allowed.");
+            }
 
-            /** @var string $id */
-            $id = $entity->getId();
+            $converter->convert($entity, $targetCurrency, $rates);
 
-            $ids[] = $id;
+            $this->entityManager->saveEntity($entity, [SaveOption::MODIFIED_BY_ID => $this->user->getId()]);
 
+            $ids[] = $entity->getId();
             $count++;
         }
 
-        $result = [
-            'count' => $count,
-            'ids' => $ids,
-        ];
-
-        return Result::fromArray($result);
+        return new Result($count, $ids);
     }
 
-    /**
-     * @param string[] $fieldList
-     */
-    protected function convertEntity(
-        Entity $entity,
-        array $fieldList,
-        string $targetCurrency,
-        CurrencyRates $rates
-    ): void {
-
-        $entityDefs = $this->entityManager
-            ->getDefs()
-            ->getEntity($entity->getEntityType());
-
-        foreach ($fieldList as $field) {
-            $disabled = $entityDefs->getField($field)->getParam('conversionDisabled');
-
-            if ($disabled) {
-                continue;
-            }
-
-            $amount = $entity->get($field);
-            $code = $entity->get($field . 'Currency');
-
-            if ($amount === null) {
-                continue;
-            }
-
-            if ($targetCurrency === $code) {
-                continue;
-            }
-
-            $value = new Currency($amount, $code);
-
-            $convertedValue = $this->currencyConverter->convertWithRates($value, $targetCurrency, $rates);
-
-            $entity->set($field, $convertedValue->getAmount());
-            $entity->set($field . 'Currency', $convertedValue->getCode());
-        }
-
-        $this->entityManager->saveEntity($entity, [
-            'modifiedById' => $this->user->getId(),
-        ]);
-    }
-
-    protected function getRatesFromData(Data $data): ?CurrencyRates
+    private function getRatesFromData(Data $data): ?CurrencyRates
     {
         if ($data->get('rates') === null) {
             return null;
         }
 
         $baseCurrency = $this->configDataProvider->getBaseCurrency();
-
         $ratesArray = get_object_vars($data->get('rates'));
 
         $ratesArray[$baseCurrency] = 1.0;
@@ -197,30 +142,21 @@ class MassConvertCurrency implements MassAction
     }
 
     /**
-     * @return string[]
+     * @throws Forbidden
      */
-    protected function getFieldList(string $entityType, Data $data): array
+    private function checkFieldAccess(string $entityType): void
     {
-        $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($entityType, 'edit');
+        /** @var string[] $requiredFieldList */
+        $requiredFieldList = $this->metadata->get(['scopes', $entityType, 'currencyConversionAccessRequiredFieldList']);
 
-        $resultList = [];
-
-        $fieldList = $data->get('fieldList') ?? $this->fieldUtil->getEntityTypeFieldList($entityType);
-
-        foreach ($fieldList as $field) {
-            $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
-
-            if ($type !== 'currency') {
-                continue;
-            }
-
-            if (in_array($field, $forbiddenFieldList)) {
-                continue;
-            }
-
-            $resultList[] = $field;
+        if ($requiredFieldList === null) {
+            return;
         }
 
-        return $resultList;
+        foreach ($requiredFieldList as $field) {
+            if (!$this->acl->checkField($entityType, $field, Table::ACTION_EDIT)) {
+                throw new Forbidden("No edit access to field `$field`.");
+            }
+        }
     }
 }

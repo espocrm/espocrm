@@ -82,10 +82,10 @@ interface Entity
      * Set an attribute or multiple attributes.
      *
      * Two usage options:
-     * * `set(string $attribute, mixed $value)`
-     * * `set(array|stdClass $valueMap)`
+     * - `set($attribute, $value)`
+     * - `set($valueMap)`
      *
-     * @param string|stdClass|array<string,mixed> $attribute
+     * @param string|stdClass|array<string, mixed> $attribute
      * @param mixed $value
      */
     public function set($attribute, $value = null): void;

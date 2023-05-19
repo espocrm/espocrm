@@ -138,7 +138,7 @@ class ClientManager
     }
 
     /**
-     * @param array<string,mixed> $vars
+     * @param array<string, mixed> $vars
      */
     public function display(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []): void
     {
@@ -153,7 +153,7 @@ class ClientManager
     }
 
     /**
-     * @param array<string,mixed> $vars
+     * @param array<string, mixed> $vars
      */
     public function render(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []): string
     {

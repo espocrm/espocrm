@@ -35,12 +35,8 @@ use Espo\ORM\EntityManager;
 
 class DefaultDuplicateFinder implements DuplicateFinder
 {
-    private EntityManager $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     public function find(Email $email, Message $message): ?Email
     {

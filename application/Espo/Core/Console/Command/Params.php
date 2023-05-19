@@ -38,7 +38,7 @@ use Espo\Core\Utils\Util;
  */
 class Params
 {
-    /** @var array<string,string> */
+    /** @var array<string, string> */
     private $options;
     /** @var string[] */
     private $flagList;
@@ -46,7 +46,7 @@ class Params
     private $argumentList;
 
     /**
-     * @param array<string,string>|null $options
+     * @param array<string, string>|null $options
      * @param string[]|null $flagList
      * @param string[]|null $argumentList
      */
@@ -58,7 +58,7 @@ class Params
     }
 
     /**
-     * @return array<string,string>
+     * @return array<string, string>
      */
     public function getOptions(): array
     {
@@ -114,7 +114,7 @@ class Params
     }
 
     /**
-     * @param array<int,string> $args
+     * @param array<int, string> $args
      */
     public static function fromArgs(array $args): self
     {
@@ -123,17 +123,17 @@ class Params
         $flagList = [];
 
         foreach ($args as $i => $item) {
-            if (strpos($item, '--') === 0 && strpos($item, '=') > 2) {
-                list($name, $value) = explode('=', substr($item, 2));
+            if (str_starts_with($item, '--') && strpos($item, '=') > 2) {
+                [$name, $value] = explode('=', substr($item, 2));
 
                 $name = Util::hyphenToCamelCase($name);
 
                 $options[$name] = $value;
             }
-            else if (strpos($item, '--') === 0) {
+            else if (str_starts_with($item, '--')) {
                 $flagList[] = Util::hyphenToCamelCase(substr($item, 2));
             }
-            else if (strpos($item, '-') === 0) {
+            else if (str_starts_with($item, '-')) {
                 $flagList[] = substr($item, 1);
             }
             else if ($i > 0) {

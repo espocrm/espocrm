@@ -29,20 +29,16 @@
 
 namespace Espo\Core\FileStorage\Storages;
 
-use Espo\Core\{
-    Utils\Config,
-    FileStorage\Storage,
-    FileStorage\Attachment,
-};
+use Espo\Core\FileStorage\Attachment;
+use Espo\Core\FileStorage\Storage;
+use Espo\Core\Utils\Config;
 
 use Psr\Http\Message\StreamInterface;
 
 use AsyncAws\S3\S3Client;
 
-use League\Flysystem\{
-    AsyncAwsS3\AsyncAwsS3Adapter,
-    Filesystem,
-};
+use League\Flysystem\AsyncAwsS3\AsyncAwsS3Adapter;
+use League\Flysystem\Filesystem;
 
 use GuzzleHttp\Psr7\Stream;
 

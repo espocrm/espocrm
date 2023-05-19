@@ -29,23 +29,17 @@
 
 namespace Espo\Core\Job;
 
+use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
-
-use Espo\Core\Utils\DateTime as DateTimeUtil;
-
 use Espo\Entities\ScheduledJob as ScheduledJobEntity;
 use Espo\Entities\ScheduledJobLogRecord as ScheduledJobLogRecordEntity;
 
 class ScheduleUtil
 {
-    private EntityManager $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     /**
      * Get active scheduled job list.

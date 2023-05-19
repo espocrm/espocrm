@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/knowledge-base-article/fields/language', 'views/fields/enum', function (Dep) {
+define('crm:views/knowledge-base-article/fields/language', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,5 +37,4 @@ define('crm:views/knowledge-base-article/fields/language', 'views/fields/enum', 
             this.translatedOptions[''] = this.translate('Any', 'labels', 'KnowledgeBaseArticle')
         },
     });
-
 });

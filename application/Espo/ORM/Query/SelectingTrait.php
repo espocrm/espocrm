@@ -74,8 +74,13 @@ trait SelectingTrait
             return null;
         }
 
-        /** @phpstan-ignore-next-line */
-        return WhereClause::fromRaw($whereClause);
+        $where = WhereClause::fromRaw($whereClause);
+
+        if (!$where instanceof WhereClause) {
+            throw new RuntimeException();
+        }
+
+        return $where;
     }
 
     /**
@@ -129,7 +134,7 @@ trait SelectingTrait
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     private static function validateRawParamsSelecting(array $params): void
     {

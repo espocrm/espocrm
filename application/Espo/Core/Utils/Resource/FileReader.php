@@ -32,7 +32,6 @@ namespace Espo\Core\Utils\Resource;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Resource\FileReader\Params;
-
 use RuntimeException;
 
 /**
@@ -40,18 +39,11 @@ use RuntimeException;
  */
 class FileReader
 {
-    private $fileManager;
-
-    private $metadata;
-
-    private $pathProvider;
-
-    public function __construct(FileManager $fileManager, Metadata $metadata, PathProvider $pathProvider)
-    {
-        $this->fileManager = $fileManager;
-        $this->metadata = $metadata;
-        $this->pathProvider = $pathProvider;
-    }
+    public function __construct(
+        private FileManager $fileManager,
+        private Metadata $metadata,
+        private PathProvider $pathProvider
+    ) {}
 
     /**
      * Read a resource file. Returns NULL if the file does not exists.

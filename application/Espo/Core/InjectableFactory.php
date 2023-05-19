@@ -29,12 +29,13 @@
 
 namespace Espo\Core;
 
+use Psr\Container\NotFoundExceptionInterface;
+
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\Binding;
 use Espo\Core\Binding\Factory;
 use Espo\Core\Interfaces\Injectable;
 
-use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
 use ReflectionParameter;
 use ReflectionFunction;
@@ -52,14 +53,10 @@ use Closure;
  */
 class InjectableFactory
 {
-    private Container $container;
-    private ?BindingContainer $bindingContainer;
-
-    public function __construct(Container $container, ?BindingContainer $bindingContainer = null)
-    {
-        $this->container = $container;
-        $this->bindingContainer = $bindingContainer;
-    }
+    public function __construct(
+        private Container $container,
+        private ?BindingContainer $bindingContainer = null
+    ) {}
 
     /**
      * Create an instance by a class name.
@@ -188,7 +185,7 @@ class InjectableFactory
 
     /**
      * @param ReflectionClass<object> $class
-     * @param ?array<string,mixed> $with
+     * @param ?array<string, mixed> $with
      * @return mixed[]
      */
     private function getConstructorInjectionList(
@@ -216,7 +213,7 @@ class InjectableFactory
 
     /**
      * @param ?ReflectionClass<object> $class
-     * @param ?array<string,mixed> $with
+     * @param ?array<string, mixed> $with
      * @return mixed
      */
     private function getMethodParamInjection(
@@ -468,7 +465,7 @@ class InjectableFactory
      *
      * @template T of object
      * @param class-string<T> $className
-     * @param ?array<string,mixed> $with
+     * @param ?array<string, mixed> $with
      * @return T
      */
     public function createByClassName(string $className, ?array $with = null): object

@@ -39,23 +39,14 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
     return Dep.extend(/** @lends module:views/modals/edit.Class# */{
 
         cssName: 'edit-modal',
-
         template: 'modals/edit',
-
         saveDisabled: false,
-
         fullFormDisabled: false,
-
         editView: null,
-
         escapeDisabled: true,
-
         fitHeight: true,
-
         className: 'dialog dialog-record',
-
         sideDisabled: false,
-
         bottomDisabled: false,
 
         shortcutKeys: {
@@ -149,9 +140,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
             });
 
             this.scope = this.scope || this.options.scope;
-
             this.entityType = this.options.entityType || this.scope;
-
             this.id = this.options.id;
 
             this.headerHtml = this.composeHeaderHtml();
@@ -194,9 +183,12 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
             });
         },
 
+        /**
+         * @param {module:model.Class} model
+         * @param {function} [callback]
+         */
         createRecordView: function (model, callback) {
-            var viewName =
-                this.editViewName ||
+            let viewName =
                 this.editView ||
                 this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editSmall']) ||
                 this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editQuick']) ||
@@ -211,7 +203,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                 sideDisabled: this.sideDisabled,
                 bottomDisabled: this.bottomDisabled,
                 focusForCreate: this.options.focusForCreate,
-                exit: function () {},
+                exit: () => {},
             };
 
             this.handleRecordViewOptions(options);
@@ -219,6 +211,17 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
             this.createView('edit', viewName, options, callback)
                 .then(view => {
                     this.listenTo(view, 'before:save', () => this.trigger('before:save', model));
+
+                    if (this.options.relate && ('link' in this.options.relate)) {
+                        let link = this.options.relate.link;
+
+                        if (
+                            model.hasField(link) &&
+                            ['link'].includes(model.getFieldType(link))
+                        ) {
+                            view.setFieldReadOnly(link);
+                        }
+                    }
                 });
         },
 
@@ -252,7 +255,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                     .get(0).outerHTML;
             }
             else {
-                let text = this.getLanguage().translate('Edit') + ': ' +
+                let text = this.getLanguage().translate('Edit') + ' · ' +
                     this.getLanguage().translate(this.scope, 'scopeNames');
 
                 html = $('<span>')
@@ -304,6 +307,16 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
 
                     if (!data.bypassClose) {
                         this.dialog.close();
+
+                        if (wasNew) {
+                            let url = '#' + this.scope + '/view/' + model.id;
+                            let name = model.get('name');
+
+                            let msg = this.translate('Created')  + '\n' +
+                                `[${name}](${url})`;
+
+                            Espo.Ui.notify(msg, 'success', 4000, true);
+                        }
 
                         return;
                     }

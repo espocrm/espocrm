@@ -1,28 +1,31 @@
 [
     {
-        "label": "General",
         "rows": [
             [{"name": "name"}, {"name": "isActive"}],
             [{"name": "url"}, {"name": "isDefault"}],
             [{"name": "portalRoles"}, {"name": "customId"}],
             [{"name": "authenticationProvider"}, {"name": "customUrl"}]
-        ]
+        ],
+        "tabBreak": true,
+        "tabLabel": "$label:General"
     },
     {
-        "label": "Settings",
         "rows": [
             [{"name": "dateFormat"}, {"name": "timeZone"}],
             [{"name": "timeFormat"}, {"name": "weekStart"}],
             [{"name": "defaultCurrency"}, {"name": "language"}]
-        ]
+        ],
+        "tabBreak": true,
+        "tabLabel": "$label:Settings"
     },
     {
-        "label": "User Interface",
         "rows": [
             [{"name": "companyLogo"}, {"name": "theme"}],
             [{"name": "layoutSet"}, false],
             [{"name": "tabList"}, {"name": "quickCreateList"}],
             [{"name": "dashboardLayout", "fullWidth": true}]
-        ]
+        ],
+        "tabBreak": true,
+        "tabLabel": "$label:User Interface"
     }
 ]

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', function (Dep) {
+define('crm:views/mass-email/fields/smtp-account', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
@@ -102,7 +102,7 @@ define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', function
                 this.getAcl().checkScope('MassEmail', 'edit')
             ) {
 
-                this.ajaxGetRequest(this.dataUrl).then(dataList => {
+                Espo.Ajax.getRequest(this.dataUrl).then(dataList => {
                     if (!dataList.length) {
                         return;
                     }

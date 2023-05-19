@@ -1,5 +1,7 @@
 {{#if isNotEmpty}}
 {{#if style}}
-<span class="{{class}}-{{style}}"
->{{/if}}{{translateOption value scope=scope field=name translatedOptions=translatedOptions}}{{#if style}}</span>{{/if}}
+<span
+    class="{{class}}-{{style}}"
+    title="{{valueTranslated}}"
+>{{/if}}{{valueTranslated}}{{#if style}}</span>{{/if}}
 {{/if}}

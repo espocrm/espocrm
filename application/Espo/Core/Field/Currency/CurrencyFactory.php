@@ -38,7 +38,7 @@ class CurrencyFactory implements ValueFactory
 {
     public function isCreatableFromEntity(Entity $entity, string $field): bool
     {
-        return $entity->has($field) && $entity->has($field . 'Currency');
+        return $entity->get($field) !== null && $entity->get($field . 'Currency') !== null;
     }
 
     public function createFromEntity(Entity $entity, string $field): Currency

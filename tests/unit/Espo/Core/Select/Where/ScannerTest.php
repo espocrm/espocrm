@@ -29,14 +29,12 @@
 
 namespace tests\unit\Espo\Core\Select\Where;
 
-use Espo\{
-    Core\Select\Where\Scanner,
-    Core\Select\Where\Item,
-    ORM\EntityManager,
-    ORM\BaseEntity as Entity,
-    ORM\Query\Select as Query,
-    ORM\Query\SelectBuilder as QueryBuilder,
-};
+use Espo\Core\Select\Where\Item;
+use Espo\Core\Select\Where\Scanner;
+use Espo\ORM\BaseEntity as Entity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Select as Query;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class ScannerTest extends \PHPUnit\Framework\TestCase
 {

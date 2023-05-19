@@ -29,10 +29,13 @@
 
 namespace Espo\Core\Api;
 
+use Espo\Core\Utils\Config;
 use stdClass;
 
 class Util
 {
+    public function __construct(private Config $config) {}
+
     public static function cloneObject(stdClass $source): stdClass
     {
         $cloned = (object) [];
@@ -69,5 +72,12 @@ class Util
         }
 
         return $item;
+    }
+
+    public function obtainIpFromRequest(Request $request): ?string
+    {
+        $param = $this->config->get('ipAddressServerParam') ?? 'REMOTE_ADDR';
+
+        return $request->getServerParam($param);
     }
 }

@@ -34,10 +34,26 @@ define('views/fields/range-float', ['views/fields/range-int', 'views/fields/floa
 
         validations: ['required', 'float', 'range', 'order'],
 
+        decimalPlacesRawValue: 10,
+
+        setupAutoNumericOptions: function () {
+            this.autoNumericOptions = {
+                digitGroupSeparator: this.thousandSeparator || '',
+                decimalCharacter: this.decimalMark,
+                modifyValueOnWheel: false,
+                selectOnFocus: false,
+                decimalPlaces: this.decimalPlacesRawValue,
+                decimalPlacesRawValue: this.decimalPlacesRawValue,
+                allowDecimalPadding: false,
+                showWarnings: false,
+                formulaMode: true,
+            };
+        },
+
         validateFloat: function () {
-            var validate = (name) => {
+            let validate = (name) => {
                 if (isNaN(this.model.get(name))) {
-                    var msg = this.translate('fieldShouldBeFloat', 'messages')
+                    let msg = this.translate('fieldShouldBeFloat', 'messages')
                         .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg, '[data-name="'+name+'"]');
@@ -46,7 +62,7 @@ define('views/fields/range-float', ['views/fields/range-int', 'views/fields/floa
                 }
             };
 
-            var result = false;
+            let result = false;
 
             result = validate(this.fromField) || result;
             result = validate(this.toField) || result;
@@ -59,15 +75,7 @@ define('views/fields/range-float', ['views/fields/range-int', 'views/fields/floa
         },
 
         formatNumber: function (value) {
-            return Float.prototype.formatNumber.call(this, value);
-        },
-
-        formatNumberDetail: function (value) {
             return Float.prototype.formatNumberDetail.call(this, value);
-        },
-
-        formatNumberEdit: function (value) {
-            return Float.prototype.formatNumberEdit.call(this, value);
         },
     });
 });

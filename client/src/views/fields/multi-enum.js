@@ -58,6 +58,8 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
          */
         restoreOnBackspace: false,
 
+        validationElementSelector: '.selectize-control',
+
         events: {},
 
         /**

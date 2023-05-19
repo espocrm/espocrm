@@ -29,20 +29,14 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\{
-    Container\Loader,
-    Utils\Config,
-    Utils\NumberUtil as NumberUtilService,
-};
+use Espo\Core\Container\Loader;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\NumberUtil as NumberUtilService;
 
 class NumberUtil implements Loader
 {
-    private $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private Config $config)
+    {}
 
     public function load(): NumberUtilService
     {

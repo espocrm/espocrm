@@ -29,13 +29,17 @@
 
 namespace Espo\Classes\FieldValidators\Email;
 
+use Espo\Entities\Email;
 use Espo\ORM\Entity;
 
 class EmailAddresses
 {
+    /**
+     * @param Email $entity
+     */
     public function checkRequired(Entity $entity, string $field): bool
     {
-        if ($entity->get('status') === 'Draft') {
+        if ($entity->getStatus() === Email::STATUS_DRAFT) {
             return true;
         }
 

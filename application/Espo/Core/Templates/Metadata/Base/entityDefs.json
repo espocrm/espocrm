@@ -3,7 +3,6 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "description": {
@@ -29,7 +28,7 @@
         },
         "assignedUser": {
             "type": "link",
-            "required": true,
+            "required": false,
             "view": "views/fields/assigned-user"
         },
         "teams": {
@@ -67,6 +66,13 @@
         },
         "assignedUser": {
             "columns": ["assignedUserId", "deleted"]
+        },
+        "createdAt": {
+            "columns": ["createdAt"]
+        },
+        "createdAtId": {
+            "unique": true,
+            "columns": ["createdAt", "id"]
         }
     }
 }

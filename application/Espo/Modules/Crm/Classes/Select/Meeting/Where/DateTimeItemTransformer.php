@@ -29,10 +29,8 @@
 
 namespace Espo\Modules\Crm\Classes\Select\Meeting\Where;
 
-use Espo\Core\{
-    Select\Where\DateTimeItemTransformer as DateTimeItemTransformerOriginal,
-    Select\Where\Item,
-};
+use Espo\Core\Select\Where\DateTimeItemTransformer as DateTimeItemTransformerOriginal;
+use Espo\Core\Select\Where\Item;
 
 /**
  * Extends to take into account DateStartDate and DateEndDate fields.
@@ -45,27 +43,27 @@ class DateTimeItemTransformer extends DateTimeItemTransformerOriginal
         $value = $item->getValue();
         $attribute = $item->getAttribute();
 
-        $tranformedItem = parent::transform($item);
+        $transformedItem = parent::transform($item);
 
         if (!in_array($attribute, ['dateStart', 'dateEnd'])) {
-            return $tranformedItem;
+            return $transformedItem;
         }
 
         if (in_array($type, ['isNull', 'ever', 'isNotNull'])) {
-            return $tranformedItem;
+            return $transformedItem;
         }
 
         $attributeDate = $attribute . 'Date';
 
         if (is_string($value)) {
             if (strlen($value) > 11) {
-                return $tranformedItem;
+                return $transformedItem;
             }
         }
         else if (is_array($value)) {
             foreach ($value as $valueItem) {
                 if (is_string($valueItem) && strlen($valueItem) > 11) {
-                    return $tranformedItem;
+                    return $transformedItem;
                 }
             }
         }
@@ -83,7 +81,7 @@ class DateTimeItemTransformer extends DateTimeItemTransformerOriginal
                 [
                     'type' => 'and',
                     'value' => [
-                        $tranformedItem->getRaw(),
+                        $transformedItem->getRaw(),
                         [
                             'type' => 'isNull',
                             'attribute' => $attributeDate,

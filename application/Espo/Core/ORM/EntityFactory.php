@@ -45,18 +45,14 @@ use RuntimeException;
 
 class EntityFactory implements EntityFactoryInterface
 {
-    private ClassFinder $classFinder;
-    private Helper $helper;
-    private InjectableFactory $injectableFactory;
     private ?EntityManager $entityManager = null;
     private ?ValueAccessorFactory $valueAccessorFactory = null;
 
-    public function __construct(ClassFinder $classFinder, Helper $helper, InjectableFactory $injectableFactory)
-    {
-        $this->classFinder = $classFinder;
-        $this->helper = $helper;
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(
+        private ClassFinder $classFinder,
+        private Helper $helper,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     /**
      * @return ?class-string<Entity>

@@ -29,13 +29,11 @@
 
 namespace Espo\Classes\Select\EmailFilter\AccessControlFilters;
 
-use Espo\{
-    Core\Select\AccessControl\Filter,
-    Entities\EmailAccount,
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\EntityManager,
-    Entities\User,
-};
+use Espo\Core\Select\AccessControl\Filter;
+use Espo\Entities\EmailAccount;
+use Espo\Entities\User;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class OnlyOwn implements Filter
 {

@@ -32,7 +32,6 @@ namespace Espo\Tools\Pdf\Dompdf;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Espo\Core\Utils\Config;
-use Espo\ORM\Entity;
 use Espo\Tools\Pdf\Template;
 
 class DompdfInitializer
@@ -43,7 +42,7 @@ class DompdfInitializer
         private Config $config
     ) {}
 
-    public function initialize(Template $template, ?Entity $entity = null): Dompdf
+    public function initialize(Template $template): Dompdf
     {
         $options = new Options();
 
@@ -52,7 +51,7 @@ class DompdfInitializer
         $pdf = new Dompdf($options);
 
         $size = $template->getPageFormat() === Template::PAGE_FORMAT_CUSTOM ?
-            [$template->getPageWidth(), $template->getPageHeight()] :
+            [0.0, 0.0, $template->getPageWidth(), $template->getPageHeight()] :
             $template->getPageFormat();
 
         $orientation = $template->getPageOrientation() === Template::PAGE_ORIENTATION_PORTRAIT ?

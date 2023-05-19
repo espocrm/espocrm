@@ -10,7 +10,13 @@ It's a web application with a frontend designed as a single page application and
 backend written in PHP.
 
 [Download](https://www.espocrm.com/download/) the latest release from our website. Release notes
-and release packages are available at Releases on GitHub.
+and release packages are available at [Releases](https://github.com/espocrm/espocrm/releases) on GitHub.
+
+![Screenshot](https://user-images.githubusercontent.com/1006792/226094559-995dfd2a-a18f-4619-a21b-79a4e671990a.png)
+
+### Demo
+
+You can try the CRM on the online [demo](https://www.espocrm.com/demo/).
 
 ### Requirements
 
@@ -21,35 +27,46 @@ For more information about server configuration see [this article](https://docs.
 
 ### Documentation
 
-The documentation for administrators, users and developers is available [here](https://docs.espocrm.com).
+See the [documentation](https://docs.espocrm.com) for administrators, users and developers.
 
 ### Bug reporting
 
-Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our [forum](https://forum.espocrm.com/forum/bug-reports).
-We'd appreciate if you prefer posting issues on weekdays rather than weekends.
+Create a [GitHub issue](https://github.com/espocrm/espocrm/issues/new/choose) or post on our [forum](https://forum.espocrm.com/forum/bug-reports).
 
-### Installing the stable version
+### Installing stable version
 
-See the [instructions](https://docs.espocrm.com/administration/installation/) about installation.
+See installation instructions:
+
+* [Manual installation](https://docs.espocrm.com/administration/installation/) 
+* [Installation by script](https://docs.espocrm.com/administration/installation-by-script/)
+* [Installation with Docker](https://docs.espocrm.com/administration/docker/installation/)
+* [Installation with Traefik](https://docs.espocrm.com/administration/docker/traefik/)
 
 ### Development
 
-* [Getting started](https://docs.espocrm.com/development/how-to-start)
-* [Running tests](https://docs.espocrm.com/development/tests)
-* [Making translation](https://docs.espocrm.com/development/translation)
+See the [developer documentation](https://docs.espocrm.com/development/).
+
+We highly recommend using IDE for development. The backend codebase follows SOLID principles, utilizes interfaces, static typing and generics. We recommend to start learning EspoCRM from the Dependency Injection article in the documentation.
 
 ### Contributing
 
-Before we can merge your pull request you need to accept our CLA [here](https://github.com/espocrm/cla). It's very simple to do.
-
-Contribute translations to [POEditor](https://poeditor.com/join/project/gLDKZtUF4i). Changes
-are usually merged to the GitHub repository before minor releases.
+Before we can merge your pull request, you need to accept our CLA [here](https://github.com/espocrm/cla). It's very simple to do.
 
 Branches:
 
-* *fix* – upcoming maintenance release; fixes should be pushed to this branch;
+* *fix* – upcoming maintenance release; minor fixes should be pushed to this branch;
 * *master* – develop branch; new features should be pushed to this branch;
 * *stable* – last stable release.
+
+### Language
+
+If you want to improve existing translation or add a language that is not available yet, you can contribute on our [POEditor](https://poeditor.com/join/project/gLDKZtUF4i) project. See instructions [here](https://www.espocrm.com/blog/how-to-use-poeditor-to-translate-espocrm/).
+
+Changes on POEditor are usually merged to the GitHub repository before minor releases.
+
+### Community & Support
+
+If you have a question regarding some features, need help or customizations, want to get in touch with other EspoCRM users, or add a feature request, please use our [community forum](https://forum.espocrm.com/). We believe that using a forum to ask for help and share experience allows everyone in the community to contribute and use this knowledge later.
 
 ### License
 

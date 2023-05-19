@@ -69,7 +69,7 @@ define('views/admin/label-manager/edit', ['view'], function (Dep) {
 
             this.wait(true);
 
-            this.ajaxPostRequest('LabelManager/action/getScopeData', {
+            Espo.Ajax.postRequest('LabelManager/action/getScopeData', {
                 scope: this.scope,
                 language: this.language,
             }).then(data => {
@@ -131,7 +131,7 @@ define('views/admin/label-manager/edit', ['view'], function (Dep) {
 
             Espo.Ui.notify(this.translate('saving', 'messages'));
 
-            this.ajaxPostRequest('LabelManager/action/saveLabels', {
+            Espo.Ajax.postRequest('LabelManager/action/saveLabels', {
                 scope: this.scope,
                 language: this.language,
                 labels: data,

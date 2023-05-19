@@ -106,17 +106,22 @@
                 </button>
                 <ul class="dropdown-menu pull-right filter-list">
                     <li class="dropdown-header">{{translate 'Add Field'}}</li>
-                    {{#each advancedFields}}
+                    {{#if hasFieldQuickSearch}}
+                    <li class="quick-search-list-item">
+                        <input class="form-control field-filter-quick-search-input">
+                    </li>
+                    {{/if}}
+                    {{#each filterFieldDataList}}
                         <li
                             data-name="{{name}}"
-                            class="{{#if checked}}hidden{{/if}}"
+                            class="filter-item {{#if checked}} hidden{{/if}}"
                         ><a
                             role="button"
                             tabindex="0"
                             class="add-filter"
                             data-action="addFilter"
                             data-name="{{name}}"
-                        >{{translate name scope=../entityType category='fields'}}</a></li>
+                        >{{label}}</a></li>
                     {{/each}}
                 </ul>
             </div>

@@ -63,9 +63,11 @@ class Meeting extends Entity
         return $this->getValueObject('dateStart');
     }
 
-    public function setDateStart(?DateTimeOptional $dateStart): void
+    public function setDateStart(?DateTimeOptional $dateStart): self
     {
         $this->setValueObject('dateStart', $dateStart);
+
+        return $this;
     }
 
     public function getDateEnd(): ?DateTimeOptional
@@ -74,9 +76,18 @@ class Meeting extends Entity
         return $this->getValueObject('dateEnd');
     }
 
-    public function setDateEnd(?DateTimeOptional $dateEnd): void
+    public function setDateEnd(?DateTimeOptional $dateEnd): self
     {
         $this->setValueObject('dateEnd', $dateEnd);
+
+        return $this;
+    }
+
+    public function setAssignedUserId(?string $assignedUserId): self
+    {
+        $this->set('assignedUserId', $assignedUserId);
+
+        return $this;
     }
 
     public function getCreatedBy(): ?Link

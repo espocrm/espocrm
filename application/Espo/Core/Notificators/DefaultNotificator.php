@@ -30,15 +30,11 @@
 namespace Espo\Core\Notificators;
 
 use Espo\ORM\Entity;
-
 use Espo\Entities\User;
-
 use Espo\Core\Notification\AssignmentNotificator\Params;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    Notification\DefaultAssignmentNotificator
-};
+use Espo\Core\Notification\DefaultAssignmentNotificator;
+use Espo\Core\ORM\EntityManager;
 
 /**
  * @deprecated As of v7.0. Use plain classes that implement `Espo\Core\Notification\AssignmentNotificator`.

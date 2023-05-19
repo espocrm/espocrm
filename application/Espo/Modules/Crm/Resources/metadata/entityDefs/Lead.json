@@ -15,15 +15,11 @@
         },
         "firstName": {
             "type": "varchar",
-            "maxLength": 100,
-            "default":"",
-            "trim": true
+            "maxLength": 100
         },
         "lastName": {
             "type": "varchar",
-            "maxLength": 100,
-            "default":"",
-            "trim": true
+            "maxLength": 100
         },
         "title": {
             "type": "varchar",
@@ -46,7 +42,8 @@
                     "view": "views/admin/field-manager/fields/not-actual-options"
                 }
             ],
-            "notActualOptions": ["Converted", "Recycled", "Dead"]
+            "notActualOptions": ["Converted", "Recycled", "Dead"],
+            "customizationOptionsReferenceDisabled": true
         },
         "source": {
             "type": "enum",
@@ -60,15 +57,14 @@
                 "Web Site",
                 "Campaign",
                 "Other"
-            ]
+            ],
+            "customizationOptionsReferenceDisabled": true
         },
         "industry": {
             "type": "enum",
             "view": "crm:views/lead/fields/industry",
             "customizationOptionsDisabled": true,
-            "optionsPath": "entityDefs.Account.fields.industry.options",
-            "translation": "Account.options.industry",
-            "default": "",
+            "optionsReference": "Account.industry",
             "isSorted": true
         },
         "opportunityAmount": {
@@ -95,20 +91,16 @@
             "dbType": "varchar"
         },
         "addressCity": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "addressState": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "addressCountry": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "addressPostalCode": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "emailAddress": {
             "type": "email",

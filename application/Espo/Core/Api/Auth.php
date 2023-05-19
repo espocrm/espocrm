@@ -30,7 +30,6 @@
 namespace Espo\Core\Api;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\HasBody;
 use Espo\Core\Exceptions\ServiceUnavailable;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Authentication\ConfigDataProvider;
@@ -70,7 +69,7 @@ class Auth
         $authenticationMethod = $this->obtainAuthenticationMethodFromRequest($request);
 
         if (!$authenticationMethod) {
-            list($username, $password) = $this->obtainUsernamePasswordFromRequest($request);
+            [$username, $password] = $this->obtainUsernamePasswordFromRequest($request);
         }
 
         $authenticationData = AuthenticationData::create()
@@ -184,7 +183,7 @@ class Auth
     }
 
     /**
-     * @return array{string,string}
+     * @return array{string, string}
      * @throws BadRequest
      */
     private function decodeAuthorizationString(string $string): array
@@ -196,11 +195,11 @@ class Auth
             throw new BadRequest("Auth: Bad authorization string provided.");
         }
 
-        /** @var array{string,string} */
+        /** @var array{string, string} */
         return explode(':', $stringDecoded, 2);
     }
 
-    protected function handleSecondStepRequired(Response $response, Result $result): void
+    private function handleSecondStepRequired(Response $response, Result $result): void
     {
         $response->setStatus(401);
         $response->setHeader('X-Status-Reason', 'second-step-required');
@@ -219,7 +218,7 @@ class Auth
     /**
      * @throws Exception
      */
-    protected function handleException(Response $response, Exception $e): void
+    private function handleException(Response $response, Exception $e): void
     {
         if (
             $e instanceof BadRequest ||
@@ -291,13 +290,13 @@ class Auth
     }
 
     /**
-     * @return array{?string,?string}
+     * @return array{?string, ?string}
      * @throws BadRequest
      */
     private function obtainUsernamePasswordFromRequest(Request $request): array
     {
         if ($request->hasHeader(self::HEADER_ESPO_AUTHORIZATION)) {
-            list($username, $password) = $this->decodeAuthorizationString(
+            [$username, $password] = $this->decodeAuthorizationString(
                 $request->getHeader(self::HEADER_ESPO_AUTHORIZATION) ?? ''
             );
 
@@ -318,7 +317,7 @@ class Auth
             $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
 
         if ($cgiAuthString) {
-            list($username, $password) = $this->decodeAuthorizationString(substr($cgiAuthString, 6));
+            [$username, $password] = $this->decodeAuthorizationString(substr($cgiAuthString, 6));
 
             return [$username, $password];
         }

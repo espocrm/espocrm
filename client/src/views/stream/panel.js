@@ -578,6 +578,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 this.prepareNoteForPost(model);
 
                 this.notify('Posting...');
+                Espo.Ui.notify(this.translate('posting', 'messages'));
 
                 model.save(null)
                     .then(() => {

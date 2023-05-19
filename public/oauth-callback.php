@@ -29,11 +29,9 @@
 
 include "../bootstrap.php";
 
-use Espo\Core\{
-    Application,
-    ApplicationRunners\EntryPoint,
-    Application\Runner\Params,
-};
+use Espo\Core\Application;
+use Espo\Core\Application\Runner\Params;
+use Espo\Core\ApplicationRunners\EntryPoint;
 
 $app = new Application();
 

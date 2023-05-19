@@ -254,6 +254,12 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
         checkboxesDisabled: false,
 
         /**
+         * Force displaying the top bar even if empty. Can be overridden by an option parameter.
+         * @protected
+         */
+        forceDisplayTopBar: false,
+
+        /**
          * Where to display the pagination. Can be overridden by an option parameter.
          *
          * @protected
@@ -936,12 +942,15 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 }
             }
 
+            let displayTotalCount = this.displayTotalCount && this.collection.total > 0;
+
             let topBar =
                 paginationTop ||
                 this.checkboxes ||
                 (this.buttonList.length && !this.buttonsDisabled) ||
                 (this.dropdownItemList.length && !this.buttonsDisabled) ||
-                this.forceDisplayTopBar;
+                this.forceDisplayTopBar ||
+                displayTotalCount;
 
             return {
                 scope: this.scope,
@@ -963,7 +972,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 checkAllResultDisabled: checkAllResultDisabled,
                 buttonList: this.buttonList,
                 dropdownItemList: this.dropdownItemList,
-                displayTotalCount: this.displayTotalCount && this.collection.total > 0,
+                displayTotalCount: displayTotalCount,
                 displayActionsButtonGroup: this.checkboxes ||
                     this.massActionList || this.buttonList.length || this.dropdownItemList.length,
                 totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
@@ -1381,7 +1390,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 message: this.translate('removeSelectedRecordsConfirmation', 'messages', this.scope),
                 confirmText: this.translate('Remove'),
             }, () => {
-                Espo.Ui.notify(this.translate('Removing...'));
+                Espo.Ui.notify(' ... ');
 
                 let helper = new MassActionHelper(this);
                 let params = this.getMassActionSelectionPostData();
@@ -1487,7 +1496,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
             this.createView('pdfTemplate', 'views/modals/select-template', {
                 entityType: this.entityType,
-            }, (view) => {
+            }, view => {
                 view.render();
 
                 this.listenToOnce(view, 'select', (templateModel) => {
@@ -1495,20 +1504,19 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
                     Espo.Ui.notify(' ... ');
 
-                    this.ajaxPostRequest(
-                            'Pdf/action/massPrint',
-                            {
-                                idList: idList,
-                                entityType: this.entityType,
-                                templateId: templateModel.id,
-                            },
-                            {timeout: 0}
-                        )
-                        .then((result) => {
-                            Espo.Ui.notify(false);
+                    Espo.Ajax.postRequest(
+                        'Pdf/action/massPrint',
+                        {
+                            idList: idList,
+                            entityType: this.entityType,
+                            templateId: templateModel.id,
+                        },
+                        {timeout: 0}
+                    ).then(result => {
+                        Espo.Ui.notify(false);
 
-                            window.open('?entryPoint=download&id=' + result.id, '_blank');
-                        });
+                        window.open('?entryPoint=download&id=' + result.id, '_blank');
+                    });
                 });
             });
         },
@@ -2341,14 +2349,14 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
 
                 let field = item.name;
 
-                let fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
+                let fieldType = this.getMetadata().get(['entityDefs', this.entityType, 'fields', field, 'type']);
 
                 if (!fieldType) {
                     return;
                 }
 
                 this.getFieldManager()
-                    .getEntityTypeFieldAttributeList(this.scope, field)
+                    .getEntityTypeFieldAttributeList(this.entityType, field)
                     .forEach((attribute) => {
                         list.push(attribute);
                     });
@@ -2733,7 +2741,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                     el: this.options.el + ' .list-row[data-id="'+key+'"]',
                     optionsToPass: ['acl'],
                     noCache: true,
-                    _layout: {
+                    layoutDefs: {
                         type: this._internalLayoutType,
                         layout: internalLayout
                     },
@@ -3147,7 +3155,7 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 this.collection.trigger('model-removing', id);
                 this.collection.remove(model);
 
-                this.notify('Removing...');
+                Espo.Ui.notify(' ... ');
 
                 model
                     .destroy({wait: true, fromList: true})
@@ -3181,8 +3189,6 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
                 this.checkedList.splice(index, 1);
             }
 
-            this.removeRowHtml(id);
-
             let key = id;
 
             this.clearView(key);
@@ -3192,6 +3198,8 @@ function (Dep, MassActionHelper, ExportHelper, RecordModal) {
             if (~index) {
                 this.rowList.splice(index, 1);
             }
+
+            this.removeRowHtml(id);
         },
 
         /**

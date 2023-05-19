@@ -31,28 +31,16 @@ namespace Espo\Core\Field\Address;
 
 use RuntimeException;
 
-use Espo\Core\{
-    InjectableFactory,
-    Utils\Config,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
 
 class AddressFormatterFactory
 {
-    private AddressFormatterMetadataProvider $metadataProvider;
-
-    private InjectableFactory $injectableFactory;
-
-    private Config $config;
-
     public function __construct(
-        AddressFormatterMetadataProvider $metadataProvider,
-        InjectableFactory $injectableFactory,
-        Config $config
-    ) {
-        $this->metadataProvider = $metadataProvider;
-        $this->injectableFactory = $injectableFactory;
-        $this->config = $config;
-    }
+        private AddressFormatterMetadataProvider $metadataProvider,
+        private InjectableFactory $injectableFactory,
+        private Config $config
+    ) {}
 
     public function create(int $format): AddressFormatter
     {

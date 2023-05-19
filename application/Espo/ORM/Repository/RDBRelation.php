@@ -351,7 +351,7 @@ class RDBRelation
      * Usage example:
      * `->columnsWhere(['column' => $value])`
      *
-     * @param WhereItem|array<mixed,mixed> $clause Where clause.
+     * @param WhereItem|array<string|int, mixed> $clause Where clause.
      */
     public function columnsWhere($clause): Builder
     {
@@ -436,8 +436,8 @@ class RDBRelation
     /**
      * Relate with an entity by ID.
      *
-     * @param array<string,mixed>|null $columnData Role values.
-     * @param array<string,mixed> $options
+     * @param array<string, mixed>|null $columnData Role values.
+     * @param array<string, mixed> $options
      */
     public function relateById(string $id, ?array $columnData = null, array $options = []): void
     {
@@ -487,7 +487,7 @@ class RDBRelation
     /**
      * Update relationship columns by ID. For many-to-many relationships.
      *
-     * @param array<string,mixed> $columnData Role values.
+     * @param array<string, mixed> $columnData Role values.
      */
     public function updateColumnsById(string $id, array $columnData): void
     {
@@ -602,6 +602,18 @@ class RDBRelation
         }
 
         $id = $entity->getId();
+
+        return $this->getMapper()->getRelationColumn($this->entity, $this->relationName, $id, $column);
+    }
+
+    /**
+     * Get a relationship column value by a foreign record ID. For many-to-many relationships.
+     */
+    public function getColumnById(string $id, string $column): string|int|float|bool|null
+    {
+        if ($this->relationType !== Entity::MANY_MANY) {
+            throw new RuntimeException("Can't get a column of not many-to-many relation.");
+        }
 
         return $this->getMapper()->getRelationColumn($this->entity, $this->relationName, $id, $column);
     }

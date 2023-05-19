@@ -336,7 +336,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                 url += '&entityId=' + this.model.id;
             }
 
-            this.ajaxGetRequest(url).then(data => {
+            Espo.Ajax.getRequest(url).then(data => {
                 this.fetchedStart = from.clone();
                 this.fetchedEnd = to.clone();
 

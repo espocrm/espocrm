@@ -54,7 +54,7 @@ class CommandManager
     }
 
     /**
-     * @param array<int,string> $argv
+     * @param array<int, string> $argv
      *
      * @return int<0, 255> Exit-status.
      */
@@ -98,7 +98,7 @@ class CommandManager
     }
 
     /**
-     * @param array<int,string> $argv
+     * @param array<int, string> $argv
      */
     private function getCommandNameFromArgv(array $argv): ?string
     {
@@ -146,7 +146,7 @@ class CommandManager
     }
 
     /**
-     * @param array<int,string> $argv
+     * @param array<int, string> $argv
      */
     private function createParamsFromArgv(array $argv): Params
     {

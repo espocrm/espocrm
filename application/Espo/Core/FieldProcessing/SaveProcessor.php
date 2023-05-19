@@ -39,17 +39,13 @@ use Espo\Core\Utils\Metadata;
  */
 class SaveProcessor
 {
-    private InjectableFactory $injectableFactory;
-    private Metadata $metadata;
-
     /** @var array<string, Saver<Entity>[]> */
     private $saverListMapCache = [];
 
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
-    }
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata
+    ) {}
 
     /**
      * @param array<string, mixed> $options

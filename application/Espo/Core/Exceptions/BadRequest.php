@@ -35,6 +35,7 @@ use Exception;
 
 /**
  * A bad request exception. Main purpose is for the 400 Bad Request HTTP error.
+ * If uncaught within an API request, the message will be printed to the X-Status-Reason header.
  */
 class BadRequest extends Exception implements HasBody, HasLogLevel
 {

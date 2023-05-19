@@ -32,15 +32,12 @@ namespace Espo\Tools\Stream;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
-
 use Espo\Core\Select\SearchParams;
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\Subscription;
 use Espo\Entities\User;
 use Espo\Entities\Note;
 use Espo\Entities\Email;
-
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Acl;
 use Espo\Core\AclManager;
@@ -53,34 +50,16 @@ use Espo\ORM\Query\SelectBuilder as SelectQueryBuilder;
 
 class RecordService
 {
-    private EntityManager $entityManager;
-    private User $user;
-    private Metadata $metadata;
-    private Acl $acl;
-    private AclManager $aclManager;
-    private SelectBuilderFactory $selectBuilderFactory;
-    private UserAclManagerProvider $userAclManagerProvider;
-    private NoteAccessControl $noteAccessControl;
-
     public function __construct(
-        EntityManager $entityManager,
-        User $user,
-        Metadata $metadata,
-        Acl $acl,
-        AclManager $aclManager,
-        SelectBuilderFactory $selectBuilderFactory,
-        UserAclManagerProvider $userAclManagerProvider,
-        NoteAccessControl $noteAccessControl
-    ) {
-        $this->entityManager = $entityManager;
-        $this->user = $user;
-        $this->metadata = $metadata;
-        $this->acl = $acl;
-        $this->aclManager = $aclManager;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->userAclManagerProvider = $userAclManagerProvider;
-        $this->noteAccessControl = $noteAccessControl;
-    }
+        private EntityManager $entityManager,
+        private User $user,
+        private Metadata $metadata,
+        private Acl $acl,
+        private AclManager $aclManager,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private UserAclManagerProvider $userAclManagerProvider,
+        private NoteAccessControl $noteAccessControl
+    ) {}
 
     /**
      * Find user stream records.
@@ -490,7 +469,7 @@ class RecordService
     }
 
     /**
-     * @return array<mixed,mixed>
+     * @return array<string|int, mixed>
      */
     private function getUserStreamSubscriptionIgnoreWhereClause(User $user): array
     {
@@ -938,7 +917,7 @@ class RecordService
                     $aclManager->checkScope($user, $scope, Table::ACTION_READ) &&
                     (!$forParent || $aclManager->checkScope($user, $scope, Table::ACTION_STREAM));
             }
-            catch (AclNotImplemented $e) {
+            catch (AclNotImplemented) {
                 $hasAccess = false;
             }
 

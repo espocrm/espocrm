@@ -67,7 +67,7 @@ class Upgrade implements Command
     ];
 
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private $upgradeStepLabels = [
         'init' => 'Initialization',
@@ -200,7 +200,7 @@ class Upgrade implements Command
      * --file="EspoCRM-upgrade.zip"
      * --step="beforeUpgradeScript"
      *
-     * @param array<string,string> $options
+     * @param array<string, string> $options
      * @param string[] $flagList
      * @param string[] $argumentList
      * @return \stdClass

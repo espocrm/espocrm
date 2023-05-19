@@ -3,7 +3,6 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "status": {
@@ -20,7 +19,8 @@
                     "view": "views/admin/field-manager/fields/not-actual-options"
                 }
             ],
-            "notActualOptions": ["Completed", "Canceled", "Deferred"]
+            "notActualOptions": ["Completed", "Canceled", "Deferred"],
+            "customizationOptionsReferenceDisabled": true
         },
         "priority": {
             "type": "enum",
@@ -31,7 +31,8 @@
                 "High": "warning",
                 "Urgent": "danger"
             },
-            "audited": true
+            "audited": true,
+            "customizationOptionsReferenceDisabled": true
         },
         "dateStart": {
             "type": "datetimeOptional",

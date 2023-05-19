@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/modals/mass-update', 'views/modals/mass-update', function (Dep) {
+define('views/user/modals/mass-update', ['views/modals/mass-update'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,8 +37,8 @@ define('views/user/modals/mass-update', 'views/modals/mass-update', function (De
             } else if (this.options.scope === 'PortalUser') {
                 this.layoutName = 'massUpdatePortal';
             }
+
             Dep.prototype.setup.call(this);
         },
-
     });
 });

@@ -40,7 +40,7 @@ class ScopeData
 {
     /** @var stdClass|bool */
     private $raw;
-    /** @var array<string,string> */
+    /** @var array<string, string> */
     private $actionData = [];
     private bool $isBoolean = false;
 

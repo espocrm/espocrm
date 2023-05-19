@@ -1,8 +1,8 @@
 <div class="panel panel-default no-side-margin">
-<div class="panel-body panel-body-form">
+<div class="panel-body{{#if fieldList}} panel-body-form{{/if}}">
 
 {{#unless fieldList}}
-    {{translate 'No fields available for Mass Update'}}
+    <div>{{translate 'emptyMassUpdate' category='messages'}}</div>
 {{else}}
 
 <div class="button-container">

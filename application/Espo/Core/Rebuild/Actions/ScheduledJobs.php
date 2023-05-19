@@ -30,7 +30,6 @@
 namespace Espo\Core\Rebuild\Actions;
 
 use Espo\Core\Rebuild\RebuildAction;
-
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\ScheduledJob;
 use Espo\ORM\EntityManager;
@@ -40,14 +39,10 @@ use Espo\ORM\EntityManager;
  */
 class ScheduledJobs implements RebuildAction
 {
-    private Metadata $metadata;
-    private EntityManager $entityManager;
-
-    public function __construct(Metadata $metadata, EntityManager $entityManager)
-    {
-        $this->metadata = $metadata;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private Metadata $metadata,
+        private EntityManager $entityManager
+    ) {}
 
     public function process(): void
     {

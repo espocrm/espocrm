@@ -36,19 +36,13 @@ use RuntimeException;
 
 class CheckerFactory
 {
-    /**
-     * @var array<string,?class-string>
-     */
+    /** @var array<string, ?class-string> */
     private $classNameCache = [];
 
-    private Metadata $metadata;
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
-    {
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     /**
      * Whether a field validator can be created.

@@ -51,8 +51,8 @@ class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
         assert($entity instanceof CoreEntity);
 
         $intersect = array_intersect(
-            $user->getLinkMultipleIdList('teams') ?? [],
-            $entity->getLinkMultipleIdList('teams') ?? []
+            $user->getLinkMultipleIdList('teams'),
+            $entity->getLinkMultipleIdList('teams')
         );
 
         if (count($intersect)) {

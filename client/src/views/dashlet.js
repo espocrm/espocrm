@@ -161,7 +161,8 @@ define('views/dashlet', ['view'], function (Dep) {
                 el: this.options.el + ' .dashlet-body',
                 id: this.id,
                 name: this.name,
-                readOnly: this.options.readOnly
+                readOnly: this.options.readOnly,
+                locked: this.options.locked,
             });
         },
 
@@ -186,17 +187,18 @@ define('views/dashlet', ['view'], function (Dep) {
                 name: this.name,
                 optionsData: this.getOptionsData(),
                 fields: this.getView('body').optionsFields,
-            }, (view) => {
+            }, view => {
                 view.render();
 
                 this.listenToOnce(view, 'save', (attributes) => {
                     let id = this.id;
 
-                    this.notify('Saving...');
+                    Espo.Ui.notify(this.translate('saving', 'messages'));
 
                     this.getPreferences().once('sync', () => {
                         this.getPreferences().trigger('update');
-                        this.notify(false);
+
+                        Espo.Ui.notify(false);
 
                         view.close();
                         this.trigger('change');
@@ -206,9 +208,7 @@ define('views/dashlet', ['view'], function (Dep) {
 
                     o[id] = attributes;
 
-                    this.getPreferences().save({
-                        dashletsOptions: o
-                    }, {patch: true});
+                    this.getPreferences().save({dashletsOptions: o}, {patch: true});
                 });
             });
         },

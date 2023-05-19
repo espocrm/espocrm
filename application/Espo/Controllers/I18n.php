@@ -43,7 +43,7 @@ class I18n
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getActionRead(Request $request): array
     {

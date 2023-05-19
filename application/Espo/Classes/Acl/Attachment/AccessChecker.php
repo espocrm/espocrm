@@ -126,8 +126,8 @@ class AccessChecker implements AccessEntityCREDChecker
     {
         if ($note->getTargetType() === Note::TARGET_TEAMS) {
             $intersect = array_intersect(
-                $note->getLinkMultipleIdList('teams') ?? [],
-                $user->getLinkMultipleIdList('teams') ?? []
+                $note->getLinkMultipleIdList('teams'),
+                $user->getLinkMultipleIdList('teams')
             );
 
             if (count($intersect)) {

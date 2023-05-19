@@ -83,7 +83,7 @@ define('dynamic-handler', [], function () {
         },
     });
 
-    DynamicHandler.extend = Backbone.Router.extend;
+    DynamicHandler.extend = Bull.View.extend;
 
     return DynamicHandler;
 });

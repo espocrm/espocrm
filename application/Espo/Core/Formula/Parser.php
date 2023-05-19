@@ -298,6 +298,11 @@ class Parser
                 !$lastStatement->isEndedWithSemicolon()
             ) {
                 array_pop($statementList);
+            } else if (
+                $lastStatement instanceof StatementRef &&
+                !$lastStatement->isEndedWithSemicolon()
+            ) {
+                $lastStatement->setEnd(strlen($string));
             }
         }
 
@@ -395,7 +400,10 @@ class Parser
         }
 
         if (
-            $parenthesisCounter === 0 &&
+            (
+                $parenthesisCounter === 0 ||
+                $parenthesisCounter === 1 && $char === '('
+            ) &&
             $braceCounter === 0
         ) {
             if ($isLineComment || $isComment) {

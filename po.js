@@ -41,26 +41,27 @@ const PO = require('./js/po');
 const path = require('path');
 const fs = require('fs');
 
-var language = process.argv[2] || null;
+let language = process.argv[2] || null;
 
-var onlyModuleName = null;
+let onlyModuleName = null;
+
 if (process.argv.length > 2) {
-    for (var i in process.argv) {
+    for (let i in process.argv) {
         if (~process.argv[i].indexOf('--module=')) {
             onlyModuleName = process.argv[i].substr(('--module=').length);
         }
+
         if (~process.argv[i].indexOf('--all')) {
             language = '--all';
         }
     }
 }
 
-var espoPath = path.dirname(fs.realpathSync(__filename)) + '';
+let espoPath = path.dirname(fs.realpathSync(__filename)) + '';
 
-var po = new PO(espoPath, language, onlyModuleName);
+let po = new PO(espoPath, language, onlyModuleName);
 
-if (language === '--all') {
-    po.runAll();
-} else {
+language === '--all' ?
+    po.runAll() :
     po.run();
-}
+

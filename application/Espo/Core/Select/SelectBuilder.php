@@ -208,7 +208,7 @@ class SelectBuilder
 
         $textFilter = $searchParams->getTextFilter();
 
-        if ($textFilter) {
+        if ($textFilter !== null) {
             $this->withTextFilter($textFilter);
         }
 

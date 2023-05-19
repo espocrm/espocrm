@@ -31,11 +31,10 @@ namespace Espo\Core\Upgrades\Actions\Extension;
 
 class Upload extends \Espo\Core\Upgrades\Actions\Base\Upload
 {
-
     /**
      * Check dependencies.
      *
-     * @param array<string,string[]|string> $dependencyList
+     * @param array<string, string[]|string> $dependencyList
      * @return bool
      * @throws \Espo\Core\Exceptions\Error
      */

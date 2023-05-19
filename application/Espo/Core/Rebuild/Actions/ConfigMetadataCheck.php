@@ -40,12 +40,8 @@ use Espo\Core\Utils\Metadata;
  */
 class ConfigMetadataCheck implements RebuildAction
 {
-    private Metadata $metadata;
-
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     /**
      * @throws Error

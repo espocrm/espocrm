@@ -155,6 +155,7 @@ define('views/admin/authentication', ['views/settings/record/edit'], function (D
             if (this.model.get('auth2FA')) {
                 this.showField('auth2FAForced');
                 this.showField('auth2FAMethodList');
+                this.showField('auth2FAInPortal');
                 this.setFieldRequired('auth2FAMethodList');
 
                 return;
@@ -162,6 +163,7 @@ define('views/admin/authentication', ['views/settings/record/edit'], function (D
 
             this.hideField('auth2FAForced');
             this.hideField('auth2FAMethodList');
+            this.hideField('auth2FAInPortal');
             this.setFieldNotRequired('auth2FAMethodList');
         },
 

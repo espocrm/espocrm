@@ -336,7 +336,7 @@ class Util
      */
     public static function objectToArray($object)
     {
-        /** @var array<string,mixed> */
+        /** @var array<string, mixed> */
         return self::objectToArrayInternal($object);
     }
 

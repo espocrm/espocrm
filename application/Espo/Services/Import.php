@@ -32,17 +32,15 @@ namespace Espo\Services;
 use Espo\Repositories\Import as Repository;
 use Espo\Entities\Import as ImportEntity;
 
-use Espo\Core\{
-    Acl\Table,
-    Exceptions\Forbidden,
-    Exceptions\NotFoundSilent,
-    Record\Collection as RecordCollection,
-    Select\SearchParams,
-    FieldProcessing\ListLoadProcessor,
-};
+use Espo\Core\Acl\Table;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFoundSilent;
+use Espo\Core\FieldProcessing\ListLoadProcessor;
+use Espo\Core\Record\Collection as RecordCollection;
+use Espo\Core\Select\SearchParams;
 
 /**
- * @extends Record<\Espo\Entities\Import>
+ * @extends Record<ImportEntity>
  */
 class Import extends Record
 {

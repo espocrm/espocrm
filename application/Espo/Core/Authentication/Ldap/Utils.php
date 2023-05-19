@@ -36,12 +36,12 @@ class Utils
     private Config $config;
 
     /**
-     * @var ?array<string,mixed>
+     * @var ?array<string, mixed>
      */
     private ?array $options = null;
 
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private $fieldMap = [
         'host' => 'ldapHost',
@@ -76,7 +76,7 @@ class Utils
     ];
 
     /**
-     * @var array<int,string>
+     * @var array<int, string>
      */
     private $permittedEspoOptions = [
         'createEspoUser',
@@ -98,7 +98,7 @@ class Utils
     /**
      * AccountCanonicalForm Map between Espo and Laminas value.
      *
-     *  @var array<string,int>
+     *  @var array<string, int>
      */
     private $accountCanonicalFormMap = [
         'Dn' => 1,
@@ -117,7 +117,7 @@ class Utils
     /**
      * Get Options from espo config according to $this->fieldMap.
      *
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getOptions(): array
     {
@@ -143,9 +143,9 @@ class Utils
     /**
      * Normalize options to LDAP client format
      *
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      *
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function normalizeOptions(array $options): array
     {
@@ -179,7 +179,7 @@ class Utils
     /**
      * Get Laminas options for using Laminas\Ldap.
      *
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getLdapClientOptions(): array
     {

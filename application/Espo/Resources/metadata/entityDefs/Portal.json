@@ -3,7 +3,6 @@
         "name": {
             "type": "varchar",
             "maxLength": 100,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "logo": {
@@ -18,7 +17,6 @@
             "type": "varchar",
             "maxLength": 36,
             "view": "views/portal/fields/custom-id",
-            "trim": true,
             "index": true
         },
         "isActive": {

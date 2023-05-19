@@ -269,7 +269,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager, _) {
             }
 
             if (scope && options.formula) {
-                this.main('views/admin/entity-manager/formula', {scope: scope});
+                this.main('views/admin/entity-manager/formula', {scope: scope, type: options.type});
 
                 return;
             }

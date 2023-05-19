@@ -37,7 +37,7 @@ class ExtensionManager extends Base
     protected $name = 'Extension';
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     protected $params = [
         'packagePath' => 'data/upload/extensions',

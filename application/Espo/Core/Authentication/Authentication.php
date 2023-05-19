@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Authentication;
 
+
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Repositories\UserData as UserDataRepository;
@@ -37,7 +38,6 @@ use Espo\Entities\User;
 use Espo\Entities\AuthLogRecord;
 use Espo\Entities\AuthToken as AuthTokenEntity;
 use Espo\Entities\UserData;
-
 use Espo\Core\Exceptions\Error\Body;
 use Espo\Core\Authentication\Logout\Params as LogoutParams;
 use Espo\Core\Authentication\Util\MethodProvider;
@@ -52,6 +52,7 @@ use Espo\Core\ApplicationUser;
 use Espo\Core\ApplicationState;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
+use Espo\Core\Api\Util;
 use Espo\Core\Utils\Log;
 use Espo\Core\ORM\EntityManagerProxy;
 use Espo\Core\Exceptions\ServiceUnavailable;
@@ -85,7 +86,8 @@ class Authentication
         private HookManager $hookManager,
         private Log $log,
         private LogoutFactory $logoutFactory,
-        private MethodProvider $methodProvider
+        private MethodProvider $methodProvider,
+        private Util $util
     ) {}
 
     /**
@@ -219,7 +221,7 @@ class Authentication
             $user->loadLinkMultipleField('teams');
         }
 
-        $user->set('ipAddress', $request->getServerParam('REMOTE_ADDR') ?? null);
+        $user->set('ipAddress', $this->util->obtainIpFromRequest($request));
 
         [$loggedUser, $anotherUserFailReason] = $this->getLoggedUser($request, $user);
 
@@ -464,15 +466,19 @@ class Authentication
             $request->getHeader(self::HEADER_CREATE_TOKEN_SECRET) === 'true' &&
             !$this->configDataProvider->isAuthTokenSecretDisabled();
 
-        $arrayData = [
-            'hash' => $user->get('password'),
-            'ipAddress' => $request->getServerParam('REMOTE_ADDR'),
-            'userId' => $user->hasId() ? $user->getId() : null,
+        /** @var ?string $password */
+        $password = $user->get('password');
+        $ipAddress = $this->util->obtainIpFromRequest($request);
+
+        $authTokenData = AuthTokenData::create([
+            'hash' => $password,
+            'ipAddress' => $ipAddress,
+            'userId' => $user->getId(),
             'portalId' => $this->isPortal() ? $this->getPortal()->getId() : null,
             'createSecret' => $createSecret,
-        ];
+        ]);
 
-        $authToken = $this->authTokenManager->create(AuthTokenData::create($arrayData));
+        $authToken = $this->authTokenManager->create($authTokenData);
 
         if ($createSecret) {
             $this->setSecretInCookie($authToken->getSecret(), $response, $request);
@@ -590,7 +596,7 @@ class Authentication
 
         $authLogRecord
             ->setUsername($username)
-            ->setIpAddress($request->getServerParam('REMOTE_ADDR'))
+            ->setIpAddress($this->util->obtainIpFromRequest($request))
             ->setRequestTime($request->getServerParam('REQUEST_TIME_FLOAT'))
             ->setRequestMethod($request->getMethod())
             ->setRequestUrl($requestUrl)

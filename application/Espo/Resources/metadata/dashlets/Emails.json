@@ -1,13 +1,12 @@
 {
-    "view":"views/dashlets/emails",
+    "view": "views/dashlets/emails",
     "aclScope": "Email",
     "entityType": "Email",
     "options": {
         "fields": {
             "title": {
                 "type": "varchar",
-                "required": true,
-                "trim": true
+                "required": true
             },
             "autorefreshInterval": {
                 "type": "enumFloat",

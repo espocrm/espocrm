@@ -25,7 +25,8 @@
             "hasSeconds": true
         },
         "user": {
-            "type": "link"
+            "type": "link",
+            "view": "views/fields/user"
         },
         "userType": {
             "type": "foreign",

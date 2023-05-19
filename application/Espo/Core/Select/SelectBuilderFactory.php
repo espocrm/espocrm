@@ -29,21 +29,15 @@
 
 namespace Espo\Core\Select;
 
-use Espo\Core\{
-    InjectableFactory,
-};
+use Espo\Core\InjectableFactory;
 
 /**
  * Creates instances of Select Builder.
  */
 class SelectBuilderFactory
 {
-    private $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private InjectableFactory $injectableFactory)
+    {}
 
     public function create(): SelectBuilder
     {

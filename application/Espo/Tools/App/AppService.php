@@ -341,7 +341,7 @@ class AppService
         }
 
         if ($groupEmailAccountPermission === Acl\Table::LEVEL_TEAM) {
-            $teamIdList = $user->getLinkMultipleIdList('teams') ?? [];
+            $teamIdList = $user->getLinkMultipleIdList('teams');
 
             if (!count($teamIdList)) {
                 return [];

@@ -29,33 +29,22 @@
 
 namespace Espo\Core\Console\Commands;
 
-use Espo\Core\{
-    Console\Command,
-    Console\Command\Params,
-    Console\IO,
-};
-
+use Espo\Core\Console\Command;
+use Espo\Core\Console\Command\Params;
+use Espo\Core\Console\IO;
 use Espo\Core\Job\JobManager;
 use Espo\Core\Job\Job\Status;
 use Espo\Core\Utils\Util;
-
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\Job;
 
 use Throwable;
 
 class RunJob implements Command
 {
-    private $jobManager;
 
-    private $entityManager;
-
-    public function __construct(JobManager $jobManager, EntityManager $entityManager)
-    {
-        $this->jobManager = $jobManager;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private JobManager $jobManager, private EntityManager $entityManager)
+    {}
 
     public function run(Params $params, IO $io): void
     {

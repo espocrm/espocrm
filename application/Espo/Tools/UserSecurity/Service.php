@@ -76,7 +76,12 @@ class Service
             throw new NotFound();
         }
 
-        if (!$user->isAdmin() && !$user->isRegular()) {
+        $allow =
+            $user->isAdmin() ||
+            $user->isRegular() ||
+            $user->isPortal() && $this->config->get('auth2FAInPortal');
+
+        if (!$allow) {
             throw new Forbidden();
         }
 
@@ -116,7 +121,15 @@ class Service
             throw new NotFound();
         }
 
-        if (!$user->isAdmin() && !$user->isRegular()) {
+        $allow =
+            $this->config->get('auth2FA') &&
+            (
+                $user->isAdmin() ||
+                $user->isRegular() ||
+                $user->isPortal() && $this->config->get('auth2FAInPortal')
+            );
+
+        if (!$allow) {
             throw new Forbidden();
         }
 
@@ -178,7 +191,12 @@ class Service
             throw new NotFound();
         }
 
-        if (!$user->isAdmin() && !$user->isRegular()) {
+        $allow =
+            $user->isAdmin() ||
+            $user->isRegular() ||
+            $user->isPortal() && $this->config->get('auth2FAInPortal');
+
+        if (!$allow) {
             throw new Forbidden();
         }
 
@@ -219,7 +237,11 @@ class Service
         if (
             $userData->get('auth2FA') &&
             $userData->get('auth2FAMethod') &&
-            ($userData->isAttributeChanged('auth2FA') || $userData->isAttributeChanged('auth2FAMethod'))
+            ($userData->isAttributeChanged('auth2FA') || $userData->isAttributeChanged('auth2FAMethod')) &&
+            (
+                !$user->isPortal() ||
+                $this->config->get('auth2FAInPortal')
+            )
         ) {
             $auth2FAMethod = $userData->get('auth2FAMethod');
 

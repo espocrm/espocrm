@@ -39,19 +39,11 @@ use RuntimeException;
  */
 class ConfigWriter
 {
-    /**
-     * @var array<string,mixed>
-     */
+    /** @var array<string, mixed> */
     private $changedData = [];
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $removeParamList = [];
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $associativeArrayAttributeList = [
         'currencyRates',
         'database',
@@ -61,25 +53,12 @@ class ConfigWriter
 
     private string $cacheTimestampParam = 'cacheTimestamp';
 
-    private Config $config;
-
-    private ConfigWriterFileManager $fileManager;
-
-    private ConfigWriterHelper $helper;
-
-    private InternalConfigHelper $internalConfigHelper;
-
     public function __construct(
-        Config $config,
-        ConfigWriterFileManager $fileManager,
-        ConfigWriterHelper $helper,
-        InternalConfigHelper $internalConfigHelper
-    ) {
-        $this->config = $config;
-        $this->fileManager = $fileManager;
-        $this->helper = $helper;
-        $this->internalConfigHelper = $internalConfigHelper;
-    }
+        private Config $config,
+        private ConfigWriterFileManager $fileManager,
+        private ConfigWriterHelper $helper,
+        private InternalConfigHelper $internalConfigHelper
+    ) {}
 
     /**
      * Set a parameter.
@@ -98,7 +77,7 @@ class ConfigWriter
     /**
      * Set multiple parameters.
      *
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     public function setMultiple(array $params): void
     {
@@ -186,7 +165,7 @@ class ConfigWriter
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     private function saveData(string $path, array &$data, string $timeParam): void
     {

@@ -3,15 +3,13 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "emailAddress": {
             "type": "varchar",
             "required": true,
             "maxLength": 100,
-            "view": "views/inbound-email/fields/email-address",
-            "trim": true
+            "view": "views/inbound-email/fields/email-address"
         },
         "status": {
             "type": "enum",
@@ -19,8 +17,7 @@
             "default": "Active"
         },
         "host": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "port": {
             "type": "int",
@@ -34,8 +31,7 @@
             "options": ["", "SSL", "TLS"]
         },
         "username": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "password": {
             "type": "password"
@@ -102,8 +98,7 @@
             "tooltip": true
         },
         "smtpHost": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "smtpPort": {
             "type": "int",
@@ -121,8 +116,7 @@
             "options": ["", "SSL", "TLS"]
         },
         "smtpUsername": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "smtpPassword": {
             "type": "password"

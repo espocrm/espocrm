@@ -10,7 +10,7 @@
         "label": "2-Factor Authentication",
         "rows": [
             [{"name": "auth2FA"}, {"name": "auth2FAMethodList"}],
-            [{"name": "auth2FAForced"}, false]
+            [{"name": "auth2FAForced"}, {"name": "auth2FAInPortal"}]
         ]
     },
     {

@@ -30,13 +30,9 @@
 namespace Espo\Core\FieldProcessing\LinkParent;
 
 use Espo\ORM\Entity;
-
 use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Core\{
-    FieldProcessing\Loader as LoaderInterface,
-    FieldProcessing\Loader\Params,
-};
+use Espo\Core\FieldProcessing\Loader as LoaderInterface;
+use Espo\Core\FieldProcessing\Loader\Params;
 
 use Espo\ORM\Defs as OrmDefs;
 
@@ -48,7 +44,7 @@ class Loader implements LoaderInterface
     private OrmDefs $ormDefs;
 
     /**
-     * @var array<string,string[]>
+     * @var array<string, string[]>
      */
     private $fieldListCacheMap = [];
 

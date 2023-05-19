@@ -220,7 +220,6 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
             throw new RuntimeException();
         }
 
-        /** @var mixed */
         $value = $this->dataList[$offset];
 
         if ($value instanceof Entity) {

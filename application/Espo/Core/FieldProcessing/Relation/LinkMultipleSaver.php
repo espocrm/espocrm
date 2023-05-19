@@ -31,19 +31,14 @@ namespace Espo\Core\FieldProcessing\Relation;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    FieldProcessing\Saver\Params,
-    ORM\Repository\Option\SaveOption};
+use Espo\Core\FieldProcessing\Saver\Params;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 
 class LinkMultipleSaver
 {
-    private $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     public function process(Entity $entity, string $name, Params $params): void
     {

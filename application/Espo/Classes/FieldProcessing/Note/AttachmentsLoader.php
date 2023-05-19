@@ -30,16 +30,12 @@
 namespace Espo\Classes\FieldProcessing\Note;
 
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    FieldProcessing\Loader,
-    FieldProcessing\Loader\Params,
-};
-
+use Espo\Core\FieldProcessing\Loader;
+use Espo\Core\FieldProcessing\Loader\Params;
 use Espo\Entities\Note;
 
 /**
- * @implements Loader<\Espo\Entities\Note>
+ * @implements Loader<Note>
  */
 class AttachmentsLoader implements Loader
 {

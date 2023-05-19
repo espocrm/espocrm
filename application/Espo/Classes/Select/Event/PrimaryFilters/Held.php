@@ -27,23 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job;
+namespace Espo\Classes\Select\Event\PrimaryFilters;
 
-use Espo\Core\InjectableFactory;
+use Espo\Core\Select\Primary\Filter;
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\Query\SelectBuilder;
 
-class QueueProcessorFactory
+class Held implements Filter
 {
-    private $injectableFactory;
+    public function __construct(
+        private string $entityType,
+        private Metadata $metadata
+    ) {}
 
-    public function __construct(InjectableFactory $injectableFactory)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        $this->injectableFactory = $injectableFactory;
-    }
+        $statusList = $this->metadata->get(['scopes', $this->entityType, 'completedStatusList']) ?? [];
 
-    public function create(QueueProcessorParams $params): QueueProcessor
-    {
-        return $this->injectableFactory->createWith(QueueProcessor::class, [
-            'params' => $params,
-        ]);
+        $queryBuilder->where(['status' => $statusList]);
     }
 }

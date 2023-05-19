@@ -101,7 +101,7 @@ trait RDBRepositoryDeprecationTrait
 
     /**
      * @deprecated As of v6.0. Use `getRelation(...)->find()`.
-     * @param ?array<string,mixed> $params
+     * @param ?array<string, mixed> $params
      * @return Collection<TEntity>|TEntity|null
      */
     public function findRelated(Entity $entity, string $relationName, ?array $params = null)

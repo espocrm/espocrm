@@ -27,9 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job;
+namespace Espo\Core\Job\QueueProcessor;
 
-class QueueProcessorParams
+class Params
 {
     private bool $useProcessPool = false;
     private bool $noLock = false;

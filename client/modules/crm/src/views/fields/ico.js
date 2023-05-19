@@ -30,7 +30,7 @@ define('crm:views/fields/ico', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
-        templateContent: `
+        templateContent: `{{! ~}}
             <span
                 class="{{iconClass}} text-muted action icon"
                 style="cursor: pointer"
@@ -39,7 +39,7 @@ define('crm:views/fields/ico', ['views/fields/base'], function (Dep) {
                 data-id="{{id}}"
                 {{#if notRelationship}}data-scope="{{scope}}"{{/if}}
             ></span>
-        `,
+        {{~!}}`,
 
         data: function () {
             return {

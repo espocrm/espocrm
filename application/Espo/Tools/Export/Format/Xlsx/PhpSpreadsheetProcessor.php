@@ -214,7 +214,11 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
             ->getNumberFormat()
             ->setFormatCode(NumberFormat::FORMAT_TEXT);
 
-        $startingRowNumber = 4;
+        $startingRowNumber = 2;
+
+        if ($params->getParam(self::PARAM_TITLE)) {
+            $startingRowNumber += 2;
+        }
 
         foreach ($fieldList as $i => $name) {
             $col = $azRange[$i];

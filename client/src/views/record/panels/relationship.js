@@ -277,6 +277,7 @@ function (Dep, SearchManager, RecordModal) {
                         rowActionsOptions: {
                             unlinkDisabled: this.defs.unlinkDisabled,
                         },
+                        displayTotalCount: false,
                     }, view => {
                         view.getSelectAttributeList((selectAttributeList) => {
                             if (selectAttributeList) {

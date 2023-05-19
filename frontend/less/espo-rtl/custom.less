@@ -356,15 +356,82 @@ table.table-admin-panel tr > td:first-child > div > a {
     padding-left: 10px;
 }
 
+.input-group > .input-group-btn:not(:first-child) > .btn:first-child {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: var(--border-radius) !important;
+    border-bottom-left-radius: var(--border-radius) !important;
+}
+
+.input-group > .input-group-btn:last-child > .form-control:last-child {
+    border-top-left-radius: var(--border-radius) !important;
+    border-bottom-left-radius: var(--border-radius) !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.field .input-group > .input-group-btn > button.btn.btn-icon:not(:last-child, .radius-right) {
+    border-radius: 0 !important;
+}
+
+.field .input-group > .input-group-btn > button.btn.btn-icon:last-child {
+    border-top-left-radius: 5px !important;
+    border-bottom-left-radius: 5px !important;
+}
+
+.field .input-group > input.main-element.form-control:first-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.input-group > .input-group-item,
+.input-group {
+    > .selectize-control {
+        &.radius-right {
+            > .selectize-input {
+                border-top-left-radius: var(--border-radius);
+                border-bottom-left-radius: var(--border-radius);
+            }
+
+            &:not(.radius-left) {
+                > .selectize-input {
+                    border-top-right-radius: 0 !important;
+                    border-bottom-right-radius: 0 !important;
+                }
+            }
+        }
+
+        &.radius-left {
+            > .selectize-input {
+                border-top-right-radius: var(--border-radius);
+                border-bottom-right-radius: var(--border-radius);
+            }
+
+            &:not(.radius-right) {
+                > .selectize-input {
+                    border-top-left-radius: 0 !important;
+                    border-bottom-left-radius: 0 !important;
+                }
+            }
+        }
+    }
+}
+
 .btn {
     &.radius-right {
         border-top-left-radius: var(--border-radius) !important;
         border-bottom-left-radius: var(--border-radius) !important;
+        &:not(.radius-left) {
+            .border-right-radius(0) !important;
+        }
     }
 
     &.radius-left {
         border-top-right-radius: var(--border-radius) !important;
         border-bottom-right-radius: var(--border-radius) !important;
+        &:not(.radius-right) {
+            .border-left-radius(0) !important;
+        }
     }
 
     &.margin-right {

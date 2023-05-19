@@ -26,12 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/record/detail', 'views/record/detail', function (Dep) {
+define('views/user/record/detail', ['views/record/detail'], function (Dep) {
 
     return Dep.extend({
 
         sideView: 'views/user/record/detail-side',
-
         bottomView: 'views/user/record/detail-bottom',
 
         editModeDisabled: true,
@@ -51,10 +50,16 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 }
             }
 
+            let isPortalUser = this.model.isPortal() ||
+                this.model.id === this.getUser().id && this.getUser().isPortal();
+
             if (
-                (this.model.id == this.getUser().id || this.getUser().isAdmin()) &&
-                (this.model.isRegular() || this.model.isAdmin()) &&
-                this.getConfig().get('auth2FA')
+                (this.model.id === this.getUser().id || this.getUser().isAdmin()) &&
+                this.getConfig().get('auth2FA') &&
+                (
+                    (this.model.isRegular() || this.model.isAdmin()) ||
+                    isPortalUser && this.getConfig().get('auth2FAInPortal')
+                )
             ) {
                 this.addButton({
                     name: 'viewSecurity',
@@ -376,7 +381,7 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
         actionGenerateNewApiKey: function () {
             this.confirm(this.translate('confirmation', 'messages'), () => {
-                this.ajaxPostRequest('UserSecurity/apiKey/generate', {id: this.model.id})
+                Espo.Ajax.postRequest('UserSecurity/apiKey/generate', {id: this.model.id})
                     .then((data) => {
                         this.model.set(data);
                     });

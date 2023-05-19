@@ -30,7 +30,7 @@ define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], function
 
     return Dep.extend({
 
-        _template: '' +
+        templateContent: '' +
             '<div class="panel panel-default no-side-margin"><div class="panel-body">' +
             '<div class="record-container">{{{record}}}</div>' +
             '</div></div>',

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashlets/iframe', 'views/dashlets/abstract/base', function (Dep) {
+define('views/dashlets/iframe', ['views/dashlets/abstract/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -38,6 +38,7 @@ define('views/dashlets/iframe', 'views/dashlets/abstract/base', function (Dep) {
             var $iframe = this.$el.find('iframe');
 
             var url = this.getOption('url');
+
             if (url) {
                 $iframe.attr('src', url);
             }
@@ -54,6 +55,5 @@ define('views/dashlets/iframe', 'views/dashlets/abstract/base', function (Dep) {
         afterAdding: function () {
             this.getParentView().actionOptions();
         },
-
     });
 });

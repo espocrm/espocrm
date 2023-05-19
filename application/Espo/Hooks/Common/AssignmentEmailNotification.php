@@ -43,7 +43,7 @@ class AssignmentEmailNotification
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function afterSave(Entity $entity, array $options): void
     {

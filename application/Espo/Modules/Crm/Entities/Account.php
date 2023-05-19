@@ -29,13 +29,12 @@
 
 namespace Espo\Modules\Crm\Entities;
 
-use Espo\Core\{
-    Field\Link,
-    Field\LinkMultiple,
-    ORM\Entity,
-    Field\EmailAddressGroup,
-    Field\PhoneNumberGroup,
-    Field\Address};
+use Espo\Core\Field\Address;
+use Espo\Core\Field\EmailAddressGroup;
+use Espo\Core\Field\Link;
+use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Field\PhoneNumberGroup;
+use Espo\Core\ORM\Entity;
 
 class Account extends Entity
 {

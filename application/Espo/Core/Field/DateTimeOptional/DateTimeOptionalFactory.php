@@ -29,11 +29,8 @@
 
 namespace Espo\Core\Field\DateTimeOptional;
 
-use Espo\{
-    ORM\Entity,
-    ORM\Value\ValueFactory,
-};
-
+use Espo\ORM\Entity;
+use Espo\ORM\Value\ValueFactory;
 use Espo\Core\Field\DateTimeOptional;
 
 use RuntimeException;

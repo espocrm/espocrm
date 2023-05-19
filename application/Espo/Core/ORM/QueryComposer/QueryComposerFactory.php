@@ -43,28 +43,14 @@ use RuntimeException;
 
 class QueryComposerFactory implements \Espo\ORM\QueryComposer\QueryComposerFactory
 {
-    private Metadata $metadata;
-    private InjectableFactory $injectableFactory;
-    private PDOProvider $pdoProvider;
-    private OrmMetadata $ormMetadata;
-    private EntityFactory $entityFactory;
-    private FunctionConverterFactory $functionConverterFactory;
-
     public function __construct(
-        Metadata $metadata,
-        InjectableFactory $injectableFactory,
-        PDOProvider $pdoProvider,
-        OrmMetadata $ormMetadata,
-        EntityFactory $entityFactory,
-        FunctionConverterFactory $functionConverterFactory
-    ) {
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
-        $this->pdoProvider = $pdoProvider;
-        $this->ormMetadata = $ormMetadata;
-        $this->entityFactory = $entityFactory;
-        $this->functionConverterFactory = $functionConverterFactory;
-    }
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory,
+        private PDOProvider $pdoProvider,
+        private OrmMetadata $ormMetadata,
+        private EntityFactory $entityFactory,
+        private FunctionConverterFactory $functionConverterFactory
+    ) {}
 
     public function create(string $platform): QueryComposer
     {

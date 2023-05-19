@@ -10,6 +10,17 @@
                     {{{dashboardTabList}}}
                 </div>
             </div>
+            {{#if hasLocked}}
+                <div class="cell form-group col-md-6" data-name="dashboardLocked">
+                    <label
+                        class="control-label"
+                        data-name="dashboardLocked"
+                    >{{translate 'dashboardLocked' category='fields' scope="Preferences"}}</label>
+                    <div class="field" data-name="dashboardLocked">
+                        {{{dashboardLocked}}}
+                    </div>
+                </div>
+            {{/if}}
         </div>
     </div>
 </div>

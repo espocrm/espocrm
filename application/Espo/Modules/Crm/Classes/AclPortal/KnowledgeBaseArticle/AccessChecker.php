@@ -62,7 +62,7 @@ class AccessChecker implements AccessEntityCREDChecker
 
         assert($entity instanceof CoreEntity);
 
-        $portalIdList = $entity->getLinkMultipleIdList('portals') ?? [];
+        $portalIdList = $entity->getLinkMultipleIdList('portals');
 
         $portalId = $user->get('portalId');
 

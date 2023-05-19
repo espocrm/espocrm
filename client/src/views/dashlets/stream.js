@@ -26,16 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashlets/stream', 'views/dashlets/abstract/base', function (Dep) {
+define('views/dashlets/stream', ['views/dashlets/abstract/base'], function (Dep) {
 
     return Dep.extend({
 
         name: 'Stream',
 
-        _template: '<div class="list-container">{{{list}}}</div>',
+        templateContent: '<div class="list-container">{{{list}}}</div>',
 
         actionRefresh: function () {
-            this.getView('list').showNewRecords();
+            let listView = this.getView('list');
+
+            if (!listView) {
+                return;
+            }
+
+            listView.showNewRecords();
         },
 
         afterRender: function () {

@@ -60,6 +60,14 @@ define('views/fields/float', ['views/fields/int'], function (Dep) {
             else if (this.getConfig().has('decimalMark')) {
                 this.decimalMark = this.getConfig().get('decimalMark');
             }
+
+            if (!this.decimalMark) {
+                this.decimalMark = '.';
+            }
+
+            if (this.decimalMark === this.thousandSeparator) {
+                this.thousandSeparator = '';
+            }
         },
 
         /**
@@ -90,23 +98,7 @@ define('views/fields/float', ['views/fields/int'], function (Dep) {
                 return value;
             }
 
-            if (this.isReadMode()) {
-                return this.formatNumberDetail(value);
-            }
-
-            return this.formatNumberEdit(value);
-        },
-
-        formatNumberEdit: function (value) {
-            if (value === null) {
-                return '';
-            }
-
-            let parts = value.toString().split(".");
-
-            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
-
-            return parts.join(this.decimalMark);
+            return this.formatNumberDetail(value);
         },
 
         formatNumberDetail: function (value) {

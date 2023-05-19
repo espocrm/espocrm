@@ -141,12 +141,12 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             $columnsPart = implode(
                 " || ' ' || ",
                 array_map(
-                    fn ($item) => "COALESCE({$item}, '')",
+                    fn ($item) => "COALESCE($item, '')",
                     array_slice($argumentPartList, 0, -1)
                 )
             );
 
-            return "TS_RANK_CD(TO_TSVECTOR({$columnsPart}), PLAINTO_TSQUERY({$queryPart}))";
+            return "TS_RANK_CD(TO_TSVECTOR($columnsPart), PLAINTO_TSQUERY($queryPart))";
         }
 
         if ($function === 'IF') {
@@ -158,21 +158,21 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             $thenPart = $argumentPartList[1];
             $elsePart = $argumentPartList[2];
 
-            return "CASE WHEN {$conditionPart} THEN {$thenPart} ELSE {$elsePart} END";
+            return "CASE WHEN $conditionPart THEN $thenPart ELSE $elsePart END";
         }
 
         if ($function === 'ROUND') {
             if (count($argumentPartList) === 2 && $argumentPartList[1] === '0') {
                 $argumentPartList = array_slice($argumentPartList, 0, -1);
 
-                return "ROUND({$argumentPartList[0]})";
+                return "ROUND($argumentPartList[0])";
             }
         }
 
         if ($function === 'UNIX_TIMESTAMP') {
             $arg = $argumentPartList[0] ?? 'NOW()';
 
-            return "FLOOR(EXTRACT(EPOCH FROM {$arg}))";
+            return "FLOOR(EXTRACT(EPOCH FROM $arg))";
         }
 
         if ($function === 'BINARY') {
@@ -190,7 +190,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                 $offsetHoursString = substr($offsetHoursString, 1, -1);
             }
 
-            return "{$argumentPartList[0]} + INTERVAL 'HOUR {$offsetHoursString}'";
+            return "$argumentPartList[0] + INTERVAL 'HOUR $offsetHoursString'";
         }
 
         if ($function === 'POSITION_IN_LIST') {
@@ -209,7 +209,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                 $resolution = intval($item[0]);
                 $value = $item[1];
 
-                return " WHEN {$field} = {$value} THEN {$resolution}";
+                return " WHEN $field = $value THEN $resolution";
             }, array_slice($pairs, 1));
 
             return "CASE" . implode('', $whenParts) . " ELSE 0 END";
@@ -227,9 +227,9 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                 $fiscalFirstMonth = $fiscalShift + 1;
 
                 return
-                    "CASE WHEN EXTRACT(MONTH FROM {$part}) >= {$fiscalFirstMonth} THEN ".
-                    "EXTRACT(YEAR FROM {$part}) ".
-                    "ELSE EXTRACT(YEAR FROM {$part}) - 1 END";
+                    "CASE WHEN EXTRACT(MONTH FROM $part) >= $fiscalFirstMonth THEN ".
+                    "EXTRACT(YEAR FROM $part) ".
+                    "ELSE EXTRACT(YEAR FROM $part) - 1 END";
             }
         }
 
@@ -244,16 +244,16 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                     12 - $fiscalFirstMonth + 1;
 
                 return
-                    "CASE WHEN EXTRACT(MONTH FROM {$part}) >= {$fiscalFirstMonth} " .
+                    "CASE WHEN EXTRACT(MONTH FROM $part) >= $fiscalFirstMonth " .
                     "THEN " .
                     "CONCAT(" .
-                    "EXTRACT(YEAR FROM {$part}), '_', " .
-                    "FLOOR((EXTRACT(MONTH FROM {$part}) - {$fiscalFirstMonth}) / 3) + 1" .
+                    "EXTRACT(YEAR FROM $part), '_', " .
+                    "FLOOR((EXTRACT(MONTH FROM $part) - $fiscalFirstMonth) / 3) + 1" .
                     ") " .
                     "ELSE " .
                     "CONCAT(" .
-                    "EXTRACT(YEAR FROM {$part}) - 1, '_', " .
-                    "CEIL((EXTRACT(MONTH FROM {$part}) + {$fiscalDistractedMonth}) / 3)" .
+                    "EXTRACT(YEAR FROM $part) - 1, '_', " .
+                    "CEIL((EXTRACT(MONTH FROM $part) + $fiscalDistractedMonth) / 3)" .
                     ") " .
                     "END";
             }
@@ -261,10 +261,10 @@ class PostgresqlQueryComposer extends BaseQueryComposer
 
         switch ($function) {
             case 'MONTH':
-                return "TO_CHAR({$part}, 'YYYY-MM')";
+                return "TO_CHAR($part, 'YYYY-MM')";
 
             case 'DAY':
-                return "TO_CHAR({$part}, 'YYYY-MM-DD')";
+                return "TO_CHAR($part, 'YYYY-MM-DD')";
 
             case 'WEEK':
             case 'WEEK_0':
@@ -273,46 +273,46 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                     $part = "DATE " . $part;
                 }
 
-                return "CONCAT(TO_CHAR({$part}, 'YYYY'), '/', TRIM(LEADING '0' FROM TO_CHAR({$part}, 'IW')))";
+                return "CONCAT(TO_CHAR($part, 'YYYY'), '/', TRIM(LEADING '0' FROM TO_CHAR($part, 'IW')))";
 
             case 'QUARTER':
-                return "CONCAT(TO_CHAR({$part}, 'YYYY'), '_', TO_CHAR({$part}, 'Q'))";
+                return "CONCAT(TO_CHAR($part, 'YYYY'), '_', TO_CHAR($part, 'Q'))";
 
             case 'WEEK_NUMBER_0':
             case 'WEEK_NUMBER':
             case 'WEEK_NUMBER_1':
                 // Monday week-start not implemented.
-                return "TO_CHAR({$part}, 'IW')::INTEGER";
+                return "TO_CHAR($part, 'IW')::INTEGER";
 
             case 'HOUR_NUMBER':
             case 'HOUR':
-                return "EXTRACT(HOUR FROM {$part})";
+                return "EXTRACT(HOUR FROM $part)";
 
             case 'MINUTE_NUMBER':
             case 'MINUTE':
-                return "EXTRACT(MINUTE FROM {$part})";
+                return "EXTRACT(MINUTE FROM $part)";
 
             case 'SECOND_NUMBER':
             case 'SECOND':
-                return "FLOOR(EXTRACT(SECOND FROM {$part}))";
+                return "FLOOR(EXTRACT(SECOND FROM $part))";
 
             case 'DATE_NUMBER':
             case 'DAYOFMONTH':
-                return "EXTRACT(DAY FROM {$part})";
+                return "EXTRACT(DAY FROM $part)";
 
             case 'DAYOFWEEK_NUMBER':
             case 'DAYOFWEEK':
-                return "EXTRACT(DOW FROM {$part})";
+                return "EXTRACT(DOW FROM $part)";
 
             case 'MONTH_NUMBER':
-                return "EXTRACT(MONTH FROM {$part})";
+                return "EXTRACT(MONTH FROM $part)";
 
             case 'YEAR_NUMBER':
             case 'YEAR':
-                return "EXTRACT(YEAR FROM {$part})";
+                return "EXTRACT(YEAR FROM $part)";
 
             case 'QUARTER_NUMBER':
-                return "EXTRACT(QUARTER FROM {$part})";
+                return "EXTRACT(QUARTER FROM $part)";
         }
 
         if (str_starts_with($function, 'TIMESTAMPDIFF_')) {
@@ -321,25 +321,25 @@ class PostgresqlQueryComposer extends BaseQueryComposer
 
             switch ($function) {
                 case 'TIMESTAMPDIFF_YEAR':
-                    return "EXTRACT(YEAR FROM {$to} - {$from})";
+                    return "EXTRACT(YEAR FROM $to - $from)";
 
                 case 'TIMESTAMPDIFF_MONTH':
-                    return "EXTRACT(MONTH FROM {$to}) - {$from})";
+                    return "EXTRACT(MONTH FROM $to) - $from)";
 
                 case 'TIMESTAMPDIFF_WEEK':
-                    return "FLOOR(EXTRACT(DAY FROM {$to} - {$from}) / 7)";
+                    return "FLOOR(EXTRACT(DAY FROM $to - $from) / 7)";
 
                 case 'TIMESTAMPDIFF_DAY':
-                    return "EXTRACT(DAY FROM ({$to}) - {$from})";
+                    return "EXTRACT(DAY FROM ($to) - $from)";
 
                 case 'TIMESTAMPDIFF_HOUR':
-                    return "EXTRACT(HOUR FROM {$to} - {$from})";
+                    return "EXTRACT(HOUR FROM $to - $from)";
 
                 case 'TIMESTAMPDIFF_MINUTE':
-                    return "EXTRACT(MINUTE FROM {$to} - {$from})";
+                    return "EXTRACT(MINUTE FROM $to - $from)";
 
                 case 'TIMESTAMPDIFF_SECOND':
-                    return "FLOOR(EXTRACT(SECOND FROM {$to} - {$from}))";
+                    return "FLOOR(EXTRACT(SECOND FROM $to - $from))";
             }
         }
 
@@ -458,7 +458,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
 
         $table = $this->toDb($entityType);
 
-        $sql = "INSERT INTO " . $this->quoteIdentifier($table) . " ({$columnsPart}) {$valuesPart}";
+        $sql = "INSERT INTO " . $this->quoteIdentifier($table) . " ($columnsPart) $valuesPart";
 
         if ($updatePart) {
             $updateColumnsPart = implode(', ',
@@ -467,7 +467,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                 )
             );
 
-            $sql .= " ON CONFLICT({$updateColumnsPart}) DO UPDATE SET " . $updatePart;
+            $sql .= " ON CONFLICT($updateColumnsPart) DO UPDATE SET " . $updatePart;
         }
 
         return $sql;
@@ -575,7 +575,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             $offset = intval($offset);
             $limit = intval($limit);
 
-            $sql .= " LIMIT {$limit} OFFSET {$offset}";
+            $sql .= " LIMIT $limit OFFSET $offset";
 
             return $sql;
         }
@@ -583,7 +583,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
         if (!is_null($limit)) {
             $limit = intval($limit);
 
-            $sql .= " LIMIT {$limit}";
+            $sql .= " LIMIT $limit";
 
             return $sql;
         }

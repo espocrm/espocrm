@@ -39,12 +39,9 @@ use Espo\Core\Utils\ClientManager;
  */
 class ActionRenderer
 {
-    private ClientManager $clientManager;
 
-    public function __construct(ClientManager $clientManager)
-    {
-        $this->clientManager = $clientManager;
-    }
+    public function __construct(private ClientManager $clientManager)
+    {}
 
     /**
      * Writes to a body.
@@ -64,7 +61,7 @@ class ActionRenderer
 
     /**
      * @deprecated Use`write`.
-     * @param ?array<string,mixed> $data
+     * @param ?array<string, mixed> $data
      */
     public function render(string $controller, string $action, ?array $data = null, bool $initAuth = false): string
     {

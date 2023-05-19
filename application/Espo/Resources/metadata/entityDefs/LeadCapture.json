@@ -2,8 +2,7 @@
     "fields": {
         "name": {
             "type": "varchar",
-            "maxLength": 100,
-            "trim": true
+            "maxLength": 100
         },
         "campaign": {
             "type": "link"

@@ -36,17 +36,15 @@ define('views/fields/user',[ 'views/fields/link'], function (Dep) {
             Dep.prototype.setupSearch.call(this);
 
             this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
-
             this.searchTypeList.push('isFromTeams');
 
             this.searchData.teamIdList = this.getSearchParamsData().teamIdList ||
                 this.searchParams.teamIdList || [];
-
             this.searchData.teamNameHash = this.getSearchParamsData().teamNameHash ||
                 this.searchParams.teamNameHash || {};
 
             this.events['click a[data-action="clearLinkTeams"]'] = function (e) {
-                var id = $(e.currentTarget).data('id').toString();
+                let id = $(e.currentTarget).data('id').toString();
 
                 this.deleteLinkTeams(id);
             };
@@ -61,25 +59,25 @@ define('views/fields/user',[ 'views/fields/link'], function (Dep) {
                     scope: 'Team',
                     createButton: false,
                     multiple: true,
-                }, function (view) {
+                }, (view) => {
                     view.render();
 
                     this.notify(false);
 
-                    this.listenToOnce(view, 'select', function (models) {
+                    this.listenToOnce(view, 'select', models => {
                         if (Object.prototype.toString.call(models) !== '[object Array]') {
                             models = [models];
                         }
 
-                        models.forEach(function (model) {
+                        models.forEach(model => {
                             this.addLinkTeams(model.id, model.get('name'));
-                        }, this);
+                        });
                     });
-                }, this);
+                });
             });
 
             this.events['click a[data-action="clearLinkTeams"]'] = function (e) {
-                var id = $(e.currentTarget).data('id').toString();
+                let id = $(e.currentTarget).data('id').toString();
 
                 this.deleteLinkTeams(id);
             };
@@ -100,10 +98,10 @@ define('views/fields/user',[ 'views/fields/link'], function (Dep) {
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'search') {
-                var $elemeneTeams = this.$el.find('input.element-teams');
+                let $elementTeams = this.$el.find('input.element-teams');
 
-                $elemeneTeams.autocomplete({
-                    serviceUrl: (q) => {
+                $elementTeams.autocomplete({
+                    serviceUrl: () => {
                         return 'Team?&maxSize=' + this.getAutocompleteMaxCount() + '&select=id,name';
                     },
                     minChars: 1,
@@ -114,8 +112,8 @@ define('views/fields/user',[ 'views/fields/link'], function (Dep) {
                         return this.getHelper().escapeString(suggestion.name);
                     },
                     transformResult: (response) => {
-                        var response = JSON.parse(response);
-                        var list = [];
+                        response = JSON.parse(response);
+                        let list = [];
 
                         response.list.forEach(item => {
                             list.push({
@@ -132,22 +130,22 @@ define('views/fields/user',[ 'views/fields/link'], function (Dep) {
                     },
                     onSelect: (s) => {
                         this.addLinkTeams(s.id, s.name);
-                        $elemeneTeams.val('');
-                        $elemeneTeams.focus();
+                        $elementTeams.val('');
+                        $elementTeams.focus();
                     },
                 });
 
-                $elemeneTeams.attr('autocomplete', 'espo-' + this.name);
+                $elementTeams.attr('autocomplete', 'espo-' + this.name);
 
                 this.once('render', () => {
-                    $elemeneTeams.autocomplete('dispose');
+                    $elementTeams.autocomplete('dispose');
                 });
 
                 this.once('remove', () => {
-                    $elemeneTeams.autocomplete('dispose');
+                    $elementTeams.autocomplete('dispose');
                 });
 
-                var type = this.$el.find('select.search-type').val();
+                let type = this.$el.find('select.search-type').val();
 
                 if (type === 'isFromTeams') {
                     this.searchData.teamIdList.forEach(id => {
@@ -160,7 +158,7 @@ define('views/fields/user',[ 'views/fields/link'], function (Dep) {
         deleteLinkTeams: function (id) {
             this.deleteLinkTeamsHtml(id);
 
-            var index = this.searchData.teamIdList.indexOf(id);
+            let index = this.searchData.teamIdList.indexOf(id);
 
             if (index > -1) {
                 this.searchData.teamIdList.splice(index, 1);
@@ -191,8 +189,8 @@ define('views/fields/user',[ 'views/fields/link'], function (Dep) {
             id = Handlebars.Utils.escapeExpression(id);
             name = Handlebars.Utils.escapeExpression(name);
 
-            var $container = this.$el.find('.link-teams-container');
-            var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
+            let $container = this.$el.find('.link-teams-container');
+            let $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
 
             $el.html(name + '&nbsp');
 
@@ -207,7 +205,7 @@ define('views/fields/user',[ 'views/fields/link'], function (Dep) {
         },
 
         fetchSearch: function () {
-            var type = this.$el.find('select.search-type').val();
+            let type = this.$el.find('select.search-type').val();
 
             if (type === 'isFromTeams') {
                 return {
@@ -218,7 +216,7 @@ define('views/fields/user',[ 'views/fields/link'], function (Dep) {
                         type: type,
                         teamIdList: this.searchData.teamIdList,
                         teamNameHash: this.searchData.teamNameHash,
-                    }
+                    },
                 };
             }
 

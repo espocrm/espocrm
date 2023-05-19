@@ -163,7 +163,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
 
             this.$header.append(
                 $('<span>').text(
-                    this.translate('Select') + ': ' +
+                    this.translate('Select') + ' · ' +
                     this.getLanguage().translate(this.scope, 'scopeNamesPlural')
                 )
             );

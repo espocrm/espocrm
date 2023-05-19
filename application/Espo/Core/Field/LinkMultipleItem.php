@@ -43,7 +43,7 @@ class LinkMultipleItem
     private ?string $name = null;
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     private array $columnData = [];
 

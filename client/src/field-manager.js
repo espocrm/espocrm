@@ -292,7 +292,7 @@ define('field-manager', [], function () {
          *
          * @param {string} fieldType A field type.
          * @param {string} fieldName A field name.
-         * @returns {string}
+         * @returns {string[]}
          */
         getAttributeList: function (fieldType, fieldName) {
             return _.union(

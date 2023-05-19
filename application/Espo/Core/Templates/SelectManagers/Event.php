@@ -29,35 +29,8 @@
 
 namespace Espo\Core\Templates\SelectManagers;
 
+/**
+ * @deprecated As of v7.0. For backward compatibility.
+ */
 class Event extends \Espo\Core\Select\SelectManager
-{
-    protected $selectAttributesDependancyMap = [ /** @phpstan-ignore-line */
-        'duration' => [
-            'dateStart',
-            'dateEnd',
-        ],
-    ];
-
-    protected function filterPlanned(&$result) /** @phpstan-ignore-line */
-    {
-        $result['whereClause'][] = [
-            'status' => 'Planned'
-        ];
-    }
-
-    protected function filterHeld(&$result) /** @phpstan-ignore-line */
-    {
-        $result['whereClause'][] = [
-            'status' => 'Held'
-        ];
-    }
-
-    protected function filterTodays(&$result) /** @phpstan-ignore-line */
-    {
-        $result['whereClause'][] = $this->convertDateTimeWhere([
-            'type' => 'today',
-            'attribute' => 'dateStart',
-            'timeZone' => $this->getUserTimeZone(),
-        ]);
-    }
-}
+{}

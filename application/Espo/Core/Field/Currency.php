@@ -45,7 +45,8 @@ class Currency
     private string $code;
 
     /**
-     * @param string|float $amount
+     * @param string|float $amount An amount.
+     * @param string $code A currency code.
      * @throws RuntimeException
      */
     public function __construct($amount, string $code)
@@ -117,7 +118,7 @@ class Currency
     public function subtract(self $value): self
     {
         if ($this->getCode() !== $value->getCode()) {
-            throw new RuntimeException("Can't substract a currency value with a different code.");
+            throw new RuntimeException("Can't subtract a currency value with a different code.");
         }
 
         $amount = CalculatorUtil::subtract(
@@ -195,7 +196,8 @@ class Currency
     /**
      * Create from an amount and code.
      *
-     * @param string|float $amount
+     * @param string|float $amount An amount.
+     * @param string $code A currency code.
      * @throws RuntimeException
      */
     public static function create($amount, string $code): self

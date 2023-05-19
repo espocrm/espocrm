@@ -76,6 +76,10 @@ class UpdateRelationColumnType extends BaseFunction implements
             $this->throwError("Empty column.");
         }
 
+        if (!is_string($column)) {
+            $this->throwError("Column is not string.");
+        }
+
         $em = $this->entityManager;
 
         if (!$em->hasRepository($entityType)) {
@@ -88,6 +92,10 @@ class UpdateRelationColumnType extends BaseFunction implements
             return null;
         }
 
-        return $em->getRDBRepository($entityType)->updateRelation($entity, $link, $foreignId, [$column => $value]);
+        $em->getRDBRepository($entityType)
+            ->getRelation($entity, $link)
+            ->updateColumnsById($foreignId, [$column => $value]);
+
+        return true;
     }
 }

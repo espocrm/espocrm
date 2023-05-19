@@ -30,10 +30,8 @@
 namespace Espo\Core\Job;
 
 use Espo\ORM\EntityManager;
-
 use Espo\Core\Utils\DateTime;
 use Espo\Core\Job\Job\Data;
-
 use Espo\Entities\Job as JobEntity;
 
 use ReflectionClass;

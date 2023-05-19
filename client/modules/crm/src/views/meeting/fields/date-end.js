@@ -26,16 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/fields/date-end', 'views/fields/datetime-optional', function (Dep) {
+define('crm:views/meeting/fields/date-end', ['views/fields/datetime-optional'], function (Dep) {
 
     return Dep.extend({
 
         validateAfterAllowSameDay: true,
-
         emptyTimeInInlineEditDisabled: true,
-
         noneOptionIsHidden: true,
-
         isEnd: true,
 
         setup: function () {
@@ -43,12 +40,18 @@ define('crm:views/meeting/fields/date-end', 'views/fields/datetime-optional', fu
 
             this.isAllDayValue = this.model.get('isAllDay');
 
-            this.listenTo(this.model, 'change:isAllDay', function (model, value, o) {
-                if (!o.ui) return;
-                if (!this.isEditMode()) return;
+            this.listenTo(this.model, 'change:isAllDay', (model, value, o) => {
+                if (!o.ui) {
+                    return;
+                }
+
+                if (!this.isEditMode()) {
+                    return;
+                }
 
                 if (this.isAllDayValue === undefined && !value) {
                     this.isAllDayValue = value;
+
                     return;
                 }
 
@@ -57,22 +60,26 @@ define('crm:views/meeting/fields/date-end', 'views/fields/datetime-optional', fu
                 if (value) {
                     this.$time.val(this.noneOption);
                 } else {
-                    var dateTime = this.model.get('dateStart');
+                    let dateTime = this.model.get('dateStart');
+
                     if (!dateTime) {
                         dateTime = this.getDateTime().getNow(5);
                     }
-                    var m = this.getDateTime().toMoment(dateTime);
+
+                    let m = this.getDateTime().toMoment(dateTime);
                     dateTime = m.format(this.getDateTime().getDateTimeFormat());
-                    var index = dateTime.indexOf(' ');
-                    var time = dateTime.substr(index + 1);
+
+                    let index = dateTime.indexOf(' ');
+                    let time = dateTime.substring(index + 1);
 
                     if (this.model.get('dateEnd')) {
                         this.$time.val(time);
                     }
                 }
+
                 this.trigger('change');
                 this.controlTimePartVisibility();
-            }, this);
+            });
         },
 
         afterRender: function () {
@@ -84,16 +91,19 @@ define('crm:views/meeting/fields/date-end', 'views/fields/datetime-optional', fu
         },
 
         controlTimePartVisibility: function () {
-            if (!this.isEditMode()) return;
+            if (!this.isEditMode()) {
+                return;
+            }
 
             if (this.model.get('isAllDay')) {
                 this.$time.addClass('hidden');
                 this.$el.find('.time-picker-btn').addClass('hidden');
-            } else {
-                this.$time.removeClass('hidden');
-                this.$el.find('.time-picker-btn').removeClass('hidden');
-            }
-        },
 
+                return;
+            }
+
+            this.$time.removeClass('hidden');
+            this.$el.find('.time-picker-btn').removeClass('hidden');
+        },
     });
 });

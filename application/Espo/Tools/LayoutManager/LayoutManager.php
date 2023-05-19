@@ -29,32 +29,23 @@
 
 namespace Espo\Tools\LayoutManager;
 
-use Espo\Core\{
-    Utils\File\Manager as FileManager,
-    Utils\Layout,
-    Utils\Json,
-    Exceptions\Error,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Layout;
 
 use const JSON_PRETTY_PRINT;
 use const JSON_UNESCAPED_UNICODE;
 
 class LayoutManager
 {
-    protected FileManager $fileManager;
-
-    protected Layout $layout;
-
     /**
-     * @var array<string,array<string,mixed>>
+     * @var array<string, array<string, mixed>>
      */
     protected $changedData = [];
 
-    public function __construct(FileManager $fileManager, Layout $layout)
-    {
-        $this->fileManager = $fileManager;
-        $this->layout = $layout;
-    }
+    public function __construct(protected FileManager $fileManager, protected Layout $layout)
+    {}
 
     /**
      * Get layout in string format.

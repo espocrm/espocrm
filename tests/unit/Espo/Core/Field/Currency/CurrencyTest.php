@@ -170,10 +170,10 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase
 
         $entity
             ->expects($this->any())
-            ->method('has')
+            ->method('get')
             ->willReturnMap([
-                ['test', true],
-                ['testCurrency', true],
+                ['test', 5],
+                ['testCurrency', 'USD'],
             ]);
 
         $factory = new CurrencyFactory();
@@ -189,10 +189,10 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase
 
         $entity
             ->expects($this->any())
-            ->method('has')
+            ->method('get')
             ->willReturnMap([
-                ['test', true],
-                ['testCurrency', False],
+                ['test', 5.0],
+                ['testCurrency', null],
             ]);
 
         $factory = new CurrencyFactory();

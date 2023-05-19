@@ -68,7 +68,7 @@ class Pdf
     }
 
     /**
-     * @param ?array<string,mixed> $additionalData
+     * @param ?array<string, mixed> $additionalData
      * @throws Error
      * @throws Forbidden
      * @throws NotFound

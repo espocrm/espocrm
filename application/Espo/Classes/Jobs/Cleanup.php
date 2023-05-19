@@ -609,8 +609,6 @@ class Cleanup implements JobDataLess
 
         $repository->deleteFromDb($entity->getId());
 
-        $query = $this->entityManager->getQueryComposer();
-
         foreach ($entity->getRelationList() as $relation) {
             if ($entity->getRelationType($relation) !== Entity::MANY_MANY) {
                 continue;
@@ -762,6 +760,15 @@ class Cleanup implements JobDataLess
             $whereClause = [
                 'deleted' => true,
             ];
+
+            if (
+                !$this->entityManager
+                    ->getDefs()
+                    ->getEntity($scope)
+                    ->hasAttribute('deleted')
+            ) {
+                continue;
+            }
 
             if ($this->metadata->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) {
                 $whereClause['modifiedAt<'] = $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);

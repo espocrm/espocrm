@@ -1,0 +1,136 @@
+{
+    "Meeting": {
+        "activityStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        },
+        "historyStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        },
+        "completedStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        },
+        "canceledStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        }
+    },
+    "Call": {
+        "activityStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        },
+        "historyStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        },
+        "completedStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        },
+        "canceledStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        }
+    },
+    "Task": {
+        "completedStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        },
+        "canceledStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        }
+    },
+    "@Event": {
+        "activityStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        },
+        "historyStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        },
+        "completedStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        },
+        "canceledStatusList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "multiEnum",
+                "required": true,
+                "tooltip": true,
+                "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        }
+    }
+}

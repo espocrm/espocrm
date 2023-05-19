@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Mail\Event;
 
+use ICal\Event as ICalEvent;
 use ICal\ICal as U01jmg3ICal;
 
 use RuntimeException;
@@ -37,7 +38,7 @@ class EventFactory
 {
     public static function createFromU01jmg3Ical(U01jmg3ICal $ical): Event
     {
-        /* @var \ICal\Event|null $event */
+        /* @var ?ICalEvent $event */
         $event = $ical->events()[0] ?? null;
 
         if (!$event) {
@@ -54,7 +55,7 @@ class EventFactory
             $dateEnd = $event->dtend ?? null;
         }
 
-        $espoEvent = Event::create()
+        return Event::create()
             ->withUid($event->uid ?? null)
             ->withIsAllDay($isAllDay)
             ->withDateStart($dateStart)
@@ -65,7 +66,5 @@ class EventFactory
             ->withTimezone($ical->calendarTimeZone() ?? null) /** @phpstan-ignore-line */
             ->withOrganizer($event->organizer ?? null)
             ->withAttendees($event->attendee ?? null);
-
-        return $espoEvent;
     }
 }

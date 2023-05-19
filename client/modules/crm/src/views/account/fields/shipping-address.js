@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/account/fields/shipping-address', 'views/fields/address', function (Dep) {
+define('crm:views/account/fields/shipping-address', ['views/fields/address'], function (Dep) {
 
     return Dep.extend({
 
@@ -38,18 +38,21 @@ define('crm:views/account/fields/shipping-address', 'views/fields/address', func
             this.attributePartList = this.getMetadata().get(['fields', 'address', 'actualFields']) || [];
 
             this.allAddressAttributeList = [];
-            this.attributePartList.forEach(function (part) {
+
+            this.attributePartList.forEach(part => {
                 this.allAddressAttributeList.push(this.copyFrom + Espo.Utils.upperCaseFirst(part));
                 this.allAddressAttributeList.push(this.name + Espo.Utils.upperCaseFirst(part));
-            }, this);
+            });
 
-            this.listenTo(this.model, 'change', function () {
+            this.listenTo(this.model, 'change', () => {
                 var isChanged = false;
-                this.allAddressAttributeList.forEach(function (attribute) {
+
+                this.allAddressAttributeList.forEach(attribute => {
                     if (this.model.hasChanged(attribute)) {
                         isChanged = true;
                     }
-                }, this);
+                });
+
                 if (isChanged) {
                     if (this.isEditMode() && this.isRendered() && this.$copyButton) {
                         if (this.toShowCopyButton()) {
@@ -59,21 +62,24 @@ define('crm:views/account/fields/shipping-address', 'views/fields/address', func
                         }
                     }
                 }
-            }, this);
+            });
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 var label = this.translate('Copy Billing', 'labels', 'Account');
                 this.$copyButton = $('<button class="btn btn-default btn-sm">' + label + '</button>');
-                this.$copyButton.on('click', function () {
+
+                this.$copyButton.on('click', () => {
                     this.copy(this.copyFrom);
-                }.bind(this));
+                });
+
                 if (!this.toShowCopyButton()) {
                     this.$copyButton.addClass('hidden');
                 }
+
                 this.$el.append(this.$copyButton);
             }
         },
@@ -108,6 +114,5 @@ define('crm:views/account/fields/shipping-address', 'views/fields/address', func
 
             return billingIsNotEmpty && !shippingIsNotEmpty;
         },
-
     });
 });

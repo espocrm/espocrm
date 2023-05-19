@@ -185,7 +185,7 @@ define('views/admin/extensions/index', ['view'], function (Dep) {
         },
 
         run: function (id, version, name) {
-            this.notify('Please wait...');
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
             this.showError(false);
             this.showErrorNotification(false);

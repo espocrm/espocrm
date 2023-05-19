@@ -3,7 +3,6 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "status": {
@@ -29,15 +28,13 @@
         },
         "fromAddress": {
             "type": "varchar",
-            "trim": true,
             "view": "crm:views/mass-email/fields/from-address"
         },
         "fromName": {
             "type": "varchar"
         },
         "replyToAddress": {
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         "replyToName": {
             "type": "varchar"

@@ -119,6 +119,10 @@ class Note extends Record
             throw new ForbiddenSilent("Only 'Post' type allowed.");
         }
 
+        if ($this->user->isPortal()) {
+            $entity->set('isInternal', false);
+        }
+
         if ($entity->isPost()) {
             $this->handlePostText($entity);
         }

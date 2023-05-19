@@ -29,31 +29,28 @@
 
 namespace Espo\Classes\JobPreparators;
 
-use Espo\Core\Utils\DateTime;
-use Espo\Core\Job\Job\Status;
 use Espo\Core\Job\Preparator;
 use Espo\Core\Job\Preparator\Data;
-
-use Espo\Entities\EmailAccount;
 use Espo\ORM\EntityManager;
-
-use Espo\Entities\Job as JobEntity;
+use Espo\Entities\EmailAccount;
+use Espo\Core\Job\Preparator\CollectionHelper;
 
 use DateTimeImmutable;
 
 class CheckEmailAccounts implements Preparator
 {
-    private EntityManager $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    /**
+     * @param CollectionHelper<EmailAccount> $helper
+     */
+    public function __construct(
+        private EntityManager $entityManager,
+        private CollectionHelper $helper
+    ) {}
 
     public function prepare(Data $data, DateTimeImmutable $executeTime): void
     {
         $collection = $this->entityManager
-            ->getRDBRepository(EmailAccount::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(EmailAccount::class)
             ->join('assignedUser', 'assignedUserAdditional')
             ->where([
                 'status' => EmailAccount::STATUS_ACTIVE,
@@ -62,49 +59,6 @@ class CheckEmailAccounts implements Preparator
             ])
             ->find();
 
-        foreach ($collection as $entity) {
-            $running = $this->entityManager
-                ->getRDBRepository(JobEntity::ENTITY_TYPE)
-                ->where([
-                    'scheduledJobId' => $data->getId(),
-                    'status' => [
-                        Status::RUNNING,
-                        Status::READY,
-                    ],
-                    'targetType' => EmailAccount::ENTITY_TYPE,
-                    'targetId' => $entity->getId(),
-                ])
-                ->findOne();
-
-            if ($running) {
-                continue;
-            }
-
-            $countPending = $this->entityManager
-                ->getRDBRepository(JobEntity::ENTITY_TYPE)
-                ->where([
-                    'scheduledJobId' => $data->getId(),
-                    'status' => Status::PENDING,
-                    'targetType' => EmailAccount::ENTITY_TYPE,
-                    'targetId' => $entity->getId(),
-                ])
-                ->count();
-
-            if ($countPending > 1) {
-                continue;
-            }
-
-            $jobEntity = $this->entityManager->getNewEntity(JobEntity::ENTITY_TYPE);
-
-            $jobEntity->set([
-                'name' => $data->getName(),
-                'scheduledJobId' => $data->getId(),
-                'executeTime' => $executeTime->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
-                'targetType' => EmailAccount::ENTITY_TYPE,
-                'targetId' => $entity->getId(),
-            ]);
-
-            $this->entityManager->saveEntity($jobEntity);
-        }
+        $this->helper->prepare($collection, $data, $executeTime);
     }
 }

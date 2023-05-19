@@ -34,22 +34,15 @@ use stdClass;
 
 class Data
 {
-    private stdClass $data;
-
-    public function __construct(stdClass $data)
-    {
-        $this->data = $data;
-    }
+    public function __construct(private stdClass $data)
+    {}
 
     public function has(string $name): bool
     {
         return property_exists($this->data, $name);
     }
 
-    /**
-     * @return mixed
-     */
-    public function get(string $name)
+    public function get(string $name): mixed
     {
         return $this->getClonedData()->$name ?? null;
     }

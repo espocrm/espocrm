@@ -83,7 +83,7 @@ class MysqlQueryComposer extends BaseQueryComposer
             $offset = intval($offset);
             $limit = intval($limit);
 
-            $sql .= " LIMIT {$offset}, {$limit}";
+            $sql .= " LIMIT $offset, $limit";
 
             return $sql;
         }
@@ -91,7 +91,7 @@ class MysqlQueryComposer extends BaseQueryComposer
         if (!is_null($limit)) {
             $limit = intval($limit);
 
-            $sql .= " LIMIT {$limit}";
+            $sql .= " LIMIT $limit";
 
             return $sql;
         }

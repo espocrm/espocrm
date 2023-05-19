@@ -36,7 +36,7 @@ use Espo\Core\Utils\Json;
 class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 {
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return void
      * @throws Error
      */

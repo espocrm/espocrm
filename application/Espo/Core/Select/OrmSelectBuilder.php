@@ -38,7 +38,7 @@ use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 class OrmSelectBuilder extends QueryBuilder
 {
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     public function setRawParams(array $params): void
     {

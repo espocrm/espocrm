@@ -34,15 +34,8 @@ use Espo\Core\Utils\Metadata;
 
 class InternalConfigHelper
 {
-    private $config;
-
-    private $metadata;
-
-    public function __construct(Config $config, Metadata $metadata)
-    {
-        $this->config = $config;
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Config $config, private Metadata $metadata)
+    {}
 
     public function isParamForInternalConfig(string $name): bool
     {

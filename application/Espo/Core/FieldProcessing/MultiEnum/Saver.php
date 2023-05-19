@@ -29,6 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\MultiEnum;
 
+use Espo\Entities\ArrayValue;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 
@@ -44,7 +45,7 @@ use Espo\Core\ORM\EntityManager;
 class Saver implements SaverInterface
 {
     private EntityManager $entityManager;
-    /** @var array<string,string[]> */
+    /** @var array<string, string[]> */
     private $fieldListMapCache = [];
 
     public function __construct(EntityManager $entityManager)
@@ -70,7 +71,7 @@ class Saver implements SaverInterface
         }
 
         /** @var Repository $repository */
-        $repository = $this->entityManager->getRepository('ArrayValue');
+        $repository = $this->entityManager->getRepository(ArrayValue::ENTITY_TYPE);
 
         assert($entity instanceof CoreEntity);
 

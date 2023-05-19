@@ -4,6 +4,7 @@
         "to": "To",
         "subject": "Subject",
         "bodyContains": "Body Contains",
+        "bodyContainsAll": "Body Contains All",
         "action": "Action",
         "isGlobal": "Is Global",
         "emailFolder": "Folder",
@@ -30,6 +31,7 @@
         "name": "Give the filter a descriptive name.",
         "subject": "Use a wildcard *: \n\n * `text*` – starts with text,\n * `*text*` – contains text,\n * `*text` – ends with text.",
         "bodyContains": "Body of the email contains any of the specified words or phrases.",
+        "bodyContainsAll": "An email body contains all specified words or phrases.",
         "from": "Emails being sent from the specified address. Leave empty if not needed. You can use wildcard *.",
         "to": "Emails being sent to the specified address. Leave empty if not needed. You can use wildcard *.",
         "isGlobal": "Applies this filter to all emails incoming to system."

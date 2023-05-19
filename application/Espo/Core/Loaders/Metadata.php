@@ -29,24 +29,15 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\{
-    Container\Loader,
-    Utils\Metadata as MetadataService,
-    Utils\Config,
-    InjectableFactory,
-};
+use Espo\Core\Container\Loader;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata as MetadataService;
 
 class Metadata implements Loader
 {
-    private $injectableFactory;
-
-    private $config;
-
-    public function __construct(InjectableFactory $injectableFactory, Config $config)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->config = $config;
-    }
+    public function __construct(private InjectableFactory $injectableFactory, private Config $config)
+    {}
 
     public function load(): MetadataService
     {

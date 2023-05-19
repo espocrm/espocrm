@@ -29,15 +29,13 @@
 
 namespace Espo\Services;
 
-use Espo\{
-    Core\Exceptions\Forbidden,
-    Core\Exceptions\NotFound,
-    Core\Utils\Config,
-    Core\Utils\Config\ConfigWriter,
-    ORM\EntityManager,
-    ORM\Entity,
-    Entities\User,
-};
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
 use stdClass;
 

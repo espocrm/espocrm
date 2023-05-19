@@ -19,6 +19,11 @@
             "tooltip": "urlStrip"
         },
         {
+            "name": "copyToClipboard",
+            "type": "bool",
+            "default": false
+        },
+        {
             "name": "audited",
             "type": "bool"
         },

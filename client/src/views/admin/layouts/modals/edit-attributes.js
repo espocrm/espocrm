@@ -68,15 +68,14 @@ define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], f
 
             model.set(this.options.attributes || {});
 
+            this.headerText = null;
+
             if (this.options.languageCategory) {
-                this.header = this.translate(
+                this.headerText = this.translate(
                     this.options.name,
-                    this.options.languageCategory || 'fields',
+                    this.options.languageCategory,
                     this.options.scope
                 );
-            }
-            else {
-                this.header = false;
             }
 
             let attributeList = Espo.Utils.clone(this.options.attributeList || []);

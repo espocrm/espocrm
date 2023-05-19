@@ -86,7 +86,7 @@ define('model', [], function () {
      * @mixes Backbone.Events
      * @memberOf module:model
      */
-    return Dep.extend(/** @lends module:model.Class.prototype */{
+    let Model = Dep.extend(/** @lends module:model.Class.prototype */{
 
         /**
          * A record ID.
@@ -583,4 +583,8 @@ define('model', [], function () {
             }
         },
     });
+
+    Model.extend = Bull.View.extend;
+
+    return Model;
 });

@@ -169,8 +169,6 @@ class HtmlComposer
 
     private function replaceTags(string $html): string
     {
-        // @todo Convert barcode tags.
-
         $html = str_replace('<br pagebreak="true">', '<div style="page-break-after: always;"></div>', $html);
         $html = preg_replace('/src="\@([A-Za-z0-9\+\/]*={0,2})"/', 'src="data:image/jpeg;base64,$1"', $html);
         $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html ?? '');

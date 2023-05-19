@@ -7,6 +7,8 @@
     "aclPortalLevelList": ["all", "account", "contact", "own", "no"],
     "activityStatusList": ["Not Started", "Started"],
     "historyStatusList": ["Completed"],
+    "completedStatusList": ["Completed"],
+    "canceledStatusList": ["Canceled"],
     "module": "Crm",
     "customizable": true,
     "importable": true,
@@ -15,5 +17,6 @@
     "object": true,
     "statusField": "status",
     "stream": true,
-    "kanbanStatusIgnoreList": ["Canceled", "Deferred"]
+    "kanbanStatusIgnoreList": ["Canceled", "Deferred"],
+    "statusFieldLocked": true
 }

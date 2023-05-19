@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Import;
 
+use Espo\Entities\ActionHistoryRecord;
 use Espo\ORM\Entity;
 use Espo\ORM\Query\DeleteBuilder;
 use Espo\ORM\Type\RelationType;
@@ -102,7 +103,7 @@ class Service
             if ($import) {
                 $this->recordServiceContainer
                     ->get(ImportEntity::ENTITY_TYPE)
-                    ->processActionHistoryRecord('create', $import);
+                    ->processActionHistoryRecord(ActionHistoryRecord::ACTION_CREATE, $import);
             }
         }
 
@@ -282,7 +283,7 @@ class Service
 
         $this->recordServiceContainer
             ->get(ImportEntity::ENTITY_TYPE)
-            ->processActionHistoryRecord('delete', $import);
+            ->processActionHistoryRecord(ActionHistoryRecord::ACTION_DELETE, $import);
     }
 
     private function deleteRelations(Entity $entity): void

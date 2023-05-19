@@ -38,9 +38,7 @@
     ],
     "filter": true,
     "notCreatable": true,
-    "fieldDefs": {
-        "notStorable": true
-    },
+
     "valueFactoryClassName": "Espo\\Core\\Field\\LinkParent\\LinkParentFactory",
     "attributeExtractorClassName": "Espo\\Core\\Field\\LinkParent\\LinkParentAttributeExtractor"
 }

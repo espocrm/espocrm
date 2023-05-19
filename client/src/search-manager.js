@@ -349,6 +349,9 @@ define('search-manager', [], function () {
             this.data = data;
 
             if (this.storage) {
+                data = Espo.Utils.clone(data);
+                delete data['textFilter'];
+
                 this.storage.set(this.type + 'Search', this.scope, data);
             }
         },

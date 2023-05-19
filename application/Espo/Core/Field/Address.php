@@ -38,25 +38,13 @@ use Espo\Core\Field\Address\AddressBuilder;
  */
 class Address
 {
-    private $street = null;
-    private $city = null;
-    private $country = null;
-    private $state = null;
-    private $postalCode = null;
-
     public function __construct(
-        ?string $country = null,
-        ?string $state = null,
-        ?string $city = null,
-        ?string $street = null,
-        ?string $postalCode = null
-    ) {
-        $this->country = $country;
-        $this->state = $state;
-        $this->city = $city;
-        $this->street = $street;
-        $this->postalCode = $postalCode;
-    }
+        private ?string $country = null,
+        private ?string $state = null,
+        private ?string $city = null,
+        private ?string $street = null,
+        private ?string $postalCode = null
+    ) {}
 
     /**
      * Whether has a street.
@@ -143,12 +131,10 @@ class Address
      */
     public function withStreet(?string $street): self
     {
-        $newAddress = self::createBuilder()
+        return self::createBuilder()
             ->clone($this)
             ->setStreet($street)
             ->build();
-
-        return $newAddress;
     }
 
     /**
@@ -156,12 +142,10 @@ class Address
      */
     public function withCity(?string $city): self
     {
-        $newAddress = self::createBuilder()
+        return self::createBuilder()
             ->clone($this)
             ->setCity($city)
             ->build();
-
-        return $newAddress;
     }
 
     /**
@@ -169,12 +153,10 @@ class Address
      */
     public function withCountry(?string $country): self
     {
-        $newAddress = self::createBuilder()
+        return self::createBuilder()
             ->clone($this)
             ->setCountry($country)
             ->build();
-
-        return $newAddress;
     }
 
     /**
@@ -182,12 +164,10 @@ class Address
      */
     public function withState(?string $state): self
     {
-        $newAddress = self::createBuilder()
+        return self::createBuilder()
             ->clone($this)
             ->setState($state)
             ->build();
-
-        return $newAddress;
     }
 
     /**
@@ -195,12 +175,10 @@ class Address
      */
     public function withPostalCode(?string $postalCode): self
     {
-        $newAddress = self::createBuilder()
+        return self::createBuilder()
             ->clone($this)
             ->setPostalCode($postalCode)
             ->build();
-
-        return $newAddress;
     }
 
     /**

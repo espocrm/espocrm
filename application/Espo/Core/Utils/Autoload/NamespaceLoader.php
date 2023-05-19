@@ -29,13 +29,11 @@
 
 namespace Espo\Core\Utils\Autoload;
 
-use Espo\Core\{
-    Utils\Util,
-    Utils\Config,
-    Utils\DataCache,
-    Utils\File\Manager as FileManager,
-    Utils\Log,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Util;
 
 use Composer\Autoload\ClassLoader;
 
@@ -45,63 +43,44 @@ class NamespaceLoader
 {
     /**
      * @var ?array{
-     *   psr-4?: array<string,mixed>,
-     *   psr-0?: array<string,mixed>,
-     *   classmap?: array<string,mixed>,
+     *   psr-4?: array<string, mixed>,
+     *   psr-0?: array<string, mixed>,
+     *   classmap?: array<string, mixed>,
      * }
      */
     private $namespaces = null;
-
-    /**
-     * @var ?array<string,mixed>
-     */
+    /** @var ?array<string, mixed> */
     private $vendorNamespaces = null;
-
     private string $autoloadFilePath = 'vendor/autoload.php';
-
-    /**
-     * @var array<'psr-4'|'psr-0'|'classmap',string>
-     */
+    /** @var array<'psr-4'|'psr-0'|'classmap', string> */
     private $namespacesPaths = [
         'psr-4' => 'vendor/composer/autoload_psr4.php',
         'psr-0' => 'vendor/composer/autoload_namespaces.php',
         'classmap' => 'vendor/composer/autoload_classmap.php',
     ];
-
-    /**
-     * @var array<'psr-4'|'psr-0',string>
-     */
+    /** @var array<'psr-4'|'psr-0', string> */
     private $methodNameMap = [
         'psr-4' => 'addPsr4',
         'psr-0' => 'add',
     ];
-
     private string $cacheKey = 'autoloadVendorNamespaces';
 
     private ClassLoader $classLoader;
 
-    private Config $config;
-
-    private DataCache $dataCache;
-
-    private FileManager $fileManager;
-
-    private Log $log;
-
-    public function __construct(Config $config, DataCache $dataCache, FileManager $fileManager, Log $log)
-    {
-        $this->config = $config;
-        $this->dataCache = $dataCache;
-        $this->fileManager = $fileManager;
-        $this->log = $log;
+    public function __construct(
+        private Config $config,
+        private DataCache $dataCache,
+        private FileManager $fileManager,
+        private Log $log
+    ) {
 
         $this->classLoader = new ClassLoader();
     }
 
     /**
      * @param array{
-     *   psr-4?: array<string,mixed>,
-     *   psr-0?: array<string,mixed>
+     *   psr-4?: array<string, mixed>,
+     *   psr-0?: array<string, mixed>
      * } $data
      */
     public function register(array $data): void
@@ -113,9 +92,9 @@ class NamespaceLoader
 
     /**
      * @return array{
-     *   psr-4?: array<string,mixed>,
-     *   psr-0?: array<string,mixed>,
-     *   classmap?: array<string,mixed>,
+     *   psr-4?: array<string, mixed>,
+     *   psr-0?: array<string, mixed>,
+     *   classmap?: array<string, mixed>,
      * }
      */
     private function loadNamespaces(string $basePath = ''): array
@@ -142,9 +121,9 @@ class NamespaceLoader
     /**
      *
      * @return array{
-     *   psr-4?: array<string,mixed>,
-     *   psr-0?: array<string,mixed>,
-     *   classmap?: array<string,mixed>,
+     *   psr-4?: array<string, mixed>,
+     *   psr-0?: array<string, mixed>,
+     *   classmap?: array<string, mixed>,
      * }
      */
     private function getNamespaces(): array
@@ -169,7 +148,7 @@ class NamespaceLoader
 
     /**
      * @param 'psr-4'|'psr-0'|'classmap' $type
-     * @param string|array<string,string> $path
+     * @param string|array<string, string> $path
      */
     private function addNamespace(string $type, string $name, $path): void
     {
@@ -201,7 +180,7 @@ class NamespaceLoader
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     private function addListToClassLoader(array $data, bool $skipVendorNamespaces = false): void
     {
@@ -249,7 +228,7 @@ class NamespaceLoader
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function getVendorNamespaces(string $path): array
     {
@@ -259,7 +238,7 @@ class NamespaceLoader
             $this->vendorNamespaces = [];
 
             if ($useCache && $this->dataCache->has($this->cacheKey)) {
-                /** @var ?array<string,mixed> $cachedData */
+                /** @var ?array<string, mixed> $cachedData */
                 $cachedData = $this->dataCache->get($this->cacheKey);
 
                 $this->vendorNamespaces = $cachedData;

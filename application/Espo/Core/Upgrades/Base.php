@@ -49,7 +49,7 @@ abstract class Base
     protected $name = null;
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     protected $params = [];
 
@@ -88,7 +88,7 @@ abstract class Base
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      * @throws Error
      */
     public function getManifest()
@@ -98,7 +98,7 @@ abstract class Base
 
     /**
      * @param string $processId
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      * @throws Error
      */
     public function getManifestById($processId)
@@ -122,7 +122,7 @@ abstract class Base
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return mixed
      * @throws Error
      */
@@ -134,7 +134,7 @@ abstract class Base
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return mixed
      * @throws Error
      */
@@ -146,7 +146,7 @@ abstract class Base
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return mixed
      * @throws Error
      */
@@ -159,7 +159,7 @@ abstract class Base
 
     /**
      * @param string $stepName
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @return bool
      * @throws Error
      */
@@ -172,7 +172,7 @@ abstract class Base
      *
      * @param string $actionName
      * @param string $stepName
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      * @return bool
      * @throws Error
      */

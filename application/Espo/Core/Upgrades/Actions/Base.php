@@ -33,17 +33,14 @@ use Espo\Core\Utils\Util;
 use Espo\Core\Utils\System;
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\Error;
-
 use Espo\Core\Utils\File\Manager as FileManager;
-
-use Espo\Core\{
-    Container,
-    InjectableFactory,
-    Upgrades\ActionManager,
-    Utils\File\ZipArchive,
-    Utils\Config\ConfigWriter,
-    Utils\Database\Helper as DatabaseHelper,
-    Utils\Log};
+use Espo\Core\Container;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Upgrades\ActionManager;
+use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\Database\Helper as DatabaseHelper;
+use Espo\Core\Utils\File\ZipArchive;
+use Espo\Core\Utils\Log;
 
 use Composer\Semver\Semver;
 
@@ -62,7 +59,7 @@ abstract class Base
     protected $data;
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     protected $params = null;
 
@@ -107,7 +104,7 @@ abstract class Base
     protected $packagePostfix = 'z';
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     protected $scriptParams = [];
 
@@ -124,7 +121,7 @@ abstract class Base
     /**
      * Package types.
      *
-     * @var array<string,string>
+     * @var array<string, string>
      */
     protected $packageTypes = array(
         'upgrade' => 'upgrade',
@@ -488,7 +485,7 @@ abstract class Base
     }
 
     /**
-     * @param array<string,string[]> $dependencyList
+     * @param array<string, string[]> $dependencyList
      * @return bool
      */
     protected function checkDependencies($dependencyList)
@@ -890,7 +887,7 @@ abstract class Base
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      * @throws Error
      */
     public function getManifest()
@@ -930,7 +927,7 @@ abstract class Base
     /**
      * Check if the manifest is correct.
      *
-     * @param array<string,mixed> $manifest
+     * @param array<string, mixed> $manifest
      * @return bool
      */
     protected function checkManifest(array $manifest)
@@ -1047,7 +1044,7 @@ abstract class Base
      * Execute an action. For ex., execute uninstall action in install.
      *
      * @param string $actionName
-     * @param string|array<string,mixed> $data
+     * @param string|array<string, mixed> $data
      * @return void
      * @throws Error
      */

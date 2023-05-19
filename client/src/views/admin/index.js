@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/index', 'view', function (Dep) {
+define('views/admin/index', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -51,11 +51,15 @@ define('views/admin/index', 'view', function (Dep) {
         },
 
         afterRender: function () {
+            let $quickSearch = this.$el.find('input[data-name="quick-search"]');
+
             if (this.quickSearchText) {
-                this.$el.find('input[data-name="quick-search"]').val(this.quickSearchText);
+                $quickSearch.val(this.quickSearchText);
 
                 this.processQuickSearch(this.quickSearchText);
             }
+
+            $quickSearch.get(0).focus({preventScroll: true});
         },
 
         setup: function () {

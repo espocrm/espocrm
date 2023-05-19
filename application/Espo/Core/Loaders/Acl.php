@@ -29,25 +29,15 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\{
-    Container\Loader,
-    AclManager,
-    Acl as AclService,
-};
-
+use Espo\Core\Acl as AclService;
+use Espo\Core\AclManager;
+use Espo\Core\Container\Loader;
 use Espo\Entities\User;
 
 class Acl implements Loader
 {
-    private $aclManager;
-
-    private $user;
-
-    public function __construct(AclManager $aclManager, User $user)
-    {
-        $this->aclManager = $aclManager;
-        $this->user = $user;
-    }
+    public function __construct(private AclManager $aclManager, private User $user)
+    {}
 
     public function load(): AclService
     {

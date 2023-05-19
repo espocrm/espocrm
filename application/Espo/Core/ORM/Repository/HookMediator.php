@@ -37,16 +37,12 @@ use Espo\Core\ORM\Repository\Option\SaveOption;
 
 class HookMediator extends EmptyHookMediator
 {
-    protected HookManager $hookManager;
-
-    public function __construct(HookManager $hookManager)
-    {
-        $this->hookManager = $hookManager;
-    }
+    public function __construct(protected HookManager $hookManager)
+    {}
 
     /**
-     * @param ?array<string,mixed> $columnData
-     * @param array<string,mixed> $options
+     * @param ?array<string, mixed> $columnData
+     * @param array<string, mixed> $options
      */
     public function afterRelate(
         Entity $entity,
@@ -77,7 +73,7 @@ class HookMediator extends EmptyHookMediator
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function afterUnrelate(Entity $entity, string $relationName, Entity $foreignEntity, array $options): void
     {
@@ -101,7 +97,7 @@ class HookMediator extends EmptyHookMediator
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function afterMassRelate(Entity $entity, string $relationName, Select $query, array $options): void
     {

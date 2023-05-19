@@ -32,7 +32,6 @@ namespace Espo\Core\Mail\Account;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Mail\Account\Storage\Flag;
-use Espo\Core\Mail\Account\Storage;
 use Espo\Core\Mail\Importer;
 use Espo\Core\Mail\Importer\Data as ImporterData;
 use Espo\Core\Mail\ParserFactory;
@@ -44,56 +43,29 @@ use Espo\Core\Mail\Account\Hook\BeforeFetchResult as BeforeFetchHookResult;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 use Espo\Core\Field\DateTime as DateTimeField;
-
 use Espo\Entities\EmailFilter;
 use Espo\Entities\Email;
-
 use Espo\Entities\InboundEmail;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
-
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Order;
+
 use Throwable;
 use DateTime;
 
 class Fetcher
 {
-    private Importer $importer;
-
-    private StorageFactory $storageFactory;
-
-    private Config $config;
-
-    private Log $log;
-
-    private EntityManager $entityManager;
-
-    private ParserFactory $parserFactory;
-
-    private ?BeforeFetchHook $beforeFetchHook;
-
-    private ?AfterFetchHook $afterFetchHook;
-
     public function __construct(
-        Importer $importer,
-        StorageFactory $storageFactory,
-        Config $config,
-        Log $log,
-        EntityManager $entityManager,
-        ParserFactory $parserFactory,
-        ?BeforeFetchHook $beforeFetchHook,
-        ?AfterFetchHook $afterFetchHook
-    ) {
-        $this->importer = $importer;
-        $this->storageFactory = $storageFactory;
-        $this->config = $config;
-        $this->log = $log;
-        $this->entityManager = $entityManager;
-        $this->parserFactory = $parserFactory;
-        $this->beforeFetchHook = $beforeFetchHook;
-        $this->afterFetchHook = $afterFetchHook;
-    }
+        private Importer $importer,
+        private StorageFactory $storageFactory,
+        private Config $config,
+        private Log $log,
+        private EntityManager $entityManager,
+        private ParserFactory $parserFactory,
+        private ?BeforeFetchHook $beforeFetchHook,
+        private ?AfterFetchHook $afterFetchHook
+    ) {}
 
     /**
      * @throws Error

@@ -29,20 +29,14 @@
 
 namespace Espo\Core\FieldProcessing\VersionNumber;
 
-use Espo\Core\{
-    Utils\Metadata,
-};
-
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
 class BeforeSaveProcessor
 {
-    private $metadata;
 
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     public function process(Entity $entity): void
     {

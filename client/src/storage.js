@@ -213,7 +213,7 @@ define('storage', [], function () {
         }
     });
 
-    Storage.extend = Backbone.Router.extend;
+    Storage.extend = Bull.View.extend;
 
     return Storage;
 });

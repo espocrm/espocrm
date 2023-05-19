@@ -33,6 +33,7 @@
         ["app", "api"],
         ["app", "databasePlatforms"],
         ["app", "recordId"],
+        ["app", "currencyConversion"],
         ["selectDefs"],
         ["recordDefs"],
         ["pdfDefs"],

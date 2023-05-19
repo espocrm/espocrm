@@ -490,7 +490,7 @@ define('acl-manager', ['acl', 'utils'], function (Acl, Utils) {
         },
     });
 
-    AclManager.extend = Backbone.Router.extend;
+    AclManager.extend = Bull.View.extend;
 
     return AclManager;
 });

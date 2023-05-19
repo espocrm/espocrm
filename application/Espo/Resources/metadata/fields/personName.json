@@ -21,17 +21,14 @@
         },
         "first": {
             "type": "varchar",
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "last": {
             "type": "varchar",
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "middle": {
             "type": "varchar",
-            "trim": true,
             "maxLength": 100,
             "pattern": "$noBadCharacters"
         }

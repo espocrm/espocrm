@@ -80,6 +80,7 @@
         }
     },
     "tooltips": {
+        "optionsReference": "Re-use options from another field.",
         "currencyDecimal": "Use the Decimal DB type. In the app, values will be represented as strings. Check this parameter if precision is required.",
         "cutHeight": "A text higher then a specified value will be cut with a 'show more' button displayed.",
         "urlStrip": "Strip a protocol and a trailing slash.",
@@ -143,6 +144,7 @@
         "array": "A list of values, similar to Multi-Enum field.",
         "address": "An address with street, city, state, postal code and country.",
         "url": "For storing links.",
+        "urlMultiple": "Multiple links.",
         "wysiwyg": "A text with HTML support.",
         "file": "For file uploading.",
         "image": "For image uploading.",

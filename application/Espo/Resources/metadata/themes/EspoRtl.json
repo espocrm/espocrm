@@ -6,7 +6,8 @@
             "type": "enum",
             "default": "top",
             "options": [
-                "top"
+                "top",
+                "side"
             ]
         }
     }

@@ -67,7 +67,7 @@ class Helper
     /**
      * Check dependencies.
      *
-     * @param array<string,string[]|string> $dependencyList
+     * @param array<string, string[]|string> $dependencyList
      * @return bool
      * @throws Error
      */
@@ -77,7 +77,7 @@ class Helper
             $dependencyList = (array) $dependencyList;
         }
 
-        /** @var array<string,string[]|string> $dependencyList */
+        /** @var array<string, string[]|string> $dependencyList */
 
         $actionObject = $this->getActionObject();
 

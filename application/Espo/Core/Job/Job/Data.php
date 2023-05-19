@@ -37,9 +37,7 @@ use stdClass;
 class Data
 {
     private stdClass $data;
-
     private ?string $targetId = null;
-
     private ?string $targetType = null;
 
     public function __construct(?stdClass $data = null)
@@ -50,7 +48,7 @@ class Data
     /**
      * Create an instance.
      *
-     * @param stdClass|array<string,mixed>|null $data Raw data.
+     * @param stdClass|array<string, mixed>|null $data Raw data.
      * @return self
      */
     public static function create($data = null): self
@@ -101,7 +99,6 @@ class Data
     public function withTargetId(?string $targetId): self
     {
         $obj = clone $this;
-
         $obj->targetId = $targetId;
 
         return $obj;
@@ -110,7 +107,6 @@ class Data
     public function withTargetType(?string $targetType): self
     {
         $obj = clone $this;
-
         $obj->targetType = $targetType;
 
         return $obj;

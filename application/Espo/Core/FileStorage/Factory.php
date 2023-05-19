@@ -29,24 +29,17 @@
 
 namespace Espo\Core\FileStorage;
 
-use Espo\Core\{
-    InjectableFactory,
-    Utils\Metadata,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 
 use RuntimeException;
 
 class Factory
 {
-    private Metadata $metadata;
-
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
-    {
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     public function create(string $name): Storage
     {

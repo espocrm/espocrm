@@ -225,7 +225,7 @@ define('views/preferences/record/edit', ['views/record/edit'], function (Dep) {
 
         actionResetDashboard: function () {
             this.confirm(this.translate('confirmation', 'messages'), () => {
-                this.ajaxPostRequest('Preferences/action/resetDashboard', {id: this.model.id})
+                Espo.Ajax.postRequest('Preferences/action/resetDashboard', {id: this.model.id})
                     .then(data =>  {
                         Espo.Ui.success(this.translate('Done'));
 

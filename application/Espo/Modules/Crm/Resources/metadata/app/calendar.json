@@ -1,7 +1,5 @@
 {
     "additionalAttributeList": [
         "color"
-    ],
-    "canceledStatusList": ["Not Held", "Canceled"],
-    "completedStatusList": ["Held", "Completed"]
+    ]
 }

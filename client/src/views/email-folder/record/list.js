@@ -55,9 +55,7 @@ define('views/email-folder/record/list', ['views/record/list'], function (Dep) {
                 return;
             }
 
-            this.ajaxPostRequest('EmailFolder/action/moveUp', {
-                id: model.id
-            }).then(() => {
+            Espo.Ajax.postRequest('EmailFolder/action/moveUp', {id: model.id}).then(() => {
                 this.collection.fetch();
             });
         },
@@ -75,12 +73,9 @@ define('views/email-folder/record/list', ['views/record/list'], function (Dep) {
                 return;
             }
 
-            this.ajaxPostRequest('EmailFolder/action/moveDown', {
-                id: model.id
-            }).then(() => {
+            Espo.Ajax.postRequest('EmailFolder/action/moveDown', {id: model.id}).then(() => {
                 this.collection.fetch();
             });
         },
     });
 });
-

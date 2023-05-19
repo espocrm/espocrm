@@ -93,6 +93,10 @@ class EmailService
             throw new Forbidden("2FA is not enabled.");
         }
 
+        if ($this->user->isPortal() && !$this->config->get('auth2FAInPortal')) {
+            throw new Forbidden("2FA is not enabled in portals.");
+        }
+
         $methodList = $this->config->get('auth2FAMethodList') ?? [];
 
         if (!in_array(EmailLogin::NAME, $methodList)) {

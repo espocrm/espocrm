@@ -36,7 +36,9 @@
                 "duration": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Duration",
                 "enum": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\Enumeration",
                 "multiEnum": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\MultiEnum",
-                "array": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\MultiEnum"
+                "array": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\MultiEnum",
+                "checklist": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\MultiEnum",
+                "urlMultiple": "Espo\\Tools\\Export\\Format\\Xlsx\\CellValuePreparators\\MultiEnum"
             },
             "params": {
                 "fields": {

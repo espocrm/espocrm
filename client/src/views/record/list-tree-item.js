@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/list-tree-item', 'view', function (Dep) {
+define('views/record/list-tree-item', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -169,7 +169,7 @@ define('views/record/list-tree-item', 'view', function (Dep) {
         },
 
         checkLastChildren: function () {
-            this.ajaxGetRequest(this.collection.name + '/action/lastChildrenIdList', {
+            Espo.Ajax.getRequest(this.collection.name + '/action/lastChildrenIdList', {
                 parentId: this.model.id
             }).then(function (idList) {
                 var childrenView = this.getView('children');

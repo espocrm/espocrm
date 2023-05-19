@@ -10,7 +10,9 @@
     </div>
     <div class="stream-head-text-container">
         <span class="text-muted message">{{{message}}}</span>
+        {{#if fieldsArr.length}}
         <a role="button" tabindex="0" data-action="expandDetails"><span class="fas fa-chevron-down"></span></a>
+        {{/if}}
     </div>
 </div>
 

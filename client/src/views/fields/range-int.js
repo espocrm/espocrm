@@ -26,22 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], function (Dep, Int) {
+define('views/fields/range-int',
+['views/fields/base', 'views/fields/int', 'lib!autonumeric'], function (Dep, Int, AutoNumeric) {
 
     return Dep.extend({
 
         type: 'rangeInt',
 
         listTemplate: 'fields/range-int/detail',
-
         detailTemplate: 'fields/range-int/detail',
-
         editTemplate: 'fields/range-int/edit',
 
         validations: ['required', 'int', 'range', 'order'],
 
         data: function () {
-            var data = Dep.prototype.data.call(this);
+            let data = Dep.prototype.data.call(this);
 
             data.ucName = Espo.Utils.upperCaseFirst(this.name);
             data.fromValue = this.model.get(this.fromField);
@@ -60,8 +59,8 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
         },
 
         getValueForDisplay: function () {
-            var fromValue = this.model.get(this.fromField);
-            var toValue = this.model.get(this.toField);
+            let fromValue = this.model.get(this.fromField);
+            let toValue = this.model.get(this.toField);
 
             fromValue = isNaN(fromValue) ? null : fromValue;
             toValue = isNaN(toValue) ? null : toValue;
@@ -100,10 +99,37 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
             }
         },
 
+        setupFinal: function () {
+            Dep.prototype.setupFinal.call(this);
+
+            this.setupAutoNumericOptions();
+        },
+
+        /**
+         * @protected
+         */
+        setupAutoNumericOptions: function () {
+            let separator = (!this.disableFormatting ? this.thousandSeparator : null) || '';
+            let decimalCharacter = '.';
+
+            if (separator === '.') {
+                decimalCharacter = ',';
+            }
+
+            this.autoNumericOptions = {
+                digitGroupSeparator: separator,
+                decimalCharacter: decimalCharacter,
+                modifyValueOnWheel: false,
+                decimalPlaces: 0,
+                selectOnFocus: false,
+                formulaMode: true,
+            };
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'edit') {
+            if (this.mode === this.MODE_EDIT) {
                 this.$from = this.$el.find('[data-name="' + this.fromField + '"]');
                 this.$to = this.$el.find('[data-name="' + this.toField + '"]');
 
@@ -114,6 +140,11 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
                 this.$to.on('change', () => {
                     this.trigger('change');
                 });
+
+                if (this.autoNumericOptions) {
+                    this.autoNumericInstance1 = new AutoNumeric(this.$from.get(0), this.autoNumericOptions);
+                    this.autoNumericInstance2 = new AutoNumeric(this.$to.get(0), this.autoNumericOptions);
+                }
             }
         },
 
@@ -131,7 +162,7 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
                 }
             };
 
-            var result = false;
+            let result = false;
 
             result = validate(this.fromField) || result;
             result = validate(this.toField) || result;
@@ -140,7 +171,7 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
         },
 
         validateInt: function () {
-            var validate = (name) => {
+            let validate = (name) => {
                 if (isNaN(this.model.get(name))) {
                     var msg = this.translate('fieldShouldBeInt', 'messages')
                         .replace('{field}', this.getLabelText());
@@ -151,7 +182,7 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
                 }
             };
 
-            var result = false;
+            let result = false;
 
             result = validate(this.fromField) || result;
             result = validate(this.toField) || result;
@@ -160,7 +191,7 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
         },
 
         validateRange: function () {
-            var validate = (name) => {
+            let validate = (name) => {
                 var value = this.model.get(name);
 
                 if (value === null) {
@@ -172,7 +203,7 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
 
                 if (minValue !== null && maxValue !== null) {
                     if (value < minValue || value > maxValue ) {
-                        var msg = this.translate('fieldShouldBeBetween', 'messages')
+                        let msg = this.translate('fieldShouldBeBetween', 'messages')
                             .replace('{field}', this.translate(name, 'fields', this.model.name))
                             .replace('{min}', minValue)
                             .replace('{max}', maxValue);
@@ -184,7 +215,7 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
                 } else {
                     if (minValue !== null) {
                         if (value < minValue) {
-                            var msg = this.translate('fieldShouldBeLess', 'messages')
+                            let msg = this.translate('fieldShouldBeLess', 'messages')
                                 .replace('{field}', this.translate(name, 'fields', this.model.name))
                                 .replace('{value}', minValue);
 
@@ -194,7 +225,7 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
                         }
                     } else if (maxValue !== null) {
                         if (value > maxValue) {
-                            var msg = this.translate('fieldShouldBeGreater', 'messages')
+                            let msg = this.translate('fieldShouldBeGreater', 'messages')
                                 .replace('{field}', this.translate(name, 'fields', this.model.name))
                                 .replace('{value}', maxValue);
 
@@ -206,7 +237,7 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
                 }
             };
 
-            var result = false;
+            let result = false;
 
             result = validate(this.fromField) || result;
             result = validate(this.toField) || result;
@@ -215,12 +246,12 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
         },
 
         validateOrder: function () {
-            var fromValue = this.model.get(this.fromField);
-            var toValue = this.model.get(this.toField);
+            let fromValue = this.model.get(this.fromField);
+            let toValue = this.model.get(this.toField);
 
             if (fromValue !== null && toValue !== null) {
                 if (fromValue > toValue) {
-                    var msg = this.translate('fieldShouldBeGreater', 'messages')
+                    let msg = this.translate('fieldShouldBeGreater', 'messages')
                         .replace('{field}', this.translate(this.toField, 'fields', this.model.name))
                         .replace('{value}', this.translate(this.fromField, 'fields', this.model.name));
 
@@ -241,11 +272,11 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
         },
 
         formatNumber: function (value) {
-            return value;
+            return Int.prototype.formatNumberDetail.call(this, value);
         },
 
-        fetch: function (form) {
-            var data = {};
+        fetch: function () {
+            let data = {};
 
             data[this.fromField] = this.parse(this.$from.val().trim());
             data[this.toField] = this.parse(this.$to.val().trim());

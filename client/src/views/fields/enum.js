@@ -97,6 +97,14 @@ function (Dep, /** module:ui/multi-select*/MultiSelect, /** module:ui/select*/Se
 
             data.valueIsSet = this.model.has(this.name);
 
+            if (data.isNotEmpty) {
+                data.valueTranslated =
+                    this.translatedOptions ?
+                        (this.translatedOptions[translationKey] || value) :
+                        this.getLanguage().translateOption(translationKey, this.name, this.entityType);
+
+            }
+
             return data;
         },
 
@@ -109,10 +117,18 @@ function (Dep, /** module:ui/multi-select*/MultiSelect, /** module:ui/select*/Se
                 }
             }
 
-            if (this.params.optionsPath) {
-                this.params.options = Espo.Utils.clone(
-                    this.getMetadata().get(this.params.optionsPath) || []
-                );
+            let optionsPath = this.params.optionsPath;
+            /** @type {?string} */
+            let optionsReference = this.params.optionsReference;
+
+            if (!optionsPath && optionsReference) {
+                let [refEntityType, refField] = optionsReference.split('.');
+
+                optionsPath = `entityDefs.${refEntityType}.fields.${refField}.options`;
+            }
+
+            if (optionsPath) {
+                this.params.options = Espo.Utils.clone(this.getMetadata().get(optionsPath)) || [];
             }
 
             this.styleMap = this.params.style || this.model.getFieldParam(this.name, 'style') || {};
@@ -153,13 +169,23 @@ function (Dep, /** module:ui/multi-select*/MultiSelect, /** module:ui/select*/Se
         },
 
         setupTranslation: function () {
-            if (!this.params.translation) {
+            let translation = this.params.translation;
+            /** @type {?string} */
+            let optionsReference = this.params.optionsReference;
+
+            if (!translation && optionsReference) {
+                let [refEntityType, refField] = optionsReference.split('.');
+
+                translation = `${refEntityType}.options.${refField}`;
+            }
+
+            if (!translation) {
                 return;
             }
 
             let translationObj;
 
-            let arr = this.params.translation.split('.');
+            let arr = translation.split('.');
             let pointer = this.getLanguage().data;
 
             arr.forEach(key => {

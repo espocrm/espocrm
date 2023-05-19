@@ -29,15 +29,11 @@
 
 namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
-use Espo\Core\{
-    Di,
-    Utils\DateTime as DateTimeUtil,
-};
+use Espo\Core\Di;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Functions\BaseFunction;
 
 use DateTime;
 use Exception;

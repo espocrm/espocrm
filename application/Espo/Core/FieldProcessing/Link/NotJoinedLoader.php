@@ -31,12 +31,9 @@ namespace Espo\Core\FieldProcessing\Link;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    FieldProcessing\Loader as LoaderInterface,
-    FieldProcessing\Loader\Params,
-};
-
+use Espo\Core\FieldProcessing\Loader as LoaderInterface;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\ORM\EntityManager;
 use Espo\ORM\Defs as OrmDefs;
 
 /**
@@ -49,7 +46,7 @@ class NotJoinedLoader implements LoaderInterface
     private EntityManager $entityManager;
 
     /**
-     * @var array<string,string[]>
+     * @var array<string, string[]>
      */
     private $fieldListCacheMap = [];
 

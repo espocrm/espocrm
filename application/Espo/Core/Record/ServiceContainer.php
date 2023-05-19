@@ -44,12 +44,9 @@ class ServiceContainer
 {
     /** @var array<string, Service<Entity>> */
     private $data = [];
-    private ServiceFactory $serviceFactory;
 
-    public function __construct(ServiceFactory $serviceFactory)
-    {
-        $this->serviceFactory = $serviceFactory;
-    }
+    public function __construct(private ServiceFactory $serviceFactory)
+    {}
 
     /**
      * Get a record service by an entity class name.

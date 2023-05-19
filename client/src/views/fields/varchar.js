@@ -96,6 +96,12 @@ define('views/fields/varchar', ['views/fields/base', 'helpers/reg-exp-pattern'],
             if (this.options.customOptionList) {
                 this.setOptionList(this.options.customOptionList);
             }
+
+            if (this.mode === this.MODE_DETAIL) {
+                if (this.params.copyToClipboard) {
+                    this.events['click [data-action="copyToClipboard"]'] = () => this.copyToClipboard();
+                }
+            }
         },
 
         /**
@@ -135,6 +141,17 @@ define('views/fields/varchar', ['views/fields/base', 'helpers/reg-exp-pattern'],
                     this.reRender();
                 }
             }
+        },
+
+        /**
+         * @protected
+         */
+        copyToClipboard: function () {
+            let value = this.model.get(this.name);
+
+            navigator.clipboard.writeText(value).then(() => {
+                Espo.Ui.success(this.translate('Copied to clipboard'));
+            });
         },
 
         /**
@@ -196,6 +213,7 @@ define('views/fields/varchar', ['views/fields/base', 'helpers/reg-exp-pattern'],
             }
 
             data.noSpellCheck = this.noSpellCheck;
+            data.copyToClipboard = this.params.copyToClipboard;
 
             return data;
         },

@@ -31,6 +31,7 @@ namespace Espo\Tools\UserSecurity\Password;
 
 use Espo\Core\ApplicationState;
 use Espo\Core\Authentication\Util\MethodProvider as AuthenticationMethodProvider;
+use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Exceptions\SendingError;
@@ -222,7 +223,7 @@ class RecoveryService
 
         if ($existingRequest) {
             if (!$noExposure) {
-                throw new Forbidden(Json::encode(['reason' => 'Already-Sent']));
+                throw new ForbiddenSilent('Already-Sent');
             }
 
             $this->fail("Denied for {$userId}, already sent.");

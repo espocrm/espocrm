@@ -31,7 +31,6 @@ namespace Espo\Core\Mail\Account\Hook;
 
 use Espo\Core\Mail\Account\Account;
 use Espo\Entities\Email;
-use Espo\Core\Mail\Account\Hook\BeforeFetchResult;
 
 interface AfterFetch
 {

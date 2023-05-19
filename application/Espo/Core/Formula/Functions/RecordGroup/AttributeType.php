@@ -48,13 +48,23 @@ class AttributeType extends \Espo\Core\Formula\Functions\AttributeType implement
         $id = $this->evaluate($item->value[1]);
         $attribute = $this->evaluate($item->value[2]);
 
-        if (!$entityType) throw new Error("Formula record\\attribute: Empty entityType.");
-        if (!$id) return null;
-        if (!$attribute) throw new Error("Formula record\\attribute: Empty attribute.");
+        if (!$entityType) {
+            throw new Error("Formula record\\attribute: Empty entityType.");
+        }
+
+        if (!$id) {
+            return null;
+        }
+
+        if (!$attribute) {
+            throw new Error("Formula record\\attribute: Empty attribute.");
+        }
 
         $entity = $this->entityManager->getEntity($entityType, $id);
 
-        if (!$entity) return null;
+        if (!$entity) {
+            return null;
+        }
 
         return $this->attributeFetcher->fetch($entity, $attribute);
     }

@@ -47,7 +47,7 @@ class PortalOnlyAccount implements Filter
     {
         $orGroup = [];
 
-        $accountIdList = $this->user->getLinkMultipleIdList('accounts') ?? [];
+        $accountIdList = $this->user->getLinkMultipleIdList('accounts');
         $contactId = $this->user->get('contactId');
 
         if (count($accountIdList)) {

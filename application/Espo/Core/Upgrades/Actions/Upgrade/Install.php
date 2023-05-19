@@ -32,7 +32,7 @@ namespace Espo\Core\Upgrades\Actions\Upgrade;
 class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 {
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return mixed
      * @throws \Espo\Core\Exceptions\Error
      * @throws \Espo\Core\Exceptions\Error
@@ -44,7 +44,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return mixed
      * @throws \Espo\Core\Exceptions\Error
      * @throws \Espo\Core\Exceptions\Error

@@ -29,9 +29,7 @@
 
 namespace Espo\Core\Portal\Utils;
 
-use Espo\Core\{
-    Utils\Config as BaseConfig,
-};
+use Espo\Core\Utils\Config as BaseConfig;
 
 use RuntimeException;
 use stdClass;
@@ -41,7 +39,7 @@ class Config extends BaseConfig
     private bool $portalParamsSet = false;
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     private $portalData = [];
 
@@ -100,7 +98,7 @@ class Config extends BaseConfig
     /**
      * Override parameters for a portal. Can be called only once.
      *
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     public function setPortalParameters(array $data = []): void
     {

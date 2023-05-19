@@ -105,7 +105,7 @@ class EmailAccount extends Record implements
     }
 
     /**
-     * @return ?array<string,mixed>
+     * @return ?array<string, mixed>
      * @throws Error
      * @throws NoSmtp
      * @internal Left for bc.

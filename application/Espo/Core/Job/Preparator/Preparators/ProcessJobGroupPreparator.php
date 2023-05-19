@@ -42,12 +42,8 @@ use DateTimeImmutable;
 
 class ProcessJobGroupPreparator implements Preparator
 {
-    private $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     public function prepare(Data $data, DateTimeImmutable $executeTime): void
     {

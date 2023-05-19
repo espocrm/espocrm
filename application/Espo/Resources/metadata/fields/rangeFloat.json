@@ -5,10 +5,18 @@
     ],
     "fields": {
         "from": {
-            "type": "float"
+            "type": "float",
+            "layoutAvailabilityList": [
+                "filters",
+                "massUpdate"
+            ]
         },
         "to": {
-            "type": "float"
+            "type": "float",
+            "layoutAvailabilityList": [
+                "filters",
+                "massUpdate"
+            ]
         }
     },
     "naming": "prefix",

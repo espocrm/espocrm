@@ -29,24 +29,15 @@
 
 namespace Espo\Core\Duplicate;
 
-use Espo\Core\{
-    InjectableFactory,
-    Utils\Metadata,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 
 use RuntimeException;
 
 class WhereBuilderFactory
 {
-    private $injectableFactory;
-
-    private $metadata;
-
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
-    }
+    public function __construct(private InjectableFactory $injectableFactory, private Metadata $metadata)
+    {}
 
     public function has(string $entityType): bool
     {

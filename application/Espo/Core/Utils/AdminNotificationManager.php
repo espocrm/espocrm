@@ -45,7 +45,7 @@ class AdminNotificationManager
     ) {}
 
     /**
-     * @return array<int,array{id:string,type:string,message:string}>
+     * @return array<int, array{id: string, type: string, message: string}>
      */
     public function getNotificationList(): array
     {
@@ -144,7 +144,7 @@ class AdminNotificationManager
 
     /**
      *
-     * @return array<string,array{currentVersion:string,latestVersion:string,extensionName:string}>
+     * @return array<string, array{currentVersion: string, latestVersion: string, extensionName: string}>
      */
     private function getExtensionsNeedingUpgrade(): array
     {
@@ -191,7 +191,7 @@ class AdminNotificationManager
     }
 
     /**
-     * @param array<string,string> $data
+     * @param array<string, string> $data
      */
     private function prepareMessage(string $message, array $data = []): string
     {

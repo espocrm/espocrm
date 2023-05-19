@@ -36,14 +36,10 @@ use ZMQ;
 
 class ZeroMQSender implements Sender
 {
-    private $config;
-
     private const DSN = 'tcp://localhost:5555';
 
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private Config $config)
+    {}
 
     public function send(string $message): void
     {

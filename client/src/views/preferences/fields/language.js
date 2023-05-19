@@ -26,16 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/fields/language', 'views/fields/enum', function (Dep) {
+define('views/preferences/fields/language', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
         setupOptions: function () {
-            this.params.options = Espo.Utils.clone(this.getMetadata().get(['app', 'language', 'list']) || [])
-                .sort(function (v1, v2) {
-                    return this.getLanguage().translateOption(v1, 'language')
-                        .localeCompare(this.getLanguage().translateOption(v2, 'language'));
-                }.bind(this));
+            this.params.options =
+                Espo.Utils.clone(this.getMetadata().get(['app', 'language', 'list']) || [])
+                    .sort((v1, v2) => {
+                        return this.getLanguage().translateOption(v1, 'language')
+                            .localeCompare(this.getLanguage().translateOption(v2, 'language'));
+                    });
 
             this.params.options.unshift('');
 
@@ -45,6 +46,5 @@ define('views/preferences/fields/language', 'views/fields/enum', function (Dep) 
 
             this.translatedOptions[''] = this.translate('Default') + ' (' + defaultTranslated + ')';
         },
-
     });
 });

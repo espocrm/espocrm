@@ -34,8 +34,6 @@ namespace Espo\Core\Utils\Client\ActionRenderer;
  */
 class Params
 {
-    private string $controller;
-    private string $action;
     /** @var ?array<string, mixed> */
     private ?array $data;
     private bool $initAuth = false;
@@ -43,10 +41,11 @@ class Params
     /**
      * @param ?array<string, mixed> $data
      */
-    public function __construct(string $controller, string $action, ?array $data = null)
-    {
-        $this->controller = $controller;
-        $this->action = $action;
+    public function __construct(
+        private string $controller,
+        private string $action,
+        ?array $data = null
+    ) {
         $this->data = $data;
     }
 

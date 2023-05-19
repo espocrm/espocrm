@@ -41,11 +41,12 @@ use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
+use LogicException;
 
 class Converter
 {
     /** @var ?array<string, mixed> */
-    private $entityDefs = null;
+    private ?array $entityDefs = null;
 
     private string $defaultAttributeType = Entity::VARCHAR;
 
@@ -53,7 +54,7 @@ class Converter
     private const INDEX_TYPE_INDEX = 'index';
 
     /** @var array<string, int> */
-    private $defaultLengthMap = [
+    private array $defaultLengthMap = [
         Entity::VARCHAR => 255,
         Entity::INT => 11,
     ];
@@ -63,7 +64,7 @@ class Converter
      *
      * @var array<string, string>
      */
-    private $paramMap = [
+    private array $paramMap = [
         'type' => 'type',
         'dbType' => 'dbType',
         'maxLength' => 'len',
@@ -89,14 +90,14 @@ class Converter
     ];
 
     /** @var array<string, mixed> */
-    private $idParams = [];
+    private array $idParams = [];
 
     /**
      * Permitted entityDefs parameters which will be copied to ormMetadata.
      *
      * @var string[]
      */
-    private $permittedEntityOptions = [
+    private array $permittedEntityOptions = [
         'indexes',
         'additionalTables',
     ];
@@ -160,11 +161,11 @@ class Converter
             );
         }
 
-        foreach ($ormMetadata as $entityOrmMetadata) {
+        foreach ($ormMetadata as $entityType => $entityOrmMetadata) {
             /** @var array<string, array<string, mixed>> $ormMetadata */
             $ormMetadata = Util::merge(
                 $ormMetadata,
-                $this->createEntityTypesFromRelations($entityOrmMetadata)
+                $this->createEntityTypesFromRelations($entityType, $entityOrmMetadata)
             );
 
             /** @var array<string, array<string, mixed>> $ormMetadata */
@@ -406,7 +407,7 @@ class Converter
                     $output[$attribute] = $fieldDefs;
                 }
 
-                /** @var array<string,array<string,mixed>> $output */
+                /** @var array<string, array<string, mixed>> $output */
             }
 
             if (isset($fieldTypeMetadata['linkDefs'])) {
@@ -846,7 +847,7 @@ class Converter
      * @param array<string, mixed> $defs
      * @return array<string, mixed>
      */
-    private function createEntityTypesFromRelations(array $defs): array
+    private function createEntityTypesFromRelations(string $entityType, array $defs): array
     {
         $result = [];
 
@@ -872,6 +873,11 @@ class Converter
                     ],
                 ],
             ];
+
+            if (!$relationDefs->hasMidKey()) {
+                throw new LogicException(
+                    "Bad manyMany relation {$name} in {$entityType}. Might be not defined on the other side.");
+            }
 
             $key1 = $relationDefs->getMidKey();
             $key2 = $relationDefs->getForeignMidKey();

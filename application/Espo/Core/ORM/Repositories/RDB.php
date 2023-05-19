@@ -31,15 +31,12 @@ namespace Espo\Core\ORM\Repositories;
 
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ORM\EntityFactory;
-
 use Espo\Core\Interfaces\Injectable;
-
-use Espo\Core\{
-    Utils\Metadata,
-    HookManager,
-    ApplicationState,
-    Utils\Id\RecordIdGenerator,
-    Utils\SystemUser};
+use Espo\Core\ApplicationState;
+use Espo\Core\HookManager;
+use Espo\Core\Utils\Id\RecordIdGenerator;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\SystemUser;
 
 /**
  * @deprecated As of v6.0. Not to be extended. Extend Espo\Core\Repositories\Database, or better

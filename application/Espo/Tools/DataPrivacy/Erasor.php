@@ -29,14 +29,12 @@
 
 namespace Espo\Tools\DataPrivacy;
 
+use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
-
-use Espo\Core\{
-    Record\ServiceContainer as RecordServiceContainer,
-    FieldProcessing\EmailAddress\AccessChecker as EmailAddressAccessChecker,
-    FieldProcessing\PhoneNumber\AccessChecker as PhoneNumberAccessChecker,
-};
+use Espo\Core\FieldProcessing\EmailAddress\AccessChecker as EmailAddressAccessChecker;
+use Espo\Core\FieldProcessing\PhoneNumber\AccessChecker as PhoneNumberAccessChecker;
+use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
 use Espo\Core\Di;
 
@@ -58,21 +56,11 @@ class Erasor implements
     use Di\FieldUtilSetter;
     use Di\UserSetter;
 
-    private $recordServiceContainer;
-
-    private $emailAddressAccessChecker;
-
-    private $phoneNumberAccessChecker;
-
     public function __construct(
-        RecordServiceContainer $recordServiceContainer,
-        EmailAddressAccessChecker $emailAddressAccessChecker,
-        PhoneNumberAccessChecker $phoneNumberAccessChecker
-    ) {
-        $this->recordServiceContainer = $recordServiceContainer;
-        $this->emailAddressAccessChecker = $emailAddressAccessChecker;
-        $this->phoneNumberAccessChecker = $phoneNumberAccessChecker;
-    }
+        private RecordServiceContainer $recordServiceContainer,
+        private EmailAddressAccessChecker $emailAddressAccessChecker,
+        private PhoneNumberAccessChecker $phoneNumberAccessChecker
+    ) {}
 
     /**
      * @param string[] $fieldList
@@ -81,7 +69,7 @@ class Erasor implements
      */
     public function erase(string $entityType, string $id, array $fieldList): void
     {
-        if ($this->acl->get('dataPrivacyPermission') === 'no') {
+        if ($this->acl->getPermissionLevel('dataPrivacyPermission') === Table::LEVEL_NO) {
             throw new Forbidden();
         }
 
@@ -93,11 +81,11 @@ class Erasor implements
             throw new NotFound();
         }
 
-        if (!$this->acl->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, Table::ACTION_EDIT)) {
             throw new Forbidden("No edit access.");
         }
 
-        $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($entityType, 'edit');
+        $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($entityType, Table::ACTION_EDIT);
 
         foreach ($fieldList as $field) {
             if (in_array($field, $forbiddenFieldList)) {

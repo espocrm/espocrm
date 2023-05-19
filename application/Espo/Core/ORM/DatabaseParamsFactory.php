@@ -31,6 +31,7 @@ namespace Espo\Core\ORM;
 
 use Espo\Core\Utils\Config;
 use Espo\ORM\DatabaseParams;
+
 use RuntimeException;
 
 class DatabaseParamsFactory

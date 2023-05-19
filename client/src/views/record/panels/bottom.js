@@ -299,10 +299,10 @@ define('views/record/panels/bottom', ['view'], function (Dep) {
                 if (readOnly !== null) {
                     o.readOnly = readOnly;
                 }
+            }
 
-                if (readOnly) {
-                    readOnlyLocked = true;
-                }
+            if (readOnly) {
+                readOnlyLocked = true;
             }
 
             if (this.inlineEditDisabled) {

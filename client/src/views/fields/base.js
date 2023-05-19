@@ -1187,7 +1187,7 @@ define('views/fields/base', ['view', 'ui/select'], function (Dep, /** module:ui/
                 return;
             }
 
-            this.notify('Saving...');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
 
             model
                 .save(attrs, {patch: true})

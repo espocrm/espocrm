@@ -29,38 +29,18 @@
 
 namespace Espo\Classes\Select\Email\Where\ItemConverters;
 
-use Espo\Core\{
-    Select\Where\ItemConverter,
-    Select\Where\Item,
-};
-
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\WhereItem as WhereClauseItem,
-    ORM\Query\Part\WhereClause,
-    ORM\EntityManager,
-    Classes\Select\Email\Helpers\EmailAddressHelper,
-};
+use Espo\Core\Select\Where\Item;
+use Espo\Core\Select\Where\ItemConverter;
+use Espo\Classes\Select\Email\Helpers\EmailAddressHelper;
+use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class FromEquals implements ItemConverter
 {
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var EmailAddressHelper
-     */
-    protected $emailAddressHelper;
-
     public function __construct(
-        EntityManager $entityManager,
-        EmailAddressHelper $emailAddressHelper
-    ) {
-        $this->entityManager = $entityManager;
-        $this->emailAddressHelper = $emailAddressHelper;
-    }
+        private EmailAddressHelper $emailAddressHelper
+    ) {}
 
     public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
     {

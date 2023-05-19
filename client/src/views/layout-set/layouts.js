@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/layout-set/layouts', 'views/admin/layouts/index', function (Dep) {
+define('views/layout-set/layouts', ['views/admin/layouts/index'], function (Dep) {
 
     return Dep.extend({
 
@@ -38,14 +38,14 @@ define('views/layout-set/layouts', 'views/admin/layouts/index', function (Dep) {
 
 
             this.wait(
-                this.getModelFactory().create('LayoutSet')
-                .then(
-                    function (m) {
+                this.getModelFactory()
+                    .create('LayoutSet')
+                    .then(m => {
                         this.sModel = m;
                         m.id = setId;
+
                         return m.fetch();
-                    }.bind(this)
-                )
+                    })
             );
         },
 
@@ -55,15 +55,20 @@ define('views/layout-set/layouts', 'views/admin/layouts/index', function (Dep) {
 
             var scopeList = [];
 
-            list.forEach(function (item) {
+            list.forEach(item => {
                 var arr = item.split('.');
                 var scope = arr[0];
-                if (~scopeList.indexOf(scope)) return;
+
+                if (~scopeList.indexOf(scope)) {
+                    return;
+                }
+
                 scopeList.push(scope);
             });
 
-            scopeList.forEach(function (scope) {
+            scopeList.forEach(scope => {
                 var o = {};
+
                 o.scope = scope;
                 o.url = this.baseUrl + '&scope=' + scope;
                 o.typeDataList = [];
@@ -74,21 +79,25 @@ define('views/layout-set/layouts', 'views/admin/layouts/index', function (Dep) {
                     var arr = item.split('.');
                     var scope = arr[0];
                     var type = arr[1];
-                    if (scope !== o.scope) return;
+
+                    if (scope !== o.scope) {
+                        return;
+                    }
+
                     typeList.push(type);
                 });
 
-                typeList.forEach(function (type) {
+                typeList.forEach(type => {
                     o.typeDataList.push({
                         type: type,
                         url: this.baseUrl + '&scope=' + scope + '&type=' + type,
                     });
-                }, this);
+                });
 
                 o.typeList = typeList;
 
                 dataList.push(o);
-            }, this);
+            });
 
             return dataList;
         },

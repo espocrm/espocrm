@@ -30,26 +30,19 @@
 namespace Espo\Modules\Crm\Classes\AclPortal\Contact;
 
 use Espo\Entities\User;
-
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Portal\Acl\DefaultOwnershipChecker,
-    Portal\Acl\OwnershipAccountChecker,
-    Portal\Acl\OwnershipContactChecker,
-};
+use Espo\Core\Portal\Acl\DefaultOwnershipChecker;
+use Espo\Core\Portal\Acl\OwnershipAccountChecker;
+use Espo\Core\Portal\Acl\OwnershipContactChecker;
 
 /**
- * @implements OwnershipAccountChecker<\Espo\Modules\Crm\Entities\Contact>
- * @implements OwnershipContactChecker<\Espo\Modules\Crm\Entities\Contact>
+ * @implements OwnershipAccountChecker<Contact>
+ * @implements OwnershipContactChecker<Contact>
  */
 class OwnershipChecker implements OwnershipAccountChecker, OwnershipContactChecker
 {
-    private $defaultOwnershipChecker;
-
-    public function __construct(DefaultOwnershipChecker $defaultOwnershipChecker) {
-        $this->defaultOwnershipChecker = $defaultOwnershipChecker;
-    }
+    public function __construct(private DefaultOwnershipChecker $defaultOwnershipChecker) {}
 
     public function checkContact(User $user, Entity $entity): bool
     {

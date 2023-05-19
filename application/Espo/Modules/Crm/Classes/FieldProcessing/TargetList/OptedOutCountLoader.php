@@ -30,35 +30,22 @@
 namespace Espo\Modules\Crm\Classes\FieldProcessing\TargetList;
 
 use Espo\ORM\Entity;
-
 use Espo\Modules\Crm\Entities\TargetList;
-
 use Espo\Core\Utils\Metadata;
-
-use Espo\Core\{
-    FieldProcessing\Loader,
-    FieldProcessing\Loader\Params,
-    ORM\EntityManager,
-};
+use Espo\Core\FieldProcessing\Loader;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\ORM\EntityManager;
 
 /**
  * @implements Loader<TargetList>
  */
 class OptedOutCountLoader implements Loader
 {
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private array $targetLinkList;
 
-    private EntityManager $entityManager;
-
-    private Metadata $metadata;
-
-    public function __construct(EntityManager $entityManager, Metadata $metadata)
+    public function __construct(private EntityManager $entityManager, private Metadata $metadata)
     {
-        $this->entityManager = $entityManager;
-        $this->metadata = $metadata;
 
         $this->targetLinkList = $this->metadata->get(['scopes', 'TargetList', 'targetLinkList']) ?? [];
     }

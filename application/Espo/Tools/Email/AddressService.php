@@ -172,7 +172,7 @@ class AddressService
     }
 
     /**
-     * @param array<int,array<string,mixed>> $result
+     * @param array<int, array<string, mixed>> $result
      */
     private function findInAddressBookByEntityType(
         string $filter,
@@ -325,7 +325,7 @@ class AddressService
     }
 
     /**
-     * @param array<int,array<string,mixed>> $result
+     * @param array<int, array<string, mixed>> $result
      */
     protected function findInInboundEmail(string $query, int $limit, array &$result): void
     {

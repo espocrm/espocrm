@@ -7,8 +7,7 @@
         },
         {
             "name": "default",
-            "type": "varchar",
-            "trim": true
+            "type": "varchar"
         },
         {
             "name": "maxLength",
@@ -28,6 +27,11 @@
             "default": null,
             "tooltip": true,
             "view": "views/admin/field-manager/fields/pattern"
+        },
+        {
+            "name": "copyToClipboard",
+            "type": "bool",
+            "default": false
         },
         {
             "name": "audited",

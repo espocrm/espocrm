@@ -35,15 +35,10 @@ use Espo\Core\Utils\Config;
 
 class SmsSender
 {
-    private $sender;
-
-    private $config;
-
-    public function __construct(Sender $sender, Config $config)
-    {
-        $this->sender = $sender;
-        $this->config = $config;
-    }
+    public function __construct(
+        private Sender $sender,
+        private Config $config
+    ) {}
 
     public function send(SmsEntity $sms): void
     {

@@ -461,7 +461,7 @@ class Renamer
 
     private function renameInRelationshipsEntity(string $entityType, string $fromEntityType, string $toEntityType): void
     {
-        /** @var array<string,array<string,mixed>> $linkDefs */
+        /** @var array<string, array<string, mixed>> $linkDefs */
         $linkDefs = $this->metadata->get(['entityDefs', $entityType, 'links']) ?? [];
 
         foreach ($linkDefs as $link => $defs) {

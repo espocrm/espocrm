@@ -321,7 +321,7 @@ class RDBRepository implements Repository
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array<scalar,mixed>|null $conditions Join conditions.
+     * @param WhereItem|array<scalar, mixed>|null $conditions Join conditions.
      * @return RDBSelectBuilder<TEntity>
      */
     public function join($target, ?string $alias = null, $conditions = null): RDBSelectBuilder
@@ -335,7 +335,7 @@ class RDBRepository implements Repository
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array<scalar,mixed>|null $conditions Join conditions.
+     * @param WhereItem|array<scalar, mixed>|null $conditions Join conditions.
      * @return RDBSelectBuilder<TEntity>
      */
     public function leftJoin($target, ?string $alias = null, $conditions = null): RDBSelectBuilder

@@ -46,7 +46,7 @@ class ScheduledJob
      * Period to check if crontab is configured properly.
      */
     protected string $checkingCronPeriod = '25 hours';
-    /** @var array<string,string> */
+    /** @var array<string, string> */
     protected $cronSetup = [
         'linux' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BINARY} -f {CRON-FILE} > /dev/null 2>&1',
         'windows' => '{PHP-BINARY} -f {FULL-CRON-PATH}',

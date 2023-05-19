@@ -30,18 +30,41 @@ define('views/settings/fields/oidc-redirect-uri', ['views/fields/varchar'], func
 
     return Dep.extend({
 
-        detailTemplateContent: `{{value}}`,
+        detailTemplateContent: `
+            {{#if isNotEmpty}}
+                <a
+                    role="button"
+                    data-action="copyToClipboard"
+                    class="pull-right text-soft"
+                    title="{{translate 'Copy to Clipboard'}}"
+                ><span class="far fa-copy"></span></a>
+                {{value}}
+            {{else}}
+                <span class="none-value">{{translate 'None'}}</span>
+            {{/if}}
+        `,
 
         portalCollection: null,
 
         data: function () {
-            let valueIsSet = this.model.entityType !== 'AuthenticationProvider' ||
+            let isNotEmpty = this.model.entityType !== 'AuthenticationProvider' ||
                 this.portalCollection;
 
             return {
                 value: this.getValueForDisplay(),
-                valueIsSet: valueIsSet,
+                isNotEmpty: isNotEmpty,
             };
+        },
+
+        /**
+         * @protected
+         */
+        copyToClipboard: function () {
+            let value = this.getValueForDisplay();
+
+            navigator.clipboard.writeText(value).then(() => {
+                Espo.Ui.success(this.translate('Copied to clipboard'));
+            });
         },
 
         getValueForDisplay: function () {

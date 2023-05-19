@@ -52,34 +52,18 @@ use stdClass;
 
 class Service
 {
-    private Acl $acl;
-    private LayoutUtil $layout;
-    private LayoutManager $layoutManager;
-    private EntityManager $entityManager;
-    private Metadata $metadata;
-    private DataManager $dataManager;
-    private User $user;
-
     public function __construct(
-        Acl $acl,
-        LayoutUtil $layout,
-        LayoutManager $layoutManager,
-        EntityManager $entityManager,
-        Metadata $metadata,
-        DataManager $dataManager,
-        User $user
-    ) {
-        $this->acl = $acl;
-        $this->layout = $layout;
-        $this->layoutManager = $layoutManager;
-        $this->entityManager = $entityManager;
-        $this->metadata = $metadata;
-        $this->dataManager = $dataManager;
-        $this->user = $user;
-    }
+        private Acl $acl,
+        private LayoutUtil $layout,
+        private LayoutManager $layoutManager,
+        private EntityManager $entityManager,
+        private Metadata $metadata,
+        private DataManager $dataManager,
+        private User $user
+    ) {}
 
     /**
-     * @return array<int,mixed>|stdClass|null
+     * @return array<int, mixed>|stdClass|null
      * @throws NotFound
      * @throws Error
      */
@@ -311,7 +295,7 @@ class Service
     }
 
     /**
-     * @return array<int,mixed>|stdClass|null
+     * @return array<int, mixed>|stdClass|null
      * @throws NotFound
      * @throws Error
      */

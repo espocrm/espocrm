@@ -29,28 +29,24 @@
 
 namespace tests\unit\Espo\Core\Select;
 
-use Espo\Core\Select\{
-    SelectBuilder,
-    SearchParams,
-    Applier\Factory as ApplierFactory,
-    Where\Applier as WhereApplier,
-    Select\Applier as SelectApplier,
-    Order\Applier as OrderApplier,
-    AccessControl\Applier as AccessControlFilterApplier,
-    Primary\Applier as PrimaryFilterApplier,
-    Text\Applier as TextFilterApplier,
-    Applier\Appliers\Additional as AdditionalApplier,
-    Applier\Appliers\Limit as LimitApplier,
-    Bool\Applier as BoolFilterListApplier,
-    Where\Params as WhereParams,
-    Order\Params as OrderParams,
-    Text\FilterParams as TextFilterParams,
-};
+use Espo\Core\Select\AccessControl\Applier as AccessControlFilterApplier;
+use Espo\Core\Select\Applier\Appliers\Additional as AdditionalApplier;
+use Espo\Core\Select\Applier\Appliers\Limit as LimitApplier;
+use Espo\Core\Select\Applier\Factory as ApplierFactory;
+use Espo\Core\Select\Bool\Applier as BoolFilterListApplier;
+use Espo\Core\Select\Order\Applier as OrderApplier;
+use Espo\Core\Select\Order\Params as OrderParams;
+use Espo\Core\Select\Primary\Applier as PrimaryFilterApplier;
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\Select\Applier as SelectApplier;
+use Espo\Core\Select\SelectBuilder;
+use Espo\Core\Select\Text\Applier as TextFilterApplier;
+use Espo\Core\Select\Text\FilterParams as TextFilterParams;
+use Espo\Core\Select\Where\Applier as WhereApplier;
+use Espo\Core\Select\Where\Params as WhereParams;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Entities\User,
-};
+use Espo\Entities\User;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 {

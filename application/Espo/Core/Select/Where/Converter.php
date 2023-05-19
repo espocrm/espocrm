@@ -202,7 +202,7 @@ class Converter
 
     /**
      * @param mixed $value
-     * @return array<int|string ,mixed>
+     * @return array<int|string, mixed>
      * @throws Error
      */
     private function applyIsUserFromTeams(QueryBuilder $queryBuilder, string $attribute, $value): array

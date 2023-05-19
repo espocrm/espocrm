@@ -29,11 +29,9 @@
 
 namespace Espo\Core\Portal\Utils;
 
-use Espo\Core\{
-    Utils\Layout as LayoutBase,
-    Exceptions\Error,
-    Utils\Resource\FileReader\Params as FileReaderParams,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Layout as LayoutBase;
+use Espo\Core\Utils\Resource\FileReader\Params as FileReaderParams;
 
 class Layout extends LayoutBase
 {

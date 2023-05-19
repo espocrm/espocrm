@@ -57,7 +57,8 @@ class UserSecurity
 
         if (
             !$this->user->isAdmin() &&
-            !$this->user->isRegular()
+            !$this->user->isRegular() &&
+            !$this->user->isPortal()
         ) {
             throw new Forbidden();
         }

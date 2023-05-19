@@ -35,19 +35,11 @@ use Espo\Core\Utils\ClassFinder;
 
 class JobFactory
 {
-    private ClassFinder $classFinder;
-    private InjectableFactory $injectableFactory;
-    private MetadataProvider $metadataProvider;
-
     public function __construct(
-        ClassFinder $classFinder,
-        InjectableFactory $injectableFactory,
-        MetadataProvider $metadataProvider
-    ) {
-        $this->classFinder = $classFinder;
-        $this->injectableFactory = $injectableFactory;
-        $this->metadataProvider = $metadataProvider;
-    }
+        private ClassFinder $classFinder,
+        private InjectableFactory $injectableFactory,
+        private MetadataProvider $metadataProvider
+    ) {}
 
     /**
      * Create a job by a scheduled job name.
@@ -68,6 +60,7 @@ class JobFactory
 
     /**
      * Create a job by a class name.
+     *
      * @param class-string<Job|JobDataLess> $className
      * @return Job|JobDataLess
      */

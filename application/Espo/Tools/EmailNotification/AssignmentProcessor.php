@@ -30,20 +30,19 @@
 namespace Espo\Tools\EmailNotification;
 
 use Espo\Core\ORM\Entity;
-
+use Espo\Entities\Email;
+use Espo\Entities\Preferences;
+use Espo\Entities\User;
 use Espo\ORM\EntityManager;
-
-use Espo\Core\{
-    Htmlizer\HtmlizerFactory as HtmlizerFactory,
-    Htmlizer\Htmlizer,
-    Utils\Config,
-    Utils\Metadata,
-    Utils\Language,
-    Utils\TemplateFileManager,
-    Mail\EmailSender as EmailSender,
-    Utils\Util,
-    Utils\Log,
-};
+use Espo\Core\Htmlizer\Htmlizer;
+use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
+use Espo\Core\Mail\EmailSender as EmailSender;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\TemplateFileManager;
+use Espo\Core\Utils\Util;
 
 use Exception;
 use LogicException;
@@ -52,41 +51,16 @@ class AssignmentProcessor
 {
     private ?Htmlizer $htmlizer = null;
 
-    private $entityManager;
-
-    private $htmlizerFactory;
-
-    private $emailSender;
-
-    private $config;
-
-    private $templateFileManager;
-
-    private $metadata;
-
-    private $language;
-
-    private $log;
-
     public function __construct(
-        EntityManager $entityManager,
-        HtmlizerFactory $htmlizerFactory,
-        EmailSender $emailSender,
-        Config $config,
-        TemplateFileManager $templateFileManager,
-        Metadata $metadata,
-        Language $language,
-        Log $log
-    ) {
-        $this->entityManager = $entityManager;
-        $this->htmlizerFactory = $htmlizerFactory;
-        $this->emailSender = $emailSender;
-        $this->config = $config;
-        $this->templateFileManager = $templateFileManager;
-        $this->metadata = $metadata;
-        $this->language = $language;
-        $this->log = $log;
-    }
+        private EntityManager $entityManager,
+        private HtmlizerFactory $htmlizerFactory,
+        private EmailSender $emailSender,
+        private Config $config,
+        private TemplateFileManager $templateFileManager,
+        private Metadata $metadata,
+        private Language $language,
+        private Log $log
+    ) {}
 
     public function process(AssignmentProcessorData $data): void
     {
@@ -104,7 +78,7 @@ class AssignmentProcessor
             throw new LogicException();
         }
 
-        $user = $this->entityManager->getEntity('User', $userId);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             return;
@@ -114,7 +88,7 @@ class AssignmentProcessor
             return;
         }
 
-        $preferences = $this->entityManager->getEntity('Preferences', $userId);
+        $preferences = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $userId);
 
         if (!$preferences) {
             return;
@@ -130,9 +104,9 @@ class AssignmentProcessor
             return;
         }
 
-        $assignerUser = $this->entityManager->getEntity('User', $assignerUserId);
+        $assignerUser = $this->entityManager->getEntityById(User::ENTITY_TYPE, $assignerUserId);
 
-        $entity = $this->entityManager->getEntity($entityType, $entityId);
+        $entity = $this->entityManager->getEntityById($entityType, $entityId);
 
         if (!$entity) {
             return;
@@ -160,7 +134,8 @@ class AssignmentProcessor
             return;
         }
 
-        $email = $this->entityManager->getNewEntity('Email');
+        /** @var Email $email */
+        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
         $subjectTpl = $this->templateFileManager->getTemplate('assignment', 'subject', $entity->getEntityType());
         $bodyTpl = $this->templateFileManager->getTemplate('assignment', 'body', $entity->getEntityType());

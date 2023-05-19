@@ -43,22 +43,12 @@ use Espo\Entities\User;
 
 class Service
 {
-    private Fetcher $fetcher;
-    private AccountFactory $accountFactory;
-    private StorageFactory $storageFactory;
-    private User $user;
-
     public function __construct(
-        Fetcher $fetcher,
-        AccountFactory $accountFactory,
-        StorageFactory $storageFactory,
-        User $user
-    ) {
-        $this->fetcher = $fetcher;
-        $this->accountFactory = $accountFactory;
-        $this->storageFactory = $storageFactory;
-        $this->user = $user;
-    }
+        private Fetcher $fetcher,
+        private AccountFactory $accountFactory,
+        private StorageFactory $storageFactory,
+        private User $user
+    ) {}
 
     /**
      * @param string $id Account ID.
