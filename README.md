@@ -32,7 +32,6 @@ The documentation for administrators, users and developers is available [here](h
 ### Bug reporting
 
 Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our [forum](https://forum.espocrm.com/forum/bug-reports).
-We'd appreciate if you prefer posting issues on weekdays rather than weekends.
 
 ### Installing the stable version
 
