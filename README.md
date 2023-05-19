@@ -53,7 +53,7 @@ Branches:
 * *master* – develop branch; new features should be pushed to this branch;
 * *stable* – last stable release.
 
-## Language
+### Language
 
 If you want to improve existing translation or add a language that is not available yet, you can contribute on our [POEditor](https://poeditor.com/join/project/gLDKZtUF4i) project. See instructions [here](https://www.espocrm.com/blog/how-to-use-poeditor-to-translate-espocrm/).
 
