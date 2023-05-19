@@ -66,7 +66,7 @@ Changes on POEditor are usually merged to the GitHub repository before minor rel
 
 ### Community & Support
 
-If you have a question regarding some features, need help or customizations, want to get in touch with other EspoCRM users, or add a feature request, please use our [Community Forum](https://forum.espocrm.com/). We believe that using a forum to ask for help and share experience allows everyone in the community to contribute and use this knowledge later.
+If you have a question regarding some features, need help or customizations, want to get in touch with other EspoCRM users, or add a feature request, please use our [community forum](https://forum.espocrm.com/). We believe that using a forum to ask for help and share experience allows everyone in the community to contribute and use this knowledge later.
 
 ### License
 
