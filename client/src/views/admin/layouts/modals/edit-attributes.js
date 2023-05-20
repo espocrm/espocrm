@@ -58,7 +58,7 @@ define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], f
                 },
                 {
                     name: 'cancel',
-                    text: 'Cancel',
+                    text: this.translate('Cancel'),
                 },
             ];
 
