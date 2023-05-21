@@ -114,13 +114,31 @@ class BindingContainer
             $key = '$' . $param->getName();
         }
 
-        if ($className && $key && $this->data->hasContext($className, $key)) {
+        $type = $param->getType();
+
+        if (
+            $className &&
+            $key &&
+            $this->data->hasContext($className, $key)
+        ) {
+            // @todo For v7.6. Uncomment, then remove the return statement below.
+            /*$binding = $this->data->getContext($className, $key);
+
+            $notMatching =
+                $type &&
+                $type instanceof ReflectionNamedType &&
+                !$type->isBuiltin() &&
+                $binding->getType() === Binding::VALUE &&
+                is_scalar($binding->getValue());
+
+            if (!$notMatching) {
+                return $binding;
+            }*/
+
             return $this->data->getContext($className, $key);
         }
 
         $dependencyClassName = null;
-
-        $type = $param->getType();
 
         if (
             $type &&

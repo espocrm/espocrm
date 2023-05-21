@@ -43,6 +43,8 @@ use ReflectionClass;
 use ReflectionParameter;
 use ReflectionNamedType;
 
+use tests\unit\testClasses\Core\Binding\Class0;
+use tests\unit\testClasses\Core\Binding\Class1;
 use tests\unit\testClasses\Core\Binding\SomeInterface1;
 use tests\unit\testClasses\Core\Binding\SomeInterface2;
 use tests\unit\testClasses\Core\Binding\SomeClass1;
@@ -643,4 +645,41 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $param3 = $this->createParamMock('test', SomeInterface2::class);
         $this->assertTrue($container->hasByParam($class3, $param3));
     }
+
+    /*public function testTypedParamWithScalarBound1(): void
+    {
+        $container = BindingContainerBuilder::create()
+            ->inContext(Class0::class, function (ContextualBinder $binder): void {
+                $binder->bindValue('$dep', 'test');
+            })
+            ->build();
+
+        $class = new ReflectionClass(Class0::class);
+
+        $constructor = $class->getConstructor();
+
+        $params = $constructor->getParameters();
+
+        $this->assertFalse($container->hasByParam($class, $params[0]));
+    }
+
+    public function testTypedParamWithScalarBound2(): void
+    {
+        $container = BindingContainerBuilder::create()
+            ->inContext(Class0::class, function (ContextualBinder $binder): void {
+                $binder->bindValue('$dep', new Class1());
+            })
+            ->build();
+
+        $class = new ReflectionClass(Class0::class);
+
+        $constructor = $class->getConstructor();
+
+        $params = $constructor->getParameters();
+
+        $binding = $container->getByParam($class, $params[0]);
+
+        $this->assertEquals(Binding::VALUE, $binding->getType());
+        $this->assertInstanceOf(Class1::class, $binding->getValue());
+    }*/
 }
