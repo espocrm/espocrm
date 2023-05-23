@@ -3128,4 +3128,22 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             $this->query->composeSelect($query)
         );
     }
+
+    public function testSelections1(): void
+    {
+        $query1 = SelectBuilder::create()
+            ->select(['number'])
+            ->from('Post')
+            ->build();
+
+        $query2 = SelectBuilder::create()
+            ->select($query1->getSelect())
+            ->from('Post')
+            ->build();
+
+        $this->assertEquals(
+            $this->query->composeSelect($query1),
+            $this->query->composeSelect($query2)
+        );
+    }
 }

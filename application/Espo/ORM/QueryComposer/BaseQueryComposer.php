@@ -1813,9 +1813,14 @@ abstract class BaseQueryComposer implements QueryComposer
             ];
         }
 
-        if (is_array($attribute) && count($attribute) === 2) {
-            $alias = $attribute[1];
+        if (is_array($attribute) && count($attribute) === 1) {
+            $attribute = $attribute[0];
+        }
 
+        if (is_array($attribute) && count($attribute) === 2) {
+            // @todo Refactor to unite convertComplexExpression and select, noSelect, notStorable (here and below).
+
+            $alias = $attribute[1];
             $attribute0 = $attribute[0];
 
             if (!$entity->hasAttribute($attribute0)) {
@@ -1848,7 +1853,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (!is_string($attribute)) {
-            throw new RuntimeException();
+            throw new RuntimeException("Bad select.");
         }
 
         if (!$entity->hasAttribute($attribute)) {
