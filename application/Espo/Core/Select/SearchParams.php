@@ -150,7 +150,7 @@ class SearchParams
      */
     public function getMaxTextAttributeLength(): ?int
     {
-        return $this->rawParams['maxTextAttributeLength'];
+        return $this->rawParams['maxTextAttributeLength'] ?? null;
     }
 
     /**
