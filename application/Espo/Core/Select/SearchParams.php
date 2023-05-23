@@ -187,7 +187,11 @@ class SearchParams
         $obj = clone $this;
         $obj->rawParams['order'] = $order;
 
-        if ($order !== self::ORDER_ASC && $order !== self::ORDER_DESC) {
+        if (
+            $order !== null &&
+            $order !== self::ORDER_ASC &&
+            $order !== self::ORDER_DESC
+        ) {
             throw new InvalidArgumentException("order value is bad.");
         }
 
