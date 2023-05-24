@@ -1,4 +1,5 @@
 {
+    "aclPortal": "crm:acl-portal/document",
     "controller": "controllers/record",
     "views": {
         "list": "crm:views/document/list"
