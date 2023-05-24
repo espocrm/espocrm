@@ -1178,7 +1178,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $entityType = $entity->getEntityType();
 
-        if (strpos($attribute, ':')) {
+        if (strpos($attribute, ':') && !Util::isArgumentString($attribute)) {
             /** @var int $delimiterPosition */
             $delimiterPosition = strpos($attribute, ':');
             $function = substr($attribute, 0, $delimiterPosition);

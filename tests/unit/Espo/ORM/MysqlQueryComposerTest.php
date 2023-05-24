@@ -3146,4 +3146,16 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             $this->query->composeSelect($query2)
         );
     }
+
+    public function testStringWithColon(): void
+    {
+        $query = SelectBuilder::create()
+            ->select(["'2020-10-10 20:20:20'"])
+            ->from('Post')
+            ->build();
+
+        $sql = $this->query->composeSelect($query);
+
+        $this->assertIsString($sql);
+    }
 }
