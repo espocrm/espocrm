@@ -47,6 +47,7 @@ use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 use DateTime;
 use DateInterval;
+use RuntimeException;
 
 /**
  * Converts a where item to a where clause (for ORM).
@@ -1159,7 +1160,6 @@ class ItemGeneralConverter implements ItemConverter
     /**
      * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws \Exception
      */
     private function processLastFiscalQuarter(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
@@ -1203,13 +1203,13 @@ class ItemGeneralConverter implements ItemConverter
 
         $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);
 
-        $key = $defs->getForeignMidKey();
-        $nearKey = $defs->getMidKey();
-        $middleEntityType = ucfirst($defs->getRelationshipName());
-
         $relationType = $defs->getType();
 
         if ($relationType == Entity::MANY_MANY) {
+            $key = $defs->getForeignMidKey();
+            $nearKey = $defs->getMidKey();
+            $middleEntityType = ucfirst($defs->getRelationshipName());
+
             // The foreign table is not joined as it would perform much slower.
             // Trade off is that if a foreign record is deleted but the middle table
             // is not yet deleted, it will give a non-actual result.
@@ -1229,7 +1229,8 @@ class ItemGeneralConverter implements ItemConverter
         if (
             $relationType == Entity::HAS_MANY ||
             $relationType == Entity::HAS_ONE ||
-            $relationType == Entity::BELONGS_TO
+            $relationType == Entity::BELONGS_TO ||
+            $relationType === Entity::HAS_CHILDREN
         ) {
             $subQuery = QueryBuilder::create()
                 ->select('id')
@@ -1241,7 +1242,7 @@ class ItemGeneralConverter implements ItemConverter
             return ['id=s' =>  $subQuery];
         }
 
-        throw new Error("Bad where item. Not supported relation type.");
+        throw new RuntimeException("Bad where item. Not supported relation type.");
     }
 
     /**
@@ -1254,13 +1255,13 @@ class ItemGeneralConverter implements ItemConverter
 
         $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);
 
-        $key = $defs->getForeignMidKey();
-        $nearKey = $defs->getMidKey();
-        $middleEntityType = ucfirst($defs->getRelationshipName());
-
         $relationType = $defs->getType();
 
         if ($relationType == Entity::MANY_MANY) {
+            $key = $defs->getForeignMidKey();
+            $nearKey = $defs->getMidKey();
+            $middleEntityType = ucfirst($defs->getRelationshipName());
+
             // The foreign table is not joined as it would perform much slower.
             // Trade off is that if a foreign record is deleted but the middle table
             // is not yet deleted, it will give a non-actual result.
@@ -1280,7 +1281,8 @@ class ItemGeneralConverter implements ItemConverter
         if (
             $relationType == Entity::HAS_MANY ||
             $relationType == Entity::HAS_ONE ||
-            $relationType == Entity::BELONGS_TO
+            $relationType == Entity::BELONGS_TO ||
+            $relationType == Entity::HAS_CHILDREN
         ) {
             $subQuery = QueryBuilder::create()
                 ->select('id')
@@ -1292,7 +1294,7 @@ class ItemGeneralConverter implements ItemConverter
             return ['id=s' =>  $subQuery];
         }
 
-        throw new Error("Bad where item. Not supported relation type.");
+        throw new RuntimeException("Bad where item. Not supported relation type.");
     }
 
     /**
