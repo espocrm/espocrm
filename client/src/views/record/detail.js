@@ -76,7 +76,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @property {'default'|'success'|'danger'|'warning'} [style] A style.
          * @property {boolean} [tabBreak] Is a tab-break.
          * @property {string} [tabLabel] A tab label. If starts with `$`, a translation
-         *   with the `tabs` category is used.
+         *   of the `tabs` category is used.
          * @property {module:views/record/detail~rowDefs[]} [rows] Rows.
          */
 
