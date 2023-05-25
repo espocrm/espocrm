@@ -1,0 +1,289 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/scopes.json",
+    "title": "scopes",
+    "description": "Scope definitions.",
+    "type": "object",
+    "properties": {
+        "entity": {
+            "description": "Whether the scope represents an entity type.",
+            "type": "boolean"
+        },
+        "object": {
+            "description": "Whether the entity is a business object. Means that it's not an entity for internal system purpose; an object entity represents some business entity.",
+            "type": "boolean"
+        },
+        "module": {
+            "description": "The the name of the module, where this scope is defined.",
+            "type": "string"
+        },
+        "stream": {
+            "description": "Whether the entity has the stream.",
+            "type": "boolean"
+        },
+        "importable": {
+            "description": "Whether the entity is available in the Import tool.",
+            "type": "boolean"
+        },
+        "layouts": {
+            "description": "Whether the entity is available in the Layout Manager tool.",
+            "type": "boolean"
+        },
+        "tab": {
+            "description": "Whether the scope is available as a navbar tab.",
+            "type": "boolean"
+        },
+        "tabAclPermission": {
+            "description": "A permission level required for a user to have the scope available as a navbar tab. Examples: portal, massUpdate.",
+            "type": ["string", "null"]
+        },
+        "type": {
+            "description": "A template type of the entity. E.g. Base, BasePlus, Person, Company, CategoryTree, Event.",
+            "type": ["string", "null"]
+        },
+        "acl": {
+            "description": "Whether the scope is available in Roles. Available values: true, false, \"boolean\". Boolean means that it will be available in roles w/o actions.",
+            "anyOf": [
+                {
+                    "type" : "boolean"
+                },
+                {
+                    "type" : "string",
+                    "enum": ["boolean"]
+                }
+            ]
+        },
+        "aclPortal": {
+            "description": "Whether the scope is available in Portal Roles. Available values: true, false, \"boolean\". Boolean means that it will be available in roles w/o actions.",
+            "anyOf": [
+                {
+                    "type" : "boolean"
+                },
+                {
+                    "type" : "string",
+                    "enum": ["boolean"]
+                }
+            ]
+        },
+        "aclActionList": {
+            "description": "A list of available actions in Roles.",
+            "type": "array",
+            "items": {
+                "enum": ["create", "read", "edit", "delete", "stream"]
+            }
+        },
+        "aclPortalActionList": {
+            "description": "A list of available actions in Portal Roles.",
+            "type": "array",
+            "items": {
+                "enum": ["create", "read", "edit", "delete", "stream"]
+            }
+        },
+        "aclLevelList": {
+            "description": "A list of available levels in Roles.",
+            "type": "array",
+            "items": {
+                "enum": ["all", "team", "own", "no"]
+            }
+
+        },
+        "aclPortalLevelList": {
+            "description": "A list of available levels in Portal Roles.",
+            "type": "array",
+            "items": {
+                "enum": ["all", "account", "contact","own", "no"]
+            }
+        },
+        "aclActionLevelListMap": {
+            "description": "Lists of available levels for specific actions in Roles.",
+            "type": "object",
+            "properties": {
+                "create": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": ["all", "team", "own", "no"]
+                    }
+                },
+                "read": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": ["all", "team", "own", "no"]
+                    }
+                },
+                "edit": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": ["all", "team", "own", "no"]
+                    }
+                },
+                "delete": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": ["all", "team", "own", "no"]
+                    }
+                },
+                "stream": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": ["all", "team", "own", "no"]
+                    }
+                }
+            }
+        },
+        "aclPortalActionLevelListMap": {
+            "description": "Lists of available levels for specific actions in Portal Roles.",
+            "type": "object",
+            "properties": {
+                "create": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "all",
+                            "account",
+                            "contact",
+                            "own",
+                            "no"
+                        ]
+                    }
+                },
+                "read": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "all",
+                            "account",
+                            "contact",
+                            "own",
+                            "no"
+                        ]
+                    }
+                },
+                "edit": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "all",
+                            "account",
+                            "contact",
+                            "own",
+                            "no"
+                        ]
+                    }
+                },
+                "delete": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "all",
+                            "account",
+                            "contact",
+                            "own",
+                            "no"
+                        ]
+                    }
+                },
+                "stream": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "all",
+                            "account",
+                            "contact",
+                            "own",
+                            "no"
+                        ]
+                    }
+                }
+            }
+        },
+        "statusField": {
+            "description": "Defines a field that should be used as a status field.",
+            "type": "string"
+        },
+        "statusFieldLocked": {
+            "description": "Disables the ability to change the status field.",
+            "type": "boolean"
+        },
+        "disabled": {
+            "description": "Disables the scope in the system.",
+            "type": "boolean"
+        },
+        "customizable": {
+            "description": "Wether the entity can be customized in the Entity Manager tool.",
+            "type": "boolean"
+        },
+        "isCustom": {
+            "description": "Entities creted in the Entity Manager tool marked as custom.",
+            "type": "boolean"
+        },
+        "notifications": {
+            "description": "Whether notifications can be enabled for the entity.",
+            "type": "boolean"
+        },
+        "calendar": {
+            "description": "Whether the entity can be displayed on the Calendar.",
+            "type": "boolean"
+        },
+        "activity": {
+            "description": "Whether the entity can be displayed on the Activities panel.",
+            "type": "boolean"
+        },
+        "activityStatusList": {
+            "description": "Status values that determine that a record should be shown in the Activities panel.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "historyStatusList": {
+            "description": "Status values that determine that a record should be shown in the History panel.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "kanbanStatusIgnoreList": {
+            "description": "Status values to be ignored on the Kanban view.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "languageIsGlobal": {
+            "description": "Languge labels will be available for all users (not restricted by ACL).",
+            "type": "boolean"
+        },
+        "languageAclDisabled": {
+            "description": "Disables access control application for language labels. All labels of the scope will be avaialble in the front-end regardless of user roles.",
+            "type": "boolean"
+        },
+        "hasPersonalData": {
+            "description": "Whether the entity may contain personal data.",
+            "type": "boolean"
+        },
+        "exportFormatList": {
+            "description": "A list of allowed export formats. E.g. csv, xlsx.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "currencyConversionAccessRequiredFieldList": {
+            "description": "When a user converts currency of an entity, edit access to all listed fields is checked. Otherwise, the operation will be forbidden.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    }
+}

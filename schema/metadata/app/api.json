@@ -1,0 +1,60 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/api.json",
+    "title": "app/api",
+    "description": "API definitions.",
+    "type": "object",
+    "properties": {
+        "globalMiddlewareClassNameList": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "A class list of global middlewares. Global middlewares applied for all API requests. Processed before authentication."
+        },
+        "routeMiddlewareClassNameListMap": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "array",
+                "description": "A key in `{method}_{route}` format.",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "description": "Middlewares for specific routes. Keys are composed in the form: {method}_{route}. Processed before authentication."
+        },
+        "actionMiddlewareClassNameListMap": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "array",
+                "description": "A key in `{method}_{route}` format.",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "description": "Middlewares for routes with actionClassName. Keys are composed in the form: {method}_{route}. Processed after authentication."
+        },
+        "controllerMiddlewareClassNameListMap": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "array",
+                "description": "A controller name.",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "description": "Middlewares for specific controllers. A controller-name => class-string-list map. Processed after authentication."
+        },
+        "controllerActionMiddlewareClassNameListMap": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "array",
+                "description": "A key in `{ControllerName}_{method}_{actionName}` format.",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "description": "Middlewares for specific controller actions. Keys are composed in the form: {ControllerName}_{method}_{actionName}. Processed after authentication."
+        }
+    }
+}

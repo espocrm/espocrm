@@ -1,0 +1,39 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/dashlets.json",
+    "title": "dashlets",
+    "description": "Front-end definitions for a scope.",
+    "type": "object",
+    "properties": {
+        "view": {
+            "type": "string",
+            "description": "A front-end view class for a dashlet."
+        },
+        "aclScope": {
+            "type": "string",
+            "description": "A scope access to which is required to have access to the dashlet.",
+        },
+        "accessDataList": {
+            "$ref": "./components/accessDataList.json",
+            "description": "Frontend access rules."
+        },
+        "options": {
+            "type": "object",
+            "description": "Dashlet options definitions.",
+            "properties": {
+                "fields": {
+                    "$ref": "./entityDefs.json#/properties/fields"
+                },
+                "defaults": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "Default options."
+                },
+                "layout": {
+                    "$ref": "./../layouts/detail.json",
+                    "description": "A layout."
+                }
+            }
+        }
+    }
+}

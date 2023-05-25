@@ -1,0 +1,647 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/entityDefs.json",
+    "title": "entityDefs",
+    "description": "Entity type definitions.",
+    "type": "object",
+    "properties": {
+        "fields": {
+            "type": "object",
+            "description": "Fields.",
+            "additionalProperties": {
+                "type": "object",
+                "additionalProperties": true,
+                "description": "A field.",
+                "allOf": [
+                    {
+                        "if": {
+                            "properties": {
+                                "type": {
+                                    "anyOf": [
+                                        {"const": "enum"},
+                                        {"const": "multiEnum"},
+                                        {"const": "array"},
+                                        {"const": "checklist"},
+                                        {"const": "urlMultiple"}
+                                    ]
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "options": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "description": "Options."
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "type": {
+                                    "anyOf": [
+                                        {"const": "varchar"},
+                                        {"const": "enum"},
+                                        {"const": "url"}
+                                    ]
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "maxLength": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "description": "The max length of the database column."
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "type": {
+                                    "anyOf": [
+                                        {"const": "varchar"},
+                                        {"const": "text"},
+                                        {"const": "url"},
+                                        {"const": "int"},
+                                        {"const": "float"},
+                                        {"const": "currency"},
+                                        {"const": "date"},
+                                        {"const": "datetime"},
+                                        {"const": "datetimeOptional"},
+                                        {"const": "link"},
+                                        {"const": "multiEnum"},
+                                        {"const": "urlMultiple"},
+                                        {"const": "checklist"},
+                                        {"const": "file"},
+                                        {"const": "image"}
+                                    ]
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "audited": {
+                                    "type": "boolean",
+                                    "description": "Changes of audited fields are logged in the stream."
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "type": {"const": "currency"}
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "onlyDefaultCurrency": {
+                                    "type": "boolean",
+                                    "description": "Only default curreny."
+                                },
+                                "conversionDisabled": {
+                                    "type": "boolean",
+                                    "description": "Don't convert currency when the convert-currency action is applied for an entity."
+                                },
+                                "decimal": {
+                                    "type": "boolean",
+                                    "description": "Use the decimal type for more precision."
+                                },
+                                "precision": {
+                                    "type": "integer",
+                                    "description": "Precision (for decimal type)."
+                                },
+                                "scale": {
+                                    "type": "scale",
+                                    "description": "Scale (for decimal type)."
+                                }
+                            }
+                        }
+                    }
+                ],
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "description": "A field type.",
+                        "anyOf": [
+                            {"type": "string"},
+                            {
+                                "enum": [
+                                    "checklist",
+                                    "address",
+                                    "array",
+                                    "arrayInt",
+                                    "attachmentMultiple",
+                                    "autoincrement",
+                                    "barcode",
+                                    "bool",
+                                    "checklist",
+                                    "colorpicker",
+                                    "currency",
+                                    "date",
+                                    "datetime",
+                                    "datetimeOptional",
+                                    "enum",
+                                    "enumFloat",
+                                    "enumInt",
+                                    "file",
+                                    "float",
+                                    "foreign",
+                                    "image",
+                                    "int",
+                                    "jsonArray",
+                                    "jsonObject",
+                                    "link",
+                                    "linkMultiple",
+                                    "linkOne",
+                                    "linkParent",
+                                    "multiEnum",
+                                    "number",
+                                    "password",
+                                    "personName",
+                                    "rangeCurrency",
+                                    "rangeFloat",
+                                    "rangeInt",
+                                    "text",
+                                    "url",
+                                    "urlMultiple",
+                                    "varchar",
+                                    "wysiwyg"
+                                ]
+                            }
+                        ]
+                    },
+                    "notStorable": {
+                        "type": "boolean",
+                        "description": "The field will be marked as not-storable, a DB column won't be created."
+                    },
+                    "readOnly": {
+                        "type": "boolean",
+                        "description": "Read-only fields are stripped from a payload received from the front-end. Fields are not editable."
+                    },
+                    "view": {
+                        "type": "string",
+                        "description": "A custom field view. If not specified, then a value from metadata > fields > {fieldType} > view is used."
+                    },
+                    "index": {
+                        "type": "boolean",
+                        "description": "To create a DB index for the field."
+                    },
+                    "dbType": {
+                        "type": "string",
+                        "description": "Overrides the type of the DB column.",
+                        "anyOf": [
+                            {"type": "string"},
+                            {
+                                "enum": [
+                                    "string",
+                                    "decimal",
+                                    "float",
+                                    "smallint",
+                                    "integer",
+                                    "bigint",
+                                    "text",
+                                    "date",
+                                    "datetime",
+                                    "boolean",
+                                    "binary"
+                                ]
+                            }
+                        ]
+                    },
+                    "disabled": {
+                        "type": "boolean",
+                        "description": "Disables the field."
+                    },
+                    "tooltip": {
+                        "type": ["string", "boolean"],
+                        "description": "Enable a tooltip for the field. A tooltip text is taken from the language by: {EntityType} > tooltips > {fieldName}. If defined as a string, then text will be taken from the language by: {EntityType} > tooltips > {value}."
+                    },
+                    "validatorClassNameMap": {
+                        "type": "object",
+                        "description": "Validators defined as validation-type => class-name map. Classes should implement Espo\\Core\\FieldValidation\\Validator interface. If not defined for a tyoe, metadata > fields > {fieldType} > validatorClassNameMap > {type} is used.",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    },
+                    "validatorClassNameList": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A list of additional validators. Should implement Espo\\Core\\FieldValidation\\Validator interface."
+                    },
+                    "validationList": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A custom validation list for the field. Use this parameter to re-define validations applied for a specific field. By default, validations for a field type are applied."
+                    },
+                    "mandatoryValidationList": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A custom mandatory validation list for the field. Use this parameter to re-define mandatory validations applied for a specific field. By default, mandatory validations for a field type are applied."
+                    },
+                    "customizationDisabled": {
+                        "type": "boolean",
+                        "description": "Disables the ability to customize the field in the Entity Manager tool."
+                    },
+                    "fieldManagerParamList": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Parameters available in the Entity Manager tool when editing the field. Specify an empty array to disable all parameters."
+                    },
+                    "layoutAvailabilityList": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A list of layout types there the field should be available. Specify an empty array to disable in all layouts.",
+                    },
+                    "textFilterDisabled": {
+                        "type": "boolean",
+                        "description": "Disables the ability to add the field to text filters (in the Entity Manager tool)."
+                    },
+                    "directAccessDisabled": {
+                        "type": "boolean",
+                        "description": "Disables the ability to add the field in formula-script, templates and some other tools."
+                    },
+                    "importDisabled": {
+                        "type": "boolean",
+                        "description": "Disables the ability to import the field."
+                    },
+                    "exportDisabled": {
+                        "type": "boolean",
+                        "description": "Disables the ability to export the field."
+                    },
+                    "isPersonalData": {
+                        "type": "boolean",
+                        "description": "Whether the field may contain personal data."
+                    },
+                    "valueFactoryClassName": {
+                        "type": "string",
+                        "description": "A factory for value objects. For field types it's defined at metadata > fields. Here you can define a factory for a specific field.",
+
+                    },
+                    "attributeExtractorClassName": {
+                        "type": "string",
+                        "description": "An extractor for value objects. For field types it's defined at metadata > fields. Here you can define an extractor for a specific field.",
+                    },
+                    "select": {
+                        "type": "object",
+                        "description": "A custom complex expression to be used for the field when reading from DB. It's possible to define leftJoins and joins that are needed to be applied when the field is being selected.",
+                        "properties": {
+                            "select": {
+                                "type": "string",
+                                "description": "A complex expression for the SELECT."
+                            },
+                            "leftJoins": {
+                                "description": "LEFT JOINs",
+                                "type": "array",
+                                "items": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "string",
+                                            "description": "A table or link. Table – CamelCase, link – camelCase."
+                                        },
+                                        {
+                                            "type": "string",
+                                            "description": "An alias."
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": true,
+                                            "description": "Join conditions."
+                                        }
+                                    ]
+                                }
+                            },
+                            "joins": {
+                                "description": "JOINs",
+                                "type": "array",
+                                "items": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "string",
+                                            "description": "A table or link. Table – CamelCase, link – camelCase."
+                                        },
+                                        {
+                                            "type": "string",
+                                            "description": "An alias."
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": true,
+                                            "description": "Join conditions."
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "order": {
+                        "description": "Custom complex expressions to be used when ordering by the field. It's possible to define leftJoins and joins that are needed to be applied.",
+                        "type": "object",
+                        "properties": {
+                            "order": {
+                                "type": "array",
+                                "items": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "description": "A complex expression for the ORDER."
+                                    }
+                                }
+                            },
+                            "leftJoins": {
+                                "description": "LEFT JOINs",
+                                "type": "array",
+                                "items": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "string",
+                                            "description": "A table or link. Table – CamelCase, link – camelCase."
+                                        },
+                                        {
+                                            "type": "string",
+                                            "description": "An alias."
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": true,
+                                            "description": "Join conditions."
+                                        }
+                                    ]
+                                }
+                            },
+                            "joins": {
+                                "description": "JOINs",
+                                "type": "array",
+                                "items": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "string",
+                                            "description": "A table or link. Table – CamelCase, link – camelCase."
+                                        },
+                                        {
+                                            "type": "string",
+                                            "description": "An alias."
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": true,
+                                            "description": "Join conditions."
+                                        }
+                                    ]
+                                }
+                            },
+                            "additionalSelect": {
+                                "description": "Additional columns to be selected when order by the field is applied.",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "where": {
+                        "description": "Custom where clause to be used when the field is met in a provided where-clause. It's possible to define leftJoins and joins that are needed to be applied. Every comparison operation that you need to support should have its own definitions.",
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object",
+                            "properties": {
+                                "whereClause": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "string"
+                                    }
+                                },
+                                "leftJoins": {
+                                    "type": "array",
+                                    "description": "LEFT JOINs",
+                                    "items": {
+                                        "type": "array",
+                                        "items": [
+                                            {
+                                                "type": "string",
+                                                "description": "A table or link. Table – CamelCase, link – camelCase."
+                                            },
+                                            {
+                                                "type": "string",
+                                                "description": "An alias."
+                                            },
+                                            {
+                                                "type": "object",
+                                                "additionalProperties": true,
+                                                "description": "Join conditions."
+                                            }
+                                        ]
+                                    }
+                                },
+                                "joins": {
+                                    "description": "JOINs",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": [
+                                            {
+                                                "type": "string",
+                                                "description": "A table or link. Table – CamelCase, link – camelCase."
+                                            },
+                                            {
+                                                "type": "string",
+                                                "description": "An alias."
+                                            },
+                                            {
+                                                "type": "object",
+                                                "additionalProperties": true,
+                                                "description": "Join conditions."
+                                            }
+                                        ]
+                                    }
+                                },
+                                "distinct": {
+                                    "type": "boolean",
+                                    "description": "Apply DISTINCT to the query."
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "links": {
+            "description": "Links.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "description": "A link.",
+                "additionalProperties": true,
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "description": "A link type.",
+                        "enum": ["belongsTo", "hasMany", "hasOne", "belongsToParent", "hasChildren"]
+                    },
+                    "entity": {
+                        "type": "string",
+                        "description": "A foreign entity type."
+                    },
+                    "foreign": {
+                        "type": "string",
+                        "description": "A foreign link name."
+                    },
+                    "noJoin": {
+                        "type": "boolean",
+                        "description": "Prevents joining a foreign table when fetching a record. Available for belongsTo, hasOne."
+                    },
+                    "foreignName": {
+                        "type": "string",
+                        "description": "A field to be used as a name of a foreign record. Needed when a foreign entity type does not have the field name."
+                    },
+                    "audited": {
+                        "type": "boolean",
+                        "description": "Linking and unlinking will be logged in the Stream. Available for hasMany."
+                    },
+                    "layoutRelationshipsDisabled": {
+                        "type": "boolean",
+                        "description": "Makes the link not available in the Bottom Panels layout (in the Layout Manager tool). Available for hasMany"
+                    },
+                    "relationName": {
+                        "type": "string",
+                        "description": "A relationship name. Defines how a middle table will be named (for a many-to-many relationships). Available for hasMany",
+                    },
+                    "additionalColumns": {
+                        "type": "object",
+                        "description": "Additional columns to be created in a middle table (for a many-to-many relationships).",
+                        "additionalProperties": {
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "enum": ["varchar", "int", "float", "bool"]
+                                },
+                                "maxLength": {
+                                    "type": "integer"
+                                },
+                                "default": {
+                                    "type": ["integer", "string", "boolean", "null", "number"]
+                                },
+                                "dbType": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "conditions": {
+                        "type": "object",
+                        "description": "Where-conditions (for a many-to-many relationships). If multiple links share the same relationship name (middle table), conditions must be defined for each link. For many-to-many.",
+                        "additionalProperties": {
+                            "type": ["string", "integer", "number", "boolean", "null"]
+                        }
+                    },
+                    "indexes": {
+                        "type": "object",
+                        "description": "Indexes for a middle table.",
+                        "additionalProperties": {
+                            "type": "object",
+                            "properties": {
+                                "columns": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "description": "Database columns of the index."
+                                },
+                                "unique": {
+                                    "type": "boolean",
+                                    "description": "Whether the index is unique."
+                                }
+                            }
+                        }
+                    },
+                    "notMergeable": {
+                        "type": "boolean",
+                        "description": "Disable merging related records when duplicate records are being merged. For hasMany, hasChildren."
+                    }
+                }
+            }
+        },
+        "indexes": {
+            "type": "object",
+            "description": "Indexes for a middle table.",
+            "additionalProperties": {
+                "type": "object",
+                "description": "An index.",
+                "properties": {
+                    "columns": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Database columns of the index."
+                    },
+                    "unique": {
+                        "type": "boolean",
+                        "description": "Whether the index is unique."
+                    }
+                }
+            }
+        },
+        "collection": {
+            "type": "object",
+            "properties": {
+                "orderBy": {
+                    "type": "string",
+                    "description": "The default order-by field."
+                },
+                "order": {
+                    "enum": ["asc", "desc"],
+                    "description": "The default order direction."
+                },
+                "textFilterFields": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Fields used by the text filter."
+                },
+                "countDisabled": {
+                    "type": "boolean",
+                    "description": "Disable fetching a total records number (on the list view)."
+                },
+                "fullTextSearch": {
+                    "type": "boolean",
+                    "description": "Enable full-text search."
+                },
+                "fullTextSearchOrderType": {
+                    "enum": ["original", "relevance", "combined"],
+                    "description": "How to order result of full-text search."
+                }
+            }
+        },
+        "optimisticConcurrencyControl": {
+            "type": "boolean",
+            "description": "Enables optimistic concurrency control for the entity type."
+        },
+        "skipRebuild": {
+            "type": "boolean",
+            "description": "To skip database table creation for the entity type."
+        }
+    }
+}

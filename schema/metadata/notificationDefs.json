@@ -1,0 +1,24 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/notificationDefs.json",
+    "title": "notificationDefs",
+    "description": "Notification framework definitions for a scope.",
+    "type": "object",
+    "properties": {
+        "assignmentNotificatorClassName": {
+            "type": "string",
+            "description": "An assignment notificator. Should implement Espo\\Core\\Notification\\AssignmentNotificator interface. Processes assignment notifications. Called after entity is saved. By default, Espo\\Core\\Notification\\DefaultAssignmentNotificator is used."
+        },
+        "emailNotificationHandlerClassNameMap": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            },
+            "description": "Email notification handlers. Should implement Espo\\Core\\Notification\\EmailNotificationHandler interface. Handles a notification emails (supposed for adding CC, BCC addresses). Provides sender parameters for notification emails (e.g. setting Reply-To address)."
+        },
+        "forceAssignmentNotificator": {
+            "type": "boolean",
+            "description": "To force processing assignment notifications (upon record save). Otherwise, it may be bypassed in some scenarios (e.g. when the Stream is enabled for the entity type)."
+        }
+    }
+}
