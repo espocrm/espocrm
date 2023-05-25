@@ -184,6 +184,10 @@ function (Dep, /** module:ui/select*/Select) {
                     return;
                 }
 
+                if (!this.isEditMode() && o.xhr) {
+                    return;
+                }
+
                 this.updateDateEnd();
             });
         },
