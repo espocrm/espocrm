@@ -35,27 +35,20 @@ use Espo\Entities\User;
 
 class PortalOnlyContact implements Filter
 {
-    private $user;
 
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
+    public function __construct(private User $user)
+    {}
 
     public function apply(SelectBuilder $queryBuilder): void
     {
-        $contactId = $this->user->get('contactId');
+        $contactId = $this->user->getContactId();
 
         if ($contactId === null) {
-            $queryBuilder->where([
-                'id' => null
-            ]);
+            $queryBuilder->where(['id' => null]);
 
             return;
         }
 
-        $queryBuilder->where([
-            'id' => $contactId
-        ]);
+        $queryBuilder->where(['id' => $contactId]);
     }
 }
