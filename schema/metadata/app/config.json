@@ -1,0 +1,64 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/config.json",
+    "title": "app/config",
+    "description": "Application config definitions.",
+    "type": "object",
+    "properties": {
+        "params": {
+            "type": "object",
+            "description": "Config parameters. https://docs.espocrm.com/development/metadata/app-config/#params",
+            "additionalProperties": {
+                "type": "object",
+                "description": "A config parameter name.",
+                "properties": {
+                    "level": {
+                        "description": "Defines availability of the config parameter in the front-end. default – available for logged-in users;\nglobal – available even before logging in (value is exposed to the world);\nsystem – never available;\ninternal – never available for read, admin can write (useful for passwords, secrets);\nadmin – available only for admin;\nsuperAdmin – available only for super-admin.",
+                        "anyOf": [
+                            {
+                                "const": "default",
+                                "description": "Available for logged-in users."
+                            },
+                            {
+                                "const": "global",
+                                "description": "Available even before logging in."
+                            },
+                            {
+                                "const": "system",
+                                "description": "Never available."
+                            },
+                            {
+                                "const": "internal",
+                                "description": "Never available for read, admin can write."
+                            },
+                            {
+                                "const": "admin",
+                                "description": "Available only for admin."
+                            },
+                            {
+                                "const": "superAdmin",
+                                "description": "Available only for super-admin."
+                            }
+                        ]
+                    },
+                    "readOnly": {
+                        "type": "boolean",
+                        "description": "Disables the ability to change a parameter value for admin users. Useful for parameters that are supposed to be set either manually by writing into the config file or automatically by the application."
+                    }
+                }
+            }
+        },
+        "entityTypeListParamList": {
+            "description": "A list of config parameters values of which are arrays of entity types. Needed to let the application know what params need to be filtered to remove entity types not available for a user.",
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "string"
+                    },
+                    {"enum": ["__APPEND__"]}
+                ]
+            }
+        }
+    }
+}

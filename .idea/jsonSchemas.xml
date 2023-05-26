@@ -148,6 +148,25 @@
             </SchemaInfo>
           </value>
         </entry>
+        <entry key="metadata/app/actions">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/actions" />
+              <option name="relativePathToSchema" value="schema/metadata/app/actions.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/actions.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
         <entry key="metadata/app/api">
           <value>
             <SchemaInfo>
@@ -160,6 +179,899 @@
                   <Item>
                     <option name="pattern" value="true" />
                     <option name="path" value="*/Resources/metadata/app/api.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/addressFormats">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/addressFormats" />
+              <option name="relativePathToSchema" value="schema/metadata/app/addressFormats.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/addressFormats.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/adminPanel">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/adminPanel" />
+              <option name="relativePathToSchema" value="schema/metadata/app/adminPanel.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/adminPanel.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/api">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/api" />
+              <option name="relativePathToSchema" value="schema/metadata/app/api.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/api.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/appParams">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/appParams" />
+              <option name="relativePathToSchema" value="schema/metadata/app/appParams.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/appParams.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/authentication">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/authentication" />
+              <option name="relativePathToSchema" value="schema/metadata/app/authentication.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/authentication.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/authentication2FAMethods">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/authentication2FAMethods" />
+              <option name="relativePathToSchema" value="schema/metadata/app/authentication2FAMethods.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/authentication2FAMethods.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/cleanup">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/cleanup" />
+              <option name="relativePathToSchema" value="schema/metadata/app/cleanup.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/cleanup.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/client">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/client" />
+              <option name="relativePathToSchema" value="schema/metadata/app/client.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/client.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/clientRoutes">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/clientRoutes" />
+              <option name="relativePathToSchema" value="schema/metadata/app/clientRoutes.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/clientRoutes.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/complexExpression">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/complexExpression" />
+              <option name="relativePathToSchema" value="schema/metadata/app/complexExpression.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/complexExpression.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/config">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/config" />
+              <option name="relativePathToSchema" value="schema/metadata/app/config.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/config.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/consoleCommands">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/consoleCommands" />
+              <option name="relativePathToSchema" value="schema/metadata/app/consoleCommands.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/consoleCommands.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/containerServices">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/containerServices" />
+              <option name="relativePathToSchema" value="schema/metadata/app/containerServices.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/containerServices.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/currency">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/currency" />
+              <option name="relativePathToSchema" value="schema/metadata/app/currency.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/currency.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/currencyConversion">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/currencyConversion" />
+              <option name="relativePathToSchema" value="schema/metadata/app/currencyConversion.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/currencyConversion.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/databasePlatforms">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/databasePlatforms" />
+              <option name="relativePathToSchema" value="schema/metadata/app/databasePlatforms.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/databasePlatforms.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/dateTime">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/dateTime" />
+              <option name="relativePathToSchema" value="schema/metadata/app/dateTime.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/dateTime.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/defaultDashboardLayouts">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/defaultDashboardLayouts" />
+              <option name="relativePathToSchema" value="schema/metadata/app/defaultDashboardLayouts.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/defaultDashboardLayouts.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/defaultDashboardOptions">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/defaultDashboardOptions" />
+              <option name="relativePathToSchema" value="schema/metadata/app/defaultDashboardOptions.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/defaultDashboardOptions.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/entityManagerParams">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/entityManagerParams" />
+              <option name="relativePathToSchema" value="schema/metadata/app/entityManagerParams.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/entityManagerParams.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/entityTemplateList">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/entityTemplateList" />
+              <option name="relativePathToSchema" value="schema/metadata/app/entityTemplateList.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/entityTemplateList.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/export">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/export" />
+              <option name="relativePathToSchema" value="schema/metadata/app/export.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/export.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/fieldProcessing">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/fieldProcessing" />
+              <option name="relativePathToSchema" value="schema/metadata/app/fieldProcessing.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/fieldProcessing.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/file">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/file" />
+              <option name="relativePathToSchema" value="schema/metadata/app/file.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/file.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/fileStorage">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/fileStorage" />
+              <option name="relativePathToSchema" value="schema/metadata/app/fileStorage.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/fileStorage.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/formula">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/formula" />
+              <option name="relativePathToSchema" value="schema/metadata/app/formula.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/formula.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/hook">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/hook" />
+              <option name="relativePathToSchema" value="schema/metadata/app/hook.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/hook.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/image">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/image" />
+              <option name="relativePathToSchema" value="schema/metadata/app/image.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/image.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/jsLibs">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/jsLibs" />
+              <option name="relativePathToSchema" value="schema/metadata/app/jsLibs.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/jsLibs.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/language">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/language" />
+              <option name="relativePathToSchema" value="schema/metadata/app/language.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/language.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/linkManager">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/linkManager" />
+              <option name="relativePathToSchema" value="schema/metadata/app/linkManager.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/linkManager.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/massActions">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/massActions" />
+              <option name="relativePathToSchema" value="schema/metadata/app/massActions.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/massActions.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/metadata">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/metadata" />
+              <option name="relativePathToSchema" value="schema/metadata/app/metadata.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/metadata.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/orm">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/orm" />
+              <option name="relativePathToSchema" value="schema/metadata/app/orm.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/orm.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/pdfEngines">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/pdfEngines" />
+              <option name="relativePathToSchema" value="schema/metadata/app/pdfEngines.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/pdfEngines.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/popupNotifications">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/popupNotifications" />
+              <option name="relativePathToSchema" value="schema/metadata/app/popupNotifications.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/popupNotifications.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/portalContainerServices">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/portalContainerServices" />
+              <option name="relativePathToSchema" value="schema/metadata/app/portalContainerServices.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/portalContainerServices.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/rebuild">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/rebuild" />
+              <option name="relativePathToSchema" value="schema/metadata/app/rebuild.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/rebuild.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/recordId">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/recordId" />
+              <option name="relativePathToSchema" value="schema/metadata/app/recordId.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/recordId.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/regExpPatterns">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/regExpPatterns" />
+              <option name="relativePathToSchema" value="schema/metadata/app/regExpPatterns.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/regExpPatterns.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/relationships">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/relationships" />
+              <option name="relativePathToSchema" value="schema/metadata/app/relationships.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/relationships.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/scheduledJobs">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/scheduledJobs" />
+              <option name="relativePathToSchema" value="schema/metadata/app/scheduledJobs.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/scheduledJobs.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/select">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/select" />
+              <option name="relativePathToSchema" value="schema/metadata/app/select.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/select.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/smsProviders">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/smsProviders" />
+              <option name="relativePathToSchema" value="schema/metadata/app/smsProviders.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/smsProviders.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/templateHelpers">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/templateHelpers" />
+              <option name="relativePathToSchema" value="schema/metadata/app/templateHelpers.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/templateHelpers.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/templates">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/templates" />
+              <option name="relativePathToSchema" value="schema/metadata/app/templates.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/templates.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/webSocket">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/webSocket" />
+              <option name="relativePathToSchema" value="schema/metadata/app/webSocket.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/webSocket.json" />
                     <option name="mappingKind" value="Pattern" />
                   </Item>
                 </list>

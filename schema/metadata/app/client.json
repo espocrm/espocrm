@@ -1,0 +1,81 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/client.json",
+    "title": "app/client",
+    "description": "General definitions for the front-end client.",
+    "type": "object",
+    "properties": {
+        "scriptList": {
+            "type": "array",
+            "description": "JS files to include on the HTML page. Use __APPEND__ to append custom values w/o removing existing.",
+            "items": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"enum": ["__APPEND__"]}
+                ]
+            }
+        },
+        "developerModeScriptList": {
+            "type": "array",
+            "description": "JS files to include on the HTML page in the developer mode. Use __APPEND__ to append custom values w/o removing existing.",
+            "items": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"enum": ["__APPEND__"]}
+                ]
+            }
+        },
+        "linkList": {
+            "type": "array",
+            "description": "Link tags to include on the HTML page. Use __APPEND__ to append custom values w/o removing existing.",
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "href": {
+                                "type": "string",
+                                "description": "An URL."
+                            },
+                            "as": {
+                                "type": "string",
+                                "description": "An AS attribute value."
+                            },
+                            "type": {
+                                "type": "string",
+                                "description": "A TYPE attribute value."
+                            },
+                            "noTimestamp": {
+                                "type": "boolean",
+                                "description": "Disables cache busting."
+                            },
+                            "crossorigin": {
+                                "type": "boolean",
+                                "description": "Sets the crossorigin attribute."
+                            }
+                        }
+                    },
+                    {"enum": ["__APPEND__"]}
+                ]
+            }
+        },
+        "cssList": {
+            "type": "array",
+            "description": "CSS files to include on the HTML page. Use __APPEND__ to append custom values w/o removing existing.",
+            "items": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"enum": ["__APPEND__"]}
+                ]
+            }
+        },
+        "favicon": {
+            "type": "string",
+            "description": "A favicon image path. The default value: client/img/favicon.ico."
+        },
+        "favicon196": {
+            "type": "string",
+            "description": "A big favicon image path. The default value: client/img/favicon196x196.png."
+        }
+    }
+}

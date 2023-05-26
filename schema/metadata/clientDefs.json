@@ -93,15 +93,22 @@
             "description": "A list of primary filters.",
             "type": "array",
             "items": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "A name."
+                            },
+                            "style": {
+                                "enum": ["default", "success", "warning", "danger", "info"],
+                                "description": "A style."
+                            }
+                        }
                     },
-                    "style": {
-                        "enum": ["default", "success", "warning", "danger", "info"]
-                    }
-                }
+                    {"type": "string"}
+                ]
             }
         },
         "boolFilterList": {
@@ -143,61 +150,71 @@
                 "additionalProperties": {
                     "type": "array",
                     "items": {
-                        "type": "object",
-                        "properties": {
-                            "labelTranslation": {
-                                "type": "string",
-                                "description": "A label translation path. Example: 'Campaign.links.trackingUrls'."
-                            },
-                            "link": {
-                                "type": "string",
-                                "description": "A link (href)."
-                            },
-                            "acl": {
-                                "enum": [
-                                    "create",
-                                    "read",
-                                    "edit",
-                                    "delete",
-                                    "stream"
-                                ],
-                                "description": "An action to check access to. If no access, the item is not displayed."
-                            },
-                            "aclScope": {
-                                "type": "string",
-                                "description": "A scope to check access to. If no access, the item is not displayed."
-                            },
-                            "action": {
-                                "type": "string",
-                                "description": "An action. To be used in javascript code for handling."
-                            },
-                            "style": {
-                                "enum": [
-                                    "default",
-                                    "success",
-                                    "warning",
-                                    "danger",
-                                    "info"
-                                ],
-                                "description": "A style."
-                            },
-                            "data": {
+                        "anyOf": [
+                            {"enum": ["__APPEND__"]},
+                            {"const": false},
+                            {
                                 "type": "object",
                                 "properties": {
-                                    "handler": {
+                                    "label": {
                                         "type": "string",
-                                        "description": "A handler class."
+                                        "description": "A translatable label."
+                                    },
+                                    "labelTranslation": {
+                                        "type": "string",
+                                        "description": "A label translation path. Example: 'Campaign.links.trackingUrls'."
+                                    },
+                                    "link": {
+                                        "type": "string",
+                                        "description": "A link (href)."
+                                    },
+                                    "acl": {
+                                        "enum": [
+                                            "create",
+                                            "read",
+                                            "edit",
+                                            "delete",
+                                            "stream"
+                                        ],
+                                        "description": "An action to check access to. If no access, the item is not displayed."
+                                    },
+                                    "aclScope": {
+                                        "type": "string",
+                                        "description": "A scope to check access to. If no access, the item is not displayed."
+                                    },
+                                    "action": {
+                                        "type": "string",
+                                        "description": "An action. To be used in javascript code for handling."
+                                    },
+                                    "style": {
+                                        "enum": [
+                                            "default",
+                                            "success",
+                                            "warning",
+                                            "danger",
+                                            "info"
+                                        ],
+                                        "description": "A style."
+                                    },
+                                    "data": {
+                                        "type": "object",
+                                        "properties": {
+                                            "handler": {
+                                                "type": "string",
+                                                "description": "A handler class."
+                                            }
+                                        }
+                                    },
+                                    "initFunction": {
+                                        "type": "string",
+                                        "description": "An init function of the handler."
+                                    },
+                                    "accessDataList": {
+                                        "$ref": "./components/accessDataList.json"
                                     }
                                 }
-                            },
-                            "initFunction": {
-                                "type": "string",
-                                "description": "An init function of the handler."
-                            },
-                            "accessDataList": {
-                                "$ref": "./components/accessDataList.json"
                             }
-                        }
+                        ]
                     }
                 }
             }
@@ -325,7 +342,7 @@
             }
         },
         "additionalLayouts": {
-            "description": "Additionals layouts for the entity type.",
+            "description": "Additional layouts for the entity type.",
             "type": "object",
             "additionalProperties": {
                 "type": "object",
@@ -351,7 +368,7 @@
             }
         },
         "massActionDefs": {
-            "description": "Defenitions for mass actions.",
+            "description": "Definitions for mass actions.",
             "type": "object",
             "additionalProperties": {
                 "type": "object",
@@ -508,38 +525,46 @@
             "properties": {
                 "fields": {
                     "type": "object",
+                    "description": "Fields.",
                     "additionalProperties": {
                         "type": "object",
+                        "description": "A field name.",
                         "properties": {
                             "visible": {
                                 "type": "object",
+                                "description": "Conditions making the field visible.",
                                 "properties": {
                                     "conditionGroup": {
+                                        "description": "An AND where clause.",
                                         "type": "array",
                                         "items": {
-                                            "type": "object"
+                                            "$ref": "#/definitions/dynamicLogicItem"
                                         }
                                     }
                                 }
                             },
                             "required": {
                                 "type": "object",
+                                "description": "Conditions making the field required.",
                                 "properties": {
                                     "conditionGroup": {
                                         "type": "array",
+                                        "description": "An AND where clause.",
                                         "items": {
-                                            "type": "object"
+                                            "$ref": "#/definitions/dynamicLogicItem"
                                         }
                                     }
                                 }
                             },
                             "readOnly": {
                                 "type": "object",
+                                "description": "Conditions making the field read-only.",
                                 "properties": {
                                     "conditionGroup": {
                                         "type": "array",
+                                        "description": "An AND where clause.",
                                         "items": {
-                                            "type": "object"
+                                            "$ref": "#/definitions/dynamicLogicItem"
                                         }
                                     }
                                 }
@@ -549,16 +574,20 @@
                 },
                 "panels": {
                     "type": "object",
+                    "description": "Panels.",
                     "additionalProperties": {
                         "type": "object",
+                        "description": "A panel name.",
                         "properties": {
                             "visible": {
                                 "type": "object",
+                                "description": "Conditions making the panel visible.",
                                 "properties": {
                                     "conditionGroup": {
                                         "type": "array",
+                                        "description": "An AND where clause.",
                                         "items": {
-                                            "type": "object"
+                                            "$ref": "#/definitions/dynamicLogicItem"
                                         }
                                     }
                                 }
@@ -567,6 +596,160 @@
                     }
                 }
             }
+        }
+    },
+    "definitions": {
+        "dynamicLogicItem": {
+            "type": "object",
+            "description": "A logic node.",
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "and"},
+                                    {"const": "or"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "value": {
+                                "type": "array",
+                                "description": "Sub-items.",
+                                "items": {
+                                    "$ref": "#/definitions/dynamicLogicItem"
+                                }
+                            }
+                        },
+                        "required": ["type", "value"]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "not"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "value": {
+                                "type": "object",
+                                "$ref": "#/definitions/dynamicLogicItem"
+                            }
+                        },
+                        "required": ["type", "value"]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "equals"},
+                                    {"const": "notEquals"},
+                                    {"const": "greaterThan"},
+                                    {"const": "lessThan"},
+                                    {"const": "greaterThanOrEquals"},
+                                    {"const": "lessThanOrEquals"},
+                                    {"const": "isEmpty"},
+                                    {"const": "isNotEmpty"},
+                                    {"const": "isTrue"},
+                                    {"const": "isFalse"},
+                                    {"const": "in"},
+                                    {"const": "notIn"},
+                                    {"const": "isToday"},
+                                    {"const": "inFuture"},
+                                    {"const": "inPast"},
+                                    {"const": "contains"},
+                                    {"const": "notContains"},
+                                    {"const": "has"},
+                                    {"const": "notHas"},
+                                    {"const": "startsWith"},
+                                    {"const": "endsWith"},
+                                    {"const": "matches"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "value": {
+                                "description": "A value.",
+                                "anyOf": [
+                                    {"type": "string"},
+                                    {"type": "boolean"},
+                                    {"type": "integer"},
+                                    {"type": "integer"},
+                                    {"type": "number"},
+                                    {"type": "null"},
+                                    {
+                                        "type": "array",
+                                        "items": {"type": "string"}
+                                    },
+                                    {
+                                        "type": "array",
+                                        "items": {"type": "integer"}
+                                    },
+                                    {
+                                        "type": "array",
+                                        "items": {"type": "number"}
+                                    }
+                                ]
+                            },
+                            "attribute": {
+                                "type": "string",
+                                "description": "An attribute."
+                            }
+                        },
+                        "required": ["type", "attribute"]
+                    }
+                }
+            ],
+            "properties": {
+                "type": {
+                    "description": "A type.",
+                    "enum": [
+                        "and",
+                        "or",
+                        "not",
+                        "equals",
+                        "notEquals",
+                        "greaterThan",
+                        "lessThan",
+                        "greaterThanOrEquals",
+                        "lessThanOrEquals",
+                        "isEmpty",
+                        "isNotEmpty",
+                        "isTrue",
+                        "isFalse",
+                        "in",
+                        "notIn",
+                        "isToday",
+                        "inFuture",
+                        "inPast",
+                        "contains",
+                        "notContains",
+                        "has",
+                        "notHas",
+                        "startsWith",
+                        "endsWith",
+                        "matches"
+                    ]
+                },
+                "data": {
+                    "type": "object",
+                    "description": "Additional data. Not used for logic.",
+                    "additionalProperties": true
+                }
+            },
+            "required": ["type"]
         }
     }
 }

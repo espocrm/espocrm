@@ -1,0 +1,21 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/consoleCommands",
+    "$id": "https://www.espocrm.com/schema/metadata/app/consoleCommands.json",
+    "title": "app/appParams",
+    "description": "Console commands.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A command name.",
+        "properties": {
+            "className": {
+                "type": "string",
+                "description": "An implementation class name. Should implement Espo\\Core\\Console\\Command interface."
+            },
+            "listed": {
+                "type": "boolean",
+                "description": "Whether the command is listed when running bin/command."
+            }
+        }
+    }
+}
