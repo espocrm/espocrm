@@ -1,0 +1,29 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/dateTime.json",
+    "title": "app/dateTime",
+    "description": "Date-time definitions.",
+    "type": "object",
+    "properties": {
+        "dateFormatList": {
+            "type": "array",
+            "description": "A list of date formats available in the system.",
+            "items": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"enum": ["__APPEND__"]}
+                ]
+            }
+        },
+        "timeFormatList": {
+            "type": "array",
+            "description": "A list of time formats available in the system.",
+            "items": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"enum": ["__APPEND__"]}
+                ]
+            }
+        }
+    }
+}

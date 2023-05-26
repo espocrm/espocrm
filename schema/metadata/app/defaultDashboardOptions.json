@@ -1,0 +1,16 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/defaultDashboardOptions.json",
+    "title": "app/defaultDashboardOptions",
+    "description": "Options for default dashboard dashlets.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A key.",
+        "additionalProperties": {
+            "description": "A dashlet ID.",
+            "type": "object",
+            "additionalProperties": true
+        }
+    }
+}

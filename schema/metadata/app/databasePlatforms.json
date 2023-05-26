@@ -1,0 +1,56 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/databasePlatforms.json",
+    "title": "app/databasePlatforms",
+    "description": "Database platform definitions.",
+    "type": "object",
+    "additionalProperties": {
+        "description": "A platform name.",
+        "properties": {
+            "dbalConnectionFactoryClass": {
+                "type": "string",
+                "description": "Should implementEspo\\Core\\Utils\\Database\\Dbal\\ConnectionFactory"
+            },
+            "detailsProviderClassName": {
+                "type": "string",
+                "description": "Should implement Espo\\Core\\Utils\\Database\\Dbal\\DetailsProvider."
+            },
+            "dbalTypeClassNameMap": {
+                "type": "object",
+                "description": "Custom database types.",
+                "additionalProperties": {
+                    "type": "string",
+                    "description": "A database type. Should extend Doctrine\\DBAL\\Types\\Type."
+                }
+            },
+            "indexHelperClassName": {
+                "type": "string",
+                "description": "Should implement Espo\\Core\\Utils\\Database\\Orm\\IndexHelper."
+            },
+            "columnPreparatorClassName": {
+                "type": "string",
+                "description": "Should implement Espo\\Core\\Utils\\Database\\Schema\\ColumnPreparator."
+            },
+            "preRebuildActionClassNameList": {
+                "type": "array",
+                "description": "Pre-prebuild actions. Should implement Espo\\Core\\Utils\\Database\\Schema\\RebuildAction.",
+                "items": {
+                    "anyOf": [
+                        {"enum": ["__APPEND__"]},
+                        {"type": "string"}
+                    ]
+                }
+            },
+            "postRebuildActionClassNameList": {
+                "type": "array",
+                "description": "Pre-prebuild actions. Should implement Espo\\Core\\Utils\\Database\\Schema\\RebuildAction.",
+                "items": {
+                    "anyOf": [
+                        {"enum": ["__APPEND__"]},
+                        {"type": "string"}
+                    ]
+                }
+            }
+        }
+    }
+}
