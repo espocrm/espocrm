@@ -79,6 +79,10 @@
         "skipRebuild": {
             "type": "boolean",
             "description": "To skip database table creation for the entity type."
+        },
+        "noDeletedAttribute": {
+            "type": "boolean",
+            "description": "Do not add the `deleted` attribute."
         }
     },
     "definitions": {
