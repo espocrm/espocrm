@@ -1,0 +1,11 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/templateHelpers.json",
+    "title": "app/templateHelpers",
+    "description": "Template helpers for the back-end templating system (used for PDF printing, email templates).",
+    "type": "object",
+    "additionalProperties": {
+        "type": "string",
+        "description": "A helper name and its implementation. Should implement Espo\\Core\\Htmlizer\\Helper."
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/smsProviders.json",
+    "title": "app/smsProviders",
+    "description": "Templates (available at Administration > Templates). Usually used for system emails.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A template name. Should start with the lower case letter.",
+        "properties": {
+            "scopeList": {
+                "type": "array",
+                "description": "A list of scopes (entity types) for which the template is available.",
+                "items": {
+                    "anyOf": [
+                        {"const": "__APPEND__"},
+                        {"type": "string"}
+                    ]
+                }
+            },
+            "scope": {
+                "type": "string",
+                "description": "A scope (entity types) for which the template is available. Use it if it's needed only for one entity type."
+            },
+            "scopeListConfigParam": {
+                "type": "string",
+                "description": "A config parameter defining for which entity types the template is available."
+            },
+            "module": {
+                "type": "string",
+                "description": "A module name."
+            }
+        }
+    }
+}

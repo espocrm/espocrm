@@ -1,0 +1,164 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/fields.json",
+    "title": "fields",
+    "description": "Field definitions.",
+    "type": "object",
+    "properties": {
+        "notMergeable": {
+            "type": "boolean",
+            "description": "Whether this field type is mergeable (when merging duplicate records)."
+        },
+        "notCreatable": {
+            "type": "boolean",
+            "description": "Whether the field of this type can be created in the Entity Manager tool."
+        },
+        "readOnly": {
+            "type": "boolean",
+            "description": "Is this field type Read Only (can't be edited)."
+        },
+        "skipOrmDefs": {
+            "type": "boolean",
+            "description": "Skip converting to defs for the ORM."
+        },
+        "filter": {
+            "type": "boolean",
+            "description": "Records can be filtered by this field (available as filter on the list view)."
+        },
+        "view": {
+            "type": "string",
+            "description": "A frontend view."
+        },
+        "params": {
+            "type": "array",
+            "description": "Field parameters.",
+            "items": {
+                "allOf": [
+                    {
+                        "$ref": "./entityDefs.json#/definitions/fieldDefs"
+                    },
+                    {
+                        "properties": {
+                            "hidden": {
+                                "type": "boolean",
+                                "description": "Do not display the parameter in the field manager."
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "A name."
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "fieldDefs": {
+            "description": "An object of field type definition",
+            "$ref": "./entityDefs.json#/definitions/fieldDefs"
+        },
+        "translatedOptions": {
+            "type": "boolean",
+            "description": "Does the field have options that can be translated."
+        },
+        "hookClassName": {
+            "type": "string",
+            "description": "A hook class. Called after the field is created or edited in the Entity Manager tool."
+        },
+        "fields": {
+            "type": "object",
+            "description": "Definitions of additional fields that will be created with this field. E.g. for address field, separate fields (street, city, etc.) are created.",
+            "additionalProperties": {
+                "$ref": "./entityDefs.json#/definitions/fieldDefs"
+            }
+        },
+        "naming": {
+            "enum": ["suffix", "prefix"],
+            "description": "The naming determines how additional fields will be named."
+        },
+        "actualFields": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "The list of actual attributes (which contain useful data). For example, for field type link in actualFields is ['id'], in notActualFields is ['name']. Means, if you load record with link field, you have values in {fieldName}Id and {fieldName}Name (suffix naming). But you need set only {fieldName}Id, if you want to update this field."
+        },
+        "notActualFields": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "The list of not actual attributes."
+        },
+        "personalData": {
+            "type": "boolean",
+            "description": "Where the field may contain personal data."
+        },
+        "textFilter": {
+            "type": "boolean",
+            "description": "The field will be available in the list of text filters (in the Entity Manager tool)."
+        },
+        "textFilterForeign": {
+            "type": "boolean",
+            "description": "The field will be available in the list of text filters as a foreign field."
+        },
+        "linkDefs": {
+            "$ref": "./entityDefs.json#/definitions/linkDefs",
+            "description": "If defined, a link with the same name as the field name will be created."
+        },
+        "fullTextSearch": {
+            "type": "boolean",
+            "description": "Full-text search will be available for the field."
+        },
+        "fullTextSearchColumnList": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Columns used in full-text search."
+        },
+        "valueFactoryClassName": {
+            "type": "string",
+            "description": "A factory that creates value-objects for this field. A value-object can be obtained by calling getValueObject method on an Entity. Should implement Espo\\ORM\\Value\\ValueFactory."
+        },
+        "attributeExtractorClassName": {
+            "type": "string",
+            "description": "A class that extracts values (attribute => value map) from a value-object. Used internally for obtaining values from a value-object and writing them to an entity. Should implement Espo\\ORM\\Value\\AttributeExtractor."
+        },
+        "validationList": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"const": "__APPEND__"}
+                ]
+            },
+            "description": "Validations applied server-side."
+        },
+        "mandatoryValidationList": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"const": "__APPEND__"}
+                ]
+            },
+            "description": "Validations applied server-side."
+        },
+        "validatorClassNameMap": {
+            "type": "object",
+            "description": "Validators. Should implement Espo\\Core\\FieldValidation\\Validator.",
+            "additionalProperties": {
+                "type": "string",
+                "description": "A validation name."
+            }
+        },
+        "duplicatorClassName": {
+            "type": "string",
+            "description": "Duplicates attributes of a field. Some fields can require some processing when an entity is being duplicated. Should implement Espo\\Core\\Record\\Duplicator\\FieldDuplicator."
+        },
+        "converterClassName": {
+            "type": "string",
+            "description": "A metadata converter. Converts field metadata to ORM metadata. Should implement Espo\\Core\\Utils\\Database\\Orm\\FieldConverter."
+        }
+    }
+}

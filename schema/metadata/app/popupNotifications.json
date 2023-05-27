@@ -1,0 +1,45 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/popupNotifications.json",
+    "title": "app/popupNotifications",
+    "description": "Popup notifications.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A name.",
+        "properties": {
+            "grouped": {
+                "type": "boolean",
+                "description": "Grouped popup notifications are fetched with a single API request."
+            },
+            "providerClassName": {
+                "type": "string",
+                "description": "A provider class. Actual only if the `grouped` parameter is set to true. Should implement Espo\\Tools\\PopupNotification\\Provider."
+            },
+            "useWebSocket": {
+                "type": "boolean",
+                "description": "If the WebSocked is configured and the parameter is set to true, notifications won't be polled in the front-end (except once, when page is loaded)."
+            },
+            "disabled": {
+                "type": "boolean",
+                "description": "Disables."
+            },
+            "portalDisabled": {
+                "type": "boolean",
+                "description": "Disables in portals."
+            },
+            "view": {
+                "type": "string",
+                "description": "A frontend view for the popup notification."
+            },
+            "interval": {
+                "type": "integer",
+                "description": "A polling interval in seconds. Actual if `grouped` is false."
+            },
+            "url": {
+                "type": "string",
+                "description": "An API endpoint used for polling. Actual if `grouped` is false."
+            }
+        }
+    }
+}

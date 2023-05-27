@@ -16,96 +16,7 @@
             "description": "Links.",
             "type": "object",
             "additionalProperties": {
-                "type": "object",
-                "description": "A link.",
-                "additionalProperties": true,
-                "properties": {
-                    "type": {
-                        "type": "string",
-                        "description": "A link type.",
-                        "enum": ["belongsTo", "hasMany", "hasOne", "belongsToParent", "hasChildren"]
-                    },
-                    "entity": {
-                        "type": "string",
-                        "description": "A foreign entity type."
-                    },
-                    "foreign": {
-                        "type": "string",
-                        "description": "A foreign link name."
-                    },
-                    "noJoin": {
-                        "type": "boolean",
-                        "description": "Prevents joining a foreign table when fetching a record. Available for belongsTo, hasOne."
-                    },
-                    "foreignName": {
-                        "type": "string",
-                        "description": "A field to be used as a name of a foreign record. Needed when a foreign entity type does not have the field name."
-                    },
-                    "audited": {
-                        "type": "boolean",
-                        "description": "Linking and unlinking will be logged in the Stream. Available for hasMany."
-                    },
-                    "layoutRelationshipsDisabled": {
-                        "type": "boolean",
-                        "description": "Makes the link not available in the Bottom Panels layout (in the Layout Manager tool). Available for hasMany"
-                    },
-                    "relationName": {
-                        "type": "string",
-                        "description": "A relationship name. Defines how a middle table will be named (for a many-to-many relationships). Available for hasMany"
-                    },
-                    "additionalColumns": {
-                        "type": "object",
-                        "description": "Additional columns to be created in a middle table (for a many-to-many relationships).",
-                        "additionalProperties": {
-                            "type": "object",
-                            "properties": {
-                                "type": {
-                                    "enum": ["varchar", "int", "float", "bool"]
-                                },
-                                "maxLength": {
-                                    "type": "integer"
-                                },
-                                "default": {
-                                    "type": ["integer", "string", "boolean", "null", "number"]
-                                },
-                                "dbType": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    },
-                    "conditions": {
-                        "type": "object",
-                        "description": "Where-conditions (for a many-to-many relationships). If multiple links share the same relationship name (middle table), conditions must be defined for each link. For many-to-many.",
-                        "additionalProperties": {
-                            "type": ["string", "integer", "number", "boolean", "null"]
-                        }
-                    },
-                    "indexes": {
-                        "type": "object",
-                        "description": "Indexes for a middle table.",
-                        "additionalProperties": {
-                            "type": "object",
-                            "properties": {
-                                "columns": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    },
-                                    "description": "Database columns of the index."
-                                },
-                                "unique": {
-                                    "type": "boolean",
-                                    "description": "Whether the index is unique."
-                                }
-                            }
-                        }
-                    },
-                    "notMergeable": {
-                        "type": "boolean",
-                        "description": "Disable merging related records when duplicate records are being merged. For hasMany, hasChildren."
-                    }
-                }
+                "$ref": "#/definitions/linkDefs"
             }
         },
         "indexes": {
@@ -644,6 +555,98 @@
                             }
                         }
                     }
+                }
+            }
+        },
+        "linkDefs": {
+            "type": "object",
+            "description": "A link.",
+            "additionalProperties": true,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "A link type.",
+                    "enum": ["belongsTo", "hasMany", "hasOne", "belongsToParent", "hasChildren"]
+                },
+                "entity": {
+                    "type": "string",
+                    "description": "A foreign entity type."
+                },
+                "foreign": {
+                    "type": "string",
+                    "description": "A foreign link name."
+                },
+                "noJoin": {
+                    "type": "boolean",
+                    "description": "Prevents joining a foreign table when fetching a record. Available for belongsTo, hasOne."
+                },
+                "foreignName": {
+                    "type": "string",
+                    "description": "A field to be used as a name of a foreign record. Needed when a foreign entity type does not have the field name."
+                },
+                "audited": {
+                    "type": "boolean",
+                    "description": "Linking and unlinking will be logged in the Stream. Available for hasMany."
+                },
+                "layoutRelationshipsDisabled": {
+                    "type": "boolean",
+                    "description": "Makes the link not available in the Bottom Panels layout (in the Layout Manager tool). Available for hasMany"
+                },
+                "relationName": {
+                    "type": "string",
+                    "description": "A relationship name. Defines how a middle table will be named (for a many-to-many relationships). Available for hasMany"
+                },
+                "additionalColumns": {
+                    "type": "object",
+                    "description": "Additional columns to be created in a middle table (for a many-to-many relationships).",
+                    "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "enum": ["varchar", "int", "float", "bool"]
+                            },
+                            "maxLength": {
+                                "type": "integer"
+                            },
+                            "default": {
+                                "type": ["integer", "string", "boolean", "null", "number"]
+                            },
+                            "dbType": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "conditions": {
+                    "type": "object",
+                    "description": "Where-conditions (for a many-to-many relationships). If multiple links share the same relationship name (middle table), conditions must be defined for each link. For many-to-many.",
+                    "additionalProperties": {
+                        "type": ["string", "integer", "number", "boolean", "null"]
+                    }
+                },
+                "indexes": {
+                    "type": "object",
+                    "description": "Indexes for a middle table.",
+                    "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                            "columns": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "description": "Database columns of the index."
+                            },
+                            "unique": {
+                                "type": "boolean",
+                                "description": "Whether the index is unique."
+                            }
+                        }
+                    }
+                },
+                "notMergeable": {
+                    "type": "boolean",
+                    "description": "Disable merging related records when duplicate records are being merged. For hasMany, hasChildren."
                 }
             }
         }

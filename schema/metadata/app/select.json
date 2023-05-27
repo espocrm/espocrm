@@ -1,0 +1,30 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/select.json",
+    "title": "app/select",
+    "description": "Select framework definitions.",
+    "type": "object",
+    "properties": {
+        "boolFilterClassNameMap": {
+            "type": "object",
+            "description": "Bool filters available for all entity types. Should implement Espo\\Core\\Select\\Bool\\Filter.",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "orderItemConverterClassNameMap": {
+            "type": "object",
+            "description": "Order item converters for field types. Should implement Espo\\Core\\Select\\Order\\ItemConverter.",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "whereItemConverterClassNameMap": {
+            "type": "object",
+            "description": "Where item converters. Should implement Espo\\Core\\Select\\Where\\ItemConverter.",
+            "additionalProperties": {
+                "type": "string"
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/relationships.json",
+    "title": "app/relationships",
+    "description": "Definitions of specific named relationships.",
+    "type": "object",
+    "additionalProperties": {
+        "description": "A relationship name.",
+        "type": "object",
+        "properties": {
+            "converterClassName": {
+                "type": "string",
+                "description": "A converter. Converts metadata link definitions to ORM definitions. Should implement Espo\\Core\\Utils\\Database\\Orm\\LinkConverter."
+            }
+        }
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/regExpPatterns.json",
+    "title": "app/regExpPatterns",
+    "description": "Predefined regular expression patterns. Predefined patterns can be used for field validation.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A pattern name.",
+        "properties": {
+            "pattern": {
+                "type": "string",
+                "description": "A regular expression pattern."
+            },
+            "isSystem": {
+                "type": "boolean",
+                "description": "If true, the pattern won't be available when defining a validation for a field."
+            }
+        }
+    }
+}

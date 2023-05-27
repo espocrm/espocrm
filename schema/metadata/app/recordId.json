@@ -1,0 +1,32 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/recordId.json",
+    "title": "app/recordId",
+    "description": "Record ID definitions.",
+    "type": "object",
+    "properties": {
+        "type": {
+            "enum": [
+                "id",
+                "uuid4"
+            ],
+            "description": "A type of generated IDs."
+        },
+        "length": {
+            "type": "integer",
+            "description": "ID column length. By default, set to 17."
+        },
+        "dbType": {
+            "description": "An ID column data type. By default, set to string (equivalent to varchar in MySQL). Changing this parameter will change types of all ID columns once you run rebuild."
+            "anyOf": [
+                {"type": "string"},
+                {
+                    "enum": [
+                        "string",
+                        "uuid"
+                    ]
+                }
+            ]
+        }
+    }
+}

@@ -167,25 +167,6 @@
             </SchemaInfo>
           </value>
         </entry>
-        <entry key="metadata/app/api">
-          <value>
-            <SchemaInfo>
-              <option name="generatedName" value="New Schema" />
-              <option name="name" value="metadata/app/api" />
-              <option name="relativePathToSchema" value="schema/metadata/app/api.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
-              <option name="patterns">
-                <list>
-                  <Item>
-                    <option name="pattern" value="true" />
-                    <option name="path" value="*/Resources/metadata/app/api.json" />
-                    <option name="mappingKind" value="Pattern" />
-                  </Item>
-                </list>
-              </option>
-            </SchemaInfo>
-          </value>
-        </entry>
         <entry key="metadata/app/addressFormats">
           <value>
             <SchemaInfo>
@@ -1079,6 +1060,25 @@
             </SchemaInfo>
           </value>
         </entry>
+        <entry key="metadata/authenticationMethods">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/authenticationMethods" />
+              <option name="relativePathToSchema" value="schema/metadata/authenticationMethods.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/metadata/authenticationMethods/*.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
         <entry key="metadata/clientDefs">
           <value>
             <SchemaInfo>
@@ -1148,6 +1148,25 @@
                   <Item>
                     <option name="pattern" value="true" />
                     <option name="path" value="*/metadata/entityDefs/*.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/fields">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/fields" />
+              <option name="relativePathToSchema" value="schema/metadata/fields.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/metadata/fields/*.json" />
                     <option name="mappingKind" value="Pattern" />
                   </Item>
                 </list>

@@ -1,0 +1,33 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/scheduledJobs.json",
+    "title": "app/scheduledJobs",
+    "description": "Scheduled jobs definitions. Defined scheduled job will be available for the admin when creating a scheduled job.",
+    "type": "object",
+    "additionalProperties": {
+        "description": "A job name. Should start with the upper case letter.",
+        "type": "object",
+        "properties": {
+            "name": {
+                "type": "string",
+                "description": "A name to be used for job records. Not important."
+            },
+            "isSystem": {
+                "type": "boolean",
+                "description": "Whether the job is system."
+            },
+            "scheduling": {
+                "type": "string",
+                "description": "A default scheduling in crontab notation."
+            },
+            "jobClassName": {
+                "type": "string",
+                "description": "A job implementation. Should implement either Espo\\Core\\Job\\Job|Espo\\Core\\Job or Espo\\Core\\Job\\Job|Espo\\Core\\JobDataLess interfaces. Usage of the former requires having the preparator."
+            },
+            "preparatorClassName": {
+                "type": "string",
+                "description": "A preparator. Optional. The preparator is called by the application. It serves for creating job records. E.g. for email checking, the preparator creates jobs for each email account. Should implement Espo\\Core\\Job\\Preparator."
+            }
+        }
+    }
+}
