@@ -1,0 +1,422 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "*/Resources/routes.json"
+            ],
+            "url": "./schema/routes.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/module.json"
+            ],
+            "url": "./schema/routes.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/layouts/*/detail.json",
+                "*/Resources/layouts/*/detailSmall.json",
+                "*/Resources/layouts/*/detailConvert.json"
+            ],
+            "url": "./schema/layouts/detail.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/layouts/*/list.json",
+                "*/Resources/layouts/*/listSmall.json",
+                "*/Resources/layouts/*/listFor*.json"
+            ],
+            "url": "./schema/layouts/list.json"
+        },
+        {
+            "fileMatch": [
+                "*/metadata/aclDefs/*.json"
+            ],
+            "url": "./schema/metadata/aclDefs.json"
+        },
+        {
+            "fileMatch": [
+                "*/metadata/authenticationMethods/*.json"
+            ],
+            "url": "./schema/metadata/authenticationMethods.json"
+        },
+        {
+            "fileMatch": [
+                "*/metadata/clientDefs/*.json"
+            ],
+            "url": "./schema/metadata/clientDefs.json"
+        },
+        {
+            "fileMatch": [
+                "*/metadata/dashlets/*.json"
+            ],
+            "url": "./schema/metadata/dashlets.json"
+        },
+        {
+            "fileMatch": [
+                "*/metadata//*.json"
+            ],
+            "url": "./schema/metadata/.json"
+        },
+        {
+            "fileMatch": [
+                "*/metadata/entityAcl/*.json"
+            ],
+            "url": "./schema/metadata/entityAcl.json"
+        },
+        {
+            "fileMatch": [
+                "*/metadata/entityDefs/*.json"
+            ],
+            "url": "./schema/metadata/entityDefs.json"
+        },
+        {
+            "fileMatch": [
+                "*/metadata/fields/*.json"
+            ],
+            "url": "./schema/metadata/fields.json"
+        },
+        {
+            "fileMatch": [
+                "*/metadata/integrations/*.json"
+            ],
+            "url": "./schema/metadata/integrations.json"
+        },
+        {
+            "fileMatch": [
+                "*/metadata/notificationDefs/*.json"
+            ],
+            "url": "./schema/metadata/notificationDefs.json"
+        },
+        {
+            "fileMatch": [
+                "*/metadata/pdfDefs/*.json"
+            ],
+            "url": "./schema/metadata/pdfDefs.json"
+        },
+        {
+            "fileMatch": [
+                "*/metadata/recordDefs/*.json"
+            ],
+            "url": "./schema/metadata/recordDefs.json"
+        },
+        {
+            "fileMatch": [
+                "*/metadata/scopes/*.json"
+            ],
+            "url": "./schema/metadata/scopes.json"
+        },
+        {
+            "fileMatch": [
+                "*/metadata/selectDefs/*.json"
+            ],
+            "url": "./schema/metadata/selectDefs.json"
+        },
+        {
+            "fileMatch": [
+                "*/metadata/streamDefs/*.json"
+            ],
+            "url": "./schema/metadata/streamDefs.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/acl.json"
+            ],
+            "url": "./schema/metadata/app/acl.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/aclPortal.json"
+            ],
+            "url": "./schema/metadata/app/aclPortal.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/actions.json"
+            ],
+            "url": "./schema/metadata/app/actions.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/addressFormats.json"
+            ],
+            "url": "./schema/metadata/app/addressFormats.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/adminPanel.json"
+            ],
+            "url": "./schema/metadata/app/adminPanel.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/api.json"
+            ],
+            "url": "./schema/metadata/app/api.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/appParams.json"
+            ],
+            "url": "./schema/metadata/app/appParams.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/authentication.json"
+            ],
+            "url": "./schema/metadata/app/authentication.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/authentication2FAMethods.json"
+            ],
+            "url": "./schema/metadata/app/authentication2FAMethods.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/cleanup.json"
+            ],
+            "url": "./schema/metadata/app/cleanup.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/client.json"
+            ],
+            "url": "./schema/metadata/app/client.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/clientRoutes.json"
+            ],
+            "url": "./schema/metadata/app/clientRoutes.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/complexExpression.json"
+            ],
+            "url": "./schema/metadata/app/complexExpression.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/config.json"
+            ],
+            "url": "./schema/metadata/app/config.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/consoleCommands.json"
+            ],
+            "url": "./schema/metadata/app/consoleCommands.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/containerServices.json"
+            ],
+            "url": "./schema/metadata/app/containerServices.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/currency.json"
+            ],
+            "url": "./schema/metadata/app/currency.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/currencyConversion.json"
+            ],
+            "url": "./schema/metadata/app/currencyConversion.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/databasePlatforms.json"
+            ],
+            "url": "./schema/metadata/app/databasePlatforms.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/dateTime.json"
+            ],
+            "url": "./schema/metadata/app/dateTime.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/defaultDashboardLayouts.json"
+            ],
+            "url": "./schema/metadata/app/defaultDashboardLayouts.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/defaultDashboardOptions.json"
+            ],
+            "url": "./schema/metadata/app/defaultDashboardOptions.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/entityManagerParams.json"
+            ],
+            "url": "./schema/metadata/app/entityManagerParams.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/entityTemplateList.json"
+            ],
+            "url": "./schema/metadata/app/entityTemplateList.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/export.json"
+            ],
+            "url": "./schema/metadata/app/export.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/fieldProcessing.json"
+            ],
+            "url": "./schema/metadata/app/fieldProcessing.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/file.json"
+            ],
+            "url": "./schema/metadata/app/file.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/fileStorage.json"
+            ],
+            "url": "./schema/metadata/app/fileStorage.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/formula.json"
+            ],
+            "url": "./schema/metadata/app/formula.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/hook.json"
+            ],
+            "url": "./schema/metadata/app/hook.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/image.json"
+            ],
+            "url": "./schema/metadata/app/image.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/jsLibs.json"
+            ],
+            "url": "./schema/metadata/app/jsLibs.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/language.json"
+            ],
+            "url": "./schema/metadata/app/language.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/linkManager.json"
+            ],
+            "url": "./schema/metadata/app/linkManager.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/massActions.json"
+            ],
+            "url": "./schema/metadata/app/massActions.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/metadata.json"
+            ],
+            "url": "./schema/metadata/app/metadata.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/orm.json"
+            ],
+            "url": "./schema/metadata/app/orm.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/pdfEngines.json"
+            ],
+            "url": "./schema/metadata/app/pdfEngines.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/popupNotifications.json"
+            ],
+            "url": "./schema/metadata/app/popupNotifications.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/portalContainerServices.json"
+            ],
+            "url": "./schema/metadata/app/portalContainerServices.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/rebuild.json"
+            ],
+            "url": "./schema/metadata/app/rebuild.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/recordId.json"
+            ],
+            "url": "./schema/metadata/app/recordId.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/regExpPatterns.json"
+            ],
+            "url": "./schema/metadata/app/regExpPatterns.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/relationships.json"
+            ],
+            "url": "./schema/metadata/app/relationships.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/scheduledJobs.json"
+            ],
+            "url": "./schema/metadata/app/scheduledJobs.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/select.json"
+            ],
+            "url": "./schema/metadata/app/select.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/smsProviders.json"
+            ],
+            "url": "./schema/metadata/app/smsProviders.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/templateHelpers.json"
+            ],
+            "url": "./schema/metadata/app/templateHelpers.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/templates.json"
+            ],
+            "url": "./schema/metadata/app/templates.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/webSocket.json"
+            ],
+            "url": "./schema/metadata/app/webSocket.json"
+        }
+    ]
+}
