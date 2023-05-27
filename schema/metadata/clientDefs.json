@@ -531,43 +531,17 @@
                         "description": "A field name.",
                         "properties": {
                             "visible": {
-                                "type": "object",
                                 "description": "Conditions making the field visible.",
-                                "properties": {
-                                    "conditionGroup": {
-                                        "description": "An AND where clause.",
-                                        "type": "array",
-                                        "items": {
-                                            "$ref": "#/definitions/dynamicLogicItem"
-                                        }
-                                    }
-                                }
+                                "$ref": "#/definitions/dynamicLogicVisible"
                             },
                             "required": {
-                                "type": "object",
-                                "description": "Conditions making the field required.",
-                                "properties": {
-                                    "conditionGroup": {
-                                        "type": "array",
-                                        "description": "An AND where clause.",
-                                        "items": {
-                                            "$ref": "#/definitions/dynamicLogicItem"
-                                        }
-                                    }
-                                }
+                                "$ref": "#/definitions/dynamicLogicRequired"
                             },
                             "readOnly": {
-                                "type": "object",
-                                "description": "Conditions making the field read-only.",
-                                "properties": {
-                                    "conditionGroup": {
-                                        "type": "array",
-                                        "description": "An AND where clause.",
-                                        "items": {
-                                            "$ref": "#/definitions/dynamicLogicItem"
-                                        }
-                                    }
-                                }
+                                "$ref": "#/definitions/dynamicLogicReadOnly"
+                            },
+                            "invalid": {
+                                "$ref": "#/definitions/dynamicLogicInvalid"
                             }
                         }
                     }
@@ -580,17 +554,8 @@
                         "description": "A panel name.",
                         "properties": {
                             "visible": {
-                                "type": "object",
                                 "description": "Conditions making the panel visible.",
-                                "properties": {
-                                    "conditionGroup": {
-                                        "type": "array",
-                                        "description": "An AND where clause.",
-                                        "items": {
-                                            "$ref": "#/definitions/dynamicLogicItem"
-                                        }
-                                    }
-                                }
+                                "$ref": "#/definitions/dynamicLogicVisible"
                             }
                         }
                     }
@@ -599,6 +564,58 @@
         }
     },
     "definitions": {
+        "dynamicLogicVisible": {
+            "type": "object",
+            "description": "Conditions making the element visible.",
+            "properties": {
+                "conditionGroup": {
+                    "description": "An AND where clause.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dynamicLogicItem"
+                    }
+                }
+            }
+        },
+        "dynamicLogicRequired": {
+            "type": "object",
+            "description": "Conditions making the field required.",
+            "properties": {
+                "conditionGroup": {
+                    "type": "array",
+                    "description": "An AND where clause.",
+                    "items": {
+                        "$ref": "#/definitions/dynamicLogicItem"
+                    }
+                }
+            }
+        },
+        "dynamicLogicReadOnly": {
+            "type": "object",
+            "description": "Conditions making the field read-only.",
+            "properties": {
+                "conditionGroup": {
+                    "type": "array",
+                    "description": "An AND where clause.",
+                    "items": {
+                        "$ref": "#/definitions/dynamicLogicItem"
+                    }
+                }
+            }
+        },
+        "dynamicLogicInvalid": {
+            "type": "object",
+            "description": "Conditions making the field invalid.",
+            "properties": {
+                "conditionGroup": {
+                    "type": "array",
+                    "description": "An AND where clause.",
+                    "items": {
+                        "$ref": "#/definitions/dynamicLogicItem"
+                    }
+                }
+            }
+        },
         "dynamicLogicItem": {
             "type": "object",
             "description": "A logic node.",
