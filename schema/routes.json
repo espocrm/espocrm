@@ -6,11 +6,11 @@
     "type": "array",
     "items": {
         "type": "object",
-        "description": "An endpoint.",
+        "description": "A route.",
         "properties": {
             "route": {
                 "type": "string",
-                "description": "A route. Example: `/MyScope/:id/myAction`."
+                "description": "A route path. Example: `/MyScope/:id/myAction`."
             },
             "method": {
                 "type": "string",
@@ -26,7 +26,7 @@
             },
             "noAuth": {
                 "type": "boolean",
-                "description": "Makes the endpoint not requiring authentication."
+                "description": "Makes the route not requiring authentication."
             },
             "actionClassName": {
                 "type": "string",
