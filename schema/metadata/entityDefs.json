@@ -386,47 +386,11 @@
                         },
                         "leftJoins": {
                             "description": "LEFT JOINs",
-                            "type": "array",
-                            "items": {
-                                "type": "array",
-                                "items": [
-                                    {
-                                        "type": "string",
-                                        "description": "A table or link. Table – CamelCase, link – camelCase."
-                                    },
-                                    {
-                                        "type": "string",
-                                        "description": "An alias."
-                                    },
-                                    {
-                                        "type": "object",
-                                        "additionalProperties": true,
-                                        "description": "Join conditions."
-                                    }
-                                ]
-                            }
+                            "$ref": "#/definitions/joins"
                         },
                         "joins": {
                             "description": "JOINs",
-                            "type": "array",
-                            "items": {
-                                "type": "array",
-                                "items": [
-                                    {
-                                        "type": "string",
-                                        "description": "A table or link. Table – CamelCase, link – camelCase."
-                                    },
-                                    {
-                                        "type": "string",
-                                        "description": "An alias."
-                                    },
-                                    {
-                                        "type": "object",
-                                        "additionalProperties": true,
-                                        "description": "Join conditions."
-                                    }
-                                ]
-                            }
+                            "type": "array"
                         }
                     }
                 },
@@ -446,47 +410,11 @@
                         },
                         "leftJoins": {
                             "description": "LEFT JOINs",
-                            "type": "array",
-                            "items": {
-                                "type": "array",
-                                "items": [
-                                    {
-                                        "type": "string",
-                                        "description": "A table or link. Table – CamelCase, link – camelCase."
-                                    },
-                                    {
-                                        "type": "string",
-                                        "description": "An alias."
-                                    },
-                                    {
-                                        "type": "object",
-                                        "additionalProperties": true,
-                                        "description": "Join conditions."
-                                    }
-                                ]
-                            }
+                            "$ref": "#/definitions/joins"
                         },
                         "joins": {
                             "description": "JOINs",
-                            "type": "array",
-                            "items": {
-                                "type": "array",
-                                "items": [
-                                    {
-                                        "type": "string",
-                                        "description": "A table or link. Table – CamelCase, link – camelCase."
-                                    },
-                                    {
-                                        "type": "string",
-                                        "description": "An alias."
-                                    },
-                                    {
-                                        "type": "object",
-                                        "additionalProperties": true,
-                                        "description": "Join conditions."
-                                    }
-                                ]
-                            }
+                            "$ref": "#/definitions/joins"
                         },
                         "additionalSelect": {
                             "description": "Additional columns to be selected when order by the field is applied.",
@@ -500,58 +428,38 @@
                 "where": {
                     "description": "Custom where clause to be used when the field is met in a provided where-clause. It's possible to define leftJoins and joins that are needed to be applied. Every comparison operation that you need to support should have its own definitions.",
                     "type": "object",
+                    "propertyNames": {
+                        "enum": [
+                            "=",
+                            "<>",
+                            "<",
+                            ">",
+                            "<=",
+                            ">=",
+                            "IS NULL",
+                            "IS NOT NULL",
+                            "LIKE",
+                            "NOT LIKE",
+                            "IN",
+                            "NOT IN",
+                            "= TRUE",
+                            "= FALSE"
+                        ]
+                    },
                     "additionalProperties": {
                         "type": "object",
                         "properties": {
                             "whereClause": {
-                                "type": "object",
-                                "additionalProperties": {
-                                    "type": "string"
-                                }
+                                "description": "A WHERE clause.",
+                                "$ref": "#/definitions/whereClause"
                             },
                             "leftJoins": {
-                                "type": "array",
                                 "description": "LEFT JOINs",
-                                "items": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "string",
-                                            "description": "A table or link. Table – CamelCase, link – camelCase."
-                                        },
-                                        {
-                                            "type": "string",
-                                            "description": "An alias."
-                                        },
-                                        {
-                                            "type": "object",
-                                            "additionalProperties": true,
-                                            "description": "Join conditions."
-                                        }
-                                    ]
-                                }
+                                "$ref": "#/definitions/joins"
                             },
                             "joins": {
                                 "description": "JOINs",
-                                "type": "array",
-                                "items": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "string",
-                                            "description": "A table or link. Table – CamelCase, link – camelCase."
-                                        },
-                                        {
-                                            "type": "string",
-                                            "description": "An alias."
-                                        },
-                                        {
-                                            "type": "object",
-                                            "additionalProperties": true,
-                                            "description": "Join conditions."
-                                        }
-                                    ]
-                                }
+                                "$ref": "#/definitions/joins"
                             },
                             "distinct": {
                                 "type": "boolean",
@@ -652,6 +560,63 @@
                     "type": "boolean",
                     "description": "Disable merging related records when duplicate records are being merged. For hasMany, hasChildren."
                 }
+            }
+        },
+        "joins": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"type": "string"},
+                    {
+                        "type": "array",
+                        "items": [
+                            {
+                                "type": "string",
+                                "description": "A table or link. Table – CamelCase, link – camelCase."
+                            },
+                            {
+                                "type": "string",
+                                "description": "An alias."
+                            },
+                            {
+                                "type": "object",
+                                "additionalProperties": true,
+                                "description": "Join conditions."
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "whereClause": {
+            "type": "object",
+            "additionalProperties": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"type": "integer"},
+                    {"type": "number"},
+                    {"type": "boolean"},
+                    {"type": "null"},
+                    {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/whereClause"
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "from": {"type": "string"},
+                            "select": {"type": "array"},
+                            "whereClause": {"type": "object"},
+                            "leftJoins": {"$ref": "#/definitions/joins"},
+                            "joins": {"$ref": "#/definitions/joins"}
+                        }
+                    },
+                    {
+                        "$ref": "#/definitions/whereClause"
+                    }
+                ]
             }
         }
     }
