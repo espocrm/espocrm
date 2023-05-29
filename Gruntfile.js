@@ -110,9 +110,7 @@ module.exports = grunt => {
             beforeFinal: {
                 src: [
                     'build/tmp/custom/Espo/Custom/*',
-                    'build/tmp/custom/Espo/Modules/*',
                     '!build/tmp/custom/Espo/Custom/.htaccess',
-                    '!build/tmp/custom/Espo/Modules/.htaccess',
                     'build/tmp/install/config.php',
                     'build/tmp/vendor/*/*/.git',
                     'build/tmp/custom/Espo/Custom/*',
