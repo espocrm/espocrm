@@ -646,7 +646,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($container->hasByParam($class3, $param3));
     }
 
-    /*public function testTypedParamWithScalarBound1(): void
+    public function testTypedParamWithScalarBound1(): void
     {
         $container = BindingContainerBuilder::create()
             ->inContext(Class0::class, function (ContextualBinder $binder): void {
@@ -681,5 +681,5 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(Binding::VALUE, $binding->getType());
         $this->assertInstanceOf(Class1::class, $binding->getValue());
-    }*/
+    }
 }

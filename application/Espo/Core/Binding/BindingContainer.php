@@ -121,11 +121,9 @@ class BindingContainer
             $key &&
             $this->data->hasContext($className, $key)
         ) {
-            // @todo For v7.6. Uncomment, then remove the return statement below.
-            /*$binding = $this->data->getContext($className, $key);
+            $binding = $this->data->getContext($className, $key);
 
             $notMatching =
-                $type &&
                 $type instanceof ReflectionNamedType &&
                 !$type->isBuiltin() &&
                 $binding->getType() === Binding::VALUE &&
@@ -133,15 +131,12 @@ class BindingContainer
 
             if (!$notMatching) {
                 return $binding;
-            }*/
-
-            return $this->data->getContext($className, $key);
+            }
         }
 
         $dependencyClassName = null;
 
         if (
-            $type &&
             $type instanceof ReflectionNamedType &&
             !$type->isBuiltin()
         ) {
