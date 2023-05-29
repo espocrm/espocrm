@@ -90,7 +90,7 @@ module.exports = grunt => {
         mkdir: {
             tmp: {
                 options: {
-                    mode: 0755,
+                    mode: 0o755,
                     create: [
                         'build/tmp',
                     ],
@@ -234,7 +234,7 @@ module.exports = grunt => {
                 options: {
                     patterns: [
                         {
-                            match: /\# \{\#dev\}(.*)\{\/dev\}/gs,
+                            match: /# \{#dev}(.*)\{\/dev}/gs,
                             replacement: '',
                         }
                     ]
