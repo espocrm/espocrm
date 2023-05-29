@@ -20,9 +20,10 @@
         "valuePermissionList": {
             "type": "array",
             "description": "A list of all available permissions in the system.",
-            "items": {
-                "type": "string"
-            }
+            "anyOf": [
+                {"const": "__APPEND__"},
+                {"type": "string"}
+            ]
         },
         "valuePermissionHighestLevels": {
             "type": "object",

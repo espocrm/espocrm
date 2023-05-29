@@ -14,8 +14,7 @@
             "description": "A scope access to which is required to have access to the dashlet.",
         },
         "accessDataList": {
-            "$ref": "./components/accessDataList.json",
-            "description": "Frontend access rules."
+            "$ref": "./clientDefs.json#/definitions/accessDataList"
         },
         "options": {
             "type": "object",

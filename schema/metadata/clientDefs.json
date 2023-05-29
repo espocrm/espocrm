@@ -94,6 +94,8 @@
             "type": "array",
             "items": {
                 "anyOf": [
+                    {"const": "__APPEND__"},
+                    {"type": "string"},
                     {
                         "type": "object",
                         "properties": {
@@ -104,10 +106,12 @@
                             "style": {
                                 "enum": ["default", "success", "warning", "danger", "info"],
                                 "description": "A style."
+                            },
+                            "accessDataList": {
+                                "$ref": "#/definitions/accessDataList"
                             }
                         }
-                    },
-                    {"type": "string"}
+                    }
                 ]
             }
         },
@@ -115,7 +119,23 @@
             "description": "A list of bool filters.",
             "type": "array",
             "items": {
-                "type": "string"
+                "type": "string",
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {"type": "string"},
+                    {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "A filter name."
+                            },
+                            "accessDataList": {
+                                "$ref": "#/definitions/accessDataList"
+                            }
+                        }
+                    }
+                ]
             }
         },
         "defaultFilterData": {
@@ -210,7 +230,7 @@
                                         "description": "An init function of the handler."
                                     },
                                     "accessDataList": {
-                                        "$ref": "./components/accessDataList.json"
+                                        "$ref": "#/definitions/accessDataList"
                                     }
                                 }
                             }
@@ -225,33 +245,61 @@
             "additionalProperties": {
                 "type": "array",
                 "items": {
-                    "type": "object",
-                    "properties": {
-                        "name": {
-                            "description": "A name.",
-                            "type": "string"
-                        },
-                        "label": {
-                            "description": "A translatable label.",
-                            "type": "string"
-                        },
-                        "view": {
-                            "description": "A view class.",
-                            "type": "string"
-                        },
-                        "options": {
-                            "description": "Options to be passed to the view.",
-                            "type": "object"
-                        },
-                        "isForm": {
-                            "description": "Whether the panel should display a form.",
-                            "type": "boolean"
-                        },
-                        "notRefreshable": {
-                            "description": "Disable the ability to refresh the panel.",
-                            "type": "boolean"
+                    "anyOf": [
+                        {"const": "__APPEND__"},
+                        {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "description": "A name.",
+                                    "type": "string"
+                                },
+                                "label": {
+                                    "description": "A translatable label.",
+                                    "type": "string"
+                                },
+                                "view": {
+                                    "description": "A view class.",
+                                    "type": "string"
+                                },
+                                "options": {
+                                    "description": "Options to be passed to the view.",
+                                    "type": "object"
+                                },
+                                "isForm": {
+                                    "description": "Whether the panel should display a form.",
+                                    "type": "boolean"
+                                },
+                                "notRefreshable": {
+                                    "description": "Disable the ability to refresh the panel.",
+                                    "type": "boolean"
+                                },
+                                "style": {
+                                    "description": "A style.",
+                                    "enum": ["default", "success", "warning", "danger"]
+                                },
+                                "hidden": {
+                                    "description": "Hidden by default.",
+                                    "type": "boolean"
+                                },
+                                "aclScope": {
+                                    "description": "A scope access to which is required for the panel being visible.",
+                                    "type": "string"
+                                },
+                                "acl": {
+                                    "description": "An ACL action access to which is required for the panel being visible.",
+                                    "type": "string",
+                                    "enum": [
+                                        "create",
+                                        "read",
+                                        "edit",
+                                        "delete",
+                                        "stream"
+                                    ]
+                                }
+                            }
                         }
-                    }
+                    ]
                 }
             }
         },
@@ -264,6 +312,7 @@
             "type": "object",
             "additionalProperties": {
                 "type": "object",
+                "description": "A link.",
                 "properties": {
                     "view": {
                         "description": "A view class.",
@@ -357,14 +406,20 @@
             "description": "Mass actions.",
             "type": "array",
             "items": {
-                "type": "string"
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {"type": "string"}
+                ]
             }
         },
         "checkAllResultMassActionList": {
             "description": "Mass actions available when selecting all results.",
             "type": "array",
             "items": {
-                "type": "string"
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {"type": "string"}
+                ]
             }
         },
         "massActionDefs": {
@@ -390,7 +445,7 @@
                         "type": "string"
                     },
                     "acl": {
-                        "description": "An acl action access to which is required for the action.",
+                        "description": "An ACL action access to which is required for the action.",
                         "type": "string",
                         "enum": [
                             "create",
@@ -407,96 +462,24 @@
             "description": "Detail view actions (available from the dropdown next to the Edit button).",
             "type": "array",
             "items": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "A name."
-                    },
-                    "label": {
-                        "type": "string",
-                        "description": "A translatable label."
-                    },
-                    "handler": {
-                        "type": "string",
-                        "description": "A handler class for the action."
-                    },
-                    "initFunction": {
-                        "type": "string",
-                        "description": "An init function of the handler."
-                    },
-                    "checkVisibilityFunction": {
-                        "type": "string",
-                        "description": "The handler function that checks whether the action is available. Should return a boolean value. Called on model sync."
-                    },
-                    "configCheck": {
-                        "description": "A config path (separated by the .) to check whether the action is enabled. The ! prefix reverts.",
-                        "type": "string"
-                    },
-                    "aclScope": {
-                        "description": "A scope access to which is required for the action.",
-                        "type": "string"
-                    },
-                    "acl": {
-                        "description": "An acl action access to which is required for the action.",
-                        "type": "string",
-                        "enum": [
-                            "create",
-                            "read",
-                            "edit",
-                            "delete",
-                            "stream"
-                        ]
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {
+                        "$ref": "#/definitions/actionDefs"
                     }
-                }
+                ]
             }
         },
         "modalDetailActionList": {
             "description": "Modal detail view actions.",
             "type": "array",
             "items": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "A name."
-                    },
-                    "label": {
-                        "type": "string",
-                        "description": "A translatable label."
-                    },
-                    "handler": {
-                        "type": "string",
-                        "description": "A handler class for the action."
-                    },
-                    "initFunction": {
-                        "type": "string",
-                        "description": "An init function of the handler."
-                    },
-                    "checkVisibilityFunction": {
-                        "type": "string",
-                        "description": "The handler function that checks whether the action is available. Should return a boolean value. Called on model sync."
-                    },
-                    "configCheck": {
-                        "description": "A config path (separated by the .) to check whether the action is enabled. The ! prefix reverts.",
-                        "type": "string"
-                    },
-                    "aclScope": {
-                        "description": "A scope access to which is required for the action.",
-                        "type": "string"
-                    },
-                    "acl": {
-                        "description": "An acl action access to which is required for the action.",
-                        "type": "string",
-                        "enum": [
-                            "create",
-                            "read",
-                            "edit",
-                            "delete",
-                            "stream"
-                        ]
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {
+                        "$ref": "#/definitions/actionDefs"
                     }
-                }
+                ]
             }
         },
         "iconClass": {
@@ -767,6 +750,99 @@
                 }
             },
             "required": ["type"]
+        },
+        "actionDefs": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "A name."
+                },
+                "label": {
+                    "type": "string",
+                    "description": "A translatable label."
+                },
+                "handler": {
+                    "type": "string",
+                    "description": "A handler class for the action."
+                },
+                "initFunction": {
+                    "type": "string",
+                    "description": "An init function of the handler."
+                },
+                "checkVisibilityFunction": {
+                    "type": "string",
+                    "description": "The handler function that checks whether the action is available. Should return a boolean value. Called on model sync."
+                },
+                "configCheck": {
+                    "description": "A config path (separated by the .) to check whether the action is enabled. The ! prefix reverts.",
+                    "type": "string"
+                },
+                "aclScope": {
+                    "description": "A scope access to which is required for the action.",
+                    "type": "string"
+                },
+                "acl": {
+                    "description": "An acl action access to which is required for the action.",
+                    "type": "string",
+                    "enum": [
+                        "create",
+                        "read",
+                        "edit",
+                        "delete",
+                        "stream"
+                    ]
+                }
+            }
+        },
+        "accessDataList": {
+            "type": "array",
+            "description": "Frontend access rules.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "action": {
+                        "enum": [
+                            "create",
+                            "read",
+                            "edit",
+                            "stream",
+                            "delete"
+                        ],
+                        "description": "An ACL action to check."
+                    },
+                    "scope": {
+                        "type": "string",
+                        "description": "A scope to check."
+                    },
+                    "portalIdList": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A portal ID list. To check whether a user in one of portals."
+                    },
+                    "teamIdList": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A team ID list. To check whether a user in one of teams."
+                    },
+                    "isPortalOnly": {
+                        "type": "boolean",
+                        "description": "Allow for portal users only."
+                    },
+                    "inPortalDisabled": {
+                        "type": "boolean",
+                        "description": "Disable for portal users."
+                    },
+                    "isAdminOnly": {
+                        "type": "boolean",
+                        "description": "Allow for admin users only."
+                    }
+                }
+            }
         }
     }
 }

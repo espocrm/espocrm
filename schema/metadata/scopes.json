@@ -219,11 +219,11 @@
             "type": "boolean"
         },
         "customizable": {
-            "description": "Wether the entity can be customized in the Entity Manager tool.",
+            "description": "Weather the entity can be customized in the Entity Manager tool.",
             "type": "boolean"
         },
         "isCustom": {
-            "description": "Entities creted in the Entity Manager tool marked as custom.",
+            "description": "Entities created in the Entity Manager tool marked as custom.",
             "type": "boolean"
         },
         "notifications": {
@@ -260,11 +260,11 @@
             }
         },
         "languageIsGlobal": {
-            "description": "Languge labels will be available for all users (not restricted by ACL).",
+            "description": "Language labels will be available for all users (not restricted by ACL).",
             "type": "boolean"
         },
         "languageAclDisabled": {
-            "description": "Disables access control application for language labels. All labels of the scope will be avaialble in the front-end regardless of user roles.",
+            "description": "Disables access control application for language labels. All labels of the scope will be available in the front-end regardless of user roles.",
             "type": "boolean"
         },
         "hasPersonalData": {

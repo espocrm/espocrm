@@ -33,21 +33,26 @@
             "type": "array",
             "description": "Field parameters.",
             "items": {
-                "allOf": [
+                "anyOf": [
+                    {"const": "__APPEND__"},
                     {
-                        "$ref": "./entityDefs.json#/definitions/fieldDefs"
-                    },
-                    {
-                        "properties": {
-                            "hidden": {
-                                "type": "boolean",
-                                "description": "Do not display the parameter in the field manager."
+                        "allOf": [
+                            {
+                                "$ref": "./entityDefs.json#/definitions/fieldDefs"
                             },
-                            "name": {
-                                "type": "string",
-                                "description": "A name."
+                            {
+                                "properties": {
+                                    "hidden": {
+                                        "type": "boolean",
+                                        "description": "Do not display the parameter in the field manager."
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "A name."
+                                    }
+                                }
                             }
-                        }
+                        ]
                     }
                 ]
             }

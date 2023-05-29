@@ -33,7 +33,10 @@
         "externalAccountSecretAttributeList": {
             "type": "array",
             "items": {
-                "type": "string"
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {"type": "string"}
+                ]
             },
             "description": "External account attributes to be hidden from the front-end."
         }
