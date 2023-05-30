@@ -54,11 +54,22 @@ define('helpers/misc/foreign-field', [], function () {
             let fieldDefs = metadata.get(['entityDefs', entityType, 'fields', field]) || {};
             let type = fieldDefs.type;
 
+            let ignoreList = [
+                'default',
+                'audited',
+                'readOnly',
+                'required',
+            ];
+
             /** @private */
             this.foreignParams = {};
 
             view.getFieldManager().getParamList(type).forEach(defs => {
                 let name = defs.name;
+
+                if (ignoreList.includes(name)) {
+                    return;
+                }
 
                 this.foreignParams[name] = fieldDefs[name] || null;
             });
