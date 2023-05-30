@@ -53,19 +53,22 @@ class Middleware implements MiddlewareInterface
             $handler->handle($request);
 
         $allowedOrigin = $this->helper->getAllowedOrigin($request);
+
+        if (!$allowedOrigin) {
+            return $response;
+        }
+
         $status = $this->helper->getSuccessStatus() ?? self::DEFAULT_SUCCESS_STATUS;
         $allowedMethods = $this->helper->getAllowedMethods($request);
         $allowedHeaders = $this->helper->getAllowedHeaders($request);
         $maxAge = $this->helper->getMaxAge() ?? self::DEFAULT_MAX_AGE;
         $credentialsAllowed = $this->helper->isCredentialsAllowed($request);
 
-        if ($allowedOrigin) {
-            $response = $response
-                ->withHeader('Access-Control-Allow-Origin', $allowedOrigin)
-                ->withHeader('Access-Control-Max-Age', (string) $maxAge);
-        }
+        $response = $response
+            ->withHeader('Access-Control-Allow-Origin', $allowedOrigin)
+            ->withHeader('Access-Control-Max-Age', (string) $maxAge);
 
-        if ($credentialsAllowed && $allowedOrigin) {
+        if ($credentialsAllowed) {
             $response = $response->withHeader('Access-Control-Allow-Credentials', 'true');
         }
 
