@@ -35,6 +35,7 @@ use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Query\Part\Join;
 
 use InvalidArgumentException;
+use LogicException;
 use RuntimeException;
 
 trait SelectingBuilderTrait
@@ -156,41 +157,54 @@ trait SelectingBuilderTrait
     /**
      * Add JOIN.
      *
-     * @param Join|string $target
-     * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
+     * @param Join|string|Select $target A relation name, table or sub-query. A relation name should be in camelCase,
+     *     a table in CamelCase.
      * @param ?string $alias An alias.
      * @param WhereItem|array<string|int, mixed>|null $conditions Join conditions.
      */
-    public function join($target, ?string $alias = null, $conditions = null): self
-    {
+    public function join(
+        $target,
+        ?string $alias = null,
+        WhereItem|array|null $conditions = null
+    ): self {
+
         return $this->joinInternal('joins', $target, $alias, $conditions);
     }
 
     /**
      * Add LEFT JOIN.
      *
-     * @param Join|string $target
-     * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
+     * @param Join|string|Select $target A relation name, table or sub-query. A relation name should be in camelCase,
+     *     a table in CamelCase.
      * @param ?string $alias An alias.
      * @param WhereItem|array<string|int, mixed>|null $conditions Join conditions.
      */
-    public function leftJoin($target, ?string $alias = null, $conditions = null): self
-    {
+    public function leftJoin(
+        $target,
+        ?string $alias = null,
+        WhereItem|array|null $conditions = null
+    ): self {
+
         return $this->joinInternal('leftJoins', $target, $alias, $conditions);
     }
 
     /**
      * @param 'leftJoins'|'joins' $type
-     * @param Join|string $target
-     * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
-     * @param string|null $alias An alias.
-     * @param WhereItem|array<string|int, mixed>|null $conditions Join conditions.
-     *
      * @todo Support USE INDEX in Join.
+     * $target can be an array for backward compatibility.
+     * @param Join|string|Select $target $target
+     * @param WhereItem|array<string|int, mixed>|null $conditions
      */
-    private function joinInternal(string $type, $target, ?string $alias = null, $conditions = null): self
-    {
+    private function joinInternal(
+        string $type,
+        $target,
+        ?string $alias = null,
+        WhereItem|array|null $conditions = null
+    ): self {
+
         $onlyMiddle = false;
+
+        /** @var string|Join|array<int, mixed> $target */
 
         if ($target instanceof Join) {
             $alias = $alias ?? $target->getAlias();
@@ -199,11 +213,8 @@ trait SelectingBuilderTrait
             $target = $target->getTarget();
         }
 
-        /** @phpstan-var mixed $conditions */
-        /** @phpstan-var mixed $target */
-
-        if ($conditions !== null && !is_array($conditions) && !$conditions instanceof WhereItem) {
-            throw new InvalidArgumentException("Conditions must be WhereItem or array.");
+        if ($target instanceof Select && !$alias) {
+            throw new LogicException("Sub-query join can't be used w/o alias.");
         }
 
         $noLeftAlias = false;
@@ -228,7 +239,12 @@ trait SelectingBuilderTrait
             return $this;
         }
 
-        if (is_null($alias) && is_null($conditions) && $this->hasJoinAliasInternal($type, $target)) {
+        if (
+            is_null($alias) &&
+            is_null($conditions) &&
+            is_string($target) &&
+            $this->hasJoinAliasInternal($type, $target)
+        ) {
             return $this;
         }
 
