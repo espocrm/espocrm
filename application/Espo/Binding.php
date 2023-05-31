@@ -282,6 +282,11 @@ class Binding implements BindingProcessor
             'Espo\\Core\\Mail\\Importer\\DuplicateFinder',
             'Espo\\Core\\Mail\\Importer\\DefaultDuplicateFinder'
         );
+
+        $binder->bindImplementation(
+            'Espo\\Tools\\Api\\Cors\\Helper',
+            'Espo\\Tools\\Api\\Cors\\DefaultHelper'
+        );
     }
 
     private function bindAcl(Binder $binder): void
