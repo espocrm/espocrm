@@ -4,7 +4,8 @@
         "client/lib/espo-0.min.js",
         "client/lib/espo-1.min.js",
         "client/lib/espo-2.min.js",
-        "client/lib/espo-3.min.js"
+        "client/lib/espo-3.min.js",
+        "client/lib/espo-templates.min.js"
     ],
     "developerModeScriptList": [
         "client/src/loader.js",

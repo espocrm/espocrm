@@ -33,16 +33,20 @@ const fs = require('fs');
 const cp = require('child_process');
 const path = require('path');
 const buildUtils = require('./js/build-utils');
+const Bundler = require("./js/bundler");
+const bundleConfig = require("./frontend/bundle-config.json");
+const libs = require("./frontend/libs.json");
 
 module.exports = grunt => {
 
     const pkg = grunt.file.readJSON('package.json');
-    const bundleConfig = require('./frontend/bundle-config.json');
-    const libs = require('./frontend/libs.json');
 
     const originalLibDir = 'client/lib/original';
 
-    let bundleFileMap = {'client/lib/espo-libs.min.js': buildUtils.getPreparedBundleLibList(libs)};
+    let bundleFileMap = {
+        'client/lib/espo-libs.min.js': buildUtils.getPreparedBundleLibList(libs),
+        'client/lib/espo-templates.min.js': 'client/lib/original/espo-templates.js',
+    };
 
     for (let i = 0; i < bundleConfig.chunkNumber; i++) {
         let bundleFile = originalLibDir + `/espo-${i}.js`;
@@ -256,8 +260,6 @@ module.exports = grunt => {
     });
 
     grunt.registerTask('espo-bundle', () => {
-        const Bundler = require('./js/bundler');
-
         let chunks = (new Bundler()).bundle({
             files: bundleConfig.files,
             patterns: bundleConfig.patterns,
@@ -275,6 +277,23 @@ module.exports = grunt => {
 
             fs.writeFileSync(file, chunk, 'utf8');
         });
+    });
+
+    grunt.registerTask('template-precompile', () => {
+        const Precompiler = require('./js/template-precompiler');
+
+        let contents = (new Precompiler()).precompile({
+            patterns: bundleConfig.templatePatterns,
+            modulePaths: {'crm': 'client/modules/crm'},
+        });
+
+        if (!fs.existsSync(originalLibDir)) {
+            fs.mkdirSync(originalLibDir);
+        }
+
+        let file = originalLibDir + `/espo-templates.js`;
+
+        fs.writeFileSync(file, contents, 'utf8');
     });
 
     grunt.registerTask('prepare-lib-original', () => {
@@ -460,6 +479,7 @@ module.exports = grunt => {
         'less',
         'cssmin',
         'espo-bundle',
+        'template-precompile',
         'prepare-lib-original',
         'uglify:bundle',
         'copy:frontendLib',

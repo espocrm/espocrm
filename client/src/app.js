@@ -896,6 +896,7 @@ function (
                         },
                     },
                 },
+                preCompiledTemplates: Espo.preCompiledTemplates || {},
             });
         },
 
