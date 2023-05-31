@@ -56,5 +56,5 @@
         "client/res/templates/fields/varchar/*.tpl",
         "client/res/templates/fields/wysiwyg/*.tpl"
     ],
-    "chunkNumber": 4
+    "chunkNumber": 3
 }
