@@ -2931,10 +2931,10 @@ abstract class BaseQueryComposer implements QueryComposer
             $itemParams = [];
 
             if (is_array($item)) {
-                $relationName = $item[0];
+                $target = $item[0];
 
                 if (count($item) > 1) {
-                    $alias = $item[1] ?? $relationName;
+                    $alias = $item[1] ?? $target;
 
                     if (count($item) > 2) {
                         $itemConditions = $item[2] ?? [];
@@ -2945,12 +2945,16 @@ abstract class BaseQueryComposer implements QueryComposer
                     }
                 }
                 else {
-                    $alias = $relationName;
+                    $alias = $target;
+                }
+
+                if ($target instanceof Select && !is_string($alias)) {
+                    throw new LogicException("Sub-query join can't be w/o alias");
                 }
             }
             else {
-                $relationName = $item;
-                $alias = $relationName;
+                $target = $item;
+                $alias = $target;
             }
 
             $conditions = [];
@@ -2965,7 +2969,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
             $sql = $this->getJoinItemPart(
                 $entity,
-                $relationName,
+                $target,
                 $isLeft,
                 $conditions,
                 $alias,
@@ -3119,7 +3123,7 @@ abstract class BaseQueryComposer implements QueryComposer
      */
     protected function getJoinItemPart(
         Entity $entity,
-        string $name,
+        string|Select $target,
         bool $isLeft = false,
         array $conditions = [],
         ?string $alias = null,
@@ -3127,27 +3131,44 @@ abstract class BaseQueryComposer implements QueryComposer
         array $params = []
     ): string {
 
-        $prefix = ($isLeft) ? 'LEFT ' : '';
+        $prefixPart = $isLeft ? 'LEFT ' : '';
 
-        if (!$entity->hasRelation($name)) {
-            $alias = !$alias ?
-                $this->sanitize($name) :
-                $this->sanitizeSelectAlias($alias);
+        if (!is_string($target) || !$entity->hasRelation($target)) {
+            if ($alias === '') {
+                throw new LogicException("Empty alias.");
+            }
 
-            $table = $this->toDb($this->sanitize($name));
+            if (!is_string($target)) {
+                if ($alias === null) {
+                    throw new LogicException();
+                }
 
-            $sql = $prefix . "JOIN " . $this->quoteIdentifier($table) . " AS " . $this->quoteIdentifier($alias);
+                $alias = $this->sanitizeSelectAlias($alias);
+            }
+            else {
+                $alias = $alias === null ?
+                    $this->sanitize($target) :
+                    $this->sanitizeSelectAlias($alias);
+            }
 
-            if (empty($conditions)) {
+            $targetPart = is_string($target) ?
+                $this->quoteIdentifier($this->toDb($this->sanitize($target))) :
+                '(' . $this->composeSelecting($target) . ')';
+
+            $aliasPart = $this->quoteIdentifier($alias);
+
+            $sql = $prefixPart . "JOIN $targetPart AS $aliasPart";
+
+            if ($conditions === []) {
                 return $sql;
             }
 
             $sql .= " ON";
 
-            $joinSqlList = [];
+            $conditionParts = [];
 
             foreach ($conditions as $left => $right) {
-                $joinSqlList[] = $this->buildJoinConditionStatement(
+                $conditionParts[] = $this->buildJoinConditionStatement(
                     $entity,
                     $alias,
                     $left,
@@ -3157,12 +3178,12 @@ abstract class BaseQueryComposer implements QueryComposer
                 );
             }
 
-            $sql .= " " . implode(" AND ", $joinSqlList);
+            $sql .= " " . implode(" AND ", $conditionParts);
 
             return $sql;
         }
 
-        $relationName = $name;
+        $relationName = $target;
 
         $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
@@ -3247,16 +3268,16 @@ abstract class BaseQueryComposer implements QueryComposer
                 $middleDeletedColumn = $this->quoteColumn("$midAlias.deleted");
 
                 $sql =
-                    "{$prefix}JOIN ".$this->quoteIdentifier($relTable)." AS " .
+                    "{$prefixPart}JOIN ".$this->quoteIdentifier($relTable)." AS " .
                     $this->quoteIdentifier($midAlias) . "$indexPart " .
                     "ON $leftKeyColumn = $middleKeyColumn" .
                     " AND " .
                     "$middleDeletedColumn = " . $this->quote(false);
 
-                $joinSqlList = [];
+                $conditionParts = [];
 
                 foreach ($conditions as $left => $right) {
-                    $joinSqlList[] = $this->buildJoinConditionStatement(
+                    $conditionParts[] = $this->buildJoinConditionStatement(
                         $entity,
                         $midAlias,
                         $left,
@@ -3265,8 +3286,8 @@ abstract class BaseQueryComposer implements QueryComposer
                     );
                 }
 
-                if (count($joinSqlList)) {
-                    $sql .= " AND " . implode(" AND ", $joinSqlList);
+                if (count($conditionParts)) {
+                    $sql .= " AND " . implode(" AND ", $conditionParts);
                 }
 
                 if (!$onlyMiddle) {
@@ -3274,7 +3295,7 @@ abstract class BaseQueryComposer implements QueryComposer
                     $middleDistantKeyColumn = $this->quoteColumn("$midAlias." . $this->toDb($distantKey));
                     $rightDeletedColumn = $this->quoteColumn("$alias.deleted");
 
-                    $sql .= " {$prefix}JOIN " . $this->quoteIdentifier($distantTable) . " AS " .
+                    $sql .= " {$prefixPart}JOIN " . $this->quoteIdentifier($distantTable) . " AS " .
                         $this->quoteIdentifier($alias)
                         . " ON $rightKeyColumn = $middleDistantKeyColumn"
                         . " AND "
@@ -3293,19 +3314,19 @@ abstract class BaseQueryComposer implements QueryComposer
                 $leftDeletedColumn = $this->quoteColumn("$alias.deleted");
 
                 $sql =
-                    "{$prefix}JOIN " . $this->quoteIdentifier($distantTable) . " AS "
+                    "{$prefixPart}JOIN " . $this->quoteIdentifier($distantTable) . " AS "
                     . $this->quoteIdentifier($alias) . " ON "
                     . "$leftIdColumn = $rightIdColumn AND "
                     . "$leftDeletedColumn = " . $this->quote(false);
 
-                $joinSqlList = [];
+                $conditionParts = [];
 
                 foreach ($conditions as $left => $right) {
-                    $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right, $params);
+                    $conditionParts[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right, $params);
                 }
 
-                if (count($joinSqlList)) {
-                    $sql .= " AND " . implode(" AND ", $joinSqlList);
+                if (count($conditionParts)) {
+                    $sql .= " AND " . implode(" AND ", $conditionParts);
                 }
 
                 return $sql;
@@ -3326,27 +3347,27 @@ abstract class BaseQueryComposer implements QueryComposer
                 $leftDeletedColumn = $this->quoteColumn("$alias.deleted");
 
                 $sql =
-                    "{$prefix}JOIN " . $this->quoteIdentifier($distantTable)
+                    "{$prefixPart}JOIN " . $this->quoteIdentifier($distantTable)
                     . " AS "
                     . $this->quoteIdentifier($alias) . " ON "
                     . "$leftIdColumn = $rightIdColumn AND "
                     . "$leftTypeColumn = " . $this->quote($entity->getEntityType()) . " AND "
                     . "$leftDeletedColumn = " . $this->quote(false);
 
-                $joinSqlList = [];
+                $conditionParts = [];
 
                 foreach ($conditions as $left => $right) {
-                    $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right, $params);
+                    $conditionParts[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right, $params);
                 }
 
-                if (count($joinSqlList)) {
-                    $sql .= " AND " . implode(" AND ", $joinSqlList);
+                if (count($conditionParts)) {
+                    $sql .= " AND " . implode(" AND ", $conditionParts);
                 }
 
                 return $sql;
 
             case Entity::BELONGS_TO:
-                return $prefix . $this->getBelongsToJoinItemPart($entity, $relationName, $alias, $params);
+                return $prefixPart . $this->getBelongsToJoinItemPart($entity, $relationName, $alias, $params);
         }
 
         return '';

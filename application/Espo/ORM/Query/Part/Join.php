@@ -29,6 +29,8 @@
 
 namespace Espo\ORM\Query\Part;
 
+use Espo\ORM\Query\Select;
+use LogicException;
 use RuntimeException;
 
 /**
@@ -38,11 +40,18 @@ use RuntimeException;
  */
 class Join
 {
+    /** A table join. */
+    public const TYPE_TABLE = 0;
+    /** A relation join. */
+    public const TYPE_RELATION = 1;
+    /** A sub-query join. */
+    public const TYPE_SUB_QUERY = 3;
+
     private ?WhereItem $conditions = null;
     private bool $onlyMiddle = false;
 
     private function __construct(
-        private string $target,
+        private string|Select $target,
         private ?string $alias = null
     ) {
         if ($target === '' || $alias === '') {
@@ -51,10 +60,10 @@ class Join
     }
 
     /**
-     * Get a join target. A relationName or table.
-     * A relationName is in camelCase, a table is in CamelCase.
+     * Get a join target. A relation name, table or sub-query.
+     * A relation name is in camelCase, a table is in CamelCase.
      */
-    public function getTarget(): string
+    public function getTarget(): string|Select
     {
         return $this->target;
     }
@@ -75,16 +84,51 @@ class Join
         return $this->conditions;
     }
 
+    /**
+     * Is a sub-query join.
+     */
+    public function isSubQuery(): bool
+    {
+        return !is_string($this->target);
+    }
+
+    /**
+     * Is a table join.
+     */
     public function isTable(): bool
     {
-        return $this->target[0] === ucfirst($this->target[0]);
+        return is_string($this->target) && $this->target[0] === ucfirst($this->target[0]);
     }
 
+    /**
+     * Is a relation join.
+     */
     public function isRelation(): bool
     {
-        return !$this->isTable();
+        return !$this->isSubQuery() && !$this->isTable();
     }
 
+    /**
+     * Get a join type.
+     *
+     * @return self::TYPE_TABLE|self::TYPE_RELATION|self::TYPE_SUB_QUERY
+     */
+    public function getType(): int
+    {
+        if ($this->isSubQuery()) {
+            return self::TYPE_SUB_QUERY;
+        }
+
+        if ($this->isRelation()) {
+            return self::TYPE_RELATION;
+        }
+
+        return self::TYPE_TABLE;
+    }
+
+    /**
+     * Is only middle table to be joined.
+     */
     public function isOnlyMiddle(): bool
     {
         return $this->onlyMiddle;
@@ -93,18 +137,23 @@ class Join
     /**
      * Create.
      *
-     * @param string $target
-     * A relation name or table. A relationName should be in camelCase, a table in CamelCase.
-     * When joining a table, conditions should be specified.
-     * When joining a relation, conditions will be applied automatically.
+     * @param string|Select $target
+     * A relation name, table or sub-query. A relation name should be in camelCase, a table in CamelCase.
+     * When joining a table or sub-query, conditions should be specified.
+     * When joining a relation, conditions will be applied automatically, additional conditions can
+     * be specified as well.
+     * @param ?string $alias An alias.
      */
-    public static function create(string $target, ?string $alias = null): self
+    public static function create(string|Select $target, ?string $alias = null): self
     {
         return new self($target, $alias);
     }
 
     /**
      * Create with a table target.
+     *
+     * @param string $table A table name. Should start with an upper case letter.
+     * @param ?string $alias An alias.
      */
     public static function createWithTableTarget(string $table, ?string $alias = null): self
     {
@@ -113,10 +162,24 @@ class Join
 
     /**
      * Create with a relation target. Conditions will be applied automatically.
+     *
+     * @param string $relation A relation name. Should start with a lower case letter.
+     * @param ?string $alias An alias.
      */
     public static function createWithRelationTarget(string $relation, ?string $alias = null): self
     {
         return self::create(lcfirst($relation), $alias);
+    }
+
+    /**
+     * Create with a sub-query.
+     *
+     * @param Select $subQuery A sub-query.
+     * @param string $alias An alias.
+     */
+    public static function createWithSubQuery(Select $subQuery, string $alias): self
+    {
+        return new self($subQuery, $alias);
     }
 
     /**
@@ -146,6 +209,10 @@ class Join
      */
     public function withOnlyMiddle(bool $onlyMiddle = true): self
     {
+        if (!$this->isRelation()) {
+            throw new LogicException("Only-middle is compatible only with relation joins.");
+        }
+
         $obj = clone $this;
         $obj->onlyMiddle = $onlyMiddle;
 

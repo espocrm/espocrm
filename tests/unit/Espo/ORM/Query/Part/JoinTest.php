@@ -29,8 +29,10 @@
 
 namespace tests\unit\Espo\ORM\Query\Part;
 
+use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Join;
 use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\ORM\Query\SelectBuilder;
 
 class JoinTest extends \PHPUnit\Framework\TestCase
 {
@@ -50,6 +52,8 @@ class JoinTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($join->isRelation());
         $this->assertFalse($join->isTable());
+
+        $this->assertEquals(Join::TYPE_RELATION, $join->getType());
     }
 
     public function testCreate2(): void
@@ -68,6 +72,8 @@ class JoinTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($join->isTable());
         $this->assertFalse($join->isRelation());
+
+        $this->assertEquals(Join::TYPE_TABLE, $join->getType());
     }
 
     public function testCreate3(): void
@@ -76,5 +82,19 @@ class JoinTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('Test', $join->getTarget());
         $this->assertEquals('testAlias', $join->getAlias());
+    }
+
+    public function testCreate4(): void
+    {
+        $join = Join::createWithSubQuery(
+            SelectBuilder::create()
+                ->select(Expression::value(true))
+                ->build()
+            ,
+            'a'
+        );
+
+        $this->assertTrue($join->isSubQuery());
+        $this->assertEquals(Join::TYPE_SUB_QUERY, $join->getType());
     }
 }
