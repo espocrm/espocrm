@@ -1,7 +1,7 @@
 {
     "srcDir": ".",
     "srcFiles": [
-        "client/lib/espo-lib.min.js",
+        "client/lib/espo-libs.min.js",
         "client/lib/espo-0.min.js",
         "client/lib/espo-1.min.js",
         "client/lib/espo-2.min.js",
