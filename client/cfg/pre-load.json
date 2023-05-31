@@ -1,10 +1,5 @@
 {
 	"templates": [],
-	"layoutTypes": [
-		"columns-2",
-		"record",
-		"list-row",
-		"list-row-expanded"
-	],
+	"layoutTypes": [],
 	"classes": []
 }

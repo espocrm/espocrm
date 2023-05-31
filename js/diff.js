@@ -289,10 +289,11 @@ class Diff
                 fileList.push(`client/lib/espo-${i}.min.js.map`);
             }
 
+            fileList.push('client/lib/espo-layout-templates.min.js');
+            fileList.push('client/lib/espo-layout-templates.min.js.map');
+
             fileList.push('client/lib/espo-templates.min.js');
             fileList.push('client/lib/espo-templates.min.js.map');
-
-            //fileList.push('client/lib/original/espo.js');
 
             fs.readdirSync('client/css/espo/').forEach(file => {
                 fileList.push('client/css/espo/' + file);

@@ -1,4 +1,3 @@
-
 <% _.each(layout, function (row, rowNumber) { %>
     <div class="col-sm-6">
     <% _.each(row, function (defs, key) { %>

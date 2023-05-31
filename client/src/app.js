@@ -47,7 +47,6 @@ define(
     'models/preferences',
     'model-factory',
     'collection-factory',
-    'pre-loader',
     'controllers/base',
     'router',
     'date-time',
@@ -81,7 +80,6 @@ function (
     /** typeof module:models/preferences.Class */Preferences,
     /** typeof module:model-factory.Class */ModelFactory,
     /** typeof module:collection-factory.Class */CollectionFactory,
-    /** typeof module:pre-loader.Class */PreLoader,
     /** typeof module:controllers/base.Class */BaseController,
     /** typeof module:router.Class */Router,
     /** typeof module:date-time.Class */DateTime,
@@ -475,11 +473,7 @@ function (
                 this.initView();
                 this.initBaseController();
 
-                this.preLoader = new PreLoader(this.cache, this.viewFactory, this.basePath);
-
-                this.preLoad(() => {
-                    callback.call(this, this);
-                });
+                callback.call(this, this);
             });
         },
 
@@ -763,13 +757,6 @@ function (
         /**
          * @private
          */
-        preLoad: function (callback) {
-            this.preLoader.load(callback, this);
-        },
-
-        /**
-         * @private
-         */
         initUtils: function () {
             this.dateTime = new DateTime();
             this.modelFactory.dateTime = this.dateTime;
@@ -890,6 +877,12 @@ function (
                             this.loader.require('res!' + path, callback);
                         },
                         layoutTemplate: (name, callback) => {
+                            if (Espo.layoutTemplates && name in Espo.layoutTemplates) {
+                                callback(Espo.layoutTemplates[name]);
+
+                                return;
+                            }
+
                             let path = getResourcePath('layoutTemplate', name);
 
                             this.loader.require('res!' + path, callback);

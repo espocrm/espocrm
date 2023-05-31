@@ -34,8 +34,10 @@ const cp = require('child_process');
 const path = require('path');
 const buildUtils = require('./js/build-utils');
 const Bundler = require("./js/bundler");
-const bundleConfig = require("./frontend/bundle-config.json");
-const libs = require("./frontend/libs.json");
+const Precompiler = require('./js/template-precompiler');
+const LayoutTypeBundler = require('./js/layout-template-bundler');
+const bundleConfig = require('./frontend/bundle-config.json');
+const libs = require('./frontend/libs.json');
 
 module.exports = grunt => {
 
@@ -46,6 +48,7 @@ module.exports = grunt => {
     let bundleFileMap = {
         'client/lib/espo-libs.min.js': buildUtils.getPreparedBundleLibList(libs),
         'client/lib/espo-templates.min.js': 'client/lib/original/espo-templates.js',
+        'client/lib/espo-layout-templates.min.js': 'client/lib/original/espo-layout-templates.js',
     };
 
     for (let i = 0; i < bundleConfig.chunkNumber; i++) {
@@ -259,7 +262,7 @@ module.exports = grunt => {
         },
     });
 
-    grunt.registerTask('espo-bundle', () => {
+    grunt.registerTask('bundle-espo', () => {
         let chunks = (new Bundler()).bundle({
             files: bundleConfig.files,
             patterns: bundleConfig.patterns,
@@ -279,9 +282,15 @@ module.exports = grunt => {
         });
     });
 
-    grunt.registerTask('template-precompile', () => {
-        const Precompiler = require('./js/template-precompiler');
+    grunt.registerTask('bundle-layout-templates', () => {
+        let content = (new LayoutTypeBundler()).bundle();
 
+        let file = originalLibDir + `/espo-layout-templates.js`;
+
+        fs.writeFileSync(file, content, 'utf8');
+    });
+
+    grunt.registerTask('template-precompile', () => {
         let contents = (new Precompiler()).precompile({
             patterns: bundleConfig.templatePatterns,
             modulePaths: {'crm': 'client/modules/crm'},
@@ -478,7 +487,8 @@ module.exports = grunt => {
     grunt.registerTask('internal', [
         'less',
         'cssmin',
-        'espo-bundle',
+        'bundle-espo',
+        'bundle-layout-templates',
         'template-precompile',
         'prepare-lib-original',
         'uglify:bundle',

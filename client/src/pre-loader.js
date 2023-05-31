@@ -31,6 +31,8 @@ define('pre-loader', [], function () {
     /**
      * A pre-loader.
      *
+     * Not used. Maybe utilize for post-loading additional resources in idle, after the page is fully rendered.
+     *
      * @class
      * @name Class
      * @memberOf module:pre-loader

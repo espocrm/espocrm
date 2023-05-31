@@ -41,7 +41,10 @@ const originalLibCrmDir = './client/modules/crm/lib/original';
     .filter(path => !fs.existsSync(path))
     .forEach(path => fs.mkdirSync(path));
 
-let bundleFiles = ['espo-templates.js'];
+let bundleFiles = [
+    'espo-templates.js',
+    'espo-layout-templates.js',
+];
 
 for (let i = 0; i < bundleConfig.chunkNumber; i++) {
     bundleFiles.push(`espo-${i}.js`)
