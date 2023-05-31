@@ -179,6 +179,7 @@ class ClientManager
 
         $cssFileList = $this->metadata->get(['app', 'client', 'cssList'], []);
         $linkList = $this->metadata->get(['app', 'client', 'linkList'], []);
+        $jsLibs = $this->metadata->get(['app', 'jsLibs'], []);
 
         $scriptsHtml = '';
 
@@ -252,6 +253,12 @@ class ClientManager
             'internalModuleList' => Json::encode($internalModuleList),
             'applicationDescription' => $this->config->get('applicationDescription') ?? self::APP_DESCRIPTION,
             'nonce' => $this->nonce,
+            'jsLibs' => Json::encode($jsLibs),
+            'loaderParams' => Json::encode([
+                'basePath' => $this->basePath,
+                'cacheTimestamp' => $loaderCacheTimestamp,
+                'internalModuleList' => $internalModuleList,
+            ]),
         ];
 
         $html = $this->fileManager->getContents($htmlFilePath);

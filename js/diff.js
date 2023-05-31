@@ -34,6 +34,8 @@ const buildUtils = require('./build-utils');
 
 const exec = cp.exec;
 
+const bundleConfig = require('./../frontend/bundle-config.json');
+
 /**
  * Builds upgrade packages.
  */
@@ -279,9 +281,15 @@ class Diff
 
             libData.filesToCopy.forEach(item => fileList.push(item));
 
-            fileList.push('client/lib/espo.min.js');
-            fileList.push('client/lib/espo.min.js.map');
-            fileList.push('client/lib/original/espo.js');
+            fileList.push('client/lib/espo-libs.min.js');
+            fileList.push('client/lib/espo-libs.min.js.map');
+
+            for (let i = 0; i < bundleConfig.chunkNumber; i++) {
+                fileList.push(`client/lib/espo-${i}.min.js`);
+                fileList.push(`client/lib/espo-${i}.min.js.map`);
+            }
+
+            //fileList.push('client/lib/original/espo.js');
 
             fs.readdirSync('client/css/espo/').forEach(file => {
                 fileList.push('client/css/espo/' + file);

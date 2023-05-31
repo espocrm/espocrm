@@ -924,4 +924,21 @@
         loader.define(subject, dependency, callback);
     };
 
+    (() => {
+        let loaderParamsTag = document.querySelector('script[data-name="loader-params"]');
+
+        if (loaderParamsTag) {
+            let params = JSON.parse(loaderParamsTag.textContent);
+
+            Espo.loader.setCacheTimestamp(params.cacheTimestamp);
+            Espo.loader.setBasePath(params.basePath);
+            Espo.loader.setInternalModuleList(params.internalModuleList);
+        }
+
+        let jsLibsTag = document.querySelector('script[data-name="js-libs"]');
+        if (jsLibsTag) {
+            Espo.loader.addLibsConfig(JSON.parse(jsLibsTag.textContent));
+        }
+    })();
+
 }).call(window, _, $);

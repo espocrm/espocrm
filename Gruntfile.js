@@ -42,7 +42,15 @@ module.exports = grunt => {
 
     const originalLibDir = 'client/lib/original';
 
-    let bundleJsFileList = buildUtils.getPreparedBundleLibList(libs).concat(originalLibDir + '/espo.js');
+    let bundleFileMap = {'client/lib/espo-libs.min.js': buildUtils.getPreparedBundleLibList(libs)};
+
+    for (let i = 0; i < bundleConfig.chunkNumber; i++) {
+        let bundleFile = originalLibDir + `/espo-${i}.js`;
+        let minFile = `client/lib/espo-${i}.min.js`;
+
+        bundleFileMap[minFile] = [bundleFile];
+    }
+
     let copyJsFileList = buildUtils.getCopyLibDataList(libs);
 
     let minifyLibFileList = copyJsFileList
@@ -142,9 +150,7 @@ module.exports = grunt => {
                 options: {
                     banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
                 },
-                files: {
-                    'client/lib/espo.min.js': bundleJsFileList,
-                },
+                files: bundleFileMap,
             },
             lib: {
                 files: minifyLibFileList,
@@ -252,13 +258,23 @@ module.exports = grunt => {
     grunt.registerTask('espo-bundle', () => {
         const Bundler = require('./js/bundler');
 
-        let contents = (new Bundler()).bundle(bundleConfig.jsFiles);
+        let chunks = (new Bundler()).bundle({
+            files: bundleConfig.files,
+            patterns: bundleConfig.patterns,
+            allPatterns: ['client/src/**/*.js'],
+            chunkNumber: bundleConfig.chunkNumber,
+            libs: libs,
+        });
 
         if (!fs.existsSync(originalLibDir)) {
             fs.mkdirSync(originalLibDir);
         }
 
-        fs.writeFileSync(originalLibDir + '/espo.js', contents, 'utf8');
+        chunks.forEach((chunk, i) => {
+            let file = originalLibDir + `/espo-${i}.js`;
+
+            fs.writeFileSync(file, chunk, 'utf8');
+        });
     });
 
     grunt.registerTask('prepare-lib-original', () => {

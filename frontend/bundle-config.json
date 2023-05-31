@@ -1,47 +1,29 @@
 {
-    "jsFiles": [
+    "files": [
         "client/src/namespace.js",
         "client/src/loader.js",
         "client/src/loader-init-libs.js",
         "client/src/exceptions.js",
-        "client/src/utils.js",
-
-        "client/src/acl.js",
-        "client/src/model.js",
-        "client/src/model-offline.js",
-        "client/src/ajax.js",
-        "client/src/controller.js",
-
-        "client/src/ui.js",
-        "client/src/acl-manager.js",
-        "client/src/cache.js",
-        "client/src/storage.js",
-        "client/src/models/settings.js",
-        "client/src/language.js",
-        "client/src/metadata.js",
-        "client/src/field-manager.js",
-        "client/src/models/user.js",
-        "client/src/models/preferences.js",
-        "client/src/model-factory.js",
-        "client/src/collection-factory.js",
-        "client/src/pre-loader.js",
-        "client/src/controllers/base.js",
-        "client/src/router.js",
-        "client/src/date-time.js",
-        "client/src/layout-manager.js",
-        "client/src/theme-manager.js",
-        "client/src/session-storage.js",
-        "client/src/view-helper.js",
-        "client/src/page-title.js",
-        "client/src/broadcast-channel.js",
-        "client/src/web-socket-manager.js",
-        "client/src/number.js",
-
-        "client/src/helpers/file-upload.js",
-        "client/src/helpers/mass-action.js",
-        "client/src/helpers/export.js",
-        "client/src/helpers/action-item-setup.js",
-
-        "client/src/app.js"
-    ]
+        "client/src/utils.js"
+    ],
+    "patterns": [
+        "client/src/*.js",
+        "client/src/ui/**/*.js",
+        "client/src/views/*.js",
+        "client/src/views/site/*.js",
+        "client/src/views/fields/*.js",
+        "client/src/views/record/**/*.js",
+        "client/src/views/search/**/*.js",
+        "client/src/views/modals/*.js",
+        "client/src/views/dashlets/**/*.js",
+        "client/src/views/global-search/*.js",
+        "client/src/views/stream/*.js",
+        "client/src/views/note/*.js",
+        "client/src/views/notification/*.js",
+        "client/src/controllers/*.js",
+        "client/src/models/*.js",
+        "client/src/collections/*.js",
+        "client/src/acl/*.js"
+    ],
+    "chunkNumber": 4
 }

@@ -1,11 +1,13 @@
 [
     {
         "src": "node_modules/jquery/dist/jquery.js",
-        "bundle": true
+        "bundle": true,
+        "key": "jquery"
     },
     {
         "src": "node_modules/underscore/underscore.js",
-        "bundle": true
+        "bundle": true,
+        "key": "underscore"
     },
     {
         "src": "node_modules/es6-promise/dist/es6-promise.js",
@@ -13,19 +15,23 @@
     },
     {
         "src": "node_modules/backbone/backbone.js",
-        "bundle": true
+        "bundle": true,
+        "key": "backbone"
     },
     {
         "src": "node_modules/handlebars/dist/handlebars.js",
-        "bundle": true
+        "bundle": true,
+        "key": "handlebars"
     },
     {
         "src": "node_modules/bullbone/dist/bullbone.js",
-        "bundle": true
+        "bundle": true,
+        "key": "bullbone"
     },
     {
         "src": "node_modules/js-base64/base64.js",
-        "bundle": true
+        "bundle": true,
+        "key": "Base64"
     },
     {
         "src": "node_modules/moment/moment.js",
@@ -49,7 +55,8 @@
     },
     {
         "src": "node_modules/jquery-textcomplete/dist/jquery.textcomplete.js",
-        "bundle": true
+        "bundle": true,
+        "key": "Textcomplete"
     },
     {
         "src": "node_modules/bootstrap/dist/js/bootstrap.js",
@@ -61,11 +68,13 @@
     },
     {
         "src": "node_modules/marked/lib/marked.umd.js",
-        "bundle": true
+        "bundle": true,
+        "key": "marked"
     },
     {
         "src": "node_modules/dompurify/dist/purify.js",
-        "bundle": true
+        "bundle": true,
+        "key": "dompurify"
     },
     {
         "src": "node_modules/autobahn-espo/autobahn.js",
@@ -86,47 +95,61 @@
                 "src": "node_modules/gridstack/dist/gridstack-jq.js"
             }
         ],
-        "bundle": true
+        "bundle": true,
+        "key": "gridstack"
     },
     {
         "src": "node_modules/selectize/dist/js/standalone/selectize.js",
-        "bundle": true
+        "bundle": true,
+        "key": "Selectize"
     },
     {
         "src": "node_modules/autonumeric/dist/autoNumeric.js",
-        "bundle": true
-    },
-    {
-        "src": "node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"
-    },
-    {
-        "src": "node_modules/cropper/dist/cropper.js"
-    },
-    {
-        "src": "node_modules/cronstrue/dist/cronstrue-i18n.js",
-        "minify": true
-    },
-    {
-        "src": "node_modules/exif-js/exif.js",
-        "minify": true
-    },
-    {
-        "src": "node_modules/jsbarcode/dist/JsBarcode.all.js",
-        "minify": true
-    },
-    {
-        "src": "node_modules/qrcodejs/qrcode.js"
+        "bundle": true,
+        "key": "autonumeric"
     },
     {
         "src": "node_modules/summernote/dist/summernote.js",
+        "key": "Summernote",
         "minify": true
     },
     {
-        "src": "node_modules/espo-funnel-chart/build/espo-funnel-chart.js"
+        "src": "node_modules/espo-funnel-chart/build/espo-funnel-chart.js",
+        "key": "espo-funnel-chart",
+        "minify": true
     },
     {
         "src": "node_modules/flotr2/flotr2.js",
+        "key": "Flotr",
         "minify": true
+    },
+    {
+        "src": "node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js",
+        "key": "Colorpicker"
+    },
+    {
+        "src": "node_modules/cropper/dist/cropper.js",
+        "key": "Cropper",
+        "minify": true
+    },
+    {
+        "src": "node_modules/cronstrue/dist/cronstrue-i18n.js",
+        "minify": true,
+        "key": "cronstrue"
+    },
+    {
+        "src": "node_modules/exif-js/exif.js",
+        "minify": true,
+        "key": "exif"
+    },
+    {
+        "src": "node_modules/jsbarcode/dist/JsBarcode.all.js",
+        "minify": true,
+        "key": "JsBarcode"
+    },
+    {
+        "src": "node_modules/qrcodejs/qrcode.js",
+        "key": "qrcode"
     },
     {
         "name": "ace-builds",
@@ -147,16 +170,19 @@
                 "src": "node_modules/ace-builds/src-noconflict/theme-tomorrow_night.js",
                 "dest": "client/lib/ace-theme-tomorrow_night.js"
             }
-        ]
+        ],
+        "key": "ace"
     },
     {
         "src": "node_modules/fullcalendar/dist/fullcalendar.js",
         "dest": "client/modules/crm/lib/fullcalendar.js",
-        "minify": true
+        "minify": true,
+        "key": "full-calendar"
     },
     {
         "src": "node_modules/vis/dist/vis.js",
         "dest": "client/modules/crm/lib/vis.js",
-        "minify": true
+        "minify": true,
+        "key": "vis"
     }
 ]

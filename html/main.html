@@ -1,7 +1,9 @@
 <!doctype html>
 <html>
     <head>
-        <title>{{applicationName}}</title>{{scriptsHtml}}
+        <title>{{applicationName}}</title>
+        <script type="application/json" data-name="loader-params">{{loaderParams}}</script>
+        <script type="application/json" data-name="js-libs">{{jsLibs}}</script>{{scriptsHtml}}
         <link href="{{basePath}}{{stylesheet}}?r={{cacheTimestamp}}" rel="stylesheet" id='main-stylesheet'>{{additionalStyleSheetsHtml}}{{linksHtml}}
         <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
         <meta content="utf-8" http-equiv="encoding">
@@ -14,10 +16,6 @@
         <link rel="shortcut icon" href="{{basePath}}{{faviconPath}}" type="image/x-icon">
         <script type="text/javascript" nonce="{{nonce}}">
             window.addEventListener('DOMContentLoaded', () => {
-                Espo.loader.setCacheTimestamp({{loaderCacheTimestamp}});
-                Espo.loader.setBasePath('{{basePath}}');
-                Espo.loader.setInternalModuleList({{internalModuleList}});
-
                 require('{{appClientClassName}}', App => {
                     new App({
                         id: '{{applicationId}}',

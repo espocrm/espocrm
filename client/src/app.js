@@ -451,7 +451,6 @@ function (
             ])
             .then(() => {
                 this.loader.setIsDeveloperMode(this.settings.get('isDeveloperMode'));
-                this.loader.addLibsConfig(this.settings.get('jsLibs') || {});
 
                 this.user = new User();
                 this.preferences = new Preferences();

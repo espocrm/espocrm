@@ -26,9 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/rows',
-['views/admin/layouts/base', 'res!client/css/misc/layout-manager-rows.css'],
-function (Dep, styleCss) {
+define('views/admin/layouts/rows', ['views/admin/layouts/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -68,7 +66,13 @@ function (Dep, styleCss) {
                 this.itemsData[name] = Espo.Utils.cloneDeep(attributes);
             });
 
-            this.$style = $('<style>').html(styleCss).appendTo($('body'));
+            this.wait(
+                Espo.loader.requirePromise()
+            );
+
+            require('res!client/css/misc/layout-manager-rows.css', styleCss => {
+                this.$style = $('<style>').html(styleCss).appendTo($('body'));
+            });
         },
 
         onRemove: function () {
