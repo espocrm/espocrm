@@ -7,7 +7,7 @@
         "client/src/utils.js"
     ],
     "patterns": [
-        "client/src/*.js",
+        "client/src/!(pre-loader).js",
         "client/src/ui/**/*.js",
         "client/src/views/*.js",
         "client/src/views/site/*.js",

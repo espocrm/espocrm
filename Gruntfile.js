@@ -175,7 +175,6 @@ module.exports = grunt => {
                     'src/**',
                     'res/**',
                     'fonts/**',
-                    'cfg/**',
                     'modules/**',
                     'img/**',
                     'css/**',
