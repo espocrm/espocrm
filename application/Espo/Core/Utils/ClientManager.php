@@ -170,7 +170,7 @@ class ClientManager
 
         if ($this->config->get('isDeveloperMode')) {
             $useCache = $this->config->get('useCacheInDeveloperMode');
-            $loaderCacheTimestamp = 'null';
+            $loaderCacheTimestamp = null;
         }
         else {
             $useCache = $this->config->get('useCache');
@@ -237,7 +237,7 @@ class ClientManager
             'apiUrl' => 'api/v1',
             'applicationName' => $this->config->get('applicationName', 'EspoCRM'),
             'cacheTimestamp' => $cacheTimestamp,
-            'loaderCacheTimestamp' => $loaderCacheTimestamp,
+            'loaderCacheTimestamp' => Json::encode($loaderCacheTimestamp),
             'stylesheet' => $this->themeManager->getStylesheet(),
             'runScript' => $runScript,
             'basePath' => $this->basePath,
