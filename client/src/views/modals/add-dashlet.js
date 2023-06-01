@@ -30,12 +30,10 @@ define('views/modals/add-dashlet', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
-        cssName: 'add-dashlet',
-
         template: 'modals/add-dashlet',
 
+        cssName: 'add-dashlet',
         backdrop: true,
-
         fitHeight: true,
 
         data: function () {
@@ -50,6 +48,9 @@ define('views/modals/add-dashlet', ['views/modal'], function (Dep) {
                 this.trigger('add', name);
                 this.close();
             },
+            'keyup input[data-name="quick-search"]': function (e) {
+                this.processQuickSearch(e.currentTarget.value);
+            },
         },
 
         setup: function () {
@@ -59,6 +60,9 @@ define('views/modals/add-dashlet', ['views/modal'], function (Dep) {
                 .sort((v1, v2) => {
                     return this.translate(v1, 'dashlets').localeCompare(this.translate(v2, 'dashlets'));
                 });
+
+
+            this.translations = {};
 
             this.dashletList = dashletList.filter(item => {
                 let aclScope = this.getMetadata().get(['dashlets', item, 'aclScope']) || null;
@@ -88,7 +92,69 @@ define('views/modals/add-dashlet', ['views/modal'], function (Dep) {
                     }
                 }
 
+                this.translations[item] = this.translate(item, 'dashlets');
+
                 return true;
+            });
+        },
+
+        afterRender: function () {
+            this.$noData = this.$el.find('.no-data');
+
+            setTimeout(() => {
+                this.$el.find('input[data-name="quick-search"]').focus()
+            }, 100);
+        },
+
+        processQuickSearch: function (text) {
+            text = text.trim();
+
+            let $noData = this.$noData;
+
+            $noData.addClass('hidden');
+
+            if (!text) {
+                this.$el.find('ul .list-group-item').removeClass('hidden');
+
+                return;
+            }
+
+            let matchedList = [];
+
+            let lowerCaseText = text.toLowerCase();
+
+            this.dashletList.forEach(item => {
+                let label = this.translations[item].toLowerCase();
+
+                for (let word of label.split(' ')) {
+                    let matched = word.indexOf(lowerCaseText) === 0;
+
+                    if (matched) {
+                        matchedList.push(item);
+
+                        return;
+                    }
+                }
+            });
+
+            if (matchedList.length === 0) {
+                this.$el.find('ul .list-group-item').addClass('hidden');
+
+                $noData.removeClass('hidden');
+
+                return;
+            }
+
+            this.dashletList.forEach(item => {
+                let $row = this.$el.find(`ul .list-group-item[data-name="${item}"]`);
+
+                if (!~matchedList.indexOf(item)) {
+                    $row.addClass('hidden');
+
+                    return;
+                }
+
+                $row.removeClass('hidden');
             });
         },
     });
