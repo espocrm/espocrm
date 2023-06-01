@@ -26,21 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashlets/options/base',
-['views/modal', 'views/record/detail', 'model', 'view-record-helper'],
-function (Dep, Detail, Model, ViewRecordHelper) {
+define('views/dashlets/options/base', ['views/modal', 'model'], function (Dep, Model) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/modal.Class
+     * @memberOf module:views/dashlets/options/base
+     */
+    return Dep.extend(/** @lends module:views/dashlets/options/base.Class# */{
 
         name: null,
-
         template: 'dashlets/options/base',
-
         cssName: 'options-modal',
-
         className: 'dialog dialog-record',
-
         fieldsMode: 'edit',
+        escapeDisabled: true,
 
         data: function () {
             return {
@@ -64,6 +65,29 @@ function (Dep, Detail, Model, ViewRecordHelper) {
 
         shortcutKeys: {
             'Control+Enter': 'save',
+            'Escape': function (e) {
+                if (this.saveDisabled) {
+                    return;
+                }
+
+                e.stopPropagation();
+                e.preventDefault();
+
+                let focusedFieldView = this.getRecordView().getFocusedFieldView();
+
+                if (focusedFieldView) {
+                    this.model.set(focusedFieldView.fetch(), {skipReRender: true});
+                }
+
+                if (this.getRecordView().isChanged) {
+                    this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
+                        .then(() => this.actionClose());
+
+                    return;
+                }
+
+                this.actionClose();
+            },
         },
 
         getDetailLayout: function () {
@@ -104,17 +128,12 @@ function (Dep, Detail, Model, ViewRecordHelper) {
         setup: function () {
             this.id = 'dashlet-options';
 
-            this.recordHelper = new ViewRecordHelper();
-
+            /** @var {module:model.Class} */
             let model = this.model = new Model();
 
             model.name = 'DashletOptions';
-            model.defs = {
-                fields: this.fields
-            };
-
+            model.setDefs({fields: this.fields});
             model.set(this.optionsData);
-
             model.dashletName = this.name;
 
             this.middlePanelDefs = {};
@@ -122,50 +141,41 @@ function (Dep, Detail, Model, ViewRecordHelper) {
 
             this.setupBeforeFinal();
 
-            this.createView('record', 'views/record/detail-middle', {
+            this.createView('record', 'views/record/edit-for-modal', {
                 model: model,
-                recordHelper: this.recordHelper,
-                layoutDefs: {
-                    type: 'record',
-                    layout: Detail.prototype.convertDetailLayout.call(this, this.getDetailLayout())
-                },
-                el: this.options.el + ' .record',
-                layoutData: {
-                    model: model,
-                },
+                detailLayout: this.getDetailLayout(),
+                selector: '.record',
             });
 
-            this.header =
+            this.headerText =
                 this.getLanguage().translate('Dashlet Options') + ': ' +
-                Handlebars.Utils.escapeExpression(this.getLanguage().translate(this.name, 'dashlets'));
+                this.getLanguage().translate(this.name, 'dashlets');
         },
 
         setupBeforeFinal: function () {},
 
+        onBackdropClick: function () {
+            if (this.getRecordView().isChanged) {
+                return;
+            }
+
+            this.close();
+        },
+
+        /**
+         * @return {module:views/record/edit.Class}
+         */
+        getRecordView: function () {
+            return this.getView('record');
+        },
+
+        /**
+         * @return {Object|null}
+         */
         fetchAttributes: function () {
-            let attributes = {};
+            let attributes = this.getRecordView().fetch();
 
-            this.fieldList.forEach(field => {
-                let fieldView = this.getView('record').getFieldView(field);
-
-                _.extend(attributes, fieldView.fetch());
-            });
-
-            this.model.set(attributes, {silent: true});
-
-            let valid = true;
-
-            this.fieldList.forEach(field => {
-                let fieldView = this.getView('record').getFieldView(field);
-
-                if (fieldView && fieldView.isEditMode() && !fieldView.disabled && !fieldView.readOnly) {
-                    valid = !fieldView.validate() && valid;
-                }
-            });
-
-            if (!valid) {
-                this.notify('Not Valid', 'error');
-
+            if (this.getRecordView().validate()) {
                 return null;
             }
 
@@ -173,7 +183,7 @@ function (Dep, Detail, Model, ViewRecordHelper) {
         },
 
         actionSave: function () {
-            var attributes = this.fetchAttributes();
+            let attributes = this.fetchAttributes();
 
             if (attributes == null) {
                 return;
@@ -183,11 +193,11 @@ function (Dep, Detail, Model, ViewRecordHelper) {
         },
 
         getFieldViews: function (withHidden) {
-            if (this.hasView('record')) {
-                return this.getView('record').getFieldViews(withHidden) || {};
+            if (!this.hasView('record')) {
+                return {};
             }
 
-            return {};
+            return this.getRecordView().getFieldViews(withHidden);
         },
 
         getFieldView: function (name) {
@@ -195,84 +205,23 @@ function (Dep, Detail, Model, ViewRecordHelper) {
         },
 
         hideField: function (name, locked) {
-            this.recordHelper.setFieldStateParam(name, 'hidden', true);
+            if (!this.getRecordView()) {
+                this.whenRendered().then(() => this.hideField(name), locked);
 
-            if (locked) {
-                this.recordHelper.setFieldStateParam(name, 'hiddenLocked', true);
-            }
-
-            var processHtml = () => {
-                let fieldView = this.getFieldView(name);
-
-                if (fieldView) {
-                    let $field = fieldView.$el;
-                    let $cell = $field.closest('.cell[data-name="' + name + '"]');
-                    let $label = $cell.find('label.control-label[data-name="' + name + '"]');
-
-                    $field.addClass('hidden');
-                    $label.addClass('hidden');
-                    $cell.addClass('hidden-cell');
-
-                    return;
-                }
-
-                this.$el.find('.cell[data-name="' + name + '"]').addClass('hidden-cell');
-                this.$el.find('.field[data-name="' + name + '"]').addClass('hidden');
-            };
-
-            if (this.isRendered()) {
-                processHtml();
-            } else {
-                this.once('after:render', () => processHtml());
-            }
-
-            let view = this.getFieldView(name);
-
-            if (view) {
-                view.setDisabled(locked);
-            }
-        },
-
-        showField: function (name) {
-            if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
                 return;
             }
 
-            this.recordHelper.setFieldStateParam(name, 'hidden', false);
+            this.getRecordView().hideField(name, locked);
+        },
 
-            let processHtml = () => {
-                let fieldView = this.getFieldView(name);
+        showField: function (name) {
+            if (!this.getRecordView()) {
+                this.whenRendered().then(() => this.showField(name));
 
-                if (fieldView) {
-                    let $field = fieldView.$el;
-                    let $cell = $field.closest('.cell[data-name="' + name + '"]');
-                    let $label = $cell.find('label.control-label[data-name="' + name + '"]');
-
-                    $field.removeClass('hidden');
-                    $label.removeClass('hidden');
-                    $cell.removeClass('hidden-cell');
-
-                    return;
-                }
-
-                this.$el.find('.cell[data-name="' + name + '"]').removeClass('hidden-cell');
-                this.$el.find('.field[data-name="' + name + '"]').removeClass('hidden');
-                this.$el.find('label.control-label[data-name="' + name + '"]').removeClass('hidden');
-            };
-
-            if (this.isRendered()) {
-                processHtml();
-            } else {
-                this.once('after:render', () => processHtml());
+                return;
             }
 
-            let view = this.getFieldView(name);
-
-            if (view) {
-                if (!view.disabledLocked) {
-                    view.setNotDisabled();
-                }
-            }
+            this.getRecordView().showField(name);
         },
     });
 });
