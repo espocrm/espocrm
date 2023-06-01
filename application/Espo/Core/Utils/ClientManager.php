@@ -45,7 +45,6 @@ class ClientManager
     protected string $mainHtmlFilePath = 'html/main.html';
     protected string $runScript = "app.start();";
     private string $basePath = '';
-    private string $libsConfigPath = 'client/cfg/libs.json';
 
     private string $nonce;
 
@@ -249,7 +248,6 @@ class ClientManager
             'favicon196Path' => $favicon196Path,
             'faviconPath' => $faviconPath,
             'ajaxTimeout' => $this->config->get('ajaxTimeout') ?? 60000,
-            'libsConfigPath' => $this->libsConfigPath,
             'internalModuleList' => Json::encode($internalModuleList),
             'applicationDescription' => $this->config->get('applicationDescription') ?? self::APP_DESCRIPTION,
             'nonce' => $this->nonce,
