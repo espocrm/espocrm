@@ -27,6 +27,22 @@
             "rel": "preload",
             "noTimestamp": true,
             "crossorigin": true
+        },
+        {
+            "href": "client/fonts/fa-solid-900.woff2",
+            "as": "font",
+            "type": "font/woff2",
+            "rel": "preload",
+            "noTimestamp": true,
+            "crossorigin": true
+        },
+        {
+            "href": "client/fonts/fa-regular-400.woff2",
+            "as": "font",
+            "type": "font/woff2",
+            "rel": "preload",
+            "noTimestamp": true,
+            "crossorigin": true
         }
     ]
 }
