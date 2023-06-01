@@ -33,8 +33,7 @@ const fs = require('fs');
 const cp = require('child_process');
 const path = require('path');
 const buildUtils = require('./js/build-utils');
-const Bundler = require("./js/bundler");
-const Precompiler = require('./js/template-precompiler');
+const BundlerGeneral = require("./js/bundler-general");
 const LayoutTypeBundler = require('./js/layout-template-bundler');
 const bundleConfig = require('./frontend/bundle-config.json');
 const libs = require('./frontend/libs.json');
@@ -257,32 +256,40 @@ module.exports = grunt => {
     });
 
     grunt.registerTask('bundle-espo', () => {
-        let chunks = (new Bundler()).bundle({
-            files: bundleConfig.files,
-            patterns: bundleConfig.patterns,
+        let chunkConfig = bundleConfig.chunks.main;
+
+        let contents = (new BundlerGeneral()).bundle({
+            files: chunkConfig.files,
+            patterns: chunkConfig.patterns,
             allPatterns: ['client/src/**/*.js'],
             libs: libs,
         });
 
-        let contents = chunks[0] + '\n' +
+        contents += '\n' +
             (new LayoutTypeBundler()).bundle();
 
         let file = originalLibDir + `/espo.js`;
-
-        fs.writeFileSync(file, contents, 'utf8');
-    });
-
-    grunt.registerTask('template-precompile', () => {
-        let contents = (new Precompiler()).precompile({
-            patterns: bundleConfig.templatePatterns,
-            modulePaths: {'crm': 'client/modules/crm'},
-        });
 
         if (!fs.existsSync(originalLibDir)) {
             fs.mkdirSync(originalLibDir);
         }
 
+        fs.writeFileSync(file, contents, 'utf8');
+    });
+
+    grunt.registerTask('bundle-templates', () => {
+        let chunkConfig = bundleConfig.chunks.templates;
+
+        let contents = (new BundlerGeneral()).bundle({
+            templatePatterns: chunkConfig.templatePatterns,
+            modulePaths: {'crm': 'client/modules/crm'},
+        });
+
         let file = originalLibDir + `/espo-templates.js`;
+
+        if (!fs.existsSync(originalLibDir)) {
+            fs.mkdirSync(originalLibDir);
+        }
 
         fs.writeFileSync(file, contents, 'utf8');
     });
@@ -470,7 +477,7 @@ module.exports = grunt => {
         'less',
         'cssmin',
         'bundle-espo',
-        'template-precompile',
+        'bundle-templates',
         'prepare-lib-original',
         'uglify:bundle',
         'copy:frontendLib',

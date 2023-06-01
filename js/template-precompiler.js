@@ -81,7 +81,9 @@ class TemplatePrecompiler {
             nameMap[file] = name
         });
 
-        let contents = 'Espo.preCompiledTemplates = {\n';
+        let contents =
+            'Espo.preCompiledTemplates = Espo.preCompiledTemplates || {};\n' +
+            'Object.assign(Espo.preCompiledTemplates, {\n';
 
         for (let file in nameMap) {
             let name = nameMap[file];
@@ -92,7 +94,7 @@ class TemplatePrecompiler {
             contents += `'${name}': Handlebars.template(\n${compiled}\n),\n`;
         }
 
-        contents += `\n}`;
+        contents += `\n});`;
 
         return contents;
     }
