@@ -2,8 +2,6 @@
     "manifest": {
         "delete": [
             "client/lib/original/espo.js",
-            "client/lib/espo.min.js",
-            "client/lib/espo.min.js.map",
             "client/lib/original/espo.js",
             "client/cfg/pre-load.json"
         ]

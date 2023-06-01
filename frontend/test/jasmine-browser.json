@@ -2,10 +2,7 @@
     "srcDir": ".",
     "srcFiles": [
         "client/lib/espo-libs.min.js",
-        "client/lib/espo-0.min.js",
-        "client/lib/espo-1.min.js",
-        "client/lib/espo-2.min.js",
-        "client/src/collection.js"
+        "client/lib/espo.min.js"
     ],
     "specDir": "frontend/test/spec",
     "specFiles": [

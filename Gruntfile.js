@@ -48,15 +48,8 @@ module.exports = grunt => {
     let bundleFileMap = {
         'client/lib/espo-libs.min.js': buildUtils.getPreparedBundleLibList(libs),
         'client/lib/espo-templates.min.js': 'client/lib/original/espo-templates.js',
-        'client/lib/espo-layout-templates.min.js': 'client/lib/original/espo-layout-templates.js',
+        'client/lib/espo.min.js': originalLibDir + `/espo.js`,
     };
-
-    for (let i = 0; i < bundleConfig.chunkNumber; i++) {
-        let bundleFile = originalLibDir + `/espo-${i}.js`;
-        let minFile = `client/lib/espo-${i}.min.js`;
-
-        bundleFileMap[minFile] = [bundleFile];
-    }
 
     let copyJsFileList = buildUtils.getCopyLibDataList(libs);
 
@@ -268,27 +261,15 @@ module.exports = grunt => {
             files: bundleConfig.files,
             patterns: bundleConfig.patterns,
             allPatterns: ['client/src/**/*.js'],
-            chunkNumber: bundleConfig.chunkNumber,
             libs: libs,
         });
 
-        if (!fs.existsSync(originalLibDir)) {
-            fs.mkdirSync(originalLibDir);
-        }
+        let contents = chunks[0] + '\n' +
+            (new LayoutTypeBundler()).bundle();
 
-        chunks.forEach((chunk, i) => {
-            let file = originalLibDir + `/espo-${i}.js`;
+        let file = originalLibDir + `/espo.js`;
 
-            fs.writeFileSync(file, chunk, 'utf8');
-        });
-    });
-
-    grunt.registerTask('bundle-layout-templates', () => {
-        let content = (new LayoutTypeBundler()).bundle();
-
-        let file = originalLibDir + `/espo-layout-templates.js`;
-
-        fs.writeFileSync(file, content, 'utf8');
+        fs.writeFileSync(file, contents, 'utf8');
     });
 
     grunt.registerTask('template-precompile', () => {
@@ -489,7 +470,6 @@ module.exports = grunt => {
         'less',
         'cssmin',
         'bundle-espo',
-        'bundle-layout-templates',
         'template-precompile',
         'prepare-lib-original',
         'uglify:bundle',

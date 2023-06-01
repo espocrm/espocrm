@@ -55,6 +55,5 @@
         "client/res/templates/fields/user-with-avatar/*.tpl",
         "client/res/templates/fields/varchar/*.tpl",
         "client/res/templates/fields/wysiwyg/*.tpl"
-    ],
-    "chunkNumber": 3
+    ]
 }

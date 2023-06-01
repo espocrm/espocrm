@@ -51,7 +51,7 @@ class Bundler {
      *   files: string[],
      *   patterns: string[],
      *   allPatterns: string[],
-     *   chunkNumber: number,
+     *   chunkNumber?: number,
      *   libs: {
      *     src?: string,
      *     bundle?: boolean,
@@ -61,6 +61,8 @@ class Bundler {
      * @return {string[]}
      */
     bundle(params) {
+        let chunkNumber = params.chunkNumber || 1;
+
         let files = []
             .concat(params.files)
             .concat(this.#obtainFiles(params.patterns, params.files));
@@ -74,10 +76,10 @@ class Bundler {
         let sortedFiles = this.#sortFiles(files, allFiles, ignoreLibs);
 
         let portions = [];
-        let portionSize = Math.floor(sortedFiles.length / params.chunkNumber);
+        let portionSize = Math.floor(sortedFiles.length / chunkNumber);
 
-        for (let i = 0; i < params.chunkNumber; i++) {
-            let end = i === params.chunkNumber - 1 ?
+        for (let i = 0; i < chunkNumber; i++) {
+            let end = i === chunkNumber - 1 ?
                 sortedFiles.length :
                 (i + 1) * portionSize;
 
