@@ -9,7 +9,9 @@
     "exportPermission": "Права за експортиране",
     "dataPrivacyPermission": "Права за управление на поверителността на данните",
     "massUpdatePermission": "Права за масови обновления",
-    "followerManagementPermission": "Права за управление на последователи"
+    "followerManagementPermission": "Права за управление на последователи",
+    "data": "Данни",
+    "fieldData": "Данни на полето"
   },
   "links": {
     "users": "Потребители",

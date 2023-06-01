@@ -1002,6 +1002,12 @@ input.global-search-input {
     > .list-group-item.ui-sortable-handle {
         cursor: default;
     }
+
+    > .list-group-item {
+        .text:empty:before {
+            content: "\200b";
+        }
+    }
 }
 
 .list-group-item {

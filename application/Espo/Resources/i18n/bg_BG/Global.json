@@ -52,7 +52,13 @@
     "DashboardTemplate": "Шаблон за работно табло",
     "Currency": "Валута",
     "LayoutSet": "Оформление",
-    "Mass Action": "Масово действие"
+    "Mass Action": "Масово действие",
+    "Note": "Коментар",
+    "ImportError": "Грешка при импортиране",
+    "WorkingTimeCalendar": "Календар на работно време",
+    "WorkingTimeRange": "Диапазон на работното време",
+    "GroupEmailFolder": "Групова имейл папка",
+    "AuthenticationProvider": "Доставчик на удостоверяване"
   },
   "scopeNamesPlural": {
     "Email": "Имейли",
@@ -94,7 +100,13 @@
     "EmailAddress": "Имейл адреси",
     "PhoneNumber": "Телефонни номера",
     "Currency": "Валута",
-    "LayoutSet": "Оформления"
+    "LayoutSet": "Оформления",
+    "Note": "Коментари",
+    "ImportError": "Грешки при импортиране",
+    "WorkingTimeCalendar": "Календари на работното време",
+    "WorkingTimeRange": "Диапазони на работно време",
+    "GroupEmailFolder": "Групови имейл папки",
+    "AuthenticationProvider": "Доставчици на удостоверяване"
   },
   "labels": {
     "Misc": "Разни",
@@ -111,7 +123,6 @@
     "Loading...": "Зареждане...",
     "Uploading...": "Качва се ...",
     "Sending...": "Изпраща се...",
-    "Merging...": "Сливане ...",
     "Merged": "Слято",
     "Removed": "Премахнато",
     "Posted": "Публикувано",
@@ -125,18 +136,14 @@
     "Record has been removed": "Записът беше премахнат",
     "Wrong username/password": "Грешно потребителско име / парола",
     "Post cannot be empty": "Публикацията не може да бъде празна",
-    "Removing...": "Премахва се ...",
-    "Unlinking...": "Премахне на релацията ...",
-    "Posting...": "Публикува се ...",
     "Username can not be empty!": "Потребителското име не може да бъде празно!",
     "Cache is not enabled": "Кешът не е активиран",
     "Cache has been cleared": "Кешът беше изчистен",
     "Rebuild has been done": "Регенерирането на кеша беше завършено",
-    "Saving...": "Запазва се...",
     "Modified": "Променено",
     "Created": "Създадено",
     "Create": "Създаване",
-    "create": "създаде",
+    "create": "Създаване",
     "Overview": "Общ преглед",
     "Details": "Детайли",
     "Add Field": "Търсене по поле",
@@ -157,7 +164,7 @@
     "Options": "Опции",
     "Username": "Потребител",
     "Password": "Парола",
-    "Login": "Влизане",
+    "Login": "Вход",
     "Log Out": "Изход",
     "Preferences": "Предпочитания",
     "State": "Област",
@@ -262,7 +269,14 @@
     "Field": "Поле",
     "Resolution": "Резолюция",
     "Resolve Conflict": "Разрешаване на конфликт",
-    "Download": "Изтегляне"
+    "Download": "Изтегляне",
+    "Sort": "Сортиране",
+    "Log in": "Вход",
+    "Log in as": "Вход като",
+    "Sign in": "Вход",
+    "Global Search": "Глобална търсачка",
+    "Show Navigation Panel": "Показване на страничния панел",
+    "Hide Navigation Panel": "Скриване на страничния панел"
   },
   "messages": {
     "pleaseWait": "Моля изчакайте...",
@@ -328,7 +342,35 @@
     "maintenanceMode": "Приложението в момента е в режим на поддръжка. Само администратори имат достъп.\n\nРежимът на поддръжка може да бъде деактивиран в Администриране → Настройки.",
     "fieldInvalid": "{field} е невалидно",
     "resolveSaveConflict": "Записът е променен. Трябва да разрешите конфликта, преди да можете да запазите записа.",
-    "massActionProcessed": "Масовото действие е обработено успешно."
+    "massActionProcessed": "Масовото действие е обработено успешно.",
+    "fieldUrlExceedsMaxLength": "Кодираният URL адрес надвишава максималната дължина от {maxLength}",
+    "fieldNotMatchingPattern": "{field} не съответства на шаблона `{pattern}`",
+    "fieldNotMatchingPattern$noBadCharacters": "{field} съдържа непозволени знаци",
+    "fieldNotMatchingPattern$noAsciiSpecialCharacters": "{field} не трябва да съдържа ASCII специални знаци",
+    "fieldNotMatchingPattern$latinLetters": "{field} може да съдържа само латински букви",
+    "fieldNotMatchingPattern$latinLettersDigits": "{field} може да съдържа само латински букви и цифри",
+    "fieldNotMatchingPattern$latinLettersDigitsWhitespace": "{field} може да съдържа само латински букви, цифри и интервал",
+    "fieldNotMatchingPattern$latinLettersWhitespace": "{field} може да съдържа само латински букви и интервал",
+    "fieldNotMatchingPattern$digits": "{field} може да съдържа само цифри",
+    "fieldPhoneInvalidCharacters": "Разрешени са само цифри, латински букви и знаци `-+_@:#().`",
+    "arrayItemMaxLength": "Текста не трябва да е по-дълъг от {max} знака",
+    "validationFailure": "Неуспешно валидиране в бекенда.\n\nПоле: `{field}`\nВалидиране: `{type}`",
+    "confirmAppRefresh": "Приложението е актуализирано. Препоръчително е да опресните страницата, за да осигурите правилното функциониране на системата.",
+    "error404": "URL адресът, който поискахте, не може да бъде обработен.",
+    "error403": "Нямате достъп до този модул.",
+    "extensionLicenseInvalid": "Невалиден лиценз за разширение „{name}“.",
+    "extensionLicenseExpired": "Абонаментът за лиценз за разширение „{name}“ е изтекъл.",
+    "extensionLicenseSoftExpired": "Абонаментът за лиценз за разширение „{name}“ е изтекъл.",
+    "loggedOutLeaveOut": "Излязохте от системата. Сесията е неактивна. Може да загубите незапазени данни от формата след опресняване на страницата. Може да се наложи да направите копие.",
+    "noAccessToRecord": "Операцията изисква достъп `{action}` за да може да запазите.",
+    "noAccessToForeignRecord": "Операцията изисква `{action}` достъп до чужд запис.",
+    "fieldShouldBeNumber": "{field} трябва да е валидно число",
+    "maintenanceModeError": "В момента приложението е в режим на поддръжка.",
+    "noLinkAccess": "Нямате достъп до операция за свързване за конкретен запис.",
+    "cannotRelateNonExisting": "Не може да се свърже с несъществуващ {foreignEntityType} запис.",
+    "cannotRelateForbidden": "Не може да се свърже със забранен запис {foreignEntityType}. Изисква се достъп „{action}“.",
+    "cannotRelateForbiddenLink": "Няма достъп до връзката „{link}“.",
+    "emptyMassUpdate": "Няма налични полета за масова актуализация."
   },
   "boolFilters": {
     "onlyMy": "Само мои",
@@ -350,7 +392,8 @@
     "printPdf": "Принтиране на PDF",
     "unlink": "Отсвързване",
     "recalculateFormula": "Преизчисляване на формули",
-    "update": "Обновяване"
+    "update": "Обновяване",
+    "delete": "Изтриване"
   },
   "fields": {
     "name": "Име",
@@ -386,7 +429,9 @@
     "type": "Тип",
     "phoneNumberIsOptedOut": "Телефонния номер е отписан",
     "types": "Типове",
-    "middleName": "Презиме"
+    "middleName": "Презиме",
+    "emailAddressIsInvalid": "Имейл адреса е невалиден",
+    "phoneNumberIsInvalid": "Телефонния номер е невалиден"
   },
   "links": {
     "assignedUser": "Назначен потребител",
@@ -462,7 +507,9 @@
     "assignThisVoid": "{user} премахна самоназначаване от {entityType}",
     "assignVoid": "{user} премахна самоназначаване от {entityType} {entity}",
     "assignThisSelf": "{user} самоназначи {entityType}",
-    "assignSelf": "{user} самоназначи {entityType} {entity}"
+    "assignSelf": "{user} самоназначи {entityType} {entity}",
+    "unrelate": "{user} Отсвърза {relatedEntityType} {relatedEntity} от {entityType} {entity}",
+    "unrelateThis": "{user} отсвърза {relatedEntityType} {relatedEntity} от този {entityType}"
   },
   "lists": {
     "monthNamesShort": [
@@ -701,5 +748,36 @@
     "h": "ч.",
     "m": "мин.",
     "s": "сек."
+  },
+  "themeNavbars": {
+    "side": "Странично меню",
+    "top": "Горно меню"
+  },
+  "fieldValidations": {
+    "required": "Задължително",
+    "maxCount": "Макс. брой",
+    "maxLength": "Макс. дължина",
+    "pattern": "Проверка по Regex",
+    "emailAddress": "Валиден имейл адрес",
+    "phoneNumber": "Валиден телефонен номер",
+    "array": "Масив",
+    "arrayOfString": "Масив от текстове",
+    "valid": "Валиден",
+    "noEmptyString": "Без празен текст",
+    "max": "Макс. стойност",
+    "min": "Мин. стойност"
+  },
+  "fieldValidationExplanations": {
+    "url_valid": "Невалидна URL стойност.",
+    "currency_valid": "Невалидна стойност на сумата.",
+    "currency_validCurrency": "Стойността на кода на валутата е невалидна или не е разрешена.",
+    "varchar_pattern": "Вероятно стойността съдържа непозволени знаци.",
+    "email_emailAddress": "Невалидна стойност на имейл адреса.",
+    "phone_phoneNumber": "Невалидна стойност на телефонния номер.",
+    "dateTimeOptional_valid": "Невалидна стойност за дата-час.",
+    "dateTime_valid": "Невалидна стойност за дата-час.",
+    "date_valid": "Невалидна стойност на датата.",
+    "enum_valid": "Невалидна стойност на падащо меню. Стойността трябва да бъде една от дефинираните опции за изброяване. Празна стойност е разрешена само ако полето има празна опция.",
+    "multiEnum_valid": "Невалидна стойност за множество изброявания. Стойностите трябва да са една от дефинираните опции на полето."
   }
 }

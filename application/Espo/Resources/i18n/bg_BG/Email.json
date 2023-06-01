@@ -7,7 +7,6 @@
     "to": "Получател",
     "replyTo": "Отговор на",
     "replyToString": "Отговор на (String)",
-    "isHtml": "Имейла е HTML",
     "body": "Съдържание",
     "subject": "Заглавие",
     "attachments": "Прикачени файлове",
@@ -53,7 +52,8 @@
     "icsEventUid": "ICS UID на събитие",
     "createdEvent": "Създадено събитие",
     "event": "Събитие",
-    "icsEventDateStart": "ICS събитие начална дата"
+    "icsEventDateStart": "ICS събитие начална дата",
+    "groupFolder": "Групова папка"
   },
   "links": {
     "replied": "Отговорено",
@@ -67,7 +67,8 @@
     "toEmailAddresses": "До имейл адреси",
     "ccEmailAddresses": "CC имейл адреси",
     "bccEmailAddresses": "BCC имейл адреси",
-    "replyToEmailAddresses": "Reply-To имейл адреси"
+    "replyToEmailAddresses": "Reply-To имейл адреси",
+    "groupFolder": "Групова папка"
   },
   "options": {
     "status": {
@@ -109,7 +110,9 @@
     "View Users": "Преглед на потребителите",
     "No Subject": "Без заглавие",
     "Insert Field": "Добавяне на поле",
-    "Event": "Събитие"
+    "Event": "Събитие",
+    "Moving to folder": "Преместване в папка",
+    "Group Folders": "Групови папки"
   },
   "messages": {
     "testEmailSent": "Тестовия имейл е изпратен",

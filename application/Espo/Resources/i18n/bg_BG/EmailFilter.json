@@ -6,7 +6,9 @@
     "bodyContains": "В съдържанието се съдържа",
     "action": "Действие",
     "isGlobal": "Е глобален",
-    "emailFolder": "Папка"
+    "emailFolder": "Папка",
+    "groupEmailFolder": "Групова имейл папка",
+    "markAsRead": "Отбележи като прочетено"
   },
   "labels": {
     "Create EmailFilter": "Създаване на имейл филтър",
@@ -23,7 +25,13 @@
   "options": {
     "action": {
       "Skip": "Игнориране",
-      "Move to Folder": "Слагане в папка"
+      "Move to Folder": "Слагане в папка",
+      "None": "Нищо",
+      "Move to Group Folder": "Вкарай в групова папка"
     }
+  },
+  "links": {
+    "emailFolder": "Папка",
+    "groupEmailFolder": "Групова имейл папка"
   }
 }

@@ -2,7 +2,6 @@
   "fields": {
     "name": "Име",
     "status": "Статус",
-    "isHtml": "Имейлът е HTML",
     "body": "Съдържание",
     "subject": "Заглавие",
     "attachments": "Прикачени файлове",
