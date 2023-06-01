@@ -16,7 +16,6 @@
     "dateStartDate": "Начална дата (цял ден)",
     "dateEndDate": "Крайна дата (цял ден)",
     "isAllDay": "Цял ден",
-    "Acceptance": "Приемане",
     "sourceEmail": "Източник на имейла"
   },
   "options": {
@@ -43,7 +42,9 @@
     "Send Invitations": "Изпращането на покани",
     "on time": "на време",
     "before": "преди",
-    "All-Day": "Цял ден"
+    "All-Day": "Цял ден",
+    "Send Cancellation": "Изпрати Отказ",
+    "Acceptance": "Приемане"
   },
   "presetFilters": {
     "planned": "Планирани",
@@ -52,6 +53,8 @@
   },
   "messages": {
     "nothingHasBeenSent": "Нищо не беше изпратено",
-    "selectAcceptanceStatus": "Задайте състоянието на приемане."
+    "selectAcceptanceStatus": "Задайте състоянието на приемане.",
+    "sendInvitationsToSelectedAttendees": "Имейли с покани ще бъдат изпратени до избраните участници.",
+    "sendCancellationsToSelectedAttendees": "Имейли за анулиране ще бъдат изпратени до избраните участници."
   }
 }

@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "method": "Метод"
+  },
+  "labels": {
+    "Create AuthenticationProvider": "Създаване на доставчик"
+  }
+}

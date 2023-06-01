@@ -1,0 +1,27 @@
+{
+  "labels": {
+    "Create WorkingTimeRange": "Създаване на диапазон",
+    "Calendars": "Календари"
+  },
+  "fields": {
+    "timeRanges": "График",
+    "dateStart": "Начална дата",
+    "dateEnd": "Крайна дата",
+    "type": "Тип",
+    "calendars": "Календари",
+    "users": "Потребители"
+  },
+  "links": {
+    "calendars": "Календари",
+    "users": "Потребители"
+  },
+  "options": {
+    "type": {
+      "Non-working": "Неработни",
+      "Working": "Работни"
+    }
+  },
+  "presetFilters": {
+    "actual": "Налични"
+  }
+}
