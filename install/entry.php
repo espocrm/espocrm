@@ -204,15 +204,15 @@ if (Utils::checkActionExists($action)) {
 
 if (!empty($actionFile) && file_exists('install/core/tpl/' . $tplName)) {
     /* check if EspoCRM is built */
-    $isBuilt = file_exists('client/lib/espo-0.min.js');
+    $isBuilt = file_exists('client/lib/espo-libs.min.js');
 
     $smarty->assign('isBuilt', $isBuilt);
 
-    if (!$isBuilt) {
-        $libListProvider = new DevModeJsFileListProvider(new FileManager());
+    $libFileList = $isBuilt ?
+        $installer->getMetadata()->get(['app', 'client', 'scriptList']) ?? [] :
+        (new DevModeJsFileListProvider(new FileManager()))->get();
 
-        $smarty->assign('libFileList', $libListProvider->get());
-    }
+    $smarty->assign('libFileList', $libFileList);
 
     $smarty->display('index.tpl');
 }
