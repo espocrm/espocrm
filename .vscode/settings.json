@@ -2,6 +2,12 @@
     "json.schemas": [
         {
             "fileMatch": [
+                "*/Resources/autoload.json"
+            ],
+            "url": "./schema/autoload.json"
+        },
+        {
+            "fileMatch": [
                 "*/Resources/routes.json"
             ],
             "url": "./schema/routes.json"

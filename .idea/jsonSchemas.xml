@@ -28,6 +28,28 @@
                   <Item>
                     <option name="path" value="schema/routes.json" />
                   </Item>
+                  <Item>
+                    <option name="path" value="schema/autoload.json" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="autoload">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="autoload" />
+              <option name="relativePathToSchema" value="schema/autoload.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/autoload.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>
