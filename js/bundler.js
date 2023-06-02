@@ -57,7 +57,7 @@ class Bundler {
      * @param {{
      *   files?: string[],
      *   patterns: string[],
-     *   allPatterns?: string[],
+     *   lookupPatterns?: string[],
      *   ignoreFiles?: string[],
      *   dependentOn?: string[],
      *   libs: {
@@ -79,7 +79,7 @@ class Bundler {
             .concat(this.#obtainFiles(params.patterns, params.files))
             .filter(file => !params.ignoreFiles.includes(file));
 
-        let allFiles = this.#obtainFiles(params.allPatterns || params.patterns);
+        let allFiles = this.#obtainFiles(params.lookupPatterns || params.patterns);
 
         let ignoreLibs = params.libs
             .filter(item => item.key && !item.bundle)
@@ -229,7 +229,7 @@ class Bundler {
 
         let modulePaths = modules.map(name => {
             if (!moduleFileMap[name]) {
-                throw Error(`Can't obtain ${name}. Might be missing in allPatterns.`);
+                throw Error(`Can't obtain ${name}. Might be missing in lookupPatterns.`);
             }
 
             return moduleFileMap[name];

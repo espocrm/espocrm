@@ -36,14 +36,14 @@ class BundlerGeneral {
      *   chunks: Object.<string, {
      *     files?: string[],
      *     patterns?: string[],
-     *     allPatterns?: string[],
+     *     lookupPatterns?: string[],
      *     templatePatterns?: string[],
      *     noDuplicates?: boolean,
      *     dependentOn?: string[],
-     *     libs?: string[],
+     *     requiredLibs?: string[],
      *   }>,
      *   modulePaths?: Record.<string, string>,
-     *   allPatterns: string[],
+     *   lookupPatterns: string[],
      *   order: string[],
      * }} config
      * @param {{
@@ -97,7 +97,7 @@ class BundlerGeneral {
 
             let bundleFile = this.filePattern.replace('{*}', name);
 
-            let libs = this.config.chunks[name].libs;
+            let libs = this.config.chunks[name].requiredLibs;
 
             if (libs) {
                 let part = JSON.stringify(libs.map(item => 'lib!' + item));
@@ -150,9 +150,9 @@ class BundlerGeneral {
         let params = this.config.chunks[name];
 
         let patterns = params.patterns;
-        let allPatterns = []
-            .concat(this.config.allPatterns)
-            .concat(params.allPatterns || []);
+        let lookupPatterns = []
+            .concat(this.config.lookupPatterns)
+            .concat(params.lookupPatterns || []);
 
         let bundledFiles = [];
         let bundledTemplateFiles = [];
@@ -171,7 +171,7 @@ class BundlerGeneral {
             let data = bundler.bundle({
                 files: params.files,
                 patterns: patterns,
-                allPatterns: allPatterns,
+                lookupPatterns: lookupPatterns,
                 libs: this.libs,
                 ignoreFiles: ignoreFiles,
                 dependentOn: params.dependentOn,

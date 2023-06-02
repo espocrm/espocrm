@@ -76,8 +76,10 @@
         this._internalModuleListIsSet = false;
         this._bundleFileMap = {};
         this._bundleMapping = {};
-        /** @type Object.<string, string[]> */
+        /** @type {Object.<string, string[]>} */
         this._bundleDependenciesMap = {};
+        /** @type {Object.<string, boolean>} */
+        this._bundleIsLoadedMap = {};
 
         this._addLibsConfigCallCount = 0;
         this._addLibsConfigCallMaxCount = 2;
@@ -507,7 +509,7 @@
                 if (name in this._bundleMapping) {
                     let bundleName = this._bundleMapping[name];
 
-                    this._addBundle(bundleName).then(() => {
+                    this._requireBundle(bundleName).then(() => {
                         let classObj = this._getClass(name);
 
                         if (!classObj) {
@@ -606,11 +608,15 @@
          * @param {string} name
          * @return {Promise}
          */
-        _addBundle: function (name) {
+        _requireBundle: function (name) {
+            if (this._bundleIsLoadedMap[name]) {
+                return Promise.resolve();
+            }
+
             let dependencies = this._bundleDependenciesMap[name] || [];
 
             if (!dependencies.length) {
-                return this._addBundleInternal(name);
+                return this._addBundle(name);
             }
 
             return new Promise(resolve => {
@@ -618,7 +624,7 @@
 
                 Promise.all(list)
                     .then(() => {
-                        return this._addBundleInternal(name);
+                        return this._addBundle(name);
                     })
                     .then(() => resolve());
             });
@@ -629,7 +635,7 @@
          * @param {string} name
          * @return {Promise}
          */
-        _addBundleInternal: function (name) {
+        _addBundle: function (name) {
             let src = this._bundleFileMap[name];
 
             if (!src) {
@@ -656,7 +662,11 @@
             return new Promise(resolve => {
                 document.head.appendChild(scriptEl);
 
-                scriptEl.addEventListener('load', () => resolve());
+                scriptEl.addEventListener('load', () => {
+                    this._bundleIsLoadedMap[name] = true;
+
+                    resolve();
+                });
             });
         },
 

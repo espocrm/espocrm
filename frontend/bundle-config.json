@@ -107,7 +107,7 @@
             "templatePatterns": [
                 "client/modules/crm/res/templates/**/*.tpl"
             ],
-            "allPatterns": [
+            "lookupPatterns": [
                 "client/modules/crm/src/**/*.js"
             ]
         },
@@ -119,8 +119,8 @@
             "dependentOn": [
                 "lib!Summernote"
             ],
-            "libs": ["Summernote"],
-            "allPatterns": [
+            "requiredLibs": ["Summernote"],
+            "lookupPatterns": [
                 "client/modules/crm/src/**/*.js"
             ]
         },
@@ -132,8 +132,8 @@
                 "lib!Flotr",
                 "lib!espo-funnel-chart"
             ],
-            "libs": ["Flotr", "espo-funnel-chart"],
-            "allPatterns": [
+            "requiredLibs": ["Flotr", "espo-funnel-chart"],
+            "lookupPatterns": [
                 "client/modules/crm/src/**/*.js"
             ]
         },
@@ -144,8 +144,8 @@
             "dependentOn": [
                 "lib!full-calendar"
             ],
-            "libs": ["full-calendar"],
-            "allPatterns": [
+            "requiredLibs": ["full-calendar"],
+            "lookupPatterns": [
                 "client/modules/crm/src/**/*.js"
             ]
         },
@@ -156,8 +156,8 @@
             "dependentOn": [
                 "lib!vis"
             ],
-            "libs": ["vis"],
-            "allPatterns": [
+            "requiredLibs": ["vis"],
+            "lookupPatterns": [
                 "client/modules/crm/src/**/*.js"
             ]
         },
@@ -174,7 +174,7 @@
     "modulePaths": {
         "crm": "client/modules/crm"
     },
-    "allPatterns": [
+    "lookupPatterns": [
         "client/src/**/*.js"
     ]
 }
