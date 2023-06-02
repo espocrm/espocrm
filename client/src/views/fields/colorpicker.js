@@ -26,20 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/colorpicker', ['views/fields/varchar', 'lib!Colorpicker'], function (Dep, Colorpicker) {
+define('views/fields/colorpicker', ['views/fields/varchar'], function (Dep) {
 
     return Dep.extend({
 
         type: 'varchar',
 
         detailTemplate: 'fields/colorpicker/detail',
-
         listTemplate: 'fields/colorpicker/detail',
-
         editTemplate: 'fields/colorpicker/edit',
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            this.wait(Espo.loader.requirePromise('lib!Colorpicker'));
         },
 
         afterRender: function () {

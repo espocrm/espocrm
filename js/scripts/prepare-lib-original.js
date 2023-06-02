@@ -30,6 +30,7 @@ const fs = require('fs');
 const buildUtils = require('../build-utils');
 
 const libs = require('./../../frontend/libs.json');
+const bundleConfig = require('../../frontend/bundle-config.json');
 
 const libDir = './client/lib';
 const originalLibDir = './client/lib/original';
@@ -40,10 +41,12 @@ const originalLibCrmDir = './client/modules/crm/lib/original';
     .filter(path => !fs.existsSync(path))
     .forEach(path => fs.mkdirSync(path));
 
-let bundleFiles = [
-    'espo-templates.js',
-    'espo.js',
-];
+let bundleFiles = Object.keys(bundleConfig.chunks)
+    .map(name => {
+        let namePart = name === 'main' ? 'espo' : 'espo-' + name;
+
+        return namePart + '.js';
+    });
 
 fs.readdirSync(originalLibDir)
     .filter(file => !bundleFiles.includes(file))

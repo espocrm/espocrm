@@ -1,4 +1,15 @@
 {
+    "order": [
+        "main",
+        "templates",
+        "admin",
+        "crm",
+        "wysiwyg",
+        "chart",
+        "calendar",
+        "timeline",
+        "extra"
+    ],
     "chunks": {
         "main": {
             "files": [
@@ -65,6 +76,105 @@
                 "client/res/templates/fields/varchar/*.tpl",
                 "client/res/templates/fields/wysiwyg/*.tpl"
             ]
+        },
+        "admin": {
+            "patterns": [
+                "client/src/views/admin/**/*.js",
+                "client/src/views/authentication-provider/**/*.js",
+                "client/src/views/inbound-email/**/*.js",
+                "client/src/views/templates/**/*.js",
+                "client/src/views/role/**/*.js",
+                "client/src/views/portal-role/**/*.js",
+                "client/src/views/scheduled-job/**/*.js",
+                "client/src/views/lead-capture/**/*.js",
+                "client/src/views/lead-capture-log-record/**/*.js",
+                "client/src/views/webhooks/**/*.js",
+                "client/src/controllers/admin.js",
+                "client/src/controllers/inbound-email.js",
+                "client/src/controllers/layout-set.js",
+                "client/src/controllers/api-user.js",
+                "client/src/controllers/role.js",
+                "client/src/controllers/portal-role.js"
+            ],
+            "templatePatterns": [
+                "client/res/templates/admin/**/*.tpl"
+            ]
+        },
+        "crm": {
+            "patterns": [
+                "client/modules/crm/src/**/*.js"
+            ],
+            "templatePatterns": [
+                "client/modules/crm/res/templates/**/*.tpl"
+            ],
+            "allPatterns": [
+                "client/modules/crm/src/**/*.js"
+            ]
+        },
+        "wysiwyg": {
+            "patterns": [
+                "client/src/**/*.js",
+                "client/modules/crm/src/**/*.js"
+            ],
+            "dependentOn": [
+                "lib!Summernote"
+            ],
+            "libs": ["Summernote"],
+            "allPatterns": [
+                "client/modules/crm/src/**/*.js"
+            ]
+        },
+        "chart": {
+            "patterns": [
+                "client/modules/crm/src/**/*.js"
+            ],
+            "dependentOn": [
+                "lib!Flotr",
+                "lib!espo-funnel-chart"
+            ],
+            "libs": ["Flotr", "espo-funnel-chart"],
+            "allPatterns": [
+                "client/modules/crm/src/**/*.js"
+            ]
+        },
+        "calendar": {
+            "patterns": [
+                "client/modules/crm/src/**/*.js"
+            ],
+            "dependentOn": [
+                "lib!full-calendar"
+            ],
+            "libs": ["full-calendar"],
+            "allPatterns": [
+                "client/modules/crm/src/**/*.js"
+            ]
+        },
+        "timeline": {
+            "patterns": [
+                "client/modules/crm/src/**/*.js"
+            ],
+            "dependentOn": [
+                "lib!vis"
+            ],
+            "libs": ["vis"],
+            "allPatterns": [
+                "client/modules/crm/src/**/*.js"
+            ]
+        },
+        "extra": {
+            "patterns": [
+                "client/src/**/*.js"
+            ],
+            "templatePatterns": [
+                "client/res/templates/**/*.tpl"
+            ],
+            "noDuplicates": true
         }
-    }
+    },
+    "modulePaths": {
+        "crm": "client/modules/crm"
+    },
+    "allPatterns": [
+        "client/src/**/*.js"
+    ]
 }

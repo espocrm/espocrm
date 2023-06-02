@@ -26,16 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/barcode',
-    ['views/fields/varchar', 'lib!JsBarcode', 'lib!qrcode'],
-function (Dep, JsBarcode, QRCode) {
+define('views/fields/barcode', ['views/fields/varchar'], function (Dep) {
+
+    let JsBarcode;
+    let QRCode;
 
     return Dep.extend({
 
         type: 'barcode',
 
         listTemplate: 'fields/barcode/detail',
-
         detailTemplate: 'fields/barcode/detail',
 
         setup: function () {
@@ -66,19 +66,42 @@ function (Dep, JsBarcode, QRCode) {
 
             if (this.params.codeType !== 'QRcode') {
                 this.isSvg = true;
+
+                this.wait(
+                    Espo.loader.requirePromise('lib!JsBarcode').then(lib => {
+                        JsBarcode = lib;
+
+                        console.log(JsBarcode);
+                    })
+                );
+            }
+            else {
+                this.wait(
+                    Espo.loader.requirePromise('lib!qrcode').then(lib => {
+                        QRCode = lib;
+                    })
+                );
             }
 
             Dep.prototype.setup.call(this);
 
-            $(window).on('resize.' + this.cid, function () {
+            $(window).on('resize.' + this.cid, () => {
                 if (!this.isRendered()) {
                     return;
                 }
 
                 this.controlWidth();
-            }.bind(this));
+            });
 
             this.listenTo(this.recordHelper, 'panel-show', () => this.controlWidth());
+        },
+
+        data: function () {
+            let data = Dep.prototype.data.call(this);
+
+            data.isSvg = this.isSvg;
+
+            return data;
         },
 
         onRemove: function () {
@@ -122,15 +145,10 @@ function (Dep, JsBarcode, QRCode) {
                         }
                         else {
                             // SVG may be not available yet (in webkit).
-                            setTimeout(
-                                function () {
-                                    this.initBarcode(value);
-
-                                    this.controlWidth();
-                                }
-                                .bind(this),
-                                100
-                            );
+                            setTimeout(() => {
+                                this.initBarcode(value);
+                                this.controlWidth();
+                            }, 100);
                         }
 
                     }

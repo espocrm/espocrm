@@ -1,6 +1,6 @@
 {{#if isNotEmpty}}
 
-{{#if viewObject.isSvg}}
+{{#if isSvg}}
 <svg class="barcode"></svg>
 {{else}}
 <div class="barcode"></div>

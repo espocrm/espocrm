@@ -37,9 +37,10 @@ class TemplatePrecompiler {
     /**
      * @param {{
      *   patterns: string[],
-     *   modulePaths: Object.<string, string>,
+     *   modulePaths: Record.<string, string>,
+     *   ignoreFiles: string[],
      * }} params
-     * @return {string}
+     * @return {{contents: string, files: string[]}}
      */
     precompile(params) {
         let files = [];
@@ -52,9 +53,14 @@ class TemplatePrecompiler {
         });
 
         let nameMap = {};
+        let compiledFiles = [];
 
         files.forEach(file => {
             let module = null;
+
+            if (params.ignoreFiles.includes(file)) {
+                return;
+            }
 
             for (let itemModule in params.modulePaths) {
                 let path = params.modulePaths[itemModule];
@@ -79,6 +85,7 @@ class TemplatePrecompiler {
             }
 
             nameMap[file] = name
+            compiledFiles.push(file);
         });
 
         let contents =
@@ -96,7 +103,10 @@ class TemplatePrecompiler {
 
         contents += `\n});`;
 
-        return contents;
+        return {
+            files: compiledFiles,
+            contents: contents,
+        };
     }
 }
 

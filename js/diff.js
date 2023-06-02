@@ -32,6 +32,8 @@ const archiver = require('archiver');
 const process = require('process');
 const buildUtils = require('./build-utils');
 
+const bundleConfig = require('../frontend/bundle-config.json');
+
 const exec = cp.exec;
 
 /**
@@ -281,10 +283,14 @@ class Diff
 
             fileList.push('client/lib/espo-libs.min.js');
             fileList.push('client/lib/espo-libs.min.js.map');
-            fileList.push(`client/lib/espo.min.js`);
-            fileList.push(`client/lib/espo.min.js.map`);
-            fileList.push('client/lib/espo-templates.min.js');
-            fileList.push('client/lib/espo-templates.min.js.map');
+
+            Object.keys(bundleConfig.chunks)
+                .map(name => {
+                    let namePart = name === 'main' ? 'espo' : 'espo-' + name;
+
+                    fileList.push(`client/lib/${namePart}.min.js`);
+                    fileList.push(`client/lib/${namePart}.min.js.map`);
+                });
 
             fs.readdirSync('client/css/espo/').forEach(file => {
                 fileList.push('client/css/espo/' + file);

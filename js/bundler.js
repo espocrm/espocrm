@@ -39,6 +39,13 @@ const {globSync} = require('glob');
 class Bundler {
 
     /**
+     * @param {Object.<string, string>} modulePaths
+     */
+    constructor(modulePaths) {
+        this.modulePaths = modulePaths;
+    }
+
+    /**
      * @private
      * @type {string}
      */
@@ -48,55 +55,60 @@ class Bundler {
      * Bundles Espo js files into chunks.
      *
      * @param {{
-     *   files: string[],
+     *   files?: string[],
      *   patterns: string[],
-     *   allPatterns: string[],
-     *   chunkNumber?: number,
+     *   allPatterns?: string[],
+     *   ignoreFiles?: string[],
+     *   dependentOn?: string[],
      *   libs: {
      *     src?: string,
      *     bundle?: boolean,
      *     key?: string,
      *   }[],
      * }} params
-     * @return {string[]}
+     * @return {{
+     *   contents: string,
+     *   files: string[],
+     *   modules: string[],
+     *   notBundledModules: string[],
+     * }}
      */
     bundle(params) {
-        let chunkNumber = params.chunkNumber || 1;
-
         let files = []
-            .concat(params.files)
-            .concat(this.#obtainFiles(params.patterns, params.files));
+            .concat(params.files || [])
+            .concat(this.#obtainFiles(params.patterns, params.files))
+            .filter(file => !params.ignoreFiles.includes(file));
 
-        let allFiles = this.#obtainFiles(params.allPatterns);
+        let allFiles = this.#obtainFiles(params.allPatterns || params.patterns);
 
         let ignoreLibs = params.libs
             .filter(item => item.key && !item.bundle)
-            .map(item => 'lib!' + item.key);
+            .map(item => 'lib!' + item.key)
+            .filter(item => !(params.dependentOn || []).includes(item));
 
-        let sortedFiles = this.#sortFiles(files, allFiles, ignoreLibs);
+        let notBundledModules = [];
 
-        let portions = [];
-        let portionSize = Math.floor(sortedFiles.length / chunkNumber);
+        let sortedFiles = this.#sortFiles(
+            files,
+            allFiles,
+            ignoreLibs,
+            params.ignoreFiles || [],
+            notBundledModules,
+            params.dependentOn || null,
+        );
 
-        for (let i = 0; i < chunkNumber; i++) {
-            let end = i === chunkNumber - 1 ?
-                sortedFiles.length :
-                (i + 1) * portionSize;
+        let contents = '';
 
-            portions.push(sortedFiles.slice(i * portionSize, end));
-        }
+        sortedFiles.forEach(file => contents += this.#normalizeSourceFile(file));
 
-        let chunks = [];
+        let modules = sortedFiles.map(file => this.#obtainModuleName(file));
 
-        portions.forEach(portion => {
-            let chunk = '';
-
-            portion.forEach(file => chunk += this.normalizeSourceFile(file));
-
-            chunks.push(chunk);
-        });
-
-        return chunks;
+        return {
+            contents: contents,
+            files: sortedFiles,
+            modules: modules,
+            notBundledModules: notBundledModules,
+        };
     }
 
     /**
@@ -123,16 +135,26 @@ class Bundler {
      * @param {string[]} files
      * @param {string[]} allFiles
      * @param {string[]} ignoreLibs
+     * @param {string[]} ignoreFiles
+     * @param {string[]} notBundledModules
+     * @param {string[]|null} dependentOn
      * @return {string[]}
      */
-    #sortFiles(files, allFiles, ignoreLibs) {
+    #sortFiles(
+        files,
+        allFiles,
+        ignoreLibs,
+        ignoreFiles,
+        notBundledModules,
+        dependentOn
+    ) {
         /** @var {Object.<string, string[]>} */
         let map = {};
-
         let standalonePathList = [];
-
         let modules = [];
         let moduleFileMap = {};
+
+        let ignoreModules = ignoreFiles.map(file => this.#obtainModuleName(file));
 
         allFiles.forEach(file => {
             let data = this.#obtainModuleData(file);
@@ -170,12 +192,16 @@ class Bundler {
                     });
             });
 
-        modules = modules.concat(depModules);
+        modules = modules
+            .concat(depModules)
+            .filter(module => !ignoreModules.includes(module));
 
         /** @var {string[]} */
         let discardedModules = [];
         /** @var {Object.<string, number>} */
         let depthMap = {};
+        /** @var {string[]} */
+        let pickedModules = [];
 
         for (let name of modules) {
             this.#buildTreeItem(
@@ -183,17 +209,29 @@ class Bundler {
                 map,
                 depthMap,
                 ignoreLibs,
-                discardedModules
+                dependentOn,
+                discardedModules,
+                pickedModules
             );
+        }
+
+        if (dependentOn) {
+            modules = pickedModules;
         }
 
         modules.sort((v1, v2) => {
             return depthMap[v2] - depthMap[v1];
         });
 
+        discardedModules.forEach(item => notBundledModules.push(item));
+
         modules = modules.filter(item => !discardedModules.includes(item));
 
         let modulePaths = modules.map(name => {
+            if (!moduleFileMap[name]) {
+                throw Error(`Can't obtain ${name}. Might be missing in allPatterns.`);
+            }
+
             return moduleFileMap[name];
         });
 
@@ -232,7 +270,9 @@ class Bundler {
      * @param {Object.<string, string[]>} map
      * @param {Object.<string, number>} depthMap
      * @param {string[]} ignoreLibs
+     * @param {string[]} dependentOn
      * @param {string[]} discardedModules
+     * @param {string[]} pickedModules
      * @param {number} [depth]
      * @param {string[]} [path]
      */
@@ -241,7 +281,9 @@ class Bundler {
         map,
         depthMap,
         ignoreLibs,
+        dependentOn,
         discardedModules,
+        pickedModules,
         depth,
         path
     ) {
@@ -271,6 +313,12 @@ class Bundler {
 
                 return;
             }
+
+            if (dependentOn && dependentOn.includes(depName)) {
+                path
+                    .filter(item => !pickedModules.includes(item))
+                    .forEach(item => pickedModules.push(item));
+            }
         }
 
         deps.forEach(depName => {
@@ -283,11 +331,29 @@ class Bundler {
                 map,
                 depthMap,
                 ignoreLibs,
+                dependentOn,
                 discardedModules,
+                pickedModules,
                 depth + 1,
                 path
             );
         });
+    }
+
+    /**
+     * @param {string} file
+     * @return string
+     */
+    #obtainModuleName(file) {
+        for (let mod in this.modulePaths) {
+            let part = this.modulePaths[mod] + '/src/';
+
+            if (file.indexOf(part) === 0) {
+                return mod + ':' + file.substring(part.length, file.length - 3);
+            }
+        }
+
+        return file.slice(this.#getBathPath().length, -3);
     }
 
     /**
@@ -315,7 +381,7 @@ class Bundler {
             return null;
         }
 
-        let moduleName = path.slice(this._getBathPath().length, -3);
+        let moduleName = this.#obtainModuleName(path);
 
         let deps = [];
 
@@ -344,7 +410,25 @@ class Bundler {
      * @return {boolean}
      */
     #isClientJsFile(path) {
-        return path.indexOf(this._getBathPath()) === 0 && path.slice(-3) === '.js';
+        if (path.slice(-3) !== '.js') {
+            return false;
+        }
+
+        let startParts = [this.#getBathPath()];
+
+        for (let mod in this.modulePaths) {
+            let modPath = this.modulePaths[mod];
+
+            startParts.push(modPath);
+        }
+
+        for (let starPart of startParts) {
+            if (path.indexOf(starPart) === 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -352,9 +436,9 @@ class Bundler {
      * @param {string} path
      * @return {string}
      */
-    normalizeSourceFile(path) {
+    #normalizeSourceFile(path) {
         let sourceCode = fs.readFileSync(path, 'utf-8');
-        let basePath = this._getBathPath();
+        let basePath = this.#getBathPath();
 
         if (!this.#isClientJsFile(path)) {
             return sourceCode;
@@ -401,7 +485,7 @@ class Bundler {
      * @private
      * @return {string}
      */
-    _getBathPath() {
+    #getBathPath() {
         let path = this.basePath;
 
         if (path.slice(-1) !== '/') {
