@@ -28,13 +28,12 @@
 
 const Bundler = require("./bundler");
 const Precompiler = require('./template-precompiler');
-const fs = require('fs');
 
 class BundlerGeneral {
 
     /**
      * @param {{
-     * chunks: Object.<string, {
+     *   chunks: Object.<string, {
      *     files?: string[],
      *     patterns?: string[],
      *     allPatterns?: string[],
@@ -220,7 +219,7 @@ class BundlerGeneral {
      * @param {string[]} libs
      * @return {string}
      */
-    #bundleLibs(libs) {
+    /*#bundleLibs(libs) {
         let files = [];
 
         this.libs
@@ -244,7 +243,7 @@ class BundlerGeneral {
         let contents = files.map(file => fs.readFileSync(file, 'utf-8'));
 
         return contents.join('\n');
-    }
+    }*/
 }
 
 module.exports = BundlerGeneral;
