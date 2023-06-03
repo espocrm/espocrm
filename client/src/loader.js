@@ -78,8 +78,8 @@
         this._bundleMapping = {};
         /** @type {Object.<string, string[]>} */
         this._bundleDependenciesMap = {};
-        /** @type {Object.<string, boolean>} */
-        this._bundleIsLoadedMap = {};
+        /** @type {Object.<string, Promise>} */
+        this._bundlePromiseMap = {};
 
         this._addLibsConfigCallCount = 0;
         this._addLibsConfigCallMaxCount = 2;
@@ -286,6 +286,10 @@
                 subject = subject || this._loadingSubject;
 
                 this._loadingSubject = null;
+            }
+
+            if (this._getClass(subject)) {
+                return;
             }
 
             if (!dependency) {
@@ -609,25 +613,27 @@
          * @return {Promise}
          */
         _requireBundle: function (name) {
-            if (this._bundleIsLoadedMap[name]) {
-                return Promise.resolve();
+            if (this._bundlePromiseMap[name]) {
+                return this._bundlePromiseMap[name];
             }
 
             let dependencies = this._bundleDependenciesMap[name] || [];
 
             if (!dependencies.length) {
-                return this._addBundle(name);
+                this._bundlePromiseMap[name] = this._addBundle(name);
+
+                return this._bundlePromiseMap[name];
             }
 
-            return new Promise(resolve => {
+            this._bundlePromiseMap[name] = new Promise(resolve => {
                 let list = dependencies.map(item => Espo.loader.requirePromise(item));
 
                 Promise.all(list)
-                    .then(() => {
-                        return this._addBundle(name);
-                    })
+                    .then(() => this._addBundle(name))
                     .then(() => resolve());
             });
+
+            return this._bundlePromiseMap[name];
         },
 
         /**
@@ -662,11 +668,7 @@
             return new Promise(resolve => {
                 document.head.appendChild(scriptEl);
 
-                scriptEl.addEventListener('load', () => {
-                    this._bundleIsLoadedMap[name] = true;
-
-                    resolve();
-                });
+                scriptEl.addEventListener('load', () => resolve());
             });
         },
 
