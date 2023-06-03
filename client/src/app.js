@@ -1120,7 +1120,7 @@ function (
          */
         requestUserData: function (callback) {
             Ajax
-                .getRequest('App/user')
+                .getRequest('App/user', {}, {appStart: true})
                 .then(callback);
         },
 
@@ -1231,7 +1231,9 @@ function (
                             }
 
                             if (this.auth) {
-                                this.logout(true, true);
+                                let silent = !options.appStart;
+
+                                this.logout(true, silent);
                             }
 
                             console.error('Error 401: Unauthorized.');
