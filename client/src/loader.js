@@ -626,7 +626,13 @@
             }
 
             this._bundlePromiseMap[name] = new Promise(resolve => {
-                let list = dependencies.map(item => Espo.loader.requirePromise(item));
+                let list = dependencies.map(item => {
+                    if (item.indexOf('bundle!') === 0) {
+                        return this._requireBundle(item.substring(7));
+                    }
+
+                    return Espo.loader.requirePromise(item);
+                });
 
                 Promise.all(list)
                     .then(() => this._addBundle(name))
@@ -861,7 +867,7 @@
 
         /**
          * @param {string} name A bundle name.
-         * @param {string} list Dependencies..
+         * @param {string[]} list Dependencies.
          * @internal
          */
         mapBundleDependencies: function (name, list) {
@@ -1003,7 +1009,7 @@
 
         /**
          * @param {string} name A bundle name.
-         * @param {string} list Dependencies..
+         * @param {string[]} list Dependencies.
          * @internal
          */
         mapBundleDependencies: function (name, list) {

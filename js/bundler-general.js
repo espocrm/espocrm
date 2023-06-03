@@ -40,7 +40,7 @@ class BundlerGeneral {
      *     templatePatterns?: string[],
      *     noDuplicates?: boolean,
      *     dependentOn?: string[],
-     *     requiredLibs?: string[],
+     *     requires?: string[],
      *   }>,
      *   modulePaths?: Record.<string, string>,
      *   lookupPatterns: string[],
@@ -97,10 +97,10 @@ class BundlerGeneral {
 
             let bundleFile = this.filePattern.replace('{*}', name);
 
-            let libs = this.config.chunks[name].requiredLibs;
+            let requires = this.config.chunks[name].requires;
 
-            if (libs) {
-                let part = JSON.stringify(libs.map(item => 'lib!' + item));
+            if (requires) {
+                let part = JSON.stringify(requires);
 
                 result[mainName] += `Espo.loader.mapBundleDependencies('${name}', ${part});\n`;
             }

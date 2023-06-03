@@ -89,6 +89,7 @@
                 "client/src/views/lead-capture/**/*.js",
                 "client/src/views/lead-capture-log-record/**/*.js",
                 "client/src/views/webhooks/**/*.js",
+                "client/src/views/layout-set/**/*.js",
                 "client/src/controllers/admin.js",
                 "client/src/controllers/inbound-email.js",
                 "client/src/controllers/layout-set.js",
@@ -97,7 +98,11 @@
                 "client/src/controllers/portal-role.js"
             ],
             "templatePatterns": [
-                "client/res/templates/admin/**/*.tpl"
+                "client/res/templates/admin/**/*.tpl",
+                "client/res/templates/lead-capture/**/*.tpl",
+                "client/res/templates/scheduled-job/**/*.tpl",
+                "client/res/templates/settings/**/*.tpl",
+                "client/res/templates/settings/**/*.tpl"
             ]
         },
         "crm": {
@@ -119,7 +124,9 @@
             "dependentOn": [
                 "lib!Summernote"
             ],
-            "requiredLibs": ["Summernote"],
+            "requires": [
+                "lib!Summernote"
+            ],
             "lookupPatterns": [
                 "client/modules/crm/src/**/*.js"
             ]
@@ -132,7 +139,10 @@
                 "lib!Flotr",
                 "lib!espo-funnel-chart"
             ],
-            "requiredLibs": ["Flotr", "espo-funnel-chart"],
+            "requires": [
+                "lib!Flotr",
+                "lib!espo-funnel-chart"
+            ],
             "lookupPatterns": [
                 "client/modules/crm/src/**/*.js"
             ]
@@ -144,7 +154,9 @@
             "dependentOn": [
                 "lib!full-calendar"
             ],
-            "requiredLibs": ["full-calendar"],
+            "requires": [
+                "lib!full-calendar"
+            ],
             "lookupPatterns": [
                 "client/modules/crm/src/**/*.js"
             ]
@@ -156,7 +168,9 @@
             "dependentOn": [
                 "lib!vis"
             ],
-            "requiredLibs": ["vis"],
+            "requires": [
+                "lib!vis"
+            ],
             "lookupPatterns": [
                 "client/modules/crm/src/**/*.js"
             ]
