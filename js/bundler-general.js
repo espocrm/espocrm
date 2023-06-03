@@ -186,13 +186,11 @@ class BundlerGeneral {
             modules = data.modules;
             bundledFiles = data.files;
 
-            /*if (params.libs) {
-                contents = this.#bundleLibs(params.libs) + '\n' + contents;
-            }*/
-
             notBundledModules = data.notBundledModules;
         }
 
+        // Pre-compiled templates turned out to be slower if too many are bundled.
+        // To be used sparingly.
         if (params.templatePatterns) {
             let ignoreFiles = params.noDuplicates ? [].concat(alreadyBundled.templateFiles) : [];
 
@@ -214,36 +212,6 @@ class BundlerGeneral {
             notBundledModules: notBundledModules,
         };
     }
-
-    /**
-     * @param {string[]} libs
-     * @return {string}
-     */
-    /*#bundleLibs(libs) {
-        let files = [];
-
-        this.libs
-            .filter(item => libs.includes(item.key))
-            .forEach(item => {
-                if (item.src) {
-                    files.push(item.src);
-
-                    return;
-                }
-
-                if (!item.files) {
-                    return;
-                }
-
-                item.files.forEach(item => {
-                    files.push(item.src);
-                });
-            });
-
-        let contents = files.map(file => fs.readFileSync(file, 'utf-8'));
-
-        return contents.join('\n');
-    }*/
 }
 
 module.exports = BundlerGeneral;

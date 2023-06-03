@@ -1,7 +1,6 @@
 {
     "order": [
         "main",
-        "templates",
         "admin",
         "crm",
         "wysiwyg",
@@ -39,44 +38,6 @@
                 "client/src/acl/*.js"
             ]
         },
-        "templates": {
-            "templatePatterns": [
-                "client/res/templates/*.tpl",
-                "client/res/templates/site/**/*.tpl",
-                "client/res/templates/record/**/*.tpl",
-                "client/res/templates/note/**/*.tpl",
-                "client/res/templates/stream/**/*.tpl",
-                "client/res/templates/notification/*.tpl",
-                "client/res/templates/global-search/*.tpl",
-                "client/res/templates/fields/address/*.tpl",
-                "client/res/templates/fields/array/*.tpl",
-                "client/res/templates/fields/attachments-multiple/*.tpl",
-                "client/res/templates/fields/base/*.tpl",
-                "client/res/templates/fields/bool/*.tpl",
-                "client/res/templates/fields/currency/*.tpl",
-                "client/res/templates/fields/date/*.tpl",
-                "client/res/templates/fields/datetime/*.tpl",
-                "client/res/templates/fields/datetime-short/*.tpl",
-                "client/res/templates/fields/duration/*.tpl",
-                "client/res/templates/fields/email/*.tpl",
-                "client/res/templates/fields/enum/*.tpl",
-                "client/res/templates/fields/phone/*.tpl",
-                "client/res/templates/fields/file/*.tpl",
-                "client/res/templates/fields/float/*.tpl",
-                "client/res/templates/fields/int/*.tpl",
-                "client/res/templates/fields/link/*.tpl",
-                "client/res/templates/fields/link-multiple/*.tpl",
-                "client/res/templates/fields/link-parent/*.tpl",
-                "client/res/templates/fields/multi-enum/*.tpl",
-                "client/res/templates/fields/person-name/*.tpl",
-                "client/res/templates/fields/text/*.tpl",
-                "client/res/templates/fields/url/*.tpl",
-                "client/res/templates/fields/user/*.tpl",
-                "client/res/templates/fields/user-with-avatar/*.tpl",
-                "client/res/templates/fields/varchar/*.tpl",
-                "client/res/templates/fields/wysiwyg/*.tpl"
-            ]
-        },
         "admin": {
             "patterns": [
                 "client/src/views/admin/**/*.js",
@@ -96,21 +57,11 @@
                 "client/src/controllers/api-user.js",
                 "client/src/controllers/role.js",
                 "client/src/controllers/portal-role.js"
-            ],
-            "templatePatterns": [
-                "client/res/templates/admin/**/*.tpl",
-                "client/res/templates/lead-capture/**/*.tpl",
-                "client/res/templates/scheduled-job/**/*.tpl",
-                "client/res/templates/settings/**/*.tpl",
-                "client/res/templates/settings/**/*.tpl"
             ]
         },
         "crm": {
             "patterns": [
                 "client/modules/crm/src/**/*.js"
-            ],
-            "templatePatterns": [
-                "client/modules/crm/res/templates/**/*.tpl"
             ],
             "lookupPatterns": [
                 "client/modules/crm/src/**/*.js"
@@ -178,9 +129,6 @@
         "extra": {
             "patterns": [
                 "client/src/**/*.js"
-            ],
-            "templatePatterns": [
-                "client/res/templates/**/*.tpl"
             ],
             "noDuplicates": true
         }
