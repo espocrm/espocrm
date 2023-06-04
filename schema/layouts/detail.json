@@ -107,7 +107,7 @@
                         }
                     },
                     {
-                        "type": "boolean",
+                        "const": false,
                         "description": "False designates an empty cell."
                     }
                 ]
