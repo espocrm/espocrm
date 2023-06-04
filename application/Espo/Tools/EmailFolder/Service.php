@@ -87,7 +87,7 @@ class Service
 
         /** @var ?User $user */
         $user = $userId === $this->user->getId() ?
-            $this->user->getId() :
+            $this->user :
             $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
