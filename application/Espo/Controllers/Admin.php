@@ -29,9 +29,9 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
-
 use Espo\Core\Container;
 use Espo\Core\DataManager;
 use Espo\Core\Api\Request;
@@ -44,6 +44,9 @@ use Espo\Entities\User;
 
 class Admin
 {
+    /**
+     * @throws Forbidden
+     */
     public function __construct(
         private Container $container,
         private Config $config,
@@ -53,12 +56,14 @@ class Admin
         private ScheduledJob $scheduledJob,
         private DataManager $dataManager
     ) {
-
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
     }
 
+    /**
+     * @throws Error
+     */
     public function postActionRebuild(): bool
     {
         $this->dataManager->rebuild();
@@ -66,6 +71,9 @@ class Admin
         return true;
     }
 
+    /**
+     * @throws Error
+     */
     public function postActionClearCache(): bool
     {
         $this->dataManager->clearCache();
@@ -81,24 +89,28 @@ class Admin
         return $this->scheduledJob->getAvailableList();
     }
 
-
     /**
-     * @param array<string, mixed> $params
-     * @param string $data
-     * @return array{
+     * @return object{
      *   id: string,
      *   version: string,
      * }
      * @throws Forbidden
      * @throws Error
-     * @todo Use Request.
+     * @throws BadRequest
      */
-    public function postActionUploadUpgradePackage($params, $data): array
+    public function postActionUploadUpgradePackage(Request $request): object
     {
-        if ($this->config->get('restrictedMode')) {
-            if (!$this->user->isSuperAdmin()) {
-                throw new Forbidden();
-            }
+        if (
+            $this->config->get('restrictedMode') &&
+            !$this->user->isSuperAdmin()
+        ) {
+            throw new Forbidden();
+        }
+
+        $data = $request->getBodyContents();
+
+        if (!$data) {
+            throw new BadRequest();
         }
 
         $upgradeManager = new UpgradeManager($this->container);
@@ -106,7 +118,7 @@ class Admin
         $upgradeId = $upgradeManager->upload($data);
         $manifest = $upgradeManager->getManifest();
 
-        return [
+        return (object) [
             'id' => $upgradeId,
             'version' => $manifest['version'],
         ];
@@ -120,10 +132,11 @@ class Admin
     {
         $data = $request->getParsedBody();
 
-        if ($this->config->get('restrictedMode')) {
-            if (!$this->user->isSuperAdmin()) {
-                throw new Forbidden();
-            }
+        if (
+            $this->config->get('restrictedMode') &&
+            !$this->user->isSuperAdmin()
+        ) {
+            throw new Forbidden();
         }
 
         $upgradeManager = new UpgradeManager($this->container);
@@ -134,33 +147,37 @@ class Admin
     }
 
     /**
-     * @return array{
-     *   message: string,
-     *   command: string,
+     * @return object{
+     *     message: string,
+     *     command: string,
      * }
      */
-    public function actionCronMessage(): array
+    public function getActionCronMessage(): object
     {
-        return $this->scheduledJob->getSetupMessage();
+        return (object) $this->scheduledJob->getSetupMessage();
     }
 
     /**
-     * @return array<int, array{id: string, type: string, message: string}>
+     * @return array<int, array{
+     *     id: string,
+     *     type: string,
+     *     message: string,
+     * }>
      */
-    public function actionAdminNotificationList(): array
+    public function getActionAdminNotificationList(): array
     {
         return $this->adminNotificationManager->getNotificationList();
     }
 
     /**
-     * @return array{
-     *   php: array<string, array<string, mixed>>,
-     *   database: array<string, array<string, mixed>>,
-     *   permission: array<string, array<string, mixed>>,
+     * @return object{
+     *     php: array<string, array<string, mixed>>,
+     *     database: array<string, array<string, mixed>>,
+     *     permission: array<string, array<string, mixed>>,
      * }
      */
-    public function actionSystemRequirementList(): array
+    public function getActionSystemRequirementList(): object
     {
-        return $this->systemRequirements->getAllRequiredList();
+        return (object) $this->systemRequirements->getAllRequiredList();
     }
 }
