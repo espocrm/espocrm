@@ -302,7 +302,8 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                 name: name,
                 optionsData: options,
                 fields: this.getMetadata().get(['dashlets', name, 'options', 'fields']) || {},
-            }, (view) => {
+                userId: this.model.entityType === 'Preferences' ? this.model.id : null,
+            }, view => {
                 view.render();
 
                 this.listenToOnce(view, 'save', (attributes) => {

@@ -32,6 +32,7 @@ namespace Espo\Tools\EmailFolder;
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
@@ -69,14 +70,35 @@ class Service
 
     /**
      * @return array<array<string, mixed>>
+     * @throws ForbiddenSilent
+     * @throws NotFound
      */
-    public function listAll()
+    public function listAll(?string $userId = null)
     {
+        if (
+            $userId &&
+            $userId !== $this->user->getId() &&
+            !$this->user->isAdmin()
+        ) {
+            throw new ForbiddenSilent();
+        }
+
+        $userId ??= $this->user->getId();
+
+        /** @var ?User $user */
+        $user = $userId === $this->user->getId() ?
+            $this->user->getId() :
+            $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+
+        if (!$user) {
+            throw new NotFound();
+        }
+
         $limit = $this->config->get('emailFolderMaxCount') ?? self::FOLDER_MAX_COUNT;
 
         $folderList = $this->entityManager
             ->getRDBRepositoryByClass(EmailFolder::class)
-            ->where(['assignedUserId' => $this->user->getId()])
+            ->where(['assignedUserId' => $userId])
             ->order('order')
             ->limit(0, $limit)
             ->find();
@@ -86,9 +108,9 @@ class Service
             ->distinct()
             ->leftJoin('teams')
             ->where(
-                $this->user->isAdmin() ?
+                $user->isAdmin() ?
                     ['id!=' => null] :
-                    ['teams.id' => $this->user->getTeamIdList()]
+                    ['teams.id' => $user->getTeamIdList()]
             )
             ->order('order')
             ->limit(0, $limit)
@@ -131,8 +153,6 @@ class Service
             if ($item instanceof GroupEmailFolder) {
                 $attributes['id'] = 'group:' . $item->getId();
             }
-
-            //$attributes['childCollection'] = [];
 
             $finalList[] = $attributes;
         }

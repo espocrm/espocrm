@@ -15,12 +15,17 @@
             "displayRecords": {
                 "type": "enumInt",
                 "options": [3, 4, 5, 7, 10, 15, 20, 30]
+            },
+            "folder": {
+                "type": "enum",
+                "view": "views/dashlets/fields/emails/folder"
             }
         },
         "defaults": {
             "orderBy": "dateSent",
             "order": "desc",
             "displayRecords": 5,
+            "folder": null,
             "expandedLayout": {
                 "rows": [
                     [
@@ -40,18 +45,6 @@
                         }
                     ]
                 ]
-            },
-            "searchData": {
-                "bool": {
-                    "onlyMy": true
-                },
-                "advanced": [
-                    {
-                        "attribute": "folderId",
-                        "type": "inFolder",
-                        "value": "inbox"
-                    }
-                ]
             }
         },
         "layout": [
@@ -63,6 +56,10 @@
                     [
                         {"name": "displayRecords"},
                         {"name": "autorefreshInterval"}
+                    ],
+                    [
+                        {"name": "folder"},
+                        false
                     ]
                 ]
             }

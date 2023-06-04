@@ -183,12 +183,16 @@ define('views/dashlet', ['view'], function (Dep) {
                 this.optionsView ||
                 'views/dashlets/options/base';
 
+            Espo.Ui.notify(' ... ');
+
             this.createView('options', optionsView, {
                 name: this.name,
                 optionsData: this.getOptionsData(),
                 fields: this.getView('body').optionsFields,
             }, view => {
                 view.render();
+
+                Espo.Ui.notify(false);
 
                 this.listenToOnce(view, 'save', (attributes) => {
                     let id = this.id;

@@ -31,11 +31,9 @@ define('views/dashlets/emails', ['views/dashlets/abstract/record-list'], functio
     return Dep.extend({
 
         name: 'Emails',
-
         scope: 'Emails',
 
         rowActionsView: 'views/email/record/row-actions/dashlet',
-
         listView: 'views/email/record/list-expanded',
 
         setupActionList: function () {
@@ -43,7 +41,7 @@ define('views/dashlets/emails', ['views/dashlets/abstract/record-list'], functio
                 this.actionList.unshift({
                     name: 'compose',
                     text: this.translate('Compose Email', 'labels', this.scope),
-                    iconHtml: '<span class="fas fa-plus"></span>'
+                    iconHtml: '<span class="fas fa-plus"></span>',
                 });
             }
         },
@@ -59,14 +57,30 @@ define('views/dashlets/emails', ['views/dashlets/abstract/record-list'], functio
             this.createView('modal', viewName, {
                 scope: this.scope,
                 attributes: attributes,
-            }, (view) => {
+            }, view => {
                 view.render();
-                view.notify(false);
+
+                Espo.Ui.notify(false);
 
                 this.listenToOnce(view, 'after:save', () => {
                     this.actionRefresh();
                 });
             });
+        },
+
+        /**
+         * @return {module:search-manager~data}
+         */
+        getSearchData: function () {
+            return {
+                'advanced': [
+                    {
+                        'attribute': 'folderId',
+                        'type': 'inFolder',
+                        'value': this.getOption('folder') || 'inbox',
+                    }
+                ]
+            };
         },
     });
 });

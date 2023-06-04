@@ -134,7 +134,9 @@ define('views/dashlets/options/base', ['views/modal', 'model'], function (Dep, M
             model.name = 'DashletOptions';
             model.setDefs({fields: this.fields});
             model.set(this.optionsData);
+
             model.dashletName = this.name;
+            model.userId = this.options.userId;
 
             this.middlePanelDefs = {};
             this.middlePanelDefsList = [];
@@ -147,9 +149,13 @@ define('views/dashlets/options/base', ['views/modal', 'model'], function (Dep, M
                 selector: '.record',
             });
 
-            this.headerText =
-                this.getLanguage().translate('Dashlet Options') + ': ' +
-                this.getLanguage().translate(this.name, 'dashlets');
+            this.$header =
+                $('<span>')
+                    .append(
+                        $('<span>').text(this.getLanguage().translate('Dashlet Options')),
+                        ' &middot; ',
+                        $('<span>').text(this.getLanguage().translate(this.name, 'dashlets')),
+                    );
         },
 
         setupBeforeFinal: function () {},

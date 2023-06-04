@@ -61,6 +61,9 @@ define('views/dashlets/abstract/record-list',
             return this.getAcl().check(this.scope, 'read');
         },
 
+        /**
+         * @return {module:search-manager~data}
+         */
         getSearchData: function () {
             return this.getOption('searchData');
         },
