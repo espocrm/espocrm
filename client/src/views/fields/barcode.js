@@ -70,8 +70,6 @@ define('views/fields/barcode', ['views/fields/varchar'], function (Dep) {
                 this.wait(
                     Espo.loader.requirePromise('lib!JsBarcode').then(lib => {
                         JsBarcode = lib;
-
-                        console.log(JsBarcode);
                     })
                 );
             }
