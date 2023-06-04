@@ -93,6 +93,14 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                 return value;
             });
 
+            let $relativeParent = null;
+
+            let $modalBody = $el.closest('.modal-body');
+
+            if ($modalBody.length) {
+                $relativeParent = $modalBody;
+            }
+
             let selectizeOptions = {
                 sortField: [{field: options.sortBy, direction: options.sortDirection}],
                 load: options.load,
@@ -103,6 +111,7 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                 copyClassesToDropdown: false,
                 allowEmptyOption: allowedValues.includes(''),
                 showEmptyOptionInDropdown: true,
+                $relativeParent: $relativeParent,
                 render: {
                     item: function (data) {
                         return $('<div>')
@@ -573,11 +582,14 @@ define('ui/select', ['lib!Selectize'], (Selectize) => {
                         let controlPosTop = self.$control.get(0).getBoundingClientRect().top;
                         let wrapperHeight = self.$wrapper.height();
 
-                        let controlPosBottom = self.$control.get(0).getBoundingClientRect().bottom
+                        let controlPosBottom = self.$control.get(0).getBoundingClientRect().bottom;
+
+                        let boundaryTop = !this.settings.$relativeParent ? 0 :
+                            this.settings.$relativeParent.get(0).getBoundingClientRect().top;
 
                         let position =
                             controlPosTop + dropdownHeight + wrapperHeight > window.innerHeight &&
-                            controlPosBottom - dropdownHeight - wrapperHeight >= 0 ?
+                            controlPosBottom - dropdownHeight - wrapperHeight >= boundaryTop ?
                                 POSITION.top :
                                 POSITION.bottom;
 
