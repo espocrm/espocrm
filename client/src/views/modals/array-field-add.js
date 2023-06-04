@@ -30,49 +30,52 @@ define('views/modals/array-field-add', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
-        cssName: 'add-modal',
-
         template: 'modals/array-field-add',
 
+        cssName: 'add-modal',
         backdrop: true,
-
         fitHeight: true,
 
         data: function () {
             return {
-                optionList: this.options.options,
-                translatedOptions: this.options.translatedOptions,
+                optionList: this.optionList,
+                translatedOptions: this.translations,
             };
         },
 
         events: {
             'click .add': function (e) {
-                var value = $(e.currentTarget).attr('data-value');
+                let value = $(e.currentTarget).attr('data-value');
+
                 this.trigger('add', value);
             },
             'click input[type="checkbox"]': function (e) {
-                var value = $(e.currentTarget).attr('data-value');
+                let value = $(e.currentTarget).attr('data-value');
+
                 if (e.target.checked) {
                     this.checkedList.push(value);
                 } else {
-                    var index = this.checkedList.indexOf(value);
+                    let index = this.checkedList.indexOf(value);
 
                     if (index !== -1) {
                         this.checkedList.splice(index, 1);
                     }
                 }
 
-                if (this.checkedList.length) {
-                    this.enableButton('select');
-                } else {
+                this.checkedList.length ?
+                    this.enableButton('select') :
                     this.disableButton('select');
-                }
+            },
+            'keyup input[data-name="quick-search"]': function (e) {
+                this.processQuickSearch(e.currentTarget.value);
             },
         },
 
         setup: function () {
             this.header = this.translate('Add Item');
             this.checkedList = [];
+            this.translations = this.options.translatedOptions || {};
+            this.optionList = this.options.options || [];
 
             this.buttonList = [
                 {
@@ -80,17 +83,75 @@ define('views/modals/array-field-add', ['views/modal'], function (Dep) {
                     style: 'danger',
                     label: 'Select',
                     disabled: true,
-                    onClick: function (dialog) {
+                    onClick: () => {
                         this.trigger('add-mass', this.checkedList);
-                    }.bind(this),
+                    },
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel'
+                    label: 'Cancel',
                 },
             ];
-
         },
 
+        afterRender: function () {
+            this.$noData = this.$el.find('.no-data');
+
+            setTimeout(() => {
+                this.$el.find('input[data-name="quick-search"]').focus()
+            }, 100);
+        },
+
+        processQuickSearch: function (text) {
+            text = text.trim();
+
+            let $noData = this.$noData;
+
+            $noData.addClass('hidden');
+
+            if (!text) {
+                this.$el.find('ul .list-group-item').removeClass('hidden');
+
+                return;
+            }
+
+            let matchedList = [];
+
+            let lowerCaseText = text.toLowerCase();
+
+            this.optionList.forEach(item => {
+                let label = this.translations[item].toLowerCase();
+
+                for (let word of label.split(' ')) {
+                    let matched = word.indexOf(lowerCaseText) === 0;
+
+                    if (matched) {
+                        matchedList.push(item);
+
+                        return;
+                    }
+                }
+            });
+
+            if (matchedList.length === 0) {
+                this.$el.find('ul .list-group-item').addClass('hidden');
+
+                $noData.removeClass('hidden');
+
+                return;
+            }
+
+            this.optionList.forEach(item => {
+                let $row = this.$el.find(`ul .list-group-item[data-name="${item}"]`);
+
+                if (!~matchedList.indexOf(item)) {
+                    $row.addClass('hidden');
+
+                    return;
+                }
+
+                $row.removeClass('hidden');
+            });
+        },
     });
 });
