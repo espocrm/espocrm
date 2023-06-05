@@ -14,13 +14,15 @@
     "defaultCurrency": "Standardwährung",
     "customUrl": "Benutzerdefinierte URL",
     "customId": "Benutzerdefinierte ID",
-    "layoutSet": "Layout-Set"
+    "layoutSet": "Layout-Set",
+    "authenticationProvider": "Authentifizierungsanbieter"
   },
   "links": {
     "users": "Benutzer",
     "portalRoles": "Rollen",
     "notes": "Notizen",
-    "layoutSet": "Layout-Set"
+    "layoutSet": "Layout-Set",
+    "authenticationProvider": "Authentifizierungsanbieter"
   },
   "tooltips": {
     "portalRoles": "Die spezifizierten Portal Rollen werden auf alle Benutzer dieses Portals angewendet.",

@@ -6,7 +6,9 @@
     "bodyContains": "Mailinhalt",
     "action": "Aktion",
     "isGlobal": "Ist global",
-    "emailFolder": "Ordner"
+    "emailFolder": "Ordner",
+    "groupEmailFolder": "E-Mail Gruppenordner",
+    "markAsRead": "Als gelesen markieren"
   },
   "labels": {
     "Create EmailFilter": "E.Mail Filter erstellen",
@@ -23,7 +25,13 @@
   "options": {
     "action": {
       "Skip": "Ignorieren",
-      "Move to Folder": "In Ordner ablegen"
+      "Move to Folder": "In Ordner ablegen",
+      "None": "Keine",
+      "Move to Group Folder": "In Gruppenordner ablegen"
     }
+  },
+  "links": {
+    "emailFolder": "Ordner",
+    "groupEmailFolder": "E-Mail Gruppenordner"
   }
 }

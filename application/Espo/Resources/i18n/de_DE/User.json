@@ -34,7 +34,8 @@
     "dashboardTemplate": "Dashboard-Vorlage",
     "auth2FAEnable": "2-Faktor-Authentifizierung aktivieren",
     "auth2FAMethod": "2FA Methode",
-    "auth2FATotpSecret": "2FA TOTP Geheimnis"
+    "auth2FATotpSecret": "2FA TOTP Geheimnis",
+    "workingTimeCalendar": "Arbeitszeitkalender"
   },
   "links": {
     "roles": "Rollen",
@@ -47,7 +48,9 @@
     "tasks": "Aufgaben",
     "defaultTeam": "Standard Team",
     "dashboardTemplate": "Dashboard-Vorlage",
-    "userData": "Benutzerdaten"
+    "userData": "Benutzerdaten",
+    "workingTimeCalendar": "Arbeitszeitkalender",
+    "workingTimeRanges": "Arbeitszeitzeiträume"
   },
   "labels": {
     "Create User": "Benutzer erstellen",
@@ -71,7 +74,8 @@
     "Reset 2FA": "2FA zurücksetzen",
     "Secret": "Geheimnis",
     "Send Password Change Link": "Passwort ändern Link versenden",
-    "Send Code": "Code senden"
+    "Send Code": "Code senden",
+    "Login Link": "Anmeldelink"
   },
   "tooltips": {
     "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
@@ -108,7 +112,16 @@
     "ldapUserInEspoNotFound": "Benutzer wird in EspoCRM nicht gefunden. Wenden Sie sich an Ihren Administrator, um den Benutzer anzulegen.",
     "passwordRecoverySentIfMatched": "Angenommen, die eingegebenen Daten stimmen mit einem beliebigen Benutzerkonto überein.",
     "auth2FARequiredHeader": "2-Faktor-Authentifizierung erforderlich",
-    "auth2FARequired": "Sie müssen eine 2-Faktor-Authentifizierung einrichten. Verwenden Sie eine Authentifizierungsanwendung auf Ihrem Mobiltelefon (z.B. Google Authenticator)."
+    "auth2FARequired": "Sie müssen eine 2-Faktor-Authentifizierung einrichten. Verwenden Sie eine Authentifizierungsanwendung auf Ihrem Mobiltelefon (z.B. Google Authenticator).",
+    "sendPasswordChangeLinkConfirmation": "Der Nutzer erhält eine E-Mail mit einem eindeutigen Link, über den er sein Passwort ändern kann. Der Link läuft nach einer bestimmten Zeitspanne ab.",
+    "yourAuthenticationCode": "Dein Authentication-Code lautet: {code}.",
+    "choose2FaSmsPhoneNumber": "Wählen Sie eine Telefonnummer aus, die für 2FA verwendet werden soll.",
+    "choose2FaEmailAddress": "Wählen Sie eine E-Mail-Adresse, die für 2FA verwendet werden soll. Es wird dringend empfohlen, eine nicht primäre E-Mail-Adresse zu verwenden.",
+    "enterCodeSentInEmail": "Gib den Code ein, welcher dir per E-Mail gesendet wurde.",
+    "enterCodeSentBySms": "Gib den Code ein, welcher dir per SMS gesendet wurde.",
+    "passwordChangeRequestNotFound": "Der Antrag auf Passwortänderung wurde nicht gefunden. Er könnte abgelaufen sein. Versuchen Sie, die Passwortänderung erneut über die [login page]({url}) anzufordern.",
+    "loginAs": "Öffnen Sie den Anmeldelink in einem Inkognito-Fenster, um Ihre aktuelle Sitzung beizubehalten. Melden Sie sich mit Ihren Administrator-Anmeldedaten an.",
+    "failedToLogIn": "Anmeldung fehlgeschlagen"
   },
   "boolFilters": {
     "onlyMyTeam": "Nur mein Team"

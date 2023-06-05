@@ -1,1 +1,27 @@
-{}
+{
+  "labels": {
+    "Create WorkingTimeRange": "Zeitraum erstellen",
+    "Calendars": "Kalender"
+  },
+  "fields": {
+    "timeRanges": "Zeitplan",
+    "dateStart": "Startdatum",
+    "dateEnd": "Enddatum",
+    "type": "Typ",
+    "calendars": "Kalender",
+    "users": "Benutzer"
+  },
+  "links": {
+    "calendars": "Kalender",
+    "users": "Benutzer"
+  },
+  "options": {
+    "type": {
+      "Non-working": "Kein Arbeitstag",
+      "Working": "Arbeitstag"
+    }
+  },
+  "presetFilters": {
+    "actual": "Aktuell"
+  }
+}

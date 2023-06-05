@@ -86,13 +86,16 @@
     "maxFileSize": "Wenn leer oder 0, dann keine Begrenzung.",
     "fileAccept": "Welche Dateitypen akzeptiert werden sollen. Es ist möglich, benutzerdefinierte Elemente hinzuzufügen.",
     "barcodeLastChar": "Für den Typ EAN-13.",
+    "conversionDisabled": "Die Währungsumrechnung wird auf dieses Feld nicht angewendet.",
     "cutHeight": "Ein Text, der einen bestimmte Länge überschreitet, wird abgeschnitten und ein \"Mehr anzeigen\" Button angezeigt.",
+    "urlStrip": "Entferne ein Protokoll und abschließenden Schrägstrich.",
     "pattern": "Ein regulärer Ausdruck, gegen den ein Feldwert geprüft wird. Definieren Sie einen Ausdruck oder wählen Sie einen vordefinierten Ausdruck.",
     "options": "Eine Liste der möglichen Werte und ihrer Bezeichnungen.",
     "optionsArray": "Eine Liste der möglichen Werte und ihrer Bezeichnungen. Wenn das Feld leer ist, können eigene Werte eingegeben werden.",
     "maxCount": "Maximale Anzahl an auswählbaren Werten.",
     "displayAsList": "Jeder Wert in eine neue Zeile.",
-    "optionsVarchar": "Eine Liste mit Werten zur Autovervollständigung."
+    "optionsVarchar": "Eine Liste mit Werten zur Autovervollständigung.",
+    "currencyDecimal": "Verwenden Sie den DB-Typ Dezimal. In der Anwendung werden die Werte als Strings dargestellt. Überprüfen Sie diesen Parameter, wenn Präzision erforderlich ist."
   },
   "fieldParts": {
     "address": {
@@ -142,7 +145,8 @@
     "email": "Eine Reihe von E-Mail-Adressen mit ihren Parametern: Ausgewählt, Ungültig, Primär.",
     "phone": "Eine Reihe von Telefonnummern mit ihren Parametern: Typ, Ausgewählt, Ungültig, Primär.",
     "foreign": "Ein Feld eines Bezugsdatensatzes. Schreibgeschützt",
-    "link": "Ein Datensatz, der durch eine Belongs-To-Beziehung (Mann-zu-Eins- oder Eins-zu-Eins-Beziehung) verbunden ist.",
-    "linkParent": "Ein Datensatz, der über die Beziehung zwischen Eltern und Angehörigen in Beziehung steht. Kann von verschiedenen Entitätstypen sein."
+    "link": "Ein Datensatz, der durch eine Belongs-To-Beziehung (Viele-zu-Eins- oder Eins-zu-Eins-Beziehung) verbunden ist.",
+    "linkParent": "Ein Datensatz, der über die Beziehung zwischen Eltern und Angehörigen in Beziehung steht. Kann von verschiedenen Entitätstypen sein.",
+    "linkMultiple": "Eine Gruppe von Datensätzen, die durch Mehrfachbeziehungen (n:n oder n:1) verbunden sind. Nicht alle Beziehungen haben ihre Mehrfachlinks-Felder. Nur diejenigen, bei denen die Option \"Mehrere Felder verlinken\" aktiviert ist."
   }
 }

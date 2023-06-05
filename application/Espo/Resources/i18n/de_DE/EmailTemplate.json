@@ -21,7 +21,8 @@
     "optOutLink": "ein Abmeldelink",
     "today": "Heutiges Datum",
     "now": "Aktuelles Datum & Uhrzeit",
-    "currentYear": "Laufendes Jahr"
+    "currentYear": "Laufendes Jahr",
+    "optOutUrl": "URL für einen Link zur Abbestellung"
   },
   "messages": {
     "infoText": "Verfügbare Platzhalter:\n\n{optOutUrl} &#8211; URL für einen Abmeldelink;\n\n{optOutLink} &#8211; ein Link zum Abbestellen des Abonnements."

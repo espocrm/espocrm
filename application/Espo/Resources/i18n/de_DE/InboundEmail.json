@@ -33,7 +33,8 @@
     "useImap": "E-Mails abholen",
     "keepFetchedEmailsUnread": "Geholte E-Mails ungelesen halten",
     "smtpAuthMechanism": "SMTP-Auth-Mechanismus",
-    "security": "Sicherheit"
+    "security": "Sicherheit",
+    "groupEmailFolder": "E-Mail Gruppenordner"
   },
   "tooltips": {
     "reply": "Benachrichtigt E-Mail Empfänger beim Empfang der Nachrichten.\n\n Nur eine E-Mail pro Empfänger wird zu einer Zeit versendet um eine Endlosschleife zu verhindern.",
@@ -49,12 +50,14 @@
     "smtpIsShared": "Wenn diese Option aktiviert ist, können Benutzer E-Mails über dieses SMTP senden. Die Verfügbarkeit wird von Rollen über die Gruppen-E-Mail-Konto-Berechtigung gesteuert.",
     "smtpIsForMassEmail": "Wenn diese Option aktiviert ist, steht SMTP für Massen-E-Mail zur Verfügung.",
     "storeSentEmails": "Gesendete E-Mails werden auf dem IMAP-Server gespeichert.",
-    "useSmtp": "Die Möglichkeit, E-Mails zu versenden."
+    "useSmtp": "Die Möglichkeit, E-Mails zu versenden.",
+    "groupEmailFolder": "Eingehende E-Mails in einem Gruppenordner ablegen."
   },
   "links": {
     "filters": "Filter",
     "emails": "E-Mails",
-    "assignToUser": "Mit Benutzer verknüpfen"
+    "assignToUser": "Mit Benutzer verknüpfen",
+    "groupEmailFolder": "E-Mail Gruppenordner"
   },
   "options": {
     "status": {

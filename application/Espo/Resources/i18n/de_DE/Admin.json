@@ -31,7 +31,7 @@
     "Extensions": "Erweiterungen",
     "Upload": "Hochladen",
     "Installing...": "Installiere...",
-    "Upgrading...": "Aktualisiere....",
+    "Upgrading...": "Aktualisiere...",
     "Upgraded successfully": "Erfolgreich aktualisiert",
     "Installed successfully": "Erfolgreich installiert",
     "Ready for upgrade": "Bereit für Aktualisierung",
@@ -68,9 +68,13 @@
     "Email Addresses": "E-Mail-Adressen",
     "Phone Numbers": "Telefonnummern",
     "Layout Sets": "Layout-Sätze",
+    "Messaging": "Nachrichtenversand",
     "Misc": "Verschiedenes",
     "Job Settings": "Job Einstellungen",
-    "Configuration Instructions": "Konfigurationsanleitung"
+    "Configuration Instructions": "Konfigurationsanleitung",
+    "Working Time Calendars": "Arbeitszeitkalender",
+    "Group Email Folders": "E-Mail Gruppenordner",
+    "Authentication Providers": "Authentifizierungsanbieter"
   },
   "layouts": {
     "list": "Liste",
@@ -152,7 +156,7 @@
     "audited": "Auditiert",
     "trim": "Abschneiden",
     "height": "Höhe (px)",
-    "minHeight": "Min. Höhe (px)",
+    "minHeight": "Mindesthöhe (px)",
     "typeList": "Typenliste",
     "rows": "Anzahl Zeilen Textbereich",
     "lengthOfCut": "Angezeigte Textlänge",
@@ -189,7 +193,8 @@
     "conversionDisabled": "Konvertierung deaktivieren",
     "decimalPlaces": "Dezimalstellen",
     "pattern": "Muster",
-    "globalRestrictions": "Globale Beschränkungen"
+    "globalRestrictions": "Globale Beschränkungen",
+    "decimal": "Dezimal"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
@@ -215,21 +220,21 @@
   },
   "descriptions": {
     "settings": "Systemeinstellungen der Applikation.",
-    "scheduledJob": "Aufgaben die durch einen Cronjob ausgeführt werden.",
+    "scheduledJob": "Aufgaben, die durch einen Cronjob ausgeführt werden.",
     "upgrade": "EspoCRM aktualisieren.",
     "clearCache": "Alle Cache Dateien leeren.",
     "rebuild": "Wiederherstellung des Backends und Leeren des Cache.",
     "users": "Benutzerverwaltung.",
     "teams": "Teamverwaltung.",
     "roles": "Rollenverwaltung.",
-    "portals": "Portalverwaltung",
+    "portals": "Portalverwaltung.",
     "portalRoles": "Rollen für Portale.",
     "outboundEmails": "SMTP Einstellungen für ausgehende E-Mails.",
     "groupEmailAccounts": "IMAP Gruppenkonten. E-Mail Import und E-Mails für Fälle.",
     "personalEmailAccounts": "E-Mail Konten der Benutzer.",
     "emailTemplates": "Vorlagen für ausgehende E-Mails.",
     "import": "Datenimport aus CSV Datei.",
-    "layoutManager": "Layouts anpassen (Liste, Detailansicht, Bearbeitungsansicht, Suche, Massenaktualisierung).",
+    "layoutManager": "Layouts anpassen (Liste, Detailansicht, Bearbeitungsansicht, Suche, Massenänderungen).",
     "userInterface": "Benutzeroberfläche konfigurieren.",
     "authTokens": "Aktive Auth Sessions. IP Adresse und letztes Zugriffsdatum.",
     "authentication": "Authentifizierungseinstellungen.",
@@ -256,8 +261,12 @@
     "phoneNumbers": "Alle im System gespeicherten Telefonnummern.",
     "emailAddresses": "Alle im System gespeicherten E-Mail-Adressen.",
     "layoutSets": "Sammlungen von Layouts, die den Teams und Portalen zugeordnet werden können.",
+    "jobsSettings": "Job Verarbeitungseinstellungen. Jobs führen Aufgaben im Hintergrund aus.",
     "sms": "SMS Einstellungen",
-    "formulaSandbox": "Schreibe und teste Formula Skripte"
+    "formulaSandbox": "Schreibe und teste Formula Skripte",
+    "workingTimeCalendars": "Arbeitszeitpläne",
+    "groupEmailFolders": "E-Mail Ordner, die mit Teams geteilt sind.",
+    "authenticationProviders": "Zusätzliche Authentifizierungsanbieter für Portale."
   },
   "options": {
     "previewSize": {
@@ -293,6 +302,7 @@
   "keywords": {
     "settings": "System",
     "templateManager": "Benachrichtigungen",
-    "authentication": "Passwort,Sicherheit,LDAP"
+    "authentication": "Passwort,Sicherheit,LDAP",
+    "labelManager": "Sprache,Übersetzung"
   }
 }
