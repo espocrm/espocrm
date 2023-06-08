@@ -131,8 +131,10 @@ module.exports = grunt => {
                     '!build/tmp/client/custom/modules',
                     'build/tmp/client/custom/modules/*',
                     '!build/tmp/client/custom/modules/dummy.txt',
+                    'build/tmp/client/lib/original/espo.js',
                     'build/tmp/client/lib/original/espo-*.js',
                     '!build/tmp/client/lib/original/espo-funnel-chart.js',
+                    'build/tmp/client/lib/transpiled',
                 ]
             },
         },
