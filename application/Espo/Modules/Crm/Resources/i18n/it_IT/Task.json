@@ -4,7 +4,7 @@
     "parent": "Genitore",
     "status": "Stato",
     "dateStart": "Data Inizio",
-    "dateEnd": "Data di scadenza",
+    "dateEnd": "Data di Scadenza",
     "dateStartDate": "Data Inizio (tutto il giorno)",
     "dateEndDate": "Data Fine (tutto il giorno)",
     "priority": "Priorità",
@@ -16,7 +16,7 @@
     "contact": "Contatto"
   },
   "links": {
-    "attachments": "Allegato",
+    "attachments": "Allegati",
     "contact": "Contatto"
   },
   "options": {
@@ -24,7 +24,7 @@
       "Not Started": "Non iniziato",
       "Started": "Iniziato",
       "Completed": "Completato",
-      "Canceled": "Cancellato",
+      "Canceled": "Annullato",
       "Deferred": "Prorogare"
     },
     "priority": {

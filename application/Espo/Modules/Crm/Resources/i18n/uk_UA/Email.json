@@ -3,8 +3,11 @@
     "Create Lead": "Створити лід",
     "Create Contact": "Створити контакт",
     "Create Task": "Створити завдання",
-    "Create Case": "Створити Звернення",
+    "Create Case": "Створити звернення",
     "Add to Contact": "Додати в контакт",
     "Add to Lead": "Додати до ліда"
+  },
+  "fields": {
+    "tasks": "Завдання"
   }
 }

@@ -7,7 +7,7 @@
   },
   "fields": {
     "name": "Ім'я",
-    "emailAddress": "Емейл",
+    "emailAddress": "Електронна пошта",
     "title": "Посада",
     "website": "Вебсайт",
     "phoneNumber": "Телефон",
@@ -25,7 +25,7 @@
     "campaign": "Кампанія",
     "targetLists": "Цільові списки",
     "targetList": "Цільовий список",
-    "industry": "Промисловість",
+    "industry": "Індустрія",
     "acceptanceStatus": "Статус підтвердження",
     "opportunityAmountCurrency": "Валюта суми угоди",
     "acceptanceStatusMeetings": "Статус підтвердження (Зустрічі)",
@@ -34,7 +34,7 @@
   },
   "links": {
     "targetLists": "Цільові списки",
-    "campaignLogRecords": "Лоґ кампаніґ",
+    "campaignLogRecords": "Журнал кампанії",
     "campaign": "Кампанія",
     "createdAccount": "Контрагент",
     "createdContact": "Контакт",
@@ -53,7 +53,7 @@
     },
     "source": {
       "Call": "Дзвінок",
-      "Email": "Емейл",
+      "Email": "Електронна пошта",
       "Existing Customer": "Існуючий замовник",
       "Partner": "Партнер",
       "Public Relations": "Зв'язки із громадськістю",

@@ -7,14 +7,14 @@
     "targetType": "Тип цілі",
     "authToken": "Токен аутентифікації",
     "ipAddress": "IP адреса",
-    "authLogRecord": "Запис Логу Аутентифікації",
+    "authLogRecord": "Запис журналу аутентифікації",
     "userType": "Тип користувача"
   },
   "links": {
     "authToken": "Токен аутентифікації",
     "user": "Користувач",
     "target": "Ціль",
-    "authLogRecord": "Запис Логу Аутентифікації"
+    "authLogRecord": "Запис журналу аутентифікації"
   },
   "presetFilters": {
     "onlyMy": "Тільки моє"
@@ -22,7 +22,7 @@
   "options": {
     "action": {
       "read": "Читати",
-      "update": "Обновити",
+      "update": "Оновити",
       "delete": "Видалити",
       "create": "Створити"
     }

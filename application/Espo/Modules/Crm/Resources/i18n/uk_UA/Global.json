@@ -27,16 +27,16 @@
     "Task": "Завдання",
     "Case": "Звернення",
     "Document": "Документ",
-    "DocumentFolder": "Документ папка",
+    "DocumentFolder": "Папка для документів",
     "Campaign": "Кампанія",
     "TargetList": "Цільовий список",
     "MassEmail": "Масова розсилка",
-    "EmailQueueItem": "Черговість пунктів в електронній скринці",
-    "CampaignTrackingUrl": "Відстеження URL",
+    "EmailQueueItem": "Елемент черги електронної пошти",
+    "CampaignTrackingUrl": "URL для відстеження",
     "Activities": "Активність",
-    "KnowledgeBaseArticle": "Стаття Бази Знань",
-    "KnowledgeBaseCategory": "Категорія Бази Знань",
-    "CampaignLogRecord": "Лоґ кампанії"
+    "KnowledgeBaseArticle": "Стаття бази знань",
+    "KnowledgeBaseCategory": "Категорія бази знань",
+    "CampaignLogRecord": "Запис журналу кампанії"
   },
   "scopeNamesPlural": {
     "Account": "Контрагенти",
@@ -54,12 +54,12 @@
     "Campaign": "Кампанії",
     "TargetList": "Цільові списки",
     "MassEmail": "Масові розсилки",
-    "EmailQueueItem": "Електронне повідомлення черговості питань",
-    "CampaignTrackingUrl": "Відстеження URLs",
+    "EmailQueueItem": "Елементи черги електронної пошти",
+    "CampaignTrackingUrl": "URLs для відстеження",
     "Activities": "Активність",
     "KnowledgeBaseArticle": "База знань",
-    "KnowledgeBaseCategory": "Категорії Бази Знань",
-    "CampaignLogRecord": "Лоґи кампанії"
+    "KnowledgeBaseCategory": "Категорії бази знань",
+    "CampaignLogRecord": "Записи журналу кампанії"
   },
   "dashlets": {
     "Leads": "Мої ліди",
@@ -69,23 +69,23 @@
     "Calendar": "Календар",
     "Calls": "Мої дзвінки",
     "Meetings": "Мої зустрічі",
-    "OpportunitiesByStage": "Угоди на стадії",
+    "OpportunitiesByStage": "Угоди за стадіями",
     "OpportunitiesByLeadSource": "Угоди за джерелом лідів",
     "SalesByMonth": "Продажі по місяцях",
-    "SalesPipeline": "Джерела продажу",
-    "Activities": "Моя діяльність"
+    "SalesPipeline": "Воронка продажів",
+    "Activities": "Моя активність"
   },
   "labels": {
     "Create InboundEmail": "Створити вхідну пошту",
-    "Activities": "Заходи",
+    "Activities": "Активність",
     "History": "Історія",
     "Attendees": "Учасники",
     "Schedule Meeting": "Запланувати зустріч",
     "Schedule Call": "Запланувати дзвінок",
-    "Compose Email": "Написати емейл",
+    "Compose Email": "Написати листа",
     "Log Meeting": "Записати зустріч",
     "Log Call": "Записати дзвінок",
-    "Archive Email": "Записати емейл",
+    "Archive Email": "Архівувати лист",
     "Create Task": "Створити завдання",
     "Tasks": "Завдання",
     "Scheduler": "Планувальник"
@@ -115,5 +115,16 @@
       "Popup": "Спливаюче вікно",
       "Email": "Емейл"
     }
+  },
+  "notificationMessages": {
+    "eventAttendee": "{user} додав вас до {entityType} {entity}"
+  },
+  "streamMessages": {
+    "eventConfirmationAccepted": "{invitee} погодився взяти участь у {entityType} {entity}",
+    "eventConfirmationDeclined": "{invitee} відмовився від участі в {entityType} {entity}",
+    "eventConfirmationTentative": "{invitee} попередньо погоджується взяти участь в {entityType} {entity}",
+    "eventConfirmationAcceptedThis": "{invitee} погодився прийняти участь",
+    "eventConfirmationDeclinedThis": "{invitee} відмовився від участі",
+    "eventConfirmationTentativeThis": "{invitee} попередньо погоджується на участь"
   }
 }
