@@ -49,7 +49,8 @@
     "icsContents": "ICS Inhalt",
     "icsEventData": "ICS Event Daten",
     "createdEvent": "Erstelltes Event",
-    "icsEventDateStart": "ICS Event Startdatum"
+    "icsEventDateStart": "ICS Event Startdatum",
+    "groupFolder": "Gruppenordner"
   },
   "links": {
     "replied": "Beantwortet",
@@ -63,7 +64,8 @@
     "toEmailAddresses": "An E-Mail Adressen",
     "ccEmailAddresses": "CC E-Mail Adressen",
     "bccEmailAddresses": "BCC E-Mail Adressen",
-    "replyToEmailAddresses": "Antwort-an E-Mail Adressen"
+    "replyToEmailAddresses": "Antwort-an E-Mail Adressen",
+    "groupFolder": "Gruppenordner"
   },
   "options": {
     "status": {
@@ -104,7 +106,9 @@
     "Folders": "Ordner",
     "View Users": "Benutzer anzeigen",
     "No Subject": "Kein Betreff",
-    "Insert Field": "Feld einfügen"
+    "Insert Field": "Feld einfügen",
+    "Moving to folder": "Verschiebe in Ordner",
+    "Group Folders": "Gruppenordner"
   },
   "messages": {
     "testEmailSent": "Eine Test E-Mail wurde gesendet",

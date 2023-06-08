@@ -1,1 +1,27 @@
-{}
+{
+  "labels": {
+    "Create WorkingTimeCalendar": "Kalender erstellen",
+    "Ranges": "Zeiträume"
+  },
+  "fields": {
+    "timeZone": "Zeitzone",
+    "timeRanges": "Arbeitstag Zeitplan",
+    "weekday0": "So",
+    "weekday1": "Mo",
+    "weekday2": "Di",
+    "weekday3": "Mi",
+    "weekday4": "Do",
+    "weekday5": "Fr",
+    "weekday6": "Sa",
+    "weekday0TimeRanges": "So Zeitplan",
+    "weekday1TimeRanges": "Mo Zeitplan",
+    "weekday2TimeRanges": "Di Zeitplan",
+    "weekday3TimeRanges": "Mi Zeitplan",
+    "weekday4TimeRanges": "Do Zeitplan",
+    "weekday5TimeRanges": "Fr Zeitplan",
+    "weekday6TimeRanges": "Sa Zeitplan"
+  },
+  "links": {
+    "ranges": "Zeiträume"
+  }
+}

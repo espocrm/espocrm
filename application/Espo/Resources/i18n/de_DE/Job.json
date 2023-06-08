@@ -14,6 +14,8 @@
     "targetId": "Ziel ID",
     "number": "Nummer",
     "queue": "Warteschlange",
+    "group": "Gruppe",
+    "className": "Klassenname",
     "targetGroup": "Zielgruppe"
   },
   "options": {

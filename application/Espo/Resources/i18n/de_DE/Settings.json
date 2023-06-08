@@ -132,7 +132,29 @@
     "auth2FAForced": "Regelmäßige Benutzer zur Einrichtung von 2FA zwingen",
     "smsProvider": "SMS Anbieter",
     "outboundSmsFromNumber": "SMS Absender Nummer",
-    "recordsPerPageSelect": "Einträge pro Seite (Auswahl)"
+    "recordsPerPageSelect": "Einträge pro Seite (Auswahl)",
+    "attachmentUploadMaxSize": "Maximale Upload-Grösse (Mb)",
+    "attachmentUploadChunkSize": "Blockgröße der Uploads (Mb)",
+    "workingTimeCalendar": "Arbeitszeitkalender",
+    "oidcClientId": "OIDC Client-ID",
+    "oidcClientSecret": "OIDC Client-Geheimnis",
+    "oidcAuthorizationRedirectUri": "OIDC Autorisierungs-Redirect-URI",
+    "oidcAuthorizationEndpoint": "OIDC Autorisierungsendpunkt",
+    "oidcTokenEndpoint": "OIDC Token-Endpunkt",
+    "oidcJwksEndpoint": "OIDC JSON Web Key Set Endpunkt",
+    "oidcJwtSignatureAlgorithmList": "OIDC JWT Zulässige Signaturalgorithmen",
+    "oidcScopes": "OIDC Geltungsbereiche",
+    "oidcGroupClaim": "OIDC Gruppen-Claim",
+    "oidcCreateUser": "OIDC Benutzer erstellen",
+    "oidcUsernameClaim": "OIDC Benutzername-Claim",
+    "oidcSync": "OIDC-Synchronisation",
+    "oidcSyncTeams": "OIDC Teams synchronisieren",
+    "oidcFallback": "OIDC Fallback-Anmeldung",
+    "oidcAllowRegularUserFallback": "OIDC Fallback-Anmeldung für reguläre Benutzer zulassen",
+    "oidcAllowAdminUser": "OIDC OIDC-Anmeldung für Admin-Benutzer zulassen",
+    "oidcLogoutUrl": "OIDC Abmelde-URL",
+    "recordsPerPageKanban": "Einträge pro Seite (Kanban)",
+    "auth2FAInPortal": "2FA in Portalen erlauben"
   },
   "tooltips": {
     "recordsPerPage": "Anzahl Sätze In Listenansichten (Standard) ",
@@ -204,7 +226,18 @@
     "emailNotificationsDelay": "Eine Nachricht kann innerhalb des angegebenen Zeitrahmens bearbeitet werden, bevor die Benachrichtigung gesendet wird.",
     "outboundEmailFromAddress": "Die E-Mail-Adresse des Systems.",
     "smtpServer": "Wenn leer, dann wird das Gruppen-E-Mail-Konto mit der entsprechenden E-Mail-Adresse verwendet.",
-    "busyRangesEntityList": "Was wird bei der Anzeige belegter Zeitbereiche in Scheduler & Timeline berücksichtigt."
+    "busyRangesEntityList": "Was wird bei der Anzeige belegter Zeitbereiche in Scheduler & Timeline berücksichtigt.",
+    "recordsPerPageSelect": "Anzahl der Datensätze, die initial bei der Auswahl von Datensätzen angezeigt werden.",
+    "workingTimeCalendar": "Ein Arbeitszeitkalender, der standardmäßig auf alle Benutzer angewendet wird.",
+    "oidcGroupClaim": "Ein Claim an den Benutzer für Team-Zuordnung.",
+    "oidcFallback": "Anmeldung mit Benutzernamen/Passwort erlauben.",
+    "oidcCreateUser": "Erstellen Sie einen neuen Benutzer in Espo, wenn kein passender Benutzer gefunden wurde.",
+    "oidcSync": "Benutzerdaten synchronisieren (bei jeder Anmeldung).",
+    "oidcSyncTeams": "Teamdaten synchronisieren (bei jeder Anmeldung).",
+    "oidcUsernameClaim": "Ein Claim, der für einen Benutzernamen verwendet wird (für den Abgleich und die Erstellung von Benutzern).",
+    "oidcTeams": "Espo-Teams, die den Gruppen/Teams/Rollen des Identitätsanbieters zugeordnet sind. Teams mit einem leeren Zuordnungswert werden immer einem Benutzer zugewiesen (beim Erstellen oder Synchronisieren).",
+    "oidcLogoutUrl": "Eine URL, an die der Browser nach der Abmeldung von Espo weitergeleitet wird. Sie dient dazu, die Sitzungsinformationen im Browser zu löschen und die Abmeldung auf der Anbieterseite durchzuführen. Normalerweise enthält die URL einen redirect-URL Parameter, um zu Espo zurückzukehren.\n\nVerfügbare Platzhalter:\n* `{siteUrl}`\n* `{clientId}`",
+    "recordsPerPageKanban": "Anzahl der Datensätze, die initial in den Kanban-Spalten angezeigt werden."
   },
   "labels": {
     "Locale": "Lokale Einstellungen",
@@ -222,7 +255,9 @@
     "Misc": "Verschiedenes",
     "Passwords": "Kennwörter",
     "2-Factor Authentication": "2-Faktor-Authentifizierung",
-    "Group Tab": "Registerkarte Gruppe"
+    "Group Tab": "Registerkarte Gruppe",
+    "Attachments": "Anhänge",
+    "IdP Group": "IdP Gruppe"
   },
   "messages": {
     "ldapTestConnection": "Die Verbindung wurde erfolgreich hergestellt."

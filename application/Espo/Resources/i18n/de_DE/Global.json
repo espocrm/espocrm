@@ -44,7 +44,11 @@
     "LayoutSet": "Layout-Set",
     "Mass Action": "Massenaktionen",
     "Note": "Notiz",
-    "ImportError": "Fehler beim Importieren"
+    "ImportError": "Fehler beim Importieren",
+    "WorkingTimeCalendar": "Arbeitszeitkalender",
+    "WorkingTimeRange": "Arbeitszeitzeitraum",
+    "GroupEmailFolder": "E-Mail Gruppenordner",
+    "AuthenticationProvider": "Authentifizierungsanbieter"
   },
   "scopeNamesPlural": {
     "Email": "E-Mails",
@@ -84,7 +88,11 @@
     "Currency": "Währung",
     "LayoutSet": "Layout-Sätze",
     "Note": "Notiz",
-    "ImportError": "Fehler beim Importieren"
+    "ImportError": "Fehler beim Importieren",
+    "WorkingTimeCalendar": "Arbeitszeitkalender",
+    "WorkingTimeRange": "Arbeitszeitzeiträume",
+    "GroupEmailFolder": "E-Mail Gruppenordner",
+    "AuthenticationProvider": "Authentifizierungsanbieter"
   },
   "labels": {
     "Misc": "Verschiedenes",
@@ -100,11 +108,10 @@
     "Loading...": "Lade...",
     "Uploading...": "Lade hoch...",
     "Sending...": "Wird gesendet...",
-    "Merging...": "Zusammenführen...",
     "Merged": "Zusammengeführt",
     "Removed": "Gelöscht",
     "Posted": "Geposted",
-    "Linked": "Verlinkt",
+    "Linked": "Verknüpft",
     "Unlinked": "Verknüpfung gelöscht",
     "Done": "Fertig",
     "Access denied": "Zugriff verweigert",
@@ -114,14 +121,10 @@
     "Record has been removed": "Datensatz wurde gelöscht",
     "Wrong username/password": "Falscher Benutzername/Passwort",
     "Post cannot be empty": "Notiz darf nicht leer sein",
-    "Removing...": "Lösche...",
-    "Unlinking...": "Lösche Verknüpfung...",
-    "Posting...": "Poste...",
     "Username can not be empty!": "Der Benutzername darf nicht leer sein!",
     "Cache is not enabled": "Cache ist nicht aktiviert",
     "Cache has been cleared": "Der Cache wurde geleert",
     "Rebuild has been done": "Wiederherstellen wurde durchgeführt",
-    "Saving...": "Speichere...",
     "Modified": "Verändert",
     "Created": "Erstellt",
     "Create": "Erstellen",
@@ -246,7 +249,13 @@
     "Field": "Feld",
     "Resolution": "Auflösung",
     "Resolve Conflict": "Löse Konflikt",
-    "Sort": "Sortieren"
+    "Sort": "Sortieren",
+    "Log in": "Anmelden",
+    "Log in as": "Anmelden als",
+    "Sign in": "Anmelden",
+    "Global Search": "Globale Suche",
+    "Show Navigation Panel": "Navigationsleiste anzeigen",
+    "Hide Navigation Panel": "Navigationsleiste verstecken"
   },
   "messages": {
     "pleaseWait": "Bitte warten...",
@@ -311,7 +320,36 @@
     "notUpdated": "Nicht aktualisiert",
     "maintenanceMode": "Die Anwendung befindet sich derzeit im Wartungsmodus. Nur Admin-Benutzer haben Zugriff.\n\nDer Wartungsmodus kann unter Administration → Einstellungen deaktiviert werden.",
     "fieldInvalid": "{field} ist ungültig",
-    "resolveSaveConflict": "Der Eintrag wurde bearbeitet. Um den Eintrag speichern zu können, müssen Sie den Konflikt beheben."
+    "resolveSaveConflict": "Der Eintrag wurde bearbeitet. Um den Eintrag speichern zu können, müssen Sie den Konflikt beheben.",
+    "massActionProcessed": "Die Massenänderung wurde abgeschlossen.",
+    "fieldUrlExceedsMaxLength": "Enkodierte URL überschreitet die maximale Länge von {maxLength}",
+    "fieldNotMatchingPattern": "{field} stimmt nicht mit dem Muster `{pattern}` überein",
+    "fieldNotMatchingPattern$noBadCharacters": "{field} enthält nicht erlaubte Zeichen",
+    "fieldNotMatchingPattern$noAsciiSpecialCharacters": "{field} sollte keine ASCII-Sonderzeichen enthalten",
+    "fieldNotMatchingPattern$latinLetters": "{field} darf nur lateinische Buchstaben enthalten",
+    "fieldNotMatchingPattern$latinLettersDigits": "{field} darf nur lateinische Buchstaben und Ziffern enthalten",
+    "fieldNotMatchingPattern$latinLettersDigitsWhitespace": "{field} darf nur lateinische Buchstaben, Ziffern und Leerzeichen enthalten",
+    "fieldNotMatchingPattern$latinLettersWhitespace": "{field} darf nur lateinische Buchstaben und Leerzeichen enthalten",
+    "fieldNotMatchingPattern$digits": "{field} darf nur Ziffern enthalten",
+    "fieldPhoneInvalidCharacters": "Nur Ziffern, lateinische Buchstaben und die Zeichen `-+_@:#().` sind erlaubt.",
+    "arrayItemMaxLength": "Artikel sollte nicht länger als {max} Zeichen sein",
+    "validationFailure": "Fehler bei der Backend-Validierung.\n\nFeld: `{field}`\nValidierung: `{type}`",
+    "confirmAppRefresh": "Die Anwendung wurde aktualisiert. Es wird empfohlen die Seite neu zu laden, um eine problemlose Funktionsweise sicherzustellen.",
+    "error404": "Die von Ihnen angeforderte URL kann nicht verarbeitet werden.",
+    "error403": "Du hast keinen Zugang zu diesem Bereich.",
+    "extensionLicenseInvalid": "Ungültige '{name}'-Erweiterungslizenz.",
+    "extensionLicenseExpired": "Das Abonnement der Lizenz für die Erweiterung '{name}' ist abgelaufen.",
+    "extensionLicenseSoftExpired": "Das Abonnement der Lizenz für die Erweiterung '{name}' ist abgelaufen.",
+    "loggedOutLeaveOut": "Abgemeldet. Die Sitzung ist inaktiv. Nicht gespeicherte Formulardaten können nach dem Aktualisieren der Seite verloren gehen. Sie müssen eventuell eine Kopie erstellen.",
+    "noAccessToRecord": "Die Operation erfordert `{action}`-Zugriff auf den Datensatz.",
+    "noAccessToForeignRecord": "Die Operation erfordert `{action}`-Zugriff auf den fremden Datensatz.",
+    "fieldShouldBeNumber": "{field} sollte eine gültige Zahl sein",
+    "maintenanceModeError": "Die Anwendung befindet sich im Wartungsmodus.",
+    "noLinkAccess": "Kein Zugriff, um Operation für einen bestimmten Datensatz zu verknüpfen.",
+    "cannotRelateNonExisting": "Kann nicht mit einem nicht existierenden {foreignEntityType} Datensatz verknüpft werden.",
+    "cannotRelateForbidden": "Kann nicht mit verbotenem {foreignEntityType} Datensatz verknüpft werden. Zugriff auf `{action}` erforderlich.",
+    "cannotRelateForbiddenLink": "Kein Zugriff auf den Link '{link}'.",
+    "emptyMassUpdate": "Keine Felder für Massenänderungen verfügbar."
   },
   "boolFilters": {
     "onlyMy": "Nur Meine",
@@ -332,7 +370,9 @@
     "convertCurrency": "Währung umrechnen",
     "printPdf": "Als PDF drucken",
     "unlink": "Link entfernen",
-    "recalculateFormula": "Formel neu berechnen"
+    "recalculateFormula": "Formel neu berechnen",
+    "update": "Aktualisieren",
+    "delete": "Löschen"
   },
   "fields": {
     "firstName": "Vorname",
@@ -365,7 +405,9 @@
     "type": "Typ",
     "phoneNumberIsOptedOut": "Telefonnummer ist Opt-Out gesetzt",
     "types": "Typen",
-    "middleName": "Zweiter Vorname"
+    "middleName": "Zweiter Vorname",
+    "emailAddressIsInvalid": "E-Mail-Adresse ist ungültig",
+    "phoneNumberIsInvalid": "Telefonnummer ist ungültig"
   },
   "links": {
     "assignedUser": "Zugewiesener Benutzer",
@@ -439,7 +481,9 @@
     "assignThisVoid": "{user} löst die Zuordnung {entityType}",
     "assignVoid": "{user} löst die Zuordnung {entityType} {entity}",
     "assignThisSelf": "{user} hat sich selbst {entityType} zugewiesen",
-    "assignSelf": "{user} hat sich {entityType} {entity} selbst zugewiesen"
+    "assignSelf": "{user} hat sich {entityType} {entity} selbst zugewiesen",
+    "unrelate": "{user} hat die Verknüpfung von {relatedEntityType} {relatedEntity} zu {entityType} {entity} gelöscht",
+    "unrelateThis": "{user} hat die Verknüpfung von {relatedEntityType} {relatedEntity} zu {entityType} gelöscht"
   },
   "lists": {
     "monthNames": [
@@ -581,6 +625,10 @@
       "Office": "Telefon Büro",
       "Home": "Telefon Privat",
       "Other": "Telefon Andere"
+    },
+    "saveConflictResolution": {
+      "current": "Derzeitige",
+      "actual": "Tatsächlich"
     }
   },
   "sets": {
@@ -695,5 +743,42 @@
   },
   "listViewModes": {
     "list": "Liste"
+  },
+  "themes": {
+    "Dark": "Dunkel",
+    "Sakura": "Kirschblüten",
+    "Violet": "Violett",
+    "Hazyblue": "Blassblau",
+    "Glass": "Glas"
+  },
+  "themeNavbars": {
+    "side": "Seitliche Navigationsleiste",
+    "top": "Obere Navigationsleiste"
+  },
+  "fieldValidations": {
+    "required": "Erforderlich",
+    "maxCount": "Maximale Anzahl",
+    "maxLength": "Maximale Länge",
+    "pattern": "Musterabgleich",
+    "emailAddress": "Gültige E-Mail-Adresse",
+    "phoneNumber": "Gültige Telefonnummer",
+    "arrayOfString": "Array von Zeichenketten",
+    "valid": "Gültig",
+    "noEmptyString": "Keine leere Zeichenkette",
+    "max": "Maximal Wert",
+    "min": "Minimal Wert"
+  },
+  "fieldValidationExplanations": {
+    "url_valid": "Ungültige URL.",
+    "currency_valid": "Ungültiger Betrag.",
+    "currency_validCurrency": "Der Wert des Währungscodes ist ungültig oder nicht zulässig.",
+    "varchar_pattern": "Wahrscheinlich enthält der Wert nicht zulässige Zeichen.",
+    "email_emailAddress": "Ungültige E-Mail Adresse.",
+    "phone_phoneNumber": "Ungültiger Wert für die Telefonnummer.",
+    "dateTimeOptional_valid": "Ungültiger Datum-Uhrzeit Wert.",
+    "dateTime_valid": "Ungültiger Datum-Uhrzeit Wert.",
+    "date_valid": "Ungültiger Datumswert.",
+    "enum_valid": "Ungültiger Enum-Wert. Der Wert muss eine der definierten Enum-Optionen sein. Ein leerer Wert ist nur zulässig, wenn das Feld eine leere Option hat.",
+    "multiEnum_valid": "Ungültiger Multi-Enum-Wert. Werte müssen eine der definierten Feldoptionen sein."
   }
 }

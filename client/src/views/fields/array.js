@@ -454,6 +454,15 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
                 });
             });
 
+            valueList
+                .filter(item => !(this.params.options || []).includes(item))
+                .forEach(item => {
+                    items.push({
+                        value: item,
+                        text: item,
+                    });
+                });
+
             /** @type {module:ui/multi-select~Options} */
             let multiSelectOptions = {
                 items: items,
