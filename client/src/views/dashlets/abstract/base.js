@@ -32,7 +32,7 @@ define('views/dashlets/abstract/base', ['view'], function (Dep) {
      * @class
      * @name Class
      * @memberOf module:views/dashlets/abstract/base
-     * @extends module:view.Class
+     * @extends module:view
      */
     return Dep.extend(/** @lends module:views/dashlets/abstract/base.Class# */{
 

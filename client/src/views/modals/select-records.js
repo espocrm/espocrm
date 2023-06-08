@@ -26,458 +26,453 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/select-records', ['views/modal', 'search-manager'], function (Dep, SearchManager) {
+/** @module views/modals/select-records */
+
+import Dep from 'views/modal';
+import SearchManager from 'search-manager';
+
+/**
+ * A select-records modal.
+ *
+ * @class
+ * @name Class
+ * @memberOf module:views/modals/select-records
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    template: 'modals/select-records',
+
+    cssName: 'select-modal',
+    className: 'dialog dialog-record',
+
+    multiple: false,
+    header: false,
+    createButton: true,
+    searchPanel: true,
+    scope: null,
+    noCreateScopeList: ['User', 'Team', 'Role', 'Portal'],
 
     /**
-     * A select-records modal.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:views/modals/select-records
-     * @extends module:views/modal.Class
+     * @inheritDoc
      */
-    return Dep.extend(/** @lends module:views/modals/select-records.Class# */{
-
-        cssName: 'select-modal',
-
-        multiple: false,
-
-        header: false,
-
-        template: 'modals/select-records',
-
-        createButton: true,
-
-        searchPanel: true,
-
-        scope: null,
-
-        noCreateScopeList: ['User', 'Team', 'Role', 'Portal'],
-
-        className: 'dialog dialog-record',
-
-        /**
-         * @inheritDoc
-         */
-        shortcutKeys: {
-            'Control+Enter': function (e) {
-                this.handleShortcutKeyCtrlEnter(e);
-            },
-            'Control+Space': function (e) {
-                this.handleShortcutKeyCtrlSpace(e);
-            },
-            'Control+Slash': function (e) {
-                this.handleShortcutKeyCtrlSlash(e);
-            },
-            'Control+Comma': function (e) {
-                this.handleShortcutKeyCtrlComma(e);
-            },
-            'Control+Period': function (e) {
-                this.handleShortcutKeyCtrlPeriod(e);
-            },
+    shortcutKeys: {
+        'Control+Enter': function (e) {
+            this.handleShortcutKeyCtrlEnter(e);
         },
-
-        data: function () {
-            return {
-                createButton: this.createButton,
-                createText: this.translate('Create ' + this.scope, 'labels', this.scope),
-            };
+        'Control+Space': function (e) {
+            this.handleShortcutKeyCtrlSpace(e);
         },
-
-        events: {
-            'click button[data-action="create"]': function () {
-                this.create();
-            },
-            'click .list a': function (e) {
-                e.preventDefault();
-            }
+        'Control+Slash': function (e) {
+            this.handleShortcutKeyCtrlSlash(e);
         },
+        'Control+Comma': function (e) {
+            this.handleShortcutKeyCtrlComma(e);
+        },
+        'Control+Period': function (e) {
+            this.handleShortcutKeyCtrlPeriod(e);
+        },
+    },
 
-        setup: function () {
-            this.filters = this.options.filters || {};
-            this.boolFilterList = this.options.boolFilterList || [];
-            this.primaryFilterName = this.options.primaryFilterName || null;
-            this.filterList = this.options.filterList || this.filterList || null;
+    data: function () {
+        return {
+            createButton: this.createButton,
+            createText: this.translate('Create ' + this.scope, 'labels', this.scope),
+        };
+    },
 
-            if ('multiple' in this.options) {
-                this.multiple = this.options.multiple;
+    events: {
+        'click button[data-action="create"]': function () {
+            this.create();
+        },
+        'click .list a': function (e) {
+            e.preventDefault();
+        }
+    },
+
+    setup: function () {
+        this.filters = this.options.filters || {};
+        this.boolFilterList = this.options.boolFilterList || [];
+        this.primaryFilterName = this.options.primaryFilterName || null;
+        this.filterList = this.options.filterList || this.filterList || null;
+
+        if ('multiple' in this.options) {
+            this.multiple = this.options.multiple;
+        }
+
+        if ('createButton' in this.options) {
+            this.createButton = this.options.createButton;
+        }
+
+        this.massRelateEnabled = this.options.massRelateEnabled;
+
+        this.buttonList = [
+            {
+                name: 'cancel',
+                label: 'Cancel',
             }
+        ];
 
-            if ('createButton' in this.options) {
-                this.createButton = this.options.createButton;
-            }
+        if (this.multiple) {
+            this.buttonList.unshift({
+                name: 'select',
+                style: 'danger',
+                label: 'Select',
+                disabled: true,
+                title: 'Ctrl+Enter',
+            });
+        }
 
-            this.massRelateEnabled = this.options.massRelateEnabled;
+        this.scope = this.entityType = this.options.scope || this.scope;
 
-            this.buttonList = [
-                {
-                    name: 'cancel',
-                    label: 'Cancel',
-                }
-            ];
+        let customDefaultOrderBy = this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'orderBy']);
+        let customDefaultOrder = this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'order']);
 
-            if (this.multiple) {
-                this.buttonList.unshift({
-                    name: 'select',
-                    style: 'danger',
-                    label: 'Select',
-                    disabled: true,
-                    title: 'Ctrl+Enter',
-                });
-            }
+        if (customDefaultOrderBy) {
+            this.defaultOrderBy = customDefaultOrderBy;
+            this.defaultOrder = customDefaultOrder || false;
+        }
 
-            this.scope = this.entityType = this.options.scope || this.scope;
+        if (this.noCreateScopeList.indexOf(this.scope) !== -1) {
+            this.createButton = false;
+        }
 
-            let customDefaultOrderBy = this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'orderBy']);
-            let customDefaultOrder = this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'order']);
-
-            if (customDefaultOrderBy) {
-                this.defaultOrderBy = customDefaultOrderBy;
-                this.defaultOrder = customDefaultOrder || false;
-            }
-
-            if (this.noCreateScopeList.indexOf(this.scope) !== -1) {
+        if (this.createButton) {
+            if (
+                !this.getAcl().check(this.scope, 'create') ||
+                this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])
+            ) {
                 this.createButton = false;
             }
+        }
 
-            if (this.createButton) {
-                if (
-                    !this.getAcl().check(this.scope, 'create') ||
-                    this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])
-                ) {
-                    this.createButton = false;
-                }
-            }
+        if (this.getMetadata().get(['clientDefs', this.scope, 'searchPanelDisabled'])) {
+            this.searchPanel = false;
+        }
 
-            if (this.getMetadata().get(['clientDefs', this.scope, 'searchPanelDisabled'])) {
+        if (this.getUser().isPortal()) {
+            if (this.getMetadata().get(['clientDefs', this.scope, 'searchPanelInPortalDisabled'])) {
                 this.searchPanel = false;
             }
+        }
 
-            if (this.getUser().isPortal()) {
-                if (this.getMetadata().get(['clientDefs', this.scope, 'searchPanelInPortalDisabled'])) {
-                    this.searchPanel = false;
-                }
+        this.$header = $('<span>');
+
+        this.$header.append(
+            $('<span>').text(
+                this.translate('Select') + ' · ' +
+                this.getLanguage().translate(this.scope, 'scopeNamesPlural')
+            )
+        );
+
+        this.$header.prepend(
+            this.getHelper().getScopeColorIconHtml(this.scope)
+        );
+
+        this.waitForView('list');
+
+        if (this.searchPanel) {
+            this.waitForView('search');
+        }
+
+        this.getCollectionFactory().create(this.scope, (collection) => {
+            collection.maxSize = this.getConfig().get('recordsPerPageSelect') || 5;
+
+            this.collection = collection;
+
+            if (this.defaultOrderBy) {
+                this.collection.setOrder(this.defaultOrderBy, this.defaultOrder || 'asc', true);
             }
 
-            this.$header = $('<span>');
+            this.loadSearch();
+            this.wait(true);
+            this.loadList();
+        });
+    },
 
-            this.$header.append(
-                $('<span>').text(
-                    this.translate('Select') + ' · ' +
-                    this.getLanguage().translate(this.scope, 'scopeNamesPlural')
-                )
-            );
+    loadSearch: function () {
+        var searchManager = this.searchManager =
+            new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
 
-            this.$header.prepend(
-                this.getHelper().getScopeColorIconHtml(this.scope)
-            );
+        searchManager.emptyOnReset = true;
 
-            this.waitForView('list');
+        if (this.filters) {
+            searchManager.setAdvanced(this.filters);
+        }
 
-            if (this.searchPanel) {
-                this.waitForView('search');
-            }
+        var boolFilterList = this.boolFilterList ||
+            this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.boolFilterList');
 
-            this.getCollectionFactory().create(this.scope, (collection) => {
-                collection.maxSize = this.getConfig().get('recordsPerPageSelect') || 5;
+        if (boolFilterList) {
+            var d = {};
 
-                this.collection = collection;
-
-                if (this.defaultOrderBy) {
-                    this.collection.setOrder(this.defaultOrderBy, this.defaultOrder || 'asc', true);
-                }
-
-                this.loadSearch();
-                this.wait(true);
-                this.loadList();
+            boolFilterList.forEach((item) => {
+                d[item] = true;
             });
-        },
 
-        loadSearch: function () {
-            var searchManager = this.searchManager =
-                new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
+            searchManager.setBool(d);
+        }
 
-            searchManager.emptyOnReset = true;
+        var primaryFilterName = this.primaryFilterName ||
+            this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.filter');
 
-            if (this.filters) {
-                searchManager.setAdvanced(this.filters);
-            }
+        if (primaryFilterName) {
+            searchManager.setPrimary(primaryFilterName);
+        }
 
-            var boolFilterList = this.boolFilterList ||
-                this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.boolFilterList');
+        this.collection.where = searchManager.getWhere();
 
-            if (boolFilterList) {
-                var d = {};
-
-                boolFilterList.forEach((item) => {
-                    d[item] = true;
-                });
-
-                searchManager.setBool(d);
-            }
-
-            var primaryFilterName = this.primaryFilterName ||
-                this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.filter');
-
-            if (primaryFilterName) {
-                searchManager.setPrimary(primaryFilterName);
-            }
-
-            this.collection.where = searchManager.getWhere();
-
-            if (this.searchPanel) {
-                this.createView('search', 'views/record/search', {
-                    collection: this.collection,
-                    el: this.containerSelector + ' .search-container',
-                    searchManager: searchManager,
-                    disableSavePreset: true,
-                    filterList: this.filterList,
-                }, (view) => {
-                    this.listenTo(view, 'reset', () => {});
-                });
-            }
-        },
-
-        loadList: function () {
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
-                this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
-                'views/record/list';
-
-            this.createView('list', viewName, {
+        if (this.searchPanel) {
+            this.createView('search', 'views/record/search', {
                 collection: this.collection,
-                el: this.containerSelector + ' .list-container',
-                selectable: true,
-                checkboxes: this.multiple,
-                massActionsDisabled: true,
-                rowActionsView: false,
-                layoutName: 'listSmall',
-                searchManager: this.searchManager,
-                checkAllResultDisabled: !this.massRelateEnabled,
-                buttonsDisabled: true,
-                skipBuildRows: true,
-                pagination: this.getConfig().get('listPagination') ||
-                    this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||
-                    null,
-            }, function (view) {
-                this.listenToOnce(view, 'select', (model) =>{
-                    this.trigger('select', model);
+                el: this.containerSelector + ' .search-container',
+                searchManager: searchManager,
+                disableSavePreset: true,
+                filterList: this.filterList,
+            }, (view) => {
+                this.listenTo(view, 'reset', () => {});
+            });
+        }
+    },
 
-                    this.close();
+    loadList: function () {
+        var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
+            this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
+            'views/record/list';
+
+        this.createView('list', viewName, {
+            collection: this.collection,
+            el: this.containerSelector + ' .list-container',
+            selectable: true,
+            checkboxes: this.multiple,
+            massActionsDisabled: true,
+            rowActionsView: false,
+            layoutName: 'listSmall',
+            searchManager: this.searchManager,
+            checkAllResultDisabled: !this.massRelateEnabled,
+            buttonsDisabled: true,
+            skipBuildRows: true,
+            pagination: this.getConfig().get('listPagination') ||
+                this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||
+                null,
+        }, function (view) {
+            this.listenToOnce(view, 'select', (model) =>{
+                this.trigger('select', model);
+
+                this.close();
+            });
+
+            if (this.multiple) {
+                this.listenTo(view, 'check', () => {
+                    if (view.checkedList.length) {
+                        this.enableButton('select');
+                    }
+                    else {
+                        this.disableButton('select');
+                    }
                 });
 
-                if (this.multiple) {
-                    this.listenTo(view, 'check', () => {
-                        if (view.checkedList.length) {
-                            this.enableButton('select');
-                        }
-                        else {
-                            this.disableButton('select');
+                this.listenTo(view, 'select-all-results', () => {
+                    this.enableButton('select');
+                });
+            }
+
+            if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
+                this.listenToOnce(view, 'after:build-rows', () => {
+                    this.wait(false);
+                });
+
+                this.collection.fetch();
+            }
+            else {
+                view.getSelectAttributeList((selectAttributeList) => {
+                    if (!~selectAttributeList.indexOf('name')) {
+                        selectAttributeList.push('name');
+                    }
+
+                    var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
+                        this.mandatorySelectAttributeList || [];
+
+                    mandatorySelectAttributeList.forEach((attribute) => {
+                        if (!~selectAttributeList.indexOf(attribute)) {
+                            selectAttributeList.push(attribute);
                         }
                     });
 
-                    this.listenTo(view, 'select-all-results', () => {
-                        this.enableButton('select');
-                    });
-                }
+                    if (selectAttributeList) {
+                        this.collection.data.select = selectAttributeList.join(',');
+                    }
 
-                if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
                     this.listenToOnce(view, 'after:build-rows', () => {
                         this.wait(false);
                     });
 
                     this.collection.fetch();
-                }
-                else {
-                    view.getSelectAttributeList((selectAttributeList) => {
-                        if (!~selectAttributeList.indexOf('name')) {
-                            selectAttributeList.push('name');
-                        }
+                });
+            }
+        });
+    },
 
-                        var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
-                            this.mandatorySelectAttributeList || [];
+    create: function () {
+        if (this.options.triggerCreateEvent) {
+            this.trigger('create');
 
-                        mandatorySelectAttributeList.forEach((attribute) => {
-                            if (!~selectAttributeList.indexOf(attribute)) {
-                                selectAttributeList.push(attribute);
-                            }
-                        });
+            return;
+        }
 
-                        if (selectAttributeList) {
-                            this.collection.data.select = selectAttributeList.join(',');
-                        }
+        Espo.Ui.notify(' ... ');
 
-                        this.listenToOnce(view, 'after:build-rows', () => {
-                            this.wait(false);
-                        });
+        let viewName = this.getMetadata()
+            .get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
+            'views/modals/edit';
 
-                        this.collection.fetch();
+        new Promise(resolve => {
+            if (this.options.createAttributesProvider) {
+                this.options.createAttributesProvider().then(attributes => {
+                    resolve(attributes)
+                });
+
+                return;
+            }
+
+            resolve(this.options.createAttributes || {});
+        })
+            .then(attributes => {
+                this.createView('quickCreate', viewName, {
+                    scope: this.scope,
+                    fullFormDisabled: true,
+                    attributes: attributes,
+                }, view => {
+                    view.render()
+                        .then(() => Espo.Ui.notify(false));
+
+                    this.listenToOnce(view, 'leave', () => {
+                        view.close();
+                        this.close();
                     });
-                }
+
+                    this.listenToOnce(view, 'after:save', (model) => {
+                        view.close();
+
+                        this.trigger('select', model);
+
+                        setTimeout(() => this.close(), 10);
+                    });
+                });
             });
-        },
+    },
 
-        create: function () {
-            if (this.options.triggerCreateEvent) {
-                this.trigger('create');
+    actionSelect: function () {
+        if (!this.multiple) {
+            return;
+        }
 
-                return;
-            }
+        let listView = this.getView('list');
 
-            Espo.Ui.notify(' ... ');
-
-            let viewName = this.getMetadata()
-                .get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
-                'views/modals/edit';
-
-            new Promise(resolve => {
-                if (this.options.createAttributesProvider) {
-                    this.options.createAttributesProvider().then(attributes => {
-                        resolve(attributes)
-                    });
-
-                    return;
-                }
-
-                resolve(this.options.createAttributes || {});
-            })
-                .then(attributes => {
-                    this.createView('quickCreate', viewName, {
-                        scope: this.scope,
-                        fullFormDisabled: true,
-                        attributes: attributes,
-                    }, view => {
-                        view.render()
-                            .then(() => Espo.Ui.notify(false));
-
-                        this.listenToOnce(view, 'leave', () => {
-                            view.close();
-                            this.close();
-                        });
-
-                        this.listenToOnce(view, 'after:save', (model) => {
-                            view.close();
-
-                            this.trigger('select', model);
-
-                            setTimeout(() => this.close(), 10);
-                        });
-                    });
-                });
-        },
-
-        actionSelect: function () {
-            if (!this.multiple) {
-                return;
-            }
-
-            let listView = this.getView('list');
-
-            if (listView.allResultIsChecked) {
-                this.trigger('select', {
-                    massRelate: true,
-                    where: this.collection.getWhere(),
-                    searchParams: this.collection.data,
-                });
-
-                this.close();
-
-                return;
-            }
-
-            let list = listView.getSelected();
-
-            if (list.length) {
-                this.trigger('select', list);
-            }
+        if (listView.allResultIsChecked) {
+            this.trigger('select', {
+                massRelate: true,
+                where: this.collection.getWhere(),
+                searchParams: this.collection.data,
+            });
 
             this.close();
-        },
 
-        /**
-         * @protected
-         * @return {?module:views/record/search.Class}
-         */
-        getSearchView: function () {
-            return this.getView('search');
-        },
+            return;
+        }
 
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyCtrlSlash: function (e) {
-            if (!this.searchPanel) {
-                return;
-            }
+        let list = listView.getSelected();
 
-            let $search = this.$el.find('input.text-filter').first();
+        if (list.length) {
+            this.trigger('select', list);
+        }
 
-            if (!$search.length) {
-                return;
-            }
+        this.close();
+    },
 
-            e.preventDefault();
-            e.stopPropagation();
+    /**
+     * @protected
+     * @return {?module:views/record/search}
+     */
+    getSearchView: function () {
+        return this.getView('search');
+    },
 
-            $search.focus();
-        },
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyCtrlSlash: function (e) {
+        if (!this.searchPanel) {
+            return;
+        }
 
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyCtrlEnter: function (e) {
-            if (!this.multiple) {
-                return;
-            }
+        let $search = this.$el.find('input.text-filter').first();
 
-            if (!this.hasAvailableActionItem('select')) {
-                return;
-            }
+        if (!$search.length) {
+            return;
+        }
 
-            e.stopPropagation();
-            e.preventDefault();
+        e.preventDefault();
+        e.stopPropagation();
 
-            this.actionSelect();
-        },
+        $search.focus();
+    },
 
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyCtrlSpace: function (e) {
-            if (!this.createButton) {
-                return;
-            }
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyCtrlEnter: function (e) {
+        if (!this.multiple) {
+            return;
+        }
 
-            e.preventDefault();
-            e.stopPropagation();
+        if (!this.hasAvailableActionItem('select')) {
+            return;
+        }
 
-            this.create();
-        },
+        e.stopPropagation();
+        e.preventDefault();
 
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyCtrlComma: function (e) {
-            if (!this.getSearchView()) {
-                return;
-            }
+        this.actionSelect();
+    },
 
-            this.getSearchView().selectPreviousPreset();
-        },
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyCtrlSpace: function (e) {
+        if (!this.createButton) {
+            return;
+        }
 
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyCtrlPeriod: function (e) {
-            if (!this.getSearchView()) {
-                return;
-            }
+        e.preventDefault();
+        e.stopPropagation();
 
-            this.getSearchView().selectNextPreset();
-        },
-    });
+        this.create();
+    },
+
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyCtrlComma: function (e) {
+        if (!this.getSearchView()) {
+            return;
+        }
+
+        this.getSearchView().selectPreviousPreset();
+    },
+
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyCtrlPeriod: function (e) {
+        if (!this.getSearchView()) {
+            return;
+        }
+
+        this.getSearchView().selectNextPreset();
+    },
 });

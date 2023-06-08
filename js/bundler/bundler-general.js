@@ -33,6 +33,8 @@ class BundlerGeneral {
 
     /**
      * @param {{
+     *   basePath?: string,
+     *   transpiledPath?: string,
      *   chunks: Object.<string, {
      *     files?: string[],
      *     patterns?: string[],
@@ -92,6 +94,7 @@ class BundlerGeneral {
             if (i === 0) {
                 return;
             }
+
 
             data.modules.forEach(item => mapping[item] = name);
 
@@ -159,7 +162,11 @@ class BundlerGeneral {
         let notBundledModules = [];
 
         if (params.patterns) {
-            let bundler = (new Bundler(this.config.modulePaths));
+            let bundler = new Bundler(
+                this.config.modulePaths,
+                this.config.basePath,
+                this.config.transpiledPath
+            );
 
             // The main bundle is always loaded, duplicates are not needed.
             let ignoreFiles = [].concat(this.mainBundleFiles);
@@ -169,6 +176,7 @@ class BundlerGeneral {
             }
 
             let data = bundler.bundle({
+                name: name,
                 files: params.files,
                 patterns: patterns,
                 lookupPatterns: lookupPatterns,

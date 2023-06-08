@@ -32,7 +32,7 @@ define('views/header', ['view'], function (Dep) {
      * @class
      * @name Class
      * @memberOf module:views/header
-     * @extends module:view.Class
+     * @extends module:view
      */
     return Dep.extend(/** @lends module:views/header.Class# */{
 

@@ -26,119 +26,117 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('action-handler', [], function () {
+/** @module action-handler */
+
+/**
+ * An action handler. To be extended by specific action handlers.
+ *
+ * @constructor
+ * @param {module:view} view A view.
+ * @memberOf module:action-handler
+ */
+const ActionHandler = function (view) {
+    /**
+     * @memberof ActionHandler#
+     * @protected
+     */
+    this.view = view;
+};
+
+_.extend(ActionHandler.prototype, /** @lends ActionHandler# */{
 
     /**
-     * An action handler. To be extended by specific action handlers.
-     *
-     * @class
-     * @name Class
-     * @param {module:view.Class} view A view.
-     * @memberOf module:action-handler
+     * @deprecated Use `this.view`.
      */
-    let ActionHandler = function (view) {
-        /**
-         * @type {module:view.Class}
-         * @protected
-         */
-        this.view = view;
-    };
+    getConfig: function () {
+        return this.view.getConfig();
+    },
 
-    _.extend(ActionHandler.prototype, /** @lends {module:action-handler.Class#} */ {
+    /**
+     * @deprecated Use `this.view`.
+     */
+    getMetadata: function () {
+        return this.view.getMetadata();
+    },
 
-        /**
-         * @deprecated Use `this.view`.
-         */
-        getConfig: function () {
-            return this.view.getConfig();
-        },
+    /**
+     * @deprecated Use `this.view`.
+     */
+    getAcl: function () {
+        return this.view.getAcl();
+    },
 
-        /**
-         * @deprecated Use `this.view`.
-         */
-        getMetadata: function () {
-            return this.view.getMetadata();
-        },
+    /**
+     * @deprecated Use `this.view`.
+     */
+    getUser: function () {
+        return this.view.getUser();
+    },
 
-        /**
-         * @deprecated Use `this.view`.
-         */
-        getAcl: function () {
-            return this.view.getAcl();
-        },
+    /**
+     * @deprecated Use `this.view`.
+     */
+    getRouter: function () {
+        return this.view.getRouter();
+    },
 
-        /**
-         * @deprecated Use `this.view`.
-         */
-        getUser: function () {
-            return this.view.getUser();
-        },
+    /**
+     * @deprecated Use `this.view`.
+     */
+    getHelper: function () {
+        return this.view.getHelper();
+    },
 
-        /**
-         * @deprecated Use `this.view`.
-         */
-        getRouter: function () {
-            return this.view.getRouter();
-        },
+    /**
+     * @deprecated Use `this.view`.
+     */
+    getLanguage: function () {
+        return this.view.getLanguage();
+    },
 
-        /**
-         * @deprecated Use `this.view`.
-         */
-        getHelper: function () {
-            return this.view.getHelper();
-        },
+    /**
+     * @deprecated Use `this.view`.
+     */
+    getModelFactory: function () {
+        return this.view.getModelFactory();
+    },
 
-        /**
-         * @deprecated Use `this.view`.
-         */
-        getLanguage: function () {
-            return this.view.getLanguage();
-        },
+    /**
+     * @deprecated Use `this.view`.
+     */
+    getCollectionFactory: function () {
+        return this.view.getCollectionFactory();
+    },
 
-        /**
-         * @deprecated Use `this.view`.
-         */
-        getModelFactory: function () {
-            return this.view.getModelFactory();
-        },
+    /**
+     * @deprecated Use `Espo.Ajax`.
+     */
+    ajaxPostRequest: function () {
+        return Espo.Ajax.postRequest.apply(this.view, arguments);
+    },
 
-        /**
-         * @deprecated Use `this.view`.
-         */
-        getCollectionFactory: function () {
-            return this.view.getCollectionFactory();
-        },
+    /**
+     * @deprecated Use `Espo.Ajax`.
+     */
+    ajaxPutRequest: function () {
+        return Espo.Ajax.putRequest.apply(this.view, arguments);
+    },
 
-        /**
-         * @deprecated Use `Espo.Ajax`.
-         */
-        ajaxPostRequest: function () {
-            return Espo.Ajax.postRequest.apply(this.view, arguments);
-        },
+    /**
+     * @deprecated Use `Espo.Ajax`.
+     */
+    ajaxGetRequest: function () {
+        return Espo.Ajax.getRequest.apply(this.view, arguments);
+    },
 
-        /**
-         * @deprecated Use `Espo.Ajax`.
-         */
-        ajaxPutRequest: function () {
-            return Espo.Ajax.putRequest.apply(this.view, arguments);
-        },
-
-        /**
-         * @deprecated Use `Espo.Ajax`.
-         */
-        ajaxGetRequest: function () {
-            return Espo.Ajax.getRequest.apply(this.view, arguments);
-        },
-
-        /**
-         * @deprecated Use `this.view`.
-         */
-        confirm: function () {
-            return this.view.confirm.apply(this.view, arguments);
-        },
-    });
-
-    ActionHandler.extend = Bull.View.extend;
-
-    return ActionHandler;
+    /**
+     * @deprecated Use `this.view`.
+     */
+    confirm: function () {
+        return this.view.confirm.apply(this.view, arguments);
+    },
 });
+
+ActionHandler.extend = Bull.View.extend;
+
+export default ActionHandler;

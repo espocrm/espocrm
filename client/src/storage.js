@@ -26,194 +26,189 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('storage', [], function () {
+/** @module storage */
+
+import Bull from 'lib!bullbone';
+
+/**
+ * A storage. Data is saved across browser sessions, has no expiration time.
+ *
+ * @class
+ */
+const Storage = function () {};
+
+_.extend(Storage.prototype, /** @lends Storage# */{
+
+    /** @protected */
+    prefix: 'espo',
+
+    /** @protected */
+    storageObject: localStorage,
 
     /**
-     * A storage. Data is saved across browser sessions, has no expiration time.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:storage
+     * @private
+     * @param {string} type
+     * @returns {string}
      */
-    let Storage = function () {};
+    composeFullPrefix: function (type) {
+        return this.prefix + '-' + type;
+    },
 
-    _.extend(Storage.prototype, /** @lends module:storage.Class# */{
+    /**
+     * @private
+     * @param {string} type
+     * @param {string} name
+     * @returns {string}
+     */
+    composeKey: function (type, name) {
+        return this.composeFullPrefix(type) + '-' + name;
+    },
 
-        /**
-         * @protected
-         */
-        prefix: 'espo',
+    /**
+     * @private
+     * @param {string} type
+     */
+    checkType: function (type) {
+        if (
+            typeof type === 'undefined' &&
+            toString.call(type) !== '[object String]' || type === 'cache'
+        ) {
+            throw new TypeError("Bad type \"" + type + "\" passed to Espo.Storage.");
+        }
+    },
 
-        /**
-         * @protected
-         */
-        storageObject: localStorage,
+    /**
+     * Has a value.
+     *
+     * @param {string} type A type (category).
+     * @param {string} name A name.
+     * @returns {boolean}
+     */
+    has: function (type, name) {
+        this.checkType(type);
 
-        /**
-         * @private
-         * @param {string} type
-         * @returns {string}
-         */
-        composeFullPrefix: function (type) {
-            return this.prefix + '-' + type;
-        },
+        let key = this.composeKey(type, name);
 
-        /**
-         * @private
-         * @param {string} type
-         * @param {string} name
-         * @returns {string}
-         */
-        composeKey: function (type, name) {
-            return this.composeFullPrefix(type) + '-' + name;
-        },
+        return this.storageObject.getItem(key) !== null;
+    },
 
-        /**
-         * @private
-         * @param {string} type
-         */
-        checkType: function (type) {
-            if (
-                typeof type === 'undefined' &&
-                toString.call(type) !== '[object String]' || type === 'cache'
-            ) {
-                throw new TypeError("Bad type \"" + type + "\" passed to Espo.Storage.");
-            }
-        },
+    /**
+     * Get a value.
+     *
+     * @param {string} type A type (category).
+     * @param {string} name A name.
+     * @returns {*} Null if not stored.
+     */
+    get: function (type, name) {
+        this.checkType(type);
 
-        /**
-         * Has a value.
-         *
-         * @param {string} type A type (category).
-         * @param {string} name A name.
-         * @returns {boolean}
-         */
-        has: function (type, name) {
-            this.checkType(type);
+        let key = this.composeKey(type, name);
 
-            let key = this.composeKey(type, name);
-
-            return this.storageObject.getItem(key) !== null;
-        },
-
-        /**
-         * Get a value.
-         *
-         * @param {string} type A type (category).
-         * @param {string} name A name.
-         * @returns {*} Null if not stored.
-         */
-        get: function (type, name) {
-            this.checkType(type);
-
-            let key = this.composeKey(type, name);
-
-            try {
-                var stored = this.storageObject.getItem(key);
-            }
-            catch (error) {
-                console.error(error);
-
-                return null;
-            }
-
-            if (stored) {
-                let result = stored;
-
-                if (stored.length > 9 && stored.substr(0, 9) === '__JSON__:') {
-                    let jsonString = stored.substr(9);
-
-                    try {
-                        result = JSON.parse(jsonString);
-                    }
-                    catch (error) {
-                        result = stored;
-                    }
-                }
-                else if (stored[0] === "{" || stored[0] === "[") { // for backward compatibility
-                    try {
-                        result = JSON.parse(stored);
-                    }
-                    catch (error) {
-                        result = stored;
-                    }
-                }
-
-                return result;
-            }
+        try {
+            var stored = this.storageObject.getItem(key);
+        }
+        catch (error) {
+            console.error(error);
 
             return null;
-        },
+        }
 
-        /**
-         * Set (store) a value.
-         *
-         * @param {string} type A type (category).
-         * @param {string} name A name.
-         * @param {*} value A value.
-         */
-        set: function (type, name, value) {
-            this.checkType(type);
+        if (stored) {
+            let result = stored;
 
-            if (value === null) {
-                this.clear(type, name);
+            if (stored.length > 9 && stored.substr(0, 9) === '__JSON__:') {
+                let jsonString = stored.substr(9);
 
-                return;
-            }
-
-            let key = this.composeKey(type, name);
-
-            if (
-                value instanceof Object ||
-                Array.isArray(value) ||
-                value === true ||
-                value === false ||
-                typeof value === 'number'
-            ) {
-                value = '__JSON__:' + JSON.stringify(value);
-            }
-
-            try {
-                this.storageObject.setItem(key, value);
-            }
-            catch (error) {
-                console.error(error);
-                return null;
-            }
-        },
-
-        /**
-         * Clear a value.
-         *
-         * @param {string} type A type (category).
-         * @param {string} name A name.
-         */
-        clear: function (type, name) {
-            let reText;
-
-            if (typeof type !== 'undefined') {
-                if (typeof name === 'undefined') {
-                    reText = '^' + this.composeFullPrefix(type);
+                try {
+                    result = JSON.parse(jsonString);
                 }
-                else {
-                    reText = '^' + this.composeKey(type, name);
+                catch (error) {
+                    result = stored;
                 }
+            }
+            else if (stored[0] === "{" || stored[0] === "[") { // for backward compatibility
+                try {
+                    result = JSON.parse(stored);
+                }
+                catch (error) {
+                    result = stored;
+                }
+            }
+
+            return result;
+        }
+
+        return null;
+    },
+
+    /**
+     * Set (store) a value.
+     *
+     * @param {string} type A type (category).
+     * @param {string} name A name.
+     * @param {*} value A value.
+     */
+    set: function (type, name, value) {
+        this.checkType(type);
+
+        if (value === null) {
+            this.clear(type, name);
+
+            return;
+        }
+
+        let key = this.composeKey(type, name);
+
+        if (
+            value instanceof Object ||
+            Array.isArray(value) ||
+            value === true ||
+            value === false ||
+            typeof value === 'number'
+        ) {
+            value = '__JSON__:' + JSON.stringify(value);
+        }
+
+        try {
+            this.storageObject.setItem(key, value);
+        }
+        catch (error) {
+            console.error(error);
+            return null;
+        }
+    },
+
+    /**
+     * Clear a value.
+     *
+     * @param {string} type A type (category).
+     * @param {string} name A name.
+     */
+    clear: function (type, name) {
+        let reText;
+
+        if (typeof type !== 'undefined') {
+            if (typeof name === 'undefined') {
+                reText = '^' + this.composeFullPrefix(type);
             }
             else {
-                reText = '^' + this.prefix + '-';
-            }
-
-            let re = new RegExp(reText);
-
-            for (let i in this.storageObject) {
-                if (re.test(i)) {
-                    delete this.storageObject[i];
-                }
+                reText = '^' + this.composeKey(type, name);
             }
         }
-    });
+        else {
+            reText = '^' + this.prefix + '-';
+        }
 
-    Storage.extend = Bull.View.extend;
+        let re = new RegExp(reText);
 
-    return Storage;
+        for (let i in this.storageObject) {
+            if (re.test(i)) {
+                delete this.storageObject[i];
+            }
+        }
+    }
 });
+
+Storage.extend = Bull.View.extend;
+
+export default Storage;

@@ -26,100 +26,97 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/url-multiple', ['views/fields/array'], function (Dep) {
+import Dep from 'views/fields/array';
+
+/**
+ * An Url-Multiple field.
+ *
+ * @class Class
+ * @extends module:views/fields/array
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    type: 'urlMultiple',
+
+    maxItemLength: 255,
+    displayAsList: true,
+    defaultProtocol: 'https:',
+
+    setup: function () {
+        Dep.prototype.setup.call(this);
+
+        this.noEmptyString = true;
+        this.params.pattern = '$uriOptionalProtocol';
+    },
+
+    addValueFromUi: function (value) {
+        value = value.trim();
+
+        if (this.params.strip) {
+            value = this.strip(value);
+        }
+
+        if (value === decodeURI(value)) {
+            value = encodeURI(value);
+        }
+
+        Dep.prototype.addValueFromUi.call(this, value);
+    },
 
     /**
-     * An Url-Multiple field.
-     *
-     * @class
-     * @name Class
-     * @extends module:views/fields/array.Class
-     * @memberOf module:views/fields/url-multiple
+     * @param {string} value
+     * @return {string}
      */
-    return Dep.extend(/** @lends module:views/fields/url-multiple.Class# */{
+    strip: function (value) {
+        if (value.indexOf('//') !== -1) {
+            value = value.substring(value.indexOf('//') + 2);
+        }
 
-        type: 'urlMultiple',
+        value = value.replace(/\/+$/, '');
 
-        maxItemLength: 255,
-        displayAsList: true,
-        defaultProtocol: 'https:',
+        return value;
+    },
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    prepareUrl: function (url) {
+        if (url.indexOf('//') === -1) {
+            url = this.defaultProtocol + '//' + url;
+        }
 
-            this.noEmptyString = true;
-            this.params.pattern = '$uriOptionalProtocol';
-        },
+        return url;
+    },
 
-        addValueFromUi: function (value) {
-            value = value.trim();
+    getValueForDisplay: function () {
+        /** @type {JQuery[]} */
+        let $list = this.selected.map(value => {
+            return $('<a>')
+                .attr('href', this.prepareUrl(value))
+                .attr('target', '_blank')
+                .text(decodeURI(value));
+        });
 
-            if (this.params.strip) {
-                value = this.strip(value);
-            }
+        return $list
+            .map($item =>
+                $('<div>')
+                    .addClass('multi-enum-item-container')
+                    .append($item)
+                    .get(0).outerHTML
+            )
+            .join('');
+    },
 
-            if (value === decodeURI(value)) {
-                value = encodeURI(value);
-            }
+    getItemHtml: function (value) {
+        let html = Dep.prototype.getItemHtml.call(this, value);
 
-            Dep.prototype.addValueFromUi.call(this, value);
-        },
+        let $item = $(html);
 
-        /**
-         * @param {string} value
-         * @return {string}
-         */
-        strip: function (value) {
-            if (value.indexOf('//') !== -1) {
-                value = value.substring(value.indexOf('//') + 2);
-            }
+        $item.find('span.text').html(
+            $('<a>')
+                .attr('href', this.prepareUrl(value))
+                .css('user-drag', 'none')
+                .attr('target', '_blank')
+                .text(decodeURI(value))
+        );
 
-            value = value.replace(/\/+$/, '');
-
-            return value;
-        },
-
-        prepareUrl: function (url) {
-            if (url.indexOf('//') === -1) {
-                url = this.defaultProtocol + '//' + url;
-            }
-
-            return url;
-        },
-
-        getValueForDisplay: function () {
-            /** @type {JQuery[]} */
-            let $list = this.selected.map(value => {
-                return $('<a>')
-                    .attr('href', this.prepareUrl(value))
-                    .attr('target', '_blank')
-                    .text(decodeURI(value));
-            });
-
-            return $list
-                .map($item =>
-                    $('<div>')
-                        .addClass('multi-enum-item-container')
-                        .append($item)
-                        .get(0).outerHTML
-                )
-                .join('');
-        },
-
-        getItemHtml: function (value) {
-            let html = Dep.prototype.getItemHtml.call(this, value);
-
-            let $item = $(html);
-
-            $item.find('span.text').html(
-                $('<a>')
-                    .attr('href', this.prepareUrl(value))
-                    .css('user-drag', 'none')
-                    .attr('target', '_blank')
-                    .text(decodeURI(value))
-            );
-
-            return $item.get(0).outerHTML;
-        },
-    });
+        return $item.get(0).outerHTML;
+    },
 });

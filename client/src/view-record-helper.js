@@ -26,206 +26,187 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('view-record-helper', [], function () {
+/** @module view-record-helper */
+
+import Backbone from "lib!backbone";
+
+/**
+ * @class
+ * @mixes Backbone.Events
+ * @param {Object.<string,*>} [defaultFieldStates] Default field states.
+ * @param {Object.<string,*>} [defaultPanelStates] Default panel states.
+ */
+const ViewRecordHelper = function (defaultFieldStates, defaultPanelStates) {
+    /**
+     * @private
+     * @type {Object}
+     */
+    this.defaultFieldStates = defaultFieldStates || {};
+    /**
+     * @private
+     * @type {Object}
+     */
+    this.defaultPanelStates = defaultPanelStates || {};
+    /** @private */
+    this.fieldStateMap = {};
+    /** @private */
+    this.panelStateMap = {};
+    /** @private */
+    this.hiddenFields = {};
+    /** @private */
+    this.hiddenPanels = {};
+    /** @private */
+    this.fieldOptionListMap = {};
+
+    _.extend(this, Backbone.Events);
+};
+
+_.extend(ViewRecordHelper.prototype, /** @lends ViewRecordHelper# */{
 
     /**
-     * @class
-     * @name Class
-     * @memberOf module:view-record-helper
+     * Get hidden fields.
      *
-     * @mixes Backbone.Events
-     *
-     * @param {Object.<string,*>} [defaultFieldStates] Default field states.
-     * @param {Object.<string,*>} [defaultPanelStates] Default panel states.
+     * @returns {Object.<string, boolean>}
      */
-    let ViewRecordHelper = function (defaultFieldStates, defaultPanelStates) {
-        /**
-         * @private
-         * @type {Object}
-         */
-        this.defaultFieldStates = defaultFieldStates || {};
+    getHiddenFields: function () {
+        return this.hiddenFields;
+    },
 
-        /**
-         * @private
-         * @type {Object}
-         */
-        this.defaultPanelStates = defaultPanelStates || {};
+    /**
+     * Get hidden panels.
+     *
+     * @returns {Object.<string,boolean>}
+     */
+    getHiddenPanels: function () {
+        return this.hiddenPanels;
+    },
 
-        /**
-         * @private
-         */
-        this.fieldStateMap = {};
-
-        /**
-         * @private
-         */
-        this.panelStateMap = {};
-
-        /**
-         * @private
-         */
-        this.hiddenFields = {};
-
-        /**
-         * @private
-         */
-        this.hiddenPanels = {};
-
-        /**
-         * @private
-         */
-        this.fieldOptionListMap = {};
-
-        _.extend(this, Backbone.Events);
-    };
-
-    _.extend(ViewRecordHelper.prototype, /** @lends module:view-record-helper.Class# */{
-
-        /**
-         * Get hidden fields.
-         *
-         * @returns {Object.<string, boolean>}
-         */
-        getHiddenFields: function () {
-            return this.hiddenFields;
-        },
-
-        /**
-         * Get hidden panels.
-         *
-         * @returns {Object.<string,boolean>}
-         */
-        getHiddenPanels: function () {
-            return this.hiddenPanels;
-        },
-
-        /**
-         * Set a field-state parameter.
-         *
-         * @param {string} field A field name.
-         * @param {string} name A parameter.
-         * @param {*} value A value.
-         */
-        setFieldStateParam: function (field, name, value) {
-            switch (name) {
-                case 'hidden':
-                    if (value) {
-                        this.hiddenFields[field] = true;
-                    }
-                    else {
-                        delete this.hiddenFields[field];
-                    }
-
-                    break;
-            }
-
-            this.fieldStateMap[field] = this.fieldStateMap[field] || {};
-            this.fieldStateMap[field][name] = value;
-        },
-
-        /**
-         * Get a field-state parameter.
-         *
-         * @param {string} field A field name.
-         * @param {string} name A parameter.
-         * @returns {*} A value.
-         */
-        getFieldStateParam: function (field, name) {
-            if (field in this.fieldStateMap) {
-                if (name in this.fieldStateMap[field]) {
-                    return this.fieldStateMap[field][name];
+    /**
+     * Set a field-state parameter.
+     *
+     * @param {string} field A field name.
+     * @param {string} name A parameter.
+     * @param {*} value A value.
+     */
+    setFieldStateParam: function (field, name, value) {
+        switch (name) {
+            case 'hidden':
+                if (value) {
+                    this.hiddenFields[field] = true;
                 }
-            }
-
-            if (name in this.defaultFieldStates) {
-                return this.defaultFieldStates[name];
-            }
-
-            return null;
-        },
-
-        /**
-         * Set a panel-state parameter.
-         *
-         * @param {string} panel A panel name.
-         * @param {string} name A parameter.
-         * @param {*} value A value.
-         */
-        setPanelStateParam: function (panel, name, value) {
-            switch (name) {
-                case 'hidden':
-                    if (value) {
-                        this.hiddenPanels[panel] = true;
-                    } else {
-                        delete this.hiddenPanels[panel];
-                    }
-                    break;
-            }
-
-            this.panelStateMap[panel] = this.panelStateMap[panel] || {};
-            this.panelStateMap[panel][name] = value;
-        },
-
-        /**
-         * Get a panel-state parameter.
-         *
-         * @param {string} panel A panel name.
-         * @param {string} name A parameter.
-         * @returns {*} A value.
-         */
-        getPanelStateParam: function (panel, name) {
-            if (panel in this.panelStateMap) {
-                if (name in this.panelStateMap[panel]) {
-                    return this.panelStateMap[panel][name];
+                else {
+                    delete this.hiddenFields[field];
                 }
+
+                break;
+        }
+
+        this.fieldStateMap[field] = this.fieldStateMap[field] || {};
+        this.fieldStateMap[field][name] = value;
+    },
+
+    /**
+     * Get a field-state parameter.
+     *
+     * @param {string} field A field name.
+     * @param {string} name A parameter.
+     * @returns {*} A value.
+     */
+    getFieldStateParam: function (field, name) {
+        if (field in this.fieldStateMap) {
+            if (name in this.fieldStateMap[field]) {
+                return this.fieldStateMap[field][name];
             }
+        }
 
-            if (name in this.defaultPanelStates) {
-                return this.defaultPanelStates[name];
+        if (name in this.defaultFieldStates) {
+            return this.defaultFieldStates[name];
+        }
+
+        return null;
+    },
+
+    /**
+     * Set a panel-state parameter.
+     *
+     * @param {string} panel A panel name.
+     * @param {string} name A parameter.
+     * @param {*} value A value.
+     */
+    setPanelStateParam: function (panel, name, value) {
+        switch (name) {
+            case 'hidden':
+                if (value) {
+                    this.hiddenPanels[panel] = true;
+                } else {
+                    delete this.hiddenPanels[panel];
+                }
+                break;
+        }
+
+        this.panelStateMap[panel] = this.panelStateMap[panel] || {};
+        this.panelStateMap[panel][name] = value;
+    },
+
+    /**
+     * Get a panel-state parameter.
+     *
+     * @param {string} panel A panel name.
+     * @param {string} name A parameter.
+     * @returns {*} A value.
+     */
+    getPanelStateParam: function (panel, name) {
+        if (panel in this.panelStateMap) {
+            if (name in this.panelStateMap[panel]) {
+                return this.panelStateMap[panel][name];
             }
+        }
 
-            return null;
-        },
+        if (name in this.defaultPanelStates) {
+            return this.defaultPanelStates[name];
+        }
 
-        /**
-         * Set a field option list.
-         *
-         * @param {string} field A field name.
-         * @param {string[]} list An option list.
-         */
-        setFieldOptionList: function (field, list) {
-            this.fieldOptionListMap[field] = list;
-        },
+        return null;
+    },
 
-        /**
-         * Clear a field option list.
-         *
-         * @param {string} field A field name.
-         */
-        clearFieldOptionList: function (field) {
-            delete this.fieldOptionListMap[field];
-        },
+    /**
+     * Set a field option list.
+     *
+     * @param {string} field A field name.
+     * @param {string[]} list An option list.
+     */
+    setFieldOptionList: function (field, list) {
+        this.fieldOptionListMap[field] = list;
+    },
 
-        /**
-         * Get a field option list.
-         *
-         * @param {string} field A field name.
-         * @returns {string|null} Null if not set.
-         */
-        getFieldOptionList: function (field) {
-            return this.fieldOptionListMap[field] || null;
-        },
+    /**
+     * Clear a field option list.
+     *
+     * @param {string} field A field name.
+     */
+    clearFieldOptionList: function (field) {
+        delete this.fieldOptionListMap[field];
+    },
 
-        /**
-         * Whether a field option list is set.
-         *
-         * @param {string} field A field name.
-         * @returns {boolean}
-         */
-        hasFieldOptionList: function (field) {
-            return (field in this.fieldOptionListMap);
-        },
-    });
+    /**
+     * Get a field option list.
+     *
+     * @param {string} field A field name.
+     * @returns {string|null} Null if not set.
+     */
+    getFieldOptionList: function (field) {
+        return this.fieldOptionListMap[field] || null;
+    },
 
-    return ViewRecordHelper;
+    /**
+     * Whether a field option list is set.
+     *
+     * @param {string} field A field name.
+     * @returns {boolean}
+     */
+    hasFieldOptionList: function (field) {
+        return (field in this.fieldOptionListMap);
+    },
 });
+
+export default ViewRecordHelper;

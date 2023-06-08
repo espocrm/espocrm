@@ -245,7 +245,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
 
             this.panelsData = {};
 
-            require('res!client/css/misc/layout-manager-grid.css', styleCss => {
+            Espo.loader.require('res!client/css/misc/layout-manager-grid.css', styleCss => {
                 this.$style = $('<style>').html(styleCss).appendTo($('body'));
             });
         },

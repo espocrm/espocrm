@@ -26,86 +26,67 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('model-factory', [], function () {
+/** @module model-factory */
+
+/**
+ * A model factory.
+ */
+class Class {
+    /**
+     * @param {module:metadata} metadata
+     */
+    constructor (metadata) {
+        this.metadata = metadata;
+    }
 
     /**
-     * A model factory.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:model-factory
+     * Used by default value expressions.
+     * @public
+     * @type {module:date-time|null}
+     * @internal
      */
-    let ModelFactory = function (metadata, user) {
-        this.metadata = metadata;
-        this.user = user;
-    };
+    dateTime = null
 
-    _.extend(ModelFactory.prototype, /** @lends module:model-factory.Class# */ {
+    /**
+     * Create a model.
+     *
+     * @param {string} entityType An entity type.
+     * @param {Function} [callback] Deprecated.
+     * @param {Object} [context] Deprecated.
+     * @returns {Promise<module:model>}
+     */
+    create(entityType, callback, context) {
+        return new Promise(resolve => {
+            context = context || this;
 
-        /**
-         * @private
-         */
-        metadata: null,
-
-        /**
-         * @public
-         * @type {module:date-time.Class|null}
-         * @internal
-         */
-        dateTime: null,
-
-        /**
-         * @private
-         */
-        user: null,
-
-        /**
-         * Create a model.
-         *
-         * @param {string} name An entity type.
-         * @param {Function} [callback] Deprecated.
-         * @param {Object} [context] Deprecated.
-         * @returns {Promise<module:model.Class>}
-         */
-        create: function (name, callback, context) {
-            return new Promise(resolve => {
-                context = context || this;
-
-                this.getSeed(name, seed => {
-                    let model = new seed();
-
-                    if (callback) {
-                        callback.call(context, model);
-                    }
-
-                    resolve(model);
-                });
-            });
-        },
-
-        /**
-         * Get a class.
-         *
-         * @param {string} name An entity type.
-         * @param {function(module:model.Class): void} callback A callback.
-         * @public
-         */
-        getSeed: function (name, callback) {
-            let className = this.metadata.get(['clientDefs', name, 'model']) || 'model';
-
-            require(className, modelClass => {
-                let seed = modelClass.extend({
-                    name: name,
-                    entityType: name,
-                    defs: this.metadata.get(['entityDefs', name]) || {},
+            this.getSeed(entityType, Seed => {
+                let model = new Seed({}, {
+                    entityType: entityType,
+                    defs: this.metadata.get(['entityDefs', entityType]) || {},
                     dateTime: this.dateTime,
-                    _user: this.user,
                 });
 
-                callback(seed);
-            });
-        },
-    });
+                if (callback) {
+                    callback.call(context, model);
+                }
 
-    return ModelFactory;
-});
+                resolve(model);
+            });
+        });
+    }
+
+    /**
+     * Get a class.
+     *
+     * @param {string} entityType An entity type.
+     * @param {function(module:model): void} callback A callback.
+     * @public
+     */
+    getSeed(entityType, callback) {
+        let className = this.metadata.get(['clientDefs', entityType, 'model']) || 'model';
+
+        Espo.loader.require(className, modelClass => callback(modelClass));
+    }
+}
+
+export default Class;

@@ -26,176 +26,171 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('helpers/file-upload', [], function () {
+/** @module helpers/file-upload */
+
+/**
+ * A file-upload helper.
+ */
+export default class {
+    /**
+     * @param {module:models/settings} config A config.
+     */
+    constructor(config) {
+        /**
+         * @private
+         * @type {module:models/settings}
+         */
+        this.config = config;
+    }
 
     /**
-     * A file-upload helper.
+     * @typedef {Object} module:helpers/file-upload~Options
      *
-     * @memberOf module:helpers/file-upload
+     * @property {function(number):void} [afterChunkUpload] After every chunk is uploaded.
+     * @property {function(module:model):void} [afterAttachmentSave] After an attachment is saved.
+     * @property {{isCanceled?: boolean}} [mediator] A mediator.
      */
-    class Class {
-        /**
-         * @param {module:models/settings.Class} config A config.
-         */
-        constructor(config) {
-            /**
-             * @private
-             * @type {module:models/settings.Class}
-             */
-            this.config = config;
+
+    /**
+     * Upload.
+     *
+     * @param {File} file A file.
+     * @param {module:model} attachment An attachment model.
+     * @param {module:helpers/file-upload~Options} [options] Options.
+     * @returns {Promise}
+     */
+    upload(file, attachment, options) {
+        options = options || {};
+
+        options.afterChunkUpload = options.afterChunkUpload || (() => {});
+        options.afterAttachmentSave = options.afterAttachmentSave || (() => {});
+        options.mediator = options.mediator || {};
+
+        attachment.set('name', file.name);
+        attachment.set('type', file.type || 'text/plain');
+        attachment.set('size', file.size);
+
+        if (this._useChunks(file)) {
+            return this._uploadByChunks(file, attachment, options);
         }
 
-        /**
-         * @typedef {Object} module:helpers/file-upload~Options
-         *
-         * @property {function(number):void} [afterChunkUpload] After every chunk is uploaded.
-         * @property {function(module:model.Class):void} [afterAttachmentSave] After an attachment is saved.
-         * @property {{isCanceled?: boolean}} [mediator] A mediator.
-         */
-
-        /**
-         * Upload.
-         *
-         * @param {File} file A file.
-         * @param {module:model.Class} attachment An attachment model.
-         * @param {module:helpers/file-upload~Options} [options] Options.
-         * @returns {Promise}
-         */
-        upload(file, attachment, options) {
-            options = options || {};
-
-            options.afterChunkUpload = options.afterChunkUpload || (() => {});
-            options.afterAttachmentSave = options.afterAttachmentSave || (() => {});
-            options.mediator = options.mediator || {};
-
-            attachment.set('name', file.name);
-            attachment.set('type', file.type || 'text/plain');
-            attachment.set('size', file.size);
-
-            if (this._useChunks(file)) {
-                return this._uploadByChunks(file, attachment, options);
-            }
-
-            return new Promise((resolve, reject) => {
-                let fileReader = new FileReader();
-
-                fileReader.onload = (e) => {
-                    attachment.set('file', e.target.result);
-
-                    attachment
-                        .save({}, {timeout: 0})
-                        .then(() => resolve())
-                        .catch(() => reject());
-                };
-
-                fileReader.readAsDataURL(file);
-            });
-        }
-
-        /**
-         * @private
-         */
-        _uploadByChunks(file, attachment, options) {
-            return new Promise((resolve, reject) => {
-                attachment.set('isBeingUploaded', true);
-
-                attachment
-                    .save()
-                    .then(() => {
-                        options.afterAttachmentSave(attachment);
-
-                        return this._uploadChunks(
-                            file,
-                            attachment,
-                            resolve,
-                            reject,
-                            options
-                        );
-                    })
-                    .catch(() => reject());
-            });
-        }
-
-        /**
-         * @private
-         */
-        _uploadChunks(file, attachment, resolve, reject, options, start) {
-            start = start || 0;
-            let end = start + this._getChunkSize() + 1;
-
-            if (end > file.size) {
-                end = file.size;
-            }
-
-            if (options.mediator.isCanceled) {
-                reject();
-
-                return;
-            }
-
-            let blob = file.slice(start, end);
-
+        return new Promise((resolve, reject) => {
             let fileReader = new FileReader();
 
-            fileReader.onloadend = (e) => {
-                if (e.target.readyState !== FileReader.DONE) {
-                    return;
-                }
+            fileReader.onload = (e) => {
+                attachment.set('file', e.target.result);
 
-                Espo.Ajax
-                    .postRequest('Attachment/chunk/' + attachment.id, e.target.result, {
-                        headers: {
-                            contentType: 'multipart/form-data',
-                        }
-                    })
-                    .then(() => {
-                        options.afterChunkUpload(end);
-
-                        if (end === file.size) {
-                            resolve();
-
-                            return;
-                        }
-
-                        this._uploadChunks(
-                            file,
-                            attachment,
-                            resolve,
-                            reject,
-                            options,
-                            end
-                        );
-                    })
+                attachment
+                    .save({}, {timeout: 0})
+                    .then(() => resolve())
                     .catch(() => reject());
             };
 
-            fileReader.readAsDataURL(blob);
+            fileReader.readAsDataURL(file);
+        });
+    }
+
+    /**
+     * @private
+     */
+    _uploadByChunks(file, attachment, options) {
+        return new Promise((resolve, reject) => {
+            attachment.set('isBeingUploaded', true);
+
+            attachment
+                .save()
+                .then(() => {
+                    options.afterAttachmentSave(attachment);
+
+                    return this._uploadChunks(
+                        file,
+                        attachment,
+                        resolve,
+                        reject,
+                        options
+                    );
+                })
+                .catch(() => reject());
+        });
+    }
+
+    /**
+     * @private
+     */
+    _uploadChunks(file, attachment, resolve, reject, options, start) {
+        start = start || 0;
+        let end = start + this._getChunkSize() + 1;
+
+        if (end > file.size) {
+            end = file.size;
         }
 
-        /**
-         * @private
-         */
-        _useChunks(file) {
-            let chunkSize = this._getChunkSize();
+        if (options.mediator.isCanceled) {
+            reject();
 
-            if (!chunkSize) {
-                return false;
+            return;
+        }
+
+        let blob = file.slice(start, end);
+
+        let fileReader = new FileReader();
+
+        fileReader.onloadend = (e) => {
+            if (e.target.readyState !== FileReader.DONE) {
+                return;
             }
 
-            if (file.size > chunkSize) {
-                return true;
-            }
+            Espo.Ajax
+                .postRequest('Attachment/chunk/' + attachment.id, e.target.result, {
+                    headers: {
+                        contentType: 'multipart/form-data',
+                    }
+                })
+                .then(() => {
+                    options.afterChunkUpload(end);
 
+                    if (end === file.size) {
+                        resolve();
+
+                        return;
+                    }
+
+                    this._uploadChunks(
+                        file,
+                        attachment,
+                        resolve,
+                        reject,
+                        options,
+                        end
+                    );
+                })
+                .catch(() => reject());
+        };
+
+        fileReader.readAsDataURL(blob);
+    }
+
+    /**
+     * @private
+     */
+    _useChunks(file) {
+        let chunkSize = this._getChunkSize();
+
+        if (!chunkSize) {
             return false;
         }
 
-        /**
-         * @private
-         */
-        _getChunkSize() {
-            return (this.config.get('attachmentUploadChunkSize') || 0) * 1024 * 1024;
+        if (file.size > chunkSize) {
+            return true;
         }
+
+        return false;
     }
 
-    return Class;
-});
+    /**
+     * @private
+     */
+    _getChunkSize() {
+        return (this.config.get('attachmentUploadChunkSize') || 0) * 1024 * 1024;
+    }
+}

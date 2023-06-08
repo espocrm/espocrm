@@ -26,190 +26,197 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/datetime-optional', ['views/fields/datetime'], function (Dep) {
+/** @module views/fields/datetime-optional */
 
-    /**
-     * @class
-     * @name Class
-     * @extends module:views/fields/datetime.Class
-     * @memberOf module:views/fields/datetime-optional
-     */
-    return Dep.extend(/** @lends module:views/fields/datetime-optional.Class# */{
+import Dep from 'views/fields/datetime';
+import moment from 'lib!moment';
 
-        type: "datetimeOptional",
+/**
+ * A date-time or date.
+ *
+ * @class Class
+ * @extends module:views/fields/datetime
+ */
+export default Dep.extend(/** @lends Class# */{
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    type: 'datetimeOptional',
 
-            this.noneOption = this.translate('None');
-            this.nameDate = this.name + 'Date';
-        },
+    setup: function () {
+        Dep.prototype.setup.call(this);
 
-        isDate: function () {
+        this.noneOption = this.translate('None');
+        this.nameDate = this.name + 'Date';
+    },
+
+    isDate: function () {
+        let dateValue = this.model.get(this.nameDate);
+
+        if (dateValue && dateValue !== '') {
+            return true;
+        }
+
+        return false;
+    },
+
+    data: function () {
+        let data = Dep.prototype.data.call(this);
+
+        if (this.isDate()) {
+            let dateValue = this.model.get(this.nameDate);
+
+            data.date = this.getDateTime().toDisplayDate(dateValue);
+            data.time = this.noneOption;
+        }
+
+        return data;
+    },
+
+    getDateStringValue: function () {
+        if (this.isDate()) {
             var dateValue = this.model.get(this.nameDate);
 
-            if (dateValue && dateValue !== '') {
-                return true;
+            return this.stringifyDateValue(dateValue);
+        }
+
+        return Dep.prototype.getDateStringValue.call(this);
+    },
+
+    setDefaultTime: function () {
+        this.$time.val(this.noneOption);
+    },
+
+    initTimepicker: function () {
+        let $time = this.$time;
+
+        let o = {
+            step: this.params.minuteStep || 30,
+            scrollDefaultNow: true,
+            timeFormat: this.timeFormatMap[this.getDateTime().timeFormat],
+            noneOption: [{
+                label: this.noneOption,
+                value: this.noneOption,
+            }],
+        };
+
+        if (this.emptyTimeInInlineEditDisabled && this.isInlineEditMode() || this.noneOptionIsHidden) {
+            delete o.noneOption;
+        }
+
+        $time.timepicker(o);
+
+        $time.parent().find('button.time-picker-btn').on('click', () => {
+            $time.timepicker('show');
+        });
+    },
+
+    fetch: function () {
+        let data = {};
+
+        let date = this.$date.val();
+        let time = this.$time.val();
+        let value = null;
+
+        if (time !== this.noneOption && time !== '') {
+            if (date !== '' && time !== '') {
+                value = this.parse(date + ' ' + time);
             }
 
-            return false;
-        },
-
-        data: function () {
-            var data = Dep.prototype.data.call(this);
-
-            if (this.isDate()) {
-                var dateValue = this.model.get(this.nameDate);
-
-                data.date = this.getDateTime().toDisplayDate(dateValue);
-                data.time = this.noneOption;
-            }
+            data[this.name] = value;
+            data[this.nameDate] = null;
 
             return data;
-        },
+        }
 
-        getDateStringValue: function () {
-            if (this.isDate()) {
-                var dateValue = this.model.get(this.nameDate);
+        if (date !== '') {
+            data[this.nameDate] = this.getDateTime().fromDisplayDate(date);
 
-                return this.stringifyDateValue(dateValue);
-            }
+            let dateTimeValue = data[this.nameDate] + ' 00:00:00';
 
-            return Dep.prototype.getDateStringValue.call(this);
-        },
+            dateTimeValue = moment
+                .tz(dateTimeValue, this.getConfig().get('timeZone') || 'UTC')
+                .add(this.isEnd ? 1 : 0, 'days')
+                .utc()
+                .format(this.getDateTime().internalDateTimeFullFormat);
 
-        setDefaultTime: function () {
-            this.$time.val(this.noneOption);
-        },
-
-        initTimepicker: function () {
-            var $time = this.$time;
-
-            var o = {
-                step: this.params.minuteStep || 30,
-                scrollDefaultNow: true,
-                timeFormat: this.timeFormatMap[this.getDateTime().timeFormat],
-                noneOption: [{
-                    label: this.noneOption,
-                    value: this.noneOption,
-                }],
-            };
-
-            if (this.emptyTimeInInlineEditDisabled && this.isInlineEditMode() || this.noneOptionIsHidden) {
-                delete o.noneOption;
-            }
-
-            $time.timepicker(o);
-
-            $time.parent().find('button.time-picker-btn').on('click', () => {
-                $time.timepicker('show');
-            });
-        },
-
-        fetch: function () {
-            var data = {};
-
-            var date = this.$date.val();
-            var time = this.$time.val();
-
-            var value = null;
-
-            if (time !== this.noneOption && time !== '') {
-                if (date !== '' && time !== '') {
-                    value = this.parse(date + ' ' + time);
-                }
-
-                data[this.name] = value;
-                data[this.nameDate] = null;
-            }
-            else {
-                if (date !== '') {
-                    data[this.nameDate] = this.getDateTime().fromDisplayDate(date);
-
-                    var dateTimeValue = data[this.nameDate] + ' 00:00:00';
-
-                    dateTimeValue = moment
-                        .tz(dateTimeValue, this.getConfig().get('timeZone') || 'UTC')
-                        .add(this.isEnd ? 1 : 0, 'days')
-                        .utc()
-                        .format(this.getDateTime().internalDateTimeFullFormat);
-
-                    data[this.name] = dateTimeValue;
-                }
-                else {
-                    data[this.nameDate] = null;
-                    data[this.name] = null;
-                }
-            }
+            data[this.name] = dateTimeValue;
 
             return data;
-        },
+        }
 
-        validateAfter: function () {
-            var field = this.model.getFieldParam(this.name, 'after');
+        data[this.nameDate] = null;
+        data[this.name] = null;
 
-            if (field) {
-                var fieldDate  = field + 'Date';
-                var value = this.model.get(this.name) || this.model.get(this.nameDate);
-                var otherValue = this.model.get(field) || this.model.get(fieldDate);
+        return data;
+    },
 
-                if (value && otherValue) {
-                    var isNotValid = false;
+    validateAfter: function () {
+        let field = this.model.getFieldParam(this.name, 'after');
 
-                    if (this.validateAfterAllowSameDay && this.model.get(this.nameDate)) {
-                        isNotValid = moment(value).unix() < moment(otherValue).unix();
-                    }
-                    else {
-                        isNotValid = moment(value).unix() <= moment(otherValue).unix();
-                    }
+        if (!field) {
+            return;
+        }
 
-                    if (isNotValid) {
-                        var msg = this.translate('fieldShouldAfter', 'messages')
-                            .replace('{field}', this.getLabelText())
-                            .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+        let fieldDate = field + 'Date';
+        let value = this.model.get(this.name) || this.model.get(this.nameDate);
+        let otherValue = this.model.get(field) || this.model.get(fieldDate);
 
-                        this.showValidationMessage(msg);
+        if (!(value && otherValue)) {
+            return;
+        }
 
-                        return true;
-                    }
-                }
-            }
-        },
+        let isNotValid = this.validateAfterAllowSameDay && this.model.get(this.nameDate) ?
+            moment(value).unix() < moment(otherValue).unix() :
+            moment(value).unix() <= moment(otherValue).unix();
 
-        validateBefore: function () {
-            var field = this.model.getFieldParam(this.name, 'before');
+        if (isNotValid) {
+            let msg = this.translate('fieldShouldAfter', 'messages')
+                .replace('{field}', this.getLabelText())
+                .replace('{otherField}', this.translate(field, 'fields', this.model.name));
 
-            if (field) {
-                var fieldDate  = field + 'Date';
-                var value = this.model.get(this.name) || this.model.get(this.nameDate);
+            this.showValidationMessage(msg);
 
-                var otherValue = this.model.get(field) || this.model.get(fieldDate);
+            return true;
+        }
+    },
 
-                if (value && otherValue) {
-                    if (moment(value).unix() >= moment(otherValue).unix()) {
-                        var msg = this.translate('fieldShouldBefore', 'messages')
-                            .replace('{field}', this.getLabelText())
-                            .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+    validateBefore: function () {
+        var field = this.model.getFieldParam(this.name, 'before');
 
-                        this.showValidationMessage(msg);
+        if (!field) {
+            return;
+        }
 
-                        return true;
-                    }
-                }
-            }
-        },
+        let fieldDate = field + 'Date';
+        let value = this.model.get(this.name) || this.model.get(this.nameDate);
+        let otherValue = this.model.get(field) || this.model.get(fieldDate);
 
-        validateRequired: function () {
-            if (this.isRequired()) {
-                if (this.model.get(this.name) === null && this.model.get(this.nameDate) === null) {
-                    var msg = this.translate('fieldIsRequired', 'messages')
-                        .replace('{field}', this.getLabelText());
+        if (!(value && otherValue)) {
+            return;
+        }
 
-                    this.showValidationMessage(msg);
+        if (moment(value).unix() >= moment(otherValue).unix()) {
+            let msg = this.translate('fieldShouldBefore', 'messages')
+                .replace('{field}', this.getLabelText())
+                .replace('{otherField}', this.translate(field, 'fields', this.model.name));
 
-                    return true;
-                }
-            }
-        },
-    });
+            this.showValidationMessage(msg);
+
+            return true;
+        }
+    },
+
+    validateRequired: function () {
+        if (!this.isRequired()) {
+            return;
+        }
+
+        if (this.model.get(this.name) === null && this.model.get(this.nameDate) === null) {
+            let msg = this.translate('fieldIsRequired', 'messages')
+                .replace('{field}', this.getLabelText());
+
+            this.showValidationMessage(msg);
+
+            return true;
+        }
+    },
 });

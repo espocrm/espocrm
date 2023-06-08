@@ -212,6 +212,7 @@ class ClientManager
                 'basePath' => $this->basePath,
                 'cacheTimestamp' => $loaderCacheTimestamp,
                 'internalModuleList' => $internalModuleList,
+                'transpiledModuleList' => $this->getTranspiledModuleList(),
             ]),
         ];
 
@@ -337,5 +338,25 @@ class ClientManager
     private function getTabHtml(): string
     {
         return "\n        ";
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getTranspiledModuleList(): array
+    {
+        if (!$this->isDeveloperMode()) {
+            return [];
+        }
+
+        $modules = array_values(array_filter(
+            $this->module->getList(),
+            fn ($item) => $this->module->get([$item, 'jsTranspiled'])
+        ));
+
+        return array_map(
+            fn ($item) => Util::fromCamelCase($item, '-'),
+            $modules
+        );
     }
 }

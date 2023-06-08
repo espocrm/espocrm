@@ -59,6 +59,14 @@ Espo.loader.addLibsConfig(
         "dompurify": {
             "exportsTo": "window",
             "exportsAs": "DOMPurify"
+        },
+        "base64": {
+            "exportsTo": "window",
+            "exportsAs": "Base64"
+        },
+        "moment": {
+            "exportsTo": "window",
+            "exportsAs": "moment"
         }
     }
 );

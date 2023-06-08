@@ -116,10 +116,10 @@ define('views/modals/compose-email', ['views/modals/edit'], function (Dep) {
             ) {
                 var attributes = this.options.attributes || {};
 
-                require('email-helper', (EmailHelper) => {
+                Espo.loader.require('email-helper', EmailHelper => {
                     this.getRouter().confirmLeaveOut = false;
 
-                    var emailHelper = new EmailHelper();
+                    let emailHelper = new EmailHelper();
 
                     document.location.href = emailHelper
                         .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));

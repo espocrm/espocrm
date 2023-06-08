@@ -26,376 +26,376 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/edit', ['views/modal'], function (Dep) {
+/** @module views/modals/edit */
 
-    /**
-     * A quick edit modal.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:views/modals/edit
-     * @extends module:views/modal.Class
-     */
-    return Dep.extend(/** @lends module:views/modals/edit.Class# */{
+import Dep from 'views/modal';
+import Backbone from 'lib!backbone';
 
-        cssName: 'edit-modal',
-        template: 'modals/edit',
-        saveDisabled: false,
-        fullFormDisabled: false,
-        editView: null,
-        escapeDisabled: true,
-        fitHeight: true,
-        className: 'dialog dialog-record',
-        sideDisabled: false,
-        bottomDisabled: false,
+/**
+ * A quick edit modal.
+ *
+ * @class
+ * @name Class
+ * @memberOf module:views/modals/edit
+ */
+export default Dep.extend(/** @lends Class# */{
 
-        shortcutKeys: {
-            'Control+Enter': function (e) {
-                if (this.saveDisabled) {
-                    return;
-                }
+    cssName: 'edit-modal',
+    template: 'modals/edit',
+    saveDisabled: false,
+    fullFormDisabled: false,
+    editView: null,
+    escapeDisabled: true,
+    fitHeight: true,
+    className: 'dialog dialog-record',
+    sideDisabled: false,
+    bottomDisabled: false,
 
-                if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden) === -1) {
-                    return;
-                }
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                this.actionSave();
-            },
-            'Control+KeyS': function (e) {
-                if (this.saveDisabled) {
-                    return;
-                }
-
-                if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden) === -1) {
-                    return;
-                }
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                this.actionSaveAndContinueEditing();
-            },
-            'Escape': function (e) {
-                if (this.saveDisabled) {
-                    return;
-                }
-
-                e.stopPropagation();
-                e.preventDefault();
-
-                let focusedFieldView = this.getRecordView().getFocusedFieldView();
-
-                if (focusedFieldView) {
-                    this.model.set(focusedFieldView.fetch(), {skipReRender: true});
-                }
-
-                if (this.getRecordView().isChanged) {
-                    this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
-                        .then(() => this.actionClose());
-
-                    return;
-                }
-
-                this.actionClose();
-            },
-            'Control+Backslash': function (e) {
-                this.getRecordView().handleShortcutKeyControlBackslash(e);
-            },
-        },
-
-        setup: function () {
-            this.buttonList = [];
-
-            if ('saveDisabled' in this.options) {
-                this.saveDisabled = this.options.saveDisabled;
-            }
-
-            if (!this.saveDisabled) {
-                this.buttonList.push({
-                    name: 'save',
-                    label: 'Save',
-                    style: 'primary',
-                    title: 'Ctrl+Enter',
-                });
-            }
-
-            this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
-
-            this.layoutName = this.options.layoutName || this.layoutName;
-
-            if (!this.fullFormDisabled) {
-                this.buttonList.push({
-                    name: 'fullForm',
-                    label: 'Full Form',
-                });
-            }
-
-            this.buttonList.push({
-                name: 'cancel',
-                label: 'Cancel',
-                title: 'Esc',
-            });
-
-            this.scope = this.scope || this.options.scope;
-            this.entityType = this.options.entityType || this.scope;
-            this.id = this.options.id;
-
-            this.headerHtml = this.composeHeaderHtml();
-
-            this.sourceModel = this.model;
-
-            this.waitForView('edit');
-
-            this.getModelFactory().create(this.entityType, (model) => {
-                if (this.id) {
-                    if (this.sourceModel) {
-                        model = this.model = this.sourceModel.clone();
-                    }
-                    else {
-                        this.model = model;
-
-                        model.id = this.id;
-                    }
-
-                    model
-                        .fetch()
-                        .then(() => {
-                            this.createRecordView(model);
-                        });
-
-                    return;
-                }
-
-                this.model = model;
-
-                if (this.options.relate) {
-                    model.setRelate(this.options.relate);
-                }
-
-                if (this.options.attributes) {
-                    model.set(this.options.attributes);
-                }
-
-                this.createRecordView(model);
-            });
-        },
-
-        /**
-         * @param {module:model.Class} model
-         * @param {function} [callback]
-         */
-        createRecordView: function (model, callback) {
-            let viewName =
-                this.editView ||
-                this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editSmall']) ||
-                this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editQuick']) ||
-                'views/record/edit-small';
-
-            let options = {
-                model: model,
-                el: this.containerSelector + ' .edit-container',
-                type: 'editSmall',
-                layoutName: this.layoutName || 'detailSmall',
-                buttonsDisabled: true,
-                sideDisabled: this.sideDisabled,
-                bottomDisabled: this.bottomDisabled,
-                focusForCreate: this.options.focusForCreate,
-                exit: () => {},
-            };
-
-            this.handleRecordViewOptions(options);
-
-            this.createView('edit', viewName, options, callback)
-                .then(view => {
-                    this.listenTo(view, 'before:save', () => this.trigger('before:save', model));
-
-                    if (this.options.relate && ('link' in this.options.relate)) {
-                        let link = this.options.relate.link;
-
-                        if (
-                            model.hasField(link) &&
-                            ['link'].includes(model.getFieldType(link))
-                        ) {
-                            view.setFieldReadOnly(link);
-                        }
-                    }
-                });
-        },
-
-        handleRecordViewOptions: function (options) {},
-
-        /**
-         * @return {module:views/record/edit.Class}
-         */
-        getRecordView: function () {
-            return this.getView('edit');
-        },
-
-        onBackdropClick: function () {
-            if (this.getRecordView().isChanged) {
+    shortcutKeys: {
+        'Control+Enter': function (e) {
+            if (this.saveDisabled) {
                 return;
             }
 
-            this.close();
+            if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden) === -1) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionSave();
         },
-
-        /**
-         * @protected
-         * @return {string}
-         */
-        composeHeaderHtml: function () {
-            let html;
-
-            if (!this.id) {
-                html = $('<span>')
-                    .text(this.getLanguage().translate('Create ' + this.scope, 'labels', this.scope))
-                    .get(0).outerHTML;
-            }
-            else {
-                let text = this.getLanguage().translate('Edit') + ' · ' +
-                    this.getLanguage().translate(this.scope, 'scopeNames');
-
-                html = $('<span>')
-                    .text(text)
-                    .get(0).outerHTML;
+        'Control+KeyS': function (e) {
+            if (this.saveDisabled) {
+                return;
             }
 
-            if (!this.fullFormDisabled) {
-                let url = this.id ?
-                    '#' + this.scope + '/edit/' + this.id :
-                    '#' + this.scope + '/create';
-
-                html =
-                    $('<a>')
-                        .attr('href', url)
-                        .addClass('action')
-                        .attr('title', this.translate('Full Form'))
-                        .attr('data-action', 'fullForm')
-                        .append(html)
-                        .get(0).outerHTML;
+            if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden) === -1) {
+                return;
             }
 
-            html = this.getHelper().getScopeColorIconHtml(this.scope) + html;
+            e.preventDefault();
+            e.stopPropagation();
 
-            return html;
+            this.actionSaveAndContinueEditing();
         },
+        'Escape': function (e) {
+            if (this.saveDisabled) {
+                return;
+            }
 
-        actionSave: function (data) {
-            data = data || {};
+            e.stopPropagation();
+            e.preventDefault();
 
-            let editView = this.getRecordView();
+            let focusedFieldView = this.getRecordView().getFocusedFieldView();
 
-            let model = editView.model;
+            if (focusedFieldView) {
+                this.model.set(focusedFieldView.fetch(), {skipReRender: true});
+            }
 
-            let $buttons = this.dialog.$el.find('.modal-footer button');
+            if (this.getRecordView().isChanged) {
+                this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
+                    .then(() => this.actionClose());
 
-            $buttons.addClass('disabled').attr('disabled', 'disabled');
+                return;
+            }
 
-            editView
-                .save()
-                .then(() => {
-                    let wasNew = !this.id;
+            this.actionClose();
+        },
+        'Control+Backslash': function (e) {
+            this.getRecordView().handleShortcutKeyControlBackslash(e);
+        },
+    },
+
+    setup: function () {
+        this.buttonList = [];
+
+        if ('saveDisabled' in this.options) {
+            this.saveDisabled = this.options.saveDisabled;
+        }
+
+        if (!this.saveDisabled) {
+            this.buttonList.push({
+                name: 'save',
+                label: 'Save',
+                style: 'primary',
+                title: 'Ctrl+Enter',
+            });
+        }
+
+        this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
+
+        this.layoutName = this.options.layoutName || this.layoutName;
+
+        if (!this.fullFormDisabled) {
+            this.buttonList.push({
+                name: 'fullForm',
+                label: 'Full Form',
+            });
+        }
+
+        this.buttonList.push({
+            name: 'cancel',
+            label: 'Cancel',
+            title: 'Esc',
+        });
+
+        this.scope = this.scope || this.options.scope;
+        this.entityType = this.options.entityType || this.scope;
+        this.id = this.options.id;
+
+        this.headerHtml = this.composeHeaderHtml();
+
+        this.sourceModel = this.model;
+
+        this.waitForView('edit');
+
+        this.getModelFactory().create(this.entityType, (model) => {
+            if (this.id) {
+                if (this.sourceModel) {
+                    model = this.model = this.sourceModel.clone();
+                }
+                else {
+                    this.model = model;
+
+                    model.id = this.id;
+                }
+
+                model
+                    .fetch()
+                    .then(() => {
+                        this.createRecordView(model);
+                    });
+
+                return;
+            }
+
+            this.model = model;
+
+            if (this.options.relate) {
+                model.setRelate(this.options.relate);
+            }
+
+            if (this.options.attributes) {
+                model.set(this.options.attributes);
+            }
+
+            this.createRecordView(model);
+        });
+    },
+
+    /**
+     * @param {module:model} model
+     * @param {function} [callback]
+     */
+    createRecordView: function (model, callback) {
+        let viewName =
+            this.editView ||
+            this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editSmall']) ||
+            this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editQuick']) ||
+            'views/record/edit-small';
+
+        let options = {
+            model: model,
+            el: this.containerSelector + ' .edit-container',
+            type: 'editSmall',
+            layoutName: this.layoutName || 'detailSmall',
+            buttonsDisabled: true,
+            sideDisabled: this.sideDisabled,
+            bottomDisabled: this.bottomDisabled,
+            focusForCreate: this.options.focusForCreate,
+            exit: () => {},
+        };
+
+        this.handleRecordViewOptions(options);
+
+        this.createView('edit', viewName, options, callback)
+            .then(view => {
+                this.listenTo(view, 'before:save', () => this.trigger('before:save', model));
+
+                if (this.options.relate && ('link' in this.options.relate)) {
+                    let link = this.options.relate.link;
+
+                    if (
+                        model.hasField(link) &&
+                        ['link'].includes(model.getFieldType(link))
+                    ) {
+                        view.setFieldReadOnly(link);
+                    }
+                }
+            });
+    },
+
+    handleRecordViewOptions: function (options) {},
+
+    /**
+     * @return {module:views/record/edit}
+     */
+    getRecordView: function () {
+        return this.getView('edit');
+    },
+
+    onBackdropClick: function () {
+        if (this.getRecordView().isChanged) {
+            return;
+        }
+
+        this.close();
+    },
+
+    /**
+     * @protected
+     * @return {string}
+     */
+    composeHeaderHtml: function () {
+        let html;
+
+        if (!this.id) {
+            html = $('<span>')
+                .text(this.getLanguage().translate('Create ' + this.scope, 'labels', this.scope))
+                .get(0).outerHTML;
+        }
+        else {
+            let text = this.getLanguage().translate('Edit') + ' · ' +
+                this.getLanguage().translate(this.scope, 'scopeNames');
+
+            html = $('<span>')
+                .text(text)
+                .get(0).outerHTML;
+        }
+
+        if (!this.fullFormDisabled) {
+            let url = this.id ?
+                '#' + this.scope + '/edit/' + this.id :
+                '#' + this.scope + '/create';
+
+            html =
+                $('<a>')
+                    .attr('href', url)
+                    .addClass('action')
+                    .attr('title', this.translate('Full Form'))
+                    .attr('data-action', 'fullForm')
+                    .append(html)
+                    .get(0).outerHTML;
+        }
+
+        html = this.getHelper().getScopeColorIconHtml(this.scope) + html;
+
+        return html;
+    },
+
+    actionSave: function (data) {
+        data = data || {};
+
+        let editView = this.getRecordView();
+
+        let model = editView.model;
+
+        let $buttons = this.dialog.$el.find('.modal-footer button');
+
+        $buttons.addClass('disabled').attr('disabled', 'disabled');
+
+        editView
+            .save()
+            .then(() => {
+                let wasNew = !this.id;
+
+                if (wasNew) {
+                    this.id = model.id;
+                }
+
+                this.trigger('after:save', model, {bypassClose: data.bypassClose});
+
+                if (!data.bypassClose) {
+                    this.dialog.close();
 
                     if (wasNew) {
-                        this.id = model.id;
+                        let url = '#' + this.scope + '/view/' + model.id;
+                        let name = model.get('name');
+
+                        let msg = this.translate('Created')  + '\n' +
+                            `[${name}](${url})`;
+
+                        Espo.Ui.notify(msg, 'success', 4000, true);
                     }
 
-                    this.trigger('after:save', model, {bypassClose: data.bypassClose});
-
-                    if (!data.bypassClose) {
-                        this.dialog.close();
-
-                        if (wasNew) {
-                            let url = '#' + this.scope + '/view/' + model.id;
-                            let name = model.get('name');
-
-                            let msg = this.translate('Created')  + '\n' +
-                                `[${name}](${url})`;
-
-                            Espo.Ui.notify(msg, 'success', 4000, true);
-                        }
-
-                        return;
-                    }
-
-                    this.$el.find('.modal-header .modal-title-text')
-                        .html(this.composeHeaderHtml());
-
-                    $buttons.removeClass('disabled').removeAttr('disabled');
-                })
-                .catch(() => {
-                    $buttons.removeClass('disabled').removeAttr('disabled');
-                })
-        },
-
-        actionSaveAndContinueEditing: function () {
-            this.actionSave({bypassClose: true});
-        },
-
-        actionFullForm: function (dialog) {
-            var url;
-            var router = this.getRouter();
-
-            var attributes;
-            var model;
-            var options;
-
-            if (!this.id) {
-                url = '#' + this.scope + '/create';
-
-                attributes = this.getView('edit').fetch();
-                model = this.getView('edit').model;
-
-                attributes = _.extend(attributes, model.getClonedAttributes());
-
-                options = {
-                    attributes: attributes,
-                    relate: this.options.relate,
-                    returnUrl: this.options.returnUrl || Backbone.history.fragment,
-                    returnDispatchParams: this.options.returnDispatchParams || null,
-                };
-
-                if (this.options.rootUrl) {
-                    options.rootUrl = this.options.rootUrl;
+                    return;
                 }
 
-                setTimeout(() => {
-                    router.dispatch(this.scope, 'create', options);
-                    router.navigate(url, {trigger: false});
-                }, 10);
+                this.$el.find('.modal-header .modal-title-text')
+                    .html(this.composeHeaderHtml());
+
+                $buttons.removeClass('disabled').removeAttr('disabled');
+            })
+            .catch(() => {
+                $buttons.removeClass('disabled').removeAttr('disabled');
+            })
+    },
+
+    actionSaveAndContinueEditing: function () {
+        this.actionSave({bypassClose: true});
+    },
+
+    actionFullForm: function (dialog) {
+        var url;
+        var router = this.getRouter();
+
+        var attributes;
+        var model;
+        var options;
+
+        if (!this.id) {
+            url = '#' + this.scope + '/create';
+
+            attributes = this.getView('edit').fetch();
+            model = this.getView('edit').model;
+
+            attributes = _.extend(attributes, model.getClonedAttributes());
+
+            options = {
+                attributes: attributes,
+                relate: this.options.relate,
+                returnUrl: this.options.returnUrl || Backbone.history.fragment,
+                returnDispatchParams: this.options.returnDispatchParams || null,
+            };
+
+            if (this.options.rootUrl) {
+                options.rootUrl = this.options.rootUrl;
             }
-            else {
-                url = '#' + this.scope + '/edit/' + this.id;
 
-                attributes = this.getView('edit').fetch();
-                model = this.getView('edit').model;
+            setTimeout(() => {
+                router.dispatch(this.scope, 'create', options);
+                router.navigate(url, {trigger: false});
+            }, 10);
+        }
+        else {
+            url = '#' + this.scope + '/edit/' + this.id;
 
-                attributes = _.extend(attributes, model.getClonedAttributes());
+            attributes = this.getView('edit').fetch();
+            model = this.getView('edit').model;
 
-                options = {
-                    attributes: attributes,
-                    returnUrl: this.options.returnUrl || Backbone.history.fragment,
-                    returnDispatchParams: this.options.returnDispatchParams || null,
-                    model: this.sourceModel,
-                    id: this.id,
-                };
+            attributes = _.extend(attributes, model.getClonedAttributes());
 
-                if (this.options.rootUrl) {
-                    options.rootUrl = this.options.rootUrl;
-                }
+            options = {
+                attributes: attributes,
+                returnUrl: this.options.returnUrl || Backbone.history.fragment,
+                returnDispatchParams: this.options.returnDispatchParams || null,
+                model: this.sourceModel,
+                id: this.id,
+            };
 
-                setTimeout(() => {
-                    router.dispatch(this.scope, 'edit', options);
-                    router.navigate(url, {trigger: false});
-                }, 10);
+            if (this.options.rootUrl) {
+                options.rootUrl = this.options.rootUrl;
             }
 
-            this.trigger('leave');
-            this.dialog.close();
-        },
-    });
+            setTimeout(() => {
+                router.dispatch(this.scope, 'edit', options);
+                router.navigate(url, {trigger: false});
+            }, 10);
+        }
+
+        this.trigger('leave');
+        this.dialog.close();
+    },
 });
-

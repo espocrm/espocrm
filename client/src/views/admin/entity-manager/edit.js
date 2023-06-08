@@ -28,15 +28,15 @@
 
 define('views/admin/entity-manager/edit', ['view', 'model'],
 /**
- * @param {module:view.Class#} Dep
- * @param {typeof module:model.Class} Model
+ * @param {module:view#} Dep
+ * @param {typeof module:model} Model
  */
 function (Dep, Model) {
 
     /**
      * @class
      * @name Class
-     * @extends module:view.Class
+     * @extends module:view
      * @memberOf module:views/admin/entity-manager/edit
      */
     return Dep.extend(/** @lends module:views/admin/entity-manager/edit.Class# */{

@@ -26,110 +26,108 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('session-storage', ['storage'], function (Dep) {
+/** @module session-storage */
+
+import Dep from 'storage';
+
+/**
+ * A session storage. Cleared when a page session ends.
+ *
+ * @class
+ * @name Class
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    /** @inheritDoc */
+    storageObject: sessionStorage,
 
     /**
-     * A session storage. Cleared when a page session ends.
+     * Get a value.
      *
-     * @class
-     * @name Class
-     * @memberOf module:session-storage
+     * @param {string} name A name.
+     * @returns {*} Null if not set.
      */
-    return Dep.extend(/** @lends module:session-storage.Class# */{
-
-        /**
-         * @private
-         */
-        storageObject: sessionStorage,
-
-        /**
-         * Get a value.
-         *
-         * @param {string} name A name.
-         * @returns {*} Null if not set.
-         */
-        get: function (name) {
-            try {
-                var stored = this.storageObject.getItem(name);
-            }
-            catch (error) {
-                console.error(error);
-
-                return null;
-            }
-
-            if (stored) {
-                let result = stored;
-
-                if (stored.length > 9 && stored.substr(0, 9) === '__JSON__:') {
-                    let jsonString = stored.substr(9);
-
-                    try {
-                        result = JSON.parse(jsonString);
-                    }
-                    catch (error) {
-                        result = stored;
-                    }
-                }
-
-                return result;
-            }
+    get: function (name) {
+        try {
+            var stored = this.storageObject.getItem(name);
+        }
+        catch (error) {
+            console.error(error);
 
             return null;
-        },
+        }
 
-        /**
-         * Set (store) a value.
-         *
-         * @param {string} name A name.
-         * @param {*} value A value.
-         */
-        set: function (name, value) {
-            if (value === null) {
-                this.clear(name);
+        if (stored) {
+            let result = stored;
 
-                return;
-            }
+            if (stored.length > 9 && stored.substr(0, 9) === '__JSON__:') {
+                let jsonString = stored.substr(9);
 
-            if (
-                value instanceof Object ||
-                Array.isArray(value) ||
-                value === true ||
-                value === false ||
-                typeof value === 'number'
-            ) {
-                value = '__JSON__:' + JSON.stringify(value);
-            }
-
-            try {
-                this.storageObject.setItem(name, value);
-            }
-            catch (error) {
-                console.error(error);
-            }
-        },
-
-        /**
-         * Has a value.
-         *
-         * @param {string} name A name.
-         * @returns {boolean}
-         */
-        has: function (name) {
-            return this.storageObject.getItem(name) !== null;
-        },
-
-        /**
-         * Clear a value.
-         *
-         * @param {string} name A name.
-         */
-        clear: function (name) {
-            for (let i in this.storageObject) {
-                if (i === name) {
-                    delete this.storageObject[i];
+                try {
+                    result = JSON.parse(jsonString);
+                }
+                catch (error) {
+                    result = stored;
                 }
             }
-        },
-    });
+
+            return result;
+        }
+
+        return null;
+    },
+
+    /**
+     * Set (store) a value.
+     *
+     * @param {string} name A name.
+     * @param {*} value A value.
+     */
+    set: function (name, value) {
+        if (value === null) {
+            this.clear(name);
+
+            return;
+        }
+
+        if (
+            value instanceof Object ||
+            Array.isArray(value) ||
+            value === true ||
+            value === false ||
+            typeof value === 'number'
+        ) {
+            value = '__JSON__:' + JSON.stringify(value);
+        }
+
+        try {
+            this.storageObject.setItem(name, value);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    },
+
+    /**
+     * Has a value.
+     *
+     * @param {string} name A name.
+     * @returns {boolean}
+     */
+    has: function (name) {
+        return this.storageObject.getItem(name) !== null;
+    },
+
+    /**
+     * Clear a value.
+     *
+     * @param {string} name A name.
+     */
+    clear: function (name) {
+        for (let i in this.storageObject) {
+            if (i === name) {
+                delete this.storageObject[i];
+            }
+        }
+    },
 });

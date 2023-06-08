@@ -31,7 +31,7 @@ define('handlers/working-time-range', [], () => {
     let Class = class Class {
 
         constructor(view) {
-            /** @type {module:views/record/edit.Class} */
+            /** @type {module:views/record/edit} */
             this.view = view;
         }
 

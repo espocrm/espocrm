@@ -314,7 +314,7 @@ define('crm:views/calendar/calendar-page', ['view'], function (Dep) {
 
         /**
          * @private
-         * @return {module:view.Class}
+         * @return {module:view}
          */
         getCalendarView: function () {
             return this.getView('calendar');

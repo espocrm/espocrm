@@ -26,233 +26,233 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/detail-middle', ['view'], function (Dep) {
+/** @module views/record/detail-middle */
+
+import Dep from 'view';
+
+/**
+ * A detail-middle record view.
+ *
+ * @class
+ * @name Class
+ * @extends module:view
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    init: function () {
+        this.recordHelper = this.options.recordHelper;
+        this.scope = this.model.name;
+    },
+
+    data: function () {
+        return {
+            hiddenPanels: this.recordHelper.getHiddenPanels(),
+            hiddenFields: this.recordHelper.getHiddenFields(),
+        };
+    },
 
     /**
-     * A detail-middle record view.
+     * Show a panel.
      *
-     * @class
-     * @name Class
-     * @extends module:view.Class
-     * @memberOf module:views/record/detail-middle
+     * @param {string} name
      */
-    return Dep.extend(/** @lends module:views/record/detail-middle.Class# */{
+    showPanel: function (name) {
+        if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) {
+            return;
+        }
 
-        init: function () {
-            this.recordHelper = this.options.recordHelper;
-            this.scope = this.model.name;
-        },
+        this.showPanelInternal(name);
 
-        data: function () {
-            return {
-                hiddenPanels: this.recordHelper.getHiddenPanels(),
-                hiddenFields: this.recordHelper.getHiddenFields(),
-            };
-        },
+        this.recordHelper.setPanelStateParam(name, 'hidden', false);
+    },
 
-        /**
-         * Show a panel.
-         *
-         * @param {string} name
-         */
-        showPanel: function (name) {
-            if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) {
-                return;
-            }
+    /**
+     * @private
+     * @param {string} name
+     */
+    showPanelInternal: function (name) {
+        if (this.isRendered()) {
+            this.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
+        }
 
-            this.showPanelInternal(name);
+        let wasShown = !this.recordHelper.getPanelStateParam(name, 'hidden');
 
-            this.recordHelper.setPanelStateParam(name, 'hidden', false);
-        },
+        if (
+            !wasShown &&
+            this.options.panelFieldListMap &&
+            this.options.panelFieldListMap[name]
+        ) {
+            this.options.panelFieldListMap[name].forEach(field => {
+                var view = this.getFieldView(field);
 
-        /**
-         * @private
-         * @param {string} name
-         */
-        showPanelInternal: function (name) {
-            if (this.isRendered()) {
-                this.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
-            }
-
-            let wasShown = !this.recordHelper.getPanelStateParam(name, 'hidden');
-
-            if (
-                !wasShown &&
-                this.options.panelFieldListMap &&
-                this.options.panelFieldListMap[name]
-            ) {
-                this.options.panelFieldListMap[name].forEach(field => {
-                    var view = this.getFieldView(field);
-
-                    if (!view) {
-                        return;
-                    }
-
-                    view.reRender();
-                });
-            }
-        },
-
-        /**
-         * Hide a panel.
-         *
-         * @param {string} name
-         */
-        hidePanel: function (name) {
-            this.hidePanelInternal(name);
-
-            this.recordHelper.setPanelStateParam(name, 'hidden', true);
-        },
-
-        /**
-         * @private
-         * @param {string} name
-         */
-        hidePanelInternal: function (name) {
-            if (this.isRendered()) {
-                this.$el.find('.panel[data-name="'+name+'"]').addClass('hidden');
-            }
-        },
-
-        /**
-         * Hide a field.
-         *
-         * @param {string} name
-         */
-        hideField: function (name) {
-            this.recordHelper.setFieldStateParam(name, 'hidden', true);
-
-            var processHtml = () => {
-                var fieldView = this.getFieldView(name);
-
-                if (fieldView) {
-                    var $field = fieldView.$el;
-                    var $cell = $field.closest('.cell[data-name="' + name + '"]');
-                    var $label = $cell.find('label.control-label[data-name="' + name + '"]');
-
-                    $field.addClass('hidden');
-                    $label.addClass('hidden');
-                    $cell.addClass('hidden-cell');
+                if (!view) {
+                    return;
                 }
-                else {
-                    this.$el.find('.cell[data-name="' + name + '"]').addClass('hidden-cell');
-                    this.$el.find('.field[data-name="' + name + '"]').addClass('hidden');
-                    this.$el.find('label.control-label[data-name="' + name + '"]').addClass('hidden');
-                }
-            };
 
-            if (this.isRendered()) {
-                processHtml();
+                view.reRender();
+            });
+        }
+    },
+
+    /**
+     * Hide a panel.
+     *
+     * @param {string} name
+     */
+    hidePanel: function (name) {
+        this.hidePanelInternal(name);
+
+        this.recordHelper.setPanelStateParam(name, 'hidden', true);
+    },
+
+    /**
+     * @private
+     * @param {string} name
+     */
+    hidePanelInternal: function (name) {
+        if (this.isRendered()) {
+            this.$el.find('.panel[data-name="'+name+'"]').addClass('hidden');
+        }
+    },
+
+    /**
+     * Hide a field.
+     *
+     * @param {string} name
+     */
+    hideField: function (name) {
+        this.recordHelper.setFieldStateParam(name, 'hidden', true);
+
+        var processHtml = () => {
+            var fieldView = this.getFieldView(name);
+
+            if (fieldView) {
+                var $field = fieldView.$el;
+                var $cell = $field.closest('.cell[data-name="' + name + '"]');
+                var $label = $cell.find('label.control-label[data-name="' + name + '"]');
+
+                $field.addClass('hidden');
+                $label.addClass('hidden');
+                $cell.addClass('hidden-cell');
             }
             else {
-                this.once('after:render', () => {
-                    processHtml();
-                });
+                this.$el.find('.cell[data-name="' + name + '"]').addClass('hidden-cell');
+                this.$el.find('.field[data-name="' + name + '"]').addClass('hidden');
+                this.$el.find('label.control-label[data-name="' + name + '"]').addClass('hidden');
             }
+        };
 
-            var view = this.getFieldView(name);
-
-            if (view) {
-                view.setDisabled();
-            }
-        },
-
-        /**
-         * Show a field.
-         *
-         * @param {string} name
-         */
-        showField: function (name) {
-            if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
-                return;
-            }
-
-            this.recordHelper.setFieldStateParam(name, 'hidden', false);
-
-            var processHtml = () => {
-                var fieldView = this.getFieldView(name);
-
-                if (fieldView) {
-                    var $field = fieldView.$el;
-                    var $cell = $field.closest('.cell[data-name="' + name + '"]');
-                    var $label = $cell.find('label.control-label[data-name="' + name + '"]');
-
-                    $field.removeClass('hidden');
-                    $label.removeClass('hidden');
-                    $cell.removeClass('hidden-cell');
-                }
-                else {
-                    this.$el.find('.cell[data-name="' + name + '"]').removeClass('hidden-cell');
-                    this.$el.find('.field[data-name="' + name + '"]').removeClass('hidden');
-                    this.$el.find('label.control-label[data-name="' + name + '"]').removeClass('hidden');
-                }
-            };
-
-            if (this.isRendered()) {
+        if (this.isRendered()) {
+            processHtml();
+        }
+        else {
+            this.once('after:render', () => {
                 processHtml();
+            });
+        }
+
+        var view = this.getFieldView(name);
+
+        if (view) {
+            view.setDisabled();
+        }
+    },
+
+    /**
+     * Show a field.
+     *
+     * @param {string} name
+     */
+    showField: function (name) {
+        if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
+            return;
+        }
+
+        this.recordHelper.setFieldStateParam(name, 'hidden', false);
+
+        var processHtml = () => {
+            var fieldView = this.getFieldView(name);
+
+            if (fieldView) {
+                var $field = fieldView.$el;
+                var $cell = $field.closest('.cell[data-name="' + name + '"]');
+                var $label = $cell.find('label.control-label[data-name="' + name + '"]');
+
+                $field.removeClass('hidden');
+                $label.removeClass('hidden');
+                $cell.removeClass('hidden-cell');
             }
             else {
-                this.once('after:render', () => {
-                    processHtml();
-                });
+                this.$el.find('.cell[data-name="' + name + '"]').removeClass('hidden-cell');
+                this.$el.find('.field[data-name="' + name + '"]').removeClass('hidden');
+                this.$el.find('label.control-label[data-name="' + name + '"]').removeClass('hidden');
             }
+        };
 
-            var view = this.getFieldView(name);
+        if (this.isRendered()) {
+            processHtml();
+        }
+        else {
+            this.once('after:render', () => {
+                processHtml();
+            });
+        }
 
-            if (view) {
-                if (!view.disabledLocked) {
-                    view.setNotDisabled();
-                }
+        var view = this.getFieldView(name);
+
+        if (view) {
+            if (!view.disabledLocked) {
+                view.setNotDisabled();
             }
-        },
+        }
+    },
 
-        /**
-         * @deprecated Use `getFieldViews`.
-         */
-        getFields: function () {
-            return this.getFieldViews();
-        },
+    /**
+     * @deprecated Use `getFieldViews`.
+     */
+    getFields: function () {
+        return this.getFieldViews();
+    },
 
-        /**
-         * Get field views.
-         *
-         * @return {{string: module:views/fields/base.Class}}
-         */
-        getFieldViews: function () {
-            var fieldViews = {};
+    /**
+     * Get field views.
+     *
+     * @return {{string: module:views/fields/base}}
+     */
+    getFieldViews: function () {
+        var fieldViews = {};
 
-            for (var viewKey in this.nestedViews) {
-                var name = this.nestedViews[viewKey].name;
+        for (var viewKey in this.nestedViews) {
+            var name = this.nestedViews[viewKey].name;
 
-                fieldViews[name] = this.nestedViews[viewKey];
-            }
+            fieldViews[name] = this.nestedViews[viewKey];
+        }
 
-            return fieldViews;
-        },
+        return fieldViews;
+    },
 
-        /**
-         * Get a field view.
-         *
-         * @param {string} name A field name.
-         * @return {module:views/fields/base.Class}
-         */
-        getFieldView: function (name) {
-            return (this.getFieldViews() || {})[name];
-        },
+    /**
+     * Get a field view.
+     *
+     * @param {string} name A field name.
+     * @return {module:views/fields/base}
+     */
+    getFieldView: function (name) {
+        return (this.getFieldViews() || {})[name];
+    },
 
-        /**
-         * For backward compatibility.
-         *
-         * @todo Remove.
-         */
-        getView: function (name) {
-            var view = Dep.prototype.getView.call(this, name);
+    /**
+     * For backward compatibility.
+     *
+     * @todo Remove.
+     */
+    getView: function (name) {
+        var view = Dep.prototype.getView.call(this, name);
 
-            if (!view) {
-                view = this.getFieldView(name);
-            }
+        if (!view) {
+            view = this.getFieldView(name);
+        }
 
-            return view;
-        },
-    });
+        return view;
+    },
 });

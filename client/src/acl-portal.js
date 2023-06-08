@@ -26,129 +26,99 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('acl-portal', ['acl'], function (Dep) {
+/** @module acl-portal */
+
+import Dep from 'acl';
+
+/**
+ * Internal class for portal access checking. Can be extended to customize access checking
+ * for a specific scope.
+ *
+ * @class
+ * @name Class
+ * @extends Dep
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    /** @inheritDoc */
+    user: null,
 
     /**
-     * Internal class for portal access checking. Can be extended to customize access checking
-     * for a specific scope.
-     *
-     * @class
-     * @name Class
-     * @extends module:acl.Class
-     * @memberOf module:acl-portal
+     * @inheritDoc
      */
-    return Dep.extend(/** @lends module:acl-portal.Class# */{
+    getUser: function () {
+        return this.user;
+    },
 
-        /**
-         * @inheritDoc
-         */
-        user: null,
+    /**
+     * @inheritDoc
+     */
+    checkScope: function (data, action, precise, entityAccessData) {
+        entityAccessData = entityAccessData || {};
 
-        /**
-         * @inheritDoc
-         */
-        getUser: function () {
-            return this.user;
-        },
+        let inAccount = entityAccessData.inAccount;
+        let isOwnContact = entityAccessData.isOwnContact;
+        let isOwner = entityAccessData.isOwner;
 
-        /**
-         * @inheritDoc
-         */
-        checkScope: function (data, action, precise, entityAccessData) {
-            entityAccessData = entityAccessData || {};
+        if (this.getUser().isAdmin()) {
+            return true;
+        }
 
-            let inAccount = entityAccessData.inAccount;
-            let isOwnContact = entityAccessData.isOwnContact;
-            let isOwner = entityAccessData.isOwner;
+        if (data === false) {
+            return false;
+        }
 
-            if (this.getUser().isAdmin()) {
+        if (data === true) {
+            return true;
+        }
+
+        if (typeof data === 'string') {
+            return true;
+        }
+
+        if (data === null) {
+            return false;
+        }
+
+        action = action || null;
+
+        if (action === null) {
+            return true;
+        }
+
+        if (!(action in data)) {
+            return false;
+        }
+
+        var value = data[action];
+
+        if (value === 'all') {
+            return true;
+        }
+
+        if (value === 'yes') {
+            return true;
+        }
+
+        if (value === 'no') {
+            return false;
+        }
+
+        if (typeof isOwner === 'undefined') {
+            return true;
+        }
+
+        if (isOwner) {
+            if (value === 'own' || value === 'account' || value === 'contact') {
                 return true;
             }
+        }
 
-            if (data === false) {
-                return false;
-            }
+        var result = false;
 
-            if (data === true) {
-                return true;
-            }
-
-            if (typeof data === 'string') {
-                return true;
-            }
-
-            if (data === null) {
-                return false;
-            }
-
-            action = action || null;
-
-            if (action === null) {
-                return true;
-            }
-
-            if (!(action in data)) {
-                return false;
-            }
-
-            var value = data[action];
-
-            if (value === 'all') {
-                return true;
-            }
-
-            if (value === 'yes') {
-                return true;
-            }
-
-            if (value === 'no') {
-                return false;
-            }
-
-            if (typeof isOwner === 'undefined') {
-                return true;
-            }
-
-            if (isOwner) {
-                if (value === 'own' || value === 'account' || value === 'contact') {
-                    return true;
-                }
-            }
-
-            var result = false;
-
-            if (value === 'account') {
-                result = inAccount;
-                if (inAccount === null) {
-                    if (precise) {
-                        result = null;
-                    }
-                    else {
-                        return true;
-                    }
-                }
-                else if (inAccount) {
-                    return true;
-                }
-            }
-
-            if (value === 'contact') {
-                result = isOwnContact;
-
-                if (isOwnContact === null) {
-                    if (precise) {
-                        result = null;
-                    }
-                    else {
-                        return true;
-                    }
-                }
-                else if (isOwnContact) {
-                    return true;
-                }
-            }
-
-            if (isOwner === null) {
+        if (value === 'account') {
+            result = inAccount;
+            if (inAccount === null) {
                 if (precise) {
                     result = null;
                 }
@@ -156,140 +126,168 @@ define('acl-portal', ['acl'], function (Dep) {
                     return true;
                 }
             }
-
-            return result;
-        },
-
-        /**
-         * @inheritDoc
-         */
-        checkModel: function (model, data, action, precise) {
-            if (this.getUser().isAdmin()) {
+            else if (inAccount) {
                 return true;
             }
+        }
 
-            let entityAccessData = {
-                isOwner: this.checkIsOwner(model),
-                inAccount: this.checkInAccount(model),
-                isOwnContact: this.checkIsOwnContact(model),
-            };
+        if (value === 'contact') {
+            result = isOwnContact;
 
-            return this.checkScope(data, action, precise, entityAccessData);
-        },
-
-        /**
-         * @inheritDoc
-         */
-        checkIsOwner: function (model) {
-            if (model.hasField('createdBy')) {
-                if (this.getUser().id === model.get('createdById')) {
+            if (isOwnContact === null) {
+                if (precise) {
+                    result = null;
+                }
+                else {
                     return true;
                 }
             }
+            else if (isOwnContact) {
+                return true;
+            }
+        }
 
+        if (isOwner === null) {
+            if (precise) {
+                result = null;
+            }
+            else {
+                return true;
+            }
+        }
+
+        return result;
+    },
+
+    /**
+     * @inheritDoc
+     */
+    checkModel: function (model, data, action, precise) {
+        if (this.getUser().isAdmin()) {
+            return true;
+        }
+
+        let entityAccessData = {
+            isOwner: this.checkIsOwner(model),
+            inAccount: this.checkInAccount(model),
+            isOwnContact: this.checkIsOwnContact(model),
+        };
+
+        return this.checkScope(data, action, precise, entityAccessData);
+    },
+
+    /**
+     * @inheritDoc
+     */
+    checkIsOwner: function (model) {
+        if (model.hasField('createdBy')) {
+            if (this.getUser().id === model.get('createdById')) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    /**
+     * Check if a user in an account of a model.
+     *
+     * @param {module:model} model A model.
+     * @returns {boolean|null} True if in an account, null if not clear.
+     */
+    checkInAccount: function (model) {
+        let accountIdList = this.getUser().getLinkMultipleIdList('accounts');
+
+        if (!accountIdList.length) {
             return false;
-        },
+        }
 
-        /**
-         * Check if a user in an account of a model.
-         *
-         * @param {module:model.Class} model A model.
-         * @returns {boolean|null} True if in an account, null if not clear.
-         */
-        checkInAccount: function (model) {
-            let accountIdList = this.getUser().getLinkMultipleIdList('accounts');
-
-            if (!accountIdList.length) {
-                return false;
-            }
-
-            if (model.hasField('account')) {
-                if (model.get('accountId')) {
-                    if (~accountIdList.indexOf(model.get('accountId'))) {
-                        return true;
-                    }
-                }
-            }
-
-            var result = false;
-
-            if (model.hasField('accounts') && model.hasLink('accounts')) {
-                if (!model.has('accountsIds')) {
-                    result = null;
-                }
-
-                (model.getLinkMultipleIdList('accounts')).forEach(id => {
-                    if (~accountIdList.indexOf(id)) {
-                        result = true;
-                    }
-                });
-            }
-
-            if (model.hasField('parent') && model.hasLink('parent')) {
-                if (model.get('parentType') === 'Account') {
-                    if (!accountIdList.indexOf(model.get('parentId'))) {
-                        return true;
-                    }
-                }
-            }
-
-            if (result === false) {
-                if (!model.hasField('accounts') && model.hasLink('accounts')) {
+        if (model.hasField('account')) {
+            if (model.get('accountId')) {
+                if (~accountIdList.indexOf(model.get('accountId'))) {
                     return true;
                 }
             }
+        }
 
-            return result;
-        },
+        var result = false;
 
-        /**
-         * Check if a user is a contact-owner to a model.
-         *
-         * @param {module:model.Class} model A model.
-         * @returns {boolean|null} True if in a contact-owner, null if not clear.
-         */
-        checkIsOwnContact: function (model) {
-            let contactId = this.getUser().get('contactId');
-
-            if (!contactId) {
-                return false;
+        if (model.hasField('accounts') && model.hasLink('accounts')) {
+            if (!model.has('accountsIds')) {
+                result = null;
             }
 
-            if (model.hasField('contact')) {
-                if (model.get('contactId')) {
-                    if (contactId === model.get('contactId')) {
-                        return true;
-                    }
+            (model.getLinkMultipleIdList('accounts')).forEach(id => {
+                if (~accountIdList.indexOf(id)) {
+                    result = true;
                 }
-            }
+            });
+        }
 
-            let result = false;
-
-            if (model.hasField('contacts') && model.hasLink('contacts')) {
-                if (!model.has('contactsIds')) {
-                    result = null;
-                }
-
-                (model.getLinkMultipleIdList('contacts')).forEach(id => {
-                    if (contactId === id) {
-                        result = true;
-                    }
-                });
-            }
-
-            if (model.hasField('parent') && model.hasLink('parent')) {
-                if (model.get('parentType') === 'Contact' && model.get('parentId') === contactId) {
+        if (model.hasField('parent') && model.hasLink('parent')) {
+            if (model.get('parentType') === 'Account') {
+                if (!accountIdList.indexOf(model.get('parentId'))) {
                     return true;
                 }
             }
+        }
 
-            if (result === false) {
-                if (!model.hasField('contacts') && model.hasLink('contacts')) {
+        if (result === false) {
+            if (!model.hasField('accounts') && model.hasLink('accounts')) {
+                return true;
+            }
+        }
+
+        return result;
+    },
+
+    /**
+     * Check if a user is a contact-owner to a model.
+     *
+     * @param {module:model} model A model.
+     * @returns {boolean|null} True if in a contact-owner, null if not clear.
+     */
+    checkIsOwnContact: function (model) {
+        let contactId = this.getUser().get('contactId');
+
+        if (!contactId) {
+            return false;
+        }
+
+        if (model.hasField('contact')) {
+            if (model.get('contactId')) {
+                if (contactId === model.get('contactId')) {
                     return true;
                 }
             }
+        }
 
-            return result;
-        },
-    });
+        let result = false;
+
+        if (model.hasField('contacts') && model.hasLink('contacts')) {
+            if (!model.has('contactsIds')) {
+                result = null;
+            }
+
+            (model.getLinkMultipleIdList('contacts')).forEach(id => {
+                if (contactId === id) {
+                    result = true;
+                }
+            });
+        }
+
+        if (model.hasField('parent') && model.hasLink('parent')) {
+            if (model.get('parentType') === 'Contact' && model.get('parentId') === contactId) {
+                return true;
+            }
+        }
+
+        if (result === false) {
+            if (!model.hasField('contacts') && model.hasLink('contacts')) {
+                return true;
+            }
+        }
+
+        return result;
+    },
 });

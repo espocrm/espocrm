@@ -31,7 +31,7 @@ define('views/dashlets/options/base', ['views/modal', 'model'], function (Dep, M
     /**
      * @class
      * @name Class
-     * @extends module:views/modal.Class
+     * @extends module:views/modal
      * @memberOf module:views/dashlets/options/base
      */
     return Dep.extend(/** @lends module:views/dashlets/options/base.Class# */{
@@ -128,7 +128,7 @@ define('views/dashlets/options/base', ['views/modal', 'model'], function (Dep, M
         setup: function () {
             this.id = 'dashlet-options';
 
-            /** @var {module:model.Class} */
+            /** @var {module:model} */
             let model = this.model = new Model();
 
             model.name = 'DashletOptions';
@@ -169,7 +169,7 @@ define('views/dashlets/options/base', ['views/modal', 'model'], function (Dep, M
         },
 
         /**
-         * @return {module:views/record/edit.Class}
+         * @return {module:views/record/edit}
          */
         getRecordView: function () {
             return this.getView('record');

@@ -26,443 +26,446 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/date', ['views/fields/base'], function (Dep) {
+/** @module views/fields/date */
 
-    /**
-     * A date field.
-     *
-     * @class
-     * @name Class
-     * @extends module:views/fields/base.Class
-     * @memberOf module:views/fields/date
-     */
-    return Dep.extend(/** @lends module:views/fields/date.Class# */{
+import Dep from 'views/fields/base';
+import moment from 'lib!moment';
 
-        type: 'date',
+/**
+ * A date field.
+ *
+ * @class
+ * @name Class
+ * @extends module:views/fields/base
+ */
+export default Dep.extend(/** @lends Class# */{
 
-        listTemplate: 'fields/date/list',
+    type: 'date',
 
-        listLinkTemplate: 'fields/date/list-link',
+    listTemplate: 'fields/date/list',
+    listLinkTemplate: 'fields/date/list-link',
+    detailTemplate: 'fields/date/detail',
+    editTemplate: 'fields/date/edit',
+    searchTemplate: 'fields/date/search',
 
-        detailTemplate: 'fields/date/detail',
+    validations: ['required', 'date', 'after', 'before'],
 
-        editTemplate: 'fields/date/edit',
+    searchTypeList: [
+        'lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'nextMonth', 'currentQuarter',
+        'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays',
+        'olderThanXDays', 'afterXDays', 'on', 'after', 'before', 'between',
+    ],
 
-        searchTemplate: 'fields/date/search',
+    initialSearchIsNotIdle: true,
 
-        validations: ['required', 'date', 'after', 'before'],
+    setup: function () {
+        Dep.prototype.setup.call(this);
 
-        searchTypeList: [
-            'lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'nextMonth', 'currentQuarter',
-            'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays',
-            'olderThanXDays', 'afterXDays', 'on', 'after', 'before', 'between',
-        ],
+        if (this.getConfig().get('fiscalYearShift')) {
+            this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
 
-        initialSearchIsNotIdle: true,
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            if (this.getConfig().get('fiscalYearShift')) {
-                this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
-
-                if (this.getConfig().get('fiscalYearShift') % 3 !== 0) {
-                    this.searchTypeList.push('currentFiscalQuarter');
-                    this.searchTypeList.push('lastFiscalQuarter');
-                }
-
-                this.searchTypeList.push('currentFiscalYear');
-                this.searchTypeList.push('lastFiscalYear');
-            }
-        },
-
-        data: function () {
-            var data = Dep.prototype.data.call(this);
-
-            data.dateValue = this.getDateStringValue();
-
-            data.isNone = data.dateValue === null;
-
-            if (data.dateValue === -1) {
-                data.dateValue = null;
-                data.isLoading = true;
+            if (this.getConfig().get('fiscalYearShift') % 3 !== 0) {
+                this.searchTypeList.push('currentFiscalQuarter');
+                this.searchTypeList.push('lastFiscalQuarter');
             }
 
-            if (this.isSearchMode()) {
-                let value = this.getSearchParamsData().value || this.searchParams.dateValue;
-                let valueTo = this.getSearchParamsData().valueTo || this.searchParams.dateValueTo;
+            this.searchTypeList.push('currentFiscalYear');
+            this.searchTypeList.push('lastFiscalYear');
+        }
+    },
 
-                data.dateValue = this.getDateTime().toDisplayDate(value);
-                data.dateValueTo = this.getDateTime().toDisplayDate(valueTo);
+    data: function () {
+        let data = Dep.prototype.data.call(this);
 
-                if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays']
-                        .indexOf(this.getSearchType())
-                ) {
-                    data.number = this.searchParams.value;
-                }
+        data.dateValue = this.getDateStringValue();
+
+        data.isNone = data.dateValue === null;
+
+        if (data.dateValue === -1) {
+            data.dateValue = null;
+            data.isLoading = true;
+        }
+
+        if (this.isSearchMode()) {
+            let value = this.getSearchParamsData().value || this.searchParams.dateValue;
+            let valueTo = this.getSearchParamsData().valueTo || this.searchParams.dateValueTo;
+
+            data.dateValue = this.getDateTime().toDisplayDate(value);
+            data.dateValueTo = this.getDateTime().toDisplayDate(valueTo);
+
+            if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays']
+                    .indexOf(this.getSearchType())
+            ) {
+                data.number = this.searchParams.value;
             }
+        }
 
-            return data;
-        },
+        return data;
+    },
 
-        setupSearch: function () {
-            this.events = _.extend({
-                'change select.search-type': (e) => {
-                    let type = $(e.currentTarget).val();
+    setupSearch: function () {
+        this.events = _.extend({
+            'change select.search-type': (e) => {
+                let type = $(e.currentTarget).val();
 
-                    this.handleSearchType(type);
-                },
-            }, this.events || {});
-        },
+                this.handleSearchType(type);
+            },
+        }, this.events || {});
+    },
 
-        stringifyDateValue: function (value) {
-            if (!value) {
-                if (
-                    this.mode === this.MODE_EDIT ||
-                    this.mode === this.MODE_SEARCH ||
-                    this.mode === this.MODE_LIST ||
-                    this.mode === this.MODE_LIST_LINK
-                ) {
-                    return '';
-                }
-
-                return null;
-            }
-
+    stringifyDateValue: function (value) {
+        if (!value) {
             if (
+                this.mode === this.MODE_EDIT ||
+                this.mode === this.MODE_SEARCH ||
                 this.mode === this.MODE_LIST ||
-                this.mode === this.MODE_DETAIL ||
                 this.mode === this.MODE_LIST_LINK
             ) {
-                return this.convertDateValueForDetail(value);
+                return '';
             }
 
+            return null;
+        }
+
+        if (
+            this.mode === this.MODE_LIST ||
+            this.mode === this.MODE_DETAIL ||
+            this.mode === this.MODE_LIST_LINK
+        ) {
+            return this.convertDateValueForDetail(value);
+        }
+
+        return this.getDateTime().toDisplayDate(value);
+    },
+
+    convertDateValueForDetail: function (value) {
+        if (this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat) {
             return this.getDateTime().toDisplayDate(value);
-        },
+        }
 
-        convertDateValueForDetail: function (value) {
-            if (this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat) {
-                return this.getDateTime().toDisplayDate(value);
-            }
+        let timezone = this.getDateTime().getTimeZone();
+        let internalDateTimeFormat = this.getDateTime().internalDateTimeFormat;
+        let readableFormat = this.getDateTime().getReadableDateFormat();
+        let valueWithTime = value + ' 00:00:00';
 
-            let timezone = this.getDateTime().getTimeZone();
-            let internalDateTimeFormat = this.getDateTime().internalDateTimeFormat;
-            let readableFormat = this.getDateTime().getReadableDateFormat();
-            let valueWithTime = value + ' 00:00:00';
+        let today = moment().tz(timezone).startOf('day');
+        let dateTime = moment.tz(valueWithTime, internalDateTimeFormat, timezone);
 
-            let today = moment().tz(timezone).startOf('day');
-            let dateTime = moment.tz(valueWithTime, internalDateTimeFormat, timezone);
+        var temp = today.clone();
 
-            var temp = today.clone();
+        var ranges = {
+            'today': [temp.unix(), temp.add(1, 'days').unix()],
+            'tomorrow': [temp.unix(), temp.add(1, 'days').unix()],
+            'yesterday': [temp.add(-3, 'days').unix(), temp.add(1, 'days').unix()],
+        };
 
-            var ranges = {
-                'today': [temp.unix(), temp.add(1, 'days').unix()],
-                'tomorrow': [temp.unix(), temp.add(1, 'days').unix()],
-                'yesterday': [temp.add(-3, 'days').unix(), temp.add(1, 'days').unix()],
+        if (dateTime.unix() >= ranges['today'][0] && dateTime.unix() < ranges['today'][1]) {
+            return this.translate('Today');
+        }
+
+        if (dateTime.unix() >= ranges['tomorrow'][0] && dateTime.unix() < ranges['tomorrow'][1]) {
+            return this.translate('Tomorrow');
+        }
+
+        if (dateTime.unix() >= ranges['yesterday'][0] && dateTime.unix() < ranges['yesterday'][1]) {
+            return this.translate('Yesterday');
+        }
+
+        // Need to use UTC, otherwise there's a DST issue with old dates.
+        dateTime = moment.utc(valueWithTime, internalDateTimeFormat);
+
+        if (dateTime.format('YYYY') === today.format('YYYY')) {
+            return dateTime.format(readableFormat);
+        }
+
+        return dateTime.format(readableFormat + ', YYYY');
+    },
+
+    getDateStringValue: function () {
+        if (this.mode === this.MODE_DETAIL && !this.model.has(this.name)) {
+            return -1;
+        }
+
+        var value = this.model.get(this.name);
+
+        return this.stringifyDateValue(value);
+    },
+
+    afterRender: function () {
+        if (this.mode === this.MODE_EDIT || this.mode === this.MODE_SEARCH) {
+            this.$element = this.$el.find('[data-name="' + this.name + '"]');
+
+            let wait = false;
+
+            // @todo Introduce ui/date-picker.
+
+            this.$element.on('change', (e) => {
+                if (!wait) {
+                    this.trigger('change');
+                    wait = true;
+                    setTimeout(() => wait = false, 100);
+                }
+
+                if (e.isTrigger) {
+                    if (document.activeElement !== this.$element.get(0)) {
+                        this.$element.focus();
+                    }
+                }
+            });
+
+            this.$element.on('click', () => {
+                this.$element.datepicker('show');
+            });
+
+            let options = {
+                format: this.getDateTime().dateFormat.toLowerCase(),
+                weekStart: this.getDateTime().weekStart,
+                autoclose: true,
+                todayHighlight: true,
+                keyboardNavigation: true,
+                todayBtn: this.getConfig().get('datepickerTodayButton') || false,
+                orientation: 'bottom auto',
+                templates: {
+                    leftArrow: '<span class="fas fa-chevron-left fa-sm"></span>',
+                    rightArrow: '<span class="fas fa-chevron-right fa-sm"></span>',
+                },
+                container: this.$el.closest('.modal-body').length ?
+                    this.$el.closest('.modal-body') :
+                    'body',
             };
 
-            if (dateTime.unix() >= ranges['today'][0] && dateTime.unix() < ranges['today'][1]) {
-                return this.translate('Today');
+            let language = this.getConfig().get('language');
+
+            if (!(language in $.fn.datepicker.dates)) {
+                $.fn.datepicker.dates[language] = {
+                    days: this.translate('dayNames', 'lists'),
+                    daysShort: this.translate('dayNamesShort', 'lists'),
+                    daysMin: this.translate('dayNamesMin', 'lists'),
+                    months: this.translate('monthNames', 'lists'),
+                    monthsShort: this.translate('monthNamesShort', 'lists'),
+                    today: this.translate('Today'),
+                    clear: this.translate('Clear'),
+                };
             }
 
-            if (dateTime.unix() >= ranges['tomorrow'][0] && dateTime.unix() < ranges['tomorrow'][1]) {
-                return this.translate('Tomorrow');
-            }
+            options.language = language;
 
-            if (dateTime.unix() >= ranges['yesterday'][0] && dateTime.unix() < ranges['yesterday'][1]) {
-                return this.translate('Yesterday');
-            }
+            this.$element.datepicker(options);
 
-            // Need to use UTC, otherwise there's a DST issue with old dates.
-            dateTime = moment.utc(valueWithTime, internalDateTimeFormat);
+            if (this.mode === this.MODE_SEARCH) {
+                let $elAdd = this.$el.find('input.additional');
 
-            if (dateTime.format('YYYY') === today.format('YYYY')) {
-                return dateTime.format(readableFormat);
-            }
+                $elAdd.datepicker(options);
 
-            return dateTime.format(readableFormat + ', YYYY');
-        },
+                $elAdd.parent().find('button.date-picker-btn').on('click', () => {
+                    $elAdd.datepicker('show');
+                });
 
-        getDateStringValue: function () {
-            if (this.mode === this.MODE_DETAIL && !this.model.has(this.name)) {
-                return -1;
-            }
+                this.$el.find('select.search-type').on('change', () => {
+                    this.trigger('change');
+                });
 
-            var value = this.model.get(this.name);
-
-            return this.stringifyDateValue(value);
-        },
-
-        afterRender: function () {
-            if (this.mode === this.MODE_EDIT || this.mode === this.MODE_SEARCH) {
-                this.$element = this.$el.find('[data-name="' + this.name + '"]');
-
-                let wait = false;
-
-                // @todo Introduce ui/date-picker.
-
-                this.$element.on('change', (e) => {
-                    if (!wait) {
-                        this.trigger('change');
-                        wait = true;
-                        setTimeout(() => wait = false, 100);
-                    }
+                $elAdd.on('change', e => {
+                    this.trigger('change');
 
                     if (e.isTrigger) {
-                        if (document.activeElement !== this.$element.get(0)) {
-                            this.$element.focus();
+                        if (document.activeElement !== $elAdd.get(0)) {
+                            $elAdd.focus();
                         }
                     }
                 });
 
-                this.$element.on('click', () => {
-                    this.$element.datepicker('show');
+                $elAdd.on('click', () => {
+                    $elAdd.datepicker('show');
                 });
-
-                let options = {
-                    format: this.getDateTime().dateFormat.toLowerCase(),
-                    weekStart: this.getDateTime().weekStart,
-                    autoclose: true,
-                    todayHighlight: true,
-                    keyboardNavigation: true,
-                    todayBtn: this.getConfig().get('datepickerTodayButton') || false,
-                    orientation: 'bottom auto',
-                    templates: {
-                        leftArrow: '<span class="fas fa-chevron-left fa-sm"></span>',
-                        rightArrow: '<span class="fas fa-chevron-right fa-sm"></span>',
-                    },
-                    container: this.$el.closest('.modal-body').length ?
-                        this.$el.closest('.modal-body') :
-                        'body',
-                };
-
-                let language = this.getConfig().get('language');
-
-                if (!(language in $.fn.datepicker.dates)) {
-                    $.fn.datepicker.dates[language] = {
-                        days: this.translate('dayNames', 'lists'),
-                        daysShort: this.translate('dayNamesShort', 'lists'),
-                        daysMin: this.translate('dayNamesMin', 'lists'),
-                        months: this.translate('monthNames', 'lists'),
-                        monthsShort: this.translate('monthNamesShort', 'lists'),
-                        today: this.translate('Today'),
-                        clear: this.translate('Clear'),
-                    };
-                }
-
-                options.language = language;
-
-                this.$element.datepicker(options);
-
-                if (this.mode === this.MODE_SEARCH) {
-                    let $elAdd = this.$el.find('input.additional');
-
-                    $elAdd.datepicker(options);
-
-                    $elAdd.parent().find('button.date-picker-btn').on('click', () => {
-                        $elAdd.datepicker('show');
-                    });
-
-                    this.$el.find('select.search-type').on('change', () => {
-                        this.trigger('change');
-                    });
-
-                    $elAdd.on('change', e => {
-                        this.trigger('change');
-
-                        if (e.isTrigger) {
-                            if (document.activeElement !== $elAdd.get(0)) {
-                                $elAdd.focus();
-                            }
-                        }
-                    });
-
-                    $elAdd.on('click', () => {
-                        $elAdd.datepicker('show');
-                    });
-                }
-
-                this.$element.parent().find('button.date-picker-btn').on('click', () => {
-                    this.$element.datepicker('show');
-                });
-
-                if (this.mode === this.MODE_SEARCH) {
-                    let $searchType = this.$el.find('select.search-type');
-
-                    this.handleSearchType($searchType.val());
-                }
             }
-        },
 
-        handleSearchType: function (type) {
-            this.$el.find('div.primary').addClass('hidden');
-            this.$el.find('div.additional').addClass('hidden');
-            this.$el.find('div.additional-number').addClass('hidden');
+            this.$element.parent().find('button.date-picker-btn').on('click', () => {
+                this.$element.datepicker('show');
+            });
 
-            if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
-                this.$el.find('div.primary').removeClass('hidden');
+            if (this.mode === this.MODE_SEARCH) {
+                let $searchType = this.$el.find('select.search-type');
+
+                this.handleSearchType($searchType.val());
             }
-            else if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].indexOf(type)) {
-                this.$el.find('div.additional-number').removeClass('hidden');
+        }
+    },
+
+    handleSearchType: function (type) {
+        this.$el.find('div.primary').addClass('hidden');
+        this.$el.find('div.additional').addClass('hidden');
+        this.$el.find('div.additional-number').addClass('hidden');
+
+        if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
+            this.$el.find('div.primary').removeClass('hidden');
+        }
+        else if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].indexOf(type)) {
+            this.$el.find('div.additional-number').removeClass('hidden');
+        }
+        else if (type === 'between') {
+            this.$el.find('div.primary').removeClass('hidden');
+            this.$el.find('div.additional').removeClass('hidden');
+        }
+    },
+
+    parseDate: function (string) {
+        return this.getDateTime().fromDisplayDate(string);
+    },
+
+    parse: function (string) {
+        return this.parseDate(string);
+    },
+
+    fetch: function () {
+        let data = {};
+
+        data[this.name] = this.parse(this.$element.val());
+
+        return data;
+    },
+
+    fetchSearch: function () {
+        let value = this.parseDate(this.$element.val());
+
+        let type = this.fetchSearchType();
+        let data;
+
+        if (type === 'between') {
+            if (!value) {
+                return false;
             }
-            else if (type === 'between') {
-                this.$el.find('div.primary').removeClass('hidden');
-                this.$el.find('div.additional').removeClass('hidden');
+
+            let valueTo = this.parseDate(this.$el.find('input.additional').val());
+
+            if (!valueTo) {
+                return false;
             }
-        },
 
-        parseDate: function (string) {
-            return this.getDateTime().fromDisplayDate(string);
-        },
-
-        parse: function (string) {
-            return this.parseDate(string);
-        },
-
-        fetch: function () {
-            let data = {};
-
-            data[this.name] = this.parse(this.$element.val());
-
-            return data;
-        },
-
-        fetchSearch: function () {
-            let value = this.parseDate(this.$element.val());
-
-            let type = this.fetchSearchType();
-            let data;
-
-            if (type === 'between') {
-                if (!value) {
-                    return false;
-                }
-
-                let valueTo = this.parseDate(this.$el.find('input.additional').val());
-
-                if (!valueTo) {
-                    return false;
-                }
-
-                data = {
-                    type: type,
-                    value: [value, valueTo],
-                    data: {
-                        value: value,
-                        valueTo: valueTo
-                    },
-                };
-            } else if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].indexOf(type)) {
-                let number = this.$el.find('input.number').val();
-
-                data = {
-                    type: type,
-                    value: number,
-                };
-            }
-            else if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
-                if (!value) {
-                    return false;
-                }
-
-                data = {
-                    type: type,
+            data = {
+                type: type,
+                value: [value, valueTo],
+                data: {
                     value: value,
-                    data: {
-                        value: value,
-                    },
-                };
+                    valueTo: valueTo
+                },
+            };
+        } else if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].indexOf(type)) {
+            let number = this.$el.find('input.number').val();
+
+            data = {
+                type: type,
+                value: number,
+            };
+        }
+        else if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
+            if (!value) {
+                return false;
             }
-            else if (type === 'isEmpty') {
-                data = {
-                    type: 'isNull',
-                    data: {
-                        type: type,
-                    },
-                };
-            }
-            else {
-                data = {
+
+            data = {
+                type: type,
+                value: value,
+                data: {
+                    value: value,
+                },
+            };
+        }
+        else if (type === 'isEmpty') {
+            data = {
+                type: 'isNull',
+                data: {
                     type: type,
-                };
-            }
+                },
+            };
+        }
+        else {
+            data = {
+                type: type,
+            };
+        }
 
-            return data;
-        },
+        return data;
+    },
 
-        getSearchType: function () {
-            return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
-        },
+    getSearchType: function () {
+        return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
+    },
 
-        validateRequired: function () {
-            if (this.isRequired()) {
-                if (this.model.get(this.name) === null) {
-                    let msg = this.translate('fieldIsRequired', 'messages')
-                        .replace('{field}', this.getLabelText());
+    validateRequired: function () {
+        if (!this.isRequired()) {
+            return;
+        }
 
-                    this.showValidationMessage(msg);
+        if (this.model.get(this.name) === null) {
+            let msg = this.translate('fieldIsRequired', 'messages')
+                .replace('{field}', this.getLabelText());
 
-                    return true;
-                }
-            }
-        },
+            this.showValidationMessage(msg);
 
-        validateDate: function () {
-            if (this.model.get(this.name) === -1) {
-                let msg = this.translate('fieldShouldBeDate', 'messages')
-                    .replace('{field}', this.getLabelText());
+            return true;
+        }
+    },
 
-                this.showValidationMessage(msg);
+    validateDate: function () {
+        if (this.model.get(this.name) === -1) {
+            let msg = this.translate('fieldShouldBeDate', 'messages')
+                .replace('{field}', this.getLabelText());
 
-                return true;
-            }
-        },
+            this.showValidationMessage(msg);
 
-        validateAfter: function () {
-            let field = this.model.getFieldParam(this.name, 'after');
+            return true;
+        }
+    },
 
-            if (!field) {
-                return false;
-            }
+    validateAfter: function () {
+        let field = this.model.getFieldParam(this.name, 'after');
 
-            let value = this.model.get(this.name);
-            let otherValue = this.model.get(field);
+        if (!field) {
+            return false;
+        }
 
-            if (value && otherValue) {
-                if (moment(value).unix() <= moment(otherValue).unix()) {
-                    var msg = this.translate('fieldShouldAfter', 'messages')
-                        .replace('{field}', this.getLabelText())
-                        .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+        let value = this.model.get(this.name);
+        let otherValue = this.model.get(field);
 
-                    this.showValidationMessage(msg);
+        if (!(value && otherValue)) {
+            return;
+        }
 
-                    return true;
-                }
-            }
-        },
+        if (moment(value).unix() <= moment(otherValue).unix()) {
+            let msg = this.translate('fieldShouldAfter', 'messages')
+                .replace('{field}', this.getLabelText())
+                .replace('{otherField}', this.translate(field, 'fields', this.model.name));
 
-        validateBefore: function () {
-            let field = this.model.getFieldParam(this.name, 'before');
+            this.showValidationMessage(msg);
 
-            if (!field) {
-                return false;
-            }
+            return true;
+        }
+    },
 
-            let value = this.model.get(this.name);
-            let otherValue = this.model.get(field);
+    validateBefore: function () {
+        let field = this.model.getFieldParam(this.name, 'before');
 
-            if (value && otherValue) {
-                if (moment(value).unix() >= moment(otherValue).unix()) {
-                    var msg = this.translate('fieldShouldBefore', 'messages')
-                        .replace('{field}', this.getLabelText())
-                        .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+        if (!field) {
+            return false;
+        }
 
-                    this.showValidationMessage(msg);
+        let value = this.model.get(this.name);
+        let otherValue = this.model.get(field);
 
-                    return true;
-                }
-            }
-        },
-    });
+        if (!(value && otherValue)) {
+            return;
+        }
+
+        if (moment(value).unix() >= moment(otherValue).unix()) {
+            let msg = this.translate('fieldShouldBefore', 'messages')
+                .replace('{field}', this.getLabelText())
+                .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+
+            this.showValidationMessage(msg);
+
+            return true;
+        }
+    },
 });
 

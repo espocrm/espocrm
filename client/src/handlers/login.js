@@ -26,49 +26,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('handlers/login', [], function () {
+/** @module handlers/login */
+
+/**
+ * Custom login handling. To be extended.
+ *
+ * @abstract
+ */
+class Handler {
 
     /**
-     * Custom login handling. To be extended.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:handlers/login
-     * @abstract
+     * @param {module:views/login} loginView A login view.
+     * @param {Object.<string, *>} data Additional metadata.
      */
-    class Class {
+    constructor(loginView, data) {
+        /**
+         * A login view.
+         * @protected
+         * @type {module:views/login}
+         */
+        this.loginView = loginView;
 
         /**
-         * @param {module:views/login.Class} loginView A login view.
-         * @param {Object.<string, *>} data Additional metadata.
+         * Additional metadata.
+         * @protected
+         * @type {Object.<string, *>}
          */
-        constructor(loginView, data) {
-            /**
-             * A login view.
-             * @protected
-             * @type {module:views/login.Class}
-             */
-            this.loginView = loginView;
-
-            /**
-             * Additional metadata.
-             * @protected
-             * @type {Object.<string, *>}
-             */
-            this.data = data;
-        }
-
-        /**
-         * Process. Called on 'Sign in' button click.
-         *
-         * @public
-         * @abstract
-         * @return Promise<{Object.<string, string>}> Resolved with headers to be sent to the `App/user` endpoint.
-         */
-        process() {
-            return Promise.resolve({});
-        }
+        this.data = data;
     }
 
-    return Class;
-});
+    /**
+     * Process. Called on 'Sign in' button click.
+     *
+     * @public
+     * @abstract
+     * @return {Promise<Object.<string, string>>} Resolved with headers to be sent to the `App/user` endpoint.
+     */
+    process() {
+        return Promise.resolve({});
+    }
+}
+
+export default Handler;

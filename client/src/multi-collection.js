@@ -26,61 +26,69 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('multi-collection', ['collection'], function (Collection) {
+/** @module multi-collection */
+
+import Collection from 'collection';
+import Backbone from 'lib!backbone';
+
+/**
+ * A collection that can contain entities of different entity types.
+ *
+ * @class
+ * @name Class
+ * @extends module:collection
+ */
+export default Collection.extend(/** @lends Class# */{
 
     /**
-     * A collection that can contain entities of different entity types.
+     * A model seed map.
      *
-     * @class
-     * @name Class
-     * @extends module:collection.Class
-     * @memberOf module:multi-collection
+     * @public
+     * @type {Object.<string, module:model>}
      */
-    return Collection.extend(/** @lends module:multi-collection.Class# */{
+    seeds: null,
 
-        /**
-         * A model seed map.
-         *
-         * @public
-         * @type {Object.<string, module:model.Class>}
-         */
-        seeds: null,
+    /** @inheritDoc */
+    initialize: function (models, options) {
+        options = options || {};
 
-        /**
-         * @inheritDoc
-         */
-        initialize: function (models, options) {
-            options = options || {};
+        this.data = {};
 
-            this.data = {};
+        Backbone.Collection.prototype.initialize.call(this, options);
+    },
 
-            Backbone.Collection.prototype.initialize.call(this, options);
-        },
+    /** @inheritDoc */
+    parse: function (response) {
+        this.total = response.total;
 
-        /**
-         * @inheritDoc
-         */
-        parse: function (resp, options) {
-            this.total = resp.total;
+        if (!('list' in response)) {
+            throw new Error("No 'list' in response.");
+        }
 
-            return resp.list.map(attributes => {
-                let a = _.clone(attributes);
+        return response.list.map(attributes => {
+            let entityType = attributes._scope;
 
-                delete a['_scope'];
+            if (!entityType) {
+                throw new Error("No '_scope' attribute.");
+            }
 
-                return new this.seeds[attributes._scope](a, options);
-            });
-        },
+            attributes = _.clone(attributes);
+            delete attributes['_scope'];
 
-        /**
-         * @inheritDoc
-         */
-        clone: function () {
-            let collection = Collection.prototype.clone.call(this);
+            let model = this.seeds[entityType].clone();
 
-            collection.seeds = this.seeds;
+            model.set(attributes);
 
-            return collection;
-        },
-    });
+            return model;
+        });
+    },
+
+    /** @inheritDoc */
+    clone: function () {
+        let collection = Collection.prototype.clone.call(this);
+
+        collection.seeds = this.seeds;
+
+        return collection;
+    },
 });

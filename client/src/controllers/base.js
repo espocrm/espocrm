@@ -26,140 +26,142 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/base', ['controller'], function (Dep) {
+/** @module controllers/base */
+
+import Controller from 'controller';
+
+/**
+ * A base controller.
+ */
+class BaseController extends Controller {
 
     /**
-     * A base controller.
+     * Log in.
      *
-     * @class
-     * @name Class
-     * @extends module:controller.Class
-     * @memberOf module:controllers/base
+     * @param {{
+     *     anotherUser?: string,
+     *     username?: string,
+     * }} [options]
      */
-    return Dep.extend(/** @lends module:controllers/base.Class# */{
+    login(options) {
+        let viewName = this.getConfig().get('loginView') || 'views/login';
 
-        /**
-         * Log in.
-         */
-        login: function (options) {
-            let viewName = this.getConfig().get('loginView') || 'views/login';
+        let anotherUser = (options || {}).anotherUser;
+        let prefilledUsername = (options || {}).username;
 
-            let anotherUser = (options || {}).anotherUser;
-            let prefilledUsername = (options || {}).username;
+        let viewOptions = {
+            anotherUser: anotherUser,
+            prefilledUsername: prefilledUsername,
+        };
 
-            let viewOptions = {
-                anotherUser: anotherUser,
-                prefilledUsername: prefilledUsername,
-            };
+        this.entire(viewName, viewOptions, loginView => {
+            loginView.render();
 
-            this.entire(viewName, viewOptions, loginView => {
-                loginView.render();
+            loginView.on('login', (userName, data) => {
+                this.trigger('login', this.normalizeLoginData(userName, data));
+            });
 
-                loginView.on('login', (userName, data) => {
-                    this.trigger('login', this.normalizeLoginData(userName, data));
-                });
+            loginView.once('redirect', (viewName, headers, userName, password, data) => {
+                loginView.remove();
 
-                loginView.once('redirect', (viewName, headers, userName, password, data) => {
-                    loginView.remove();
+                this.entire(viewName, {
+                    loginData: data,
+                    userName: userName,
+                    password: password,
+                    anotherUser: anotherUser,
+                    headers: headers,
+                }, secondStepView => {
+                    secondStepView.render();
 
-                    this.entire(viewName, {
-                        loginData: data,
-                        userName: userName,
-                        password: password,
-                        anotherUser: anotherUser,
-                        headers: headers,
-                    }, secondStepView => {
-                        secondStepView.render();
+                    secondStepView.once('login', (userName, data) => {
+                        this.trigger('login', this.normalizeLoginData(userName, data));
+                    });
 
-                        secondStepView.once('login', (userName, data) => {
-                            this.trigger('login', this.normalizeLoginData(userName, data));
-                        });
+                    secondStepView.once('back', () => {
+                        secondStepView.remove();
 
-                        secondStepView.once('back', () => {
-                            secondStepView.remove();
-
-                            this.login();
-                        });
+                        this.login();
                     });
                 });
             });
-        },
+        });
+    }
 
-        /**
-         * @private
-         */
-        normalizeLoginData: function (userName, data) {
-            return {
-                auth: {
-                    userName: userName,
-                    token: data.token,
-                    anotherUser: data.anotherUser,
-                },
-                user: data.user,
-                preferences: data.preferences,
-                acl: data.acl,
-                settings: data.settings,
-                appParams: data.appParams,
-                language: data.language,
-            };
-        },
+    /** @private */
+    normalizeLoginData(userName, data) {
+        return {
+            auth: {
+                userName: userName,
+                token: data.token,
+                anotherUser: data.anotherUser,
+            },
+            user: data.user,
+            preferences: data.preferences,
+            acl: data.acl,
+            settings: data.settings,
+            appParams: data.appParams,
+            language: data.language,
+        };
+    }
 
-        /**
-         * Log out.
-         */
-        logout: function () {
-            var title = this.getConfig().get('applicationName') || 'EspoCRM';
-            $('head title').text(title);
+    /**
+     * Log out.
+     */
+    logout() {
+        let title = this.getConfig().get('applicationName') || 'EspoCRM';
 
-            this.trigger('logout');
-        },
+        $('head title').text(title);
 
-        /**
-         * Clear cache.
-         */
-        clearCache: function () {
-            this.entire('views/clear-cache', {
-                cache: this.getCache()
-            }, view => {
-                view.render();
-            });
-        },
+        this.trigger('logout');
+    }
 
-        actionLogin: function () {
-            this.login();
-        },
+    /**
+     * Clear cache.
+     */
+    clearCache() {
+        this.entire('views/clear-cache', {
+            cache: this.getCache(),
+        }, view => {
+            view.render();
+        });
+    }
 
-        actionLogout: function () {
-            this.logout();
-        },
+    actionLogin() {
+        this.login();
+    }
 
-        actionLogoutWait: function () {
-            this.entire('views/base', {template: 'logout-wait'}, view => {
-                view.render()
-                    .then(() => Espo.Ui.notify(' ... '))
-            });
-        },
+    actionLogout() {
+        this.logout();
+    }
 
-        actionClearCache: function () {
-            this.clearCache();
-        },
+    actionLogoutWait() {
+        this.entire('views/base', {template: 'logout-wait'}, view => {
+            view.render()
+                .then(() => Espo.Ui.notify(' ... '))
+        });
+    }
 
-        /**
-         * Error Not Found.
-         */
-        error404: function () {
-            this.entire('views/base', {template: 'errors/404'}, (view) => {
-                view.render();
-            });
-        },
+    actionClearCache() {
+        this.clearCache();
+    }
 
-        /**
-         * Error Forbidden.
-         */
-        error403: function () {
-            this.entire('views/base', {template: 'errors/403'}, (view) => {
-                view.render();
-            });
-        },
-    });
-});
+    /**
+     * Error Not Found.
+     */
+    error404() {
+        this.entire('views/base', {template: 'errors/404'}, view => {
+            view.render();
+        });
+    }
+
+    /**
+     * Error Forbidden.
+     */
+    error403() {
+        this.entire('views/base', {template: 'errors/403'}, view => {
+            view.render();
+        });
+    }
+}
+
+export default BaseController;

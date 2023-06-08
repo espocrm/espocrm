@@ -26,62 +26,55 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('helpers/misc/foreign-field', [], function () {
+/** @module helpers/misc/foreign-field */
 
+export default class {
     /**
-     * @memberOf module:helpers/misc/foreign-field
+     * @param {module:views/fields/base} view A field view.
      */
-     class Class {
+    constructor(view) {
         /**
-         * @param {module:views/fields/base.Class} view A field view.
+         * @private
+         * @type {module:views/fields/base}
          */
-        constructor(view) {
-            /**
-             * @private
-             * @type {module:views/fields/base.Class}
-             */
-            this.view = view;
+        this.view = view;
 
-            let metadata = view.getMetadata();
-            let model = view.model;
-            let field = view.params.field;
-            let link = view.params.link;
+        let metadata = view.getMetadata();
+        let model = view.model;
+        let field = view.params.field;
+        let link = view.params.link;
 
-            let entityType = metadata
-                .get(['entityDefs', model.entityType, 'links', link, 'entity']) ||
-                model.entityType;
+        let entityType = metadata.get(['entityDefs', model.entityType, 'links', link, 'entity']) ||
+            model.entityType;
 
-            let fieldDefs = metadata.get(['entityDefs', entityType, 'fields', field]) || {};
-            let type = fieldDefs.type;
+        let fieldDefs = metadata.get(['entityDefs', entityType, 'fields', field]) || {};
+        let type = fieldDefs.type;
 
-            let ignoreList = [
-                'default',
-                'audited',
-                'readOnly',
-                'required',
-            ];
+        let ignoreList = [
+            'default',
+            'audited',
+            'readOnly',
+            'required',
+        ];
 
-            /** @private */
-            this.foreignParams = {};
+        /** @private */
+        this.foreignParams = {};
 
-            view.getFieldManager().getParamList(type).forEach(defs => {
-                let name = defs.name;
+        view.getFieldManager().getParamList(type).forEach(defs => {
+            let name = defs.name;
 
-                if (ignoreList.includes(name)) {
-                    return;
-                }
+            if (ignoreList.includes(name)) {
+                return;
+            }
 
-                this.foreignParams[name] = fieldDefs[name] || null;
-            });
-        }
-
-        /**
-         * @return {Object.<string, *>}
-         */
-        getForeignParams() {
-            return Espo.Utils.cloneDeep(this.foreignParams);
-        }
+            this.foreignParams[name] = fieldDefs[name] || null;
+        });
     }
 
-    return Class;
-});
+    /**
+     * @return {Object.<string, *>}
+     */
+    getForeignParams() {
+        return Espo.Utils.cloneDeep(this.foreignParams);
+    }
+}

@@ -26,87 +26,80 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('helpers/mass-action', [], function () {
-
+/**
+ * A mass-action helper.
+ */
+export default class {
     /**
-     * A mass-action helper.
-     *
-     * @memberOf module:helpers/mass-action
+     * @param {module:view} view A view.
      */
-    class Class {
+    constructor(view) {
         /**
-         * @param {module:view.Class} view A view.
+         * @private
+         * @type {module:view}
          */
-        constructor(view) {
-            /**
-             * @private
-             * @type {module:view.Class}
-             */
-            this.view = view;
-
-            /**
-             * @private
-             * @type {module:models/settings.Class}
-             */
-            this.config = view.getConfig();
-        }
+        this.view = view;
 
         /**
-         * Check whether an action should be run in idle.
-         *
-         * @param {number} [totalCount] A total record count.
-         * @returns {boolean}
+         * @private
+         * @type {module:models/settings}
          */
-        checkIsIdle(totalCount) {
-            if (this.view.getUser().isPortal()) {
-                return false;
-            }
-
-            if (typeof totalCount === 'undefined') {
-                totalCount = this.view.options.totalCount;
-            }
-
-            if (typeof totalCount === 'undefined' && this.view.collection) {
-                totalCount = this.view.collection.total;
-            }
-
-            return totalCount === -1 || totalCount > this.config.get('massActionIdleCountThreshold');
-        }
-
-        /**
-         * Process.
-         *
-         * @param {string} id An ID.
-         * @param {string} action An action.
-         * @returns {Promise<module:view.Class>} Resolves with a dialog view.
-         *   The view emits the 'close:success' event.
-         */
-        process(id, action) {
-            Espo.Ui.notify(false);
-
-            return new Promise(resolve => {
-                this.view
-                    .createView('dialog', 'views/modals/mass-action', {
-                        id: id,
-                        action: action,
-                        scope: this.view.scope || this.view.entityType,
-                    })
-                    .then(view => {
-                        view.render();
-
-                        resolve(view);
-
-                        this.view.listenToOnce(view, 'success', data => {
-                            resolve(data);
-
-                            this.view.listenToOnce(view, 'close', () => {
-                                view.trigger('close:success', data);
-                            });
-                        });
-                    });
-            });
-        }
+        this.config = view.getConfig();
     }
 
-    return Class;
-});
+    /**
+     * Check whether an action should be run in idle.
+     *
+     * @param {number} [totalCount] A total record count.
+     * @returns {boolean}
+     */
+    checkIsIdle(totalCount) {
+        if (this.view.getUser().isPortal()) {
+            return false;
+        }
+
+        if (typeof totalCount === 'undefined') {
+            totalCount = this.view.options.totalCount;
+        }
+
+        if (typeof totalCount === 'undefined' && this.view.collection) {
+            totalCount = this.view.collection.total;
+        }
+
+        return totalCount === -1 || totalCount > this.config.get('massActionIdleCountThreshold');
+    }
+
+    /**
+     * Process.
+     *
+     * @param {string} id An ID.
+     * @param {string} action An action.
+     * @returns {Promise<module:view>} Resolves with a dialog view.
+     *   The view emits the 'close:success' event.
+     */
+    process(id, action) {
+        Espo.Ui.notify(false);
+
+        return new Promise(resolve => {
+            this.view
+                .createView('dialog', 'views/modals/mass-action', {
+                    id: id,
+                    action: action,
+                    scope: this.view.scope || this.view.entityType,
+                })
+                .then(view => {
+                    view.render();
+
+                    resolve(view);
+
+                    this.view.listenToOnce(view, 'success', data => {
+                        resolve(data);
+
+                        this.view.listenToOnce(view, 'close', () => {
+                            view.trigger('close:success', data);
+                        });
+                    });
+                });
+        });
+    }
+}

@@ -26,565 +26,727 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('model', [], function () {
+/** @module model */
 
-    let Dep = Backbone.Model;
+import Backbone from "lib!backbone";
+import _ from "lib!underscore";
+
+/**
+ * When attributes have changed.
+ *
+ * @event Class#change
+ * @param {Class} model A model.
+ * @param {Object} o Options.
+ */
+
+/**
+ * On sync with backend.
+ *
+ * @event Class#sync
+ * @param {Class} model A model.
+ * @param {Object} response Response from backend.
+ * @param {Object} o Options.
+ */
+
+/**
+ * Defs.
+ *
+ * @typedef module:model~defs
+ * @type {Object}
+ * @property {Object.<string, Object.<string, *>>} [fields] Fields.
+ * @property {Object.<string, Object.<string, *>>} [links] Links.
+ */
+
+/**
+ * A model.
+ *
+ * @mixes Backbone.Events
+ */
+class Class {
 
     /**
-     * Save values to the backend.
-     *
-     * @function save
-     * @memberof Backbone.Model.prototype
-     * @param {Object} [attributes] Attribute values.
-     * @param {Object} [options] Options.
-     * @returns {Promise}
-     *
-     * @fires module:model.Class#sync
+     * A root URL.
+     * @type {string|null}
      */
+    urlRoot = null
 
     /**
-     * Whether an attribute is changed. To be used only within a callback of a 'change' event listener.
+     * A name.
+     * @type {string|null}
+     */
+    name = null
+
+    /**
+     * An entity type.
+     * @type {string|null}
+     */
+    entityType = null
+
+    /**
+     * @param {Object.<string, *>|Class} [attributes]
+     * @param {{
+     *     collection?: module:collection,
+     *     entityType?: string,
+     *     defs?: module:model~defs,
+     *     user?: module:models/user,
+     *     dateTime?: module:date-time
+     * }} [options]
+     */
+    constructor(attributes, options) {
+        options = options || {};
+
+        /**
+         * A record ID.
+         * @type {string|null}
+         */
+        this.id = null;
+
+        /**
+         * An instance ID.
+         * @type {string}
+         */
+        this.cid = _.uniqueId('c');
+
+        /**
+         * Attribute values.
+         * @type {Object.<string, *>}
+         */
+        this.attributes = {};
+
+        if (options.collection) {
+            this.collection = options.collection;
+        }
+
+        this.set(attributes || {});
+
+        /**
+         * Definitions.
+         */
+        this.defs = options.defs || {};
+
+        if (!this.defs.fields) {
+            this.defs.fields = {};
+        }
+
+        if (options.entityType) {
+            this.entityType = options.entityType;
+            this.name = options.entityType;
+            this.urlRoot = options.entityType;
+        }
+
+        /** @private */
+        this.dateTime = options.dateTime || null;
+
+        /** @private */
+        this.changed = {};
+        /** @private */
+        this._previousAttributes = null;
+    }
+
+    /**
+     * @todo Revise naming.
      *
-     * @function changed
-     * @memberof Backbone.Model.prototype
+     * @public
+     * @return {Object.<string, *>}
+     */
+    toJSON() {
+        return Espo.Utils.cloneDeep(this.attributes);
+    }
+
+    /**
+     * @protected
+     * @param {string} [method] HTTP method.
+     * @param {Class} [model]
+     * @param {Object} [options]
+     * @returns {Promise}
+     */
+    sync(method, model, options) {
+        if (method === 'patch') {
+            options.type = 'PUT';
+        }
+
+        return Backbone.sync.call(this, method, model, options);
+    }
+
+    /**
+     * Set an attribute value.
+     *
+     * @param {(string|Object)} attribute An attribute name or a {key => value} object.
+     * @param {*} [value] A value or options if the first argument is an object.
+     * @param {{
+     *     silent?: boolean,
+     * }} [options] Options. `silent` won't trigger a `change` event.
+     * @returns {this}
+     * @fires Class#change Unless `{silent: true}`.
+     */
+    set(attribute, value, options) {
+        if (typeof attribute === 'object') {
+            let o = attribute;
+
+            if ('id' in o) {
+                this.id = o['id'];
+            }
+        }
+        else if (attribute === 'id') {
+            this.id = value;
+        }
+
+        return Backbone.Model.prototype.set.call(this, attribute, value, options);
+    }
+
+    /**
+     * Set attributes values.
+     *
+     * @param {Object.<string, *>} attributes
+     * @param {{
+     *     silent?: boolean,
+     * }} [options] Options. `silent` won't trigger a `change` event.
+     * @return {this}
+     */
+    setMultiple(attributes, options) {
+        return this.set(attributes, options);
+    }
+
+    /**
+     * Get an attribute value.
+     *
+     * @param {string} attribute An attribute name.
+     * @returns {*}
+     */
+    get(attribute) {
+        if (attribute === 'id' && this.id) {
+            return this.id;
+        }
+
+        return this.attributes[attribute];
+    }
+
+    /**
+     * Whether attribute is set.
+     *
      * @param {string} attribute An attribute name.
      * @returns {boolean}
      */
+    has(attribute) {
+        let value = this.get(attribute);
+
+        return (typeof value !== 'undefined');
+    }
+
+    /**
+     * Unset an attribute.
+     *
+     * @param {string} attribute
+     * @param options
+     * @return {Class}
+     */
+    unset(attribute, options) {
+        return this.set(attribute, void 0, _.extend({}, options, {unset: true}));
+    }
 
     /**
      * Removes all attributes from the model, including the `id` attribute.
      * Fires a `change` event unless `silent` is passed as an option.
      *
-     * @function clear
-     * @memberof Backbone.Model.prototype
      * @param {Object} [options] Options.
      */
+    clear(options) {
+        let attributes = {};
+
+        for (let key in this.attributes) {
+            attributes[key] = void 0;
+        }
+
+        return this.set(attributes, _.extend({}, options, {unset: true}));
+    }
 
     /**
-     * When attributes have changed.
+     * Whether is new.
      *
-     * @event module:model.Class#change
-     * @param {module:model.Class} model A model.
-     * @param {Object} o Options.
+     * @returns {boolean}
      */
+    isNew() {
+        return !this.id;
+    }
 
     /**
-     * On sync with backend.
+     * Whether an attribute changed. To be called only within a 'change' event handler.
      *
-     * @event module:model.Class#sync
-     * @param {module:model.Class} model A model.
-     * @param {Object} response Response from backend.
-     * @param {Object} o Options.
+     * @param {string} [attribute]
+     * @return {boolean}
      */
+    hasChanged(attribute) {
+        if (!attribute) {
+            return !_.isEmpty(this.changed);
+        }
+
+        return _.has(this.changed, attribute);
+    }
 
     /**
-     * A model.
+     * Get changed attribute values. To be called only within a 'change' event handler.
      *
-     * @class
-     * @name Class
-     * @extends Backbone.Model
-     * @mixes Backbone.Events
-     * @memberOf module:model
+     * @return {Object.<string, *>}
      */
-    let Model = Dep.extend(/** @lends module:model.Class.prototype */{
+    changedAttributes() {
+        return this.hasChanged() ? _.clone(this.changed) : {};
+    }
 
-        /**
-         * A record ID.
-         *
-         * @name cid
-         * @type {string|null}
-         * @public
-         * @memberof module:model.Class.prototype
-         */
+    /**
+     * Get previous attributes. To be called only within a 'change' event handler.
+     *
+     * @return {Object.<string, *>}
+     */
+    previousAttributes() {
+        return _.clone(this._previousAttributes);
+    }
 
-        /**
-         * An ID, unique among all models.
-         *
-         * @name cid
-         * @type {string}
-         * @public
-         * @memberof module:model.Class.prototype
-         */
-
-        /**
-         * Attribute values.
-         *
-         * @name attributes
-         * @type {Object}
-         * @public
-         * @memberof module:model.Class.prototype
-         */
-
-        /**
-         * A root URL.
-         *
-         * @type {string|null}
-         * @public
-         */
-        urlRoot: null,
-
-        /**
-         * A name.
-         *
-         * @type {string|null}
-         * @public
-         */
-        name: null,
-
-        /**
-         * An entity type.
-         *
-         * @type {string|null}
-         */
-        entityType: null,
-
-        /**
-         * @private
-         */
-        dateTime: null,
-
-        /**
-         * @private
-         */
-        _user: null,
-
-        /**
-         * Definitions.
-         *
-         * @type {Object|null}
-         */
-        defs: null,
-
-        /**
-         * Initialize.
-         *
-         * @protected
-         */
-        initialize: function () {
-            this.urlRoot = this.urlRoot || this.name;
-
-            this.defs = this.defs || {};
-
-            this.defs.fields = this.defs.fields || {};
-            this.defs.links = this.defs.links || {};
-        },
-
-        /**
-         * @param {string} [method] HTTP method.
-         * @param {module:model.Class} [model]
-         * @param {Object} [options]
-         * @returns {Promise}
-         */
-        sync: function (method, model, options) {
-            if (method === 'patch') {
-                options.type = 'PUT';
-            }
-
-            return Dep.prototype.sync.call(this, method, model, options);
-        },
-
-        /**
-         * Set an attribute value or multiple values.
-         *
-         * @param {(string|Object)} key An attribute name or a {key => value} object.
-         * @param {*} [val] A value or options if the first argument is an object.
-         * @param {Object} [options] Options. `silent` won't trigger a `change` event.
-         * @returns {this}
-         *
-         * @fires module:model.Class#change Unless `{silent: true}`.
-         */
-        set: function (key, val, options) {
-            if (typeof key === 'object') {
-                let o = key;
-
-                if (this.idAttribute in o) {
-                    this.id = o[this.idAttribute];
-                }
-            }
-            else if (key === 'id') {
-                this.id = val;
-            }
-
-            return Dep.prototype.set.call(this, key, val, options);
-        },
-
-        /**
-         * Get an attribute value.
-         *
-         * @param {string} key An attribute name.
-         * @returns {*}
-         */
-        get: function (key) {
-            if (key === 'id' && this.id) {
-                return this.id;
-            }
-
-            return Dep.prototype.get.call(this, key);
-        },
-
-        /**
-         * Whether attribute is set.
-         *
-         * @param {string} key An attribute name.
-         * @returns {boolean}
-         */
-        has: function (key) {
-            let value = this.get(key);
-
-            return (typeof value !== 'undefined');
-        },
-
-        /**
-         * Whether is new.
-         *
-         * @returns {boolean}
-         */
-        isNew: function () {
-            return !this.id;
-        },
-
-        /**
-         * Set defs.
-         *
-         * @param {{
-         *   fields?: Object.<string, *>,
-         *   links?: Object.<string, *>,
-         * }} defs
-         */
-        setDefs: function (defs) {
-            this.defs = defs || {};
-
-            this.defs.fields = this.defs.fields || {};
-        },
-
-        /**
-         * Get cloned attribute values.
-         *
-         * @returns {Object}
-         */
-        getClonedAttributes: function () {
-            var attributes = {};
-
-            for (let name in this.attributes) {
-                attributes[name] = Espo.Utils.cloneDeep(this.attributes[name]);
-            }
-
-            return attributes;
-        },
-
-        /**
-         * Populate default values.
-         */
-        populateDefaults: function () {
-            var defaultHash = {};
-
-            if ('fields' in this.defs) {
-                for (let field in this.defs.fields) {
-                    let defaultValue = this.getFieldParam(field, 'default');
-
-                    if (defaultValue !== null) {
-                        try {
-                            defaultValue = this.parseDefaultValue(defaultValue);
-
-                            defaultHash[field] = defaultValue;
-                        }
-                        catch (e) {
-                            console.error(e);
-                        }
-                    }
-
-                    let defaultAttributes = this.getFieldParam(field, 'defaultAttributes');
-
-                    if (defaultAttributes) {
-                        for (let attribute in defaultAttributes) {
-                            defaultHash[attribute] = defaultAttributes[attribute];
-                        }
-                    }
-                }
-            }
-
-            defaultHash = Espo.Utils.cloneDeep(defaultHash);
-
-            for (let attr in defaultHash) {
-                if (this.has(attr)) {
-                    delete defaultHash[attr];
-                }
-            }
-
-            this.set(defaultHash, {silent: true});
-        },
-
-        /**
-         * @protected
-         *
-         * @param {*} defaultValue
-         * @returns {*}
-         * @deprecated
-         */
-        parseDefaultValue: function (defaultValue) {
-            if (
-                typeof defaultValue === 'string' &&
-                defaultValue.indexOf('javascript:') === 0
-            ) {
-                let code = defaultValue.substring(11);
-
-                defaultValue = (new Function( "with(this) { " + code + "}")).call(this);
-            }
-
-            return defaultValue;
-        },
-
-        /**
-         * Get a link multiple column value.
-         *
-         * @param {string} field
-         * @param {string} column
-         * @param {string} id
-         * @returns {*}
-         */
-        getLinkMultipleColumn: function (field, column, id) {
-            return ((this.get(field + 'Columns') || {})[id] || {})[column];
-        },
-
-        /**
-         * @param {Object} data
-         */
-        setRelate: function (data) {
-            let setRelate = options => {
-                var link = options.link;
-                var model = options.model;
-
-                if (!link || !model) {
-                    throw new Error('Bad related options');
-                }
-
-                var type = this.defs.links[link].type;
-
-                switch (type) {
-                    case 'belongsToParent':
-                        this.set(link + 'Id', model.id);
-                        this.set(link + 'Type', model.name);
-                        this.set(link + 'Name', model.get('name'));
-
-                        break;
-
-                    case 'belongsTo':
-                        this.set(link + 'Id', model.id);
-                        this.set(link + 'Name', model.get('name'));
-
-                        break;
-
-                    case 'hasMany':
-                        var ids = [];
-                        ids.push(model.id);
-
-                        let names = {};
-
-                        names[model.id] = model.get('name');
-
-                        this.set(link + 'Ids', ids);
-                        this.set(link + 'Names', names);
-
-                        break;
-                }
-            };
-
-            if (Object.prototype.toString.call(data) === '[object Array]') {
-                data.forEach(options => {
-                    setRelate(options);
-                });
-            }
-            else {
-                setRelate(data);
-            }
-        },
-
-        /**
-         * Get a field type.
-         *
-         * @param {string} field
-         * @returns {string|null}
-         */
-        getFieldType: function (field) {
-            if (this.defs && this.defs.fields && (field in this.defs.fields)) {
-                return this.defs.fields[field].type || null;
-            }
-
+    /**
+     * Get a previous attribute value. To be called only within a 'change' event handler.
+     *
+     * @param attribute
+     * @return {*}
+     */
+    previous(attribute) {
+        if (!this._previousAttributes) {
             return null;
-        },
+        }
 
-        /**
-         * Get a field param.
-         *
-         * @param {string} field
-         * @param {string} param
-         * @returns {*}
-         */
-        getFieldParam: function (field, param) {
-            if (this.defs && this.defs.fields && (field in this.defs.fields)) {
-                if (param in this.defs.fields[field]) {
-                    return this.defs.fields[field][param];
+        return this._previousAttributes[attribute];
+    }
+
+    /**
+     * @private
+     */
+    _validate() {
+        return true;
+    }
+
+    /**
+     * Fetch values from the backend.
+     *
+     * @param {Object} [options] Options.
+     * @returns {Promise<Object>}
+     * @fires Class#sync
+     */
+    fetch(options) {
+        options = _.extend({parse: true}, options);
+
+        let success = options.success;
+
+        options.success = response => {
+            let serverAttributes = options.parse ?
+                this.parse(response, options) :
+                response;
+
+            if (!this.set(serverAttributes, options)) {
+                return false;
+            }
+
+            if (success) {
+                success.call(options.context, this, response, options);
+            }
+
+            this.trigger('sync', this, response, options);
+        };
+
+        this.lastXhr = this.sync('read', this, options);
+
+        return this.lastXhr;
+    }
+
+    /**
+     * Save values to the backend.
+     *
+     * @param {Object} [attributes] Attribute values.
+     * @param {Object} [options] Options.
+     * @returns {Promise}
+     * @fires Class#sync
+     */
+    save(attributes, options) {
+        return Backbone.Model.prototype.save.call(this, attributes, options);
+    }
+
+    /**
+     * Delete the record in the backend.
+     *
+     * @param {{wait: boolean}} [options] Options.
+     * @returns {Promise}
+     * @fires Class#sync
+     */
+    destroy(options) {
+        return Backbone.Model.prototype.destroy.call(this, options);
+    }
+
+    /**
+     * @private
+     */
+    url() {
+        let base = _.result(this, 'urlRoot');
+
+        if (!base) {
+            throw new Error("No URL.");
+        }
+
+        if (this.isNew()) {
+            return base;
+        }
+
+        let id = this.get('id');
+
+        return base.replace(/[^\/]$/, '$&/') + encodeURIComponent(id);
+    }
+
+    /**
+     * @protected
+     * @param {*} response
+     * @param {Object.<string, *>} options
+     * @return {*}
+     */
+    parse(response, options) {
+        return response;
+    }
+
+    /**
+     * Clone.
+     *
+     * @return {Class}
+     */
+    clone() {
+        return new this.constructor(
+            Espo.Utils.cloneDeep(this.attributes),
+            {
+                entityType: this.entityType,
+                dateTime: this.dateTime,
+                defs: this.defs,
+            }
+        );
+    }
+
+    /**
+     * Set defs.
+     *
+     * @param {module:model~defs} defs
+     */
+    setDefs(defs) {
+        this.defs = defs || {};
+
+        if (!this.defs.fields) {
+            this.defs.fields = {};
+        }
+    }
+
+    /**
+     * Get cloned attribute values.
+     *
+     * @returns {Object.<string, *>}
+     */
+    getClonedAttributes() {
+        return Espo.Utils.cloneDeep(this.attributes);
+    }
+
+    /**
+     * Populate default values.
+     */
+    populateDefaults() {
+        let defaultHash = {};
+
+        const fieldDefs = this.defs.fields;
+
+        for (let field in fieldDefs) {
+            let defaultValue = this.getFieldParam(field, 'default');
+
+            if (defaultValue !== null) {
+                try {
+                    defaultValue = this.parseDefaultValue(defaultValue);
+
+                    defaultHash[field] = defaultValue;
+                }
+                catch (e) {
+                    console.error(e);
                 }
             }
 
-            return null;
-        },
+            let defaultAttributes = this.getFieldParam(field, 'defaultAttributes');
 
-        /**
-         * Get a link type.
-         *
-         * @param {string} link
-         * @returns {string|null}
-         */
-        getLinkType: function (link) {
-            if (this.defs && this.defs.links && (link in this.defs.links)) {
-                return this.defs.links[link].type || null;
-            }
-
-            return null;
-        },
-
-        /**
-         * Get a link param.
-         *
-         * @param {string} link A link.
-         * @param {string} param A param.
-         * @returns {*}
-         */
-        getLinkParam: function (link, param) {
-            if (this.defs && this.defs.links && (link in this.defs.links)) {
-                if (param in this.defs.links[link]) {
-                    return this.defs.links[link][param];
+            if (defaultAttributes) {
+                for (let attribute in defaultAttributes) {
+                    defaultHash[attribute] = defaultAttributes[attribute];
                 }
             }
+        }
 
-            return null;
-        },
+        defaultHash = Espo.Utils.cloneDeep(defaultHash);
 
-        /**
-         * Is a field read-only.
-         *
-         * @param {string} field A field.
-         * @returns {bool}
-         */
-        isFieldReadOnly: function (field) {
-            return this.getFieldParam(field, 'readOnly') || false;
-        },
-
-        /**
-         * If a field required.
-         *
-         * @param {string} field A field.
-         * @returns {bool}
-         */
-        isRequired: function (field) {
-            return this.getFieldParam(field, 'required') || false;
-        },
-
-        /**
-         * Get IDs of a link-multiple field.
-         *
-         * @param {type} field A link-multiple field name.
-         * @returns {string[]}
-         */
-        getLinkMultipleIdList: function (field) {
-            return this.get(field + 'Ids') || [];
-        },
-
-        /**
-         * Get team IDs.
-         *
-         * @returns {string[]}
-         */
-        getTeamIdList: function () {
-            return this.get('teamsIds') || [];
-        },
-
-
-        /**
-         * @protected
-         * @returns {Espo.DateTime}
-         */
-        getDateTime: function () {
-            return this.dateTime;
-        },
-
-        /**
-         * @protected
-         * @returns {Espo.Models.User}
-         */
-        getUser: function () {
-            return this._user;
-        },
-
-        /**
-         * Whether has a field.
-         *
-         * @param {string} field A field.
-         * @returns {boolean}
-         */
-        hasField: function (field) {
-            return ('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields);
-        },
-
-        /**
-         * Whether has a link.
-         *
-         * @param {string} link A link.
-         * @returns {boolean}
-         */
-        hasLink: function (link) {
-            return ('defs' in this) && ('links' in this.defs) && (link in this.defs.links);
-        },
-
-        /**
-         * @returns {boolean}
-         */
-        isEditable: function () {
-            return true;
-        },
-
-        /**
-         * @returns {boolean}
-         */
-        isRemovable: function () {
-            return true;
-        },
-
-        /**
-         * Get an entity type.
-         *
-         * @returns {string}
-         */
-        getEntityType: function () {
-            return this.name;
-        },
-
-        /**
-         * Fetch values from the backend.
-         *
-         * @param {Object} [options] Options.
-         * @returns {Promise<Object>}
-         *
-         * @fires module:model.Class#sync
-         */
-        fetch: function (options) {
-            this.lastXhr = Dep.prototype.fetch.call(this, options);
-
-            return this.lastXhr;
-        },
-
-        /**
-         * Abort the last fetch.
-         */
-        abortLastFetch: function () {
-            if (this.lastXhr && this.lastXhr.readyState < 4) {
-                this.lastXhr.abort();
+        for (let attr in defaultHash) {
+            if (this.has(attr)) {
+                delete defaultHash[attr];
             }
-        },
-    });
+        }
 
-    Model.extend = Bull.View.extend;
+        this.set(defaultHash, {silent: true});
+    }
 
-    return Model;
-});
+    /**
+     * @protected
+     *
+     * @param {*} defaultValue
+     * @returns {*}
+     * @deprecated
+     */
+    parseDefaultValue(defaultValue) {
+        if (
+            typeof defaultValue === 'string' &&
+            defaultValue.indexOf('javascript:') === 0
+        ) {
+            let code = defaultValue.substring(11);
+
+            defaultValue = (new Function( "with(this) { " + code + "}")).call(this);
+        }
+
+        return defaultValue;
+    }
+
+    /**
+     * Get a link multiple column value.
+     *
+     * @param {string} field
+     * @param {string} column
+     * @param {string} id
+     * @returns {*}
+     */
+    getLinkMultipleColumn(field, column, id) {
+        return ((this.get(field + 'Columns') || {})[id] || {})[column];
+    }
+
+    /**
+     * Set relate data (when creating a related record).
+     *
+     * @param {Object} data
+     */
+    setRelate(data) {
+        let setRelate = options => {
+            let link = options.link;
+            let model = options.model;
+
+            if (!link || !model) {
+                throw new Error('Bad related options');
+            }
+
+            let type = this.defs.links[link].type;
+
+            switch (type) {
+                case 'belongsToParent':
+                    this.set(link + 'Id', model.id);
+                    this.set(link + 'Type', model.name);
+                    this.set(link + 'Name', model.get('name'));
+
+                    break;
+
+                case 'belongsTo':
+                    this.set(link + 'Id', model.id);
+                    this.set(link + 'Name', model.get('name'));
+
+                    break;
+
+                case 'hasMany':
+                    let ids = [];
+                    ids.push(model.id);
+
+                    let names = {};
+
+                    names[model.id] = model.get('name');
+
+                    this.set(link + 'Ids', ids);
+                    this.set(link + 'Names', names);
+
+                    break;
+            }
+        };
+
+        if (Object.prototype.toString.call(data) === '[object Array]') {
+            data.forEach(options => {
+                setRelate(options);
+            });
+
+            return;
+        }
+
+        setRelate(data);
+    }
+
+    /**
+     * Get a field type.
+     *
+     * @param {string} field
+     * @returns {string|null}
+     */
+    getFieldType(field) {
+        if (!this.defs || !this.defs.fields) {
+            return null;
+        }
+
+        if (field in this.defs.fields) {
+            return this.defs.fields[field].type || null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a field param.
+     *
+     * @param {string} field
+     * @param {string} param
+     * @returns {*}
+     */
+    getFieldParam(field, param) {
+        if (!this.defs || !this.defs.fields) {
+            return null;
+        }
+
+        if (field in this.defs.fields) {
+            if (param in this.defs.fields[field]) {
+                return this.defs.fields[field][param];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a link type.
+     *
+     * @param {string} link
+     * @returns {string|null}
+     */
+    getLinkType(link) {
+        if (!this.defs || !this.defs.links) {
+            return null;
+        }
+
+        if (link in this.defs.links) {
+            return this.defs.links[link].type || null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a link param.
+     *
+     * @param {string} link A link.
+     * @param {string} param A param.
+     * @returns {*}
+     */
+    getLinkParam(link, param) {
+        if (!this.defs || !this.defs.links) {
+            return null;
+        }
+
+        if (link in this.defs.links) {
+            if (param in this.defs.links[link]) {
+                return this.defs.links[link][param];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Is a field read-only.
+     *
+     * @param {string} field A field.
+     * @returns {bool}
+     */
+    isFieldReadOnly(field) {
+        return this.getFieldParam(field, 'readOnly') || false;
+    }
+
+    /**
+     * If a field required.
+     *
+     * @param {string} field A field.
+     * @returns {bool}
+     */
+    isRequired(field) {
+        return this.getFieldParam(field, 'required') || false;
+    }
+
+    /**
+     * Get IDs of a link-multiple field.
+     *
+     * @param {string} field A link-multiple field name.
+     * @returns {string[]}
+     */
+    getLinkMultipleIdList(field) {
+        return this.get(field + 'Ids') || [];
+    }
+
+    /**
+     * Get team IDs.
+     *
+     * @returns {string[]}
+     */
+    getTeamIdList() {
+        return this.get('teamsIds') || [];
+    }
+
+    /**
+     * Whether it has a field.
+     *
+     * @param {string} field A field.
+     * @returns {boolean}
+     */
+    hasField(field) {
+        return ('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields);
+    }
+
+    /**
+     * Whether has a link.
+     *
+     * @param {string} link A link.
+     * @returns {boolean}
+     */
+    hasLink(link) {
+        return ('defs' in this) && ('links' in this.defs) && (link in this.defs.links);
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    isEditable() {
+        return true;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    isRemovable() {
+        return true;
+    }
+
+    /**
+     * Get an entity type.
+     *
+     * @returns {string}
+     */
+    getEntityType() {
+        return this.name;
+    }
+
+    /**
+     * Abort the last fetch.
+     */
+    abortLastFetch() {
+        if (this.lastXhr && this.lastXhr.readyState < 4) {
+            this.lastXhr.abort();
+        }
+    }
+}
+
+Class.extend = Bull.View.extend;
+
+_.extend(Class.prototype, Backbone.Events);
+
+export default Class;

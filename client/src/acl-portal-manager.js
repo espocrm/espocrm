@@ -26,55 +26,55 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('acl-portal-manager', ['acl-manager', 'acl-portal'], function (Dep, AclPortal) {
+/** @module acl-portal-manager */
+
+import Dep from 'acl-manager';
+import AclPortal from 'acl-portal';
+
+/**
+ * Portal access checking.
+ *
+ * @class
+ * @name Class
+ * @extends module:acl-manager
+ */
+export default Dep.extend(/** @lends Class# */{
 
     /**
-     * Portal access checking.
+     * Check if a user in an account of a model.
      *
-     * @class
-     * @name Class
-     * @extends module:acl-manager.Class
-     * @memberOf module:acl-portal-manager
+     * @param {module:model} model A model.
+     * @returns {boolean|null} True if in an account, null if not clear.
      */
-    return Dep.extend(/** @lends module:acl-portal-manager.Class# */{
+    checkInAccount: function (model) {
+        return this.getImplementation(model.name).checkInAccount(model);
+    },
 
-        /**
-         * Check if a user in an account of a model.
-         *
-         * @param {module:model.Class} model A model.
-         * @returns {boolean|null} True if in an account, null if not clear.
-         */
-        checkInAccount: function (model) {
-            return this.getImplementation(model.name).checkInAccount(model);
-        },
+    /**
+     * Check if a user is a contact-owner to a model.
+     *
+     * @param {module:model} model A model.
+     * @returns {boolean|null} True if in a contact-owner, null if not clear.
+     */
+    checkIsOwnContact: function (model) {
+        return this.getImplementation(model.name).checkIsOwnContact(model);
+    },
 
-        /**
-         * Check if a user is a contact-owner to a model.
-         *
-         * @param {module:model.Class} model A model.
-         * @returns {boolean|null} True if in a contact-owner, null if not clear.
-         */
-        checkIsOwnContact: function (model) {
-            return this.getImplementation(model.name).checkIsOwnContact(model);
-        },
+    /**
+     * @inheritDoc
+     */
+    getImplementation: function (scope) {
+        if (!(scope in this.implementationHash)) {
+            let implementationClass = AclPortal;
 
-        /**
-         * @inheritDoc
-         */
-        getImplementation: function (scope) {
-            if (!(scope in this.implementationHash)) {
-                let implementationClass = AclPortal;
-
-                if (scope in this.implementationClassMap) {
-                    implementationClass = this.implementationClassMap[scope];
-                }
-
-                let obj = new implementationClass(this.getUser(), scope, this.aclAllowDeleteCreated);
-
-                this.implementationHash[scope] = obj;
+            if (scope in this.implementationClassMap) {
+                implementationClass = this.implementationClassMap[scope];
             }
 
-            return this.implementationHash[scope];
-        },
-    });
+            this.implementationHash[scope] =
+                new implementationClass(this.getUser(), scope, this.aclAllowDeleteCreated);
+        }
+
+        return this.implementationHash[scope];
+    },
 });

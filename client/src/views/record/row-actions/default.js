@@ -26,93 +26,91 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/row-actions/default', ['view'], function (Dep) {
+import Dep from 'view';
+
+/**
+ * A detail-side record view.
+ *
+ * @class
+ * @name Class
+ * @extends module:view
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    template: 'record/row-actions/default',
+
+    setup: function () {
+        this.options.acl = this.options.acl || {};
+    },
+
+    afterRender: function () {
+        let $dd = this.$el.find('button[data-toggle="dropdown"]').parent();
+
+        let isChecked = false;
+
+        $dd.on('show.bs.dropdown', () => {
+            let $el = this.$el.closest('.list-row');
+
+            isChecked = false;
+
+            if ($el.hasClass('active')) {
+                isChecked = true;
+            }
+
+            $el.addClass('active');
+        });
+
+        $dd.on('hide.bs.dropdown', () => {
+            if (!isChecked) {
+                this.$el.closest('.list-row').removeClass('active');
+            }
+        });
+    },
 
     /**
-     * A detail-side record view.
+     * Get an action list.
      *
-     * @class
-     * @name Class
-     * @extends module:view.Class
-     * @memberOf views/record/row-actions/default
+     * @return {module:views/record/list~rowAction[]}
      */
-    return Dep.extend(/** @lends views/record/row-actions/default.Class# */{
+    getActionList: function () {
+        var list = [{
+            action: 'quickView',
+            label: 'View',
+            data: {
+                id: this.model.id
+            },
+            link: '#' + this.model.name + '/view/' + this.model.id,
+        }];
 
-        template: 'record/row-actions/default',
-
-        setup: function () {
-            this.options.acl = this.options.acl || {};
-        },
-
-        afterRender: function () {
-            let $dd = this.$el.find('button[data-toggle="dropdown"]').parent();
-
-            let isChecked = false;
-
-            $dd.on('show.bs.dropdown', () => {
-                let $el = this.$el.closest('.list-row');
-
-                isChecked = false;
-
-                if ($el.hasClass('active')) {
-                    isChecked = true;
-                }
-
-                $el.addClass('active');
-            });
-
-            $dd.on('hide.bs.dropdown', () => {
-                if (!isChecked) {
-                    this.$el.closest('.list-row').removeClass('active');
-                }
-            });
-        },
-
-        /**
-         * Get an action list.
-         *
-         * @return {module:views/record/list~rowAction[]}
-         */
-        getActionList: function () {
-            var list = [{
-                action: 'quickView',
-                label: 'View',
+        if (this.options.acl.edit) {
+            list.push({
+                action: 'quickEdit',
+                label: 'Edit',
                 data: {
                     id: this.model.id
                 },
-                link: '#' + this.model.name + '/view/' + this.model.id,
-            }];
+                link: '#' + this.model.name + '/edit/' + this.model.id,
+            });
+        }
 
-            if (this.options.acl.edit) {
-                list.push({
-                    action: 'quickEdit',
-                    label: 'Edit',
-                    data: {
-                        id: this.model.id
-                    },
-                    link: '#' + this.model.name + '/edit/' + this.model.id,
-                });
-            }
+        if (this.options.acl.delete) {
+            list.push({
+                action: 'quickRemove',
+                label: 'Remove',
+                data: {
+                    id: this.model.id,
+                }
+            });
+        }
 
-            if (this.options.acl.delete) {
-                list.push({
-                    action: 'quickRemove',
-                    label: 'Remove',
-                    data: {
-                        id: this.model.id,
-                    }
-                });
-            }
+        return list;
+    },
 
-            return list;
-        },
-
-        data: function () {
-            return {
-                acl: this.options.acl,
-                actionList: this.getActionList(),
-                scope: this.model.name,
-            };
-        },
-    });
+    data: function () {
+        return {
+            acl: this.options.acl,
+            actionList: this.getActionList(),
+            scope: this.model.name,
+        };
+    },
 });

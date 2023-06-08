@@ -26,821 +26,805 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/array', ['views/fields/base', 'helpers/reg-exp-pattern', 'ui/multi-select'],
-function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
+/** @module views/fields/array */
+
+import Dep from 'views/fields/base';
+import RegExpPattern from 'helpers/reg-exp-pattern';
+import MultiSelect from 'ui/multi-select';
+
+/**
+ * An array field.
+ *
+ * @class
+ * @name Class
+ * @extends module:views/fields/base
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    type: 'array',
+
+    listTemplate: 'fields/array/list',
+    listLinkTemplate: 'fields/array/list-link',
+    detailTemplate: 'fields/array/detail',
+    editTemplate: 'fields/array/edit',
+    searchTemplate: 'fields/array/search',
+
+    searchTypeList: ['anyOf', 'noneOf', 'allOf', 'isEmpty', 'isNotEmpty'],
+    maxItemLength: null,
+    validations: ['required', 'maxCount'],
+    MAX_ITEM_LENGTH: 100,
 
     /**
-     * An array field.
+     * An add-item model view.
      *
-     * @class
-     * @name Class
-     * @extends module:views/fields/base.Class
-     * @memberOf module:views/fields/array
+     * @protected
+     * @type {string}
      */
-    return Dep.extend(/** @lends module:views/fields/array.Class# */{
+    addItemModalView: 'views/modals/array-field-add',
+    /**
+     * @protected
+     * @type {string}
+     */
+    itemDelimiter: ':,:',
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    matchAnyWord: true,
+    /**
+     * @protected
+     * @type {Object|null}
+     */
+    translatedOptions: null,
 
-        type: 'array',
+    /** @inheritDoc */
+    data: function () {
+        let itemHtmlList = [];
 
-        listTemplate: 'fields/array/list',
+        (this.selected || []).forEach(value => {
+            itemHtmlList.push(this.getItemHtml(value));
+        });
 
-        listLinkTemplate: 'fields/array/list-link',
+        return _.extend({
+            selected: this.selected,
+            translatedOptions: this.translatedOptions,
+            hasOptions: !!this.params.options,
+            itemHtmlList: itemHtmlList,
+            isEmpty: (this.selected || []).length === 0,
+            valueIsSet: this.model.has(this.name),
+            maxItemLength: this.maxItemLength || this.MAX_ITEM_LENGTH,
+            allowCustomOptions: this.allowCustomOptions,
+        }, Dep.prototype.data.call(this));
+    },
 
-        detailTemplate: 'fields/array/detail',
+    /**
+     * @inheritDoc
+     */
+    events: {
+        'click [data-action="removeValue"]': function (e) {
+            let value = $(e.currentTarget).attr('data-value').toString();
 
-        editTemplate: 'fields/array/edit',
+            this.removeValue(value);
 
-        searchTemplate: 'fields/array/search',
+            this.focusOnElement();
+        },
+        'click [data-action="showAddModal"]': function () {
+            this.actionAddItem();
+        },
+    },
 
-        searchTypeList: ['anyOf', 'noneOf', 'allOf', 'isEmpty', 'isNotEmpty'],
+    setup: function () {
+        Dep.prototype.setup.call(this);
 
-        maxItemLength: null,
+        this.noEmptyString = this.params.noEmptyString;
 
-        validations: ['required', 'maxCount'],
+        this.listenTo(this.model, 'change:' + this.name, () => {
+            this.selected = Espo.Utils.clone(this.model.get(this.name)) || [];
+        });
 
-        MAX_ITEM_LENGTH: 100,
+        this.selected = Espo.Utils.clone(this.model.get(this.name) || []);
 
-        /**
-         * An add-item model view.
-         *
-         * @protected
-         * @type {string}
-         */
-        addItemModalView: 'views/modals/array-field-add',
+        if (Object.prototype.toString.call(this.selected) !== '[object Array]')    {
+            this.selected = [];
+        }
 
-        /**
-         * @protected
-         * @type {string}
-         */
-        itemDelimiter: ':,:',
+        let optionsPath = this.params.optionsPath;
+        /** @type {?string} */
+        let optionsReference = this.params.optionsReference;
 
-        /**
-         * @protected
-         * @type {boolean}
-         */
-        matchAnyWord: true,
+        if (!optionsPath && optionsReference) {
+            let [refEntityType, refField] = optionsReference.split('.');
 
-        /**
-         * @protected
-         * @type {Object|null}
-         */
-        translatedOptions: null,
+            optionsPath = `entityDefs.${refEntityType}.fields.${refField}.options`;
+        }
 
-        /**
-         * @inheritDoc
-         */
-        data: function () {
-            let itemHtmlList = [];
+        if (optionsPath) {
+            this.params.options = Espo.Utils.clone(this.getMetadata().get(optionsPath)) || [];
+        }
 
-            (this.selected || []).forEach(value => {
-                itemHtmlList.push(this.getItemHtml(value));
+        this.styleMap = this.params.style || {};
+
+        this.setupOptions();
+
+        if ('translatedOptions' in this.options) {
+            this.translatedOptions = this.options.translatedOptions;
+        }
+
+        if ('translatedOptions' in this.params) {
+            this.translatedOptions = this.params.translatedOptions;
+        }
+
+        if (!this.translatedOptions) {
+            this.setupTranslation();
+        }
+
+        this.displayAsLabel = this.params.displayAsLabel || this.displayAsLabel;
+        this.displayAsList = this.params.displayAsList || this.displayAsList;
+
+        if (this.params.isSorted && this.translatedOptions) {
+            this.params.options = Espo.Utils.clone(this.params.options);
+            this.params.options = this.params.options.sort((v1, v2) => {
+                 return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
+            });
+        }
+
+        if (this.options.customOptionList) {
+            this.setOptionList(this.options.customOptionList, true);
+        }
+
+        if (this.params.allowCustomOptions || !this.params.options) {
+            this.allowCustomOptions = true;
+        }
+    },
+
+    focusOnElement: function () {
+        let $button = this.$el.find('button[data-action="showAddModal"]');
+
+        if ($button[0]) {
+            $button[0].focus({preventScroll: true});
+
+            return;
+        }
+
+        let $input = this.$el.find('input');
+
+        if ($input[0]) {
+            $input[0].focus({preventScroll: true});
+        }
+    },
+
+    setupSearch: function () {
+        this.events['change select.search-type'] = e => {
+            this.handleSearchType($(e.currentTarget).val());
+        };
+    },
+
+    handleSearchType: function (type) {
+        let $inputContainer = this.$el.find('div.input-container');
+
+        if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
+            $inputContainer.removeClass('hidden');
+        } else {
+            $inputContainer.addClass('hidden');
+        }
+    },
+
+    setupTranslation: function () {
+        let t = {};
+
+        let translation = this.params.translation;
+        /** @type {?string} */
+        let optionsReference = this.params.optionsReference;
+
+        if (!translation && optionsReference) {
+            let [refEntityType, refField] = optionsReference.split('.');
+
+            translation = `${refEntityType}.options.${refField}`;
+        }
+
+        if (translation) {
+            let arr = translation.split('.');
+
+            let pointer = this.getLanguage().data;
+
+            arr.forEach(key => {
+                if (key in pointer) {
+                    pointer = pointer[key];
+
+                    t = pointer;
+                }
+            });
+        }
+        else {
+            t = this.translate(this.name, 'options', this.model.name);
+        }
+
+        this.translatedOptions = null;
+
+        let translatedOptions = {};
+
+        if (this.params.options) {
+            this.params.options.forEach((o) => {
+                if (typeof t === 'object' && o in t) {
+                    translatedOptions[o] = t[o];
+                } else {
+                    translatedOptions[o] = o;
+                }
             });
 
-            return _.extend({
-                selected: this.selected,
-                translatedOptions: this.translatedOptions,
-                hasOptions: this.params.options ? true : false,
-                itemHtmlList: itemHtmlList,
-                isEmpty: (this.selected || []).length === 0,
-                valueIsSet: this.model.has(this.name),
-                maxItemLength: this.maxItemLength || this.MAX_ITEM_LENGTH,
-                allowCustomOptions: this.allowCustomOptions,
-            }, Dep.prototype.data.call(this));
-        },
-
-        /**
-         * @inheritDoc
-         */
-        events: {
-            'click [data-action="removeValue"]': function (e) {
-                let value = $(e.currentTarget).attr('data-value').toString();
-
-                this.removeValue(value);
-
-                this.focusOnElement();
-            },
-            'click [data-action="showAddModal"]': function () {
-                this.actionAddItem();
-            },
-        },
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.noEmptyString = this.params.noEmptyString;
-
-            this.listenTo(this.model, 'change:' + this.name, () => {
-                this.selected = Espo.Utils.clone(this.model.get(this.name)) || [];
-            });
-
-            this.selected = Espo.Utils.clone(this.model.get(this.name) || []);
-
-            if (Object.prototype.toString.call(this.selected) !== '[object Array]')    {
-                this.selected = [];
-            }
-
-            let optionsPath = this.params.optionsPath;
-            /** @type {?string} */
-            let optionsReference = this.params.optionsReference;
-
-            if (!optionsPath && optionsReference) {
-                let [refEntityType, refField] = optionsReference.split('.');
-
-                optionsPath = `entityDefs.${refEntityType}.fields.${refField}.options`;
-            }
-
-            if (optionsPath) {
-                this.params.options = Espo.Utils.clone(this.getMetadata().get(optionsPath)) || [];
-            }
-
-            this.styleMap = this.params.style || {};
-
-            this.setupOptions();
-
-            if ('translatedOptions' in this.options) {
-                this.translatedOptions = this.options.translatedOptions;
-            }
-
-            if ('translatedOptions' in this.params) {
-                this.translatedOptions = this.params.translatedOptions;
-            }
-
-            if (!this.translatedOptions) {
-                this.setupTranslation();
-            }
-
-            this.displayAsLabel = this.params.displayAsLabel || this.displayAsLabel;
-            this.displayAsList = this.params.displayAsList || this.displayAsList;
-
-            if (this.params.isSorted && this.translatedOptions) {
-                this.params.options = Espo.Utils.clone(this.params.options);
-                this.params.options = this.params.options.sort((v1, v2) => {
-                     return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
-                });
-            }
-
-            if (this.options.customOptionList) {
-                this.setOptionList(this.options.customOptionList, true);
-            }
-
-            if (this.params.allowCustomOptions || !this.params.options) {
-                this.allowCustomOptions = true;
-            }
-        },
-
-        focusOnElement: function () {
-            let $button = this.$el.find('button[data-action="showAddModal"]');
-
-            if ($button[0]) {
-                $button[0].focus({preventScroll: true});
-
-                return;
-            }
-
-            let $input = this.$el.find('input');
-
-            if ($input[0]) {
-                $input[0].focus({preventScroll: true});
-            }
-        },
-
-        setupSearch: function () {
-            this.events['change select.search-type'] = e => {
-                this.handleSearchType($(e.currentTarget).val());
-            };
-        },
-
-        handleSearchType: function (type) {
-            let $inputContainer = this.$el.find('div.input-container');
-
-            if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
-                $inputContainer.removeClass('hidden');
-            } else {
-                $inputContainer.addClass('hidden');
-            }
-        },
-
-        setupTranslation: function () {
-            let t = {};
-
-            let translation = this.params.translation;
-            /** @type {?string} */
-            let optionsReference = this.params.optionsReference;
-
-            if (!translation && optionsReference) {
-                let [refEntityType, refField] = optionsReference.split('.');
-
-                translation = `${refEntityType}.options.${refField}`;
-            }
-
-            if (translation) {
-                let arr = translation.split('.');
-
-                let pointer = this.getLanguage().data;
-
-                arr.forEach(key => {
-                    if (key in pointer) {
-                        pointer = pointer[key];
-
-                        t = pointer;
-                    }
-                });
-            }
-            else {
-                t = this.translate(this.name, 'options', this.model.name);
-            }
-
-            this.translatedOptions = null;
-
-            let translatedOptions = {};
-
-            if (this.params.options) {
-                this.params.options.forEach((o) => {
-                    if (typeof t === 'object' && o in t) {
-                        translatedOptions[o] = t[o];
-                    } else {
-                        translatedOptions[o] = o;
-                    }
-                });
-
-                this.translatedOptions = translatedOptions;
-            }
-        },
-
-        setupOptions: function () {},
-
-        setOptionList: function (optionList, silent) {
-            let previousOptions = this.params.options;
-
-            if (!this.originalOptionList) {
-                this.originalOptionList = this.params.options;
-            }
-
-            this.params.options = Espo.Utils.clone(optionList);
-
-            let isChanged = !_(previousOptions).isEqual(optionList);
-
-            if (this.isEditMode() && !silent && isChanged) {
-                let selectedOptionList = [];
-
-                this.selected.forEach(option => {
-                    if (~optionList.indexOf(option)) {
-                        selectedOptionList.push(option);
-                    }
-                });
-
-                this.selected = selectedOptionList;
-
-                if (this.isRendered()) {
-                    this.reRender();
-
-                    this.trigger('change');
-                }
-                else {
-                    this.once('after:render', () => {
-                        this.trigger('change');
-                    });
-                }
-            }
-        },
-
-        setTranslatedOptions: function (translatedOptions) {
             this.translatedOptions = translatedOptions;
-        },
+        }
+    },
 
-        resetOptionList: function () {
-            if (!this.originalOptionList) {
-                return;
-            }
+    setupOptions: function () {},
 
-            let previousOptions = this.params.options;
+    setOptionList: function (optionList, silent) {
+        let previousOptions = this.params.options;
 
-            this.params.options = Espo.Utils.clone(this.originalOptionList);
+        if (!this.originalOptionList) {
+            this.originalOptionList = this.params.options;
+        }
 
-            let isChanged = !_(previousOptions).isEqual(this.originalOptionList);
+        this.params.options = Espo.Utils.clone(optionList);
 
-            if (!this.isEditMode() || !isChanged) {
-                return;
-            }
+        let isChanged = !_(previousOptions).isEqual(optionList);
+
+        if (this.isEditMode() && !silent && isChanged) {
+            let selectedOptionList = [];
+
+            this.selected.forEach(option => {
+                if (~optionList.indexOf(option)) {
+                    selectedOptionList.push(option);
+                }
+            });
+
+            this.selected = selectedOptionList;
 
             if (this.isRendered()) {
                 this.reRender();
-            }
-        },
 
-        controlAddItemButton: function () {
-            let $select = this.$select;
-
-            if (!$select) {
-                return;
-            }
-
-            if (!$select.get(0)) {
-                return;
-            }
-
-            let value = $select.val().toString().trim();
-
-            if (!value && this.params.noEmptyString) {
-                this.$addButton.addClass('disabled').attr('disabled', 'disabled');
+                this.trigger('change');
             }
             else {
-                this.$addButton.removeClass('disabled').removeAttr('disabled');
+                this.once('after:render', () => {
+                    this.trigger('change');
+                });
             }
-        },
+        }
+    },
 
-        afterRender: function () {
-            if (this.isEditMode()) {
-                this.$list = this.$el.find('.list-group');
+    setTranslatedOptions: function (translatedOptions) {
+        this.translatedOptions = translatedOptions;
+    },
 
-                let $select = this.$select = this.$el.find('.select');
+    resetOptionList: function () {
+        if (!this.originalOptionList) {
+            return;
+        }
 
-                if (this.allowCustomOptions) {
-                    this.$addButton = this.$el.find('button[data-action="addItem"]');
+        let previousOptions = this.params.options;
 
-                    this.$addButton.on('click', () => {
+        this.params.options = Espo.Utils.clone(this.originalOptionList);
+
+        let isChanged = !_(previousOptions).isEqual(this.originalOptionList);
+
+        if (!this.isEditMode() || !isChanged) {
+            return;
+        }
+
+        if (this.isRendered()) {
+            this.reRender();
+        }
+    },
+
+    controlAddItemButton: function () {
+        let $select = this.$select;
+
+        if (!$select) {
+            return;
+        }
+
+        if (!$select.get(0)) {
+            return;
+        }
+
+        let value = $select.val().toString().trim();
+
+        if (!value && this.params.noEmptyString) {
+            this.$addButton.addClass('disabled').attr('disabled', 'disabled');
+        }
+        else {
+            this.$addButton.removeClass('disabled').removeAttr('disabled');
+        }
+    },
+
+    afterRender: function () {
+        if (this.isEditMode()) {
+            this.$list = this.$el.find('.list-group');
+
+            let $select = this.$select = this.$el.find('.select');
+
+            if (this.allowCustomOptions) {
+                this.$addButton = this.$el.find('button[data-action="addItem"]');
+
+                this.$addButton.on('click', () => {
+                    let value = $select.val().toString();
+
+                    this.addValueFromUi(value);
+
+                    this.focusOnElement();
+                });
+
+                $select.on('input', () => this.controlAddItemButton());
+
+                $select.on('keydown', e => {
+                    let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                    if (key === 'Enter') {
                         let value = $select.val().toString();
 
                         this.addValueFromUi(value);
-
-                        this.focusOnElement();
-                    });
-
-                    $select.on('input', () => this.controlAddItemButton());
-
-                    $select.on('keydown', e => {
-                        let key = Espo.Utils.getKeyFromKeyEvent(e);
-
-                        if (key === 'Enter') {
-                            let value = $select.val().toString();
-
-                            this.addValueFromUi(value);
-                        }
-                    });
-
-                    this.controlAddItemButton();
-                }
-
-                this.$list.sortable({
-                    stop: () => {
-                        this.fetchFromDom();
-                        this.trigger('change');
-                    },
-                    distance: 5,
-                    cancel: 'input,textarea,button,select,option,a[role="button"]',
-                    cursor: 'grabbing',
+                    }
                 });
+
+                this.controlAddItemButton();
             }
 
-            if (this.isSearchMode()) {
-                this.renderSearch();
+            this.$list.sortable({
+                stop: () => {
+                    this.fetchFromDom();
+                    this.trigger('change');
+                },
+                distance: 5,
+                cancel: 'input,textarea,button,select,option,a[role="button"]',
+                cursor: 'grabbing',
+            });
+        }
+
+        if (this.isSearchMode()) {
+            this.renderSearch();
+        }
+    },
+
+    /**
+     * @param {string} value
+     */
+    addValueFromUi: function (value) {
+        value = value.trim();
+
+        if (this.noEmptyString && value === '') {
+            return;
+        }
+
+        if (this.params.pattern) {
+            let helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+
+            let result = helper.validate(this.params.pattern, value, this.name, this.entityType);
+
+            if (result) {
+                setTimeout(() => this.showValidationMessage(result.message, 'input.select'), 10);
+
+                return;
             }
-        },
+        }
 
-        /**
-         * @param {string} value
-         */
-        addValueFromUi: function (value) {
-            value = value.trim();
+        this.addValue(value);
 
-            if (this.noEmptyString && value === '') {
+        this.$select.val('');
+
+        this.controlAddItemButton();
+    },
+
+    renderSearch: function () {
+        this.$element = this.$el.find('.main-element');
+
+        let valueList = this.getSearchParamsData().valueList || this.searchParams.valueFront || [];
+
+        this.$element.val(valueList.join(this.itemDelimiter));
+
+        let items = [];
+
+        (this.params.options || []).forEach(value => {
+            let label = this.getLanguage().translateOption(value, this.name, this.scope);
+
+            if (this.translatedOptions) {
+                if (value in this.translatedOptions) {
+                    label = this.translatedOptions[value];
+                }
+            }
+
+            if (label === '') {
                 return;
             }
 
-            if (this.params.pattern) {
-                /** @type module:helpers/reg-exp-pattern.Class */
-                let helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+            items.push({
+                value: value,
+                text: label,
+            });
+        });
 
-                let result = helper.validate(this.params.pattern, value, this.name, this.entityType);
-
-                if (result) {
-                    setTimeout(() => this.showValidationMessage(result.message, 'input.select'), 10);
-
-                    return;
-                }
-            }
-
-            this.addValue(value);
-
-            this.$select.val('');
-
-            this.controlAddItemButton();
-        },
-
-        renderSearch: function () {
-            this.$element = this.$el.find('.main-element');
-
-            let valueList = this.getSearchParamsData().valueList || this.searchParams.valueFront || [];
-
-            this.$element.val(valueList.join(this.itemDelimiter));
-
-            let items = [];
-
-            (this.params.options || []).forEach(value => {
-                let label = this.getLanguage().translateOption(value, this.name, this.scope);
-
-                if (this.translatedOptions) {
-                    if (value in this.translatedOptions) {
-                        label = this.translatedOptions[value];
-                    }
-                }
-
-                if (label === '') {
-                    return;
-                }
-
+        valueList
+            .filter(item => !(this.params.options || []).includes(item))
+            .forEach(item => {
                 items.push({
-                    value: value,
-                    text: label,
+                    value: item,
+                    text: item,
                 });
             });
 
-            valueList
-                .filter(item => !(this.params.options || []).includes(item))
-                .forEach(item => {
-                    items.push({
-                        value: item,
-                        text: item,
-                    });
-                });
+        /** @type {module:ui/multi-select~Options} */
+        let multiSelectOptions = {
+            items: items,
+            delimiter: this.itemDelimiter,
+            matchAnyWord: this.matchAnyWord,
+            allowCustomOptions: this.allowCustomOptions,
+            create: input => {
+                return {
+                    value: input,
+                    text: input,
+                };
+            },
+        };
 
-            /** @type {module:ui/multi-select~Options} */
-            let multiSelectOptions = {
-                items: items,
-                delimiter: this.itemDelimiter,
-                matchAnyWord: this.matchAnyWord,
-                allowCustomOptions: this.allowCustomOptions,
-                create: input => {
-                    return {
-                        value: input,
-                        text: input,
-                    };
+        MultiSelect.init(this.$element, multiSelectOptions);
+
+        this.$el.find('.selectize-dropdown-content').addClass('small');
+
+        let type = this.$el.find('select.search-type').val();
+
+        this.handleSearchType(type);
+
+        this.$el.find('select.search-type').on('change', () => {
+            this.trigger('change');
+        });
+
+        this.$element.on('change', () => {
+            this.trigger('change');
+        });
+    },
+
+    fetchFromDom: function () {
+        let selected = [];
+
+        this.$el.find('.list-group .list-group-item').each((i, el) => {
+            let value = $(el).attr('data-value').toString();
+
+            selected.push(value);
+        });
+
+        this.selected = selected;
+    },
+
+    getValueForDisplay: function () {
+        // Do not use the `html` method to avoid XSS.
+
+        /** @var {string[]} */
+        let list = this.selected.map(item => {
+            let label = null;
+
+            if (this.translatedOptions !== null) {
+                if (item in this.translatedOptions) {
+                    label = this.translatedOptions[item];
+                }
+            }
+
+            if (label === null) {
+                label = item;
+            }
+
+            if (label === '') {
+                label = this.translate('None');
+            }
+
+            let style = this.styleMap[item] || 'default';
+
+            if (this.params.displayAsLabel) {
+                return $('<span>')
+                    .addClass('label label-md label-' + style)
+                    .text(label)
+                    .get(0).outerHTML;
+
+            }
+
+            if (style && style !== 'default') {
+                return $('<span>')
+                    .addClass('text-' + style)
+                    .text(label)
+                    .get(0).outerHTML;
+            }
+
+            return $('<span>')
+                .text(label)
+                .get(0).outerHTML;
+        });
+
+        if (this.displayAsList) {
+            if (!list.length) {
+                return '';
+            }
+
+            let itemClassName = 'multi-enum-item-container';
+
+            if (this.displayAsLabel) {
+                itemClassName += ' multi-enum-item-label-container';
+            }
+
+            return list
+                .map(item =>
+                    $('<div>')
+                        .addClass(itemClassName)
+                        .html(item)
+                        .get(0).outerHTML
+                )
+                .join('');
+        }
+
+        if (this.displayAsLabel) {
+            return list.join(' ');
+        }
+
+        return list.join(', ');
+    },
+
+    getItemHtml: function (value) {
+        // Do not use the `html` method to avoid XSS.
+
+        if (this.translatedOptions !== null) {
+            for (let item in this.translatedOptions) {
+                if (this.translatedOptions[item] === value) {
+                    value = item;
+
+                    break;
+                }
+            }
+        }
+
+        value = value.toString();
+
+        let text = this.translatedOptions && value in this.translatedOptions ?
+            this.translatedOptions[value].toString() :
+            value;
+
+        return $('<div>')
+            .addClass('list-group-item')
+            .attr('data-value', value)
+            .css('cursor', 'default')
+            .append(
+                $('<a>')
+                    .attr('role', 'button')
+                    .attr('tabindex', '0')
+                    .addClass('pull-right')
+                    .attr('data-value', value)
+                    .attr('data-action', 'removeValue')
+                    .append(
+                        $('<span>').addClass('fas fa-times')
+                    )
+            )
+            .append(
+                $('<span>')
+                    .addClass('text')
+                    .text(text)
+            )
+            .append('')
+            .get(0)
+            .outerHTML;
+    },
+
+    addValue: function (value) {
+        if (this.selected.indexOf(value) === -1) {
+            let html = this.getItemHtml(value);
+
+            this.$list.append(html);
+            this.selected.push(value);
+            this.trigger('change');
+        }
+    },
+
+    removeValue: function (value) {
+        let valueInternal = value.replace(/"/g, '\\"');
+
+        this.$list.children('[data-value="' + valueInternal + '"]').remove();
+
+        let index = this.selected.indexOf(value);
+
+        this.selected.splice(index, 1);
+        this.trigger('change');
+    },
+
+    fetch: function () {
+        let data = {};
+
+        let list = Espo.Utils.clone(this.selected || []);
+
+        if (this.params.isSorted && this.translatedOptions) {
+            list = list.sort((v1, v2) => {
+                 return (this.translatedOptions[v1] || v1)
+                     .localeCompare(this.translatedOptions[v2] || v2);
+            });
+        }
+
+        data[this.name] = list;
+
+        return data;
+    },
+
+    fetchSearch: function () {
+        let type = this.$el.find('select.search-type').val() || 'anyOf';
+
+        let valueList;
+
+        if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
+            valueList = this.$element.val().split(this.itemDelimiter);
+
+            if (valueList.length === 1 && valueList[0] === '') {
+                valueList = [];
+            }
+
+            if (valueList.length === 0) {
+               if (type === 'anyOf') {
+                   return {
+                       type: 'any',
+                       data: {
+                           type: type,
+                           valueList: valueList,
+                       },
+                   };
+               }
+
+               if (type === 'noneOf') {
+                   return {
+                       type: 'any',
+                       data: {
+                           type: type,
+                           valueList: valueList,
+                       },
+                   };
+               }
+
+               if (type === 'allOf') {
+                   return {
+                       type: 'any',
+                       data: {
+                           type: type,
+                           valueList: valueList,
+                       },
+                   };
+               }
+           }
+        }
+
+        if (type === 'anyOf') {
+            let data = {
+                type: 'arrayAnyOf',
+                value: valueList,
+                data: {
+                    type: 'anyOf',
+                    valueList: valueList,
                 },
             };
 
-            MultiSelect.init(this.$element, multiSelectOptions);
-
-            this.$el.find('.selectize-dropdown-content').addClass('small');
-
-            let type = this.$el.find('select.search-type').val();
-
-            this.handleSearchType(type);
-
-            this.$el.find('select.search-type').on('change', () => {
-                this.trigger('change');
-            });
-
-            this.$element.on('change', () => {
-                this.trigger('change');
-            });
-        },
-
-        fetchFromDom: function () {
-            let selected = [];
-
-            this.$el.find('.list-group .list-group-item').each((i, el) => {
-                let value = $(el).attr('data-value').toString();
-
-                selected.push(value);
-            });
-
-            this.selected = selected;
-        },
-
-        getValueForDisplay: function () {
-            // Do not use the `html` method to avoid XSS.
-
-            /** @var {string[]} */
-            let list = this.selected.map(item => {
-                let label = null;
-
-                if (this.translatedOptions !== null) {
-                    if (item in this.translatedOptions) {
-                        label = this.translatedOptions[item];
-                    }
-                }
-
-                if (label === null) {
-                    label = item;
-                }
-
-                if (label === '') {
-                    label = this.translate('None');
-                }
-
-                let style = this.styleMap[item] || 'default';
-
-                if (this.params.displayAsLabel) {
-                    return $('<span>')
-                        .addClass('label label-md label-' + style)
-                        .text(label)
-                        .get(0).outerHTML;
-
-                }
-
-                if (style && style !== 'default') {
-                    return $('<span>')
-                        .addClass('text-' + style)
-                        .text(label)
-                        .get(0).outerHTML;
-                }
-
-                return $('<span>')
-                    .text(label)
-                    .get(0).outerHTML;
-            });
-
-            if (this.displayAsList) {
-                if (!list.length) {
-                    return '';
-                }
-
-                let itemClassName = 'multi-enum-item-container';
-
-                if (this.displayAsLabel) {
-                    itemClassName += ' multi-enum-item-label-container';
-                }
-
-                return list
-                    .map(item =>
-                        $('<div>')
-                            .addClass(itemClassName)
-                            .html(item)
-                            .get(0).outerHTML
-                    )
-                    .join('');
+            if (!valueList.length) {
+                data.value = null;
             }
-
-            if (this.displayAsLabel) {
-                return list.join(' ');
-            }
-
-            return list.join(', ');
-        },
-
-        getItemHtml: function (value) {
-            // Do not use the `html` method to avoid XSS.
-
-            if (this.translatedOptions !== null) {
-                for (let item in this.translatedOptions) {
-                    if (this.translatedOptions[item] === value) {
-                        value = item;
-
-                        break;
-                    }
-                }
-            }
-
-            value = value.toString();
-
-            let text = this.translatedOptions && value in this.translatedOptions ?
-                this.translatedOptions[value].toString() :
-                value;
-
-            return $('<div>')
-                .addClass('list-group-item')
-                .attr('data-value', value)
-                .css('cursor', 'default')
-                .append(
-                    $('<a>')
-                        .attr('role', 'button')
-                        .attr('tabindex', '0')
-                        .addClass('pull-right')
-                        .attr('data-value', value)
-                        .attr('data-action', 'removeValue')
-                        .append(
-                            $('<span>').addClass('fas fa-times')
-                        )
-                )
-                .append(
-                    $('<span>')
-                        .addClass('text')
-                        .text(text)
-                )
-                .append('')
-                .get(0)
-                .outerHTML;
-        },
-
-        escapeValue: function (value) {
-            return Handlebars.Utils.escapeExpression(value);
-        },
-
-        addValue: function (value) {
-            if (this.selected.indexOf(value) === -1) {
-                let html = this.getItemHtml(value);
-
-                this.$list.append(html);
-                this.selected.push(value);
-                this.trigger('change');
-            }
-        },
-
-        removeValue: function (value) {
-            let valueInternal = value.replace(/"/g, '\\"');
-
-            this.$list.children('[data-value="' + valueInternal + '"]').remove();
-
-            let index = this.selected.indexOf(value);
-
-            this.selected.splice(index, 1);
-            this.trigger('change');
-        },
-
-        fetch: function () {
-            let data = {};
-
-            let list = Espo.Utils.clone(this.selected || []);
-
-            if (this.params.isSorted && this.translatedOptions) {
-                list = list.sort((v1, v2) => {
-                     return (this.translatedOptions[v1] || v1)
-                         .localeCompare(this.translatedOptions[v2] || v2);
-                });
-            }
-
-            data[this.name] = list;
 
             return data;
-        },
+        }
 
-        fetchSearch: function () {
-            let type = this.$el.find('select.search-type').val() || 'anyOf';
-
-            let valueList;
-
-            if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
-                valueList = this.$element.val().split(this.itemDelimiter);
-
-                if (valueList.length === 1 && valueList[0] === '') {
-                    valueList = [];
-                }
-
-                if (valueList.length === 0) {
-                   if (type === 'anyOf') {
-                       return {
-                           type: 'any',
-                           data: {
-                               type: type,
-                               valueList: valueList,
-                           },
-                       };
-                   }
-
-                   if (type === 'noneOf') {
-                       return {
-                           type: 'any',
-                           data: {
-                               type: type,
-                               valueList: valueList,
-                           },
-                       };
-                   }
-
-                   if (type === 'allOf') {
-                       return {
-                           type: 'any',
-                           data: {
-                               type: type,
-                               valueList: valueList,
-                           },
-                       };
-                   }
-               }
-            }
-
-            if (type === 'anyOf') {
-                let data = {
-                    type: 'arrayAnyOf',
-                    value: valueList,
-                    data: {
-                        type: 'anyOf',
-                        valueList: valueList,
-                    },
-                };
-
-                if (!valueList.length) {
-                    data.value = null;
-                }
-
-                return data;
-            }
-
-            if (type === 'noneOf') {
-                return {
-                    type: 'arrayNoneOf',
-                    value: valueList,
-                    data: {
-                        type: 'noneOf',
-                        valueList: valueList,
-                    },
-                };
-            }
-
-            if (type === 'allOf') {
-                let data = {
-                    type: 'arrayAllOf',
-                    value: valueList,
-                    data: {
-                        type: 'allOf',
-                        valueList: valueList,
-                    },
-                };
-
-                if (!valueList.length) {
-                    data.value = null;
-                }
-
-                return data;
-            }
-
-            if (type === 'isEmpty') {
-                return {
-                    type: 'arrayIsEmpty',
-                    data: {
-                        type: 'isEmpty',
-                    },
-                };
-            }
-
-            if (type === 'isNotEmpty') {
-                return {
-                    type: 'arrayIsNotEmpty',
-                    data: {
-                        type: 'isNotEmpty',
-                    },
-                };
-            }
-        },
-
-        validateRequired: function () {
-            if (this.isRequired()) {
-                let value = this.model.get(this.name);
-
-                if (!value || value.length === 0) {
-                    let msg = this.translate('fieldIsRequired', 'messages')
-                        .replace('{field}', this.getLabelText());
-
-                    this.showValidationMessage(msg, '.array-control-container');
-
-                    return true;
-                }
-            }
-
-            return false;
-        },
-
-        validateMaxCount: function () {
-            if (this.params.maxCount) {
-                let itemList = this.model.get(this.name) || [];
-
-                if (itemList.length > this.params.maxCount) {
-                    let msg =
-                        this.translate('fieldExceedsMaxCount', 'messages')
-                            .replace('{field}', this.getLabelText())
-                            .replace('{maxCount}', this.params.maxCount.toString());
-
-                    this.showValidationMessage(msg, '.array-control-container');
-
-                    return true;
-                }
-            }
-
-            return false;
-        },
-
-        getSearchType: function () {
-            return this.getSearchParamsData().type || 'anyOf';
-        },
-
-        getAddItemModalOptions: function () {
-            let options = [];
-
-            this.params.options.forEach(item => {
-                if (!~this.selected.indexOf(item)) {
-                    options.push(item);
-                }
-            });
-
+        if (type === 'noneOf') {
             return {
-                options: options,
-                translatedOptions: this.translatedOptions,
+                type: 'arrayNoneOf',
+                value: valueList,
+                data: {
+                    type: 'noneOf',
+                    valueList: valueList,
+                },
             };
-        },
+        }
 
-        actionAddItem: function () {
-            this.createView('addModal', this.addItemModalView, this.getAddItemModalOptions(), view => {
-                view.render();
+        if (type === 'allOf') {
+            let data = {
+                type: 'arrayAllOf',
+                value: valueList,
+                data: {
+                    type: 'allOf',
+                    valueList: valueList,
+                },
+            };
 
-                view.once('add', item => {
-                    this.addValue(item);
-                    view.close();
-                });
+            if (!valueList.length) {
+                data.value = null;
+            }
 
-                view.once('add-mass', items => {
-                    items.forEach(item => this.addValue(item));
-                    view.close();
-                });
+            return data;
+        }
+
+        if (type === 'isEmpty') {
+            return {
+                type: 'arrayIsEmpty',
+                data: {
+                    type: 'isEmpty',
+                },
+            };
+        }
+
+        if (type === 'isNotEmpty') {
+            return {
+                type: 'arrayIsNotEmpty',
+                data: {
+                    type: 'isNotEmpty',
+                },
+            };
+        }
+    },
+
+    validateRequired: function () {
+        if (this.isRequired()) {
+            let value = this.model.get(this.name);
+
+            if (!value || value.length === 0) {
+                let msg = this.translate('fieldIsRequired', 'messages')
+                    .replace('{field}', this.getLabelText());
+
+                this.showValidationMessage(msg, '.array-control-container');
+
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    validateMaxCount: function () {
+        if (this.params.maxCount) {
+            let itemList = this.model.get(this.name) || [];
+
+            if (itemList.length > this.params.maxCount) {
+                let msg =
+                    this.translate('fieldExceedsMaxCount', 'messages')
+                        .replace('{field}', this.getLabelText())
+                        .replace('{maxCount}', this.params.maxCount.toString());
+
+                this.showValidationMessage(msg, '.array-control-container');
+
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    getSearchType: function () {
+        return this.getSearchParamsData().type || 'anyOf';
+    },
+
+    getAddItemModalOptions: function () {
+        let options = [];
+
+        this.params.options.forEach(item => {
+            if (!~this.selected.indexOf(item)) {
+                options.push(item);
+            }
+        });
+
+        return {
+            options: options,
+            translatedOptions: this.translatedOptions,
+        };
+    },
+
+    actionAddItem: function () {
+        this.createView('addModal', this.addItemModalView, this.getAddItemModalOptions(), view => {
+            view.render();
+
+            view.once('add', item => {
+                this.addValue(item);
+                view.close();
             });
-        },
-    });
+
+            view.once('add-mass', items => {
+                items.forEach(item => this.addValue(item));
+                view.close();
+            });
+        });
+    },
 });

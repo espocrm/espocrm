@@ -32,7 +32,7 @@ define('views/admin/field-manager/fields/pattern', ['views/fields/varchar'], fun
      * @class
      * @name Class
      * @memberOf module:views/admin/field-manager/fields/pattern
-     * @extends module:views/fields/varchar.Class
+     * @extends module:views/fields/varchar
      */
     return Dep.extend(/** @lends module:views/admin/field-manager/fields/pattern.Class# */{
 

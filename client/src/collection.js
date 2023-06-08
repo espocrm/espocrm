@@ -26,476 +26,499 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('collection', ['model'], function (Model) {
+/** @module collection */
+
+import Model from 'model';
+import Backbone from 'lib!backbone';
+
+const Dep = Backbone.Collection;
+
+/**
+ * On sync with backend.
+ *
+ * @event Class#sync
+ * @param {Class} collection A collection.
+ * @param {Object} response Response from backend.
+ * @param {Object} o Options.
+ */
+
+/**
+ * Any number of models have been added, removed or changed.
+ *
+ * @event Class#update
+ * @param {Class} collection A collection.
+ * @param {Object} o Options.
+ */
+
+/**
+ * Add a model or models.
+ *
+ * @function add
+ * @memberof Class#
+ * @param {Model|Model[]} models A model or models.
+ * @param {Object} [options] Options.
+ *
+ * @fires Class#update Unless `{silent: true}`.
+ */
+
+/**
+ * Remove a model or models.
+ *
+ * @function remove
+ * @memberof Class#
+ * @param {Model|Model[]|string|string[]} models A model, models, ID or IDs.
+ * @param {Object} [options] Options.
+ *
+ * @fires Class#update Unless `{silent: true}`.
+ */
+
+/**
+ * Append a model.
+ *
+ * @function push
+ * @memberof Class#
+ * @param {Model} model A model.
+ * @param {Object} [options] Options.
+ */
+
+/**
+ * Remove and return the last model from the collection.
+ *
+ * @function pop
+ * @memberof Class#
+ * @param {Object} [options] Options.
+ */
+
+/**
+ * @class
+ * @extends Backbone.Collection.prototype
+ * @mixes Backbone.Events
+ */
+const Class = Dep.extend(/** @lends Class# */ {
 
     /**
-     * On sync with backend.
+     * A number of records.
      *
-     * @event module:collection.Class#sync
-     * @param {module:collection.Class} collection A collection.
-     * @param {Object} response Response from backend.
-     * @param {Object} o Options.
+     * @name length
+     * @type {number}
+     * @memberof Class#
      */
 
     /**
-     * Any number of models have been added, removed or changed.
+     * Models.
      *
-     * @event module:collection.Class#update
-     * @param {module:collection.Class} collection A collection.
-     * @param {Object} o Options.
+     * @name length
+     * @type {Model[]}
+     * @memberof Class#
      */
 
     /**
-     * Add a model or models.
+     * An API URL.
      *
-     * @function add
-     * @memberof module:collection.Class#
-     * @param {module:model.Class|module:model.Class[]} models A model or models.
-     * @param {Object} [options] Options.
-     *
-     * @fires module:collection.Class#update Unless `{silent: true}`.
+     * @name url
+     * @type {string|null}
+     * @public
+     * @memberof Class.prototype
      */
 
     /**
-     * Remove a model or models.
+     * A name.
      *
-     * @function remove
-     * @memberof module:collection.Class#
-     * @param {module:model.Class|module:model.Class[]|string|string[]} models A model, models, ID or IDs.
-     * @param {Object} [options] Options.
-     *
-     * @fires module:collection.Class#update Unless `{silent: true}`.
+     * @type {string|null}
      */
+    name: null,
 
     /**
-     * Append a model.
+     * An entity type.
      *
-     * @function push
-     * @memberof module:collection.Class#
-     * @param {module:model.Class} model A model.
-     * @param {Object} [options] Options.
+     * @type {string|null}
      */
+    entityType: null,
 
     /**
-     * Remove and return the last model from the collection.
+     * A total number of records.
      *
-     * @function pop
-     * @memberof module:collection.Class#
-     * @param {Object} [options] Options.
+     * @type {number}
      */
+    total: 0,
 
     /**
-     * @class
-     * @name Class
-     * @memberOf module:collection
-     * @extends Backbone.Collection.prototype
-     * @mixes Backbone.Events
+     * A current offset (for pagination).
+     *
+     * @type {number}
      */
-    let Collection = Backbone.Collection.extend(/** @lends module:collection.Class# */ {
+    offset: 0,
 
-        /**
-         * A number of records.
-         *
-         * @name length
-         * @type {number}
-         * @memberof module:collection.Class#
-         */
+    /**
+     * A max size (for pagination).
+     *
+     * @type {number}
+     */
+    maxSize: 20,
 
-        /**
-         * Models.
-         *
-         * @name length
-         * @type {module:model.Class[]}
-         * @memberof module:collection.Class#
-         */
+    /**
+     * An order.
+     *
+     * @type {boolean|'asc'|'desc'|null}
+     */
+    order: null,
 
-        /**
-         * An API URL.
-         *
-         * @name url
-         * @type {string|null}
-         * @public
-         * @memberof module:collection.Class.prototype
-         */
+    /**
+     * An order-by field.
+     *
+     * @type {string|null}
+     */
+    orderBy: null,
 
-        /**
-         * A name.
-         *
-         * @type {string|null}
-         */
-        name: null,
+    /**
+     * A where clause.
+     *
+     * @type {Array.<Object>|null}
+     */
+    where: null,
 
-        /**
-         * An entity type.
-         *
-         * @type {string|null}
-         */
-        entityType: null,
+    /**
+     * @deprecated
+     */
+    whereAdditional: null,
 
-        /**
-         * A total number of records.
-         *
-         * @type {number}
-         */
-        total: 0,
+    /**
+     * @type {number}
+     */
+    lengthCorrection: 0,
 
-        /**
-         * A current offset (for pagination).
-         *
-         * @type {number}
-         */
-        offset: 0,
+    /**
+     * @type {number}
+     */
+    maxMaxSize: 0,
 
-        /**
-         * A max size (for pagination).
-         *
-         * @type {number}
-         */
-        maxSize: 20,
+    /**
+     * Initialize.
+     *
+     * @protected
+     * @param {Model[]} models Models.
+     * @param {Object} options Options.
+     */
+    initialize: function (models, options) {
+        options = options || {};
 
-        /**
-         * An order.
-         *
-         * @type {boolean|'asc'|'desc'|null}
-         */
-        order: null,
+        this.name = options.name || this.name;
+        this.urlRoot = this.urlRoot || this.name;
+        this.url = this.url || this.urlRoot;
 
-        /**
-         * An order-by field.
-         *
-         * @type {string|null}
-         */
-        orderBy: null,
+        this.orderBy = this.sortBy = options.orderBy || options.sortBy || this.orderBy || this.sortBy;
+        this.order = options.order || this.order;
 
-        /**
-         * A where clause.
-         *
-         * @type {Array.<Object>|null}
-         */
-        where: null,
+        this.defaultOrder = this.order;
+        this.defaultOrderBy = this.orderBy;
 
-        /**
-         * @deprecated
-         */
-        whereAdditional: null,
+        /** @type {module:model~defs} */
+        this.defs = options.defs || {};
 
-        /**
-         * @type {number}
-         */
-        lengthCorrection: 0,
-
-        /**
-         * @type {number}
-         */
-        maxMaxSize: 0,
+        this.data = {};
 
         /**
          * @private
+         * @type Model#
          */
-        _user: null,
+        this.model = options.model || Model;
+    },
 
-        /**
-         * Initialize.
-         *
-         * @protected
-         * @param {module:model.Class[]} models Models.
-         * @param {Object} options Options.
-         */
-        initialize: function (models, options) {
-            options = options || {};
+    /**
+     * @private
+     */
+    _onModelEvent: function(event, model, collection, options) {
+        if (event === 'sync' && collection !== this) {
+            return;
+        }
 
-            this.name = options.name || this.name;
-            this.urlRoot = this.urlRoot || this.name;
-            this.url = this.url || this.urlRoot;
+        Dep.prototype._onModelEvent.apply(this, arguments);
+    },
 
-            this.orderBy = this.sortBy = options.orderBy || options.sortBy || this.orderBy || this.sortBy;
-            this.order = options.order || this.order;
+    /**
+     * Reset.
+     *
+     * @param {Model[]} [models]
+     * @param {Object} [options]
+     */
+    reset: function (models, options) {
+        this.lengthCorrection = 0;
 
-            this.defaultOrder = this.order;
-            this.defaultOrderBy = this.orderBy;
+        Dep.prototype.reset.call(this, models, options);
+    },
 
-            this.data = {};
+    /**
+     * @param {string} orderBy An order field.
+     * @param {bool|null|'desc'|'asc'} [order] True for desc.
+     * @returns {Promise}
+     */
+    sort: function (orderBy, order) {
+        this.orderBy = orderBy;
 
-            this.model = options.model || Model;
-        },
+        if (order === true) {
+            order = 'desc';
+        }
+        else if (order === false) {
+            order = 'asc';
+        }
 
-        /**
-         * @private
-         */
-        _onModelEvent: function(event, model, collection, options) {
-            if (event === 'sync' && collection !== this) {
-                return;
+        this.order = order || 'asc';
+
+        if (typeof this.asc !== 'undefined') { // TODO remove in 5.7
+            this.asc = this.order === 'asc';
+            this.sortBy = orderBy;
+        }
+
+        return this.fetch();
+    },
+
+    /**
+     * Next page.
+     */
+    nextPage: function () {
+        var offset = this.offset + this.maxSize;
+
+        this.setOffset(offset);
+    },
+
+    /**
+     * Previous page.
+     */
+    previousPage: function () {
+        var offset = this.offset - this.maxSize;
+
+        this.setOffset(offset);
+    },
+
+    /**
+     * First page.
+     */
+    firstPage: function () {
+        this.setOffset(0);
+    },
+
+    /**
+     * Last page.
+     */
+    lastPage: function () {
+        let offset = this.total - this.total % this.maxSize;
+
+        if (offset === this.total) {
+            offset = this.total - this.maxSize;
+        }
+
+        this.setOffset(offset);
+    },
+
+    /**
+     * Set an offset.
+     *
+     * @param {number} offset Offset.
+     */
+    setOffset: function (offset) {
+        if (offset < 0) {
+            throw new RangeError('offset can not be less than 0');
+        }
+
+        if (offset > this.total && this.total !== -1 && offset > 0) {
+            throw new RangeError('offset can not be larger than total count');
+        }
+
+        this.offset = offset;
+        this.fetch();
+    },
+
+    /**
+     * Has more.
+     *
+     * @return {boolean}
+     */
+    hasMore: function () {
+        return this.total > this.length || this.total === -1;
+    },
+
+    /**
+     * Parse a response from the backend.
+     *
+     * @param {Object} response A response.
+     * @param {Object} options Options.
+     * @returns {Class[]}
+     */
+    parse: function (response, options) {
+        this.total = response.total;
+
+        if ('additionalData' in response) {
+            this.dataAdditional = response.additionalData;
+        }
+        else {
+            this.dataAdditional = null;
+        }
+
+        return response.list;
+    },
+
+    /**
+     * Fetches from the backend.
+     *
+     * @param {Object} [options] Options.
+     * @returns {Promise}
+     *
+     * @fires Class#sync Unless `{silent: true}`.
+     */
+    fetch: function (options) {
+        options = options || {};
+
+        options.data = _.extend(options.data || {}, this.data);
+
+        this.offset = options.offset || this.offset;
+        this.orderBy = options.orderBy || options.sortBy || this.orderBy;
+        this.order = options.order || this.order;
+
+        this.where = options.where || this.where;
+
+        let length = this.length + this.lengthCorrection;
+
+        if (!('maxSize' in options)) {
+            options.data.maxSize = options.more ? this.maxSize : (
+                (length > this.maxSize) ? length : this.maxSize
+            );
+
+            if (this.maxMaxSize && options.data.maxSize > this.maxMaxSize) {
+                options.data.maxSize = this.maxMaxSize;
+            }
+        }
+        else {
+            options.data.maxSize = options.maxSize;
+        }
+
+        options.data.offset = options.more ? length : this.offset;
+        options.data.orderBy = this.orderBy;
+        options.data.order = this.order;
+        options.data.where = this.getWhere();
+
+        if (typeof this.asc !== 'undefined') { // TODO remove in 5.7
+            options.data.asc = this.asc;
+            options.data.sortBy = this.sortBy;
+
+            delete options.data.orderBy;
+            delete options.data.order;
+        }
+
+        this.lastXhr = Dep.prototype.fetch.call(this, options);
+
+        return this.lastXhr;
+    },
+
+    /**
+     * Abort the last fetch.
+     */
+    abortLastFetch: function () {
+        if (this.lastXhr && this.lastXhr.readyState < 4) {
+            this.lastXhr.abort();
+        }
+    },
+
+    /**
+     * Get a where clause.
+     *
+     * @returns {Object[]}
+     */
+    getWhere: function () {
+        var where = (this.where || []).concat(this.whereAdditional || []);
+
+        if (this.whereFunction) {
+            where = where.concat(this.whereFunction() || []);
+        }
+
+        return where;
+    },
+
+    /**
+     * @returns {string}
+     */
+    getEntityType: function () {
+        return this.name;
+    },
+
+    /**
+     * Reset the order to default.
+     */
+    resetOrderToDefault: function () {
+        this.orderBy = this.defaultOrderBy;
+        this.order = this.defaultOrder;
+    },
+
+    /**
+     * Set an order.
+     *
+     * @param {string|null} orderBy
+     * @param {boolean|'asc'|'desc'|null} [order]
+     * @param {boolean} [setDefault]
+     */
+    setOrder: function (orderBy, order, setDefault) {
+        this.orderBy = orderBy;
+        this.order = order;
+
+        if (setDefault) {
+            this.defaultOrderBy = orderBy;
+            this.defaultOrder = order;
+        }
+    },
+
+    /**
+     * Clone.
+     *
+     * @return {Class}
+     */
+    clone: function () {
+        /** @type {Class} */
+        let collection = Dep.prototype.clone.call(this);
+
+        collection.name = this.name;
+        collection.urlRoot = this.urlRoot;
+        collection.url = this.url;
+        collection.orderBy = this.orderBy;
+        collection.order = this.order;
+        collection.defaultOrder = this.defaultOrder;
+        collection.defaultOrderBy = this.defaultOrderBy;
+        collection.data = Espo.Utils.cloneDeep(this.data);
+        collection.where = Espo.Utils.cloneDeep(this.where);
+        collection.whereAdditional = Espo.Utils.cloneDeep(this.whereAdditional);
+        collection.total = this.total;
+        collection.offset = this.offset;
+        collection.maxSize = this.maxSize;
+        collection.maxMaxSize = this.maxMaxSize;
+
+        return collection;
+    },
+
+    /** @private */
+    _isModel: function(object) {
+        return object instanceof Model;
+    },
+
+    /** @private*/
+    _prepareModel: function(attributes, options) {
+        if (this._isModel(attributes)) {
+            if (!attributes.collection) {
+                attributes.collection = this;
             }
 
-            Backbone.Collection.prototype._onModelEvent.apply(this, arguments);
-        },
+            return attributes;
+        }
 
-        /**
-         * Reset.
-         *
-         * @param {module:model.Class[]} [models]
-         * @param {Object} [options]
-         */
-        reset: function (models, options) {
-            this.lengthCorrection = 0;
+        const Model = this.model;
 
-            Backbone.Collection.prototype.reset.call(this, models, options);
-        },
-
-        /**
-         * @param {string} orderBy An order field.
-         * @param {bool|null|'desc'|'asc'} [order] True for desc.
-         * @returns {Promise}
-         */
-        sort: function (orderBy, order) {
-            this.orderBy = orderBy;
-
-            if (order === true) {
-                order = 'desc';
-            }
-            else if (order === false) {
-                order = 'asc';
-            }
-
-            this.order = order || 'asc';
-
-            if (typeof this.asc !== 'undefined') { // TODO remove in 5.7
-                this.asc = this.order === 'asc';
-                this.sortBy = orderBy;
-            }
-
-            return this.fetch();
-        },
-
-        /**
-         * Next page.
-         */
-        nextPage: function () {
-            var offset = this.offset + this.maxSize;
-
-            this.setOffset(offset);
-        },
-
-        /**
-         * Previous page.
-         */
-        previousPage: function () {
-            var offset = this.offset - this.maxSize;
-
-            this.setOffset(offset);
-        },
-
-        /**
-         * First page.
-         */
-        firstPage: function () {
-            this.setOffset(0);
-        },
-
-        /**
-         * Last page.
-         */
-        lastPage: function () {
-            let offset = this.total - this.total % this.maxSize;
-
-            if (offset === this.total) {
-                offset = this.total - this.maxSize;
-            }
-
-            this.setOffset(offset);
-        },
-
-        /**
-         * Set an offset.
-         *
-         * @param {number} offset Offset.
-         */
-        setOffset: function (offset) {
-            if (offset < 0) {
-                throw new RangeError('offset can not be less than 0');
-            }
-
-            if (offset > this.total && this.total !== -1 && offset > 0) {
-                throw new RangeError('offset can not be larger than total count');
-            }
-
-            this.offset = offset;
-            this.fetch();
-        },
-
-        /**
-         * Has more.
-         *
-         * @return {boolean}
-         */
-        hasMore: function () {
-            return this.total > this.length || this.total === -1;
-        },
-
-        /**
-         * Parse a response from the backend.
-         *
-         * @param {Object} response A response.
-         * @param {Object} options Options.
-         * @returns {module:collection.Class[]}
-         */
-        parse: function (response, options) {
-            this.total = response.total;
-
-            if ('additionalData' in response) {
-                this.dataAdditional = response.additionalData;
-            }
-            else {
-                this.dataAdditional = null;
-            }
-
-            return response.list;
-        },
-
-        /**
-         * Fetches from the backend.
-         *
-         * @param {Object} [options] Options.
-         * @returns {Promise}
-         *
-         * @fires module:collection.Class#sync Unless `{silent: true}`.
-         */
-        fetch: function (options) {
-            options = options || {};
-
-            options.data = _.extend(options.data || {}, this.data);
-
-            this.offset = options.offset || this.offset;
-            this.orderBy = options.orderBy || options.sortBy || this.orderBy;
-            this.order = options.order || this.order;
-
-            this.where = options.where || this.where;
-
-            let length = this.length + this.lengthCorrection;
-
-            if (!('maxSize' in options)) {
-                options.data.maxSize = options.more ? this.maxSize : (
-                    (length > this.maxSize) ? length : this.maxSize
-                );
-
-                if (this.maxMaxSize && options.data.maxSize > this.maxMaxSize) {
-                    options.data.maxSize = this.maxMaxSize;
-                }
-            }
-            else {
-                options.data.maxSize = options.maxSize;
-            }
-
-            options.data.offset = options.more ? length : this.offset;
-            options.data.orderBy = this.orderBy;
-            options.data.order = this.order;
-            options.data.where = this.getWhere();
-
-            if (typeof this.asc !== 'undefined') { // TODO remove in 5.7
-                options.data.asc = this.asc;
-                options.data.sortBy = this.sortBy;
-
-                delete options.data.orderBy;
-                delete options.data.order;
-            }
-
-            this.lastXhr = Backbone.Collection.prototype.fetch.call(this, options);
-
-            return this.lastXhr;
-        },
-
-        /**
-         * Abort the last fetch.
-         */
-        abortLastFetch: function () {
-            if (this.lastXhr && this.lastXhr.readyState < 4) {
-                this.lastXhr.abort();
-            }
-        },
-
-        /**
-         * Get a where clause.
-         *
-         * @returns {Object[]}
-         */
-        getWhere: function () {
-            var where = (this.where || []).concat(this.whereAdditional || []);
-
-            if (this.whereFunction) {
-                where = where.concat(this.whereFunction() || []);
-            }
-
-            return where;
-        },
-
-        /**
-         * @protected
-         */
-        getUser: function () {
-            return this._user;
-        },
-
-        /**
-         * @returns {string}
-         */
-        getEntityType: function () {
-            return this.name;
-        },
-
-        /**
-         * Reset the order to default.
-         */
-        resetOrderToDefault: function () {
-            this.orderBy = this.defaultOrderBy;
-            this.order = this.defaultOrder;
-        },
-
-        /**
-         * Set an order.
-         *
-         * @param {string|null} orderBy
-         * @param {boolean|'asc'|'desc'|null} [order]
-         * @param {boolean} [setDefault]
-         */
-        setOrder: function (orderBy, order, setDefault) {
-            this.orderBy = orderBy;
-            this.order = order;
-
-            if (setDefault) {
-                this.defaultOrderBy = orderBy;
-                this.defaultOrder = order;
-            }
-        },
-
-        /**
-         * Clone.
-         *
-         * @return {module:collection.Class}
-         */
-        clone: function () {
-            /** @type {module:collection.Class} */
-            let collection = Backbone.Collection.prototype.clone.call(this);
-
-            collection.name = this.name;
-            collection.urlRoot = this.urlRoot;
-            collection.url = this.url;
-            collection.orderBy = this.orderBy;
-            collection.order = this.order;
-            collection.defaultOrder = this.defaultOrder;
-            collection.defaultOrderBy = this.defaultOrderBy;
-            collection.data = Espo.Utils.cloneDeep(this.data);
-            collection.where = Espo.Utils.cloneDeep(this.where);
-            collection.whereAdditional = Espo.Utils.cloneDeep(this.whereAdditional);
-            collection.total = this.total;
-            collection.offset = this.offset;
-            collection.maxSize = this.maxSize;
-            collection.maxMaxSize = this.maxMaxSize;
-
-            return collection;
-        },
-    });
-
-    Collection.extend = Bull.View.extend;
-
-    return Collection;
+        return new Model(attributes, {
+            collection: this,
+            dateTime: this.dateTime,
+            entityType: this.entityType || this.name,
+            defs: this.defs,
+            ...options,
+        });
+    },
 });
+
+Class.extend = Bull.View.extend;
+
+export default Class;

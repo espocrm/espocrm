@@ -26,74 +26,65 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('helpers/reg-exp-pattern', [], function () {
-
+/**
+ * A regular expression pattern helper.
+ */
+export default class {
     /**
-     * A regular expression pattern helper.
-     *
-     * @memberOf module:helpers/reg-exp-pattern
+     * @param {module:metadata} metadata
+     * @param {module:language} language
      */
-    class Class {
+    constructor(metadata, language) {
         /**
-         * @param {module:metadata.Class} metadata
-         * @param {module:language.Class} language
+         * @private
+         * @type {module:metadata}
          */
-        constructor(metadata, language) {
-            /**
-             * @private
-             * @type {module:metadata.Class}
-             */
-            this.metadata = metadata;
-            /**
-             * @private
-             * @type {module:language.Class}
-             */
-            this.language = language;
-        }
-
+        this.metadata = metadata;
         /**
-         *
-         * @param {string} pattern
-         * @param {string|null} value
-         * @param {string} [field]
-         * @param {string} [entityType]
-         * @return {{message: string}|null}
+         * @private
+         * @type {module:language}
          */
-        validate(pattern, value, field, entityType) {
-            if (value === '' || value === null) {
-                return null;
-            }
-
-            let messageKey = 'fieldNotMatchingPattern';
-
-            if (pattern[0] === '$') {
-                let patternName = pattern.slice(1);
-                let foundPattern = this.metadata.get(['app', 'regExpPatterns', patternName, 'pattern']);
-
-                if (foundPattern) {
-                    messageKey += '$' + patternName;
-                    pattern = foundPattern;
-                }
-            }
-
-            let regExp = new RegExp('^' + pattern + '$');
-
-            if (regExp.test(value)) {
-                return null;
-            }
-
-            let message = this.language.translate(messageKey, 'messages')
-                .replace('{pattern}', pattern);
-
-            if (field && entityType) {
-                message = message.replace('{field}', this.language.translate(field, 'fields', entityType));
-            }
-
-            return {
-                message: message,
-            };
-        }
+        this.language = language;
     }
 
-    return Class;
-});
+    /**
+     *
+     * @param {string} pattern
+     * @param {string|null} value
+     * @param {string} [field]
+     * @param {string} [entityType]
+     * @return {{message: string}|null}
+     */
+    validate(pattern, value, field, entityType) {
+        if (value === '' || value === null) {
+            return null;
+        }
+
+        let messageKey = 'fieldNotMatchingPattern';
+
+        if (pattern[0] === '$') {
+            let patternName = pattern.slice(1);
+            let foundPattern = this.metadata.get(['app', 'regExpPatterns', patternName, 'pattern']);
+
+            if (foundPattern) {
+                messageKey += '$' + patternName;
+                pattern = foundPattern;
+            }
+        }
+
+        let regExp = new RegExp('^' + pattern + '$');
+
+        if (regExp.test(value)) {
+            return null;
+        }
+
+        let message = this.language.translate(messageKey, 'messages')
+            .replace('{pattern}', pattern);
+
+        if (field && entityType) {
+            message = message.replace('{field}', this.language.translate(field, 'fields', entityType));
+        }
+
+        return {message: message};
+    }
+}

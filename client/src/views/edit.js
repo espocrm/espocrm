@@ -26,207 +26,195 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/edit', ['views/main'], function (Dep) {
+/** @module module:views/edit */
+
+import Dep from 'views/main';
+
+/**
+ * An edit view page.
+ *
+ * @class
+ * @name Class
+ * @extends module:views/main
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    /** @inheritDoc */
+    template: 'edit',
+
+    /** @inheritDoc */
+    scope: null,
+    /** @inheritDoc */
+    name: 'Edit',
+    /** @inheritDoc */
+    menu: null,
+
+    /** @inheritDoc */
+    optionsToPass: [
+        'returnUrl',
+        'returnDispatchParams',
+        'attributes',
+        'rootUrl',
+        'duplicateSourceId',
+        'returnAfterCreate',
+    ],
 
     /**
-     * An edit view page.
+     * A header view name.
      *
-     * @class
-     * @name Class
-     * @extends module:views/main.Class
-     * @memberOf module:views/edit
+     * @type {string}
      */
-    return Dep.extend(/** @lends module:views/edit.Class# */{
+    headerView: 'views/header',
 
-        /**
-         * @inheritDoc
-         */
-        template: 'edit',
+    /**
+     * A record view name.
+     *
+     * @type {string}
+     */
+    recordView: 'views/record/edit',
 
-        /**
-         * @inheritDoc
-         */
-        scope: null,
+    /**
+     * A root breadcrumb item not to be a link.
+     *
+     * @type {boolean}
+     */
+    rootLinkDisabled: false,
 
-        /**
-         * @inheritDoc
-         */
-        name: 'Edit',
+    /**
+     * @inheritDoc
+     */
+    setup: function () {
+        this.headerView = this.options.headerView || this.headerView;
+        this.recordView = this.options.recordView || this.recordView;
 
-        /**
-         * @inheritDoc
-         */
-        menu: null,
+        this.setupHeader();
+        this.setupRecord();
+    },
 
-        /**
-         * @inheritDoc
-         */
-        optionsToPass: [
-            'returnUrl',
-            'returnDispatchParams',
-            'attributes',
-            'rootUrl',
-            'duplicateSourceId',
-            'returnAfterCreate',
-        ],
+    setupFinal: function () {
+        Dep.prototype.setupFinal.call(this);
 
-        /**
-         * A header view name.
-         *
-         * @type {string}
-         */
-        headerView: 'views/header',
+        this.getHelper().processSetupHandlers(this, 'edit');
+    },
 
-        /**
-         * A record view name.
-         *
-         * @type {string}
-         */
-        recordView: 'views/record/edit',
+    /**
+     * Set up a header.
+     */
+    setupHeader: function () {
+        this.createView('header', this.headerView, {
+            model: this.model,
+            el: '#main > .header',
+            scope: this.scope,
+        });
+    },
 
-        /**
-         * A root breadcrumb item not to be a link.
-         *
-         * @type {boolean}
-         */
-        rootLinkDisabled: false,
+    /**
+     * Set up a record.
+     */
+    setupRecord: function () {
+        let o = {
+            model: this.model,
+            el: '#main > .record',
+            scope: this.scope,
+            shortcutKeysEnabled: true,
+        };
 
-        /**
-         * @inheritDoc
-         */
-        setup: function () {
-            this.headerView = this.options.headerView || this.headerView;
-            this.recordView = this.options.recordView || this.recordView;
+        this.optionsToPass.forEach(option => {
+            o[option] = this.options[option];
+        });
 
-            this.setupHeader();
-            this.setupRecord();
-        },
+        let params = this.options.params || {};
 
-        setupFinal: function () {
-            Dep.prototype.setupFinal.call(this);
+        if (params.rootUrl) {
+            o.rootUrl = params.rootUrl;
+        }
 
-            this.getHelper().processSetupHandlers(this, 'edit');
-        },
+        if (params.focusForCreate) {
+            o.focusForCreate = true;
+        }
 
-        /**
-         * Set up a header.
-         */
-        setupHeader: function () {
-            this.createView('header', this.headerView, {
-                model: this.model,
-                el: '#main > .header',
-                scope: this.scope,
-            });
-        },
+        return this.createView('record', this.getRecordViewName(), o);
+    },
 
-        /**
-         * Set up a record.
-         */
-        setupRecord: function () {
-            let o = {
-                model: this.model,
-                el: '#main > .record',
-                scope: this.scope,
-                shortcutKeysEnabled: true,
-            };
+    /**
+     * Get a record view name.
+     *
+     * @returns {string}
+     */
+    getRecordViewName: function () {
+        return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.edit') || this.recordView;
+    },
 
-            this.optionsToPass.forEach(option => {
-                o[option] = this.options[option];
-            });
+    /**
+     * @inheritDoc
+     */
+    getHeader: function () {
+        let headerIconHtml = this.getHeaderIconHtml();
+        let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+        let scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
 
-            let params = this.options.params || {};
+        let $root = $('<span>').text(scopeLabel);
 
-            if (params.rootUrl) {
-                o.rootUrl = params.rootUrl;
-            }
+        if (!this.options.noHeaderLinks && !this.rootLinkDisabled) {
+            $root =
+                $('<span>')
+                    .append(
+                        $('<a>')
+                            .attr('href', rootUrl)
+                            .addClass('action')
+                            .attr('data-action', 'navigateToRoot')
+                            .text(scopeLabel)
+                    );
+        }
 
-            if (params.focusForCreate) {
-                o.focusForCreate = true;
-            }
+        if (headerIconHtml) {
+            $root.prepend(headerIconHtml);
+        }
 
-            return this.createView('record', this.getRecordViewName(), o);
-        },
+        if (this.model.isNew()) {
+            let $create = $('<span>').text(this.getLanguage().translate('create'));
 
-        /**
-         * Get a record view name.
-         *
-         * @returns {string}
-         */
-        getRecordViewName: function () {
-            return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.edit') || this.recordView;
-        },
+            return this.buildHeaderHtml([$root, $create]);
+        }
 
-        /**
-         * @inheritDoc
-         */
-        getHeader: function () {
-            let headerIconHtml = this.getHeaderIconHtml();
-            let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
-            let scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
+        let name = this.model.get('name') || this.model.id;
 
-            let $root = $('<span>').text(scopeLabel);
+        let $name = $('<span>').text(name);
 
-            if (!this.options.noHeaderLinks && !this.rootLinkDisabled) {
-                $root =
-                    $('<span>')
-                        .append(
-                            $('<a>')
-                                .attr('href', rootUrl)
-                                .addClass('action')
-                                .attr('data-action', 'navigateToRoot')
-                                .text(scopeLabel)
-                        );
-            }
+        if (!this.options.noHeaderLinks) {
+            let url = '#' + this.scope + '/view/' + this.model.id;
 
-            if (headerIconHtml) {
-                $root.prepend(headerIconHtml);
-            }
+            $name =
+                $('<a>')
+                    .attr('href', url)
+                    .addClass('action')
+                    .append($name);
+        }
 
-            if (this.model.isNew()) {
-                let $create = $('<span>').text(this.getLanguage().translate('create'));
+        return this.buildHeaderHtml([$root, $name]);
+    },
 
-                return this.buildHeaderHtml([$root, $create]);
-            }
+    /**
+     * @inheritDoc
+     */
+    updatePageTitle: function () {
+        var title;
 
-            let name = this.model.get('name') || this.model.id;
+        if (this.model.isNew()) {
+            title = this.getLanguage().translate('Create') + ' ' +
+                this.getLanguage().translate(this.scope, 'scopeNames');
+        }
+        else {
+            var name = this.model.get('name');
 
-            let $name = $('<span>').text(name);
-
-            if (!this.options.noHeaderLinks) {
-                let url = '#' + this.scope + '/view/' + this.model.id;
-
-                $name =
-                    $('<a>')
-                        .attr('href', url)
-                        .addClass('action')
-                        .append($name);
-            }
-
-            return this.buildHeaderHtml([$root, $name]);
-        },
-
-        /**
-         * @inheritDoc
-         */
-        updatePageTitle: function () {
-            var title;
-
-            if (this.model.isNew()) {
-                title = this.getLanguage().translate('Create') + ' ' +
-                    this.getLanguage().translate(this.scope, 'scopeNames');
+            if (name) {
+                title = name;
             }
             else {
-                var name = this.model.get('name');
-
-                if (name) {
-                    title = name;
-                }
-                else {
-                    title = this.getLanguage().translate(this.scope, 'scopeNames')
-                }
+                title = this.getLanguage().translate(this.scope, 'scopeNames')
             }
+        }
 
-            this.setPageTitle(title);
-        },
-    });
+        this.setPageTitle(title);
+    },
 });

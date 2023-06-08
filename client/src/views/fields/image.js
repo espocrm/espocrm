@@ -26,24 +26,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/image', ['views/fields/file'], function (Dep) {
+import Dep from 'views/fields/file';
 
-    /**
-     * @class
-     * @name Class
-     * @extends module:views/fields/file.Class
-     * @memberOf module:views/fields/image
-     */
-    return Dep.extend(/** @lends module:views/fields/image.Class# */{
+/**
+ * @class Class
+ * @extends module:views/fields/file
+ */
+export default Dep.extend(/** @lends Class# */{
 
-        type: 'image',
+    type: 'image',
 
-        showPreview: true,
-
-        accept: ['image/*'],
-
-        defaultType: 'image/jpeg',
-
-        previewSize: 'small',
-    });
+    showPreview: true,
+    accept: ['image/*'],
+    defaultType: 'image/jpeg',
+    previewSize: 'small',
 });

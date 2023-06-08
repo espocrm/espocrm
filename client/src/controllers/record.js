@@ -26,495 +26,485 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/record', ['controller'], function (Dep) {
+/** @module controllers/record */
+
+import Controller from 'controller';
+
+/**
+ * A record controller.
+ */
+class RecordController extends Controller {
+
+    /** @inheritDoc */
+    defaultAction = 'list'
+
+    constructor(params, injections) {
+        super(params, injections);
+
+        /**
+         * @private
+         * @type {Object}
+         */
+        this.collectionMap = {};
+    }
+
+    /** @inheritDoc */
+    checkAccess(action) {
+        if (this.getAcl().check(this.name, action)) {
+            return true;
+        }
+
+        return false;
+    }
 
     /**
-     * A record controller.
+     * Get a view name/path.
      *
-     * @class
-     * @name Class
-     * @extends module:controller.Class
-     * @memberOf module:controllers/record
+     * @protected
+     * @param {'list'|'detail'|'edit'|'create'|'listRelated'} type A type.
+     * @returns {string}
      */
-    return Dep.extend(/** @lends module:controllers/record.Class# */{
+    getViewName(type) {
+        return this.getMetadata().get(['clientDefs', this.name, 'views', type]) ||
+            'views/' + Espo.Utils.camelCaseToHyphen(type);
+    }
 
-        /**
-         * A type => view-name map.
-         * @protected
-         * @type {Object.<string,string>}
-         */
-        viewMap: null,
+    beforeList() {
+        this.handleCheckAccess('read');
+    }
 
-        /**
-         * @inheritDoc
-         */
-        defaultAction: 'list',
+    actionList(options) {
+        let isReturn = options.isReturn || this.getRouter().backProcessed;
 
-        /**
-         * @inheritDoc
-         */
-        checkAccess: function (action) {
-            if (this.getAcl().check(this.name, action)) {
-                return true;
+        let key = this.name + 'List';
+
+        if (!isReturn && this.getStoredMainView(key)) {
+            this.clearStoredMainView(key);
+        }
+
+        this.getCollection(collection => {
+            let mediator = {};
+
+            let abort = () => {
+                collection.abortLastFetch();
+                mediator.abort = true;
+
+                Espo.Ui.notify(false);
+            };
+
+            this.listenToOnce(this.baseController, 'action', abort);
+            this.listenToOnce(collection, 'sync', () =>
+                this.stopListening(this.baseController, 'action', abort));
+
+            this.main(this.getViewName('list'), {
+                scope: this.name,
+                collection: collection,
+                params: options,
+                mediator: mediator,
+            }, null, isReturn, key);
+        }, this, false);
+    }
+
+    beforeView() {
+        this.handleCheckAccess('read');
+    }
+
+    /**
+     * @protected
+     * @param {Object} options
+     * @param {module:model} model
+     * @param {string|null} [view]
+     */
+    createViewView(options, model, view) {
+        view = view || this.getViewName('detail');
+
+        this.main(view, {
+            scope: this.name,
+            model: model,
+            returnUrl: options.returnUrl,
+            returnDispatchParams: options.returnDispatchParams,
+            params: options,
+        });
+    }
+
+    /**
+     * @protected
+     * @param {module:model} model
+     * @param {Object} options
+     */
+    prepareModelView(model, options) {}
+
+    /**
+     * @param {{
+     *     model?: module:model,
+     *     id?: string,
+     *     isReturn?: boolean,
+     *     isAfterCreate?: boolean,
+     * }} options
+     */
+    actionView(options) {
+        let id = options.id;
+
+        let isReturn = this.getRouter().backProcessed;
+
+        if (isReturn) {
+            if (this.lastViewActionOptions && this.lastViewActionOptions.id === id) {
+                options = Espo.Utils.clone(this.lastViewActionOptions);
+
+                if (options.model && options.model.get('deleted')) {
+                    delete options.model;
+                }
             }
 
-            return false;
-        },
+            options.isReturn = true;
+        }
+        else {
+            delete this.lastViewActionOptions;
+        }
 
-        /**
-         * @inheritDoc
-         */
-        initialize: function () {
-            /**
-             * A type => view-name map.
-             * @protected
-             * @type {Object.<string,string>}
-             */
-            this.viewMap = this.viewMap || {};
-            this.viewsMap = this.viewsMap || {};
+        this.lastViewActionOptions = options;
 
-            /**
-             * @private
-             * @type {Object}
-             */
-            this.collectionMap = {};
-        },
+        const createView = model => {
+            this.prepareModelView(model, options);
 
-        /**
-         * Get a view name/path.
-         *
-         * @protected
-         * @param {'list'|'detail'|'edit'|'create'} type A type.
-         * @returns {string}
-         */
-        getViewName: function (type) {
-            return this.viewMap[type] ||
-                this.getMetadata().get(['clientDefs', this.name, 'views', type]) ||
-                'views/' + Espo.Utils.camelCaseToHyphen(type);
-        },
+            this.createViewView.call(this, options, model);
+        };
 
-        beforeList: function () {
-            this.handleCheckAccess('read');
-        },
+        if ('model' in options) {
+            let model = options.model;
 
-        actionList: function (options) {
-            let isReturn = options.isReturn || this.getRouter().backProcessed;
+            createView(model);
 
+            this.showLoadingNotification();
+
+            model.fetch()
+                .then(() => this.hideLoadingNotification())
+                .catch(xhr => {
+                    if (
+                        xhr.status === 403 &&
+                        options.isAfterCreate
+                    ) {
+                        this.hideLoadingNotification();
+                        xhr.errorIsHandled = true;
+
+                        model.trigger('fetch-forbidden');
+                    }
+                });
+
+            this.listenToOnce(this.baseController, 'action', () => {
+                model.abortLastFetch();
+                this.hideLoadingNotification();
+            });
+
+            return;
+        }
+
+        this.getModel().then(model => {
+            model.id = id;
+
+            this.showLoadingNotification();
+
+            model.fetch({main: true})
+                .then(() => {
+                    this.hideLoadingNotification();
+
+                    if (model.get('deleted')) {
+                        this.listenToOnce(model, 'after:restore-deleted', () => {
+                            createView(model);
+                        });
+
+                        this.prepareModelView(model, options);
+                        this.createViewView(options, model, 'views/deleted-detail');
+
+                        return;
+                    }
+
+                    createView(model);
+                });
+
+            this.listenToOnce(this.baseController, 'action', () => {
+                model.abortLastFetch();
+            });
+        });
+    }
+
+    beforeCreate() {
+        this.handleCheckAccess('create');
+    }
+
+    /**
+     * @protected
+     * @param {module:model} model
+     * @param {Object} options
+     */
+    prepareModelCreate(model, options) {
+        this.listenToOnce(model, 'before:save', () => {
             let key = this.name + 'List';
 
-            if (!isReturn && this.getStoredMainView(key)) {
+            let stored = this.getStoredMainView(key);
+
+            if (stored && !stored.storeViewAfterCreate) {
                 this.clearStoredMainView(key);
             }
+        });
 
-            this.getCollection(collection => {
-                let mediator = {};
+        this.listenToOnce(model, 'after:save', () => {
+            let key = this.name + 'List';
 
-                let abort = () => {
-                    collection.abortLastFetch();
-                    mediator.abort = true;
-                    Espo.Ui.notify(false);
-                };
+            let stored = this.getStoredMainView(key);
 
-                this.listenToOnce(this.baseController, 'action', abort);
-                this.listenToOnce(collection, 'sync', () =>
-                    this.stopListening(this.baseController, 'action', abort));
+            if (stored && stored.storeViewAfterCreate && stored.collection) {
+                this.listenToOnce(stored, 'after:render', () => {
+                    stored.collection.fetch();
+                });
+            }
+        });
+    }
 
-                this.main(this.getViewName('list'), {
-                    scope: this.name,
-                    collection: collection,
-                    params: options,
-                    mediator: mediator,
-                }, null, isReturn, key);
-            }, this, false);
-        },
+    create(options) {
+        options = options || {};
 
-        beforeView: function () {
-            this.handleCheckAccess('read');
-        },
+        let optionsOptions = options.options || {};
 
-        createViewView: function (options, model, view) {
-            view = view || this.getViewName('detail');
+        this.getModel().then(model => {
+            if (options.relate) {
+                model.setRelate(options.relate);
+            }
 
-            this.main(view, {
+            let o = {
                 scope: this.name,
                 model: model,
                 returnUrl: options.returnUrl,
                 returnDispatchParams: options.returnDispatchParams,
                 params: options,
-            });
-        },
-
-        /**
-         * @protected
-         * @param {module:model.Class} model
-         * @param {Object} options
-         */
-        prepareModelView: function (model, options) {},
-
-        actionView: function (options) {
-            let id = options.id;
-
-            let isReturn = this.getRouter().backProcessed;
-
-            if (isReturn) {
-                if (this.lastViewActionOptions && this.lastViewActionOptions.id === id) {
-                    options = Espo.Utils.clone(this.lastViewActionOptions);
-
-                    if (options.model && options.model.get('deleted')) {
-                        delete options.model;
-                    }
-                }
-
-                options.isReturn = true;
-            }
-            else {
-                delete this.lastViewActionOptions;
-            }
-
-            this.lastViewActionOptions = options;
-
-            let createView = (model) => {
-                this.prepareModelView(model, options);
-
-                this.createViewView.call(this, options, model);
             };
 
-            if ('model' in options) {
-                let model = options.model;
-
-                createView(model);
-
-                this.showLoadingNotification();
-
-                model
-                    .fetch()
-                    .then(() => this.hideLoadingNotification())
-                    .catch(xhr => {
-                        if (
-                            xhr.status === 403 &&
-                            options.isAfterCreate
-                        ) {
-                            this.hideLoadingNotification();
-                            xhr.errorIsHandled = true;
-
-                            model.trigger('fetch-forbidden');
-                        }
-                    });
-
-                this.listenToOnce(this.baseController, 'action', () => {
-                    model.abortLastFetch();
-                    this.hideLoadingNotification();
-                });
-
-                return;
+            for (let k in optionsOptions) {
+                o[k] = optionsOptions[k];
             }
 
-            this.getModel().then(model => {
-                model.id = id;
+            if (options.attributes) {
+                model.set(options.attributes);
+            }
 
-                this.showLoadingNotification();
+            this.prepareModelCreate(model, options);
 
-                model
-                    .fetch({main: true})
-                    .then(() => {
-                        this.hideLoadingNotification();
+            this.main(this.getViewName('edit'), o);
+        });
+    }
 
-                        if (model.get('deleted')) {
-                            this.listenToOnce(model, 'after:restore-deleted', () => {
-                                createView(model);
-                            });
+    actionCreate(options) {
+        this.create(options);
+    }
 
-                            this.prepareModelView(model, options);
-                            this.createViewView(options, model, 'views/deleted-detail');
+    beforeEdit() {
+        this.handleCheckAccess('edit');
+    }
 
-                            return;
-                        }
+    /**
+     * @protected
+     * @param {module:model} model
+     * @param {Object} options
+     */
+    prepareModelEdit(model, options) {
+        this.listenToOnce(model, 'before:save', () => {
+            let key = this.name + 'List';
 
-                        createView(model);
-                    });
+            let stored = this.getStoredMainView(key);
 
-                this.listenToOnce(this.baseController, 'action', () => {
-                    model.abortLastFetch();
-                });
-            });
-        },
+            if (stored && !stored.storeViewAfterUpdate) {
+                this.clearStoredMainView(key);
+            }
+        });
+    }
 
-        beforeCreate: function () {
-            this.handleCheckAccess('create');
-        },
+    actionEdit(options) {
+        let id = options.id;
 
-        /**
-         * @protected
-         * @param {module:model.Class} model
-         * @param {Object} options
-         */
-        prepareModelCreate: function (model, options) {
-            this.listenToOnce(model, 'before:save', () => {
-                let key = this.name + 'List';
+        let optionsOptions = options.options || {};
 
-                let stored = this.getStoredMainView(key);
+        this.getModel().then(model => {
+            model.id = id;
 
-                if (stored && !stored.storeViewAfterCreate) {
-                    this.clearStoredMainView(key);
-                }
-            });
+            if (options.model) {
+                model = options.model;
+            }
 
-            this.listenToOnce(model, 'after:save', () => {
-                let key = this.name + 'List';
+            this.prepareModelEdit(model, options);
 
-                let stored = this.getStoredMainView(key);
+            this.showLoadingNotification();
 
-                if (stored && stored.storeViewAfterCreate && stored.collection) {
-                    this.listenToOnce(stored, 'after:render', () => {
-                        stored.collection.fetch();
-                    });
-                }
-            });
-        },
-
-        create: function (options) {
-            options = options || {};
-
-            let optionsOptions = options.options || {};
-
-            this.getModel().then((model) => {
-                if (options.relate) {
-                    model.setRelate(options.relate);
-                }
-
-                let o = {
-                    scope: this.name,
-                    model: model,
-                    returnUrl: options.returnUrl,
-                    returnDispatchParams: options.returnDispatchParams,
-                    params: options,
-                };
-
-                for (let k in optionsOptions) {
-                    o[k] = optionsOptions[k];
-                }
-
-                if (options.attributes) {
-                    model.set(options.attributes);
-                }
-
-                this.prepareModelCreate(model, options);
-
-                this.main(this.getViewName('edit'), o);
-            });
-        },
-
-        actionCreate: function (options) {
-            this.create(options);
-        },
-
-        beforeEdit: function () {
-            this.handleCheckAccess('edit');
-        },
-
-        /**
-         * @protected
-         * @param {module:model.Class} model
-         * @param {Object} options
-         */
-        prepareModelEdit: function (model, options) {
-            this.listenToOnce(model, 'before:save', () => {
-                let key = this.name + 'List';
-
-                let stored = this.getStoredMainView(key);
-
-                if (stored && !stored.storeViewAfterUpdate) {
-                    this.clearStoredMainView(key);
-                }
-            });
-        },
-
-        actionEdit: function (options) {
-            let id = options.id;
-
-            let optionsOptions = options.options || {};
-
-            this.getModel().then(model => {
-                model.id = id;
-
-                if (options.model) {
-                    model = options.model;
-                }
-
-                this.prepareModelEdit(model, options);
-
-                this.showLoadingNotification();
-
-                model
-                    .fetch({main: true})
-                    .then(() => {
-                        this.hideLoadingNotification();
-
-                        let o = {
-                            scope: this.name,
-                            model: model,
-                            returnUrl: options.returnUrl,
-                            returnDispatchParams: options.returnDispatchParams,
-                            params: options,
-                        };
-
-                        for (let k in optionsOptions) {
-                            o[k] = optionsOptions[k];
-                        }
-
-                        if (options.attributes) {
-                            o.attributes = options.attributes;
-                        }
-
-                        this.main(this.getViewName('edit'), o);
-                    });
-
-                this.listenToOnce(this.baseController, 'action', () => {
-                    model.abortLastFetch();
-                });
-            });
-        },
-
-        beforeMerge: function () {
-            this.handleCheckAccess('edit');
-        },
-
-        actionMerge: function (options) {
-            let ids = options.ids.split(',');
-
-            this.getModel().then((model) => {
-                let models = [];
-
-                let proceed = () => {
-                    this.main('views/merge', {
-                        models: models,
-                        scope: this.name,
-                        collection: options.collection
-                    });
-                };
-
-                let i = 0;
-
-                ids.forEach(id => {
-                    let current = model.clone();
-
-                    current.id = id;
-                    models.push(current);
-
-                    this.listenToOnce(current, 'sync', () => {
-                        i++;
-
-                        if (i === ids.length) {
-                            proceed();
-                        }
-                    });
-
-                    current.fetch();
-                });
-            });
-        },
-
-        actionRelated: function (options) {
-            let id = options.id;
-            let link = options.link;
-
-            let viewName = this.getViewName('listRelated');
-
-            let model;
-
-            this.getModel()
-                .then(m => {
-                    model = m;
-                    model.id = id;
-
-                    return model.fetch({main: true});
-                })
+            model
+                .fetch({main: true})
                 .then(() => {
-                    let foreignEntityType = model.getLinkParam(link, 'entity');
+                    this.hideLoadingNotification();
 
-                    if (!foreignEntityType) {
-                        this.baseController.error404();
-
-                        throw new Error(`Bad link '${link}'.`);
-                    }
-
-                    return this.collectionFactory.create(foreignEntityType);
-                })
-                .then(collection => {
-                    collection.url = model.entityType + '/' + id + '/' + link;
-
-                    this.main(viewName, {
+                    let o = {
                         scope: this.name,
                         model: model,
-                        collection: collection,
-                        link: link,
-                    });
-                })
-        },
+                        returnUrl: options.returnUrl,
+                        returnDispatchParams: options.returnDispatchParams,
+                        params: options,
+                    };
 
-        /**
-         * Get a collection for the current controller.
-         *
-         * @protected
-         * @param {function(module:collection.Class): void|null} [callback]
-         * @param {Object|null} [context]
-         * @param {boolean} [usePreviouslyFetched=false] Use a previously fetched.
-         * @return {Promise<module:collection.Class>}
-         */
-        getCollection: function (callback, context, usePreviouslyFetched) {
-            context = context || this;
+                    for (let k in optionsOptions) {
+                        o[k] = optionsOptions[k];
+                    }
 
-            if (!this.name) {
-                throw new Error('No collection for unnamed controller');
-            }
+                    if (options.attributes) {
+                        o.attributes = options.attributes;
+                    }
 
-            let collectionName = this.entityType || this.name;
-
-            if (usePreviouslyFetched) {
-                if (collectionName in this.collectionMap) {
-                    let collection = this.collectionMap[collectionName];
-
-                    callback.call(context, collection);
-
-                    return Promise.resolve(collection);
-                }
-            }
-
-            return this.collectionFactory.create(collectionName, (collection) => {
-                this.collectionMap[collectionName] = collection;
-
-                this.listenTo(collection, 'sync', () => {
-                    collection.isFetched = true;
+                    this.main(this.getViewName('edit'), o);
                 });
 
-                if (callback) {
-                    callback.call(context, collection);
-                }
+            this.listenToOnce(this.baseController, 'action', () => {
+                model.abortLastFetch();
             });
-        },
+        });
+    }
 
-        /**
-         * Get a model for the current controller.
-         *
-         * @protected
-         * @param {Function} [callback]
-         * @param {Object} [context]
-         * @return {Promise<module:model.Class>}
-         */
-        getModel: function (callback, context) {
-            context = context || this;
+    beforeMerge() {
+        this.handleCheckAccess('edit');
+    }
 
-            if (!this.name) {
-                throw new Error('No collection for unnamed controller');
+    actionMerge(options) {
+        let ids = options.ids.split(',');
+
+        this.getModel().then((model) => {
+            let models = [];
+
+            let proceed = () => {
+                this.main('views/merge', {
+                    models: models,
+                    scope: this.name,
+                    collection: options.collection
+                });
+            };
+
+            let i = 0;
+
+            ids.forEach(id => {
+                let current = model.clone();
+
+                current.id = id;
+                models.push(current);
+
+                this.listenToOnce(current, 'sync', () => {
+                    i++;
+
+                    if (i === ids.length) {
+                        proceed();
+                    }
+                });
+
+                current.fetch();
+            });
+        });
+    }
+
+    actionRelated(options) {
+        let id = options.id;
+        let link = options.link;
+
+        let viewName = this.getViewName('listRelated');
+
+        let model;
+
+        this.getModel()
+            .then(m => {
+                model = m;
+                model.id = id;
+
+                return model.fetch({main: true});
+            })
+            .then(() => {
+                let foreignEntityType = model.getLinkParam(link, 'entity');
+
+                if (!foreignEntityType) {
+                    this.baseController.error404();
+
+                    throw new Error(`Bad link '${link}'.`);
+                }
+
+                return this.collectionFactory.create(foreignEntityType);
+            })
+            .then(collection => {
+                collection.url = model.entityType + '/' + id + '/' + link;
+
+                this.main(viewName, {
+                    scope: this.name,
+                    model: model,
+                    collection: collection,
+                    link: link,
+                });
+            })
+    }
+
+    /**
+     * Get a collection for the current controller.
+     *
+     * @protected
+     * @param {function(module:collection): void|null} [callback]
+     * @param {Object|null} [context]
+     * @param {boolean} [usePreviouslyFetched=false] Use a previously fetched.
+     * @return {Promise<module:collection>}
+     */
+    getCollection(callback, context, usePreviouslyFetched) {
+        context = context || this;
+
+        if (!this.name) {
+            throw new Error('No collection for unnamed controller');
+        }
+
+        let collectionName = this.entityType || this.name;
+
+        if (usePreviouslyFetched) {
+            if (collectionName in this.collectionMap) {
+                let collection = this.collectionMap[collectionName];
+
+                callback.call(context, collection);
+
+                return Promise.resolve(collection);
             }
+        }
 
-            let modelName = this.entityType || this.name;
+        return this.collectionFactory.create(collectionName, (collection) => {
+            this.collectionMap[collectionName] = collection;
 
-            return this.modelFactory.create(modelName, (model) => {
-                if (callback) {
-                    callback.call(context, model);
-                }
+            this.listenTo(collection, 'sync', () => {
+                collection.isFetched = true;
             });
-        },
-    });
-});
+
+            if (callback) {
+                callback.call(context, collection);
+            }
+        });
+    }
+
+    /**
+     * Get a model for the current controller.
+     *
+     * @protected
+     * @param {Function} [callback]
+     * @param {Object} [context]
+     * @return {Promise<module:model>}
+     */
+    getModel(callback, context) {
+        context = context || this;
+
+        if (!this.name) {
+            throw new Error('No collection for unnamed controller');
+        }
+
+        let modelName = this.entityType || this.name;
+
+        return this.modelFactory.create(modelName, model => {
+            if (callback) {
+                callback.call(context, model);
+            }
+        });
+    }
+}
+
+export default RecordController;

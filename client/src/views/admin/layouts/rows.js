@@ -66,11 +66,11 @@ define('views/admin/layouts/rows', ['views/admin/layouts/base'], function (Dep) 
                 this.itemsData[name] = Espo.Utils.cloneDeep(attributes);
             });
 
-            this.wait(
+            /*this.wait(
                 Espo.loader.requirePromise()
-            );
+            );*/
 
-            require('res!client/css/misc/layout-manager-rows.css', styleCss => {
+            Espo.loader.require('res!client/css/misc/layout-manager-rows.css', styleCss => {
                 this.$style = $('<style>').html(styleCss).appendTo($('body'));
             });
         },

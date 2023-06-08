@@ -27,13 +27,13 @@
  ************************************************************************/
 
 describe('theme-manager', () => {
-    /** @type {module:models/settings.Class} */
+    /** @type {module:models/settings} */
 	let config;
-    /** @type {module:models/preferences.Class} */
+    /** @type {module:models/preferences} */
     let preferences;
-    /** @type {module:metadata.Class} */
+    /** @type {module:metadata} */
     let metadata;
-    /** @type {module:theme-manager.Class} */
+    /** @type {module:theme-manager} */
     let themeManager;
 
 	beforeEach(done => {

@@ -31,7 +31,7 @@ define('views/search/filter', ['view'], function (Dep) {
     /**
      * @class
      * @name Class
-     * @extends module:view.Class
+     * @extends module:view
      * @memberOf module:views/search/filter
      */
     return Dep.extend(/** @lends module:views/search/filter.Class# */{
@@ -75,7 +75,7 @@ define('views/search/filter', ['view'], function (Dep) {
         },
 
         /**
-         * @return {module:views/fields/base.Class}
+         * @return {module:views/fields/base}
          */
         getFieldView: function () {
             return this.getView('field');

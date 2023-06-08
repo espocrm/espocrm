@@ -30,7 +30,7 @@ define('crm:handlers/campaign/mass-emails-create', ['handlers/create-related'], 
 
     return class extends Dep {
         /**
-         * @param {module:model.Class} model
+         * @param {module:model} model
          */
         getAttributes(model) {
             return Promise.resolve({

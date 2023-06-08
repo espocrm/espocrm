@@ -26,186 +26,152 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], function (Dep, ActionItemSetup) {
+/** @module views/modals/detail */
 
-    /**
-     * A quick view modal.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:views/modals/detail
-     * @extends module:views/modal.Class
-     */
-    return Dep.extend(/** @lends module:views/modals/detail.Class# */{
+import Dep from 'views/modal';
+import ActionItemSetup from 'helpers/action-item-setup';
 
-        cssName: 'detail-modal',
+/**
+ * A quick view modal.
+ *
+ * @class
+ * @name Class
+ * @memberOf module:views/modals/detail
+ */
+export default Dep.extend(/** @lends Class# */{
 
-        template: 'modals/detail',
+    template: 'modals/detail',
 
-        editDisabled: false,
+    cssName: 'detail-modal',
+    className: 'dialog dialog-record',
 
-        fullFormDisabled: false,
+    editDisabled: false,
+    fullFormDisabled: false,
+    detailView: null,
+    removeDisabled: true,
+    backdrop: true,
+    fitHeight: true,
+    sideDisabled: false,
+    bottomDisabled: false,
+    fixedHeaderHeight: true,
+    flexibleHeaderFontSize: true,
+    duplicateAction: false,
 
-        detailView: null,
-
-        removeDisabled: true,
-
-        backdrop: true,
-
-        fitHeight: true,
-
-        className: 'dialog dialog-record',
-
-        sideDisabled: false,
-
-        bottomDisabled: false,
-
-        fixedHeaderHeight: true,
-
-        flexibleHeaderFontSize: true,
-
-        duplicateAction: false,
-
-        shortcutKeys: {
-            'Control+Space': function (e) {
-                if (this.editDisabled) {
-                    return;
-                }
-
-                if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
-                    return;
-                }
-
-                if (this.buttonList.findIndex(item => item.name === 'edit') === -1) {
-                    return;
-                }
-
-                e.stopPropagation();
-                e.preventDefault();
-
-                this.actionEdit()
-                    .then(view => {
-                        view.$el
-                            .find('.form-control:not([disabled])')
-                            .first()
-                            .focus();
-                    });
-            },
-            'Control+Backslash': function (e) {
-                this.getRecordView().handleShortcutKeyControlBackslash(e);
-            },
-            'Control+ArrowLeft': function (e) {
-                this.handleShortcutKeyControlArrowLeft(e);
-            },
-            'Control+ArrowRight': function (e) {
-                this.handleShortcutKeyControlArrowRight(e);
-            },
-        },
-
-        setup: function () {
-            this.scope = this.scope || this.options.scope;
-            this.id = this.options.id;
-
-            this.buttonList = [];
-
-            if ('editDisabled' in this.options) {
-                this.editDisabled = this.options.editDisabled;
+    shortcutKeys: {
+        'Control+Space': function (e) {
+            if (this.editDisabled) {
+                return;
             }
 
-            if ('removeDisabled' in this.options) {
-                this.removeDisabled = this.options.removeDisabled;
+            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+                return;
             }
 
-            this.editDisabled = this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) ||
-                this.editDisabled;
-            this.removeDisabled = this.getMetadata().get(['clientDefs', this.scope, 'removeDisabled']) ||
-                this.removeDisabled;
-
-            this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
-
-            this.layoutName = this.options.layoutName || this.layoutName;
-
-            this.setupRecordButtons();
-
-            if (this.model) {
-                this.controlRecordButtonsVisibility();
+            if (this.buttonList.findIndex(item => item.name === 'edit') === -1) {
+                return;
             }
 
-            if (!this.fullFormDisabled) {
-                this.buttonList.push({
-                    name: 'fullForm',
-                    label: 'Full Form',
+            e.stopPropagation();
+            e.preventDefault();
+
+            this.actionEdit()
+                .then(view => {
+                    view.$el
+                        .find('.form-control:not([disabled])')
+                        .first()
+                        .focus();
                 });
-            }
+        },
+        'Control+Backslash': function (e) {
+            this.getRecordView().handleShortcutKeyControlBackslash(e);
+        },
+        'Control+ArrowLeft': function (e) {
+            this.handleShortcutKeyControlArrowLeft(e);
+        },
+        'Control+ArrowRight': function (e) {
+            this.handleShortcutKeyControlArrowRight(e);
+        },
+    },
 
+    setup: function () {
+        this.scope = this.scope || this.options.scope;
+        this.id = this.options.id;
+
+        this.buttonList = [];
+
+        if ('editDisabled' in this.options) {
+            this.editDisabled = this.options.editDisabled;
+        }
+
+        if ('removeDisabled' in this.options) {
+            this.removeDisabled = this.options.removeDisabled;
+        }
+
+        this.editDisabled = this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) ||
+            this.editDisabled;
+        this.removeDisabled = this.getMetadata().get(['clientDefs', this.scope, 'removeDisabled']) ||
+            this.removeDisabled;
+
+        this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
+
+        this.layoutName = this.options.layoutName || this.layoutName;
+
+        this.setupRecordButtons();
+
+        if (this.model) {
+            this.controlRecordButtonsVisibility();
+        }
+
+        if (!this.fullFormDisabled) {
             this.buttonList.push({
-                name: 'cancel',
-                label: 'Close',
-                title: 'Esc',
+                name: 'fullForm',
+                label: 'Full Form',
+            });
+        }
+
+        this.buttonList.push({
+            name: 'cancel',
+            label: 'Close',
+            title: 'Esc',
+        });
+
+        if (this.model && this.model.collection && !this.navigateButtonsDisabled) {
+            this.buttonList.push({
+                name: 'previous',
+                html: '<span class="fas fa-chevron-left"></span>',
+                title: this.translate('Previous Entry'),
+                position: 'right',
+                className: 'btn-icon',
+                style: 'text',
+                disabled: true,
             });
 
-            if (this.model && this.model.collection && !this.navigateButtonsDisabled) {
-                this.buttonList.push({
-                    name: 'previous',
-                    html: '<span class="fas fa-chevron-left"></span>',
-                    title: this.translate('Previous Entry'),
-                    position: 'right',
-                    className: 'btn-icon',
-                    style: 'text',
-                    disabled: true,
-                });
+            this.buttonList.push({
+                name: 'next',
+                html: '<span class="fas fa-chevron-right"></span>',
+                title: this.translate('Next Entry'),
+                position: 'right',
+                className: 'btn-icon',
+                style: 'text',
+                disabled: true,
+            });
 
-                this.buttonList.push({
-                    name: 'next',
-                    html: '<span class="fas fa-chevron-right"></span>',
-                    title: this.translate('Next Entry'),
-                    position: 'right',
-                    className: 'btn-icon',
-                    style: 'text',
-                    disabled: true,
-                });
+            this.indexOfRecord = this.model.collection.indexOf(this.model);
+        }
+        else {
+            this.navigateButtonsDisabled = true;
+        }
 
-                this.indexOfRecord = this.model.collection.indexOf(this.model);
-            }
-            else {
-                this.navigateButtonsDisabled = true;
-            }
+        this.waitForView('record');
 
-            this.waitForView('record');
+        this.sourceModel = this.model;
 
-            this.sourceModel = this.model;
-
-            this.getModelFactory().create(this.scope).then(model => {
-                if (!this.sourceModel) {
-                    this.model = model;
-                    this.model.id = this.id;
-
-                    this.setupAfterModelCreated();
-
-                    this.listenTo(this.model, 'sync', () => {
-                        this.controlRecordButtonsVisibility();
-
-                        this.trigger('model-sync');
-                    });
-
-                    this.listenToOnce(this.model, 'sync', () => {
-                        this.setupActionItems();
-                        this.createRecordView();
-                    });
-
-                    this.model.fetch();
-
-                    return;
-                }
-
-                this.model = this.sourceModel.clone();
-                this.model.collection = this.sourceModel.collection.clone();
+        this.getModelFactory().create(this.scope).then(model => {
+            if (!this.sourceModel) {
+                this.model = model;
+                this.model.id = this.id;
 
                 this.setupAfterModelCreated();
-
-                this.listenTo(this.model, 'change', () => {
-                    this.sourceModel.set(this.model.getClonedAttributes());
-                });
 
                 this.listenTo(this.model, 'sync', () => {
                     this.controlRecordButtonsVisibility();
@@ -213,288 +179,20 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                     this.trigger('model-sync');
                 });
 
-                this.once('after:render', () => {
-                    this.model.fetch();
+                this.listenToOnce(this.model, 'sync', () => {
+                    this.setupActionItems();
+                    this.createRecordView();
                 });
 
-                this.setupActionItems();
-                this.createRecordView();
-            });
+                this.model.fetch();
 
-            this.listenToOnce(this.getRouter(), 'routed', () => {
-                this.remove();
-            });
-
-            if (this.duplicateAction && this.getAcl().checkScope(this.scope, 'create')) {
-                this.addDropdownItem({
-                    name: 'duplicate',
-                    label: 'Duplicate',
-                });
-            }
-        },
-
-        /**
-         * @private
-         */
-        setupActionItems: function () {
-            /** @var {module:helpers/action-item-setup.Class} */
-            let actionItemSetup = new ActionItemSetup(
-                this.getMetadata(),
-                this.getHelper(),
-                this.getAcl(),
-                this.getLanguage()
-            );
-
-            actionItemSetup.setup(
-                this,
-                'modalDetail',
-                promise => this.wait(promise),
-                item => this.addDropdownItem(item),
-                name => this.showActionItem(name),
-                name => this.hideActionItem(name),
-                {listenToViewModelSync: true}
-            );
-        },
-
-        /**
-         * @protected
-         */
-        setupAfterModelCreated: function () {},
-
-        /**
-         * @protected
-         */
-        setupRecordButtons: function () {
-            if (!this.removeDisabled) {
-                this.addRemoveButton();
-            }
-
-            if (!this.editDisabled) {
-                this.addEditButton();
-            }
-        },
-
-        controlRecordButtonsVisibility: function () {
-            if (this.getAcl().check(this.model, 'edit')) {
-                this.showButton('edit');
-            } else {
-                this.hideButton('edit');
-            }
-
-            if (this.getAcl().check(this.model, 'delete')) {
-                this.showActionItem('remove');
-            } else {
-                this.hideActionItem('remove');
-            }
-        },
-
-        addEditButton: function () {
-            this.addButton({
-                name: 'edit',
-                label: 'Edit',
-                title: 'Ctrl+Space',
-            }, true);
-        },
-
-        removeEditButton: function () {
-            this.removeButton('edit');
-        },
-
-        addRemoveButton: function () {
-            this.addDropdownItem({
-                name: 'remove',
-                label: 'Remove',
-            });
-        },
-
-        removeRemoveButton: function () {
-            this.removeButton('remove');
-        },
-
-        getScope: function () {
-            return this.scope;
-        },
-
-        createRecordView: function (callback) {
-            let model = this.model;
-            let scope = this.getScope();
-
-            this.headerHtml = '';
-
-            this.headerHtml += $('<span>')
-                .text(this.getLanguage().translate(scope, 'scopeNames'))
-                .get(0).outerHTML;
-
-            if (model.get('name')) {
-                this.headerHtml += ' ' +
-                    $('<span>')
-                        .addClass('chevron-right')
-                        .get(0).outerHTML;
-
-                this.headerHtml += ' ' +
-                    $('<span>')
-                        .text(model.get('name'))
-                        .get(0).outerHTML;
-            }
-
-            if (!this.fullFormDisabled) {
-                let url = '#' + scope + '/view/' + this.id;
-
-                this.headerHtml =
-                    $('<a>')
-                        .attr('href', url)
-                        .addClass('action font-size-flexible')
-                        .attr('title', this.translate('Full Form'))
-                        .attr('data-action', 'fullForm')
-                        .append(this.headerHtml)
-                        .get(0).outerHTML;
-            }
-
-            this.headerHtml = this.getHelper().getScopeColorIconHtml(this.scope) + this.headerHtml;
-
-            if (!this.editDisabled) {
-                let editAccess = this.getAcl().check(model, 'edit', true);
-
-                if (editAccess) {
-                    this.showButton('edit');
-                } else {
-                    this.hideButton('edit');
-
-                    if (editAccess === null) {
-                        this.listenToOnce(model, 'sync', () => {
-                            if (this.getAcl().check(model, 'edit')) {
-                                this.showButton('edit');
-                            }
-                        });
-                    }
-                }
-            }
-
-            if (!this.removeDisabled) {
-                var removeAccess = this.getAcl().check(model, 'delete', true);
-
-                if (removeAccess) {
-                    this.showButton('remove');
-                }
-                else {
-                    this.hideButton('remove');
-
-                    if (removeAccess === null) {
-                        this.listenToOnce(model, 'sync', () => {
-                            if (this.getAcl().check(model, 'delete')) {
-                                this.showButton('remove');
-                            }
-                        });
-                    }
-                }
-            }
-
-            let viewName =
-                this.detailViewName ||
-                this.detailView ||
-                this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'detailSmall']) ||
-                this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'detailQuick']) ||
-                'views/record/detail-small';
-
-            let options = {
-                model: model,
-                el: this.containerSelector + ' .record-container',
-                type: 'detailSmall',
-                layoutName: this.layoutName || 'detailSmall',
-                buttonsDisabled: true,
-                inlineEditDisabled: true,
-                sideDisabled: this.sideDisabled,
-                bottomDisabled: this.bottomDisabled,
-                exit: function () {},
-            };
-
-            this.createView('record', viewName, options, callback);
-        },
-
-        /**
-         * @return {module:views/record/detail.Class}
-         */
-        getRecordView: function () {
-            return this.getView('record');
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            setTimeout(() => {
-                this.$el.children(0).scrollTop(0);
-            }, 50);
-
-            if (!this.navigateButtonsDisabled) {
-                this.controlNavigationButtons();
-            }
-        },
-
-        controlNavigationButtons: function () {
-            let recordView = this.getView('record');
-
-            if (!recordView) {
                 return;
             }
-
-            let indexOfRecord = this.indexOfRecord;
-
-            let previousButtonEnabled = false;
-            let nextButtonEnabled = false;
-
-            if (indexOfRecord > 0) {
-                previousButtonEnabled = true;
-            }
-
-            if (indexOfRecord < this.model.collection.total - 1) {
-                nextButtonEnabled = true;
-            }
-            else {
-                if (this.model.collection.total === -1) {
-                    nextButtonEnabled = true;
-                } else if (this.model.collection.total === -2) {
-                    if (indexOfRecord < this.model.collection.length - 1) {
-                        nextButtonEnabled = true;
-                    }
-                }
-            }
-
-            if (previousButtonEnabled) {
-                this.enableButton('previous');
-            } else {
-                this.disableButton('previous');
-            }
-
-            if (nextButtonEnabled) {
-                this.enableButton('next');
-            } else {
-                 this.disableButton('next');
-            }
-        },
-
-        switchToModelByIndex: function (indexOfRecord) {
-            if (!this.model.collection) {
-                return;
-            }
-
-            let previousModel = this.model;
-
-            this.sourceModel = this.model.collection.at(indexOfRecord);
-
-            if (!this.sourceModel) {
-                throw new Error("Model is not found in collection by index.");
-            }
-
-            this.indexOfRecord = indexOfRecord;
-
-            this.id = this.sourceModel.id;
-            this.scope = this.sourceModel.name;
 
             this.model = this.sourceModel.clone();
             this.model.collection = this.sourceModel.collection.clone();
 
-            this.stopListening(previousModel, 'change');
-            this.stopListening(previousModel, 'sync');
+            this.setupAfterModelCreated();
 
             this.listenTo(this.model, 'change', () => {
                 this.sourceModel.set(this.model.getClonedAttributes());
@@ -506,246 +204,538 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                 this.trigger('model-sync');
             });
 
-            this.createRecordView(() => {
-                this.reRender()
-                    .then(() => {
-                        this.model.fetch();
-                    })
+            this.once('after:render', () => {
+                this.model.fetch();
             });
 
-            this.controlNavigationButtons();
-            this.trigger('switch-model', this.model, previousModel);
-        },
+            this.setupActionItems();
+            this.createRecordView();
+        });
 
-        actionPrevious: function () {
-            if (!this.model.collection) {
-                return;
-            }
+        this.listenToOnce(this.getRouter(), 'routed', () => {
+            this.remove();
+        });
 
-            if (!(this.indexOfRecord > 0)) {
-                return;
-            }
+        if (this.duplicateAction && this.getAcl().checkScope(this.scope, 'create')) {
+            this.addDropdownItem({
+                name: 'duplicate',
+                label: 'Duplicate',
+            });
+        }
+    },
 
-            let indexOfRecord = this.indexOfRecord - 1;
+    /**
+     * @private
+     */
+    setupActionItems: function () {
+        /** @var {module:helpers/action-item-setup.Class} */
+        let actionItemSetup = new ActionItemSetup(
+            this.getMetadata(),
+            this.getHelper(),
+            this.getAcl(),
+            this.getLanguage()
+        );
 
-            this.switchToModelByIndex(indexOfRecord);
-        },
+        actionItemSetup.setup(
+            this,
+            'modalDetail',
+            promise => this.wait(promise),
+            item => this.addDropdownItem(item),
+            name => this.showActionItem(name),
+            name => this.hideActionItem(name),
+            {listenToViewModelSync: true}
+        );
+    },
 
-        actionNext: function () {
-            if (!this.model.collection) {
-                return;
-            }
+    /**
+     * @protected
+     */
+    setupAfterModelCreated: function () {},
 
-            if (!(this.indexOfRecord < this.model.collection.total - 1) && this.model.collection.total >= 0) {
-                return;
-            }
+    /**
+     * @protected
+     */
+    setupRecordButtons: function () {
+        if (!this.removeDisabled) {
+            this.addRemoveButton();
+        }
 
-            if (this.model.collection.total === -2 && this.indexOfRecord >= this.model.collection.length - 1) {
-                return;
-            }
+        if (!this.editDisabled) {
+            this.addEditButton();
+        }
+    },
 
-            let collection = this.model.collection;
+    controlRecordButtonsVisibility: function () {
+        if (this.getAcl().check(this.model, 'edit')) {
+            this.showButton('edit');
+        } else {
+            this.hideButton('edit');
+        }
 
-            let indexOfRecord = this.indexOfRecord + 1;
+        if (this.getAcl().check(this.model, 'delete')) {
+            this.showActionItem('remove');
+        } else {
+            this.hideActionItem('remove');
+        }
+    },
 
-            if (indexOfRecord <= collection.length - 1) {
-                this.switchToModelByIndex(indexOfRecord);
+    addEditButton: function () {
+        this.addButton({
+            name: 'edit',
+            label: 'Edit',
+            title: 'Ctrl+Space',
+        }, true);
+    },
 
-                return;
-            }
+    removeEditButton: function () {
+        this.removeButton('edit');
+    },
 
-            collection
-                .fetch({
-                    more: true,
-                    remove: false,
-                })
-                .then(() => {
-                    this.switchToModelByIndex(indexOfRecord);
-                });
-        },
+    addRemoveButton: function () {
+        this.addDropdownItem({
+            name: 'remove',
+            label: 'Remove',
+        });
+    },
 
-        /**
-         * @return {Promise}
-         */
-        actionEdit: function () {
-            if (this.options.quickEditDisabled) {
-                let options = {
-                    id: this.id,
-                    model: this.model,
-                    returnUrl: this.getRouter().getCurrentUrl(),
-                };
+    removeRemoveButton: function () {
+        this.removeButton('remove');
+    },
 
-                if (this.options.rootUrl) {
-                    options.rootUrl = this.options.rootUrl;
+    getScope: function () {
+        return this.scope;
+    },
+
+    createRecordView: function (callback) {
+        let model = this.model;
+        let scope = this.getScope();
+
+        this.headerHtml = '';
+
+        this.headerHtml += $('<span>')
+            .text(this.getLanguage().translate(scope, 'scopeNames'))
+            .get(0).outerHTML;
+
+        if (model.get('name')) {
+            this.headerHtml += ' ' +
+                $('<span>')
+                    .addClass('chevron-right')
+                    .get(0).outerHTML;
+
+            this.headerHtml += ' ' +
+                $('<span>')
+                    .text(model.get('name'))
+                    .get(0).outerHTML;
+        }
+
+        if (!this.fullFormDisabled) {
+            let url = '#' + scope + '/view/' + this.id;
+
+            this.headerHtml =
+                $('<a>')
+                    .attr('href', url)
+                    .addClass('action font-size-flexible')
+                    .attr('title', this.translate('Full Form'))
+                    .attr('data-action', 'fullForm')
+                    .append(this.headerHtml)
+                    .get(0).outerHTML;
+        }
+
+        this.headerHtml = this.getHelper().getScopeColorIconHtml(this.scope) + this.headerHtml;
+
+        if (!this.editDisabled) {
+            let editAccess = this.getAcl().check(model, 'edit', true);
+
+            if (editAccess) {
+                this.showButton('edit');
+            } else {
+                this.hideButton('edit');
+
+                if (editAccess === null) {
+                    this.listenToOnce(model, 'sync', () => {
+                        if (this.getAcl().check(model, 'edit')) {
+                            this.showButton('edit');
+                        }
+                    });
                 }
-
-                this.getRouter().navigate('#' + this.scope + '/edit/' + this.id, {trigger: false});
-                this.getRouter().dispatch(this.scope, 'edit', options);
-
-                return Promise.reject();
             }
+        }
 
-            let viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
-                'views/modals/edit';
+        if (!this.removeDisabled) {
+            var removeAccess = this.getAcl().check(model, 'delete', true);
 
-            Espo.Ui.notify(' ... ');
+            if (removeAccess) {
+                this.showButton('remove');
+            }
+            else {
+                this.hideButton('remove');
 
-            return new Promise(resolve => {
-                this.createView('quickEdit', viewName, {
-                    scope: this.scope,
-                    entityType: this.model.entityType,
-                    id: this.id,
-                    fullFormDisabled: this.fullFormDisabled
-                }, view => {
-                    this.listenToOnce(view, 'remove', () => {
-                        this.dialog.show();
+                if (removeAccess === null) {
+                    this.listenToOnce(model, 'sync', () => {
+                        if (this.getAcl().check(model, 'delete')) {
+                            this.showButton('remove');
+                        }
                     });
+                }
+            }
+        }
 
-                    this.listenToOnce(view, 'leave', () => {
-                        this.remove();
-                    });
+        let viewName =
+            this.detailViewName ||
+            this.detailView ||
+            this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'detailSmall']) ||
+            this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'detailQuick']) ||
+            'views/record/detail-small';
 
-                    this.listenTo(view, 'after:save', (model, o) => {
-                        this.model.set(model.getClonedAttributes());
+        let options = {
+            model: model,
+            el: this.containerSelector + ' .record-container',
+            type: 'detailSmall',
+            layoutName: this.layoutName || 'detailSmall',
+            buttonsDisabled: true,
+            inlineEditDisabled: true,
+            sideDisabled: this.sideDisabled,
+            bottomDisabled: this.bottomDisabled,
+            exit: function () {},
+        };
 
-                        this.trigger('after:save', model, o);
-                        this.controlRecordButtonsVisibility();
+        this.createView('record', viewName, options, callback);
+    },
 
-                        this.trigger('model-sync');
-                    });
+    /**
+     * @return {module:views/record/detail}
+     */
+    getRecordView: function () {
+        return this.getView('record');
+    },
 
-                    view.render()
-                        .then(() => {
-                            Espo.Ui.notify(false);
-                            this.dialog.hide();
+    afterRender: function () {
+        Dep.prototype.afterRender.call(this);
 
-                            resolve(view);
-                        });
-                });
+        setTimeout(() => {
+            this.$el.children(0).scrollTop(0);
+        }, 50);
+
+        if (!this.navigateButtonsDisabled) {
+            this.controlNavigationButtons();
+        }
+    },
+
+    controlNavigationButtons: function () {
+        let recordView = this.getView('record');
+
+        if (!recordView) {
+            return;
+        }
+
+        let indexOfRecord = this.indexOfRecord;
+
+        let previousButtonEnabled = false;
+        let nextButtonEnabled = false;
+
+        if (indexOfRecord > 0) {
+            previousButtonEnabled = true;
+        }
+
+        if (indexOfRecord < this.model.collection.total - 1) {
+            nextButtonEnabled = true;
+        }
+        else {
+            if (this.model.collection.total === -1) {
+                nextButtonEnabled = true;
+            } else if (this.model.collection.total === -2) {
+                if (indexOfRecord < this.model.collection.length - 1) {
+                    nextButtonEnabled = true;
+                }
+            }
+        }
+
+        if (previousButtonEnabled) {
+            this.enableButton('previous');
+        } else {
+            this.disableButton('previous');
+        }
+
+        if (nextButtonEnabled) {
+            this.enableButton('next');
+        } else {
+             this.disableButton('next');
+        }
+    },
+
+    switchToModelByIndex: function (indexOfRecord) {
+        if (!this.model.collection) {
+            return;
+        }
+
+        let previousModel = this.model;
+
+        this.sourceModel = this.model.collection.at(indexOfRecord);
+
+        if (!this.sourceModel) {
+            throw new Error("Model is not found in collection by index.");
+        }
+
+        this.indexOfRecord = indexOfRecord;
+
+        this.id = this.sourceModel.id;
+        this.scope = this.sourceModel.name;
+
+        this.model = this.sourceModel.clone();
+        this.model.collection = this.sourceModel.collection.clone();
+
+        this.stopListening(previousModel, 'change');
+        this.stopListening(previousModel, 'sync');
+
+        this.listenTo(this.model, 'change', () => {
+            this.sourceModel.set(this.model.getClonedAttributes());
+        });
+
+        this.listenTo(this.model, 'sync', () => {
+            this.controlRecordButtonsVisibility();
+
+            this.trigger('model-sync');
+        });
+
+        this.createRecordView(() => {
+            this.reRender()
+                .then(() => {
+                    this.model.fetch();
+                })
+        });
+
+        this.controlNavigationButtons();
+        this.trigger('switch-model', this.model, previousModel);
+    },
+
+    actionPrevious: function () {
+        if (!this.model.collection) {
+            return;
+        }
+
+        if (!(this.indexOfRecord > 0)) {
+            return;
+        }
+
+        let indexOfRecord = this.indexOfRecord - 1;
+
+        this.switchToModelByIndex(indexOfRecord);
+    },
+
+    actionNext: function () {
+        if (!this.model.collection) {
+            return;
+        }
+
+        if (!(this.indexOfRecord < this.model.collection.total - 1) && this.model.collection.total >= 0) {
+            return;
+        }
+
+        if (this.model.collection.total === -2 && this.indexOfRecord >= this.model.collection.length - 1) {
+            return;
+        }
+
+        let collection = this.model.collection;
+
+        let indexOfRecord = this.indexOfRecord + 1;
+
+        if (indexOfRecord <= collection.length - 1) {
+            this.switchToModelByIndex(indexOfRecord);
+
+            return;
+        }
+
+        collection
+            .fetch({
+                more: true,
+                remove: false,
+            })
+            .then(() => {
+                this.switchToModelByIndex(indexOfRecord);
             });
-        },
+    },
 
-        actionRemove: function () {
-            let model = this.getView('record').model;
-
-            this.confirm(this.translate('removeRecordConfirmation', 'messages'), () => {
-                let $buttons = this.dialog.$el.find('.modal-footer button');
-
-                $buttons.addClass('disabled').attr('disabled', 'disabled');
-
-                model.destroy()
-                    .then(() => {
-                        this.trigger('after:destroy', model);
-                        this.dialog.close();
-                    })
-                    .catch(() => {
-                        $buttons.removeClass('disabled').removeAttr('disabled');
-                    });
-            });
-        },
-
-        actionFullForm: function () {
-            let url;
-            let router = this.getRouter();
-
-            let scope = this.getScope();
-
-            url = '#' + scope + '/view/' + this.id;
-
-            var attributes = this.getView('record').fetch();
-            var model = this.getView('record').model;
-
-            attributes = _.extend(attributes, model.getClonedAttributes());
-
-            var options = {
-                attributes: attributes,
-                returnUrl: Backbone.history.fragment,
-                model: this.sourceModel || this.model,
+    /**
+     * @return {Promise}
+     */
+    actionEdit: function () {
+        if (this.options.quickEditDisabled) {
+            let options = {
                 id: this.id,
+                model: this.model,
+                returnUrl: this.getRouter().getCurrentUrl(),
             };
 
             if (this.options.rootUrl) {
                 options.rootUrl = this.options.rootUrl;
             }
 
-            setTimeout(() => {
-                router.dispatch(scope, 'view', options);
-                router.navigate(url, {trigger: false});
-            }, 10);
+            this.getRouter().navigate('#' + this.scope + '/edit/' + this.id, {trigger: false});
+            this.getRouter().dispatch(this.scope, 'edit', options);
 
-            this.trigger('leave');
-            this.dialog.close();
-        },
+            return Promise.reject();
+        }
 
-        actionDuplicate: function () {
-            Espo.Ui.notify(' ... ');
+        let viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
+            'views/modals/edit';
 
-            Espo.Ajax
-                .postRequest(this.scope + '/action/getDuplicateAttributes', {
-                    id: this.model.id,
-                })
-                .then(attributes => {
-                    Espo.Ui.notify(false);
+        Espo.Ui.notify(' ... ');
 
-                    let url = '#' + this.scope + '/create';
-
-                    this.getRouter().dispatch(this.scope, 'create', {
-                        attributes: attributes,
-                        returnUrl: this.getRouter().getCurrentUrl(),
-                        options: {
-                            duplicateSourceId: this.model.id,
-                            returnAfterCreate: true,
-                        },
-                    });
-
-                    this.getRouter().navigate(url, {trigger: false});
+        return new Promise(resolve => {
+            this.createView('quickEdit', viewName, {
+                scope: this.scope,
+                entityType: this.model.entityType,
+                id: this.id,
+                fullFormDisabled: this.fullFormDisabled
+            }, view => {
+                this.listenToOnce(view, 'remove', () => {
+                    this.dialog.show();
                 });
-        },
 
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyControlArrowLeft: function (e) {
-            if (!this.model.collection) {
-                return;
-            }
+                this.listenToOnce(view, 'leave', () => {
+                    this.remove();
+                });
 
-            if (this.buttonList.findIndex(item => item.name === 'previous' && !item.disabled) === -1) {
-                return;
-            }
+                this.listenTo(view, 'after:save', (model, o) => {
+                    this.model.set(model.getClonedAttributes());
 
-            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
-                return;
-            }
+                    this.trigger('after:save', model, o);
+                    this.controlRecordButtonsVisibility();
 
-            e.preventDefault();
-            e.stopPropagation();
+                    this.trigger('model-sync');
+                });
 
-            this.actionPrevious();
-        },
+                view.render()
+                    .then(() => {
+                        Espo.Ui.notify(false);
+                        this.dialog.hide();
 
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyControlArrowRight: function (e) {
-            if (!this.model.collection) {
-                return;
-            }
+                        resolve(view);
+                    });
+            });
+        });
+    },
 
-            if (this.buttonList.findIndex(item => item.name === 'next' && !item.disabled) === -1) {
-                return;
-            }
+    actionRemove: function () {
+        let model = this.getView('record').model;
 
-            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
-                return;
-            }
+        this.confirm(this.translate('removeRecordConfirmation', 'messages'), () => {
+            let $buttons = this.dialog.$el.find('.modal-footer button');
 
-            e.preventDefault();
-            e.stopPropagation();
+            $buttons.addClass('disabled').attr('disabled', 'disabled');
 
-            this.actionNext();
-        },
-    });
+            model.destroy()
+                .then(() => {
+                    this.trigger('after:destroy', model);
+                    this.dialog.close();
+                })
+                .catch(() => {
+                    $buttons.removeClass('disabled').removeAttr('disabled');
+                });
+        });
+    },
+
+    actionFullForm: function () {
+        let url;
+        let router = this.getRouter();
+
+        let scope = this.getScope();
+
+        url = '#' + scope + '/view/' + this.id;
+
+        var attributes = this.getView('record').fetch();
+        var model = this.getView('record').model;
+
+        attributes = _.extend(attributes, model.getClonedAttributes());
+
+        var options = {
+            attributes: attributes,
+            returnUrl: Backbone.history.fragment,
+            model: this.sourceModel || this.model,
+            id: this.id,
+        };
+
+        if (this.options.rootUrl) {
+            options.rootUrl = this.options.rootUrl;
+        }
+
+        setTimeout(() => {
+            router.dispatch(scope, 'view', options);
+            router.navigate(url, {trigger: false});
+        }, 10);
+
+        this.trigger('leave');
+        this.dialog.close();
+    },
+
+    actionDuplicate: function () {
+        Espo.Ui.notify(' ... ');
+
+        Espo.Ajax
+            .postRequest(this.scope + '/action/getDuplicateAttributes', {
+                id: this.model.id,
+            })
+            .then(attributes => {
+                Espo.Ui.notify(false);
+
+                let url = '#' + this.scope + '/create';
+
+                this.getRouter().dispatch(this.scope, 'create', {
+                    attributes: attributes,
+                    returnUrl: this.getRouter().getCurrentUrl(),
+                    options: {
+                        duplicateSourceId: this.model.id,
+                        returnAfterCreate: true,
+                    },
+                });
+
+                this.getRouter().navigate(url, {trigger: false});
+            });
+    },
+
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyControlArrowLeft: function (e) {
+        if (!this.model.collection) {
+            return;
+        }
+
+        if (this.buttonList.findIndex(item => item.name === 'previous' && !item.disabled) === -1) {
+            return;
+        }
+
+        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+            return;
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.actionPrevious();
+    },
+
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyControlArrowRight: function (e) {
+        if (!this.model.collection) {
+            return;
+        }
+
+        if (this.buttonList.findIndex(item => item.name === 'next' && !item.disabled) === -1) {
+            return;
+        }
+
+        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+            return;
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.actionNext();
+    },
 });

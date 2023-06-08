@@ -31,94 +31,114 @@ define('crm:views/knowledge-base-article/record/list-for-case', ['views/record/l
     return Dep.extend({
 
         actionSendInEmail: function (data) {
-            var model = this.collection.get(data.id);
+            let model = this.collection.get(data.id);
+            let parentModel = this.getParentView().model;
 
-            var parentModel = this.getParentView().model;
+            Espo.Ui.notify(' ... ');
 
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-
-            new Promise(
-                function (resolve, reject) {
-                    model.fetch().then(function () {
-                        resolve();
-                    });
-                }
-            ).then(function () {
-                return new Promise(function (resolve, reject) {
-                    if (parentModel.get('contactsIds') && parentModel.get('contactsIds').length) {
-                        this.getCollectionFactory().create('Contact', function (contactList) {
-                            var contactListFinal = [];
+            new Promise(resolve => {
+                model.fetch().then(() => resolve());
+            })
+            .then(() => {
+                return new Promise(resolve => {
+                    if (
+                        parentModel.get('contactsIds') &&
+                        parentModel.get('contactsIds').length
+                    ) {
+                        this.getCollectionFactory().create('Contact', contactList => {
+                            let contactListFinal = [];
                             contactList.url = 'Case/' + parentModel.id + '/contacts';
-                            contactList.fetch().then(function () {
-                                contactList.forEach(function (contact) {
+
+                            contactList.fetch().then(() => {
+                                contactList.forEach(contact => {
                                     if (contact.id === parentModel.get('contactId')) {
                                         contactListFinal.unshift(contact);
                                     } else {
                                         contactListFinal.push(contact);
                                     }
                                 });
+
                                 resolve(contactListFinal);
-                            }, function () {resolve([])});
-                        }, this);
-                    } else if (parentModel.get('accountId')) {
-                        this.getModelFactory().create('Account', function (account) {
+                            }, () => {
+                                resolve([]);
+                            });
+                        });
+                    }
+                    else if (parentModel.get('accountId')) {
+                        this.getModelFactory().create('Account', account => {
                             account.id = parentModel.get('accountId');
-                            account.fetch().then(function () {
+
+                            account.fetch().then(() => {
                                 resolve([account]);
-                            }, function () {resolve([])});
-                        }, this);
-                    } else if (parentModel.get('leadId')) {
-                        this.getModelFactory().create('Lead', function (lead) {
+                            }, () => {
+                                resolve([]);
+                            });
+                        });
+                    }
+                    else if (parentModel.get('leadId')) {
+                        this.getModelFactory().create('Lead', lead => {
                             lead.id = parentModel.get('leadId');
-                            lead.fetch().then(function () {
+
+                            lead.fetch().then(() => {
                                 resolve([lead]);
-                            }, function () {resolve([])});
-                        }, this);
-                    } else {
+                            }, () => {
+                                resolve([]);
+                            });
+                        });
+                    }
+                    else {
                         resolve([]);
                     }
-                }.bind(this))
-            }.bind(this)).then(function (list) {
-                var attributes = {
+                })
+            })
+            .then(list => {
+                let attributes = {
                     parentType: 'Case',
                     parentId: parentModel.id,
                     parentName: parentModel.get('name'),
-                    name: '[#' + parentModel.get('number') + ']'
+                    name: '[#' + parentModel.get('number') + ']',
                 };
 
                 attributes.to = '';
                 attributes.cc = '';
                 attributes.nameHash = {};
 
-                list.forEach(function (model, i) {
+                list.forEach((model, i) => {
                     if (model.get('emailAddress')) {
                         if (i === 0) {
                             attributes.to += model.get('emailAddress') + ';';
                         } else {
                             attributes.cc += model.get('emailAddress') + ';';
                         }
+
                         attributes.nameHash[model.get('emailAddress')] = model.get('name');
                     }
                 });
 
-                Espo.require('crm:knowledge-base-helper', function (Helper) {
-                    (new Helper(this.getLanguage())).getAttributesForEmail(model, attributes, function (attributes) {
-                        var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') || 'views/modals/compose-email';
+                Espo.loader.require('crm:knowledge-base-helper', Helper => {
+                    const helper = new Helper(this.getLanguage());
+
+                    helper.getAttributesForEmail(model, attributes, attributes => {
+                        var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
+                            'views/modals/compose-email';
+
                         this.createView('composeEmail', viewName, {
                             attributes: attributes,
                             selectTemplateDisabled: true,
-                            signatureDisabled: true
-                        }, function (view) {
+                            signatureDisabled: true,
+                        }, view => {
                             Espo.Ui.notify(false);
+
                             view.render();
 
-                            this.listenToOnce(view, 'after:send', function () {
+                            this.listenToOnce(view, 'after:send', () => {
                                 parentModel.trigger('after:relate');
-                            }, this);
-                        }, this);
-                    }.bind(this));
-                }, this);
-            }.bind(this)).catch(function () {
+                            });
+                        });
+                    });
+                });
+            })
+            .catch(() => {
                 Espo.Ui.notify(false);
             });
         },

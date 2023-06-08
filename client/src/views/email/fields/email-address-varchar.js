@@ -35,7 +35,10 @@ function (Dep, From, EmailAddress) {
         detailTemplate: 'email/fields/email-address-varchar/detail',
         editTemplate: 'email/fields/email-address-varchar/edit',
 
-        emailAddressRegExp: /[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/gi,
+        emailAddressRegExp: new RegExp(
+            /^[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*/.source +
+            /@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/.source
+        ),
 
         data: function () {
             let data = Dep.prototype.data.call(this);

@@ -30,7 +30,7 @@ define('crm:handlers/opportunity/contacts-create', ['handlers/create-related'], 
 
     return class extends Dep {
         /**
-         * @param {module:model.Class} model
+         * @param {module:model} model
          */
         getAttributes(model) {
             let attributes = {};

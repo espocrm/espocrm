@@ -26,96 +26,97 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/bool', ['views/fields/base', 'ui/select'], function (Dep, /** module:ui/select*/Select) {
+/** @module views/fields/bool */
 
-    /**
-     * A boolean field (checkbox).
-     *
-     * @class
-     * @name Class
-     * @extends module:views/fields/base.Class
-     * @memberOf module:views/fields/bool
-     */
-    return Dep.extend(/** @lends module:views/fields/bool.Class# */{
+import Dep from 'views/fields/base';
+import Select from 'ui/select';
 
-        type: 'bool',
+/**
+ * A boolean field (checkbox).
+ *
+ * @class
+ * @name Class
+ * @extends module:views/fields/base
+ */
+export default Dep.extend(/** @lends Class# */{
 
-        listTemplate: 'fields/bool/list',
-        detailTemplate: 'fields/bool/detail',
-        editTemplate: 'fields/bool/edit',
-        searchTemplate: 'fields/bool/search',
+    type: 'bool',
 
-        validations: [],
+    listTemplate: 'fields/bool/list',
+    detailTemplate: 'fields/bool/detail',
+    editTemplate: 'fields/bool/edit',
+    searchTemplate: 'fields/bool/search',
 
-        initialSearchIsNotIdle: true,
+    validations: [],
 
-        data: function () {
-            let data = Dep.prototype.data.call(this);
+    initialSearchIsNotIdle: true,
 
-            data.valueIsSet = this.model.has(this.name);
+    data: function () {
+        let data = Dep.prototype.data.call(this);
 
-            return data;
-        },
+        data.valueIsSet = this.model.has(this.name);
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+        return data;
+    },
 
-            if (this.mode === this.MODE_SEARCH) {
-                this.$element.on('change', () => {
-                    this.trigger('change');
-                });
+    afterRender: function () {
+        Dep.prototype.afterRender.call(this);
 
-                Select.init(this.$element);
-            }
-        },
+        if (this.mode === this.MODE_SEARCH) {
+            this.$element.on('change', () => {
+                this.trigger('change');
+            });
 
-        fetch: function () {
-            let value = this.$element.get(0).checked;
+            Select.init(this.$element);
+        }
+    },
 
-            let data = {};
+    fetch: function () {
+        let value = this.$element.get(0).checked;
 
-            data[this.name] = value;
+        let data = {};
 
-            return data;
-        },
+        data[this.name] = value;
 
-        fetchSearch: function () {
-            let type = this.$element.val();
+        return data;
+    },
 
-            if (!type) {
-                return;
-            }
+    fetchSearch: function () {
+        let type = this.$element.val();
 
-            if (type === 'any') {
-                return {
-                    type: 'or',
-                    value: [
-                        {
-                            type: 'isTrue',
-                            attribute: this.name,
+        if (!type) {
+            return;
+        }
 
-                        },
-                        {
-                            type: 'isFalse',
-                            attribute: this.name,
-                        },
-                    ],
-                    data: {
-                        type: type,
-                    },
-                };
-            }
-
+        if (type === 'any') {
             return {
-                type: type,
+                type: 'or',
+                value: [
+                    {
+                        type: 'isTrue',
+                        attribute: this.name,
+
+                    },
+                    {
+                        type: 'isFalse',
+                        attribute: this.name,
+                    },
+                ],
                 data: {
                     type: type,
                 },
             };
-        },
+        }
 
-        getSearchType: function () {
-            return this.getSearchParamsData().type || this.searchParams.type || 'isTrue';
-        },
-    });
+        return {
+            type: type,
+            data: {
+                type: type,
+            },
+        };
+    },
+
+    getSearchType: function () {
+        return this.getSearchParamsData().type || this.searchParams.type || 'isTrue';
+    },
 });

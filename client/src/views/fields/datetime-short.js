@@ -26,63 +26,61 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/datetime-short', ['views/fields/datetime'], function (Dep) {
+/** @module views/fields/datetime-short */
 
-    return Dep.extend({
+import Dep from 'views/fields/datetime';
+import moment from 'lib!moment';
 
-        listTemplate: 'fields/datetime-short/list',
+/**
+ * @class Class
+ * @extends module:views/fields/datetime
+ */
+export default Dep.extend(/** @lends Class# */{
 
-        detailTemplate: 'fields/datetime-short/detail',
+    listTemplate: 'fields/datetime-short/list',
+    detailTemplate: 'fields/datetime-short/detail',
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
+    data: function () {
+        let data = Dep.prototype.data.call(this);
 
-            if (this.mode === 'list' || this.mode === 'detail') {
-                data.fullDateValue = Dep.prototype.getDateStringValue.call(this);
-            }
+        if (this.mode === this.MODE_LIST || this.mode === this.MODE_DETAIL) {
+            data.fullDateValue = Dep.prototype.getDateStringValue.call(this);
+        }
 
-            return data;
-        },
+        return data;
+    },
 
-        getDateStringValue: function () {
-            if (this.mode === 'list' || this.mode === 'detail') {
-                var value = this.model.get(this.name)
-
-                if (value) {
-                    var string;
-
-                    var timeFormat = this.getDateTime().timeFormat;
-
-                    if (this.params.hasSeconds) {
-                        timeFormat = timeFormat.replace(/:mm/, ':mm:ss');
-                    }
-
-                    var d = this.getDateTime().toMoment(value);
-
-                    var now = moment().tz(this.getDateTime().timeZone || 'UTC');
-
-                    if (
-                        d.unix() > now.clone().startOf('day').unix() &&
-                        d.unix() < now.clone().add(1, 'days').startOf('day').unix()
-                    ) {
-                        string = d.format(timeFormat);
-
-                        return string;
-                    }
-
-                    var readableFormat = this.getDateTime().getReadableShortDateFormat();
-
-                    if (d.format('YYYY') === now.format('YYYY')) {
-                        string = d.format(readableFormat);
-                    } else {
-                        string = d.format(readableFormat + ', YY');
-                    }
-
-                    return string;
-                }
-            }
-
+    getDateStringValue: function () {
+        if (!(this.mode === this.MODE_LIST || this.mode === this.MODE_DETAIL)) {
             return Dep.prototype.getDateStringValue.call(this);
-        },
-    });
+        }
+
+        let value = this.model.get(this.name)
+
+        if (!value) {
+            return Dep.prototype.getDateStringValue.call(this);
+        }
+
+        let timeFormat = this.getDateTime().timeFormat;
+
+        if (this.params.hasSeconds) {
+            timeFormat = timeFormat.replace(/:mm/, ':mm:ss');
+        }
+
+        let d = this.getDateTime().toMoment(value);
+        let now = moment().tz(this.getDateTime().timeZone || 'UTC');
+
+        if (
+            d.unix() > now.clone().startOf('day').unix() &&
+            d.unix() < now.clone().add(1, 'days').startOf('day').unix()
+        ) {
+            return  d.format(timeFormat);
+        }
+
+        let readableFormat = this.getDateTime().getReadableShortDateFormat();
+
+        return d.format('YYYY') === now.format('YYYY') ?
+            d.format(readableFormat) :
+            d.format(readableFormat + ', YY');
+    },
 });

@@ -26,239 +26,239 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/multi-enum', ['views/fields/array', 'helpers/reg-exp-pattern', 'ui/multi-select'],
-function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
+/** @module views/fields/multi-enum */
+
+import Dep from 'views/fields/array';
+import RegExpPattern from 'helpers/reg-exp-pattern';
+import MultiSelect from 'ui/multi-select';
+
+/**
+ * A multi-enum field.
+ *
+ * @class
+ * @name Class
+ * @extends module:views/fields/array
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    type: 'multiEnum',
+
+    listTemplate: 'fields/array/list',
+    detailTemplate: 'fields/array/detail',
+    editTemplate: 'fields/multi-enum/edit',
+
+    /** @const */
+    MAX_ITEM_LENGTH: 100,
 
     /**
-     * A multi-enum field.
-     *
-     * @class
-     * @name Class
-     * @extends module:views/fields/array.Class
-     * @memberOf module:views/fields/multi-enum
+     * @protected
+     * @type {boolean}
      */
-    return Dep.extend(/** @lends module:views/fields/multi-enum.Class# */{
+    restoreOnBackspace: false,
 
-        type: 'multiEnum',
+    validationElementSelector: '.selectize-control',
 
-        listTemplate: 'fields/array/list',
+    events: {},
 
-        detailTemplate: 'fields/array/detail',
+    /** @inheritDoc */
+    data: function () {
+        return {
+            optionList: this.params.options || [],
+            ...Dep.prototype.data.call(this),
+        };
+    },
 
-        editTemplate: 'fields/multi-enum/edit',
-
-        /**
-         * @const
-         */
-        MAX_ITEM_LENGTH: 100,
-
-        /**
-         * @protected
-         * @type {boolean}
-         */
-        restoreOnBackspace: false,
-
-        validationElementSelector: '.selectize-control',
-
-        events: {},
-
-        /**
-         * @inheritDoc
-         */
-        data: function () {
-            return _.extend({
-                optionList: this.params.options || []
-            }, Dep.prototype.data.call(this));
-        },
-
-        getTranslatedOptions: function () {
-            return (this.params.options || []).map((item) => {
-                if (this.translatedOptions !== null) {
-                    if (item in this.translatedOptions) {
-                        return this.translatedOptions[item];
-                    }
-                }
-
-                return item;
-            });
-        },
-
-        translateValueToEditLabel: function (value) {
-            var label = value;
-
-            if (~(this.params.options || []).indexOf(value)) {
-                label = this.getLanguage().translateOption(value, this.name, this.scope);
-            }
-
-            if (this.translatedOptions) {
-                if (value in this.translatedOptions) {
-                    label = this.translatedOptions[value];
+    getTranslatedOptions: function () {
+        return (this.params.options || []).map(item => {
+            if (this.translatedOptions !== null) {
+                if (item in this.translatedOptions) {
+                    return this.translatedOptions[item];
                 }
             }
 
-            if (label === '') {
-                label = this.translate('None');
+            return item;
+        });
+    },
+
+    translateValueToEditLabel: function (value) {
+        let label = value;
+
+        if (~(this.params.options || []).indexOf(value)) {
+            label = this.getLanguage().translateOption(value, this.name, this.scope);
+        }
+
+        if (this.translatedOptions) {
+            if (value in this.translatedOptions) {
+                label = this.translatedOptions[value];
             }
+        }
 
-            return label;
-        },
+        if (label === '') {
+            label = this.translate('None');
+        }
 
-        afterRender: function () {
-            if (this.isEditMode()) {
-                this.$element = this.$el.find('[data-name="' + this.name + '"]');
+        return label;
+    },
 
-                let items = [];
+    afterRender: function () {
+        if (this.isSearchMode()) {
+            this.renderSearch();
 
-                let valueList = Espo.Utils.clone(this.selected);
+            return;
+        }
 
-                for (let i in valueList) {
-                    var value = valueList[i];
-                    var originalValue = value;
+        if (this.isEditMode()) {
+            this.$element = this.$el.find('[data-name="' + this.name + '"]');
 
-                    if (value === '') {
-                        value = valueList[i] = '__emptystring__';
-                    }
+            let items = [];
+            let valueList = Espo.Utils.clone(this.selected);
 
-                    if (!~(this.params.options || []).indexOf(value)) {
-                        items.push({
-                            value: value,
-                            text: this.translateValueToEditLabel(originalValue),
-                        });
-                    }
+            for (let i in valueList) {
+                let value = valueList[i];
+                let originalValue = value;
+
+                if (value === '') {
+                    value = valueList[i] = '__emptystring__';
                 }
 
-                this.$element.val(valueList.join(this.itemDelimiter));
-
-                (this.params.options || []).forEach(value => {
-                    let originalValue = value;
-
-                    if (value === '') {
-                        value = '__emptystring__';
-                    }
-
+                if (!~(this.params.options || []).indexOf(value)) {
                     items.push({
                         value: value,
                         text: this.translateValueToEditLabel(originalValue),
                     });
-                });
-
-                /** @type {module:ui/multi-select~Options} */
-                let multiSelectOptions = {
-                    items: items,
-                    delimiter: this.itemDelimiter,
-                    matchAnyWord: this.matchAnyWord,
-                    draggable: true,
-                    allowCustomOptions: this.allowCustomOptions,
-                    create: input => this.createCustomOptionCallback(input),
-                };
-
-                MultiSelect.init(this.$element, multiSelectOptions);
-
-                this.$element.on('change', () => {
-                    this.trigger('change');
-                });
+                }
             }
 
-            if (this.isSearchMode()) {
-                this.renderSearch();
-            }
-        },
+            this.$element.val(valueList.join(this.itemDelimiter));
 
-        /**
-         * @protected
-         * @param {string} input
-         * @return {{text: string, value: string}|null}
-         */
-        createCustomOptionCallback: function (input) {
-            if (input.length > this.MAX_ITEM_LENGTH) {
-                let message = this.translate('arrayItemMaxLength', 'messages')
-                    .replace('{max}', this.MAX_ITEM_LENGTH.toString())
+            (this.params.options || []).forEach(value => {
+                let originalValue = value;
 
-                this.showValidationMessage(message, '.selectize-control')
+                if (value === '') {
+                    value = '__emptystring__';
+                }
+
+                items.push({
+                    value: value,
+                    text: this.translateValueToEditLabel(originalValue),
+                });
+            });
+
+            /** @type {module:ui/multi-select~Options} */
+            let multiSelectOptions = {
+                items: items,
+                delimiter: this.itemDelimiter,
+                matchAnyWord: this.matchAnyWord,
+                draggable: true,
+                allowCustomOptions: this.allowCustomOptions,
+                create: input => this.createCustomOptionCallback(input),
+            };
+
+            MultiSelect.init(this.$element, multiSelectOptions);
+
+            this.$element.on('change', () => {
+                this.trigger('change');
+            });
+        }
+    },
+
+    /**
+     * @protected
+     * @param {string} input
+     * @return {{text: string, value: string}|null}
+     */
+    createCustomOptionCallback: function (input) {
+        if (input.length > this.MAX_ITEM_LENGTH) {
+            let message = this.translate('arrayItemMaxLength', 'messages')
+                .replace('{max}', this.MAX_ITEM_LENGTH.toString())
+
+            this.showValidationMessage(message, '.selectize-control')
+
+            return null;
+        }
+
+        if (this.params.pattern) {
+            let helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+
+            let result = helper.validate(this.params.pattern, input, this.name, this.entityType);
+
+            if (result) {
+                this.showValidationMessage(result.message, '.selectize-control')
 
                 return null;
             }
+        }
 
-            if (this.params.pattern) {
-                /** @type module:helpers/reg-exp-pattern.Class */
-                let helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+        return {
+            value: input,
+            text: input,
+        };
+    },
 
-                let result = helper.validate(this.params.pattern, input, this.name, this.entityType);
+    focusOnInlineEdit: function () {
+        MultiSelect.focus(this.$element);
+    },
 
-                if (result) {
-                    this.showValidationMessage(result.message, '.selectize-control')
+    fetch: function () {
+        let list = this.$element.val().split(this.itemDelimiter);
 
-                    return null;
-                }
+        if (list.length === 1 && list[0] === '') {
+            list = [];
+        }
+
+        for (let i in list) {
+            if (list[i] === '__emptystring__') {
+                list[i] = '';
             }
+        }
 
-            return {
-                value: input,
-                text: input,
-            };
-        },
+        if (this.params.isSorted && this.translatedOptions) {
+            list = list.sort((v1, v2) => {
+                 return (this.translatedOptions[v1] || v1)
+                     .localeCompare(this.translatedOptions[v2] || v2);
+            });
+        }
 
-        focusOnInlineEdit: function () {
-            MultiSelect.focus(this.$element);
-        },
+        let data = {};
 
-        fetch: function () {
-            let list = this.$element.val().split(this.itemDelimiter);
+        data[this.name] = list;
 
-            if (list.length === 1 && list[0] === '') {
-                list = [];
-            }
+        return data;
+    },
 
-            for (let i in list) {
-                if (list[i] === '__emptystring__') {
-                    list[i] = '';
-                }
-            }
+    validateRequired: function () {
+        if (!this.isRequired()) {
+            return;
+        }
 
-            if (this.params.isSorted && this.translatedOptions) {
-                list = list.sort((v1, v2) => {
-                     return (this.translatedOptions[v1] || v1)
-                         .localeCompare(this.translatedOptions[v2] || v2);
-                });
-            }
+        let value = this.model.get(this.name);
 
-            let data = {};
+        if (!value || value.length === 0) {
+            let msg = this.translate('fieldIsRequired', 'messages')
+                .replace('{field}', this.getLabelText());
 
-            data[this.name] = list;
+            this.showValidationMessage(msg, '.selectize-control');
 
-            return data;
-        },
+            return true;
+        }
+    },
 
-        validateRequired: function () {
-            if (this.isRequired()) {
-                let value = this.model.get(this.name);
+    validateMaxCount: function () {
+        if (!this.params.maxCount) {
+            return;
+        }
 
-                if (!value || value.length === 0) {
-                    let msg = this.translate('fieldIsRequired', 'messages')
-                        .replace('{field}', this.getLabelText());
+        let itemList = this.model.get(this.name) || [];
 
-                    this.showValidationMessage(msg, '.selectize-control');
+        if (itemList.length > this.params.maxCount) {
+            let msg =
+                this.translate('fieldExceedsMaxCount', 'messages')
+                    .replace('{field}', this.getLabelText())
+                    .replace('{maxCount}', this.params.maxCount.toString());
 
-                    return true;
-                }
-            }
-        },
+            this.showValidationMessage(msg, '.selectize-control');
 
-        validateMaxCount: function () {
-            if (this.params.maxCount) {
-                let itemList = this.model.get(this.name) || [];
-
-                if (itemList.length > this.params.maxCount) {
-                    let msg =
-                        this.translate('fieldExceedsMaxCount', 'messages')
-                            .replace('{field}', this.getLabelText())
-                            .replace('{maxCount}', this.params.maxCount.toString());
-
-                    this.showValidationMessage(msg, '.selectize-control');
-
-                    return true;
-                }
-            }
-        },
-    });
+            return true;
+        }
+    },
 });

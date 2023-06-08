@@ -31,7 +31,7 @@ define('views/admin/entity-manager/modals/select-formula', ['views/modal'], func
     /**
      * @class
      * @name Class
-     * @extends module:views/modal.Class
+     * @extends module:views/modal
      * @memberOf module:views/admin/entity-manager/modals/select-formula
      */
     return Dep.extend(/** @lends module:views/admin/entity-manager/modals/select-formula.Class# */{

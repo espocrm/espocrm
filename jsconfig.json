@@ -3,9 +3,10 @@
         "baseUrl": "client",
         "paths": {
             "*": ["src/*"],
+            "modules/crm/*": ["modules/crm/src/*"],
             "crm:*": ["modules/crm/src/*"]
         },
-        "module": "AMD",
+        "module": "ES6",
         "target": "ES2018"
     }
 }

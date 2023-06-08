@@ -33,7 +33,7 @@ const fs = require('fs');
 const cp = require('child_process');
 const path = require('path');
 const buildUtils = require('./js/build-utils');
-const BundlerGeneral = require("./js/bundler-general");
+const BundlerGeneral = require("./js/bundler/bundler-general");
 const LayoutTypeBundler = require('./js/layout-template-bundler');
 const bundleConfig = require('./frontend/bundle-config.json');
 const libs = require('./frontend/libs.json');
@@ -300,6 +300,10 @@ module.exports = grunt => {
         cp.execSync("node js/scripts/prepare-lib");
     });
 
+    grunt.registerTask('transpile', () => {
+        cp.execSync("node js/scripts/transpile");
+    });
+
     grunt.registerTask('chmod-folders', () => {
         cp.execSync(
             "find . -type d -exec chmod 755 {} +",
@@ -474,6 +478,7 @@ module.exports = grunt => {
         'less',
         'cssmin',
         'prepare-lib-original',
+        'transpile',
         'bundle',
         'uglify:bundle',
         'copy:frontendLib',

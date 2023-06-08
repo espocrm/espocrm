@@ -26,471 +26,462 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('acl-manager', ['acl', 'utils'], function (Acl, Utils) {
+/** @module acl-manager */
+
+import Acl from 'acl';
+import Utils from 'utils';
+
+/**
+ * Access checking.
+ *
+ * @class
+ * @name Class
+ * @param {module:models/user} user A user.
+ * @param {Object} implementationClassMap `acl` implementations.
+ * @param {boolean} aclAllowDeleteCreated Allow a user to delete records they created regardless a
+ *   role access level.
+ */
+const Class = function (user, implementationClassMap, aclAllowDeleteCreated) {
+    this.setEmpty();
+
+    this.user = user || null;
+    this.implementationClassMap = implementationClassMap || {};
+    this.aclAllowDeleteCreated = aclAllowDeleteCreated;
+};
+
+/**
+ * An action.
+ *
+ * @typedef {'create'|'read'|'edit'|'delete'|'stream'} module:acl-manager~action
+ */
+
+_.extend(Class.prototype, /** @lends Class# */{
+
+    /** @protected */
+    data: null,
+    /** @protected */
+    user: null,
+    /** @protected */
+    fieldLevelList: ['yes', 'no'],
 
     /**
-     * Access checking.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:acl-manager
-     * @param {module:models/user.Class} user A user.
-     * @param {Object} implementationClassMap `acl` implementations.
-     * @param {boolean} aclAllowDeleteCreated Allow a user to delete records they created regardless a
-     *   role access level.
+     * @protected
      */
-    var AclManager = function (user, implementationClassMap, aclAllowDeleteCreated) {
-        this.setEmpty();
+    setEmpty: function () {
+        this.data = {
+            table: {},
+            fieldTable:  {},
+            fieldTableQuickAccess: {},
+        };
 
-        this.user = user || null;
-        this.implementationClassMap = implementationClassMap || {};
-        this.aclAllowDeleteCreated = aclAllowDeleteCreated;
-    };
+        this.implementationHash = {};
+        this.forbiddenFieldsCache = {};
+        this.implementationClassMap = {};
+        this.forbiddenAttributesCache = {};
+    },
 
     /**
-     * An action.
+     * Get an `acl` implementation.
      *
-     * @typedef {'create'|'read'|'edit'|'delete'|'stream'} module:acl-manager.Class~action
+     * @protected
+     * @param {string} scope A scope.
+     * @returns {module:acl}
      */
+    getImplementation: function (scope) {
+        if (!(scope in this.implementationHash)) {
+            let implementationClass = Acl;
 
-    _.extend(AclManager.prototype, /** @lends module:acl-manager.Class# */{
+            if (scope in this.implementationClassMap) {
+                implementationClass = this.implementationClassMap[scope];
+            }
 
-        /**
-         * @protected
-         */
-        data: null,
+            let forbiddenFieldList = this.getScopeForbiddenFieldList(scope);
 
-        /**
-         * @protected
-         */
-        user: null,
-
-        /**
-         * @protected
-         */
-        fieldLevelList: ['yes', 'no'],
-
-        /**
-         * @protected
-         */
-        setEmpty: function () {
-            this.data = {
-                table: {},
-                fieldTable:  {},
-                fieldTableQuickAccess: {},
+            let params = {
+                aclAllowDeleteCreated: this.aclAllowDeleteCreated,
+                teamsFieldIsForbidden: !!~forbiddenFieldList.indexOf('teams'),
+                forbiddenFieldList: forbiddenFieldList,
             };
 
-            this.implementationHash = {};
-            this.forbiddenFieldsCache = {};
-            this.implementationClassMap = {};
-            this.forbiddenAttributesCache = {};
-        },
+            this.implementationHash[scope] = new implementationClass(this.getUser(), scope, params);
+        }
 
-        /**
-         * Get an `acl` implementation.
-         *
-         * @protected
-         * @param {string} scope A scope.
-         * @returns {module:acl.Class}
-         */
-        getImplementation: function (scope) {
-            if (!(scope in this.implementationHash)) {
-                let implementationClass = Acl;
+        return this.implementationHash[scope];
+    },
 
-                if (scope in this.implementationClassMap) {
-                    implementationClass = this.implementationClassMap[scope];
-                }
+    /**
+     * @protected
+     */
+    getUser: function () {
+        return this.user;
+    },
 
-                let forbiddenFieldList = this.getScopeForbiddenFieldList(scope);
+    /**
+     * @internal
+     */
+    set: function (data) {
+        data = data || {};
 
-                let params = {
-                    aclAllowDeleteCreated: this.aclAllowDeleteCreated,
-                    teamsFieldIsForbidden: !!~forbiddenFieldList.indexOf('teams'),
-                    forbiddenFieldList: forbiddenFieldList,
-                };
+        this.data = data;
+        this.data.table = this.data.table || {};
+        this.data.fieldTable = this.data.fieldTable || {};
+        this.data.attributeTable = this.data.attributeTable || {};
+    },
 
-                let obj = new implementationClass(this.getUser(), scope, params);
+    /**
+     * @deprecated Use `getPermissionLevel`.
+     *
+     * @returns {string|null}
+     */
+    get: function (name) {
+        return this.data[name] || null;
+    },
 
-                this.implementationHash[scope] = obj;
-            }
+    /**
+     * Get a permission level.
+     *
+     * @param {string} permission A permission name.
+     * @returns {'yes'|'all'|'team'|'no'}
+     */
+    getPermissionLevel: function (permission) {
+        let permissionKey = permission;
 
-            return this.implementationHash[scope];
-        },
+        if (permission.substr(-10) !== 'Permission') {
+            permissionKey = permission + 'Permission';
+        }
 
-        /**
-         * @protected
-         */
-        getUser: function () {
-            return this.user;
-        },
+        return this.data[permissionKey] || 'no';
+    },
 
-        /**
-         * @protected
-         */
-        set: function (data) {
-            data = data || {};
+    /**
+     * Get access level to a scope action.
+     *
+     * @param {string} scope A scope.
+     * @param {module:acl-manager~action} action An action.
+     * @returns {'yes'|'all'|'team'|'no'|null}
+     */
+    getLevel: function (scope, action) {
+        if (!(scope in this.data.table)) {
+            return null;
+        }
 
-            this.data = data;
-            this.data.table = this.data.table || {};
-            this.data.fieldTable = this.data.fieldTable || {};
-            this.data.attributeTable = this.data.attributeTable || {};
-        },
+        if (typeof this.data.table[scope] !== 'object' || !(action in this.data.table[scope])) {
+            return null;
+        }
 
-        /**
-         * @deprecated Use `getPermissionLevel`.
-         *
-         * @returns {string|null}
-         */
-        get: function (name) {
-            return this.data[name] || null;
-        },
+        return this.data.table[scope][action];
+    },
 
-        /**
-         * Get a permission level.
-         *
-         * @param {string} permission A permission name.
-         * @returns {'yes'|'all'|'team'|'no'}
-         */
-        getPermissionLevel: function (permission) {
-            let permissionKey = permission;
+    /**
+     * Clear access data.
+     *
+     * @internal
+     */
+    clear: function () {
+        this.setEmpty();
+    },
 
-            if (permission.substr(-10) !== 'Permission') {
-                permissionKey = permission + 'Permission';
-            }
+    /**
+     * Check whether a scope has ACL.
+     *
+     * @param {string} scope A scope.
+     * @returns {boolean}
+     */
+    checkScopeHasAcl: function (scope) {
+        var data = (this.data.table || {})[scope];
 
-            return this.data[permissionKey] || 'no';
-        },
+        if (typeof data === 'undefined') {
+            return false;
+        }
 
-        /**
-         * Get access level to a scope action.
-         *
-         * @param {string} scope A scope.
-         * @param {module:acl-manager.Class~action} action An action.
-         * @returns {'yes'|'all'|'team'|'no'|null}
-         */
-        getLevel: function (scope, action) {
-            if (!(scope in this.data.table)) {
-                return null;
-            }
+        return true;
+    },
 
-            if (typeof this.data.table[scope] !== 'object' || !(action in this.data.table[scope])) {
-                return null;
-            }
+    /**
+     * Check access to a scope.
+     *
+     * @param {string} scope A scope.
+     * @param {module:acl-manager~action|null} [action=null] An action.
+     * @param {boolean} [precise=false] Deprecated. Not used.
+     * @returns {boolean} True if has access.
+     */
+    checkScope: function (scope, action, precise) {
+        let data = (this.data.table || {})[scope];
 
-            return this.data.table[scope][action];
-        },
+        if (typeof data === 'undefined') {
+            data = null;
+        }
 
-        /**
-         * Clear access data.
-         *
-         * @internal
-         */
-        clear: function () {
-            this.setEmpty();
-        },
+        return this.getImplementation(scope).checkScope(data, action, precise);
+    },
 
-        /**
-         * Check whether a scope has ACL.
-         *
-         * @param {string} scope A scope.
-         * @returns {boolean}
-         */
-        checkScopeHasAcl: function (scope) {
-            var data = (this.data.table || {})[scope];
+    /**
+     * Check access to a model.
+     *
+     * @param {module:model} model A model.
+     * @param {module:acl-manager~action|null} [action=null] An action.
+     * @param {boolean} [precise=false] To return `null` if not enough data is set in a model.
+     *   E.g. the `teams` field is not yet loaded.
+     * @returns {boolean|null} True if has access, null if not clear.
+     */
+    checkModel: function (model, action, precise) {
+        var scope = model.name;
 
-            if (typeof data === 'undefined') {
+        // todo move this to custom acl
+        if (action === 'edit') {
+            if (!model.isEditable()) {
                 return false;
             }
+        }
 
+        if (action === 'delete') {
+            if (!model.isRemovable()) {
+                return false;
+            }
+        }
+
+        let data = (this.data.table || {})[scope];
+
+        if (typeof data === 'undefined') {
+            data = null;
+        }
+
+        let impl = this.getImplementation(scope);
+
+        if (action) {
+            let methodName = 'checkModel' + Utils.upperCaseFirst(action);
+
+            if (methodName in impl) {
+                return impl[methodName](model, data, precise);
+            }
+        }
+
+        return impl.checkModel(model, data, action, precise);
+    },
+
+    /**
+     * Check access to a scope or a model.
+     *
+     * @param {string|module:model} subject What to check. A scope or a model.
+     * @param {module:acl-manager~action|null} [action=null] An action.
+     * @param {boolean} [precise=false]  To return `null` if not enough data is set in a model.
+     *   E.g. the `teams` field is not yet loaded.
+     * @returns {boolean|null} {boolean|null} True if has access, null if not clear.
+     */
+    check: function (subject, action, precise) {
+        if (typeof subject === 'string') {
+            return this.checkScope(subject, action, precise);
+        }
+
+        return this.checkModel(subject, action, precise);
+    },
+
+    /**
+     * Check if a user is owner to a model.
+     *
+     * @param {module:model} model A model.
+     * @returns {boolean|null} True if owner, null if not clear.
+     */
+    checkIsOwner: function (model) {
+        return this.getImplementation(model.name).checkIsOwner(model);
+    },
+
+    /**
+     * Check if a user in a team of a model.
+     *
+     * @param {module:model} model A model.
+     * @returns {boolean|null} True if in a team, null if not clear.
+     */
+    checkInTeam: function (model) {
+        return this.getImplementation(model.name).checkInTeam(model);
+    },
+
+    /**
+     * Check an assignment permission to a user.
+     *
+     * @param {module:models/user} user A user.
+     * @returns {boolean} True if has access.
+     */
+    checkAssignmentPermission: function (user) {
+        return this.checkPermission('assignmentPermission', user);
+    },
+
+    /**
+     * Check a user permission to a user.
+     *
+     * @param {module:models/user} user A user.
+     * @returns {boolean} True if has access.
+     */
+    checkUserPermission: function (user) {
+        return this.checkPermission('userPermission', user);
+    },
+
+    /**
+     * Check a specific permission to a user.
+     *
+     * @param {string} permission A permission name.
+     * @param {module:models/user} user A user.
+     * @returns {boolean} True if has access.
+     */
+    checkPermission: function (permission, user) {
+        if (this.getUser().isAdmin()) {
             return true;
-        },
+        }
 
-        /**
-         * Check access to a scope.
-         *
-         * @param {string} scope A scope.
-         * @param {module:acl-manager.Class~action|null} [action=null] An action.
-         * @param {boolean} [precise=false] Deprecated. Not used.
-         * @returns {boolean} True if has access.
-         */
-        checkScope: function (scope, action, precise) {
-            let data = (this.data.table || {})[scope];
+        let level = this.get(permission);
 
-            if (typeof data === 'undefined') {
-                data = null;
-            }
-
-            return this.getImplementation(scope).checkScope(data, action, precise);
-        },
-
-        /**
-         * Check access to a model.
-         *
-         * @param {module:model.Class} model A model.
-         * @param {module:acl-manager.Class~action|null} [action=null] An action.
-         * @param {boolean} [precise=false] To return `null` if not enough data is set in a model.
-         *   E.g. the `teams` field is not yet loaded.
-         * @returns {boolean|null} True if has access, null if not clear.
-         */
-        checkModel: function (model, action, precise) {
-            var scope = model.name;
-
-            // todo move this to custom acl
-            if (action === 'edit') {
-                if (!model.isEditable()) {
-                    return false;
-                }
-            }
-
-            if (action === 'delete') {
-                if (!model.isRemovable()) {
-                    return false;
-                }
-            }
-
-            let data = (this.data.table || {})[scope];
-
-            if (typeof data === 'undefined') {
-                data = null;
-            }
-
-            let impl = this.getImplementation(scope);
-
-            if (action) {
-                let methodName = 'checkModel' + Espo.Utils.upperCaseFirst(action);
-
-                if (methodName in impl) {
-                    return impl[methodName](model, data, precise);
-                }
-            }
-
-            return impl.checkModel(model, data, action, precise);
-        },
-
-        /**
-         * Check access to a scope or a model.
-         *
-         * @param {string|module:model.Class} subject What to check. A scope or a model.
-         * @param {module:acl-manager.Class~action|null} [action=null] An action.
-         * @param {boolean} [precise=false]  To return `null` if not enough data is set in a model.
-         *   E.g. the `teams` field is not yet loaded.
-         * @returns {boolean|null} {boolean|null} True if has access, null if not clear.
-         */
-        check: function (subject, action, precise) {
-            if (typeof subject === 'string') {
-                return this.checkScope(subject, action, precise);
-            }
-
-            return this.checkModel(subject, action, precise);
-        },
-
-        /**
-         * Check if a user is owner to a model.
-         *
-         * @param {module:model.Class} model A model.
-         * @returns {boolean|null} True if owner, null if not clear.
-         */
-        checkIsOwner: function (model) {
-            return this.getImplementation(model.name).checkIsOwner(model);
-        },
-
-        /**
-         * Check if a user in a team of a model.
-         *
-         * @param {module:model.Class} model A model.
-         * @returns {boolean|null} True if in a team, null if not clear.
-         */
-        checkInTeam: function (model) {
-            return this.getImplementation(model.name).checkInTeam(model);
-        },
-
-        /**
-         * Check an assignment permission to a user.
-         *
-         * @param {module:models/User.Class} user A user.
-         * @returns {boolean} True if has access.
-         */
-        checkAssignmentPermission: function (user) {
-            return this.checkPermission('assignmentPermission', user);
-        },
-
-        /**
-         * Check a user permission to a user.
-         *
-         * @param {module:models/User.Class} user A user.
-         * @returns {boolean} True if has access.
-         */
-        checkUserPermission: function (user) {
-            return this.checkPermission('userPermission', user);
-        },
-
-        /**
-         * Check a specific permission to a user.
-         *
-         * @param {string} permission A permission name.
-         * @param {module:models/User.Class} user A user.
-         * @returns {boolean} True if has access.
-         */
-        checkPermission: function (permission, user) {
-            if (this.getUser().isAdmin()) {
-                return true;
-            }
-
-            let level = this.get(permission);
-
-            if (level === 'no') {
-                if (user.id === this.getUser().id) {
-                    return true;
-                }
-
-                return false;
-            }
-
-            if (level === 'team') {
-                if (!user.has('teamsIds')) {
-                    return false;
-                }
-
-                let result = false;
-
-                let teamsIds = user.get('teamsIds') || [];
-
-                teamsIds.forEach(id => {
-                    if (~(this.getUser().get('teamsIds') || []).indexOf(id)) {
-                        result = true;
-                    }
-                });
-
-                return result;
-            }
-
-            if (level === 'all') {
-                return true;
-            }
-
-            if (level === 'yes') {
+        if (level === 'no') {
+            if (user.id === this.getUser().id) {
                 return true;
             }
 
             return false;
-        },
+        }
 
-        /**
-         * Get a list of forbidden fields for an entity type.
-         *
-         * @param {string} scope An entity type.
-         * @param {'read'|'edit'} [action='read'] An action.
-         * @param {'yes'|'no'} [thresholdLevel='no'] A threshold level.
-         * @returns {string[]} A forbidden field list.
-         */
-        getScopeForbiddenFieldList: function (scope, action, thresholdLevel) {
-            action = action || 'read';
-            thresholdLevel = thresholdLevel || 'no';
-
-            let key = scope + '_' + action + '_' + thresholdLevel;
-
-            if (key in this.forbiddenFieldsCache) {
-                return Utils.clone(this.forbiddenFieldsCache[key]);
+        if (level === 'team') {
+            if (!user.has('teamsIds')) {
+                return false;
             }
 
-            let levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
+            let result = false;
 
-            let fieldTableQuickAccess = this.data.fieldTableQuickAccess || {};
-            let scopeData = fieldTableQuickAccess[scope] || {};
-            let fieldsData = scopeData.fields || {};
-            let actionData = fieldsData[action] || {};
+            let teamsIds = user.get('teamsIds') || [];
 
-            let fieldList = [];
-
-            levelList.forEach(level => {
-                let list = actionData[level] || [];
-
-                list.forEach(field => {
-                    if (~fieldList.indexOf(field)) {
-                        return;
-                    }
-
-                    fieldList.push(field);
-                });
+            teamsIds.forEach(id => {
+                if (~(this.getUser().get('teamsIds') || []).indexOf(id)) {
+                    result = true;
+                }
             });
 
-            this.forbiddenFieldsCache[key] = fieldList;
+            return result;
+        }
 
-            return Utils.clone(fieldList);
-        },
+        if (level === 'all') {
+            return true;
+        }
 
-        /**
-         * Get a list of forbidden attributes for an entity type.
-         *
-         * @param {string} scope An entity type.
-         * @param {'read'|'edit'} [action='read'] An action.
-         * @param {'yes'|'no'} [thresholdLevel='no'] A threshold level.
-         * @returns {string[]} A forbidden attribute list.
-         */
-        getScopeForbiddenAttributeList: function (scope, action, thresholdLevel) {
-            action = action || 'read';
-            thresholdLevel = thresholdLevel || 'no';
+        if (level === 'yes') {
+            return true;
+        }
 
-            let key = scope + '_' + action + '_' + thresholdLevel;
+        return false;
+    },
 
-            if (key in this.forbiddenAttributesCache) {
-                return Utils.clone(this.forbiddenAttributesCache[key]);
-            }
+    /**
+     * Get a list of forbidden fields for an entity type.
+     *
+     * @param {string} scope An entity type.
+     * @param {'read'|'edit'} [action='read'] An action.
+     * @param {'yes'|'no'} [thresholdLevel='no'] A threshold level.
+     * @returns {string[]} A forbidden field list.
+     */
+    getScopeForbiddenFieldList: function (scope, action, thresholdLevel) {
+        action = action || 'read';
+        thresholdLevel = thresholdLevel || 'no';
 
-            let levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
+        let key = scope + '_' + action + '_' + thresholdLevel;
 
-            let fieldTableQuickAccess = this.data.fieldTableQuickAccess || {};
-            let scopeData = fieldTableQuickAccess[scope] || {};
+        if (key in this.forbiddenFieldsCache) {
+            return Utils.clone(this.forbiddenFieldsCache[key]);
+        }
 
-            let attributesData = scopeData.attributes || {};
-            let actionData = attributesData[action] || {};
+        let levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
 
-            let attributeList = [];
+        let fieldTableQuickAccess = this.data.fieldTableQuickAccess || {};
+        let scopeData = fieldTableQuickAccess[scope] || {};
+        let fieldsData = scopeData.fields || {};
+        let actionData = fieldsData[action] || {};
 
-            levelList.forEach(level => {
-                let list = actionData[level] || [];
+        let fieldList = [];
 
-                list.forEach(attribute => {
-                    if (~attributeList.indexOf(attribute)) {
-                        return;
-                    }
+        levelList.forEach(level => {
+            let list = actionData[level] || [];
 
-                    attributeList.push(attribute);
-                });
+            list.forEach(field => {
+                if (~fieldList.indexOf(field)) {
+                    return;
+                }
+
+                fieldList.push(field);
             });
+        });
 
-            this.forbiddenAttributesCache[key] = attributeList;
+        this.forbiddenFieldsCache[key] = fieldList;
 
-            return Utils.clone(attributeList);
-        },
+        return Utils.clone(fieldList);
+    },
 
-        /**
-         * Check an assignment permission to a team.
-         *
-         * @param {string} teamId A team ID.
-         * @returns {boolean} True if has access.
-         */
-        checkTeamAssignmentPermission: function (teamId) {
-            if (this.get('assignmentPermission') === 'all') {
-                return true;
-            }
+    /**
+     * Get a list of forbidden attributes for an entity type.
+     *
+     * @param {string} scope An entity type.
+     * @param {'read'|'edit'} [action='read'] An action.
+     * @param {'yes'|'no'} [thresholdLevel='no'] A threshold level.
+     * @returns {string[]} A forbidden attribute list.
+     */
+    getScopeForbiddenAttributeList: function (scope, action, thresholdLevel) {
+        action = action || 'read';
+        thresholdLevel = thresholdLevel || 'no';
 
-            return !!~this.getUser().getLinkMultipleIdList('teams').indexOf(teamId);
-        },
+        let key = scope + '_' + action + '_' + thresholdLevel;
 
-        /**
-         * Check access to a field.
-         * @param {string} scope An entity type.
-         * @param {string} field A field.
-         * @param {'read'|'edit'} [action='read'] An action.
-         * @returns {boolean} True if has access.
-         */
-        checkField: function (scope, field, action) {
-            return !~this.getScopeForbiddenFieldList(scope, action).indexOf(field);
-        },
-    });
+        if (key in this.forbiddenAttributesCache) {
+            return Utils.clone(this.forbiddenAttributesCache[key]);
+        }
 
-    AclManager.extend = Bull.View.extend;
+        let levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
 
-    return AclManager;
+        let fieldTableQuickAccess = this.data.fieldTableQuickAccess || {};
+        let scopeData = fieldTableQuickAccess[scope] || {};
+
+        let attributesData = scopeData.attributes || {};
+        let actionData = attributesData[action] || {};
+
+        let attributeList = [];
+
+        levelList.forEach(level => {
+            let list = actionData[level] || [];
+
+            list.forEach(attribute => {
+                if (~attributeList.indexOf(attribute)) {
+                    return;
+                }
+
+                attributeList.push(attribute);
+            });
+        });
+
+        this.forbiddenAttributesCache[key] = attributeList;
+
+        return Utils.clone(attributeList);
+    },
+
+    /**
+     * Check an assignment permission to a team.
+     *
+     * @param {string} teamId A team ID.
+     * @returns {boolean} True if has access.
+     */
+    checkTeamAssignmentPermission: function (teamId) {
+        if (this.get('assignmentPermission') === 'all') {
+            return true;
+        }
+
+        return !!~this.getUser().getLinkMultipleIdList('teams').indexOf(teamId);
+    },
+
+    /**
+     * Check access to a field.
+     * @param {string} scope An entity type.
+     * @param {string} field A field.
+     * @param {'read'|'edit'} [action='read'] An action.
+     * @returns {boolean} True if has access.
+     */
+    checkField: function (scope, field, action) {
+        return !~this.getScopeForbiddenFieldList(scope, action).indexOf(field);
+    },
 });
+
+Class.extend = Bull.View.extend;
+
+export default Class;

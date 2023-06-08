@@ -44,8 +44,8 @@ define('crm:views/dashlets/activities',
                         name: 'ico',
                         view: 'crm:views/fields/ico',
                         params: {
-                            notRelationship: true
-                        }
+                            notRelationship: true,
+                        },
                     },
                     {
                         name: 'name',
@@ -53,9 +53,9 @@ define('crm:views/dashlets/activities',
                     },
                 ],
                 [
-                    {name: 'dateStart'}
-                ]
-            ]
+                    {name: 'dateStart'},
+                ],
+            ],
         },
 
         listLayoutEntityTypeMap: {
@@ -67,7 +67,7 @@ define('crm:views/dashlets/activities',
                             view: 'crm:views/fields/ico',
                             params: {
                                 notRelationship: true
-                            }
+                            },
                         },
                         {
                             name: 'name',
@@ -79,8 +79,8 @@ define('crm:views/dashlets/activities',
                         {
                             name: 'priority',
                             view: 'crm:views/task/fields/priority-for-dashlet',
-                        }
-                    ]
+                        },
+                    ],
                 ]
             }
         },
@@ -109,8 +109,8 @@ define('crm:views/dashlets/activities',
             this.wait(true);
             var i = 0;
 
-            this.scopeList.forEach((scope) => {
-                this.getModelFactory().getSeed(scope, (seed) => {
+            this.scopeList.forEach(scope => {
+                this.getModelFactory().create(scope, seed => {
                     this.seeds[scope] = seed;
 
                     i++;
@@ -121,7 +121,7 @@ define('crm:views/dashlets/activities',
                 });
             });
 
-            this.scopeList.slice(0).reverse().forEach((scope) => {
+            this.scopeList.slice(0).reverse().forEach(scope => {
                 if (this.getAcl().checkScope(scope, 'create')) {
                     this.actionList.unshift({
                         name: 'createActivity',
@@ -129,8 +129,8 @@ define('crm:views/dashlets/activities',
                         iconHtml: '<span class="fas fa-plus"></span>',
                         url: '#' + scope + '/create',
                         data: {
-                            scope: scope
-                        }
+                            scope: scope,
+                        },
                     });
                 }
             });
@@ -154,7 +154,7 @@ define('crm:views/dashlets/activities',
                     checkboxes: false,
                     collection: this.collection,
                     listLayout: this.listLayout,
-                }, (view) => {
+                }, view => {
                     view.render();
                 });
             });
@@ -183,7 +183,7 @@ define('crm:views/dashlets/activities',
             this.createView('quickCreate', viewName, {
                 scope: scope,
                 attributes: attributes,
-            }, (view) => {
+            }, view => {
                 view.render();
                 view.notify(false);
 
@@ -205,7 +205,7 @@ define('crm:views/dashlets/activities',
             this.createView('quickCreate', viewName, {
                 scope: 'Meeting',
                 attributes: attributes,
-            }, (view) => {
+            }, view => {
                 view.render();
                 view.notify(false);
 
@@ -227,7 +227,7 @@ define('crm:views/dashlets/activities',
             this.createView('quickCreate', viewName, {
                 scope: 'Call',
                 attributes: attributes,
-            }, (view) => {
+            }, view => {
                 view.render();
                 view.notify(false);
 

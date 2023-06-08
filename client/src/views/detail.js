@@ -26,693 +26,685 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/detail', ['views/main'], function (Dep) {
+/** @module module:views/detail */
+
+import Dep from 'views/main';
+
+/**
+ * A detail view page.
+ *
+ * @class
+ * @name Class
+ * @extends module:views/main
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    /** @inheritDoc */
+    template: 'detail',
+    /** @inheritDoc */
+    name: 'Detail',
+
+    /** @inheritDoc */
+    optionsToPass: [
+        'attributes',
+        'returnUrl',
+        'returnDispatchParams',
+        'rootUrl',
+    ],
 
     /**
-     * A detail view page.
+     * A header view name.
      *
-     * @class
-     * @name Class
-     * @extends module:views/main.Class
-     * @memberOf module:views/detail
+     * @type {string}
      */
-    return Dep.extend(/** @lends module:views/detail.Class# */{
+    headerView: 'views/header',
 
-        /**
-         * @inheritDoc
-         */
-        template: 'detail',
+    /**
+     * A record view name.
+     *
+     * @type {string}
+     */
+    recordView: 'views/record/detail',
 
-        /**
-         * @inheritDoc
-         */
-        name: 'Detail',
+    /**
+     * A root breadcrumb item not to be a link.
+     *
+     * @type {boolean}
+     */
+    rootLinkDisabled: false,
 
-        /**
-         * @inheritDoc
-         */
-        optionsToPass: [
-            'attributes',
-            'returnUrl',
-            'returnDispatchParams',
-            'rootUrl',
-        ],
+    /**
+     * A root URL.
+     *
+     * @type {string}
+     */
+    rootUrl: '',
 
-        /**
-         * A header view name.
-         *
-         * @type {string}
-         */
-        headerView: 'views/header',
+    /**
+     * Is return.
+     *
+     * @protected
+     */
+    isReturn: false,
 
-        /**
-         * A record view name.
-         *
-         * @type {string}
-         */
-        recordView: 'views/record/detail',
+    /**
+     * @inheritDoc
+     */
+    shortcutKeys: {},
 
-        /**
-         * A root breadcrumb item not to be a link.
-         *
-         * @type {boolean}
-         */
-        rootLinkDisabled: false,
+    /**
+     * @inheritDoc
+     */
+    setup: function () {
+        Dep.prototype.setup.call(this);
 
-        /**
-         * A root URL.
-         *
-         * @type {string}
-         */
-        rootUrl: '',
+        this.headerView = this.options.headerView || this.headerView;
+        this.recordView = this.options.recordView || this.recordView;
 
-        /**
-         * Is return.
-         *
-         * @protected
-         */
-        isReturn: false,
+        this.rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+        this.isReturn = this.options.isReturn || this.options.params.isReturn || false;
 
-        /**
-         * @inheritDoc
-         */
-        shortcutKeys: {},
+        this.setupHeader();
+        this.setupRecord();
+        this.setupPageTitle();
+        this.initFollowButtons();
+        this.initRedirect();
+    },
 
-        /**
-         * @inheritDoc
-         */
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setupFinal: function () {
+        Dep.prototype.setupFinal.call(this);
 
-            this.headerView = this.options.headerView || this.headerView;
-            this.recordView = this.options.recordView || this.recordView;
+        this.getHelper().processSetupHandlers(this, 'detail');
+    },
 
-            this.rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
-            this.isReturn = this.options.isReturn || this.options.params.isReturn || false;
+    /**
+     * @private
+     */
+    initRedirect: function () {
+        if (!this.options.params.isAfterCreate) {
+            return;
+        }
 
-            this.setupHeader();
-            this.setupRecord();
-            this.setupPageTitle();
-            this.initFollowButtons();
-            this.initRedirect();
-        },
+        let redirect = () => {
+            Espo.Ui.success(this.translate('Created'));
 
-        setupFinal: function () {
-            Dep.prototype.setupFinal.call(this);
+            setTimeout(() => {
+                this.getRouter().navigate(this.rootUrl, {trigger: true});
+            }, 1000)
+        };
 
-            this.getHelper().processSetupHandlers(this, 'detail');
-        },
+        if (
+            this.model.lastXhr &&
+            this.model.lastXhr.status === 403
+        ) {
+            redirect();
 
-        /**
-         * @private
-         */
-        initRedirect: function () {
-            if (!this.options.params.isAfterCreate) {
-                return;
-            }
+            return;
+        }
 
-            let redirect = () => {
-                Espo.Ui.success(this.translate('Created'));
+        this.listenToOnce(this.model, 'fetch-forbidden', () => redirect())
+    },
 
-                setTimeout(() => {
-                    this.getRouter().navigate(this.rootUrl, {trigger: true});
-                }, 1000)
-            };
+    /**
+     * Set up a page title.
+     */
+    setupPageTitle: function () {
+        this.listenTo(this.model, 'after:save', () => {
+            this.updatePageTitle();
+        });
 
-            if (
-                this.model.lastXhr &&
-                this.model.lastXhr.status === 403
-            ) {
-                redirect();
-
-                return;
-            }
-
-            this.listenToOnce(this.model, 'fetch-forbidden', () => redirect())
-        },
-
-        /**
-         * Set up a page title.
-         */
-        setupPageTitle: function () {
-            this.listenTo(this.model, 'after:save', () => {
+        this.listenTo(this.model, 'sync', (model) => {
+            if (model && model.hasChanged('name')) {
                 this.updatePageTitle();
-            });
+            }
+        });
+    },
 
-            this.listenTo(this.model, 'sync', (model) => {
-                if (model && model.hasChanged('name')) {
-                    this.updatePageTitle();
+    /**
+     * Set up a header.
+     */
+    setupHeader: function () {
+        this.createView('header', this.headerView, {
+            model: this.model,
+            el: '#main > .header',
+            scope: this.scope,
+            fontSizeFlexible: true,
+        });
+
+        this.listenTo(this.model, 'sync', (model) => {
+            if (model && model.hasChanged('name')) {
+                if (this.getView('header')) {
+                    this.getView('header').reRender();
                 }
-            });
-        },
+            }
+        });
+    },
 
-        /**
-         * Set up a header.
-         */
-        setupHeader: function () {
-            this.createView('header', this.headerView, {
-                model: this.model,
-                el: '#main > .header',
-                scope: this.scope,
-                fontSizeFlexible: true,
+    /**
+     * Set up a record.
+     */
+    setupRecord: function () {
+        let o = {
+            model: this.model,
+            el: '#main > .record',
+            scope: this.scope,
+            shortcutKeysEnabled: true,
+            isReturn: this.isReturn,
+        };
+
+        this.optionsToPass.forEach((option) => {
+            o[option] = this.options[option];
+        });
+
+        if (this.options.params && this.options.params.rootUrl) {
+            o.rootUrl = this.options.params.rootUrl;
+        }
+
+        if (this.model.get('deleted')) {
+            o.readOnly = true;
+        }
+
+        return this.createView('record', this.getRecordViewName(), o);
+    },
+
+    /**
+     * Get a record view name.
+     *
+     * @returns {string}
+     */
+    getRecordViewName: function () {
+        return this.getMetadata()
+            .get('clientDefs.' + this.scope + '.recordViews.detail') || this.recordView;
+    },
+
+    /**
+     * @private
+     */
+    initFollowButtons: function () {
+        if (!this.getMetadata().get(['scopes', this.scope, 'stream'])) {
+            return;
+        }
+
+        this.addFollowButtons();
+
+        this.listenTo(this.model, 'change:isFollowed', () => {
+            this.controlFollowButtons();
+        });
+    },
+
+    /**
+     * @private
+     */
+    addFollowButtons: function () {
+        let isFollowed = this.model.get('isFollowed');
+
+        this.addMenuItem('buttons', {
+            name: 'unfollow',
+            label: 'Followed',
+            style: 'success',
+            action: 'unfollow',
+            hidden: !isFollowed,
+        }, true);
+
+        this.addMenuItem('buttons', {
+            name: 'follow',
+            label: 'Follow',
+            style: 'default',
+            iconHtml: '<span class="fas fa-rss fa-sm"></span>',
+            text: this.translate('Follow'),
+            action: 'follow',
+            hidden: isFollowed ||
+                !this.model.has('isFollowed') ||
+                !this.getAcl().checkModel(this.model, 'stream'),
+        }, true);
+    },
+
+    /**
+     * @private
+     */
+    controlFollowButtons: function () {
+        let isFollowed = this.model.get('isFollowed');
+
+        if (isFollowed) {
+            this.hideHeaderActionItem('follow');
+            this.showHeaderActionItem('unfollow');
+
+            return;
+        }
+
+        this.hideHeaderActionItem('unfollow');
+
+        if (this.getAcl().checkModel(this.model, 'stream')) {
+            this.showHeaderActionItem('follow');
+        }
+    },
+
+    /**
+     * Action 'follow'.
+     */
+    actionFollow: function () {
+        this.disableMenuItem('follow');
+
+        Espo.Ajax
+            .putRequest(this.model.name + '/' + this.model.id + '/subscription')
+            .then(() => {
+                this.hideHeaderActionItem('follow');
+
+                this.model.set('isFollowed', true, {sync: true});
+
+                this.enableMenuItem('follow');
+            })
+            .catch(() => {
+                this.enableMenuItem('follow');
+            });
+    },
+
+    /**
+     * Action 'unfollow'.
+     */
+    actionUnfollow: function () {
+        this.disableMenuItem('unfollow');
+
+        Espo.Ajax
+            .deleteRequest(this.model.name + '/' + this.model.id + '/subscription')
+            .then(() => {
+                this.hideHeaderActionItem('unfollow');
+
+                this.model.set('isFollowed', false, {sync: true});
+
+                this.enableMenuItem('unfollow');
+            })
+            .catch(() => {
+                this.enableMenuItem('unfollow');
+            });
+    },
+
+    /**
+     * @inheritDoc
+     */
+    getHeader: function () {
+        let name = this.model.get('name') || this.model.id;
+
+        let $name =
+            $('<span>')
+                .addClass('font-size-flexible title')
+                .text(name);
+
+        if (this.model.get('deleted')) {
+            $name.css('text-decoration', 'line-through');
+        }
+
+        let headerIconHtml = this.getHeaderIconHtml();
+        let scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
+
+        let $root = $('<span>').text(scopeLabel);
+
+        if (!this.rootLinkDisabled) {
+            $root = $('<span>')
+                .append(
+                    $('<a>')
+                        .attr('href', this.rootUrl)
+                        .addClass('action')
+                        .attr('data-action', 'navigateToRoot')
+                        .text(scopeLabel)
+                );
+        }
+
+        if (headerIconHtml) {
+            $root.prepend(headerIconHtml);
+        }
+
+        return this.buildHeaderHtml([
+            $root,
+            $name,
+        ]);
+    },
+
+    /**
+     * @inheritDoc
+     */
+    updatePageTitle: function () {
+        if (this.model.has('name')) {
+            this.setPageTitle(this.model.get('name') || this.model.id);
+
+            return;
+        }
+
+        Dep.prototype.updatePageTitle.call(this);
+    },
+
+    /**
+     * @return {module:views/record/detail}
+     */
+    getRecordView: function () {
+        return this.getView('record');
+    },
+
+    /**
+     * Update a relationship panel (fetch data).
+     *
+     * @param {string} name A relationship name.
+     */
+    updateRelationshipPanel: function (name) {
+        var bottom = this.getView('record').getView('bottom');
+
+        if (bottom) {
+            var rel = bottom.getView(name);
+
+            if (rel) {
+                rel.collection.fetch();
+            }
+        }
+    },
+
+    /**
+     * @deprecated Use metadata clientDefs > {EntityType} > relationshipPanels > {link} > createAttributeMap.
+     * @type {Object}
+     */
+    relatedAttributeMap: {},
+
+    /**
+     * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > createHandler.
+     * @type {Object}
+     */
+    relatedAttributeFunctions: {},
+
+    /**
+     * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > selectHandler.
+     * @type {Object}
+     */
+    selectRelatedFilters: {},
+
+    /**
+     * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > selectHandler or
+     *  clientDefs > {EntityType} > relationshipPanels > {link} > selectPrimaryFilter.
+     * @type {Object}
+     */
+    selectPrimaryFilterNames: {},
+
+    /**
+     * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > selectHandler or
+     *  clientDefs > {EntityType} > relationshipPanels > {link} > selectBoolFilterList.
+     * @type {Object}
+     */
+    selectBoolFilterLists: [],
+
+    /**
+     * Action 'createRelated'.
+     *
+     * @param {Object} data
+     */
+    actionCreateRelated: function (data) {
+        data = data || {};
+
+        let link = data.link;
+        let scope = this.model.defs['links'][link].entity;
+        let foreignLink = this.model.defs['links'][link].foreign;
+
+        let attributes = {};
+
+        if (
+            this.relatedAttributeFunctions[link] &&
+            typeof this.relatedAttributeFunctions[link] === 'function'
+        ) {
+            attributes = _.extend(this.relatedAttributeFunctions[link].call(this), attributes);
+        }
+
+        let attributeMap = this.getMetadata()
+            .get(['clientDefs', this.scope, 'relationshipPanels', link, 'createAttributeMap']) ||
+            this.relatedAttributeMap[link] || {};
+
+        Object.keys(attributeMap)
+            .forEach(attr => {
+                attributes[attributeMap[attr]] = this.model.get(attr);
             });
 
-            this.listenTo(this.model, 'sync', (model) => {
-                if (model && model.hasChanged('name')) {
-                    if (this.getView('header')) {
-                        this.getView('header').reRender();
+        Espo.Ui.notify(' ... ');
+
+        let handler = this.getMetadata()
+            .get(['clientDefs', this.scope, 'relationshipPanels', link, 'createHandler']);
+
+        new Promise(resolve => {
+            if (!handler) {
+                resolve({});
+
+                return;
+            }
+
+            Espo.loader.requirePromise(handler)
+                .then(Handler => new Handler(this.getHelper()))
+                .then(handler => {
+                    handler.getAttributes(this.model)
+                        .then(attributes => resolve(attributes));
+                });
+        }).then(additionalAttributes => {
+            attributes = {...attributes, ...additionalAttributes};
+
+            let viewName = this.getMetadata()
+                .get(['clientDefs', scope, 'modalViews', 'edit']) || 'views/modals/edit';
+
+            this.createView('quickCreate', viewName, {
+                scope: scope,
+                relate: {
+                    model: this.model,
+                    link: foreignLink,
+                },
+                attributes: attributes,
+            }, view => {
+                view.render();
+                view.notify(false);
+
+                this.listenToOnce(view, 'after:save', () => {
+                    if (data.fromSelectRelated) {
+                        setTimeout(() => this.clearView('dialogSelectRelated'), 25);
+                    }
+
+                    this.updateRelationshipPanel(link);
+
+                    this.model.trigger('after:relate');
+                    this.model.trigger('after:relate:' + link);
+                });
+            });
+        });
+    },
+
+    /**
+     * Action 'selectRelated'.
+     *
+     * @param {Object.<string, *>} data
+     */
+    actionSelectRelated: function (data) {
+        let link = data.link;
+
+        if (!data.foreignEntityType && !this.model.defs['links'][link]) {
+            throw new Error('Link ' + link + ' does not exist.');
+        }
+
+        let scope = data.foreignEntityType || this.model.defs['links'][link].entity;
+        let massRelateEnabled = data.massSelect;
+
+        /** @var {Object.<string, *>} */
+        let panelDefs = this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', link]) || {};
+
+        let advanced = {};
+
+        if (link in this.selectRelatedFilters) {
+            advanced = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || advanced;
+
+            for (let filterName in advanced) {
+                if (typeof advanced[filterName] === 'function') {
+                    let filtersData = advanced[filterName].call(this);
+
+                    if (filtersData) {
+                        advanced[filterName] = filtersData;
+                    } else {
+                        delete advanced[filterName];
                     }
                 }
-            });
-        },
-
-        /**
-         * Set up a record.
-         */
-        setupRecord: function () {
-            let o = {
-                model: this.model,
-                el: '#main > .record',
-                scope: this.scope,
-                shortcutKeysEnabled: true,
-                isReturn: this.isReturn,
-            };
-
-            this.optionsToPass.forEach((option) => {
-                o[option] = this.options[option];
-            });
-
-            if (this.options.params && this.options.params.rootUrl) {
-                o.rootUrl = this.options.params.rootUrl;
             }
+        }
 
-            if (this.model.get('deleted')) {
-                o.readOnly = true;
-            }
+        let foreignLink = (this.model.defs['links'][link] || {}).foreign;
 
-            return this.createView('record', this.getRecordViewName(), o);
-        },
-
-        /**
-         * Get a record view name.
-         *
-         * @returns {string}
-         */
-        getRecordViewName: function () {
-            return this.getMetadata()
-                .get('clientDefs.' + this.scope + '.recordViews.detail') || this.recordView;
-        },
-
-        /**
-         * @private
-         */
-        initFollowButtons: function () {
-            if (!this.getMetadata().get(['scopes', this.scope, 'stream'])) {
-                return;
-            }
-
-            this.addFollowButtons();
-
-            this.listenTo(this.model, 'change:isFollowed', () => {
-                this.controlFollowButtons();
-            });
-        },
-
-        /**
-         * @private
-         */
-        addFollowButtons: function () {
-            let isFollowed = this.model.get('isFollowed');
-
-            this.addMenuItem('buttons', {
-                name: 'unfollow',
-                label: 'Followed',
-                style: 'success',
-                action: 'unfollow',
-                hidden: !isFollowed,
-            }, true);
-
-            this.addMenuItem('buttons', {
-                name: 'follow',
-                label: 'Follow',
-                style: 'default',
-                iconHtml: '<span class="fas fa-rss fa-sm"></span>',
-                text: this.translate('Follow'),
-                action: 'follow',
-                hidden: isFollowed ||
-                    !this.model.has('isFollowed') ||
-                    !this.getAcl().checkModel(this.model, 'stream'),
-            }, true);
-        },
-
-        /**
-         * @private
-         */
-        controlFollowButtons: function () {
-            let isFollowed = this.model.get('isFollowed');
-
-            if (isFollowed) {
-                this.hideHeaderActionItem('follow');
-                this.showHeaderActionItem('unfollow');
-
-                return;
-            }
-
-            this.hideHeaderActionItem('unfollow');
-
-            if (this.getAcl().checkModel(this.model, 'stream')) {
-                this.showHeaderActionItem('follow');
-            }
-        },
-
-        /**
-         * Action 'follow'.
-         */
-        actionFollow: function () {
-            this.disableMenuItem('follow');
-
-            Espo.Ajax
-                .putRequest(this.model.name + '/' + this.model.id + '/subscription')
-                .then(() => {
-                    this.hideHeaderActionItem('follow');
-
-                    this.model.set('isFollowed', true, {sync: true});
-
-                    this.enableMenuItem('follow');
-                })
-                .catch(() => {
-                    this.enableMenuItem('follow');
-                });
-        },
-
-        /**
-         * Action 'unfollow'.
-         */
-        actionUnfollow: function () {
-            this.disableMenuItem('unfollow');
-
-            Espo.Ajax
-                .deleteRequest(this.model.name + '/' + this.model.id + '/subscription')
-                .then(() => {
-                    this.hideHeaderActionItem('unfollow');
-
-                    this.model.set('isFollowed', false, {sync: true});
-
-                    this.enableMenuItem('unfollow');
-                })
-                .catch(() => {
-                    this.enableMenuItem('unfollow');
-                });
-        },
-
-        /**
-         * @inheritDoc
-         */
-        getHeader: function () {
-            let name = this.model.get('name') || this.model.id;
-
-            let $name =
-                $('<span>')
-                    .addClass('font-size-flexible title')
-                    .text(name);
-
-            if (this.model.get('deleted')) {
-                $name.css('text-decoration', 'line-through');
-            }
-
-            let headerIconHtml = this.getHeaderIconHtml();
-            let scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
-
-            let $root = $('<span>').text(scopeLabel);
-
-            if (!this.rootLinkDisabled) {
-                $root = $('<span>')
-                    .append(
-                        $('<a>')
-                            .attr('href', this.rootUrl)
-                            .addClass('action')
-                            .attr('data-action', 'navigateToRoot')
-                            .text(scopeLabel)
-                    );
-            }
-
-            if (headerIconHtml) {
-                $root.prepend(headerIconHtml);
-            }
-
-            return this.buildHeaderHtml([
-                $root,
-                $name,
-            ]);
-        },
-
-        /**
-         * @inheritDoc
-         */
-        updatePageTitle: function () {
-            if (this.model.has('name')) {
-                this.setPageTitle(this.model.get('name') || this.model.id);
-
-                return;
-            }
-
-            Dep.prototype.updatePageTitle.call(this);
-        },
-
-        /**
-         * @return {module:views/record/detail.Class}
-         */
-        getRecordView: function () {
-            return this.getView('record');
-        },
-
-        /**
-         * Update a relationship panel (fetch data).
-         *
-         * @param {string} name A relationship name.
-         */
-        updateRelationshipPanel: function (name) {
-            var bottom = this.getView('record').getView('bottom');
-
-            if (bottom) {
-                var rel = bottom.getView(name);
-
-                if (rel) {
-                    rel.collection.fetch();
-                }
-            }
-        },
-
-        /**
-         * @deprecated Use metadata clientDefs > {EntityType} > relationshipPanels > {link} > createAttributeMap.
-         * @type {Object}
-         */
-        relatedAttributeMap: {},
-
-        /**
-         * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > createHandler.
-         * @type {Object}
-         */
-        relatedAttributeFunctions: {},
-
-        /**
-         * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > selectHandler.
-         * @type {Object}
-         */
-        selectRelatedFilters: {},
-
-        /**
-         * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > selectHandler or
-         *  clientDefs > {EntityType} > relationshipPanels > {link} > selectPrimaryFilter.
-         * @type {Object}
-         */
-        selectPrimaryFilterNames: {},
-
-        /**
-         * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > selectHandler or
-         *  clientDefs > {EntityType} > relationshipPanels > {link} > selectBoolFilterList.
-         * @type {Object}
-         */
-        selectBoolFilterLists: [],
-
-        /**
-         * Action 'createRelated'.
-         *
-         * @param {Object} data
-         */
-        actionCreateRelated: function (data) {
-            data = data || {};
-
-            let link = data.link;
-            let scope = this.model.defs['links'][link].entity;
-            let foreignLink = this.model.defs['links'][link].foreign;
-
-            let attributes = {};
+        if (foreignLink && scope) {
+            // Select only records not related with any.
+            let foreignLinkType = this.getMetadata()
+                .get(['entityDefs', scope, 'links', foreignLink, 'type']);
+            let foreignLinkFieldType = this.getMetadata()
+                .get(['entityDefs', scope, 'fields', foreignLink, 'type']);
 
             if (
-                this.relatedAttributeFunctions[link] &&
-                typeof this.relatedAttributeFunctions[link] === 'function'
+                ~['belongsTo', 'belongsToParent'].indexOf(foreignLinkType) &&
+                foreignLinkFieldType &&
+                !advanced[foreignLink] &&
+                ~['link', 'linkParent'].indexOf(foreignLinkFieldType)
             ) {
-                attributes = _.extend(this.relatedAttributeFunctions[link].call(this), attributes);
-            }
-
-            let attributeMap = this.getMetadata()
-                .get(['clientDefs', this.scope, 'relationshipPanels', link, 'createAttributeMap']) ||
-                this.relatedAttributeMap[link] || {};
-
-            Object.keys(attributeMap)
-                .forEach(attr => {
-                    attributes[attributeMap[attr]] = this.model.get(attr);
-                });
-
-            Espo.Ui.notify(' ... ');
-
-            let handler = this.getMetadata()
-                .get(['clientDefs', this.scope, 'relationshipPanels', link, 'createHandler']);
-
-            new Promise(resolve => {
-                if (!handler) {
-                    resolve({});
-
-                    return;
-                }
-
-                Espo.loader.requirePromise(handler)
-                    .then(Handler => new Handler(this.getHelper()))
-                    .then(handler => {
-                        handler.getAttributes(this.model)
-                            .then(attributes => resolve(attributes));
-                    });
-            }).then(additionalAttributes => {
-                attributes = {...attributes, ...additionalAttributes};
-
-                let viewName = this.getMetadata()
-                    .get(['clientDefs', scope, 'modalViews', 'edit']) || 'views/modals/edit';
-
-                this.createView('quickCreate', viewName, {
-                    scope: scope,
-                    relate: {
-                        model: this.model,
-                        link: foreignLink,
+                advanced[foreignLink] = {
+                    type: 'isNull',
+                    attribute: foreignLink + 'Id',
+                    data: {
+                        type: 'isEmpty',
                     },
-                    attributes: attributes,
-                }, view => {
-                    view.render();
-                    view.notify(false);
+                };
+            }
+        }
 
-                    this.listenToOnce(view, 'after:save', () => {
-                        if (data.fromSelectRelated) {
-                            setTimeout(() => this.clearView('dialogSelectRelated'), 25);
-                        }
+        let primaryFilterName = data.primaryFilterName || this.selectPrimaryFilterNames[link] || null;
 
-                        this.updateRelationshipPanel(link);
+        if (typeof primaryFilterName === 'function') {
+            primaryFilterName = primaryFilterName.call(this);
+        }
 
-                        this.model.trigger('after:relate');
-                        this.model.trigger('after:relate:' + link);
+        let dataBoolFilterList = data.boolFilterList;
+
+        if (typeof data.boolFilterList === 'string') {
+            dataBoolFilterList = data.boolFilterList.split(',');
+        }
+
+        let boolFilterList = dataBoolFilterList ||
+            panelDefs.selectBoolFilterList ||
+            this.selectBoolFilterLists[link] ||
+            [];
+
+        if (typeof boolFilterList === 'function') {
+            boolFilterList = boolFilterList.call(this);
+        }
+
+        boolFilterList = Espo.Utils.clone(boolFilterList);
+
+        primaryFilterName = primaryFilterName || panelDefs.selectPrimaryFilter || null;
+
+        let viewKey = data.viewKey || 'select';
+
+        let viewName = panelDefs.selectModalView ||
+            this.getMetadata().get(['clientDefs', scope, 'modalViews', viewKey]) ||
+            'views/modals/select-records';
+
+        Espo.Ui.notify(' ... ');
+
+        let handler = panelDefs.selectHandler || null;
+
+        new Promise(resolve => {
+            if (!handler) {
+                resolve({});
+
+                return;
+            }
+
+            Espo.loader.requirePromise(handler)
+                .then(Handler => new Handler(this.getHelper()))
+                .then(handler => {
+                    handler.getFilters(this.model)
+                        .then(filters => resolve(filters));
+                });
+        }).then(filters => {
+            advanced = {...advanced, ...(filters.advanced || {})};
+            boolFilterList = [...boolFilterList, ...(filters.bool || [])];
+
+            if (filters.primary && !primaryFilterName) {
+                primaryFilterName = filters.primary;
+            }
+
+            this.createView('dialogSelectRelated', viewName, {
+                scope: scope,
+                multiple: true,
+                createButton: data.createButton || false,
+                triggerCreateEvent: true,
+                filters: advanced,
+                massRelateEnabled: massRelateEnabled,
+                primaryFilterName: primaryFilterName,
+                boolFilterList: boolFilterList,
+            }, dialog => {
+                dialog.render();
+
+                Espo.Ui.notify(false);
+
+                this.listenTo(dialog, 'create', () => {
+                    this.actionCreateRelated({
+                        link: data.link,
+                        fromSelectRelated: true,
                     });
                 });
-            });
-        },
 
-        /**
-         * Action 'selectRelated'.
-         *
-         * @param {Object.<string, *>} data
-         */
-        actionSelectRelated: function (data) {
-            let link = data.link;
+                this.listenToOnce(dialog, 'select', (selectObj) => {
+                    let data = {};
 
-            if (!data.foreignEntityType && !this.model.defs['links'][link]) {
-                throw new Error('Link ' + link + ' does not exist.');
-            }
+                    if (Object.prototype.toString.call(selectObj) === '[object Array]') {
+                        let ids = [];
 
-            let scope = data.foreignEntityType || this.model.defs['links'][link].entity;
-            let massRelateEnabled = data.massSelect;
+                        selectObj.forEach(model => ids.push(model.id));
 
-            /** @var {Object.<string, *>} */
-            let panelDefs = this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', link]) || {};
-
-            let advanced = {};
-
-            if (link in this.selectRelatedFilters) {
-                advanced = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || advanced;
-
-                for (let filterName in advanced) {
-                    if (typeof advanced[filterName] === 'function') {
-                        let filtersData = advanced[filterName].call(this);
-
-                        if (filtersData) {
-                            advanced[filterName] = filtersData;
-                        } else {
-                            delete advanced[filterName];
-                        }
+                        data.ids = ids;
                     }
-                }
-            }
-
-            let foreignLink = (this.model.defs['links'][link] || {}).foreign;
-
-            if (foreignLink && scope) {
-                // Select only records not related with any.
-                let foreignLinkType = this.getMetadata()
-                    .get(['entityDefs', scope, 'links', foreignLink, 'type']);
-                let foreignLinkFieldType = this.getMetadata()
-                    .get(['entityDefs', scope, 'fields', foreignLink, 'type']);
-
-                if (
-                    ~['belongsTo', 'belongsToParent'].indexOf(foreignLinkType) &&
-                    foreignLinkFieldType &&
-                    !advanced[foreignLink] &&
-                    ~['link', 'linkParent'].indexOf(foreignLinkFieldType)
-                ) {
-                    advanced[foreignLink] = {
-                        type: 'isNull',
-                        attribute: foreignLink + 'Id',
-                        data: {
-                            type: 'isEmpty',
-                        },
-                    };
-                }
-            }
-
-            let primaryFilterName = data.primaryFilterName || this.selectPrimaryFilterNames[link] || null;
-
-            if (typeof primaryFilterName === 'function') {
-                primaryFilterName = primaryFilterName.call(this);
-            }
-
-            let dataBoolFilterList = data.boolFilterList;
-
-            if (typeof data.boolFilterList === 'string') {
-                dataBoolFilterList = data.boolFilterList.split(',');
-            }
-
-            let boolFilterList = dataBoolFilterList ||
-                panelDefs.selectBoolFilterList ||
-                this.selectBoolFilterLists[link] ||
-                [];
-
-            if (typeof boolFilterList === 'function') {
-                boolFilterList = boolFilterList.call(this);
-            }
-
-            boolFilterList = Espo.Utils.clone(boolFilterList);
-
-            primaryFilterName = primaryFilterName || panelDefs.selectPrimaryFilter || null;
-
-            let viewKey = data.viewKey || 'select';
-
-            let viewName = panelDefs.selectModalView ||
-                this.getMetadata().get(['clientDefs', scope, 'modalViews', viewKey]) ||
-                'views/modals/select-records';
-
-            Espo.Ui.notify(' ... ');
-
-            let handler = panelDefs.selectHandler || null;
-
-            new Promise(resolve => {
-                if (!handler) {
-                    resolve({});
-
-                    return;
-                }
-
-                Espo.loader.requirePromise(handler)
-                    .then(Handler => new Handler(this.getHelper()))
-                    .then(handler => {
-                        handler.getFilters(this.model)
-                            .then(filters => resolve(filters));
-                    });
-            }).then(filters => {
-                advanced = {...advanced, ...(filters.advanced || {})};
-                boolFilterList = [...boolFilterList, ...(filters.bool || [])];
-
-                if (filters.primary && !primaryFilterName) {
-                    primaryFilterName = filters.primary;
-                }
-
-                this.createView('dialogSelectRelated', viewName, {
-                    scope: scope,
-                    multiple: true,
-                    createButton: data.createButton || false,
-                    triggerCreateEvent: true,
-                    filters: advanced,
-                    massRelateEnabled: massRelateEnabled,
-                    primaryFilterName: primaryFilterName,
-                    boolFilterList: boolFilterList,
-                }, dialog => {
-                    dialog.render();
-
-                    Espo.Ui.notify(false);
-
-                    this.listenTo(dialog, 'create', () => {
-                        this.actionCreateRelated({
-                            link: data.link,
-                            fromSelectRelated: true,
-                        });
-                    });
-
-                    this.listenToOnce(dialog, 'select', (selectObj) => {
-                        let data = {};
-
-                        if (Object.prototype.toString.call(selectObj) === '[object Array]') {
-                            let ids = [];
-
-                            selectObj.forEach(model => ids.push(model.id));
-
-                            data.ids = ids;
+                    else {
+                        if (selectObj.massRelate) {
+                            data.massRelate = true;
+                            data.where = selectObj.where;
+                            data.searchParams = selectObj.searchParams;
                         }
                         else {
-                            if (selectObj.massRelate) {
-                                data.massRelate = true;
-                                data.where = selectObj.where;
-                                data.searchParams = selectObj.searchParams;
-                            }
-                            else {
-                                data.id = selectObj.id;
-                            }
+                            data.id = selectObj.id;
                         }
+                    }
 
-                        let url = this.scope + '/' + this.model.id + '/' + link;
+                    let url = this.scope + '/' + this.model.id + '/' + link;
 
-                        Espo.Ajax.postRequest(url, data)
-                            .then(() => {
-                                Espo.Ui.success(this.translate('Linked'))
+                    Espo.Ajax.postRequest(url, data)
+                        .then(() => {
+                            Espo.Ui.success(this.translate('Linked'))
 
-                                this.updateRelationshipPanel(link);
+                            this.updateRelationshipPanel(link);
 
-                                this.model.trigger('after:relate');
-                                this.model.trigger('after:relate:' + link);
-                            });
-                    });
+                            this.model.trigger('after:relate');
+                            this.model.trigger('after:relate:' + link);
+                        });
                 });
             });
-        },
+        });
+    },
 
-        /**
-         * Action 'duplicate'.
-         */
-        actionDuplicate: function () {
-            Espo.Ui.notify(' ... ');
+    /**
+     * Action 'duplicate'.
+     */
+    actionDuplicate: function () {
+        Espo.Ui.notify(' ... ');
 
-            Espo.Ajax.postRequest(this.scope + '/action/getDuplicateAttributes', {
-                    id: this.model.id
-                })
-                .then((attributes) => {
-                    Espo.Ui.notify(false);
+        Espo.Ajax
+            .postRequest(this.scope + '/action/getDuplicateAttributes', {id: this.model.id})
+            .then(attributes => {
+                Espo.Ui.notify(false);
 
-                    var url = '#' + this.scope + '/create';
+                var url = '#' + this.scope + '/create';
 
-                    this.getRouter().dispatch(this.scope, 'create', {
-                        attributes: attributes,
-                        returnUrl: this.getRouter().getCurrentUrl(),
-                        options: {
-                            duplicateSourceId: this.model.id,
-                        },
-                    });
-
-                    this.getRouter().navigate(url, {trigger: false});
+                this.getRouter().dispatch(this.scope, 'create', {
+                    attributes: attributes,
+                    returnUrl: this.getRouter().getCurrentUrl(),
+                    options: {
+                        duplicateSourceId: this.model.id,
+                    },
                 });
-        },
-    });
+
+                this.getRouter().navigate(url, {trigger: false});
+            });
+    },
 });

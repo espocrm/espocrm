@@ -48,10 +48,10 @@
      * Handles caching.
      *
      * @class
-     * @param {?module:cache.Class} [cache=null]
-     * @param {?int} [_cacheTimestamp=null]
+     * @param {module:cache|null} [cache=null]
+     * @param {int|null} [_cacheTimestamp=null]
      */
-    let Loader = function (cache, _cacheTimestamp) {
+    const Loader = function (cache, _cacheTimestamp) {
         this._cacheTimestamp = _cacheTimestamp || null;
         this._cache = cache || null;
         this._libsConfig = {};
@@ -64,6 +64,7 @@
         this._basePath = '';
 
         this._internalModuleList = [];
+        this._transpiledModuleList = [];
         this._internalModuleMap = {};
         this._isDeveloperMode = false;
 
@@ -126,7 +127,7 @@
         },
 
         /**
-         * @param {module:cache.Class} cache
+         * @param {module:cache} cache
          */
         setCache: function (cache) {
             if (this._cacheIsSet) {
@@ -163,6 +164,13 @@
         },
 
         /**
+         * @param {string[]} transpiledModuleList
+         */
+        setTranspiledModuleList: function (transpiledModuleList) {
+            this._transpiledModuleList = transpiledModuleList;
+        },
+
+        /**
          * @private
          */
         _getClass: function (name) {
@@ -185,22 +193,26 @@
          */
         _nameToPath: function (name) {
             if (name.indexOf(':') === -1) {
-                return 'client/src/' + name + '.js';
+                return 'client/lib/transpiled/src/' + name + '.js';
             }
 
             let arr = name.split(':');
             let namePart = arr[1];
-            let modulePart = arr[0];
+            let mod = arr[0];
 
-            if (modulePart === 'custom') {
-                return 'client/custom/src/' + namePart + '.js' ;
+            if (mod === 'custom') {
+                return 'client/custom/src/' + namePart + '.js';
             }
 
-            if (this._isModuleInternal(modulePart)) {
-                return 'client/modules/' + modulePart + '/src/' + namePart + '.js';
+            if (this._transpiledModuleList.includes(mod)) {
+                return `client/lib/transpiled/modules/${mod}/src/${namePart}.js`;
             }
 
-            return 'client/custom/modules/' + modulePart + '/src/' + namePart + '.js';
+            if (this._isModuleInternal(mod)) {
+                return 'client/modules/' + mod + '/src/' + namePart + '.js';
+            }
+
+            return 'client/custom/modules/' + mod + '/src/' + namePart + '.js';
         },
 
         /**
@@ -293,28 +305,40 @@
             }
 
             if (!dependency) {
-                this._defineProceed(callback, subject, []);
+                this._defineProceed(callback, subject, [], -1);
 
                 return;
             }
 
-            this.require(dependency, (...arguments) => {
-                this._defineProceed(callback, subject, arguments);
+            let indexOfExports = dependency.indexOf('exports');
+
+            this.require(dependency, (...args) => {
+                this._defineProceed(callback, subject, args, indexOfExports);
             });
         },
 
         /**
          * @private
+         * @param {function} callback
+         * @param {string} subject
+         * @param {Array} args
+         * @param {number} indexOfExports
          */
-        _defineProceed: function (callback, subject, args) {
+        _defineProceed: function (callback, subject, args, indexOfExports) {
             let o = callback.apply(root, args);
 
-            if (!o) {
+            if (!o && indexOfExports === -1) {
                 if (this._cache) {
                     this._cache.clear('a', subject);
                 }
 
                 throw new Error("Could not load '" + subject + "'");
+            }
+
+            if (indexOfExports !== -1) {
+                let exports = args[indexOfExports];
+
+                o = ('default' in exports) ? exports.default : exports;
             }
 
             this._setClass(subject, o);
@@ -420,6 +444,19 @@
                 return this._convertCamelCaseToHyphen(name).split('.').join('/');
             }
 
+            if (name.startsWith('modules/')) {
+                name = name.slice(8);
+
+                let index = name.indexOf('/');
+
+                if (index > 0) {
+                    let mod = name.slice(0, index);
+                    name = name.slice(index + 1);
+
+                    return mod + ':' + name;
+                }
+            }
+
             return name;
         },
 
@@ -438,6 +475,12 @@
          * @private
          */
         _load: function (name, callback, errorCallback) {
+            if (name === 'exports') {
+                callback({});
+
+                return;
+            }
+
             let dataType, type, path, exportsTo, exportsAs;
 
             let realName = name;
@@ -935,7 +978,7 @@
         },
 
         /**
-         * @param {module:cache.Class} cache
+         * @param {module:cache} cache
          * @internal
          */
         setCache: function (cache) {
@@ -955,6 +998,13 @@
          */
         setInternalModuleList: function (internalModuleList) {
             loader.setInternalModuleList(internalModuleList);
+        },
+
+        /**
+         * @param {string[]} transpiledModuleList
+         */
+        setTranspiledModuleList: function (transpiledModuleList) {
+            loader.setTranspiledModuleList(transpiledModuleList);
         },
 
         /**
@@ -1032,6 +1082,8 @@
      * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies.
      * @param {Object} [context] A context.
      * @param {Function|null} [errorCallback] An error callback.
+     *
+     * @deprecated Use `Espo.loader.require` instead.
      */
     root.require = Espo.require = function (subject, callback, context, errorCallback) {
         if (context) {
@@ -1085,6 +1137,7 @@
             Espo.loader.setCacheTimestamp(params.cacheTimestamp);
             Espo.loader.setBasePath(params.basePath);
             Espo.loader.setInternalModuleList(params.internalModuleList);
+            Espo.loader.setTranspiledModuleList(params.transpiledModuleList);
         }
 
         let jsLibsTag = document.querySelector('script[data-name="js-libs"]');

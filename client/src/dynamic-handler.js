@@ -26,64 +26,61 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('dynamic-handler', [], function () {
+/** @module dynamic-handler */
+
+/**
+ * A dynamic handler. To be extended by a specific handler.
+ *
+ * @class
+ * @param {module:views/record/detail} recordView A record view.
+ */
+const DynamicHandler = function (recordView) {
+    /**
+     * A record view.
+     *
+     * @protected
+     * @type {module:views/record/detail}
+     */
+    this.recordView = recordView;
 
     /**
-     * A dynamic handler. To be extended by a specific handler.
+     * A model.
      *
-     * @class
-     * @name Class
-     * @param {module:views/record/detail.Class} recordView A record view.
-     * @memberOf module:dynamic-handler
+     * @protected
+     * @type {module:model}
      */
-    let DynamicHandler = function (recordView) {
-        /**
-         * A record view.
-         *
-         * @protected
-         * @type {module:views/record/detail.Class}
-         */
-        this.recordView = recordView;
+    this.model = recordView.model;
+};
 
-        /**
-         * A model.
-         *
-         * @protected
-         * @type {module:model.Class}
-         */
-        this.model = recordView.model;
-    };
+_.extend(DynamicHandler.prototype, /** @lends DynamicHandler# */{
 
-    _.extend(DynamicHandler.prototype, /** @lends module:dynamic-handler.Class# */{
+    /**
+     * Initialization logic. To be extended.
+     *
+     * @protected
+     */
+    init: function () {},
 
-        /**
-         * Initialization logic. To be extended.
-         *
-         * @protected
-         */
-        init: function () {},
+    /**
+     * Called on model change. To be extended.
+     *
+     * @protected
+     * @param {module:views/record/detail} model A model.
+     * @param {Object} o Options.
+     */
+    onChange: function (model, o) {},
 
-        /**
-         * Called on model change. To be extended.
-         *
-         * @protected
-         * @param {module:views/record/detail.Class} model A model.
-         * @param {Object} o Options.
-         */
-        onChange: function (model, o) {},
-
-        /**
-         * Get a metadata.
-         *
-         * @protected
-         * @returns {module:metadata.Class}
-         */
-        getMetadata: function () {
-            return this.recordView.getMetadata()
-        },
-    });
-
-    DynamicHandler.extend = Bull.View.extend;
-
-    return DynamicHandler;
+    /**
+     * Get a metadata.
+     *
+     * @protected
+     * @returns {module:metadata}
+     */
+    getMetadata: function () {
+        return this.recordView.getMetadata()
+    },
 });
+
+DynamicHandler.extend = Bull.View.extend;
+
+export default DynamicHandler;

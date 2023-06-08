@@ -26,411 +26,403 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/enum', ['views/fields/base', 'ui/multi-select', 'ui/select'],
-function (Dep, /** module:ui/multi-select*/MultiSelect, /** module:ui/select*/Select) {
+/** @module views/fields/enum */
+
+import Dep from 'views/fields/base';
+import MultiSelect from 'ui/multi-select';
+import Select from 'ui/select'
+
+/**
+ * An enum field (select-box).
+ *
+ * @class
+ * @name Class
+ * @extends module:views/fields/base
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    type: 'enum',
+
+    listTemplate: 'fields/enum/list',
+    listLinkTemplate: 'fields/enum/list-link',
+    detailTemplate: 'fields/enum/detail',
+    editTemplate: 'fields/enum/edit',
+    searchTemplate: 'fields/enum/search',
+
+    translatedOptions: null,
 
     /**
-     * An enum field (select-box).
-     *
-     * @class
-     * @name Class
-     * @extends module:views/fields/base.Class
-     * @memberOf module:views/fields/enum
+     * @todo Remove? Always treat as true.
      */
-    return Dep.extend(/** @lends module:views/fields/enum.Class# */{
+    fetchEmptyValueAsNull: true,
 
-        type: 'enum',
+    searchTypeList: [
+        'anyOf',
+        'noneOf',
+        'isEmpty',
+        'isNotEmpty',
+    ],
 
-        listTemplate: 'fields/enum/list',
-        listLinkTemplate: 'fields/enum/list-link',
-        detailTemplate: 'fields/enum/detail',
-        editTemplate: 'fields/enum/edit',
-        searchTemplate: 'fields/enum/search',
+    validationElementSelector: '.selectize-control',
 
-        translatedOptions: null,
+    data: function () {
+        let data = Dep.prototype.data.call(this);
 
-        /**
-         * @todo Remove? Always treat as true.
-         */
-        fetchEmptyValueAsNull: true,
+        data.translatedOptions = this.translatedOptions;
 
-        searchTypeList: [
-            'anyOf',
-            'noneOf',
-            'isEmpty',
-            'isNotEmpty',
-        ],
+        let value = this.model.get(this.name);
 
-        validationElementSelector: '.selectize-control',
+        if (this.isReadMode() && this.styleMap) {
+            data.style = this.styleMap[value || ''] || 'default';
+        }
 
-        data: function () {
-            let data = Dep.prototype.data.call(this);
-
-            data.translatedOptions = this.translatedOptions;
-
-            let value = this.model.get(this.name);
-
-            if (this.isReadMode() && this.styleMap) {
-                data.style = this.styleMap[value || ''] || 'default';
-            }
-
-            if (this.isReadMode()) {
-                if (this.params.displayAsLabel && data.style && data.style !== 'default') {
-                    data.class = 'label label-md label';
-                } else {
-                    data.class = 'text';
-                }
-            }
-
-            let translationKey = value || '';
-
-            if (
-                typeof value !== 'undefined' && value !== null && value !== ''
-                ||
-                translationKey === '' && (
-                    translationKey in (this.translatedOptions || {}) &&
-                    (this.translatedOptions || {})[translationKey] !== ''
-                )
-            ) {
-                data.isNotEmpty = true;
-            }
-
-            data.valueIsSet = this.model.has(this.name);
-
-            if (data.isNotEmpty) {
-                data.valueTranslated =
-                    this.translatedOptions ?
-                        (this.translatedOptions[translationKey] || value) :
-                        this.getLanguage().translateOption(translationKey, this.name, this.entityType);
-
-            }
-
-            return data;
-        },
-
-        setup: function () {
-            if (!this.params.options) {
-                let methodName = 'get' + Espo.Utils.upperCaseFirst(this.name) + 'Options';
-
-                if (typeof this.model[methodName] === 'function') {
-                    this.params.options = this.model[methodName].call(this.model);
-                }
-            }
-
-            let optionsPath = this.params.optionsPath;
-            /** @type {?string} */
-            let optionsReference = this.params.optionsReference;
-
-            if (!optionsPath && optionsReference) {
-                let [refEntityType, refField] = optionsReference.split('.');
-
-                optionsPath = `entityDefs.${refEntityType}.fields.${refField}.options`;
-            }
-
-            if (optionsPath) {
-                this.params.options = Espo.Utils.clone(this.getMetadata().get(optionsPath)) || [];
-            }
-
-            this.styleMap = this.params.style || this.model.getFieldParam(this.name, 'style') || {};
-
-            this.setupOptions();
-
-            if ('translatedOptions' in this.options) {
-                this.translatedOptions = this.options.translatedOptions;
-            }
-
-            if ('translatedOptions' in this.params) {
-                this.translatedOptions = this.params.translatedOptions;
-            }
-
-            this.setupTranslation();
-
-            if (this.translatedOptions === null) {
-                this.translatedOptions = this.getLanguage()
-                    .translate(this.name, 'options', this.model.name) || {};
-
-                if (this.translatedOptions === this.name) {
-                    this.translatedOptions = null;
-                }
-            }
-
-            if (this.params.isSorted && this.translatedOptions) {
-                this.params.options = Espo.Utils.clone(this.params.options) || [];
-
-                this.params.options = this.params.options.sort((v1, v2) => {
-                     return (this.translatedOptions[v1] || v1)
-                         .localeCompare(this.translatedOptions[v2] || v2);
-                });
-            }
-
-            if (this.options.customOptionList) {
-                this.setOptionList(this.options.customOptionList);
-            }
-        },
-
-        setupTranslation: function () {
-            let translation = this.params.translation;
-            /** @type {?string} */
-            let optionsReference = this.params.optionsReference;
-
-            if (!translation && optionsReference) {
-                let [refEntityType, refField] = optionsReference.split('.');
-
-                translation = `${refEntityType}.options.${refField}`;
-            }
-
-            if (!translation) {
-                return;
-            }
-
-            let translationObj;
-
-            let arr = translation.split('.');
-            let pointer = this.getLanguage().data;
-
-            arr.forEach(key => {
-                if (key in pointer) {
-                    pointer = pointer[key];
-                    translationObj = pointer;
-                }
-            });
-
-            this.translatedOptions = null;
-
-            let translatedOptions = {};
-
-            if (!this.params.options) {
-                return;
-            }
-
-            this.params.options.forEach(item => {
-                if (typeof translationObj === 'object' && item in translationObj) {
-                    translatedOptions[item] = translationObj[item];
-                }
-                else if (
-                    Array.isArray(translationObj) &&
-                    typeof item === 'number' &&
-                    typeof translationObj[item] !== 'undefined'
-                ) {
-                    translatedOptions[item.toString()] = translationObj[item];
-                }
-                else {
-                    translatedOptions[item] = item;
-                }
-            });
-
-            let value = this.model.get(this.name);
-
-            if ((value || value === '') && !(value in translatedOptions)) {
-                if (typeof translationObj === 'object' && value in translationObj) {
-                    translatedOptions[value] = translationObj[value];
-                }
-            }
-
-            this.translatedOptions = translatedOptions;
-        },
-
-        /**
-         * Set up options.
-         */
-        setupOptions: function () {},
-
-        /**
-         * Set an option list.
-         *
-         * @param {string[]} optionList An option list.
-         */
-        setOptionList: function (optionList) {
-            let previousOptions = this.params.options;
-
-            if (!this.originalOptionList) {
-                this.originalOptionList = this.params.options;
-            }
-
-            let newOptions = Espo.Utils.clone(optionList) || [];
-
-            this.params.options = newOptions;
-
-            let isChanged = !_(previousOptions).isEqual(optionList);
-
-            if (!this.isEditMode() || !isChanged) {
-                return;
-            }
-
-            let triggerChange = false;
-            let currentValue = this.model.get(this.name);
-
-            if (!newOptions.includes(currentValue) && this.isReady) {
-                this.model.set(this.name, newOptions[0] ?? null, {silent: true});
-
-                triggerChange = true;
-            }
-
-            this.reRender()
-                .then(() => {
-                    if (triggerChange) {
-                        this.trigger('change');
-                    }
-                });
-        },
-
-        /**
-         * Reset a previously set option list.
-         */
-        resetOptionList: function () {
-            if (!this.originalOptionList) {
-                return;
-            }
-
-            let previousOptions = this.params.options;
-
-            this.params.options = Espo.Utils.clone(this.originalOptionList);
-
-            let isChanged = !_(previousOptions).isEqual(this.originalOptionList);
-
-            if (!this.isEditMode() || !isChanged) {
-                return;
-            }
-
-            if (this.isRendered()) {
-                this.reRender();
-            }
-        },
-
-        setupSearch: function () {
-            this.events = _.extend({
-                'change select.search-type': (e) => {
-                    this.handleSearchType($(e.currentTarget).val());
-                },
-            }, this.events || {});
-        },
-
-        handleSearchType: function (type) {
-            var $inputContainer = this.$el.find('div.input-container');
-
-            if (~['anyOf', 'noneOf'].indexOf(type)) {
-                $inputContainer.removeClass('hidden');
+        if (this.isReadMode()) {
+            if (this.params.displayAsLabel && data.style && data.style !== 'default') {
+                data.class = 'label label-md label';
             } else {
-                $inputContainer.addClass('hidden');
+                data.class = 'text';
             }
-        },
+        }
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+        let translationKey = value || '';
 
-            if (this.isSearchMode()) {
-                this.$element = this.$el.find('.main-element');
+        if (
+            typeof value !== 'undefined' && value !== null && value !== ''
+            ||
+            translationKey === '' && (
+                translationKey in (this.translatedOptions || {}) &&
+                (this.translatedOptions || {})[translationKey] !== ''
+            )
+        ) {
+            data.isNotEmpty = true;
+        }
 
-                let type = this.$el.find('select.search-type').val();
+        data.valueIsSet = this.model.has(this.name);
 
-                this.handleSearchType(type);
+        if (data.isNotEmpty) {
+            data.valueTranslated =
+                this.translatedOptions ?
+                    (this.translatedOptions[translationKey] || value) :
+                    this.getLanguage().translateOption(translationKey, this.name, this.entityType);
 
-                let valueList = this.getSearchParamsData().valueList || this.searchParams.value || [];
+        }
 
-                this.$element.val(valueList.join(':,:'));
+        return data;
+    },
 
-                let items = [];
+    setup: function () {
+        if (!this.params.options) {
+            let methodName = 'get' + Espo.Utils.upperCaseFirst(this.name) + 'Options';
 
-                (this.params.options || []).forEach(value => {
-                    let label = this.getLanguage().translateOption(value, this.name, this.scope);
-
-                    if (this.translatedOptions) {
-                        if (value in this.translatedOptions) {
-                            label = this.translatedOptions[value];
-                        }
-                    }
-
-                    if (label === '') {
-                        return;
-                    }
-
-                    items.push({
-                        value: value,
-                        text: label,
-                    });
-                });
-
-                /** @type {module:ui/multi-select~Options} */
-                let multiSelectOptions = {
-                    items: items,
-                    delimiter: ':,:',
-                    matchAnyWord: true,
-                };
-
-                MultiSelect.init(this.$element, multiSelectOptions);
-
-                this.$el.find('.selectize-dropdown-content').addClass('small');
-                this.$el.find('select.search-type').on('change', () => this.trigger('change'));
-                this.$element.on('change', () => this.trigger('change'));
+            if (typeof this.model[methodName] === 'function') {
+                this.params.options = this.model[methodName].call(this.model);
             }
+        }
 
-            if (this.isEditMode() || this.isSearchMode()) {
-                Select.init(this.$element, {matchAnyWord: true});
+        let optionsPath = this.params.optionsPath;
+        /** @type {?string} */
+        let optionsReference = this.params.optionsReference;
+
+        if (!optionsPath && optionsReference) {
+            let [refEntityType, refField] = optionsReference.split('.');
+
+            optionsPath = `entityDefs.${refEntityType}.fields.${refField}.options`;
+        }
+
+        if (optionsPath) {
+            this.params.options = Espo.Utils.clone(this.getMetadata().get(optionsPath)) || [];
+        }
+
+        this.styleMap = this.params.style || this.model.getFieldParam(this.name, 'style') || {};
+
+        this.setupOptions();
+
+        if ('translatedOptions' in this.options) {
+            this.translatedOptions = this.options.translatedOptions;
+        }
+
+        if ('translatedOptions' in this.params) {
+            this.translatedOptions = this.params.translatedOptions;
+        }
+
+        this.setupTranslation();
+
+        if (this.translatedOptions === null) {
+            this.translatedOptions = this.getLanguage()
+                .translate(this.name, 'options', this.model.name) || {};
+
+            if (this.translatedOptions === this.name) {
+                this.translatedOptions = null;
             }
-        },
+        }
 
-        focusOnInlineEdit: function () {
-            Select.focus(this.$element);
-        },
+        if (this.params.isSorted && this.translatedOptions) {
+            this.params.options = Espo.Utils.clone(this.params.options) || [];
 
-        validateRequired: function () {
-            if (this.isRequired()) {
-                if (!this.model.get(this.name)) {
-                    let msg = this.translate('fieldIsRequired', 'messages')
-                        .replace('{field}', this.getLabelText());
+            this.params.options = this.params.options.sort((v1, v2) => {
+                 return (this.translatedOptions[v1] || v1)
+                     .localeCompare(this.translatedOptions[v2] || v2);
+            });
+        }
 
-                    this.showValidationMessage(msg);
+        if (this.options.customOptionList) {
+            this.setOptionList(this.options.customOptionList);
+        }
+    },
 
-                    return true;
+    setupTranslation: function () {
+        let translation = this.params.translation;
+        /** @type {?string} */
+        let optionsReference = this.params.optionsReference;
+
+        if (!translation && optionsReference) {
+            let [refEntityType, refField] = optionsReference.split('.');
+
+            translation = `${refEntityType}.options.${refField}`;
+        }
+
+        if (!translation) {
+            return;
+        }
+
+        let translationObj;
+
+        let arr = translation.split('.');
+        let pointer = this.getLanguage().data;
+
+        arr.forEach(key => {
+            if (key in pointer) {
+                pointer = pointer[key];
+                translationObj = pointer;
+            }
+        });
+
+        this.translatedOptions = null;
+
+        let translatedOptions = {};
+
+        if (!this.params.options) {
+            return;
+        }
+
+        this.params.options.forEach(item => {
+            if (typeof translationObj === 'object' && item in translationObj) {
+                translatedOptions[item] = translationObj[item];
+            }
+            else if (
+                Array.isArray(translationObj) &&
+                typeof item === 'number' &&
+                typeof translationObj[item] !== 'undefined'
+            ) {
+                translatedOptions[item.toString()] = translationObj[item];
+            }
+            else {
+                translatedOptions[item] = item;
+            }
+        });
+
+        let value = this.model.get(this.name);
+
+        if ((value || value === '') && !(value in translatedOptions)) {
+            if (typeof translationObj === 'object' && value in translationObj) {
+                translatedOptions[value] = translationObj[value];
+            }
+        }
+
+        this.translatedOptions = translatedOptions;
+    },
+
+    /**
+     * Set up options.
+     */
+    setupOptions: function () {},
+
+    /**
+     * Set an option list.
+     *
+     * @param {string[]} optionList An option list.
+     */
+    setOptionList: function (optionList) {
+        let previousOptions = this.params.options;
+
+        if (!this.originalOptionList) {
+            this.originalOptionList = this.params.options;
+        }
+
+        let newOptions = Espo.Utils.clone(optionList) || [];
+
+        this.params.options = newOptions;
+
+        let isChanged = !_(previousOptions).isEqual(optionList);
+
+        if (!this.isEditMode() || !isChanged) {
+            return;
+        }
+
+        let triggerChange = false;
+        let currentValue = this.model.get(this.name);
+
+        if (!newOptions.includes(currentValue) && this.isReady) {
+            this.model.set(this.name, newOptions[0] ?? null, {silent: true});
+
+            triggerChange = true;
+        }
+
+        this.reRender()
+            .then(() => {
+                if (triggerChange) {
+                    this.trigger('change');
                 }
-            }
-        },
+            });
+    },
 
-        fetch: function () {
-            let value = this.$element.val();
+    /**
+     * Reset a previously set option list.
+     */
+    resetOptionList: function () {
+        if (!this.originalOptionList) {
+            return;
+        }
 
-            if (this.fetchEmptyValueAsNull && !value) {
-                value = null;
-            }
+        let previousOptions = this.params.options;
 
-            let data = {};
+        this.params.options = Espo.Utils.clone(this.originalOptionList);
 
-            data[this.name] = value;
+        let isChanged = !_(previousOptions).isEqual(this.originalOptionList);
 
-            return data;
-        },
+        if (!this.isEditMode() || !isChanged) {
+            return;
+        }
 
-        parseItemForSearch: function (item) {
-            return item;
-        },
+        if (this.isRendered()) {
+            this.reRender();
+        }
+    },
 
-        fetchSearch: function () {
-            let type = this.fetchSearchType();
+    setupSearch: function () {
+        this.events = _.extend({
+            'change select.search-type': (e) => {
+                this.handleSearchType($(e.currentTarget).val());
+            },
+        }, this.events || {});
+    },
 
-            let list = this.$element.val().split(':,:');
+    handleSearchType: function (type) {
+        var $inputContainer = this.$el.find('div.input-container');
 
-            if (list.length === 1 && list[0] === '') {
-                list = [];
-            }
+        if (~['anyOf', 'noneOf'].indexOf(type)) {
+            $inputContainer.removeClass('hidden');
+        } else {
+            $inputContainer.addClass('hidden');
+        }
+    },
 
-            list.forEach((item, i) => {
-                list[i] = this.parseItemForSearch(item);
+    afterRender: function () {
+        Dep.prototype.afterRender.call(this);
+
+        if (this.isSearchMode()) {
+            this.$element = this.$el.find('.main-element');
+
+            let type = this.$el.find('select.search-type').val();
+
+            this.handleSearchType(type);
+
+            let valueList = this.getSearchParamsData().valueList || this.searchParams.value || [];
+
+            this.$element.val(valueList.join(':,:'));
+
+            let items = [];
+
+            (this.params.options || []).forEach(value => {
+                let label = this.getLanguage().translateOption(value, this.name, this.scope);
+
+                if (this.translatedOptions) {
+                    if (value in this.translatedOptions) {
+                        label = this.translatedOptions[value];
+                    }
+                }
+
+                if (label === '') {
+                    return;
+                }
+
+                items.push({
+                    value: value,
+                    text: label,
+                });
             });
 
-            if (type === 'anyOf') {
-                if (list.length === 0) {
-                    return {
-                        type: 'any',
-                        data: {
-                            type: 'anyOf',
-                            valueList: list,
-                        },
-                    };
-                }
+            /** @type {module:ui/multi-select~Options} */
+            let multiSelectOptions = {
+                items: items,
+                delimiter: ':,:',
+                matchAnyWord: true,
+            };
 
+            MultiSelect.init(this.$element, multiSelectOptions);
+
+            this.$el.find('.selectize-dropdown-content').addClass('small');
+            this.$el.find('select.search-type').on('change', () => this.trigger('change'));
+            this.$element.on('change', () => this.trigger('change'));
+        }
+
+        if (this.isEditMode() || this.isSearchMode()) {
+            Select.init(this.$element, {matchAnyWord: true});
+        }
+    },
+
+    focusOnInlineEdit: function () {
+        Select.focus(this.$element);
+    },
+
+    validateRequired: function () {
+        if (this.isRequired()) {
+            if (!this.model.get(this.name)) {
+                let msg = this.translate('fieldIsRequired', 'messages')
+                    .replace('{field}', this.getLabelText());
+
+                this.showValidationMessage(msg);
+
+                return true;
+            }
+        }
+    },
+
+    fetch: function () {
+        let value = this.$element.val();
+
+        if (this.fetchEmptyValueAsNull && !value) {
+            value = null;
+        }
+
+        let data = {};
+
+        data[this.name] = value;
+
+        return data;
+    },
+
+    parseItemForSearch: function (item) {
+        return item;
+    },
+
+    fetchSearch: function () {
+        let type = this.fetchSearchType();
+
+        let list = this.$element.val().split(':,:');
+
+        if (list.length === 1 && list[0] === '') {
+            list = [];
+        }
+
+        list.forEach((item, i) => {
+            list[i] = this.parseItemForSearch(item);
+        });
+
+        if (type === 'anyOf') {
+            if (list.length === 0) {
                 return {
-                    type: 'in',
-                    value: list,
+                    type: 'any',
                     data: {
                         type: 'anyOf',
                         valueList: list,
@@ -438,30 +430,20 @@ function (Dep, /** module:ui/multi-select*/MultiSelect, /** module:ui/select*/Se
                 };
             }
 
-            if (type === 'noneOf') {
-                if (list.length === 0) {
-                    return {
-                        type: 'any',
-                        data: {
-                            type: 'noneOf',
-                            valueList: list,
-                        },
-                    };
-                }
+            return {
+                type: 'in',
+                value: list,
+                data: {
+                    type: 'anyOf',
+                    valueList: list,
+                },
+            };
+        }
 
+        if (type === 'noneOf') {
+            if (list.length === 0) {
                 return {
-                    type: 'or',
-                    value: [
-                        {
-                            type: 'isNull',
-                            attribute: this.name,
-                        },
-                        {
-                            type: 'notIn',
-                            value: list,
-                            attribute: this.name,
-                        },
-                    ],
+                    type: 'any',
                     data: {
                         type: 'noneOf',
                         valueList: list,
@@ -469,49 +451,68 @@ function (Dep, /** module:ui/multi-select*/MultiSelect, /** module:ui/select*/Se
                 };
             }
 
-            if (type === 'isEmpty') {
-                return {
-                    type: 'or',
-                    value: [
-                        {
-                            type: 'isNull',
-                            attribute: this.name,
-                        },
-                        {
-                            type: 'equals',
-                            value: '',
-                            attribute: this.name,
-                        }
-                    ],
-                    data: {
-                        type: 'isEmpty',
+            return {
+                type: 'or',
+                value: [
+                    {
+                        type: 'isNull',
+                        attribute: this.name,
                     },
-                };
-            }
-
-            if (type === 'isNotEmpty') {
-                return {
-                    type: 'and',
-                    value: [
-                        {
-                            type: 'isNotNull',
-                            attribute: this.name,
-                        },
-                        {
-                            type: 'notEquals',
-                            value: '',
-                            attribute: this.name,
-                        },
-                    ],
-                    data: {
-                        type: 'isNotEmpty',
+                    {
+                        type: 'notIn',
+                        value: list,
+                        attribute: this.name,
                     },
-                };
-            }
-        },
+                ],
+                data: {
+                    type: 'noneOf',
+                    valueList: list,
+                },
+            };
+        }
 
-        getSearchType: function () {
-            return this.getSearchParamsData().type || 'anyOf';
-        },
-    });
+        if (type === 'isEmpty') {
+            return {
+                type: 'or',
+                value: [
+                    {
+                        type: 'isNull',
+                        attribute: this.name,
+                    },
+                    {
+                        type: 'equals',
+                        value: '',
+                        attribute: this.name,
+                    }
+                ],
+                data: {
+                    type: 'isEmpty',
+                },
+            };
+        }
+
+        if (type === 'isNotEmpty') {
+            return {
+                type: 'and',
+                value: [
+                    {
+                        type: 'isNotNull',
+                        attribute: this.name,
+                    },
+                    {
+                        type: 'notEquals',
+                        value: '',
+                        attribute: this.name,
+                    },
+                ],
+                data: {
+                    type: 'isNotEmpty',
+                },
+            };
+        }
+    },
+
+    getSearchType: function () {
+        return this.getSearchParamsData().type || 'anyOf';
+    },
 });

@@ -26,258 +26,256 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/detail-side', ['views/record/panels-container'], function (Dep) {
+/** @module views/record/detail-side */
+
+import Dep from 'views/record/panels-container';
+
+/**
+ * A detail-side record view.
+ *
+ * @class
+ * @name Class
+ * @extends module:views/record/panels-container
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    template: 'record/side',
+
+    /** @inheritDoc */
+    mode: 'detail',
+    readOnly: false,
+    inlineEditDisabled: false,
+    name: 'side',
+    defaultPanel: true,
 
     /**
-     * A detail-side record view.
+     * A panel list.
      *
-     * @class
-     * @name Class
-     * @extends module:views/record/panels-container.Class
-     * @memberOf module:views/record/detail-side
+     * @protected
+     * @type {module:views/record/panels-container~panel[]}
      */
-    return Dep.extend(/** @lends module:views/record/detail-side.Class# */{
+    panelList: [],
 
-        template: 'record/side',
+    /**
+     * A default panel.
+     *
+     * @type {module:views/record/panels-container~panel}
+     */
+    defaultPanelDefs: {
+        name: 'default',
+        label: false,
+        view: 'views/record/panels/default-side',
+        isForm: true,
+        options: {
+            fieldList: [
+                {
+                    name: ':assignedUser'
+                },
+                {
+                    name: 'teams'
+                },
+            ],
+        }
+    },
 
-        mode: 'detail',
+    init: function () {
+        this.panelList = this.options.panelList || this.panelList;
+        this.scope = this.entityType = this.options.model.name;
 
-        readOnly: false,
+        this.recordHelper = this.options.recordHelper;
 
-        inlineEditDisabled: false,
+        this.panelList = Espo.Utils.clone(this.panelList);
 
-        name: 'side',
+        this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
+        this.readOnly = this.options.readOnly || this.readOnly;
+        this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
 
-        defaultPanel: true,
+        this.recordViewObject = this.options.recordViewObject;
+    },
 
-        /**
-         * A panel list.
-         *
-         * @protected
-         * @type {module:views/record/panels-container~panel[]}
-         */
-        panelList: [],
+    /**
+     * @inheritDoc
+     */
+    setupPanels: function () {},
 
-        /**
-         * A default panel.
-         *
-         * @type {module:views/record/panels-container~panel}
-         */
-        defaultPanelDefs: {
-            name: 'default',
-            label: false,
-            view: 'views/record/panels/default-side',
-            isForm: true,
-            options: {
-                fieldList: [
-                    {
-                        name: ':assignedUser'
-                    },
-                    {
-                        name: 'teams'
-                    },
-                ],
-            }
-        },
+    setup: function () {
+        this.type = this.mode;
 
-        init: function () {
-            this.panelList = this.options.panelList || this.panelList;
-            this.scope = this.entityType = this.options.model.name;
+        if ('type' in this.options) {
+            this.type = this.options.type;
+        }
 
-            this.recordHelper = this.options.recordHelper;
+        this.setupPanels();
 
-            this.panelList = Espo.Utils.clone(this.panelList);
+        if (!this.additionalPanelsDisabled) {
+            var additionalPanels = this.getMetadata()
+                .get(['clientDefs', this.scope, 'sidePanels', this.type]) || [];
 
-            this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
-            this.readOnly = this.options.readOnly || this.readOnly;
-            this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
+            additionalPanels.forEach((panel) => {
+                this.panelList.push(panel);
+            });
+        }
 
-            this.recordViewObject = this.options.recordViewObject;
-        },
-
-        /**
-         * @inheritDoc
-         */
-        setupPanels: function () {},
-
-        setup: function () {
-            this.type = this.mode;
-            if ('type' in this.options) {
-                this.type = this.options.type;
-            }
-
-            this.setupPanels();
-
-            if (!this.additionalPanelsDisabled) {
-                var additionalPanels = this.getMetadata()
-                    .get(['clientDefs', this.scope, 'sidePanels', this.type]) || [];
-
-                additionalPanels.forEach((panel) => {
-                    this.panelList.push(panel);
-                });
+        this.panelList = this.panelList.filter((p) => {
+            if (p.aclScope) {
+                if (!this.getAcl().checkScope(p.aclScope)) {
+                    return;
+                }
             }
 
-            this.panelList = this.panelList.filter((p) => {
-                if (p.aclScope) {
-                    if (!this.getAcl().checkScope(p.aclScope)) {
+            if (p.accessDataList) {
+                if (!Espo.Utils.checkAccessDataList(p.accessDataList, this.getAcl(), this.getUser())) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        this.panelList = this.panelList.map((p) => {
+            var item = Espo.Utils.clone(p);
+
+            if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
+                item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
+            } else {
+                this.recordHelper.setPanelStateParam(p.name, 'hidden', item.hidden || false);
+            }
+
+            return item;
+        });
+
+        this.panelList.forEach((item) => {
+            item.actionsViewKey = item.name + 'Actions';
+        });
+
+        this.wait(
+            Promise.all([
+                new Promise((resolve) => {
+                    this.getHelper().layoutManager.get(
+                        this.scope,
+                        'sidePanels' + Espo.Utils.upperCaseFirst(this.type),
+                        (layoutData) => {
+                            this.layoutData = layoutData;
+
+                            resolve();
+                        });
+                }),
+                new Promise((resolve) => {
+                    if (
+                        !this.defaultPanel ||
+                        this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled']) ||
+                        this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.type]) ||
+                        this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type]) ||
+                        this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldList'])
+                    ) {
+                        resolve();
+
                         return;
                     }
-                }
 
-                if (p.accessDataList) {
-                    if (!Espo.Utils.checkAccessDataList(p.accessDataList, this.getAcl(), this.getUser())) {
-                        return false;
-                    }
-                }
+                    this.getHelper()
+                        .layoutManager
+                        .get(this.scope, 'defaultSidePanel', (layoutData) => {
+                            this.defaultSidePanelLayoutData = layoutData;
 
-                return true;
-            });
-
-            this.panelList = this.panelList.map((p) => {
-                var item = Espo.Utils.clone(p);
-
-                if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
-                    item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
-                } else {
-                    this.recordHelper.setPanelStateParam(p.name, 'hidden', item.hidden || false);
-                }
-
-                return item;
-            });
-
-            this.panelList.forEach((item) => {
-                item.actionsViewKey = item.name + 'Actions';
-            });
-
-            this.wait(
-                Promise.all([
-                    new Promise((resolve) => {
-                        this.getHelper().layoutManager.get(
-                            this.scope,
-                            'sidePanels' + Espo.Utils.upperCaseFirst(this.type),
-                            (layoutData) => {
-                                this.layoutData = layoutData;
-
-                                resolve();
-                            });
-                    }),
-                    new Promise((resolve) => {
-                        if (
-                            !this.defaultPanel ||
-                            this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled']) ||
-                            this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.type]) ||
-                            this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type]) ||
-                            this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldList'])
-                        ) {
                             resolve();
+                        });
+                }),
+            ]).then(() => {
+                if (this.defaultPanel) {
+                    this.setupDefaultPanel();
+                }
 
-                            return;
+                this.alterPanels();
+                this.setupPanelsFinal();
+                this.setupPanelViews();
+            })
+        );
+    },
+
+    /**
+     * Set up a default panel.
+     *
+     * @protected
+     */
+    setupDefaultPanel: function () {
+        var met = false;
+
+        this.panelList.forEach((item) => {
+            if (item.name === 'default') {
+                met = true;
+            }
+        });
+
+        if (met) {
+            return;
+        }
+
+        var defaultPanelDefs = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.type]);
+
+        if (defaultPanelDefs === false) {
+            return;
+        }
+
+        if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])) {
+            return;
+        }
+
+        defaultPanelDefs = defaultPanelDefs || this.defaultPanelDefs;
+
+        if (!defaultPanelDefs) {
+            return;
+        }
+
+        defaultPanelDefs = Espo.Utils.cloneDeep(defaultPanelDefs);
+
+        defaultPanelDefs.view = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelView']) ||
+            defaultPanelDefs.view;
+
+        var fieldList = this.getMetadata()
+            .get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type]);
+
+        if (!fieldList) {
+            fieldList = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldList']);
+        }
+
+        if (!fieldList && this.defaultSidePanelLayoutData) {
+            fieldList = this.defaultSidePanelLayoutData;
+        }
+
+        if (fieldList) {
+            defaultPanelDefs.options = defaultPanelDefs.options || {};
+            defaultPanelDefs.options.fieldList = fieldList;
+        }
+
+        if (defaultPanelDefs.options.fieldList && defaultPanelDefs.options.fieldList.length) {
+            defaultPanelDefs.options.fieldList.forEach((item, i) => {
+                if (typeof item !== 'object') {
+                    item = {
+                        name: item
+                    };
+
+                    defaultPanelDefs.options.fieldList[i] = item;
+                }
+
+                if (item.name === ':assignedUser') {
+                    if (this.model.hasField('assignedUsers')) {
+                        item.name = 'assignedUsers';
+
+                        if (!this.model.getFieldParam('assignedUsers', 'view')) {
+                            item.view = 'views/fields/assigned-users';
                         }
-
-                        this.getHelper()
-                            .layoutManager
-                            .get(this.scope, 'defaultSidePanel', (layoutData) => {
-                                this.defaultSidePanelLayoutData = layoutData;
-
-                                resolve();
-                            });
-                    }),
-                ]).then(() => {
-                    if (this.defaultPanel) {
-                        this.setupDefaultPanel();
                     }
-
-                    this.alterPanels();
-                    this.setupPanelsFinal();
-                    this.setupPanelViews();
-                })
-            );
-        },
-
-        /**
-         * Set up a default panel.
-         *
-         * @protected
-         */
-        setupDefaultPanel: function () {
-            var met = false;
-
-            this.panelList.forEach((item) => {
-                if (item.name === 'default') {
-                    met = true;
+                    else if (this.model.hasField('assignedUser')) {
+                        item.name = 'assignedUser';
+                    }
+                    else {
+                        defaultPanelDefs.options.fieldList[i] = {};
+                    }
                 }
             });
+        }
 
-            if (met) {
-                return;
-            }
-
-            var defaultPanelDefs = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.type]);
-
-            if (defaultPanelDefs === false) {
-                return;
-            }
-
-            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])) {
-                return;
-            }
-
-            defaultPanelDefs = defaultPanelDefs || this.defaultPanelDefs;
-
-            if (!defaultPanelDefs) {
-                return;
-            }
-
-            defaultPanelDefs = Espo.Utils.cloneDeep(defaultPanelDefs);
-
-            defaultPanelDefs.view = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelView']) ||
-                defaultPanelDefs.view;
-
-            var fieldList = this.getMetadata()
-                .get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type]);
-
-            if (!fieldList) {
-                fieldList = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldList']);
-            }
-
-            if (!fieldList && this.defaultSidePanelLayoutData) {
-                fieldList = this.defaultSidePanelLayoutData;
-            }
-
-            if (fieldList) {
-                defaultPanelDefs.options = defaultPanelDefs.options || {};
-                defaultPanelDefs.options.fieldList = fieldList;
-            }
-
-            if (defaultPanelDefs.options.fieldList && defaultPanelDefs.options.fieldList.length) {
-                defaultPanelDefs.options.fieldList.forEach((item, i) => {
-                    if (typeof item !== 'object') {
-                        item = {
-                            name: item
-                        };
-
-                        defaultPanelDefs.options.fieldList[i] = item;
-                    }
-
-                    if (item.name === ':assignedUser') {
-                        if (this.model.hasField('assignedUsers')) {
-                            item.name = 'assignedUsers';
-
-                            if (!this.model.getFieldParam('assignedUsers', 'view')) {
-                                item.view = 'views/fields/assigned-users';
-                            }
-                        }
-                        else if (this.model.hasField('assignedUser')) {
-                            item.name = 'assignedUser';
-                        }
-                        else {
-                            defaultPanelDefs.options.fieldList[i] = {};
-                        }
-                    }
-                });
-            }
-
-            this.panelList.unshift(defaultPanelDefs);
-        },
-    });
+        this.panelList.unshift(defaultPanelDefs);
+    },
 });

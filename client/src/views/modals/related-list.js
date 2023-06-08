@@ -26,606 +26,599 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/related-list', ['views/modal', 'search-manager'], function (Dep, SearchManager) {
+/** @module views/modals/related-records */
+
+import Dep from 'views/modal';
+import SearchManager from 'search-manager';
+
+/**
+ * A related-list modal.
+ *
+ * @class
+ * @name Class
+ * @extends module:views/modal
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    template: 'modals/related-list',
+
+    className: 'dialog dialog-record',
+
+    searchPanel: true,
+    scope: null,
+    noCreateScopeList: ['User', 'Team', 'Role', 'Portal'],
+    backdrop: true,
+    fixedHeaderHeight: true,
+    mandatorySelectAttributeList: null,
 
     /**
-     * A related-list modal.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:views/modals/related-list
-     * @extends module:views/modal.Class
+     * @inheritDoc
      */
-    return Dep.extend(/** @lends module:views/modals/related-list.Class# */{
-
-        template: 'modals/related-list',
-
-        searchPanel: true,
-
-        scope: null,
-
-        noCreateScopeList: ['User', 'Team', 'Role', 'Portal'],
-
-        className: 'dialog dialog-record',
-
-        backdrop: true,
-
-        fixedHeaderHeight: true,
-
-        mandatorySelectAttributeList: null,
-
-        /**
-         * @inheritDoc
-         */
-        shortcutKeys: {
-            'Control+Space': function (e) {
-                this.handleShortcutKeyCtrlSpace(e);
-            },
-            'Control+Slash': function (e) {
-                this.handleShortcutKeyCtrlSlash(e);
-            },
-            'Control+Comma': function (e) {
-                this.handleShortcutKeyCtrlComma(e);
-            },
-            'Control+Period': function (e) {
-                this.handleShortcutKeyCtrlPeriod(e);
-            },
+    shortcutKeys: {
+        'Control+Space': function (e) {
+            this.handleShortcutKeyCtrlSpace(e);
         },
-
-        events: {
-            'click button[data-action="createRelated"]': function () {
-                this.actionCreateRelated();
-            },
-            'click .action': function (e) {
-                var $el = $(e.currentTarget);
-
-                var action = $el.data('action');
-
-                var method = 'action' + Espo.Utils.upperCaseFirst(action);
-
-                var data = $el.data();
-
-                if (typeof this[method] === 'function') {
-                    this[method](data, e);
-
-                    e.preventDefault();
-                }
-                else {
-                    this.trigger('action', action, data, e);
-                }
-            }
+        'Control+Slash': function (e) {
+            this.handleShortcutKeyCtrlSlash(e);
         },
+        'Control+Comma': function (e) {
+            this.handleShortcutKeyCtrlComma(e);
+        },
+        'Control+Period': function (e) {
+            this.handleShortcutKeyCtrlPeriod(e);
+        },
+    },
 
-        setup: function () {
-            this.primaryFilterName = this.options.primaryFilterName || null;
+    events: {
+        'click button[data-action="createRelated"]': function () {
+            this.actionCreateRelated();
+        },
+        'click .action': function (e) {
+            let $el = $(e.currentTarget);
+            let action = $el.data('action');
+            let method = 'action' + Espo.Utils.upperCaseFirst(action);
+            let data = $el.data();
 
-            this.buttonList = [
-                {
-                    name: 'cancel',
-                    label: 'Close',
+            if (typeof this[method] === 'function') {
+                this[method](data, e);
+
+                e.preventDefault();
+            }
+            else {
+                this.trigger('action', action, data, e);
+            }
+        }
+    },
+
+    setup: function () {
+        this.primaryFilterName = this.options.primaryFilterName || null;
+
+        this.buttonList = [
+            {
+                name: 'cancel',
+                label: 'Close',
+            }
+        ];
+
+        this.scope = this.options.scope || this.scope;
+
+        this.defaultOrderBy = this.options.defaultOrderBy;
+        this.defaultOrder = this.options.defaultOrder;
+
+        this.panelName = this.options.panelName;
+        this.link = this.options.link;
+
+        this.defs = this.options.defs || {};
+
+        this.filterList = this.options.filterList;
+        this.filter = this.options.filter;
+        this.layoutName = this.options.layoutName || 'listSmall';
+        this.url = this.options.url;
+        this.listViewName = this.options.listViewName;
+        this.rowActionsView = this.options.rowActionsView;
+
+        this.createDisabled = this.options.createDisabled || this.createDisabled;
+        this.selectDisabled = this.options.selectDisabled || this.selectDisabled;
+
+        this.massUnlinkDisabled = this.options.massUnlinkDisabled || this.massUnlinkDisabled;
+
+        this.massActionRemoveDisabled = this.options.massActionRemoveDisabled ||
+            this.massActionRemoveDisabled;
+
+        this.massActionMassUpdateDisabled = this.options.massActionMassUpdateDisabled ||
+            this.massActionMassUpdateDisabled;
+
+        this.panelCollection = this.options.panelCollection;
+
+        if (this.panelCollection) {
+            this.listenTo(this.panelCollection, 'sync', (c, r, o) => {
+                if (o.skipCollectionSync) {
+                    return;
                 }
-            ];
 
-            this.scope = this.options.scope || this.scope;
+                this.collection.fetch();
+            });
 
-            this.defaultOrderBy = this.options.defaultOrderBy;
-            this.defaultOrder = this.options.defaultOrder;
+            // Sync changing models.
+            this.listenTo(this.panelCollection, 'change', (m, o) => {
+                // Prevent change after save.
+                if (o.xhr || !m.id) {
+                    return;
+                }
 
-            this.panelName = this.options.panelName;
-            this.link = this.options.link;
+                let model = this.collection.get(m.id);
 
-            this.defs = this.options.defs || {};
+                if (!model) {
+                    return;
+                }
 
-            this.filterList = this.options.filterList;
-            this.filter = this.options.filter;
-            this.layoutName = this.options.layoutName || 'listSmall';
-            this.url = this.options.url;
-            this.listViewName = this.options.listViewName;
-            this.rowActionsView = this.options.rowActionsView;
+                let attributes = {};
 
-            this.createDisabled = this.options.createDisabled || this.createDisabled;
-            this.selectDisabled = this.options.selectDisabled || this.selectDisabled;
-
-            this.massUnlinkDisabled = this.options.massUnlinkDisabled || this.massUnlinkDisabled;
-
-            this.massActionRemoveDisabled = this.options.massActionRemoveDisabled ||
-                this.massActionRemoveDisabled;
-
-            this.massActionMassUpdateDisabled = this.options.massActionMassUpdateDisabled ||
-                this.massActionMassUpdateDisabled;
-
-            this.panelCollection = this.options.panelCollection;
-
-            if (this.panelCollection) {
-                this.listenTo(this.panelCollection, 'sync', (c, r, o) => {
-                    if (o.skipCollectionSync) {
-                        return;
+                for (let name in m.attributes) {
+                    if (m.hasChanged(name)) {
+                        attributes[name] = m.attributes[name];
                     }
-
-                    this.collection.fetch();
-                });
-
-                // Sync changing models.
-                this.listenTo(this.panelCollection, 'change', (m, o) => {
-                    // Prevent change after save.
-                    if (o.xhr || !m.id) {
-                        return;
-                    }
-
-                    let model = this.collection.get(m.id);
-
-                    if (!model) {
-                        return;
-                    }
-
-                    let attributes = {};
-
-                    for (let name in m.attributes) {
-                        if (m.hasChanged(name)) {
-                            attributes[name] = m.attributes[name];
-                        }
-                    }
-
-                    model.set(attributes);
-                });
-
-                if (this.model) {
-                    this.listenTo(this.model, 'after:unrelate', () => {
-                        this.panelCollection.fetch({
-                            skipCollectionSync: true,
-                        });
-                    });
-                }
-            }
-            else if (this.model) {
-                this.listenTo(this.model, 'after:relate', () => {
-                    this.collection.fetch();
-                });
-            }
-
-            if (this.noCreateScopeList.indexOf(this.scope) !== -1) {
-                this.createDisabled = true;
-            }
-
-            this.primaryFilterName = this.filter;
-
-            if (!this.createDisabled) {
-                if (
-                    !this.getAcl().check(this.scope, 'create') ||
-                    this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])
-                ) {
-                    this.createDisabled = true;
-                }
-            }
-
-            this.unlinkDisabled = this.unlinkDisabled || this.options.unlinkDisabled;
-
-            if (!this.massUnlinkDisabled) {
-                if (this.unlinkDisabled || this.defs.massUnlinkDisabled || this.defs.unlinkDisabled) {
-                    this.massUnlinkDisabled = true;
                 }
 
-                if (!this.getAcl().check(this.model, 'edit')) {
-                    this.massUnlinkDisabled = true;
-                }
-            }
-
-            if (!this.selectDisabled) {
-                this.buttonList.unshift({
-                    name: 'selectRelated',
-                    label: 'Select',
-                    pullLeft: true,
-                });
-            }
-
-            if (!this.createDisabled) {
-                this.buttonList.unshift({
-                    name: 'createRelated',
-                    label: 'Create',
-                    pullLeft: true,
-                });
-            }
-
-            this.$header = $('<span>');
+                model.set(attributes);
+            });
 
             if (this.model) {
-                if (this.model.get('name')) {
-                    this.$header.append(
-                        $('<span>').text(this.model.get('name')),
-                        ' <span class="chevron-right"></span> '
-                    );
-                }
-            }
-
-            let title = this.options.title;
-
-            if (title) {
-                title = this.getHelper().escapeString(this.options.title)
-                    .replace(/@right/, '<span class="chevron-right"></span>');
-            }
-
-            this.$header.append(
-                title ||
-                $('<span>').text(
-                    this.getLanguage().translate(this.link, 'links', this.model.name)
-                )
-            );
-
-            if (this.options.listViewUrl) {
-                this.$header = $('<a>')
-                    .attr('href', this.options.listViewUrl)
-                    .append(this.$header);
-            }
-
-            if (
-                !this.options.listViewUrl &&
-                (
-                    !this.defs.fullFormDisabled && this.link && this.model.hasLink(this.link) ||
-                    this.options.fullFormUrl
-                )
-            ) {
-                let url = this.options.fullFormUrl ||
-                    '#' + this.model.entityType + '/related/' + this.model.id + '/' + this.link;
-
-                this.buttonList.unshift({
-                    name: 'fullForm',
-                    label: 'Full Form',
-                    onClick: () => this.getRouter().navigate(url, {trigger: true}),
-                });
-
-                this.$header = $('<a>')
-                    .attr('href', url)
-                    .append(this.$header);
-            }
-
-            let iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
-
-            if (iconHtml) {
-                this.$header = $('<span>')
-                    .append(iconHtml)
-                    .append(this.$header);
-            }
-
-            this.waitForView('list');
-
-            if (this.searchPanel) {
-                this.waitForView('search');
-            }
-
-            this.getCollectionFactory().create(this.scope, (collection) => {
-                collection.maxSize = this.getConfig().get('recordsPerPage');
-                collection.url = this.url;
-
-                collection.setOrder(this.defaultOrderBy, this.defaultOrder, true);
-
-                this.collection = collection;
-
-                if (this.panelCollection) {
-                    this.listenTo(collection, 'change', (model) => {
-                        var panelModel = this.panelCollection.get(model.id);
-
-                        if (panelModel) {
-                            panelModel.set(model.attributes);
-                        }
+                this.listenTo(this.model, 'after:unrelate', () => {
+                    this.panelCollection.fetch({
+                        skipCollectionSync: true,
                     });
-                }
-
-                this.loadSearch();
-
-                this.wait(true);
-
-                this.loadList();
+                });
+            }
+        }
+        else if (this.model) {
+            this.listenTo(this.model, 'after:relate', () => {
+                this.collection.fetch();
             });
-        },
+        }
 
-        setFilter: function (filter) {
-            this.searchManager.setPrimary(filter);
-        },
+        if (this.noCreateScopeList.indexOf(this.scope) !== -1) {
+            this.createDisabled = true;
+        }
 
-        /**
-         * @protected
-         * @return {?module:views/record/search.Class}
-         */
-        getSearchView: function () {
-            return this.getView('search');
-        },
+        this.primaryFilterName = this.filter;
 
-        loadSearch: function () {
-            var searchManager = this.searchManager =
-                new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
+        if (!this.createDisabled) {
+            if (
+                !this.getAcl().check(this.scope, 'create') ||
+                this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])
+            ) {
+                this.createDisabled = true;
+            }
+        }
 
-            searchManager.emptyOnReset = true;
+        this.unlinkDisabled = this.unlinkDisabled || this.options.unlinkDisabled;
 
-            var primaryFilterName = this.primaryFilterName;
-
-            if (primaryFilterName) {
-                searchManager.setPrimary(primaryFilterName);
+        if (!this.massUnlinkDisabled) {
+            if (this.unlinkDisabled || this.defs.massUnlinkDisabled || this.defs.unlinkDisabled) {
+                this.massUnlinkDisabled = true;
             }
 
-            this.collection.where = searchManager.getWhere();
+            if (!this.getAcl().check(this.model, 'edit')) {
+                this.massUnlinkDisabled = true;
+            }
+        }
 
-            var filterList = Espo.Utils.clone(this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || []);
+        if (!this.selectDisabled) {
+            this.buttonList.unshift({
+                name: 'selectRelated',
+                label: 'Select',
+                pullLeft: true,
+            });
+        }
 
-            if (this.filterList) {
-                this.filterList.forEach((item1) => {
-                    var isFound = false;
+        if (!this.createDisabled) {
+            this.buttonList.unshift({
+                name: 'createRelated',
+                label: 'Create',
+                pullLeft: true,
+            });
+        }
 
-                    var name1 = item1.name || item1;
+        this.$header = $('<span>');
 
-                    if (!name1 || name1 === 'all') {
-                        return;
+        if (this.model) {
+            if (this.model.get('name')) {
+                this.$header.append(
+                    $('<span>').text(this.model.get('name')),
+                    ' <span class="chevron-right"></span> '
+                );
+            }
+        }
+
+        let title = this.options.title;
+
+        if (title) {
+            title = this.getHelper().escapeString(this.options.title)
+                .replace(/@right/, '<span class="chevron-right"></span>');
+        }
+
+        this.$header.append(
+            title ||
+            $('<span>').text(
+                this.getLanguage().translate(this.link, 'links', this.model.name)
+            )
+        );
+
+        if (this.options.listViewUrl) {
+            this.$header = $('<a>')
+                .attr('href', this.options.listViewUrl)
+                .append(this.$header);
+        }
+
+        if (
+            !this.options.listViewUrl &&
+            (
+                !this.defs.fullFormDisabled && this.link && this.model.hasLink(this.link) ||
+                this.options.fullFormUrl
+            )
+        ) {
+            let url = this.options.fullFormUrl ||
+                '#' + this.model.entityType + '/related/' + this.model.id + '/' + this.link;
+
+            this.buttonList.unshift({
+                name: 'fullForm',
+                label: 'Full Form',
+                onClick: () => this.getRouter().navigate(url, {trigger: true}),
+            });
+
+            this.$header = $('<a>')
+                .attr('href', url)
+                .append(this.$header);
+        }
+
+        let iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+
+        if (iconHtml) {
+            this.$header = $('<span>')
+                .append(iconHtml)
+                .append(this.$header);
+        }
+
+        this.waitForView('list');
+
+        if (this.searchPanel) {
+            this.waitForView('search');
+        }
+
+        this.getCollectionFactory().create(this.scope, (collection) => {
+            collection.maxSize = this.getConfig().get('recordsPerPage');
+            collection.url = this.url;
+
+            collection.setOrder(this.defaultOrderBy, this.defaultOrder, true);
+
+            this.collection = collection;
+
+            if (this.panelCollection) {
+                this.listenTo(collection, 'change', (model) => {
+                    var panelModel = this.panelCollection.get(model.id);
+
+                    if (panelModel) {
+                        panelModel.set(model.attributes);
                     }
-
-                    filterList.forEach((item2) => {
-                        var name2 = item2.name || item2;
-
-                        if (name1 === name2) {
-                            isFound = true;
-                        }
-                    });
-
-                    if (!isFound) {
-                        filterList.push(item1);
-                    }
                 });
             }
 
-            if (this.options.filtersDisabled) {
-                filterList = [];
-            }
+            this.loadSearch();
 
-            if (this.searchPanel) {
-                this.createView('search', 'views/record/search', {
-                    collection: this.collection,
-                    el: this.containerSelector + ' .search-container',
-                    searchManager: searchManager,
-                    disableSavePreset: true,
-                    filterList: filterList,
-                }, (view) => {
-                    this.listenTo(view, 'reset', () => {});
-                });
-            }
-        },
+            this.wait(true);
 
-        loadList: function () {
-            var viewName =
-                this.listViewName ||
-                this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'listRelated']) ||
-                this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
-                'views/record/list';
+            this.loadList();
+        });
+    },
 
-            this.createView('list', viewName, {
-                collection: this.collection,
-                el: this.containerSelector + ' .list-container',
-                rowActionsView: this.rowActionsView,
-                layoutName: this.layoutName,
-                searchManager: this.searchManager,
-                buttonsDisabled: true,
-                skipBuildRows: true,
-                model: this.model,
-                unlinkMassAction: !this.massUnlinkDisabled,
-                massActionRemoveDisabled: this.massActionRemoveDisabled,
-                massActionMassUpdateDisabled: this.massActionMassUpdateDisabled,
-                mandatorySelectAttributeList: this.mandatorySelectAttributeList,
-                rowActionsOptions: {
-                    unlinkDisabled: this.unlinkDisabled,
-                },
-                pagination: this.getConfig().get('listPagination') ||
-                    this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||
-                    null,
-            }, (view) => {
-                this.listenToOnce(view, 'select', (model) => {
-                    this.trigger('select', model);
+    setFilter: function (filter) {
+        this.searchManager.setPrimary(filter);
+    },
 
-                    this.close();
-                });
+    /**
+     * @protected
+     * @return {module:views/record/search}
+     */
+    getSearchView: function () {
+        return this.getView('search');
+    },
 
-                if (this.multiple) {
-                    this.listenTo(view, 'check', () => {
-                        if (view.checkedList.length) {
-                            this.enableButton('select');
-                        } else {
-                            this.disableButton('select');
-                        }
-                    });
+    loadSearch: function () {
+        var searchManager = this.searchManager =
+            new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
 
-                    this.listenTo(view, 'select-all-results', () => {
-                        this.enableButton('select');
-                    });
+        searchManager.emptyOnReset = true;
+
+        var primaryFilterName = this.primaryFilterName;
+
+        if (primaryFilterName) {
+            searchManager.setPrimary(primaryFilterName);
+        }
+
+        this.collection.where = searchManager.getWhere();
+
+        var filterList = Espo.Utils.clone(this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || []);
+
+        if (this.filterList) {
+            this.filterList.forEach((item1) => {
+                var isFound = false;
+
+                var name1 = item1.name || item1;
+
+                if (!name1 || name1 === 'all') {
+                    return;
                 }
 
-                if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
+                filterList.forEach((item2) => {
+                    var name2 = item2.name || item2;
+
+                    if (name1 === name2) {
+                        isFound = true;
+                    }
+                });
+
+                if (!isFound) {
+                    filterList.push(item1);
+                }
+            });
+        }
+
+        if (this.options.filtersDisabled) {
+            filterList = [];
+        }
+
+        if (this.searchPanel) {
+            this.createView('search', 'views/record/search', {
+                collection: this.collection,
+                el: this.containerSelector + ' .search-container',
+                searchManager: searchManager,
+                disableSavePreset: true,
+                filterList: filterList,
+            }, (view) => {
+                this.listenTo(view, 'reset', () => {});
+            });
+        }
+    },
+
+    loadList: function () {
+        var viewName =
+            this.listViewName ||
+            this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'listRelated']) ||
+            this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
+            'views/record/list';
+
+        this.createView('list', viewName, {
+            collection: this.collection,
+            el: this.containerSelector + ' .list-container',
+            rowActionsView: this.rowActionsView,
+            layoutName: this.layoutName,
+            searchManager: this.searchManager,
+            buttonsDisabled: true,
+            skipBuildRows: true,
+            model: this.model,
+            unlinkMassAction: !this.massUnlinkDisabled,
+            massActionRemoveDisabled: this.massActionRemoveDisabled,
+            massActionMassUpdateDisabled: this.massActionMassUpdateDisabled,
+            mandatorySelectAttributeList: this.mandatorySelectAttributeList,
+            rowActionsOptions: {
+                unlinkDisabled: this.unlinkDisabled,
+            },
+            pagination: this.getConfig().get('listPagination') ||
+                this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||
+                null,
+        }, (view) => {
+            this.listenToOnce(view, 'select', (model) => {
+                this.trigger('select', model);
+
+                this.close();
+            });
+
+            if (this.multiple) {
+                this.listenTo(view, 'check', () => {
+                    if (view.checkedList.length) {
+                        this.enableButton('select');
+                    } else {
+                        this.disableButton('select');
+                    }
+                });
+
+                this.listenTo(view, 'select-all-results', () => {
+                    this.enableButton('select');
+                });
+            }
+
+            if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
+                this.listenToOnce(view, 'after:build-rows', () => {
+                    this.wait(false);
+                });
+
+                this.collection.fetch();
+            }
+            else {
+                view.getSelectAttributeList((selectAttributeList) => {
+                    if (!~selectAttributeList.indexOf('name')) {
+                        selectAttributeList.push('name');
+                    }
+
+                    var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
+                        this.mandatorySelectAttributeList || [];
+
+                    mandatorySelectAttributeList.forEach((attribute) => {
+                        if (!~selectAttributeList.indexOf(attribute)) {
+                            selectAttributeList.push(attribute);
+                        }
+                    });
+
+                    if (selectAttributeList) {
+                        this.collection.data.select = selectAttributeList.join(',');
+                    }
+
                     this.listenToOnce(view, 'after:build-rows', () => {
                         this.wait(false);
                     });
 
                     this.collection.fetch();
-                }
-                else {
-                    view.getSelectAttributeList((selectAttributeList) => {
-                        if (!~selectAttributeList.indexOf('name')) {
-                            selectAttributeList.push('name');
-                        }
+                });
+            }
+        });
+    },
 
-                        var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
-                            this.mandatorySelectAttributeList || [];
+    actionUnlinkRelated: function (data) {
+        let id = data.id;
 
-                        mandatorySelectAttributeList.forEach((attribute) => {
-                            if (!~selectAttributeList.indexOf(attribute)) {
-                                selectAttributeList.push(attribute);
-                            }
-                        });
+        this.confirm({
+            message: this.translate('unlinkRecordConfirmation', 'messages'),
+            confirmText: this.translate('Unlink'),
+        }, () => {
+            Espo.Ui.notify(' ... ');
 
-                        if (selectAttributeList) {
-                            this.collection.data.select = selectAttributeList.join(',');
-                        }
+            Espo.Ajax.deleteRequest(this.collection.url, {id: id}).then(() => {
+                Espo.Ui.success(this.translate('Unlinked'));
 
-                        this.listenToOnce(view, 'after:build-rows', () => {
-                            this.wait(false);
-                        });
+                this.collection.fetch();
 
-                        this.collection.fetch();
-                    });
-                }
+                this.model.trigger('after:unrelate');
+                this.model.trigger('after:unrelate:' + this.link);
             });
-        },
+        });
+    },
 
-        actionUnlinkRelated: function (data) {
-            let id = data.id;
+    actionCreateRelated: function () {
+        let actionName = this.defs.createAction || 'createRelated';
+        let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
 
-            this.confirm({
-                message: this.translate('unlinkRecordConfirmation', 'messages'),
-                confirmText: this.translate('Unlink'),
-            }, () => {
-                Espo.Ui.notify(' ... ');
+        let p = this.getParentView();
 
-                Espo.Ajax.deleteRequest(this.collection.url, {id: id}).then(() => {
-                    Espo.Ui.success(this.translate('Unlinked'));
+        let view = null;
+
+        while (p) {
+            if (p[methodName]) {
+                view = p;
+
+                break;
+            }
+
+            p = p.getParentView();
+        }
+
+        p[methodName]({
+            link: this.link,
+            scope: this.scope,
+        });
+    },
+
+    actionSelectRelated: function () {
+        let actionName = this.defs.selectAction || 'selectRelated';
+        let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
+
+        let p = this.getParentView();
+
+        let view = null;
+
+        while (p) {
+            if (p[methodName]) {
+                view = p;
+
+                break;
+            }
+
+            p = p.getParentView();
+        }
+
+        p[methodName]({
+            link: this.link,
+            primaryFilterName: this.defs.selectPrimaryFilterName,
+            boolFilterList: this.defs.selectBoolFilterList,
+            massSelect: this.defs.massSelect,
+        });
+    },
+
+    actionRemoveRelated: function (data) {
+        let id = data.id;
+
+        this.confirm({
+            message: this.translate('removeRecordConfirmation', 'messages'),
+            confirmText: this.translate('Remove'),
+        }, () => {
+            let model = this.collection.get(id);
+
+            Espo.Ui.notify(' ... ');
+
+            model
+                .destroy()
+                .then(() => {
+                    Espo.Ui.success(this.translate('Removed'));
 
                     this.collection.fetch();
 
                     this.model.trigger('after:unrelate');
                     this.model.trigger('after:unrelate:' + this.link);
                 });
-            });
-        },
+        });
+    },
 
-        actionCreateRelated: function () {
-            let actionName = this.defs.createAction || 'createRelated';
-            let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyCtrlSlash: function (e) {
+        if (!this.searchPanel) {
+            return;
+        }
 
-            let p = this.getParentView();
+        let $search = this.$el.find('input.text-filter').first();
 
-            let view = null;
+        if (!$search.length) {
+            return;
+        }
 
-            while (p) {
-                if (p[methodName]) {
-                    view = p;
+        e.preventDefault();
+        e.stopPropagation();
 
-                    break;
-                }
+        $search.focus();
+    },
 
-                p = p.getParentView();
-            }
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyCtrlSpace: function (e) {
+        if (this.createDisabled) {
+            return;
+        }
 
-            p[methodName]({
-                link: this.link,
-                scope: this.scope,
-            });
-        },
+        if (this.buttonList.findIndex(item => item.name === 'createRelated' && !item.hidden) === -1) {
+            return;
+        }
 
-        actionSelectRelated: function () {
-            let actionName = this.defs.selectAction || 'selectRelated';
-            let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
+        e.preventDefault();
+        e.stopPropagation();
 
-            let p = this.getParentView();
+        this.actionCreateRelated();
+    },
 
-            let view = null;
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyCtrlComma: function (e) {
+        if (!this.getSearchView()) {
+            return;
+        }
 
-            while (p) {
-                if (p[methodName]) {
-                    view = p;
+        this.getSearchView().selectPreviousPreset();
+    },
 
-                    break;
-                }
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyCtrlPeriod: function (e) {
+        if (!this.getSearchView()) {
+            return;
+        }
 
-                p = p.getParentView();
-            }
-
-            p[methodName]({
-                link: this.link,
-                primaryFilterName: this.defs.selectPrimaryFilterName,
-                boolFilterList: this.defs.selectBoolFilterList,
-                massSelect: this.defs.massSelect,
-            });
-        },
-
-        actionRemoveRelated: function (data) {
-            let id = data.id;
-
-            this.confirm({
-                message: this.translate('removeRecordConfirmation', 'messages'),
-                confirmText: this.translate('Remove'),
-            }, () => {
-                let model = this.collection.get(id);
-
-                Espo.Ui.notify(' ... ');
-
-                model
-                    .destroy()
-                    .then(() => {
-                        Espo.Ui.success(this.translate('Removed'));
-
-                        this.collection.fetch();
-
-                        this.model.trigger('after:unrelate');
-                        this.model.trigger('after:unrelate:' + this.link);
-                    });
-            });
-        },
-
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyCtrlSlash: function (e) {
-            if (!this.searchPanel) {
-                return;
-            }
-
-            let $search = this.$el.find('input.text-filter').first();
-
-            if (!$search.length) {
-                return;
-            }
-
-            e.preventDefault();
-            e.stopPropagation();
-
-            $search.focus();
-        },
-
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyCtrlSpace: function (e) {
-            if (this.createDisabled) {
-                return;
-            }
-
-            if (this.buttonList.findIndex(item => item.name === 'createRelated' && !item.hidden) === -1) {
-                return;
-            }
-
-            e.preventDefault();
-            e.stopPropagation();
-
-            this.actionCreateRelated();
-        },
-
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyCtrlComma: function (e) {
-            if (!this.getSearchView()) {
-                return;
-            }
-
-            this.getSearchView().selectPreviousPreset();
-        },
-
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyCtrlPeriod: function (e) {
-            if (!this.getSearchView()) {
-                return;
-            }
-
-            this.getSearchView().selectNextPreset();
-        },
-    });
+        this.getSearchView().selectNextPreset();
+    },
 });

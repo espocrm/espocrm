@@ -26,483 +26,482 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/phone', ['views/fields/varchar', 'ui/select'],
-function (Dep, /** module:ui/select*/Select) {
+import Dep from 'views/fields/varchar';
+import Select from 'ui/select';
 
-    /**
-     * @class
-     * @name Class
-     * @memberOf module:views/fields/phone
-     * @extends module:views/fields/varchar.Class
-     */
-    return Dep.extend(/** @lends module:views/fields/phone.Class */{
+/**
+ * @class Class
+ * @extends module:views/fields/varchar
+ */
+export default Dep.extend(/** @lends Class# */{
 
-        type: 'phone',
+    type: 'phone',
 
-        editTemplate: 'fields/phone/edit',
-        detailTemplate: 'fields/phone/detail',
-        listTemplate: 'fields/phone/list',
+    editTemplate: 'fields/phone/edit',
+    detailTemplate: 'fields/phone/detail',
+    listTemplate: 'fields/phone/list',
 
-        validations: ['required', 'phoneData'],
+    validations: ['required', 'phoneData'],
 
-        validateRequired: function () {
-            if (this.isRequired()) {
-                if (!this.model.get(this.name)) {
-                    let msg = this.translate('fieldIsRequired', 'messages')
-                        .replace('{field}', this.getLabelText());
+    validateRequired: function () {
+        if (!this.isRequired()) {
+            return;
+        }
 
-                    this.showValidationMessage(msg, 'div.phone-number-block:nth-child(1) input.phone-number');
+        if (!this.model.get(this.name)) {
+            let msg = this.translate('fieldIsRequired', 'messages')
+                .replace('{field}', this.getLabelText());
 
-                    return true;
-                }
+            this.showValidationMessage(msg, 'div.phone-number-block:nth-child(1) input.phone-number');
+
+            return true;
+        }
+    },
+
+    validatePhoneData: function () {
+        let data = this.model.get(this.dataFieldName);
+
+        if (!data || !data.length) {
+            return;
+        }
+
+        /** @var {string} */
+        let pattern = '^' + this.getMetadata().get(['app', 'regExpPatterns', 'phoneNumberLoose', 'pattern']) + '$';
+        let regExp = new RegExp(pattern);
+
+        let numberList = [];
+        let notValid = false;
+
+        data.forEach((row, i) => {
+            let number = row.phoneNumber;
+
+            if (!regExp.test(number)) {
+                notValid = true;
+
+                let msg = this.translate('fieldPhoneInvalidCharacters', 'messages')
+                    .replace('{field}', this.getLabelText());
+
+                this.showValidationMessage(msg, 'div.phone-number-block:nth-child(' + (i + 1)
+                    .toString() + ') input.phone-number');
             }
-        },
 
-        validatePhoneData: function () {
-            let data = this.model.get(this.dataFieldName);
+            let numberClean = String(number).replace(/[\s\+]/g, '');
 
-            if (!data || !data.length) {
+            if (~numberList.indexOf(numberClean)) {
+                let msg = this.translate('fieldValueDuplicate', 'messages')
+                    .replace('{field}', this.getLabelText());
+
+                this.showValidationMessage(msg, 'div.phone-number-block:nth-child(' + (i + 1)
+                    .toString() + ') input.phone-number');
+
+                notValid = true;
+
                 return;
             }
 
-            /** @var {string} */
-            let pattern = '^' + this.getMetadata().get(['app', 'regExpPatterns', 'phoneNumberLoose', 'pattern']) + '$';
-            let regExp = new RegExp(pattern);
+            numberList.push(numberClean);
+        });
 
-            let numberList = [];
-            let notValid = false;
+        if (notValid) {
+            return true;
+        }
+    },
 
-            data.forEach((row, i) => {
-                let number = row.phoneNumber;
+    data: function () {
+        let phoneNumberData;
 
-                if (!regExp.test(number)) {
-                    notValid = true;
+        if (this.mode === this.MODE_EDIT) {
+            phoneNumberData = Espo.Utils.cloneDeep(this.model.get(this.dataFieldName));
 
-                    let msg = this.translate('fieldPhoneInvalidCharacters', 'messages')
-                        .replace('{field}', this.getLabelText());
+            if (this.model.isNew() || !this.model.get(this.name)) {
+                if (!phoneNumberData || !phoneNumberData.length) {
+                    let optOut;
 
-                    this.showValidationMessage(msg, 'div.phone-number-block:nth-child(' + (i + 1)
-                        .toString() + ') input.phone-number');
-                }
-
-                let numberClean = String(number).replace(/[\s\+]/g, '');
-
-                if (~numberList.indexOf(numberClean)) {
-                    let msg = this.translate('fieldValueDuplicate', 'messages')
-                        .replace('{field}', this.getLabelText());
-
-                    this.showValidationMessage(msg, 'div.phone-number-block:nth-child(' + (i + 1)
-                        .toString() + ') input.phone-number');
-
-                    notValid = true;
-
-                    return;
-                }
-
-                numberList.push(numberClean);
-            });
-
-            if (notValid) {
-                return true;
-            }
-        },
-
-        data: function () {
-            let phoneNumberData;
-
-            if (this.mode === this.MODE_EDIT) {
-                phoneNumberData = Espo.Utils.cloneDeep(this.model.get(this.dataFieldName));
-
-                if (this.model.isNew() || !this.model.get(this.name)) {
-                    if (!phoneNumberData || !phoneNumberData.length) {
-                        let optOut;
-
-                        if (this.model.isNew()) {
-                            optOut = this.phoneNumberOptedOutByDefault && this.model.name !== 'User';
-                        } else {
-                            optOut = this.model.get(this.isOptedOutFieldName)
-                        }
-
-                        phoneNumberData = [{
-                            phoneNumber: this.model.get(this.name) || '',
-                            primary: true,
-                            type: this.defaultType,
-                            optOut: optOut,
-                            invalid: false,
-                        }];
-                    }
-                }
-            } else {
-                phoneNumberData = this.model.get(this.dataFieldName) || false;
-            }
-
-            if (phoneNumberData) {
-                phoneNumberData = Espo.Utils.cloneDeep(phoneNumberData);
-
-                phoneNumberData.forEach((item) => {
-                    let number = item.phoneNumber || '';
-
-                    item.erased = number.indexOf(this.erasedPlaceholder) === 0;
-
-                    if (!item.erased) {
-                        item.valueForLink = number.replace(/ /g, '');
-                    }
-
-                    item.lineThrough = item.optOut || item.invalid || this.model.get('doNotCall');
-                });
-            }
-
-            if ((!phoneNumberData || phoneNumberData.length === 0) && this.model.get(this.name)) {
-                let number = this.model.get(this.name);
-
-                let o = {
-                    phoneNumber: number,
-                    primary: true,
-                    valueForLink: number.replace(/ /g, ''),
-                };
-
-                if (this.mode === 'edit' && this.model.isNew()) {
-                    o.type = this.defaultType;
-                }
-
-                phoneNumberData = [o];
-            }
-
-            let data = _.extend({
-                phoneNumberData: phoneNumberData,
-                doNotCall: this.model.get('doNotCall'),
-                lineThrough: this.model.get('doNotCall') || this.model.get(this.isOptedOutFieldName),
-            }, Dep.prototype.data.call(this));
-
-            if (this.isReadMode()) {
-                data.isOptedOut = this.model.get(this.isOptedOutFieldName);
-                data.isInvalid = this.model.get(this.isInvalidFieldName);
-
-                if (this.model.get(this.name)) {
-                    data.isErased = this.model.get(this.name).indexOf(this.erasedPlaceholder) === 0;
-
-                    if (!data.isErased) {
-                        data.valueForLink = this.model.get(this.name).replace(/ /g, '');
-                    }
-                }
-
-                data.valueIsSet = this.model.has(this.name);
-            }
-
-            data.itemMaxLength = this.itemMaxLength;
-
-            return data;
-        },
-
-        events: {
-            'click [data-action="switchPhoneProperty"]': function (e) {
-                let $target = $(e.currentTarget);
-                let $block = $(e.currentTarget).closest('div.phone-number-block');
-                let property = $target.data('property-type');
-
-                if (property === 'primary') {
-                    if (!$target.hasClass('active')) {
-                        if ($block.find('input.phone-number').val() !== '') {
-                            this.$el.find('button.phone-property[data-property-type="primary"]')
-                                .removeClass('active').children().addClass('text-muted');
-
-                            $target.addClass('active').children().removeClass('text-muted');
-                        }
-                    }
-                }
-                else {
-                    if ($target.hasClass('active')) {
-                        $target.removeClass('active').children().addClass('text-muted');
+                    if (this.model.isNew()) {
+                        optOut = this.phoneNumberOptedOutByDefault && this.model.name !== 'User';
                     } else {
+                        optOut = this.model.get(this.isOptedOutFieldName)
+                    }
+
+                    phoneNumberData = [{
+                        phoneNumber: this.model.get(this.name) || '',
+                        primary: true,
+                        type: this.defaultType,
+                        optOut: optOut,
+                        invalid: false,
+                    }];
+                }
+            }
+        } else {
+            phoneNumberData = this.model.get(this.dataFieldName) || false;
+        }
+
+        if (phoneNumberData) {
+            phoneNumberData = Espo.Utils.cloneDeep(phoneNumberData);
+
+            phoneNumberData.forEach((item) => {
+                let number = item.phoneNumber || '';
+
+                item.erased = number.indexOf(this.erasedPlaceholder) === 0;
+
+                if (!item.erased) {
+                    item.valueForLink = number.replace(/ /g, '');
+                }
+
+                item.lineThrough = item.optOut || item.invalid || this.model.get('doNotCall');
+            });
+        }
+
+        if ((!phoneNumberData || phoneNumberData.length === 0) && this.model.get(this.name)) {
+            let number = this.model.get(this.name);
+
+            let o = {
+                phoneNumber: number,
+                primary: true,
+                valueForLink: number.replace(/ /g, ''),
+            };
+
+            if (this.mode === 'edit' && this.model.isNew()) {
+                o.type = this.defaultType;
+            }
+
+            phoneNumberData = [o];
+        }
+
+        let data = _.extend({
+            phoneNumberData: phoneNumberData,
+            doNotCall: this.model.get('doNotCall'),
+            lineThrough: this.model.get('doNotCall') || this.model.get(this.isOptedOutFieldName),
+        }, Dep.prototype.data.call(this));
+
+        if (this.isReadMode()) {
+            data.isOptedOut = this.model.get(this.isOptedOutFieldName);
+            data.isInvalid = this.model.get(this.isInvalidFieldName);
+
+            if (this.model.get(this.name)) {
+                data.isErased = this.model.get(this.name).indexOf(this.erasedPlaceholder) === 0;
+
+                if (!data.isErased) {
+                    data.valueForLink = this.model.get(this.name).replace(/ /g, '');
+                }
+            }
+
+            data.valueIsSet = this.model.has(this.name);
+        }
+
+        data.itemMaxLength = this.itemMaxLength;
+
+        return data;
+    },
+
+    events: {
+        'click [data-action="switchPhoneProperty"]': function (e) {
+            let $target = $(e.currentTarget);
+            let $block = $(e.currentTarget).closest('div.phone-number-block');
+            let property = $target.data('property-type');
+
+            if (property === 'primary') {
+                if (!$target.hasClass('active')) {
+                    if ($block.find('input.phone-number').val() !== '') {
+                        this.$el.find('button.phone-property[data-property-type="primary"]')
+                            .removeClass('active').children().addClass('text-muted');
+
                         $target.addClass('active').children().removeClass('text-muted');
                     }
                 }
-
-                this.trigger('change');
-            },
-            'click [data-action="removePhoneNumber"]': function (e) {
-                let $block = $(e.currentTarget).closest('div.phone-number-block');
-
-                this.removePhoneNumber($block);
-
-                this.trigger('change');
-
-                let $last = this.$el.find('.phone-number').last();
-
-                if ($last.length) {
-                    $last[0].focus({preventScroll: true});
-                }
-            },
-            'change input.phone-number': function (e) {
-                let $input = $(e.currentTarget);
-                let $block = $input.closest('div.phone-number-block');
-
-                if (this._itemJustRemoved) {
-                    return;
-                }
-
-                if ($input.val() === '' && $block.length) {
-                    this.removePhoneNumber($block);
-                }
-                else {
-                    this.trigger('change');
-                }
-
-                this.manageAddButton();
-            },
-            'keypress input.phone-number': function (e) {
-                this.manageAddButton();
-            },
-            'paste input.phone-number': function () {
-                setTimeout(() => this.manageAddButton(), 10);
-            },
-            'click [data-action="addPhoneNumber"]': function () {
-                this.addPhoneNumber();
-            },
-            'keydown input.phone-number': function (e) {
-                let key = Espo.Utils.getKeyFromKeyEvent(e);
-
-                let $target = $(e.currentTarget);
-
-                if (key === 'Enter') {
-                    if (!this.$el.find('[data-action="addPhoneNumber"]').hasClass('disabled')) {
-                        this.addPhoneNumber();
-
-                        e.stopPropagation();
-                    }
-
-                    return;
-                }
-
-                if (key === 'Backspace' && $target.val() === '') {
-                    let $block = $target.closest('div.phone-number-block');
-
-                    this._itemJustRemoved = true;
-                    setTimeout(() => this._itemJustRemoved = false, 100);
-
-                    e.stopPropagation();
-
-                    this.removePhoneNumber($block);
-
-                    setTimeout(() => this.focusOnLast(true), 50);
-                }
-            },
-        },
-
-        focusOnLast: function (cursorAtEnd) {
-            let $item = this.$el.find('input.form-control').last();
-
-            $item.focus();
-
-            if (cursorAtEnd && $item[0]) {
-                $item[0].setSelectionRange($item[0].value.length, $item[0].value.length);
             }
-        },
-
-        removePhoneNumber: function ($block) {
-            if ($block.parent().children().length === 1) {
-                $block.find('input.phone-number').val('');
-            } else {
-                this.removePhoneNumberBlock($block);
+            else {
+                if ($target.hasClass('active')) {
+                    $target.removeClass('active').children().addClass('text-muted');
+                } else {
+                    $target.addClass('active').children().removeClass('text-muted');
+                }
             }
 
             this.trigger('change');
         },
+        'click [data-action="removePhoneNumber"]': function (e) {
+            let $block = $(e.currentTarget).closest('div.phone-number-block');
 
-        addPhoneNumber: function () {
-            let data = Espo.Utils.cloneDeep(this.fetchPhoneNumberData());
+            this.removePhoneNumber($block);
 
-            let o = {
-                phoneNumber: '',
-                primary: !data.length,
-                type: false,
-                optOut: this.emailAddressOptedOutByDefault,
-                invalid: false,
-            };
+            this.trigger('change');
 
-            data.push(o);
+            let $last = this.$el.find('.phone-number').last();
 
-            this.model.set(this.dataFieldName, data, {silent: true});
-
-            this.reRender()
-                .then(() => this.focusOnLast());
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            this.manageButtonsVisibility();
-            this.manageAddButton();
-
-            if (this.mode === this.MODE_EDIT) {
-                this.$el.find('select').toArray().forEach(selectElement => {
-                    Select.init($(selectElement));
-                });
+            if ($last.length) {
+                $last[0].focus({preventScroll: true});
             }
         },
+        'change input.phone-number': function (e) {
+            let $input = $(e.currentTarget);
+            let $block = $input.closest('div.phone-number-block');
 
-        removePhoneNumberBlock: function ($block) {
-            let changePrimary = false;
-
-            if ($block.find('button[data-property-type="primary"]').hasClass('active')) {
-                changePrimary = true;
+            if (this._itemJustRemoved) {
+                return;
             }
 
-            $block.remove();
-
-            if (changePrimary) {
-                this.$el.find('button[data-property-type="primary"]')
-                    .first()
-                    .addClass('active')
-                    .children()
-                    .removeClass('text-muted');
+            if ($input.val() === '' && $block.length) {
+                this.removePhoneNumber($block);
+            }
+            else {
+                this.trigger('change');
             }
 
-            this.manageButtonsVisibility();
             this.manageAddButton();
         },
+        'keypress input.phone-number': function (e) {
+            this.manageAddButton();
+        },
+        'paste input.phone-number': function () {
+            setTimeout(() => this.manageAddButton(), 10);
+        },
+        'click [data-action="addPhoneNumber"]': function () {
+            this.addPhoneNumber();
+        },
+        'keydown input.phone-number': function (e) {
+            let key = Espo.Utils.getKeyFromKeyEvent(e);
 
-        manageAddButton: function () {
-            let $input = this.$el.find('input.phone-number');
-            let c = 0;
+            let $target = $(e.currentTarget);
 
-            $input.each((i, input) => {
-                if (input.value !== '') {
-                    c++;
+            if (key === 'Enter') {
+                if (!this.$el.find('[data-action="addPhoneNumber"]').hasClass('disabled')) {
+                    this.addPhoneNumber();
+
+                    e.stopPropagation();
                 }
-            });
-
-            if (c === $input.length) {
-                this.$el.find('[data-action="addPhoneNumber"]')
-                    .removeClass('disabled')
-                    .removeAttr('disabled');
 
                 return;
             }
 
+            if (key === 'Backspace' && $target.val() === '') {
+                let $block = $target.closest('div.phone-number-block');
+
+                this._itemJustRemoved = true;
+                setTimeout(() => this._itemJustRemoved = false, 100);
+
+                e.stopPropagation();
+
+                this.removePhoneNumber($block);
+
+                setTimeout(() => this.focusOnLast(true), 50);
+            }
+        },
+    },
+
+    focusOnLast: function (cursorAtEnd) {
+        let $item = this.$el.find('input.form-control').last();
+
+        $item.focus();
+
+        if (cursorAtEnd && $item[0]) {
+            $item[0].setSelectionRange($item[0].value.length, $item[0].value.length);
+        }
+    },
+
+    removePhoneNumber: function ($block) {
+        if ($block.parent().children().length === 1) {
+            $block.find('input.phone-number').val('');
+        } else {
+            this.removePhoneNumberBlock($block);
+        }
+
+        this.trigger('change');
+    },
+
+    addPhoneNumber: function () {
+        let data = Espo.Utils.cloneDeep(this.fetchPhoneNumberData());
+
+        let o = {
+            phoneNumber: '',
+            primary: !data.length,
+            type: false,
+            optOut: this.emailAddressOptedOutByDefault,
+            invalid: false,
+        };
+
+        data.push(o);
+
+        this.model.set(this.dataFieldName, data, {silent: true});
+
+        this.reRender()
+            .then(() => this.focusOnLast());
+    },
+
+    afterRender: function () {
+        Dep.prototype.afterRender.call(this);
+
+        this.manageButtonsVisibility();
+        this.manageAddButton();
+
+        if (this.mode === this.MODE_EDIT) {
+            this.$el.find('select').toArray().forEach(selectElement => {
+                Select.init($(selectElement));
+            });
+        }
+    },
+
+    removePhoneNumberBlock: function ($block) {
+        let changePrimary = false;
+
+        if ($block.find('button[data-property-type="primary"]').hasClass('active')) {
+            changePrimary = true;
+        }
+
+        $block.remove();
+
+        if (changePrimary) {
+            this.$el.find('button[data-property-type="primary"]')
+                .first()
+                .addClass('active')
+                .children()
+                .removeClass('text-muted');
+        }
+
+        this.manageButtonsVisibility();
+        this.manageAddButton();
+    },
+
+    manageAddButton: function () {
+        let $input = this.$el.find('input.phone-number');
+        let c = 0;
+
+        $input.each((i, input) => {
+            if (input.value !== '') {
+                c++;
+            }
+        });
+
+        if (c === $input.length) {
             this.$el.find('[data-action="addPhoneNumber"]')
-                .addClass('disabled')
-                .attr('disabled', 'disabled');
-        },
+                .removeClass('disabled')
+                .removeAttr('disabled');
 
-        manageButtonsVisibility: function () {
-            let $primary = this.$el.find('button[data-property-type="primary"]');
-            let $remove = this.$el.find('button[data-action="removePhoneNumber"]');
-            let $container = this.$el.find('.phone-number-block-container');
+            return;
+        }
 
-            if ($primary.length > 1) {
-                $primary.removeClass('hidden');
-                $remove.removeClass('hidden');
-                $container.addClass('many')
+        this.$el.find('[data-action="addPhoneNumber"]')
+            .addClass('disabled')
+            .attr('disabled', 'disabled');
+    },
 
-                return;
-            }
+    manageButtonsVisibility: function () {
+        let $primary = this.$el.find('button[data-property-type="primary"]');
+        let $remove = this.$el.find('button[data-action="removePhoneNumber"]');
+        let $container = this.$el.find('.phone-number-block-container');
 
-            $container.removeClass('many')
-            $primary.addClass('hidden');
-            $remove.addClass('hidden');
-        },
+        if ($primary.length > 1) {
+            $primary.removeClass('hidden');
+            $remove.removeClass('hidden');
+            $container.addClass('many')
 
-        setup: function () {
-            this.dataFieldName = this.name + 'Data';
-            this.defaultType = this.defaultType ||
-                this.getMetadata()
-                    .get('entityDefs.' + this.model.name + '.fields.' + this.name + '.defaultType');
+            return;
+        }
 
-            this.isOptedOutFieldName = this.name + 'IsOptedOut';
-            this.isInvalidFieldName = this.name + 'IsInvalid';
+        $container.removeClass('many')
+        $primary.addClass('hidden');
+        $remove.addClass('hidden');
+    },
 
-            this.phoneNumberOptedOutByDefault = this.getConfig().get('phoneNumberIsOptedOutByDefault');
+    setup: function () {
+        this.dataFieldName = this.name + 'Data';
+        this.defaultType = this.defaultType ||
+            this.getMetadata()
+                .get('entityDefs.' + this.model.name + '.fields.' + this.name + '.defaultType');
 
-            if (this.model.has('doNotCall')) {
-                this.listenTo(this.model, 'change:doNotCall', (model, value, o) => {
-                    if (this.mode !== 'detail' && this.mode !== 'list') {
-                        return;
-                    }
+        this.isOptedOutFieldName = this.name + 'IsOptedOut';
+        this.isInvalidFieldName = this.name + 'IsInvalid';
 
-                    if (!o.ui) {
-                        return;
-                    }
+        this.phoneNumberOptedOutByDefault = this.getConfig().get('phoneNumberIsOptedOutByDefault');
 
-                    this.reRender();
-                });
-            }
-
-            this.erasedPlaceholder = 'ERASED:';
-
-            this.itemMaxLength = this.getMetadata()
-                .get(['entityDefs', 'PhoneNumber', 'fields', 'name', 'maxLength']);
-        },
-
-        fetchPhoneNumberData: function () {
-            let data = [];
-
-            let $list = this.$el.find('div.phone-number-block');
-
-            if ($list.length) {
-                $list.each((i, d) => {
-                    let row = {};
-                    let $d = $(d);
-
-                    row.phoneNumber = $d.find('input.phone-number').val().trim();
-
-                    if (row.phoneNumber === '') {
-                        return;
-                    }
-
-                    row.primary = $d.find('button[data-property-type="primary"]').hasClass('active');
-                    row.type = $d.find('select[data-property-type="type"]').val();
-                    row.optOut = $d.find('button[data-property-type="optOut"]').hasClass('active');
-                    row.invalid = $d.find('button[data-property-type="invalid"]').hasClass('active');
-
-                    data.push(row);
-                });
-            }
-
-            return data;
-        },
-
-        fetch: function () {
-            let data = {};
-
-            let addressData = this.fetchPhoneNumberData() || [];
-
-            data[this.dataFieldName] = addressData;
-            data[this.name] = null;
-            data[this.isOptedOutFieldName] = false;
-            data[this.isInvalidFieldName] = false;
-
-            let primaryIndex = 0;
-
-            addressData.forEach((item, i) => {
-                if (item.primary) {
-                    primaryIndex = i;
-
-                    if (item.optOut) {
-                        data[this.isOptedOutFieldName] = true;
-                    }
-
-                    if (item.invalid) {
-                        data[this.isInvalidFieldName] = true;
-                    }
+        if (this.model.has('doNotCall')) {
+            this.listenTo(this.model, 'change:doNotCall', (model, value, o) => {
+                if (this.mode !== 'detail' && this.mode !== 'list') {
+                    return;
                 }
+
+                if (!o.ui) {
+                    return;
+                }
+
+                this.reRender();
             });
+        }
 
-            if (addressData.length && primaryIndex > 0) {
-                let t = addressData[0];
+        this.erasedPlaceholder = 'ERASED:';
 
-                addressData[0] = addressData[primaryIndex];
-                addressData[primaryIndex] = t;
+        this.itemMaxLength = this.getMetadata()
+            .get(['entityDefs', 'PhoneNumber', 'fields', 'name', 'maxLength']);
+    },
+
+    fetchPhoneNumberData: function () {
+        let data = [];
+
+        let $list = this.$el.find('div.phone-number-block');
+
+        if ($list.length) {
+            $list.each((i, d) => {
+                let row = {};
+                let $d = $(d);
+
+                row.phoneNumber = $d.find('input.phone-number').val().trim();
+
+                if (row.phoneNumber === '') {
+                    return;
+                }
+
+                row.primary = $d.find('button[data-property-type="primary"]').hasClass('active');
+                row.type = $d.find('select[data-property-type="type"]').val();
+                row.optOut = $d.find('button[data-property-type="optOut"]').hasClass('active');
+                row.invalid = $d.find('button[data-property-type="invalid"]').hasClass('active');
+
+                data.push(row);
+            });
+        }
+
+        return data;
+    },
+
+    fetch: function () {
+        let data = {};
+
+        let addressData = this.fetchPhoneNumberData() || [];
+
+        data[this.dataFieldName] = addressData;
+        data[this.name] = null;
+        data[this.isOptedOutFieldName] = false;
+        data[this.isInvalidFieldName] = false;
+
+        let primaryIndex = 0;
+
+        addressData.forEach((item, i) => {
+            if (item.primary) {
+                primaryIndex = i;
+
+                if (item.optOut) {
+                    data[this.isOptedOutFieldName] = true;
+                }
+
+                if (item.invalid) {
+                    data[this.isInvalidFieldName] = true;
+                }
             }
+        });
 
-            if (addressData.length) {
-                data[this.name] = addressData[0].phoneNumber;
-            } else {
-                data[this.isOptedOutFieldName] = null;
-                data[this.isInvalidFieldName] = null;
-            }
+        if (addressData.length && primaryIndex > 0) {
+            let t = addressData[0];
 
-            return data;
-        },
-    });
+            addressData[0] = addressData[primaryIndex];
+            addressData[primaryIndex] = t;
+        }
+
+        if (addressData.length) {
+            data[this.name] = addressData[0].phoneNumber;
+        } else {
+            data[this.isOptedOutFieldName] = null;
+            data[this.isInvalidFieldName] = null;
+        }
+
+        return data;
+    },
 });

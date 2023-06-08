@@ -26,78 +26,71 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
- define('collection-factory', [], function () {
+/** @module collection-factory */
+
+/**
+ * A collection factory.
+ */
+class Class {
+    /**
+     * @param {module:model-factory} modelFactory
+     * @param {module:models/settings} config
+     * @param {module:metadata} metadata
+     */
+    constructor(modelFactory, config, metadata) {
+        /** @private */
+        this.modelFactory = modelFactory;
+        /** @private */
+        this.metadata = metadata;
+        /** @private */
+        this.recordListMaxSizeLimit = config.get('recordListMaxSizeLimit') || 200;
+    }
 
     /**
-     * A collection factory.
+     * Create a collection.
      *
-     * @class
-     * @name Class
-     * @memberOf module:collection-factory
+     * @param {string} entityType An entity type.
+     * @param {Function} [callback] Deprecated.
+     * @param {Object} [context] Deprecated.
+     * @returns {Promise<module:collection>}
      */
-    let CollectionFactory = function (modelFactory, config) {
-        this.modelFactory = modelFactory;
-        this.config = config;
-    };
+    create(entityType, callback, context) {
+        return new Promise(resolve => {
+            context = context || this;
 
-    _.extend(CollectionFactory.prototype, /** @lends module:collection-factory.Class# */ {
+            this.modelFactory.getSeed(entityType, Model => {
+                let orderBy = this.modelFactory.metadata
+                    .get(['entityDefs', entityType, 'collection', 'orderBy']);
 
-        /**
-         * @private
-         */
-        modelFactory: null,
+                let order = this.modelFactory.metadata
+                    .get(['entityDefs', entityType, 'collection', 'order']);
 
-        /**
-         * @private
-         */
-        recordListMaxSizeLimit: 200,
+                let className = this.modelFactory.metadata
+                    .get(['clientDefs', entityType, 'collection']) || 'collection';
 
-        /**
-         * Create a collection.
-         *
-         * @param {string} name An entity type.
-         * @param {Function} [callback] Deprecated.
-         * @param {Object} [context] Deprecated.
-         * @returns {Promise<module:collection.Class>}
-         */
-        create: function (name, callback, context) {
-            return new Promise(resolve => {
-                context = context || this;
+                let defs = this.metadata.get(['entityDefs', entityType]) || {};
 
-                this.modelFactory.getSeed(name, seed => {
-                    let orderBy = this.modelFactory.metadata
-                        .get(['entityDefs', name, 'collection', 'orderBy']);
-
-                    let order = this.modelFactory.metadata
-                        .get(['entityDefs', name, 'collection', 'order']);
-
-                    let className = this.modelFactory.metadata
-                        .get(['clientDefs', name, 'collection']) || 'collection';
-
-                    require(className, collectionClass => {
-                        let collection = new collectionClass(null, {
-                            name: name,
-                            orderBy: orderBy,
-                            order: order,
-                        });
-
-                        collection.model = seed;
-                        collection._user = this.modelFactory.user;
-                        collection.entityType = name;
-
-                        collection.maxMaxSize = this.config.get('recordListMaxSizeLimit') ||
-                            this.recordListMaxSizeLimit;
-
-                        if (callback) {
-                            callback.call(context, collection);
-                        }
-
-                        resolve(collection);
+                Espo.loader.require(className, Collection => {
+                    let collection = new Collection(null, {
+                        name: entityType,
+                        orderBy: orderBy,
+                        order: order,
+                        defs: defs,
                     });
+
+                    collection.model = Model;
+                    collection.entityType = entityType;
+                    collection.maxMaxSize = this.recordListMaxSizeLimit;
+
+                    if (callback) {
+                        callback.call(context, collection);
+                    }
+
+                    resolve(collection);
                 });
             });
-        },
-    });
+        });
+    }
+}
 
-    return CollectionFactory;
-});
+export default Class;

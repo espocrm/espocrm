@@ -26,153 +26,147 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('pre-loader', [], function () {
+/**
+ * A pre-loader.
+ *
+ * Not used.
+ *
+ * @class
+ * @param {module:cache} cache A cache.
+ * @param {Bull.Factory} viewFactory A view factory.
+ * @param {string} [basePath] A base path.
+ */
+const PreLoader = function (cache, viewFactory, basePath) {
+    /**
+     * @private
+     * @type {module:cache}
+     */
+    this.cache = cache;
 
     /**
-     * A pre-loader.
-     *
-     * Not used. Maybe utilize for post-loading additional resources in idle, after the page is fully rendered.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:pre-loader
-     *
-     * @param {module:cache.Class} cache A cache.
-     * @param {Bull.Factory} viewFactory A view factory.
-     * @param {string} [basePath] A base path.
+     * @private
+     * @type {Bull.Factory}
      */
-    let PreLoader = function (cache, viewFactory, basePath) {
-        /**
-         * @private
-         * @type {module:cache.Class}
-         */
-        this.cache = cache;
+    this.viewFactory = viewFactory;
 
-        /**
-         * @private
-         * @type {Bull.Factory}
-         */
-        this.viewFactory = viewFactory;
+    /**
+     * @private
+     * @type {string}
+     */
+    this.basePath = basePath || '';
+};
 
-        /**
-         * @private
-         * @type {string}
-         */
-        this.basePath = basePath || '';
-    };
+_.extend(PreLoader.prototype, /** @lends PreLoader# */{
 
-    _.extend(PreLoader.prototype, /** @lends module:pre-loader.Class# */{
+    /**
+     * @private
+     * @type {string}
+     */
+    configUrl: 'client/cfg/pre-load.json',
 
-        /**
-         * @private
-         * @type {string}
-         */
-        configUrl: 'client/cfg/pre-load.json',
+    /**
+     * Load.
+     *
+     * @param {Function} callback A callback.
+     * @param {module:app} app An application instance.
+     */
+    load: function (callback, app) {
+        let bar = $(
+            '<div class="progress pre-loading">' +
+            '<div class="progress-bar" id="loading-progress-bar" role="progressbar" ' +
+            'aria-valuenow="0" style="width: 0"></div></div>'
+        ).prependTo('body');
 
-        /**
-         * Load.
-         *
-         * @param {Function} callback A callback.
-         * @param {module:app.Class} app An application instance.
-         */
-        load: function (callback, app) {
-            let bar = $(
-                '<div class="progress pre-loading">' +
-                '<div class="progress-bar" id="loading-progress-bar" role="progressbar" ' +
-                'aria-valuenow="0" style="width: 0%;"></div></div>'
-            ).prependTo('body');
+        bar = bar.children();
 
-            bar = bar.children();
+        bar.css({
+            'transition': 'width .1s linear',
+            '-webkit-transition': 'width .1s linear'
+        });
 
-            bar.css({
-                'transition': 'width .1s linear',
-                '-webkit-transition': 'width .1s linear'
+        let count = 0;
+        let countLoaded = 0;
+        let classesLoaded = 0;
+        let layoutTypesLoaded = 0;
+        let templatesLoaded = 0;
+
+        let updateBar = () => {
+            let percents = countLoaded / count * 100;
+
+            bar.css('width', percents + '%').attr('aria-valuenow', percents);
+        };
+
+        let checkIfReady = () => {
+            if (countLoaded >= count) {
+                clearInterval(timer);
+                callback.call(app, app);
+            }
+        };
+
+        let timer = setInterval(checkIfReady, 100);
+
+        let load = (data) => {
+            data.classes = data.classes || [];
+            data.templates = data.templates || [];
+            data.layoutTypes = data.layoutTypes || [];
+
+            let d = [];
+
+            data.classes.forEach(item => {
+                if (item !== 'views/fields/enum') {
+                    d.push(item); // TODO remove this hack
+                }
             });
 
-            let count = 0;
-            let countLoaded = 0;
-            let classesLoaded = 0;
-            let layoutTypesLoaded = 0;
-            let templatesLoaded = 0;
+            data.classes = d;
 
-            let updateBar = () => {
-                let percents = countLoaded / count * 100;
+            count = data.templates.length + data.layoutTypes.length+ data.classes.length;
 
-                bar.css('width', percents + '%').attr('aria-valuenow', percents);
-            };
+            let loadTemplates = () => {
+                data.templates.forEach(name =>  {
+                    this.viewFactory._loader.load('template', name, () => {
+                        templatesLoaded++;
+                        countLoaded++;
 
-            let checkIfReady = () => {
-                if (countLoaded >= count) {
-                    clearInterval(timer);
-                    callback.call(app, app);
-                }
-            };
-
-            let timer = setInterval(checkIfReady, 100);
-
-            let load = (data) => {
-                data.classes = data.classes || [];
-                data.templates = data.templates || [];
-                data.layoutTypes = data.layoutTypes || [];
-
-                let d = [];
-
-                data.classes.forEach(item => {
-                    if (item !== 'views/fields/enum') {
-                        d.push(item); // TODO remove this hack
-                    }
+                        updateBar();
+                    });
                 });
-
-                data.classes = d;
-
-                count = data.templates.length + data.layoutTypes.length+ data.classes.length;
-
-                let loadTemplates = () => {
-                    data.templates.forEach(name =>  {
-                        this.viewFactory._loader.load('template', name, () => {
-                            templatesLoaded++;
-                            countLoaded++;
-
-                            updateBar();
-                        });
-                    });
-                };
-
-                let loadLayoutTypes = () => {
-                    data.layoutTypes.forEach(name => {
-                        this.viewFactory._loader.load('layoutTemplate', name, () => {
-                            layoutTypesLoaded++;
-                            countLoaded++;
-
-                            updateBar();
-                        });
-                    });
-                };
-
-                let loadClasses = () => {
-                    data.classes.forEach(name => {
-                        Espo.loader.require(name, () => {
-                            classesLoaded++;
-                            countLoaded++;
-
-                            updateBar();
-                        });
-                    });
-                };
-
-                loadTemplates();
-                loadLayoutTypes();
-                loadClasses();
             };
 
-            Espo.Ajax
-                .getRequest(this.basePath + this.configUrl, null, {
-                    dataType: 'json',
-                    local: true,
-                })
-                .then(data => load(data));
-        }
-    });
+            let loadLayoutTypes = () => {
+                data.layoutTypes.forEach(name => {
+                    this.viewFactory._loader.load('layoutTemplate', name, () => {
+                        layoutTypesLoaded++;
+                        countLoaded++;
 
-    return PreLoader;
+                        updateBar();
+                    });
+                });
+            };
+
+            let loadClasses = () => {
+                data.classes.forEach(name => {
+                    Espo.loader.require(name, () => {
+                        classesLoaded++;
+                        countLoaded++;
+
+                        updateBar();
+                    });
+                });
+            };
+
+            loadTemplates();
+            loadLayoutTypes();
+            loadClasses();
+        };
+
+        Espo.Ajax
+            .getRequest(this.basePath + this.configUrl, null, {
+                dataType: 'json',
+                local: true,
+            })
+            .then(data => load(data));
+    }
 });
+
+export default PreLoader;

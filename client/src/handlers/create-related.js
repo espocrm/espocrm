@@ -39,7 +39,7 @@ define('handlers/create-related', [], () => {
     class Class {
 
         /**
-         * @param {module:view-helper.Class} viewHelper
+         * @param {module:view-helper} viewHelper
          */
         constructor(viewHelper) {
             this.viewHelper = viewHelper;
@@ -49,7 +49,7 @@ define('handlers/create-related', [], () => {
          * Get attributes for a new record.
          *
          * @abstract
-         * @param {module:model.Class} model A model.
+         * @param {module:model} model A model.
          * @return {Promise<Object.<string, *>>} Attributes.
          */
         getAttributes(model) {

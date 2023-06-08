@@ -26,281 +26,285 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (Dep, moment) {
+/** @module views/fields/datetime */
 
-    /**
-     * A date-time field.
-     * @class
-     * @name Class
-     * @extends module:views/fields/date.Class
-     * @memberOf module:views/fields/datetime
-     */
-    return Dep.extend(/** @lends module:views/fields/datetime.Class# */{
+import Dep from 'views/fields/date';
+import moment from 'lib!moment';
 
-        type: 'datetime',
+/**
+ * A date-time field.
+ *
+ * @class
+ * @name Class
+ * @extends module:views/fields/date
+ */
+export default Dep.extend(/** @lends Class# */{
 
-        editTemplate: 'fields/datetime/edit',
+    type: 'datetime',
 
-        validations: ['required', 'datetime', 'after', 'before'],
+    editTemplate: 'fields/datetime/edit',
 
-        searchTypeList: [
-            'lastSevenDays',
-            'ever',
-            'isEmpty',
-            'currentMonth',
-            'lastMonth',
-            'nextMonth',
-            'currentQuarter',
-            'lastQuarter',
-            'currentYear',
-            'lastYear',
-            'today',
-            'past',
-            'future',
-            'lastXDays',
-            'nextXDays',
-            'olderThanXDays',
-            'afterXDays',
-            'on',
-            'after',
-            'before',
-            'between',
-        ],
+    validations: ['required', 'datetime', 'after', 'before'],
 
-        timeFormatMap: {
-            'HH:mm': 'H:i',
-            'hh:mm A': 'h:i A',
-            'hh:mm a': 'h:i a',
-            'hh:mmA': 'h:iA',
-            'hh:mma': 'h:ia',
-        },
+    searchTypeList: [
+        'lastSevenDays',
+        'ever',
+        'isEmpty',
+        'currentMonth',
+        'lastMonth',
+        'nextMonth',
+        'currentQuarter',
+        'lastQuarter',
+        'currentYear',
+        'lastYear',
+        'today',
+        'past',
+        'future',
+        'lastXDays',
+        'nextXDays',
+        'olderThanXDays',
+        'afterXDays',
+        'on',
+        'after',
+        'before',
+        'between',
+    ],
 
-        data: function () {
-            let data = Dep.prototype.data.call(this);
+    timeFormatMap: {
+        'HH:mm': 'H:i',
+        'hh:mm A': 'h:i A',
+        'hh:mm a': 'h:i a',
+        'hh:mmA': 'h:iA',
+        'hh:mma': 'h:ia',
+    },
 
-            data.date = data.time = '';
+    data: function () {
+        let data = Dep.prototype.data.call(this);
 
-            let value = this.getDateTime().toDisplay(this.model.get(this.name));
+        data.date = data.time = '';
 
-            if (value) {
-                let pair = this.splitDatetime(value);
+        let value = this.getDateTime().toDisplay(this.model.get(this.name));
 
-                data.date = pair[0];
-                data.time = pair[1];
-            }
+        if (value) {
+            let pair = this.splitDatetime(value);
 
-            return data;
-        },
+            data.date = pair[0];
+            data.time = pair[1];
+        }
 
-        getDateStringValue: function () {
-            if (this.mode === this.MODE_DETAIL && !this.model.has(this.name)) {
-                return -1;
-            }
+        return data;
+    },
 
-            let value = this.model.get(this.name);
+    getDateStringValue: function () {
+        if (this.mode === this.MODE_DETAIL && !this.model.has(this.name)) {
+            return -1;
+        }
 
-            if (!value) {
-                if (
-                    this.mode === this.MODE_EDIT |
-                    this.mode === this.MODE_SEARCH |
-                    this.mode === this.MODE_LIST ||
-                    this.mode === this.MODE_LIST_LINK
-                ) {
-                    return '';
-                }
+        let value = this.model.get(this.name);
 
-                return null;
-            }
-
+        if (!value) {
             if (
+                this.mode === this.MODE_EDIT |
+                this.mode === this.MODE_SEARCH |
                 this.mode === this.MODE_LIST ||
-                this.mode === this.MODE_DETAIL ||
                 this.mode === this.MODE_LIST_LINK
             ) {
-                if (this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat) {
-                    return this.getDateTime().toDisplayDateTime(value);
-                }
-
-                let timeFormat = this.getDateTime().timeFormat;
-
-                if (this.params.hasSeconds) {
-                    timeFormat = timeFormat.replace(/:mm/, ':mm:ss');
-                }
-
-                let d = this.getDateTime().toMoment(value);
-                let now = moment().tz(this.getDateTime().timeZone || 'UTC');
-                let dt = now.clone().startOf('day');
-
-                let ranges = {
-                    'today': [dt.unix(), dt.add(1, 'days').unix()],
-                    'tomorrow': [dt.unix(), dt.add(1, 'days').unix()],
-                    'yesterday': [dt.add(-3, 'days').unix(), dt.add(1, 'days').unix()]
-                };
-
-                if (d.unix() > ranges['today'][0] && d.unix() < ranges['today'][1]) {
-                    return this.translate('Today') + ' ' + d.format(timeFormat);
-                }
-                else if (d.unix() > ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
-                    return this.translate('Tomorrow') + ' ' + d.format(timeFormat);
-                }
-                else if (d.unix() > ranges['yesterday'][0] && d.unix() < ranges['yesterday'][1]) {
-                    return this.translate('Yesterday') + ' ' + d.format(timeFormat);
-                }
-
-                let readableFormat = this.getDateTime().getReadableDateFormat();
-
-                if (d.format('YYYY') === now.format('YYYY')) {
-                    return d.format(readableFormat) + ' ' + d.format(timeFormat);
-                }
-                else {
-                    return d.format(readableFormat + ', YYYY') + ' ' + d.format(timeFormat);
-                }
+                return '';
             }
 
-            return this.getDateTime().toDisplay(value);
-        },
+            return null;
+        }
 
-        initTimepicker: function () {
-            let $time = this.$time;
+        if (
+            this.mode === this.MODE_LIST ||
+            this.mode === this.MODE_DETAIL ||
+            this.mode === this.MODE_LIST_LINK
+        ) {
+            if (this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat) {
+                return this.getDateTime().toDisplay(value);
+            }
 
-            $time.timepicker({
-                step: this.params.minuteStep || 30,
-                scrollDefaultNow: true,
-                timeFormat: this.timeFormatMap[this.getDateTime().timeFormat],
+            let timeFormat = this.getDateTime().timeFormat;
+
+            if (this.params.hasSeconds) {
+                timeFormat = timeFormat.replace(/:mm/, ':mm:ss');
+            }
+
+            let d = this.getDateTime().toMoment(value);
+            let now = moment().tz(this.getDateTime().timeZone || 'UTC');
+            let dt = now.clone().startOf('day');
+
+            let ranges = {
+                'today': [dt.unix(), dt.add(1, 'days').unix()],
+                'tomorrow': [dt.unix(), dt.add(1, 'days').unix()],
+                'yesterday': [dt.add(-3, 'days').unix(), dt.add(1, 'days').unix()]
+            };
+
+            if (d.unix() > ranges['today'][0] && d.unix() < ranges['today'][1]) {
+                return this.translate('Today') + ' ' + d.format(timeFormat);
+            }
+            else if (d.unix() > ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
+                return this.translate('Tomorrow') + ' ' + d.format(timeFormat);
+            }
+            else if (d.unix() > ranges['yesterday'][0] && d.unix() < ranges['yesterday'][1]) {
+                return this.translate('Yesterday') + ' ' + d.format(timeFormat);
+            }
+
+            let readableFormat = this.getDateTime().getReadableDateFormat();
+
+            if (d.format('YYYY') === now.format('YYYY')) {
+                return d.format(readableFormat) + ' ' + d.format(timeFormat);
+            }
+            else {
+                return d.format(readableFormat + ', YYYY') + ' ' + d.format(timeFormat);
+            }
+        }
+
+        return this.getDateTime().toDisplay(value);
+    },
+
+    initTimepicker: function () {
+        let $time = this.$time;
+
+        $time.timepicker({
+            step: this.params.minuteStep || 30,
+            scrollDefaultNow: true,
+            timeFormat: this.timeFormatMap[this.getDateTime().timeFormat],
+        });
+
+        $time
+            .parent()
+            .find('button.time-picker-btn')
+            .on('click', () => {
+                $time.timepicker('show');
             });
+    },
 
-            $time
-                .parent()
-                .find('button.time-picker-btn')
-                .on('click', () => {
-                    $time.timepicker('show');
-                });
-        },
+    setDefaultTime: function () {
+        let dtString = moment('2014-01-01 00:00').format(this.getDateTime().getDateTimeFormat()) || '';
 
-        setDefaultTime: function () {
-            let dtString = moment('2014-01-01 00:00').format(this.getDateTime().getDateTimeFormat()) || '';
+        let pair = this.splitDatetime(dtString);
 
-            let pair = this.splitDatetime(dtString);
+        if (pair.length === 2) {
+            this.$time.val(pair[1]);
+        }
+    },
 
-            if (pair.length === 2) {
-                this.$time.val(pair[1]);
+    splitDatetime: function (value) {
+        let m = moment(value, this.getDateTime().getDateTimeFormat());
+
+        let dateValue = m.format(this.getDateTime().getDateFormat());
+        let timeValue = value.substr(dateValue.length + 1);
+
+        return [dateValue, timeValue];
+    },
+
+    setup: function () {
+        Dep.prototype.setup.call(this);
+
+        this.on('remove', () => this.destroyTimepicker());
+        this.on('mode-changed', () => this.destroyTimepicker());
+    },
+
+    destroyTimepicker: function () {
+        if (this.$time && this.$time[0]) {
+            this.$time.timepicker('remove');
+        }
+    },
+
+    afterRender: function () {
+        Dep.prototype.afterRender.call(this);
+
+        if (this.mode !== this.MODE_EDIT) {
+            return;
+        }
+
+        this.$date = this.$element;
+        let $time = this.$time = this.$el.find('input.time-part');
+
+        this.initTimepicker();
+
+        this.$element.on('change.datetime', () => {
+            if (this.$element.val() && !$time.val()) {
+                this.setDefaultTime();
+                this.trigger('change');
             }
-        },
+        });
 
-        splitDatetime: function (value) {
-            let m = moment(value, this.getDateTime().getDateTimeFormat());
+        let timeout = false;
+        let isTimeFormatError = false;
+        let previousValue = $time.val();
 
-            let dateValue = m.format(this.getDateTime().getDateFormat());
-            let timeValue = value.substr(dateValue.length + 1);
+        $time.on('change', () => {
+            if (!timeout) {
+                if (isTimeFormatError) {
+                    $time.val(previousValue);
 
-            return [dateValue, timeValue];
-        },
+                    return;
+                }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+                if (this.noneOption && $time.val() === '' && this.$date.val() !== '') {
+                    $time.val(this.noneOption);
 
-            this.on('remove', () => this.destroyTimepicker());
-            this.on('mode-changed', () => this.destroyTimepicker());
-        },
+                    return;
+                }
 
-        destroyTimepicker: function () {
-            if (this.$time && this.$time[0]) {
-                this.$time.timepicker('remove');
-            }
-        },
+                this.trigger('change');
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.mode === this.MODE_EDIT) {
-                this.$date = this.$element;
-                let $time = this.$time = this.$el.find('input.time-part');
-
-                this.initTimepicker();
-
-                this.$element.on('change.datetime', (e) => {
-                    if (this.$element.val() && !$time.val()) {
-                        this.setDefaultTime();
-                        this.trigger('change');
-                    }
-                });
-
-                let timeout = false;
-                let isTimeFormatError = false;
-                let previousValue = $time.val();
-
-                $time.on('change', (e) => {
-                    if (!timeout) {
-                        if (isTimeFormatError) {
-                            $time.val(previousValue);
-
-                            return;
-                        }
-
-                        if (this.noneOption && $time.val() === '' && this.$date.val() !== '') {
-                            $time.val(this.noneOption);
-
-                            return;
-                        }
-
-                        this.trigger('change');
-
-                        previousValue = $time.val();
-                    }
-
-                    timeout = true;
-
-                    setTimeout(() => timeout = false, 100);
-                });
-
-                $time.on('timeFormatError', () => {
-                    isTimeFormatError = true;
-
-                    setTimeout(() => isTimeFormatError = false, 50);
-                });
-            }
-        },
-
-        parse: function (string) {
-            return this.getDateTime().fromDisplay(string);
-        },
-
-        fetch: function () {
-            let data = {};
-
-            let date = this.$date.val();
-            let time = this.$time.val();
-
-            let value = null;
-
-            if (date !== '' && time !== '') {
-                value = this.parse(date + ' ' + time);
+                previousValue = $time.val();
             }
 
-            data[this.name] = value;
+            timeout = true;
 
-            return data;
-        },
+            setTimeout(() => timeout = false, 100);
+        });
 
-        validateDatetime: function () {
-            if (this.model.get(this.name) === -1) {
-                let msg = this.translate('fieldShouldBeDatetime', 'messages')
-                    .replace('{field}', this.getLabelText());
+        $time.on('timeFormatError', () => {
+            isTimeFormatError = true;
 
-                this.showValidationMessage(msg);
+            setTimeout(() => isTimeFormatError = false, 50);
+        });
+    },
 
-                return true;
-            }
-        },
+    parse: function (string) {
+        return this.getDateTime().fromDisplay(string);
+    },
 
-        fetchSearch: function () {
-            let data = Dep.prototype.fetchSearch.call(this);
+    fetch: function () {
+        let data = {};
 
-            if (data) {
-                data.dateTime = true;
-            }
+        let date = this.$date.val();
+        let time = this.$time.val();
 
-            return data;
-        },
-    });
+        let value = null;
+
+        if (date !== '' && time !== '') {
+            value = this.parse(date + ' ' + time);
+        }
+
+        data[this.name] = value;
+
+        return data;
+    },
+
+    validateDatetime: function () {
+        if (this.model.get(this.name) === -1) {
+            let msg = this.translate('fieldShouldBeDatetime', 'messages')
+                .replace('{field}', this.getLabelText());
+
+            this.showValidationMessage(msg);
+
+            return true;
+        }
+    },
+
+    fetchSearch: function () {
+        let data = Dep.prototype.fetchSearch.call(this);
+
+        if (data) {
+            data.dateTime = true;
+        }
+
+        return data;
+    },
 });

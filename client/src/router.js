@@ -26,566 +26,569 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('router', [], function () {
+/** @module router */
+
+import Backbone from 'lib!backbone';
+
+/**
+ * On route.
+ *
+ * @event Backbone.Router#route
+ * @param {string} name A route name.
+ * @param {any[]} args Arguments.
+ */
+
+/**
+ * After dispatch.
+ *
+ * @event module:router#routed
+ * @param {{
+ *   controller: string,
+ *   action:string,
+ *   options: Object.<string,*>,
+ * }} data A route data.
+ */
+
+/**
+ * Subscribe.
+ *
+ * @function on
+ * @memberof module:router#
+ * @param {string} event An event.
+ * @param {function(*): void} callback A callback.
+ */
+
+/**
+ * Subscribe once.
+ *
+ * @function once
+ * @memberof module:router#
+ * @param {string} event An event.
+ * @param {function(): void} callback A callback.
+ */
+
+/**
+ * Unsubscribe.
+ *
+ * @function off
+ * @memberof module:router#
+ * @param {string} event An event.
+ */
+
+/**
+ * Trigger an event.
+ *
+ * @function trigger
+ * @memberof module:router#
+ * @param {string} event An event.
+ */
+
+/**
+ * A router.
+ *
+ * @class
+ * @mixes Espo.Events
+ */
+const Router = Backbone.Router.extend(/** @lends Router# */ {
 
     /**
-     * On route.
-     *
-     * @event Backbone.Router#route
-     * @param {string} name A route name.
-     * @param {any[]} args Arguments.
+     * @private
      */
+    routeList: [
+        {
+            route: "clearCache",
+            resolution: "clearCache"
+        },
+        {
+            route: ":controller/view/:id/:options",
+            resolution: "view"
+        },
+        {
+            route: ":controller/view/:id",
+            resolution: "view"
+        },
+        {
+            route: ":controller/edit/:id/:options",
+            resolution: "edit"
+        },
+        {
+            route: ":controller/edit/:id",
+            resolution: "edit"
+        },
+        {
+            route: ":controller/create",
+            resolution: "create"
+        },
+        {
+            route: ":controller/related/:id/:link",
+            resolution: "related"
+        },
+        {
+            route: ":controller/:action/:options",
+            resolution: "action",
+            order: 100
+        },
+        {
+            route: ":controller/:action",
+            resolution: "action",
+            order: 200
+        },
+        {
+            route: ":controller",
+            resolution: "defaultAction",
+            order: 300
+        },
+        {
+            route: "*actions",
+            resolution: "home",
+            order: 500
+        },
+    ],
 
     /**
-     * After dispatch.
-     *
-     * @event module:router#routed
-     * @param {{
-     *   controller: string,
-     *   action:string,
-     *   options: Object.<string,*>,
-     * }} data A route data.
+     * @private
      */
+    _bindRoutes: function() {},
 
     /**
-     * Subscribe.
-     *
-     * @function on
-     * @memberof module:router.Class#
-     * @param {string} event An event.
-     * @param {function(): void} callback A callback.
+     * @private
      */
+    setupRoutes: function () {
+        this.routeParams = {};
 
-    /**
-     * Subscribe once.
-     *
-     * @function once
-     * @memberof module:router.Class#
-     * @param {string} event An event.
-     * @param {function(): void} callback A callback.
-     */
+        if (this.options.routes) {
+            let routeList = [];
 
-    /**
-     * Unsubscribe.
-     *
-     * @function off
-     * @memberof module:router.Class#
-     * @param {string} event An event.
-     */
+            Object.keys(this.options.routes).forEach(route => {
+                let item = this.options.routes[route];
 
-    /**
-     * Trigger an event.
-     *
-     * @function trigger
-     * @memberof module:router.Class#
-     * @param {string} event An event.
-     */
-
-    /**
-     * A router.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:router
-     * @mixes Espo.Events
-     */
-    let Router = Backbone.Router.extend(/** @lends module:router.Class# */ {
-
-        /**
-         * @private
-         */
-        routeList: [
-            {
-                route: "clearCache",
-                resolution: "clearCache"
-            },
-            {
-                route: ":controller/view/:id/:options",
-                resolution: "view"
-            },
-            {
-                route: ":controller/view/:id",
-                resolution: "view"
-            },
-            {
-                route: ":controller/edit/:id/:options",
-                resolution: "edit"
-            },
-            {
-                route: ":controller/edit/:id",
-                resolution: "edit"
-            },
-            {
-                route: ":controller/create",
-                resolution: "create"
-            },
-            {
-                route: ":controller/related/:id/:link",
-                resolution: "related"
-            },
-            {
-                route: ":controller/:action/:options",
-                resolution: "action",
-                order: 100
-            },
-            {
-                route: ":controller/:action",
-                resolution: "action",
-                order: 200
-            },
-            {
-                route: ":controller",
-                resolution: "defaultAction",
-                order: 300
-            },
-            {
-                route: "*actions",
-                resolution: "home",
-                order: 500
-            },
-        ],
-
-        /**
-         * @private
-         */
-        _bindRoutes: function() {},
-
-        /**
-         * @private
-         */
-        setupRoutes: function () {
-            this.routeParams = {};
-
-            if (this.options.routes) {
-                let routeList = [];
-
-                Object.keys(this.options.routes).forEach(route => {
-                    let item = this.options.routes[route];
-
-                    routeList.push({
-                        route: route,
-                        resolution: item.resolution || 'defaultRoute',
-                        order: item.order || 0
-                    });
-
-                    this.routeParams[route] = item.params || {};
+                routeList.push({
+                    route: route,
+                    resolution: item.resolution || 'defaultRoute',
+                    order: item.order || 0
                 });
 
-                this.routeList = Espo.Utils.clone(this.routeList);
-
-                routeList.forEach(item => {
-                    this.routeList.push(item);
-                });
-
-                this.routeList = this.routeList.sort((v1, v2) => {
-                    return (v1.order || 0) - (v2.order || 0);
-                });
-            }
-
-            this.routeList.reverse().forEach(item => {
-                this.route(item.route, item.resolution);
-            });
-        },
-
-        /**
-         * @private
-         */
-        _last: null,
-
-        /**
-         * Whether a confirm-leave-out was set.
-         *
-         * @public
-         * @type {boolean}
-         */
-        confirmLeaveOut: false,
-
-        /**
-         * Whether back has been processed.
-         *
-         * @public
-         * @type {boolean}
-         */
-        backProcessed: false,
-
-        /**
-         * @type {string}
-         * @internal
-         */
-        confirmLeaveOutMessage: 'Are you sure?',
-
-        /**
-         * @type {string}
-         * @internal
-         */
-        confirmLeaveOutConfirmText: 'Yes',
-
-        /**
-         * @type {string}
-         * @internal
-         */
-        confirmLeaveOutCancelText: 'No',
-
-        /**
-         * @private
-         */
-        initialize: function (options) {
-            this.options = options || {};
-            this.setupRoutes();
-
-            this.history = [];
-
-            let hashHistory = [window.location.hash];
-
-            window.addEventListener('hashchange', () => {
-                let hash = window.location.hash
-
-                if (
-                    hashHistory.length > 1 &&
-                    hashHistory[hashHistory.length - 2] === hash
-                ) {
-                    hashHistory = hashHistory.slice(0, -1);
-
-                    this.backProcessed = true;
-                    setTimeout(() => this.backProcessed = false, 50);
-
-                    return;
-                }
-
-                hashHistory.push(hash);
+                this.routeParams[route] = item.params || {};
             });
 
-            this.on('route', () => {
-                this.history.push(Backbone.history.fragment);
+            this.routeList = Espo.Utils.clone(this.routeList);
+
+            routeList.forEach(item => {
+                this.routeList.push(item);
             });
 
-            window.addEventListener('beforeunload', (e) => {
-                e = e || window.event;
-
-                if (this.confirmLeaveOut) {
-                    e.preventDefault();
-
-                    e.returnValue = this.confirmLeaveOutMessage;
-
-                    return this.confirmLeaveOutMessage;
-                }
+            this.routeList = this.routeList.sort((v1, v2) => {
+                return (v1.order || 0) - (v2.order || 0);
             });
-        },
+        }
 
-        /**
-         * Get a current URL.
-         *
-         * @returns {string}
-         */
-        getCurrentUrl: function () {
-            return '#' + Backbone.history.fragment;
-        },
+        this.routeList.reverse().forEach(item => {
+            this.route(item.route, item.resolution);
+        });
+    },
 
-        /**
-         * @callback module:router.Class~checkConfirmLeaveOutCallback
-         */
+    /**
+     * @private
+     */
+    _last: null,
 
-        /**
-         * Process confirm-leave-out.
-         *
-         * @param {module:router.Class~checkConfirmLeaveOutCallback} callback Proceed if confirmed.
-         * @param {Object|null} [context] A context.
-         * @param {boolean} [navigateBack] To navigate back if not confirmed.
-         */
-        checkConfirmLeaveOut: function (callback, context, navigateBack) {
-            if (this.confirmLeaveOutDisplayed) {
-                this.navigateBack({trigger: false});
+    /**
+     * Whether a confirm-leave-out was set.
+     *
+     * @public
+     * @type {boolean}
+     */
+    confirmLeaveOut: false,
 
-                this.confirmLeaveOutCanceled = true;
+    /**
+     * Whether back has been processed.
+     *
+     * @public
+     * @type {boolean}
+     */
+    backProcessed: false,
+
+    /**
+     * @type {string}
+     * @internal
+     */
+    confirmLeaveOutMessage: 'Are you sure?',
+
+    /**
+     * @type {string}
+     * @internal
+     */
+    confirmLeaveOutConfirmText: 'Yes',
+
+    /**
+     * @type {string}
+     * @internal
+     */
+    confirmLeaveOutCancelText: 'No',
+
+    /**
+     * @private
+     */
+    initialize: function (options) {
+        this.options = options || {};
+        this.setupRoutes();
+
+        this.history = [];
+
+        let hashHistory = [window.location.hash];
+
+        window.addEventListener('hashchange', () => {
+            let hash = window.location.hash
+
+            if (
+                hashHistory.length > 1 &&
+                hashHistory[hashHistory.length - 2] === hash
+            ) {
+                hashHistory = hashHistory.slice(0, -1);
+
+                this.backProcessed = true;
+                setTimeout(() => this.backProcessed = false, 50);
 
                 return;
             }
 
-            context = context || this;
+            hashHistory.push(hash);
+        });
+
+        this.on('route', () => {
+            this.history.push(Backbone.history.fragment);
+        });
+
+        window.addEventListener('beforeunload', (e) => {
+            e = e || window.event;
 
             if (this.confirmLeaveOut) {
-                this.confirmLeaveOutDisplayed = true;
-                this.confirmLeaveOutCanceled = false;
+                e.preventDefault();
 
-                Espo.Ui.confirm(
-                    this.confirmLeaveOutMessage,
-                    {
-                        confirmText: this.confirmLeaveOutConfirmText,
-                        cancelText: this.confirmLeaveOutCancelText,
-                        backdrop: true,
-                        cancelCallback: () => {
-                            this.confirmLeaveOutDisplayed = false;
+                e.returnValue = this.confirmLeaveOutMessage;
 
-                            if (navigateBack) {
-                                this.navigateBack({trigger: false});
-                            }
-                        },
-                    },
-                    () => {
+                return this.confirmLeaveOutMessage;
+            }
+        });
+    },
+
+    /**
+     * Get a current URL.
+     *
+     * @returns {string}
+     */
+    getCurrentUrl: function () {
+        return '#' + Backbone.history.fragment;
+    },
+
+    /**
+     * @callback module:router~checkConfirmLeaveOutCallback
+     */
+
+    /**
+     * Process confirm-leave-out.
+     *
+     * @param {module:router~checkConfirmLeaveOutCallback} callback Proceed if confirmed.
+     * @param {Object|null} [context] A context.
+     * @param {boolean} [navigateBack] To navigate back if not confirmed.
+     */
+    checkConfirmLeaveOut: function (callback, context, navigateBack) {
+        if (this.confirmLeaveOutDisplayed) {
+            this.navigateBack({trigger: false});
+
+            this.confirmLeaveOutCanceled = true;
+
+            return;
+        }
+
+        context = context || this;
+
+        if (this.confirmLeaveOut) {
+            this.confirmLeaveOutDisplayed = true;
+            this.confirmLeaveOutCanceled = false;
+
+            Espo.Ui.confirm(
+                this.confirmLeaveOutMessage,
+                {
+                    confirmText: this.confirmLeaveOutConfirmText,
+                    cancelText: this.confirmLeaveOutCancelText,
+                    backdrop: true,
+                    cancelCallback: () => {
                         this.confirmLeaveOutDisplayed = false;
-                        this.confirmLeaveOut = false;
 
-                        if (!this.confirmLeaveOutCanceled) {
-                            callback.call(context);
+                        if (navigateBack) {
+                            this.navigateBack({trigger: false});
                         }
+                    },
+                },
+                () => {
+                    this.confirmLeaveOutDisplayed = false;
+                    this.confirmLeaveOut = false;
+
+                    if (!this.confirmLeaveOutCanceled) {
+                        callback.call(context);
                     }
-                );
-
-                return;
-            }
-
-            callback.call(context);
-        },
-
-        /**
-         * @private
-         */
-        route: function (route, name, callback) {
-            let routeOriginal = route;
-
-            if (!_.isRegExp(route)) {
-                route = this._routeToRegExp(route);
-            }
-
-            if (_.isFunction(name)) {
-                callback = name;
-                name = '';
-            }
-
-            if (!callback) {
-                callback = this['_' + name];
-            }
-
-            let router = this;
-
-            Backbone.history.route(route, function (fragment) {
-                let args = router._extractParameters(route, fragment);
-
-                let options = {};
-
-                if (name === 'defaultRoute') {
-                    let keyList = [];
-
-                    routeOriginal.split('/').forEach(key => {
-                        if (key && key.indexOf(':') === 0) {
-                            keyList.push(key.substr(1));
-                        }
-                    });
-
-                    keyList.forEach((key, i) => {
-                        options[key] = args[i];
-                    });
                 }
+            );
 
-                if (router.execute(callback, args, name, routeOriginal, options) !== false) {
-                    router.trigger.apply(router, ['route:' + name].concat(args));
+            return;
+        }
 
-                    router.trigger('route', name, args);
+        callback.call(context);
+    },
 
-                    Backbone.history.trigger('route', router, name, args);
-                }
-            });
+    /**
+     * @private
+     */
+    route: function (route, name/*, callback*/) {
+        let routeOriginal = route;
 
-            return this;
-        },
+        if (!_.isRegExp(route)) {
+            route = this._routeToRegExp(route);
+        }
 
-        /**
-         * @private
-         */
-        execute: function (callback, args, name, routeOriginal, options) {
-            this.checkConfirmLeaveOut(() => {
-                if (name === 'defaultRoute') {
-                    this._defaultRoute(this.routeParams[routeOriginal], options);
+        let callback;
 
-                    return;
-                }
+        // @todo Revise.
+        /*if (_.isFunction(name)) {
+            callback = name;
+            name = '';
+        }*/
 
-                Backbone.Router.prototype.execute.call(this, callback, args, name);
-            }, null, true);
-        },
+        /*if (!callback) {
+            callback = this['_' + name];
+        }*/
+        callback = this['_' + name];
 
-        /**
-         * Navigate.
-         *
-         * @param {string} fragment An URL fragment.
-         * @param {{trigger?: boolean, replace?: boolean}} [options] Options: trigger, replace.
-         */
-        navigate: function (fragment, options) {
-            this.history.push(fragment);
+        let router = this;
 
-            return Backbone.Router.prototype.navigate.call(this, fragment, options);
-        },
-
-        /**
-         * Navigate back.
-         *
-         * @param {Object} [options] Options: trigger, replace.
-         */
-        navigateBack: function (options) {
-            let url;
-
-            if (this.history.length > 1) {
-                url = this.history[this.history.length - 2];
-            }
-            else {
-                url = this.history[0];
-            }
-
-            this.navigate(url, options);
-        },
-
-        /**
-         * @private
-         */
-        _parseOptionsParams: function (string) {
-            if (!string) {
-                return {};
-            }
-
-            if (string.indexOf('&') === -1 && string.indexOf('=') === -1) {
-                return string;
-            }
+        Backbone.history.route(route, function (fragment) {
+            let args = router._extractParameters(route, fragment);
 
             let options = {};
 
-            if (typeof string !== 'undefined') {
-                string.split('&').forEach((item, i) => {
-                    let p = item.split('=');
+            if (name === 'defaultRoute') {
+                let keyList = [];
 
-                    options[p[0]] = true;
-
-                    if (p.length > 1) {
-                        options[p[0]] = p[1];
+                routeOriginal.split('/').forEach(key => {
+                    if (key && key.indexOf(':') === 0) {
+                        keyList.push(key.substr(1));
                     }
+                });
+
+                keyList.forEach((key, i) => {
+                    options[key] = args[i];
                 });
             }
 
-            return options;
-        },
+            // @todo Revise.
+            router.execute(callback, args, name, routeOriginal, options);
+            //if (router.execute(callback, args, name, routeOriginal, options) !== false) {
+                router.trigger.apply(router, ['route:' + name].concat(args));
+                router.trigger('route', name, args);
+                Backbone.history.trigger('route', router, name, args);
+            //}
+        });
 
-        /**
-         * @private
-         */
-        _defaultRoute: function (params, options) {
-            let controller = params.controller || options.controller;
-            let action = params.action || options.action;
+        return this;
+    },
 
-            this.dispatch(controller, action, options);
-        },
+    /**
+     * @private
+     */
+    execute: function (callback, args, name, routeOriginal, options) {
+        this.checkConfirmLeaveOut(() => {
+            if (name === 'defaultRoute') {
+                this._defaultRoute(this.routeParams[routeOriginal], options);
 
-        /**
-         * @private
-         */
-        _record: function (controller, action, id, options) {
-            options = this._parseOptionsParams(options);
+                return;
+            }
 
-            options.id = id;
+            Backbone.Router.prototype.execute.call(this, callback, args, name);
+        }, null, true);
+    },
 
-            this.dispatch(controller, action, options);
-        },
+    /**
+     * Navigate.
+     *
+     * @param {string} fragment An URL fragment.
+     * @param {{trigger?: boolean, replace?: boolean}} [options] Options: trigger, replace.
+     */
+    navigate: function (fragment, options) {
+        this.history.push(fragment);
 
-        /**
-         * @private
-         */
-        _view: function (controller, id, options) {
-            this._record(controller, 'view', id, options);
-        },
+        return Backbone.Router.prototype.navigate.call(this, fragment, options);
+    },
 
-        /**
-         * @private
-         */
-        _edit: function (controller, id, options) {
-            this._record(controller, 'edit', id, options);
-        },
+    /**
+     * Navigate back.
+     *
+     * @param {Object} [options] Options: trigger, replace.
+     */
+    navigateBack: function (options) {
+        let url;
 
-        /**
-         * @private
-         */
-        _related: function (controller, id, link, options) {
-            options = this._parseOptionsParams(options);
+        if (this.history.length > 1) {
+            url = this.history[this.history.length - 2];
+        }
+        else {
+            url = this.history[0];
+        }
 
-            options.id = id;
-            options.link = link;
+        this.navigate(url, options);
+    },
 
-            this.dispatch(controller, 'related', options);
-        },
+    /**
+     * @private
+     */
+    _parseOptionsParams: function (string) {
+        if (!string) {
+            return {};
+        }
 
-        /**
-         * @private
-         */
-        _create: function (controller, options) {
-            this._record(controller, 'create', null, options);
-        },
+        if (string.indexOf('&') === -1 && string.indexOf('=') === -1) {
+            return string;
+        }
 
-        /**
-         * @private
-         */
-        _action: function (controller, action, options) {
-            this.dispatch(controller, action, this._parseOptionsParams(options));
-        },
+        let options = {};
 
-        /**
-         * @private
-         */
-        _defaultAction: function (controller) {
-            this.dispatch(controller, null);
-        },
+        if (typeof string !== 'undefined') {
+            string.split('&').forEach(item => {
+                let p = item.split('=');
 
-        /**
-         * @private
-         */
-        _home: function () {
-            this.dispatch('Home', null);
-        },
+                options[p[0]] = true;
 
-        /**
-         * @private
-         */
-        _clearCache: function () {
-            this.dispatch(null, 'clearCache');
-        },
+                if (p.length > 1) {
+                    options[p[0]] = p[1];
+                }
+            });
+        }
 
-        /**
-         * Process `logout` route.
-         */
-        logout: function () {
-            this.dispatch(null, 'logout');
+        return options;
+    },
 
-            this.navigate('', {trigger: false});
-        },
+    /**
+     * @private
+     */
+    _defaultRoute: function (params, options) {
+        let controller = params.controller || options.controller;
+        let action = params.action || options.action;
 
-        /**
-         * Dispatch a controller action.
-         *
-         * @param {string} controller A controller.
-         * @param {string} action An action.
-         * @param {Object} [options] Options.
-         * @fires module:router#routed
-         */
-        dispatch: function (controller, action, options) {
-            let o = {
-                controller: controller,
-                action: action,
-                options: options,
-            };
+        this.dispatch(controller, action, options);
+    },
 
-            this._last = o;
+    /**
+     * @private
+     */
+    _record: function (controller, action, id, options) {
+        options = this._parseOptionsParams(options);
 
-            this.trigger('routed', o);
-        },
+        options.id = id;
 
-        /**
-         * Get the last route data.
-         *
-         * @returns {Object}
-         */
-        getLast: function () {
-            return this._last;
-        },
-    });
+        this.dispatch(controller, action, options);
+    },
 
-    return Router;
+    /**
+     * @private
+     */
+    _view: function (controller, id, options) {
+        this._record(controller, 'view', id, options);
+    },
+
+    /**
+     * @private
+     */
+    _edit: function (controller, id, options) {
+        this._record(controller, 'edit', id, options);
+    },
+
+    /**
+     * @private
+     */
+    _related: function (controller, id, link, options) {
+        options = this._parseOptionsParams(options);
+
+        options.id = id;
+        options.link = link;
+
+        this.dispatch(controller, 'related', options);
+    },
+
+    /**
+     * @private
+     */
+    _create: function (controller, options) {
+        this._record(controller, 'create', null, options);
+    },
+
+    /**
+     * @private
+     */
+    _action: function (controller, action, options) {
+        this.dispatch(controller, action, this._parseOptionsParams(options));
+    },
+
+    /**
+     * @private
+     */
+    _defaultAction: function (controller) {
+        this.dispatch(controller, null);
+    },
+
+    /**
+     * @private
+     */
+    _home: function () {
+        this.dispatch('Home', null);
+    },
+
+    /**
+     * @private
+     */
+    _clearCache: function () {
+        this.dispatch(null, 'clearCache');
+    },
+
+    /**
+     * Process `logout` route.
+     */
+    logout: function () {
+        this.dispatch(null, 'logout');
+
+        this.navigate('', {trigger: false});
+    },
+
+    /**
+     * Dispatch a controller action.
+     *
+     * @param {string} controller A controller.
+     * @param {string} action An action.
+     * @param {Object} [options] Options.
+     * @fires module:router#routed
+     */
+    dispatch: function (controller, action, options) {
+        let o = {
+            controller: controller,
+            action: action,
+            options: options,
+        };
+
+        this._last = o;
+
+        this.trigger('routed', o);
+    },
+
+    /**
+     * Get the last route data.
+     *
+     * @returns {Object}
+     */
+    getLast: function () {
+        return this._last;
+    },
 });
+
+export default Router;
 
 function isIOS9UIWebView() {
     let userAgent = window.navigator.userAgent;

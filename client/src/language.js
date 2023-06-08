@@ -26,298 +26,295 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('language', ['ajax'], function (Ajax) {
+/** @module language */
+
+import Backbone from 'lib!backbone';
+
+/**
+ * A language.
+ *
+ * @class
+ * @param {module:cache} [cache] A cache.
+ */
+const Language = function (cache) {
+    /**
+     * @private
+     * @type {module:cache|null}
+     */
+    this.cache = cache || null;
 
     /**
-     * A language.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:language
-     * @param {module:cache.Class} [cache] A cache.
+     * @private
+     * @type {Object}
      */
-    let Language = function (cache) {
-        /**
-         * @private
-         * @type {module:cache.Class|null}
-         */
-        this.cache = cache || null;
+    this.data = {};
 
-        /**
-         * @private
-         * @type {Object}
-         */
-        this.data = {};
+    /**
+     * A name.
+     *
+     * @type {string}
+     */
+    this.name = 'default';
+};
 
-        /**
-         * A name.
-         *
-         * @type {string}
-         */
-        this.name = 'default';
-    };
+_.extend(Language.prototype, /** @lends Language# */{
 
-    _.extend(Language.prototype, /** @lends module:language.Class# */{
+    /** @private */
+    url: 'I18n',
 
-        /**
-         * @private
-         */
-        url: 'I18n',
-
-        /**
-         * Whether an item is set in language data.
-         *
-         * @param {string} scope A scope.
-         * @param {string} category A category.
-         * @param {string} name An item name.
-         * @returns {boolean}
-         */
-        has: function (name, category, scope) {
-            if (scope in this.data) {
-                if (category in this.data[scope]) {
-                    if (name in this.data[scope][category]) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        },
-
-        /**
-         * Get a value set in language data.
-         *
-         * @param {string} scope A scope.
-         * @param {string} category A category.
-         * @param {string} name An item name.
-         * @returns {*}
-         */
-        get: function (scope, category, name) {
-            if (scope in this.data) {
-                if (category in this.data[scope]) {
-                    if (name in this.data[scope][category]) {
-                        return this.data[scope][category][name];
-                    }
-                }
-            }
-
-            if (scope === 'Global') {
-                return name;
-            }
-
-            return false;
-        },
-
-        /**
-         * Translate a label.
-         *
-         * @param {string} name An item name.
-         * @param {string|null} [category='labels'] A category.
-         * @param {string|null} [scope='Global'] A scope.
-         * @returns {string}
-         */
-        translate: function (name, category, scope) {
-            scope = scope || 'Global';
-            category = category || 'labels';
-
-            let res = this.get(scope, category, name);
-
-            if (res === false && scope !== 'Global') {
-                res = this.get('Global', category, name);
-            }
-
-            return res;
-        },
-
-        /**
-         * Translation an option item value.
-         *
-         * @param {string} value An option value.
-         * @param {string} field A field name.
-         * @param {string} [scope='Global'] A scope.
-         * @returns {string}
-         */
-        translateOption: function (value, field, scope) {
-            let translation = this.translate(field, 'options', scope);
-
-            if (typeof translation !== 'object') {
-                translation = {};
-            }
-
-            return translation[value] || value;
-        },
-
-        /**
-         * @private
-         */
-        loadFromCache: function (loadDefault) {
-            let name = this.name;
-            if (loadDefault) {
-                name = 'default';
-            }
-
-            if (this.cache) {
-                let cached = this.cache.get('app', 'language-' + name);
-
-                if (cached) {
-                    this.data = cached;
-
+    /**
+     * Whether an item is set in language data.
+     *
+     * @param {string} scope A scope.
+     * @param {string} category A category.
+     * @param {string} name An item name.
+     * @returns {boolean}
+     */
+    has: function (name, category, scope) {
+        if (scope in this.data) {
+            if (category in this.data[scope]) {
+                if (name in this.data[scope][category]) {
                     return true;
                 }
             }
+        }
 
-            return null;
-        },
+        return false;
+    },
 
-        /**
-         * Clear a language cache.
-         */
-        clearCache: function () {
-            if (this.cache) {
-                this.cache.clear('app', 'language-' + this.name);
-            }
-        },
-
-        /**
-         * @private
-         */
-        storeToCache: function (loadDefault) {
-            let name = this.name;
-
-            if (loadDefault) {
-                name = 'default';
-            }
-
-            if (this.cache) {
-                this.cache.set('app', 'language-' + name, this.data);
-            }
-        },
-
-        /**
-         * Load data from cache or backend (if not yet cached).
-         *
-         * @param {Function} [callback] Deprecated.
-         * @param {boolean} [disableCache=false] Deprecated
-         * @param {boolean} [loadDefault=false] Deprecated.
-         * @returns {Promise}
-         */
-        load: function (callback, disableCache, loadDefault) {
-            if (callback) {
-                this.once('sync', callback);
-            }
-
-            if (!disableCache) {
-                if (this.loadFromCache(loadDefault)) {
-                    this.trigger('sync');
-
-                    return new Promise(resolve => resolve());
+    /**
+     * Get a value set in language data.
+     *
+     * @param {string} scope A scope.
+     * @param {string} category A category.
+     * @param {string} name An item name.
+     * @returns {*}
+     */
+    get: function (scope, category, name) {
+        if (scope in this.data) {
+            if (category in this.data[scope]) {
+                if (name in this.data[scope][category]) {
+                    return this.data[scope][category][name];
                 }
             }
+        }
 
-            return new Promise(resolve => {
-                this.fetch(loadDefault)
-                    .then(() => resolve());
-            });
-        },
+        if (scope === 'Global') {
+            return name;
+        }
 
-        /**
-         * Load default-language data from the backend.
-         *
-         * @returns {Promise}
-         */
-        loadDefault: function () {
-            return this.load(null, false, true);
-        },
+        return false;
+    },
 
-        /**
-         * Load data from the backend.
-         *
-         * @returns {Promise}
-         */
-        loadSkipCache: function () {
-            return this.load(null, true);
-        },
+    /**
+     * Translate a label.
+     *
+     * @param {string} name An item name.
+     * @param {string|null} [category='labels'] A category.
+     * @param {string|null} [scope='Global'] A scope.
+     * @returns {string}
+     */
+    translate: function (name, category, scope) {
+        scope = scope || 'Global';
+        category = category || 'labels';
 
-        /**
-         * Load default-language data from the backend.
-         *
-         * @returns {Promise}
-         */
-        loadDefaultSkipCache: function () {
-            return this.load(null, true, true);
-        },
+        let res = this.get(scope, category, name);
 
-        /**
-         * @private
-         * @param {boolean} loadDefault
-         * @returns {Promise}
-         */
-        fetch: function (loadDefault) {
-            return Ajax.getRequest(this.url, {default: loadDefault}).then(data => {
-                this.data = data;
+        if (res === false && scope !== 'Global') {
+            res = this.get('Global', category, name);
+        }
 
-                this.storeToCache(loadDefault);
+        return res;
+    },
+
+    /**
+     * Translation an option item value.
+     *
+     * @param {string} value An option value.
+     * @param {string} field A field name.
+     * @param {string} [scope='Global'] A scope.
+     * @returns {string}
+     */
+    translateOption: function (value, field, scope) {
+        let translation = this.translate(field, 'options', scope);
+
+        if (typeof translation !== 'object') {
+            translation = {};
+        }
+
+        return translation[value] || value;
+    },
+
+    /**
+     * @private
+     */
+    loadFromCache: function (loadDefault) {
+        let name = this.name;
+        if (loadDefault) {
+            name = 'default';
+        }
+
+        if (this.cache) {
+            let cached = this.cache.get('app', 'language-' + name);
+
+            if (cached) {
+                this.data = cached;
+
+                return true;
+            }
+        }
+
+        return null;
+    },
+
+    /**
+     * Clear a language cache.
+     */
+    clearCache: function () {
+        if (this.cache) {
+            this.cache.clear('app', 'language-' + this.name);
+        }
+    },
+
+    /**
+     * @private
+     */
+    storeToCache: function (loadDefault) {
+        let name = this.name;
+
+        if (loadDefault) {
+            name = 'default';
+        }
+
+        if (this.cache) {
+            this.cache.set('app', 'language-' + name, this.data);
+        }
+    },
+
+    /**
+     * Load data from cache or backend (if not yet cached).
+     *
+     * @param {Function} [callback] Deprecated.
+     * @param {boolean} [disableCache=false] Deprecated
+     * @param {boolean} [loadDefault=false] Deprecated.
+     * @returns {Promise}
+     */
+    load: function (callback, disableCache, loadDefault) {
+        if (callback) {
+            this.once('sync', callback);
+        }
+
+        if (!disableCache) {
+            if (this.loadFromCache(loadDefault)) {
                 this.trigger('sync');
-            });
-        },
 
-        /**
-         * Sort a field list by a translated name.
-         *
-         * @param {string} scope An entity type.
-         * @param {string[]} fieldList A field list.
-         * @returns {string[]}
-         */
-        sortFieldList: function (scope, fieldList) {
-            return fieldList.sort((v1, v2) => {
-                 return this.translate(v1, 'fields', scope)
-                     .localeCompare(this.translate(v2, 'fields', scope));
-            });
-        },
-
-        /**
-         * Sort an entity type list by a translated name.
-         *
-         * @param {string[]} entityList An entity type list.
-         * @param {boolean} [plural=false] Use a plural label.
-         * @returns {string[]}
-         */
-        sortEntityList: function (entityList, plural) {
-            let category = 'scopeNames';
-
-            if (plural) {
-                category += 'Plural';
+                return new Promise(resolve => resolve());
             }
+        }
 
-            return entityList.sort((v1, v2) => {
-                 return this.translate(v1, category)
-                     .localeCompare(this.translate(v2, category));
-            });
-        },
+        return new Promise(resolve => {
+            this.fetch(loadDefault)
+                .then(() => resolve());
+        });
+    },
 
-        /**
-         * Get a value by a path.
-         *
-         * @param {string[]|string} path A path.
-         * @returns {*}
-         */
-        translatePath: function (path) {
-            if (typeof path === 'string' || path instanceof String) {
-                path = path.split('.');
+    /**
+     * Load default-language data from the backend.
+     *
+     * @returns {Promise}
+     */
+    loadDefault: function () {
+        return this.load(null, false, true);
+    },
+
+    /**
+     * Load data from the backend.
+     *
+     * @returns {Promise}
+     */
+    loadSkipCache: function () {
+        return this.load(null, true);
+    },
+
+    /**
+     * Load default-language data from the backend.
+     *
+     * @returns {Promise}
+     */
+    loadDefaultSkipCache: function () {
+        return this.load(null, true, true);
+    },
+
+    /**
+     * @private
+     * @param {boolean} loadDefault
+     * @returns {Promise}
+     */
+    fetch: function (loadDefault) {
+        return Espo.Ajax.getRequest(this.url, {default: loadDefault}).then(data => {
+            this.data = data;
+
+            this.storeToCache(loadDefault);
+            this.trigger('sync');
+        });
+    },
+
+    /**
+     * Sort a field list by a translated name.
+     *
+     * @param {string} scope An entity type.
+     * @param {string[]} fieldList A field list.
+     * @returns {string[]}
+     */
+    sortFieldList: function (scope, fieldList) {
+        return fieldList.sort((v1, v2) => {
+             return this.translate(v1, 'fields', scope)
+                 .localeCompare(this.translate(v2, 'fields', scope));
+        });
+    },
+
+    /**
+     * Sort an entity type list by a translated name.
+     *
+     * @param {string[]} entityList An entity type list.
+     * @param {boolean} [plural=false] Use a plural label.
+     * @returns {string[]}
+     */
+    sortEntityList: function (entityList, plural) {
+        let category = 'scopeNames';
+
+        if (plural) {
+            category += 'Plural';
+        }
+
+        return entityList.sort((v1, v2) => {
+             return this.translate(v1, category)
+                 .localeCompare(this.translate(v2, category));
+        });
+    },
+
+    /**
+     * Get a value by a path.
+     *
+     * @param {string[]|string} path A path.
+     * @returns {*}
+     */
+    translatePath: function (path) {
+        if (typeof path === 'string' || path instanceof String) {
+            path = path.split('.');
+        }
+
+        let pointer = this.data;
+
+        path.forEach(key => {
+            if (key in pointer) {
+                pointer = pointer[key];
             }
+        });
 
-            let pointer = this.data;
+        return pointer;
+    },
 
-            path.forEach(key => {
-                if (key in pointer) {
-                    pointer = pointer[key];
-                }
-            });
+}, Backbone.Events);
 
-            return pointer;
-        },
-
-    }, Backbone.Events);
-
-    return Language;
-});
+export default Language;

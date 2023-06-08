@@ -26,253 +26,253 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/currency', ['views/fields/float', 'ui/select'],
-function (Dep, /** module:ui/select*/Select) {
+/** @module views/fields/currency */
+
+import Dep from 'views/fields/float';
+import Select from 'ui/select';
+
+/**
+ * @class
+ * @name Class
+ * @extends module:views/fields/float
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    type: 'currency',
+
+    editTemplate: 'fields/currency/edit',
+    detailTemplate: 'fields/currency/detail',
+    detailTemplate1: 'fields/currency/detail-1',
+    detailTemplate2: 'fields/currency/detail-2',
+    detailTemplate3: 'fields/currency/detail-3',
+    listTemplate: 'fields/currency/list',
+    listTemplate1: 'fields/currency/list-1',
+    listTemplate2: 'fields/currency/list-2',
+    listTemplate3: 'fields/currency/list-3',
+    detailTemplateNoCurrency: 'fields/currency/detail-no-currency',
+
+    maxDecimalPlaces: 3,
+
+    validations: [
+        'required',
+        'number',
+        'range',
+    ],
 
     /**
-     * @class
-     * @name Class
-     * @extends module:views/fields/float.Class
-     * @memberOf module:views/fields/currency
+     * @inheritDoc
      */
-    return Dep.extend(/** @lends module:views/fields/currency.Class# */{
+    data: function () {
+        let currencyValue = this.model.get(this.currencyFieldName) ||
+            this.getPreferences().get('defaultCurrency') ||
+            this.getConfig().get('defaultCurrency');
 
-        type: 'currency',
+        let multipleCurrencies = !this.isSingleCurrency || currencyValue !== this.defaultCurrency;
 
-        editTemplate: 'fields/currency/edit',
-        detailTemplate: 'fields/currency/detail',
-        detailTemplate1: 'fields/currency/detail-1',
-        detailTemplate2: 'fields/currency/detail-2',
-        detailTemplate3: 'fields/currency/detail-3',
-        listTemplate: 'fields/currency/list',
-        listTemplate1: 'fields/currency/list-1',
-        listTemplate2: 'fields/currency/list-2',
-        listTemplate3: 'fields/currency/list-3',
-        detailTemplateNoCurrency: 'fields/currency/detail-no-currency',
+        return _.extend({
+            currencyFieldName: this.currencyFieldName,
+            currencyValue: currencyValue,
+            currencyOptions: this.currencyOptions,
+            currencyList: this.currencyList,
+            currencySymbol: this.getMetadata().get(['app', 'currency', 'symbolMap', currencyValue]) || '',
+            multipleCurrencies: multipleCurrencies,
+            defaultCurrency: this.defaultCurrency,
+        }, Dep.prototype.data.call(this));
+    },
 
-        maxDecimalPlaces: 3,
+    /**
+     * @inheritDoc
+     */
+    setup: function () {
+        Dep.prototype.setup.call(this);
 
-        validations: [
-            'required',
-            'number',
-            'range',
-        ],
+        this.currencyFieldName = this.name + 'Currency';
+        this.defaultCurrency = this.getConfig().get('defaultCurrency');
+        this.currencyList = this.getConfig().get('currencyList') || [this.defaultCurrency];
+        this.decimalPlaces = this.getConfig().get('currencyDecimalPlaces');
 
-        /**
-         * @inheritDoc
-         */
-        data: function () {
-            let currencyValue = this.model.get(this.currencyFieldName) ||
-                this.getPreferences().get('defaultCurrency') ||
-                this.getConfig().get('defaultCurrency');
+        if (this.params.onlyDefaultCurrency) {
+            this.currencyList = [this.defaultCurrency];
+        }
 
-            let multipleCurrencies = !this.isSingleCurrency || currencyValue !== this.defaultCurrency;
+        this.isSingleCurrency = this.currencyList.length <= 1;
 
-            return _.extend({
-                currencyFieldName: this.currencyFieldName,
-                currencyValue: currencyValue,
-                currencyOptions: this.currencyOptions,
-                currencyList: this.currencyList,
-                currencySymbol: this.getMetadata().get(['app', 'currency', 'symbolMap', currencyValue]) || '',
-                multipleCurrencies: multipleCurrencies,
-                defaultCurrency: this.defaultCurrency,
-            }, Dep.prototype.data.call(this));
-        },
+        let currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) ||
+            this.defaultCurrency;
 
-        /**
-         * @inheritDoc
-         */
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        if (!~this.currencyList.indexOf(currencyValue)) {
+            this.currencyList = Espo.Utils.clone(this.currencyList);
+            this.currencyList.push(currencyValue);
+        }
+    },
 
-            this.currencyFieldName = this.name + 'Currency';
-            this.defaultCurrency = this.getConfig().get('defaultCurrency');
-            this.currencyList = this.getConfig().get('currencyList') || [this.defaultCurrency];
-            this.decimalPlaces = this.getConfig().get('currencyDecimalPlaces');
+    /**
+     * @inheritDoc
+     */
+    setupAutoNumericOptions: function () {
+        this.autoNumericOptions = {
+            digitGroupSeparator: this.thousandSeparator || '',
+            decimalCharacter: this.decimalMark,
+            modifyValueOnWheel: false,
+            selectOnFocus: false,
+            decimalPlaces: this.decimalPlaces,
+            allowDecimalPadding: true,
+            showWarnings: false,
+            formulaMode: true,
+        };
 
-            if (this.params.onlyDefaultCurrency) {
-                this.currencyList = [this.defaultCurrency];
+        if (this.decimalPlaces === null) {
+            this.autoNumericOptions.decimalPlaces = this.decimalPlacesRawValue;
+            this.autoNumericOptions.decimalPlacesRawValue = this.decimalPlacesRawValue;
+            this.autoNumericOptions.allowDecimalPadding = false;
+        }
+    },
+
+    getCurrencyFormat: function () {
+        return this.getConfig().get('currencyFormat') || 1;
+    },
+
+    _getTemplateName: function () {
+        if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
+            var prop;
+
+            if (this.mode === this.MODE_LIST) {
+                prop = 'listTemplate' + this.getCurrencyFormat().toString();
+            }
+            else {
+                prop = 'detailTemplate' + this.getCurrencyFormat().toString();
             }
 
-            this.isSingleCurrency = this.currencyList.length <= 1;
-
-            let currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) ||
-                this.defaultCurrency;
-
-            if (!~this.currencyList.indexOf(currencyValue)) {
-                this.currencyList = Espo.Utils.clone(this.currencyList);
-                this.currencyList.push(currencyValue);
-            }
-        },
-
-        /**
-         * @inheritDoc
-         */
-        setupAutoNumericOptions: function () {
-            this.autoNumericOptions = {
-                digitGroupSeparator: this.thousandSeparator || '',
-                decimalCharacter: this.decimalMark,
-                modifyValueOnWheel: false,
-                selectOnFocus: false,
-                decimalPlaces: this.decimalPlaces,
-                allowDecimalPadding: true,
-                showWarnings: false,
-                formulaMode: true,
-            };
-
-            if (this.decimalPlaces === null) {
-                this.autoNumericOptions.decimalPlaces = this.decimalPlacesRawValue;
-                this.autoNumericOptions.decimalPlacesRawValue = this.decimalPlacesRawValue;
-                this.autoNumericOptions.allowDecimalPadding = false;
-            }
-        },
-
-        getCurrencyFormat: function () {
-            return this.getConfig().get('currencyFormat') || 1;
-        },
-
-        _getTemplateName: function () {
-            if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
-                var prop;
-
-                if (this.mode === this.MODE_LIST) {
-                    prop = 'listTemplate' + this.getCurrencyFormat().toString();
-                }
-                else {
-                    prop = 'detailTemplate' + this.getCurrencyFormat().toString();
-                }
-
-                if (this.options.hideCurrency) {
-                    prop = 'detailTemplateNoCurrency';
-                }
-
-                if (prop in this) {
-                    return this[prop];
-                }
+            if (this.options.hideCurrency) {
+                prop = 'detailTemplateNoCurrency';
             }
 
-            return Dep.prototype._getTemplateName.call(this);
-        },
+            if (prop in this) {
+                return this[prop];
+            }
+        }
 
-        formatNumber: function (value) {
-            return this.formatNumberDetail(value);
-        },
+        return Dep.prototype._getTemplateName.call(this);
+    },
 
-        formatNumberDetail: function (value) {
-            if (value !== null) {
-                let currencyDecimalPlaces = this.decimalPlaces;
+    formatNumber: function (value) {
+        return this.formatNumberDetail(value);
+    },
 
-                if (currencyDecimalPlaces === 0) {
-                    value = Math.round(value);
+    formatNumberDetail: function (value) {
+        if (value !== null) {
+            let currencyDecimalPlaces = this.decimalPlaces;
+
+            if (currencyDecimalPlaces === 0) {
+                value = Math.round(value);
+            }
+            else if (currencyDecimalPlaces) {
+                value = Math.round(
+                    value * Math.pow(10, currencyDecimalPlaces)) / (Math.pow(10, currencyDecimalPlaces)
+                );
+            }
+            else {
+                value = Math.round(
+                    value * Math.pow(10, this.maxDecimalPlaces)) / (Math.pow(10, this.maxDecimalPlaces)
+                );
+            }
+
+            let parts = value.toString().split(".");
+
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
+
+            if (currencyDecimalPlaces === 0) {
+                return parts[0];
+            }
+            else if (currencyDecimalPlaces) {
+                let decimalPartLength = 0;
+
+                if (parts.length > 1) {
+                    decimalPartLength = parts[1].length;
+                } else {
+                    parts[1] = '';
                 }
-                else if (currencyDecimalPlaces) {
-                    value = Math.round(
-                        value * Math.pow(10, currencyDecimalPlaces)) / (Math.pow(10, currencyDecimalPlaces)
-                    );
-                }
-                else {
-                    value = Math.round(
-                        value * Math.pow(10, this.maxDecimalPlaces)) / (Math.pow(10, this.maxDecimalPlaces)
-                    );
-                }
 
-                let parts = value.toString().split(".");
+                if (currencyDecimalPlaces && decimalPartLength < currencyDecimalPlaces) {
+                    let limit = currencyDecimalPlaces - decimalPartLength;
 
-                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
-
-                if (currencyDecimalPlaces === 0) {
-                    return parts[0];
-                }
-                else if (currencyDecimalPlaces) {
-                    let decimalPartLength = 0;
-
-                    if (parts.length > 1) {
-                        decimalPartLength = parts[1].length;
-                    } else {
-                        parts[1] = '';
-                    }
-
-                    if (currencyDecimalPlaces && decimalPartLength < currencyDecimalPlaces) {
-                        let limit = currencyDecimalPlaces - decimalPartLength;
-
-                        for (let i = 0; i < limit; i++) {
-                            parts[1] += '0';
-                        }
+                    for (let i = 0; i < limit; i++) {
+                        parts[1] += '0';
                     }
                 }
-
-                return parts.join(this.decimalMark);
             }
 
-            return '';
-        },
+            return parts.join(this.decimalMark);
+        }
 
-        parse: function (value) {
-            value = (value !== '') ? value : null;
+        return '';
+    },
 
-            if (value === null) {
-                return null;
-            }
+    parse: function (value) {
+        value = (value !== '') ? value : null;
 
-            value = value.split(this.thousandSeparator).join('');
-            value = value.split(this.decimalMark).join('.');
+        if (value === null) {
+            return null;
+        }
 
-            if (!this.params.decimal) {
-                value = parseFloat(value);
-            }
+        value = value.split(this.thousandSeparator).join('');
+        value = value.split(this.decimalMark).join('.');
 
-            return value;
-        },
+        if (!this.params.decimal) {
+            value = parseFloat(value);
+        }
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+        return value;
+    },
 
-            if (this.mode === this.MODE_EDIT) {
-                this.$currency = this.$el.find('[data-name="' + this.currencyFieldName + '"]');
+    afterRender: function () {
+        Dep.prototype.afterRender.call(this);
 
-                this.$currency.on('change', () => {
-                    this.model.set(this.currencyFieldName, this.$currency.val(), {ui: true});
-                });
+        if (this.mode === this.MODE_EDIT) {
+            this.$currency = this.$el.find('[data-name="' + this.currencyFieldName + '"]');
 
-                Select.init(this.$currency);
-            }
-        },
+            this.$currency.on('change', () => {
+                this.model.set(this.currencyFieldName, this.$currency.val(), {ui: true});
+            });
 
-        validateNumber: function () {
-            if (!this.params.decimal) {
-                return this.validateFloat();
-            }
+            Select.init(this.$currency);
+        }
+    },
 
-            let value = this.model.get(this.name);
+    validateNumber: function () {
+        if (!this.params.decimal) {
+            return this.validateFloat();
+        }
 
-            if (Number.isNaN(Number(value))) {
-                let msg = this.translate('fieldShouldBeNumber', 'messages').replace('{field}', this.getLabelText());
+        let value = this.model.get(this.name);
 
-                this.showValidationMessage(msg);
+        if (Number.isNaN(Number(value))) {
+            let msg = this.translate('fieldShouldBeNumber', 'messages').replace('{field}', this.getLabelText());
 
-                return true;
-            }
-        },
+            this.showValidationMessage(msg);
 
-        fetch: function () {
-            let value = this.$element.val().trim();
+            return true;
+        }
+    },
 
-            value = this.parse(value);
+    fetch: function () {
+        let value = this.$element.val().trim();
 
-            let data = {};
+        value = this.parse(value);
 
-            let currencyValue = this.$currency.length ?
-                this.$currency.val() :
-                this.defaultCurrency;
+        let data = {};
 
-            if (value === null) {
-                currencyValue = null;
-            }
+        let currencyValue = this.$currency.length ?
+            this.$currency.val() :
+            this.defaultCurrency;
 
-            data[this.name] = value;
-            data[this.currencyFieldName] = currencyValue;
+        if (value === null) {
+            currencyValue = null;
+        }
 
-            return data;
-        },
-    });
+        data[this.name] = value;
+        data[this.currencyFieldName] = currencyValue;
+
+        return data;
+    },
 });

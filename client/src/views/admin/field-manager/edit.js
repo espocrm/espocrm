@@ -31,7 +31,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
     /**
      * @class
      * @name Class
-     * @extends module:view.Class
+     * @extends module:view
      * @memberOf module:views/admin/field-manager/edit
      */
     return Dep.extend(/** @lends module:views/admin/field-manager/edit.Class# */{

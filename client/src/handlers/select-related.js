@@ -26,45 +26,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('handlers/select-related', [], () => {
+/** @module handlers/select-related */
+
+/**
+ * @typedef Object
+ * @name module:handlers/select-related~filters
+ * @property {Object.<string, module:search-manager~advancedFilter>} [advanced]
+ *  Advanced filters map. A field name as a key.
+ * @property {string[]} [bool] Bool filters.
+ * @property {string} [primary] A primary filter.
+ */
+
+/**
+ * Prepares filters for selecting records to relate.
+ *
+ * @abstract
+ */
+export default class {
 
     /**
-     * @typedef Object
-     * @name module:handlers/select-related~filters
-     * @property {Object.<string, module:search-manager~advancedFilter>} [advanced]
-     *  Advanced filters map. A field name as a key.
-     * @property {string[]} [bool] Bool filters.
-     * @property {string} [primary] A primary filter.
+     * @param {module:view-helper} viewHelper
      */
-
-    /**
-     * Prepares filters for selecting records to relate.
-     *
-     * @abstract
-     * @class
-     * @name Class
-     * @memberOf module:handlers/select-related
-     */
-    class Class {
-
-        /**
-         * @param {module:view-helper.Class} viewHelper
-         */
-        constructor(viewHelper) {
-            this.viewHelper = viewHelper;
-        }
-
-        /**
-         * Get filters for selecting records to relate.
-         *
-         * @abstract
-         * @param {module:model.Class} model A model.
-         * @return {Promise<module:handlers/select-related~filters>} Filters.
-         */
-        getFilters(model) {
-            return Promise.resolve({});
-        }
+    constructor(viewHelper) {
+        /** @protected */
+        this.viewHelper = viewHelper;
     }
 
-    return Class;
-});
+    /**
+     * Get filters for selecting records to relate.
+     *
+     * @abstract
+     * @param {module:model} model A model.
+     * @return {Promise<module:handlers/select-related~filters>} Filters.
+     */
+    getFilters(model) {
+        return Promise.resolve({});
+    }
+}

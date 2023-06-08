@@ -31,7 +31,7 @@ define('views/email/fields/has-attachment', ['views/fields/base'], function (Dep
     /**
      * @class
      * @name Class
-     * @extends module:views/fields/base.Class
+     * @extends module:views/fields/base
      * @memberOf module:views/email/fields/has-attachment
      */
     return Dep.extend(/** @lends module:views/email/fields/has-attachment.Class# */{

@@ -62,7 +62,7 @@ let stripSourceMappingUrl = path => {
     /** @var {string} */
     let originalContents = fs.readFileSync(path, {encoding: 'utf-8'});
 
-    let re = /\/\/# sourceMappingURL.*/g;
+    let re = /^\/\/# sourceMappingURL.*/gm;
 
     if (!originalContents.match(re)) {
         return;

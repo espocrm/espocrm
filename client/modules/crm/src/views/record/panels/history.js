@@ -167,7 +167,7 @@ define('crm:views/record/panels/history', ['crm:views/record/panels/activities']
                 return;
             }
 
-            Espo.require('EmailHelper', EmailHelper => {
+            Espo.loader.require('email-helper', EmailHelper => {
                 let emailHelper =
                     new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime(), this.getAcl());
 

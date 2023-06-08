@@ -26,132 +26,134 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/checklist', ['views/fields/array'], function (Dep) {
+/** @module views/fields/checklist */
 
-    /**
-     * @class
-     * @name Class
-     * @extends module:views/fields/base.Class
-     * @memberOf module:views/fields/checklist
-     */
-    return Dep.extend(/** @lends module:views/fields/checklist.Class# */{
+import Dep from 'views/fields/array';
 
-        type: 'checklist',
+/**
+ * @class Class
+ * @extends module:views/fields/base
+ */
+export default Dep.extend(/** @lends Class# */{
 
-        listTemplate: 'fields/array/list',
+    type: 'checklist',
 
-        detailTemplate: 'fields/checklist/detail',
+    listTemplate: 'fields/array/list',
+    detailTemplate: 'fields/checklist/detail',
+    editTemplate: 'fields/checklist/edit',
 
-        editTemplate: 'fields/checklist/edit',
+    isInversed: false,
 
-        isInversed: false,
+    events: {},
 
-        events: {},
+    data: function () {
+        return {
+            optionDataList: this.getOptionDataList(),
+            ...Dep.prototype.data.call(this),
+        };
+    },
 
-        data: function () {
-            return _.extend({
-                optionDataList: this.getOptionDataList(),
-            }, Dep.prototype.data.call(this));
-        },
+    setup: function () {
+        Dep.prototype.setup.call(this);
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        this.params.options = this.params.options || [];
 
-            this.params.options = this.params.options || [];
+        this.isInversed = this.params.isInversed || this.options.isInversed || this.isInversed;
+    },
 
-            this.isInversed = this.params.isInversed || this.options.isInversed || this.isInversed;
-        },
+    afterRender: function () {
+        if (this.isSearchMode()) {
+            this.renderSearch();
+        }
 
-        afterRender: function () {
-            if (this.isSearchMode()) {
-                this.renderSearch();
-            }
-
-            if (this.isEditMode()) {
-                this.$el.find('input').on('change', () => {
-                    this.trigger('change');
-                });
-            }
-        },
-
-        getOptionDataList: function () {
-            let valueList = this.model.get(this.name) || [];
-            let list = [];
-
-            this.params.options.forEach((item) => {
-                let isChecked = ~valueList.indexOf(item);
-                let dataName = item;
-                let id = this.cid + '-' + Espo.Utils.camelCaseToHyphen(item.replace(/\s+/g, '-'));
-
-                if (this.isInversed) {
-                    isChecked = !isChecked;
-                }
-
-                list.push({
-                    name: item,
-                    isChecked: isChecked,
-                    dataName: dataName,
-                    id: id,
-                    label: this.translatedOptions[item] || item,
-                });
+        if (this.isEditMode()) {
+            this.$el.find('input').on('change', () => {
+                this.trigger('change');
             });
+        }
+    },
 
-            return list;
-        },
+    getOptionDataList: function () {
+        let valueList = this.model.get(this.name) || [];
+        let list = [];
 
-        fetch: function () {
-            let list = [];
+        this.params.options.forEach((item) => {
+            let isChecked = ~valueList.indexOf(item);
+            let dataName = item;
+            let id = this.cid + '-' + Espo.Utils.camelCaseToHyphen(item.replace(/\s+/g, '-'));
 
-            this.params.options.forEach(item => {
-                let $item = this.$el.find('input[data-name="' + item + '"]');
-                let isChecked = $item.get(0) && $item.get(0).checked;
+            if (this.isInversed) {
+                isChecked = !isChecked;
+            }
 
-                if (this.isInversed) {
-                    isChecked = !isChecked;
-                }
-
-                if (isChecked) {
-                    list.push(item);
-                }
+            list.push({
+                name: item,
+                isChecked: isChecked,
+                dataName: dataName,
+                id: id,
+                label: this.translatedOptions[item] || item,
             });
+        });
 
-            let data = {};
+        return list;
+    },
 
-            data[this.name] = list;
+    fetch: function () {
+        let list = [];
 
-            return data;
-        },
+        this.params.options.forEach(item => {
+            let $item = this.$el.find('input[data-name="' + item + '"]');
+            let isChecked = $item.get(0) && $item.get(0).checked;
 
-        validateRequired: function () {
-            if (this.isRequired()) {
-                let value = this.model.get(this.name);
-
-                if (!value || value.length === 0) {
-                    var msg = this.translate('fieldIsRequired', 'messages')
-                        .replace('{field}', this.getLabelText());
-
-                    this.showValidationMessage(msg, '.checklist-item-container:last-child input');
-
-                    return true;
-                }
+            if (this.isInversed) {
+                isChecked = !isChecked;
             }
-        },
 
-        validateMaxCount: function () {
-            if (this.params.maxCount) {
-                let itemList = this.model.get(this.name) || [];
-
-                if (itemList.length > this.params.maxCount) {
-                    let msg =
-                        this.translate('fieldExceedsMaxCount', 'messages')
-                            .replace('{field}', this.getLabelText())
-                            .replace('{maxCount}', this.params.maxCount.toString());
-
-                    this.showValidationMessage(msg, '.checklist-item-container:last-child input');
-
-                    return true;
-                }
+            if (isChecked) {
+                list.push(item);
             }
-        },
-    });
+        });
+
+        let data = {};
+
+        data[this.name] = list;
+
+        return data;
+    },
+
+    validateRequired: function () {
+        if (!this.isRequired()) {
+            return;
+        }
+
+        let value = this.model.get(this.name);
+
+        if (!value || value.length === 0) {
+            var msg = this.translate('fieldIsRequired', 'messages')
+                .replace('{field}', this.getLabelText());
+
+            this.showValidationMessage(msg, '.checklist-item-container:last-child input');
+
+            return true;
+        }
+    },
+
+    validateMaxCount: function () {
+        if (!this.params.maxCount) {
+            return;
+        }
+
+        let itemList = this.model.get(this.name) || [];
+
+        if (itemList.length > this.params.maxCount) {
+            let msg =
+                this.translate('fieldExceedsMaxCount', 'messages')
+                    .replace('{field}', this.getLabelText())
+                    .replace('{maxCount}', this.params.maxCount.toString());
+
+            this.showValidationMessage(msg, '.checklist-item-container:last-child input');
+
+            return true;
+        }
+    },
 });

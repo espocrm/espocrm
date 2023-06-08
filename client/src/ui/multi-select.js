@@ -26,249 +26,250 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('ui/multi-select', ['lib!Selectize'], (Selectize) => {
+/** @module module:ui/multi-select */
 
+import Selectize from "lib!Selectize";
+
+/**
+ * @typedef module:ui/multi-select~Options
+ * @type {Object}
+ * @property {{value: string, text: string}[]} items
+ * @property {string} [delimiter=':,:']
+ * @property {boolean} [restoreOnBackspace=false]
+ * @property {boolean} [removeButton=true]
+ * @property {boolean} [draggable=false]
+ * @property {boolean} [selectOnTab=false]
+ * @property {boolean} [matchAnyWord=false]
+ * @property {boolean} [allowCustomOptions=false]
+ * @property {function (string): {value: string, text: string}|null} create
+ */
+
+/**
+ * @module ui/multi-select
+ */
+const MultiSelect = {
     /**
-     * @typedef module:ui/multi-select~Options
-     * @type {Object}
-     * @property {{value: string, text: string}[]} items
-     * @property {string} [delimiter=':,:']
-     * @property {boolean} [restoreOnBackspace=false]
-     * @property {boolean} [removeButton=true]
-     * @property {boolean} [draggable=false]
-     * @property {boolean} [selectOnTab=false]
-     * @property {boolean} [matchAnyWord=false]
-     * @property {boolean} [allowCustomOptions=false]
-     * @property {function (string): {value: string, text: string}|null} create
+     * @param {JQuery} $el An element.
+     * @param {module:ui/multi-select~Options} options Options.
      */
+    init: function ($el, options) {
+        options = MultiSelect.applyDefaultOptions(options);
 
-    /**
-     * @module ui/multi-select
-     */
-    let MultiSelect = {
-        /**
-         * @param {JQuery} $el An element.
-         * @param {module:ui/multi-select~Options} options Options.
-         */
-        init: function ($el, options) {
-            options = MultiSelect.applyDefaultOptions(options);
+        let plugins = [];
 
-            let plugins = [];
+        if (options.removeButton) {
+            plugins.push('remove_button');
+        }
 
-            if (options.removeButton) {
-                plugins.push('remove_button');
-            }
+        if (options.draggable) {
+            plugins.push('drag_drop');
+        }
 
-            if (options.draggable) {
-                plugins.push('drag_drop');
-            }
+        if (options.restoreOnBackspace) {
+            MultiSelect.loadRestoreOnBackspacePlugin();
+            plugins.push('restore_on_backspace_espo')
+        }
 
-            if (options.restoreOnBackspace) {
-                MultiSelect.loadRestoreOnBackspacePlugin();
-                plugins.push('restore_on_backspace_espo')
-            }
+        MultiSelect.loadBypassCtrlEnterPlugin();
+        plugins.push('bypass_ctrl_enter');
 
-            MultiSelect.loadBypassCtrlEnterPlugin();
-            plugins.push('bypass_ctrl_enter');
+        let selectizeOptions = {
+            options: options.items,
+            plugins: plugins,
+            delimiter: options.delimiter,
+            labelField: 'text',
+            valueField: 'value',
+            searchField: ['text'],
+            highlight: false,
+            selectOnTab: options.selectOnTab,
+        };
 
-            let selectizeOptions = {
-                options: options.items,
-                plugins: plugins,
-                delimiter: options.delimiter,
-                labelField: 'text',
-                valueField: 'value',
-                searchField: ['text'],
-                highlight: false,
-                selectOnTab: options.selectOnTab,
-            };
+        if (!options.matchAnyWord) {
+            /** @this Selectize */
+            selectizeOptions.score = function (search) {
+                let score = this.getScoreFunction(search);
 
-            if (!options.matchAnyWord) {
-                /** @this Selectize */
-                selectizeOptions.score = function (search) {
-                    let score = this.getScoreFunction(search);
+                search = search.toLowerCase();
 
-                    search = search.toLowerCase();
-
-                    return function (item) {
-                        if (item.text.toLowerCase().indexOf(search) === 0) {
-                            return score(item);
-                        }
-
-                        return 0;
-                    };
-                };
-            }
-
-            if (options.matchAnyWord) {
-                /** @this Selectize */
-                selectizeOptions.score = function (search) {
-                    let score = this.getScoreFunction(search);
-
-                    search = search.toLowerCase();
-
-                    return function (item) {
-                        let text = item.text.toLowerCase();
-
-                        if (
-                            !text.split(' ').find(item => item.startsWith(search)) &&
-                            !text.startsWith(search)
-                        ) {
-                            return 0;
-                        }
-
+                return function (item) {
+                    if (item.text.toLowerCase().indexOf(search) === 0) {
                         return score(item);
-                    };
+                    }
+
+                    return 0;
                 };
-            }
+            };
+        }
 
-            if (options.allowCustomOptions) {
-                selectizeOptions.persist = false;
-                selectizeOptions.create = options.create;
-                selectizeOptions.render = {
-                    option_create: data => {
-                        return $('<div>')
-                            .addClass('create')
-                            .append(
-                                $('<span>')
-                                    .text(data.input)
-                                    .addClass('text-bold')
-                            )
-                            .append('&hellip;')
-                            .get(0).outerHTML;
-                    },
+        if (options.matchAnyWord) {
+            /** @this Selectize */
+            selectizeOptions.score = function (search) {
+                let score = this.getScoreFunction(search);
+
+                search = search.toLowerCase();
+
+                return function (item) {
+                    let text = item.text.toLowerCase();
+
+                    if (
+                        !text.split(' ').find(item => item.startsWith(search)) &&
+                        !text.startsWith(search)
+                    ) {
+                        return 0;
+                    }
+
+                    return score(item);
                 };
+            };
+        }
+
+        if (options.allowCustomOptions) {
+            selectizeOptions.persist = false;
+            selectizeOptions.create = options.create;
+            selectizeOptions.render = {
+                option_create: data => {
+                    return $('<div>')
+                        .addClass('create')
+                        .append(
+                            $('<span>')
+                                .text(data.input)
+                                .addClass('text-bold')
+                        )
+                        .append('&hellip;')
+                        .get(0).outerHTML;
+                },
+            };
+        }
+
+        $el.selectize(selectizeOptions);
+    },
+
+    /**
+     * Focus.
+     *
+     * @param {JQuery} $el An element.
+     */
+    focus: function ($el) {
+        if (
+            !$el[0] ||
+            !$el[0].selectize
+        ) {
+            return;
+        }
+
+        let selectize = $el[0].selectize;
+
+        selectize.focus();
+    },
+
+    /**
+     * @private
+     * @param {module:ui/multi-select~Options} options
+     * @return {module:ui/multi-select~Options}
+     */
+    applyDefaultOptions: function (options) {
+        options = Espo.Utils.clone(options);
+
+        let defaults = {
+            removeButton: true,
+            draggable: false,
+            selectOnTab: false,
+            delimiter: ':,:',
+            matchAnyWord: false,
+            allowCustomOptions: false,
+        };
+
+        for (let key in defaults) {
+            if (key in options) {
+                continue;
             }
 
-            $el.selectize(selectizeOptions);
-        },
+            options[key] = defaults[key];
+        }
 
-        /**
-         * Focus.
-         *
-         * @param {JQuery} $el An element.
-         */
-        focus: function ($el) {
-            if (
-                !$el[0] ||
-                !$el[0].selectize
-            ) {
-                return;
-            }
+        return options;
+    },
 
-            let selectize = $el[0].selectize;
+    /**
+     * @private
+     */
+    loadBypassCtrlEnterPlugin: function () {
+        if ('bypass_ctrl_enter' in Selectize.plugins) {
+            return;
+        }
 
-            selectize.focus();
-        },
+        const IS_MAC = /Mac/.test(navigator.userAgent);
 
-        /**
-         * @private
-         * @param {module:ui/multi-select~Options} options
-         * @return {module:ui/multi-select~Options}
-         */
-        applyDefaultOptions: function (options) {
-            options = Espo.Utils.clone(options);
+        Selectize.define('bypass_ctrl_enter', function (options) {
+            let self = this;
 
-            let defaults = {
-                removeButton: true,
-                draggable: false,
-                selectOnTab: false,
-                delimiter: ':,:',
-                matchAnyWord: false,
-                allowCustomOptions: false,
+            this.onKeyDown = (function() {
+                let original = self.onKeyDown;
+
+                return function (e) {
+                    if (e.code === 'Enter' && (IS_MAC ? e.metaKey : e.ctrlKey)) {
+                        return;
+                    }
+
+                    return original.apply(this, arguments);
+                };
+            })();
+        });
+    },
+
+    /**
+     * @private
+     */
+    loadRestoreOnBackspacePlugin: function () {
+        if ('restore_on_backspace_espo' in Selectize.plugins) {
+            return;
+        }
+
+        Selectize.define('restore_on_backspace_espo', function (options) {
+            options.text = options.text || function (option) {
+                return option[this.settings.labelField];
             };
 
-            for (let key in defaults) {
-                if (key in options) {
-                    continue;
-                }
+            let self = this;
 
-                options[key] = defaults[key];
-            }
+            this.onKeyDown = (function() {
+                let original = self.onKeyDown;
 
-            return options;
-        },
+                return function (e) {
+                    let index, option;
 
-        /**
-         * @private
-         */
-        loadBypassCtrlEnterPlugin: function () {
-            if ('bypass_ctrl_enter' in Selectize.plugins) {
-                return;
-            }
+                    if (
+                        e.code === 'Backspace' &&
+                        this.$control_input.val() === '' &&
+                        !this.$activeItems.length
+                    ) {
+                        index = this.caretPos - 1;
 
-            const IS_MAC = /Mac/.test(navigator.userAgent);
+                        if (index >= 0 && index < this.items.length) {
+                            option = this.options[this.items[index]];
 
-            Selectize.define('bypass_ctrl_enter', function (options) {
-                let self = this;
+                            option = {
+                                value: option.value,
+                                $order: option.$order,
+                                text: option.value,
+                            };
 
-                this.onKeyDown = (function() {
-                    let original = self.onKeyDown;
+                            if (this.deleteSelection(e)) {
+                                this.setTextboxValue(options.text.apply(this, [option]));
+                                this.refreshOptions(true);
+                            }
 
-                    return function (e) {
-                        if (e.code === 'Enter' && (IS_MAC ? e.metaKey : e.ctrlKey)) {
+                            e.preventDefault();
+
                             return;
                         }
+                    }
 
-                        return original.apply(this, arguments);
-                    };
-                })();
-            });
-        },
-
-        /**
-         * @private
-         */
-        loadRestoreOnBackspacePlugin: function () {
-            if ('restore_on_backspace_espo' in Selectize.plugins) {
-                return;
-            }
-
-            Selectize.define('restore_on_backspace_espo', function (options) {
-                options.text = options.text || function (option) {
-                    return option[this.settings.labelField];
+                    return original.apply(this, arguments);
                 };
+            })();
+        });
+    },
+};
 
-                let self = this;
-
-                this.onKeyDown = (function() {
-                    let original = self.onKeyDown;
-
-                    return function (e) {
-                        let index, option;
-
-                        if (
-                            e.code === 'Backspace' &&
-                            this.$control_input.val() === '' &&
-                            !this.$activeItems.length
-                        ) {
-                            index = this.caretPos - 1;
-
-                            if (index >= 0 && index < this.items.length) {
-                                option = this.options[this.items[index]];
-
-                                option = {
-                                    value: option.value,
-                                    $order: option.$order,
-                                    text: option.value,
-                                };
-
-                                if (this.deleteSelection(e)) {
-                                    this.setTextboxValue(options.text.apply(this, [option]));
-                                    this.refreshOptions(true);
-                                }
-
-                                e.preventDefault();
-
-                                return;
-                            }
-                        }
-
-                        return original.apply(this, arguments);
-                    };
-                })();
-            });
-        },
-    };
-
-    return MultiSelect;
-});
+export default MultiSelect;

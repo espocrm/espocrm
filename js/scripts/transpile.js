@@ -26,7 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('models/email', ['model'], function (Dep) {
+const Transpiler = require('../../js/transpiler');
 
-    return Dep.extend({});
-});
+(new Transpiler({})).process();
+
+(new Transpiler({
+    mod: 'crm',
+    path: 'client/modules/crm',
+})).process();

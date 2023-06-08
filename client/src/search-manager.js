@@ -26,477 +26,474 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('search-manager', [], function () {
+/** @module search-manager */
+
+/**
+ * Search data.
+ *
+ * @typedef {Object} module:search-manager~data
+ *
+ * @property {string} primary A primary filter.
+ * @property {Object.<string,boolean>} bool Bool filters.
+ * @property {{string: module:search-manager~advancedFilter}} advanced Advanced filters (field filters).
+ * Contains data needed for both the backend and frontend. Keys are field names.
+ */
+
+/**
+ * A where item. Sent to the backend.
+ *
+ * @typedef {Object} module:search-manager~whereItem
+ *
+ * @property {string} type A type.
+ * @property {string} [attribute] An attribute (field).
+ * @property {module:search-manager~whereItem[]|string|number|boolean|null} [value] A value.
+ * @property {boolean} [dateTime] Is a date-time item.
+ * @property {string} [timeZone] A time-zone (for date-time items).
+ */
+
+/**
+ * An advanced filter
+ *
+ * @typedef {Object} module:search-manager~advancedFilter
+ *
+ * @property {string} type A type. E.g. `equals`.
+ * @property {string} attribute An attribute.
+ * @property {*} [value] A value.
+ * @property {Object.<string,*>} [data] Additional data for UI.
+ */
+
+/**
+ * A search manager.
+ *
+ * @class
+ * @param {module:collection} collection A collection.
+ * @param {string|null} type A type. Used for a storage key.
+ * @param {module:storage|null} storage A storage.
+ * @param {module:date-time|null} dateTime A date-time util.
+ * @param {module:search-manager~data|null} [defaultData=null] Default search data.
+ * @param {boolean} [emptyOnReset=false] To empty on reset.
+ */
+const SearchManager = function (
+    collection,
+    type,
+    storage,
+    dateTime,
+    defaultData,
+    emptyOnReset
+) {
+    /**
+     * @private
+     * @type {module:collection}
+     */
+    this.collection = collection;
 
     /**
-     * Search data.
+     * An entity type.
      *
-     * @typedef {Object} module:search-manager~data
-     *
-     * @property {string} primary A primary filter.
-     * @property {Object.<string,boolean>} bool Bool filters.
-     * @property {{string: module:search-manager~advancedFilter}} advanced Advanced filters (field filters).
-     * Contains data needed for both the backend and frontend. Keys are field names.
+     * @public
+     * @type {string}
      */
+    this.scope = collection.name;
 
     /**
-     * A where item. Sent to the backend.
-     *
-     * @typedef {Object} module:search-manager~whereItem
-     *
-     * @property {string} type A type.
-     * @property {string} [attribute] An attribute (field).
-     * @property {module:search-manager~whereItem[]|string|number|boolean|null} [value] A value.
-     * @property {boolean} [dateTime] Is a date-time item.
-     * @property {string} [timeZone] A time-zone (for date-time items).
+     * @private
+     * @type {module:storage|null}
      */
+    this.storage = storage;
 
     /**
-     * An advanced filter
-     *
-     * @typedef {Object} module:search-manager~advancedFilter
-     *
-     * @property {string} type A type. E.g. `equals`.
-     * @property {string} attribute An attribute.
-     * @property {*} [value] A value.
-     * @property {Object.<string,*>} [data] Additional data for UI.
+     * @private
+     * @type {string}
      */
+    this.type = type || 'list';
 
     /**
-     * A search manager.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:search-manager
-     *
-     * @param {module:collection.Class} collection A collection.
-     * @param {string|null} type A type. Used for a storage key.
-     * @param {module:storage.Class|null} storage A storage.
-     * @param {module:date-time.Class|null} dateTime A date-time util.
-     * @param {module:search-manager~data|null} [defaultData=null] Default search data.
-     * @param {boolean} [emptyOnReset=false] To empty on reset.
+     * @private
+     * @type {module:date-time|null}
      */
-    let SearchManager = function (
-        collection,
-        type,
-        storage,
-        dateTime,
-        defaultData,
-        emptyOnReset
-    ) {
-        /**
-         * @private
-         * @type {module:collection.Class}
-         */
-        this.collection = collection;
+    this.dateTime = dateTime;
 
-        /**
-         * An entity type.
-         *
-         * @public
-         * @type {string}
-         */
-        this.scope = collection.name;
+    /**
+     * @private
+     * @type {boolean}
+     */
+    this.emptyOnReset = emptyOnReset;
 
-        /**
-         * @private
-         * @type {module:storage.Class|null}
-         */
-        this.storage = storage;
+    /**
+     * @private
+     * @type {Object}
+     */
+    this.emptyData = {
+        textFilter: '',
+        bool: {},
+        advanced: {},
+        primary: null,
+    };
 
-        /**
-         * @private
-         * @type {string}
-         */
-        this.type = type || 'list';
+    if (defaultData) {
+        this.defaultData = defaultData;
 
-        /**
-         * @private
-         * @type {module:date-time.Class|null}
-         */
-        this.dateTime = dateTime;
+        for (let p in this.emptyData) {
+            if (!(p in defaultData)) {
+                defaultData[p] = Espo.Utils.clone(this.emptyData[p]);
+            }
+        }
+    }
 
-        /**
-         * @private
-         * @type {boolean}
-         */
-        this.emptyOnReset = emptyOnReset;
+    this.data = Espo.Utils.clone(defaultData) || this.emptyData;
 
-        /**
-         * @private
-         * @type {Object}
-         */
-        this.emptyData = {
-            textFilter: '',
-            bool: {},
-            advanced: {},
-            primary: null,
-        };
+    this.sanitizeData();
+};
 
-        if (defaultData) {
-            this.defaultData = defaultData;
+_.extend(SearchManager.prototype, /** @lends SearchManager# */{
 
-            for (let p in this.emptyData) {
-                if (!(p in defaultData)) {
-                    defaultData[p] = Espo.Utils.clone(this.emptyData[p]);
+    /**
+     * @private
+     */
+    sanitizeData: function () {
+        if (!('advanced' in this.data)) {
+            this.data.advanced = {};
+        }
+
+        if (!('bool' in this.data)) {
+            this.data.bool = {};
+        }
+
+        if (!('textFilter' in this.data)) {
+            this.data.textFilter = '';
+        }
+    },
+
+    /**
+     * Get a where clause. The where clause to be sent to the backend.
+     *
+     * @returns {module:search-manager~whereItem[]}
+     */
+    getWhere: function () {
+        let where = [];
+
+        if (this.data.textFilter && this.data.textFilter !== '') {
+            where.push({
+                type: 'textFilter',
+                value: this.data.textFilter
+            });
+        }
+
+        if (this.data.bool) {
+            let o = {
+                type: 'bool',
+                value: [],
+            };
+
+            for (let name in this.data.bool) {
+                if (this.data.bool[name]) {
+                    o.value.push(name);
                 }
+            }
+
+            if (o.value.length) {
+                where.push(o);
             }
         }
 
-        this.data = Espo.Utils.clone(defaultData) || this.emptyData;
+        if (this.data.primary) {
+            let o = {
+                type: 'primary',
+                value: this.data.primary,
+            };
 
-        this.sanitizeData();
-    };
-
-    _.extend(SearchManager.prototype, /** @lends module:search-manager.Class# */{
-
-        /**
-         * @private
-         */
-        sanitizeData: function () {
-            if (!('advanced' in this.data)) {
-                this.data.advanced = {};
+            if (o.value.length) {
+                where.push(o);
             }
+        }
 
-            if (!('bool' in this.data)) {
-                this.data.bool = {};
-            }
+        if (this.data.advanced) {
+            for (let name in this.data.advanced) {
+                let defs = this.data.advanced[name];
 
-            if (!('textFilter' in this.data)) {
-                this.data.textFilter = '';
-            }
-        },
-
-        /**
-         * Get a where clause. The where clause to be sent to the backend.
-         *
-         * @returns {module:search-manager~whereItem[]}
-         */
-        getWhere: function () {
-            let where = [];
-
-            if (this.data.textFilter && this.data.textFilter !== '') {
-                where.push({
-                    type: 'textFilter',
-                    value: this.data.textFilter
-                });
-            }
-
-            if (this.data.bool) {
-                let o = {
-                    type: 'bool',
-                    value: [],
-                };
-
-                for (let name in this.data.bool) {
-                    if (this.data.bool[name]) {
-                        o.value.push(name);
-                    }
+                if (!defs) {
+                    continue;
                 }
 
-                if (o.value.length) {
-                    where.push(o);
-                }
+                let part = this.getWherePart(name, defs);
+
+                where.push(part);
             }
+        }
 
-            if (this.data.primary) {
-                let o = {
-                    type: 'primary',
-                    value: this.data.primary,
-                };
+        return where;
+    },
 
-                if (o.value.length) {
-                    where.push(o);
-                }
+    /**
+     * @private
+     */
+    getWherePart: function (name, defs) {
+        var attribute = name;
+
+        if ('where' in defs) {
+            return defs.where;
+        }
+
+        let type = defs.type;
+
+        if (type === 'or' || type === 'and') {
+            let a = [];
+
+            var value = defs.value || {};
+
+            for (let n in value) {
+                a.push(this.getWherePart(n, value[n]));
             }
-
-            if (this.data.advanced) {
-                for (let name in this.data.advanced) {
-                    let defs = this.data.advanced[name];
-
-                    if (!defs) {
-                        continue;
-                    }
-
-                    let part = this.getWherePart(name, defs);
-
-                    where.push(part);
-                }
-            }
-
-            return where;
-        },
-
-        /**
-         * @private
-         */
-        getWherePart: function (name, defs) {
-            var attribute = name;
-
-            if ('where' in defs) {
-                return defs.where;
-            }
-
-            let type = defs.type;
-
-            if (type === 'or' || type === 'and') {
-                let a = [];
-
-                var value = defs.value || {};
-
-                for (let n in value) {
-                    a.push(this.getWherePart(n, value[n]));
-                }
-
-                return {
-                    type: type,
-                    value: a
-                };
-            }
-
-            if ('field' in defs) { // for backward compatibility
-                attribute = defs.field;
-            }
-
-            if ('attribute' in defs) {
-                attribute = defs.attribute;
-            }
-
-            if (defs.dateTime) {
-                return {
-                    type: type,
-                    attribute: attribute,
-                    value: defs.value,
-                    dateTime: true,
-                    timeZone: this.dateTime.timeZone || 'UTC',
-                };
-            }
-
-            value = defs.value;
 
             return {
                 type: type,
+                value: a
+            };
+        }
+
+        if ('field' in defs) { // for backward compatibility
+            attribute = defs.field;
+        }
+
+        if ('attribute' in defs) {
+            attribute = defs.attribute;
+        }
+
+        if (defs.dateTime) {
+            return {
+                type: type,
                 attribute: attribute,
-                value: value
+                value: defs.value,
+                dateTime: true,
+                timeZone: this.dateTime.timeZone || 'UTC',
             };
-        },
+        }
 
-        /**
-         * Load stored data.
-         *
-         * @returns {module:search-manager.Class}
-         */
-        loadStored: function () {
-            this.data =
-                this.storage.get(this.type + 'Search', this.scope) ||
-                Espo.Utils.clone(this.defaultData) ||
-                Espo.Utils.clone(this.emptyData);
+        value = defs.value;
 
-            this.sanitizeData();
+        return {
+            type: type,
+            attribute: attribute,
+            value: value
+        };
+    },
 
-            return this;
-        },
+    /**
+     * Load stored data.
+     *
+     * @returns {module:search-manager}
+     */
+    loadStored: function () {
+        this.data =
+            this.storage.get(this.type + 'Search', this.scope) ||
+            Espo.Utils.clone(this.defaultData) ||
+            Espo.Utils.clone(this.emptyData);
 
-        /**
-         * Get data.
-         *
-         * @returns {module:search-manager~data}
-         */
-        get: function () {
-            return this.data;
-        },
+        this.sanitizeData();
 
-        /**
-         * Set advanced filters.
-         *
-         * @param {{string: module:search-manager~advancedFilter}} advanced Advanced filters.
-         *   Pairs of field => advancedFilter.
-         */
-        setAdvanced: function (advanced) {
-            this.data = Espo.Utils.clone(this.data);
+        return this;
+    },
 
-            this.data.advanced = advanced;
-        },
+    /**
+     * Get data.
+     *
+     * @returns {module:search-manager~data}
+     */
+    get: function () {
+        return this.data;
+    },
 
-        /**
-         * Set bool filters.
-         *
-         * @param {Object.<string, boolean>} bool Bool filters.
-         */
-        setBool: function (bool) {
-            this.data = Espo.Utils.clone(this.data);
+    /**
+     * Set advanced filters.
+     *
+     * @param {{string: module:search-manager~advancedFilter}} advanced Advanced filters.
+     *   Pairs of field => advancedFilter.
+     */
+    setAdvanced: function (advanced) {
+        this.data = Espo.Utils.clone(this.data);
 
-            this.data.bool = bool;
-        },
+        this.data.advanced = advanced;
+    },
 
-        /**
-         * Set a primary filter.
-         *
-         * @param {string} primary A filter.
-         */
-        setPrimary: function (primary) {
-            this.data = Espo.Utils.clone(this.data);
+    /**
+     * Set bool filters.
+     *
+     * @param {Object.<string, boolean>} bool Bool filters.
+     */
+    setBool: function (bool) {
+        this.data = Espo.Utils.clone(this.data);
 
-            this.data.primary = primary;
-        },
+        this.data.bool = bool;
+    },
 
-        /**
-         * Set data.
-         *
-         * @param {module:search-manager~data} data Data.
-         */
-        set: function (data) {
-            this.data = data;
+    /**
+     * Set a primary filter.
+     *
+     * @param {string} primary A filter.
+     */
+    setPrimary: function (primary) {
+        this.data = Espo.Utils.clone(this.data);
 
-            if (this.storage) {
-                data = Espo.Utils.clone(data);
-                delete data['textFilter'];
+        this.data.primary = primary;
+    },
 
-                this.storage.set(this.type + 'Search', this.scope, data);
-            }
-        },
+    /**
+     * Set data.
+     *
+     * @param {module:search-manager~data} data Data.
+     */
+    set: function (data) {
+        this.data = data;
 
-        /**
-         * Empty data.
-         */
-        empty: function () {
-            this.data = Espo.Utils.clone(this.emptyData);
+        if (this.storage) {
+            data = Espo.Utils.clone(data);
+            delete data['textFilter'];
 
-            if (this.storage) {
-                this.storage.clear(this.type + 'Search', this.scope);
-            }
-        },
+            this.storage.set(this.type + 'Search', this.scope, data);
+        }
+    },
 
-        /**
-         * Reset.
-         */
-        reset: function () {
-            if (this.emptyOnReset) {
-                this.empty();
+    /**
+     * Empty data.
+     */
+    empty: function () {
+        this.data = Espo.Utils.clone(this.emptyData);
 
-                return;
-            }
+        if (this.storage) {
+            this.storage.clear(this.type + 'Search', this.scope);
+        }
+    },
 
-            this.data = Espo.Utils.clone(this.defaultData) || Espo.Utils.clone(this.emptyData);
+    /**
+     * Reset.
+     */
+    reset: function () {
+        if (this.emptyOnReset) {
+            this.empty();
 
-            if (this.storage) {
-                this.storage.clear(this.type + 'Search', this.scope);
-            }
-        },
+            return;
+        }
 
-        /**
-         * @private
-         */
-        getDateTimeWhere: function (type, field, value) {
-            var where = {
-                field: field
-            };
+        this.data = Espo.Utils.clone(this.defaultData) || Espo.Utils.clone(this.emptyData);
 
-            if (!value && ~['on', 'before', 'after'].indexOf(type)) {
-                return null;
-            }
+        if (this.storage) {
+            this.storage.clear(this.type + 'Search', this.scope);
+        }
+    },
 
-            let start, from, to;
+    /**
+     * @private
+     * @todo Revise.
+     */
+    getDateTimeWhere: function (type, field, value) {
+        var where = {
+            field: field
+        };
 
-            switch (type) {
-                case 'today':
-                    where.type = 'between';
+        if (!value && ~['on', 'before', 'after'].indexOf(type)) {
+            return null;
+        }
 
-                    start = this.dateTime.getNowMoment().startOf('day').utc();
+        let start, from, to;
 
-                    from = start.format(this.dateTime.internalDateTimeFormat);
-                    to = start.add(1, 'days').format(this.dateTime.internalDateTimeFormat);
+        switch (type) {
+            case 'today':
+                where.type = 'between';
 
-                    where.value = [from, to];
+                start = this.dateTime.getNowMoment().startOf('day').utc();
 
-                    break;
+                from = start.format(this.dateTime.internalDateTimeFormat);
+                to = start.add(1, 'days').format(this.dateTime.internalDateTimeFormat);
 
-                case 'past':
-                    where.type = 'before';
+                where.value = [from, to];
 
-                    where.value = this.dateTime.getNowMoment().utc().format(this.dateTime.internalDateTimeFormat);
+                break;
 
-                    break;
+            case 'past':
+                where.type = 'before';
 
-                case 'future':
-                    where.type = 'after';
+                where.value = this.dateTime.getNowMoment().utc().format(this.dateTime.internalDateTimeFormat);
 
-                    where.value = this.dateTime.getNowMoment().utc().format(this.dateTime.internalDateTimeFormat);
+                break;
 
-                    break;
+            case 'future':
+                where.type = 'after';
 
-                case 'on':
-                    where.type = 'between';
+                where.value = this.dateTime.getNowMoment().utc().format(this.dateTime.internalDateTimeFormat);
 
-                    start = moment(value, this.dateTime.internalDateFormat, this.timeZone).utc();
+                break;
 
-                    from = start.format(this.dateTime.internalDateTimeFormat);
-                    to = start.add(1, 'days').format(this.dateTime.internalDateTimeFormat);
+            case 'on':
+                where.type = 'between';
 
-                    where.value = [from, to];
+                start = moment(value, this.dateTime.internalDateFormat, this.timeZone).utc();
 
-                    break;
+                from = start.format(this.dateTime.internalDateTimeFormat);
+                to = start.add(1, 'days').format(this.dateTime.internalDateTimeFormat);
 
-                case 'before':
-                    where.type = 'before';
-                    where.value =
+                where.value = [from, to];
+
+                break;
+
+            case 'before':
+                where.type = 'before';
+                where.value =
+                    moment(
+                        value,
+                        this.dateTime.internalDateFormat,
+                        this.timeZone
+                    )
+                    .utc()
+                    .format(this.dateTime.internalDateTimeFormat );
+
+                break;
+
+            case 'after':
+                where.type = 'after';
+                where.value =
+                    moment(
+                        value,
+                        this.dateTime.internalDateFormat,
+                        this.timeZone
+                    )
+                    .utc()
+                    .format(this.dateTime.internalDateTimeFormat);
+
+                break;
+
+            case 'between':
+                where.type = 'between';
+
+                if (value[0] && value[1]) {
+                    let from =
                         moment(
-                            value,
-                            this.dateTime.internalDateFormat,
-                            this.timeZone
-                        )
-                        .utc()
-                        .format(this.dateTime.internalDateTimeFormat );
-
-                    break;
-
-                case 'after':
-                    where.type = 'after';
-                    where.value =
-                        moment(
-                            value,
+                            value[0],
                             this.dateTime.internalDateFormat,
                             this.timeZone
                         )
                         .utc()
                         .format(this.dateTime.internalDateTimeFormat);
 
-                    break;
+                    let to =
+                        moment(
+                            value[1],
+                            this.dateTime.internalDateFormat,
+                            this.timeZone
+                        )
+                        .utc()
+                        .format(this.dateTime.internalDateTimeFormat);
 
-                case 'between':
-                    where.type = 'between';
+                    where.value = [from, to];
+                }
 
-                    if (value[0] && value[1]) {
-                        let from =
-                            moment(
-                                value[0],
-                                this.dateTime.internalDateFormat,
-                                this.timeZone
-                            )
-                            .utc()
-                            .format(this.dateTime.internalDateTimeFormat);
+                break;
 
-                        let to =
-                            moment(
-                                value[1],
-                                this.dateTime.internalDateFormat,
-                                this.timeZone
-                            )
-                            .utc()
-                            .format(this.dateTime.internalDateTimeFormat);
+            default:
+                where.type = type;
+        }
 
-                        where.value = [from, to];
-                    }
-
-                    break;
-
-                default:
-                    where.type = type;
-            }
-
-            return where;
-        },
-    });
-
-    return SearchManager;
+        return where;
+    },
 });
+
+export default SearchManager;

@@ -26,402 +26,405 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/int', ['views/fields/base', 'lib!autonumeric'], function (Dep, AutoNumeric) {
+/** @module views/fields/int */
+
+import Dep from 'views/fields/base';
+import AutoNumeric from 'lib!autonumeric';
+
+/**
+ * An integer field.
+ *
+ * @class Class
+ * @extends module:views/fields/base
+ */
+export default Dep.extend(/** Class# */{
+
+    type: 'int',
+
+    listTemplate: 'fields/int/list',
+    detailTemplate: 'fields/int/detail',
+    editTemplate: 'fields/int/edit',
+    searchTemplate: 'fields/int/search',
+    validations: ['required', 'int', 'range'],
+
+    thousandSeparator: ',',
+
+    searchTypeList: [
+        'isNotEmpty',
+        'isEmpty',
+        'equals',
+        'notEquals',
+        'greaterThan',
+        'lessThan',
+        'greaterThanOrEquals',
+        'lessThanOrEquals',
+        'between',
+    ],
 
     /**
-     * An integer field.
-     *
-     * @class
-     * @name Class
-     * @extends module:views/fields/base.Class
-     * @memberOf module:views/fields/int
+     * @type {Object.<string, *>|null}
+     * @protected
      */
-    return Dep.extend(/** module:views/fields/int.Class# */{
+    autoNumericOptions: null,
 
-        type: 'int',
+    /**
+     * @type {?AutoNumeric}
+     * @protected
+     */
+    autoNumericInstance: null,
 
-        listTemplate: 'fields/int/list',
-        detailTemplate: 'fields/int/detail',
-        editTemplate: 'fields/int/edit',
-        searchTemplate: 'fields/int/search',
-        validations: ['required', 'int', 'range'],
+    setup: function () {
+        Dep.prototype.setup.call(this);
 
-        thousandSeparator: ',',
+        this.setupMaxLength();
 
-        searchTypeList: [
-            'isNotEmpty',
-            'isEmpty',
-            'equals',
-            'notEquals',
-            'greaterThan',
-            'lessThan',
-            'greaterThanOrEquals',
-            'lessThanOrEquals',
-            'between',
-        ],
+        if (this.getPreferences().has('thousandSeparator')) {
+            this.thousandSeparator = this.getPreferences().get('thousandSeparator');
+        }
+        else if (this.getConfig().has('thousandSeparator')) {
+            this.thousandSeparator = this.getConfig().get('thousandSeparator');
+        }
 
-        /**
-         * @type {?Object.<string, *>}
-         * @protected
-         */
-        autoNumericOptions: null,
+        if (this.params.disableFormatting) {
+            this.disableFormatting = true;
+        }
+    },
 
-        /**
-         * @type {?AutoNumeric}
-         * @protected
-         */
-        autoNumericInstance: null,
+    setupFinal: function () {
+        Dep.prototype.setupFinal.call(this);
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        this.setupAutoNumericOptions();
+    },
 
-            this.setupMaxLength();
+    /**
+     * @protected
+     */
+    setupAutoNumericOptions: function () {
+        let separator = (!this.disableFormatting ? this.thousandSeparator : null) || '';
+        let decimalCharacter = '.';
 
-            if (this.getPreferences().has('thousandSeparator')) {
-                this.thousandSeparator = this.getPreferences().get('thousandSeparator');
+        if (separator === '.') {
+            decimalCharacter = ',';
+        }
+
+        this.autoNumericOptions = {
+            digitGroupSeparator: separator,
+            decimalCharacter: decimalCharacter,
+            modifyValueOnWheel: false,
+            decimalPlaces: 0,
+            selectOnFocus: false,
+            formulaMode: true,
+        };
+    },
+
+    afterRender: function () {
+        Dep.prototype.afterRender.call(this);
+
+        if (this.mode === this.MODE_EDIT) {
+
+            if (this.autoNumericOptions) {
+                this.autoNumericInstance = new AutoNumeric(this.$element.get(0), this.autoNumericOptions);
             }
-            else if (this.getConfig().has('thousandSeparator')) {
-                this.thousandSeparator = this.getConfig().get('thousandSeparator');
+        }
+
+        if (this.mode === this.MODE_SEARCH) {
+            var $searchType = this.$el.find('select.search-type');
+
+            this.handleSearchType($searchType.val());
+
+            this.$el.find('select.search-type').on('change', () => {
+                this.trigger('change');
+            });
+
+            this.$element.on('input', () => {
+                this.trigger('change');
+            });
+
+            let $inputAdditional = this.$el.find('input.additional');
+
+            $inputAdditional.on('input', () => {
+                this.trigger('change');
+            });
+
+            if (this.autoNumericOptions) {
+                new AutoNumeric(this.$element.get(0), this.autoNumericOptions);
+                new AutoNumeric($inputAdditional.get(0), this.autoNumericOptions);
             }
+        }
+    },
 
-            if (this.params.disableFormatting) {
-                this.disableFormatting = true;
+    data: function () {
+        var data = Dep.prototype.data.call(this);
+
+        if (this.model.get(this.name) !== null && typeof this.model.get(this.name) !== 'undefined') {
+            data.isNotEmpty = true;
+        }
+
+        data.valueIsSet = this.model.has(this.name);
+
+        if (this.isSearchMode()) {
+            data.value = this.searchParams.value;
+
+            if (this.getSearchType() === 'between') {
+                data.value = this.getSearchParamsData().value1 || this.searchParams.value1;
+                data.value2 = this.getSearchParamsData().value2 || this.searchParams.value2;
             }
-        },
+        }
 
-        setupFinal: function () {
-            Dep.prototype.setupFinal.call(this);
+        if (this.isEditMode()) {
+            data.value = this.model.get(this.name);
+        }
 
-            this.setupAutoNumericOptions();
-        },
+        return data;
+    },
 
-        /**
-         * @protected
-         */
-        setupAutoNumericOptions: function () {
-            let separator = (!this.disableFormatting ? this.thousandSeparator : null) || '';
-            let decimalCharacter = '.';
+    getValueForDisplay: function () {
+        var value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
 
-            if (separator === '.') {
-                decimalCharacter = ',';
-            }
+        return this.formatNumber(value);
+    },
 
-            this.autoNumericOptions = {
-                digitGroupSeparator: separator,
-                decimalCharacter: decimalCharacter,
-                modifyValueOnWheel: false,
-                decimalPlaces: 0,
-                selectOnFocus: false,
-                formulaMode: true,
-            };
-        },
+    formatNumber: function (value) {
+        if (this.disableFormatting) {
+            return value;
+        }
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+        return this.formatNumberDetail(value);
+    },
 
-            if (this.mode === this.MODE_EDIT) {
+    formatNumberDetail: function (value) {
+        if (value === null) {
+            return '';
+        }
 
-                if (this.autoNumericOptions) {
-                    this.autoNumericInstance = new AutoNumeric(this.$element.get(0), this.autoNumericOptions);
-                }
-            }
+        let stringValue = value.toString();
 
-            if (this.mode === this.MODE_SEARCH) {
-                var $searchType = this.$el.find('select.search-type');
+        stringValue = stringValue.replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
 
-                this.handleSearchType($searchType.val());
+        return stringValue;
+    },
 
-                this.$el.find('select.search-type').on('change', () => {
-                    this.trigger('change');
-                });
+    setupSearch: function () {
+        this.events = _.extend({
+            'change select.search-type': (e) => {
+                this.handleSearchType($(e.currentTarget).val());
+            },
+        }, this.events || {});
+    },
 
-                this.$element.on('input', () => {
-                    this.trigger('change');
-                });
+    handleSearchType: function (type) {
+        var $additionalInput = this.$el.find('input.additional');
 
-                let $inputAdditional = this.$el.find('input.additional');
+        var $input = this.$el.find('input[data-name="'+this.name+'"]');
 
-                $inputAdditional.on('input', () => {
-                    this.trigger('change');
-                });
+        if (type === 'between') {
+            $additionalInput.removeClass('hidden');
+            $input.removeClass('hidden');
+        }
+        else if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+            $additionalInput.addClass('hidden');
+            $input.addClass('hidden');
+        }
+        else {
+            $additionalInput.addClass('hidden');
+            $input.removeClass('hidden');
+        }
+    },
 
-                if (this.autoNumericOptions) {
-                    new AutoNumeric(this.$element.get(0), this.autoNumericOptions);
-                    new AutoNumeric($inputAdditional.get(0), this.autoNumericOptions);
-                }
-            }
-        },
+    getMaxValue: function () {
+        var maxValue = this.model.getFieldParam(this.name, 'max') || null;
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
+        if (!maxValue && maxValue !== 0) {
+            maxValue = null;
+        }
 
-            if (this.model.get(this.name) !== null && typeof this.model.get(this.name) !== 'undefined') {
-                data.isNotEmpty = true;
-            }
+        if ('max' in this.params) {
+            maxValue = this.params.max;
+        }
 
-            data.valueIsSet = this.model.has(this.name);
+        return maxValue;
+    },
 
-            if (this.isSearchMode()) {
-                data.value = this.searchParams.value;
+    getMinValue: function () {
+        var minValue = this.model.getFieldParam(this.name, 'min');
 
-                if (this.getSearchType() === 'between') {
-                    data.value = this.getSearchParamsData().value1 || this.searchParams.value1;
-                    data.value2 = this.getSearchParamsData().value2 || this.searchParams.value2;
-                }
-            }
+        if (!minValue && minValue !== 0) {
+            minValue = null;
+        }
 
-            if (this.isEditMode()) {
-                data.value = this.model.get(this.name);
-            }
+        if ('min' in this.params) {
+            minValue = this.params.min;
+        }
 
-            return data;
-        },
+        return minValue;
+    },
 
-        getValueForDisplay: function () {
-            var value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
+    setupMaxLength: function () {
+        var maxValue = this.getMaxValue();
 
-            return this.formatNumber(value);
-        },
+        if (typeof max !== 'undefined' && max !== null) {
+            maxValue = this.formatNumber(maxValue);
 
-        formatNumber: function (value) {
-            if (this.disableFormatting) {
-                return value;
-            }
+            this.params.maxLength = maxValue.toString().length;
+        }
+    },
 
-            return this.formatNumberDetail(value);
-        },
+    validateInt: function () {
+        var value = this.model.get(this.name);
 
-        formatNumberDetail: function (value) {
-            if (value === null) {
-                return '';
-            }
+        if (isNaN(value)) {
+            var msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText());
 
-            let stringValue = value.toString();
+            this.showValidationMessage(msg);
 
-            stringValue = stringValue.replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
+            return true;
+        }
+    },
 
-            return stringValue;
-        },
+    validateRange: function () {
+        let value = this.model.get(this.name);
 
-        setupSearch: function () {
-            this.events = _.extend({
-                'change select.search-type': (e) => {
-                    this.handleSearchType($(e.currentTarget).val());
-                },
-            }, this.events || {});
-        },
+        if (value === null) {
+            return false;
+        }
 
-        handleSearchType: function (type) {
-            var $additionalInput = this.$el.find('input.additional');
+        let minValue = this.getMinValue();
+        let maxValue = this.getMaxValue();
 
-            var $input = this.$el.find('input[data-name="'+this.name+'"]');
-
-            if (type === 'between') {
-                $additionalInput.removeClass('hidden');
-                $input.removeClass('hidden');
-            }
-            else if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
-                $additionalInput.addClass('hidden');
-                $input.addClass('hidden');
-            }
-            else {
-                $additionalInput.addClass('hidden');
-                $input.removeClass('hidden');
-            }
-        },
-
-        getMaxValue: function () {
-            var maxValue = this.model.getFieldParam(this.name, 'max') || null;
-
-            if (!maxValue && maxValue !== 0) {
-                maxValue = null;
-            }
-
-            if ('max' in this.params) {
-                maxValue = this.params.max;
-            }
-
-            return maxValue;
-        },
-
-        getMinValue: function () {
-            var minValue = this.model.getFieldParam(this.name, 'min');
-
-            if (!minValue && minValue !== 0) {
-                minValue = null;
-            }
-
-            if ('min' in this.params) {
-                minValue = this.params.min;
-            }
-
-            return minValue;
-        },
-
-        setupMaxLength: function () {
-            var maxValue = this.getMaxValue();
-
-            if (typeof max !== 'undefined' && max !== null) {
-                maxValue = this.formatNumber(maxValue);
-
-                this.params.maxLength = maxValue.toString().length;
-            }
-        },
-
-        validateInt: function () {
-            var value = this.model.get(this.name);
-
-            if (isNaN(value)) {
-                var msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText());
+        if (minValue !== null && maxValue !== null) {
+            if (value < minValue || value > maxValue ) {
+                let msg = this.translate('fieldShouldBeBetween', 'messages')
+                    .replace('{field}', this.getLabelText())
+                    .replace('{min}', minValue)
+                    .replace('{max}', maxValue);
 
                 this.showValidationMessage(msg);
 
                 return true;
             }
-        },
-
-        validateRange: function () {
-            var value = this.model.get(this.name);
-
-            if (value === null) {
-                return false;
-            }
-
-            var minValue = this.getMinValue();
-            var maxValue = this.getMaxValue();
-
-            if (minValue !== null && maxValue !== null) {
-                if (value < minValue || value > maxValue ) {
-                    var msg = this.translate('fieldShouldBeBetween', 'messages')
+        }
+        else {
+            if (minValue !== null) {
+                if (value < minValue) {
+                    let msg = this.translate('fieldShouldBeGreater', 'messages')
                         .replace('{field}', this.getLabelText())
-                        .replace('{min}', minValue)
-                        .replace('{max}', maxValue);
+                        .replace('{value}', minValue);
 
                     this.showValidationMessage(msg);
 
                     return true;
                 }
             }
-            else {
-                if (minValue !== null) {
-                    if (value < minValue) {
-                        var msg = this.translate('fieldShouldBeGreater', 'messages')
-                            .replace('{field}', this.getLabelText())
-                            .replace('{value}', minValue);
-
-                        this.showValidationMessage(msg);
-                        return true;
-                    }
-                }
-                else if (maxValue !== null) {
-                    if (value > maxValue) {
-                        var msg = this.translate('fieldShouldBeLess', 'messages')
-                            .replace('{field}', this.getLabelText())
-                            .replace('{value}', maxValue);
-                        this.showValidationMessage(msg);
-
-                        return true;
-                    }
-                }
-            }
-        },
-
-        validateRequired: function () {
-            if (this.isRequired()) {
-                var value = this.model.get(this.name);
-
-                if (value === null || value === false) {
-                    var msg = this.translate('fieldIsRequired', 'messages')
-                        .replace('{field}', this.getLabelText());
-
+            else if (maxValue !== null) {
+                if (value > maxValue) {
+                    let msg = this.translate('fieldShouldBeLess', 'messages')
+                        .replace('{field}', this.getLabelText())
+                        .replace('{value}', maxValue);
                     this.showValidationMessage(msg);
 
                     return true;
                 }
             }
-        },
+        }
+    },
 
-        parse: function (value) {
-            value = (value !== '') ? value : null;
+    validateRequired: function () {
+        if (this.isRequired()) {
+            let value = this.model.get(this.name);
 
-            if (value === null) {
-                return null;
+            if (value === null || value === false) {
+                let msg = this.translate('fieldIsRequired', 'messages')
+                    .replace('{field}', this.getLabelText());
+
+                this.showValidationMessage(msg);
+
+                return true;
             }
+        }
+    },
 
-            value = value
-                .split(this.thousandSeparator)
-                .join('');
+    parse: function (value) {
+        value = (value !== '') ? value : null;
 
-            if (value.indexOf('.') !== -1 || value.indexOf(',') !== -1) {
-                return NaN;
-            }
+        if (value === null) {
+            return null;
+        }
 
-            return parseInt(value);
-        },
+        value = value
+            .split(this.thousandSeparator)
+            .join('');
 
-        fetch: function () {
-            var value = this.$element.val();
-            value = this.parse(value);
+        if (value.indexOf('.') !== -1 || value.indexOf(',') !== -1) {
+            return NaN;
+        }
 
-            var data = {};
+        return parseInt(value);
+    },
 
-            data[this.name] = value;
+    fetch: function () {
+        let value = this.$element.val();
+        value = this.parse(value);
 
-            return data;
-        },
+        let data = {};
 
-        fetchSearch: function () {
-            var value = this.parse(this.$element.val());
+        data[this.name] = value;
 
-            var type = this.fetchSearchType();
+        return data;
+    },
 
-            var data;
+    fetchSearch: function () {
+        let value = this.parse(this.$element.val());
 
-            if (isNaN(value)) {
+        let type = this.fetchSearchType();
+
+        let data;
+
+        if (isNaN(value)) {
+            return false;
+        }
+
+        if (type === 'between') {
+            let valueTo = this.parse(this.$el.find('input.additional').val());
+
+            if (isNaN(valueTo)) {
                 return false;
             }
 
-            if (type === 'between') {
-                var valueTo = this.parse(this.$el.find('input.additional').val());
-                if (isNaN(valueTo)) {
-                    return false;
+            data = {
+                type: type,
+                value: [value, valueTo],
+                data: {
+                    value1: value,
+                    value2: valueTo
                 }
-                data = {
-                    type: type,
-                    value: [value, valueTo],
-                    data: {
-                        value1: value,
-                        value2: valueTo
-                    }
-                };
-            }
-            else if (type === 'isEmpty') {
-                data = {
-                    type: 'isNull',
-                    typeFront: 'isEmpty'
-                };
-            }
-            else if (type === 'isNotEmpty') {
-                data = {
-                    type: 'isNotNull',
-                    typeFront: 'isNotEmpty'
-                };
-            }
-            else {
-                data = {
-                    type: type,
-                    value: value,
-                    data: {
-                        value1: value
-                    }
-                };
-            }
+            };
+        }
+        else if (type === 'isEmpty') {
+            data = {
+                type: 'isNull',
+                typeFront: 'isEmpty'
+            };
+        }
+        else if (type === 'isNotEmpty') {
+            data = {
+                type: 'isNotNull',
+                typeFront: 'isNotEmpty'
+            };
+        }
+        else {
+            data = {
+                type: type,
+                value: value,
+                data: {
+                    value1: value
+                }
+            };
+        }
 
-            return data;
-        },
+        return data;
+    },
 
-        getSearchType: function () {
-            return this.searchParams.typeFront || this.searchParams.type;
-        },
-    });
+    getSearchType: function () {
+        return this.searchParams.typeFront || this.searchParams.type;
+    },
 });

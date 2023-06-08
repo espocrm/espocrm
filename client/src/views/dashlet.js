@@ -34,7 +34,7 @@ define('views/dashlet', ['view'], function (Dep) {
      * @class
      * @name Class
      * @memberOf module:views/dashlet
-     * @extends module:view.Class
+     * @extends module:view
      */
     return Dep.extend(/** @lends module:views/dashlet.Class# */{
 

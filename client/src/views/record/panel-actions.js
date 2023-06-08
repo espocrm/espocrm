@@ -26,55 +26,57 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/panel-actions', ['view'], function (Dep) {
+import Dep from 'view';
 
-    return Dep.extend({
+/**
+ * @class Class
+ */
+export default Dep.extend(/** @lends Class# */{
 
-        template: 'record/panel-actions',
+    template: 'record/panel-actions',
 
-        data: function () {
-            return {
-                defs: this.options.defs,
-                buttonList: this.getButtonList(),
-                actionList: this.getActionList(),
-                entityType: this.options.entityType,
-                scope: this.options.scope,
-            };
-        },
+    data: function () {
+        return {
+            defs: this.options.defs,
+            buttonList: this.getButtonList(),
+            actionList: this.getActionList(),
+            entityType: this.options.entityType,
+            scope: this.options.scope,
+        };
+    },
 
-        setup: function () {
-            this.buttonList = this.options.defs.buttonList || [];
-            this.actionList = this.options.defs.actionList || [];
-            this.defs = this.options.defs;
-        },
+    setup: function () {
+        this.buttonList = this.options.defs.buttonList || [];
+        this.actionList = this.options.defs.actionList || [];
+        this.defs = this.options.defs;
+    },
 
-        getButtonList: function () {
-            let list = [];
+    getButtonList: function () {
+        let list = [];
 
-            this.buttonList.forEach(item => {
-                if (item.hidden) {
-                    return;
+        this.buttonList.forEach(item => {
+            if (item.hidden) {
+                return;
+            }
+
+            list.push(item);
+        });
+
+        return list;
+    },
+
+    getActionList: function () {
+        return this.actionList
+            .filter(item => !item.hidden)
+            .map(item => {
+                item = Espo.Utils.clone(item);
+
+                if (item.action) {
+                    item.data = Espo.Utils.clone(item.data || {});
+                    item.data.panel = this.options.defs.name;
                 }
 
-                list.push(item);
+                return item;
             });
-
-            return list;
-        },
-
-        getActionList: function () {
-            return this.actionList
-                .filter(item => !item.hidden)
-                .map(item => {
-                    item = Espo.Utils.clone(item);
-
-                    if (item.action) {
-                        item.data = Espo.Utils.clone(item.data || {});
-                        item.data.panel = this.options.defs.name;
-                    }
-
-                    return item;
-                });
-        },
-    });
+    },
 });

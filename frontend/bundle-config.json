@@ -3,88 +3,74 @@
         "main",
         "admin",
         "crm",
-        "wysiwyg",
         "chart",
         "calendar",
         "timeline",
         "extra"
     ],
+    "basePath": "client",
+    "transpiledPath": "client/lib/transpiled",
     "chunks": {
         "main": {
             "files": [
-                "client/src/namespace.js",
-                "client/src/loader.js",
-                "client/src/loader-init-libs.js",
-                "client/src/exceptions.js",
-                "client/src/utils.js"
+                "src/namespace.js",
+                "src/loader.js",
+                "src/loader-init-libs.js",
+                "src/exceptions.js",
+                "src/utils.js"
             ],
             "patterns": [
-                "client/src/!(pre-loader).js",
-                "client/src/ui/**/*.js",
-                "client/src/views/*.js",
-                "client/src/views/site/*.js",
-                "client/src/views/fields/*.js",
-                "client/src/views/record/**/*.js",
-                "client/src/views/search/**/*.js",
-                "client/src/views/modals/*.js",
-                "client/src/views/dashlets/**/*.js",
-                "client/src/views/global-search/*.js",
-                "client/src/views/stream/**/*.js",
-                "client/src/views/note/**/*.js",
-                "client/src/views/notification/*.js",
-                "client/src/controllers/!(admin|inbound-email|layout-set|api-user|role|portal-role).js",
-                "client/src/models/*.js",
-                "client/src/collections/*.js",
-                "client/src/acl/*.js"
+                "src/!(pre-loader).js",
+                "src/ui/**/*.js",
+                "src/views/*.js",
+                "src/views/site/*.js",
+                "src/views/fields/*.js",
+                "src/views/record/**/*.js",
+                "src/views/search/**/*.js",
+                "src/views/modals/*.js",
+                "src/views/dashlets/**/*.js",
+                "src/views/global-search/*.js",
+                "src/views/stream/**/*.js",
+                "src/views/note/**/*.js",
+                "src/views/notification/*.js",
+                "src/controllers/!(admin|inbound-email|layout-set|api-user|role|portal-role).js",
+                "src/models/*.js",
+                "src/collections/*.js",
+                "src/acl/*.js"
             ]
         },
         "admin": {
             "patterns": [
-                "client/src/views/admin/**/*.js",
-                "client/src/views/authentication-provider/**/*.js",
-                "client/src/views/inbound-email/**/*.js",
-                "client/src/views/templates/**/*.js",
-                "client/src/views/role/**/*.js",
-                "client/src/views/portal-role/**/*.js",
-                "client/src/views/scheduled-job/**/*.js",
-                "client/src/views/lead-capture/**/*.js",
-                "client/src/views/lead-capture-log-record/**/*.js",
-                "client/src/views/webhooks/**/*.js",
-                "client/src/views/layout-set/**/*.js",
-                "client/src/controllers/admin.js",
-                "client/src/controllers/inbound-email.js",
-                "client/src/controllers/layout-set.js",
-                "client/src/controllers/api-user.js",
-                "client/src/controllers/role.js",
-                "client/src/controllers/portal-role.js"
+                "src/views/admin/**/*.js",
+                "src/views/authentication-provider/**/*.js",
+                "src/views/inbound-email/**/*.js",
+                "src/views/templates/**/*.js",
+                "src/views/role/**/*.js",
+                "src/views/portal-role/**/*.js",
+                "src/views/scheduled-job/**/*.js",
+                "src/views/lead-capture/**/*.js",
+                "src/views/lead-capture-log-record/**/*.js",
+                "src/views/webhooks/**/*.js",
+                "src/views/layout-set/**/*.js",
+                "src/controllers/admin.js",
+                "src/controllers/inbound-email.js",
+                "src/controllers/layout-set.js",
+                "src/controllers/api-user.js",
+                "src/controllers/role.js",
+                "src/controllers/portal-role.js"
             ]
         },
         "crm": {
             "patterns": [
-                "client/modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.js"
             ],
             "lookupPatterns": [
-                "client/modules/crm/src/**/*.js"
-            ]
-        },
-        "wysiwyg": {
-            "patterns": [
-                "client/src/**/*.js",
-                "client/modules/crm/src/**/*.js"
-            ],
-            "dependentOn": [
-                "lib!Summernote"
-            ],
-            "requires": [
-                "lib!Summernote"
-            ],
-            "lookupPatterns": [
-                "client/modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.js"
             ]
         },
         "chart": {
             "patterns": [
-                "client/modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.js"
             ],
             "dependentOn": [
                 "lib!Flotr",
@@ -95,12 +81,12 @@
                 "lib!espo-funnel-chart"
             ],
             "lookupPatterns": [
-                "client/modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.js"
             ]
         },
         "calendar": {
             "patterns": [
-                "client/modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.js"
             ],
             "dependentOn": [
                 "lib!full-calendar"
@@ -109,12 +95,12 @@
                 "lib!full-calendar"
             ],
             "lookupPatterns": [
-                "client/modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.js"
             ]
         },
         "timeline": {
             "patterns": [
-                "client/modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.js"
             ],
             "dependentOn": [
                 "lib!vis"
@@ -123,20 +109,20 @@
                 "lib!vis"
             ],
             "lookupPatterns": [
-                "client/modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.js"
             ]
         },
         "extra": {
             "patterns": [
-                "client/src/**/*.js"
+                "src/**/*.js"
             ],
             "noDuplicates": true
         }
     },
     "modulePaths": {
-        "crm": "client/modules/crm"
+        "crm": "modules/crm"
     },
     "lookupPatterns": [
-        "client/src/**/*.js"
+        "src/**/*.js"
     ]
 }

@@ -26,152 +26,143 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/**
- * @module helpers/action-item-setup
- */
-define(() => {
+/** @module helpers/action-item-setup */
+
+export default class {
+    /**
+     * @param {module:metadata} metadata
+     * @param {module:view-helper} viewHelper
+     * @param {module:acl-manager} acl
+     * @param {module:language} language
+     */
+    constructor(metadata, viewHelper, acl, language) {
+        this.metadata = metadata;
+        this.viewHelper = viewHelper;
+        this.acl = acl;
+        this.language = language;
+    }
 
     /**
-     * @memberOf module:helpers/action-item-setup
+     * @param {module:view} view
+     * @param {string} type
+     * @param {function(Promise): void} waitFunc
+     * @param {function(Object): void} addFunc
+     * @param {function(string): void} showFunc
+     * @param {function(string): void} hideFunc
+     * @param {{listenToViewModelSync?: boolean}} options
      */
-    class Class {
-        /**
-         * @param {module:metadata.Class} metadata
-         * @param {module:view-helper.Class} viewHelper
-         * @param {module:acl-manager.Class} acl
-         * @param {module:language.Class} language
-         */
-        constructor(metadata, viewHelper, acl, language) {
-            this.metadata = metadata;
-            this.viewHelper = viewHelper;
-            this.acl = acl;
-            this.language = language;
+    setup(view, type, waitFunc, addFunc, showFunc, hideFunc, options) {
+        options = options || {};
+        let actionList = [];
+
+        let scope = view.scope || view.model.entityType;
+
+        if (!scope) {
+            throw new Error();
         }
 
-        /**
-         * @param {module:view.Class} view
-         * @param {string} type
-         * @param {function(Promise): void} waitFunc
-         * @param {function(Object): void} addFunc
-         * @param {function(string): void} showFunc
-         * @param {function(string): void} hideFunc
-         * @param {{listenToViewModelSync?: boolean}} options
-         */
-        setup(view, type, waitFunc, addFunc, showFunc, hideFunc, options) {
-            options = options || {};
-            let actionList = [];
+        let actionDefsList = [
+            ...this.metadata.get(['clientDefs', 'Global', type + 'ActionList']) || [],
+            ...this.metadata.get(['clientDefs', scope, type + 'ActionList']) || [],
+        ];
 
-            let scope = view.scope || view.model.entityType;
-
-            if (!scope) {
-                throw new Error();
+        actionDefsList.forEach(item => {
+            if (typeof item === 'string') {
+                item = {name: item};
             }
 
-            let actionDefsList = [
-                ...this.metadata.get(['clientDefs', 'Global', type + 'ActionList']) || [],
-                ...this.metadata.get(['clientDefs', scope, type + 'ActionList']) || [],
-            ];
+            item = Espo.Utils.cloneDeep(item);
 
-            actionDefsList.forEach(item => {
-                if (typeof item === 'string') {
-                    item = {name: item};
-                }
+            let name = item.name;
 
-                item = Espo.Utils.cloneDeep(item);
+            if (!item.label) {
+                item.html = this.language.translate(name, 'actions', scope);
+            }
 
-                let name = item.name;
+            item.data = item.data || {};
 
-                if (!item.label) {
-                    item.html = this.language.translate(name, 'actions', scope);
-                }
+            let handlerName = item.handler || item.data.handler;
 
-                item.data = item.data || {};
+            if (handlerName && !item.data.handler) {
+                item.data.handler = handlerName;
+            }
 
-                let handlerName = item.handler || item.data.handler;
+            addFunc(item);
 
-                if (handlerName && !item.data.handler) {
-                    item.data.handler = handlerName;
-                }
-
-                addFunc(item);
-
-                if (!Espo.Utils.checkActionAvailability(this.viewHelper, item)) {
-                    return;
-                }
-
-                if (!Espo.Utils.checkActionAccess(this.acl, view.model, item, true)) {
-                    item.hidden = true;
-                }
-
-                actionList.push(item);
-
-                if (!handlerName) {
-                    return;
-                }
-
-                if (!item.initFunction && !item.checkVisibilityFunction) {
-                    return;
-                }
-
-                waitFunc(new Promise(resolve => {
-                    require(handlerName, Handler => {
-                        let handler = new Handler(view);
-
-                        if (item.initFunction) {
-                            handler[item.initFunction].call(handler);
-                        }
-
-                        if (item.checkVisibilityFunction) {
-                            let isNotVisible = !handler[item.checkVisibilityFunction].call(handler);
-
-                            if (isNotVisible) {
-                                hideFunc(item.name);
-                            }
-                        }
-
-                        item.handlerInstance = handler;
-
-                        resolve();
-                    });
-                }));
-            });
-
-            if (!actionList.length) {
+            if (!Espo.Utils.checkActionAvailability(this.viewHelper, item)) {
                 return;
             }
 
-            let onSync = () => {
-                actionList.forEach(item => {
-                    if (item.handlerInstance && item.checkVisibilityFunction) {
-                        let isNotVisible = !item.handlerInstance[item.checkVisibilityFunction]
-                            .call(item.handlerInstance);
+            if (!Espo.Utils.checkActionAccess(this.acl, view.model, item, true)) {
+                item.hidden = true;
+            }
+
+            actionList.push(item);
+
+            if (!handlerName) {
+                return;
+            }
+
+            if (!item.initFunction && !item.checkVisibilityFunction) {
+                return;
+            }
+
+            waitFunc(new Promise(resolve => {
+                Espo.loader.require(handlerName, Handler => {
+                    let handler = new Handler(view);
+
+                    if (item.initFunction) {
+                        handler[item.initFunction].call(handler);
+                    }
+
+                    if (item.checkVisibilityFunction) {
+                        let isNotVisible = !handler[item.checkVisibilityFunction].call(handler);
 
                         if (isNotVisible) {
                             hideFunc(item.name);
-
-                            return;
                         }
                     }
 
-                    if (Espo.Utils.checkActionAccess(this.acl, view.model, item, true)) {
-                        showFunc(item.name);
+                    item.handlerInstance = handler;
+
+                    resolve();
+                });
+            }));
+        });
+
+        if (!actionList.length) {
+            return;
+        }
+
+        let onSync = () => {
+            actionList.forEach(item => {
+                if (item.handlerInstance && item.checkVisibilityFunction) {
+                    let isNotVisible = !item.handlerInstance[item.checkVisibilityFunction]
+                        .call(item.handlerInstance);
+
+                    if (isNotVisible) {
+                        hideFunc(item.name);
 
                         return;
                     }
+                }
 
-                    hideFunc(item.name);
-                });
-            };
+                if (Espo.Utils.checkActionAccess(this.acl, view.model, item, true)) {
+                    showFunc(item.name);
 
-            if (options.listenToViewModelSync) {
-                view.listenTo(view, 'model-sync', () => onSync());
+                    return;
+                }
 
-                return;
-            }
+                hideFunc(item.name);
+            });
+        };
 
-            view.listenTo(view.model, 'sync', () => onSync());
+        if (options.listenToViewModelSync) {
+            view.listenTo(view, 'model-sync', () => onSync());
+
+            return;
         }
-    }
 
-    return Class;
-});
+        view.listenTo(view.model, 'sync', () => onSync());
+    }
+}

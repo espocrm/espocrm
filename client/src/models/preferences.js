@@ -26,45 +26,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('models/preferences', ['model'], function (Dep) {
+/** @module models/preferences */
+
+import Dep from "model";
+
+/**
+ * User preferences.
+ */
+export default class extends Dep {
+
+    name = 'Preferences'
+    entityType = 'Preferences'
+    urlRoot = 'Preferences'
 
     /**
-     * User preferences.
+     * Get dashlet options.
      *
-     * @class
-     * @name Class
-     * @extends module:model.Class
-     *
-     * @memberOf module:models/preferences
+     * @param {string} id A dashlet ID.
+     * @returns {Object|null}
      */
-    return Dep.extend(/** @lends module:models/preferences.Class# */{
+    getDashletOptions(id) {
+        let value = this.get('dashletsOptions') || {};
 
-        /**
-         * @inheritDoc
-         */
-        name: 'Preferences',
+        return value[id] || null;
+    }
 
-        entityType: 'Preferences',
-
-        /**
-         * Get dashlet options.
-         *
-         * @param {string} id A dashlet ID.
-         * @returns {Object|null}
-         */
-        getDashletOptions: function (id) {
-            let value = this.get('dashletsOptions') || {};
-
-            return value[id] || null;
-        },
-
-        /**
-         * Whether a user is portal.
-         *
-         * @returns {boolean}
-         */
-        isPortal: function () {
-            return this.get('isPortalUser');
-        },
-    });
-});
+    /**
+     * Whether a user is portal.
+     *
+     * @returns {boolean}
+     */
+    isPortal() {
+        return this.get('isPortalUser');
+    }
+}

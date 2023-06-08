@@ -26,70 +26,73 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/knowledge-base-article/record/detail', ['views/record/detail'], function (Dep) {
+import KnowledgeBaseHelper from "modules/crm/knowledge-base-helper";
+import Dep from "views/record/detail";
 
-    return Dep.extend({
+/**
+ * @class
+ * @name Class
+ * @extends Dep
+ */
+export default Dep.extend(/** @lends Class# */{
 
-        saveAndContinueEditingAction: true,
+    saveAndContinueEditingAction: true,
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup: function () {
+        Dep.prototype.setup.call(this);
 
-            if (this.getUser().isPortal()) {
-                this.sideDisabled = true;
-            }
+        if (this.getUser().isPortal()) {
+            this.sideDisabled = true;
+        }
 
-            if (this.getAcl().checkScope('Email', 'create')) {
-                this.dropdownItemList.push({
-                    'label': 'Send in Email',
-                    'name': 'sendInEmail',
-                });
-            }
+        if (this.getAcl().checkScope('Email', 'create')) {
+            this.dropdownItemList.push({
+                'label': 'Send in Email',
+                'name': 'sendInEmail',
+            });
+        }
 
-            if (this.getUser().isPortal()) {
-                if (!this.getAcl().checkScope(this.scope, 'edit')) {
-                    if (!this.model.getLinkMultipleIdList('attachments').length) {
-                        this.hideField('attachments');
+        if (this.getUser().isPortal()) {
+            if (!this.getAcl().checkScope(this.scope, 'edit')) {
+                if (!this.model.getLinkMultipleIdList('attachments').length) {
+                    this.hideField('attachments');
 
-                        this.listenToOnce(this.model, 'sync', () => {
-                            if (this.model.getLinkMultipleIdList('attachments').length) {
-                                this.showField('attachments');
-                            }
-                        });
-                    }
+                    this.listenToOnce(this.model, 'sync', () => {
+                        if (this.model.getLinkMultipleIdList('attachments').length) {
+                            this.showField('attachments');
+                        }
+                    });
                 }
             }
-        },
+        }
+    },
 
-        actionSendInEmail: function () {
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+    actionSendInEmail: function () {
+        Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-            Espo.require('crm:knowledge-base-helper', Helper => {
-                var helper = new Helper(this.getLanguage());
+        let helper = new KnowledgeBaseHelper(this.getLanguage());
 
-                helper.getAttributesForEmail(this.model, {}, (attributes) => {
-                    var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
-                        'views/modals/compose-email';
+        helper.getAttributesForEmail(this.model, {}, attributes => {
+            let viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
+                'views/modals/compose-email';
 
-                    this.createView('composeEmail', viewName, {
-                        attributes: attributes,
-                        selectTemplateDisabled: true,
-                        signatureDisabled: true,
-                    }, (view) => {
-                        Espo.Ui.notify(false);
+            this.createView('composeEmail', viewName, {
+                attributes: attributes,
+                selectTemplateDisabled: true,
+                signatureDisabled: true,
+            }, view => {
+                Espo.Ui.notify(false);
 
-                        view.render();
-                    });
-                });
+                view.render();
             });
-        },
+        });
+    },
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+    afterRender: function () {
+        Dep.prototype.afterRender.call(this);
 
-            if (this.getUser().isPortal()) {
-                this.$el.find('.field[data-name="body"]').css('minHeight', '400px');
-            }
-        },
-    });
+        if (this.getUser().isPortal()) {
+            this.$el.find('.field[data-name="body"]').css('minHeight', '400px');
+        }
+    },
 });

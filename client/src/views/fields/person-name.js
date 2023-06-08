@@ -26,268 +26,267 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/person-name', ['views/fields/varchar', 'ui/select'],
-function (Dep, /** module:ui/select*/Select) {
+/** @module views/fields/person-name */
+
+import Dep from 'views/fields/varchar';
+import Select from 'ui/select';
+
+/**
+ * @class Class
+ * @extends module:views/fields/varchar
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    type: 'personName',
+
+    detailTemplate: 'fields/person-name/detail',
+    editTemplate: 'fields/person-name/edit',
+    editTemplateLastFirst: 'fields/person-name/edit-last-first',
+    editTemplateLastFirstMiddle: 'fields/person-name/edit-last-first-middle',
+    editTemplateFirstMiddleLast: 'fields/person-name/edit-first-middle-last',
 
     /**
-     * @class
-     * @name Class
-     * @extends module:views/fields/varchar.Class
-     * @memberOf module:views/fields/person-name
+     * @inheritDoc
      */
-    return Dep.extend(/** @lends module:views/fields/person-name.Class# */{
+    validations: [
+        'required',
+        'pattern',
+    ],
 
-        type: 'personName',
+    data: function () {
+        let data = Dep.prototype.data.call(this);
 
-        detailTemplate: 'fields/person-name/detail',
-        editTemplate: 'fields/person-name/edit',
-        editTemplateLastFirst: 'fields/person-name/edit-last-first',
-        editTemplateLastFirstMiddle: 'fields/person-name/edit-last-first-middle',
-        editTemplateFirstMiddleLast: 'fields/person-name/edit-first-middle-last',
+        data.ucName = Espo.Utils.upperCaseFirst(this.name);
+        data.salutationValue = this.model.get(this.salutationField);
+        data.firstValue = this.model.get(this.firstField);
+        data.lastValue = this.model.get(this.lastField);
+        data.middleValue = this.model.get(this.middleField);
+        data.salutationOptions = this.model.getFieldParam(this.salutationField, 'options');
 
-        /**
-         * @inheritDoc
-         */
-        validations: [
-            'required',
-            'pattern',
-        ],
+        if (this.isEditMode()) {
+            data.firstMaxLength = this.model.getFieldParam(this.firstField, 'maxLength');
+            data.lastMaxLength = this.model.getFieldParam(this.lastField, 'maxLength');
+            data.middleMaxLength = this.model.getFieldParam(this.middleField, 'maxLength');
+        }
 
-        data: function () {
-            let data = Dep.prototype.data.call(this);
+        data.valueIsSet = this.model.has(this.firstField) || this.model.has(this.lastField);
 
-            data.ucName = Espo.Utils.upperCaseFirst(this.name);
-            data.salutationValue = this.model.get(this.salutationField);
-            data.firstValue = this.model.get(this.firstField);
-            data.lastValue = this.model.get(this.lastField);
-            data.middleValue = this.model.get(this.middleField);
-            data.salutationOptions = this.model.getFieldParam(this.salutationField, 'options');
+        if (this.isDetailMode()) {
+            data.isNotEmpty = !!data.firstValue || !!data.lastValue ||
+                !!data.salutationValue || !!data.middleValue;
+        }
+        else if (this.isListMode()) {
+            data.isNotEmpty = !!data.firstValue || !!data.lastValue || !!data.middleValue;
+        }
 
-            if (this.isEditMode()) {
-                data.firstMaxLength = this.model.getFieldParam(this.firstField, 'maxLength');
-                data.lastMaxLength = this.model.getFieldParam(this.lastField, 'maxLength');
-                data.middleMaxLength = this.model.getFieldParam(this.middleField, 'maxLength');
+        if (
+            data.isNotEmpty && this.isDetailMode() ||
+            this.isListMode()
+        ) {
+            data.formattedValue = this.getFormattedValue();
+        }
+
+        return data;
+    },
+
+    setup: function () {
+        Dep.prototype.setup.call(this);
+
+        var ucName = Espo.Utils.upperCaseFirst(this.name)
+        this.salutationField = 'salutation' + ucName;
+        this.firstField = 'first' + ucName;
+        this.lastField = 'last' + ucName;
+        this.middleField = 'middle' + ucName;
+    },
+
+    afterRender: function () {
+        Dep.prototype.afterRender.call(this);
+
+        if (this.isEditMode()) {
+            this.$salutation = this.$el.find('[data-name="' + this.salutationField + '"]');
+            this.$first = this.$el.find('[data-name="' + this.firstField + '"]');
+            this.$last = this.$el.find('[data-name="' + this.lastField + '"]');
+
+            if (this.formatHasMiddle()) {
+                this.$middle = this.$el.find('[data-name="' + this.middleField + '"]');
             }
 
-            data.valueIsSet = this.model.has(this.firstField) || this.model.has(this.lastField);
-
-            if (this.isDetailMode()) {
-                data.isNotEmpty = !!data.firstValue || !!data.lastValue ||
-                    !!data.salutationValue || !!data.middleValue;
-            }
-            else if (this.isListMode()) {
-                data.isNotEmpty = !!data.firstValue || !!data.lastValue || !!data.middleValue;
-            }
-
-            if (
-                data.isNotEmpty && this.isDetailMode() ||
-                this.isListMode()
-            ) {
-                data.formattedValue = this.getFormattedValue();
-            }
-
-            return data;
-        },
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            var ucName = Espo.Utils.upperCaseFirst(this.name)
-            this.salutationField = 'salutation' + ucName;
-            this.firstField = 'first' + ucName;
-            this.lastField = 'last' + ucName;
-            this.middleField = 'middle' + ucName;
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.isEditMode()) {
-                this.$salutation = this.$el.find('[data-name="' + this.salutationField + '"]');
-                this.$first = this.$el.find('[data-name="' + this.firstField + '"]');
-                this.$last = this.$el.find('[data-name="' + this.lastField + '"]');
-
-                if (this.formatHasMiddle()) {
-                    this.$middle = this.$el.find('[data-name="' + this.middleField + '"]');
-                }
-
-                this.$salutation.on('change', () => {
-                    this.trigger('change');
-                });
-
-                this.$first.on('change', () => {
-                    this.trigger('change');
-                });
-
-                this.$last.on('change', () => {
-                    this.trigger('change');
-                });
-
-                Select.init(this.$salutation);
-            }
-        },
-
-        getFormattedValue: function () {
-            let salutation = this.model.get(this.salutationField);
-            let first = this.model.get(this.firstField);
-            let last = this.model.get(this.lastField);
-            let middle = this.model.get(this.middleField);
-
-            if (salutation) {
-                salutation = this.getLanguage()
-                    .translateOption(salutation, 'salutationName', this.model.entityType);
-            }
-
-            return this.formatName({
-                salutation: salutation,
-                first: first,
-                middle: middle,
-                last: last,
+            this.$salutation.on('change', () => {
+                this.trigger('change');
             });
-        },
 
-        _getTemplateName: function () {
-            if (this.isEditMode()) {
-                let prop = 'editTemplate' + Espo.Utils.upperCaseFirst(this.getFormat().toString());
+            this.$first.on('change', () => {
+                this.trigger('change');
+            });
 
-                if (prop in this) {
-                    return this[prop];
-                }
+            this.$last.on('change', () => {
+                this.trigger('change');
+            });
+
+            Select.init(this.$salutation);
+        }
+    },
+
+    getFormattedValue: function () {
+        let salutation = this.model.get(this.salutationField);
+        let first = this.model.get(this.firstField);
+        let last = this.model.get(this.lastField);
+        let middle = this.model.get(this.middleField);
+
+        if (salutation) {
+            salutation = this.getLanguage()
+                .translateOption(salutation, 'salutationName', this.model.entityType);
+        }
+
+        return this.formatName({
+            salutation: salutation,
+            first: first,
+            middle: middle,
+            last: last,
+        });
+    },
+
+    _getTemplateName: function () {
+        if (this.isEditMode()) {
+            let prop = 'editTemplate' + Espo.Utils.upperCaseFirst(this.getFormat().toString());
+
+            if (prop in this) {
+                return this[prop];
             }
+        }
 
-            return Dep.prototype._getTemplateName.call(this);
-        },
+        return Dep.prototype._getTemplateName.call(this);
+    },
 
-        getFormat: function () {
-            this.format = this.format || this.getConfig().get('personNameFormat') || 'firstLast';
+    getFormat: function () {
+        this.format = this.format || this.getConfig().get('personNameFormat') || 'firstLast';
 
-            return this.format;
-        },
+        return this.format;
+    },
 
-        formatHasMiddle: function () {
-            let format = this.getFormat();
+    formatHasMiddle: function () {
+        let format = this.getFormat();
 
-            return format === 'firstMiddleLast' || format === 'lastFirstMiddle';
-        },
+        return format === 'firstMiddleLast' || format === 'lastFirstMiddle';
+    },
 
-        validateRequired: function () {
-            let isRequired = this.isRequired();
+    validateRequired: function () {
+        let isRequired = this.isRequired();
 
-            let validate = (name) => {
-                if (this.model.isRequired(name)) {
-                    if (!this.model.get(name)) {
-                        let msg = this.translate('fieldIsRequired', 'messages')
-                            .replace('{field}', this.translate(name, 'fields', this.model.name));
-                        this.showValidationMessage(msg, '[data-name="'+name+'"]');
-
-                        return true;
-                    }
-                }
-            };
-
-            if (isRequired) {
-                if (!this.model.get(this.firstField) && !this.model.get(this.lastField)) {
+        let validate = (name) => {
+            if (this.model.isRequired(name)) {
+                if (!this.model.get(name)) {
                     let msg = this.translate('fieldIsRequired', 'messages')
-                        .replace('{field}', this.getLabelText());
-
-                    this.showValidationMessage(msg, '[data-name="'+this.lastField+'"]');
+                        .replace('{field}', this.translate(name, 'fields', this.model.name));
+                    this.showValidationMessage(msg, '[data-name="'+name+'"]');
 
                     return true;
                 }
             }
+        };
 
-            let result = false;
+        if (isRequired) {
+            if (!this.model.get(this.firstField) && !this.model.get(this.lastField)) {
+                let msg = this.translate('fieldIsRequired', 'messages')
+                    .replace('{field}', this.getLabelText());
 
-            result = validate(this.salutationField) || result;
-            result = validate(this.firstField) || result;
-            result = validate(this.lastField) || result;
-            result = validate(this.middleField) || result;
+                this.showValidationMessage(msg, '[data-name="'+this.lastField+'"]');
 
-            return result;
-        },
-
-        validatePattern: function () {
-            let result = false;
-
-            result = this.fieldValidatePattern(this.firstField) || result;
-            result = this.fieldValidatePattern(this.lastField) || result;
-            result = this.fieldValidatePattern(this.middleField) || result;
-
-            return result;
-        },
-
-        hasRequiredMarker: function () {
-            if (this.isRequired()) {
                 return true;
             }
+        }
 
-            return this.model.getFieldParam(this.salutationField, 'required') ||
-                   this.model.getFieldParam(this.firstField, 'required') ||
-                   this.model.getFieldParam(this.middleField, 'required') ||
-                   this.model.getFieldParam(this.lastField, 'required');
-        },
+        let result = false;
 
-        fetch: function () {
-            let data = {};
+        result = validate(this.salutationField) || result;
+        result = validate(this.firstField) || result;
+        result = validate(this.lastField) || result;
+        result = validate(this.middleField) || result;
 
-            data[this.salutationField] = this.$salutation.val() || null;
-            data[this.firstField] = this.$first.val().trim() || null;
-            data[this.lastField] = this.$last.val().trim() || null;
+        return result;
+    },
 
-            if (this.formatHasMiddle()) {
-                data[this.middleField] = this.$middle.val().trim() || null;
-            }
+    validatePattern: function () {
+        let result = false;
 
-            data[this.name] = this.formatName({
-                first: data[this.firstField],
-                last: data[this.lastField],
-                middle: data[this.middleField],
-            });
+        result = this.fieldValidatePattern(this.firstField) || result;
+        result = this.fieldValidatePattern(this.lastField) || result;
+        result = this.fieldValidatePattern(this.middleField) || result;
 
-            return data;
-        },
+        return result;
+    },
 
-        /**
-         * @param {{first?: string, last?: string, middle?: string, salutation?: string}}data
-         * @return {?string}
-         */
-        formatName: function (data) {
-            let name = '';
-            let format = this.getFormat();
-            let arr = [];
+    hasRequiredMarker: function () {
+        if (this.isRequired()) {
+            return true;
+        }
 
-            arr.push(data.salutation);
+        return this.model.getFieldParam(this.salutationField, 'required') ||
+               this.model.getFieldParam(this.firstField, 'required') ||
+               this.model.getFieldParam(this.middleField, 'required') ||
+               this.model.getFieldParam(this.lastField, 'required');
+    },
 
-            if (format === 'firstLast') {
-                arr.push(data.first);
-                arr.push(data.last);
-            }
-            else if (format === 'lastFirst') {
-                arr.push(data.last);
-                arr.push(data.first);
-            }
-            else if (format === 'firstMiddleLast') {
-                arr.push(data.first);
-                arr.push(data.middle);
-                arr.push(data.last);
-            }
-            else if (format === 'lastFirstMiddle') {
-                arr.push(data.last);
-                arr.push(data.first);
-                arr.push(data.middle);
-            }
-            else {
-                arr.push(data.first);
-                arr.push(data.last);
-            }
+    fetch: function () {
+        let data = {};
 
-            name = arr.filter(item => !!item).join(' ').trim();
+        data[this.salutationField] = this.$salutation.val() || null;
+        data[this.firstField] = this.$first.val().trim() || null;
+        data[this.lastField] = this.$last.val().trim() || null;
 
-            if (name === '') {
-                name = null;
-            }
+        if (this.formatHasMiddle()) {
+            data[this.middleField] = this.$middle.val().trim() || null;
+        }
 
-            return name;
-        },
-    });
+        data[this.name] = this.formatName({
+            first: data[this.firstField],
+            last: data[this.lastField],
+            middle: data[this.middleField],
+        });
+
+        return data;
+    },
+
+    /**
+     * @param {{first?: string, last?: string, middle?: string, salutation?: string}}data
+     * @return {?string}
+     */
+    formatName: function (data) {
+        let name = '';
+        let format = this.getFormat();
+        let arr = [];
+
+        arr.push(data.salutation);
+
+        if (format === 'firstLast') {
+            arr.push(data.first);
+            arr.push(data.last);
+        }
+        else if (format === 'lastFirst') {
+            arr.push(data.last);
+            arr.push(data.first);
+        }
+        else if (format === 'firstMiddleLast') {
+            arr.push(data.first);
+            arr.push(data.middle);
+            arr.push(data.last);
+        }
+        else if (format === 'lastFirstMiddle') {
+            arr.push(data.last);
+            arr.push(data.first);
+            arr.push(data.middle);
+        }
+        else {
+            arr.push(data.first);
+            arr.push(data.last);
+        }
+
+        name = arr.filter(item => !!item).join(' ').trim();
+
+        if (name === '') {
+            name = null;
+        }
+
+        return name;
+    },
 });

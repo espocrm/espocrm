@@ -107,7 +107,7 @@ define('crm:views/record/panels/activities',
             let i = 0;
 
             this.scopeList.forEach(scope => {
-                this.getModelFactory().getSeed(scope, seed => {
+                this.getModelFactory().create(scope, seed => {
                     this.seeds[scope] = seed;
 
                     i++;

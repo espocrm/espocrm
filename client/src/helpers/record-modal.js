@@ -27,72 +27,64 @@
  ************************************************************************/
 
 /**
- * @module helpers/record-modal
+ * A record-modal helper.
  */
-define(() => {
-
+export default class {
     /**
-     * @memberOf module:helpers/record-modal
+     * @param {module:metadata} metadata
+     * @param {module:acl-manager} acl
      */
-    class Class {
-        /**
-         * @param {module:metadata.Class} metadata
-         * @param {module:acl-manager.Class} acl
-         */
-        constructor(metadata, acl) {
-            this.metadata = metadata;
-            this.acl = acl;
-        }
-
-        /**
-         * @param {module:view.Class} view
-         * @param {{
-         *   id: string,
-         *   scope: string,
-         *   model?: module:model.Class,
-         *   editDisabled?: boolean,
-         *   rootUrl?: string,
-         * }} params
-         * @return {Promise}
-         */
-        showDetail(view, params) {
-            let id = params.id;
-            let scope = params.scope;
-            let model = params.model;
-
-            if (!id || !scope) {
-                console.error("Bad data.");
-
-                return Promise.reject();
-            }
-
-            if (model && !this.acl.checkScope(model.entityType, 'read')) {
-                return Promise.reject();
-            }
-
-            let viewName = this.metadata.get(['clientDefs', scope, 'modalViews', 'detail']) ||
-                'views/modals/detail';
-
-            Espo.Ui.notify(' ... ');
-
-            let options = {
-                scope: scope,
-                model: model,
-                id: id,
-                quickEditDisabled: params.editDisabled,
-                rootUrl: params.rootUrl,
-            };
-
-            return view.createView('modal', viewName, options, modalView => {
-                modalView.render()
-                    .then(() => Espo.Ui.notify(false));
-
-                view.listenToOnce(modalView, 'remove', () => {
-                    view.clearView('modal');
-                });
-            });
-        }
+    constructor(metadata, acl) {
+        this.metadata = metadata;
+        this.acl = acl;
     }
 
-    return Class;
-});
+    /**
+     * @param {module:view} view
+     * @param {{
+     *   id: string,
+     *   scope: string,
+     *   model?: module:model,
+     *   editDisabled?: boolean,
+     *   rootUrl?: string,
+     * }} params
+     * @return {Promise}
+     */
+    showDetail(view, params) {
+        let id = params.id;
+        let scope = params.scope;
+        let model = params.model;
+
+        if (!id || !scope) {
+            console.error("Bad data.");
+
+            return Promise.reject();
+        }
+
+        if (model && !this.acl.checkScope(model.entityType, 'read')) {
+            return Promise.reject();
+        }
+
+        let viewName = this.metadata.get(['clientDefs', scope, 'modalViews', 'detail']) ||
+            'views/modals/detail';
+
+        Espo.Ui.notify(' ... ');
+
+        let options = {
+            scope: scope,
+            model: model,
+            id: id,
+            quickEditDisabled: params.editDisabled,
+            rootUrl: params.rootUrl,
+        };
+
+        return view.createView('modal', viewName, options, modalView => {
+            modalView.render()
+                .then(() => Espo.Ui.notify(false));
+
+            view.listenToOnce(modalView, 'remove', () => {
+                view.clearView('modal');
+            });
+        });
+    }
+}

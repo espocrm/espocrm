@@ -26,73 +26,66 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('models/settings', ['model'], function (Dep) {
+/** @module models/settings */
+
+import Dep from 'model';
+
+/**
+ * A config.
+ */
+export default class extends Dep {
+
+    name = 'Settings'
+    entityType = 'Settings'
+    urlRoot = 'Settings'
 
     /**
-     * A config.
+     * Load.
      *
-     * @class
-     * @name Class
-     * @extends module:model.Class
-     * @memberOf module:models/settings
+     * @returns {Promise}
      */
-    return Dep.extend(/** @lends module:models/settings.Class# */{
+    load() {
+        return new Promise(resolve => {
+            this.fetch()
+                .then(() => resolve());
+        });
+    }
 
-        /**
-         * @inheritDoc
-         */
-        name: 'Settings',
+    /**
+     * Get a value by a path.
+     *
+     * @param {string[]} path A path.
+     * @returns {*} Null if not set.
+     */
+    getByPath(path) {
+        if (!path.length) {
+            return null;
+        }
 
-        entityType: 'Settings',
+        let p;
 
-        /**
-         * Load.
-         *
-         * @returns {Promise}
-         */
-        load: function () {
-            return new Promise(resolve => {
-                this.fetch()
-                    .then(() => resolve());
-            });
-        },
+        for (let i = 0; i < path.length; i++) {
+            var item = path[i];
 
-        /**
-         * Get a value by a path.
-         *
-         * @param {string[]} arr A path.
-         * @returns {*} Null if not set.
-         */
-        getByPath: function (arr) {
-            if (!arr.length) {
-                return null;
+            if (i === 0) {
+                p = this.get(item);
             }
-
-            let p;
-
-            for (let i = 0; i < arr.length; i++) {
-                var item = arr[i];
-
-                if (i === 0) {
-                    p = this.get(item);
+            else {
+                if (item in p) {
+                    p = p[item];
                 }
                 else {
-                    if (item in p) {
-                        p = p[item];
-                    }
-                    else {
-                        return null;
-                    }
-                }
-
-                if (i === arr.length - 1) {
-                    return p;
-                }
-
-                if (p === null || typeof p !== 'object') {
                     return null;
                 }
             }
-        },
-    });
-});
+
+            if (i === path.length - 1) {
+                return p;
+            }
+
+            if (p === null || typeof p !== 'object') {
+                return null;
+            }
+        }
+    }
+}

@@ -26,164 +26,162 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/float', ['views/fields/int'], function (Dep) {
+/** @module views/fields/float */
+
+import Dep from 'views/fields/int';
+
+/**
+ * A float field.
+ *
+ * @class
+ * @name Class
+ * @extends module:views/fields/int
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    type: 'float',
+
+    editTemplate: 'fields/float/edit',
+
+    decimalMark: '.',
+    validations: ['required', 'float', 'range'],
+    decimalPlacesRawValue: 10,
 
     /**
-     * A float field.
-     *
-     * @class
-     * @name Class
-     * @extends module:views/fields/int.Class
-     * @memberOf module:views/fields/float
+     * @inheritDoc
      */
-    return Dep.extend(/** @lends module:views/fields/float.Class# */{
+    setup: function () {
+        Dep.prototype.setup.call(this);
 
-        type: 'float',
+        if (this.getPreferences().has('decimalMark')) {
+            this.decimalMark = this.getPreferences().get('decimalMark');
+        }
+        else if (this.getConfig().has('decimalMark')) {
+            this.decimalMark = this.getConfig().get('decimalMark');
+        }
 
-        editTemplate: 'fields/float/edit',
+        if (!this.decimalMark) {
+            this.decimalMark = '.';
+        }
 
-        decimalMark: '.',
+        if (this.decimalMark === this.thousandSeparator) {
+            this.thousandSeparator = '';
+        }
+    },
 
-        validations: ['required', 'float', 'range'],
+    /**
+     * @inheritDoc
+     */
+    setupAutoNumericOptions: function () {
+        this.autoNumericOptions = {
+            digitGroupSeparator: this.thousandSeparator || '',
+            decimalCharacter: this.decimalMark,
+            modifyValueOnWheel: false,
+            selectOnFocus: false,
+            decimalPlaces: this.decimalPlacesRawValue,
+            decimalPlacesRawValue: this.decimalPlacesRawValue,
+            allowDecimalPadding: false,
+            showWarnings: false,
+            formulaMode: true,
+        };
+    },
 
-        decimalPlacesRawValue: 10,
+    getValueForDisplay: function () {
+        var value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
 
-        /**
-         * @inheritDoc
-         */
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        return this.formatNumber(value);
+    },
 
-            if (this.getPreferences().has('decimalMark')) {
-                this.decimalMark = this.getPreferences().get('decimalMark');
+    formatNumber: function (value) {
+        if (this.disableFormatting) {
+            return value;
+        }
+
+        return this.formatNumberDetail(value);
+    },
+
+    formatNumberDetail: function (value) {
+        if (value === null) {
+            return '';
+        }
+
+        var decimalPlaces = this.params.decimalPlaces;
+
+        if (decimalPlaces === 0) {
+            value = Math.round(value);
+        }
+        else if (decimalPlaces) {
+            value = Math.round(
+                 value * Math.pow(10, decimalPlaces)) / (Math.pow(10, decimalPlaces)
+            );
+        }
+
+        var parts = value.toString().split(".");
+
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
+
+        if (decimalPlaces === 0) {
+            return parts[0];
+        }
+        else if (decimalPlaces) {
+            var decimalPartLength = 0;
+
+            if (parts.length > 1) {
+                decimalPartLength = parts[1].length;
+            } else {
+                parts[1] = '';
             }
-            else if (this.getConfig().has('decimalMark')) {
-                this.decimalMark = this.getConfig().get('decimalMark');
-            }
 
-            if (!this.decimalMark) {
-                this.decimalMark = '.';
-            }
+            if (decimalPlaces && decimalPartLength < decimalPlaces) {
+                var limit = decimalPlaces - decimalPartLength;
 
-            if (this.decimalMark === this.thousandSeparator) {
-                this.thousandSeparator = '';
-            }
-        },
-
-        /**
-         * @inheritDoc
-         */
-        setupAutoNumericOptions: function () {
-            this.autoNumericOptions = {
-                digitGroupSeparator: this.thousandSeparator || '',
-                decimalCharacter: this.decimalMark,
-                modifyValueOnWheel: false,
-                selectOnFocus: false,
-                decimalPlaces: this.decimalPlacesRawValue,
-                decimalPlacesRawValue: this.decimalPlacesRawValue,
-                allowDecimalPadding: false,
-                showWarnings: false,
-                formulaMode: true,
-            };
-        },
-
-        getValueForDisplay: function () {
-            var value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
-
-            return this.formatNumber(value);
-        },
-
-        formatNumber: function (value) {
-            if (this.disableFormatting) {
-                return value;
-            }
-
-            return this.formatNumberDetail(value);
-        },
-
-        formatNumberDetail: function (value) {
-            if (value === null) {
-                return '';
-            }
-
-            var decimalPlaces = this.params.decimalPlaces;
-
-            if (decimalPlaces === 0) {
-                value = Math.round(value);
-            }
-            else if (decimalPlaces) {
-                value = Math.round(
-                     value * Math.pow(10, decimalPlaces)) / (Math.pow(10, decimalPlaces)
-                );
-            }
-
-            var parts = value.toString().split(".");
-
-            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
-
-            if (decimalPlaces === 0) {
-                return parts[0];
-            }
-            else if (decimalPlaces) {
-                var decimalPartLength = 0;
-
-                if (parts.length > 1) {
-                    decimalPartLength = parts[1].length;
-                } else {
-                    parts[1] = '';
-                }
-
-                if (decimalPlaces && decimalPartLength < decimalPlaces) {
-                    var limit = decimalPlaces - decimalPartLength;
-
-                    for (var i = 0; i < limit; i++) {
-                        parts[1] += '0';
-                    }
+                for (var i = 0; i < limit; i++) {
+                    parts[1] += '0';
                 }
             }
+        }
 
-            return parts.join(this.decimalMark);
-        },
+        return parts.join(this.decimalMark);
+    },
 
-        setupMaxLength: function () {
-        },
+    setupMaxLength: function () {
+    },
 
-        validateFloat: function () {
-            var value = this.model.get(this.name);
+    validateFloat: function () {
+        var value = this.model.get(this.name);
 
-            if (isNaN(value)) {
-                var msg = this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText());
+        if (isNaN(value)) {
+            var msg = this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText());
 
-                this.showValidationMessage(msg);
+            this.showValidationMessage(msg);
 
-                return true;
-            }
-        },
+            return true;
+        }
+    },
 
-        parse: function (value) {
-            value = (value !== '') ? value : null;
+    parse: function (value) {
+        value = (value !== '') ? value : null;
 
-            if (value === null) {
-                return null;
-            }
+        if (value === null) {
+            return null;
+        }
 
-            value = value
-                .split(this.thousandSeparator)
-                .join('')
-                .split(this.decimalMark)
-                .join('.');
+        value = value
+            .split(this.thousandSeparator)
+            .join('')
+            .split(this.decimalMark)
+            .join('.');
 
-            return parseFloat(value);
-        },
+        return parseFloat(value);
+    },
 
-        fetch: function () {
-            let value = this.$element.val();
-            value = this.parse(value);
+    fetch: function () {
+        let value = this.$element.val();
+        value = this.parse(value);
 
-            let data = {};
-            data[this.name] = value;
+        let data = {};
+        data[this.name] = value;
 
-            return data;
-        },
-    });
+        return data;
+    },
 });

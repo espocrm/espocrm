@@ -26,912 +26,917 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/panels-container', ['view'], function (Dep) {
+/** @module views/record/panels-container */
+
+import Dep from 'view';
+
+/**
+ * A detail record view.
+ *
+ * @class
+ * @name Class
+ * @extends module:view
+ */
+export default Dep.extend(/** @lends Class# */{
+
+    /** @private */
+    panelSoftLockedTypeList: ['default', 'acl', 'delimiter', 'dynamicLogic'],
 
     /**
-     * A detail record view.
+     * A panel.
      *
-     * @class
-     * @name Class
-     * @extends module:view.Class
-     * @memberOf module:views/record/panels-container
+     * @typedef {Object} module:views/record/panels-container~panel
+     *
+     * @property {string} name A name.
+     * @property {boolean} [hidden] Hidden.
+     * @property {string} [label] A label.
+     * @property {'default'|'success'|'danger'|'warning'} [style] A style.
+     * @property {string} [titleHtml] A title HTML.
+     * @property {boolean} [notRefreshable] Not refreshable.
+     * @property {boolean} [isForm] If for a form.
+     * @property {module:views/record/panels-container~button[]} [buttonList] Buttons.
+     * @property {module:views/record/panels-container~action[]} [actionList] Dropdown actions.
+     * @property {string} [view] A view name.
+     * @property {Object.<string,*>} [Options] A view options.
+     * @property {boolean} [sticked] To stick to an upper panel.
+     * @property {Number} [tabNumber]
      */
-    return Dep.extend(/** @lends module:views/record/panels-container.Class# */{
 
-        /**
-         * @private
-         */
-        panelSoftLockedTypeList: ['default', 'acl', 'delimiter', 'dynamicLogic'],
+    /**
+     * A button.
+     *
+     * @typedef {Object} module:views/record/panels-container~button
+     *
+     * @property {string} action An action.
+     * @property {boolean} [hidden] Hidden.
+     * @property {string} [label] A label. Translatable.
+     * @property {string} [html] A HTML.
+     * @property {string} [text] A text.
+     * @property {string} [title] A title (on hover). Translatable.
+     * @property {Object.<string,(string|number|boolean)>} [data] Data attributes.
+     */
 
-        /**
-         * A panel.
-         *
-         * @typedef {Object} module:views/record/panels-container~panel
-         *
-         * @property {string} name A name.
-         * @property {boolean} [hidden] Hidden.
-         * @property {string} [label] A label.
-         * @property {'default'|'success'|'danger'|'warning'} [style] A style.
-         * @property {string} [titleHtml] A title HTML.
-         * @property {boolean} [notRefreshable] Not refreshable.
-         * @property {boolean} [isForm] If for a form.
-         * @property {module:views/record/panels-container~button[]} [buttonList] Buttons.
-         * @property {module:views/record/panels-container~action[]} [actionList] Dropdown actions.
-         * @property {string} [view] A view name.
-         * @property {Object.<string,*>} [Options] A view options.
-         * @property {boolean} [sticked] To stick to an upper panel.
-         * @property {Number} [tabNumber]
-         */
+    /**
+     * An action.
+     *
+     * @typedef {Object} module:views/record/panels-container~action
+     *
+     * @property {string} [action] An action.
+     * @property {string} [link] A link URL.
+     * @property {boolean} [hidden] Hidden.
+     * @property {string} [label] A label. Translatable.
+     * @property {string} [html] A HTML.
+     * @property {string} [text] A text.
+     * @property {Object.<string,(string|number|boolean)>} [data] Data attributes.
+     */
 
-        /**
-         * A button.
-         *
-         * @typedef {Object} module:views/record/panels-container~button
-         *
-         * @property {string} action An action.
-         * @property {boolean} [hidden] Hidden.
-         * @property {string} [label] A label. Translatable.
-         * @property {string} [html] A HTML.
-         * @property {string} [text] A text.
-         * @property {string} [title] A title (on hover). Translatable.
-         * @property {Object.<string,(string|number|boolean)>} [data] Data attributes.
-         */
+    /**
+     * A panel list.
+     *
+     * @protected
+     * @type {module:views/record/panels-container~panel[]}
+     */
+    panelList: null,
 
-        /**
-         * An action.
-         *
-         * @typedef {Object} module:views/record/panels-container~action
-         *
-         * @property {string} [action] An action.
-         * @property {string} [link] A link URL.
-         * @property {boolean} [hidden] Hidden.
-         * @property {string} [label] A label. Translatable.
-         * @property {string} [html] A HTML.
-         * @property {string} [text] A text.
-         * @property {Object.<string,(string|number|boolean)>} [data] Data attributes.
-         */
+    /**
+     * @private
+     */
+    hasTabs: false,
 
-        /**
-         * A panel list.
-         *
-         * @protected
-         * @type {module:views/record/panels-container~panel[]}
-         */
-        panelList: null,
+    /**
+     * @private
+     * @type {Object.<string,*>[]|null}
+     */
+    tabDataList: null,
 
-        /**
-         * @private
-         */
-        hasTabs: false,
+    /**
+     * @protected
+     */
+    currentTab: 0,
 
-        /**
-         * @private
-         * @type {Object.<string,*>[]|null}
-         */
-        tabDataList: null,
+    /**
+     * @protected
+     * @type {string}
+     */
+    scope: '',
 
-        /**
-         * @protected
-         */
-        currentTab: 0,
+    /**
+     * @protected
+     * @type {string}
+     */
+    entityType: '',
 
-        /**
-         * @protected
-         * @type {string}
-         */
-        scope: '',
+    /**
+     * @protected
+     * @type {string}
+     */
+    name: '',
 
-        /**
-         * @protected
-         * @type {string}
-         */
-        entityType: '',
+    /**
+     * A mode.
+     *
+     * @type 'detail'|'edit'
+     */
+    mode: 'detail',
 
-        /**
-         * @protected
-         * @type {string}
-         */
-        name: '',
+    data: function () {
+        let tabDataList = this.hasTabs ? this.getTabDataList() : [];
 
-        data: function () {
-            let tabDataList = this.hasTabs ? this.getTabDataList() : [];
+        return {
+            panelList: this.panelList,
+            scope: this.scope,
+            entityType: this.entityType,
+            tabDataList: tabDataList,
+        };
+    },
 
-            return {
-                panelList: this.panelList,
-                scope: this.scope,
-                entityType: this.entityType,
-                tabDataList: tabDataList,
-            };
-        },
+    events: {
+        'click .action': function (e) {
+            let $target = $(e.currentTarget);
+            let action = $target.data('action');
+            let panel = $target.data('panel');
+            let data = $target.data();
 
-        events: {
-            'click .action': function (e) {
-                let $target = $(e.currentTarget);
-                let action = $target.data('action');
-                let panel = $target.data('panel');
-                let data = $target.data();
+            if (action && panel) {
+                let method = 'action' + Espo.Utils.upperCaseFirst(action);
+                let d = _.clone(data);
 
-                if (action && panel) {
-                    let method = 'action' + Espo.Utils.upperCaseFirst(action);
-                    let d = _.clone(data);
+                delete d['action'];
+                delete d['panel'];
 
-                    delete d['action'];
-                    delete d['panel'];
+                let view = this.getView(panel);
 
-                    let view = this.getView(panel);
-
-                    if (view && typeof view[method] == 'function') {
-                        view[method].call(view, d, e);
-                    }
+                if (view && typeof view[method] == 'function') {
+                    view[method].call(view, d, e);
                 }
-            },
-            'click .panels-show-more-delimiter [data-action="showMorePanels"]': 'actionShowMorePanels',
-            /** @this module:views/record/panels-container.Class */
-            'click .tabs > button': function (e) {
-                let tab = parseInt($(e.currentTarget).attr('data-tab'));
-
-                this.selectTab(tab);
-            },
+            }
         },
+        'click .panels-show-more-delimiter [data-action="showMorePanels"]': 'actionShowMorePanels',
+        /** @this module:views/record/panels-container */
+        'click .tabs > button': function (e) {
+            let tab = parseInt($(e.currentTarget).attr('data-tab'));
 
-        afterRender: function () {
-            this.adjustPanels();
+            this.selectTab(tab);
         },
+    },
 
-        adjustPanels: function () {
-            if (!this.isRendered()) {
-                return;
+    afterRender: function () {
+        this.adjustPanels();
+    },
+
+    adjustPanels: function () {
+        if (!this.isRendered()) {
+            return;
+        }
+
+        let $panels = this.$el.find('> .panel');
+
+        $panels
+            .removeClass('first')
+            .removeClass('last')
+            .removeClass('in-middle');
+
+        let $visiblePanels = $panels.filter(`:not(.tab-hidden):not(.hidden)`);
+
+        let groups = [];
+        let currentGroup = [];
+        let inTab = false;
+
+        $visiblePanels.each((i, el) => {
+            let $el = $(el);
+
+            let breakGroup = false;
+
+            if (
+                !breakGroup &&
+                this.hasTabs &&
+                !inTab &&
+                $el.attr('data-tab') !== '-1'
+            ) {
+                inTab = true;
+                breakGroup = true;
             }
 
-            let $panels = this.$el.find('> .panel');
+            if (!breakGroup && !$el.hasClass('sticked')) {
+                breakGroup = true;
+            }
 
-            $panels
-                .removeClass('first')
-                .removeClass('last')
-                .removeClass('in-middle');
-
-            let $visiblePanels = $panels.filter(`:not(.tab-hidden):not(.hidden)`);
-
-            let groups = [];
-            let currentGroup = [];
-            let inTab = false;
-
-            $visiblePanels.each((i, el) => {
-                let $el = $(el);
-
-                let breakGroup = false;
-
-                if (
-                    !breakGroup &&
-                    this.hasTabs &&
-                    !inTab &&
-                    $el.attr('data-tab') !== '-1'
-                ) {
-                    inTab = true;
-                    breakGroup = true;
-                }
-
-                if (!breakGroup && !$el.hasClass('sticked')) {
-                    breakGroup = true;
-                }
-
-                if (breakGroup) {
-                    if (i !== 0) {
-                        groups.push(currentGroup);
-                    }
-
-                    currentGroup = [];
-                }
-
-                currentGroup.push($el);
-
-                if (i === $visiblePanels.length - 1) {
+            if (breakGroup) {
+                if (i !== 0) {
                     groups.push(currentGroup);
                 }
-            });
 
-            groups.forEach(group => {
-                group.forEach(($el, i) => {
-                    if (i === group.length - 1) {
-                        if (i === 0) {
-                            return;
-                        }
+                currentGroup = [];
+            }
 
-                        $el.addClass('last')
+            currentGroup.push($el);
 
+            if (i === $visiblePanels.length - 1) {
+                groups.push(currentGroup);
+            }
+        });
+
+        groups.forEach(group => {
+            group.forEach(($el, i) => {
+                if (i === group.length - 1) {
+                    if (i === 0) {
                         return;
                     }
 
-                    if (i === 0 && group.length) {
-                        $el.addClass('first')
-
-                        return;
-                    }
-
-                    $el.addClass('in-middle');
-                });
-            });
-        },
-
-        /**
-         * Set read-only.
-         */
-        setReadOnly: function () {
-            this.readOnly = true;
-        },
-
-        /**
-         * Set not read-only.
-         */
-        setNotReadOnly: function (onlyNotSetAsReadOnly) {
-            this.readOnly = false;
-
-            if (onlyNotSetAsReadOnly) {
-                this.panelList.forEach(item => {
-                    this.applyAccessToActions(item.buttonList);
-                    this.applyAccessToActions(item.actionList);
-
-                    if (this.isRendered()) {
-                        let actionsView = this.getView(item.actionsViewKey);
-
-                        if (actionsView) {
-                            actionsView.reRender();
-                        }
-                    }
-                });
-            }
-        },
-
-        /**
-         * @private
-         * @param {Object[]} actionList
-         */
-        applyAccessToActions: function (actionList) {
-            if (!actionList) {
-                return;
-            }
-
-            actionList.forEach(item => {
-                if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) {
-                    item.hidden = true;
+                    $el.addClass('last')
 
                     return;
                 }
 
-                if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item, true)) {
-                    if (item.isHiddenByAcl) {
-                        item.isHiddenByAcl = false;
-                        item.hidden = false;
+                if (i === 0 && group.length) {
+                    $el.addClass('first')
+
+                    return;
+                }
+
+                $el.addClass('in-middle');
+            });
+        });
+    },
+
+    /**
+     * Set read-only.
+     */
+    setReadOnly: function () {
+        this.readOnly = true;
+    },
+
+    /**
+     * Set not read-only.
+     */
+    setNotReadOnly: function (onlyNotSetAsReadOnly) {
+        this.readOnly = false;
+
+        if (onlyNotSetAsReadOnly) {
+            this.panelList.forEach(item => {
+                this.applyAccessToActions(item.buttonList);
+                this.applyAccessToActions(item.actionList);
+
+                if (this.isRendered()) {
+                    let actionsView = this.getView(item.actionsViewKey);
+
+                    if (actionsView) {
+                        actionsView.reRender();
                     }
                 }
-                else {
-                    if (!item.hidden) {
-                        item.isHiddenByAcl = true;
-                        item.hidden = true;
-                    }
-                }
             });
-        },
+        }
+    },
 
-        /**
-         * Set up panel views.
-         *
-         * @protected
-         */
-        setupPanelViews: function () {
-            this.panelList.forEach(p => {
-                let name = p.name;
+    /**
+     * @private
+     * @param {Object[]} actionList
+     */
+    applyAccessToActions: function (actionList) {
+        if (!actionList) {
+            return;
+        }
 
-                let options = {
-                    model: this.model,
-                    panelName: name,
-                    el: this.options.el + ' .panel[data-name="' + name + '"] > .panel-body',
-                    defs: p,
-                    mode: this.mode,
-                    recordHelper: this.recordHelper,
-                    inlineEditDisabled: this.inlineEditDisabled,
-                    readOnly: this.readOnly,
-                    disabled: p.hidden || false,
-                    recordViewObject: this.recordViewObject,
-                };
-
-                options = _.extend(options, p.options);
-
-                this.createView(name, p.view, options, (view) => {
-                    if ('getActionList' in view) {
-                        p.actionList = view.getActionList();
-
-                        this.applyAccessToActions(p.actionList);
-                    }
-
-                    if ('getButtonList' in view) {
-                        p.buttonList = view.getButtonList();
-                        this.applyAccessToActions(p.buttonList);
-                    }
-
-                    if (view.titleHtml) {
-                        p.titleHtml = view.titleHtml;
-                    }
-                    else {
-                        if (p.label) {
-                            p.title = this.translate(p.label, 'labels', this.scope);
-                        }
-                        else {
-                            p.title = view.title;
-                        }
-                    }
-
-                    this.createView(name + 'Actions', 'views/record/panel-actions', {
-                        el: this.getSelector() +
-                            '.panel[data-name="'+p.name+'"] > .panel-heading > .panel-actions-container',
-                        model: this.model,
-                        defs: p,
-                        scope: this.scope,
-                        entityType: this.entityType,
-                    });
-                });
-            });
-        },
-
-        /**
-         * Set up panels.
-         *
-         * @protected
-         */
-        setupPanels: function () {},
-
-        getFieldViews: function (withHidden) {
-            let fields = {};
-
-            this.panelList.forEach(p => {
-                let panelView = this.getView(p.name);
-
-                if ((!panelView.disabled || withHidden) && 'getFieldViews' in panelView) {
-                    fields = _.extend(fields, panelView.getFieldViews());
-                }
-            });
-
-            return fields;
-        },
-
-        getFields: function () {
-            return this.getFieldViews();
-        },
-
-        fetch: function () {
-            let data = {};
-
-            this.panelList.forEach((p) => {
-                let panelView = this.getView(p.name);
-
-                if (!panelView.disabled && 'fetch' in panelView) {
-                    data = _.extend(data, panelView.fetch());
-                }
-            });
-
-            return data;
-        },
-
-        /**
-         * @param {string} name
-         * @return {boolean}
-         */
-        hasPanel: function (name) {
-            return !!this.panelList.find(item => item.name === name);
-        },
-
-        processShowPanel: function (name, callback, wasShown) {
-            if (this.recordHelper.getPanelStateParam(name, 'hidden')) {
-                return;
-            }
-
-            if (!this.hasPanel(name)) {
-                return;
-            }
-
-            this.panelList.filter(item => item.name === name).forEach(item => {
-                item.hidden = false;
-
-                if (typeof item.tabNumber !== 'undefined') {
-                    this.controlTabVisibilityShow(item.tabNumber);
-                }
-            });
-
-            this.showPanelFinalize(name, callback, wasShown);
-        },
-
-        processHidePanel: function (name, callback) {
-            if (!this.recordHelper.getPanelStateParam(name, 'hidden')) {
-                return;
-            }
-
-            if (!this.hasPanel(name)) {
-                return;
-            }
-
-             this.panelList.filter(item => item.name === name).forEach(item => {
+        actionList.forEach(item => {
+            if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) {
                 item.hidden = true;
 
-                if (typeof item.tabNumber !== 'undefined') {
-                    this.controlTabVisibilityHide(item.tabNumber);
-                }
-            });
-
-            this.hidePanelFinalize(name, callback);
-        },
-
-        showPanelFinalize: function (name, callback, wasShown) {
-            let process = (wasRendered) => {
-                let view = this.getView(name);
-
-                if (view) {
-                    view.$el.closest('.panel').removeClass('hidden');
-
-                    view.disabled = false;
-                    view.trigger('show');
-                    view.trigger('panel-show-propagated');
-
-                    if (wasRendered && !wasShown && view.getFieldViews) {
-                        let fields = view.getFieldViews();
-
-                        if (fields) {
-                            for (let i in fields) {
-                                fields[i].reRender();
-                            }
-                        }
-                    }
-                }
-
-                if (typeof callback === 'function') {
-                    callback.call(this);
-                }
-            };
-
-            if (this.isRendered()) {
-                process(true);
-
-                this.adjustPanels();
-
                 return;
             }
 
-            this.once('after:render', () => {
-                process();
+            if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item, true)) {
+                if (item.isHiddenByAcl) {
+                    item.isHiddenByAcl = false;
+                    item.hidden = false;
+                }
+            }
+            else {
+                if (!item.hidden) {
+                    item.isHiddenByAcl = true;
+                    item.hidden = true;
+                }
+            }
+        });
+    },
+
+    /**
+     * Set up panel views.
+     *
+     * @protected
+     */
+    setupPanelViews: function () {
+        this.panelList.forEach(p => {
+            let name = p.name;
+
+            let options = {
+                model: this.model,
+                panelName: name,
+                el: this.options.el + ' .panel[data-name="' + name + '"] > .panel-body',
+                defs: p,
+                mode: this.mode,
+                recordHelper: this.recordHelper,
+                inlineEditDisabled: this.inlineEditDisabled,
+                readOnly: this.readOnly,
+                disabled: p.hidden || false,
+                recordViewObject: this.recordViewObject,
+            };
+
+            options = _.extend(options, p.options);
+
+            this.createView(name, p.view, options, (view) => {
+                if ('getActionList' in view) {
+                    p.actionList = view.getActionList();
+
+                    this.applyAccessToActions(p.actionList);
+                }
+
+                if ('getButtonList' in view) {
+                    p.buttonList = view.getButtonList();
+                    this.applyAccessToActions(p.buttonList);
+                }
+
+                if (view.titleHtml) {
+                    p.titleHtml = view.titleHtml;
+                }
+                else {
+                    if (p.label) {
+                        p.title = this.translate(p.label, 'labels', this.scope);
+                    }
+                    else {
+                        p.title = view.title;
+                    }
+                }
+
+                this.createView(name + 'Actions', 'views/record/panel-actions', {
+                    el: this.getSelector() +
+                        '.panel[data-name="'+p.name+'"] > .panel-heading > .panel-actions-container',
+                    model: this.model,
+                    defs: p,
+                    scope: this.scope,
+                    entityType: this.entityType,
+                });
             });
-        },
+        });
+    },
 
-        hidePanelFinalize: function (name, callback) {
-            if (this.isRendered()) {
-                let view = this.getView(name);
+    /**
+     * Set up panels.
+     *
+     * @protected
+     */
+    setupPanels: function () {},
 
-                if (view) {
-                    view.$el.closest('.panel').addClass('hidden');
-                    view.disabled = true;
-                    view.trigger('hide');
+    getFieldViews: function (withHidden) {
+        let fields = {};
+
+        this.panelList.forEach(p => {
+            let panelView = this.getView(p.name);
+
+            if ((!panelView.disabled || withHidden) && 'getFieldViews' in panelView) {
+                fields = _.extend(fields, panelView.getFieldViews());
+            }
+        });
+
+        return fields;
+    },
+
+    getFields: function () {
+        return this.getFieldViews();
+    },
+
+    fetch: function () {
+        let data = {};
+
+        this.panelList.forEach((p) => {
+            let panelView = this.getView(p.name);
+
+            if (!panelView.disabled && 'fetch' in panelView) {
+                data = _.extend(data, panelView.fetch());
+            }
+        });
+
+        return data;
+    },
+
+    /**
+     * @param {string} name
+     * @return {boolean}
+     */
+    hasPanel: function (name) {
+        return !!this.panelList.find(item => item.name === name);
+    },
+
+    processShowPanel: function (name, callback, wasShown) {
+        if (this.recordHelper.getPanelStateParam(name, 'hidden')) {
+            return;
+        }
+
+        if (!this.hasPanel(name)) {
+            return;
+        }
+
+        this.panelList.filter(item => item.name === name).forEach(item => {
+            item.hidden = false;
+
+            if (typeof item.tabNumber !== 'undefined') {
+                this.controlTabVisibilityShow(item.tabNumber);
+            }
+        });
+
+        this.showPanelFinalize(name, callback, wasShown);
+    },
+
+    processHidePanel: function (name, callback) {
+        if (!this.recordHelper.getPanelStateParam(name, 'hidden')) {
+            return;
+        }
+
+        if (!this.hasPanel(name)) {
+            return;
+        }
+
+         this.panelList.filter(item => item.name === name).forEach(item => {
+            item.hidden = true;
+
+            if (typeof item.tabNumber !== 'undefined') {
+                this.controlTabVisibilityHide(item.tabNumber);
+            }
+        });
+
+        this.hidePanelFinalize(name, callback);
+    },
+
+    showPanelFinalize: function (name, callback, wasShown) {
+        let process = (wasRendered) => {
+            let view = this.getView(name);
+
+            if (view) {
+                view.$el.closest('.panel').removeClass('hidden');
+
+                view.disabled = false;
+                view.trigger('show');
+                view.trigger('panel-show-propagated');
+
+                if (wasRendered && !wasShown && view.getFieldViews) {
+                    let fields = view.getFieldViews();
+
+                    if (fields) {
+                        for (let i in fields) {
+                            fields[i].reRender();
+                        }
+                    }
                 }
-
-                if (typeof callback === 'function') {
-                    callback.call(this);
-                }
-
-                this.adjustPanels();
-
-                return;
             }
 
             if (typeof callback === 'function') {
-                this.once('after:render', () => {
-                    callback.call(this);
-                });
-            }
-        },
-
-        showPanel: function (name, softLockedType, callback) {
-            if (!this.hasPanel(name)) {
-                return;
-            }
-
-            if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) {
-                return;
-            }
-
-            if (softLockedType) {
-                let param = 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked';
-
-                this.recordHelper.setPanelStateParam(name, param, false);
-
-                for (let i = 0; i < this.panelSoftLockedTypeList.length; i++) {
-                    let iType = this.panelSoftLockedTypeList[i];
-
-                    if (iType === softLockedType) {
-                        continue;
-                    }
-
-                    let iParam = 'hidden' +  Espo.Utils.upperCaseFirst(iType) + 'Locked';
-
-                    if (this.recordHelper.getPanelStateParam(name, iParam)) {
-                        return;
-                    }
-                }
-            }
-
-            let wasShown = this.recordHelper.getPanelStateParam(name, 'hidden') === false;
-
-            this.recordHelper.setPanelStateParam(name, 'hidden', false);
-
-            this.processShowPanel(name, callback, wasShown);
-        },
-
-        hidePanel: function (name, locked, softLockedType, callback) {
-            if (!this.hasPanel(name)) {
-                return;
-            }
-
-            this.recordHelper.setPanelStateParam(name, 'hidden', true);
-
-            if (locked) {
-                this.recordHelper.setPanelStateParam(name, 'hiddenLocked', true);
-            }
-
-            if (softLockedType) {
-                let param = 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked';
-
-                this.recordHelper.setPanelStateParam(name, param, true);
-            }
-
-            this.processHidePanel(name, callback);
-        },
-
-        alterPanels: function (layoutData) {
-            layoutData = layoutData || this.layoutData || {};
-
-            let tabBreakIndexList = [];
-
-            let tabDataList = [];
-
-            for (let name in layoutData) {
-                let item = layoutData[name];
-
-                if (name === '_delimiter_') {
-                    this.panelList.push({
-                        name: name,
-                    });
-                }
-
-                if (item.tabBreak) {
-                    tabBreakIndexList.push(item.index);
-
-                    tabDataList.push({
-                        index: item.index,
-                        label: item.tabLabel,
-                    })
-                }
-            }
-
-            /**
-             * @private
-             * @type {Object.<string,*>[]}
-             */
-            this.tabDataList = tabDataList.sort((v1, v2) => v1.index - v2.index);
-
-            let newList = [];
-
-            this.panelList.forEach((item, i) => {
-                item.index = ('index' in item) ? item.index : i;
-
-                let allowedInLayout = false;
-
-                if (item.name) {
-                    let itemData = layoutData[item.name] || {};
-
-                    if (itemData.disabled) {
-                        return;
-                    }
-
-                    if (layoutData[item.name]) {
-                        allowedInLayout = true;
-                    }
-
-                    for (let i in itemData) {
-                        item[i] = itemData[i];
-                    }
-                }
-
-                if (item.disabled && !allowedInLayout) {
-                    return;
-                }
-
-                item.tabNumber = tabBreakIndexList.length -
-                    tabBreakIndexList.slice().reverse().findIndex(index => item.index > index) - 1;
-
-                if (item.tabNumber === tabBreakIndexList.length) {
-                    item.tabNumber = -1;
-                }
-
-                newList.push(item);
-            });
-
-            newList.sort((v1, v2) => v1.index - v2.index);
-
-            let firstTabIndex = newList.findIndex(item => item.tabNumber !== -1);
-
-            if (firstTabIndex !== -1) {
-                newList[firstTabIndex].isTabsBeginning = true;
-                this.hasTabs = true;
-                this.currentTab = newList[firstTabIndex].tabNumber;
-
-                this.panelList
-                    .filter(item => item.tabNumber !== -1 && item.tabNumber !== this.currentTab)
-                    .forEach(item => {
-                        item.tabHidden = true;
-                    });
-
-                this.panelList
-                    .forEach((item, i) => {
-                        if (
-                            item.tabNumber !== -1 &&
-                            (i === 0 || this.panelList[i - 1].tabNumber !== item.tabNumber)
-                        ) {
-                            item.sticked = false;
-                        }
-                    });
-            }
-
-            this.panelList = newList;
-
-            if (this.recordViewObject && this.recordViewObject.dynamicLogic) {
-                let dynamicLogic = this.recordViewObject.dynamicLogic;
-
-                this.panelList.forEach(item => {
-                    if (item.dynamicLogicVisible) {
-                        dynamicLogic.addPanelVisibleCondition(item.name, item.dynamicLogicVisible);
-
-                        if (this.recordHelper.getPanelStateParam(item.name, 'hidden')) {
-                            item.hidden = true;
-                        }
-                    }
-
-                    if (item.style && item.style !== 'default' && item.dynamicLogicStyled) {
-                        dynamicLogic.addPanelStyledCondition(item.name, item.dynamicLogicStyled);
-                    }
-                });
-            }
-
-            if (
-                this.hasTabs &&
-                this.options.isReturn &&
-                this.isStoredTabForThisRecord()
-            ) {
-                this.selectStoredTab();
-            }
-        },
-
-        setupPanelsFinal: function () {
-            let afterDelimiter = false;
-            let rightAfterDelimiter = false;
-
-            let index = -1;
-
-            this.panelList.forEach((p, i) => {
-                if (p.name === '_delimiter_') {
-                    afterDelimiter = true;
-                    rightAfterDelimiter = true;
-                    index = i;
-
-                    return;
-                }
-
-                if (afterDelimiter) {
-                    p.hidden = true;
-                    p.hiddenAfterDelimiter = true;
-
-                    this.recordHelper.setPanelStateParam(p.name, 'hidden', true);
-                    this.recordHelper.setPanelStateParam(p.name, 'hiddenDelimiterLocked', true);
-                }
-
-                if (rightAfterDelimiter) {
-                    p.isRightAfterDelimiter = true;
-                    rightAfterDelimiter = false;
-                }
-            });
-
-            if (~index) {
-                this.panelList.splice(index, 1);
-            }
-
-            this.panelList = this.panelList.filter((p) => {
-                return !this.recordHelper.getPanelStateParam(p.name, 'hiddenLocked');
-            });
-
-            this.panelsAreSet = true;
-
-            this.trigger('panels-set');
-        },
-
-        actionShowMorePanels: function () {
-            this.panelList.forEach(p => {
-                if (!p.hiddenAfterDelimiter) {
-                    return;
-                }
-
-                delete p.isRightAfterDelimiter;
-
-                this.showPanel(p.name, 'delimiter');
-            });
-
-            this.$el.find('.panels-show-more-delimiter').remove();
-        },
-
-        onPanelsReady: function (callback) {
-            Promise.race([
-                new Promise(resolve => {
-                    if (this.panelsAreSet) {
-                        resolve();
-                    }
-                }),
-                new Promise(resolve => {
-                    this.once('panels-set', resolve);
-                })
-            ]).then(() => {
                 callback.call(this);
-            });
-        },
+            }
+        };
 
-        getTabDataList: function () {
-            return this.tabDataList.map((item, i) => {
-                let label = item.label;
+        if (this.isRendered()) {
+            process(true);
 
-                if (!label) {
-                    label = (i + 1).toString();
-                }
-                else if (label[0] === '$') {
-                    label = this.translate(label.substring(1), 'tabs', this.scope);
-                }
+            this.adjustPanels();
 
-                let hidden = this.panelList
-                    .filter(panel => panel.tabNumber === i)
-                    .findIndex(panel => !this.recordHelper.getPanelStateParam(panel.name, 'hidden')) === -1;
+            return;
+        }
 
-                return {
-                    label: label,
-                    isActive: i === this.currentTab,
-                    hidden: hidden,
-                };
-            });
-        },
+        this.once('after:render', () => {
+            process();
+        });
+    },
 
-        selectTab: function (tab) {
-            this.currentTab = tab;
+    hidePanelFinalize: function (name, callback) {
+        if (this.isRendered()) {
+            let view = this.getView(name);
 
-            if (this.isRendered()) {
-                $('body > .popover').remove();
+            if (view) {
+                view.$el.closest('.panel').addClass('hidden');
+                view.disabled = true;
+                view.trigger('hide');
+            }
 
-                this.$el.find('.tabs > button').removeClass('active');
-                this.$el.find(`.tabs > button[data-tab="${tab}"]`).addClass('active');
-
-                this.$el.find('.panel[data-tab]:not([data-tab="-1"])').addClass('tab-hidden');
-                this.$el.find(`.panel[data-tab="${tab}"]`).removeClass('tab-hidden');
+            if (typeof callback === 'function') {
+                callback.call(this);
             }
 
             this.adjustPanels();
 
+            return;
+        }
+
+        if (typeof callback === 'function') {
+            this.once('after:render', () => {
+                callback.call(this);
+            });
+        }
+    },
+
+    showPanel: function (name, softLockedType, callback) {
+        if (!this.hasPanel(name)) {
+            return;
+        }
+
+        if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) {
+            return;
+        }
+
+        if (softLockedType) {
+            let param = 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked';
+
+            this.recordHelper.setPanelStateParam(name, param, false);
+
+            for (let i = 0; i < this.panelSoftLockedTypeList.length; i++) {
+                let iType = this.panelSoftLockedTypeList[i];
+
+                if (iType === softLockedType) {
+                    continue;
+                }
+
+                let iParam = 'hidden' +  Espo.Utils.upperCaseFirst(iType) + 'Locked';
+
+                if (this.recordHelper.getPanelStateParam(name, iParam)) {
+                    return;
+                }
+            }
+        }
+
+        let wasShown = this.recordHelper.getPanelStateParam(name, 'hidden') === false;
+
+        this.recordHelper.setPanelStateParam(name, 'hidden', false);
+
+        this.processShowPanel(name, callback, wasShown);
+    },
+
+    hidePanel: function (name, locked, softLockedType, callback) {
+        if (!this.hasPanel(name)) {
+            return;
+        }
+
+        this.recordHelper.setPanelStateParam(name, 'hidden', true);
+
+        if (locked) {
+            this.recordHelper.setPanelStateParam(name, 'hiddenLocked', true);
+        }
+
+        if (softLockedType) {
+            let param = 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked';
+
+            this.recordHelper.setPanelStateParam(name, param, true);
+        }
+
+        this.processHidePanel(name, callback);
+    },
+
+    alterPanels: function (layoutData) {
+        layoutData = layoutData || this.layoutData || {};
+
+        let tabBreakIndexList = [];
+
+        let tabDataList = [];
+
+        for (let name in layoutData) {
+            let item = layoutData[name];
+
+            if (name === '_delimiter_') {
+                this.panelList.push({
+                    name: name,
+                });
+            }
+
+            if (item.tabBreak) {
+                tabBreakIndexList.push(item.index);
+
+                tabDataList.push({
+                    index: item.index,
+                    label: item.tabLabel,
+                })
+            }
+        }
+
+        /**
+         * @private
+         * @type {Object.<string,*>[]}
+         */
+        this.tabDataList = tabDataList.sort((v1, v2) => v1.index - v2.index);
+
+        let newList = [];
+
+        this.panelList.forEach((item, i) => {
+            item.index = ('index' in item) ? item.index : i;
+
+            let allowedInLayout = false;
+
+            if (item.name) {
+                let itemData = layoutData[item.name] || {};
+
+                if (itemData.disabled) {
+                    return;
+                }
+
+                if (layoutData[item.name]) {
+                    allowedInLayout = true;
+                }
+
+                for (let i in itemData) {
+                    item[i] = itemData[i];
+                }
+            }
+
+            if (item.disabled && !allowedInLayout) {
+                return;
+            }
+
+            item.tabNumber = tabBreakIndexList.length -
+                tabBreakIndexList.slice().reverse().findIndex(index => item.index > index) - 1;
+
+            if (item.tabNumber === tabBreakIndexList.length) {
+                item.tabNumber = -1;
+            }
+
+            newList.push(item);
+        });
+
+        newList.sort((v1, v2) => v1.index - v2.index);
+
+        let firstTabIndex = newList.findIndex(item => item.tabNumber !== -1);
+
+        if (firstTabIndex !== -1) {
+            newList[firstTabIndex].isTabsBeginning = true;
+            this.hasTabs = true;
+            this.currentTab = newList[firstTabIndex].tabNumber;
+
             this.panelList
-                .filter(item => item.tabNumber === tab && item.name)
+                .filter(item => item.tabNumber !== -1 && item.tabNumber !== this.currentTab)
                 .forEach(item => {
-                    let view = this.getView(item.name);
-
-                    if (view) {
-                        view.trigger('tab-show');
-
-                        view.propagateEvent('panel-show-propagated');
-                    }
-
-                    item.tabHidden = false;
+                    item.tabHidden = true;
                 });
 
             this.panelList
-                .filter(item => item.tabNumber !== tab && item.name)
-                .forEach(item => {
-                    let view = this.getView(item.name);
-
-                    if (view) {
-                        view.trigger('tab-hide');
-                    }
-
-                    if (item.tabNumber > -1) {
-                        item.tabHidden = true;
+                .forEach((item, i) => {
+                    if (
+                        item.tabNumber !== -1 &&
+                        (i === 0 || this.panelList[i - 1].tabNumber !== item.tabNumber)
+                    ) {
+                        item.sticked = false;
                     }
                 });
+        }
 
-            this.storeTab();
-        },
+        this.panelList = newList;
 
-        /**
-         * @private
-         */
-        storeTab: function () {
-            let key = 'tab_' + this.name;
-            let keyRecord = 'tab_' + this.name + '_record';
+        if (this.recordViewObject && this.recordViewObject.dynamicLogic) {
+            let dynamicLogic = this.recordViewObject.dynamicLogic;
 
-            this.getSessionStorage().set(key, this.currentTab);
-            this.getSessionStorage().set(keyRecord, this.entityType + '_' + this.model.id);
-        },
+            this.panelList.forEach(item => {
+                if (item.dynamicLogicVisible) {
+                    dynamicLogic.addPanelVisibleCondition(item.name, item.dynamicLogicVisible);
 
-        /**
-         * @private
-         */
-        isStoredTabForThisRecord: function () {
-            let keyRecord = 'tab_' + this.name + '_record';
+                    if (this.recordHelper.getPanelStateParam(item.name, 'hidden')) {
+                        item.hidden = true;
+                    }
+                }
 
-            return this.getSessionStorage().get(keyRecord) === this.entityType + '_' + this.model.id;
-        },
+                if (item.style && item.style !== 'default' && item.dynamicLogicStyled) {
+                    dynamicLogic.addPanelStyledCondition(item.name, item.dynamicLogicStyled);
+                }
+            });
+        }
 
-        /**
-         * @private
-         */
-        selectStoredTab: function () {
-            let key = 'tab_' + this.name;
+        if (
+            this.hasTabs &&
+            this.options.isReturn &&
+            this.isStoredTabForThisRecord()
+        ) {
+            this.selectStoredTab();
+        }
+    },
 
-            let tab = this.getSessionStorage().get(key);
+    setupPanelsFinal: function () {
+        let afterDelimiter = false;
+        let rightAfterDelimiter = false;
 
-            if (tab > 0) {
-                this.selectTab(tab);
-            }
-        },
+        let index = -1;
 
-        /**
-         * @private
-         */
-        controlTabVisibilityShow: function (tab) {
-            if (!this.hasTabs) {
-                return;
-            }
-
-            if (this.isBeingRendered()) {
-                this.once('after:render', () => this.controlTabVisibilityShow(tab));
+        this.panelList.forEach((p, i) => {
+            if (p.name === '_delimiter_') {
+                afterDelimiter = true;
+                rightAfterDelimiter = true;
+                index = i;
 
                 return;
             }
 
-            this.$el.find(`.tabs > [data-tab="${tab.toString()}"]`).removeClass('hidden');
-        },
+            if (afterDelimiter) {
+                p.hidden = true;
+                p.hiddenAfterDelimiter = true;
 
-        /**
-         * @private
-         */
-        controlTabVisibilityHide: function (tab) {
-            if (!this.hasTabs) {
+                this.recordHelper.setPanelStateParam(p.name, 'hidden', true);
+                this.recordHelper.setPanelStateParam(p.name, 'hiddenDelimiterLocked', true);
+            }
+
+            if (rightAfterDelimiter) {
+                p.isRightAfterDelimiter = true;
+                rightAfterDelimiter = false;
+            }
+        });
+
+        if (~index) {
+            this.panelList.splice(index, 1);
+        }
+
+        this.panelList = this.panelList.filter((p) => {
+            return !this.recordHelper.getPanelStateParam(p.name, 'hiddenLocked');
+        });
+
+        this.panelsAreSet = true;
+
+        this.trigger('panels-set');
+    },
+
+    actionShowMorePanels: function () {
+        this.panelList.forEach(p => {
+            if (!p.hiddenAfterDelimiter) {
                 return;
             }
 
-            if (this.isBeingRendered()) {
-                this.once('after:render', () => this.controlTabVisibilityHide(tab));
+            delete p.isRightAfterDelimiter;
 
-                return;
+            this.showPanel(p.name, 'delimiter');
+        });
+
+        this.$el.find('.panels-show-more-delimiter').remove();
+    },
+
+    onPanelsReady: function (callback) {
+        Promise.race([
+            new Promise(resolve => {
+                if (this.panelsAreSet) {
+                    resolve();
+                }
+            }),
+            new Promise(resolve => {
+                this.once('panels-set', resolve);
+            })
+        ]).then(() => {
+            callback.call(this);
+        });
+    },
+
+    getTabDataList: function () {
+        return this.tabDataList.map((item, i) => {
+            let label = item.label;
+
+            if (!label) {
+                label = (i + 1).toString();
+            }
+            else if (label[0] === '$') {
+                label = this.translate(label.substring(1), 'tabs', this.scope);
             }
 
-            let panelList = this.panelList.filter(panel => panel.tabNumber === tab);
-
-            let allIsHidden = panelList
+            let hidden = this.panelList
+                .filter(panel => panel.tabNumber === i)
                 .findIndex(panel => !this.recordHelper.getPanelStateParam(panel.name, 'hidden')) === -1;
 
-            if (!allIsHidden) {
-                return;
-            }
+            return {
+                label: label,
+                isActive: i === this.currentTab,
+                hidden: hidden,
+            };
+        });
+    },
 
-            let $tab = this.$el.find(`.tabs > [data-tab="${tab.toString()}"]`);
+    selectTab: function (tab) {
+        this.currentTab = tab;
 
-            $tab.addClass('hidden');
+        if (this.isRendered()) {
+            $('body > .popover').remove();
 
-            if (this.currentTab === tab) {
-                let firstVisiblePanel = this.panelList
-                    .find(panel => panel.tabNumber > -1 && !panel.hidden);
+            this.$el.find('.tabs > button').removeClass('active');
+            this.$el.find(`.tabs > button[data-tab="${tab}"]`).addClass('active');
 
-                let firstVisibleTab = firstVisiblePanel ?
-                    firstVisiblePanel.tabNumber : 0;
+            this.$el.find('.panel[data-tab]:not([data-tab="-1"])').addClass('tab-hidden');
+            this.$el.find(`.panel[data-tab="${tab}"]`).removeClass('tab-hidden');
+        }
 
-                this.selectTab(firstVisibleTab);
-            }
-        },
-    });
+        this.adjustPanels();
+
+        this.panelList
+            .filter(item => item.tabNumber === tab && item.name)
+            .forEach(item => {
+                let view = this.getView(item.name);
+
+                if (view) {
+                    view.trigger('tab-show');
+
+                    view.propagateEvent('panel-show-propagated');
+                }
+
+                item.tabHidden = false;
+            });
+
+        this.panelList
+            .filter(item => item.tabNumber !== tab && item.name)
+            .forEach(item => {
+                let view = this.getView(item.name);
+
+                if (view) {
+                    view.trigger('tab-hide');
+                }
+
+                if (item.tabNumber > -1) {
+                    item.tabHidden = true;
+                }
+            });
+
+        this.storeTab();
+    },
+
+    /**
+     * @private
+     */
+    storeTab: function () {
+        let key = 'tab_' + this.name;
+        let keyRecord = 'tab_' + this.name + '_record';
+
+        this.getSessionStorage().set(key, this.currentTab);
+        this.getSessionStorage().set(keyRecord, this.entityType + '_' + this.model.id);
+    },
+
+    /**
+     * @private
+     */
+    isStoredTabForThisRecord: function () {
+        let keyRecord = 'tab_' + this.name + '_record';
+
+        return this.getSessionStorage().get(keyRecord) === this.entityType + '_' + this.model.id;
+    },
+
+    /**
+     * @private
+     */
+    selectStoredTab: function () {
+        let key = 'tab_' + this.name;
+
+        let tab = this.getSessionStorage().get(key);
+
+        if (tab > 0) {
+            this.selectTab(tab);
+        }
+    },
+
+    /**
+     * @private
+     */
+    controlTabVisibilityShow: function (tab) {
+        if (!this.hasTabs) {
+            return;
+        }
+
+        if (this.isBeingRendered()) {
+            this.once('after:render', () => this.controlTabVisibilityShow(tab));
+
+            return;
+        }
+
+        this.$el.find(`.tabs > [data-tab="${tab.toString()}"]`).removeClass('hidden');
+    },
+
+    /**
+     * @private
+     */
+    controlTabVisibilityHide: function (tab) {
+        if (!this.hasTabs) {
+            return;
+        }
+
+        if (this.isBeingRendered()) {
+            this.once('after:render', () => this.controlTabVisibilityHide(tab));
+
+            return;
+        }
+
+        let panelList = this.panelList.filter(panel => panel.tabNumber === tab);
+
+        let allIsHidden = panelList
+            .findIndex(panel => !this.recordHelper.getPanelStateParam(panel.name, 'hidden')) === -1;
+
+        if (!allIsHidden) {
+            return;
+        }
+
+        let $tab = this.$el.find(`.tabs > [data-tab="${tab.toString()}"]`);
+
+        $tab.addClass('hidden');
+
+        if (this.currentTab === tab) {
+            let firstVisiblePanel = this.panelList
+                .find(panel => panel.tabNumber > -1 && !panel.hidden);
+
+            let firstVisibleTab = firstVisiblePanel ?
+                firstVisiblePanel.tabNumber : 0;
+
+            this.selectTab(firstVisibleTab);
+        }
+    },
 });

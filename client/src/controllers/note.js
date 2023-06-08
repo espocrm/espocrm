@@ -31,7 +31,7 @@ define('controllers/note', ['controller'], function (Dep) {
     /**
      * @class
      * @name Class
-     * @extends module:controller.Class
+     * @extends module:controller
      * @memberOf module:controllers/note
      */
     return Dep.extend(/** @lends module:controllers/note.Class# */{

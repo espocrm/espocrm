@@ -26,123 +26,117 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('helpers/misc/stored-text-search', [], function () {
+/** @module helpers/misc/stored-text-search */
 
+export default class {
     /**
-     * @memberOf module:helpers/misc/stored-text-search
+     * @param {module:storage} storage
+     * @param {string} scope
+     * @param {Number} [maxCount]
      */
-    class Class {
-        /**
-         * @param {module:storage.Class} storage
-         * @param {string} scope
-         * @param {Number} [maxCount]
-         */
-        constructor(scope, storage, maxCount) {
-            this.scope = scope;
-            this.storage = storage;
-            this.key = 'textSearches';
-            this.maxCount = maxCount || 100;
-            /** @type {string[]|null} */
-            this.list = null;
-        }
-
-        /**
-         * Match.
-         *
-         * @param {string} text
-         * @param {Number} [limit]
-         * @return {string[]}
-         */
-        match(text, limit) {
-            text = text.toLowerCase().trim();
-
-            let list = this.get();
-            let matchedList = [];
-
-            for (let item of list) {
-                if (item.toLowerCase().startsWith(text)) {
-                    matchedList.push(item);
-                }
-
-                if (limit !== undefined && matchedList.length === limit) {
-                    break;
-                }
-            }
-
-            return matchedList;
-        }
-
-        /**
-         * Get stored text filters.
-         *
-         * @private
-         * @return {string[]}
-         */
-        get() {
-            if (this.list === null) {
-                this.list = this.getFromStorage();
-            }
-
-            return this.list;
-        }
-
-        /**
-         * @private
-         * @return {string[]}
-         */
-        getFromStorage() {
-            /** @var {string[]} */
-            return this.storage.get(this.key, this.scope) || [];
-        }
-
-        /**
-         * Store a text filter.
-         *
-         * @param {string} text
-         */
-        store(text) {
-            text = text.trim();
-
-            let list = this.getFromStorage();
-
-            let index = list.indexOf(text);
-
-            if (index !== -1) {
-                list.splice(index, 1);
-            }
-
-            list.unshift(text);
-
-            if (list.length > this.maxCount) {
-                list = list.slice(0, this.maxCount);
-            }
-
-            this.list = list;
-            this.storage.set(this.key, this.scope, list);
-        }
-
-        /**
-         * Remove a text filter.
-         *
-         * @param {string} text
-         */
-        remove(text) {
-            text = text.trim();
-
-            let list = this.getFromStorage();
-
-            let index = list.indexOf(text);
-
-            if (index === -1) {
-                return;
-            }
-
-            list.splice(index, 1);
-
-            this.list = list;
-            this.storage.set(this.key, this.scope, list);
-        }
+    constructor(scope, storage, maxCount) {
+        this.scope = scope;
+        this.storage = storage;
+        this.key = 'textSearches';
+        this.maxCount = maxCount || 100;
+        /** @type {string[]|null} */
+        this.list = null;
     }
 
-    return Class;
-});
+    /**
+     * Match.
+     *
+     * @param {string} text
+     * @param {Number} [limit]
+     * @return {string[]}
+     */
+    match(text, limit) {
+        text = text.toLowerCase().trim();
+
+        let list = this.get();
+        let matchedList = [];
+
+        for (let item of list) {
+            if (item.toLowerCase().startsWith(text)) {
+                matchedList.push(item);
+            }
+
+            if (limit !== undefined && matchedList.length === limit) {
+                break;
+            }
+        }
+
+        return matchedList;
+    }
+
+    /**
+     * Get stored text filters.
+     *
+     * @private
+     * @return {string[]}
+     */
+    get() {
+        if (this.list === null) {
+            this.list = this.getFromStorage();
+        }
+
+        return this.list;
+    }
+
+    /**
+     * @private
+     * @return {string[]}
+     */
+    getFromStorage() {
+        /** @var {string[]} */
+        return this.storage.get(this.key, this.scope) || [];
+    }
+
+    /**
+     * Store a text filter.
+     *
+     * @param {string} text
+     */
+    store(text) {
+        text = text.trim();
+
+        let list = this.getFromStorage();
+
+        let index = list.indexOf(text);
+
+        if (index !== -1) {
+            list.splice(index, 1);
+        }
+
+        list.unshift(text);
+
+        if (list.length > this.maxCount) {
+            list = list.slice(0, this.maxCount);
+        }
+
+        this.list = list;
+        this.storage.set(this.key, this.scope, list);
+    }
+
+    /**
+     * Remove a text filter.
+     *
+     * @param {string} text
+     */
+    remove(text) {
+        text = text.trim();
+
+        let list = this.getFromStorage();
+
+        let index = list.indexOf(text);
+
+        if (index === -1) {
+            return;
+        }
+
+        list.splice(index, 1);
+
+        this.list = list;
+        this.storage.set(this.key, this.scope, list);
+    }
+}

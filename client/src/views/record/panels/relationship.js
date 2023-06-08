@@ -26,740 +26,740 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/panels/relationship',
-['views/record/panels/bottom', 'search-manager', 'helpers/record-modal'],
-function (Dep, SearchManager, RecordModal) {
+/** @module views/record/panels/relationship */
+
+import Dep from 'views/record/panels/bottom';
+import SearchManager from 'search-manager';
+import RecordModal from 'helpers/record-modal';
+
+/**
+ * A relationship panel.
+ *
+ * @class
+ * @name Class
+ * @extends module:views/record/panels/bottom
+ */
+export default Dep.extend(/** @lends Class# */{
 
     /**
-     * A relationship panel.
-     *
-     * @class
-     * @name Class
-     * @extends module:views/record/panels/bottom.Class
-     * @memberOf module:views/record/panels/relationship
+     * @inheritDoc
      */
-    return Dep.extend(/** @lends module:views/record/panels/relationship.Class# */{
+    template: 'record/panels/relationship',
 
-        /**
-         * @inheritDoc
-         */
-        template: 'record/panels/relationship',
+    /**
+     * A row-actions view.
+     *
+     * @protected
+     */
+    rowActionsView: 'views/record/row-actions/relationship',
 
-        /**
-         * A row-actions view.
-         *
-         * @protected
-         */
-        rowActionsView: 'views/record/row-actions/relationship',
+    /**
+     * An API URL.
+     *
+     * @protected
+     */
+    url: null,
 
-        /**
-         * An API URL.
-         *
-         * @protected
-         */
-        url: null,
+    /**
+     * A scope.
+     */
+    scope: null,
 
-        /**
-         * A scope.
-         */
-        scope: null,
+    /**
+     * Read-only.
+     */
+    readOnly: false,
 
-        /**
-         * Read-only.
-         */
-        readOnly: false,
+    /**
+     * Fetch a collection on a model 'after:relate' event.
+     *
+     * @protected
+     */
+    fetchOnModelAfterRelate: false,
 
-        /**
-         * Fetch a collection on a model 'after:relate' event.
-         *
-         * @protected
-         */
-        fetchOnModelAfterRelate: false,
+    /**
+     * @protected
+     */
+    noCreateScopeList: ['User', 'Team', 'Role', 'Portal'],
 
-        /**
-         * @protected
-         */
-        noCreateScopeList: ['User', 'Team', 'Role', 'Portal'],
+    /**
+     * @private
+     */
+    recordsPerPage: null,
 
-        /**
-         * @private
-         */
-        recordsPerPage: null,
+    /**
+     * @protected
+     */
+    viewModalView: null,
 
-        /**
-         * @protected
-         */
-        viewModalView: null,
+    init: function () {
+        Dep.prototype.init.call(this);
+    },
 
-        init: function () {
-            Dep.prototype.init.call(this);
-        },
+    setup: function () {
+        Dep.prototype.setup.call(this);
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        this.link = this.link || this.defs.link || this.panelName;
 
-            this.link = this.link || this.defs.link || this.panelName;
+        if (!this.scope && !(this.link in this.model.defs.links)) {
+            throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
+        }
 
-            if (!this.scope && !(this.link in this.model.defs.links)) {
-                throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
-            }
+        this.scope = this.scope || this.model.defs.links[this.link].entity;
 
-            this.scope = this.scope || this.model.defs.links[this.link].entity;
+        let linkReadOnly = this.getMetadata()
+            .get(['entityDefs', this.model.entityType, 'links', this.link, 'readOnly']) || false;
 
-            let linkReadOnly = this.getMetadata()
-                .get(['entityDefs', this.model.entityType, 'links', this.link, 'readOnly']) || false;
+        let url = this.url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
 
-            let url = this.url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
+        if (!('create' in this.defs)) {
+            this.defs.create = true;
+        }
 
-            if (!('create' in this.defs)) {
-                this.defs.create = true;
-            }
+        if (!('select' in this.defs)) {
+            this.defs.select = true;
+        }
 
-            if (!('select' in this.defs)) {
-                this.defs.select = true;
-            }
+        if (!('view' in this.defs)) {
+            this.defs.view = true;
+        }
 
-            if (!('view' in this.defs)) {
-                this.defs.view = true;
-            }
+        if (linkReadOnly) {
+            this.defs.create = false;
+            this.defs.select = false;
+        }
 
-            if (linkReadOnly) {
-                this.defs.create = false;
-                this.defs.select = false;
-            }
+        this.filterList = this.defs.filterList || this.filterList || null;
 
-            this.filterList = this.defs.filterList || this.filterList || null;
+        if (this.filterList && this.filterList.length) {
+            this.filter = this.getStoredFilter();
+        }
 
-            if (this.filterList && this.filterList.length) {
-                this.filter = this.getStoredFilter();
-            }
+        this.setupTitle();
 
-            this.setupTitle();
+        if (this.defs.createDisabled) {
+            this.defs.create = false;
+        }
 
-            if (this.defs.createDisabled) {
-                this.defs.create = false;
-            }
+        if (this.defs.selectDisabled) {
+            this.defs.select = false;
+        }
 
-            if (this.defs.selectDisabled) {
-                this.defs.select = false;
-            }
+        if (this.defs.viewDisabled) {
+            this.defs.view = false;
+        }
 
-            if (this.defs.viewDisabled) {
-                this.defs.view = false;
-            }
+        let hasCreate = false;
 
-            let hasCreate = false;
-
-            if (this.defs.create) {
-                if (
-                    this.getAcl().check(this.scope, 'create') &&
-                    !~this.noCreateScopeList.indexOf(this.scope)
-                ) {
-                    this.buttonList.push({
-                        title: 'Create',
-                        action: this.defs.createAction || 'createRelated',
+        if (this.defs.create) {
+            if (
+                this.getAcl().check(this.scope, 'create') &&
+                !~this.noCreateScopeList.indexOf(this.scope)
+            ) {
+                this.buttonList.push({
+                    title: 'Create',
+                    action: this.defs.createAction || 'createRelated',
+                    link: this.link,
+                    html: '<span class="fas fa-plus"></span>',
+                    data: {
                         link: this.link,
-                        html: '<span class="fas fa-plus"></span>',
-                        data: {
-                            link: this.link,
-                        },
-                        acl: this.defs.createRequiredAccess || null,
-                    });
-
-                    hasCreate = true;
-                }
-            }
-
-            if (this.defs.select) {
-                let data = {link: this.link};
-
-                if (this.defs.selectPrimaryFilterName) {
-                    data.primaryFilterName = this.defs.selectPrimaryFilterName;
-                }
-
-                if (this.defs.selectBoolFilterList) {
-                    data.boolFilterList = this.defs.selectBoolFilterList;
-                }
-
-                data.massSelect = this.defs.massSelect;
-                data.createButton = hasCreate;
-
-                this.actionList.unshift({
-                    label: 'Select',
-                    action: this.defs.selectAction || 'selectRelated',
-                    data: data,
-                    acl: this.defs.selectRequiredAccess || 'edit',
-                });
-            }
-
-            if (this.defs.view) {
-                this.actionList.unshift({
-                    label: 'View List',
-                    action: this.defs.viewAction || 'viewRelatedList',
-                });
-            }
-
-            this.setupActions();
-
-            var layoutName = 'listSmall';
-            this.setupListLayout();
-
-            if (this.listLayoutName) {
-                layoutName = this.listLayoutName;
-            }
-
-            let listLayout = null;
-
-            let layout = this.defs.layout || null;
-
-            if (layout) {
-                if (typeof layout === 'string') {
-                     layoutName = layout;
-                } else {
-                     layoutName = 'listRelationshipCustom';
-                     listLayout = layout;
-                }
-            }
-
-            this.listLayout = listLayout;
-            this.layoutName = layoutName;
-
-            this.setupSorting();
-
-            this.wait(true);
-
-            this.getCollectionFactory().create(this.scope, collection => {
-                collection.maxSize = this.recordsPerPage || this.getConfig().get('recordsPerPageSmall') || 5;
-
-                if (this.defs.filters) {
-                    let searchManager = new SearchManager(collection, 'listRelationship', false, this.getDateTime());
-                    searchManager.setAdvanced(this.defs.filters);
-                    collection.where = searchManager.getWhere();
-                }
-
-                collection.url = collection.urlRoot = url;
-
-                if (this.defaultOrderBy) {
-                    collection.setOrder(this.defaultOrderBy, this.defaultOrder || false, true);
-                }
-
-                this.collection = collection;
-
-                collection.parentModel = this.model;
-
-                this.setFilter(this.filter);
-
-                if (this.fetchOnModelAfterRelate) {
-                    this.listenTo(this.model, 'after:relate', () => collection.fetch());
-                }
-
-                this.listenTo(this.model, 'update-all', () => collection.fetch());
-
-                let viewName =
-                    this.defs.recordListView ||
-                    this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'listRelated']) ||
-                    this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
-                    'views/record/list';
-
-                this.listViewName = viewName;
-                this.rowActionsView = this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView);
-
-                this.once('after:render', () => {
-                    this.createView('list', viewName, {
-                        collection: collection,
-                        layoutName: layoutName,
-                        listLayout: listLayout,
-                        checkboxes: false,
-                        rowActionsView: this.rowActionsView,
-                        buttonsDisabled: true,
-                        el: this.options.el + ' .list-container',
-                        skipBuildRows: true,
-                        rowActionsOptions: {
-                            unlinkDisabled: this.defs.unlinkDisabled,
-                        },
-                        displayTotalCount: false,
-                    }, view => {
-                        view.getSelectAttributeList((selectAttributeList) => {
-                            if (selectAttributeList) {
-                                collection.data.select = selectAttributeList.join(',');
-                            }
-
-                            if (!this.defs.hidden) {
-                                collection.fetch();
-
-                                return;
-                            }
-
-                            this.once('show', () => collection.fetch());
-                        });
-                    });
+                    },
+                    acl: this.defs.createRequiredAccess || null,
                 });
 
-                this.wait(false);
+                hasCreate = true;
+            }
+        }
+
+        if (this.defs.select) {
+            let data = {link: this.link};
+
+            if (this.defs.selectPrimaryFilterName) {
+                data.primaryFilterName = this.defs.selectPrimaryFilterName;
+            }
+
+            if (this.defs.selectBoolFilterList) {
+                data.boolFilterList = this.defs.selectBoolFilterList;
+            }
+
+            data.massSelect = this.defs.massSelect;
+            data.createButton = hasCreate;
+
+            this.actionList.unshift({
+                label: 'Select',
+                action: this.defs.selectAction || 'selectRelated',
+                data: data,
+                acl: this.defs.selectRequiredAccess || 'edit',
             });
+        }
 
-            this.setupFilterActions();
-            this.setupLast();
-        },
+        if (this.defs.view) {
+            this.actionList.unshift({
+                label: 'View List',
+                action: this.defs.viewAction || 'viewRelatedList',
+            });
+        }
 
-        /**
-         * Set up lastly.
-         *
-         * @protected
-         */
-        setupLast: function () {},
+        this.setupActions();
 
-        /**
-         * Set up title.
-         *
-         * @protected
-         */
-        setupTitle: function () {
-            this.title = this.title || this.translate(this.link, 'links', this.model.name);
+        var layoutName = 'listSmall';
+        this.setupListLayout();
 
-            var iconHtml = '';
-            if (!this.getConfig().get('scopeColorsDisabled')) {
-                iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
-            }
+        if (this.listLayoutName) {
+            layoutName = this.listLayoutName;
+        }
 
-            this.titleHtml = this.title;
+        let listLayout = null;
 
-            if (this.defs.label) {
-                this.titleHtml = iconHtml + this.translate(this.defs.label, 'labels', this.scope);
+        let layout = this.defs.layout || null;
+
+        if (layout) {
+            if (typeof layout === 'string') {
+                 layoutName = layout;
             } else {
-                this.titleHtml = iconHtml + this.title;
+                 layoutName = 'listRelationshipCustom';
+                 listLayout = layout;
+            }
+        }
+
+        this.listLayout = listLayout;
+        this.layoutName = layoutName;
+
+        this.setupSorting();
+
+        this.wait(true);
+
+        this.getCollectionFactory().create(this.scope, collection => {
+            collection.maxSize = this.recordsPerPage || this.getConfig().get('recordsPerPageSmall') || 5;
+
+            if (this.defs.filters) {
+                let searchManager = new SearchManager(collection, 'listRelationship', false, this.getDateTime());
+                searchManager.setAdvanced(this.defs.filters);
+                collection.where = searchManager.getWhere();
             }
 
-            if (this.filter && this.filter !== 'all') {
-                this.titleHtml += ' &middot; ' + this.translateFilter(this.filter);
-            }
-        },
+            collection.url = collection.urlRoot = url;
 
-        /**
-         * Set up sorting.
-         *
-         * @protected
-         */
-        setupSorting: function () {
-            var orderBy = this.defs.orderBy || this.defs.sortBy || this.orderBy;
-            var order = this.defs.orderDirection || this.orderDirection || this.order;
-
-            if ('asc' in this.defs) { // TODO remove in 5.8
-                order = this.defs.asc ? 'asc' : 'desc';
+            if (this.defaultOrderBy) {
+                collection.setOrder(this.defaultOrderBy, this.defaultOrder || false, true);
             }
 
-            if (!orderBy) {
-                orderBy = this.getMetadata().get(['entityDefs', this.scope, 'collection', 'orderBy']);
-                order = this.getMetadata().get(['entityDefs', this.scope, 'collection', 'order'])
+            this.collection = collection;
+
+            collection.parentModel = this.model;
+
+            this.setFilter(this.filter);
+
+            if (this.fetchOnModelAfterRelate) {
+                this.listenTo(this.model, 'after:relate', () => collection.fetch());
             }
 
-            if (orderBy && !order) {
-                order = 'asc';
-            }
+            this.listenTo(this.model, 'update-all', () => collection.fetch());
 
-            this.defaultOrderBy = orderBy;
-            this.defaultOrder = order;
-        },
+            let viewName =
+                this.defs.recordListView ||
+                this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'listRelated']) ||
+                this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
+                'views/record/list';
 
-        /**
-         * Set up a list layout.
-         *
-         * @protected
-         */
-        setupListLayout: function () {},
+            this.listViewName = viewName;
+            this.rowActionsView = this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView);
 
-        /**
-         * Set up actions.
-         *
-         * @protected
-         */
-        setupActions: function () {},
+            this.once('after:render', () => {
+                this.createView('list', viewName, {
+                    collection: collection,
+                    layoutName: layoutName,
+                    listLayout: listLayout,
+                    checkboxes: false,
+                    rowActionsView: this.rowActionsView,
+                    buttonsDisabled: true,
+                    el: this.options.el + ' .list-container',
+                    skipBuildRows: true,
+                    rowActionsOptions: {
+                        unlinkDisabled: this.defs.unlinkDisabled,
+                    },
+                    displayTotalCount: false,
+                }, view => {
+                    view.getSelectAttributeList((selectAttributeList) => {
+                        if (selectAttributeList) {
+                            collection.data.select = selectAttributeList.join(',');
+                        }
 
-        /**
-         * Set up filter actions.
-         *
-         * @protected
-         */
-        setupFilterActions: function () {
-            if (this.filterList && this.filterList.length) {
-                this.actionList.push(false);
+                        if (!this.defs.hidden) {
+                            collection.fetch();
 
-                this.filterList.slice(0).forEach((item) => {
-                    let selected;
+                            return;
+                        }
 
-                    if (item === 'all') {
-                        selected = !this.filter;
-                    }
-                    else {
-                        selected = item === this.filter;
-                    }
-
-                    let label = this.translateFilter(item);
-
-                    let $item =
-                        $('<div>')
-                            .append(
-                                $('<span>')
-                                    .addClass('check-icon fas fa-check pull-right')
-                                    .addClass(!selected ? 'hidden' : '')
-                            )
-                            .append(
-                                $('<div>').text(label)
-                            );
-
-                    this.actionList.push({
-                        action: 'selectFilter',
-                        html: $item.get(0).innerHTML,
-                        data: {
-                            name: item,
-                        },
+                        this.once('show', () => collection.fetch());
                     });
                 });
-            }
-        },
+            });
 
-        /**
-         * Translate a filter.
-         *
-         * @param {string} name A name.
-         * @return {string}
-         */
-        translateFilter: function (name) {
-            return this.translate(name, 'presetFilters', this.scope);
-        },
+            this.wait(false);
+        });
 
-        /**
-         * @private
-         */
-        getStoredFilter: function () {
-            var key = 'panelFilter' + this.model.name + '-' + (this.panelName || this.name);
+        this.setupFilterActions();
+        this.setupLast();
+    },
 
-            return this.getStorage().get('state', key) || null;
-        },
+    /**
+     * Set up lastly.
+     *
+     * @protected
+     */
+    setupLast: function () {},
 
-        /**
-         * @private
-         */
-        storeFilter: function (filter) {
-            var key = 'panelFilter' + this.model.name + '-' + (this.panelName || this.name);
+    /**
+     * Set up title.
+     *
+     * @protected
+     */
+    setupTitle: function () {
+        this.title = this.title || this.translate(this.link, 'links', this.model.name);
 
-            if (filter) {
-                this.getStorage().set('state', key, filter);
+        var iconHtml = '';
+
+        if (!this.getConfig().get('scopeColorsDisabled')) {
+            iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+        }
+
+        this.titleHtml = this.title;
+
+        if (this.defs.label) {
+            this.titleHtml = iconHtml + this.translate(this.defs.label, 'labels', this.scope);
+        } else {
+            this.titleHtml = iconHtml + this.title;
+        }
+
+        if (this.filter && this.filter !== 'all') {
+            this.titleHtml += ' &middot; ' + this.translateFilter(this.filter);
+        }
+    },
+
+    /**
+     * Set up sorting.
+     *
+     * @protected
+     */
+    setupSorting: function () {
+        var orderBy = this.defs.orderBy || this.defs.sortBy || this.orderBy;
+        var order = this.defs.orderDirection || this.orderDirection || this.order;
+
+        if ('asc' in this.defs) { // TODO remove in 5.8
+            order = this.defs.asc ? 'asc' : 'desc';
+        }
+
+        if (!orderBy) {
+            orderBy = this.getMetadata().get(['entityDefs', this.scope, 'collection', 'orderBy']);
+            order = this.getMetadata().get(['entityDefs', this.scope, 'collection', 'order'])
+        }
+
+        if (orderBy && !order) {
+            order = 'asc';
+        }
+
+        this.defaultOrderBy = orderBy;
+        this.defaultOrder = order;
+    },
+
+    /**
+     * Set up a list layout.
+     *
+     * @protected
+     */
+    setupListLayout: function () {},
+
+    /**
+     * Set up actions.
+     *
+     * @protected
+     */
+    setupActions: function () {},
+
+    /**
+     * Set up filter actions.
+     *
+     * @protected
+     */
+    setupFilterActions: function () {
+        if (this.filterList && this.filterList.length) {
+            this.actionList.push(false);
+
+            this.filterList.slice(0).forEach((item) => {
+                let selected;
+
+                if (item === 'all') {
+                    selected = !this.filter;
+                }
+                else {
+                    selected = item === this.filter;
+                }
+
+                let label = this.translateFilter(item);
+
+                let $item =
+                    $('<div>')
+                        .append(
+                            $('<span>')
+                                .addClass('check-icon fas fa-check pull-right')
+                                .addClass(!selected ? 'hidden' : '')
+                        )
+                        .append(
+                            $('<div>').text(label)
+                        );
+
+                this.actionList.push({
+                    action: 'selectFilter',
+                    html: $item.get(0).innerHTML,
+                    data: {
+                        name: item,
+                    },
+                });
+            });
+        }
+    },
+
+    /**
+     * Translate a filter.
+     *
+     * @param {string} name A name.
+     * @return {string}
+     */
+    translateFilter: function (name) {
+        return this.translate(name, 'presetFilters', this.scope);
+    },
+
+    /**
+     * @private
+     */
+    getStoredFilter: function () {
+        var key = 'panelFilter' + this.model.name + '-' + (this.panelName || this.name);
+
+        return this.getStorage().get('state', key) || null;
+    },
+
+    /**
+     * @private
+     */
+    storeFilter: function (filter) {
+        var key = 'panelFilter' + this.model.name + '-' + (this.panelName || this.name);
+
+        if (filter) {
+            this.getStorage().set('state', key, filter);
+        } else {
+            this.getStorage().clear('state', key);
+        }
+    },
+
+    /**
+     * Set a filter.
+     *
+     * @param {string} filter A filter.
+     */
+    setFilter: function (filter) {
+        this.filter = filter;
+        this.collection.data.primaryFilter = null;
+
+        if (filter && filter !== 'all') {
+            this.collection.data.primaryFilter = filter;
+        }
+    },
+
+    /**
+     * A `select-filter` action.
+     *
+     * @protected
+     */
+    actionSelectFilter: function (data) {
+        var filter = data.name;
+        var filterInternal = filter;
+
+        if (filter === 'all') {
+            filterInternal = false;
+        }
+
+        this.storeFilter(filterInternal);
+        this.setFilter(filterInternal);
+
+        this.filterList.forEach(item => {
+            var $el = this.$el.closest('.panel').find('[data-name="'+item+'"] span');
+
+            if (item === filter) {
+                $el.removeClass('hidden');
             } else {
-                this.getStorage().clear('state', key);
+                $el.addClass('hidden');
             }
-        },
+        });
 
-        /**
-         * Set a filter.
-         *
-         * @param {string} filter A filter.
-         */
-        setFilter: function (filter) {
-            this.filter = filter;
-            this.collection.data.primaryFilter = null;
+        this.collection.reset();
 
-            if (filter && filter !== 'all') {
-                this.collection.data.primaryFilter = filter;
+        var listView = this.getView('list');
+
+        if (listView && listView.$el) {
+            var height = listView.$el.parent().get(0).clientHeight;
+
+            listView.$el.empty();
+
+            if (height) {
+                listView.$el.parent().css('height', height + 'px');
             }
-        },
+        }
 
-        /**
-         * A `select-filter` action.
-         *
-         * @protected
-         */
-        actionSelectFilter: function (data) {
-            var filter = data.name;
-            var filterInternal = filter;
+        this.collection.fetch().then(() => {
+            listView.$el.parent().css('height', '');
+        });
 
-            if (filter === 'all') {
-                filterInternal = false;
+        this.setupTitle();
+
+        if (this.isRendered()) {
+            this.$el.closest('.panel')
+                .find('> .panel-heading > .panel-title > span')
+                .html(this.titleHtml);
+        }
+    },
+
+    /**
+     * A `refresh` action.
+     *
+     * @protected
+     */
+    actionRefresh: function () {
+        this.collection.fetch();
+    },
+
+    /**
+     * A `view-related-list` action.
+     *
+     * @protected
+     */
+    actionViewRelatedList: function (data) {
+        var viewName =
+            this.getMetadata().get(
+                ['clientDefs', this.model.name, 'relationshipPanels', this.name, 'viewModalView']
+            ) ||
+            this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'relatedList']) ||
+            this.viewModalView ||
+            'views/modals/related-list';
+
+        var scope = data.scope || this.scope;
+
+        var filter = this.filter;
+
+        if (this.relatedListFiltersDisabled) {
+            filter = null;
+        }
+
+        var options = {
+            model: this.model,
+            panelName: this.panelName,
+            link: this.link,
+            scope: scope,
+            defs: this.defs,
+            title: data.title || this.title,
+            filterList: this.filterList,
+            filter: filter,
+            layoutName: this.layoutName,
+            defaultOrder: this.defaultOrder,
+            defaultOrderBy: this.defaultOrderBy,
+            url: data.url || this.url,
+            listViewName: this.listViewName,
+            createDisabled: !this.isCreateAvailable(scope),
+            selectDisabled: !this.isSelectAvailable(scope),
+            rowActionsView: this.rowActionsView,
+            panelCollection: this.collection,
+            filtersDisabled: this.relatedListFiltersDisabled,
+        };
+
+        if (data.viewOptions) {
+            for (var item in data.viewOptions) {
+                options[item] = data.viewOptions[item];
             }
+        }
 
-            this.storeFilter(filterInternal);
-            this.setFilter(filterInternal);
+        Espo.Ui.notify(' ... ');
 
-            this.filterList.forEach(item => {
-                var $el = this.$el.closest('.panel').find('[data-name="'+item+'"] span');
+        this.createView('modalRelatedList', viewName, options, (view) => {
+            Espo.Ui.notify(false);
 
-                if (item === filter) {
-                    $el.removeClass('hidden');
-                } else {
-                    $el.addClass('hidden');
+            view.render();
+
+            this.listenTo(view, 'action', (action, data, e) => {
+                var method = 'action' + Espo.Utils.upperCaseFirst(action);
+
+                if (typeof this[method] === 'function') {
+                    this[method](data, e);
+
+                    e.preventDefault();
                 }
             });
 
-            this.collection.reset();
-
-            var listView = this.getView('list');
-
-            if (listView && listView.$el) {
-                var height = listView.$el.parent().get(0).clientHeight;
-
-                listView.$el.empty();
-
-                if (height) {
-                    listView.$el.parent().css('height', height + 'px');
-                }
-            }
-
-            this.collection.fetch().then(() => {
-                listView.$el.parent().css('height', '');
+            this.listenToOnce(view, 'close', () => {
+                this.clearView('modalRelatedList');
             });
+        });
+    },
 
-            this.setupTitle();
+    /**
+     * Is create available.
+     *
+     * @protected
+     * @param {string} scope A scope (entity type).
+     * @return {boolean};
+     */
+    isCreateAvailable: function (scope) {
+        return !!this.defs.create;
+    },
 
-            if (this.isRendered()) {
-                this.$el.closest('.panel')
-                    .find('> .panel-heading > .panel-title > span')
-                    .html(this.titleHtml);
-            }
-        },
+    /**
+     * Is select available.
+     *
+     * @protected
+     * @param {string} scope A scope (entity type).
+     * @return {boolean};
+     */
+    isSelectAvailable: function (scope) {
+        return !!this.defs.select;
+    },
 
-        /**
-         * A `refresh` action.
-         *
-         * @protected
-         */
-        actionRefresh: function () {
-            this.collection.fetch();
-        },
+    /**
+     * A `view-related` action.
+     *
+     * @protected
+     */
+    actionViewRelated: function (data) {
+        let id = data.id;
+        let model = this.collection.get(id);
 
-        /**
-         * A `view-related-list` action.
-         *
-         * @protected
-         */
-        actionViewRelatedList: function (data) {
-            var viewName =
-                this.getMetadata().get(
-                    ['clientDefs', this.model.name, 'relationshipPanels', this.name, 'viewModalView']
-                ) ||
-                this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'relatedList']) ||
-                this.viewModalView ||
-                'views/modals/related-list';
+        if (!model) {
+            return;
+        }
 
-            var scope = data.scope || this.scope;
+        let scope = model.entityType;
 
-            var filter = this.filter;
+        let helper = new RecordModal(this.getMetadata(), this.getAcl());
 
-            if (this.relatedListFiltersDisabled) {
-                filter = null;
-            }
-
-            var options = {
-                model: this.model,
-                panelName: this.panelName,
-                link: this.link,
-                scope: scope,
-                defs: this.defs,
-                title: data.title || this.title,
-                filterList: this.filterList,
-                filter: filter,
-                layoutName: this.layoutName,
-                defaultOrder: this.defaultOrder,
-                defaultOrderBy: this.defaultOrderBy,
-                url: data.url || this.url,
-                listViewName: this.listViewName,
-                createDisabled: !this.isCreateAvailable(scope),
-                selectDisabled: !this.isSelectAvailable(scope),
-                rowActionsView: this.rowActionsView,
-                panelCollection: this.collection,
-                filtersDisabled: this.relatedListFiltersDisabled,
-            };
-
-            if (data.viewOptions) {
-                for (var item in data.viewOptions) {
-                    options[item] = data.viewOptions[item];
-                }
-            }
-
-            Espo.Ui.notify(' ... ');
-
-            this.createView('modalRelatedList', viewName, options, (view) => {
-                Espo.Ui.notify(false);
-
-                view.render();
-
-                this.listenTo(view, 'action', (action, data, e) => {
-                    var method = 'action' + Espo.Utils.upperCaseFirst(action);
-
-                    if (typeof this[method] === 'function') {
-                        this[method](data, e);
-
-                        e.preventDefault();
-                    }
-                });
-
-                this.listenToOnce(view, 'close', () => {
-                    this.clearView('modalRelatedList');
-                });
-            });
-        },
-
-        /**
-         * Is create available.
-         *
-         * @protected
-         * @param {string} scope A scope (entity type).
-         * @return {boolean};
-         */
-        isCreateAvailable: function (scope) {
-            return !!this.defs.create;
-        },
-
-        /**
-         * Is select available.
-         *
-         * @protected
-         * @param {string} scope A scope (entity type).
-         * @return {boolean};
-         */
-        isSelectAvailable: function (scope) {
-            return !!this.defs.select;
-        },
-
-        /**
-         * A `view-related` action.
-         *
-         * @protected
-         */
-        actionViewRelated: function (data) {
-            let id = data.id;
-            let model = this.collection.get(id);
-
-            if (!model) {
-                return;
-            }
-
-            let scope = model.entityType;
-
-            let helper = new RecordModal(this.getMetadata(), this.getAcl());
-
-            helper
-                .showDetail(this, {
-                    scope: scope,
-                    id: id,
-                    model: model,
-                })
-                .then(view => {
-                    this.listenTo(view, 'after:save', () => {
-                        this.collection.fetch();
-                    });
-                });
-        },
-
-        /**
-         * An `edit-related` action.
-         *
-         * @protected
-         */
-        actionEditRelated: function (data) {
-            var id = data.id;
-            var scope = this.collection.get(id).name;
-
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
-                'views/modals/edit';
-
-            Espo.Ui.notify(' ... ');
-
-            this.createView('quickEdit', viewName, {
+        helper
+            .showDetail(this, {
                 scope: scope,
                 id: id,
-            }, (view) => {
-                view.once('after:render', () => {
-                    Espo.Ui.notify(false);
-                });
-
-                view.render();
-
-                view.once('after:save', () => {
+                model: model,
+            })
+            .then(view => {
+                this.listenTo(view, 'after:save', () => {
                     this.collection.fetch();
                 });
             });
-        },
+    },
 
-        /**
-         * An `unlink-related` action.
-         *
-         * @protected
-         */
-        actionUnlinkRelated: function (data) {
-            var id = data.id;
+    /**
+     * An `edit-related` action.
+     *
+     * @protected
+     */
+    actionEditRelated: function (data) {
+        var id = data.id;
+        var scope = this.collection.get(id).name;
 
-            this.confirm({
-                message: this.translate('unlinkRecordConfirmation', 'messages'),
-                confirmText: this.translate('Unlink'),
-            }, () => {
-                Espo.Ui.notify(' ... ');
+        var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
+            'views/modals/edit';
 
-                Espo.Ajax
-                    .deleteRequest(this.collection.url, {
-                        id: id,
-                    }).then(() => {
-                        this.notify('Unlinked', 'success');
+        Espo.Ui.notify(' ... ');
 
-                        this.collection.fetch();
-
-                        this.model.trigger('after:unrelate');
-                        this.model.trigger('after:unrelate:' + this.link);
-                    });
+        this.createView('quickEdit', viewName, {
+            scope: scope,
+            id: id,
+        }, (view) => {
+            view.once('after:render', () => {
+                Espo.Ui.notify(false);
             });
-        },
 
-        /**
-         * A `remove-related` action.
-         *
-         * @protected
-         */
-        actionRemoveRelated: function (data) {
-            var id = data.id;
+            view.render();
 
-            this.confirm({
-                message: this.translate('removeRecordConfirmation', 'messages'),
-                confirmText: this.translate('Remove'),
-            }, () => {
-                let model = this.collection.get(id);
-
-                Espo.Ui.notify(' ... ');
-
-                model
-                    .destroy()
-                    .then(() => {
-                        this.notify('Removed', 'success');
-
-                        this.collection.fetch();
-
-                        this.model.trigger('after:unrelate');
-                        this.model.trigger('after:unrelate:' + this.link);
-                    });
+            view.once('after:save', () => {
+                this.collection.fetch();
             });
-        },
+        });
+    },
 
-        /**
-         * An `unlink-all-related` action.
-         *
-         * @protected
-         */
-        actionUnlinkAllRelated: function (data) {
-            this.confirm(this.translate('unlinkAllConfirmation', 'messages'), () => {
-                Espo.Ui.notify(' ... ');
+    /**
+     * An `unlink-related` action.
+     *
+     * @protected
+     */
+    actionUnlinkRelated: function (data) {
+        var id = data.id;
 
-                Espo.Ajax
-                    .postRequest(this.model.name + '/action/unlinkAll', {
-                        link: data.link,
-                        id: this.model.id,
-                    })
-                    .then(() => {
-                        this.notify('Unlinked', 'success');
+        this.confirm({
+            message: this.translate('unlinkRecordConfirmation', 'messages'),
+            confirmText: this.translate('Unlink'),
+        }, () => {
+            Espo.Ui.notify(' ... ');
 
-                        this.collection.fetch();
+            Espo.Ajax
+                .deleteRequest(this.collection.url, {id: id})
+                .then(() => {
+                    Espo.Ui.success(this.translate('Unlinked'));
 
-                        this.model.trigger('after:unrelate');
-                        this.model.trigger('after:unrelate:' + this.link);
-                    });
-            });
-        },
-    });
+                    this.collection.fetch();
+
+                    this.model.trigger('after:unrelate');
+                    this.model.trigger('after:unrelate:' + this.link);
+                });
+        });
+    },
+
+    /**
+     * A `remove-related` action.
+     *
+     * @protected
+     */
+    actionRemoveRelated: function (data) {
+        var id = data.id;
+
+        this.confirm({
+            message: this.translate('removeRecordConfirmation', 'messages'),
+            confirmText: this.translate('Remove'),
+        }, () => {
+            let model = this.collection.get(id);
+
+            Espo.Ui.notify(' ... ');
+
+            model
+                .destroy()
+                .then(() => {
+                    Espo.Ui.success(this.translate('Removed'));
+
+                    this.collection.fetch();
+
+                    this.model.trigger('after:unrelate');
+                    this.model.trigger('after:unrelate:' + this.link);
+                });
+        });
+    },
+
+    /**
+     * An `unlink-all-related` action.
+     *
+     * @protected
+     */
+    actionUnlinkAllRelated: function (data) {
+        this.confirm(this.translate('unlinkAllConfirmation', 'messages'), () => {
+            Espo.Ui.notify(' ... ');
+
+            Espo.Ajax
+                .postRequest(this.model.name + '/action/unlinkAll', {
+                    link: data.link,
+                    id: this.model.id,
+                })
+                .then(() => {
+                    Espo.Ui.success(this.translate('Unlinked'));
+
+                    this.collection.fetch();
+
+                    this.model.trigger('after:unrelate');
+                    this.model.trigger('after:unrelate:' + this.link);
+                });
+        });
+    },
 });

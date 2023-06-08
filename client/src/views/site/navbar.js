@@ -843,7 +843,7 @@ define('views/site/navbar', ['view'], function (Dep) {
             let handlerClassName = this.getThemeManager().getParam('navbarAdjustmentHandler');
 
             if (handlerClassName) {
-                require(handlerClassName, (Handler) => {
+                Espo.loader.require(handlerClassName, Handler => {
                     let handler = new Handler(this);
 
                     this.navbarAdjustmentHandler = handler;

@@ -43,9 +43,11 @@ class TemplatePrecompiler {
      * @return {{contents: string, files: string[]}}
      */
     precompile(params) {
+        const baseBase = 'client';
+
         let files = [];
 
-        params.patterns.forEach(pattern => {
+        this.#normalizePaths(params.patterns).forEach(pattern => {
             let itemFiles = globSync(pattern)
                 .map(file => file.replaceAll('\\', '/'));
 
@@ -63,7 +65,7 @@ class TemplatePrecompiler {
             }
 
             for (let itemModule in params.modulePaths) {
-                let path = params.modulePaths[itemModule];
+                let path = baseBase + '/' + params.modulePaths[itemModule];
 
                 if (file.indexOf(path) === 0) {
                     module = itemModule;
@@ -73,7 +75,7 @@ class TemplatePrecompiler {
             }
 
             let path = module ?
-                params.modulePaths[module] :
+                baseBase + '/' + params.modulePaths[module] :
                 this.defaultPath;
 
             path += '/res/templates/';
@@ -107,6 +109,14 @@ class TemplatePrecompiler {
             files: compiledFiles,
             contents: contents,
         };
+    }
+
+    /**
+     * @param {string[]} patterns
+     * @return {string[]}
+     */
+    #normalizePaths(patterns) {
+        return patterns.map(item => this.defaultPath + '/' + item);
     }
 }
 

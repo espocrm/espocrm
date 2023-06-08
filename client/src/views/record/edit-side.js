@@ -26,28 +26,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/edit-side', ['views/record/detail-side'], function (Dep) {
+/** @module views/record/edit-side */
 
-    return Dep.extend({
+import Dep from 'views/record/detail-side';
 
-        mode: 'edit',
+/**
+ * @class
+ * @name Class
+ * @extends module:views/record/detail-side
+ */
+export default Dep.extend(/** @lends Class# */{
 
-        defaultPanelDefs: {
-            name: 'default',
-            label: false,
-            view: 'views/record/panels/side',
-            isForm: true,
-            options: {
-                fieldList: [
-                    {
-                        name: ':assignedUser'
-                    },
-                    {
-                        name: 'teams',
-                        view: 'views/fields/teams'
-                    }
-                ]
-            }
-        },
-    });
+    /** @inheritDoc */
+    mode: 'edit',
+
+    defaultPanelDefs: {
+        name: 'default',
+        label: false,
+        view: 'views/record/panels/side',
+        isForm: true,
+        options: {
+            fieldList: [
+                {
+                    name: ':assignedUser'
+                },
+                {
+                    name: 'teams',
+                    view: 'views/fields/teams'
+                }
+            ]
+        }
+    },
 });

@@ -26,84 +26,52 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'app',
-[
-    'lib!espo',
-    'lib!jquery',
-    'lib!backbone',
-    'lib!underscore',
-    'lib!bullbone',
-    'ui',
-    'utils',
-    'acl-manager',
-    'cache',
-    'storage',
-    'models/settings',
-    'language',
-    'metadata',
-    'field-manager',
-    'models/user',
-    'models/preferences',
-    'model-factory',
-    'collection-factory',
-    'controllers/base',
-    'router',
-    'date-time',
-    'layout-manager',
-    'theme-manager',
-    'session-storage',
-    'view-helper',
-    'web-socket-manager',
-    'ajax',
-    'number',
-    'page-title',
-    'broadcast-channel',
-    'exceptions'
-],
-function (
-    /** Espo */Espo,
-    /** $ */$,
-    /** Backbone */Backbone,
-    /** _ */_,
-    /** Bull */Bull,
-    Ui,
-    Utils,
-    /** typeof module:acl-manager.Class */AclManager,
-    /** typeof module:cache.Class */Cache,
-    /** typeof module:storage.Class */Storage,
-    /** typeof module:models/settings.Class */Settings,
-    /** typeof module:language.Class */Language,
-    /** typeof module:metadata.Class */Metadata,
-    /** typeof module:field-manager.Class */FieldManager,
-    /** typeof module:models/user.Class */User,
-    /** typeof module:models/preferences.Class */Preferences,
-    /** typeof module:model-factory.Class */ModelFactory,
-    /** typeof module:collection-factory.Class */CollectionFactory,
-    /** typeof module:controllers/base.Class */BaseController,
-    /** typeof module:router.Class */Router,
-    /** typeof module:date-time.Class */DateTime,
-    /** typeof module:layout-manager.Class */LayoutManager,
-    /** typeof module:theme-manager.Class */ThemeManager,
-    /** typeof module:session-storage.Class */SessionStorage,
-    /** typeof module:view-helper.Class */ViewHelper,
-    /** typeof module:web-socket-manager.Class */WebSocketManager,
-    Ajax,
-    /** typeof module:number.Class */NumberUtil,
-    /** typeof module:page-title.Class */PageTitle,
-    /** typeof module:broadcast-channel.Class */BroadcastChannel,
-    Exceptions
-) {
+/** @module app */
+
+import Espo from 'lib!espo';
+import $ from 'lib!jquery';
+import Backbone from 'lib!backbone';
+import _ from 'lib!underscore';
+import Bull from 'lib!bullbone';
+import Base64 from 'lib!base64';
+import Ui from 'ui';
+import Utils from 'utils';
+import AclManager from 'acl-manager';
+import Cache from 'cache';
+import Storage from 'storage';
+import Settings from 'models/settings';
+import Language from 'language';
+import Metadata from 'metadata';
+import FieldManager from 'field-manager';
+import User from 'models/user';
+import Preferences from 'models/preferences';
+import ModelFactory from 'model-factory';
+import CollectionFactory from 'collection-factory';
+import BaseController from 'controllers/base';
+import Router from 'router';
+import DateTime from 'date-time';
+import LayoutManager from 'layout-manager';
+import ThemeManager from 'theme-manager';
+import SessionStorage from 'session-storage';
+import ViewHelper from 'view-helper';
+import WebSocketManager from 'web-socket-manager';
+import Ajax from 'ajax';
+import NumberUtil from 'number';
+import PageTitle from 'page-title';
+import BroadcastChannel from 'broadcast-channel';
+
+/**
+ * A main application class.
+ *
+ * @mixes Backbone.Events
+ */
+class App  {
+
     /**
-     * A main application class.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:app
-     * @param {module:app.Class~Options} options Options.
-     * @param {module:app.Class~callback} callback A callback.
+     * @param {module:app~Options} options Options.
+     * @param {module:app~callback} callback A callback.
      */
-    let App = function (options, callback) {
+    constructor(options, callback) {
         options = options || {};
 
         /**
@@ -151,298 +119,280 @@ function (
             .then(() => this.init(options, callback));
 
         this.initDomEventListeners();
-    };
+    }
 
     /**
-     * @callback module:app.Class~callback
-     *
-     * @param {module:app.Class} app A created application instance.
+     * @private
+     * @type {boolean}
      */
+    useCache = false
 
     /**
-     * Application options.
-     *
-     * @typedef {Object} module:app.Class~Options
-     *
-     * @property {string} [id] An application ID.
-     * @property {string} [basePath] A base path.
-     * @property {boolean} [useCache] Use cache.
-     * @property {string} [apiUrl] An API URL.
-     * @property {Number} [ajaxTimeout] A default ajax request timeout.
-     * @property {string} [internalModuleList] A list of internal modules.
-     *   Internal modules located in the `client/modules` directory.
-     * @property {Number|null} [cacheTimestamp] A cache timestamp.
+     * @protected
+     * @type {module:models/user}
      */
+    user = null
 
-    _.extend(App.prototype, /** @lends module:app.Class# */{
+    /**
+     * @private
+     * @type {module:models/preferences}
+     */
+    preferences = null
 
-        /**
-         * @private
-         * @type {boolean}
-         */
-        useCache: false,
+    /**
+     * @protected
+     * @type {module:models/settings}
+     */
+    settings = null
 
-        /**
-         * @private
-         * @type {module:models/user.Class}
-         */
-        user: null,
+    /**
+     * @private
+     * @type {module:metadata}
+     */
+    metadata = null
 
-        /**
-         * @private
-         * @type {module:models/preferences.Class}
-         */
-        preferences: null,
+    /**
+     * @private
+     * @type {module:language}
+     */
+    language = null
 
-        /**
-         * @private
-         * @type {module:models/settings.Class}
-         */
-        settings: null,
+    /**
+     * @private
+     * @type {module:field-manager}
+     */
+    fieldManager = null
 
-        /**
-         * @private
-         * @type {module:metadata.Class}
-         */
-        metadata: null,
+    /**
+     * @private
+     * @type {module:cache|null}
+     */
+    cache = null
 
-        /**
-         * @private
-         * @type {module:language.Class}
-         */
-        language: null,
+    /**
+     * @private
+     * @type {module:storage|null}
+     */
+    storage = null
 
-        /**
-         * @private
-         * @type {module:field-manager.Class}
-         */
-        fieldManager: null,
+    /**
+     * @private
+     */
+    loader = null
 
-        /**
-         * @private
-         * @type {module:cache.Class|null}
-         */
-        cache: null,
+    /**
+     * An API URL.
+     *
+     * @private
+     */
+    apiUrl = 'api/v1'
 
-        /**
-         * @private
-         * @type {module:storage.Class|null}
-         */
-        storage: null,
+    /**
+     * An auth credentials string.
+     *
+     * @private
+     * @type {?string}
+     */
+    auth = null
 
-        /**
-         * @private
-         */
-        loader: null,
+    /**
+     * Another user to login as.
+     *
+     * @private
+     * @type {?string}
+     */
+    anotherUser = null
 
-        /**
-         * An API URL.
-         *
-         * @private
-         */
-        apiUrl: 'api/v1',
+    /**
+     * A base controller.
+     *
+     * @private
+     * @type {module:controllers/base}
+     */
+    baseController = null
 
-        /**
-         * An auth credentials string.
-         *
-         * @private
-         * @type {?string}
-         */
-        auth: null,
+    /**
+     * @private
+     */
+    controllers = null
 
-        /**
-         * Another user to login as.
-         *
-         * @private
-         * @type {?string}
-         */
-        anotherUser: null,
+    /**
+     * @private
+     * @type {module:router}
+     */
+    router = null
 
-        /**
-         * A base controller.
-         *
-         * @private
-         * @type {module:controllers/base.Class}
-         */
-        baseController: null,
+    /**
+     * @private
+     * @type {module:model-factory}
+     */
+    modelFactory = null
 
-        /**
-         * @private
-         */
-        controllers: null,
+    /**
+     * @private
+     * @type {module:collection-factory}
+     */
+    collectionFactory = null
 
-        /**
-         * @private
-         * @type {module:router.Class}
-         */
-        router: null,
+    /**
+     * A view factory.
+     *
+     * @private
+     * @type {Bull.Factory}
+     */
+    viewFactory = null
 
-        /**
-         * @private
-         * @type {module:model-factory.Class}
-         */
-        modelFactory: null,
+    /**
+     * @type {Function}
+     * @private
+     */
+    viewLoader = null
 
-        /**
-         * @private
-         * @type {module:collection-factory.Class}
-         */
-        collectionFactory: null,
+    /**
+     * @private
+     * @type {module:view-helper}
+     */
+    viewHelper = null
 
-        /**
-         * A view factory.
-         *
-         * @private
-         * @type {Bull.Factory}
-         */
-        viewFactory: null,
+    /**
+     * A body view.
+     *
+     * @protected
+     * @type {string}
+     */
+    masterView = 'views/site/master'
 
-        /**
-         * @type {Function}
-         * @private
-         */
-        viewLoader: null,
+    /**
+     * @private
+     * @type {Cache|null}
+     */
+    responseCache = null
 
-        /**
-         * @private
-         * @type {module:view-helper.Class}
-         */
-        viewHelper: null,
+    /**
+     * @private
+     * @type {module:broadcast-channel|null}
+     */
+    broadcastChannel = null
 
-        /**
-         * A body view.
-         *
-         * @protected
-         * @type {string}
-         */
-        masterView: 'views/site/master',
+    /**
+     * @private
+     * @type {module:date-time|null}
+     */
+    dateTime = null
 
-        /**
-         * @private
-         * @type {Cache|null}
-         */
-        responseCache: null,
+    /**
+     * @private
+     * @type {NumberUtil|null}
+     */
+    numberUtil = null
 
-        /**
-         * @private
-         * @type {module:broadcast-channel.Class|null}
-         */
-        broadcastChannel: null,
+    /**
+     * @private
+     * @type {module:web-socket-manager|null}
+     */
+    webSocketManager = null
 
-        /**
-         * @private
-         * @type {module:date-time.Class|null}
-         */
-        dateTime: null,
+    /**
+     * @private
+     * @type {?int}
+     */
+    appTimestamp = null
 
-        /**
-         * @private
-         * @type {module:number.Class|null}
-         */
-        numberUtil: null,
+    /** @private */
+    started = false
 
-        /**
-         * @private
-         * @type {module:web-socket-manager.Class|null}
-         */
-        webSocketManager: null,
+    /** @private */
+    aclName = 'acl'
 
-        /**
-         * @private
-         * @type {?int}
-         */
-        appTimestamp: null,
+    /**
+     * @private
+     */
+    initCache(options) {
+        let cacheTimestamp = options.cacheTimestamp || null;
+        let storedCacheTimestamp = null;
 
-        /**
-         * @private
-         */
-        started: false,
+        if (this.useCache) {
+            this.cache = new Cache(cacheTimestamp);
 
-        /**
-         * @private
-         */
-        initCache: function (options) {
-            let cacheTimestamp = options.cacheTimestamp || null;
-            let storedCacheTimestamp = null;
+            storedCacheTimestamp = this.cache.getCacheTimestamp();
 
-            if (this.useCache) {
-                this.cache = new Cache(cacheTimestamp);
+            if (cacheTimestamp) {
+                this.cache.handleActuality(cacheTimestamp);
+            }
+            else {
+                this.cache.storeTimestamp();
+            }
+        }
 
-                storedCacheTimestamp = this.cache.getCacheTimestamp();
-
-                if (cacheTimestamp) {
-                    this.cache.handleActuality(cacheTimestamp);
-                }
-                else {
-                    this.cache.storeTimestamp();
-                }
+        let handleActuality = () => {
+            if (
+                !cacheTimestamp ||
+                !storedCacheTimestamp ||
+                cacheTimestamp !== storedCacheTimestamp
+            ) {
+                return caches.delete('espo');
             }
 
-            let handleActuality = () => {
-                if (
-                    !cacheTimestamp ||
-                    !storedCacheTimestamp ||
-                    cacheTimestamp !== storedCacheTimestamp
-                ) {
-                    return caches.delete('espo');
-                }
+            return new Promise(resolve => resolve());
+        };
 
-                return new Promise(resolve => resolve());
-            };
-
-            return new Promise(resolve => {
-                if (!this.useCache) {
-                    resolve();
-                }
-
-                if (!window.caches) {
-                    resolve();
-                }
-
-                handleActuality()
-                    .then(() => caches.open('espo'))
-                    .then(responseCache => {
-                        this.responseCache = responseCache;
-
-                        resolve();
-                    })
-                    .catch(() => {
-                        console.error("Could not open `espo` cache.");
-                        resolve();
-                    });
-            });
-        },
-
-        /**
-         * @private
-         */
-        init: function (options, callback) {
-            /** @type {Object.<string, *>} */
-            this.appParams = {};
-            this.controllers = {};
-
-            this.loader = Espo.loader;
-
-            this.loader.setCache(this.cache);
-            this.loader.setResponseCache(this.responseCache);
-
-            if (this.useCache && !this.loader.getCacheTimestamp() && options.cacheTimestamp) {
-                this.loader.setCacheTimestamp(options.cacheTimestamp);
+        return new Promise(resolve => {
+            if (!this.useCache) {
+                resolve();
             }
 
-            this.storage = new Storage();
-            this.sessionStorage = new SessionStorage();
+            if (!window.caches) {
+                resolve();
+            }
 
-            this.setupAjax();
+            handleActuality()
+                .then(() => caches.open('espo'))
+                .then(responseCache => {
+                    this.responseCache = responseCache;
 
-            this.settings = new Settings(null);
-            this.language = new Language(this.cache);
-            this.metadata = new Metadata(this.cache);
-            this.fieldManager = new FieldManager();
+                    resolve();
+                })
+                .catch(() => {
+                    console.error("Could not open `espo` cache.");
+                    resolve();
+                });
+        });
+    }
 
-            this.initBroadcastChannel();
+    /**
+     * @private
+     */
+    init(options, callback) {
+        /** @type {Object.<string, *>} */
+        this.appParams = {};
+        this.controllers = {};
 
-            Promise
+        /**
+         * @type {Espo.loader}
+         * @private
+         */
+        this.loader = Espo.loader;
+
+        this.loader.setCache(this.cache);
+        this.loader.setResponseCache(this.responseCache);
+
+        if (this.useCache && !this.loader.getCacheTimestamp() && options.cacheTimestamp) {
+            this.loader.setCacheTimestamp(options.cacheTimestamp);
+        }
+
+        this.storage = new Storage();
+        this.sessionStorage = new SessionStorage();
+
+        this.setupAjax();
+
+        this.settings = new Settings(null);
+        this.language = new Language(this.cache);
+        this.metadata = new Metadata(this.cache);
+        this.fieldManager = new FieldManager();
+
+        this.initBroadcastChannel();
+
+        Promise
             .all([
                 this.settings.load(),
                 this.language.loadDefault()
@@ -455,13 +405,14 @@ function (
 
                 this.preferences.settings = this.settings;
 
+                /** @type {module:acl-manager} */
                 this.acl = this.createAclManager();
 
                 this.fieldManager.acl = this.acl;
 
                 this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
-                this.modelFactory = new ModelFactory(this.metadata, this.user);
-                this.collectionFactory = new CollectionFactory(this.modelFactory, this.settings);
+                this.modelFactory = new ModelFactory(this.metadata);
+                this.collectionFactory = new CollectionFactory(this.modelFactory, this.settings, this.metadata);
 
                 this.appTimestamp = this.settings.get('appTimestamp') || null;
 
@@ -475,595 +426,593 @@ function (
 
                 callback.call(this, this);
             });
-        },
+    }
 
-        /**
-         * Start the application.
-         */
-        start: function () {
-            this.initAuth();
+    /**
+     * Start the application.
+     */
+    start() {
+        this.initAuth();
 
-            this.started = true;
+        this.started = true;
 
-            if (!this.auth) {
-                this.baseController.login();
+        if (!this.auth) {
+            this.baseController.login();
 
-                return;
+            return;
+        }
+
+        this.initUserData(null, () => this.onAuth.call(this));
+    }
+
+    /**
+     * @private
+     * @param {boolean} [afterLogin]
+     */
+    onAuth(afterLogin) {
+        this.metadata.load().then(() => {
+            this.fieldManager.defs = this.metadata.get('fields');
+            this.fieldManager.metadata = this.metadata;
+
+            this.settings.defs = this.metadata.get('entityDefs.Settings') || {};
+            this.user.defs = this.metadata.get('entityDefs.User');
+            this.preferences.defs = this.metadata.get('entityDefs.Preferences');
+            this.viewHelper.layoutManager.userId = this.user.id;
+
+            if (this.themeManager.isUserTheme()) {
+                this.loadStylesheet();
             }
 
-            this.initUserData(null, () => this.onAuth.call(this));
-        },
+            if (this.anotherUser) {
+                this.viewHelper.webSocketManager = null;
+                this.webSocketManager = null;
+            }
 
-        /**
-         * @private
-         * @param {boolean} [afterLogin]
-         */
-        onAuth: function (afterLogin) {
-            this.metadata.load().then(() => {
-                this.fieldManager.defs = this.metadata.get('fields');
-                this.fieldManager.metadata = this.metadata;
+            if (this.webSocketManager) {
+                this.webSocketManager.connect(this.auth, this.user.id);
+            }
 
-                this.settings.defs = this.metadata.get('entityDefs.Settings') || {};
-                this.user.defs = this.metadata.get('entityDefs.User');
-                this.preferences.defs = this.metadata.get('entityDefs.Preferences');
-                this.viewHelper.layoutManager.userId = this.user.id;
+            let promiseList = [];
+            let aclImplementationClassMap = {};
 
-                if (this.themeManager.isUserTheme()) {
-                    this.loadStylesheet();
+            let clientDefs = this.metadata.get('clientDefs') || {};
+
+            Object.keys(clientDefs).forEach(scope => {
+                let o = clientDefs[scope];
+
+                let implClassName = (o || {})[this.aclName];
+
+                if (!implClassName) {
+                    return;
                 }
 
-                if (this.anotherUser) {
-                    this.viewHelper.webSocketManager = null;
-                    this.webSocketManager = null;
-                }
+                promiseList.push(
+                    new Promise(resolve => {
+                        this.loader.require(implClassName, implClass => {
+                            aclImplementationClassMap[scope] = implClass;
 
-                if (this.webSocketManager) {
-                    this.webSocketManager.connect(this.auth, this.user.id);
-                }
+                            resolve();
+                        });
+                    })
+                );
+            });
 
-                let promiseList = [];
-                let aclImplementationClassMap = {};
+            if (!this.themeManager.isApplied() && this.themeManager.isUserTheme()) {
+                promiseList.push(
+                    // @todo Refactor.
+                    new Promise(resolve => {
+                        (function check (i) {
+                            i = i || 0;
 
-                let clientDefs = this.metadata.get('clientDefs') || {};
-
-                Object.keys(clientDefs).forEach(scope => {
-                    let o = clientDefs[scope];
-
-                    let implClassName = (o || {})[this.aclName || 'acl'];
-
-                    if (!implClassName) {
-                        return;
-                    }
-
-                    promiseList.push(
-                        new Promise(resolve => {
-                            this.loader.require(implClassName, implClass => {
-                                aclImplementationClassMap[scope] = implClass;
-
-                                resolve();
-                            });
-                        })
-                    );
-                });
-
-                if (!this.themeManager.isApplied() && this.themeManager.isUserTheme()) {
-                    promiseList.push(
-                        // @todo Refactor.
-                        new Promise(resolve => {
-                            (function check (i) {
-                                i = i || 0;
-
-                                if (!this.themeManager.isApplied()) {
-                                    if (i === 50) {
-                                        resolve();
-
-                                        return;
-                                    }
-
-                                    setTimeout(check.bind(this, i + 1), 10);
+                            if (!this.themeManager.isApplied()) {
+                                if (i === 50) {
+                                    resolve();
 
                                     return;
                                 }
 
-                                resolve();
-                            }).call(this);
-                        })
-                    );
-                }
+                                setTimeout(check.bind(this, i + 1), 10);
 
-                Promise
-                    .all(promiseList)
-                    .then(() => {
-                        this.acl.implementationClassMap = aclImplementationClassMap;
+                                return;
+                            }
 
-                        this.initRouter();
-                    });
+                            resolve();
+                        }).call(this);
+                    })
+                );
+            }
 
-                if (afterLogin) {
-                    this.broadcastChannel.postMessage('logged-in');
-                }
-            });
-        },
+            Promise
+                .all(promiseList)
+                .then(() => {
+                    this.acl.implementationClassMap = aclImplementationClassMap;
 
-        /**
-         * @private
-         */
-        initRouter: function () {
-            let routes = this.metadata.get(['app', 'clientRoutes']) || {};
-
-            this.router = new Router({routes: routes});
-
-            this.viewHelper.router = this.router;
-
-            this.baseController.setRouter(this.router);
-
-            this.router.confirmLeaveOutMessage = this.language.translate('confirmLeaveOutMessage', 'messages');
-            this.router.confirmLeaveOutConfirmText = this.language.translate('Yes');
-            this.router.confirmLeaveOutCancelText = this.language.translate('Cancel');
-
-            this.router.on('routed', params => this.doAction(params));
-
-            try {
-                Backbone.history.start({
-                    root: window.location.pathname
+                    this.initRouter();
                 });
+
+            if (afterLogin) {
+                this.broadcastChannel.postMessage('logged-in');
             }
-            catch (e) {
-                Backbone.history.loadUrl();
-            }
-        },
+        });
+    }
 
-        /**
-         * Do an action.
-         *
-         * @public
-         * @param {{
-         *   controller?: string,
-         *   action: string,
-         *   options?: Object.<string,*>,
-         *   controllerClassName?: string,
-         * }} params
-         */
-        doAction: function (params) {
-            this.trigger('action', params);
+    /**
+     * @private
+     */
+    initRouter() {
+        let routes = this.metadata.get(['app', 'clientRoutes']) || {};
 
-            this.baseController.trigger('action');
+        this.router = new Router({routes: routes});
 
-            let callback = controller => {
-                try {
-                    controller.doAction(params.action, params.options);
+        this.viewHelper.router = this.router;
 
-                    this.trigger('action:done');
-                }
-                catch (e) {
-                    console.error(e);
+        this.baseController.setRouter(this.router);
 
-                    switch (e.name) {
-                        case 'AccessDenied':
-                            this.baseController.error403();
+        this.router.confirmLeaveOutMessage = this.language.translate('confirmLeaveOutMessage', 'messages');
+        this.router.confirmLeaveOutConfirmText = this.language.translate('Yes');
+        this.router.confirmLeaveOutCancelText = this.language.translate('Cancel');
 
-                            break;
+        this.router.on('routed', params => this.doAction(params));
 
-                        case 'NotFound':
-                            this.baseController.error404();
+        try {
+            Backbone.history.start({
+                root: window.location.pathname
+            });
+        }
+        catch (e) {
+            Backbone.history.loadUrl();
+        }
+    }
 
-                            break;
+    /**
+     * Do an action.
+     *
+     * @public
+     * @param {{
+     *   controller?: string,
+     *   action: string,
+     *   options?: Object.<string,*>,
+     *   controllerClassName?: string,
+     * }} params
+     */
+    doAction(params) {
+        this.trigger('action', params);
 
-                        default:
-                            throw e;
-                    }
-                }
-            };
+        this.baseController.trigger('action');
 
-            if (params.controllerClassName) {
-                this.createController(params.controllerClassName, null, callback);
-
-                return;
-            }
-
-            this.getController(params.controller, callback);
-        },
-
-        /**
-         * @private
-         */
-        initBaseController: function () {
-            this.baseController = new BaseController({}, this.getControllerInjection());
-
-            this.viewHelper.baseController = this.baseController;
-        },
-
-        /**
-         * @private
-         */
-        getControllerInjection: function () {
-            return {
-                viewFactory: this.viewFactory,
-                modelFactory: this.modelFactory,
-                collectionFactory: this.collectionFactory,
-                settings: this.settings,
-                user: this.user,
-                preferences: this.preferences,
-                acl: this.acl,
-                cache: this.cache,
-                router: this.router,
-                storage: this.storage,
-                metadata: this.metadata,
-                dateTime: this.dateTime,
-                broadcastChannel: this.broadcastChannel,
-                baseController: this.baseController,
-            };
-        },
-
-        /**
-         * @param {string} name
-         * @param {function(module:controller.Class): void} callback
-         * @private
-         */
-        getController: function (name, callback) {
-            if (!name) {
-                callback(this.baseController);
-
-                return;
-            }
-
-            if (name in this.controllers) {
-                callback(this.controllers[name]);
-
-                return;
-            }
-
+        let callback = controller => {
             try {
-                let className = this.metadata.get(['clientDefs', name, 'controller']);
+                controller.doAction(params.action, params.options);
 
-                if (!className) {
-                    let module = this.metadata.get(['scopes', name, 'module']);
-
-                    className = Utils.composeClassName(module, name, 'controllers');
-                }
-
-                this.createController(className, name, callback);
+                this.trigger('action:done');
             }
             catch (e) {
-                this.baseController.error404();
-            }
-        },
+                console.error(e);
 
-        /**
-         * @private
-         * @return {module:controller.Class}
-         */
-        createController: function (className, name, callback) {
-            require(
-                className,
-                /** typeof module:controller.Class */
-                controllerClass => {
-                    let injections = this.getControllerInjection();
+                switch (e.name) {
+                    case 'AccessDenied':
+                        this.baseController.error403();
 
-                    let controller = new controllerClass(this.baseController.params, injections);
+                        break;
 
-                    controller.name = name;
-                    controller.masterView = this.masterView;
+                    case 'NotFound':
+                        this.baseController.error404();
 
-                    this.controllers[name] = controller
+                        break;
 
-                    callback(controller);
-                },
-                this,
-                () => this.baseController.error404()
-            );
-        },
-
-        /**
-         * @private
-         */
-        initUtils: function () {
-            this.dateTime = new DateTime();
-            this.modelFactory.dateTime = this.dateTime;
-            this.dateTime.setSettingsAndPreferences(this.settings, this.preferences);
-            this.numberUtil = new NumberUtil(this.settings, this.preferences);
-        },
-
-        /**
-         * Create an acl-manager.
-         *
-         * @protected
-         * @return {module:acl-manager.Class}
-         */
-        createAclManager: function () {
-            return new AclManager(this.user, null, this.settings.get('aclAllowDeleteCreated'));
-        },
-
-        /**
-         * @private
-         */
-        initView: function () {
-            let helper = this.viewHelper = new ViewHelper();
-
-            helper.layoutManager = new LayoutManager(this.cache, this.id);
-            helper.settings = this.settings;
-            helper.config = this.settings;
-            helper.user = this.user;
-            helper.preferences = this.preferences;
-            helper.acl = this.acl;
-            helper.modelFactory = this.modelFactory;
-            helper.collectionFactory = this.collectionFactory;
-            helper.storage = this.storage;
-            helper.sessionStorage = this.sessionStorage;
-            helper.dateTime = this.dateTime;
-            helper.language = this.language;
-            helper.metadata = this.metadata;
-            helper.fieldManager = this.fieldManager;
-            helper.cache = this.cache;
-            helper.themeManager = this.themeManager;
-            helper.webSocketManager = this.webSocketManager;
-            helper.numberUtil = this.numberUtil;
-            helper.pageTitle = new PageTitle(this.settings);
-            helper.basePath = this.basePath;
-            helper.appParams = this.appParams;
-            helper.broadcastChannel = this.broadcastChannel;
-
-            this.viewLoader = (viewName, callback) => {
-                require(Utils.composeViewClassName(viewName), callback);
-            };
-
-            let internalModuleMap = {};
-
-            let isModuleInternal = (module) => {
-                if (!(module in internalModuleMap)) {
-                    internalModuleMap[module] = this.internalModuleList.indexOf(module) !== -1;
+                    default:
+                        throw e;
                 }
+            }
+        };
 
-                return internalModuleMap[module];
-            };
+        if (params.controllerClassName) {
+            this.createController(params.controllerClassName, null, callback);
 
-            let getResourceInnerPath = (type, name) => {
-                let path = null;
+            return;
+        }
 
-                switch (type) {
-                    case 'template':
-                        if (~name.indexOf('.')) {
-                            console.warn(name + ': template name should use slashes for a directory separator.');
+        this.getController(params.controller, callback);
+    }
+
+    /**
+     * @private
+     */
+    initBaseController() {
+        this.baseController = new BaseController({}, this.getControllerInjection());
+
+        this.viewHelper.baseController = this.baseController;
+    }
+
+    /**
+     * @private
+     */
+    getControllerInjection() {
+        return {
+            viewFactory: this.viewFactory,
+            modelFactory: this.modelFactory,
+            collectionFactory: this.collectionFactory,
+            settings: this.settings,
+            user: this.user,
+            preferences: this.preferences,
+            acl: this.acl,
+            cache: this.cache,
+            router: this.router,
+            storage: this.storage,
+            metadata: this.metadata,
+            dateTime: this.dateTime,
+            broadcastChannel: this.broadcastChannel,
+            baseController: this.baseController,
+        };
+    }
+
+    /**
+     * @param {string} name
+     * @param {function(module:controller): void} callback
+     * @private
+     */
+    getController(name, callback) {
+        if (!name) {
+            callback(this.baseController);
+
+            return;
+        }
+
+        if (name in this.controllers) {
+            callback(this.controllers[name]);
+
+            return;
+        }
+
+        try {
+            let className = this.metadata.get(['clientDefs', name, 'controller']);
+
+            if (!className) {
+                let module = this.metadata.get(['scopes', name, 'module']);
+
+                className = Utils.composeClassName(module, name, 'controllers');
+            }
+
+            this.createController(className, name, callback);
+        }
+        catch (e) {
+            this.baseController.error404();
+        }
+    }
+
+    /**
+     * @private
+     * @return {module:controller}
+     */
+    createController(className, name, callback) {
+        Espo.loader.require(
+            className,
+            controllerClass => {
+                let injections = this.getControllerInjection();
+
+                let controller = new controllerClass(this.baseController.params, injections);
+
+                controller.name = name;
+                controller.masterView = this.masterView;
+
+                this.controllers[name] = controller
+
+                callback(controller);
+            },
+            () => this.baseController.error404()
+        );
+    }
+
+    /**
+     * @private
+     */
+    initUtils() {
+        this.dateTime = new DateTime();
+        this.modelFactory.dateTime = this.dateTime;
+        this.dateTime.setSettingsAndPreferences(this.settings, this.preferences);
+        this.numberUtil = new NumberUtil(this.settings, this.preferences);
+    }
+
+    /**
+     * Create an acl-manager.
+     *
+     * @protected
+     * @return {module:acl-manager}
+     */
+    createAclManager() {
+        return new AclManager(this.user, null, this.settings.get('aclAllowDeleteCreated'));
+    }
+
+    /**
+     * @private
+     */
+    initView() {
+        let helper = this.viewHelper = new ViewHelper();
+
+        helper.layoutManager = new LayoutManager(this.cache, this.id);
+        helper.settings = this.settings;
+        helper.config = this.settings;
+        helper.user = this.user;
+        helper.preferences = this.preferences;
+        helper.acl = this.acl;
+        helper.modelFactory = this.modelFactory;
+        helper.collectionFactory = this.collectionFactory;
+        helper.storage = this.storage;
+        helper.sessionStorage = this.sessionStorage;
+        helper.dateTime = this.dateTime;
+        helper.language = this.language;
+        helper.metadata = this.metadata;
+        helper.fieldManager = this.fieldManager;
+        helper.cache = this.cache;
+        helper.themeManager = this.themeManager;
+        helper.webSocketManager = this.webSocketManager;
+        helper.numberUtil = this.numberUtil;
+        helper.pageTitle = new PageTitle(this.settings);
+        helper.basePath = this.basePath;
+        helper.appParams = this.appParams;
+        helper.broadcastChannel = this.broadcastChannel;
+
+        this.viewLoader = (viewName, callback) => {
+            this.loader.require(Utils.composeViewClassName(viewName), callback);
+        };
+
+        let internalModuleMap = {};
+
+        let isModuleInternal = (module) => {
+            if (!(module in internalModuleMap)) {
+                internalModuleMap[module] = this.internalModuleList.indexOf(module) !== -1;
+            }
+
+            return internalModuleMap[module];
+        };
+
+        let getResourceInnerPath = (type, name) => {
+            let path = null;
+
+            switch (type) {
+                case 'template':
+                    if (~name.indexOf('.')) {
+                        console.warn(name + ': template name should use slashes for a directory separator.');
+                    }
+
+                    path = 'res/templates/' + name.split('.').join('/') + '.tpl';
+
+                    break;
+
+                case 'layoutTemplate':
+                    path = 'res/layout-types/' + name + '.tpl';
+
+                    break;
+
+                case 'layout':
+                    path = 'res/layouts/' + name + '.json';
+
+                    break;
+            }
+
+            return path;
+        };
+
+        let getResourcePath = (type, name) => {
+            if (name.indexOf(':') === -1) {
+                return 'client/' + getResourceInnerPath(type, name);
+            }
+
+            let arr = name.split(':');
+            let mod = arr[0];
+            let path = arr[1];
+
+            if (mod === 'custom') {
+                return 'client/custom/' + getResourceInnerPath(type, path);
+            }
+
+            if (isModuleInternal(mod)) {
+                return 'client/modules/' + mod + '/' + getResourceInnerPath(type, path);
+            }
+
+            return 'client/custom/modules/' + mod + '/' + getResourceInnerPath(type, path);
+        };
+
+        this.viewFactory = new Bull.Factory({
+            useCache: false,
+            defaultViewName: 'views/base',
+            helper: helper,
+            viewLoader: this.viewLoader,
+            resources: {
+                loaders: {
+                    template: (name, callback) => {
+                        let path = getResourcePath('template', name);
+
+                        this.loader.require('res!' + path, callback);
+                    },
+                    layoutTemplate: (name, callback) => {
+                        if (Espo.layoutTemplates && name in Espo.layoutTemplates) {
+                            callback(Espo.layoutTemplates[name]);
+
+                            return;
                         }
 
-                        path = 'res/templates/' + name.split('.').join('/') + '.tpl';
+                        let path = getResourcePath('layoutTemplate', name);
 
-                        break;
-
-                    case 'layoutTemplate':
-                        path = 'res/layout-types/' + name + '.tpl';
-
-                        break;
-
-                    case 'layout':
-                        path = 'res/layouts/' + name + '.json';
-
-                        break;
-                }
-
-                return path;
-            };
-
-            let getResourcePath = (type, name) => {
-                if (name.indexOf(':') === -1) {
-                    return 'client/' + getResourceInnerPath(type, name);
-                }
-
-                let arr = name.split(':');
-                let mod = arr[0];
-                let path = arr[1];
-
-                if (mod === 'custom') {
-                    return 'client/custom/' + getResourceInnerPath(type, path);
-                }
-
-                if (isModuleInternal(mod)) {
-                    return 'client/modules/' + mod + '/' + getResourceInnerPath(type, path);
-                }
-
-                return 'client/custom/modules/' + mod + '/' + getResourceInnerPath(type, path);
-            };
-
-            this.viewFactory = new Bull.Factory({
-                useCache: false,
-                defaultViewName: 'views/base',
-                helper: helper,
-                viewLoader: this.viewLoader,
-                resources: {
-                    loaders: {
-                        template: (name, callback) => {
-                            let path = getResourcePath('template', name);
-
-                            this.loader.require('res!' + path, callback);
-                        },
-                        layoutTemplate: (name, callback) => {
-                            if (Espo.layoutTemplates && name in Espo.layoutTemplates) {
-                                callback(Espo.layoutTemplates[name]);
-
-                                return;
-                            }
-
-                            let path = getResourcePath('layoutTemplate', name);
-
-                            this.loader.require('res!' + path, callback);
-                        },
+                        this.loader.require('res!' + path, callback);
                     },
                 },
-                preCompiledTemplates: Espo.preCompiledTemplates || {},
-            });
-        },
+            },
+            preCompiledTemplates: Espo.preCompiledTemplates || {},
+        });
+    }
 
-        /**
-         * @public
-         */
-        initAuth: function () {
-            this.auth = this.storage.get('user', 'auth') || null;
-            this.anotherUser = this.storage.get('user', 'anotherUser') || null;
+    /**
+     * @public
+     */
+    initAuth() {
+        this.auth = this.storage.get('user', 'auth') || null;
+        this.anotherUser = this.storage.get('user', 'anotherUser') || null;
 
-            this.baseController.on('login', data => {
-                let userId = data.user.id;
-                let userName = data.auth.userName;
-                let token = data.auth.token;
-                let anotherUser = data.auth.anotherUser || null;
+        this.baseController.on('login', data => {
+            let userId = data.user.id;
+            let userName = data.auth.userName;
+            let token = data.auth.token;
+            let anotherUser = data.auth.anotherUser || null;
 
-                this.auth = Base64.encode(userName  + ':' + token);
-                this.anotherUser = anotherUser;
+            this.auth = Base64.encode(userName  + ':' + token);
+            this.anotherUser = anotherUser;
 
-                let lastUserId = this.storage.get('user', 'lastUserId');
+            let lastUserId = this.storage.get('user', 'lastUserId');
 
-                if (lastUserId !== userId) {
-                    this.metadata.clearCache();
-                    this.language.clearCache();
-                }
-
-                this.storage.set('user', 'auth', this.auth);
-                this.storage.set('user', 'lastUserId', userId);
-                this.storage.set('user', 'anotherUser', this.anotherUser);
-
-                this.setCookieAuth(userName, token);
-
-                this.initUserData(data, () => this.onAuth(true));
-            });
-
-            this.baseController.on('logout', () => this.logout());
-        },
-
-        /**
-         * @private
-         */
-        logout: function (afterFail, silent) {
-            let logoutWait = false;
-
-            if (this.auth && !afterFail) {
-                let arr = Base64.decode(this.auth).split(':');
-
-                if (arr.length > 1) {
-                    logoutWait = this.appParams.logoutWait || false;
-
-                    Ajax.postRequest('App/destroyAuthToken', {token: arr[1]}, {fullResponse: true})
-                        .then(xhr => {
-                            let redirectUrl = xhr.getResponseHeader('X-Logout-Redirect-Url');
-
-                            if (redirectUrl) {
-                                setTimeout(() => window.location.href = redirectUrl, 50);
-
-                                return;
-                            }
-
-                            if (logoutWait) {
-                                this.doAction({action: 'login'});
-                            }
-                        });
-                }
+            if (lastUserId !== userId) {
+                this.metadata.clearCache();
+                this.language.clearCache();
             }
 
-            if (this.webSocketManager) {
-                this.webSocketManager.close();
+            this.storage.set('user', 'auth', this.auth);
+            this.storage.set('user', 'lastUserId', userId);
+            this.storage.set('user', 'anotherUser', this.anotherUser);
+
+            this.setCookieAuth(userName, token);
+
+            this.initUserData(data, () => this.onAuth(true));
+        });
+
+        this.baseController.on('logout', () => this.logout());
+    }
+
+    /**
+     * @private
+     */
+    logout(afterFail, silent) {
+        let logoutWait = false;
+
+        if (this.auth && !afterFail) {
+            let arr = Base64.decode(this.auth).split(':');
+
+            if (arr.length > 1) {
+                logoutWait = this.appParams.logoutWait || false;
+
+                Ajax.postRequest('App/destroyAuthToken', {token: arr[1]}, {fullResponse: true})
+                    .then(xhr => {
+                        let redirectUrl = xhr.getResponseHeader('X-Logout-Redirect-Url');
+
+                        if (redirectUrl) {
+                            setTimeout(() => window.location.href = redirectUrl, 50);
+
+                            return;
+                        }
+
+                        if (logoutWait) {
+                            this.doAction({action: 'login'});
+                        }
+                    });
             }
+        }
 
-            silent = silent || afterFail &&
-                this.auth &&
-                this.auth !== this.storage.get('user', 'auth');
+        if (this.webSocketManager) {
+            this.webSocketManager.close();
+        }
 
-            this.auth = null;
-            this.anotherUser = null;
+        silent = silent || afterFail &&
+            this.auth &&
+            this.auth !== this.storage.get('user', 'auth');
 
-            this.user.clear();
-            this.preferences.clear();
-            this.acl.clear();
+        this.auth = null;
+        this.anotherUser = null;
 
+        this.user.clear();
+        this.preferences.clear();
+        this.acl.clear();
+
+        if (!silent) {
+            this.storage.clear('user', 'auth');
+            this.storage.clear('user', 'anotherUser');
+        }
+
+        let action = logoutWait ? 'logoutWait' : 'login';
+
+        this.doAction({action: action});
+
+        if (!silent) {
+            this.unsetCookieAuth();
+        }
+
+        if (this.broadcastChannel.object) {
             if (!silent) {
-                this.storage.clear('user', 'auth');
-                this.storage.clear('user', 'anotherUser');
+                this.broadcastChannel.postMessage('logged-out');
             }
+        }
 
-            let action = logoutWait ? 'logoutWait' : 'login';
+        if (!silent) {
+            this.sendLogoutRequest();
+        }
 
-            this.doAction({action: action});
+        this.loadStylesheet();
+    }
 
-            if (!silent) {
-                this.unsetCookieAuth();
-            }
+    /**
+     * @private
+     */
+    sendLogoutRequest() {
+        let xhr = new XMLHttpRequest;
 
-            if (this.broadcastChannel.object) {
-                if (!silent) {
-                    this.broadcastChannel.postMessage('logged-out');
-                }
-            }
+        xhr.open('GET', this.basePath + this.apiUrl + '/');
+        xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));
+        xhr.send('');
+        xhr.abort();
+    }
 
-            if (!silent) {
-                this.sendLogoutRequest();
-            }
+    /**
+     * @private
+     */
+    loadStylesheet() {
+        if (!this.metadata.get(['themes'])) {
+            return;
+        }
 
-            this.loadStylesheet();
-        },
+        let stylesheetPath = this.basePath + this.themeManager.getStylesheet();
 
-        /**
-         * @private
-         */
-        sendLogoutRequest: function () {
-            let xhr = new XMLHttpRequest;
+        $('#main-stylesheet').attr('href', stylesheetPath);
+    }
 
-            xhr.open('GET', this.basePath + this.apiUrl + '/');
-            xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));
-            xhr.send('');
-            xhr.abort();
-        },
+    /**
+     * @private
+     */
+    setCookieAuth(username, token) {
+        let date = new Date();
 
-        /**
-         * @private
-         */
-        loadStylesheet: function () {
-            if (!this.metadata.get(['themes'])) {
+        date.setTime(date.getTime() + (1000 * 24*60*60*1000));
+
+        document.cookie = 'auth-token='+token+'; SameSite=Lax; expires='+date.toGMTString()+'; path=/';
+    }
+
+    /**
+     * @private
+     */
+    unsetCookieAuth() {
+        document.cookie = 'auth-token' + '=; SameSite=Lax; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
+    }
+
+    /**
+     * @private
+     */
+    initUserData(options, callback) {
+        options = options || {};
+
+        if (this.auth === null) {
+            return;
+        }
+
+        new Promise(resolve => {
+            if (options.user) {
+                resolve(options);
+
                 return;
             }
 
-            let stylesheetPath = this.basePath + this.themeManager.getStylesheet();
+            this.requestUserData(data => {
+                options = data;
 
-            $('#main-stylesheet').attr('href', stylesheetPath);
-        },
-
-        /**
-         * @private
-         */
-        setCookieAuth: function (username, token) {
-            let date = new Date();
-
-            date.setTime(date.getTime() + (1000 * 24*60*60*1000));
-
-            document.cookie = 'auth-token='+token+'; SameSite=Lax; expires='+date.toGMTString()+'; path=/';
-        },
-
-        /**
-         * @private
-         */
-        unsetCookieAuth: function () {
-            document.cookie = 'auth-token' + '=; SameSite=Lax; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
-        },
-
-        /**
-         * @private
-         */
-        initUserData: function (options, callback) {
-            options = options || {};
-
-            if (this.auth === null) {
-                return;
-            }
-
-            new Promise(resolve => {
-                if (options.user) {
-                    resolve(options);
-
-                    return;
-                }
-
-                this.requestUserData(data => {
-                    options = data;
-
-                    resolve(options);
-                });
-            })
+                resolve(options);
+            });
+        })
             .then(options => {
                 this.language.name = options.language;
 
@@ -1113,327 +1062,348 @@ function (
 
                 xhr.send('');
             });
-        },
+    }
 
-        /**
-         * @private
-         */
-        requestUserData: function (callback) {
-            Ajax
-                .getRequest('App/user', {}, {appStart: true})
-                .then(callback);
-        },
+    /**
+     * @private
+     */
+    requestUserData(callback) {
+        Ajax.getRequest('App/user', {}, {appStart: true})
+            .then(callback);
+    }
 
-        /**
-         * @private
-         */
-        setupAjax: function () {
-            $.ajaxSetup({
-                beforeSend: (xhr, options) => {
-                    if (!options.local && this.apiUrl) {
-                        options.url = Utils.trimSlash(this.apiUrl) + '/' + options.url;
-                    }
-
-                    if (!options.local && this.basePath !== '') {
-                        options.url = this.basePath + options.url;
-                    }
-
-                    if (this.auth !== null) {
-                        xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
-                        xhr.setRequestHeader('Espo-Authorization', this.auth);
-                        xhr.setRequestHeader('Espo-Authorization-By-Token', 'true');
-                    }
-
-                    if (this.anotherUser !== null) {
-                        xhr.setRequestHeader('X-Another-User', this.anotherUser);
-                    }
-                },
-                dataType: 'json',
-                timeout: this.ajaxTimeout,
-                contentType: 'application/json',
-            });
-
-            let appTimestampChangeProcessed = false;
-
-            $(document).ajaxSuccess((e, xhr, options) => {
-                let appTimestampHeader = xhr.getResponseHeader('X-App-Timestamp');
-
-                if (appTimestampHeader && !appTimestampChangeProcessed) {
-                    let appTimestamp = parseInt(appTimestampHeader);
-
-                    if (
-                        this.appTimestamp &&
-                        appTimestamp !== this.appTimestamp &&
-                        !options.bypassAppReload
-                    ) {
-                        appTimestampChangeProcessed = true;
-
-                        Ui
-                            .confirm(
-                                this.language.translate('confirmAppRefresh', 'messages'),
-                                {
-                                    confirmText: this.language.translate('Refresh'),
-                                    cancelText: this.language.translate('Cancel'),
-                                    backdrop: 'static',
-                                    confirmStyle: 'success',
-                                }
-                            )
-                            .then(() => {
-                                window.location.reload();
-
-                                if (this.broadcastChannel) {
-                                    this.broadcastChannel.postMessage('reload');
-                                }
-                            });
-                    }
+    /**
+     * @private
+     */
+    setupAjax() {
+        $.ajaxSetup({
+            beforeSend: (xhr, options) => {
+                if (!options.local && this.apiUrl) {
+                    options.url = Utils.trimSlash(this.apiUrl) + '/' + options.url;
                 }
-            });
 
-            $(document).ajaxError((e, xhr, options) => {
-                // To process after a promise-catch.
-                setTimeout(() => {
-                    if (xhr.errorIsHandled) {
-                        return;
-                    }
-
-                    switch (xhr.status) {
-                        case 0:
-                            if (xhr.statusText === 'timeout') {
-                                Ui.error(this.language.translate('Timeout'), true);
-                            }
-
-                            break;
-
-                        case 200:
-                            Ui.error(this.language.translate('Bad server response'));
-
-                            console.error('Bad server response: ' + xhr.responseText);
-
-                            break;
-
-                        case 401:
-                            if (options.login) {
-                                break;
-                            }
-
-                            if (this.auth && this.router && !this.router.confirmLeaveOut) {
-                                this.logout(true);
-
-                                break;
-                            }
-
-                            if (this.auth && this.router && this.router.confirmLeaveOut) {
-                                Ui.error(this.language.translate('loggedOutLeaveOut', 'messages'), true);
-
-                                this.router.trigger('logout');
-
-                                break;
-                            }
-
-                            if (this.auth) {
-                                let silent = !options.appStart;
-
-                                this.logout(true, silent);
-                            }
-
-                            console.error('Error 401: Unauthorized.');
-
-                            break;
-
-                        case 403:
-                            if (options.main) {
-                                this.baseController.error403();
-
-                                break;
-                            }
-
-                            this._processErrorAlert(xhr, 'Access denied');
-
-                            break;
-
-                        case 400:
-                            this._processErrorAlert(xhr, 'Bad request');
-
-                            break;
-
-                        case 404:
-                            if (options.main) {
-                                this.baseController.error404();
-
-                                break
-                            }
-
-                            this._processErrorAlert(xhr, 'Not found', true);
-
-                            break;
-
-                        default:
-                            this._processErrorAlert(xhr, null);
-                    }
-
-                    let statusReason = xhr.getResponseHeader('X-Status-Reason');
-
-                    if (statusReason) {
-                        console.error('Server side error ' + xhr.status + ': ' + statusReason);
-                    }
-                }, 0);
-            });
-        },
-
-        /**
-         * @private
-         */
-        _processErrorAlert: function (xhr, label, noDetail) {
-            let msg = this.language.translate('Error') + ' ' + xhr.status;
-
-            if (label) {
-                msg += ': ' + this.language.translate(label);
-            }
-
-            let obj = {
-                msg: msg,
-                closeButton: false,
-            };
-
-            let isMessageDone = false;
-
-            if (noDetail) {
-                isMessageDone = true;
-            }
-
-            if (!isMessageDone && xhr.responseText && xhr.responseText[0] === '{') {
-                let data = null;
-
-                try {
-                    data = JSON.parse(xhr.responseText);
+                if (!options.local && this.basePath !== '') {
+                    options.url = this.basePath + options.url;
                 }
-                catch (e) {}
 
-                if (data && data.messageTranslation && data.messageTranslation.label) {
-                    let msgDetail = this.language.translate(
-                        data.messageTranslation.label,
-                        'messages',
-                        data.messageTranslation.scope
-                    );
+                if (this.auth !== null) {
+                    xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
+                    xhr.setRequestHeader('Espo-Authorization', this.auth);
+                    xhr.setRequestHeader('Espo-Authorization-By-Token', 'true');
+                }
 
-                    let msgData = data.messageTranslation.data || {};
+                if (this.anotherUser !== null) {
+                    xhr.setRequestHeader('X-Another-User', this.anotherUser);
+                }
+            },
+            dataType: 'json',
+            timeout: this.ajaxTimeout,
+            contentType: 'application/json',
+        });
 
-                    for (let key in msgData) {
-                        msgDetail = msgDetail.replace('{' + key + '}', msgData[key]);
-                    }
+        let appTimestampChangeProcessed = false;
 
-                    obj.msg += '\n' + msgDetail;
-                    obj.closeButton = true;
+        $(document).ajaxSuccess((e, xhr, options) => {
+            let appTimestampHeader = xhr.getResponseHeader('X-App-Timestamp');
 
-                    isMessageDone = true;
+            if (appTimestampHeader && !appTimestampChangeProcessed) {
+                let appTimestamp = parseInt(appTimestampHeader);
+
+                if (
+                    this.appTimestamp &&
+                    appTimestamp !== this.appTimestamp &&
+                    !options.bypassAppReload
+                ) {
+                    appTimestampChangeProcessed = true;
+
+                    Ui
+                        .confirm(
+                            this.language.translate('confirmAppRefresh', 'messages'),
+                            {
+                                confirmText: this.language.translate('Refresh'),
+                                cancelText: this.language.translate('Cancel'),
+                                backdrop: 'static',
+                                confirmStyle: 'success',
+                            }
+                        )
+                        .then(() => {
+                            window.location.reload();
+
+                            if (this.broadcastChannel) {
+                                this.broadcastChannel.postMessage('reload');
+                            }
+                        });
                 }
             }
+        });
 
-            if (!isMessageDone) {
+        $(document).ajaxError((e, xhr, options) => {
+            // To process after a promise-catch.
+            setTimeout(() => {
+                if (xhr.errorIsHandled) {
+                    return;
+                }
+
+                switch (xhr.status) {
+                    case 0:
+                        if (xhr.statusText === 'timeout') {
+                            Ui.error(this.language.translate('Timeout'), true);
+                        }
+
+                        break;
+
+                    case 200:
+                        Ui.error(this.language.translate('Bad server response'));
+
+                        console.error('Bad server response: ' + xhr.responseText);
+
+                        break;
+
+                    case 401:
+                        if (options.login) {
+                            break;
+                        }
+
+                        if (this.auth && this.router && !this.router.confirmLeaveOut) {
+                            this.logout(true);
+
+                            break;
+                        }
+
+                        if (this.auth && this.router && this.router.confirmLeaveOut) {
+                            Ui.error(this.language.translate('loggedOutLeaveOut', 'messages'), true);
+
+                            this.router.trigger('logout');
+
+                            break;
+                        }
+
+                        if (this.auth) {
+                            let silent = !options.appStart;
+
+                            this.logout(true, silent);
+                        }
+
+                        console.error('Error 401: Unauthorized.');
+
+                        break;
+
+                    case 403:
+                        if (options.main) {
+                            this.baseController.error403();
+
+                            break;
+                        }
+
+                        this._processErrorAlert(xhr, 'Access denied');
+
+                        break;
+
+                    case 400:
+                        this._processErrorAlert(xhr, 'Bad request');
+
+                        break;
+
+                    case 404:
+                        if (options.main) {
+                            this.baseController.error404();
+
+                            break
+                        }
+
+                        this._processErrorAlert(xhr, 'Not found', true);
+
+                        break;
+
+                    default:
+                        this._processErrorAlert(xhr, null);
+                }
+
                 let statusReason = xhr.getResponseHeader('X-Status-Reason');
 
                 if (statusReason) {
-                    obj.msg += '\n' + statusReason;
-                    obj.closeButton = true;
-
-                    isMessageDone = true;
+                    console.error('Server side error ' + xhr.status + ': ' + statusReason);
                 }
+            }, 0);
+        });
+    }
+
+    /**
+     * @private
+     */
+    _processErrorAlert(xhr, label, noDetail) {
+        let msg = this.language.translate('Error') + ' ' + xhr.status;
+
+        if (label) {
+            msg += ': ' + this.language.translate(label);
+        }
+
+        let obj = {
+            msg: msg,
+            closeButton: false,
+        };
+
+        let isMessageDone = false;
+
+        if (noDetail) {
+            isMessageDone = true;
+        }
+
+        if (!isMessageDone && xhr.responseText && xhr.responseText[0] === '{') {
+            let data = null;
+
+            try {
+                data = JSON.parse(xhr.responseText);
+            }
+            catch (e) {}
+
+            if (data && data.messageTranslation && data.messageTranslation.label) {
+                let msgDetail = this.language.translate(
+                    data.messageTranslation.label,
+                    'messages',
+                    data.messageTranslation.scope
+                );
+
+                let msgData = data.messageTranslation.data || {};
+
+                for (let key in msgData) {
+                    msgDetail = msgDetail.replace('{' + key + '}', msgData[key]);
+                }
+
+                obj.msg += '\n' + msgDetail;
+                obj.closeButton = true;
+
+                isMessageDone = true;
+            }
+        }
+
+        if (!isMessageDone) {
+            let statusReason = xhr.getResponseHeader('X-Status-Reason');
+
+            if (statusReason) {
+                obj.msg += '\n' + statusReason;
+                obj.closeButton = true;
+
+                //isMessageDone = true;
+            }
+        }
+
+        Ui.error(obj.msg, obj.closeButton);
+    }
+
+    /**
+     * @private
+     */
+    initBroadcastChannel() {
+        this.broadcastChannel = new BroadcastChannel();
+
+        this.broadcastChannel.subscribe(event => {
+            if (!this.auth && this.started) {
+                if (event.data === 'logged-in') {
+                    window.location.reload();
+                }
+
+                return;
             }
 
-            Ui.error(obj.msg, obj.closeButton);
-        },
+            if (event.data === 'update:all') {
+                this.metadata.loadSkipCache();
+                this.settings.loadSkipCache();
+                this.language.loadSkipCache();
+                this.viewHelper.layoutManager.clearLoadedData();
 
-        /**
-         * @private
-         */
-        initBroadcastChannel: function () {
-            this.broadcastChannel = new BroadcastChannel();
+                return;
+            }
 
-            this.broadcastChannel.subscribe(event => {
-                if (!this.auth && this.started) {
-                    if (event.data === 'logged-in') {
-                        window.location.reload();
-                    }
+            if (event.data === 'update:metadata') {
+                this.metadata.loadSkipCache();
 
-                    return;
-                }
+                return;
+            }
 
-                if (event.data === 'update:all') {
-                    this.metadata.loadSkipCache();
-                    this.settings.loadSkipCache();
-                    this.language.loadSkipCache();
-                    this.viewHelper.layoutManager.clearLoadedData();
+            if (event.data === 'update:config') {
+                this.settings.load();
 
-                    return;
-                }
+                return;
+            }
 
-                if (event.data === 'update:metadata') {
-                    this.metadata.loadSkipCache();
+            if (event.data === 'update:language') {
+                this.language.loadSkipCache();
 
-                    return;
-                }
+                return;
+            }
 
-                if (event.data === 'update:config') {
-                    this.settings.load();
+            if (event.data === 'update:layout') {
+                this.viewHelper.layoutManager.clearLoadedData();
 
-                    return;
-                }
+                return;
+            }
 
-                if (event.data === 'update:language') {
-                    this.language.loadSkipCache();
+            if (event.data === 'reload') {
+                window.location.reload();
 
-                    return;
-                }
+                return;
+            }
 
-                if (event.data === 'update:layout') {
-                    this.viewHelper.layoutManager.clearLoadedData();
+            if (event.data === 'logged-out' && this.started) {
+                if (this.auth && this.router.confirmLeaveOut) {
+                    Ui.error(this.language.translate('loggedOutLeaveOut', 'messages'), true);
+
+                    this.router.trigger('logout');
 
                     return;
                 }
 
-                if (event.data === 'reload') {
-                    window.location.reload();
+                this.logout(true);
+            }
+        });
+    }
 
-                    return;
-                }
+    initDomEventListeners() {
+        $(document).on('keydown.espo.button', e => {
+            if (
+                e.code !== 'Enter' ||
+                e.target.tagName !== 'A' ||
+                e.target.getAttribute('role') !== 'button' ||
+                e.target.getAttribute('href') ||
+                e.ctrlKey ||
+                e.altKey ||
+                e.metaKey
+            ) {
+                return;
+            }
 
-                if (event.data === 'logged-out' && this.started) {
-                    if (this.auth && this.router.confirmLeaveOut) {
-                        Ui.error(this.language.translate('loggedOutLeaveOut', 'messages'), true);
+            $(e.target).click();
 
-                        this.router.trigger('logout');
+            e.preventDefault();
+        });
+    }
+}
 
-                        return;
-                    }
 
-                    this.logout(true);
-                }
-            });
-        },
+/**
+ * @callback module:app~callback
+ *
+ * @param {App} app A created application instance.
+ */
 
-        initDomEventListeners: function () {
-            $(document).on('keydown.espo.button', e => {
-                if (
-                    e.code !== 'Enter' ||
-                    e.target.tagName !== 'A' ||
-                    e.target.getAttribute('role') !== 'button' ||
-                    e.target.getAttribute('href') ||
-                    e.ctrlKey ||
-                    e.altKey ||
-                    e.metaKey
-                ) {
-                    return;
-                }
+/**
+ * Application options.
+ *
+ * @typedef {Object} module:app~Options
+ *
+ * @property {string} [id] An application ID.
+ * @property {string} [basePath] A base path.
+ * @property {boolean} [useCache] Use cache.
+ * @property {string} [apiUrl] An API URL.
+ * @property {Number} [ajaxTimeout] A default ajax request timeout.
+ * @property {string} [internalModuleList] A list of internal modules.
+ *   Internal modules located in the `client/modules` directory.
+ * @property {Number|null} [cacheTimestamp] A cache timestamp.
+ */
 
-                $(e.target).click();
+_.extend(App.prototype, Backbone.Events);
 
-                e.preventDefault();
-            });
-        },
+App.extend = Bull.View.extend;
 
-    }, Backbone.Events);
-
-    App.extend = Bull.View.extend;
-
-    return App;
-});
+export default App;
