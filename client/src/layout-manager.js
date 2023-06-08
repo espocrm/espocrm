@@ -28,7 +28,7 @@
 
 /** @module layout-manager */
 
-import Backbone from 'lib!backbone';
+import Bull from 'lib!bullbone';
 
 /**
  * A layout manager.
@@ -273,6 +273,6 @@ _.extend(LayoutManager.prototype, /** @lends LayoutManager# */{
         this.data = {};
     },
 
-}, Backbone.Events);
+}, Bull.Events);
 
 export default LayoutManager;

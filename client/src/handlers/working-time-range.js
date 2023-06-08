@@ -26,27 +26,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('handlers/working-time-range', [], () => {
+import Bull from 'lib!bullbone';
 
-    let Class = class Class {
+/**
+ * @mixes Bull.Events
+ */
+class WorkingTimeRangeHandler {
 
-        constructor(view) {
-            /** @type {module:views/record/edit} */
-            this.view = view;
-        }
-
-        process() {
-            this.listenTo(this.view.model, 'change:dateStart', (model, value, o) => {
-                if (!o.ui || model.get('dateEnd')) {
-                    return;
-                }
-
-                setTimeout(() => model.set('dateEnd', value), 50);
-            });
-        }
+    constructor(view) {
+        /** @type {module:views/record/edit} */
+        this.view = view;
     }
 
-    _.extend(Class.prototype, Backbone.Events);
+    process() {
+        this.listenTo(this.view.model, 'change:dateStart', (model, value, o) => {
+            if (!o.ui || model.get('dateEnd')) {
+                return;
+            }
 
-    return Class;
-});
+            setTimeout(() => model.set('dateEnd', value), 50);
+        });
+    }
+}
+
+_.extend(WorkingTimeRangeHandler.prototype, Bull.Events);
+
+export default WorkingTimeRangeHandler;

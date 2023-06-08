@@ -28,11 +28,11 @@
 
 /** @module view-record-helper */
 
-import Backbone from "lib!backbone";
+import Bull from 'lib!bullbone';
 
 /**
  * @class
- * @mixes Backbone.Events
+ * @mixes Bull.Events
  * @param {Object.<string,*>} [defaultFieldStates] Default field states.
  * @param {Object.<string,*>} [defaultPanelStates] Default panel states.
  */
@@ -58,7 +58,7 @@ const ViewRecordHelper = function (defaultFieldStates, defaultPanelStates) {
     /** @private */
     this.fieldOptionListMap = {};
 
-    _.extend(this, Backbone.Events);
+    _.extend(this, Bull.Events);
 };
 
 _.extend(ViewRecordHelper.prototype, /** @lends ViewRecordHelper# */{

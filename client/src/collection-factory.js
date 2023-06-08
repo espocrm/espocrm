@@ -72,7 +72,7 @@ class Class {
 
                 Espo.loader.require(className, Collection => {
                     let collection = new Collection(null, {
-                        name: entityType,
+                        entityType: entityType,
                         orderBy: orderBy,
                         order: order,
                         defs: defs,

@@ -63,7 +63,7 @@ import BroadcastChannel from 'broadcast-channel';
 /**
  * A main application class.
  *
- * @mixes Backbone.Events
+ * @mixes Bull.Events
  */
 class App  {
 
@@ -555,9 +555,7 @@ class App  {
         this.router.on('routed', params => this.doAction(params));
 
         try {
-            Backbone.history.start({
-                root: window.location.pathname
-            });
+            Backbone.history.start({root: window.location.pathname});
         }
         catch (e) {
             Backbone.history.loadUrl();
@@ -1402,7 +1400,7 @@ class App  {
  * @property {Number|null} [cacheTimestamp] A cache timestamp.
  */
 
-_.extend(App.prototype, Backbone.Events);
+_.extend(App.prototype, Bull.Events);
 
 App.extend = Bull.View.extend;
 

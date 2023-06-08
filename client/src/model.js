@@ -28,8 +28,9 @@
 
 /** @module model */
 
-import Backbone from "lib!backbone";
-import _ from "lib!underscore";
+import Bull from 'lib!bullbone';
+import Backbone from 'lib!backbone';
+import _ from 'lib!underscore';
 
 /**
  * When attributes have changed.
@@ -60,7 +61,7 @@ import _ from "lib!underscore";
 /**
  * A model.
  *
- * @mixes Backbone.Events
+ * @mixes Bull.Events
  */
 class Class {
 
@@ -747,6 +748,6 @@ class Class {
 
 Class.extend = Bull.View.extend;
 
-_.extend(Class.prototype, Backbone.Events);
+_.extend(Class.prototype, Bull.Events);
 
 export default Class;

@@ -205,7 +205,7 @@ define('crm:view-setup-handlers/document/record-list-drag-n-drop', [], function 
         },
     });
 
-    _.extend(Handler.prototype, Backbone.Events);
+    _.extend(Handler.prototype, Bull.Events);
 
     return Handler;
 });

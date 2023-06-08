@@ -28,7 +28,7 @@
 
 /** @module metadata */
 
-import Backbone from 'lib!backbone';
+import Bull from 'lib!bullbone';
 
 /**
  * Application metadata.
@@ -261,6 +261,6 @@ _.extend(Metadata.prototype, /** @lends Metadata# */{
         return scopeList;
     }
 
-}, Backbone.Events);
+}, Bull.Events);
 
 export default Metadata;

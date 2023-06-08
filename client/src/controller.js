@@ -29,7 +29,7 @@
 /** @module controller */
 
 import Exceptions from 'exceptions';
-import Backbone from 'lib!backbone';
+import Bull from 'lib!bullbone';
 import _ from 'lib!underscore';
 
 /**
@@ -40,7 +40,7 @@ import _ from 'lib!underscore';
 /**
  * A controller. To be extended.
  *
- * @mixes Backbone.Events
+ * @mixes Bull.Events
  */
 class Controller {
 
@@ -611,8 +611,9 @@ class Controller {
     }
 }
 
+/** For backward compatibility. */
 Controller.extend = Bull.View.extend;
 
-_.extend(Controller.prototype, Backbone.Events);
+_.extend(Controller.prototype, Bull.Events);
 
 export default Controller;

@@ -30,14 +30,17 @@
 
 import Model from 'model';
 import Backbone from 'lib!backbone';
+import _ from 'lib!underscore';
+import Bull from 'lib!bullbone';
+import Controller from 'controller';
 
 const Dep = Backbone.Collection;
 
 /**
  * On sync with backend.
  *
- * @event Class#sync
- * @param {Class} collection A collection.
+ * @event Collection#sync
+ * @param {Collection} collection A collection.
  * @param {Object} response Response from backend.
  * @param {Object} o Options.
  */
@@ -45,8 +48,8 @@ const Dep = Backbone.Collection;
 /**
  * Any number of models have been added, removed or changed.
  *
- * @event Class#update
- * @param {Class} collection A collection.
+ * @event Collection#update
+ * @param {Collection} collection A collection.
  * @param {Object} o Options.
  */
 
@@ -54,29 +57,29 @@ const Dep = Backbone.Collection;
  * Add a model or models.
  *
  * @function add
- * @memberof Class#
+ * @memberof Collection#
  * @param {Model|Model[]} models A model or models.
  * @param {Object} [options] Options.
  *
- * @fires Class#update Unless `{silent: true}`.
+ * @fires Collection#update Unless `{silent: true}`.
  */
 
 /**
  * Remove a model or models.
  *
  * @function remove
- * @memberof Class#
+ * @memberof Collection#
  * @param {Model|Model[]|string|string[]} models A model, models, ID or IDs.
  * @param {Object} [options] Options.
  *
- * @fires Class#update Unless `{silent: true}`.
+ * @fires Collection#update Unless `{silent: true}`.
  */
 
 /**
  * Append a model.
  *
  * @function push
- * @memberof Class#
+ * @memberof Collection#
  * @param {Model} model A model.
  * @param {Object} [options] Options.
  */
@@ -85,23 +88,23 @@ const Dep = Backbone.Collection;
  * Remove and return the last model from the collection.
  *
  * @function pop
- * @memberof Class#
+ * @memberof Collection#
  * @param {Object} [options] Options.
  */
 
 /**
  * @class
  * @extends Backbone.Collection.prototype
- * @mixes Backbone.Events
+ * @mixes Bull.Events
  */
-const Class = Dep.extend(/** @lends Class# */ {
+const Collection = Dep.extend(/** @lends Collection# */ {
 
     /**
      * A number of records.
      *
      * @name length
      * @type {number}
-     * @memberof Class#
+     * @memberof Collection#
      */
 
     /**
@@ -109,7 +112,7 @@ const Class = Dep.extend(/** @lends Class# */ {
      *
      * @name length
      * @type {Model[]}
-     * @memberof Class#
+     * @memberof Collection#
      */
 
     /**
@@ -118,7 +121,7 @@ const Class = Dep.extend(/** @lends Class# */ {
      * @name url
      * @type {string|null}
      * @public
-     * @memberof Class.prototype
+     * @memberof Collection.prototype
      */
 
     /**
@@ -197,12 +200,18 @@ const Class = Dep.extend(/** @lends Class# */ {
      *
      * @protected
      * @param {Model[]} models Models.
-     * @param {Object} options Options.
+     * @param {{
+     *     entityType?: string,
+     *     model?: Model.prototype,
+     *     defs?: module:model~defs,
+     *     order?: 'asc'|'desc'|boolean|null,
+     *     orderBy?: string|null,
+     * }} options Options.
      */
     initialize: function (models, options) {
         options = options || {};
 
-        this.name = options.name || this.name;
+        this.name = options.entityType || options.name || this.name;
         this.urlRoot = this.urlRoot || this.name;
         this.url = this.url || this.urlRoot;
 
@@ -219,7 +228,7 @@ const Class = Dep.extend(/** @lends Class# */ {
 
         /**
          * @private
-         * @type Model#
+         * @type {Model#}
          */
         this.model = options.model || Model;
     },
@@ -342,7 +351,7 @@ const Class = Dep.extend(/** @lends Class# */ {
      *
      * @param {Object} response A response.
      * @param {Object} options Options.
-     * @returns {Class[]}
+     * @returns {Collection[]}
      */
     parse: function (response, options) {
         this.total = response.total;
@@ -363,7 +372,7 @@ const Class = Dep.extend(/** @lends Class# */ {
      * @param {Object} [options] Options.
      * @returns {Promise}
      *
-     * @fires Class#sync Unless `{silent: true}`.
+     * @fires Collection#sync Unless `{silent: true}`.
      */
     fetch: function (options) {
         options = options || {};
@@ -468,10 +477,10 @@ const Class = Dep.extend(/** @lends Class# */ {
     /**
      * Clone.
      *
-     * @return {Class}
+     * @return {Collection}
      */
     clone: function () {
-        /** @type {Class} */
+        /** @type {Collection} */
         let collection = Dep.prototype.clone.call(this);
 
         collection.name = this.name;
@@ -519,6 +528,8 @@ const Class = Dep.extend(/** @lends Class# */ {
     },
 });
 
-Class.extend = Bull.View.extend;
+Collection.extend = Bull.View.extend;
 
-export default Class;
+_.extend(Controller.prototype, Bull.Events);
+
+export default Collection;

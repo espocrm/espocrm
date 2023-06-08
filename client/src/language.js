@@ -28,7 +28,7 @@
 
 /** @module language */
 
-import Backbone from 'lib!backbone';
+import Bull from 'lib!bullbone';
 
 /**
  * A language.
@@ -315,6 +315,6 @@ _.extend(Language.prototype, /** @lends Language# */{
         return pointer;
     },
 
-}, Backbone.Events);
+}, Bull.Events);
 
 export default Language;
