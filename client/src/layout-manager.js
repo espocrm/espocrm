@@ -33,7 +33,6 @@ import Backbone from 'lib!backbone';
 /**
  * A layout manager.
  *
- * @class
  * @param {module:cache|null} [cache] A cache.
  * @param {string} [applicationId] An application ID.
  * @param {string} [userId] A user ID.
@@ -69,7 +68,7 @@ const LayoutManager = function (cache, applicationId, userId) {
     this.ajax = Espo.Ajax;
 };
 
-_.extend(LayoutManager.prototype, /** @lends Class# */{
+_.extend(LayoutManager.prototype, /** @lends LayoutManager# */{
 
     /**
      * Set a user ID. To be used for the cache purpose.

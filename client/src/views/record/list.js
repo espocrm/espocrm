@@ -32,6 +32,7 @@ import Dep from 'view';
 import MassActionHelper from 'helpers/mass-action';
 import ExportHelper from 'helpers/export';
 import RecordModal from 'helpers/record-modal';
+import SelectProvider from 'helpers/list/select-provider';
 
 /**
  * A record-list view. Renders and processes list items, actions.
@@ -2291,14 +2292,13 @@ export default Dep.extend(/** @lends Class# */{
         let layoutName = this.layoutName;
         let layoutScope = this.layoutScope || this.collection.name;
 
-        this._helper.layoutManager.get(layoutScope, layoutName, (listLayout) => {
+        this.getHelper().layoutManager.get(layoutScope, layoutName, listLayout => {
             let filteredListLayout = this.filterListLayout(listLayout);
 
-            this.layoutLoadCallbackList.forEach((callbackItem) => {
+            this.layoutLoadCallbackList.forEach(callbackItem => {
                 callbackItem(filteredListLayout);
 
                 this.layoutLoadCallbackList = [];
-
                 this.layoutIsBeingLoaded = false;
             });
         });
@@ -2310,7 +2310,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {function(string[]):void} callback A callback.
      */
     getSelectAttributeList: function (callback) {
-        if (this.scope === null || this.rowHasOwnLayout) {
+        if (this.scope === null) {
             callback(null);
 
             return;
@@ -2339,32 +2339,16 @@ export default Dep.extend(/** @lends Class# */{
 
     /**
      * @protected
-     * @return {Object[]}
+     * @return {string[]}
      */
     fetchAttributeListFromLayout: function () {
-        let list = [];
+        const selectProvider = new SelectProvider(
+            this.getHelper().layoutManager,
+            this.getHelper().metadata,
+            this.getHelper().fieldManager
+        );
 
-        this.listLayout.forEach((item) => {
-            if (!item.name) {
-                return;
-            }
-
-            let field = item.name;
-
-            let fieldType = this.getMetadata().get(['entityDefs', this.entityType, 'fields', field, 'type']);
-
-            if (!fieldType) {
-                return;
-            }
-
-            this.getFieldManager()
-                .getEntityTypeFieldAttributeList(this.entityType, field)
-                .forEach((attribute) => {
-                    list.push(attribute);
-                });
-        });
-
-        return list;
+        return selectProvider.getFromLayout(this.entityType, this.listLayout);
     },
 
     /**
@@ -2661,7 +2645,7 @@ export default Dep.extend(/** @lends Class# */{
      */
     getInternalLayout: function (callback, model) {
         if (
-            (this.scope === null || this.rowHasOwnLayout) &&
+            (this.scope === null) &&
             !Array.isArray(this.listLayout)
         ) {
             if (!model) {
