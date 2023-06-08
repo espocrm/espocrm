@@ -9,7 +9,9 @@
     "exportPermission": "Разрешение на экспорт",
     "dataPrivacyPermission": "Разрешение на обработку конфиденциальных данных",
     "massUpdatePermission": "Разрешение на массовое обновление",
-    "followerManagementPermission": "Разрешение на управление последователями"
+    "followerManagementPermission": "Разрешение на управление подписчиками",
+    "data": "Данные",
+    "fieldData": "Полевые данные"
   },
   "links": {
     "users": "Пользователи",

@@ -16,13 +16,13 @@
     "dateStartDate": "Дата початку (цілий день)",
     "dateEndDate": "Дата завершення (цілий день)",
     "isAllDay": "Є цілий день",
-    "Acceptance": "Підтвердження"
+    "sourceEmail": "Електронна пошта джерела"
   },
   "options": {
     "status": {
       "Planned": "Заплановано",
-      "Held": "Виконано",
-      "Not Held": "Не відбулося"
+      "Held": "Проведено",
+      "Not Held": "Не проведено"
     },
     "acceptanceStatus": {
       "None": "Нема",
@@ -32,25 +32,29 @@
     }
   },
   "massActions": {
-    "setHeld": "Позначити виконаним",
-    "setNotHeld": "Позначити невиконаним"
+    "setHeld": "Позначити проведеним",
+    "setNotHeld": "Позначити непроведеним"
   },
   "labels": {
     "Create Meeting": "Створити зустріч",
-    "Set Held": "Позначити виконаним",
-    "Set Not Held": "Позначити невиконаним",
+    "Set Held": "Позначити проведеним",
+    "Set Not Held": "Позначити непроведеним",
     "Send Invitations": "Відправити запрошення",
-    "on time": "на час",
+    "on time": "вчасно",
     "before": "перед",
-    "All-Day": "Цілий день"
+    "All-Day": "Цілий день",
+    "Send Cancellation": "Надіслати скасування",
+    "Acceptance": "Підтвердження"
   },
   "presetFilters": {
     "planned": "Заплановано",
-    "held": "Виконано",
+    "held": "Проведено",
     "todays": "Сьогоднішнє"
   },
   "messages": {
     "nothingHasBeenSent": "Нічого не надіслано",
-    "selectAcceptanceStatus": "Встановіть ваш статус підтвердження."
+    "selectAcceptanceStatus": "Встановіть ваш статус підтвердження.",
+    "sendInvitationsToSelectedAttendees": "Вибраним учасникам буде надіслано електронні листи із запрошеннями.",
+    "sendCancellationsToSelectedAttendees": "Вибраним учасникам буде надіслано електронні листи про скасування."
   }
 }

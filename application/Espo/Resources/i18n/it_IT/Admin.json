@@ -1,7 +1,7 @@
 {
   "labels": {
-    "Enabled": "Abilitato",
-    "Disabled": "Disabilitato",
+    "Enabled": "Abilitati",
+    "Disabled": "Disabilitati",
     "System": "Sistema",
     "Users": "Utenti",
     "Data": "Dati",
@@ -78,7 +78,8 @@
     "Configuration Instructions": "Istruzioni di Configurazione",
     "Formula Sandbox": "Sandbox Formule",
     "Working Time Calendars": "Calendari Lavorativi",
-    "Group Email Folders": "Cartelle Email di Gruppo"
+    "Group Email Folders": "Cartelle Email di Gruppo",
+    "Authentication Providers": "Provider di Autenticazione"
   },
   "layouts": {
     "list": "Lista",
@@ -191,7 +192,8 @@
     "dynamicLogicInvalid": "Condizioni che rendono il campo non valido",
     "conversionDisabled": "Disattiva la Conversione",
     "decimalPlaces": "Posizioni Decimali",
-    "globalRestrictions": "Restrizioni Globali"
+    "globalRestrictions": "Restrizioni Globali",
+    "decimal": "Decimale"
   },
   "messages": {
     "selectEntityType": "Scegli il tipo di entità dal menu di sinistra.",
@@ -199,19 +201,19 @@
     "selectLayout": "Scegli il layout dal menu di sinistra e modificalo.",
     "selectExtensionPackage": "Seleziona il pacchetto di estensione",
     "extensionInstalled": "L'estensione {name} {version} è stata installata",
-    "installExtension": "L'estensione {name} {version} è pronto per essere installata",
+    "installExtension": "L'estensione {name} {version} è pronta per essere installata.",
     "upgradeBackup": "Si raccomanda di eseguire un backup dei file e dei dati di EspoCRM prima di eseguire l'aggiornamento.",
     "thousandSeparatorEqualsDecimalMark": "Il separatore delle migliaia non può essere uguale al separatore decimale.",
     "userHasNoEmailAddress": "L'utente non ha un indirizzo email.",
     "uninstallConfirmation": "Sei sicuro di voler disinstallare l'estensione?",
     "cronIsNotConfigured": "I lavori pianificati non sono in esecuzione. Pertanto, le e-mail in entrata, le notifiche e i promemoria non funzionano. Seguire le [istruzioni](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) per impostare il cron job.",
-    "newExtensionVersionIsAvailable": "Nuova {extensionName} versione {latestVersion} è disponibile.\n",
+    "newExtensionVersionIsAvailable": "È disponibile la versione {latestVersion} dell'estensione {extensionName}.",
     "upgradeVersion": "EspoCRM verrà aggiornato alla versione **{version}**. Si prega di pazientare poiché ciò potrebbe richiedere del tempo.",
     "upgradeDone": "EspoCRM è stato aggiornato alla versione **{version}**.",
     "downloadUpgradePackage": "Scarica i pacchetti di aggiornamento [qui]({url}).",
     "upgradeInfo": "Controlla la [documentazione]({url}) su come aggiornare l'istanza di EspoCRM.",
     "upgradeRecommendation": "Questo metodo di aggiornamento non è consigliato. È meglio eseguire l'aggiornamento dalla CLI.",
-    "newVersionIsAvailable": "È disponibile la nuova versione di EspoCRM {latestVersion}. Seguire le [istruzioni](https://www.espocrm.com/documentation/administration/upgrading/) per aggiornare l'istanza.",
+    "newVersionIsAvailable": "È disponibile la nuova versione di EspoCRM {latestVersion}. Segui le [istruzioni](https://www.espocrm.com/documentation/administration/upgrading/) per aggiornare l'istanza.",
     "formulaFunctions": "Più funzioni possono essere trovate nella [documentazione]({documentationUrl}).",
     "rebuildRequired": "È necessario eseguire la ricostruzione da CLI."
   },
@@ -262,7 +264,8 @@
     "sms": "Impostazioni SMS.",
     "formulaSandbox": "Scrivi e testa gli script delle formule.",
     "workingTimeCalendars": "Orario lavorativo.",
-    "groupEmailFolders": "Cartelle email condivise per i team."
+    "groupEmailFolders": "Cartelle email condivise per i team.",
+    "authenticationProviders": "Provider di autenticazione aggiuntivi per i portali."
   },
   "logicalOperators": {
     "and": "And"
@@ -281,7 +284,7 @@
     "accessInfo": "Informazioni di accesso",
     "accessInfoPortal": "Informazioni di Accesso per i Portali",
     "assignment": "Assegnato",
-    "mention": "Cita",
+    "mention": "Citazione",
     "notePost": "Nota su post",
     "notePostNoParent": "Nota su post (nessun Genitore)",
     "noteStatus": "Nota sull'aggiornamento dello stato",

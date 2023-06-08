@@ -9,7 +9,7 @@
     "file": "Файл",
     "type": "Тип",
     "publishDate": "Дата публікації",
-    "expirationDate": "Термін придатности",
+    "expirationDate": "Термін придатності",
     "description": "Опис",
     "accounts": "Контрагенти",
     "folder": "Папка"
@@ -25,14 +25,12 @@
     "status": {
       "Active": "Активний",
       "Draft": "Чернетка",
-      "Expired": "Прострочено",
+      "Expired": "Термін дії минув",
       "Canceled": "Скасовано"
     },
     "type": {
       "": "Немає",
       "Contract": "Контракт",
-      "NDA": "\n NDA",
-      "EULA": "\n EULA",
       "License Agreement": "Ліцензійна угода"
     }
   },

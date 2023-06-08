@@ -53,7 +53,8 @@
     "ImportError": "Errore di importazione",
     "WorkingTimeCalendar": "Calendario Lavorativo",
     "WorkingTimeRange": "Intervallo di Lavoro",
-    "GroupEmailFolder": "Cartella Email di Gruppo"
+    "GroupEmailFolder": "Cartella Email di Gruppo",
+    "AuthenticationProvider": "Provider di Autenticazione"
   },
   "scopeNamesPlural": {
     "Email": "Email",
@@ -73,7 +74,7 @@
     "EmailFilter": "Filtri Email",
     "Portal": "Portali",
     "PortalRole": "Ruoli Portale",
-    "Attachment": "Allegato",
+    "Attachment": "Allegati",
     "EmailFolder": "Caselle Email",
     "PortalUser": "Utenti Portale",
     "ScheduledJobLogRecord": "Record Registro Lavoro Pianificato",
@@ -99,7 +100,8 @@
     "ImportError": "Errori di importazione",
     "WorkingTimeCalendar": "Calendari Lavorativi",
     "WorkingTimeRange": "Intervalli di Lavoro",
-    "GroupEmailFolder": "Cartelle Email di Gruppo"
+    "GroupEmailFolder": "Cartelle Email di Gruppo",
+    "AuthenticationProvider": "Provider di Autenticazione"
   },
   "labels": {
     "Misc": "Varie",
@@ -115,7 +117,6 @@
     "Loading...": "Caricamento in corso...",
     "Uploading...": "Caricamento...",
     "Sending...": "Invio...",
-    "Merging...": "Unione in corso...",
     "Merged": "Fusione",
     "Removed": "Rimosso",
     "Posted": "Postato",
@@ -129,13 +130,10 @@
     "Record has been removed": "Il record è stato rimosso",
     "Wrong username/password": "I dati forniti non sono corretti",
     "Post cannot be empty": "Il post non può essere vuoto",
-    "Removing...": "Rimozione...",
-    "Unlinking...": "Scollegamento...",
     "Username can not be empty!": "L'Username non può essere vuota!",
     "Cache is not enabled": "Cache non abilitata",
     "Cache has been cleared": "La cache è stata svuotata",
     "Rebuild has been done": "Ricostruzione effettuata",
-    "Saving...": "Salvataggio...",
     "Modified": "Modificato",
     "Created": "Creato",
     "Create": "Crea",
@@ -205,7 +203,7 @@
     "Run Import": "Avvia importazione",
     "Duplicate": "Duplica",
     "Notifications": "Notifiche",
-    "Mark all read": "Contrassegna tutte come lette",
+    "Mark all read": "Segna Tutte Come Lette",
     "See more": "Vedi altro",
     "Today": "Oggi",
     "Tomorrow": "Domani",
@@ -319,8 +317,6 @@
     "loading": "Caricamento...",
     "saving": "Salvataggio...",
     "fieldMaxFileSizeError": "Il file non dovrebbe superare {max} Mb",
-    "fieldShouldBeLess": "{field} deve essere minore di {value}",
-    "fieldShouldBeGreater": "{field} deve essere maggiore di {value}",
     "fieldIsUploading": "Caricamento in corso",
     "erasePersonalDataConfirmation": "I campi selezionati verranno cancellati in modo permanente. Sei sicuro?",
     "massPrintPdfMaxCountError": "Impossibile stampare più record {maxCount}.",
@@ -353,7 +349,14 @@
     "extensionLicenseSoftExpired": "L'abbonamento alla licenza dell'estensione '{name}' è scaduto.",
     "loggedOutLeaveOut": "Disconnesso. La sessione è inattiva. I dati dei moduli non salvati potrebbero essere persi dopo l'aggiornamento della pagina. Potrebbe essere necessario farne una copia.",
     "noAccessToRecord": "L'operazione richiede l'accesso `{action}` al record.",
-    "noAccessToForeignRecord": "L'operazione richiede l'accesso `{action}` al record esterno."
+    "noAccessToForeignRecord": "L'operazione richiede l'accesso `{action}` al record esterno.",
+    "fieldShouldBeNumber": "{field} deve essere un numero valido",
+    "maintenanceModeError": "L'applicazione è attualmente in modalità di manutenzione.",
+    "noLinkAccess": "Nessun accesso all'operazione di collegamento per un record specifico.",
+    "cannotRelateNonExisting": "Impossibile collegarsi a un record {foreignEntityType} inesistente.",
+    "cannotRelateForbidden": "Impossibile collegarsi a un record {foreignEntityType} proibito. È richiesto l'accesso a `{action}`.",
+    "cannotRelateForbiddenLink": "Nessun accesso al collegamento '{link}'.",
+    "emptyMassUpdate": "Nessun campo disponibile per l'Aggiornamento Massivo."
   },
   "boolFilters": {
     "onlyMy": "Solo i miei",
@@ -375,10 +378,11 @@
     "printPdf": "Stampa in PDF",
     "unlink": "Scollega",
     "recalculateFormula": "Ricalcola Formula",
-    "update": "Aggiorna"
+    "update": "Aggiorna",
+    "delete": "Elimina"
   },
   "fields": {
-    "name": "Nome",
+    "name": "Nome Completo",
     "firstName": "Nome",
     "lastName": "Cognome",
     "salutationName": "Saluto",
@@ -462,8 +466,8 @@
     "attachThis": "{user} ha allegato",
     "statusThis": "{user} ha aggiornato {field}",
     "updateThis": "{user} ha aggiornato {entityType}",
-    "createRelatedThis": "{user} ha creato {relatedEntityType} {relatedEntity} correlato al {entityType}",
-    "createRelated": "{user} ha creato {relatedEntityType} {relatedEntity} correlato al {entityType} {entity}",
+    "createRelatedThis": "{user} ha creato {relatedEntityType} {relatedEntity} correlato a {entityType}",
+    "createRelated": "{user} ha creato {relatedEntityType} {relatedEntity} correlato a {entityType} {entity}",
     "relate": "{user} si è collegato a {relatedEntityType} {relatedEntity} con {entityType} {entity}",
     "relateThis": "{user} si è collegato a {relatedEntityType} {relatedEntity} con {entityType}",
     "emailReceivedFromThis": "Email ricevuta da {from}",
@@ -486,7 +490,9 @@
     "assignThisVoid": "{user} Ha revocato questo {entityType}",
     "assignVoid": "{user} Ha revocato {entityType} {entity}",
     "assignThisSelf": "{user} Ha auto-assegnato {entityType}",
-    "assignSelf": "{user} Ha auto-assegnato {entityType} {entity}"
+    "assignSelf": "{user} Ha auto-assegnato {entityType} {entity}",
+    "unrelate": "{user} ha scollegato {relatedEntityType} {relatedEntity} da {entityType} {entity}",
+    "unrelateThis": "{user} ha scollegato {relatedEntityType} {relatedEntity} da questa {entityType}"
   },
   "lists": {
     "monthNames": [
@@ -654,7 +660,7 @@
         "dragImageHere": "Trascina un'immagine qui",
         "selectFromFiles": "Seleziona da File",
         "url": "URL dell'Immagine",
-        "remove": "Rimuovi l'Immagine"
+        "remove": "Rimuovi L'Immagine"
       },
       "link": {
         "insert": "Inserisci Link",
@@ -728,10 +734,14 @@
     }
   },
   "streamMessagesMale": {
-    "postTargetSelfAndOthers": "{user} Ha postato a {target} e se stesso"
+    "postTargetSelfAndOthers": "{user} ha postato a {target} e se stesso"
   },
   "streamMessagesFemale": {
-    "postTargetSelfAndOthers": "{user} Ha postato a {target} e se stessa"
+    "postTargetSelfAndOthers": "{user} ha postato a {target} e se stessa"
+  },
+  "durationUnits": {
+    "d": "g",
+    "h": "o"
   },
   "listViewModes": {
     "list": "Lista"
@@ -757,5 +767,18 @@
     "noEmptyString": "Nessuna Stringa Vuota",
     "max": "Valore Max",
     "min": "Valore Min"
+  },
+  "fieldValidationExplanations": {
+    "url_valid": "Valore URL non valido.",
+    "currency_valid": "Valore importo non valido.",
+    "currency_validCurrency": "Il codice della valuta non è valido o non è consentito.",
+    "varchar_pattern": "Probabilmente il valore contiene caratteri non consentiti.",
+    "email_emailAddress": "Valore indirizzo email non valido.",
+    "phone_phoneNumber": "Valore telefono non valido.",
+    "dateTimeOptional_valid": "Valore data-ora non valido.",
+    "dateTime_valid": "Valore data-ora non valido.",
+    "date_valid": "Valore data non valido.",
+    "enum_valid": "Valore enum non valido. Il valore deve essere una delle opzioni enum definite. Un valore vuoto è consentito solo se il campo ha un'opzione vuota.",
+    "multiEnum_valid": "Valore multi-enum non valido. I valori devono rientrare tra le opzioni di campo stabilite."
   }
 }

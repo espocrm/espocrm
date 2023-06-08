@@ -1,6 +1,6 @@
 {
   "fields": {
-    "billingAddress": "Адреса виставлення рахунку",
+    "billingAddress": "Платіжна адреса",
     "shippingAddress": "Адреса доставки",
     "website": "Вебсайт"
   },

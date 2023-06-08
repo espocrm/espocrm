@@ -5,7 +5,8 @@
     "EmailTemplates": "Шаблони листів"
   },
   "fields": {
-    "order": "Сортування"
+    "order": "Сортування",
+    "childList": "Список дочірніх записів"
   },
   "links": {
     "emailTemplates": "Шаблони листів"

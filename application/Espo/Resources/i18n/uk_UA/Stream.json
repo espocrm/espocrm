@@ -1,7 +1,8 @@
 {
   "messages": {
     "infoMention": "Введіть **@username** щоб згадати користувача в пості.",
-    "infoSyntax": "Доступний синтаксис розмітки"
+    "infoSyntax": "Доступний синтаксис розмітки",
+    "couldNotAddFollowerUserHasNoAccessToStream": "Не вдалося додати користувача '{userName}' до підписників. Користувач не має доступу до 'потоку' запису."
   },
   "syntaxItems": {
     "code": "код",
@@ -9,7 +10,7 @@
     "strongText": "жирний текст",
     "emphasizedText": "підкреслений текст",
     "deletedText": "закреслений текст",
-    "blockquote": "блок",
+    "blockquote": "блок цитування",
     "link": "посилання"
   }
 }

@@ -18,12 +18,12 @@
   "options": {
     "status": {
       "Planned": "Заплановано",
-      "Held": "Виконано",
-      "Not Held": "Не відбулося"
+      "Held": "Проведено",
+      "Not Held": "Не проведено"
     },
     "direction": {
-      "Outbound": "Вихідне",
-      "Inbound": "Вхідне"
+      "Outbound": "Вихідний",
+      "Inbound": "Вхідний"
     },
     "acceptanceStatus": {
       "None": "Нема",
@@ -33,18 +33,18 @@
     }
   },
   "massActions": {
-    "setHeld": "Позначити виконаним",
-    "setNotHeld": "Позначити невиконаним"
+    "setHeld": "Позначити проведеним",
+    "setNotHeld": "Позначити непроведеним"
   },
   "labels": {
     "Create Call": "Створити дзвінок",
-    "Set Held": "Позначити виконаним",
-    "Set Not Held": "Позначити невиконаним",
+    "Set Held": "Позначити проведеним",
+    "Set Not Held": "Позначити непроведеним",
     "Send Invitations": "Відправити запрошення"
   },
   "presetFilters": {
     "planned": "Заплановано",
-    "held": "Виконано",
+    "held": "Проведено",
     "todays": "Сьогоднішнє"
   }
 }

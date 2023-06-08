@@ -9,7 +9,9 @@
     "exportPermission": "Permessi di Esportazione",
     "dataPrivacyPermission": "Autorizzazione privacy dati",
     "massUpdatePermission": "Autorizzazione per l'aggiornamento di massa",
-    "followerManagementPermission": "Permessi di Gestione dei Follower"
+    "followerManagementPermission": "Permessi di Gestione dei Follower",
+    "data": "Dati",
+    "fieldData": "Dati Campo"
   },
   "links": {
     "users": "Utenti"

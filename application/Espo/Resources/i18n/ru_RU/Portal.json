@@ -19,13 +19,15 @@
     "defaultCurrency": "Валюта по умолчанию",
     "customUrl": "Пользовательский адрес ресурса URL",
     "customId": "Пользовательский ID",
-    "layoutSet": "Набор макетов"
+    "layoutSet": "Набор макетов",
+    "authenticationProvider": "Поставщик аутентификации"
   },
   "links": {
     "users": "Пользователи",
     "portalRoles": "Роли",
     "notes": "Заметки",
-    "layoutSet": "Набор макетов"
+    "layoutSet": "Набор макетов",
+    "authenticationProvider": "Поставщик аутентификации"
   },
   "tooltips": {
     "portalRoles": "Указанные роли портала будут применены ко всем пользователям портала.",

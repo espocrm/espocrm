@@ -15,18 +15,19 @@
     "apiKey": "Ключ API",
     "targetTeam": "Команда",
     "exampleRequestMethod": "Метод",
-    "createLeadBeforeOptInConfirmation": "Створити ліда до підтвердження",
+    "createLeadBeforeOptInConfirmation": "Створити лід до підтвердження",
     "duplicateCheck": "Перевірка на дублікати",
     "skipOptInConfirmationIfSubscribed": "Пропустити підтвердження, якщо лід вже є у цільовому списку",
     "smtpAccount": "SMTP Акаунт",
-    "inboundEmail": "Групова поштова скринька"
+    "inboundEmail": "Групова поштова скринька",
+    "exampleRequestHeaders": "Заголовки"
   },
   "links": {
     "targetList": "Цільовий список",
     "campaign": "Кампанія",
     "optInConfirmationEmailTemplate": "Шаблон листа для підтвердження підписки",
     "targetTeam": "Команда",
-    "logRecords": "Лоґ",
+    "logRecords": "Журнал",
     "inboundEmail": "Групова поштова скринька"
   },
   "labels": {

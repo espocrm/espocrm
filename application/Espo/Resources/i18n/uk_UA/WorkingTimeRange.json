@@ -1,0 +1,27 @@
+{
+  "labels": {
+    "Create WorkingTimeRange": "Створити діапазон",
+    "Calendars": "Календарі"
+  },
+  "fields": {
+    "timeRanges": "Розклад",
+    "dateStart": "Дата початку",
+    "dateEnd": "Дата закінчення",
+    "type": "Тип",
+    "calendars": "Календарі",
+    "users": "Користувачі"
+  },
+  "links": {
+    "calendars": "Календарі",
+    "users": "Користувачі"
+  },
+  "options": {
+    "type": {
+      "Non-working": "Неробочий",
+      "Working": "Робочий"
+    }
+  },
+  "presetFilters": {
+    "actual": "Актуальні"
+  }
+}

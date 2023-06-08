@@ -21,7 +21,7 @@
     "calls": "Дзвінки",
     "tasks": "Завдання",
     "emails": "Електронні скриньки",
-    "articles": "Статті Бази Знань",
+    "articles": "Статті бази знань",
     "lead": "Лід",
     "attachments": "Вкладення",
     "inboundEmail": "Групова поштова скринька"
@@ -30,7 +30,7 @@
     "status": {
       "New": "Новий",
       "Assigned": "На розгляді",
-      "Pending": "Поточне",
+      "Pending": "Очікується",
       "Closed": "Закрито",
       "Rejected": "Відмовлено",
       "Duplicate": "Дуплікат"
@@ -48,10 +48,10 @@
     }
   },
   "labels": {
-    "Create Case": "Створити Звернення",
+    "Create Case": "Створити звернення",
     "Close": "Закрити",
     "Reject": "Відхилити",
-    "Closed": "Закрите",
+    "Closed": "Закрито",
     "Rejected": "Відхилено"
   },
   "presetFilters": {

@@ -6,9 +6,9 @@
     "failedAttempts": "Невдалі спроби",
     "serviceName": "Обслуговування",
     "methodName": "Метод",
-    "scheduledJob": "Запланована робота",
+    "scheduledJob": "Заплановані завдання",
     "data": "Дата",
-    "method": "Метод",
+    "method": "Метод (deprecated)",
     "scheduledJobJob": "Назва запланованого завдання",
     "executedAt": "Виконано о",
     "startedAt": "Почалося в",
@@ -16,13 +16,16 @@
     "targetId": "ID цільового об'єкту",
     "number": "Номер",
     "queue": "Черга",
-    "job": "Завдання"
+    "job": "Завдання",
+    "group": "Група",
+    "className": "Назва класу",
+    "targetGroup": "Цільова група"
   },
   "options": {
     "status": {
-      "Pending": "В очікуванні",
+      "Pending": "Очікується",
       "Success": "Успішно",
-      "Running": "Плинний",
+      "Running": "Виконується",
       "Failed": "Невдало"
     }
   }

@@ -115,5 +115,16 @@
       "Popup": "Всплывающее окно",
       "Email": "Эл. письмо"
     }
+  },
+  "notificationMessages": {
+    "eventAttendee": "{user} добавил вас в {entityType} {сущность}"
+  },
+  "streamMessages": {
+    "eventConfirmationAccepted": "{инвиит} принял участие в {entityType} {субъект}",
+    "eventConfirmationDeclined": "{приглашенный} отказался от участия в {типе организации} {субъект}",
+    "eventConfirmationTentative": "{приглашенный} предварительно намерен принять участие в {entityType} {субъект}",
+    "eventConfirmationAcceptedThis": "{принято участие",
+    "eventConfirmationDeclinedThis": "{приглашенный} отказался от участия",
+    "eventConfirmationTentativeThis": "{инвитируемый} проявляет осторожность в отношении участия"
   }
 }
