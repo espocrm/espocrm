@@ -498,6 +498,8 @@ const Collection = Dep.extend(/** @lends Collection# */ {
         collection.maxSize = this.maxSize;
         collection.maxMaxSize = this.maxMaxSize;
 
+        collection.defs = this.defs;
+
         return collection;
     },
 
