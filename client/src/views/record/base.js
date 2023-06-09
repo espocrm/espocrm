@@ -28,45 +28,46 @@
 
 /** @module views/record/base */
 
-import Dep from "view";
-import ViewRecordHelper from "view-record-helper";
-import DynamicLogic from "dynamic-logic";
-import _ from "lib!underscore";
+import View from 'view';
+import ViewRecordHelper from 'view-record-helper';
+import DynamicLogic from 'dynamic-logic';
+import _ from 'lib!underscore';
+import $ from 'lib!jquery';
 
 /**
  * A base record view. To be extended.
- *
- * @class
- * @name Class
- * @extends module:view
  */
-export default Dep.extend(/** @lends Class# */{
+class BaseRecordView extends View {
 
     /**
      * A type.
      */
-    type: 'edit',
+    type = 'edit'
 
     /**
      * An entity type.
+     *
+     * @type {string|null}
      */
-    entityType: null,
+    entityType = null
 
     /**
      * A scope.
+     *
+     * @type {string|null}
      */
-    scope: null,
+    scope = null
 
     /**
      * Is new. Is set automatically.
      */
-    isNew: false,
+    isNew = false
 
     /**
      * @deprecated
      * @protected
      */
-    dependencyDefs: {},
+    dependencyDefs = {}
 
     /**
      * Dynamic logic.
@@ -74,21 +75,21 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {Object}
      */
-    dynamicLogicDefs: {},
+    dynamicLogicDefs = {}
 
     /**
      * A field list.
      *
      * @protected
      */
-    fieldList: null,
+    fieldList = null
 
     /**
      * A mode.
      *
      * @type {'detail'|'edit'|null}
      */
-    mode: null,
+    mode = null
 
     /**
      * A last save cancel reason.
@@ -96,7 +97,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string|null}
      */
-    lastSaveCancelReason: null,
+    lastSaveCancelReason = null
 
     /**
      * A record-helper.
@@ -104,27 +105,17 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {module:view-record-helper}
      */
-    recordHelper: null,
+    recordHelper = null
 
-    /**
-     * @const
-     */
-    MODE_DETAIL: 'detail',
+    /** @const */
+    MODE_DETAIL = 'detail'
+    /** @const */
+    MODE_EDIT = 'edit'
 
-    /**
-     * @const
-     */
-    MODE_EDIT: 'edit',
-
-    /**
-     * @const
-     */
-    TYPE_DETAIL: 'detail',
-
-    /**
-     * @const
-     */
-    TYPE_EDIT: 'edit',
+    /** @const */
+    TYPE_DETAIL = 'detail'
+    /** @const  */
+    TYPE_EDIT = 'edit'
 
     /**
      * Hide a field.
@@ -132,7 +123,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} name A field name.
      * @param {boolean } [locked] To lock. Won't be able to un-hide.
      */
-    hideField: function (name, locked) {
+    hideField(name, locked) {
         this.recordHelper.setFieldStateParam(name, 'hidden', true);
 
         if (locked) {
@@ -172,14 +163,14 @@ export default Dep.extend(/** @lends Class# */{
         if (view) {
             view.setDisabled(locked);
         }
-    },
+    }
 
     /**
      * Show a field.
      *
      * @param {string} name A field name.
      */
-    showField: function (name) {
+    showField(name) {
         if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
             return;
         }
@@ -222,7 +213,7 @@ export default Dep.extend(/** @lends Class# */{
                 view.setNotDisabled();
             }
         }
-    },
+    }
 
     /**
      * Set a field as read-only.
@@ -230,8 +221,8 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} name A field name.
      * @param {boolean } [locked] To lock. Won't be able to un-set.
      */
-    setFieldReadOnly: function (name, locked) {
-        let previousvalue = this.recordHelper.getFieldStateParam(name, 'readOnly');
+    setFieldReadOnly(name, locked) {
+        let previousValue = this.recordHelper.getFieldStateParam(name, 'readOnly');
 
         this.recordHelper.setFieldStateParam(name, 'readOnly', true);
 
@@ -245,18 +236,18 @@ export default Dep.extend(/** @lends Class# */{
             view.setReadOnly(locked);
         }
 
-        if (!previousvalue) {
+        if (!previousValue) {
             this.trigger('set-field-read-only', name);
         }
-    },
+    }
 
     /**
      * Set a field as not read-only.
      *
      * @param {string} name A field name.
      */
-    setFieldNotReadOnly: function (name) {
-        let previousvalue = this.recordHelper.getFieldStateParam(name, 'readOnly');
+    setFieldNotReadOnly(name) {
+        let previousValue = this.recordHelper.getFieldStateParam(name, 'readOnly');
 
         this.recordHelper.setFieldStateParam(name, 'readOnly', false);
 
@@ -275,18 +266,18 @@ export default Dep.extend(/** @lends Class# */{
             }
         }
 
-        if (previousvalue) {
+        if (previousValue) {
             this.trigger('set-field-not-read-only', name);
         }
-    },
+    }
 
     /**
      * Set a field as required.
      *
      * @param {string} name A field name.
      */
-    setFieldRequired: function (name) {
-        let previousvalue = this.recordHelper.getFieldStateParam(name, 'required');
+    setFieldRequired(name) {
+        let previousValue = this.recordHelper.getFieldStateParam(name, 'required');
 
         this.recordHelper.setFieldStateParam(name, 'required', true);
 
@@ -296,18 +287,18 @@ export default Dep.extend(/** @lends Class# */{
             view.setRequired();
         }
 
-        if (!previousvalue) {
+        if (!previousValue) {
             this.trigger('set-field-required', name);
         }
-    },
+    }
 
     /**
      * Set a field as not required.
      *
      * @param {string} name A field name.
      */
-    setFieldNotRequired: function (name) {
-        let previousvalue = this.recordHelper.getFieldStateParam(name, 'required');
+    setFieldNotRequired(name) {
+        let previousValue = this.recordHelper.getFieldStateParam(name, 'required');
 
         this.recordHelper.setFieldStateParam(name, 'required', false);
 
@@ -317,10 +308,10 @@ export default Dep.extend(/** @lends Class# */{
             view.setNotRequired();
         }
 
-        if (previousvalue) {
+        if (previousValue) {
             this.trigger('set-field-not-required', name);
         }
-    },
+    }
 
     /**
      * Set an option list for a field.
@@ -328,7 +319,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} name A field name.
      * @param {string[]} list Options.
      */
-    setFieldOptionList: function (name, list) {
+    setFieldOptionList(name, list) {
         let had = this.recordHelper.hasFieldOptionList(name);
         let previousList = this.recordHelper.getFieldOptionList(name);
 
@@ -345,14 +336,14 @@ export default Dep.extend(/** @lends Class# */{
         if (!had || !_(previousList).isEqual(list)) {
             this.trigger('set-field-option-list', name, list);
         }
-    },
+    }
 
     /**
      * Reset field options (revert to default).
      *
      * @param {string} name A field name.
      */
-    resetFieldOptionList: function (name) {
+    resetFieldOptionList(name) {
         let had = this.recordHelper.hasFieldOptionList(name);
 
         this.recordHelper.clearFieldOptionList(name);
@@ -368,40 +359,41 @@ export default Dep.extend(/** @lends Class# */{
         if (had) {
             this.trigger('reset-field-option-list', name);
         }
-    },
+    }
 
     /**
      * Show a panel.
      *
      * @param {string} name A panel name.
+     * @param [softLockedType] Omitted.
      */
-    showPanel: function (name) {
+    showPanel(name, softLockedType) {
         this.recordHelper.setPanelStateParam(name, 'hidden', false);
 
         if (this.isRendered()) {
             this.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
         }
-    },
+    }
 
     /**
      * Hide a panel.
      *
      * @param {string} name A panel name.
      */
-    hidePanel: function (name) {
+    hidePanel(name) {
         this.recordHelper.setPanelStateParam(name, 'hidden', true);
 
         if (this.isRendered()) {
             this.$el.find('.panel[data-name="'+name+'"]').addClass('hidden');
         }
-    },
+    }
 
     /**
      * Style a panel. Style is set in the `data-style` DOM attribute.
      *
      * @param {string} name A panel name.
      */
-    stylePanel: function (name) {
+    stylePanel(name) {
         this.recordHelper.setPanelStateParam(name, 'styled', true);
 
         let process = () => {
@@ -430,14 +422,14 @@ export default Dep.extend(/** @lends Class# */{
         this.once('after:render', () => {
             process();
         });
-    },
+    }
 
     /**
      * Un-style a panel.
      *
      * @param {string} name A panel name.
      */
-    unstylePanel: function (name) {
+    unstylePanel(name) {
         this.recordHelper.setPanelStateParam(name, 'styled', false);
 
         let process = () => {
@@ -466,20 +458,20 @@ export default Dep.extend(/** @lends Class# */{
         this.once('after:render', () => {
             process();
         });
-    },
+    }
 
     /**
      * Set/unset a confirmation upon leaving the form.
      *
      * @param {boolean} value True sets a required confirmation.
      */
-    setConfirmLeaveOut: function (value) {
+    setConfirmLeaveOut(value) {
         if (!this.getRouter()) {
             return;
         }
 
         this.getRouter().confirmLeaveOut = value;
-    },
+    }
 
     /**
      * Get field views.
@@ -487,7 +479,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {boolean} [withHidden] With hidden.
      * @return {Object.<string, module:views/fields/base>}
      */
-    getFieldViews: function (withHidden) {
+    getFieldViews(withHidden) {
         let fields = {};
 
         this.fieldList.forEach(item => {
@@ -499,15 +491,15 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return fields;
-    },
+    }
 
     /**
      * @deprecated Use `getFieldViews`.
      * @return {Object<string, module:views/fields/base>}
      */
-    getFields: function () {
+    getFields() {
         return this.getFieldViews();
-    },
+    }
 
     /**
      * Get a field view.
@@ -515,7 +507,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} name A field name.
      * @return {module:views/fields/base|null}
      */
-    getFieldView: function (name) {
+    getFieldView(name) {
         /** @type {module:views/fields/base|null} */
         let view =  this.getView(name + 'Field') || null;
 
@@ -525,64 +517,64 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return view;
-    },
+    }
 
     /**
      * @deprecated Use `getFieldView`.
      * @return {module:views/fields/base|null}
      */
-    getField: function (name) {
+    getField(name) {
         return this.getFieldView(name);
-    },
+    }
 
     /**
      * Get a field list.
      *
      * @return {string[]}
      */
-    getFieldList: function () {
+    getFieldList() {
         return Object.keys(this.getFieldViews());
-    },
+    }
 
     /**
      * Get a field view list.
      *
      * @return {module:views/fields/base[]}
      */
-    getFieldViewList: function () {
+    getFieldViewList() {
         return this.getFieldList()
             .map(field => this.getFieldView(field))
             .filter(view => view !== null);
-    },
+    }
 
     /**
      * @inheritDoc
      */
-    data: function () {
+    data() {
         return {
             scope: this.scope,
             entityType: this.entityType,
             hiddenPanels: this.recordHelper.getHiddenPanels(),
             hiddenFields: this.recordHelper.getHiddenFields(),
         };
-    },
+    }
 
     /**
      * @todo Remove.
      * @private
      */
-    handleDataBeforeRender: function (data) {
+    handleDataBeforeRender(data) {
         this.getFieldList().forEach((field) => {
             let viewKey = field + 'Field';
 
             data[field] = data[viewKey];
         });
-    },
+    }
 
     /**
      * @inheritDoc
      */
-    setup: function () {
+    setup() {
         if (typeof this.model === 'undefined') {
             throw new Error('Model has not been injected into record view.');
         }
@@ -602,7 +594,7 @@ export default Dep.extend(/** @lends Class# */{
 
         this.events = this.events || {};
 
-        this.entityType = this.model.name;
+        this.entityType = this.model.entityType || this.model.name;
         this.scope = this.options.scope || this.entityType;
 
         this.fieldList = this.options.fieldList || this.fieldList || [];
@@ -617,14 +609,14 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.setupBeforeFinal();
-    },
+    }
 
     /**
      * Set up before final.
      *
      * @protected
      */
-    setupBeforeFinal: function () {
+    setupBeforeFinal() {
         this.attributes = this.model.getClonedAttributes();
 
         this.listenTo(this.model, 'change', (m, o) => {
@@ -657,7 +649,7 @@ export default Dep.extend(/** @lends Class# */{
 
         this.initDependancy();
         this.initDynamicLogic();
-    },
+    }
 
     /**
      * Set an initial attribute value.
@@ -666,9 +658,9 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} attribute An attribute name.
      * @param {*} value
      */
-    setInitialAttributeValue: function (attribute, value) {
+    setInitialAttributeValue(attribute, value) {
         this.attributes[attribute] = value;
-    },
+    }
 
     /**
      * Check whether a current attribute value differs from initial.
@@ -676,14 +668,14 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} name An attribute name.
      * @return {boolean}
      */
-    checkAttributeIsChanged: function (name) {
+    checkAttributeIsChanged(name) {
         return !_.isEqual(this.attributes[name], this.model.get(name));
-    },
+    }
 
     /**
      * Reset model changes.
      */
-    resetModelChanges: function () {
+    resetModelChanges() {
         if (this.updatedAttributes) {
             this.attributes = this.updatedAttributes;
 
@@ -699,7 +691,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.model.set(this.attributes, {skipReRender: true});
-    },
+    }
 
     /**
      * Set model attribute values.
@@ -707,7 +699,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {Object.<string,*>} setAttributes Values.
      * @param {Object.<string,*>} [options] Options.
      */
-    setModelAttributes: function (setAttributes, options) {
+    setModelAttributes(setAttributes, options) {
         for (let item in this.model.attributes) {
             if (!(item in setAttributes)) {
                 this.model.unset(item);
@@ -715,14 +707,14 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.model.set(setAttributes, options || {});
-    },
+    }
 
     /**
      * Init dynamic logic.
      *
      * @protected
      */
-    initDynamicLogic: function () {
+    initDynamicLogic() {
         this.dynamicLogicDefs = Espo.Utils.clone(this.dynamicLogicDefs || {});
         this.dynamicLogicDefs.fields = Espo.Utils.clone(this.dynamicLogicDefs.fields);
         this.dynamicLogicDefs.panels = Espo.Utils.clone(this.dynamicLogicDefs.panels);
@@ -731,28 +723,28 @@ export default Dep.extend(/** @lends Class# */{
 
         this.listenTo(this.model, 'change', () => this.processDynamicLogic());
         this.processDynamicLogic();
-    },
+    }
 
     /**
      * Process dynamic logic.
      *
      * @protected
      */
-    processDynamicLogic: function () {
+    processDynamicLogic() {
         this.dynamicLogic.process();
-    },
+    }
 
     /**
      * @deprecated
      */
-    applyDependancy: function () {
+    applyDependancy() {
         this._handleDependencyAttributes();
-    },
+    }
 
     /**
      * @deprecated
      */
-    initDependancy: function () {
+    initDependancy() {
         Object.keys(this.dependencyDefs || {}).forEach((attr) => {
             this.listenTo(this.model, 'change:' + attr, () => {
                 this._handleDependencyAttribute(attr);
@@ -760,14 +752,14 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         this._handleDependencyAttributes();
-    },
+    }
 
     /**
      * Set up a field level security.
      *
      * @protected
      */
-    setupFieldLevelSecurity: function () {
+    setupFieldLevelSecurity() {
         let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
 
         forbiddenFieldList.forEach((field) => {
@@ -779,32 +771,32 @@ export default Dep.extend(/** @lends Class# */{
         readOnlyFieldList.forEach((field) => {
             this.setFieldReadOnly(field, true);
         });
-    },
+    }
 
     /**
      * Set is changed.
      *
      * @protected
      */
-    setIsChanged: function () {
+    setIsChanged() {
         this.isChanged = true;
-    },
+    }
 
     /**
      * Set is not changed.
      *
      * @protected
      */
-    setIsNotChanged: function () {
+    setIsNotChanged() {
         this.isChanged = false;
-    },
+    }
 
     /**
      * Validate.
      *
      * @return {boolean} True if not valid.
      */
-    validate: function () {
+    validate() {
         let invalidFieldList = [];
 
         this.getFieldList().forEach(field => {
@@ -820,13 +812,13 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return !!invalidFieldList.length;
-    },
+    }
 
     /**
      * @protected
      * @param {string[]} invalidFieldList Invalid fields.
      */
-    onInvalid: function (invalidFieldList) {},
+    onInvalid(invalidFieldList) {}
 
     /**
      * Validate a specific field.
@@ -834,7 +826,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} field A field name.
      * @return {boolean} True if not valid.
      */
-    validateField: function (field) {
+    validateField(field) {
         let fieldView = this.getFieldView(field);
 
         if (!fieldView) {
@@ -902,12 +894,12 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return notValid;
-    },
+    }
 
     /**
      * Processed after save.
      */
-    afterSave: function () {
+    afterSave() {
         if (this.isNew) {
             Espo.Ui.success(this.translate('Created'));
         }
@@ -916,40 +908,40 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.setIsNotChanged();
-    },
+    }
 
     /**
      * Processed before before-save.
      */
-    beforeBeforeSave: function () {},
+    beforeBeforeSave() {}
 
     /**
      * Processed before save.
      */
-    beforeSave: function () {
+    beforeSave() {
         Espo.Ui.notify(this.translate('saving', 'messages'));
-    },
+    }
 
     /**
      * Processed after save error.
      */
-    afterSaveError: function () {},
+    afterSaveError() {}
 
     /**
      * Processed after save a not modified record.
      */
-    afterNotModified: function () {
+    afterNotModified() {
         Espo.Ui.warning(this.translate('notModified', 'messages'));
 
         this.setIsNotChanged();
-    },
+    }
 
     /**
      * Processed after save not valid.
      */
-    afterNotValid: function () {
+    afterNotValid() {
         Espo.Ui.error(this.translate('Not valid'));
-    },
+    }
 
     /**
      * Save options.
@@ -968,7 +960,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {module:views/record/base~saveOptions} [options] Options.
      * @return {Promise<never,string>}
      */
-    save: function (options) {
+    save(options) {
         options = options || {};
 
         let headers = options.headers || {};
@@ -1111,7 +1103,7 @@ export default Dep.extend(/** @lends Class# */{
                     resolve();
                 });
         });
-    },
+    }
 
     /**
      * Handle a save error.
@@ -1119,7 +1111,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {JQueryXHR} xhr XHR.
      * @param {module:views/record/base~saveOptions} [options] Options.
      */
-    handleSaveError: function (xhr, options) {
+    handleSaveError(xhr, options) {
         let handlerData = null;
 
         if (~[409, 500].indexOf(xhr.status)) {
@@ -1187,14 +1179,14 @@ export default Dep.extend(/** @lends Class# */{
 
             this[methodName](handlerData.data, options);
         }
-    },
+    }
 
     /**
      * Fetch data from the form.
      *
      * @return {Object.<string,*>}
      */
-    fetch: function () {
+    fetch() {
         let data = {};
         let fieldViews = this.getFieldViews();
 
@@ -1211,14 +1203,14 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
     /**
      * Process fetch.
      *
      * @return {Object<string,*>|null}
      */
-    processFetch: function () {
+    processFetch() {
         let data = this.fetch();
 
         this.model.set(data);
@@ -1228,12 +1220,12 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
     /**
      * Populate defaults.
      */
-    populateDefaults: function () {
+    populateDefaults() {
         this.model.populateDefaults();
 
         let defaultHash = {};
@@ -1371,27 +1363,27 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.model.set(defaultHash, {silent: true});
-    },
+    }
 
     /**
      * @protected
      * @param duplicates
      */
-    errorHandlerDuplicate: function (duplicates) {},
+    errorHandlerDuplicate(duplicates) {}
 
     /**
      * @private
      */
-    _handleDependencyAttributes: function () {
+    _handleDependencyAttributes() {
         Object.keys(this.dependencyDefs || {}).forEach((attr) => {
             this._handleDependencyAttribute(attr);
         });
-    },
+    }
 
     /**
      * @private
      */
-    _handleDependencyAttribute: function (attr) {
+    _handleDependencyAttribute(attr) {
         let data = this.dependencyDefs[attr];
         let value = this.model.get(attr);
 
@@ -1408,12 +1400,12 @@ export default Dep.extend(/** @lends Class# */{
                 this._doDependencyAction(item);
             });
         }
-    },
+    }
 
     /**
      * @private
      */
-    _doDependencyAction: function (data) {
+    _doDependencyAction(data) {
         let action = data.action;
 
         let methodName = 'dependencyAction' + Espo.Utils.upperCaseFirst(action);
@@ -1478,7 +1470,7 @@ export default Dep.extend(/** @lends Class# */{
 
                 break;
         }
-    },
+    }
 
     /**
      * Create a field view.
@@ -1491,7 +1483,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {boolean} [readOnly] Read-only.
      * @param {Object<string,*>} [options] View options.
      */
-    createField: function (name, view, params, mode, readOnly, options) {
+    createField(name, view, params, mode, readOnly, options) {
         let o = {
             model: this.model,
             mode: mode || 'edit',
@@ -1542,14 +1534,14 @@ export default Dep.extend(/** @lends Class# */{
         if (!~this.fieldList.indexOf(name)) {
             this.fieldList.push(name);
         }
-    },
+    }
 
     /**
      * Get a currently focused field view.
      *
      * @return {?module:views/fields/base}
      */
-    getFocusedFieldView: function () {
+    getFocusedFieldView() {
         let $active = $(window.document.activeElement);
 
         if (!$active.length) {
@@ -1569,12 +1561,14 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return this.getFieldView(name);
-    },
+    }
 
     /**
      * Process exit.
      *
      * @param {string} [after] An exit parameter.
      */
-    exit: function (after) {},
-});
+    exit(after) {}
+}
+
+export default BaseRecordView;

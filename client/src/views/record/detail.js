@@ -28,24 +28,20 @@
 
 /** @module views/record/detail */
 
-import Dep from "views/record/base";
-import ViewRecordHelper from "view-record-helper";
-import ActionItemSetup from "helpers/action-item-setup";
+import BaseRecordView from 'views/record/base';
+import ViewRecordHelper from 'view-record-helper';
+import ActionItemSetup from 'helpers/action-item-setup';
 
 /**
  * A detail record view.
- *
- * @class
- * @name Class
- * @extends module:views/record/base
  */
-export default Dep.extend(/** @lends Class# */{
+class DetailRecordView extends BaseRecordView {
 
     /** @inheritDoc */
-    template: 'record/detail',
+    template = 'record/detail'
 
     /** @inheritDoc */
-    type: 'detail',
+    type = 'detail'
 
     /**
      * Not used.
@@ -53,7 +49,7 @@ export default Dep.extend(/** @lends Class# */{
      * @deprecated
      * @protected
      */
-    name: 'detail',
+    name = 'detail'
 
     /**
      * A layout name. Can be overridden by an option parameter.
@@ -61,7 +57,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string}
      */
-    layoutName: 'detail',
+    layoutName = 'detail'
 
     /**
      * Panel definitions.
@@ -110,7 +106,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {module:views/record/detail~panelDefs[]|null}
      */
-    detailLayout: null,
+    detailLayout = null
 
     /**
      * A fields mode.
@@ -118,7 +114,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {'detail'|'edit'|'list'}
      */
-    fieldsMode: 'detail',
+    fieldsMode = 'detail'
 
     /**
      * A current mode. Only for reading.
@@ -126,12 +122,12 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {'detail'|'edit'}
      */
-    mode: 'detail',
+    mode = 'detail'
 
     /**
      * @private
      */
-    gridLayout: null,
+    gridLayout = null
 
     /**
      * Disable buttons. Can be overridden by an option parameter.
@@ -139,14 +135,14 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    buttonsDisabled: false,
+    buttonsDisabled = false
 
     /**
      * Is record new. Only for reading.
      *
      * @protected
      */
-    isNew: false,
+    isNew = false
 
     /**
      * A button. Handled by an `action{Name}` method.
@@ -186,13 +182,13 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {module:views/record/detail~button[]}
      */
-    buttonList: [
+    buttonList = [
         {
             name: 'edit',
             label: 'Edit',
             title: 'Ctrl+Space',
         },
-    ],
+    ]
 
     /**
      * A dropdown item list.
@@ -200,12 +196,12 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {module:views/record/detail~dropdownItem[]}
      */
-    dropdownItemList: [
+    dropdownItemList = [
         {
             name: 'delete',
             label: 'Remove',
         },
-    ],
+    ]
 
     /**
      * A button list for edit mode.
@@ -213,7 +209,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {module:views/record/detail~button[]}
      */
-    buttonEditList: [
+    buttonEditList = [
         {
             name: 'save',
             label: 'Save',
@@ -227,7 +223,7 @@ export default Dep.extend(/** @lends Class# */{
             edit: true,
             title: 'Esc',
         },
-    ],
+    ]
 
     /**
      * A dropdown item list for edit mode.
@@ -235,22 +231,22 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {module:views/record/detail~dropdownItem[]}
      */
-    dropdownEditItemList: [],
+    dropdownEditItemList = []
 
     /**
      * All action items disabled;
      *
      * @protected
      */
-    allActionItemsDisabled: false,
+    allActionItemsDisabled = false
 
     /**
      * A DOM element ID. Only for reading.
      *
      * @private
-     * @type {string}
+     * @type {string|null}
      */
-    id: null,
+    id = null
 
     /**
      * A return-URL. Can be overridden by an option parameter.
@@ -258,7 +254,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string|null}
      */
-    returnUrl: null,
+    returnUrl = null
 
     /**
      * A return dispatch params. Can be overridden by an option parameter.
@@ -266,66 +262,66 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {Object|null}
      */
-    returnDispatchParams: null,
+    returnDispatchParams = null
 
     /**
      * A middle view name.
      *
      * @protected
      */
-    middleView: 'views/record/detail-middle',
+    middleView = 'views/record/detail-middle'
 
     /**
      * A side view name.
      *
      * @protected
      */
-    sideView: 'views/record/detail-side',
+    sideView = 'views/record/detail-side'
 
     /**
      * A bottom view name.
      *
      * @protected
      */
-    bottomView: 'views/record/detail-bottom',
+    bottomView = 'views/record/detail-bottom'
 
     /**
      * Disable a side view. Can be overridden by an option parameter.
      *
      * @protected
      */
-    sideDisabled: false,
+    sideDisabled = false
 
     /**
      * Disable a bottom view. Can be overridden by an option parameter.
      *
      * @protected
      */
-    bottomDisabled: false,
+    bottomDisabled = false
 
     /**
      * @protected
      */
-    gridLayoutType: 'record',
+    gridLayoutType = 'record'
 
     /**
      * Disable edit mode. Can be overridden by an option parameter.
      *
      * @protected
      */
-    editModeDisabled: false,
+    editModeDisabled = false
 
     /**
      * Disable navigate (prev, next) buttons. Can be overridden by an option parameter.
      *
      * @protected
      */
-    navigateButtonsDisabled: false,
+    navigateButtonsDisabled = false
 
     /**
      * Read-only. Can be overridden by an option parameter.
      */
-    readOnly: false,
+    readOnly = false
 
     /**
      * Middle view expanded to full width (no side view).
@@ -333,56 +329,56 @@ export default Dep.extend(/** @lends Class# */{
      *
      * @protected
      */
-    isWide: false,
+    isWide = false
 
     /**
      * Enable a duplicate action.
      *
      * @protected
      */
-    duplicateAction: true,
+    duplicateAction = true
 
     /**
      * Enable a self-assign action.
      *
      * @protected
      */
-    selfAssignAction: false,
+    selfAssignAction = false
 
     /**
      * Enable a print-pdf action.
      *
      * @protected
      */
-    printPdfAction: true,
+    printPdfAction = true
 
     /**
      * Enable a convert-currency action.
      *
      * @protected
      */
-    convertCurrencyAction: true,
+    convertCurrencyAction = true
 
     /**
      * Enable a save-and-continue-editing action.
      *
      * @protected
      */
-    saveAndContinueEditingAction: true,
+    saveAndContinueEditingAction = true
 
     /**
      * Disable the inline-edit. Can be overridden by an option parameter.
      *
      * @protected
      */
-    inlineEditDisabled: false,
+    inlineEditDisabled = false
 
     /**
      * Disable a portal layout usage. Can be overridden by an option parameter.
      *
      * @protected
      */
-    portalLayoutDisabled: false,
+    portalLayoutDisabled = false
 
     /**
      * A panel soft-locked type.
@@ -395,12 +391,12 @@ export default Dep.extend(/** @lends Class# */{
      * @private
      * @type {module:views/record/detail~panelSoftLockedType[]}
      */
-    panelSoftLockedTypeList: [
+    panelSoftLockedTypeList = [
         'default',
         'acl',
         'delimiter',
         'dynamicLogic',
-    ],
+    ]
 
     /**
      * Dynamic logic. Can be overridden by an option parameter.
@@ -408,54 +404,54 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {Object}
      */
-    dynamicLogicDefs: {},
+    dynamicLogicDefs = {}
 
     /**
      * Disable confirm leave-out processing.
      *
      * @protected
      */
-    confirmLeaveDisabled: false,
+    confirmLeaveDisabled = false
 
     /**
      * @protected
      */
-    setupHandlerType: 'record/detail',
+    setupHandlerType = 'record/detail'
 
     /**
      * @protected
      */
-    currentTab: 0,
+    currentTab = 0
 
     /**
      * @protected
      * @type {Object.<string,*>|null}
      */
-    middlePanelDefs: null,
+    middlePanelDefs = null
 
     /**
      * @protected
      * @type {Object.<string,*>[]|null}
      */
-    middlePanelDefsList: null,
+    middlePanelDefsList = null
 
     /**
      * @protected
      * @type {JQuery|null}
      */
-    $middle: null,
+    $middle = null
 
     /**
      * @protected
      * @type {JQuery|null}
      */
-    $bottom: null,
+    $bottom = null
 
     /**
      * @private
      * @type {JQuery|null}
      */
-    $detailButtonContainer: null,
+    $detailButtonContainer = null
 
     /**
      * A Ctrl+Enter shortcut action.
@@ -463,64 +459,73 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {?string}
      */
-    shortcutKeyCtrlEnterAction: 'save',
+    shortcutKeyCtrlEnterAction = 'save'
 
     /**
      * A shortcut-key => action map.
      *
      * @protected
-     * @type {?Object.<string,string|function (JQueryKeyEventObject): void>}
+     * @type {?Object.<string, string|function (JQueryKeyEventObject): void>}
      */
-    shortcutKeys: {
+    shortcutKeys = {
+        /** @this DetailRecordView */
         'Control+Enter': function (e) {
             this.handleShortcutKeyCtrlEnter(e);
         },
+        /** @this DetailRecordView */
         'Control+Alt+Enter': function (e) {
             this.handleShortcutKeyCtrlAltEnter(e);
         },
+        /** @this DetailRecordView */
         'Control+KeyS': function (e) {
             this.handleShortcutKeyCtrlS(e);
         },
+        /** @this DetailRecordView */
         'Control+Space': function (e) {
             this.handleShortcutKeyCtrlSpace(e);
         },
+        /** @this DetailRecordView */
         'Escape': function (e) {
             this.handleShortcutKeyEscape(e);
         },
+        /** @this DetailRecordView */
         'Control+Backslash': function (e) {
             this.handleShortcutKeyControlBackslash(e);
         },
+        /** @this DetailRecordView */
         'Control+ArrowLeft': function (e) {
             this.handleShortcutKeyControlArrowLeft(e);
         },
+        /** @this DetailRecordView */
         'Control+ArrowRight': function (e) {
             this.handleShortcutKeyControlArrowRight(e);
         },
-    },
+    }
 
     /**
      * @inheritDoc
      */
-    events: {
+    events = {
+        /** @this DetailRecordView */
         'click .button-container .action': function (e) {
             Espo.Utils.handleAction(this, e);
         },
-        /** @this module:views/record/detail */
+        /** @this DetailRecordView */
         'click [data-action="showMoreDetailPanels"]': function () {
             this.showMoreDetailPanels();
         },
-        /** @this module:views/record/detail */
+        /** @this DetailRecordView */
         'click .middle-tabs > button': function (e) {
             let tab = parseInt($(e.currentTarget).attr('data-tab'));
 
             this.selectTab(tab);
         },
-    },
+    }
 
     /**
      * An `edit` action.
      */
-    actionEdit: function () {
+    actionEdit() {
         if (!this.editModeDisabled) {
             this.setEditMode();
 
@@ -541,18 +546,18 @@ export default Dep.extend(/** @lends Class# */{
 
         this.getRouter().navigate('#' + this.scope + '/edit/' + this.model.id, {trigger: false});
         this.getRouter().dispatch(this.scope, 'edit', options);
-    },
+    }
 
-    actionDelete: function () {
+    actionDelete() {
         this.delete();
-    },
+    }
 
     /**
      * A `save` action.
      *
      * @param {{options?: module:views/record/base~saveOptions}} [data] Data.
      */
-    actionSave: function (data) {
+    actionSave(data) {
         data = data || {};
 
         let modeBeforeSave = this.mode;
@@ -570,37 +575,37 @@ export default Dep.extend(/** @lends Class# */{
             this.focusOnFirstDiv();
             $(window).scrollTop(0);
         }
-    },
+    }
 
-    actionCancelEdit: function () {
+    actionCancelEdit() {
         this.cancelEdit();
 
         this.focusOnFirstDiv();
         $(window).scrollTop(0);
-    },
+    }
 
-    focusOnFirstDiv: function () {
+    focusOnFirstDiv() {
         let element = this.$el.find('> div').get(0);
 
         if (element) {
             element.focus({preventScroll: true});
         }
-    },
+    }
 
     /**
      * A `save-and-continue-editing` action.
      */
-    actionSaveAndContinueEditing: function (data) {
+    actionSaveAndContinueEditing(data) {
         data = data || {};
 
         this.save(data.options)
             .catch(() => {});
-    },
+    }
 
     /**
      * A `self-assign` action.
      */
-    actionSelfAssign: function () {
+    actionSelfAssign() {
         let attributes = {
             assignedUserId: this.getUser().id,
             assignedUserName: this.getUser().get('name'),
@@ -621,12 +626,12 @@ export default Dep.extend(/** @lends Class# */{
             .then(() => {
                 Espo.Ui.success(this.translate('Self-Assigned'));
             });
-    },
+    }
 
     /**
      * A `convert-currency` action.
      */
-    actionConvertCurrency: function () {
+    actionConvertCurrency() {
         this.createView('modalConvertCurrency', 'views/modals/convert-currency', {
             entityType: this.entityType,
             model: this.model,
@@ -657,7 +662,7 @@ export default Dep.extend(/** @lends Class# */{
                     });
             });
         });
-    },
+    }
 
     /**
      * Compose attribute values for a self-assignment.
@@ -665,16 +670,16 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {Object.<string,*>|null}
      */
-    getSelfAssignAttributes: function () {
+    getSelfAssignAttributes() {
         return null;
-    },
+    }
 
     /**
      * Set up action items.
      *
      * @protected
      */
-    setupActionItems: function () {
+    setupActionItems() {
         if (this.model.isNew()) {
             this.isNew = true;
 
@@ -803,28 +808,28 @@ export default Dep.extend(/** @lends Class# */{
                 });
             }
         }
-    },
+    }
 
     /**
      * Disable action items.
      */
-    disableActionItems: function () {
+    disableActionItems() {
         this.disableButtons();
-    },
+    }
 
     /**
      * Enable action items.
      */
-    enableActionItems: function () {
+    enableActionItems() {
         this.enableButtons();
-    },
+    }
 
     /**
      * Hide a button or dropdown action item.
      *
      * @param {string} name A name.
      */
-    hideActionItem: function (name) {
+    hideActionItem(name) {
         for (let item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = true;
@@ -877,14 +882,14 @@ export default Dep.extend(/** @lends Class# */{
 
             this.adjustButtons();
         }
-    },
+    }
 
     /**
      * Show a button or dropdown action item.
      *
      * @param {string} name A name.
      */
-    showActionItem: function (name) {
+    showActionItem(name) {
         for (let item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = false;
@@ -937,14 +942,14 @@ export default Dep.extend(/** @lends Class# */{
 
             this.adjustButtons();
         }
-    },
+    }
 
     /**
      * Disable a button or dropdown action item.
      *
      * @param {string} name A name.
      */
-    disableActionItem: function (name) {
+    disableActionItem(name) {
         for (let item of this.buttonList) {
             if (item.name === name) {
                 item.disabled = true;
@@ -989,14 +994,14 @@ export default Dep.extend(/** @lends Class# */{
                 .addClass('disabled')
                 .attr('disabled', 'disabled');
         }
-    },
+    }
 
     /**
      * Enable a button or dropdown action item.
      *
      * @param {string} name A name.
      */
-    enableActionItem: function (name) {
+    enableActionItem(name) {
         for (let item of this.buttonList) {
             if (item.name === name) {
                 item.disabled = false;
@@ -1041,14 +1046,14 @@ export default Dep.extend(/** @lends Class# */{
                 .removeClass('disabled')
                 .removeAttr('disabled');
         }
-    },
+    }
 
     /**
      * Whether an action item is visible and not disabled.
      *
      * @param {string} name An action item name.
      */
-    hasAvailableActionItem: function (name) {
+    hasAvailableActionItem(name) {
         if (this.allActionItemsDisabled) {
             return false;
         }
@@ -1074,7 +1079,7 @@ export default Dep.extend(/** @lends Class# */{
 
         return this.dropdownItemList
             .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
-    },
+    }
 
     /**
      * Show a panel.
@@ -1083,7 +1088,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {module:views/record/detail~panelSoftLockedType} [softLockedType='default']
      *   A soft-locked type.
      */
-    showPanel: function (name, softLockedType) {
+    showPanel(name, softLockedType) {
         if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) {
             return;
         }
@@ -1114,13 +1119,13 @@ export default Dep.extend(/** @lends Class# */{
             }
         }
 
-        let middleView = this.getView('middle');
+        let middleView = this.getMiddleView();
 
         if (middleView) {
             middleView.showPanelInternal(name);
         }
 
-        let bottomView = this.getView('bottom');
+        let bottomView = this.getBottomView();
 
         if (bottomView) {
             if ('showPanel' in bottomView) {
@@ -1129,7 +1134,7 @@ export default Dep.extend(/** @lends Class# */{
         }
         else if (this.bottomView) {
             this.once('ready', () => {
-                let view = this.getView('bottom');
+                let view = this.getBottomView();
 
                 if (view) {
                     if ('processShowPanel' in view) {
@@ -1145,7 +1150,7 @@ export default Dep.extend(/** @lends Class# */{
             });
         }
 
-        let sideView = this.getView('side');
+        let sideView = this.getSideView();
 
         if (sideView) {
             if ('showPanel' in sideView) {
@@ -1154,7 +1159,7 @@ export default Dep.extend(/** @lends Class# */{
         }
         else if (this.sideView) {
             this.once('ready', () => {
-                let view = this.getView('side');
+                let view = this.getSideView();
 
                 if (view) {
                     if ('processShowPanel' in view) {
@@ -1179,7 +1184,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.recordHelper.trigger('panel-show');
-    },
+    }
 
     /**
      * Hide a panel.
@@ -1189,7 +1194,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {module:views/record/detail~panelSoftLockedType} [softLockedType='default']
      *   A soft-locked type.
      */
-    hidePanel: function (name, locked, softLockedType) {
+    hidePanel(name, locked, softLockedType) {
         softLockedType = softLockedType || 'default';
 
         if (locked) {
@@ -1208,13 +1213,13 @@ export default Dep.extend(/** @lends Class# */{
             }
         }
 
-        let middleView = this.getView('middle');
+        let middleView = this.getMiddleView();
 
         if (middleView) {
             middleView.hidePanelInternal(name);
         }
 
-        let bottomView = this.getView('bottom');
+        let bottomView = this.getBottomView();
 
         if (bottomView) {
             if ('hidePanel' in bottomView) {
@@ -1223,7 +1228,7 @@ export default Dep.extend(/** @lends Class# */{
         }
         else if (this.bottomView) {
             this.once('ready', () => {
-                let view = this.getView('bottom');
+                let view = this.getBottomView();
 
                 if (view) {
                     if ('processHidePanel' in view) {
@@ -1239,7 +1244,7 @@ export default Dep.extend(/** @lends Class# */{
             });
         }
 
-        let sideView = this.getView('side');
+        let sideView = this.getSideView();
 
         if (sideView) {
             if ('hidePanel' in sideView) {
@@ -1248,7 +1253,7 @@ export default Dep.extend(/** @lends Class# */{
         }
         else if (this.sideView) {
             this.once('ready', () => {
-                let view = this.getView('side');
+                let view = this.getSideView();
 
                 if (view) {
                     if ('processHidePanel' in view) {
@@ -1271,9 +1276,9 @@ export default Dep.extend(/** @lends Class# */{
 
             this.adjustMiddlePanels();
         }
-    },
+    }
 
-    afterRender: function () {
+    afterRender() {
         this.$middle = this.$el.find('.middle');
 
         if (this.bottomView) {
@@ -1287,12 +1292,12 @@ export default Dep.extend(/** @lends Class# */{
 
         this.initStickableButtonsContainer();
         this.initFieldsControlBehaviour();
-    },
+    }
 
     /**
      * @private
      */
-    initFieldsControlBehaviour: function () {
+    initFieldsControlBehaviour() {
         let fields = this.getFieldViews();
 
         let fieldInEditMode = null;
@@ -1330,12 +1335,12 @@ export default Dep.extend(/** @lends Class# */{
                 }
             });
         }
-    },
+    }
 
     /**
      * @private
      */
-    initStickableButtonsContainer: function () {
+    initStickableButtonsContainer() {
         let $containers = this.$el.find('.detail-button-container');
         let $container = this.$el.find('.detail-button-container.record-buttons');
 
@@ -1375,7 +1380,7 @@ export default Dep.extend(/** @lends Class# */{
             .hide()
             .insertAfter($container);
 
-        let $middle = this.getView('middle').$el;
+        let $middle = this.getMiddleView().$el;
         let $window = $(window);
         let $navbarRight = $('#navbar .navbar-right');
 
@@ -1436,13 +1441,13 @@ export default Dep.extend(/** @lends Class# */{
 
             $containers.show();
         });
-    },
+    }
 
-    fetch: function () {
-        let data = Dep.prototype.fetch.call(this);
+    fetch() {
+        let data = super.fetch();
 
         if (this.hasView('side')) {
-            let view = this.getView('side');
+            let view = this.getSideView();
 
             if ('fetch' in view) {
                 data = _.extend(data, view.fetch());
@@ -1450,7 +1455,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         if (this.hasView('bottom')) {
-            let view = this.getView('bottom');
+            let view = this.getBottomView();
 
             if ('fetch' in view) {
                 data = _.extend(data, view.fetch());
@@ -1458,9 +1463,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
-    setEditMode: function () {
+    setEditMode() {
         this.trigger('before:set-edit-mode');
 
         this.inlineEditModeIsOn = false;
@@ -1502,9 +1507,9 @@ export default Dep.extend(/** @lends Class# */{
 
             Promise.all(promiseList).then(() => resolve());
         });
-    },
+    }
 
-    setDetailMode: function () {
+    setDetailMode() {
         this.trigger('before:set-detail-mode');
 
         this.$el.find('.edit-buttons').addClass('hidden');
@@ -1542,16 +1547,16 @@ export default Dep.extend(/** @lends Class# */{
 
             Promise.all(promiseList).then(() => resolve());
         });
-    },
+    }
 
-    cancelEdit: function () {
+    cancelEdit() {
         this.resetModelChanges();
 
         this.setDetailMode();
         this.setIsNotChanged();
-    },
+    }
 
-    resetModelChanges: function () {
+    resetModelChanges() {
         let skipReRender = true;
 
         if (this.updatedAttributes) {
@@ -1570,9 +1575,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.model.set(this.attributes, {skipReRender: skipReRender});
-    },
+    }
 
-    delete: function () {
+    delete() {
         this.confirm({
             message: this.translate('removeRecordConfirmation', 'messages', this.scope),
             confirmText: this.translate('Remove'),
@@ -1601,7 +1606,7 @@ export default Dep.extend(/** @lends Class# */{
                     this.exit('delete');
                 });
         });
-    },
+    }
 
     /**
      * Get field views.
@@ -1609,29 +1614,29 @@ export default Dep.extend(/** @lends Class# */{
      * @param {boolean} [withHidden] With hidden.
      * @return {Object.<string, module:views/fields/base>}
      */
-    getFieldViews: function (withHidden) {
+    getFieldViews(withHidden) {
         let fields = {};
 
         if (this.hasView('middle')) {
-            if ('getFieldViews' in this.getView('middle')) {
-                _.extend(fields, Espo.Utils.clone(this.getView('middle').getFieldViews(withHidden)));
+            if ('getFieldViews' in this.getMiddleView()) {
+                _.extend(fields, Espo.Utils.clone(this.getMiddleView().getFieldViews(withHidden)));
             }
         }
 
         if (this.hasView('side')) {
-            if ('getFieldViews' in this.getView('side')) {
-                _.extend(fields, this.getView('side').getFieldViews(withHidden));
+            if ('getFieldViews' in this.getSideView()) {
+                _.extend(fields, this.getSideView().getFieldViews(withHidden));
             }
         }
 
         if (this.hasView('bottom')) {
-            if ('getFieldViews' in this.getView('bottom')) {
-                _.extend(fields, this.getView('bottom').getFieldViews(withHidden));
+            if ('getFieldViews' in this.getBottomView()) {
+                _.extend(fields, this.getBottomView().getFieldViews(withHidden));
             }
         }
 
         return fields;
-    },
+    }
 
     /**
      * Get a field view.
@@ -1639,28 +1644,28 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} name A field name.
      * @return {module:views/fields/base|null}
      */
-    getFieldView: function (name) {
+    getFieldView(name) {
         let view;
 
         if (this.hasView('middle')) {
-            view = (this.getView('middle').getFieldViews(true) || {})[name];
+            view = (this.getMiddleView().getFieldViews(true) || {})[name];
         }
 
         if (!view && this.hasView('side')) {
-            view = (this.getView('side').getFieldViews(true) || {})[name];
+            view = (this.getSideView().getFieldViews(true) || {})[name];
         }
 
         if (!view && this.hasView('bottom')) {
-            view = (this.getView('bottom').getFieldViews(true) || {})[name];
+            view = (this.getBottomView().getFieldViews(true) || {})[name];
         }
 
         return view || null;
-    },
+    }
 
     // @todo Remove.
-    handleDataBeforeRender: function (data) {},
+    handleDataBeforeRender(data) {}
 
-    data: function () {
+    data() {
         let navigateButtonsEnabled = !this.navigateButtonsDisabled && !!this.model.collection;
 
         let previousButtonEnabled = false;
@@ -1713,9 +1718,9 @@ export default Dep.extend(/** @lends Class# */{
             hasMiddleTabs: hasMiddleTabs,
             middleTabDataList: middleTabDataList,
         };
-    },
+    }
 
-    init: function () {
+    init() {
         this.entityType = this.model.name;
         this.scope = this.options.scope || this.entityType;
 
@@ -1743,9 +1748,9 @@ export default Dep.extend(/** @lends Class# */{
         if (this.shortcutKeys) {
             this.shortcutKeys = Espo.Utils.cloneDeep(this.shortcutKeys);
         }
-    },
+    }
 
-    isDropdownItemListEmpty: function () {
+    isDropdownItemListEmpty() {
         if (this.dropdownItemList.length === 0) {
             return true;
         }
@@ -1759,9 +1764,9 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return isEmpty;
-    },
+    }
 
-    isDropdownEditItemListEmpty: function () {
+    isDropdownEditItemListEmpty() {
         if (this.dropdownEditItemList.length === 0) {
             return true;
         }
@@ -1775,9 +1780,9 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return isEmpty;
-    },
+    }
 
-    setup: function () {
+    setup() {
         if (typeof this.model === 'undefined') {
             throw new Error('Model has not been injected into record view.');
         }
@@ -1924,9 +1929,9 @@ export default Dep.extend(/** @lends Class# */{
 
         this.forcePatchAttributeDependencyMap = this.getMetadata()
             .get(['clientDefs', this.scope, 'forcePatchAttributeDependencyMap']) || {};
-    },
+    }
 
-    setupBeforeFinal: function () {
+    setupBeforeFinal() {
         if (!this.accessControlDisabled) {
             this.manageAccess();
         }
@@ -1978,22 +1983,22 @@ export default Dep.extend(/** @lends Class# */{
         this.initDynamicLogic();
         this.setupFieldLevelSecurity();
         this.initDynamicHandler();
-    },
+    }
 
     /**
      * @private
      */
-    _initInlineEditSave: function () {
+    _initInlineEditSave() {
         this.listenTo(this.recordHelper, 'inline-edit-save', (field, o) => {
             this.inlineEditSave(field, o);
         });
-    },
+    }
 
     /**
      * @param {string} field
      * @param {module:views/record/base~saveOptions} [options]
      */
-    inlineEditSave: function (field, options) {
+    inlineEditSave(field, options) {
         let view = this.getFieldView(field);
 
         if (!view) {
@@ -2041,12 +2046,12 @@ export default Dep.extend(/** @lends Class# */{
                     view.inlineEdit();
                 }
             });
-    },
+    }
 
     /**
      * @private
      */
-    initInlineEditDynamicWithLogicInteroperability: function () {
+    initInlineEditDynamicWithLogicInteroperability() {
         let blockEdit = false;
 
         let process = (type, field) => {
@@ -2088,12 +2093,12 @@ export default Dep.extend(/** @lends Class# */{
         this.on('set-field-required', (field) => process('required', field));
         this.on('set-field-option-list', (field) => process('options', field));
         this.on('reset-field-option-list', (field) => process('options', field));
-    },
+    }
 
     /**
      * @private
      */
-    initDynamicHandler: function () {
+    initDynamicHandler() {
         let dynamicHandlerClassName = this.dynamicHandlerClassName ||
             this.getMetadata().get(['clientDefs', this.scope, 'dynamicHandler']);
 
@@ -2159,9 +2164,9 @@ export default Dep.extend(/** @lends Class# */{
                 })
             );
         }
-    },
+    }
 
-    setupFinal: function () {
+    setupFinal() {
         this.build();
 
         if (this.shortcutKeys && this.options.shortcutKeysEnabled) {
@@ -2192,9 +2197,9 @@ export default Dep.extend(/** @lends Class# */{
         if (!this.options.focusForCreate) {
             this.once('after:render', () => this.focusOnFirstDiv());
         }
-    },
+    }
 
-    setIsChanged: function () {
+    setIsChanged() {
         this.isChanged = true;
 
         if (this.confirmLeaveDisabled) {
@@ -2202,9 +2207,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.setConfirmLeaveOut(true);
-    },
+    }
 
-    setIsNotChanged: function () {
+    setIsNotChanged() {
         this.isChanged = false;
 
         if (this.confirmLeaveDisabled) {
@@ -2212,9 +2217,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.setConfirmLeaveOut(false);
-    },
+    }
 
-    switchToModelByIndex: function (indexOfRecord) {
+    switchToModelByIndex(indexOfRecord) {
         let collection = this.model.collection || this.collection;
 
         if (!collection) {
@@ -2246,9 +2251,9 @@ export default Dep.extend(/** @lends Class# */{
             indexOfRecord: indexOfRecord,
             rootUrl: this.options.rootUrl,
         });
-    },
+    }
 
-    actionPrevious: function () {
+    actionPrevious() {
         this.model.abortLastFetch();
 
         let collection;
@@ -2277,9 +2282,9 @@ export default Dep.extend(/** @lends Class# */{
         let indexOfRecord = this.indexOfRecord - 1;
 
         this.switchToModelByIndex(indexOfRecord);
-    },
+    }
 
-    actionNext: function () {
+    actionNext() {
         this.model.abortLastFetch();
 
         let collection;
@@ -2325,9 +2330,9 @@ export default Dep.extend(/** @lends Class# */{
             .then(() => {
                 this.switchToModelByIndex(indexOfRecord);
             });
-    },
+    }
 
-    actionViewPersonalData: function () {
+    actionViewPersonalData() {
         this.createView('viewPersonalData', 'views/personal-data/modals/personal-data', {
             model: this.model
         }, view => {
@@ -2338,9 +2343,9 @@ export default Dep.extend(/** @lends Class# */{
                 this.model.fetch();
             });
         });
-    },
+    }
 
-    actionViewFollowers: function (data) {
+    actionViewFollowers(data) {
         let viewName = this.getMetadata().get(
                 ['clientDefs', this.model.name, 'relationshipPanels', 'followers', 'viewModalView']
             ) ||
@@ -2399,9 +2404,9 @@ export default Dep.extend(/** @lends Class# */{
                 this.model.fetch();
             });
         });
-    },
+    }
 
-    actionPrintPdf: function () {
+    actionPrintPdf() {
         this.createView('pdfTemplate', 'views/modals/select-template', {
             entityType: this.model.name,
         }, (view) => {
@@ -2417,9 +2422,9 @@ export default Dep.extend(/** @lends Class# */{
                 );
             });
         });
-    },
+    }
 
-    afterSave: function () {
+    afterSave() {
         if (this.isNew) {
             this.notify('Created', 'success');
         }
@@ -2434,38 +2439,38 @@ export default Dep.extend(/** @lends Class# */{
         setTimeout(() => {
             this.unblockUpdateWebSocket();
         }, this.blockUpdateWebSocketPeriod || 500);
-    },
+    }
 
-    beforeSave: function () {
+    beforeSave() {
         Espo.Ui.notify(this.translate('saving', 'messages'));
 
         this.blockUpdateWebSocket();
-    },
+    }
 
-    beforeBeforeSave: function () {
+    beforeBeforeSave() {
         this.disableActionItems();
-    },
+    }
 
-    afterSaveError: function () {
+    afterSaveError() {
         this.enableActionItems();
-    },
+    }
 
-    afterNotModified: function () {
+    afterNotModified() {
         let msg = this.translate('notModified', 'messages');
 
         Espo.Ui.warning(msg, 'warning');
 
         this.enableActionItems();
         this.setIsNotChanged();
-    },
+    }
 
-    afterNotValid: function () {
+    afterNotValid() {
         this.notify('Not valid', 'error');
 
         this.enableActionItems();
-    },
+    }
 
-    errorHandlerDuplicate: function (duplicates) {
+    errorHandlerDuplicate(duplicates) {
         this.notify(false);
 
         this.createView('duplicate', 'views/modals/duplicate', {
@@ -2485,9 +2490,9 @@ export default Dep.extend(/** @lends Class# */{
                 });
             });
         });
-    },
+    }
 
-    errorHandlerModified: function (data, options) {
+    errorHandlerModified(data, options) {
         Espo.Ui.notify(false);
 
         let versionNumber = data.versionNumber;
@@ -2543,29 +2548,49 @@ export default Dep.extend(/** @lends Class# */{
                 }
             });
         });
-    },
+    }
 
     /**
-     * Get the middle-view.
+     * Get a middle view.
      *
      * @return {module:views/record/detail-middle}
      */
-    getMiddleView: function () {
+    getMiddleView() {
         return this.getView('middle');
-    },
+    }
 
-    setReadOnly: function () {
+    /**
+     * Get a side view.
+     *
+     * @protected
+     * @return {module:views/record/detail-side}
+     */
+    getSideView() {
+        return this.getView('side');
+    }
+
+    /**
+     * Get a bottom view.
+     *
+     * @protected
+     * @return {module:views/record/detail-bottom}
+     */
+    getBottomView() {
+        return this.getView('bottom');
+    }
+
+    setReadOnly() {
         if (!this.readOnlyLocked) {
             this.readOnly = true;
         }
 
-        let bottomView = this.getView('bottom');
+        let bottomView = this.getBottomView();
 
         if (bottomView && 'setReadOnly' in bottomView) {
             bottomView.setReadOnly();
         }
 
-        let sideView = this.getView('side');
+        let sideView = this.getSideView();
 
         if (sideView && 'setReadOnly' in sideView) {
             sideView.setReadOnly();
@@ -2574,20 +2599,20 @@ export default Dep.extend(/** @lends Class# */{
         this.getFieldList().forEach((field) => {
             this.setFieldReadOnly(field);
         });
-    },
+    }
 
-    setNotReadOnly: function (onlyNotSetAsReadOnly) {
+    setNotReadOnly(onlyNotSetAsReadOnly) {
         if (!this.readOnlyLocked) {
             this.readOnly = false;
         }
 
-        let bottomView = this.getView('bottom');
+        let bottomView = this.getBottomView();
 
         if (bottomView && 'setNotReadOnly' in bottomView) {
             bottomView.setNotReadOnly(onlyNotSetAsReadOnly);
         }
 
-        let sideView = this.getView('side');
+        let sideView = this.getSideView();
 
         if (sideView && 'setNotReadOnly' in sideView) {
             sideView.setNotReadOnly(onlyNotSetAsReadOnly);
@@ -2602,9 +2627,9 @@ export default Dep.extend(/** @lends Class# */{
 
             this.setFieldNotReadOnly(field);
         });
-    },
+    }
 
-    manageAccessEdit: function (second) {
+    manageAccessEdit(second) {
         if (this.isNew) {
             return;
         }
@@ -2651,9 +2676,9 @@ export default Dep.extend(/** @lends Class# */{
                 this.manageAccessEdit(true);
             });
         }
-    },
+    }
 
-    manageAccessDelete: function (second) {
+    manageAccessDelete(second) {
         if (this.isNew) {
             return;
         }
@@ -2671,9 +2696,9 @@ export default Dep.extend(/** @lends Class# */{
                 this.manageAccessDelete(true);
             });
         }
-    },
+    }
 
-    manageAccessStream: function (second) {
+    manageAccessStream(second) {
         if (this.isNew) {
             return;
         }
@@ -2701,15 +2726,15 @@ export default Dep.extend(/** @lends Class# */{
                 this.manageAccessStream(true);
             });
         }
-    },
+    }
 
-    manageAccess: function () {
+    manageAccess() {
         this.manageAccessEdit();
         this.manageAccessDelete();
         this.manageAccessStream();
-    },
+    }
 
-    addButton: function (o, toBeginning) {
+    addButton(o, toBeginning) {
         let method = toBeginning ? 'unshift' : 'push';
 
         let name = o.name;
@@ -2725,9 +2750,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.buttonList[method](o);
-    },
+    }
 
-    addDropdownItem: function (o, toBeginning) {
+    addDropdownItem(o, toBeginning) {
         let method = toBeginning ? 'unshift' : 'push';
 
         if (!o) {
@@ -2749,9 +2774,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.dropdownItemList[method](o);
-    },
+    }
 
-    addButtonEdit: function (o, toBeginning) {
+    addButtonEdit(o, toBeginning) {
         let method = toBeginning ? 'unshift' : 'push';
 
         let name = o.name;
@@ -2767,12 +2792,12 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.buttonEditList[method](o);
-    },
+    }
 
     /**
      * @deprecated Use `enableActionItems`.
      */
-    enableButtons: function () {
+    enableButtons() {
         this.allActionItemsDisabled = false;
 
         this.$el.find(".button-container .actions-btn-group .action")
@@ -2820,12 +2845,12 @@ export default Dep.extend(/** @lends Class# */{
                     .addClass('disabled')
                     .attr('disabled', 'disabled');
             });
-    },
+    }
 
     /**
      * @deprecated Use `disableActionItems`.
      */
-    disableButtons: function () {
+    disableButtons() {
         this.allActionItemsDisabled = true;
 
         this.$el.find(".button-container .actions-btn-group .action")
@@ -2835,23 +2860,23 @@ export default Dep.extend(/** @lends Class# */{
         this.$el.find(".button-container .actions-btn-group .dropdown-toggle")
             .attr('disabled', 'disabled')
             .addClass('disabled');
-    },
+    }
 
     /**
      * Remove a button or dropdown item.
      *
      * @param {string} name A name.
      */
-    removeActionItem: function (name) {
+    removeActionItem(name) {
         this.removeButton(name);
-    },
+    }
 
     /**
      * @deprecated Use `removeActionItem`.
      *
      * @param {string} name A name.
      */
-    removeButton: function (name) {
+    removeButton(name) {
         for (const [i, item] of this.buttonList.entries()) {
             if (item.name === name) {
                 this.buttonList.splice(i, 1);
@@ -2871,7 +2896,7 @@ export default Dep.extend(/** @lends Class# */{
         if (this.isRendered()) {
             this.$el.find('.detail-button-container .action[data-action="'+name+'"]').remove();
         }
-    },
+    }
 
     /**
      * Convert a detail layout to an internal layout.
@@ -2880,7 +2905,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {Object[]} simplifiedLayout A detail layout.
      * @return {Object[]}
      */
-    convertDetailLayout: function (simplifiedLayout) {
+    convertDetailLayout(simplifiedLayout) {
         let layout = [];
         let el = this.options.el || '#' + (this.id);
 
@@ -3102,13 +3127,13 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return layout;
-    },
+    }
 
     /**
      * @private
      * @param {function(Object[]): void}callback
      */
-    getGridLayout: function (callback) {
+    getGridLayout(callback) {
         if (this.gridLayout !== null) {
             callback(this.gridLayout);
 
@@ -3142,14 +3167,14 @@ export default Dep.extend(/** @lends Class# */{
 
             callback(this.gridLayout);
         });
-    },
+    }
 
     /**
      * Create a side view.
      *
      * @protected
      */
-    createSideView: function () {
+    createSideView() {
         let el = this.options.el || '#' + (this.id);
 
         this.createView('side', this.sideView, {
@@ -3163,14 +3188,14 @@ export default Dep.extend(/** @lends Class# */{
             recordViewObject: this,
             isReturn: this.options.isReturn,
         });
-    },
+    }
 
     /**
      * Create a middle view.
      *
      * @protected
      */
-    createMiddleView: function (callback) {
+    createMiddleView(callback) {
         let el = this.options.el || '#' + (this.id);
 
         this.waitForView('middle');
@@ -3198,14 +3223,14 @@ export default Dep.extend(/** @lends Class# */{
                 panelFieldListMap: this.panelFieldListMap,
             }, callback);
         });
-    },
+    }
 
     /**
      * Create a bottom view.
      *
      * @protected
      */
-    createBottomView: function () {
+    createBottomView() {
         let el = this.options.el || '#' + (this.id);
 
         this.createView('bottom', this.bottomView, {
@@ -3220,7 +3245,7 @@ export default Dep.extend(/** @lends Class# */{
             portalLayoutDisabled: this.portalLayoutDisabled,
             isReturn: this.options.isReturn,
         });
-    },
+    }
 
     /**
      * Create views.
@@ -3228,7 +3253,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @param {function(module:views/record/detail-middle): void} [callback]
      */
-    build: function (callback) {
+    build(callback) {
         if (!this.sideDisabled && this.sideView) {
             this.createSideView();
         }
@@ -3240,14 +3265,14 @@ export default Dep.extend(/** @lends Class# */{
         if (!this.bottomDisabled && this.bottomView) {
             this.createBottomView();
         }
-    },
+    }
 
     /**
      * Called after create.
      *
      * @return {boolean} True if redirecting is processed.
      */
-    exitAfterCreate: function () {
+    exitAfterCreate() {
         if (!this.returnAfterCreate && this.model.id) {
             let url = '#' + this.scope + '/view/' + this.model.id;
 
@@ -3264,14 +3289,14 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return false;
-    },
+    }
 
     /**
      * Called after save or cancel. By default, redirects a page. Can be overridden in options.
      *
      * @param {string} after Name of an action (`save`, `cancel,` etc.) after which #exit is invoked.
      */
-    exit: function (after) {
+    exit(after) {
         if (after) {
             let methodName = 'exitAfter' + Espo.Utils.upperCaseFirst(after);
 
@@ -3338,9 +3363,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.getRouter().navigate(url, {trigger: true});
-    },
+    }
 
-    subscribeToWebSocket: function () {
+    subscribeToWebSocket() {
         let topic = 'recordUpdate.' + this.entityType + '.' + this.model.id;
 
         this.recordUpdateWebSocketTopic = topic;
@@ -3349,17 +3374,17 @@ export default Dep.extend(/** @lends Class# */{
         this.getHelper().webSocketManager.subscribe(topic, () => {
             this.handleRecordUpdate();
         });
-    },
+    }
 
-    unsubscribeFromWebSocket: function () {
+    unsubscribeFromWebSocket() {
         if (!this.isSubscribedToWebSocket) {
             return;
         }
 
         this.getHelper().webSocketManager.unsubscribe(this.recordUpdateWebSocketTopic);
-    },
+    }
 
-    handleRecordUpdate: function () {
+    handleRecordUpdate() {
         if (this.updateWebSocketIsBlocked) {
             return;
         }
@@ -3377,9 +3402,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.model.fetch({highlight: true});
-    },
+    }
 
-    blockUpdateWebSocket: function (toUnblock) {
+    blockUpdateWebSocket(toUnblock) {
         this.updateWebSocketIsBlocked = true;
 
         if (toUnblock) {
@@ -3387,28 +3412,28 @@ export default Dep.extend(/** @lends Class# */{
                 this.unblockUpdateWebSocket();
             }, this.blockUpdateWebSocketPeriod || 500);
         }
-    },
+    }
 
-    unblockUpdateWebSocket: function () {
+    unblockUpdateWebSocket() {
         this.updateWebSocketIsBlocked = false;
-    },
+    }
 
     /**
      * Show more detail panels.
      */
-    showMoreDetailPanels: function () {
+    showMoreDetailPanels() {
         this.hidePanel('showMoreDelimiter');
 
         this.underShowMoreDetailPanelList.forEach(item => {
             this.showPanel(item);
         });
-    },
+    }
 
     /**
      * @protected
      * @return {Number}
      */
-    getTabCount: function () {
+    getTabCount() {
         if (!this.hasTabs()) {
             return 0;
         }
@@ -3422,13 +3447,13 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return count;
-    },
+    }
 
     /**
      * @protected
      * @return {boolean}
      */
-    hasTabs: function () {
+    hasTabs() {
         if (typeof this._hasMiddleTabs !== 'undefined') {
             return this._hasMiddleTabs;
         }
@@ -3448,13 +3473,13 @@ export default Dep.extend(/** @lends Class# */{
         this._hasMiddleTabs = false;
 
         return false;
-    },
+    }
 
     /**
      * @private
      * @return {{label: string}[]}
      */
-    getMiddleTabDataList: function () {
+    getMiddleTabDataList() {
         let currentTab = this.currentTab;
 
         let panelDataList = this.middlePanelDefsList;
@@ -3490,7 +3515,7 @@ export default Dep.extend(/** @lends Class# */{
                     hidden: hidden,
                 };
             });
-    },
+    }
 
     /**
      * Select a tab.
@@ -3498,7 +3523,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @param {Number} tab
      */
-    selectTab: function (tab) {
+    selectTab(tab) {
         this.currentTab = tab;
 
         $('.popover.in').removeClass('in');
@@ -3515,23 +3540,23 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         this.storeTab();
-    },
+    }
 
     /**
      * @private
      */
-    storeTab: function () {
+    storeTab() {
         let key = 'tab_middle';
         let keyRecord = 'tab_middle_record';
 
         this.getSessionStorage().set(key, this.currentTab);
         this.getSessionStorage().set(keyRecord, this.entityType + '_' + this.model.id);
-    },
+    }
 
     /**
      * @private
      */
-    selectStoredTab: function () {
+    selectStoredTab() {
         let key = 'tab_middle';
 
         let tab = this.getSessionStorage().get(key);
@@ -3539,21 +3564,21 @@ export default Dep.extend(/** @lends Class# */{
         if (tab > 0) {
             this.selectTab(tab);
         }
-    },
+    }
 
     /**
      * @private
      */
-    isStoredTabForThisRecord: function () {
+    isStoredTabForThisRecord() {
         let keyRecord = 'tab_middle_record';
 
         return this.getSessionStorage().get(keyRecord) === this.entityType + '_' + this.model.id;
-    },
+    }
 
     /**
      * @inheritDoc
       */
-    onInvalid: function (invalidFieldList) {
+    onInvalid(invalidFieldList) {
         if (!this.hasTabs()) {
             return;
         }
@@ -3595,12 +3620,12 @@ export default Dep.extend(/** @lends Class# */{
                 $tab.removeClass('invalid');
             });
         })
-    },
+    }
 
     /**
      * @private
      */
-    controlTabVisibilityShow: function (tab) {
+    controlTabVisibilityShow(tab) {
         if (!this.hasTabs() || tab === 0) {
             return;
         }
@@ -3612,12 +3637,12 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.$el.find(`.middle-tabs > [data-tab="${tab.toString()}"]`).removeClass('hidden');
-    },
+    }
 
     /**
      * @private
      */
-    controlTabVisibilityHide: function (tab) {
+    controlTabVisibilityHide(tab) {
         if (!this.hasTabs() || tab === 0) {
             return;
         }
@@ -3644,12 +3669,12 @@ export default Dep.extend(/** @lends Class# */{
         if (this.currentTab === tab) {
             this.selectTab(0);
         }
-    },
+    }
 
     /**
      * @private
      */
-    adjustMiddlePanels: function () {
+    adjustMiddlePanels() {
         if (!this.isRendered() || !this.$middle.length) {
             return;
         }
@@ -3699,12 +3724,12 @@ export default Dep.extend(/** @lends Class# */{
                 $el.addClass('first');
             }
         });
-    },
+    }
 
     /**
      * @private
      */
-    adjustButtons: function () {
+    adjustButtons() {
         let $buttons = this.$detailButtonContainer.filter('.record-buttons').find('button.btn');
 
         $buttons
@@ -3717,12 +3742,12 @@ export default Dep.extend(/** @lends Class# */{
         $buttonsVisible.last().addClass('radius-right');
 
         this.adjustEditButtons();
-    },
+    }
 
     /**
      * @private
      */
-    adjustEditButtons: function () {
+    adjustEditButtons() {
         let $buttons = this.$detailButtonContainer.filter('.edit-buttons').find('button.btn');
 
         $buttons
@@ -3733,7 +3758,7 @@ export default Dep.extend(/** @lends Class# */{
 
         $buttonsVisible.first().addClass('radius-left');
         $buttonsVisible.last().addClass('radius-right');
-    },
+    }
 
     /**
      * @private
@@ -3750,33 +3775,33 @@ export default Dep.extend(/** @lends Class# */{
 
         this.$dropdownEditItemListButton = this.$detailButtonContainer
             .find('.dropdown-edit-item-list-button');
-    },
+    }
 
     /**
      * @protected
      */
-    focusForEdit: function () {
+    focusForEdit() {
         this.$el
             .find('.field:not(.hidden) .form-control:not([disabled])')
             .first()
             .focus();
-    },
+    }
 
     /**
      * @protected
      */
-    focusForCreate: function () {
+    focusForCreate() {
         this.$el
             .find('.form-control:not([disabled])')
             .first()
             .focus();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlEnter: function (e) {
+    handleShortcutKeyCtrlEnter(e) {
         let action = this.shortcutKeyCtrlEnterAction;
 
         if (this.inlineEditModeIsOn || this.buttonsDisabled || !action) {
@@ -3797,13 +3822,13 @@ export default Dep.extend(/** @lends Class# */{
         let methodName = 'action' + Espo.Utils.upperCaseFirst(action);
 
         this[methodName]();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlS: function (e) {
+    handleShortcutKeyCtrlS(e) {
         if (this.inlineEditModeIsOn || this.buttonsDisabled) {
             return;
         }
@@ -3824,13 +3849,13 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.actionSaveAndContinueEditing();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlSpace: function (e) {
+    handleShortcutKeyCtrlSpace(e) {
         if (this.inlineEditModeIsOn || this.buttonsDisabled) {
             return;
         }
@@ -3857,13 +3882,13 @@ export default Dep.extend(/** @lends Class# */{
         if (!this.editModeDisabled) {
             setTimeout(() => this.focusForEdit(), 200);
         }
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyEscape: function (e) {
+    handleShortcutKeyEscape(e) {
         if (this.inlineEditModeIsOn || this.buttonsDisabled) {
             return;
         }
@@ -3886,19 +3911,19 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.actionCancelEdit();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlAltEnter: function (e) {},
+    handleShortcutKeyCtrlAltEnter(e) {}
 
     /**
      * @public
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyControlBackslash: function (e) {
+    handleShortcutKeyControlBackslash(e) {
         if (!this.hasTabs()) {
             return;
         }
@@ -3940,13 +3965,13 @@ export default Dep.extend(/** @lends Class# */{
         this.$el
             .find(`.middle-tabs button[data-tab="${tab}"]`)
             .focus();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyControlArrowLeft: function (e) {
+    handleShortcutKeyControlArrowLeft(e) {
         if (this.inlineEditModeIsOn || this.buttonsDisabled) {
             return;
         }
@@ -3973,13 +3998,13 @@ export default Dep.extend(/** @lends Class# */{
         e.stopPropagation();
 
         this.actionPrevious();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyControlArrowRight: function (e) {
+    handleShortcutKeyControlArrowRight(e) {
         if (this.inlineEditModeIsOn || this.buttonsDisabled) {
             return;
         }
@@ -4006,5 +4031,7 @@ export default Dep.extend(/** @lends Class# */{
         e.stopPropagation();
 
         this.actionNext();
-    },
-});
+    }
+}
+
+export default DetailRecordView;

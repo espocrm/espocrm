@@ -238,7 +238,7 @@ class Class {
      * Unset an attribute.
      *
      * @param {string} attribute
-     * @param options
+     * @param {Object} [options] Options.
      * @return {Class}
      */
     unset(attribute, options) {
