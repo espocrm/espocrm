@@ -31,8 +31,6 @@
 import View from 'view';
 import StoredTextSearch from 'helpers/misc/stored-text-search';
 
-new View();
-
 /**
  * A search panel view.
  */
