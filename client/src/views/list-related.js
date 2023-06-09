@@ -28,146 +28,137 @@
 
 /** @module module:views/list-related */
 
-import Dep from 'views/main';
+import MainView from 'views/main';
 import SearchManager from 'search-manager';
 
 /**
  * A list-related view page.
- *
- * @class
- * @name Class
- * @extends module:views/main
  */
-export default Dep.extend(/** @lends Class# */{
+class ListRelatedView extends MainView {
 
-    /**
-     * @inheritDoc
-     */
-    template: 'list',
+    /** @inheritDoc */
+    template = 'list'
 
-    /**
-     * @inheritDoc
-     */
-    scope: null,
-
-    /**
-     * @inheritDoc
-     */
-    name: 'ListRelated',
+    /** @inheritDoc */
+    name = 'ListRelated'
 
     /**
      * A header view name.
      *
      * @type {string}
      */
-    headerView: 'views/header',
+    headerView = 'views/header'
 
     /**
      * A search view name.
      *
      * @type {string}
      */
-    searchView: 'views/record/search',
+    searchView = 'views/record/search'
 
     /**
      * A record/list view name.
      *
      * @type {string}
      */
-    recordView: 'views/record/list',
+    recordView = 'views/record/list'
 
     /**
      * Has a search panel.
      *
      * @type {boolean}
      */
-    searchPanel: true,
+    searchPanel = true
 
     /**
      * @type {module:search-manager}
      */
-    searchManager: null,
+    searchManager = null
 
     /**
      * @inheritDoc
      */
-    optionsToPass: [],
+    optionsToPass = []
 
     /**
      * Use a current URL as a root URL when open a record. To be able to return to the same URL.
      */
-    keepCurrentRootUrl: false,
+    keepCurrentRootUrl = false
 
     /**
      * A view mode.
      *
      * @type {string}
      */
-    viewMode: null,
+    viewMode = ''
 
     /**
      * An available view mode list.
      *
-     * @type {string[]}
+     * @type {string[]|null}
      */
-    viewModeList: null,
+    viewModeList = null
 
     /**
      * A default view mode.
      *
      * @type {string}
      */
-    defaultViewMode: 'list',
+    defaultViewMode = 'list'
 
     /**
      * @const
      */
-    MODE_LIST: 'list',
+    MODE_LIST = 'list'
 
     /**
      * @private
      */
-    rowActionsView: 'views/record/row-actions/relationship',
+    rowActionsView = 'views/record/row-actions/relationship'
 
     /**
      * A create button.
      *
      * @protected
      */
-    createButton: true,
+    createButton = true
 
     /**
      * @protected
      */
-    unlinkDisabled: false,
+    unlinkDisabled = false
 
     /**
      * @protected
      */
-    filtersDisabled: false,
+    filtersDisabled = false
 
     /**
      * @inheritDoc
      */
-    shortcutKeys: {
+    shortcutKeys = {
+        /** @this ListRelatedView */
         'Control+Space': function (e) {
             this.handleShortcutKeyCtrlSpace(e);
         },
+        /** @this ListRelatedView */
         'Control+Slash': function (e) {
             this.handleShortcutKeyCtrlSlash(e);
         },
+        /** @this ListRelatedView */
         'Control+Comma': function (e) {
             this.handleShortcutKeyCtrlComma(e);
         },
+        /** @this ListRelatedView */
         'Control+Period': function (e) {
             this.handleShortcutKeyCtrlPeriod(e);
         },
-    },
+    }
 
     /**
      * @inheritDoc
      */
-    setup: function () {
+    setup() {
         this.link = this.options.link;
 
         if (!this.link) {
@@ -189,6 +180,7 @@ export default Dep.extend(/** @lends Class# */{
 
         if (this.panelDefs.fullFormDisabled) {
             console.error(`Full-form disabled.`);
+
             throw new Error();
         }
 
@@ -259,12 +251,12 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.getHelper().processSetupHandlers(this, 'list');
-    },
+    }
 
     /**
      * Set up modes.
      */
-    setupModes: function () {
+    setupModes() {
         this.defaultViewMode = this.options.defaultViewMode ||
             this.getMetadata().get(['clientDefs', this.foreignScope, 'listRelatedDefaultViewMode']) ||
             this.defaultViewMode;
@@ -278,42 +270,42 @@ export default Dep.extend(/** @lends Class# */{
         this.viewModeList = viewModeList ? viewModeList : [this.MODE_LIST];
 
         if (this.viewModeList.length > 1) {
-            this.viewMode = null;
+            let viewMode = null;
 
             let modeKey = 'listRelatedViewMode' + this.scope + this.link;
 
             if (this.getStorage().has('state', modeKey)) {
                 let storedViewMode = this.getStorage().get('state', modeKey);
 
-                if (storedViewMode) {
-                    if (~this.viewModeList.indexOf(storedViewMode)) {
-                        this.viewMode = storedViewMode;
-                    }
+                if (storedViewMode && this.viewModeList.includes(storedViewMode)) {
+                    viewMode = storedViewMode;
                 }
             }
 
-            if (!this.viewMode) {
-                this.viewMode = this.defaultViewMode;
+            if (!viewMode) {
+                viewMode = this.defaultViewMode;
             }
+
+            this.viewMode = viewMode;
         }
-    },
+    }
 
     /**
      * Set up a header.
      */
-    setupHeader: function () {
+    setupHeader() {
         this.createView('header', this.headerView, {
             collection: this.collection,
             el: '#main > .page-header',
             scope: this.scope,
             isXsSingleRow: true,
         });
-    },
+    }
 
     /**
      * Set up a create button.
      */
-    setupCreateButton: function () {
+    setupCreateButton() {
         this.menu.buttons.unshift({
             action: 'quickCreate',
             iconHtml: '<span class="fas fa-plus fa-sm"></span>',
@@ -323,16 +315,16 @@ export default Dep.extend(/** @lends Class# */{
             aclScope: this.foreignScope,
             title: 'Ctrl+Space',
         });
-    },
+    }
 
     /**
      * Set up a search panel.
      *
      * @protected
      */
-    setupSearchPanel: function () {
+    setupSearchPanel() {
         this.createSearchView();
-    },
+    }
 
     /**
      * Create a search view.
@@ -340,7 +332,7 @@ export default Dep.extend(/** @lends Class# */{
      * @return {Promise<module:view>}
      * @protected
      */
-    createSearchView: function () {
+    createSearchView() {
         let filterList = Espo.Utils
             .clone(this.getMetadata().get(['clientDefs', this.foreignScope, 'filterList']) || []);
 
@@ -385,20 +377,20 @@ export default Dep.extend(/** @lends Class# */{
                 this.listenTo(view, 'change-view-mode', () => this.switchViewMode());
             }
         });
-    },
+    }
 
     /**
      * Switch a view mode.
      *
      * @param {string} mode
      */
-    switchViewMode: function (mode) {
+    switchViewMode(mode) {
         this.clearView('list');
         this.collection.isFetched = false;
         this.collection.reset();
         this.setViewMode(mode, true);
         this.loadList();
-    },
+    }
 
     /**
      * Set a view mode.
@@ -406,7 +398,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} mode A mode.
      * @param {boolean} [toStore=false] To preserve a mode being set.
      */
-    setViewMode: function (mode, toStore) {
+    setViewMode(mode, toStore) {
         this.viewMode = mode;
 
         this.collection.url = this.collectionUrl;
@@ -427,12 +419,12 @@ export default Dep.extend(/** @lends Class# */{
         if (this[methodName]) {
             this[methodName]();
         }
-    },
+    }
 
     /**
      * Set up a search manager.
      */
-    setupSearchManager: function () {
+    setupSearchManager() {
         let collection = this.collection;
 
         let searchManager = new SearchManager(
@@ -448,39 +440,35 @@ export default Dep.extend(/** @lends Class# */{
         collection.where = searchManager.getWhere();
 
         this.searchManager = searchManager;
-    },
+    }
 
     /**
      * Set up sorting.
      */
-    setupSorting: function () {
-        if (!this.searchPanel) {
-            return;
-        }
-    },
+    setupSorting() {}
 
     /**
      * @protected
      * @return {module:views/record/search}
      */
-    getSearchView: function () {
+    getSearchView() {
         return this.getView('search');
-    },
+    }
 
     /**
      * @protected
      * @return {module:view}
      */
-    getRecordView: function () {
+    getRecordView() {
         return this.getView('list');
-    },
+    }
 
     /**
      * Get a record view name.
      *
      * @returns {string}
      */
-    getRecordViewName: function () {
+    getRecordViewName() {
         if (this.viewMode === this.MODE_LIST) {
             return this.panelDefs.recordListView ||
                 this.getMetadata().get(['clientDefs', this.foreignScope, 'recordViews', this.MODE_LIST]) ||
@@ -491,12 +479,12 @@ export default Dep.extend(/** @lends Class# */{
 
         return this.getMetadata().get(['clientDefs', this.foreignScope, 'recordViews', this.viewMode]) ||
             this[propertyName];
-    },
+    }
 
     /**
      * @inheritDoc
      */
-    afterRender: function () {
+    afterRender() {
         Espo.Ui.notify(false);
 
         if (!this.hasView('list')) {
@@ -504,12 +492,12 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.$el.get(0).focus({preventScroll: true});
-    },
+    }
 
     /**
      * Load a record list view.
      */
-    loadList: function () {
+    loadList() {
         let methodName = 'loadList' + Espo.Utils.upperCaseFirst(this.viewMode);
 
         if (this[methodName]) {
@@ -527,19 +515,19 @@ export default Dep.extend(/** @lends Class# */{
         Espo.Ui.notify(' ... ');
 
         this.createListRecordView(true);
-    },
+    }
 
     /**
      * Prepare record view options. Options can be modified in an extended method.
      *
      * @param {Object} options Options
      */
-    prepareRecordViewOptions: function (options) {},
+    prepareRecordViewOptions(options) {}
 
     /**
      * Create a record list view.
      */
-    createListRecordView: function () {
+    createListRecordView() {
         let o = {
             collection: this.collection,
             el: this.options.el + ' .list-container',
@@ -618,14 +606,14 @@ export default Dep.extend(/** @lends Class# */{
                     .then(() => Espo.Ui.notify(false));
             });
         });
-    },
+    }
 
     /**
      * A quick-create action.
      *
      * @protected
      */
-    actionQuickCreate: function () {
+    actionQuickCreate() {
         let link = this.link;
         let foreignScope = this.foreignScope;
         let foreignLink = this.model.getLinkParam(link, 'foreign');
@@ -684,14 +672,14 @@ export default Dep.extend(/** @lends Class# */{
                     });
                 });
             });
-    },
+    }
 
     /**
      * An `unlink-related` action.
      *
      * @protected
      */
-    actionUnlinkRelated: function (data) {
+    actionUnlinkRelated(data) {
         let id = data.id;
 
         this.confirm({
@@ -711,12 +699,12 @@ export default Dep.extend(/** @lends Class# */{
                     this.model.trigger('after:unrelate:' + this.link);
                 });
         });
-    },
+    }
 
     /**
      * @inheritDoc
      */
-    getHeader: function () {
+    getHeader() {
         let name = this.model.get('name') || this.model.id;
 
         let recordUrl = '#' + this.scope  + '/view/' + this.model.id;
@@ -758,27 +746,27 @@ export default Dep.extend(/** @lends Class# */{
             $name,
             $link
         ]);
-    },
+    }
 
     /**
      * @inheritDoc
      */
-    updatePageTitle: function () {
+    updatePageTitle() {
         this.setPageTitle(this.getLanguage().translate(this.link, 'links', this.scope));
-    },
+    }
 
     /**
      * Create attributes for an entity being created.
      *
      * @return {Object}
      */
-    getCreateAttributes: function () {},
+    getCreateAttributes() {}
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlSpace: function (e) {
+    handleShortcutKeyCtrlSpace(e) {
         if (!this.createButton) {
             return;
         }
@@ -792,13 +780,13 @@ export default Dep.extend(/** @lends Class# */{
 
 
         this.actionQuickCreate({focusForCreate: true});
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlSlash: function (e) {
+    handleShortcutKeyCtrlSlash(e) {
         if (!this.searchPanel) {
             return;
         }
@@ -813,29 +801,31 @@ export default Dep.extend(/** @lends Class# */{
         e.stopPropagation();
 
         $search.focus();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlComma: function (e) {
+    handleShortcutKeyCtrlComma(e) {
         if (!this.getSearchView()) {
             return;
         }
 
         this.getSearchView().selectPreviousPreset();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlPeriod: function (e) {
+    handleShortcutKeyCtrlPeriod(e) {
         if (!this.getSearchView()) {
             return;
         }
 
         this.getSearchView().selectNextPreset();
-    },
-});
+    }
+}
+
+export default ListRelatedView;

@@ -28,59 +28,55 @@
 
 /** @module views/list-with-categories */
 
-import Dep from 'views/list';
+import ListView from 'views/list';
 
-/**
- * @class
- * @name Class
- * @extends module:views/list
- */
-export default Dep.extend(/** @lends Class# */{
+class ListWithCategories extends ListView {
 
-    template: 'list-with-categories',
+    template = 'list-with-categories'
 
-    quickCreate: true,
-    storeViewAfterCreate: true,
-    storeViewAfterUpdate: true,
-    currentCategoryId: null,
-    currentCategoryName: '',
-    categoryScope: null,
-    categoryField: 'category',
-    categoryFilterType: 'inCategory',
-    isExpanded: false,
-    hasExpandedToggler: true,
-    expandedTogglerDisabled: false,
-    keepCurrentRootUrl: true,
-    hasNavigationPanel: false,
+    quickCreate = true
+    storeViewAfterCreate = true
+    storeViewAfterUpdate = true
+    /** @type {string|null} */
+    currentCategoryId = null
+    currentCategoryName = ''
+    /** @type {string|null} */
+    categoryScope = null
+    categoryField = 'category'
+    categoryFilterType = 'inCategory'
+    isExpanded = false
+    hasExpandedToggler = true
+    expandedTogglerDisabled = false
+    keepCurrentRootUrl = true
+    hasNavigationPanel = false
     /** @private */
-    nestedCollectionIsBeingFetched: false,
+    nestedCollectionIsBeingFetched = false
 
-    data: function () {
+    data() {
         let data = {};
 
         data.hasTree = (this.isExpanded || this.hasNavigationPanel) && !this.categoriesDisabled;
         data.hasNestedCategories = !this.isExpanded;
-
         data.fallback = !data.hasTree && !data.hasNestedCategories;
 
         return data;
-    },
+    }
 
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
         if (!this.categoryScope) {
             this.categoryScope = this.scope + 'Category';
         }
 
-        var isExpandedByDefault = this.getMetadata()
+        let isExpandedByDefault = this.getMetadata()
             .get(['clientDefs', this.categoryScope, 'isExpandedByDefault']) || false;
 
         if (isExpandedByDefault) {
             this.isExpanded = true;
         }
 
-        var isCollapsedByDefault = this.getMetadata()
+        let isCollapsedByDefault = this.getMetadata()
             .get(['clientDefs', this.categoryScope, 'isCollapsedByDefault']) || false;
 
         if (isCollapsedByDefault) {
@@ -129,23 +125,23 @@ export default Dep.extend(/** @lends Class# */{
 
             this.controlListVisibility();
         });
-    },
+    }
 
-    prepareCreateReturnDispatchParams: function (params) {
+    prepareCreateReturnDispatchParams(params) {
         if (this.currentCategoryId) {
             params.options.categoryId = this.currentCategoryId;
             params.options.categoryName = this.currentCategoryName;
         }
-    },
+    }
 
     /**
      * @inheritDoc
      */
-    setupReuse: function (params) {
+    setupReuse(params) {
         this.applyRoutingParams(params);
-    },
+    }
 
-    applyRoutingParams: function (params) {
+    applyRoutingParams(params) {
         if (!this.isExpanded) {
             if ('categoryId' in params) {
                 if (params.categoryId !== this.currentCategoryId) {
@@ -155,9 +151,9 @@ export default Dep.extend(/** @lends Class# */{
 
             this.selectCurrentCategory();
         }
-    },
+    }
 
-    hasTextFilter: function () {
+    hasTextFilter() {
         if (this.collection.where) {
             for (var i = 0; i < this.collection.where.length; i++) {
                 if (this.collection.where[i].type === 'textFilter') {
@@ -171,37 +167,37 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return false;
-    },
+    }
 
-    hasNavigationPanelStoredValue: function () {
+    hasNavigationPanelStoredValue() {
         return this.getStorage().has('state', 'categories-navigation-panel-' + this.scope);
-    },
+    }
 
-    getNavigationPanelStoredValue: function () {
+    getNavigationPanelStoredValue() {
         var value = this.getStorage().get('state', 'categories-navigation-panel-' + this.scope);
 
         return value === 'true' || value === true;
-    },
+    }
 
-    setNavigationPanelStoredValue: function (value) {
+    setNavigationPanelStoredValue(value) {
         return this.getStorage().set('state', 'categories-navigation-panel-' + this.scope, value);
-    },
+    }
 
-    hasIsExpandedStoredValue: function () {
+    hasIsExpandedStoredValue() {
         return this.getStorage().has('state', 'categories-expanded-' + this.scope);
-    },
+    }
 
-    getIsExpandedStoredValue: function () {
+    getIsExpandedStoredValue() {
         var value = this.getStorage().get('state', 'categories-expanded-' + this.scope);
 
         return value === 'true' || value === true ;
-    },
+    }
 
-    setIsExpandedStoredValue: function (value) {
+    setIsExpandedStoredValue(value) {
         return this.getStorage().set('state', 'categories-expanded-' + this.scope, value);
-    },
+    }
 
-    afterRender: function () {
+    afterRender() {
         this.$nestedCategoriesContainer = this.$el.find('.nested-categories-container');
         this.$listContainer = this.$el.find('.list-container');
 
@@ -229,9 +225,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.$el.focus();
-    },
+    }
 
-    actionExpand: function () {
+    actionExpand() {
         this.isExpanded = true;
 
         this.setIsExpandedStoredValue(true);
@@ -251,9 +247,9 @@ export default Dep.extend(/** @lends Class# */{
         this.$listContainer.empty();
 
         this.collection.fetch();
-    },
+    }
 
-    actionCollapse: function () {
+    actionCollapse() {
         this.isExpanded = false;
         this.setIsExpandedStoredValue(false);
 
@@ -269,16 +265,16 @@ export default Dep.extend(/** @lends Class# */{
         this.$listContainer.empty();
 
         this.collection.fetch();
-    },
+    }
 
-    actionOpenCategory: function (data) {
+    actionOpenCategory(data) {
         this.openCategory(data.id || null, data.name);
 
         this.selectCurrentCategory();
         this.navigateToCurrentCategory();
-    },
+    }
 
-    navigateToCurrentCategory: function () {
+    navigateToCurrentCategory() {
         if (!this.isExpanded) {
             if (this.currentCategoryId) {
                 this.getRouter().navigate('#' + this.scope + '/list/categoryId=' + this.currentCategoryId);
@@ -292,18 +288,18 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.updateLastUrl();
-    },
+    }
 
-    selectCurrentCategory: function () {
+    selectCurrentCategory() {
         var categoriesView = this.getView('categories');
 
         if (categoriesView) {
             categoriesView.setSelected(this.currentCategoryId);
             categoriesView.reRender();
         }
-    },
+    }
 
-    openCategory: function (id, name) {
+    openCategory(id, name) {
         this.getView('nestedCategories').isLoading = true;
         this.getView('nestedCategories').reRender();
         this.getView('nestedCategories').isLoading = false;
@@ -353,9 +349,9 @@ export default Dep.extend(/** @lends Class# */{
             .then(() => {
                 Espo.Ui.notify(false);
             });
-    },
+    }
 
-    controlListVisibility: function () {
+    controlListVisibility() {
         if (this.isExpanded) {
             this.showListContainer();
 
@@ -378,13 +374,13 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.showListContainer();
-    },
+    }
 
-    controlNestedCategoriesVisibility: function () {
+    controlNestedCategoriesVisibility() {
         this.$nestedCategoriesContainer.removeClass('hidden');
-    },
+    }
 
-    getTreeCollection: function (callback) {
+    getTreeCollection(callback) {
         this.getCollectionFactory().create(this.categoryScope, collection => {
             collection.url = collection.name + '/action/listTree';
 
@@ -398,9 +394,9 @@ export default Dep.extend(/** @lends Class# */{
 
             collection.fetch();
         });
-    },
+    }
 
-    applyCategoryToNestedCategoriesCollection: function () {
+    applyCategoryToNestedCategoriesCollection() {
         if (!this.nestedCategoriesCollection) {
             return;
         }
@@ -416,9 +412,9 @@ export default Dep.extend(/** @lends Class# */{
             this.currentCategoryId;
 
         this.nestedCategoriesCollection.where = [filter];
-    },
+    }
 
-    getNestedCategoriesCollection: function (callback) {
+    getNestedCategoriesCollection(callback) {
         this.getCollectionFactory().create(this.categoryScope, collection => {
             this.nestedCategoriesCollection = collection;
 
@@ -449,9 +445,9 @@ export default Dep.extend(/** @lends Class# */{
                     callback.call(this, collection);
                 });
         });
-    },
+    }
 
-    loadNestedCategories: function () {
+    loadNestedCategories() {
         this.getNestedCategoriesCollection(collection => {
             this.createView('nestedCategories', 'views/record/list-nested-categories', {
                 collection: collection,
@@ -465,9 +461,9 @@ export default Dep.extend(/** @lends Class# */{
                 view.render();
             });
         });
-    },
+    }
 
-    loadCategories: function () {
+    loadCategories() {
         this.getTreeCollection(collection => {
             this.createView('categories', 'views/record/list-tree', {
                 collection: collection,
@@ -526,9 +522,9 @@ export default Dep.extend(/** @lends Class# */{
             });
 
         });
-    },
+    }
 
-    applyCategoryToCollection: function () {
+    applyCategoryToCollection() {
         this.collection.whereFunction = () => {
             var filter;
             var isExpanded = this.isExpanded;
@@ -579,14 +575,14 @@ export default Dep.extend(/** @lends Class# */{
                 return [filter];
             }
         };
-    },
+    }
 
-    isCategoryMultiple: function () {
+    isCategoryMultiple() {
         return this.getMetadata()
             .get(['entityDefs', this.scope, 'fields', this.categoryField, 'type']) === 'linkMultiple';
-    },
+    }
 
-    getCreateAttributes: function () {
+    getCreateAttributes() {
         let data;
 
         if (this.isCategoryMultiple()) {
@@ -618,9 +614,9 @@ export default Dep.extend(/** @lends Class# */{
         data[nameAttribute] = this.getCurrentCategoryName();
 
         return data;
-    },
+    }
 
-    getCurrentCategoryName: function () {
+    getCurrentCategoryName() {
         if (this.currentCategoryName) {
             return this.currentCategoryName;
         }
@@ -634,24 +630,24 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return this.currentCategoryId;
-    },
+    }
 
-    actionManageCategories: function () {
+    actionManageCategories() {
         this.clearView('categories');
         this.clearView('nestedCategories');
 
         this.getRouter().navigate('#' + this.categoryScope, {trigger: true});
-    },
+    }
 
-    getHeader: function () {
+    getHeader() {
         if (!this.nestedCategoriesCollection) {
-            return Dep.prototype.getHeader.call(this);
+            return super.getHeader();
         }
 
         let path = this.nestedCategoriesCollection.path;
 
         if (!path || path.length === 0) {
-            return Dep.prototype.getHeader.call(this);
+            return super.getHeader();
         }
 
         let rootUrl = '#' + this.scope;
@@ -693,21 +689,21 @@ export default Dep.extend(/** @lends Class# */{
         list.push($last);
 
         return this.buildHeaderHtml(list);
-    },
+    }
 
-    updateHeader: function () {
+    updateHeader() {
         this.getView('header').reRender();
-    },
+    }
 
-    hideListContainer: function () {
+    hideListContainer() {
         this.$listContainer.addClass('hidden');
-    },
+    }
 
-    showListContainer: function () {
+    showListContainer() {
         this.$listContainer.removeClass('hidden');
-    },
+    }
 
-    actionToggleNavigationPanel: function () {
+    actionToggleNavigationPanel() {
         let value = !this.hasNavigationPanel;
 
         this.hasNavigationPanel = value;
@@ -717,5 +713,7 @@ export default Dep.extend(/** @lends Class# */{
         this.reRender().then(() => {
             this.loadNestedCategories();
         });
-    },
-});
+    }
+}
+
+export default ListWithCategories;

@@ -26,29 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Dep from 'view';
+/** @module views/main */
+
+import View from 'view';
 
 /**
  * A base main view. The detail, edit, list views to be extended from.
- *
- * @class
- * @extends Dep
  */
-let Class = Dep.extend(/** @lends Class# */{
+class MainView extends View {
 
     /**
      * A scope name.
      *
      * @type {string} scope
      */
-    scope: null,
+    scope = ''
 
     /**
      * A name.
      *
      * @type {string} name
      */
-    name: null,
+    name = ''
 
     /**
      * A top-right menu item (button or dropdown action).
@@ -75,6 +74,7 @@ let Class = Dep.extend(/** @lends Class# */{
      * @property {string} [configCheck] A config parameter defining a menu item availability.
      *   If starts with `!`, then the result is negated.
      * @property {module:utils~AccessDefs[]} [accessDataList] Access definitions.
+     * @property {string} initFunction An init function.
      */
 
     /**
@@ -85,16 +85,16 @@ let Class = Dep.extend(/** @lends Class# */{
      *     dropdown: module:views/main~MenuItem[],
      *     actions: module:views/main~MenuItem[],
      * }} menu
-     * @protected
+     * @private
      * @internal
      */
-    menu: null,
+    menu = {}
 
     /**
      * @private
      * @type {JQuery|null}
      */
-    $headerActionsContainer: null,
+    $headerActionsContainer = null
 
     /**
      * A shortcut-key => action map.
@@ -102,30 +102,27 @@ let Class = Dep.extend(/** @lends Class# */{
      * @protected
      * @type {?Object.<string,string|function (JQueryKeyEventObject): void>}
      */
-    shortcutKeys: null,
+    shortcutKeys = null
 
-    /**
-     * @inheritDoc
-     */
-    events: {
+    /** @inheritDoc */
+    events = {
+        /** @this MainView */
         'click .action': function (e) {
             Espo.Utils.handleAction(this, e);
         },
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    init: function () {
+    /** @inheritDoc */
+    init() {
         this.scope = this.options.scope || this.scope;
         this.menu = {};
 
         this.options.params = this.options.params || {};
 
         if (this.name && this.scope) {
-            this.menu = this.getMetadata()
-                .get(['clientDefs', this.scope, 'menu',
-                    this.name.charAt(0).toLowerCase() + this.name.slice(1)]) || {};
+            let key = this.name.charAt(0).toLowerCase() + this.name.slice(1);
+
+            this.menu = this.getMetadata().get(['clientDefs', this.scope, 'menu', key]) || {};
         }
 
         /**
@@ -186,9 +183,9 @@ let Class = Dep.extend(/** @lends Class# */{
         if (this.shortcutKeys) {
             this.shortcutKeys = Espo.Utils.cloneDeep(this.shortcutKeys);
         }
-    },
+    }
 
-    setupFinal: function () {
+    setupFinal() {
         if (this.shortcutKeys) {
             this.events['keydown.main'] = e => {
                 let key = Espo.Utils.getKeyFromKeyEvent(e);
@@ -213,14 +210,14 @@ let Class = Dep.extend(/** @lends Class# */{
                 this[methodName]();
             };
         }
-    },
+    }
 
     /**
      * Update a last history URL.
      */
-    updateLastUrl: function () {
+    updateLastUrl() {
         this.lastUrl = this.getRouter().getCurrentUrl();
-    },
+    }
 
     /**
      * @internal
@@ -230,67 +227,65 @@ let Class = Dep.extend(/** @lends Class# */{
      *     actions?: module:views/main~MenuItem[],
      * }}
      */
-    getMenu: function () {
-        if (this.menuDisabled) {
+    getMenu() {
+        if (this.menuDisabled || !this.menu) {
             return {};
         }
 
         let menu = {};
 
-        if (this.menu) {
-            this.headerActionItemTypeList.forEach(type => {
-                (this.menu[type] || []).forEach(item => {
-                    if (item === false) {
-                        menu[type].push(false);
+        this.headerActionItemTypeList.forEach(type => {
+            (this.menu[type] || []).forEach(item => {
+                if (item === false) {
+                    menu[type].push(false);
 
+                    return;
+                }
+
+                item = Espo.Utils.clone(item);
+
+                menu[type] = menu[type] || [];
+
+                if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) {
+                    return;
+                }
+
+                if (!Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) {
+                    return;
+                }
+
+                if (item.accessDataList) {
+                    if (!Espo.Utils
+                        .checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())
+                    ) {
                         return;
                     }
+                }
 
-                    item = Espo.Utils.clone(item);
+                item.name = item.name || item.action;
+                item.action = item.action || null;
 
-                    menu[type] = menu[type] || [];
+                if (item.labelTranslation) {
+                    item.html = this.getHelper().escapeString(
+                        this.getLanguage().translatePath(item.labelTranslation)
+                    );
+                }
 
-                    if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) {
-                        return;
-                    }
-
-                    if (!Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) {
-                        return;
-                    }
-
-                    if (item.accessDataList) {
-                        if (!Espo.Utils
-                            .checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())
-                        ) {
-                            return;
-                        }
-                    }
-
-                    item.name = item.name || item.action;
-                    item.action = item.action || null;
-
-                    if (item.labelTranslation) {
-                        item.html = this.getHelper().escapeString(
-                            this.getLanguage().translatePath(item.labelTranslation)
-                        );
-                    }
-
-                    menu[type].push(item);
-                });
+                menu[type].push(item);
             });
-        }
+        });
 
         return menu;
-    },
+    }
 
     /**
      * Get a header HTML. To be overridden.
      *
      * @returns {string} HTML.
      */
-    getHeader: function () {
+    getHeader() {
         return '';
-    },
+    }
 
     /**
      * Build a header HTML. To be called from the #getHeader method.
@@ -299,7 +294,7 @@ let Class = Dep.extend(/** @lends Class# */{
      * @param {(string|Element|JQuery)[]} itemList A breadcrumb path. Like: Account > Name > edit.
      * @returns {string} HTML
      */
-    buildHeaderHtml: function (itemList) {
+    buildHeaderHtml(itemList) {
         let $itemList = itemList.map(item => {
             return $('<div>')
                 .addClass('breadcrumb-item')
@@ -326,7 +321,7 @@ let Class = Dep.extend(/** @lends Class# */{
         });
 
         return $div.get(0).outerHTML;
-    },
+    }
 
 
     /**
@@ -334,9 +329,9 @@ let Class = Dep.extend(/** @lends Class# */{
      *
      * @returns {string} HTML
      */
-    getHeaderIconHtml: function () {
+    getHeaderIconHtml() {
         return this.getHelper().getScopeColorIconHtml(this.scope);
-    },
+    }
 
     /**
      * Action 'showModal'.
@@ -345,7 +340,7 @@ let Class = Dep.extend(/** @lends Class# */{
      *
      * @param {Object} data
      */
-    actionShowModal: function (data) {
+    actionShowModal(data) {
         let view = data.view;
 
         if (!view) {
@@ -368,7 +363,7 @@ let Class = Dep.extend(/** @lends Class# */{
                 }
             });
         });
-    },
+    }
 
     /**
      * Add a menu item.
@@ -378,7 +373,7 @@ let Class = Dep.extend(/** @lends Class# */{
      * @param {boolean} [toBeginning=false] To beginning.
      * @param {boolean} [doNotReRender=false] Skip re-render.
      */
-    addMenuItem: function (type, item, toBeginning, doNotReRender) {
+    addMenuItem(type, item, toBeginning, doNotReRender) {
         if (item) {
             item.name = item.name || item.action;
 
@@ -410,19 +405,17 @@ let Class = Dep.extend(/** @lends Class# */{
         this.menu[type][method](item);
 
         if (!doNotReRender && this.isRendered()) {
-            this.getHeaderView()
-                .reRender();
+            this.getHeaderView().reRender();
 
             return;
         }
 
         if (!doNotReRender && this.isBeingRendered()) {
             this.once('after:render', () => {
-                this.getHeaderView()
-                    .reRender();
+                this.getHeaderView().reRender();
             });
         }
-    },
+    }
 
     /**
      * Remove a menu item.
@@ -430,7 +423,7 @@ let Class = Dep.extend(/** @lends Class# */{
      * @param {string} name An item name.
      * @param {boolean} [doNotReRender] Skip re-render.
      */
-    removeMenuItem: function (name, doNotReRender) {
+    removeMenuItem(name, doNotReRender) {
         let index = -1;
         let type = false;
 
@@ -450,16 +443,14 @@ let Class = Dep.extend(/** @lends Class# */{
         }
 
         if (!doNotReRender && this.isRendered()) {
-            this.getHeaderView()
-                .reRender();
+            this.getHeaderView().reRender();
 
             return;
         }
 
         if (!doNotReRender && this.isBeingRendered()) {
             this.once('after:render', () => {
-                this.getHeaderView()
-                    .reRender();
+                this.getHeaderView().reRender();
 
             });
 
@@ -469,31 +460,31 @@ let Class = Dep.extend(/** @lends Class# */{
         if (doNotReRender && this.isRendered()) {
             this.$headerActionsContainer.find('[data-name="' + name + '"]').remove();
         }
-    },
+    }
 
     /**
      * Disable a menu item.
      *
      * @param {string} name A name.
      */
-    disableMenuItem: function (name) {
+    disableMenuItem(name) {
         this.$headerActionsContainer
             .find('[data-name="' + name + '"]')
             .addClass('disabled')
             .attr('disabled');
-    },
+    }
 
     /**
      * Enable a menu item.
      *
      * @param {string} name A name.
      */
-    enableMenuItem: function (name) {
+    enableMenuItem(name) {
         this.$headerActionsContainer
             .find('[data-name="' + name + '"]')
             .removeClass('disabled')
             .removeAttr('disabled');
-    },
+    }
 
     /**
      * Action 'navigateToRoot'.
@@ -501,7 +492,7 @@ let Class = Dep.extend(/** @lends Class# */{
      * @param {Object} data
      * @param {jQuery.Event} e
      */
-    actionNavigateToRoot: function (data, e) {
+    actionNavigateToRoot(data, e) {
         e.stopPropagation();
 
         this.getRouter().checkConfirmLeaveOut(() => {
@@ -514,16 +505,16 @@ let Class = Dep.extend(/** @lends Class# */{
             this.getRouter().navigate(rootUrl, {trigger: false});
             this.getRouter().dispatch(this.scope, null, options);
         });
-    },
+    }
 
     /**
      * Hide a menu item.
      *
      * @param {string} name A name.
      */
-    hideHeaderActionItem: function (name) {
+    hideHeaderActionItem(name) {
         this.headerActionItemTypeList.forEach(t => {
-            (this.menu[t] || []).forEach((item, i) => {
+            (this.menu[t] || []).forEach(item => {
                 item = item || {};
 
                 if (item.name === name) {
@@ -541,16 +532,16 @@ let Class = Dep.extend(/** @lends Class# */{
 
         this.controlMenuDropdownVisibility();
         this.adjustButtons();
-    },
+    }
 
     /**
      * Show a hidden menu item.
      *
      * @param {string} name A name.
      */
-    showHeaderActionItem: function (name) {
+    showHeaderActionItem(name) {
         this.headerActionItemTypeList.forEach(t => {
-            (this.menu[t] || []).forEach((item, i) => {
+            (this.menu[t] || []).forEach(item => {
                 item = item || {};
 
                 if (item.name === name) {
@@ -576,7 +567,7 @@ let Class = Dep.extend(/** @lends Class# */{
         }
 
         processUi();
-    },
+    }
 
     /**
      * Whether a menu has any non-hidden dropdown items.
@@ -584,7 +575,7 @@ let Class = Dep.extend(/** @lends Class# */{
      * @private
      * @returns {boolean}
      */
-    hasMenuVisibleDropdownItems: function () {
+    hasMenuVisibleDropdownItems() {
         let hasItems = false;
 
         (this.menu.dropdown || []).forEach(item => {
@@ -594,12 +585,12 @@ let Class = Dep.extend(/** @lends Class# */{
         });
 
         return hasItems;
-    },
+    }
 
     /**
      * @private
      */
-    controlMenuDropdownVisibility: function () {
+    controlMenuDropdownVisibility() {
         let $group = this.$headerActionsContainer.find('.dropdown-group');
 
         if (this.hasMenuVisibleDropdownItems()) {
@@ -611,20 +602,20 @@ let Class = Dep.extend(/** @lends Class# */{
 
         $group.addClass('hidden');
         $group.find('> button').addClass('hidden');
-    },
+    }
 
     /**
      * @protected
-     * @return {module:views/header.Class}
+     * @return {module:views/header}
      */
-    getHeaderView: function () {
+    getHeaderView() {
         return this.getView('header');
-    },
+    }
 
     /**
      * @private
      */
-    adjustButtons: function () {
+    adjustButtons() {
         let $buttons = this.$headerActionsContainer.find('.btn');
 
         $buttons
@@ -635,7 +626,7 @@ let Class = Dep.extend(/** @lends Class# */{
 
         $buttonsVisible.first().addClass('radius-left');
         $buttonsVisible.last().addClass('radius-right');
-    },
+    }
 
     /**
      * Called when a stored view is reused (by the controller).
@@ -643,8 +634,7 @@ let Class = Dep.extend(/** @lends Class# */{
      * @public
      * @param {Object.<string, *>} params Routing params.
      */
-    setupReuse: function (params) {},
-});
+    setupReuse(params) {}
+}
 
-/** @module views/main */
-export default Class;
+export default MainView;

@@ -562,7 +562,7 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
      * Dispatch a controller action.
      *
      * @param {string} controller A controller.
-     * @param {string} action An action.
+     * @param {string|null} [action] An action.
      * @param {Object} [options] Options.
      * @fires module:router#routed
      */

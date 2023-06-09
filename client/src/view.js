@@ -31,10 +31,11 @@
 import Bull from "lib!bullbone";
 
 /**
- * A base view.
+ * A base view. All views should extend this class.
+ *
  * @see {@link https://docs.espocrm.com/development/view/}
  */
-const Class = class extends Bull.View {
+class View extends Bull.View {
 
     /**
      * @callback module:view~actionHandlerCallback
@@ -46,7 +47,7 @@ const Class = class extends Bull.View {
      *
      * @name model
      * @type {module:model|null}
-     * @memberOf Class.prototype
+     * @memberOf View.prototype
      * @public
      */
 
@@ -55,7 +56,7 @@ const Class = class extends Bull.View {
      *
      * @name collection
      * @type {module:collection|null}
-     * @memberOf Class.prototype
+     * @memberOf View.prototype
      * @public
      */
 
@@ -64,7 +65,7 @@ const Class = class extends Bull.View {
      *
      * @name _helper
      * @type {module:view-helper}
-     * @memberOf Class.prototype
+     * @memberOf View.prototype
      * @private
      */
 
@@ -478,4 +479,4 @@ const Class = class extends Bull.View {
     }
 }
 
-export default Class;
+export default View;
