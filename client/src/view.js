@@ -28,7 +28,7 @@
 
 /** @module view */
 
-import Bull from "lib!bullbone";
+import Bull from 'lib!bullbone';
 
 /**
  * A base view. All views should extend this class.

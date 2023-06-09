@@ -28,47 +28,47 @@
 
 /** @module views/record/search */
 
-import Dep from 'view';
+import View from 'view';
 import StoredTextSearch from 'helpers/misc/stored-text-search';
 
+new View();
+
 /**
- * @class
- * @name Class
- * @extends module:view
+ * A search panel view.
  */
-export default Dep.extend(/** @lends Class# */{
+class SearchView extends View {
 
-    template: 'record/search',
+    template = 'record/search'
 
-    scope: null,
+    scope = null
     /** @type {module:search-manager} */
-    searchManager: null,
-    fieldFilterList: null,
+    searchManager = null
+    fieldFilterList = null
     /** @type {Object.<string, string>|null}*/
-    fieldFilterTranslations: null,
+    fieldFilterTranslations = null
 
-    textFilter: '',
-    primary: null,
-    presetFilterList: null,
-    advanced: null,
-    bool: null,
+    textFilter = ''
+    primary = null
+    presetFilterList = null
+    advanced = null
+    bool = null
 
-    disableSavePreset: false,
-    textFilterDisabled: false,
-    toShowApplyFiltersButton: false,
-    toShowResetFiltersText: false,
-    isSearchedWithAdvancedFilter: false,
+    disableSavePreset = false
+    textFilterDisabled = false
+    toShowApplyFiltersButton = false
+    toShowResetFiltersText = false
+    isSearchedWithAdvancedFilter = false
 
-    viewModeIconClassMap: {
+    viewModeIconClassMap = {
         list: 'fas fa-align-justify',
         kanban: 'fas fa-align-left fa-rotate-90',
-    },
+    }
 
-    FIELD_QUICK_SEARCH_COUNT_THRESHOLD: 4,
+    FIELD_QUICK_SEARCH_COUNT_THRESHOLD = 4
 
-    autocompleteLimit: 7,
+    autocompleteLimit = 7
 
-    data: function () {
+    data() {
         return {
             scope: this.scope,
             entityType: this.entityType,
@@ -89,9 +89,9 @@ export default Dep.extend(/** @lends Class# */{
             toShowApplyFiltersButton: this.toShowApplyFiltersButton,
             toShowResetFiltersText: this.toShowResetFiltersText,
         };
-    },
+    }
 
-    setup: function () {
+    setup() {
         this.entityType = this.collection.name;
         this.scope = this.options.scope || this.entityType;
 
@@ -257,9 +257,9 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         this.getHelper().processSetupHandlers(this, 'record/search');
-    },
+    }
 
-    setupViewModeDataList: function () {
+    setupViewModeDataList() {
         if (!this.viewModeList) {
             return [];
         }
@@ -277,9 +277,9 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         this.viewModeDataList = list;
-    },
+    }
 
-    setViewMode: function (mode, preventLoop, toTriggerEvent) {
+    setViewMode(mode, preventLoop, toTriggerEvent) {
         this.viewMode = mode;
 
         if (this.isRendered()) {
@@ -297,24 +297,24 @@ export default Dep.extend(/** @lends Class# */{
         if (toTriggerEvent) {
             this.trigger('change-view-mode', mode);
         }
-    },
+    }
 
-    isLeftDropdown: function () {
+    isLeftDropdown() {
         return this.presetFilterList.length ||
             this.boolFilterList.length ||
             Object.keys(this.advanced || {}).length;
-    },
+    }
 
-    handleLeftDropdownVisibility: function () {
+    handleLeftDropdownVisibility() {
         if (this.isLeftDropdown()) {
             this.$leftDropdown.removeClass('hidden');
         }
         else {
             this.$leftDropdown.addClass('hidden');
         }
-    },
+    }
 
-    createFilters: function (callback) {
+    createFilters(callback) {
         let i = 0;
         let count = Object.keys(this.advanced || {}).length;
 
@@ -335,9 +335,10 @@ export default Dep.extend(/** @lends Class# */{
                 }
             });
         }
-    },
+    }
 
-    events: {
+    events = {
+        /** @this SearchView */
         'keydown input[data-name="textFilter"]': function (e) {
             let key = Espo.Utils.getKeyFromKeyEvent(e);
 
@@ -347,23 +348,23 @@ export default Dep.extend(/** @lends Class# */{
                 this.hideApplyFiltersButton();
             }
         },
-
+        /** @this SearchView */
         'focus input[data-name="textFilter"]': function (e) {
             e.currentTarget.select();
         },
-
+        /** @this SearchView */
         'click .advanced-filters-apply-container a[data-action="applyFilters"]': function (e) {
             this.search();
             this.hideApplyFiltersButton();
 
             this.$el.find('button.search').focus();
         },
-
+        /** @this SearchView */
         'click button[data-action="search"]': function (e) {
             this.search();
             this.hideApplyFiltersButton();
         },
-
+        /** @this SearchView */
         'click a[data-action="addFilter"]': function (e) {
             let $target = $(e.currentTarget);
             let name = $target.data('name');
@@ -372,7 +373,7 @@ export default Dep.extend(/** @lends Class# */{
 
             this.addFilter(name);
         },
-
+        /** @this SearchView */
         'click .advanced-filters a.remove-filter': function (e) {
             let $target = $(e.currentTarget);
 
@@ -380,15 +381,15 @@ export default Dep.extend(/** @lends Class# */{
 
             this.removeFilter(name);
         },
-
+        /** @this SearchView */
         'click button[data-action="reset"]': function (e) {
             this.resetFilters();
         },
-
+        /** @this SearchView */
         'click button[data-action="refresh"]': function (e) {
             this.refresh();
         },
-
+        /** @this SearchView */
         'click a[data-action="selectPreset"]': function (e) {
             let $target = $(e.currentTarget);
 
@@ -396,7 +397,7 @@ export default Dep.extend(/** @lends Class# */{
 
             this.selectPreset(presetName);
         },
-
+        /** @this SearchView */
         'click .dropdown-menu a[data-action="savePreset"]': function () {
             this.createView('savePreset', 'views/modals/save-filters', {}, view => {
                 view.render();
@@ -414,7 +415,7 @@ export default Dep.extend(/** @lends Class# */{
                 });
             });
         },
-
+        /** @this SearchView */
         'click .dropdown-menu a[data-action="removePreset"]': function () {
             let id = this.presetName;
 
@@ -422,14 +423,14 @@ export default Dep.extend(/** @lends Class# */{
                 this.removePreset(id);
             });
         },
-
+        /** @this SearchView */
         'change .search-row ul.filter-menu input[data-role="boolFilterCheckbox"]': function (e) {
             e.stopPropagation();
 
             this.search();
             this.manageLabels();
         },
-
+        /** @this SearchView */
         'click [data-action="switchViewMode"]': function (e) {
             let mode = $(e.currentTarget).data('name');
 
@@ -439,11 +440,11 @@ export default Dep.extend(/** @lends Class# */{
 
             this.setViewMode(mode, false, true);
         },
-
+        /** @this SearchView */
         'keyup input.field-filter-quick-search-input': function (e) {
             this.processFieldFilterQuickSearch(e.currentTarget.value);
         },
-
+        /** @this SearchView */
         'keydown input.field-filter-quick-search-input': function (e) {
             if (e.code === 'Enter') {
                 this.addFirstFieldFilter();
@@ -455,9 +456,9 @@ export default Dep.extend(/** @lends Class# */{
                 this.closeAddFieldDropdown();
             }
         },
-    },
+    }
 
-    removeFilter: function (name) {
+    removeFilter(name) {
         this.$el.find('ul.filter-list li[data-name="' + name + '"]').removeClass('hidden');
 
         let container = this.getView('filter-' + name).$el.closest('div.filter');
@@ -490,9 +491,9 @@ export default Dep.extend(/** @lends Class# */{
         if (!this.hasAdvancedFilter()) {
             this.hideApplyFiltersButton();
         }
-    },
+    }
 
-    addFilter: function (name) {
+    addFilter(name) {
         this.advanced[name] = {};
 
         this.presetName = this.primary;
@@ -513,9 +514,9 @@ export default Dep.extend(/** @lends Class# */{
 
         this.manageLabels();
         this.controlResetButtonVisibility();
-    },
+    }
 
-    refresh: function () {
+    refresh() {
         Espo.Ui.notify(' ... ');
 
         this.collection.abortLastFetch();
@@ -524,9 +525,9 @@ export default Dep.extend(/** @lends Class# */{
         this.collection.fetch().then(() => {
             Espo.Ui.notify(false);
         });
-    },
+    }
 
-    selectPreset: function (presetName, forceClearAdvancedFilters) {
+    selectPreset(presetName, forceClearAdvancedFilters) {
         let wasPreset = !(this.primary === this.presetName);
 
         this.presetName = presetName;
@@ -554,17 +555,17 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         this.updateCollection();
-    },
+    }
 
-    removeFilters: function () {
+    removeFilters() {
         this.$advancedFiltersPanel.empty();
 
         for (let name in this.advanced) {
             this.clearView('filter-' + name);
         }
-    },
+    }
 
-    resetFilters: function () {
+    resetFilters() {
         this.trigger('reset');
 
         this.collection.resetOrderToDefault();
@@ -576,9 +577,9 @@ export default Dep.extend(/** @lends Class# */{
         this.hideApplyFiltersButton();
 
         this.trigger('update-ui');
-    },
+    }
 
-    savePreset: function (name) {
+    savePreset(name) {
         let id = 'f' + (Math.floor(Math.random() * 1000001)).toString();
 
         this.fetch();
@@ -610,9 +611,9 @@ export default Dep.extend(/** @lends Class# */{
         this.getPreferences().save({'presetFilters': presetFilters}, {patch: true});
 
         this.presetName = id;
-    },
+    }
 
-    removePreset: function (id) {
+    removePreset(id) {
         let presetFilters = this.getPreferences().get('presetFilters') || {};
 
         if (!(this.scope in presetFilters)) {
@@ -649,9 +650,9 @@ export default Dep.extend(/** @lends Class# */{
         this.render();
         this.updateSearch();
         this.updateCollection();
-    },
+    }
 
-    updateAddFilterButton: function () {
+    updateAddFilterButton() {
         let $ul = this.$el.find('ul.filter-list');
 
         if (
@@ -667,9 +668,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.trigger('update-ui');
-    },
+    }
 
-    afterRender: function () {
+    afterRender() {
         this.$filtersLabel = this.$el.find('.search-row span.filters-label');
         this.$filtersButton = this.$el.find('.search-row button.filters-button');
         this.$leftDropdown = this.$el.find('div.search-row div.left-dropdown');
@@ -693,9 +694,9 @@ export default Dep.extend(/** @lends Class# */{
         this.controlResetButtonVisibility();
         this.initQuickSearchUi();
         this.initTextSearchAutocomplete();
-    },
+    }
 
-    initTextSearchAutocomplete: function () {
+    initTextSearchAutocomplete() {
         if (this.textSearchStoringDisabled) {
             return;
         }
@@ -777,9 +778,9 @@ export default Dep.extend(/** @lends Class# */{
 
         this.once('render', () => this.$textFilter.autocomplete('dispose'));
         this.once('remove', () => this.$textFilter.autocomplete('dispose'));
-    },
+    }
 
-    initQuickSearchUi: function () {
+    initQuickSearchUi() {
         this.$addFilterButton.parent().on('show.bs.dropdown', () => {
             setTimeout(() => {
                 this.$fieldQuickSearch.focus();
@@ -795,9 +796,9 @@ export default Dep.extend(/** @lends Class# */{
 
             this.$fieldQuickSearch.css('minWidth', '');
         });
-    },
+    }
 
-    manageLabels: function () {
+    manageLabels() {
         this.$el.find('ul.dropdown-menu > li.preset-control').addClass('hidden');
 
         this.currentFilterLabelList = [];
@@ -806,13 +807,13 @@ export default Dep.extend(/** @lends Class# */{
         this.manageBoolFilters();
 
         this.$filtersLabel.html(this.currentFilterLabelList.join(' &middot; '));
-    },
+    }
 
     /**
      * @private
      * @return {boolean}
      */
-    toShowResetButton: function () {
+    toShowResetButton() {
         if (this.textFilter) {
             return true;
         }
@@ -834,9 +835,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return false;
-    },
+    }
 
-    controlResetButtonVisibility: function () {
+    controlResetButtonVisibility() {
         if (this.toShowResetButton()) {
             this.$resetButton.css('visibility', 'visible');
 
@@ -844,9 +845,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.$resetButton.css('visibility', 'hidden');
-    },
+    }
 
-    managePresetFilters: function () {
+    managePresetFilters() {
         let presetName = this.presetName || null;
         let primary = this.primary;
 
@@ -920,9 +921,9 @@ export default Dep.extend(/** @lends Class# */{
         this.$el
             .find('ul.filter-menu a.preset[data-name="'+presetName+'"]')
             .prepend('<span class="fas fa-check pull-right"></span>');
-    },
+    }
 
-    manageBoolFilters: function () {
+    manageBoolFilters() {
         (this.boolFilterList || []).forEach((item) => {
             if (this.bool[item]) {
                 let label = this.translate(item, 'boolFilters', this.entityType);
@@ -930,9 +931,9 @@ export default Dep.extend(/** @lends Class# */{
                 this.currentFilterLabelList.push(label);
             }
         });
-    },
+    }
 
-    search: function () {
+    search() {
         this.fetch();
         this.updateSearch();
         this.updateCollection();
@@ -940,26 +941,26 @@ export default Dep.extend(/** @lends Class# */{
         this.storeTextSearch();
 
         this.isSearchedWithAdvancedFilter = this.hasAdvancedFilter();
-    },
+    }
 
-    hasAdvancedFilter: function () {
+    hasAdvancedFilter() {
         return Object.keys(this.advanced).length > 0;
-    },
+    }
 
-    getFilterDataList: function () {
-        let arr = [];
+    getFilterDataList() {
+        let list = [];
 
         for (let field in this.advanced) {
-            arr.push({
+            list.push({
                 key: 'filter-' + field,
                 name: field,
             });
         }
 
-        return arr;
-    },
+        return list;
+    }
 
-    updateCollection: function () {
+    updateCollection() {
         this.collection.abortLastFetch();
         this.collection.reset();
         this.collection.where = this.searchManager.getWhere();
@@ -970,9 +971,9 @@ export default Dep.extend(/** @lends Class# */{
         this.collection.fetch().then(() => {
             Espo.Ui.notify(false);
         });
-    },
+    }
 
-    getPresetFilterList: function () {
+    getPresetFilterList() {
         let arr = [];
 
         this.presetFilterList.forEach((item) => {
@@ -984,9 +985,9 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return arr;
-    },
+    }
 
-    getPresetData: function () {
+    getPresetData() {
         let data = {};
 
         this.getPresetFilterList().forEach(item => {
@@ -996,9 +997,9 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return data;
-    },
+    }
 
-    getPrimaryFilterName: function () {
+    getPrimaryFilterName() {
         let primaryFilterName = null;
 
         this.getPresetFilterList().forEach(item => {
@@ -1013,9 +1014,9 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return primaryFilterName;
-    },
+    }
 
-    getPrimaryFilterStyle: function () {
+    getPrimaryFilterStyle() {
         let style = null;
 
         this.getPresetFilterList().forEach(item => {
@@ -1025,9 +1026,9 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return style;
-    },
+    }
 
-    loadSearchData: function () {
+    loadSearchData() {
         let searchData = this.searchManager.get();
 
         this.textFilter = searchData.textFilter;
@@ -1060,9 +1061,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.bool = searchData.bool;
-    },
+    }
 
-    createFilter: function (name, params, callback, noRender) {
+    createFilter(name, params, callback, noRender) {
         params = params || {};
 
         let rendered = false;
@@ -1114,9 +1115,9 @@ export default Dep.extend(/** @lends Class# */{
                 this.hideApplyFiltersButton();
             });
         });
-    },
+    }
 
-    fetch: function () {
+    fetch() {
         this.textFilter = (this.$el.find('input[data-name="textFilter"]').val() || '').trim();
 
         this.bool = {};
@@ -1134,9 +1135,9 @@ export default Dep.extend(/** @lends Class# */{
 
             view.searchParams = this.advanced[field];
         }
-    },
+    }
 
-    updateSearch: function () {
+    updateSearch() {
         this.searchManager.set({
             textFilter: this.textFilter,
             advanced: this.advanced,
@@ -1144,9 +1145,9 @@ export default Dep.extend(/** @lends Class# */{
             presetName: this.presetName,
             primary: this.primary,
         });
-    },
+    }
 
-    getFilterFieldDataList: function () {
+    getFilterFieldDataList() {
         let defs = [];
 
         for (let i in this.fieldFilterList) {
@@ -1162,9 +1163,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return defs;
-    },
+    }
 
-    showResetFiltersButton: function () {
+    showResetFiltersButton() {
         this.toShowApplyFiltersButton = true;
         this.toShowResetFiltersText = true;
 
@@ -1172,9 +1173,9 @@ export default Dep.extend(/** @lends Class# */{
 
         this.$applyFiltersContainer.find('.text-apply').addClass('hidden');
         this.$applyFiltersContainer.find('.text-reset').removeClass('hidden');
-    },
+    }
 
-    showApplyFiltersButton: function () {
+    showApplyFiltersButton() {
         this.toShowApplyFiltersButton = true;
         this.toShowResetFiltersText = false;
 
@@ -1182,16 +1183,16 @@ export default Dep.extend(/** @lends Class# */{
 
         this.$applyFiltersContainer.find('.text-reset').addClass('hidden');
         this.$applyFiltersContainer.find('.text-apply').removeClass('hidden');
-    },
+    }
 
-    hideApplyFiltersButton: function () {
+    hideApplyFiltersButton() {
         this.toShowApplyFiltersButton = false;
         this.toShowResetFiltersText = false;
 
         this.$applyFiltersContainer.addClass('hidden');
-    },
+    }
 
-    selectPreviousPreset: function () {
+    selectPreviousPreset() {
         let list = Espo.Utils.clone(this.getPresetFilterList());
 
         list.unshift({name: null});
@@ -1209,9 +1210,9 @@ export default Dep.extend(/** @lends Class# */{
         let preset = list[index];
 
         this.selectPreset(preset.name);
-    },
+    }
 
-    selectNextPreset: function () {
+    selectNextPreset() {
         let list = Espo.Utils.clone(this.getPresetFilterList());
 
         list.unshift({name: null});
@@ -1229,13 +1230,13 @@ export default Dep.extend(/** @lends Class# */{
         let preset = list[index];
 
         this.selectPreset(preset.name);
-    },
+    }
 
     /**
      * @private
      * @param {string} text
      */
-    processFieldFilterQuickSearch: function (text) {
+    processFieldFilterQuickSearch(text) {
         text = text.trim();
         text = text.toLowerCase();
 
@@ -1268,14 +1269,14 @@ export default Dep.extend(/** @lends Class# */{
                 $li.filter(`[data-name="${field}"]`).removeClass('search-hidden');
             }
         });
-    },
+    }
 
-    resetFieldFilterQuickSearch: function () {
+    resetFieldFilterQuickSearch() {
         this.$fieldQuickSearch.val('');
         this.$filterList.find('li.filter-item').removeClass('search-hidden');
-    },
+    }
 
-    addFirstFieldFilter: function () {
+    addFirstFieldFilter() {
         let $first = this.$filterList.find('li.filter-item:not(.hidden):not(.search-hidden)').first();
 
         if (!$first.length) {
@@ -1289,15 +1290,15 @@ export default Dep.extend(/** @lends Class# */{
         this.closeAddFieldDropdown();
         this.addFilter(name);
         this.resetFieldFilterQuickSearch();
-    },
+    }
 
-    closeAddFieldDropdown: function () {
+    closeAddFieldDropdown() {
         this.$addFilterButton.parent()
             .find('[data-toggle="dropdown"]')
             .dropdown('toggle');
-    },
+    }
 
-    storeTextSearch: function () {
+    storeTextSearch() {
         if (!this.textFilter) {
             return;
         }
@@ -1307,5 +1308,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.storedTextSearchHelper.store(this.textFilter);
-    },
-});
+    }
+}
+
+export default SearchView;
