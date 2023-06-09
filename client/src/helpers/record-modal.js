@@ -29,7 +29,7 @@
 /**
  * A record-modal helper.
  */
-export default class {
+class RecordModalHelper {
     /**
      * @param {module:metadata} metadata
      * @param {module:acl-manager} acl
@@ -88,3 +88,5 @@ export default class {
         });
     }
 }
+
+export default RecordModalHelper;

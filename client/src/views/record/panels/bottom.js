@@ -28,18 +28,14 @@
 
 /** @module views/record/panels/bottom */
 
-import Dep from 'view';
+import View from 'view';
 
 /**
  * A bottom panel.
- *
- * @class
- * @name Class
- * @extends module:view
  */
-export default Dep.extend(/** @lends Class# */{
+class BottomPanel extends View {
 
-    template: 'record/panels/side',
+    template = 'record/panels/side'
 
     /**
      * A field list.
@@ -47,21 +43,21 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {module:views/record/panels/side~field[]}
      */
-    fieldList: null,
+    fieldList = null
 
     /**
      * @protected
      * @type {module:views/record/panels-container~action[]}
      */
-    actionList: null,
+    actionList = null
 
     /**
      * @protected
      * @type {module:views/record/panels-container~button[]}
      */
-    buttonList: null,
+    buttonList = null
 
-    defs: null,
+    defs = null
 
     /**
      * A mode.
@@ -69,16 +65,16 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {'list'|'detail'|'edit'}
      */
-    mode: 'detail',
+    mode = 'detail'
 
     /**
      * Disable.
      *
      * @protected
      */
-    disabled: false,
+    disabled = false
 
-    events: {
+    events = {
         'click .action': function (e) {
             var $el = $(e.currentTarget);
             var action = $el.data('action');
@@ -91,18 +87,18 @@ export default Dep.extend(/** @lends Class# */{
                 e.preventDefault();
             }
         }
-    },
+    }
 
-    data: function () {
+    data() {
         return {
             scope: this.scope,
             name: this.panelName,
             hiddenFields: this.recordHelper.getHiddenFields(),
             fieldList: this.getFieldList(),
         };
-    },
+    }
 
-    init: function () {
+    init() {
         this.panelName = this.options.panelName;
         this.defs = this.options.defs || {};
         this.recordHelper = this.options.recordHelper;
@@ -123,9 +119,9 @@ export default Dep.extend(/** @lends Class# */{
         this.fieldList = this.options.fieldList || this.fieldList || [];
 
         this.recordViewObject = this.options.recordViewObject;
-    },
+    }
 
-    setup: function () {
+    setup() {
         this.setupFields();
 
         this.fieldList = this.fieldList.map((d) => {
@@ -165,36 +161,36 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         this.createFields();
-    },
+    }
 
     /**
      * Set up fields.
      *
      * @protected
      */
-    setupFields: function () {},
+    setupFields() {}
 
     /**
      * @return {module:views/record/panels-container~button[]}
      */
-    getButtonList: function () {
+    getButtonList() {
         return this.buttonList || [];
-    },
+    }
 
     /**
      * @return {module:views/record/panels-container~action[]}
      */
-    getActionList: function () {
+    getActionList() {
         return this.actionList || [];
-    },
+    }
 
     /**
      * Get field views.
      *
      * @return {Object.<string,module:views/fields/base>}
      */
-    getFieldViews: function () {
-        var fields = {};
+    getFieldViews() {
+        let fields = {};
 
         this.getFieldList().forEach((item) => {
             if (this.hasView(item.viewKey)) {
@@ -203,21 +199,21 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return fields;
-    },
+    }
 
     /**
      * @deprecated Use `getFieldViews`.
      */
-    getFields: function () {
+    getFields() {
         return this.getFieldViews();
-    },
+    }
 
     /**
      * Get a field list.
      *
      * @return {module:views/record/panels/side~field[]}
      */
-    getFieldList: function () {
+    getFieldList() {
         return this.fieldList.map(item => {
             if (typeof item !== 'object') {
                 return {
@@ -227,12 +223,12 @@ export default Dep.extend(/** @lends Class# */{
 
             return item;
         });
-    },
+    }
 
     /**
      * @private
      */
-    createFields: function () {
+    createFields() {
         this.getFieldList().forEach((item) => {
             var view = null;
             var field;
@@ -255,7 +251,7 @@ export default Dep.extend(/** @lends Class# */{
 
             this.createField(field, view, null, null, readOnly);
         });
-    },
+    }
 
     /**
      * Create a field view.
@@ -268,7 +264,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {boolean} [readOnly] Read-only.
      * @param {Object<string,*>} [options] View options.
      */
-    createField: function (field, viewName, params, mode, readOnly, options) {
+    createField(field, viewName, params, mode, readOnly, options) {
         var type = this.model.getFieldType(field) || 'base';
 
         viewName = viewName ||
@@ -344,14 +340,14 @@ export default Dep.extend(/** @lends Class# */{
         var viewKey = field + 'Field';
 
         this.createView(viewKey, viewName, o);
-    },
+    }
 
     /**
      * Is tab-hidden.
      *
      * @return {boolean}
      */
-    isTabHidden: function () {
+    isTabHidden() {
         if (this.defs.tabNumber === -1 || typeof this.defs.tabNumber === 'undefined') {
             return false;
         }
@@ -367,5 +363,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return false;
-    },
-});
+    }
+}
+
+export default BottomPanel;

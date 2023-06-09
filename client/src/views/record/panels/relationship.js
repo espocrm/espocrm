@@ -28,76 +28,69 @@
 
 /** @module views/record/panels/relationship */
 
-import Dep from 'views/record/panels/bottom';
+import BottomPanel from 'views/record/panels/bottom';
 import SearchManager from 'search-manager';
 import RecordModal from 'helpers/record-modal';
 
 /**
  * A relationship panel.
- *
- * @class
- * @name Class
- * @extends module:views/record/panels/bottom
  */
-export default Dep.extend(/** @lends Class# */{
+class RelationshipPanel extends BottomPanel {
 
-    /**
-     * @inheritDoc
-     */
-    template: 'record/panels/relationship',
+    /** @inheritDoc */
+    template = 'record/panels/relationship'
 
     /**
      * A row-actions view.
      *
      * @protected
      */
-    rowActionsView: 'views/record/row-actions/relationship',
+    rowActionsView = 'views/record/row-actions/relationship'
 
     /**
      * An API URL.
      *
      * @protected
+     * @type {string|null}
      */
-    url: null,
+    url = null
 
     /**
      * A scope.
+     *
+     * @type {string|null}
      */
-    scope: null,
+    scope = null
 
     /**
      * Read-only.
      */
-    readOnly: false,
+    readOnly = false
 
     /**
      * Fetch a collection on a model 'after:relate' event.
      *
      * @protected
      */
-    fetchOnModelAfterRelate: false,
+    fetchOnModelAfterRelate = false
 
     /**
      * @protected
      */
-    noCreateScopeList: ['User', 'Team', 'Role', 'Portal'],
+    noCreateScopeList = ['User', 'Team', 'Role', 'Portal']
 
     /**
      * @private
      */
-    recordsPerPage: null,
+    recordsPerPage = null
 
     /**
      * @protected
      */
-    viewModalView: null,
+    viewModalView = null
 
-    init: function () {
-        Dep.prototype.init.call(this);
-    },
-
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
         this.link = this.link || this.defs.link || this.panelName;
 
@@ -301,21 +294,21 @@ export default Dep.extend(/** @lends Class# */{
 
         this.setupFilterActions();
         this.setupLast();
-    },
+    }
 
     /**
      * Set up lastly.
      *
      * @protected
      */
-    setupLast: function () {},
+    setupLast() {}
 
     /**
      * Set up title.
      *
      * @protected
      */
-    setupTitle: function () {
+    setupTitle() {
         this.title = this.title || this.translate(this.link, 'links', this.model.name);
 
         var iconHtml = '';
@@ -335,14 +328,14 @@ export default Dep.extend(/** @lends Class# */{
         if (this.filter && this.filter !== 'all') {
             this.titleHtml += ' &middot; ' + this.translateFilter(this.filter);
         }
-    },
+    }
 
     /**
      * Set up sorting.
      *
      * @protected
      */
-    setupSorting: function () {
+    setupSorting() {
         var orderBy = this.defs.orderBy || this.defs.sortBy || this.orderBy;
         var order = this.defs.orderDirection || this.orderDirection || this.order;
 
@@ -361,28 +354,28 @@ export default Dep.extend(/** @lends Class# */{
 
         this.defaultOrderBy = orderBy;
         this.defaultOrder = order;
-    },
+    }
 
     /**
      * Set up a list layout.
      *
      * @protected
      */
-    setupListLayout: function () {},
+    setupListLayout() {}
 
     /**
      * Set up actions.
      *
      * @protected
      */
-    setupActions: function () {},
+    setupActions() {}
 
     /**
      * Set up filter actions.
      *
      * @protected
      */
-    setupFilterActions: function () {
+    setupFilterActions() {
         if (this.filterList && this.filterList.length) {
             this.actionList.push(false);
 
@@ -418,7 +411,7 @@ export default Dep.extend(/** @lends Class# */{
                 });
             });
         }
-    },
+    }
 
     /**
      * Translate a filter.
@@ -426,23 +419,23 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} name A name.
      * @return {string}
      */
-    translateFilter: function (name) {
+    translateFilter(name) {
         return this.translate(name, 'presetFilters', this.scope);
-    },
+    }
 
     /**
      * @private
      */
-    getStoredFilter: function () {
+    getStoredFilter() {
         var key = 'panelFilter' + this.model.name + '-' + (this.panelName || this.name);
 
         return this.getStorage().get('state', key) || null;
-    },
+    }
 
     /**
      * @private
      */
-    storeFilter: function (filter) {
+    storeFilter(filter) {
         var key = 'panelFilter' + this.model.name + '-' + (this.panelName || this.name);
 
         if (filter) {
@@ -450,28 +443,28 @@ export default Dep.extend(/** @lends Class# */{
         } else {
             this.getStorage().clear('state', key);
         }
-    },
+    }
 
     /**
      * Set a filter.
      *
      * @param {string} filter A filter.
      */
-    setFilter: function (filter) {
+    setFilter(filter) {
         this.filter = filter;
         this.collection.data.primaryFilter = null;
 
         if (filter && filter !== 'all') {
             this.collection.data.primaryFilter = filter;
         }
-    },
+    }
 
     /**
      * A `select-filter` action.
      *
      * @protected
      */
-    actionSelectFilter: function (data) {
+    actionSelectFilter(data) {
         var filter = data.name;
         var filterInternal = filter;
 
@@ -517,23 +510,23 @@ export default Dep.extend(/** @lends Class# */{
                 .find('> .panel-heading > .panel-title > span')
                 .html(this.titleHtml);
         }
-    },
+    }
 
     /**
      * A `refresh` action.
      *
      * @protected
      */
-    actionRefresh: function () {
+    actionRefresh() {
         this.collection.fetch();
-    },
+    }
 
     /**
      * A `view-related-list` action.
      *
      * @protected
      */
-    actionViewRelatedList: function (data) {
+    actionViewRelatedList(data) {
         var viewName =
             this.getMetadata().get(
                 ['clientDefs', this.model.name, 'relationshipPanels', this.name, 'viewModalView']
@@ -598,7 +591,7 @@ export default Dep.extend(/** @lends Class# */{
                 this.clearView('modalRelatedList');
             });
         });
-    },
+    }
 
     /**
      * Is create available.
@@ -607,9 +600,9 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} scope A scope (entity type).
      * @return {boolean};
      */
-    isCreateAvailable: function (scope) {
+    isCreateAvailable(scope) {
         return !!this.defs.create;
-    },
+    }
 
     /**
      * Is select available.
@@ -618,16 +611,16 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} scope A scope (entity type).
      * @return {boolean};
      */
-    isSelectAvailable: function (scope) {
+    isSelectAvailable(scope) {
         return !!this.defs.select;
-    },
+    }
 
     /**
      * A `view-related` action.
      *
      * @protected
      */
-    actionViewRelated: function (data) {
+    actionViewRelated(data) {
         let id = data.id;
         let model = this.collection.get(id);
 
@@ -650,14 +643,14 @@ export default Dep.extend(/** @lends Class# */{
                     this.collection.fetch();
                 });
             });
-    },
+    }
 
     /**
      * An `edit-related` action.
      *
      * @protected
      */
-    actionEditRelated: function (data) {
+    actionEditRelated(data) {
         var id = data.id;
         var scope = this.collection.get(id).name;
 
@@ -680,14 +673,14 @@ export default Dep.extend(/** @lends Class# */{
                 this.collection.fetch();
             });
         });
-    },
+    }
 
     /**
      * An `unlink-related` action.
      *
      * @protected
      */
-    actionUnlinkRelated: function (data) {
+    actionUnlinkRelated(data) {
         var id = data.id;
 
         this.confirm({
@@ -707,14 +700,14 @@ export default Dep.extend(/** @lends Class# */{
                     this.model.trigger('after:unrelate:' + this.link);
                 });
         });
-    },
+    }
 
     /**
      * A `remove-related` action.
      *
      * @protected
      */
-    actionRemoveRelated: function (data) {
+    actionRemoveRelated(data) {
         var id = data.id;
 
         this.confirm({
@@ -736,14 +729,14 @@ export default Dep.extend(/** @lends Class# */{
                     this.model.trigger('after:unrelate:' + this.link);
                 });
         });
-    },
+    }
 
     /**
      * An `unlink-all-related` action.
      *
      * @protected
      */
-    actionUnlinkAllRelated: function (data) {
+    actionUnlinkAllRelated(data) {
         this.confirm(this.translate('unlinkAllConfirmation', 'messages'), () => {
             Espo.Ui.notify(' ... ');
 
@@ -761,5 +754,7 @@ export default Dep.extend(/** @lends Class# */{
                     this.model.trigger('after:unrelate:' + this.link);
                 });
         });
-    },
-});
+    }
+}
+
+export default RelationshipPanel;

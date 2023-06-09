@@ -26,19 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Dep from 'views/record/panels/side';
+import SidePanel from 'views/record/panels/side';
 
 /**
  * A default side panel.
- *
- * @class
- * @name Class
- * @extends module:views/record/panels/side
  */
-export default Dep.extend(/** @lends Class */{
+class DefaultSidePanel extends SidePanel {
 
-    data: function () {
-        var data = Dep.prototype.data.call(this);
+    data() {
+        let data = super.data();
 
         if (
             this.complexCreatedDisabled &&
@@ -51,9 +47,9 @@ export default Dep.extend(/** @lends Class */{
         data.hasComplexModified = this.hasComplexModified;
 
         return data;
-    },
+    }
 
-    setup: function () {
+    setup() {
         this.fieldList = Espo.Utils.cloneDeep(this.fieldList);
 
         this.hasComplexCreated =
@@ -64,11 +60,11 @@ export default Dep.extend(/** @lends Class */{
             !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'modifiedAt']) &&
             !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'modifiedBy']);
 
-        Dep.prototype.setup.call(this);
-    },
+        super.setup();
+    }
 
-    setupFields: function () {
-        Dep.prototype.setupFields.call(this);
+    setupFields() {
+        super.setupFields();
 
         if (!this.complexCreatedDisabled) {
             if (this.hasComplexCreated) {
@@ -141,13 +137,15 @@ export default Dep.extend(/** @lends Class */{
 
             this.listenTo(this.model, 'change:followersIds', () => this.controlFollowersField());
         }
-    },
+    }
 
-    controlFollowersField: function () {
+    controlFollowersField() {
         if (this.model.get('followersIds') && this.model.get('followersIds').length) {
             this.recordViewObject.showField('followers');
         } else {
             this.recordViewObject.hideField('followers');
         }
-    },
-});
+    }
+}
+
+export default DefaultSidePanel;
