@@ -28,12 +28,13 @@
 
 /** @module broadcast-channel */
 
-export default class {
+class BroadcastChannel {
+
     constructor() {
         this.object = null;
 
         if (window.BroadcastChannel) {
-            this.object = new BroadcastChannel('app');
+            this.object = new window.BroadcastChannel('app');
         }
     }
 
@@ -69,3 +70,5 @@ export default class {
         this.object.addEventListener('message', callback);
     }
 }
+
+export default BroadcastChannel;

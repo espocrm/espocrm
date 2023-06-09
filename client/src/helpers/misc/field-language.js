@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @module field-language */
+/** @module helpers/misc/field-language */
 
 /**
  * A field-language util.

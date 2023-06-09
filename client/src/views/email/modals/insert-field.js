@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/modals/insert-field', ['views/modal', 'field-language'], function (Dep, FieldLanguage) {
+define('views/email/modals/insert-field',
+['views/modal', 'helpers/misc/field-language'], function (Dep, FieldLanguage) {
 
     return Dep.extend({
 

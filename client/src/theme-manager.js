@@ -30,54 +30,56 @@
 
 /**
  * A theme manager.
- *
- * @class
- * @param {module:models/settings} config A config.
- * @param {module:models/preferences} preferences Preferences.
- * @param {module:metadata} metadata Metadata.
- * @param {?string} [name] A name. If not set, then will be obtained from config and preferences.
  */
-const ThemeManager = function (config, preferences, metadata, name) {
+class ThemeManager {
+
     /**
-     * @private
-     * @type {module:models/settings}
+     * @param {module:models/settings} config A config.
+     * @param {module:models/preferences} preferences Preferences.
+     * @param {module:metadata} metadata Metadata.
+     * @param {?string} [name] A name. If not set, then will be obtained from config and preferences.
      */
-    this.config = config;
-    /**
-     * @private
-     * @type {module:models/preferences}
-     */
-    this.preferences = preferences;
-    /**
-     * @private
-     * @type {module:metadata}
-     */
-    this.metadata = metadata;
+    constructor(config, preferences, metadata, name) {
+        /**
+         * @private
+         * @type {module:models/settings}
+         */
+        this.config = config;
+
+        /**
+         * @private
+         * @type {module:models/preferences}
+         */
+        this.preferences = preferences;
+
+        /**
+         * @private
+         * @type {module:metadata}
+         */
+        this.metadata = metadata;
+
+        /**
+         * @private
+         * @type {?string}
+         */
+        this.name = name || null;
+    }
 
     /**
      * @private
-     * @type {?string}
      */
-    this.name = name || null;
-};
-
-_.extend(ThemeManager.prototype, /** ThemeManager# */{
-
-    /**
-     * @private
-     */
-    defaultParams: {
+    defaultParams = {
         screenWidthXs: 768,
         dashboardCellHeight: 155,
         dashboardCellMargin: 19,
-    },
+    }
 
     /**
      * Get a theme name for the current user.
      *
      * @returns {string}
      */
-    getName: function () {
+    getName() {
         if (this.name) {
             return this.name;
         }
@@ -91,14 +93,14 @@ _.extend(ThemeManager.prototype, /** ThemeManager# */{
         }
 
         return this.config.get('theme');
-    },
+    }
 
     /**
      * Get a theme name currently applied to the DOM.
      *
      * @returns {string|null} Null if not applied.
      */
-    getAppliedName: function () {
+    getAppliedName() {
         let name = window.getComputedStyle(document.body).getPropertyValue('--theme-name');
 
         if (!name) {
@@ -106,14 +108,14 @@ _.extend(ThemeManager.prototype, /** ThemeManager# */{
         }
 
         return name.trim();
-    },
+    }
 
     /**
      * Whether a current theme is applied to the DOM.
      *
      * @returns {boolean}
      */
-    isApplied: function () {
+    isApplied() {
         let appliedName = this.getAppliedName();
 
         if (!appliedName) {
@@ -121,14 +123,14 @@ _.extend(ThemeManager.prototype, /** ThemeManager# */{
         }
 
         return this.getName() === appliedName;
-    },
+    }
 
     /**
      * Get a stylesheet path for a current theme.
      *
      * @returns {string}
      */
-    getStylesheet: function () {
+    getStylesheet() {
         let link = this.getParam('stylesheet') || 'client/css/espo/espo.css';
 
         if (this.config.get('cacheTimestamp')) {
@@ -136,14 +138,14 @@ _.extend(ThemeManager.prototype, /** ThemeManager# */{
         }
 
         return link;
-    },
+    }
 
     /**
      * Get an iframe stylesheet path for a current theme.
      *
      * @returns {string}
      */
-    getIframeStylesheet: function () {
+    getIframeStylesheet() {
         let link = this.getParam('stylesheetIframe') || 'client/css/espo/espo-iframe.css';
 
         if (this.config.get('cacheTimestamp')) {
@@ -151,14 +153,14 @@ _.extend(ThemeManager.prototype, /** ThemeManager# */{
         }
 
         return link;
-    },
+    }
 
     /**
      * Get an iframe-fallback stylesheet path for a current theme.
      *
      * @returns {string}
      */
-    getIframeFallbackStylesheet: function () {
+    getIframeFallbackStylesheet() {
         let link = this.getParam('stylesheetIframeFallback') || 'client/css/espo/espo-iframe.css'
 
         if (this.config.get('cacheTimestamp')) {
@@ -166,7 +168,7 @@ _.extend(ThemeManager.prototype, /** ThemeManager# */{
         }
 
         return link;
-    },
+    }
 
     /**
      * Get a theme parameter.
@@ -174,7 +176,7 @@ _.extend(ThemeManager.prototype, /** ThemeManager# */{
      * @param {string} name A parameter name.
      * @returns {*} Null if not set.
      */
-    getParam: function (name) {
+    getParam(name) {
         if (name !== 'params' && name !== 'mappedParams') {
             let varValue = this.getVarParam(name);
 
@@ -202,14 +204,14 @@ _.extend(ThemeManager.prototype, /** ThemeManager# */{
         }
 
         return this.defaultParams[name] || null;
-    },
+    }
 
     /**
      * @private
      * @param {string} name
      * @returns {*}
      */
-    getVarParam: function (name) {
+    getVarParam(name) {
         let params = this.getParam('params') || {};
 
         if (!(name in params)) {
@@ -235,14 +237,14 @@ _.extend(ThemeManager.prototype, /** ThemeManager# */{
         }
 
         return null;
-    },
+    }
 
     /**
      * @private
      * @param {string} name
      * @returns {*}
      */
-    getMappedParam: function (name) {
+    getMappedParam(name) {
         let mappedParams = this.getParam('mappedParams') || {};
 
         if (!(name in mappedParams)) {
@@ -259,22 +261,22 @@ _.extend(ThemeManager.prototype, /** ThemeManager# */{
         }
 
         return null;
-    },
+    }
 
     /**
      * @private
      * @returns {string}
      */
-    getParentName: function () {
+    getParentName() {
         return this.metadata.get(['themes', this.getName(), 'parent']) || 'Espo';
-    },
+    }
 
     /**
      * Whether a current theme is different from a system default theme.
      *
      * @returns {boolean}
      */
-    isUserTheme: function () {
+    isUserTheme() {
         if (this.config.get('userThemesDisabled')) {
             return false;
         }
@@ -286,7 +288,7 @@ _.extend(ThemeManager.prototype, /** ThemeManager# */{
         }
 
         return name !== this.config.get('theme');
-    },
-});
+    }
+}
 
 export default ThemeManager;

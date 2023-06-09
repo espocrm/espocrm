@@ -28,63 +28,66 @@
 
 /** @module page-title */
 
+import $ from 'lib!jquery';
+
 /**
  * A page-title util.
- *
- * @class
- * @param {module:models/settings} config A config.
  */
-const PageTitle = function (config) {
+class PageTitle {
 
     /**
-     * @private
-     * @type {boolean}
+     * @class
+     * @param {module:models/settings} config A config.
      */
-    this.displayNotificationNumber = config.get('newNotificationCountInTitle') || false;
+    constructor(config) {
 
-    /**
-     * @private
-     * @type {string}
-     */
-    this.title = $('head title').text() || '';
+        /**
+         * @private
+         * @type {boolean}
+         */
+        this.displayNotificationNumber = config.get('newNotificationCountInTitle') || false;
 
-    /**
-     * @private
-     * @type {number}
-     */
-    this.notificationNumber = 0;
-};
+        /**
+         * @private
+         * @type {string}
+         */
+        this.title = $('head title').text() || '';
 
-_.extend(PageTitle.prototype, /** @lends PageTitle# */{
+        /**
+         * @private
+         * @type {number}
+         */
+        this.notificationNumber = 0;
+    }
 
     /**
      * Set a title.
      *
      * @param {string} title A title.
      */
-    setTitle: function (title) {
+    setTitle(title) {
         this.title = title;
 
         this.update();
-    },
+    }
 
     /**
      * Set a notification number.
      *
      * @param {number} notificationNumber A number.
      */
-    setNotificationNumber: function (notificationNumber) {
+    setNotificationNumber(notificationNumber) {
         this.notificationNumber = notificationNumber;
 
         if (this.displayNotificationNumber) {
             this.update();
         }
-    },
+    }
 
     /**
      * Update a page title.
      */
-    update: function () {
+    update() {
         let value = '';
 
         if (this.displayNotificationNumber && this.notificationNumber) {
@@ -98,7 +101,7 @@ _.extend(PageTitle.prototype, /** @lends PageTitle# */{
         value += this.title;
 
         $('head title').text(value);
-    },
-});
+    }
+}
 
 export default PageTitle;

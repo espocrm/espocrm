@@ -32,149 +32,143 @@ import moment from 'lib!moment';
 
 /**
  * A date-time util.
- *
- * @class
  */
-const DateTime = function () {};
+class DateTime {
 
-_.extend(DateTime.prototype, /** @lends DateTime# */{
+    constructor() {}
 
     /**
      * A system date format.
      *
      * @type {string}
      */
-    internalDateFormat: 'YYYY-MM-DD',
+    internalDateFormat = 'YYYY-MM-DD'
 
     /**
      * A system date-time format.
      *
      * @type {string}
      */
-    internalDateTimeFormat: 'YYYY-MM-DD HH:mm',
+    internalDateTimeFormat = 'YYYY-MM-DD HH:mm'
 
     /**
      * A system date-time format including seconds.
      *
      * @type {string}
      */
-    internalDateTimeFullFormat: 'YYYY-MM-DD HH:mm:ss',
+    internalDateTimeFullFormat = 'YYYY-MM-DD HH:mm:ss'
 
     /**
      * A date format for a current user.
      *
      * @type {string}
      */
-    dateFormat: 'MM/DD/YYYY',
+    dateFormat = 'MM/DD/YYYY'
 
     /**
      * A time format for a current user.
      *
      * @type {string}
      */
-    timeFormat: 'HH:mm',
+    timeFormat = 'HH:mm'
 
     /**
      * A time zone for a current user.
      *
      * @type {string|null}
      */
-    timeZone: null,
+    timeZone = null
 
     /**
      * A week start for a current user.
      *
      * @type {Number}
      */
-    weekStart: 1,
+    weekStart = 1
 
-    /**
-     * @private
-     */
-    readableDateFormatMap: {
+    /** @private  */
+    readableDateFormatMap = {
         'DD.MM.YYYY': 'DD MMM',
         'DD/MM/YYYY': 'DD MMM',
-    },
+    }
 
-    /**
-     * @private
-     */
-    readableShortDateFormatMap: {
+    /** @private  */
+    readableShortDateFormatMap = {
         'DD.MM.YYYY': 'D MMM',
         'DD/MM/YYYY': 'D MMM',
-    },
+    }
 
     /**
      * Whether a time format has a meridian (am/pm).
      *
      * @returns {boolean}
      */
-    hasMeridian: function () {
+    hasMeridian() {
         return (new RegExp('A', 'i')).test(this.timeFormat);
-    },
+    }
 
     /**
      * Get a date format.
      *
      * @returns {string}
      */
-    getDateFormat: function () {
+    getDateFormat() {
         return this.dateFormat;
-    },
+    }
 
     /**
      * Get a time format.
      *
      * @returns {string}
      */
-    getTimeFormat: function () {
+    getTimeFormat() {
         return this.timeFormat;
-    },
+    }
 
     /**
      * Get a date-time format.
      *
      * @returns {string}
      */
-    getDateTimeFormat: function () {
+    getDateTimeFormat() {
         return this.dateFormat + ' ' + this.timeFormat;
-    },
+    }
 
     /**
      * Get a readable date format.
      *
      * @returns {string}
      */
-    getReadableDateFormat: function () {
+    getReadableDateFormat() {
         return this.readableDateFormatMap[this.getDateFormat()] || 'MMM DD';
-    },
+    }
 
     /**
      * Get a readable short date format.
      *
      * @returns {string}
      */
-    getReadableShortDateFormat: function () {
+    getReadableShortDateFormat() {
         return this.readableShortDateFormatMap[this.getDateFormat()] || 'MMM D';
-    },
+    }
 
     /**
      * Get a readable date-time format.
      *
      * @returns {string}
      */
-    getReadableDateTimeFormat: function () {
+    getReadableDateTimeFormat() {
         return this.getReadableDateFormat() + ' ' + this.timeFormat;
-    },
+    }
 
     /**
      * Get a readable short date-time format.
      *
      * @returns {string}
      */
-    getReadableShortDateTimeFormat: function () {
+    getReadableShortDateTimeFormat() {
         return this.getReadableShortDateFormat() + ' ' + this.timeFormat;
-    },
+    }
 
     /**
      * Convert a date from a display representation to system.
@@ -182,7 +176,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
      * @param {string} string A date value.
      * @returns {string|-1} A system date value.
      */
-    fromDisplayDate: function (string) {
+    fromDisplayDate(string) {
         if (!string) {
             return null;
         }
@@ -194,16 +188,16 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
         }
 
         return m.format(this.internalDateFormat);
-    },
+    }
 
     /**
      * Get a time-zone.
      *
      * @returns {string}
      */
-    getTimeZone: function () {
+    getTimeZone() {
         return this.timeZone ? this.timeZone : 'UTC';
-    },
+    }
 
     /**
      * Convert a date from system to a display representation.
@@ -211,7 +205,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
      * @param {string} string A system date value.
      * @returns {string} A display date value.
      */
-    toDisplayDate: function (string) {
+    toDisplayDate(string) {
         if (!string || (typeof string !== 'string')) {
             return '';
         }
@@ -223,7 +217,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
         }
 
         return m.format(this.dateFormat);
-    },
+    }
 
     /**
      * Convert a date-time from system to a display representation.
@@ -231,7 +225,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
      * @param {string} string A system date-tyime value.
      * @returns {string|-1} A display date-time value.
      */
-    fromDisplay: function (string) {
+    fromDisplay(string) {
         if (!string) {
             return null;
         }
@@ -250,7 +244,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
         }
 
         return m.format(this.internalDateTimeFormat) + ':00';
-    },
+    }
 
     /**
      * Convert a date-time from system to a display representation.
@@ -258,36 +252,36 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
      * @param {string} string A system date value.
      * @returns {string} A display date-time value.
      */
-    toDisplay: function (string) {
+    toDisplay(string) {
         if (!string) {
             return '';
         }
 
         return this.toMoment(string).format(this.getDateTimeFormat());
-    },
+    }
 
     /**
      * @deprecated Use `fromDisplay`.
      */
-    fromDisplayDateTime: function (string) {
+    fromDisplayDateTime(string) {
         return this.fromDisplay(string);
-    },
+    }
 
     /**
      * @deprecated Use `toDisplay`.
      */
-    toDisplayDateTime: function (string) {
+    toDisplayDateTime(string) {
         return this.toDisplay(string);
-    },
+    }
 
     /**
      * Get a now moment.
      *
      * @returns {moment.Moment}
      */
-    getNowMoment: function () {
+    getNowMoment() {
         return moment().tz(this.getTimeZone())
-    },
+    }
 
     /**
      * Convert a date to a moment.
@@ -295,9 +289,9 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
      * @param {string} string A date value in a system representation.
      * @returns {moment.Moment}
      */
-    toMomentDate: function (string) {
+    toMomentDate(string) {
         return moment.utc(string, this.internalDateFormat);
-    },
+    }
 
     /**
      * Convert a date-time to a moment.
@@ -305,7 +299,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
      * @param {string} string A date-time value in a system representation.
      * @returns {moment.Moment}
      */
-    toMoment: function (string) {
+    toMoment(string) {
         let m = moment.utc(string, this.internalDateTimeFullFormat);
 
         if (this.timeZone) {
@@ -313,7 +307,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
         }
 
         return m;
-    },
+    }
 
     /**
      * Convert a date-time value from ISO to a system representation.
@@ -321,7 +315,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
      * @param {string} string
      * @returns {string} A date-time value in a system representation.
      */
-    fromIso: function (string) {
+    fromIso(string) {
         if (!string) {
             return '';
         }
@@ -329,7 +323,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
         let m = moment(string).utc();
 
         return m.format(this.internalDateTimeFormat);
-    },
+    }
 
     /**
      * Convert a date-time value from system to an ISO representation.
@@ -337,22 +331,22 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
      * @param string A date-time value in a system representation.
      * @returns {string} An ISO date-time value.
      */
-    toIso: function (string) {
+    toIso(string) {
         if (!string) {
             return null;
         }
 
         return this.toMoment(string).format();
-    },
+    }
 
     /**
      * Get a today date value in a system representation.
      *
      * @returns {string}
      */
-    getToday: function () {
+    getToday() {
         return moment().tz(this.getTimeZone()).format(this.internalDateFormat);
-    },
+    }
 
     /**
      * Get a date-time value in a system representation, shifted from now.
@@ -362,7 +356,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
      * @param {Number} [multiplicity] A number of minutes a value will be aliquot to.
      * @returns {string} A date-time value in a system representation
      */
-    getDateTimeShiftedFromNow: function (shift, type, multiplicity) {
+    getDateTimeShiftedFromNow(shift, type, multiplicity) {
         if (!multiplicity) {
             return moment.utc().add(shift, type).format(this.internalDateTimeFormat);
         }
@@ -372,7 +366,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
         unix = unix - (unix % (multiplicity * 60));
 
         return moment.unix(unix).utc().add(shift, type).format(this.internalDateTimeFormat);
-    },
+    }
 
     /**
      * Get a date value in a system representation, shifted from today.
@@ -381,9 +375,9 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
      * @param {'days'|'weeks'|'months'|'years'} type A shift unit.
      * @returns {string} A date value in a system representation
      */
-    getDateShiftedFromToday: function (shift, type) {
+    getDateShiftedFromToday(shift, type) {
         return moment.tz(this.getTimeZone()).add(shift, type).format(this.internalDateFormat);
-    },
+    }
 
     /**
      * Get a now date-time value in a system representation.
@@ -391,7 +385,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
      * @param {Number} [multiplicity] A number of minutes a value will be aliquot to.
      * @returns {string}
      */
-    getNow: function (multiplicity) {
+    getNow(multiplicity) {
         if (!multiplicity) {
             return moment.utc().format(this.internalDateTimeFormat);
         }
@@ -401,7 +395,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
         unix = unix - (unix % (multiplicity * 60));
 
         return moment.unix(unix).utc().format(this.internalDateTimeFormat);
-    },
+    }
 
     /**
      * Set settings and preferences.
@@ -410,7 +404,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
      * @param {module:models/preferences} preferences Preferences.
      * @internal
      */
-    setSettingsAndPreferences: function (settings, preferences) {
+    setSettingsAndPreferences(settings, preferences) {
         if (settings.has('dateFormat')) {
             this.dateFormat = settings.get('dateFormat');
         }
@@ -444,6 +438,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
 
                 this.timeZone = model.get('timeZone');
             }
+
             if (model.has('weekStart') && model.get('weekStart') !== -1) {
                 this.weekStart = model.get('weekStart');
             }
@@ -452,7 +447,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
                 this.timeZone = null;
             }
         });
-    },
+    }
 
     /**
      * Set a language.
@@ -460,7 +455,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
      * @param {module:language} language A language.
      * @internal
      */
-    setLanguage: function (language) {
+    setLanguage(language) {
         moment.updateLocale('en', {
             months: language.translate('monthNames', 'lists'),
             monthsShort: language.translate('monthNamesShort', 'lists'),
@@ -470,7 +465,7 @@ _.extend(DateTime.prototype, /** @lends DateTime# */{
         });
 
         moment.locale('en');
-    },
-});
+    }
+}
 
 export default DateTime;
