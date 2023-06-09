@@ -110,7 +110,7 @@ class ListWithCategories extends ListView {
             this.hasNavigationPanel = this.getNavigationPanelStoredValue();
         }
 
-        var params = this.options.params || {};
+        let params = this.options.params || {};
 
         if ('categoryId' in params) {
             this.currentCategoryId = params.categoryId;
@@ -155,7 +155,7 @@ class ListWithCategories extends ListView {
 
     hasTextFilter() {
         if (this.collection.where) {
-            for (var i = 0; i < this.collection.where.length; i++) {
+            for (let i = 0; i < this.collection.where.length; i++) {
                 if (this.collection.where[i].type === 'textFilter') {
                     return true;
                 }
@@ -174,7 +174,7 @@ class ListWithCategories extends ListView {
     }
 
     getNavigationPanelStoredValue() {
-        var value = this.getStorage().get('state', 'categories-navigation-panel-' + this.scope);
+        let value = this.getStorage().get('state', 'categories-navigation-panel-' + this.scope);
 
         return value === 'true' || value === true;
     }
@@ -188,7 +188,7 @@ class ListWithCategories extends ListView {
     }
 
     getIsExpandedStoredValue() {
-        var value = this.getStorage().get('state', 'categories-expanded-' + this.scope);
+        let value = this.getStorage().get('state', 'categories-expanded-' + this.scope);
 
         return value === 'true' || value === true ;
     }
@@ -291,7 +291,7 @@ class ListWithCategories extends ListView {
     }
 
     selectCurrentCategory() {
-        var categoriesView = this.getView('categories');
+        let categoriesView = this.getView('categories');
 
         if (categoriesView) {
             categoriesView.setSelected(this.currentCategoryId);
@@ -403,7 +403,7 @@ class ListWithCategories extends ListView {
 
         this.nestedCategoriesCollection.where = null;
 
-        var filter;
+        let filter;
 
         this.nestedCategoriesCollection.parentId = this.currentCategoryId;
 
@@ -487,8 +487,8 @@ class ListWithCategories extends ListView {
 
                 this.listenTo(view, 'select', model => {
                     if (!this.isExpanded) {
-                        var id = null;
-                        var name = null;
+                        let id = null;
+                        let name = null;
 
                         if (model && model.id) {
                             id = model.id;
@@ -526,8 +526,8 @@ class ListWithCategories extends ListView {
 
     applyCategoryToCollection() {
         this.collection.whereFunction = () => {
-            var filter;
-            var isExpanded = this.isExpanded;
+            let filter;
+            let isExpanded = this.isExpanded;
 
             if (!isExpanded && !this.hasTextFilter()) {
                 if (this.isCategoryMultiple()) {
@@ -587,14 +587,14 @@ class ListWithCategories extends ListView {
 
         if (this.isCategoryMultiple()) {
             if (this.currentCategoryId) {
-                var names = {};
+                let names = {};
 
                 names[this.currentCategoryId] = this.getCurrentCategoryName();
 
                 data = {};
 
-                var idsAttribute = this.categoryField + 'Ids';
-                var namesAttribute = this.categoryField + 'Names';
+                let idsAttribute = this.categoryField + 'Ids';
+                let namesAttribute = this.categoryField + 'Names';
 
                 data[idsAttribute] = [this.currentCategoryId];
                 data[namesAttribute] = names;
@@ -605,8 +605,8 @@ class ListWithCategories extends ListView {
             return null;
         }
 
-        var idAttribute = this.categoryField + 'Id';
-        var nameAttribute = this.categoryField + 'Name';
+        let idAttribute = this.categoryField + 'Id';
+        let nameAttribute = this.categoryField + 'Name';
 
         data = {};
 

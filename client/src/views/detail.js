@@ -28,75 +28,67 @@
 
 /** @module module:views/detail */
 
-import Dep from 'views/main';
+import MainView from 'views/main';
 
 /**
- * A detail view page.
- *
- * @class
- * @name Class
- * @extends module:views/main
+ * A detail view.
  */
-export default Dep.extend(/** @lends Class# */{
+class DetailView extends MainView {
 
     /** @inheritDoc */
-    template: 'detail',
+    template = 'detail'
     /** @inheritDoc */
-    name: 'Detail',
+    name = 'Detail'
 
     /** @inheritDoc */
-    optionsToPass: [
+    optionsToPass = [
         'attributes',
         'returnUrl',
         'returnDispatchParams',
         'rootUrl',
-    ],
+    ]
 
     /**
      * A header view name.
      *
      * @type {string}
      */
-    headerView: 'views/header',
+    headerView = 'views/header'
 
     /**
      * A record view name.
      *
      * @type {string}
      */
-    recordView: 'views/record/detail',
+    recordView = 'views/record/detail'
 
     /**
      * A root breadcrumb item not to be a link.
      *
      * @type {boolean}
      */
-    rootLinkDisabled: false,
+    rootLinkDisabled = false
 
     /**
      * A root URL.
      *
      * @type {string}
      */
-    rootUrl: '',
+    rootUrl = ''
 
     /**
      * Is return.
      *
      * @protected
      */
-    isReturn: false,
+    isReturn = false
 
-    /**
-     * @inheritDoc
-     */
-    shortcutKeys: {},
+    /** @inheritDoc */
+    shortcutKeys = {}
 
-    /**
-     * @inheritDoc
-     */
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    /** @inheritDoc */
+    setup() {
+        super.setup();
 
         this.headerView = this.options.headerView || this.headerView;
         this.recordView = this.options.recordView || this.recordView;
@@ -109,18 +101,17 @@ export default Dep.extend(/** @lends Class# */{
         this.setupPageTitle();
         this.initFollowButtons();
         this.initRedirect();
-    },
+    }
 
-    setupFinal: function () {
-        Dep.prototype.setupFinal.call(this);
+    /** @inheritDoc */
+    setupFinal() {
+        super.setupFinal();
 
         this.getHelper().processSetupHandlers(this, 'detail');
-    },
+    }
 
-    /**
-     * @private
-     */
-    initRedirect: function () {
+    /** @private */
+    initRedirect() {
         if (!this.options.params.isAfterCreate) {
             return;
         }
@@ -143,12 +134,12 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.listenToOnce(this.model, 'fetch-forbidden', () => redirect())
-    },
+    }
 
     /**
      * Set up a page title.
      */
-    setupPageTitle: function () {
+    setupPageTitle() {
         this.listenTo(this.model, 'after:save', () => {
             this.updatePageTitle();
         });
@@ -158,12 +149,12 @@ export default Dep.extend(/** @lends Class# */{
                 this.updatePageTitle();
             }
         });
-    },
+    }
 
     /**
      * Set up a header.
      */
-    setupHeader: function () {
+    setupHeader() {
         this.createView('header', this.headerView, {
             model: this.model,
             el: '#main > .header',
@@ -178,12 +169,12 @@ export default Dep.extend(/** @lends Class# */{
                 }
             }
         });
-    },
+    }
 
     /**
      * Set up a record.
      */
-    setupRecord: function () {
+    setupRecord() {
         let o = {
             model: this.model,
             el: '#main > .record',
@@ -205,22 +196,20 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return this.createView('record', this.getRecordViewName(), o);
-    },
+    }
 
     /**
      * Get a record view name.
      *
      * @returns {string}
      */
-    getRecordViewName: function () {
+    getRecordViewName() {
         return this.getMetadata()
             .get('clientDefs.' + this.scope + '.recordViews.detail') || this.recordView;
-    },
+    }
 
-    /**
-     * @private
-     */
-    initFollowButtons: function () {
+    /** @private */
+    initFollowButtons() {
         if (!this.getMetadata().get(['scopes', this.scope, 'stream'])) {
             return;
         }
@@ -230,12 +219,10 @@ export default Dep.extend(/** @lends Class# */{
         this.listenTo(this.model, 'change:isFollowed', () => {
             this.controlFollowButtons();
         });
-    },
+    }
 
-    /**
-     * @private
-     */
-    addFollowButtons: function () {
+    /** @private */
+    addFollowButtons() {
         let isFollowed = this.model.get('isFollowed');
 
         this.addMenuItem('buttons', {
@@ -257,12 +244,10 @@ export default Dep.extend(/** @lends Class# */{
                 !this.model.has('isFollowed') ||
                 !this.getAcl().checkModel(this.model, 'stream'),
         }, true);
-    },
+    }
 
-    /**
-     * @private
-     */
-    controlFollowButtons: function () {
+    /** @private */
+    controlFollowButtons() {
         let isFollowed = this.model.get('isFollowed');
 
         if (isFollowed) {
@@ -277,12 +262,12 @@ export default Dep.extend(/** @lends Class# */{
         if (this.getAcl().checkModel(this.model, 'stream')) {
             this.showHeaderActionItem('follow');
         }
-    },
+    }
 
     /**
      * Action 'follow'.
      */
-    actionFollow: function () {
+    actionFollow() {
         this.disableMenuItem('follow');
 
         Espo.Ajax
@@ -297,12 +282,12 @@ export default Dep.extend(/** @lends Class# */{
             .catch(() => {
                 this.enableMenuItem('follow');
             });
-    },
+    }
 
     /**
      * Action 'unfollow'.
      */
-    actionUnfollow: function () {
+    actionUnfollow() {
         this.disableMenuItem('unfollow');
 
         Espo.Ajax
@@ -317,12 +302,12 @@ export default Dep.extend(/** @lends Class# */{
             .catch(() => {
                 this.enableMenuItem('unfollow');
             });
-    },
+    }
 
     /**
      * @inheritDoc
      */
-    getHeader: function () {
+    getHeader() {
         let name = this.model.get('name') || this.model.id;
 
         let $name =
@@ -358,34 +343,34 @@ export default Dep.extend(/** @lends Class# */{
             $root,
             $name,
         ]);
-    },
+    }
 
     /**
      * @inheritDoc
      */
-    updatePageTitle: function () {
+    updatePageTitle() {
         if (this.model.has('name')) {
             this.setPageTitle(this.model.get('name') || this.model.id);
 
             return;
         }
 
-        Dep.prototype.updatePageTitle.call(this);
-    },
+        super.updatePageTitle();
+    }
 
     /**
      * @return {module:views/record/detail}
      */
-    getRecordView: function () {
+    getRecordView() {
         return this.getView('record');
-    },
+    }
 
     /**
      * Update a relationship panel (fetch data).
      *
      * @param {string} name A relationship name.
      */
-    updateRelationshipPanel: function (name) {
+    updateRelationshipPanel(name) {
         var bottom = this.getView('record').getView('bottom');
 
         if (bottom) {
@@ -395,46 +380,46 @@ export default Dep.extend(/** @lends Class# */{
                 rel.collection.fetch();
             }
         }
-    },
+    }
 
     /**
      * @deprecated Use metadata clientDefs > {EntityType} > relationshipPanels > {link} > createAttributeMap.
      * @type {Object}
      */
-    relatedAttributeMap: {},
+    relatedAttributeMap = {}
 
     /**
      * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > createHandler.
      * @type {Object}
      */
-    relatedAttributeFunctions: {},
+    relatedAttributeFunctions = {}
 
     /**
      * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > selectHandler.
      * @type {Object}
      */
-    selectRelatedFilters: {},
+    selectRelatedFilters = {}
 
     /**
      * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > selectHandler or
      *  clientDefs > {EntityType} > relationshipPanels > {link} > selectPrimaryFilter.
      * @type {Object}
      */
-    selectPrimaryFilterNames: {},
+    selectPrimaryFilterNames = {}
 
     /**
      * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > selectHandler or
      *  clientDefs > {EntityType} > relationshipPanels > {link} > selectBoolFilterList.
      * @type {Object}
      */
-    selectBoolFilterLists: [],
+    selectBoolFilterLists = []
 
     /**
      * Action 'createRelated'.
      *
      * @param {Object} data
      */
-    actionCreateRelated: function (data) {
+    actionCreateRelated(data) {
         data = data || {};
 
         let link = data.link;
@@ -506,14 +491,14 @@ export default Dep.extend(/** @lends Class# */{
                 });
             });
         });
-    },
+    }
 
     /**
      * Action 'selectRelated'.
      *
      * @param {Object.<string, *>} data
      */
-    actionSelectRelated: function (data) {
+    actionSelectRelated(data) {
         let link = data.link;
 
         if (!data.foreignEntityType && !this.model.defs['links'][link]) {
@@ -681,12 +666,12 @@ export default Dep.extend(/** @lends Class# */{
                 });
             });
         });
-    },
+    }
 
     /**
      * Action 'duplicate'.
      */
-    actionDuplicate: function () {
+    actionDuplicate() {
         Espo.Ui.notify(' ... ');
 
         Espo.Ajax
@@ -694,7 +679,7 @@ export default Dep.extend(/** @lends Class# */{
             .then(attributes => {
                 Espo.Ui.notify(false);
 
-                var url = '#' + this.scope + '/create';
+                let url = '#' + this.scope + '/create';
 
                 this.getRouter().dispatch(this.scope, 'create', {
                     attributes: attributes,
@@ -706,5 +691,7 @@ export default Dep.extend(/** @lends Class# */{
 
                 this.getRouter().navigate(url, {trigger: false});
             });
-    },
-});
+    }
+}
+
+export default DetailView;

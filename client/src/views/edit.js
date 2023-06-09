@@ -28,90 +28,81 @@
 
 /** @module module:views/edit */
 
-import Dep from 'views/main';
+import MainView from 'views/main';
 
 /**
- * An edit view page.
- *
- * @class
- * @name Class
- * @extends module:views/main
+ * An edit view.
  */
-export default Dep.extend(/** @lends Class# */{
+class EditView extends MainView {
 
     /** @inheritDoc */
-    template: 'edit',
+    template = 'edit'
 
     /** @inheritDoc */
-    scope: null,
-    /** @inheritDoc */
-    name: 'Edit',
-    /** @inheritDoc */
-    menu: null,
+    name = 'Edit'
 
     /** @inheritDoc */
-    optionsToPass: [
+    optionsToPass = [
         'returnUrl',
         'returnDispatchParams',
         'attributes',
         'rootUrl',
         'duplicateSourceId',
         'returnAfterCreate',
-    ],
+    ]
 
     /**
      * A header view name.
      *
      * @type {string}
      */
-    headerView: 'views/header',
+    headerView = 'views/header'
 
     /**
      * A record view name.
      *
      * @type {string}
      */
-    recordView: 'views/record/edit',
+    recordView = 'views/record/edit'
 
     /**
      * A root breadcrumb item not to be a link.
      *
      * @type {boolean}
      */
-    rootLinkDisabled: false,
+    rootLinkDisabled = false
 
-    /**
-     * @inheritDoc
-     */
-    setup: function () {
+    /** @inheritDoc */
+    setup() {
         this.headerView = this.options.headerView || this.headerView;
         this.recordView = this.options.recordView || this.recordView;
 
         this.setupHeader();
         this.setupRecord();
-    },
+    }
 
-    setupFinal: function () {
-        Dep.prototype.setupFinal.call(this);
+    /** @inheritDoc */
+    setupFinal() {
+        super.setupFinal();
 
         this.getHelper().processSetupHandlers(this, 'edit');
-    },
+    }
 
     /**
      * Set up a header.
      */
-    setupHeader: function () {
+    setupHeader() {
         this.createView('header', this.headerView, {
             model: this.model,
             el: '#main > .header',
             scope: this.scope,
         });
-    },
+    }
 
     /**
      * Set up a record.
      */
-    setupRecord: function () {
+    setupRecord() {
         let o = {
             model: this.model,
             el: '#main > .record',
@@ -134,21 +125,19 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return this.createView('record', this.getRecordViewName(), o);
-    },
+    }
 
     /**
      * Get a record view name.
      *
      * @returns {string}
      */
-    getRecordViewName: function () {
+    getRecordViewName() {
         return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.edit') || this.recordView;
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    getHeader: function () {
+    /** @inheritDoc */
+    getHeader() {
         let headerIconHtml = this.getHeaderIconHtml();
         let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
         let scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
@@ -192,29 +181,25 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return this.buildHeaderHtml([$root, $name]);
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    updatePageTitle: function () {
-        var title;
-
+    /** @inheritDoc */
+    updatePageTitle() {
         if (this.model.isNew()) {
-            title = this.getLanguage().translate('Create') + ' ' +
+            let title = this.getLanguage().translate('Create') + ' ' +
                 this.getLanguage().translate(this.scope, 'scopeNames');
-        }
-        else {
-            var name = this.model.get('name');
 
-            if (name) {
-                title = name;
-            }
-            else {
-                title = this.getLanguage().translate(this.scope, 'scopeNames')
-            }
+            this.setPageTitle(title);
+
+            return;
         }
+
+        let name = this.model.get('name');
+
+        let title = name ? name : this.getLanguage().translate(this.scope, 'scopeNames');
 
         this.setPageTitle(title);
-    },
-});
+    }
+}
+
+export default EditView;

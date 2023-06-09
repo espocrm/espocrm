@@ -32,7 +32,7 @@ import MainView from 'views/main';
 import SearchManager from 'search-manager';
 
 /**
- * A list view page.
+ * A list view.
  */
 class ListView extends MainView {
 
