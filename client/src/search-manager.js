@@ -64,93 +64,93 @@
 
 /**
  * A search manager.
- *
- * @class
- * @param {module:collection} collection A collection.
- * @param {string|null} type A type. Used for a storage key.
- * @param {module:storage|null} storage A storage.
- * @param {module:date-time|null} dateTime A date-time util.
- * @param {module:search-manager~data|null} [defaultData=null] Default search data.
- * @param {boolean} [emptyOnReset=false] To empty on reset.
  */
-const SearchManager = function (
-    collection,
-    type,
-    storage,
-    dateTime,
-    defaultData,
-    emptyOnReset
-) {
-    /**
-     * @private
-     * @type {module:collection}
-     */
-    this.collection = collection;
+class SearchManager {
 
     /**
-     * An entity type.
-     *
-     * @public
-     * @type {string}
+     * @param {module:collection} collection A collection.
+     * @param {string|null} type A type. Used for a storage key.
+     * @param {module:storage|null} storage A storage.
+     * @param {module:date-time|null} dateTime A date-time util.
+     * @param {module:search-manager~data|null} [defaultData=null] Default search data.
+     * @param {boolean} [emptyOnReset=false] To empty on reset.
      */
-    this.scope = collection.name;
+    constructor(
+        collection,
+        type,
+        storage,
+        dateTime,
+        defaultData,
+        emptyOnReset
+    ) {
+        /**
+         * @private
+         * @type {module:collection}
+         */
+        this.collection = collection;
 
-    /**
-     * @private
-     * @type {module:storage|null}
-     */
-    this.storage = storage;
+        /**
+         * An entity type.
+         *
+         * @public
+         * @type {string}
+         */
+        this.scope = collection.name;
 
-    /**
-     * @private
-     * @type {string}
-     */
-    this.type = type || 'list';
+        /**
+         * @private
+         * @type {module:storage|null}
+         */
+        this.storage = storage;
 
-    /**
-     * @private
-     * @type {module:date-time|null}
-     */
-    this.dateTime = dateTime;
+        /**
+         * @private
+         * @type {string}
+         */
+        this.type = type || 'list';
 
-    /**
-     * @private
-     * @type {boolean}
-     */
-    this.emptyOnReset = emptyOnReset;
+        /**
+         * @private
+         * @type {module:date-time|null}
+         */
+        this.dateTime = dateTime;
 
-    /**
-     * @private
-     * @type {Object}
-     */
-    this.emptyData = {
-        textFilter: '',
-        bool: {},
-        advanced: {},
-        primary: null,
-    };
+        /**
+         * @private
+         * @type {boolean}
+         */
+        this.emptyOnReset = emptyOnReset;
 
-    if (defaultData) {
-        this.defaultData = defaultData;
+        /**
+         * @private
+         * @type {Object}
+         */
+        this.emptyData = {
+            textFilter: '',
+            bool: {},
+            advanced: {},
+            primary: null,
+        };
 
-        for (let p in this.emptyData) {
-            if (!(p in defaultData)) {
-                defaultData[p] = Espo.Utils.clone(this.emptyData[p]);
+        if (defaultData) {
+            this.defaultData = defaultData;
+
+            for (let p in this.emptyData) {
+                if (!(p in defaultData)) {
+                    defaultData[p] = Espo.Utils.clone(this.emptyData[p]);
+                }
             }
         }
+
+        this.data = Espo.Utils.clone(defaultData) || this.emptyData;
+
+        this.sanitizeData();
     }
-
-    this.data = Espo.Utils.clone(defaultData) || this.emptyData;
-
-    this.sanitizeData();
-};
-
-_.extend(SearchManager.prototype, /** @lends SearchManager# */{
 
     /**
      * @private
      */
-    sanitizeData: function () {
+    sanitizeData() {
         if (!('advanced' in this.data)) {
             this.data.advanced = {};
         }
@@ -162,14 +162,14 @@ _.extend(SearchManager.prototype, /** @lends SearchManager# */{
         if (!('textFilter' in this.data)) {
             this.data.textFilter = '';
         }
-    },
+    }
 
     /**
      * Get a where clause. The where clause to be sent to the backend.
      *
      * @returns {module:search-manager~whereItem[]}
      */
-    getWhere: function () {
+    getWhere() {
         let where = [];
 
         if (this.data.textFilter && this.data.textFilter !== '') {
@@ -222,12 +222,12 @@ _.extend(SearchManager.prototype, /** @lends SearchManager# */{
         }
 
         return where;
-    },
+    }
 
     /**
      * @private
      */
-    getWherePart: function (name, defs) {
+    getWherePart(name, defs) {
         var attribute = name;
 
         if ('where' in defs) {
@@ -276,14 +276,14 @@ _.extend(SearchManager.prototype, /** @lends SearchManager# */{
             attribute: attribute,
             value: value
         };
-    },
+    }
 
     /**
      * Load stored data.
      *
      * @returns {module:search-manager}
      */
-    loadStored: function () {
+    loadStored() {
         this.data =
             this.storage.get(this.type + 'Search', this.scope) ||
             Espo.Utils.clone(this.defaultData) ||
@@ -292,16 +292,16 @@ _.extend(SearchManager.prototype, /** @lends SearchManager# */{
         this.sanitizeData();
 
         return this;
-    },
+    }
 
     /**
      * Get data.
      *
      * @returns {module:search-manager~data}
      */
-    get: function () {
+    get() {
         return this.data;
-    },
+    }
 
     /**
      * Set advanced filters.
@@ -309,40 +309,40 @@ _.extend(SearchManager.prototype, /** @lends SearchManager# */{
      * @param {{string: module:search-manager~advancedFilter}} advanced Advanced filters.
      *   Pairs of field => advancedFilter.
      */
-    setAdvanced: function (advanced) {
+    setAdvanced(advanced) {
         this.data = Espo.Utils.clone(this.data);
 
         this.data.advanced = advanced;
-    },
+    }
 
     /**
      * Set bool filters.
      *
      * @param {Object.<string, boolean>} bool Bool filters.
      */
-    setBool: function (bool) {
+    setBool(bool) {
         this.data = Espo.Utils.clone(this.data);
 
         this.data.bool = bool;
-    },
+    }
 
     /**
      * Set a primary filter.
      *
      * @param {string} primary A filter.
      */
-    setPrimary: function (primary) {
+    setPrimary(primary) {
         this.data = Espo.Utils.clone(this.data);
 
         this.data.primary = primary;
-    },
+    }
 
     /**
      * Set data.
      *
      * @param {module:search-manager~data} data Data.
      */
-    set: function (data) {
+    set(data) {
         this.data = data;
 
         if (this.storage) {
@@ -351,23 +351,23 @@ _.extend(SearchManager.prototype, /** @lends SearchManager# */{
 
             this.storage.set(this.type + 'Search', this.scope, data);
         }
-    },
+    }
 
     /**
      * Empty data.
      */
-    empty: function () {
+    empty() {
         this.data = Espo.Utils.clone(this.emptyData);
 
         if (this.storage) {
             this.storage.clear(this.type + 'Search', this.scope);
         }
-    },
+    }
 
     /**
      * Reset.
      */
-    reset: function () {
+    reset() {
         if (this.emptyOnReset) {
             this.empty();
 
@@ -379,121 +379,7 @@ _.extend(SearchManager.prototype, /** @lends SearchManager# */{
         if (this.storage) {
             this.storage.clear(this.type + 'Search', this.scope);
         }
-    },
-
-    /**
-     * @private
-     * @todo Revise.
-     */
-    getDateTimeWhere: function (type, field, value) {
-        var where = {
-            field: field
-        };
-
-        if (!value && ~['on', 'before', 'after'].indexOf(type)) {
-            return null;
-        }
-
-        let start, from, to;
-
-        switch (type) {
-            case 'today':
-                where.type = 'between';
-
-                start = this.dateTime.getNowMoment().startOf('day').utc();
-
-                from = start.format(this.dateTime.internalDateTimeFormat);
-                to = start.add(1, 'days').format(this.dateTime.internalDateTimeFormat);
-
-                where.value = [from, to];
-
-                break;
-
-            case 'past':
-                where.type = 'before';
-
-                where.value = this.dateTime.getNowMoment().utc().format(this.dateTime.internalDateTimeFormat);
-
-                break;
-
-            case 'future':
-                where.type = 'after';
-
-                where.value = this.dateTime.getNowMoment().utc().format(this.dateTime.internalDateTimeFormat);
-
-                break;
-
-            case 'on':
-                where.type = 'between';
-
-                start = moment(value, this.dateTime.internalDateFormat, this.timeZone).utc();
-
-                from = start.format(this.dateTime.internalDateTimeFormat);
-                to = start.add(1, 'days').format(this.dateTime.internalDateTimeFormat);
-
-                where.value = [from, to];
-
-                break;
-
-            case 'before':
-                where.type = 'before';
-                where.value =
-                    moment(
-                        value,
-                        this.dateTime.internalDateFormat,
-                        this.timeZone
-                    )
-                    .utc()
-                    .format(this.dateTime.internalDateTimeFormat );
-
-                break;
-
-            case 'after':
-                where.type = 'after';
-                where.value =
-                    moment(
-                        value,
-                        this.dateTime.internalDateFormat,
-                        this.timeZone
-                    )
-                    .utc()
-                    .format(this.dateTime.internalDateTimeFormat);
-
-                break;
-
-            case 'between':
-                where.type = 'between';
-
-                if (value[0] && value[1]) {
-                    let from =
-                        moment(
-                            value[0],
-                            this.dateTime.internalDateFormat,
-                            this.timeZone
-                        )
-                        .utc()
-                        .format(this.dateTime.internalDateTimeFormat);
-
-                    let to =
-                        moment(
-                            value[1],
-                            this.dateTime.internalDateFormat,
-                            this.timeZone
-                        )
-                        .utc()
-                        .format(this.dateTime.internalDateTimeFormat);
-
-                    where.value = [from, to];
-                }
-
-                break;
-
-            default:
-                where.type = type;
-        }
-
-        return where;
-    },
-});
+    }
+}
 
 export default SearchManager;

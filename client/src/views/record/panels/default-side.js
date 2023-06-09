@@ -26,12 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import SidePanel from 'views/record/panels/side';
+import SidePanelView from 'views/record/panels/side';
 
 /**
  * A default side panel.
  */
-class DefaultSidePanel extends SidePanel {
+class DefaultSidePanelView extends SidePanelView {
 
     data() {
         let data = super.data();
@@ -148,4 +148,4 @@ class DefaultSidePanel extends SidePanel {
     }
 }
 
-export default DefaultSidePanel;
+export default DefaultSidePanelView;

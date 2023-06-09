@@ -33,7 +33,7 @@ import View from 'view';
 /**
  * A side panel.
  */
-class SidePanel extends View {
+class SidePanelView extends View {
 
     template = 'record/panels/side'
 
@@ -408,4 +408,4 @@ class SidePanel extends View {
     }
 }
 
-export default SidePanel;
+export default SidePanelView;

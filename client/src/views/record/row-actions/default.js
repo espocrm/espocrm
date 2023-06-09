@@ -26,24 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Dep from 'view';
+import View from 'view';
 
 /**
- * A detail-side record view.
- *
- * @class
- * @name Class
- * @extends module:view
+ * Row actions.
  */
-export default Dep.extend(/** @lends Class# */{
+class DefaultRowActionsView extends View {
 
-    template: 'record/row-actions/default',
+    template ='record/row-actions/default'
 
-    setup: function () {
+    setup() {
         this.options.acl = this.options.acl || {};
-    },
+    }
 
-    afterRender: function () {
+    afterRender() {
         let $dd = this.$el.find('button[data-toggle="dropdown"]').parent();
 
         let isChecked = false;
@@ -65,15 +61,15 @@ export default Dep.extend(/** @lends Class# */{
                 this.$el.closest('.list-row').removeClass('active');
             }
         });
-    },
+    }
 
     /**
      * Get an action list.
      *
      * @return {module:views/record/list~rowAction[]}
      */
-    getActionList: function () {
-        var list = [{
+    getActionList() {
+        let list = [{
             action: 'quickView',
             label: 'View',
             data: {
@@ -104,13 +100,15 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return list;
-    },
+    }
 
-    data: function () {
+    data() {
         return {
             acl: this.options.acl,
             actionList: this.getActionList(),
             scope: this.model.name,
         };
-    },
-});
+    }
+}
+
+export default DefaultRowActionsView;

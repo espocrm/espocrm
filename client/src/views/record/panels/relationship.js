@@ -28,14 +28,14 @@
 
 /** @module views/record/panels/relationship */
 
-import BottomPanel from 'views/record/panels/bottom';
+import BottomPanelView from 'views/record/panels/bottom';
 import SearchManager from 'search-manager';
 import RecordModal from 'helpers/record-modal';
 
 /**
  * A relationship panel.
  */
-class RelationshipPanel extends BottomPanel {
+class RelationshipPanelView extends BottomPanelView {
 
     /** @inheritDoc */
     template = 'record/panels/relationship'
@@ -757,4 +757,4 @@ class RelationshipPanel extends BottomPanel {
     }
 }
 
-export default RelationshipPanel;
+export default RelationshipPanelView;

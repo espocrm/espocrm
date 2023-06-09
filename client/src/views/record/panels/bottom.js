@@ -33,7 +33,7 @@ import View from 'view';
 /**
  * A bottom panel.
  */
-class BottomPanel extends View {
+class BottomPanelView extends View {
 
     template = 'record/panels/side'
 
@@ -366,4 +366,4 @@ class BottomPanel extends View {
     }
 }
 
-export default BottomPanel;
+export default BottomPanelView;

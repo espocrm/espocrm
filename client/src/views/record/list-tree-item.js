@@ -28,7 +28,7 @@
 
 import View from 'view';
 
-class ListTreeRecordItem extends View {
+class ListTreeRecordItemView extends View {
 
     template = 'record/list-tree-item'
 
@@ -49,19 +49,19 @@ class ListTreeRecordItem extends View {
     }
 
     events = {
-        /** @this ListTreeRecordItem */
+        /** @this ListTreeRecordItemView */
         'click [data-action="unfold"]': function (e) {
             this.unfold();
 
             e.stopPropagation();
         },
-        /** @this ListTreeRecordItem */
+        /** @this ListTreeRecordItemView */
         'click [data-action="fold"]': function (e) {
             this.fold();
 
             e.stopPropagation();
         },
-        /** @this ListTreeRecordItem */
+        /** @this ListTreeRecordItemView */
         'click [data-action="remove"]': function (e) {
             this.actionRemove();
 
@@ -336,4 +336,4 @@ class ListTreeRecordItem extends View {
     }
 }
 
-export default ListTreeRecordItem;
+export default ListTreeRecordItemView;
