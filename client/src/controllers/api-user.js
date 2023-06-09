@@ -26,43 +26,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/api-user', ['controllers/record'], function (Dep) {
+import RecordController from 'controllers/record';
 
-    /**
-     * @class
-     * @name Class
-     * @extends module:controllers/record
-     * @memberOf module:controllers/api-user
-     */
-    return Dep.extend(/** @lends module:controllers/api-user.Class# */{
+class ApiUserController extends RecordController {
 
-        entityType: 'User',
+    entityType ='User'
 
-        getCollection: function (callback, context, usePreviouslyFetched) {
-            return Dep.prototype.getCollection.call(this, (collection) => {
+    getCollection(usePreviouslyFetched) {
+        return super.getCollection()
+            .then(collection => {
                 collection.data.userType = 'api';
 
-                callback.call(context, collection);
-            }, context, usePreviouslyFetched);
-        },
+                return collection;
+            });
+    }
 
-        createViewView: function (options, model, view) {
-            if (!model.isApi()) {
-                if (model.isPortal()) {
-                    this.getRouter().dispatch('PortalUser', 'view', {id: model.id, model: model});
-                    return;
-                }
-                this.getRouter().dispatch('User', 'view', {id: model.id, model: model});
+    createViewView(options, model, view) {
+        if (!model.isApi()) {
+            if (model.isPortal()) {
+                this.getRouter().dispatch('PortalUser', 'view', {id: model.id, model: model});
+
                 return;
             }
-            Dep.prototype.createViewView.call(this, options, model, view);
-        },
 
-        actionCreate: function (options) {
-            options = options || {};
-            options.attributes = options.attributes  || {};
-            options.attributes.type = 'api';
-            Dep.prototype.actionCreate.call(this, options);
-        },
-    });
-});
+            this.getRouter().dispatch('User', 'view', {id: model.id, model: model});
+
+            return;
+        }
+
+        super.createViewView(options, model, view);
+    }
+
+    actionCreate(options) {
+        options = options || {};
+        options.attributes = options.attributes  || {};
+        options.attributes.type = 'api';
+
+        super.actionCreate(options);
+    }
+}
+
+export default ApiUserController;

@@ -26,55 +26,52 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/portal-user', ['controllers/record'], function (Dep) {
+import RecordController from 'controllers/record';
 
-    /**
-     * @class
-     * @name Class
-     * @extends module:controllers/record
-     * @memberOf module:controllers/portal-user
-     */
-    return Dep.extend(/** @lends module:controllers/portal-user.Class# */{
+class PortalUserController extends RecordController {
 
-        entityType: 'User',
+    entityType = 'User'
 
-        getCollection: function (callback, context, usePreviouslyFetched) {
-            return Dep.prototype.getCollection.call(this, (collection) => {
+    getCollection(usePreviouslyFetched) {
+        return super.getCollection()
+            .then(collection => {
                 collection.data.userType = 'portal';
 
-                callback.call(context, collection);
-            }, context, usePreviouslyFetched);
-        },
+                return collection;
+            });
+    }
 
-        createViewView: function (options, model, view) {
-            if (!model.isPortal()) {
-                if (model.isApi()) {
-                    this.getRouter().dispatch('ApiUser', 'view', {id: model.id, model: model});
-
-                    return;
-                }
-
-                this.getRouter().dispatch('User', 'view', {id: model.id, model: model});
+    createViewView(options, model, view) {
+        if (!model.isPortal()) {
+            if (model.isApi()) {
+                this.getRouter().dispatch('ApiUser', 'view', {id: model.id, model: model});
 
                 return;
             }
 
-            Dep.prototype.createViewView.call(this, options, model, view);
-        },
+            this.getRouter().dispatch('User', 'view', {id: model.id, model: model});
 
-        actionCreate: function (options) {
-            options = options || {};
-            options.attributes = options.attributes  || {};
-            options.attributes.type = 'portal';
+            return;
+        }
 
-            Dep.prototype.actionCreate.call(this, options);
-        },
+        super.createViewView(options, model, view);
+    }
 
-        checkAccess: function (action) {
-            if (this.getAcl().get('portalPermission') === 'yes')
-                return true;
+    actionCreate(options) {
+        options = options || {};
+        options.attributes = options.attributes  || {};
+        options.attributes.type = 'portal';
 
-            return false;
-        },
-    });
-});
+        super.actionCreate(options);
+    }
+
+    checkAccess(action) {
+        if (this.getAcl().getPermissionLevel('portalPermission') === 'yes') {
+            return true;
+        }
+
+        return false;
+    }
+}
+
+export default PortalUserController;

@@ -82,10 +82,10 @@ class RecordController extends Controller {
             this.clearStoredMainView(key);
         }
 
-        this.getCollection(collection => {
-            let mediator = {};
+        this.getCollection().then(collection => {
+            const mediator = {};
 
-            let abort = () => {
+            const abort = () => {
                 collection.abortLastFetch();
                 mediator.abort = true;
 
@@ -93,16 +93,23 @@ class RecordController extends Controller {
             };
 
             this.listenToOnce(this.baseController, 'action', abort);
-            this.listenToOnce(collection, 'sync', () =>
-                this.stopListening(this.baseController, 'action', abort));
+            this.listenToOnce(collection, 'sync', () => this.stopListening(this.baseController, 'action', abort));
 
-            this.main(this.getViewName('list'), {
+            let viewOptions = {
                 scope: this.name,
                 collection: collection,
                 params: options,
                 mediator: mediator,
-            }, null, isReturn, key);
-        }, this, false);
+            };
+
+            this.main(
+                this.getViewName('list'),
+                viewOptions,
+                null,
+                isReturn,
+                key
+            );
+        });
     }
 
     beforeView() {
@@ -445,40 +452,26 @@ class RecordController extends Controller {
      * Get a collection for the current controller.
      *
      * @protected
-     * @param {function(module:collection): void|null} [callback]
-     * @param {Object|null} [context]
-     * @param {boolean} [usePreviouslyFetched=false] Use a previously fetched.
+     * @param {boolean} [usePreviouslyFetched=false] Use a previously fetched. @todo Revise.
      * @return {Promise<module:collection>}
      */
-    getCollection(callback, context, usePreviouslyFetched) {
-        context = context || this;
-
+    getCollection(usePreviouslyFetched) {
         if (!this.name) {
             throw new Error('No collection for unnamed controller');
         }
 
-        let collectionName = this.entityType || this.name;
+        let entityType = this.entityType || this.name;
 
-        if (usePreviouslyFetched) {
-            if (collectionName in this.collectionMap) {
-                let collection = this.collectionMap[collectionName];
+        if (usePreviouslyFetched && entityType in this.collectionMap) {
+            let collection = this.collectionMap[entityType];
 
-                callback.call(context, collection);
-
-                return Promise.resolve(collection);
-            }
+            return Promise.resolve(collection);
         }
 
-        return this.collectionFactory.create(collectionName, (collection) => {
-            this.collectionMap[collectionName] = collection;
+        return this.collectionFactory.create(entityType, collection => {
+            this.collectionMap[entityType] = collection;
 
-            this.listenTo(collection, 'sync', () => {
-                collection.isFetched = true;
-            });
-
-            if (callback) {
-                callback.call(context, collection);
-            }
+            this.listenTo(collection, 'sync', () => collection.isFetched = true);
         });
     }
 

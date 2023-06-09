@@ -508,6 +508,15 @@ const Collection = Dep.extend(/** @lends Collection# */ {
         return object instanceof Model;
     },
 
+    /**
+     * Prepare an empty model instance.
+     *
+     * @return {Model}
+     */
+    prepareModel: function () {
+        return this._prepareModel({}, {});
+    },
+
     /** @private*/
     _prepareModel: function(attributes, options) {
         if (this._isModel(attributes)) {

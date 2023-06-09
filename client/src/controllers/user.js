@@ -30,12 +30,13 @@ import RecordController from 'controllers/record';
 
 class UserController extends RecordController {
 
-    getCollection(callback, context, usePreviouslyFetched) {
-        return super.getCollection(collection => {
-            collection.data.userType = 'internal';
+    getCollection(usePreviouslyFetched) {
+        return super.getCollection()
+            .then(collection => {
+                collection.data.userType = 'internal';
 
-            callback.call(context, collection);
-        }, context, usePreviouslyFetched);
+                return collection;
+            });
     }
 
     /**

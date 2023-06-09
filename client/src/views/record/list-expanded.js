@@ -91,23 +91,22 @@ define('views/record/list-expanded', ['views/record/list'], function (Dep) {
         },
 
         _convertLayout: function (listLayout, model) {
-            model = model || this.collection.model.prototype;
+            model = model || this.collection.prepareModel();
 
             var layout = {
                 rows: [],
                 right: false,
             };
 
-            for (var i in listLayout.rows) {
-                var row = listLayout.rows[i];
-                var layoutRow = [];
+            for (let i in listLayout.rows) {
+                let row = listLayout.rows[i];
+                let layoutRow = [];
 
-                for (var j in row) {
+                for (let j in row) {
+                    let e = row[j];
+                    let type = e.type || model.getFieldType(e.name) || 'base';
 
-                    var e = row[j];
-                    var type = e.type || model.getFieldType(e.name) || 'base';
-
-                    var item = {
+                    let item = {
                         name: e.name + 'Field',
                         field: e.name,
                         view: e.view ||
@@ -133,7 +132,7 @@ define('views/record/list-expanded', ['views/record/list'], function (Dep) {
             }
 
             if ('right' in listLayout) {
-                if (listLayout.right != false) {
+                if (listLayout.right) {
                     var name = listLayout.right.name || 'right';
 
                     layout.right = {

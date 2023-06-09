@@ -2290,7 +2290,7 @@ export default Dep.extend(/** @lends Class# */{
         this.layoutIsBeingLoaded = true;
 
         let layoutName = this.layoutName;
-        let layoutScope = this.layoutScope || this.collection.name;
+        let layoutScope = this.layoutScope || this.collection.entityType || this.collection.name;
 
         this.getHelper().layoutManager.get(layoutScope, layoutName, listLayout => {
             let filteredListLayout = this.filterListLayout(listLayout);
@@ -2434,7 +2434,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      */
     _convertLayout: function (listLayout, model) {
-        model = model || this.collection.model.prototype;
+        model = model || this.collection.prepareModel();
 
         let layout = [];
 
@@ -2442,7 +2442,7 @@ export default Dep.extend(/** @lends Class# */{
             layout.push({
                 name: 'r-checkboxField',
                 columnName: 'r-checkbox',
-                template: 'record/list-checkbox'
+                template: 'record/list-checkbox',
             });
         }
 

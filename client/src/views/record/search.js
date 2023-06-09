@@ -245,7 +245,7 @@ export default Dep.extend(/** @lends Class# */{
             }
         }
 
-        this.model = new this.collection.model();
+        this.model = this.collection.prepareModel();
 
         this.model.clear();
 
