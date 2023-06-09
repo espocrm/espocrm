@@ -28,12 +28,12 @@
 
 /** @module models/preferences */
 
-import Dep from "model";
+import Model from 'model';
 
 /**
  * User preferences.
  */
-export default class extends Dep {
+class Preferences extends Model {
 
     name = 'Preferences'
     entityType = 'Preferences'
@@ -60,3 +60,5 @@ export default class extends Dep {
         return this.get('isPortalUser');
     }
 }
+
+export default Preferences;

@@ -30,33 +30,33 @@
 
 /**
  * Cache for source and resource files.
- *
- * @class
- * @param {Number} [cacheTimestamp] A cache timestamp.
  */
-const Cache = function (cacheTimestamp) {
-    this.basePrefix = this.prefix;
+class Cache {
 
-    if (cacheTimestamp) {
-        this.prefix =  this.basePrefix + '-' + cacheTimestamp;
+    /**
+     * @param {Number} [cacheTimestamp] A cache timestamp.
+     */
+    constructor(cacheTimestamp) {
+        this.basePrefix = this.prefix;
+
+        if (cacheTimestamp) {
+            this.prefix =  this.basePrefix + '-' + cacheTimestamp;
+        }
+
+        if (!this.get('app', 'timestamp')) {
+            this.storeTimestamp();
+        }
     }
-
-    if (!this.get('app', 'timestamp')) {
-        this.storeTimestamp();
-    }
-};
-
-_.extend(Cache.prototype, /** @lends Cache# */ {
 
     /** @private */
-    prefix: 'cache',
+    prefix = 'cache'
 
     /**
      * Handle actuality. Clears cache if not actual.
      *
      * @param {Number} cacheTimestamp A cache timestamp.
      */
-    handleActuality: function (cacheTimestamp) {
+    handleActuality(cacheTimestamp) {
         let storedTimestamp = this.getCacheTimestamp();
 
         if (storedTimestamp) {
@@ -72,35 +72,34 @@ _.extend(Cache.prototype, /** @lends Cache# */ {
         this.clear();
         this.set('app', 'cacheTimestamp', cacheTimestamp);
         this.storeTimestamp();
-    },
+    }
 
     /**
      * Get a cache timestamp.
      *
      * @returns {number}
      */
-    getCacheTimestamp: function () {
+    getCacheTimestamp() {
         return parseInt(this.get('app', 'cacheTimestamp') || 0);
-    },
+    }
 
     /**
-     * @deprecated
      * @todo Revise whether is needed.
      */
-    storeTimestamp: function () {
+    storeTimestamp() {
         let frontendCacheTimestamp = Date.now();
 
         this.set('app', 'timestamp', frontendCacheTimestamp);
-    },
+    }
 
     /**
      * @private
      * @param {string} type
      * @returns {string}
      */
-    composeFullPrefix: function (type) {
+    composeFullPrefix(type) {
         return this.prefix + '-' + type;
-    },
+    }
 
     /**
      * @private
@@ -108,19 +107,19 @@ _.extend(Cache.prototype, /** @lends Cache# */ {
      * @param {string} name
      * @returns {string}
      */
-    composeKey: function (type, name) {
+    composeKey(type, name) {
         return this.composeFullPrefix(type) + '-' + name;
-    },
+    }
 
     /**
      * @private
      * @param {string} type
      */
-    checkType: function (type) {
+    checkType(type) {
         if (typeof type === 'undefined' && toString.call(type) !== '[object String]') {
             throw new TypeError("Bad type \"" + type + "\" passed to Cache().");
         }
-    },
+    }
 
     /**
      * Get a stored value.
@@ -129,7 +128,7 @@ _.extend(Cache.prototype, /** @lends Cache# */ {
      * @param {string} name A name.
      * @returns {string|null} Null if no stored value.
      */
-    get: function (type, name) {
+    get(type, name) {
         this.checkType(type);
 
         let key = this.composeKey(type, name);
@@ -148,8 +147,8 @@ _.extend(Cache.prototype, /** @lends Cache# */ {
         if (stored) {
             let result = stored;
 
-            if (stored.length > 9 && stored.substr(0, 9) === '__JSON__:') {
-                let jsonString = stored.substr(9);
+            if (stored.length > 9 && stored.substring(0, 9) === '__JSON__:') {
+                let jsonString = stored.slice(9);
 
                 try {
                     result = JSON.parse(jsonString);
@@ -163,7 +162,7 @@ _.extend(Cache.prototype, /** @lends Cache# */ {
         }
 
         return null;
-    },
+    }
 
     /**
      * Store a value.
@@ -172,7 +171,7 @@ _.extend(Cache.prototype, /** @lends Cache# */ {
      * @param {string} name A name.
      * @param {any} value A value.
      */
-    set: function (type, name, value) {
+    set(type, name, value) {
         this.checkType(type);
 
         let key = this.composeKey(type, name);
@@ -187,7 +186,7 @@ _.extend(Cache.prototype, /** @lends Cache# */ {
         catch (error) {
             console.log('Local storage limit exceeded.');
         }
-    },
+    }
 
     /**
      * Clear a stored value.
@@ -195,7 +194,7 @@ _.extend(Cache.prototype, /** @lends Cache# */ {
      * @param {string} [type] A type/category.
      * @param {string} [name] A name.
      */
-    clear: function (type, name) {
+    clear(type, name) {
         let reText;
 
         if (typeof type !== 'undefined') {
@@ -217,7 +216,7 @@ _.extend(Cache.prototype, /** @lends Cache# */ {
                 delete localStorage[i];
             }
         }
-    },
-});
+    }
+}
 
 export default Cache;

@@ -35,16 +35,16 @@ import _ from 'lib!underscore';
 /**
  * When attributes have changed.
  *
- * @event Class#change
- * @param {Class} model A model.
+ * @event Model#change
+ * @param {Model} model A model.
  * @param {Object} o Options.
  */
 
 /**
  * On sync with backend.
  *
- * @event Class#sync
- * @param {Class} model A model.
+ * @event Model#sync
+ * @param {Model} model A model.
  * @param {Object} response Response from backend.
  * @param {Object} o Options.
  */
@@ -63,7 +63,7 @@ import _ from 'lib!underscore';
  *
  * @mixes Bull.Events
  */
-class Class {
+class Model {
 
     /**
      * A root URL.
@@ -84,7 +84,7 @@ class Class {
     entityType = null
 
     /**
-     * @param {Object.<string, *>|Class} [attributes]
+     * @param {Object.<string, *>|Model} [attributes]
      * @param {{
      *     collection?: module:collection,
      *     entityType?: string,
@@ -157,7 +157,7 @@ class Class {
     /**
      * @protected
      * @param {string} [method] HTTP method.
-     * @param {Class} [model]
+     * @param {Model} [model]
      * @param {Object} [options]
      * @returns {Promise}
      */
@@ -178,7 +178,7 @@ class Class {
      *     silent?: boolean,
      * }} [options] Options. `silent` won't trigger a `change` event.
      * @returns {this}
-     * @fires Class#change Unless `{silent: true}`.
+     * @fires Model#change Unless `{silent: true}`.
      */
     set(attribute, value, options) {
         if (typeof attribute === 'object') {
@@ -239,7 +239,7 @@ class Class {
      *
      * @param {string} attribute
      * @param {Object} [options] Options.
-     * @return {Class}
+     * @return {Model}
      */
     unset(attribute, options) {
         return this.set(attribute, void 0, _.extend({}, options, {unset: true}));
@@ -328,7 +328,7 @@ class Class {
      *
      * @param {Object} [options] Options.
      * @returns {Promise<Object>}
-     * @fires Class#sync
+     * @fires Model#sync
      */
     fetch(options) {
         options = _.extend({parse: true}, options);
@@ -362,7 +362,7 @@ class Class {
      * @param {Object} [attributes] Attribute values.
      * @param {Object} [options] Options.
      * @returns {Promise}
-     * @fires Class#sync
+     * @fires Model#sync
      */
     save(attributes, options) {
         return Backbone.Model.prototype.save.call(this, attributes, options);
@@ -373,7 +373,7 @@ class Class {
      *
      * @param {{wait: boolean}} [options] Options.
      * @returns {Promise}
-     * @fires Class#sync
+     * @fires Model#sync
      */
     destroy(options) {
         return Backbone.Model.prototype.destroy.call(this, options);
@@ -411,7 +411,7 @@ class Class {
     /**
      * Clone.
      *
-     * @return {Class}
+     * @return {Model}
      */
     clone() {
         return new this.constructor(
@@ -746,8 +746,8 @@ class Class {
     }
 }
 
-Class.extend = Bull.View.extend;
+Model.extend = Bull.View.extend;
 
-_.extend(Class.prototype, Bull.Events);
+_.extend(Model.prototype, Bull.Events);
 
-export default Class;
+export default Model;

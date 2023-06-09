@@ -28,18 +28,13 @@
 
 /** @module session-storage */
 
-import Dep from 'storage';
-
 /**
  * A session storage. Cleared when a page session ends.
- *
- * @class
- * @name Class
  */
-export default Dep.extend(/** @lends Class# */{
+class SessionStorage {
 
-    /** @inheritDoc */
-    storageObject: sessionStorage,
+    /** @private */
+    storageObject = sessionStorage
 
     /**
      * Get a value.
@@ -47,7 +42,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} name A name.
      * @returns {*} Null if not set.
      */
-    get: function (name) {
+    get(name) {
         try {
             var stored = this.storageObject.getItem(name);
         }
@@ -60,8 +55,8 @@ export default Dep.extend(/** @lends Class# */{
         if (stored) {
             let result = stored;
 
-            if (stored.length > 9 && stored.substr(0, 9) === '__JSON__:') {
-                let jsonString = stored.substr(9);
+            if (stored.length > 9 && stored.substring(0, 9) === '__JSON__:') {
+                let jsonString = stored.slice(9);
 
                 try {
                     result = JSON.parse(jsonString);
@@ -75,7 +70,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return null;
-    },
+    }
 
     /**
      * Set (store) a value.
@@ -83,7 +78,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} name A name.
      * @param {*} value A value.
      */
-    set: function (name, value) {
+    set(name, value) {
         if (value === null) {
             this.clear(name);
 
@@ -106,7 +101,7 @@ export default Dep.extend(/** @lends Class# */{
         catch (error) {
             console.error(error);
         }
-    },
+    }
 
     /**
      * Has a value.
@@ -114,20 +109,22 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} name A name.
      * @returns {boolean}
      */
-    has: function (name) {
+    has(name) {
         return this.storageObject.getItem(name) !== null;
-    },
+    }
 
     /**
      * Clear a value.
      *
      * @param {string} name A name.
      */
-    clear: function (name) {
+    clear(name) {
         for (let i in this.storageObject) {
             if (i === name) {
                 delete this.storageObject[i];
             }
         }
-    },
-});
+    }
+}
+
+export default SessionStorage;

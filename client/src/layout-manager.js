@@ -33,42 +33,44 @@ import Bull from 'lib!bullbone';
 /**
  * A layout manager.
  *
- * @param {module:cache|null} [cache] A cache.
- * @param {string} [applicationId] An application ID.
- * @param {string} [userId] A user ID.
+ * @mixes Bull.Events
  */
-const LayoutManager = function (cache, applicationId, userId) {
-    /**
-     * @private
-     * @type {module:cache|null}
-     */
-    this.cache = cache || null;
+class LayoutManager {
 
     /**
-     * @private
-     * @type {string}
+     * @param {module:cache|null} [cache] A cache.
+     * @param {string} [applicationId] An application ID.
+     * @param {string} [userId] A user ID.
      */
-    this.applicationId = applicationId || 'default-id';
+    constructor(cache, applicationId, userId) {
 
-    /**
-     * @private
-     * @type {string|null}
-     */
-    this.userId = userId || null;
+        /**
+         * @private
+         * @type {module:cache|null}
+         */
+        this.cache = cache || null;
 
-    /**
-     * @private
-     * @type {Object}
-     */
-    this.data = {};
+        /**
+         * @private
+         * @type {string}
+         */
+        this.applicationId = applicationId || 'default-id';
 
-    /**
-     * @private
-     */
-    this.ajax = Espo.Ajax;
-};
+        /**
+         * @private
+         * @type {string|null}
+         */
+        this.userId = userId || null;
 
-_.extend(LayoutManager.prototype, /** @lends LayoutManager# */{
+        /**
+         * @private
+         * @type {Object}
+         */
+        this.data = {};
+
+        /** @private */
+        this.ajax = Espo.Ajax;
+    }
 
     /**
      * Set a user ID. To be used for the cache purpose.
@@ -77,9 +79,9 @@ _.extend(LayoutManager.prototype, /** @lends LayoutManager# */{
      *
      * @todo Throw an exception if already set.
      */
-    setUserId: function (userId) {
+    setUserId(userId) {
         this.userId = userId
-    },
+    }
 
     /**
      * @private
@@ -87,13 +89,13 @@ _.extend(LayoutManager.prototype, /** @lends LayoutManager# */{
      * @param {string} type
      * @returns {string}
      */
-    getKey: function (scope, type) {
+    getKey(scope, type) {
         if (this.userId) {
             return this.applicationId + '-' + this.userId + '-' + scope + '-' + type;
         }
 
         return this.applicationId + '-' + scope + '-' + type;
-    },
+    }
 
     /**
      * @private
@@ -102,7 +104,7 @@ _.extend(LayoutManager.prototype, /** @lends LayoutManager# */{
      * @param {string} [setId]
      * @returns {string}
      */
-    getUrl: function (scope, type, setId) {
+    getUrl(scope, type, setId) {
         let url = scope + '/layout/' + type;
 
         if (setId) {
@@ -110,7 +112,7 @@ _.extend(LayoutManager.prototype, /** @lends LayoutManager# */{
         }
 
         return url;
-    },
+    }
 
     /**
      * @callback module:layout-manager~getCallback
@@ -126,7 +128,7 @@ _.extend(LayoutManager.prototype, /** @lends LayoutManager# */{
      * @param {module:layout-manager~getCallback} callback
      * @param {boolean} [cache=true] Use cache.
      */
-    get: function (scope, type, callback, cache) {
+    get(scope, type, callback, cache) {
         if (typeof cache === 'undefined') {
             cache = true;
         }
@@ -172,7 +174,7 @@ _.extend(LayoutManager.prototype, /** @lends LayoutManager# */{
                     }
                 }
             );
-    },
+    }
 
     /**
      * Get an original layout.
@@ -182,7 +184,7 @@ _.extend(LayoutManager.prototype, /** @lends LayoutManager# */{
      * @param {string} [setId]
      * @param {module:layout-manager~getCallback} callback
      */
-    getOriginal: function (scope, type, setId, callback) {
+    getOriginal(scope, type, setId, callback) {
         let url = 'Layout/action/getOriginal?scope='+scope+'&name='+type;
 
         if (setId) {
@@ -198,7 +200,7 @@ _.extend(LayoutManager.prototype, /** @lends LayoutManager# */{
                     }
                 }
             );
-    },
+    }
 
     /**
      * Store and set a layout.
@@ -210,7 +212,7 @@ _.extend(LayoutManager.prototype, /** @lends LayoutManager# */{
      * @param {string} [setId] A set ID.
      * @returns {Promise}
      */
-    set: function (scope, type, layout, callback, setId) {
+    set(scope, type, layout, callback, setId) {
         return Espo.Ajax
             .putRequest(this.getUrl(scope, type, setId), layout)
             .then(
@@ -230,7 +232,7 @@ _.extend(LayoutManager.prototype, /** @lends LayoutManager# */{
                     }
                 }
             );
-    },
+    }
 
     /**
      * Reset a layout to default.
@@ -240,7 +242,7 @@ _.extend(LayoutManager.prototype, /** @lends LayoutManager# */{
      * @param {Function} callback A callback.
      * @param {string} [setId] A set ID.
      */
-    resetToDefault: function (scope, type, callback, setId) {
+    resetToDefault(scope, type, callback, setId) {
         Espo.Ajax
             .postRequest('Layout/action/resetToDefault', {
                 scope: scope,
@@ -264,15 +266,16 @@ _.extend(LayoutManager.prototype, /** @lends LayoutManager# */{
                     }
                 }
             );
-    },
+    }
 
     /**
      * Clear loaded data.
      */
-    clearLoadedData: function () {
+    clearLoadedData() {
         this.data = {};
-    },
+    }
+}
 
-}, Bull.Events);
+_.extend(LayoutManager.prototype, Bull.Events);
 
 export default LayoutManager;

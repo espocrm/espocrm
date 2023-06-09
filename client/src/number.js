@@ -30,60 +30,60 @@
 
 /**
  * A number util.
- *
- * @class
- * @param {module:models/settings} config A config.
- * @param {module:models/preferences} preferences Preferences.
  */
-const NumberUtil = function (config, preferences) {
-    /**
-     * @private
-     * @type {module:models/settings}
-     */
-    this.config = config;
+class NumberUtil {
 
     /**
-     * @private
-     * @type {module:models/preferences}
+     * @param {module:models/settings} config A config.
+     * @param {module:models/preferences} preferences Preferences.
      */
-    this.preferences = preferences;
+    constructor(config, preferences) {
+        /**
+         * @private
+         * @type {module:models/settings}
+         */
+        this.config = config;
 
-    /**
-     * A thousand separator.
-     *
-     * @private
-     * @type {string|null}
-     */
-    this.thousandSeparator = null;
+        /**
+         * @private
+         * @type {module:models/preferences}
+         */
+        this.preferences = preferences;
 
-    /**
-     * A decimal mark.
-     *
-     * @private
-     * @type {string|null}
-     */
-    this.decimalMark = null;
-
-    this.config.on('change', () => {
+        /**
+         * A thousand separator.
+         *
+         * @private
+         * @type {string|null}
+         */
         this.thousandSeparator = null;
+
+        /**
+         * A decimal mark.
+         *
+         * @private
+         * @type {string|null}
+         */
         this.decimalMark = null;
-    });
 
-    this.preferences.on('change', () => {
-        this.thousandSeparator = null;
-        this.decimalMark = null;
-    });
+        this.config.on('change', () => {
+            this.thousandSeparator = null;
+            this.decimalMark = null;
+        });
 
-    /**
-     * A max decimal places.
-     *
-     * @private
-     * @type {number}
-     */
-    this.maxDecimalPlaces = 10;
-};
+        this.preferences.on('change', () => {
+            this.thousandSeparator = null;
+            this.decimalMark = null;
+        });
 
-_.extend(NumberUtil.prototype, /** @lends NumberUtil# */{
+        /**
+         * A max decimal places.
+         *
+         * @private
+         * @type {number}
+         */
+        this.maxDecimalPlaces = 10;
+    }
 
     /**
      * Format an integer number.
@@ -91,7 +91,7 @@ _.extend(NumberUtil.prototype, /** @lends NumberUtil# */{
      * @param {number} value A value.
      * @returns {string}
      */
-    formatInt: function (value) {
+    formatInt(value) {
         if (value === null || value === undefined) {
             return '';
         }
@@ -101,7 +101,7 @@ _.extend(NumberUtil.prototype, /** @lends NumberUtil# */{
         stringValue = stringValue.replace(/\B(?=(\d{3})+(?!\d))/g, this.getThousandSeparator());
 
         return stringValue;
-    },
+    }
 
     /**
      * Format a float number.
@@ -110,7 +110,7 @@ _.extend(NumberUtil.prototype, /** @lends NumberUtil# */{
      * @param {number} [decimalPlaces] Decimal places.
      * @returns {string}
      */
-    formatFloat: function (value, decimalPlaces) {
+    formatFloat(value, decimalPlaces) {
         if (value === null || value === undefined) {
             return '';
         }
@@ -127,7 +127,7 @@ _.extend(NumberUtil.prototype, /** @lends NumberUtil# */{
             );
         }
 
-        var parts = value.toString().split('.');
+        let parts = value.toString().split('.');
 
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.getThousandSeparator());
 
@@ -155,13 +155,13 @@ _.extend(NumberUtil.prototype, /** @lends NumberUtil# */{
         }
 
         return parts.join(this.getDecimalMark());
-    },
+    }
 
     /**
      * @private
      * @returns {string}
      */
-    getThousandSeparator: function () {
+    getThousandSeparator() {
         if (this.thousandSeparator !== null) {
             return this.thousandSeparator;
         }
@@ -184,13 +184,13 @@ _.extend(NumberUtil.prototype, /** @lends NumberUtil# */{
         this.thousandSeparator = thousandSeparator;
 
         return thousandSeparator;
-    },
+    }
 
     /**
      * @private
      * @returns {string}
      */
-    getDecimalMark: function () {
+    getDecimalMark() {
         if (this.decimalMark !== null) {
             return this.decimalMark;
         }
@@ -215,7 +215,7 @@ _.extend(NumberUtil.prototype, /** @lends NumberUtil# */{
         this.decimalMark = decimalMark;
 
         return decimalMark;
-    },
-});
+    }
+}
 
 export default NumberUtil;

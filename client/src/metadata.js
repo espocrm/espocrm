@@ -33,27 +33,31 @@ import Bull from 'lib!bullbone';
 /**
  * Application metadata.
  *
- * @class
- * @param {module:cache} [cache] A cache.
+ * @mixes Bull.Events
  */
-const Metadata = function (cache) {
-    /**
-     * @private
-     * @type {module:cache|null}
-     */
-    this.cache = cache || null;
+class Metadata {
 
     /**
-     * @private
-     * @type {Object}
+     * Application metadata.
+     *
+     * @param {module:cache} [cache] A cache.
      */
-    this.data = {};
-};
+    constructor(cache) {
+        /**
+         * @private
+         * @type {module:cache|null}
+         */
+        this.cache = cache || null;
 
-_.extend(Metadata.prototype, /** @lends Metadata# */{
+        /**
+         * @private
+         * @type {Object}
+         */
+        this.data = {};
+    }
 
     /** @private */
-    url: 'Metadata',
+    url = 'Metadata'
 
     /**
      * Load from cache or the backend (if not yet cached).
@@ -62,7 +66,7 @@ _.extend(Metadata.prototype, /** @lends Metadata# */{
      * @param {boolean} [disableCache=false] Bypass cache.
      * @returns {Promise}
      */
-    load: function (callback, disableCache) {
+    load(callback, disableCache) {
         this.off('sync');
 
         if (callback) {
@@ -70,7 +74,7 @@ _.extend(Metadata.prototype, /** @lends Metadata# */{
         }
 
         if (!disableCache) {
-             if (this.loadFromCache()) {
+            if (this.loadFromCache()) {
                 this.trigger('sync');
 
                 return new Promise(resolve => resolve());
@@ -81,32 +85,29 @@ _.extend(Metadata.prototype, /** @lends Metadata# */{
             this.fetch()
                 .then(() => resolve());
         });
-    },
+    }
 
     /**
      * Load from the server.
      *
      * @returns {Promise}
      */
-    loadSkipCache: function () {
+    loadSkipCache() {
         return this.load(null, true);
-    },
+    }
 
     /**
      * @private
      * @returns {Promise}
      */
-    fetch: function () {
-        return Espo.Ajax
-            .getRequest(this.url, null, {
-                dataType: 'json',
-                success: data => {
-                    this.data = data;
-                    this.storeToCache();
-                    this.trigger('sync');
-                },
+    fetch() {
+        return Espo.Ajax.getRequest(this.url)
+            .then(data => {
+                this.data = data;
+                this.storeToCache();
+                this.trigger('sync');
             });
-    },
+    }
 
     /**
      * Get a value.
@@ -115,7 +116,7 @@ _.extend(Metadata.prototype, /** @lends Metadata# */{
      * @param {*} [defaultValue] A value to return if not set.
      * @returns {*} Null if not set.
      */
-    get: function (path, defaultValue) {
+    get(path, defaultValue) {
         defaultValue = defaultValue || null;
 
         let arr;
@@ -147,13 +148,13 @@ _.extend(Metadata.prototype, /** @lends Metadata# */{
         }
 
         return result;
-    },
+    }
 
     /**
      * @private
      * @returns {boolean|null} True if success.
      */
-    loadFromCache: function () {
+    loadFromCache() {
         if (this.cache) {
             let cached = this.cache.get('app', 'metadata');
 
@@ -165,39 +166,37 @@ _.extend(Metadata.prototype, /** @lends Metadata# */{
         }
 
         return null;
-    },
+    }
 
-    /**
-     * @private
-     */
-    storeToCache: function () {
+    /** @private */
+    storeToCache() {
         if (this.cache) {
             this.cache.set('app', 'metadata', this.data);
         }
-    },
+    }
 
     /**
      * Clear cache.
      */
-    clearCache: function () {
+    clearCache() {
         if (!this.cache) {
             return;
         }
 
         this.cache.clear('app', 'metadata');
-    },
+    }
 
     /**
      * Get a scope list.
      *
      * @returns {string[]}
      */
-    getScopeList: function () {
+    getScopeList () {
         let scopes = this.get('scopes') || {};
         let scopeList = [];
 
         for (let scope in scopes) {
-            var d = scopes[scope];
+            let d = scopes[scope];
 
             if (d.disabled) {
                 continue;
@@ -207,14 +206,14 @@ _.extend(Metadata.prototype, /** @lends Metadata# */{
         }
 
         return scopeList;
-    },
+    }
 
     /**
      * Get an object-scope list. An object-scope represents a business entity.
      *
      * @returns {string[]}
      */
-    getScopeObjectList: function () {
+    getScopeObjectList () {
         let scopes = this.get('scopes') || {};
         let scopeList = [];
 
@@ -233,16 +232,16 @@ _.extend(Metadata.prototype, /** @lends Metadata# */{
         }
 
         return scopeList;
-    },
+    }
 
     /**
      * Get an entity-scope list. Scopes that represents entities.
      *
      * @returns {string[]}
      */
-    getScopeEntityList: function () {
-        var scopes = this.get('scopes') || {};
-        var scopeList = [];
+    getScopeEntityList () {
+        let scopes = this.get('scopes') || {};
+        let scopeList = [];
 
         for (let scope in scopes) {
             let d = scopes[scope];
@@ -260,7 +259,8 @@ _.extend(Metadata.prototype, /** @lends Metadata# */{
 
         return scopeList;
     }
+}
 
-}, Bull.Events);
+_.extend(Metadata.prototype, Bull.Events);
 
 export default Metadata;

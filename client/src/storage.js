@@ -32,27 +32,25 @@ import Bull from 'lib!bullbone';
 
 /**
  * A storage. Data is saved across browser sessions, has no expiration time.
- *
- * @class
  */
-const Storage = function () {};
+class Storage {
 
-_.extend(Storage.prototype, /** @lends Storage# */{
-
-    /** @protected */
-    prefix: 'espo',
+    constructor() {}
 
     /** @protected */
-    storageObject: localStorage,
+    prefix = 'espo'
+
+    /** @protected */
+    storageObject = localStorage
 
     /**
      * @private
      * @param {string} type
      * @returns {string}
      */
-    composeFullPrefix: function (type) {
+    composeFullPrefix(type) {
         return this.prefix + '-' + type;
-    },
+    }
 
     /**
      * @private
@@ -60,22 +58,22 @@ _.extend(Storage.prototype, /** @lends Storage# */{
      * @param {string} name
      * @returns {string}
      */
-    composeKey: function (type, name) {
+    composeKey(type, name) {
         return this.composeFullPrefix(type) + '-' + name;
-    },
+    }
 
     /**
      * @private
      * @param {string} type
      */
-    checkType: function (type) {
+    checkType(type) {
         if (
             typeof type === 'undefined' &&
             toString.call(type) !== '[object String]' || type === 'cache'
         ) {
             throw new TypeError("Bad type \"" + type + "\" passed to Espo.Storage.");
         }
-    },
+    }
 
     /**
      * Has a value.
@@ -84,13 +82,13 @@ _.extend(Storage.prototype, /** @lends Storage# */{
      * @param {string} name A name.
      * @returns {boolean}
      */
-    has: function (type, name) {
+    has(type, name) {
         this.checkType(type);
 
         let key = this.composeKey(type, name);
 
         return this.storageObject.getItem(key) !== null;
-    },
+    }
 
     /**
      * Get a value.
@@ -99,7 +97,7 @@ _.extend(Storage.prototype, /** @lends Storage# */{
      * @param {string} name A name.
      * @returns {*} Null if not stored.
      */
-    get: function (type, name) {
+    get(type, name) {
         this.checkType(type);
 
         let key = this.composeKey(type, name);
@@ -116,8 +114,8 @@ _.extend(Storage.prototype, /** @lends Storage# */{
         if (stored) {
             let result = stored;
 
-            if (stored.length > 9 && stored.substr(0, 9) === '__JSON__:') {
-                let jsonString = stored.substr(9);
+            if (stored.length > 9 && stored.substring(0, 9) === '__JSON__:') {
+                let jsonString = stored.slice(9);
 
                 try {
                     result = JSON.parse(jsonString);
@@ -139,7 +137,7 @@ _.extend(Storage.prototype, /** @lends Storage# */{
         }
 
         return null;
-    },
+    }
 
     /**
      * Set (store) a value.
@@ -148,7 +146,7 @@ _.extend(Storage.prototype, /** @lends Storage# */{
      * @param {string} name A name.
      * @param {*} value A value.
      */
-    set: function (type, name, value) {
+    set(type, name, value) {
         this.checkType(type);
 
         if (value === null) {
@@ -174,9 +172,10 @@ _.extend(Storage.prototype, /** @lends Storage# */{
         }
         catch (error) {
             console.error(error);
+
             return null;
         }
-    },
+    }
 
     /**
      * Clear a value.
@@ -184,7 +183,7 @@ _.extend(Storage.prototype, /** @lends Storage# */{
      * @param {string} type A type (category).
      * @param {string} name A name.
      */
-    clear: function (type, name) {
+    clear(type, name) {
         let reText;
 
         if (typeof type !== 'undefined') {
@@ -207,8 +206,6 @@ _.extend(Storage.prototype, /** @lends Storage# */{
             }
         }
     }
-});
-
-Storage.extend = Bull.View.extend;
+}
 
 export default Storage;

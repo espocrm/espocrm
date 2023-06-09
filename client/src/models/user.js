@@ -33,7 +33,7 @@ import Model from 'model';
 /**
  * A user.
  */
-export default class extends Model {
+class User extends Model {
 
     name = 'User'
     entityType = 'User'
@@ -93,3 +93,5 @@ export default class extends Model {
         return this.get('type') === 'super-admin';
     }
 }
+
+export default User;

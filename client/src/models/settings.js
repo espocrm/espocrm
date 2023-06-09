@@ -28,12 +28,12 @@
 
 /** @module models/settings */
 
-import Dep from 'model';
+import Model from 'model';
 
 /**
  * A config.
  */
-export default class extends Dep {
+class Settings extends Model {
 
     name = 'Settings'
     entityType = 'Settings'
@@ -89,3 +89,5 @@ export default class extends Dep {
         }
     }
 }
+
+export default Settings;

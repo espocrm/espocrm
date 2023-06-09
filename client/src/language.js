@@ -33,34 +33,39 @@ import Bull from 'lib!bullbone';
 /**
  * A language.
  *
- * @class
- * @param {module:cache} [cache] A cache.
+ * @mixes Bull.Events
  */
-const Language = function (cache) {
-    /**
-     * @private
-     * @type {module:cache|null}
-     */
-    this.cache = cache || null;
-
-    /**
-     * @private
-     * @type {Object}
-     */
-    this.data = {};
-
-    /**
-     * A name.
-     *
-     * @type {string}
-     */
-    this.name = 'default';
-};
-
-_.extend(Language.prototype, /** @lends Language# */{
+class Language {
 
     /** @private */
-    url: 'I18n',
+    url = 'I18n'
+
+    /**
+     * @class
+     * @param {module:cache} [cache] A cache.
+     */
+    constructor(cache) {
+        /**
+         * @private
+         * @type {module:cache|null}
+         */
+        this.cache = cache || null;
+
+        /**
+         * @private
+         * @type {Object}
+         */
+        this.data = {};
+
+        /**
+         * A name.
+         *
+         * @type {string}
+         */
+        this.name = 'default';
+    }
+
+
 
     /**
      * Whether an item is set in language data.
@@ -70,7 +75,7 @@ _.extend(Language.prototype, /** @lends Language# */{
      * @param {string} name An item name.
      * @returns {boolean}
      */
-    has: function (name, category, scope) {
+    has(name, category, scope) {
         if (scope in this.data) {
             if (category in this.data[scope]) {
                 if (name in this.data[scope][category]) {
@@ -80,7 +85,7 @@ _.extend(Language.prototype, /** @lends Language# */{
         }
 
         return false;
-    },
+    }
 
     /**
      * Get a value set in language data.
@@ -90,7 +95,7 @@ _.extend(Language.prototype, /** @lends Language# */{
      * @param {string} name An item name.
      * @returns {*}
      */
-    get: function (scope, category, name) {
+    get(scope, category, name) {
         if (scope in this.data) {
             if (category in this.data[scope]) {
                 if (name in this.data[scope][category]) {
@@ -104,7 +109,7 @@ _.extend(Language.prototype, /** @lends Language# */{
         }
 
         return false;
-    },
+    }
 
     /**
      * Translate a label.
@@ -114,7 +119,7 @@ _.extend(Language.prototype, /** @lends Language# */{
      * @param {string|null} [scope='Global'] A scope.
      * @returns {string}
      */
-    translate: function (name, category, scope) {
+    translate(name, category, scope) {
         scope = scope || 'Global';
         category = category || 'labels';
 
@@ -125,7 +130,7 @@ _.extend(Language.prototype, /** @lends Language# */{
         }
 
         return res;
-    },
+    }
 
     /**
      * Translation an option item value.
@@ -135,7 +140,7 @@ _.extend(Language.prototype, /** @lends Language# */{
      * @param {string} [scope='Global'] A scope.
      * @returns {string}
      */
-    translateOption: function (value, field, scope) {
+    translateOption(value, field, scope) {
         let translation = this.translate(field, 'options', scope);
 
         if (typeof translation !== 'object') {
@@ -143,13 +148,14 @@ _.extend(Language.prototype, /** @lends Language# */{
         }
 
         return translation[value] || value;
-    },
+    }
 
     /**
      * @private
      */
-    loadFromCache: function (loadDefault) {
+    loadFromCache(loadDefault) {
         let name = this.name;
+
         if (loadDefault) {
             name = 'default';
         }
@@ -165,21 +171,21 @@ _.extend(Language.prototype, /** @lends Language# */{
         }
 
         return null;
-    },
+    }
 
     /**
      * Clear a language cache.
      */
-    clearCache: function () {
+    clearCache() {
         if (this.cache) {
             this.cache.clear('app', 'language-' + this.name);
         }
-    },
+    }
 
     /**
      * @private
      */
-    storeToCache: function (loadDefault) {
+    storeToCache(loadDefault) {
         let name = this.name;
 
         if (loadDefault) {
@@ -189,7 +195,7 @@ _.extend(Language.prototype, /** @lends Language# */{
         if (this.cache) {
             this.cache.set('app', 'language-' + name, this.data);
         }
-    },
+    }
 
     /**
      * Load data from cache or backend (if not yet cached).
@@ -199,7 +205,7 @@ _.extend(Language.prototype, /** @lends Language# */{
      * @param {boolean} [loadDefault=false] Deprecated.
      * @returns {Promise}
      */
-    load: function (callback, disableCache, loadDefault) {
+    load(callback, disableCache, loadDefault) {
         if (callback) {
             this.once('sync', callback);
         }
@@ -216,48 +222,48 @@ _.extend(Language.prototype, /** @lends Language# */{
             this.fetch(loadDefault)
                 .then(() => resolve());
         });
-    },
+    }
 
     /**
      * Load default-language data from the backend.
      *
      * @returns {Promise}
      */
-    loadDefault: function () {
+    loadDefault() {
         return this.load(null, false, true);
-    },
+    }
 
     /**
      * Load data from the backend.
      *
      * @returns {Promise}
      */
-    loadSkipCache: function () {
+    loadSkipCache() {
         return this.load(null, true);
-    },
+    }
 
     /**
      * Load default-language data from the backend.
      *
      * @returns {Promise}
      */
-    loadDefaultSkipCache: function () {
+    loadDefaultSkipCache() {
         return this.load(null, true, true);
-    },
+    }
 
     /**
      * @private
      * @param {boolean} loadDefault
      * @returns {Promise}
      */
-    fetch: function (loadDefault) {
+    fetch(loadDefault) {
         return Espo.Ajax.getRequest(this.url, {default: loadDefault}).then(data => {
             this.data = data;
 
             this.storeToCache(loadDefault);
             this.trigger('sync');
         });
-    },
+    }
 
     /**
      * Sort a field list by a translated name.
@@ -266,12 +272,12 @@ _.extend(Language.prototype, /** @lends Language# */{
      * @param {string[]} fieldList A field list.
      * @returns {string[]}
      */
-    sortFieldList: function (scope, fieldList) {
+    sortFieldList(scope, fieldList) {
         return fieldList.sort((v1, v2) => {
-             return this.translate(v1, 'fields', scope)
-                 .localeCompare(this.translate(v2, 'fields', scope));
+            return this.translate(v1, 'fields', scope)
+                .localeCompare(this.translate(v2, 'fields', scope));
         });
-    },
+    }
 
     /**
      * Sort an entity type list by a translated name.
@@ -280,7 +286,7 @@ _.extend(Language.prototype, /** @lends Language# */{
      * @param {boolean} [plural=false] Use a plural label.
      * @returns {string[]}
      */
-    sortEntityList: function (entityList, plural) {
+    sortEntityList(entityList, plural) {
         let category = 'scopeNames';
 
         if (plural) {
@@ -288,10 +294,10 @@ _.extend(Language.prototype, /** @lends Language# */{
         }
 
         return entityList.sort((v1, v2) => {
-             return this.translate(v1, category)
-                 .localeCompare(this.translate(v2, category));
+            return this.translate(v1, category)
+                .localeCompare(this.translate(v2, category));
         });
-    },
+    }
 
     /**
      * Get a value by a path.
@@ -299,7 +305,7 @@ _.extend(Language.prototype, /** @lends Language# */{
      * @param {string[]|string} path A path.
      * @returns {*}
      */
-    translatePath: function (path) {
+    translatePath(path) {
         if (typeof path === 'string' || path instanceof String) {
             path = path.split('.');
         }
@@ -313,8 +319,9 @@ _.extend(Language.prototype, /** @lends Language# */{
         });
 
         return pointer;
-    },
+    }
+}
 
-}, Bull.Events);
+_.extend(Language.prototype, Bull.Events);
 
 export default Language;
