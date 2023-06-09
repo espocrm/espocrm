@@ -28,19 +28,15 @@
 
 /** @module views/record/panels-container */
 
-import Dep from 'view';
+import View from 'view';
 
 /**
- * A detail record view.
- *
- * @class
- * @name Class
- * @extends module:view
+ * A panel container view. For bottom and side views.
  */
-export default Dep.extend(/** @lends Class# */{
+class PanelsContainerRecordView extends View {
 
     /** @private */
-    panelSoftLockedTypeList: ['default', 'acl', 'delimiter', 'dynamicLogic'],
+    panelSoftLockedTypeList = ['default', 'acl', 'delimiter', 'dynamicLogic']
 
     /**
      * A panel.
@@ -96,50 +92,48 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {module:views/record/panels-container~panel[]}
      */
-    panelList: null,
+    panelList = null
 
-    /**
-     * @private
-     */
-    hasTabs: false,
+    /** @private */
+    hasTabs = false
 
     /**
      * @private
      * @type {Object.<string,*>[]|null}
      */
-    tabDataList: null,
+    tabDataList = null
 
     /**
      * @protected
      */
-    currentTab: 0,
-
-    /**
-     * @protected
-     * @type {string}
-     */
-    scope: '',
+    currentTab = 0
 
     /**
      * @protected
      * @type {string}
      */
-    entityType: '',
+    scope = ''
 
     /**
      * @protected
      * @type {string}
      */
-    name: '',
+    entityType =  ''
+
+    /**
+     * @protected
+     * @type {string}
+     */
+    name =  ''
 
     /**
      * A mode.
      *
      * @type 'detail'|'edit'
      */
-    mode: 'detail',
+    mode = 'detail'
 
-    data: function () {
+    data() {
         let tabDataList = this.hasTabs ? this.getTabDataList() : [];
 
         return {
@@ -148,9 +142,9 @@ export default Dep.extend(/** @lends Class# */{
             entityType: this.entityType,
             tabDataList: tabDataList,
         };
-    },
+    }
 
-    events: {
+    events = {
         'click .action': function (e) {
             let $target = $(e.currentTarget);
             let action = $target.data('action');
@@ -178,13 +172,13 @@ export default Dep.extend(/** @lends Class# */{
 
             this.selectTab(tab);
         },
-    },
+    }
 
-    afterRender: function () {
+    afterRender() {
         this.adjustPanels();
-    },
+    }
 
-    adjustPanels: function () {
+    adjustPanels() {
         if (!this.isRendered()) {
             return;
         }
@@ -257,19 +251,19 @@ export default Dep.extend(/** @lends Class# */{
                 $el.addClass('in-middle');
             });
         });
-    },
+    }
 
     /**
      * Set read-only.
      */
-    setReadOnly: function () {
+    setReadOnly() {
         this.readOnly = true;
-    },
+    }
 
     /**
      * Set not read-only.
      */
-    setNotReadOnly: function (onlyNotSetAsReadOnly) {
+    setNotReadOnly(onlyNotSetAsReadOnly) {
         this.readOnly = false;
 
         if (onlyNotSetAsReadOnly) {
@@ -286,13 +280,13 @@ export default Dep.extend(/** @lends Class# */{
                 }
             });
         }
-    },
+    }
 
     /**
      * @private
      * @param {Object[]} actionList
      */
-    applyAccessToActions: function (actionList) {
+    applyAccessToActions(actionList) {
         if (!actionList) {
             return;
         }
@@ -317,14 +311,14 @@ export default Dep.extend(/** @lends Class# */{
                 }
             }
         });
-    },
+    }
 
     /**
      * Set up panel views.
      *
      * @protected
      */
-    setupPanelViews: function () {
+    setupPanelViews() {
         this.panelList.forEach(p => {
             let name = p.name;
 
@@ -377,16 +371,22 @@ export default Dep.extend(/** @lends Class# */{
                 });
             });
         });
-    },
+    }
 
     /**
      * Set up panels.
      *
      * @protected
      */
-    setupPanels: function () {},
+    setupPanels() {}
 
-    getFieldViews: function (withHidden) {
+    /**
+     * Get field views.
+     *
+     * @param {boolean} [withHidden] With hidden.
+     * @return {Object.<string, module:views/fields/base>}
+     */
+    getFieldViews(withHidden) {
         let fields = {};
 
         this.panelList.forEach(p => {
@@ -398,16 +398,24 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return fields;
-    },
+    }
 
-    getFields: function () {
+    /**
+     * @deprecated Use `getFieldViews`.
+     */
+    getFields() {
         return this.getFieldViews();
-    },
+    }
 
-    fetch: function () {
+    /**
+     * Fetch.
+     *
+     * @return {Object.<string, *>}
+     */
+    fetch() {
         let data = {};
 
-        this.panelList.forEach((p) => {
+        this.panelList.forEach(p => {
             let panelView = this.getView(p.name);
 
             if (!panelView.disabled && 'fetch' in panelView) {
@@ -416,17 +424,17 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return data;
-    },
+    }
 
     /**
      * @param {string} name
      * @return {boolean}
      */
-    hasPanel: function (name) {
+    hasPanel(name) {
         return !!this.panelList.find(item => item.name === name);
-    },
+    }
 
-    processShowPanel: function (name, callback, wasShown) {
+    processShowPanel(name, callback, wasShown) {
         if (this.recordHelper.getPanelStateParam(name, 'hidden')) {
             return;
         }
@@ -444,9 +452,9 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         this.showPanelFinalize(name, callback, wasShown);
-    },
+    }
 
-    processHidePanel: function (name, callback) {
+    processHidePanel(name, callback) {
         if (!this.recordHelper.getPanelStateParam(name, 'hidden')) {
             return;
         }
@@ -464,9 +472,9 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         this.hidePanelFinalize(name, callback);
-    },
+    }
 
-    showPanelFinalize: function (name, callback, wasShown) {
+    showPanelFinalize(name, callback, wasShown) {
         let process = (wasRendered) => {
             let view = this.getView(name);
 
@@ -504,9 +512,9 @@ export default Dep.extend(/** @lends Class# */{
         this.once('after:render', () => {
             process();
         });
-    },
+    }
 
-    hidePanelFinalize: function (name, callback) {
+    hidePanelFinalize(name, callback) {
         if (this.isRendered()) {
             let view = this.getView(name);
 
@@ -530,9 +538,9 @@ export default Dep.extend(/** @lends Class# */{
                 callback.call(this);
             });
         }
-    },
+    }
 
-    showPanel: function (name, softLockedType, callback) {
+    showPanel(name, softLockedType, callback) {
         if (!this.hasPanel(name)) {
             return;
         }
@@ -566,9 +574,9 @@ export default Dep.extend(/** @lends Class# */{
         this.recordHelper.setPanelStateParam(name, 'hidden', false);
 
         this.processShowPanel(name, callback, wasShown);
-    },
+    }
 
-    hidePanel: function (name, locked, softLockedType, callback) {
+    hidePanel(name, locked, softLockedType, callback) {
         if (!this.hasPanel(name)) {
             return;
         }
@@ -586,9 +594,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.processHidePanel(name, callback);
-    },
+    }
 
-    alterPanels: function (layoutData) {
+    alterPanels(layoutData) {
         layoutData = layoutData || this.layoutData || {};
 
         let tabBreakIndexList = [];
@@ -710,9 +718,9 @@ export default Dep.extend(/** @lends Class# */{
         ) {
             this.selectStoredTab();
         }
-    },
+    }
 
-    setupPanelsFinal: function () {
+    setupPanelsFinal() {
         let afterDelimiter = false;
         let rightAfterDelimiter = false;
 
@@ -752,9 +760,9 @@ export default Dep.extend(/** @lends Class# */{
         this.panelsAreSet = true;
 
         this.trigger('panels-set');
-    },
+    }
 
-    actionShowMorePanels: function () {
+    actionShowMorePanels() {
         this.panelList.forEach(p => {
             if (!p.hiddenAfterDelimiter) {
                 return;
@@ -766,9 +774,9 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         this.$el.find('.panels-show-more-delimiter').remove();
-    },
+    }
 
-    onPanelsReady: function (callback) {
+    onPanelsReady(callback) {
         Promise.race([
             new Promise(resolve => {
                 if (this.panelsAreSet) {
@@ -781,9 +789,9 @@ export default Dep.extend(/** @lends Class# */{
         ]).then(() => {
             callback.call(this);
         });
-    },
+    }
 
-    getTabDataList: function () {
+    getTabDataList() {
         return this.tabDataList.map((item, i) => {
             let label = item.label;
 
@@ -804,9 +812,9 @@ export default Dep.extend(/** @lends Class# */{
                 hidden: hidden,
             };
         });
-    },
+    }
 
-    selectTab: function (tab) {
+    selectTab(tab) {
         this.currentTab = tab;
 
         if (this.isRendered()) {
@@ -850,32 +858,26 @@ export default Dep.extend(/** @lends Class# */{
             });
 
         this.storeTab();
-    },
+    }
 
-    /**
-     * @private
-     */
-    storeTab: function () {
+    /** @private */
+    storeTab() {
         let key = 'tab_' + this.name;
         let keyRecord = 'tab_' + this.name + '_record';
 
         this.getSessionStorage().set(key, this.currentTab);
         this.getSessionStorage().set(keyRecord, this.entityType + '_' + this.model.id);
-    },
+    }
 
-    /**
-     * @private
-     */
-    isStoredTabForThisRecord: function () {
+    /** @private */
+    isStoredTabForThisRecord() {
         let keyRecord = 'tab_' + this.name + '_record';
 
         return this.getSessionStorage().get(keyRecord) === this.entityType + '_' + this.model.id;
-    },
+    }
 
-    /**
-     * @private
-     */
-    selectStoredTab: function () {
+    /** @private */
+    selectStoredTab() {
         let key = 'tab_' + this.name;
 
         let tab = this.getSessionStorage().get(key);
@@ -883,12 +885,10 @@ export default Dep.extend(/** @lends Class# */{
         if (tab > 0) {
             this.selectTab(tab);
         }
-    },
+    }
 
-    /**
-     * @private
-     */
-    controlTabVisibilityShow: function (tab) {
+    /** @private */
+    controlTabVisibilityShow(tab) {
         if (!this.hasTabs) {
             return;
         }
@@ -900,12 +900,10 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.$el.find(`.tabs > [data-tab="${tab.toString()}"]`).removeClass('hidden');
-    },
+    }
 
-    /**
-     * @private
-     */
-    controlTabVisibilityHide: function (tab) {
+    /** @private */
+    controlTabVisibilityHide(tab) {
         if (!this.hasTabs) {
             return;
         }
@@ -938,5 +936,7 @@ export default Dep.extend(/** @lends Class# */{
 
             this.selectTab(firstVisibleTab);
         }
-    },
-});
+    }
+}
+
+export default PanelsContainerRecordView;

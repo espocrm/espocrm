@@ -28,20 +28,19 @@
 
 /** @module views/record/edit-for-modal */
 
-import Dep from 'views/record/edit';
+import EditRecordView from 'views/record/edit';
 
 /**
  * An edit-record view to used for custom forms.
- *
- * @class
- * @name Class
  */
-export default Dep.extend(/** @lends Class# */{
+class EditForModalRecordView extends EditRecordView {
 
-    bottomView: null,
-    sideView: null,
-    buttonsDisabled: true,
-    isWide: true,
-    accessControlDisabled: true,
-    confirmLeaveDisabled: true,
-});
+    bottomView = null
+    sideView = null
+    buttonsDisabled = true
+    isWide = true
+    accessControlDisabled = true
+    confirmLeaveDisabled = true
+}
+
+export default EditForModalRecordView;

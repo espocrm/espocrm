@@ -28,29 +28,26 @@
 
 /** @module views/record/detail-bottom */
 
-import Dep from 'views/record/panels-container';
+import PanelsContainerRecordView from 'views/record/panels-container';
 
 /**
  * A detail-bottom record view.
- *
- * @class
- * @name Class
- * @extends module:views/record/panels-container
  */
-export default Dep.extend(/** @lends Class# */{
-
-    template: 'record/bottom',
+class DetailBottomRecordView extends PanelsContainerRecordView {
 
     /** @inheritDoc */
-    mode: 'detail',
-    streamPanel: true,
-    relationshipPanels: true,
-    readOnly: false,
-    portalLayoutDisabled: false,
-    name: 'bottom',
+    template = 'record/bottom'
 
     /** @inheritDoc */
-    setupPanels: function () {
+    mode = 'detail'
+    streamPanel = true
+    relationshipPanels = true
+    readOnly = false
+    portalLayoutDisabled = false
+    name = 'bottom'
+
+    /** @inheritDoc */
+    setupPanels() {
         let scope = this.scope;
 
         this.panelList = Espo.Utils.clone(
@@ -70,12 +67,12 @@ export default Dep.extend(/** @lends Class# */{
         if (this.streamPanel && this.getMetadata().get(['scopes', scope, 'stream'])) {
             this.setupStreamPanel();
         }
-    },
+    }
 
     /**
      * Set up a stream panel.
      */
-    setupStreamPanel: function () {
+    setupStreamPanel() {
         let streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
 
         if (streamAllowed === null) {
@@ -104,9 +101,9 @@ export default Dep.extend(/** @lends Class# */{
                 this.recordHelper.setPanelStateParam('stream', 'hiddenAclLocked', true);
             }
         }
-    },
+    }
 
-    init: function () {
+    init() {
         this.recordHelper = this.options.recordHelper;
         this.scope = this.entityType = this.model.name;
 
@@ -117,9 +114,9 @@ export default Dep.extend(/** @lends Class# */{
         this.portalLayoutDisabled = this.options.portalLayoutDisabled || this.portalLayoutDisabled;
 
         this.recordViewObject = this.options.recordViewObject;
-    },
+    }
 
-    setup: function () {
+    setup() {
         this.type = this.mode;
 
         if ('type' in this.options) {
@@ -206,19 +203,17 @@ export default Dep.extend(/** @lends Class# */{
 
             this.wait(false);
         });
-    },
+    }
 
     /**
      * Set read-only.
      */
-    setReadOnly: function () {
+    setReadOnly() {
         this.readOnly = true;
-    },
+    }
 
-    /**
-     * @private
-     */
-    addRelationshipPanel: function (name, item) {
+    /** @private */
+    addRelationshipPanel(name, item) {
         let scope = this.scope;
         let scopesDefs = this.getMetadata().get('scopes') || {};
 
@@ -279,5 +274,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.panelList.push(p);
-    },
-});
+    }
+}
+
+export default DetailBottomRecordView;

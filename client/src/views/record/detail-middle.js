@@ -28,35 +28,31 @@
 
 /** @module views/record/detail-middle */
 
-import Dep from 'view';
+import View from 'view';
 
 /**
  * A detail-middle record view.
- *
- * @class
- * @name Class
- * @extends module:view
  */
-export default Dep.extend(/** @lends Class# */{
+class DetailMiddleRecordView extends View {
 
-    init: function () {
+    init() {
         this.recordHelper = this.options.recordHelper;
         this.scope = this.model.name;
-    },
+    }
 
-    data: function () {
+    data() {
         return {
             hiddenPanels: this.recordHelper.getHiddenPanels(),
             hiddenFields: this.recordHelper.getHiddenFields(),
         };
-    },
+    }
 
     /**
      * Show a panel.
      *
      * @param {string} name
      */
-    showPanel: function (name) {
+    showPanel(name) {
         if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) {
             return;
         }
@@ -64,13 +60,13 @@ export default Dep.extend(/** @lends Class# */{
         this.showPanelInternal(name);
 
         this.recordHelper.setPanelStateParam(name, 'hidden', false);
-    },
+    }
 
     /**
      * @private
      * @param {string} name
      */
-    showPanelInternal: function (name) {
+    showPanelInternal(name) {
         if (this.isRendered()) {
             this.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
         }
@@ -92,35 +88,35 @@ export default Dep.extend(/** @lends Class# */{
                 view.reRender();
             });
         }
-    },
+    }
 
     /**
      * Hide a panel.
      *
      * @param {string} name
      */
-    hidePanel: function (name) {
+    hidePanel(name) {
         this.hidePanelInternal(name);
 
         this.recordHelper.setPanelStateParam(name, 'hidden', true);
-    },
+    }
 
     /**
      * @private
      * @param {string} name
      */
-    hidePanelInternal: function (name) {
+    hidePanelInternal(name) {
         if (this.isRendered()) {
             this.$el.find('.panel[data-name="'+name+'"]').addClass('hidden');
         }
-    },
+    }
 
     /**
      * Hide a field.
      *
      * @param {string} name
      */
-    hideField: function (name) {
+    hideField(name) {
         this.recordHelper.setFieldStateParam(name, 'hidden', true);
 
         var processHtml = () => {
@@ -156,14 +152,14 @@ export default Dep.extend(/** @lends Class# */{
         if (view) {
             view.setDisabled();
         }
-    },
+    }
 
     /**
      * Show a field.
      *
      * @param {string} name
      */
-    showField: function (name) {
+    showField(name) {
         if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
             return;
         }
@@ -205,21 +201,21 @@ export default Dep.extend(/** @lends Class# */{
                 view.setNotDisabled();
             }
         }
-    },
+    }
 
     /**
      * @deprecated Use `getFieldViews`.
      */
-    getFields: function () {
+    getFields() {
         return this.getFieldViews();
-    },
+    }
 
     /**
      * Get field views.
      *
-     * @return {{string: module:views/fields/base}}
+     * @return {Object.<string, module:views/fields/base>}
      */
-    getFieldViews: function () {
+    getFieldViews() {
         var fieldViews = {};
 
         for (var viewKey in this.nestedViews) {
@@ -229,7 +225,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return fieldViews;
-    },
+    }
 
     /**
      * Get a field view.
@@ -237,16 +233,16 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} name A field name.
      * @return {module:views/fields/base}
      */
-    getFieldView: function (name) {
+    getFieldView(name) {
         return (this.getFieldViews() || {})[name];
-    },
+    }
 
     /**
      * For backward compatibility.
      *
      * @todo Remove.
      */
-    getView: function (name) {
+    getView(name) {
         var view = Dep.prototype.getView.call(this, name);
 
         if (!view) {
@@ -254,5 +250,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return view;
-    },
-});
+    }
+}
+
+export default DetailMiddleRecordView;

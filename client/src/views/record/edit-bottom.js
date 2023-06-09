@@ -26,14 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/edit-bottom', ['views/record/detail-bottom'], function (Dep) {
+import DetailBottomRecordView from 'views/record/detail-bottom';
 
-    return Dep.extend({
+class EditBottomRecordView extends DetailBottomRecordView {
 
-        mode: 'edit',
+    mode = 'edit'
+    streamPanel = false
+    relationshipPanels = false
+}
 
-        streamPanel: false,
-
-        relationshipPanels: false,
-    });
-});
+export default EditBottomRecordView;

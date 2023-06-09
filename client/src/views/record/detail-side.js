@@ -28,25 +28,22 @@
 
 /** @module views/record/detail-side */
 
-import Dep from 'views/record/panels-container';
+import PanelsContainerRecordView from 'views/record/panels-container';
 
 /**
  * A detail-side record view.
- *
- * @class
- * @name Class
- * @extends module:views/record/panels-container
  */
-export default Dep.extend(/** @lends Class# */{
-
-    template: 'record/side',
+class DetailSideRecordView extends PanelsContainerRecordView {
 
     /** @inheritDoc */
-    mode: 'detail',
-    readOnly: false,
-    inlineEditDisabled: false,
-    name: 'side',
-    defaultPanel: true,
+    template = 'record/side'
+
+    /** @inheritDoc */
+    mode = 'detail'
+    readOnly = false
+    inlineEditDisabled = false
+    name = 'side'
+    defaultPanel = true
 
     /**
      * A panel list.
@@ -54,14 +51,14 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {module:views/record/panels-container~panel[]}
      */
-    panelList: [],
+    panelList = []
 
     /**
      * A default panel.
      *
      * @type {module:views/record/panels-container~panel}
      */
-    defaultPanelDefs: {
+    defaultPanelDefs = {
         name: 'default',
         label: false,
         view: 'views/record/panels/default-side',
@@ -76,9 +73,9 @@ export default Dep.extend(/** @lends Class# */{
                 },
             ],
         }
-    },
+    }
 
-    init: function () {
+    init() {
         this.panelList = this.options.panelList || this.panelList;
         this.scope = this.entityType = this.options.model.name;
 
@@ -91,14 +88,12 @@ export default Dep.extend(/** @lends Class# */{
         this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
 
         this.recordViewObject = this.options.recordViewObject;
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    setupPanels: function () {},
+    /** @inheritDoc */
+    setupPanels() {}
 
-    setup: function () {
+    setup() {
         this.type = this.mode;
 
         if ('type' in this.options) {
@@ -191,14 +186,14 @@ export default Dep.extend(/** @lends Class# */{
                 this.setupPanelViews();
             })
         );
-    },
+    }
 
     /**
      * Set up a default panel.
      *
      * @protected
      */
-    setupDefaultPanel: function () {
+    setupDefaultPanel() {
         var met = false;
 
         this.panelList.forEach((item) => {
@@ -277,5 +272,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.panelList.unshift(defaultPanelDefs);
-    },
-});
+    }
+}
+
+export default DetailSideRecordView;

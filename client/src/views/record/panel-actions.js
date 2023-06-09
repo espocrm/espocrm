@@ -26,16 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Dep from 'view';
+import View from 'view';
 
-/**
- * @class Class
- */
-export default Dep.extend(/** @lends Class# */{
+class PanelActionsView extends View {
 
-    template: 'record/panel-actions',
+    template = 'record/panel-actions'
 
-    data: function () {
+    data() {
         return {
             defs: this.options.defs,
             buttonList: this.getButtonList(),
@@ -43,15 +40,15 @@ export default Dep.extend(/** @lends Class# */{
             entityType: this.options.entityType,
             scope: this.options.scope,
         };
-    },
+    }
 
-    setup: function () {
+    setup() {
         this.buttonList = this.options.defs.buttonList || [];
         this.actionList = this.options.defs.actionList || [];
         this.defs = this.options.defs;
-    },
+    }
 
-    getButtonList: function () {
+    getButtonList() {
         let list = [];
 
         this.buttonList.forEach(item => {
@@ -63,9 +60,9 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return list;
-    },
+    }
 
-    getActionList: function () {
+    getActionList() {
         return this.actionList
             .filter(item => !item.hidden)
             .map(item => {
@@ -78,5 +75,7 @@ export default Dep.extend(/** @lends Class# */{
 
                 return item;
             });
-    },
-});
+    }
+}
+
+export default PanelActionsView;

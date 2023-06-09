@@ -28,19 +28,15 @@
 
 /** @module views/record/edit-side */
 
-import Dep from 'views/record/detail-side';
+import DetailSideRecordView from 'views/record/detail-side';
 
-/**
- * @class
- * @name Class
- * @extends module:views/record/detail-side
- */
-export default Dep.extend(/** @lends Class# */{
+class EditSideRecordView extends DetailSideRecordView {
 
     /** @inheritDoc */
-    mode: 'edit',
+    mode = 'edit'
 
-    defaultPanelDefs: {
+    /** @inheritDoc */
+    defaultPanelDefs = {
         name: 'default',
         label: false,
         view: 'views/record/panels/side',
@@ -56,5 +52,7 @@ export default Dep.extend(/** @lends Class# */{
                 }
             ]
         }
-    },
-});
+    }
+}
+
+export default EditSideRecordView;
