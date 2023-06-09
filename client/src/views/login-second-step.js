@@ -26,33 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @module views/login-second-step */
+import View from 'view';
+import Base64 from 'lib!base64';
+import $ from 'lib!jquery';
 
-import Dep from 'view';
-
-/**
- * @class
- * @name Class
- * @extends module:view
- */
-export default Dep.extend(/** @lends Class# */{
+class LoginSecondStepView extends View {
 
     /** @inheritDoc */
-    template: 'login-second-step',
+    template = 'login-second-step'
 
     /** @inheritDoc */
-    views: {
+    views =  {
         footer: {
             el: 'body > footer',
-            view: 'views/site/footer'
+            view: 'views/site/footer',
         },
-    },
+    }
 
     /**
-     * @type {?string}
+     * @type {string|null}
      * @private
      */
-    anotherUser: null,
+    anotherUser = null
 
     /**
      * Response from the first step.
@@ -60,7 +55,7 @@ export default Dep.extend(/** @lends Class# */{
      * @type {Object.<string, *>}
      * @private
      */
-    loginData: null,
+    loginData =  null
 
     /**
      * Headers composed in the first step.
@@ -68,21 +63,24 @@ export default Dep.extend(/** @lends Class# */{
      * @type {Object.<string, string>}
      * @private
      */
-    headers: null,
+    headers =  null
 
     /** @private */
-    isPopoverDestroyed: false,
+    isPopoverDestroyed =  false
 
     /** @inheritDoc */
-    events: {
+    events = {
+        /** @this LoginSecondStepView */
         'submit #login-form': function (e) {
             e.preventDefault();
 
             this.send();
         },
+        /** @this LoginSecondStepView */
         'click [data-action="backToLogin"]': function () {
             this.trigger('back');
         },
+        /** @this LoginSecondStepView */
         'keydown': function (e) {
             if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
                 e.preventDefault();
@@ -90,35 +88,33 @@ export default Dep.extend(/** @lends Class# */{
                 this.send();
             }
         },
-    },
+    }
 
     /** @inheritDoc */
-    data: function () {
+    data() {
         return {
             message: this.message,
         };
-    },
+    }
 
     /** @inheritDoc */
-    setup: function () {
+    setup() {
         this.message = this.translate(this.options.loginData.message, 'messages', 'User');
         this.anotherUser = this.options.anotherUser || null;
         this.headers = this.options.headers || {};
         this.loginData = this.options.loginData;
-    },
+    }
 
     /** @inheritDoc */
-    afterRender: function () {
+    afterRender() {
         this.$code = $('[data-name="field-code"]');
         this.$submit = this.$el.find('#btn-send');
 
         this.$code.focus();
-    },
+    }
 
-    /**
-     * @private
-     */
-    send: function () {
+    /** @private */
+    send() {
         let code = this.$code.val().trim().replace(/\s/g, '');
 
         let userName = this.options.userName;
@@ -166,7 +162,7 @@ export default Dep.extend(/** @lends Class# */{
                     this.onWrongCredentials();
                 }
             });
-    },
+    }
 
     /**
      * Trigger login to proceed to the application.
@@ -175,7 +171,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} userName A username.
      * @param {Object.<string, *>} data Data returned from the `App/user` request.
      */
-    triggerLogin: function (userName, data) {
+    triggerLogin(userName, data) {
         if (this.anotherUser) {
             data.anotherUser = this.anotherUser;
         }
@@ -185,17 +181,15 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.trigger('login', userName, data);
-    },
+    }
 
-    /**
-     * @private
-     */
-    processEmptyCode: function () {
+    /** @private */
+    processEmptyCode() {
         this.isPopoverDestroyed = false;
 
-        let $el = this.$code;
-
         let message = this.getLanguage().translate('codeIsRequired', 'messages', 'User');
+
+        let $el = this.$code;
 
         $el
             .popover({
@@ -221,12 +215,10 @@ export default Dep.extend(/** @lends Class# */{
 
             this.isPopoverDestroyed = true;
         });
-    },
+    }
 
-    /**
-     * @private
-     */
-    onWrongCredentials: function () {
+    /** @private */
+    onWrongCredentials() {
         let $cell = $('#login .form-group');
 
         $cell.addClass('has-error');
@@ -236,26 +228,22 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         Espo.Ui.error(this.translate('wrongCode', 'messages', 'User'));
-    },
+    }
 
-    /**
-     * @private
-     */
-    notifyLoading: function () {
+    /** @private */
+    notifyLoading() {
         Espo.Ui.notify(' ... ');
-    },
+    }
 
-    /**
-     * @private
-     */
-    disableForm: function () {
+    /** @private */
+    disableForm() {
         this.$submit.addClass('disabled').attr('disabled', 'disabled');
-    },
+    }
 
-    /**
-     * @private
-     */
-    undisableForm: function () {
+    /** @private */
+    undisableForm() {
         this.$submit.removeClass('disabled').removeAttr('disabled');
-    },
-});
+    }
+}
+
+export default LoginSecondStepView;

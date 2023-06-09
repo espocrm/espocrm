@@ -28,10 +28,12 @@
 
 /** @module views/modal */
 
-import Dep from 'view';
+import View from 'view';
 
 /**
  * A base modal view. Can be extended or used directly.
+ *
+ * @todo Define JSDocs options for constructor.
  *
  * Options:
  * - `headerElement`
@@ -43,12 +45,8 @@ import Dep from 'view';
  * - `dropdownItemList`
  *
  * @see {@link https://docs.espocrm.com/development/modal/}
- *
- * @class
- * @name Class
- * @extends module:view
  */
-export default Dep.extend(/** @lends Class# */{
+class ModalView extends View {
 
     /**
      * A button or dropdown action item.
@@ -76,28 +74,28 @@ export default Dep.extend(/** @lends Class# */{
      *
      * @protected
      */
-    cssName: 'modal-dialog',
+    cssName = 'modal-dialog'
 
     /**
      * A class-name. Use `'dialog dialog-record'` for modals containing a record form.
      *
      * @protected
      */
-    className: 'dialog',
+    className = 'dialog'
 
     /**
      * @protected
      * @deprecated Use `headerHtml`
      */
-    header: false,
+    header = false
 
     /**
      * A header HTML. Beware of XSS.
      *
      * @protected
-     * @type {string}
+     * @type {string|null}
      */
-    headerHtml: null,
+    headerHtml = null
 
     /**
      * A header JQuery instance.
@@ -105,7 +103,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {JQuery}
      */
-    $header: null,
+    $header = null
 
     /**
      * A header element.
@@ -113,23 +111,23 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {Element}
      */
-    headerElement: null,
+    headerElement = null
 
     /**
      * A header text.
      *
      * @protected
-     * @type {string}
+     * @type {string|null}
      */
-    headerText: null,
+    headerText = null
 
     /**
      * A dialog instance.
      *
      * @protected
-     * @type {Espo.Ui.Dialog}
+     * @type {Espo.Ui.Dialog|null}
      */
-    dialog: null,
+    dialog = null
 
     /**
      * A container selector.
@@ -137,14 +135,14 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string}
      */
-    containerSelector: null,
+    containerSelector = null
 
     /**
      * A scope name. Used when translating button labels.
      *
      * @type {string|null}
      */
-    scope: null,
+    scope = null
 
     /**
      * A backdrop.
@@ -152,7 +150,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {'static'|boolean}
      */
-    backdrop: 'static',
+    backdrop = 'static'
 
     /**
      * Buttons.
@@ -160,7 +158,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {module:views/modal~Button[]}
      */
-    buttonList: [],
+    buttonList = []
 
     /**
      * Dropdown action items.
@@ -168,14 +166,14 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {module:views/modal~Button[]}
      */
-    dropdownItemList: [],
+    dropdownItemList = []
 
     /**
      * @deprecated Use `buttonList`.
      * @protected
      * @todo Remove.
      */
-    buttons: [],
+    buttons = []
 
     /**
      * A width.
@@ -183,14 +181,14 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {number|null}
      */
-    width: null,
+    width = null
 
     /**
      * Not used.
      *
      * @deprecated
      */
-    fitHeight: false,
+    fitHeight = false
 
     /**
      * To disable fitting to a window height.
@@ -198,7 +196,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    noFullHeight: false,
+    noFullHeight = false
 
     /**
      * Disable the ability to close by pressing the `Esc` key.
@@ -206,7 +204,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    escapeDisabled: false,
+    escapeDisabled = false
 
     /**
      * Is draggable.
@@ -214,7 +212,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    isDraggable: false,
+    isDraggable = false
 
     /**
      * Is collapsable.
@@ -222,7 +220,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    isCollapsable: false,
+    isCollapsable = false
 
     /**
      * Is collapsed. Do not change value. Only for reading.
@@ -230,12 +228,12 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    isCollapsed: false,
+    isCollapsed = false
 
     /**
      * @inheritDoc
      */
-    events: {
+    events = {
         /** @this module:views/modal */
         'click .action': function (e) {
             Espo.Utils.handleAction(this, e);
@@ -244,13 +242,13 @@ export default Dep.extend(/** @lends Class# */{
         'click [data-action="collapseModal"]': function () {
             this.collapse();
         },
-    },
+    }
 
     /**
      * @protected
      * @type {boolean|null}
      */
-    footerAtTheTop: null,
+    footerAtTheTop = null
 
     /**
      * A shortcut-key => action map.
@@ -258,12 +256,12 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {?Object.<string,string|function (JQueryKeyEventObject): void>}
      */
-    shortcutKeys: null,
+    shortcutKeys = null
 
     /**
      * @inheritDoc
      */
-    init: function () {
+    init() {
         var id = this.cssName + '-container-' + Math.floor((Math.random() * 10000) + 1).toString();
         var containerSelector = this.containerSelector = '#' + id;
 
@@ -376,9 +374,9 @@ export default Dep.extend(/** @lends Class# */{
 
             $(containerSelector).remove();
         });
-    },
+    }
 
-    setupFinal: function () {
+    setupFinal() {
         if (this.shortcutKeys) {
             this.events['keydown.modal-base'] = e => {
                 let key = Espo.Utils.getKeyFromKeyEvent(e);
@@ -407,7 +405,7 @@ export default Dep.extend(/** @lends Class# */{
                 this[methodName]();
             };
         }
-    },
+    }
 
     /**
      * Get a button list for a dialog.
@@ -415,10 +413,10 @@ export default Dep.extend(/** @lends Class# */{
      * @private
      * @return {module:ui.Dialog~Button[]}
      */
-    getDialogButtonList: function () {
-        var buttonListExt = [];
+    getDialogButtonList() {
+        let buttonListExt = [];
 
-        // TODO remove it as deprecated
+        // @todo remove it as deprecated.
         this.buttons.forEach(item => {
             var o = Espo.Utils.clone(item);
 
@@ -462,7 +460,7 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return buttonListExt;
-    },
+    }
 
     /**
      * Get a dropdown item list for a dialog.
@@ -470,10 +468,10 @@ export default Dep.extend(/** @lends Class# */{
      * @private
      * @return {module:ui.Dialog~Button[]}
      */
-    getDialogDropdownItemList: function () {
-        var dropdownItemListExt = [];
+    getDialogDropdownItemList() {
+        let dropdownItemListExt = [];
 
-        this.dropdownItemList.forEach((item) => {
+        this.dropdownItemList.forEach(item => {
             var o = {};
 
             if (typeof item === 'string') {
@@ -506,64 +504,62 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return dropdownItemListExt;
-    },
+    }
 
-    /**
-     * @private
-     */
-    updateDialog: function () {
+    /** @private */
+    updateDialog() {
         if (!this.dialog) {
             return;
         }
 
-        this.dialog.buttonList = this.getDialogButtonList();
-        this.dialog.dropdownItemList = this.getDialogDropdownItemList();
-    },
+        this.dialog.setActionItems(
+            this.getDialogButtonList(),
+            this.getDialogDropdownItemList()
+        );
+    }
 
-    /**
-     * @private
-     */
-    onDialogClose: function () {
+    /** @private */
+    onDialogClose() {
         if (!this.isBeingRendered() && !this.isCollapsed) {
             this.trigger('close');
             this.remove();
         }
-    },
+    }
 
     /**
      * @protected
      */
-    onBackdropClick: function () {},
+    onBackdropClick() {}
 
     /**
      * A `cancel` action.
      */
-    actionCancel: function () {
+    actionCancel() {
         this.trigger('cancel');
         this.dialog.close();
-    },
+    }
 
     /**
      * A `close` action.
      */
-    actionClose: function () {
+    actionClose() {
         this.trigger('cancel');
         this.dialog.close();
-    },
+    }
 
     /**
      * Close a dialog.
      */
-    close: function () {
+    close() {
         this.dialog.close();
-    },
+    }
 
     /**
      * Disable a button.
      *
      * @param {string} name A button name.
      */
-    disableButton: function (name) {
+    disableButton(name) {
         this.buttonList.forEach((d) => {
             if (d.name !== name) {
                 return;
@@ -579,14 +575,14 @@ export default Dep.extend(/** @lends Class# */{
         this.$el.find('footer button[data-name="'+name+'"]')
             .addClass('disabled')
             .attr('disabled', 'disabled');
-    },
+    }
 
     /**
      * Enable a button.
      *
      * @param {string} name A button name.
      */
-    enableButton: function (name) {
+    enableButton(name) {
         this.buttonList.forEach((d) => {
             if (d.name !== name) {
                 return;
@@ -602,17 +598,17 @@ export default Dep.extend(/** @lends Class# */{
         this.$el.find('footer button[data-name="'+name+'"]')
             .removeClass('disabled')
             .removeAttr('disabled');
-    },
+    }
 
     /**
      * Add a button.
      *
      * @param {module:views/modal~Button} o Button definitions.
-     * @param {boolean|string} [position=false] True prepends, false appends. If a string,
+     * @param {boolean|string} [position=false] True prepends, false appends. If a string
      *   then will be added after a button with a corresponding name.
      * @param {boolean} [doNotReRender=false] Do not re-render.
      */
-    addButton: function (o, position, doNotReRender) {
+    addButton(o, position, doNotReRender) {
         var index = -1;
 
         this.buttonList.forEach((item, i) => {
@@ -650,7 +646,7 @@ export default Dep.extend(/** @lends Class# */{
         if (!doNotReRender && this.isRendered()) {
             this.reRenderFooter();
         }
-    },
+    }
 
     /**
      * Add a dropdown item.
@@ -659,7 +655,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {boolean} [toBeginning=false] To prepend.
      * @param {boolean} [doNotReRender=false] Do not re-render.
      */
-    addDropdownItem: function (o, toBeginning, doNotReRender) {
+    addDropdownItem(o, toBeginning, doNotReRender) {
         let method = toBeginning ? 'unshift' : 'push';
 
         if (!o) {
@@ -685,24 +681,24 @@ export default Dep.extend(/** @lends Class# */{
         if (!doNotReRender && this.isRendered()) {
             this.reRenderFooter();
         }
-    },
+    }
 
-    /**
-     * @private
-     */
-    reRenderFooter: function () {
+    /** @private */
+    reRenderFooter() {
         if (!this.dialog) {
             return;
         }
 
         this.updateDialog();
 
-        let html = this.dialog.getFooterHtml();
+        let $footer = this.dialog.getFooter();
 
-        this.$el.find('footer.modal-footer').html(html);
+        this.$el.find('footer.modal-footer')
+            .empty()
+            .append($footer);
 
         this.dialog.initButtonEvents();
-    },
+    }
 
     /**
      * Remove a button or a dropdown action item.
@@ -710,7 +706,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} name A name.
      * @param {boolean} [doNotReRender=false] Do not re-render.
      */
-    removeButton: function (name, doNotReRender) {
+    removeButton(name, doNotReRender) {
         let index = -1;
 
         for (const [i, item] of this.buttonList.entries()) {
@@ -740,7 +736,7 @@ export default Dep.extend(/** @lends Class# */{
         if (!doNotReRender && this.isRendered()) {
             this.reRender();
         }
-    },
+    }
 
     /**
      * @deprecated Use `showActionItem`.
@@ -748,7 +744,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @param {string} name
      */
-    showButton: function (name) {
+    showButton(name) {
         for (let item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = false;
@@ -764,7 +760,7 @@ export default Dep.extend(/** @lends Class# */{
         this.$el.find('footer button[data-name="'+name+'"]').removeClass('hidden');
 
         this.adjustButtons();
-    },
+    }
 
     /**
      * @deprecated Use `hideActionItem`.
@@ -772,7 +768,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @param {string} name
      */
-    hideButton: function (name) {
+    hideButton(name) {
         for (let item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = true;
@@ -788,14 +784,14 @@ export default Dep.extend(/** @lends Class# */{
         this.$el.find('footer button[data-name="'+name+'"]').addClass('hidden');
 
         this.adjustButtons();
-    },
+    }
 
     /**
      * Show an action item (button or dropdown item).
      *
      * @param {string} name A name.
      */
-    showActionItem: function (name) {
+    showActionItem(name) {
         for (let item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = false;
@@ -827,14 +823,14 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.adjustButtons();
-    },
+    }
 
     /**
      * Hide an action item (button or dropdown item).
      *
      * @param {string} name A name.
      */
-    hideActionItem: function (name) {
+    hideActionItem(name) {
         for (let item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = true;
@@ -864,14 +860,14 @@ export default Dep.extend(/** @lends Class# */{
             $dropdownGroup.addClass('hidden');
             $dropdownGroup.find('> button').addClass('hidden');
         }
-    },
+    }
 
     /**
      * Whether an action item exists (hidden, disabled or not).
      *
      * @param {string} name An action item name.
      */
-    hasActionItem: function (name) {
+    hasActionItem(name) {
         let hasButton = this.buttonList
             .findIndex(item => item.name === name) !== -1;
 
@@ -881,14 +877,14 @@ export default Dep.extend(/** @lends Class# */{
 
         return this.dropdownItemList
             .findIndex(item => item.name === name) !== -1;
-    },
+    }
 
     /**
      * Whether an action item is visible and not disabled.
      *
      * @param {string} name An action item name.
      */
-    hasAvailableActionItem: function (name) {
+    hasAvailableActionItem(name) {
         let hasButton = this.buttonList
             .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
 
@@ -898,13 +894,13 @@ export default Dep.extend(/** @lends Class# */{
 
         return this.dropdownItemList
             .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
-    },
+    }
 
     /**
      * @private
      * @return {boolean}
      */
-    isDropdownItemListEmpty: function () {
+    isDropdownItemListEmpty() {
         if (this.dropdownItemList.length === 0) {
             return true;
         }
@@ -918,13 +914,13 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return isEmpty;
-    },
+    }
 
     /**
      * @private
      * @param {number} [step=0]
      */
-    adjustHeaderFontSize: function (step) {
+    adjustHeaderFontSize(step) {
         step = step || 0;
 
         if (!step) {
@@ -961,12 +957,12 @@ export default Dep.extend(/** @lends Class# */{
 
             this.adjustHeaderFontSize(step + 1);
         }
-    },
+    }
 
     /**
      * Collapse.
      */
-    collapse: function () {
+    collapse() {
         this.beforeCollapse().then(data => {
             if (!this.getParentView()) {
                 throw new Error("Can't collapse w/o parent view.");
@@ -984,9 +980,9 @@ export default Dep.extend(/** @lends Class# */{
             else {
                 let $title = this.$el.find('.modal-header .modal-title .modal-title-text');
 
-                if ($title.children().length) {
+                /*if ($title.children().length) {
                     $title.children()[0];
-                }
+                }*/
 
                 title = $title.text();
             }
@@ -1020,7 +1016,7 @@ export default Dep.extend(/** @lends Class# */{
                 barView.addModalView(this, {title: title});
             });
         });
-    },
+    }
 
     /**
      * Called before collapse. Can be extended to execute some logic, e.g. save form data.
@@ -1028,22 +1024,18 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {Promise}
      */
-    beforeCollapse: function () {
+    beforeCollapse() {
         return new Promise(resolve => resolve());
-    },
+    }
 
-    /**
-     * @private
-     */
-    adjustButtons: function () {
+    /** @private */
+    adjustButtons() {
         this.adjustLeftButtons();
         this.adjustRightButtons();
-    },
+    }
 
-    /**
-     * @private
-     */
-    adjustLeftButtons: function () {
+    /** @private */
+    adjustLeftButtons() {
         let $buttons = this.$el.find('footer.modal-footer > .main-btn-group button.btn');
 
         $buttons
@@ -1054,12 +1046,10 @@ export default Dep.extend(/** @lends Class# */{
 
         $buttonsVisible.first().addClass('radius-left');
         $buttonsVisible.last().addClass('radius-right');
-    },
+    }
 
-    /**
-     * @private
-     */
-    adjustRightButtons: function () {
+    /** @private */
+    adjustRightButtons() {
         let $buttons = this.$el.find('footer.modal-footer > .additional-btn-group button.btn:not(.btn-text)');
 
         $buttons
@@ -1075,12 +1065,12 @@ export default Dep.extend(/** @lends Class# */{
         if ($buttonsVisible.last().next().hasClass('btn-text')) {
             $buttonsVisible.last().addClass('margin-right');
         }
-    },
+    }
 
     /**
      * @protected
      */
-    initBodyScrollListener: function () {
+    initBodyScrollListener() {
         let $body = this.$el.find('> .dialog > .modal-dialog > .modal-content > .modal-body');
         let $footer = $body.parent().find('> .modal-footer');
 
@@ -1099,5 +1089,7 @@ export default Dep.extend(/** @lends Class# */{
 
             $footer.removeClass('shadowed');
         });
-    },
-});
+    }
+}
+
+export default ModalView;

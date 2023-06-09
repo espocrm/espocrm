@@ -28,70 +28,71 @@
 
 /** @module views/login */
 
-import Dep from 'view';
+import View from 'view';
 import Base64 from 'lib!base64';
+import $ from 'lib!jquery';
 
-/**
- * @class
- * @name Class
- * @extends module:view
- */
-export default Dep.extend(/** @lends Class# */{
+class LoginView extends View {
 
     /** @inheritDoc */
-    template: 'login',
+    template = 'login'
 
     /** @inheritDoc */
-    views: {
+    views = {
         footer: {
             el: 'body > footer',
             view: 'views/site/footer',
         },
-    },
+    }
 
     /**
-     * @type {?string}
+     * @type {string|null}
      * @private
      */
-    anotherUser: null,
+    anotherUser = null
 
     /** @private */
-    isPopoverDestroyed: false,
+    isPopoverDestroyed = false
 
     /**
      * @type {module:handlers/login}
      * @private
      */
-    handler: null,
+    handler = null
 
     /**
      * @type {boolean}
      * @private
      */
-    fallback: false,
+    fallback = false
 
     /**
-     * @type {?string}
+     * @type {string|null}
      * @private
      */
-    method: null,
+    method = null
 
     /** @inheritDoc */
-    events: {
+    events = {
+        /** @this LoginView */
         'submit #login-form': function (e) {
             e.preventDefault();
 
             this.login();
         },
+        /** @this LoginView */
         'click #sign-in': function () {
             this.signIn();
         },
+        /** @this LoginView */
         'click a[data-action="passwordChangeRequest"]': function () {
             this.showPasswordChangeRequest();
         },
+        /** @this LoginView */
         'click a[data-action="showFallback"]': function () {
             this.showFallback();
         },
+        /** @this LoginView */
         'keydown': function (e) {
             if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
                 e.preventDefault();
@@ -108,10 +109,10 @@ export default Dep.extend(/** @lends Class# */{
                 this.login();
             }
         },
-    },
+    }
 
     /** @inheritDoc */
-    data: function () {
+    data() {
         return {
             logoSrc: this.getLogoSrc(),
             showForgotPassword: this.getConfig().get('passwordRecoveryEnabled'),
@@ -122,10 +123,10 @@ export default Dep.extend(/** @lends Class# */{
             signInText: this.signInText,
             logInText: this.logInText,
         };
-    },
+    }
 
     /** @inheritDoc */
-    setup: function () {
+    setup() {
         this.anotherUser = this.options.anotherUser || null;
 
         let loginData = this.getConfig().get('loginData') || {};
@@ -154,13 +155,13 @@ export default Dep.extend(/** @lends Class# */{
         this.logInText = this.getLanguage().has('Log in', 'labels', 'Global') ?
             this.translate('Log in') :
             this.translate('Login');
-    },
+    }
 
     /**
      * @private
      * @return {string}
      */
-    getLogoSrc: function () {
+    getLogoSrc() {
         let companyLogoId = this.getConfig().get('companyLogoId');
 
         if (!companyLogoId) {
@@ -168,10 +169,10 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return this.getBasePath() + '?entryPoint=LogoImage&id=' + companyLogoId;
-    },
+    }
 
     /** @inheritDoc */
-    afterRender: function () {
+    afterRender() {
         this.$submit = this.$el.find('#btn-login');
         this.$signIn = this.$el.find('#sign-in');
         this.$username = this.$el.find('#field-userName');
@@ -186,12 +187,10 @@ export default Dep.extend(/** @lends Class# */{
             this.$password.closest('.cell').addClass('hidden');
             this.$submit.closest('.cell').addClass('hidden');
         }
-    },
+    }
 
-    /**
-     * @private
-     */
-    signIn: function () {
+    /** @private */
+    signIn() {
         this.disableForm();
 
         this.handler
@@ -202,12 +201,10 @@ export default Dep.extend(/** @lends Class# */{
             .catch(() => {
                 this.undisableForm();
             })
-    },
+    }
 
-    /**
-     * @private
-     */
-    login: function () {
+    /** @private */
+    login() {
         let authString;
         let userName = this.$username.val();
         let password = this.$password.val();
@@ -245,7 +242,7 @@ export default Dep.extend(/** @lends Class# */{
         };
 
         this.proceed(headers, userName, password);
-    },
+    }
 
     /**
      * @private
@@ -253,7 +250,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} [userName]
      * @param {string} [password]
      */
-    proceed: function (headers, userName, password) {
+    proceed(headers, userName, password) {
         headers = Espo.Utils.clone(headers);
 
         let initialHeaders = Espo.Utils.clone(headers);
@@ -294,16 +291,16 @@ export default Dep.extend(/** @lends Class# */{
                     this.onWrongCredentials();
                 }
             });
-    },
+    }
 
     /**
      * Trigger login to proceed to the application.
      *
      * @private
-     * @param {?string} userName A username.
+     * @param {string|null} userName A username.
      * @param {Object.<string, *>} data Data returned from the `App/user` request.
      */
-    triggerLogin: function (userName, data) {
+    triggerLogin(userName, data) {
         if (this.anotherUser) {
             data.anotherUser = this.anotherUser;
         }
@@ -313,12 +310,10 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.trigger('login', userName, data);
-    },
+    }
 
-    /**
-     * @private
-     */
-    processEmptyUsername: function () {
+    /** @private */
+    processEmptyUsername() {
         this.isPopoverDestroyed = false;
 
         let $el = this.$username;
@@ -349,23 +344,19 @@ export default Dep.extend(/** @lends Class# */{
 
             this.isPopoverDestroyed = true;
         });
-    },
+    }
 
-    /**
-     * @private
-     */
-    disableForm: function () {
+    /** @private */
+    disableForm() {
         this.$submit.addClass('disabled').attr('disabled', 'disabled');
         this.$signIn.addClass('disabled').attr('disabled', 'disabled');
-    },
+    }
 
-    /**
-     * @private
-     */
-    undisableForm: function () {
+    /** @private */
+    undisableForm() {
         this.$submit.removeClass('disabled').removeAttr('disabled');
         this.$signIn.removeClass('disabled').removeAttr('disabled');
-    },
+    }
 
     /**
      * @private
@@ -374,16 +365,14 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} password
      * @param {Object.<string, *>} data
      */
-    onSecondStepRequired: function (headers, userName, password, data) {
+    onSecondStepRequired(headers, userName, password, data) {
         let view = data.view || 'views/login-second-step';
 
         this.trigger('redirect', view, headers, userName, password, data);
-    },
+    }
 
-    /**
-     * @private
-     */
-    onWrongCredentials: function () {
+    /** @private */
+    onWrongCredentials() {
         let $cell = $('#login .form-group');
 
         $cell.addClass('has-error');
@@ -397,12 +386,10 @@ export default Dep.extend(/** @lends Class# */{
             'wrongUsernamePassword';
 
         Espo.Ui.error(this.translate(messageKey, 'messages', 'User'));
-    },
+    }
 
-    /**
-     * @private
-     */
-    showFallback: function () {
+    /** @private */
+    showFallback() {
         this.$el.find('[data-action="showFallback"]').addClass('hidden');
 
         this.$el.find('.panel-body').addClass('fallback-shown');
@@ -410,19 +397,15 @@ export default Dep.extend(/** @lends Class# */{
         this.$username.closest('.cell').removeClass('hidden');
         this.$password.closest('.cell').removeClass('hidden');
         this.$submit.closest('.cell').removeClass('hidden');
-    },
+    }
 
-    /**
-     * @private
-     */
-    notifyLoading: function () {
+    /** @private */
+    notifyLoading() {
         Espo.Ui.notify(' ... ');
-    },
+    }
 
-    /**
-     * @private
-     */
-    showPasswordChangeRequest: function () {
+    /** @private */
+    showPasswordChangeRequest() {
         this.notifyLoading();
 
         this.createView('passwordChangeRequest', 'views/modals/password-change-request', {
@@ -432,5 +415,7 @@ export default Dep.extend(/** @lends Class# */{
 
             Espo.Ui.notify(false);
         });
-    },
-});
+    }
+}
+
+export default LoginView;

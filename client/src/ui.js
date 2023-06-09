@@ -324,7 +324,18 @@ const Dialog = function (options) {
 };
 
 /**
- * @private
+ * Set action items.
+ *
+ * @param {module:ui.Dialog~Button[]} buttonList
+ * @param {module:ui.Dialog~Button[]} dropdownItemList
+ */
+Dialog.prototype.setActionItems = function (buttonList, dropdownItemList) {
+    this.buttonList = buttonList;
+    this.dropdownItemList = dropdownItemList;
+}
+
+/**
+ * Init button events.
  */
 Dialog.prototype.initButtonEvents = function () {
     this.buttonList.forEach(o => {
@@ -402,7 +413,8 @@ Dialog.prototype.getHeader = function () {
 }
 
 /**
- * @private
+ * Get a footer.
+ *
  * @return {JQuery|null}
  */
 Dialog.prototype.getFooter = function () {
@@ -581,6 +593,8 @@ Dialog.prototype.show = function () {
 
     $('body > .popover').addClass('hidden');
 };
+
+
 
 /**
  * Hide.
