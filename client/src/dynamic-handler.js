@@ -30,36 +30,37 @@
 
 /**
  * A dynamic handler. To be extended by a specific handler.
- *
- * @class
- * @param {module:views/record/detail} recordView A record view.
  */
-const DynamicHandler = function (recordView) {
-    /**
-     * A record view.
-     *
-     * @protected
-     * @type {module:views/record/detail}
-     */
-    this.recordView = recordView;
+class DynamicHandler {
 
     /**
-     * A model.
-     *
-     * @protected
-     * @type {module:model}
+     * @param {module:views/record/detail} recordView A record view.
      */
-    this.model = recordView.model;
-};
+    constructor(recordView) {
 
-_.extend(DynamicHandler.prototype, /** @lends DynamicHandler# */{
+        /**
+         * A record view.
+         *
+         * @protected
+         * @type {module:views/record/detail}
+         */
+        this.recordView = recordView;
+
+        /**
+         * A model.
+         *
+         * @protected
+         * @type {module:model}
+         */
+        this.model = recordView.model;
+    }
 
     /**
      * Initialization logic. To be extended.
      *
      * @protected
      */
-    init: function () {},
+    init() {}
 
     /**
      * Called on model change. To be extended.
@@ -68,7 +69,7 @@ _.extend(DynamicHandler.prototype, /** @lends DynamicHandler# */{
      * @param {module:views/record/detail} model A model.
      * @param {Object} o Options.
      */
-    onChange: function (model, o) {},
+    onChange(model, o) {}
 
     /**
      * Get a metadata.
@@ -76,10 +77,10 @@ _.extend(DynamicHandler.prototype, /** @lends DynamicHandler# */{
      * @protected
      * @returns {module:metadata}
      */
-    getMetadata: function () {
+    getMetadata() {
         return this.recordView.getMetadata()
-    },
-});
+    }
+}
 
 DynamicHandler.extend = Bull.View.extend;
 
