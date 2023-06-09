@@ -28,34 +28,40 @@
 
 /** @module views/record/kanban */
 
-import Dep from 'views/record/list';
+import ListRecordView from 'views/record/list';
 
 /**
  * A kanban record view.
- *
- * @class
- * @name Class
- * @extends module:views/record/list
  */
-export default Dep.extend(/** @lends Class# */{
+class KanbanRecordView extends ListRecordView {
 
-    template: 'record/kanban',
+    template = 'record/kanban'
 
-    type: 'kanban',
-    name: 'kanban',
+    itemViewName = 'views/record/kanban-item'
+    rowActionsView = 'views/record/row-actions/default-kanban'
 
-    scope: null,
-    showCount: true,
-    buttonList: [],
-    headerDisabled: false,
-    layoutName: 'kanban',
-    portalLayoutDisabled: false,
-    minColumnWidthPx: 220,
+    type = 'kanban'
+    name = 'kanban'
 
-    itemViewName: 'views/record/kanban-item',
-    rowActionsView: 'views/record/row-actions/default-kanban',
+    showCount = true
+    buttonList = []
+    headerDisabled = false
+    layoutName = 'kanban'
+    portalLayoutDisabled = false
+    minColumnWidthPx = 220
+    showMore = true
+    quickDetailDisabled = false
+    quickEditDisabled = false
+    listLayout = null
+    _internalLayout = null
+    buttonsDisabled = false
+    backDragStarted = true
 
-    events: {
+    events = {
+        /**
+         * @param {JQueryMouseEventObject} e
+         * @this KanbanRecordView
+         */
         'click a.link': function (e) {
             if (e.ctrlKey || e.metaKey || e.shiftKey) {
                 return;
@@ -86,6 +92,10 @@ export default Dep.extend(/** @lends Class# */{
             this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
             this.getRouter().dispatch(scope, 'view', options);
         },
+        /**
+         * @param {JQueryMouseEventObject} e
+         * @this KanbanRecordView
+         */
         'click [data-action="groupShowMore"]': function (e) {
             let $target = $(e.currentTarget);
 
@@ -93,24 +103,44 @@ export default Dep.extend(/** @lends Class# */{
 
             this.groupShowMore(group);
         },
+        /**
+         * @param {JQueryMouseEventObject} e
+         * @this KanbanRecordView
+         */
         'click .action': function (e) {
             Espo.Utils.handleAction(this, e);
         },
+        /**
+         * @param {JQueryMouseEventObject} e
+         * @this KanbanRecordView
+         */
         'mouseenter th.group-header': function (e) {
             let group = $(e.currentTarget).attr('data-name');
 
             this.showPlus(group);
         },
+        /**
+         * @param {JQueryMouseEventObject} e
+         * @this KanbanRecordView
+         */
         'mouseleave th.group-header': function (e) {
             let group = $(e.currentTarget).attr('data-name');
 
             this.hidePlus(group);
         },
+        /**
+         * @param {JQueryMouseEventObject} e
+         * @this KanbanRecordView
+         */
         'click [data-action="createInGroup"]': function (e) {
             let group = $(e.currentTarget).attr('data-group');
 
             this.actionCreateInGroup(group);
         },
+        /**
+         * @param {JQueryMouseEventObject} e
+         * @this KanbanRecordView
+         */
         'mousedown .kanban-columns td': function (e) {
             if ($(e.originalEvent.target).closest('.item').length) {
                 return;
@@ -120,7 +150,7 @@ export default Dep.extend(/** @lends Class# */{
         },
         /**
          * @param {JQueryMouseEventObject} e
-         * @this module:views/record/kanban.Class
+         * @this KanbanRecordView
          */
         'auxclick a.link': function (e) {
             let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
@@ -153,23 +183,9 @@ export default Dep.extend(/** @lends Class# */{
 
             this.actionQuickView({id: id});
         },
-    },
+    }
 
-    showMore: true,
-
-    quickDetailDisabled: false,
-
-    quickEditDisabled: false,
-
-    listLayout: null,
-
-    _internalLayout: null,
-
-    buttonsDisabled: false,
-
-    backDragStarted: true,
-
-    data: function () {
+    data() {
         return {
             scope: this.scope,
             header: this.header,
@@ -185,9 +201,9 @@ export default Dep.extend(/** @lends Class# */{
             totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
             isCreatable: this.isCreatable,
         };
-    },
+    }
 
-    init: function () {
+    init() {
         this.listLayout = this.options.listLayout || this.listLayout;
         this.type = this.options.type || this.type;
 
@@ -206,13 +222,15 @@ export default Dep.extend(/** @lends Class# */{
         if ('buttonsDisabled' in this.options) {
             this.buttonsDisabled = this.options.buttonsDisabled;
         }
-    },
+    }
 
-    getModelScope: function (id) {
+    /** @inheritDoc */
+    getModelScope(id) {
         return this.scope;
-    },
+    }
 
-    setup: function () {
+    /** @inheritDoc */
+    setup() {
         if (typeof this.collection === 'undefined') {
             throw new Error('Collection has not been injected into Record.List view.');
         }
@@ -317,9 +335,9 @@ export default Dep.extend(/** @lends Class# */{
         this.isCreatable = this.statusFieldIsEditable && this.getAcl().check(this.entityType, 'create');
 
         this.getHelper().processSetupHandlers(this, 'record/kanban');
-    },
+    }
 
-    afterRender: function () {
+    afterRender() {
         let $window = $(window);
 
         this.$listKanban = this.$el.find('.list-kanban');
@@ -352,9 +370,9 @@ export default Dep.extend(/** @lends Class# */{
             this.plusElementMap[status] = this.$el
                 .find('.kanban-head .create-button[data-group="' + value + '"]');
         });
-    },
+    }
 
-    initStickableHeader: function () {
+    initStickableHeader() {
         let $container = this.$headContainer = this.$el.find('.kanban-head-container');
         let topBarHeight = this.getThemeManager().getParam('navbarHeight') || 30;
 
@@ -433,9 +451,9 @@ export default Dep.extend(/** @lends Class# */{
             $container.get(0).scrollLeft = 0;
             $container.children().css('width', '');
         };
-    },
+    }
 
-    initSortable: function () {
+    initSortable() {
         let $list = this.$groupColumnList;
 
         $list.find('> .item').on('touchstart', (e) => {
@@ -557,17 +575,17 @@ export default Dep.extend(/** @lends Class# */{
                 this.rebuildGroupDataList();
             },
         });
-    },
+    }
 
-    storeGroupOrder: function (group) {
+    storeGroupOrder(group) {
         Espo.Ajax.putRequest('Kanban/order', {
             entityType: this.entityType,
             group: group,
             ids: this.getGroupOrderFromDom(group),
         });
-    },
+    }
 
-    getGroupOrderFromDom: function (group) {
+    getGroupOrderFromDom(group) {
         let ids = [];
 
         let $group = this.$el.find('.group-column-list[data-name="'+group+'"]');
@@ -577,9 +595,9 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return ids;
-    },
+    }
 
-    reOrderGroup: function (group) {
+    reOrderGroup(group) {
         let groupCollection = this.getGroupCollection(group);
         let ids = this.getGroupOrderFromDom(group);
 
@@ -602,9 +620,9 @@ export default Dep.extend(/** @lends Class# */{
 
             groupCollection.add(model, {silent: true});
         });
-    },
+    }
 
-    rebuildGroupDataList: function () {
+    rebuildGroupDataList() {
         this.groupDataList.forEach(item => {
             item.dataList = [];
 
@@ -615,9 +633,9 @@ export default Dep.extend(/** @lends Class# */{
                 });
             }
         });
-    },
+    }
 
-    moveModelBetweenGroupCollections: function (model, groupFrom, groupTo) {
+    moveModelBetweenGroupCollections(model, groupFrom, groupTo) {
         let collection = this.getGroupCollection(groupFrom);
 
         if (!collection) {
@@ -633,11 +651,11 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         collection.add(model, {silent: true});
-    },
+    }
 
-    handleAttributesOnGroupChange: function (model, attributes, group) {},
+    handleAttributesOnGroupChange(model, attributes, group) {}
 
-    adjustMinHeight: function () {
+    adjustMinHeight() {
         if (
             this.collection.models.length === 0 ||
             !this.$container
@@ -661,9 +679,9 @@ export default Dep.extend(/** @lends Class# */{
         this.$listKanban.find('td.group-column').css({
             minHeight: height + 'px',
         });
-    },
+    }
 
-    getListLayout: function (callback) {
+    getListLayout(callback) {
         if (this.listLayout) {
             callback.call(this, this.listLayout);
 
@@ -674,10 +692,10 @@ export default Dep.extend(/** @lends Class# */{
             this.listLayout = listLayout;
             callback.call(this, listLayout);
         });
-    },
+    }
 
-    getSelectAttributeList: function (callback) {
-        Dep.prototype.getSelectAttributeList.call(this, (attributeList) => {
+    getSelectAttributeList(callback) {
+        super.getSelectAttributeList(attributeList => {
             if (attributeList) {
                 if (!~attributeList.indexOf(this.statusField)) {
                     attributeList.push(this.statusField);
@@ -686,9 +704,9 @@ export default Dep.extend(/** @lends Class# */{
 
             callback(attributeList);
         });
-    },
+    }
 
-    buildRows: function (callback) {
+    buildRows(callback) {
         let groupList = (this.collection.dataAdditional || {}).groupList || [];
 
         this.collection.reset();
@@ -804,9 +822,9 @@ export default Dep.extend(/** @lends Class# */{
                 });
             });
         });
-    },
+    }
 
-    buildRow: function (i, model, callback) {
+    buildRow(i, model, callback) {
         let key = model.id;
 
         this.createView(key, this.itemViewName, {
@@ -818,9 +836,9 @@ export default Dep.extend(/** @lends Class# */{
             setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
             statusFieldIsEditable: this.statusFieldIsEditable,
         }, callback);
-    },
+    }
 
-    removeRecordFromList: function (id) {
+    removeRecordFromList(id) {
         this.collection.remove(id);
 
         if (this.collection.total > 0) {
@@ -861,9 +879,9 @@ export default Dep.extend(/** @lends Class# */{
                 break;
             }
         }
-    },
+    }
 
-    onChangeGroup: function (model, value, o) {
+    onChangeGroup(model, value, o) {
         let id = model.id;
         let group = model.get(this.statusField);
 
@@ -928,9 +946,9 @@ export default Dep.extend(/** @lends Class# */{
         if (!this.orderDisabled) {
             this.storeGroupOrder(group);
         }
-    },
+    }
 
-    groupShowMore: function (group) {
+    groupShowMore(group) {
         let groupItem;
 
         for (let i in this.groupDataList) {
@@ -970,20 +988,20 @@ export default Dep.extend(/** @lends Class# */{
                 });
             });
         });
-    },
+    }
 
-    getDomRowItem: function (id) {
+    getDomRowItem(id) {
         return this.$el.find('.item[data-id="'+id+'"]');
-    },
+    }
 
-    getRowContainerHtml: function (id) {
+    getRowContainerHtml(id) {
         return $('<div>')
             .attr('data-id', id)
             .addClass('item')
             .get(0).outerHTML;
-    },
+    }
 
-    actionMoveOver: function (data) {
+    actionMoveOver(data) {
         let model = this.collection.get(data.id);
 
         this.createView('moveOverDialog', 'views/modals/kanban-move-over', {
@@ -992,9 +1010,9 @@ export default Dep.extend(/** @lends Class# */{
         }, (view) => {
             view.render();
         });
-    },
+    }
 
-    getGroupCollection: function (group) {
+    getGroupCollection(group) {
         let collection = null;
 
         this.collection.subCollectionList.forEach((itemCollection) => {
@@ -1004,9 +1022,9 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return collection;
-    },
+    }
 
-    showPlus: function (group) {
+    showPlus(group) {
         let $el = this.plusElementMap[group];
 
         if (!$el) {
@@ -1014,9 +1032,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         $el.removeClass('hidden');
-    },
+    }
 
-    hidePlus: function (group) {
+    hidePlus(group) {
         let $el = this.plusElementMap[group];
 
         if (!$el) {
@@ -1024,9 +1042,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         $el.addClass('hidden');
-    },
+    }
 
-    actionCreateInGroup: function (group) {
+    actionCreateInGroup(group) {
         let attributes = {};
 
         attributes[this.statusField] = group;
@@ -1046,9 +1064,9 @@ export default Dep.extend(/** @lends Class# */{
                 this.collection.fetch();
             });
         });
-    },
+    }
 
-    initBackDrag: function (e) {
+    initBackDrag(e) {
         this.backDragStarted = true;
 
         let containerEl = this.$container.get(0);
@@ -1072,24 +1090,24 @@ export default Dep.extend(/** @lends Class# */{
         $document.one('mouseup.' + this.cid, () => {
             this.stopBackDrag();
         });
-    },
+    }
 
-    stopBackDrag: function () {
+    stopBackDrag() {
         this.$container.get(0).style.cursor = 'default';
         this.$container.get(0).style.userSelect = 'none';
 
         $(document).off('mousemove.' + this.cid);
-    },
+    }
 
-    syncHeadScroll: function () {
+    syncHeadScroll() {
         if (!this.$headContainer.hasClass('sticked')) {
             return;
         }
 
         this.$headContainer.get(0).scrollLeft = this.$container.get(0).scrollLeft;
-    },
+    }
 
-    controlHorizontalScroll: function (e) {
+    controlHorizontalScroll(e) {
         if (!this.sortIsStarted) {
             return;
         }
@@ -1180,5 +1198,7 @@ export default Dep.extend(/** @lends Class# */{
         if (!isLeft && !isRight) {
             this.sortWasCentered = true;
         }
-    },
-});
+    }
+}
+
+export default KanbanRecordView;

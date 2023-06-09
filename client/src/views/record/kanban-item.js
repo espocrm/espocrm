@@ -26,27 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Dep from 'view';
+import View from 'view';
 
-/**
- * @class
- * @name Class
- * @extends module:view
- */
-export default Dep.extend(/** @lends Class# */{
+class KanbanRecordItem extends View {
 
-    template: 'record/kanban-item',
+    template = 'record/kanban-item'
 
-    data: function () {
+    data() {
         return {
             layoutDataList: this.layoutDataList,
             rowActionsDisabled: this.rowActionsDisabled,
         };
-    },
+    }
 
-    events: {},
+    events = {}
 
-    setup: function () {
+    setup() {
         this.itemLayout = this.options.itemLayout;
         this.rowActionsView = this.options.rowActionsView;
         this.rowActionsDisabled = this.options.rowActionsDisabled;
@@ -54,9 +49,10 @@ export default Dep.extend(/** @lends Class# */{
         this.layoutDataList = [];
 
         this.itemLayout.forEach((item, i) => {
-            var name = item.name;
-            var key = name + 'Field';
-            var o = {
+            let name = item.name;
+            let key = name + 'Field';
+
+            let o = {
                 name: name,
                 isAlignRight: item.align === 'right',
                 isLarge: item.isLarge,
@@ -72,7 +68,8 @@ export default Dep.extend(/** @lends Class# */{
                 viewName = this.getFieldManager().getViewName(type);
             }
 
-            var mode = 'list';
+            let mode = 'list';
+
             if (item.link) {
                 mode = 'listLink';
             }
@@ -87,7 +84,7 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         if (!this.rowActionsDisabled) {
-            var acl =  {
+            let acl =  {
                 edit: this.getAcl().checkModel(this.model, 'edit'),
                 delete: this.getAcl().checkModel(this.model, 'delete'),
             };
@@ -99,5 +96,7 @@ export default Dep.extend(/** @lends Class# */{
                 statusFieldIsEditable: this.options.statusFieldIsEditable,
             });
         }
-    },
-});
+    }
+}
+
+export default KanbanRecordItem;

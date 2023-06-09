@@ -26,305 +26,289 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/list-tree', ['views/record/list'], function (Dep) {
+import ListRecordView from 'views/record/list';
 
-    return Dep.extend({
+class ListTreeRecordView extends ListRecordView {
 
-        template: 'record/list-tree',
+    template = 'record/list-tree'
 
-        showMore: false,
+    showMore = false
+    showCount = false
+    checkboxes = false
+    rowActionsView = false
+    presentationType = 'tree'
+    header = false
+    listContainerEl = ' > .list > ul'
+    checkAllResultDisabled = true
+    showRoot = false
+    massActionList = ['remove']
+    selectable = false
+    createDisabled = false
+    selectedData = null
+    level = 0
+    itemViewName = 'views/record/list-tree-item'
 
-        showCount: false,
+    data() {
+        let data = super.data();
 
-        checkboxes: false,
+        data.createDisabled = this.createDisabled;
 
-        rowActionsView: false,
+        data.showRoot = this.showRoot;
 
-        presentationType: 'tree',
+        if (data.showRoot) {
+            data.rootName = this.rootName || this.translate('Root');
+        }
 
-        header: false,
+        data.showEditLink = this.showEditLink;
 
-        listContainerEl: ' > .list > ul',
+        if (this.level === 0 && this.selectable && (this.selectedData || {}).id === null) {
+            data.rootIsSelected = true;
+        }
 
-        checkAllResultDisabled: true,
+        if (this.level === 0 && this.options.hasExpandedToggler) {
+            data.hasExpandedToggler = true;
+        }
 
-        showRoot: false,
+        if (this.level === 0) {
+            data.isExpanded = this.isExpanded;
+        }
 
-        massActionList: ['remove'],
+        if (data.hasExpandedToggler || this.showEditLink) {
+            data.showRootMenu = true;
+        }
 
-        selectable: false,
+        if (this.options.menuDisabled) {
+            data.showRootMenu = false;
+        }
 
-        createDisabled: false,
+        data.noData = data.createDisabled && !data.rowList.length && !data.showRoot;
 
-        selectedData: null,
+        return data;
+    }
 
-        level: 0,
+    setup() {
+        if ('selectable' in this.options) {
+            this.selectable = this.options.selectable;
+        }
 
-        itemViewName: 'views/record/list-tree-item',
+        this.readOnly = this.options.readOnly;
+        this.createDisabled = this.readOnly || this.options.createDisabled || this.createDisabled;
+        this.isExpanded = this.options.isExpanded;
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
+        if ('showRoot' in this.options) {
+            this.showRoot = this.options.showRoot;
 
-            data.createDisabled = this.createDisabled;
-
-            data.showRoot = this.showRoot;
-
-            if (data.showRoot) {
-                data.rootName = this.rootName || this.translate('Root');
+            if ('rootName' in this.options) {
+                this.rootName = this.options.rootName;
             }
+        }
 
-            data.showEditLink = this.showEditLink;
+        if ('showRoot' in this.options) {
+            this.showEditLink = this.options.showEditLink;
+        }
 
-            if (this.level === 0 && this.selectable && (this.selectedData || {}).id === null) {
-                data.rootIsSelected = true;
-            }
+        if ('level' in this.options) {
+            this.level = this.options.level;
+        }
 
-            if (this.level === 0 && this.options.hasExpandedToggler) {
-                data.hasExpandedToggler = true;
-            }
+        this.rootView = this.options.rootView || this;
 
-            if (this.level === 0) {
-                data.isExpanded = this.isExpanded;
-            }
+        if (this.level === 0) {
+            this.selectedData = {
+                id: null,
+                path: [],
+                names: {},
+            };
+        }
 
-            if (data.hasExpandedToggler || this.showEditLink) {
-                data.showRootMenu = true;
-            }
+        if ('selectedData' in this.options) {
+            this.selectedData = this.options.selectedData;
+        }
 
-            if (this.options.menuDisabled) {
-                data.showRootMenu = false;
-            }
+        super.setup();
 
-            data.noData = data.createDisabled && !data.rowList.length && !data.showRoot;
+        if (this.selectable) {
+            this.on('select', o => {
+                if (o.id) {
+                    this.$el.find('a.link[data-id="'+o.id+'"]').addClass('text-bold');
 
-            return data;
-        },
-
-        setup: function () {
-            if ('selectable' in this.options) {
-                this.selectable = this.options.selectable;
-            }
-
-            this.readOnly = this.options.readOnly;
-
-            this.createDisabled = this.readOnly || this.options.createDisabled || this.createDisabled;
-
-            this.isExpanded = this.options.isExpanded;
-
-            if ('showRoot' in this.options) {
-                this.showRoot = this.options.showRoot;
-
-                if ('rootName' in this.options) {
-                    this.rootName = this.options.rootName;
-                }
-            }
-
-            if ('showRoot' in this.options) {
-                this.showEditLink = this.options.showEditLink;
-            }
-
-            if ('level' in this.options) {
-                this.level = this.options.level;
-            }
-
-            this.rootView = this.options.rootView || this;
-
-            if (this.level === 0) {
-                this.selectedData = {
-                    id: null,
-                    path: [],
-                    names: {},
-                };
-            }
-
-            if ('selectedData' in this.options) {
-                this.selectedData = this.options.selectedData;
-            }
-
-            Dep.prototype.setup.call(this);
-
-            if (this.selectable) {
-                this.on('select', o => {
-                    if (o.id) {
+                    if (this.level === 0) {
+                        this.$el.find('a.link').removeClass('text-bold');
                         this.$el.find('a.link[data-id="'+o.id+'"]').addClass('text-bold');
 
-                        if (this.level === 0) {
-                            this.$el.find('a.link').removeClass('text-bold');
-                            this.$el.find('a.link[data-id="'+o.id+'"]').addClass('text-bold');
+                        this.setSelected(o.id);
 
-                            this.setSelected(o.id);
-
-                            o.selectedData = this.selectedData;
-                        }
+                        o.selectedData = this.selectedData;
                     }
+                }
 
-                    if (this.level > 0) {
-                        this.getParentView().trigger('select', o);
-                    }
-                });
-            }
-        },
+                if (this.level > 0) {
+                    this.getParentView().trigger('select', o);
+                }
+            });
+        }
+    }
 
-        setSelected: function (id) {
-            if (id === null) {
-                this.selectedData.id = null;
+    setSelected(id) {
+        if (id === null) {
+            this.selectedData.id = null;
+        }
+        else {
+            this.selectedData.id = id;
+        }
+
+        this.rowList.forEach(key => {
+            let view = this.getView(key);
+
+            if (view.model.id === id) {
+                view.setIsSelected();
             }
             else {
-                this.selectedData.id = id;
+                view.isSelected = false;
             }
 
-            this.rowList.forEach(key => {
-                var view = this.getView(key);
-
-                if (view.model.id === id) {
-                    view.setIsSelected();
-                }
-                else {
-                    view.isSelected = false;
-                }
-
-                if (view.hasView('children')) {
-                    view.getView('children').setSelected(id);
-                }
-            });
-        },
-
-        buildRows: function (callback) {
-            this.checkedList = [];
-            this.rowList = [];
-
-            if (this.collection.length > 0) {
-                this.wait(true);
-
-                var modelList = this.collection.models;
-                var count = modelList.length;
-                var built = 0;
-
-                modelList.forEach((model, i) => {
-                    var key = model.id;
-
-                    this.rowList.push(key);
-
-                    this.createView(key, this.itemViewName, {
-                        model: model,
-                        collection: this.collection,
-                        el: this.options.el + ' ' + this.getRowSelector(model.id),
-                        createDisabled: this.createDisabled,
-                        readOnly: this.readOnly,
-                        level: this.level,
-                        isSelected: model.id === this.selectedData.id,
-                        selectedData: this.selectedData,
-                        selectable: this.selectable,
-                        setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
-                        rootView: this.rootView,
-                    }, () => {
-                        built++;
-
-                        if (built === count) {
-                            if (typeof callback === 'function') {
-                                callback();
-                            }
-
-                            this.wait(false);
-                        };
-                    });
-                });
-
-                return;
+            if (view.hasView('children')) {
+                view.getView('children').setSelected(id);
             }
+        });
+    }
 
-            if (typeof callback === 'function') {
-                callback();
-            }
-        },
+    buildRows(callback) {
+        this.checkedList = [];
+        this.rowList = [];
 
-        getRowSelector: function (id) {
-            return 'li[data-id="' + id + '"]';
-        },
+        if (this.collection.length > 0) {
+            this.wait(true);
 
-        getItemEl: function (model, item) {
-            return this.options.el + ' li[data-id="' + model.id + '"] span.cell[data-name="' + item.name + '"]';
-        },
+            var modelList = this.collection.models;
+            var count = modelList.length;
+            var built = 0;
 
-        getCreateAttributes: function () {
-            return {};
-        },
+            modelList.forEach((model, i) => {
+                var key = model.id;
 
-        actionCreate: function (data, e) {
-            e.stopPropagation();
+                this.rowList.push(key);
 
-            var attributes = this.getCreateAttributes();
+                this.createView(key, this.itemViewName, {
+                    model: model,
+                    collection: this.collection,
+                    el: this.options.el + ' ' + this.getRowSelector(model.id),
+                    createDisabled: this.createDisabled,
+                    readOnly: this.readOnly,
+                    level: this.level,
+                    isSelected: model.id === this.selectedData.id,
+                    selectedData: this.selectedData,
+                    selectable: this.selectable,
+                    setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
+                    rootView: this.rootView,
+                }, () => {
+                    built++;
 
-            var maxOrder = 0;
-
-            this.collection.models.forEach((m) => {
-                if (m.get('order') > maxOrder) {
-                    maxOrder = m.get('order');
-                }
-            });
-
-            attributes.order = maxOrder + 1;
-
-            attributes.parentId = null;
-            attributes.parentName = null;
-
-            if (this.model) {
-                attributes.parentId = this.model.id;
-                attributes.parentName = this.model.get('name');
-            }
-
-            var scope = this.collection.name;
-
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
-                'views/modals/edit';
-
-            this.createView('quickCreate', viewName, {
-                scope: scope,
-                attributes: attributes,
-            }, (view) => {
-                view.render();
-
-                this.listenToOnce(view, 'after:save', model => {
-                    view.close();
-
-                    model.set('childCollection', this.collection.createSeed());
-
-                    if (model.get('parentId') !== attributes.parentId) {
-                        var v = this;
-
-                        while (1) {
-                            if (v.level) {
-                                v = v.getParentView().getParentView();
-                            }
-                            else {
-                                break;
-                            }
+                    if (built === count) {
+                        if (typeof callback === 'function') {
+                            callback();
                         }
 
-                        v.collection.fetch();
-
-                        return;
-                    }
-
-                    this.collection.push(model);
-
-                    this.buildRows(() => {
-                        this.render();
-                    });
+                        this.wait(false);
+                    };
                 });
             });
-        },
 
-        actionSelectRoot: function () {
-            this.trigger('select', {id: null});
+            return;
+        }
 
-            if (this.selectable) {
-                this.$el.find('a.link').removeClass('text-bold');
-                this.$el.find('a.link[data-action="selectRoot"]').addClass('text-bold');
+        if (typeof callback === 'function') {
+            callback();
+        }
+    }
 
-                this.setSelected(null);
+    getRowSelector(id) {
+        return 'li[data-id="' + id + '"]';
+    }
+
+    getItemEl(model, item) {
+        return this.options.el + ' li[data-id="' + model.id + '"] span.cell[data-name="' + item.name + '"]';
+    }
+
+    getCreateAttributes() {
+        return {};
+    }
+
+    actionCreate(data, e) {
+        e.stopPropagation();
+
+        let attributes = this.getCreateAttributes();
+
+        let maxOrder = 0;
+
+        this.collection.models.forEach(m => {
+            if (m.get('order') > maxOrder) {
+                maxOrder = m.get('order');
             }
-        },
+        });
 
-    });
-});
+        attributes.order = maxOrder + 1;
+
+        attributes.parentId = null;
+        attributes.parentName = null;
+
+        if (this.model) {
+            attributes.parentId = this.model.id;
+            attributes.parentName = this.model.get('name');
+        }
+
+        let scope = this.collection.name;
+
+        let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
+            'views/modals/edit';
+
+        this.createView('quickCreate', viewName, {
+            scope: scope,
+            attributes: attributes,
+        }, view => {
+            view.render();
+
+            this.listenToOnce(view, 'after:save', model => {
+                view.close();
+
+                model.set('childCollection', this.collection.createSeed());
+
+                if (model.get('parentId') !== attributes.parentId) {
+                    var v = this;
+
+                    while (1) {
+                        if (v.level) {
+                            v = v.getParentView().getParentView();
+                        }
+                        else {
+                            break;
+                        }
+                    }
+
+                    v.collection.fetch();
+
+                    return;
+                }
+
+                this.collection.push(model);
+
+                this.buildRows(() => {
+                    this.render();
+                });
+            });
+        });
+    }
+
+    actionSelectRoot() {
+        this.trigger('select', {id: null});
+
+        if (this.selectable) {
+            this.$el.find('a.link').removeClass('text-bold');
+            this.$el.find('a.link[data-action="selectRoot"]').addClass('text-bold');
+
+            this.setSelected(null);
+        }
+    }
+}
+
+export default ListTreeRecordView;
