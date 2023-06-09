@@ -31,45 +31,46 @@
 /**
  * Dynamic logic. Handles form appearance and behaviour depending on conditions.
  *
- * @class
- * @param {Object} defs Definitions.
- * @param {module:views/record/base} recordView A record view.
- *
  * @internal Instantiated in advanced-pack.
  */
-const DynamicLogic = function (defs, recordView) {
-    /**
-     * @type {Object} Definitions.
-     * @private
-     */
-    this.defs = defs || {};
+class DynamicLogic {
 
     /**
-     *
-     * @type {module:views/record/base}
-     * @private
+     * @param {Object} defs Definitions.
+     * @param {module:views/record/base} recordView A record view.
      */
-    this.recordView = recordView;
+    constructor(defs, recordView) {
 
-    /**
-     * @type {string[]}
-     * @private
-     */
-    this.fieldTypeList = ['visible', 'required', 'readOnly'];
+        /**
+         * @type {Object} Definitions.
+         * @private
+         */
+        this.defs = defs || {};
 
-    /**
-     * @type {string[]}
-     * @private
-     */
-    this.panelTypeList = ['visible', 'styled'];
-};
+        /**
+         *
+         * @type {module:views/record/base}
+         * @private
+         */
+        this.recordView = recordView;
 
-_.extend(DynamicLogic.prototype, /** @lends DynamicLogic# */{
+        /**
+         * @type {string[]}
+         * @private
+         */
+        this.fieldTypeList = ['visible', 'required', 'readOnly'];
+
+        /**
+         * @type {string[]}
+         * @private
+         */
+        this.panelTypeList = ['visible', 'styled'];
+    }
 
     /**
      * Process.
      */
-    process: function () {
+    process() {
         let fields = this.defs.fields || {};
 
         Object.keys(fields).forEach(field => {
@@ -140,14 +141,14 @@ _.extend(DynamicLogic.prototype, /** @lends DynamicLogic# */{
                 this.resetOptionList(field);
             }
         });
-    },
+    }
 
     /**
      * @param {string} panel A panel name.
      * @param {string} type A type.
      * @private
      */
-    processPanel: function (panel, type) {
+    processPanel(panel, type) {
         let panels = this.defs.panels || {};
         let item = (panels[panel] || {});
 
@@ -173,7 +174,7 @@ _.extend(DynamicLogic.prototype, /** @lends DynamicLogic# */{
         }
 
         this[methodName](panel);
-    },
+    }
 
     /**
      * Check a condition group.
@@ -181,7 +182,7 @@ _.extend(DynamicLogic.prototype, /** @lends DynamicLogic# */{
      * @param {'and'|'or'|'not'} [type='and'] A type.
      * @returns {boolean}
      */
-    checkConditionGroup: function (data, type) {
+    checkConditionGroup(data, type) {
         type = type || 'and';
 
         let list;
@@ -218,7 +219,7 @@ _.extend(DynamicLogic.prototype, /** @lends DynamicLogic# */{
         }
 
         return result;
-    },
+    }
 
     /**
      * Check a condition.
@@ -226,12 +227,12 @@ _.extend(DynamicLogic.prototype, /** @lends DynamicLogic# */{
      * @param {Object} defs Definitions.
      * @returns {boolean}
      */
-    checkCondition: function (defs) {
+    checkCondition(defs) {
         defs = defs || {};
 
         let type = defs.type || 'equals';
 
-        if (~['or', 'and', 'not'].indexOf(type)) {
+        if (['or', 'and', 'not'].includes(type)) {
             return this.checkConditionGroup(defs.value, type);
         }
 
@@ -398,104 +399,104 @@ _.extend(DynamicLogic.prototype, /** @lends DynamicLogic# */{
         }
 
         return false;
-    },
+    }
 
     /**
      * @param {string} field
      * @param {string[]} optionList
      * @private
      */
-    setOptionList: function (field, optionList) {
+    setOptionList(field, optionList) {
         this.recordView.setFieldOptionList(field, optionList);
-    },
+    }
 
     /**
      * @param {string} field
      * @private
      */
-    resetOptionList: function (field) {
+    resetOptionList(field) {
         this.recordView.resetFieldOptionList(field);
-    },
+    }
 
     /**
      * @param {string} field
      * @private
      */
-    makeFieldVisibleTrue: function (field) {
+    makeFieldVisibleTrue(field) {
         this.recordView.showField(field);
-    },
+    }
 
     /**
      * @param {string} field
      * @private
      */
-    makeFieldVisibleFalse: function (field) {
+    makeFieldVisibleFalse(field) {
         this.recordView.hideField(field);
-    },
+    }
 
     /**
      * @param {string} field
      * @private
      */
-    makeFieldRequiredTrue: function (field) {
+    makeFieldRequiredTrue(field) {
         this.recordView.setFieldRequired(field);
-    },
+    }
 
     /**
      * @param {string} field
      * @private
      */
-    makeFieldRequiredFalse: function (field) {
+    makeFieldRequiredFalse(field) {
         this.recordView.setFieldNotRequired(field);
-    },
+    }
 
     /**
      * @param {string} field
      * @private
      */
-    makeFieldReadOnlyTrue: function (field) {
+    makeFieldReadOnlyTrue(field) {
         this.recordView.setFieldReadOnly(field);
-    },
+    }
 
     /**
      * @param {string} field
      * @private
      */
-    makeFieldReadOnlyFalse: function (field) {
+    makeFieldReadOnlyFalse(field) {
         this.recordView.setFieldNotReadOnly(field);
-    },
+    }
 
     /**
      * @param {string} panel
      * @private
      */
-    makePanelVisibleTrue: function (panel) {
+    makePanelVisibleTrue(panel) {
         this.recordView.showPanel(panel, 'dynamicLogic');
-    },
+    }
 
     /**
      * @param {string} panel
      * @private
      */
-    makePanelVisibleFalse: function (panel) {
+    makePanelVisibleFalse(panel) {
         this.recordView.hidePanel(panel, false, 'dynamicLogic');
-    },
+    }
 
     /**
      * @param {string} panel
      * @private
      */
-    makePanelStyledTrue: function (panel) {
-        this.recordView.stylePanel(panel, 'dynamicLogic');
-    },
+    makePanelStyledTrue(panel) {
+        this.recordView.stylePanel(panel);
+    }
 
     /**
      * @param {string} panel
      * @private
      */
-    makePanelStyledFalse: function (panel) {
-        this.recordView.unstylePanel(panel, false, 'dynamicLogic');
-    },
+    makePanelStyledFalse(panel) {
+        this.recordView.unstylePanel(panel);
+    }
 
     /**
      * Add a panel-visible condition.
@@ -503,14 +504,14 @@ _.extend(DynamicLogic.prototype, /** @lends DynamicLogic# */{
      * @param {string} name A panel name.
      * @param {Object} item Condition definitions.
      */
-    addPanelVisibleCondition: function (name, item) {
+    addPanelVisibleCondition(name, item) {
         this.defs.panels = this.defs.panels || {};
         this.defs.panels[name] = this.defs.panels[name] || {};
 
         this.defs.panels[name].visible = item;
 
         this.processPanel(name, 'visible');
-    },
+    }
 
     /**
      * Add a panel-styled condition.
@@ -518,14 +519,14 @@ _.extend(DynamicLogic.prototype, /** @lends DynamicLogic# */{
      * @param {string} name A panel name.
      * @param {Object} item Condition definitions.
      */
-    addPanelStyledCondition: function (name, item) {
+    addPanelStyledCondition(name, item) {
         this.defs.panels = this.defs.panels || {};
         this.defs.panels[name] = this.defs.panels[name] || {};
 
         this.defs.panels[name].styled = item;
 
         this.processPanel(name, 'styled');
-    },
-});
+    }
+}
 
 export default DynamicLogic;

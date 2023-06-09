@@ -379,8 +379,10 @@ class BaseRecordView extends View {
      * Hide a panel.
      *
      * @param {string} name A panel name.
+     * @param {boolean} [locked=false] Won't be able to un-hide.
+     * @param {module:views/record/detail~panelSoftLockedType} [softLockedType='default']
      */
-    hidePanel(name) {
+    hidePanel(name, locked, softLockedType) {
         this.recordHelper.setPanelStateParam(name, 'hidden', true);
 
         if (this.isRendered()) {

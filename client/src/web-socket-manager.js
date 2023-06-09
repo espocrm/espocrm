@@ -32,92 +32,92 @@ import Base64 from 'lib!base64';
 
 /**
  * A web-socket manager.
- *
- * @class
- * @param {module:models/settings} config A config.
  */
-const WebSocketManager = function (config) {
-    /**
-     * @private
-     * @type {module:models/settings}
-     */
-    this.config = config;
+class WebSocketManager {
 
     /**
-     * @private
-     * @type {{category: string, callback: Function}[]}
+     * @param {module:models/settings} config A config.
      */
-    this.subscribeQueue = [];
+    constructor(config) {
+        /**
+         * @private
+         * @type {module:models/settings}
+         */
+        this.config = config;
 
-    /**
-     * @private
-     * @type {boolean}
-     */
-    this.isConnected = false;
+        /**
+         * @private
+         * @type {{category: string, callback: Function}[]}
+         */
+        this.subscribeQueue = [];
 
-    /**
-     * @private
-     */
-    this.connection = null;
+        /**
+         * @private
+         * @type {boolean}
+         */
+        this.isConnected = false;
 
-    /**
-     * @private
-     * @type {string}
-     */
-    this.url = '';
+        /**
+         * @private
+         */
+        this.connection = null;
 
-    /**
-     * @private
-     * @type {string}
-     */
-    this.protocolPart = '';
+        /**
+         * @private
+         * @type {string}
+         */
+        this.url = '';
 
-    let url = this.config.get('webSocketUrl');
+        /**
+         * @private
+         * @type {string}
+         */
+        this.protocolPart = '';
 
-    if (url) {
-        if (url.indexOf('wss://') === 0) {
-            this.url = url.substring(6);
-            this.protocolPart = 'wss://';
+        let url = this.config.get('webSocketUrl');
+
+        if (url) {
+            if (url.indexOf('wss://') === 0) {
+                this.url = url.substring(6);
+                this.protocolPart = 'wss://';
+            }
+            else {
+                this.url = url.substring(5);
+                this.protocolPart = 'ws://';
+            }
         }
         else {
-            this.url = url.substring(5);
-            this.protocolPart = 'ws://';
+            let siteUrl = this.config.get('siteUrl') || '';
+
+            if (siteUrl.indexOf('https://') === 0) {
+                this.url = siteUrl.substring(8);
+                this.protocolPart = 'wss://';
+            }
+            else {
+                this.url = siteUrl.substring(7);
+                this.protocolPart = 'ws://';
+            }
+
+            if (~this.url.indexOf('/')) {
+                this.url = this.url.replace(/\/$/, '');
+            }
+
+            let port = this.protocolPart === 'wss://' ? 443 : 8080;
+
+            let si = this.url.indexOf('/');
+
+            if (~si) {
+                this.url = this.url.substring(0, si) + ':' + port;
+            }
+            else {
+                this.url += ':' + port;
+            }
+
+            if (this.protocolPart === 'wss://') {
+                this.url += '/wss';
+            }
         }
     }
-    else {
-        let siteUrl = this.config.get('siteUrl') || '';
-
-        if (siteUrl.indexOf('https://') === 0) {
-            this.url = siteUrl.substring(8);
-            this.protocolPart = 'wss://';
-        }
-        else {
-            this.url = siteUrl.substring(7);
-            this.protocolPart = 'ws://';
-        }
-
-        if (~this.url.indexOf('/')) {
-            this.url = this.url.replace(/\/$/, '');
-        }
-
-        let port = this.protocolPart === 'wss://' ? 443 : 8080;
-
-        let si = this.url.indexOf('/');
-
-        if (~si) {
-            this.url = this.url.substring(0, si) + ':' + port;
-        }
-        else {
-            this.url += ':' + port;
-        }
-
-        if (this.protocolPart === 'wss://') {
-            this.url += '/wss';
-        }
-    }
-};
-
-_.extend(WebSocketManager.prototype, /** @lends WebSocketManager# */{
 
     /**
      * Connect.
@@ -125,7 +125,7 @@ _.extend(WebSocketManager.prototype, /** @lends WebSocketManager# */{
      * @param {string} auth An auth string.
      * @param {string} userId A user ID.
      */
-    connect: function (auth, userId) {
+    connect(auth, userId) {
         let authArray = Base64.decode(auth).split(':');
 
         let authToken = authArray[1];
@@ -152,12 +152,7 @@ _.extend(WebSocketManager.prototype, /** @lends WebSocketManager# */{
                     }
 
                     if (e === ab.CONNECTION_LOST || e === ab.CONNECTION_UNREACHABLE) {
-                        setTimeout(
-                            () => {
-                                this.connect(auth, userId);
-                            },
-                            3000
-                        );
+                        setTimeout(() => this.connect(auth, userId), 3000);
                     }
                 },
                 {skipSubprotocolCheck: true}
@@ -168,7 +163,7 @@ _.extend(WebSocketManager.prototype, /** @lends WebSocketManager# */{
 
             this.connection = null;
         }
-    },
+    }
 
     /**
      * Subscribe to a topic.
@@ -176,7 +171,7 @@ _.extend(WebSocketManager.prototype, /** @lends WebSocketManager# */{
      * @param {string} category A topic.
      * @param {Function} callback A callback.
      */
-    subscribe: function (category, callback) {
+    subscribe(category, callback) {
         if (!this.connection) {
             return;
         }
@@ -201,7 +196,7 @@ _.extend(WebSocketManager.prototype, /** @lends WebSocketManager# */{
                 console.error("WebSocket: Could not subscribe to "+category+".");
             }
         }
-    },
+    }
 
     /**
      * Unsubscribe.
@@ -209,7 +204,7 @@ _.extend(WebSocketManager.prototype, /** @lends WebSocketManager# */{
      * @param {string} category A topic.
      * @param {Function} [callback] A callback.
      */
-    unsubscribe: function (category, callback) {
+    unsubscribe(category, callback) {
         if (!this.connection) {
             return;
         }
@@ -229,12 +224,12 @@ _.extend(WebSocketManager.prototype, /** @lends WebSocketManager# */{
                 console.error("WebSocket: Could not unsubscribe from "+category+".");
             }
         }
-    },
+    }
 
     /**
      * Close a connection.
      */
-    close: function () {
+    close() {
         if (!this.connection) {
             return;
         }
@@ -247,7 +242,7 @@ _.extend(WebSocketManager.prototype, /** @lends WebSocketManager# */{
         }
 
         this.isConnected = false;
-    },
-});
+    }
+}
 
 export default WebSocketManager;

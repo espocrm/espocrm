@@ -30,56 +30,54 @@
 
 import Bull from 'lib!bullbone';
 
-/**
- * @class
- * @mixes Bull.Events
- * @param {Object.<string,*>} [defaultFieldStates] Default field states.
- * @param {Object.<string,*>} [defaultPanelStates] Default panel states.
- */
-const ViewRecordHelper = function (defaultFieldStates, defaultPanelStates) {
-    /**
-     * @private
-     * @type {Object}
-     */
-    this.defaultFieldStates = defaultFieldStates || {};
-    /**
-     * @private
-     * @type {Object}
-     */
-    this.defaultPanelStates = defaultPanelStates || {};
-    /** @private */
-    this.fieldStateMap = {};
-    /** @private */
-    this.panelStateMap = {};
-    /** @private */
-    this.hiddenFields = {};
-    /** @private */
-    this.hiddenPanels = {};
-    /** @private */
-    this.fieldOptionListMap = {};
+class ViewRecordHelper {
 
-    _.extend(this, Bull.Events);
-};
-
-_.extend(ViewRecordHelper.prototype, /** @lends ViewRecordHelper# */{
+    /**
+     * @class
+     * @mixes Bull.Events
+     * @param {Object.<string,*>} [defaultFieldStates] Default field states.
+     * @param {Object.<string,*>} [defaultPanelStates] Default panel states.
+     */
+    constructor(defaultFieldStates, defaultPanelStates) {
+        /**
+         * @private
+         * @type {Object}
+         */
+        this.defaultFieldStates = defaultFieldStates || {};
+        /**
+         * @private
+         * @type {Object}
+         */
+        this.defaultPanelStates = defaultPanelStates || {};
+        /** @private */
+        this.fieldStateMap = {};
+        /** @private */
+        this.panelStateMap = {};
+        /** @private */
+        this.hiddenFields = {};
+        /** @private */
+        this.hiddenPanels = {};
+        /** @private */
+        this.fieldOptionListMap = {};
+    }
 
     /**
      * Get hidden fields.
      *
      * @returns {Object.<string, boolean>}
      */
-    getHiddenFields: function () {
+    getHiddenFields() {
         return this.hiddenFields;
-    },
+    }
 
     /**
      * Get hidden panels.
      *
      * @returns {Object.<string,boolean>}
      */
-    getHiddenPanels: function () {
+    getHiddenPanels() {
         return this.hiddenPanels;
-    },
+    }
 
     /**
      * Set a field-state parameter.
@@ -88,7 +86,7 @@ _.extend(ViewRecordHelper.prototype, /** @lends ViewRecordHelper# */{
      * @param {string} name A parameter.
      * @param {*} value A value.
      */
-    setFieldStateParam: function (field, name, value) {
+    setFieldStateParam(field, name, value) {
         switch (name) {
             case 'hidden':
                 if (value) {
@@ -103,7 +101,7 @@ _.extend(ViewRecordHelper.prototype, /** @lends ViewRecordHelper# */{
 
         this.fieldStateMap[field] = this.fieldStateMap[field] || {};
         this.fieldStateMap[field][name] = value;
-    },
+    }
 
     /**
      * Get a field-state parameter.
@@ -112,7 +110,7 @@ _.extend(ViewRecordHelper.prototype, /** @lends ViewRecordHelper# */{
      * @param {string} name A parameter.
      * @returns {*} A value.
      */
-    getFieldStateParam: function (field, name) {
+    getFieldStateParam(field, name) {
         if (field in this.fieldStateMap) {
             if (name in this.fieldStateMap[field]) {
                 return this.fieldStateMap[field][name];
@@ -124,7 +122,7 @@ _.extend(ViewRecordHelper.prototype, /** @lends ViewRecordHelper# */{
         }
 
         return null;
-    },
+    }
 
     /**
      * Set a panel-state parameter.
@@ -133,7 +131,7 @@ _.extend(ViewRecordHelper.prototype, /** @lends ViewRecordHelper# */{
      * @param {string} name A parameter.
      * @param {*} value A value.
      */
-    setPanelStateParam: function (panel, name, value) {
+    setPanelStateParam(panel, name, value) {
         switch (name) {
             case 'hidden':
                 if (value) {
@@ -146,7 +144,7 @@ _.extend(ViewRecordHelper.prototype, /** @lends ViewRecordHelper# */{
 
         this.panelStateMap[panel] = this.panelStateMap[panel] || {};
         this.panelStateMap[panel][name] = value;
-    },
+    }
 
     /**
      * Get a panel-state parameter.
@@ -155,7 +153,7 @@ _.extend(ViewRecordHelper.prototype, /** @lends ViewRecordHelper# */{
      * @param {string} name A parameter.
      * @returns {*} A value.
      */
-    getPanelStateParam: function (panel, name) {
+    getPanelStateParam(panel, name) {
         if (panel in this.panelStateMap) {
             if (name in this.panelStateMap[panel]) {
                 return this.panelStateMap[panel][name];
@@ -167,7 +165,7 @@ _.extend(ViewRecordHelper.prototype, /** @lends ViewRecordHelper# */{
         }
 
         return null;
-    },
+    }
 
     /**
      * Set a field option list.
@@ -175,18 +173,18 @@ _.extend(ViewRecordHelper.prototype, /** @lends ViewRecordHelper# */{
      * @param {string} field A field name.
      * @param {string[]} list An option list.
      */
-    setFieldOptionList: function (field, list) {
+    setFieldOptionList(field, list) {
         this.fieldOptionListMap[field] = list;
-    },
+    }
 
     /**
      * Clear a field option list.
      *
      * @param {string} field A field name.
      */
-    clearFieldOptionList: function (field) {
+    clearFieldOptionList(field) {
         delete this.fieldOptionListMap[field];
-    },
+    }
 
     /**
      * Get a field option list.
@@ -194,9 +192,9 @@ _.extend(ViewRecordHelper.prototype, /** @lends ViewRecordHelper# */{
      * @param {string} field A field name.
      * @returns {string|null} Null if not set.
      */
-    getFieldOptionList: function (field) {
+    getFieldOptionList(field) {
         return this.fieldOptionListMap[field] || null;
-    },
+    }
 
     /**
      * Whether a field option list is set.
@@ -204,9 +202,11 @@ _.extend(ViewRecordHelper.prototype, /** @lends ViewRecordHelper# */{
      * @param {string} field A field name.
      * @returns {boolean}
      */
-    hasFieldOptionList: function (field) {
+    hasFieldOptionList(field) {
         return (field in this.fieldOptionListMap);
-    },
-});
+    }
+}
+
+_.extend(ViewRecordHelper.prototype, Bull.Events);
 
 export default ViewRecordHelper;
