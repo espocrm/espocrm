@@ -28,30 +28,26 @@
 
 /** @module views/record/edit */
 
-import Dep from 'views/record/detail';
+import DetailRecordView from 'views/record/detail';
 
 /**
  * An edit-record view. Used for create and edit.
- *
- * @class
- * @name Class
- * @extends module:views/record/detail
  */
-export default Dep.extend(/** @lends Class# */{
+class EditRecordView extends DetailRecordView {
 
     /** @inheritDoc */
-    template: 'record/edit',
+    template = 'record/edit'
 
     /** @inheritDoc */
-    type: 'edit',
+    type = 'edit'
     /** @inheritDoc */
-    name: 'edit',
+    name = 'edit'
     /** @inheritDoc */
-    fieldsMode: 'edit',
+    fieldsMode = 'edit'
     /** @inheritDoc */
-    mode: 'edit',
+    mode = 'edit'
     /** @inheritDoc */
-    buttonList: [
+    buttonList = [
         {
             name: 'save',
             label: 'Save',
@@ -63,24 +59,24 @@ export default Dep.extend(/** @lends Class# */{
             label: 'Cancel',
             title: 'Esc',
         }
-    ],
+    ]
     /** @inheritDoc */
-    dropdownItemList: [],
+    dropdownItemList = []
     /** @inheritDoc */
-    sideView: 'views/record/edit-side',
+    sideView = 'views/record/edit-side'
     /** @inheritDoc */
-    bottomView: 'views/record/edit-bottom',
+    bottomView = 'views/record/edit-bottom'
     /** @inheritDoc */
-    duplicateAction: false,
+    duplicateAction = false
     /** @inheritDoc */
-    saveAndContinueEditingAction: true,
+    saveAndContinueEditingAction = true
     /** @inheritDoc */
-    saveAndNewAction: true,
+    saveAndNewAction = true
     /** @inheritDoc */
-    setupHandlerType: 'record/edit',
+    setupHandlerType = 'record/edit'
 
     /** @inheritDoc */
-    actionSave: function (data) {
+    actionSave(data) {
         data = data || {};
 
         let isNew = this.isNew;
@@ -94,34 +90,34 @@ export default Dep.extend(/** @lends Class# */{
                 this.exit(isNew ? 'create' : 'save');
             })
             .catch(() => {});
-    },
+    }
 
     /**
      * A `cancel` action.
      */
-    actionCancel: function () {
+    actionCancel() {
         this.cancel();
-    },
+    }
 
     /**
      * Cancel.
      */
-    cancel: function () {
+    cancel() {
         if (this.isChanged) {
             this.resetModelChanges();
         }
 
         this.setIsNotChanged();
         this.exit('cancel');
-    },
+    }
 
     /** @inheritDoc */
-    setupBeforeFinal: function () {
+    setupBeforeFinal() {
         if (this.model.isNew()) {
             this.populateDefaults();
         }
 
-        Dep.prototype.setupBeforeFinal.call(this);
+        super.setupBeforeFinal();
 
         if (this.model.isNew()) {
             this.once('after:render', () => {
@@ -140,11 +136,11 @@ export default Dep.extend(/** @lends Class# */{
                 this.focusForCreate();
             });
         }
-    },
+    }
 
     /** @inheritDoc */
-    setupActionItems: function () {
-        Dep.prototype.setupActionItems.call(this);
+    setupActionItems() {
+        super.setupActionItems();
 
         if (
             this.saveAndContinueEditingAction &&
@@ -168,12 +164,12 @@ export default Dep.extend(/** @lends Class# */{
                 title: 'Ctrl+Alt+Enter',
             });
         }
-    },
+    }
 
     /**
      * A `save-and-create-new` action.
      */
-    actionSaveAndNew: function (data) {
+    actionSaveAndNew(data) {
         data = data || {};
 
         let proceedCallback = () => {
@@ -194,13 +190,13 @@ export default Dep.extend(/** @lends Class# */{
         if (this.lastSaveCancelReason === 'notModified') {
              proceedCallback();
         }
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyEscape: function (e) {
+    handleShortcutKeyEscape(e) {
         if (this.buttonsDisabled) {
             return;
         }
@@ -226,13 +222,13 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.actionCancel();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlAltEnter: function (e) {
+    handleShortcutKeyCtrlAltEnter(e) {
         if (this.buttonsDisabled) {
             return;
         }
@@ -249,5 +245,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.actionSaveAndNew({focusForCreate: true});
-    },
-});
+    }
+}
+
+export default EditRecordView;

@@ -1539,7 +1539,7 @@ class BaseRecordView extends View {
     /**
      * Get a currently focused field view.
      *
-     * @return {?module:views/fields/base}
+     * @return {module:views/fields/base|null}
      */
     getFocusedFieldView() {
         let $active = $(window.document.activeElement);

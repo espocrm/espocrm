@@ -28,7 +28,7 @@
 
 /** @module views/record/list */
 
-import Dep from 'view';
+import View from 'view';
 import MassActionHelper from 'helpers/mass-action';
 import ExportHelper from 'helpers/export';
 import RecordModal from 'helpers/record-modal';
@@ -37,13 +37,9 @@ import SelectProvider from 'helpers/list/select-provider';
 /**
  * A record-list view. Renders and processes list items, actions.
  *
- * @class
- * @name Class
- * @extends module:view
- *
  * @todo Document all options.
  */
-export default Dep.extend(/** @lends Class# */{
+class ListRecordView extends View {
 
     /**
      * A row action.
@@ -56,38 +52,34 @@ export default Dep.extend(/** @lends Class# */{
      * @property {Object.<string, string|number|boolean>} [data] Data attributes.
      */
 
-    /**
-     * @inheritDoc
-     */
-    template: 'record/list',
+    /** @inheritDoc */
+    template = 'record/list'
 
     /**
      * A type. Can be 'list', 'listSmall'.
      */
-    type: 'list',
+    type = 'list'
 
-    /**
-     * @inheritDoc
-     */
-    name: 'list',
+    /** @inheritDoc */
+    name = 'list'
 
     /**
      * A presentation type.
      */
-    presentationType: 'table',
+    presentationType = 'table'
 
     /**
      * If true checkboxes will be shown. Can be overridden by an option parameter.
      *
      * @protected
      */
-    checkboxes: true,
+    checkboxes = true
 
     /**
      * If true clicking on the record link will trigger 'select' event with model passed.
      * Can be overridden by an option parameter.
      */
-    selectable: false,
+    selectable = false
 
     /**
      * A row-actions view. A dropdown on the right side.
@@ -95,60 +87,60 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string}
      */
-    rowActionsView: 'views/record/row-actions/default',
+    rowActionsView = 'views/record/row-actions/default'
 
     /**
      * Disable row-actions. Can be overridden by an option parameter.
      */
-    rowActionsDisabled: false,
+    rowActionsDisabled = false
 
     /**
      * An entity type. Set automatically.
      *
      * @type {string|null}
      */
-    entityType: null,
+    entityType = null
 
     /**
      * A scope. Set automatically.
      *
      * @type {?string}
      */
-    scope: null,
+    scope = null
 
     /**
      * @protected
      */
-    _internalLayoutType: 'list-row',
+    _internalLayoutType = 'list-row'
 
     /**
      * A selector to a list container.
      *
      * @protected
      */
-    listContainerEl: '.list > table > tbody',
+    listContainerEl = '.list > table > tbody'
 
     /**
      * To show number of records. Can be overridden by an option parameter.
      *
      * @protected
      */
-    showCount: true,
+    showCount = true
 
     /**
      * @protected
      */
-    rowActionsColumnWidth: 25,
+    rowActionsColumnWidth = 25
 
     /**
      * @protected
      */
-    checkboxColumnWidth: 40,
+    checkboxColumnWidth = 40
 
     /**
      * @protected
      */
-    minColumnWidth: 100,
+    minColumnWidth = 100
 
     /**
      * A button. Handled by a class method `action{Name}`.
@@ -167,7 +159,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {module:views/record/list~button[]}
      */
-    buttonList: [],
+    buttonList = []
 
     /**
      * A dropdown item. Handled by a class method `action{Name}`.
@@ -186,28 +178,28 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {module:views/record/list~dropdownItem[]}
      */
-    dropdownItemList: [],
+    dropdownItemList = []
 
     /**
      * Disable a header. Can be overridden by an option parameter.
      *
      * @protected
      */
-    headerDisabled: false,
+    headerDisabled = false
 
     /**
      * Disable mass actions. Can be overridden by an option parameter.
      *
      * @protected
      */
-    massActionsDisabled: false,
+    massActionsDisabled = false
 
     /**
      * Disable a portal layout usage. Can be overridden by an option parameter.
      *
      * @protected
      */
-    portalLayoutDisabled: false,
+    portalLayoutDisabled = false
 
     /**
      * Mandatory select attributes. Can be overridden by an option parameter.
@@ -216,7 +208,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string[]|null}
      */
-    mandatorySelectAttributeList: null,
+    mandatorySelectAttributeList = null
 
     /**
      * A layout name. If null, a value from `type` property will be used.
@@ -225,7 +217,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string|null}
      */
-    layoutName: null,
+    layoutName = null
 
     /**
      * A scope name for layout loading. If null, an entity type of collection will be used.
@@ -234,7 +226,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string|null}
      */
-    layoutScope: null,
+    layoutScope = null
 
     /**
      * To disable field-level access check for a layout.
@@ -242,26 +234,26 @@ export default Dep.extend(/** @lends Class# */{
      *
      * @protected
      */
-    layoutAclDisabled: false,
+    layoutAclDisabled = false
 
     /**
      * A setup-handler type.
      *
      * @protected
      */
-    setupHandlerType: 'record/list',
+    setupHandlerType = 'record/list'
 
     /**
      * @internal
      * @private
      */
-    checkboxesDisabled: false,
+    checkboxesDisabled = false
 
     /**
      * Force displaying the top bar even if empty. Can be overridden by an option parameter.
      * @protected
      */
-    forceDisplayTopBar: false,
+    forceDisplayTopBar = false
 
     /**
      * Where to display the pagination. Can be overridden by an option parameter.
@@ -269,7 +261,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {'top'|'bottom'|boolean|null}
      */
-    pagination: false,
+    pagination = false
 
     /**
      * To display a table header with column names. Can be overridden by an option parameter.
@@ -277,14 +269,14 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    header: true,
+    header = true
 
     /**
      * A show-more button. Can be overridden by an option parameter.
      *
      * @protected
      */
-    showMore: true,
+    showMore = true
 
     /**
      * A mass-action list.
@@ -292,12 +284,12 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string[]}
      */
-    massActionList: [
+    massActionList = [
         'remove',
         'merge',
         'massUpdate',
         'export',
-    ],
+    ]
 
     /**
      * A mass-action list available when selecting all results.
@@ -305,11 +297,11 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string[]}
      */
-    checkAllResultMassActionList: [
+    checkAllResultMassActionList = [
         'remove',
         'massUpdate',
         'export',
-    ],
+    ]
 
     /**
      * A forced mass-action list.
@@ -317,21 +309,21 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {?string[]}
      */
-    forcedCheckAllResultMassActionList: null,
+    forcedCheckAllResultMassActionList = null
 
     /**
      * Disable quick-detail (viewing a record in modal)
      *
      * @protected
      */
-    quickDetailDisabled: false,
+    quickDetailDisabled = false
 
     /**
      * Disable quick-edit (editing a record in modal)
      *
      * @protected
      */
-    quickEditDisabled: false,
+    quickEditDisabled = false
 
     /**
      * Column definitions.
@@ -356,12 +348,12 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {module:views/record/list~columnDefs[]|null}
      */
-    listLayout: null,
+    listLayout = null
 
     /**
      * @private
      */
-    _internalLayout: null,
+    _internalLayout = null
 
     /**
      * A list of record IDs currently selected. Only for reading.
@@ -369,123 +361,121 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string[]|null}
      */
-    checkedList: null,
+    checkedList = null
 
     /**
      * Whether all results currently selected. Only for reading.
      *
      * @protected
      */
-    allResultIsChecked: false,
+    allResultIsChecked = false
 
     /**
      * Disable the ability to select all results. Can be overridden by an option parameter.
      *
      * @protected
      */
-    checkAllResultDisabled: false,
+    checkAllResultDisabled = false
 
     /**
      * Disable buttons. Can be overridden by an option parameter.
      *
      * @protected
      */
-    buttonsDisabled: false,
+    buttonsDisabled = false
 
     /**
      * Disable edit. Can be overridden by an option parameter.
      *
      * @protected
      */
-    editDisabled: false,
+    editDisabled = false
 
     /**
      * Disable remove. Can be overridden by an option parameter.
      *
      * @protected
      */
-    removeDisabled: false,
+    removeDisabled = false
 
     /**
      * Disable a stick-bar. Can be overridden by an option parameter.
      *
      * @protected
      */
-    stickedBarDisabled: false,
+    stickedBarDisabled = false
 
     /**
      * Disable the follow/unfollow mass action.
      *
      * @protected
      */
-    massFollowDisabled: false,
+    massFollowDisabled = false
 
     /**
      * Disable the print-pdf mass action.
      *
      * @protected
      */
-    massPrintPdfDisabled: false,
+    massPrintPdfDisabled = false
 
     /**
      * Disable the convert-currency mass action.
      *
      * @protected
      */
-    massConvertCurrencyDisabled: false,
+    massConvertCurrencyDisabled = false
 
     /**
      * Disable mass-update.
      *
      * @protected
      */
-    massUpdateDisabled: false,
+    massUpdateDisabled = false
 
     /**
      * Disable export.
      *
      * @protected
      */
-    exportDisabled: false,
+    exportDisabled = false
 
     /**
      * Disable merge.
      *
      * @protected
      */
-    mergeDisabled: false,
+    mergeDisabled = false
 
     /**
      * Disable a no-data label (when no result).
      *
      * @protected
      */
-    noDataDisabled: false,
+    noDataDisabled = false
 
     /**
      * @private
      */
-    _$focusedCheckbox: null,
+    _$focusedCheckbox = null
 
     /**
      * @protected
      * @type {?JQuery}
      */
-    $selectAllCheckbox: null,
+    $selectAllCheckbox = null
 
     /**
      * @protected
      * @type {?Object.<string, Object.<string, *>>}
      */
-    massActionDefs: null,
+    massActionDefs = null
 
-    /**
-     * @inheritDoc
-     */
-    events: {
+    /** @inheritDoc */
+    events = {
         /**
          * @param {JQueryKeyEventObject} e
-         * @this module:views/record/list
+         * @this ListRecordView
          */
         'click a.link': function (e) {
             if (e.ctrlKey || e.metaKey || e.shiftKey) {
@@ -518,7 +508,7 @@ export default Dep.extend(/** @lends Class# */{
         },
         /**
          * @param {JQueryMouseEventObject} e
-         * @this module:views/record/list
+         * @this ListRecordView
          */
         'auxclick a.link': function (e) {
             let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
@@ -553,9 +543,7 @@ export default Dep.extend(/** @lends Class# */{
 
             this.actionQuickView({id: id});
         },
-        /**
-         * @this module:views/record/list
-         */
+        /** @this ListRecordView */
         'click [data-action="showMore"]': function () {
             this.showMoreRecords();
         },
@@ -573,7 +561,7 @@ export default Dep.extend(/** @lends Class# */{
         },
         /**
          * @param {JQueryKeyEventObject} e
-         * @this module:views/record/list
+         * @this ListRecordView
          */
         'click .pagination a': function (e) {
             let page = $(e.currentTarget).data('page');
@@ -598,9 +586,7 @@ export default Dep.extend(/** @lends Class# */{
 
             this.deactivate();
         },
-        /**
-         * @this module:views/record/list
-         */
+        /** @this ListRecordView */
         'mousedown input.record-checkbox': function () {
             let $focused = $(document.activeElement);
 
@@ -616,7 +602,7 @@ export default Dep.extend(/** @lends Class# */{
         },
         /**
          * @param {JQueryKeyEventObject} e
-         * @this module:views/record/list
+         * @this ListRecordView
          */
         'click input.record-checkbox': function (e) {
             let $target = $(e.currentTarget);
@@ -655,15 +641,13 @@ export default Dep.extend(/** @lends Class# */{
         'click .action': function (e) {
             Espo.Utils.handleAction(this, e);
         },
-        /**
-         * @this module:views/record/list
-         */
+        /** @this ListRecordView */
         'click .checkbox-dropdown [data-action="selectAllResult"]': function () {
             this.selectAllResult();
         },
         /**
          * @param {JQueryKeyEventObject} e
-         * @this module:views/record/list
+         * @this ListRecordView
          */
         'click .actions-menu a.mass-action': function (e) {
             let $el = $(e.currentTarget);
@@ -688,20 +672,18 @@ export default Dep.extend(/** @lends Class# */{
 
             this.massAction(action);
         },
-        /**
-         * @this module:views/record/list
-         */
+        /** @this ListRecordView */
         'click a.reset-custom-order': function () {
             this.resetCustomOrder();
         },
-    },
+    }
 
     /**
      * @param {JQuery} $checkbox
      * @param {boolean} checked
      * @private
      */
-    checkboxClick: function ($checkbox, checked) {
+    checkboxClick($checkbox, checked) {
         let id = $checkbox.attr('data-id');
 
         if (checked) {
@@ -711,9 +693,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.uncheckRecord(id, $checkbox);
-    },
+    }
 
-    resetCustomOrder: function () {
+    resetCustomOrder() {
         this.collection.resetOrderToDefault();
         this.collection.trigger('order-changed');
 
@@ -725,13 +707,13 @@ export default Dep.extend(/** @lends Class# */{
                     order: this.collection.order,
                 });
             })
-    },
+    }
 
     /**
      * @param {string} orderBy
      * @protected
      */
-    toggleSort: function (orderBy) {
+    toggleSort(orderBy) {
         let asc = true;
 
         if (orderBy === this.collection.orderBy && this.collection.order === 'asc') {
@@ -759,12 +741,12 @@ export default Dep.extend(/** @lends Class# */{
         this.collection.trigger('order-changed');
 
         this.deactivate();
-    },
+    }
 
     /**
      * @protected
      */
-    initStickedBar: function () {
+    initStickedBar() {
         let $stickedBar = this.$stickedBar = this.$el.find('.sticked-bar');
         let $middle = this.$el.find('> .list');
 
@@ -865,12 +847,12 @@ export default Dep.extend(/** @lends Class# */{
             $stickedBar.addClass('hidden');
             $navbarRight.removeClass('has-sticked-bar');
         };
-    },
+    }
 
     /**
      * @protected
      */
-    showActions: function () {
+    showActions() {
         this.$el.find('.actions-button').removeClass('hidden');
 
         if (
@@ -882,23 +864,23 @@ export default Dep.extend(/** @lends Class# */{
                 this.initStickedBar();
             }
         }
-    },
+    }
 
     /**
      * @protected
      */
-    hideActions: function () {
+    hideActions() {
         this.$el.find('.actions-button').addClass('hidden');
 
         if (this.$stickedBar) {
             this.$stickedBar.addClass('hidden');
         }
-    },
+    }
 
     /**
      * @protected
      */
-    selectAllHandler: function (isChecked) {
+    selectAllHandler(isChecked) {
         this.checkedList = [];
 
         if (isChecked) {
@@ -923,12 +905,10 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.trigger('check');
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    data: function () {
+    /** @inheritDoc */
+    data() {
         let paginationTop = this.pagination === 'both' ||
             this.pagination === 'top';
 
@@ -983,12 +963,10 @@ export default Dep.extend(/** @lends Class# */{
             checkboxColumnWidth: this.checkboxColumnWidth,
             noDataDisabled: this.noDataDisabled,
         };
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    init: function () {
+    /** @inheritDoc */
+    init() {
         this.type = this.options.type || this.type;
         this.listLayout = this.options.listLayout || this.listLayout;
         this.layoutName = this.options.layoutName || this.layoutName || this.type;
@@ -1039,7 +1017,7 @@ export default Dep.extend(/** @lends Class# */{
         if ('checkAllResultDisabled' in this.options) {
             this.checkAllResultDisabled = this.options.checkAllResultDisabled;
         }
-    },
+    }
 
     /**
      * Get a record entity type (scope).
@@ -1047,14 +1025,14 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} id A record ID.
      * @return {string}
      */
-    getModelScope: function (id) {
+    getModelScope(id) {
         return this.scope;
-    },
+    }
 
     /**
      * Select all results.
      */
-    selectAllResult: function () {
+    selectAllResult() {
         this.allResultIsChecked = true;
 
         this.hideActions();
@@ -1080,12 +1058,12 @@ export default Dep.extend(/** @lends Class# */{
         this.$el.find('.list > table tbody tr').removeClass('active');
 
         this.trigger('select-all-results');
-    },
+    }
 
     /**
      * Unselect all results.
      */
-    unselectAllResult: function () {
+    unselectAllResult() {
         this.allResultIsChecked = false;
 
         this.$el.find('input.record-checkbox').prop('checked', false).removeAttr('disabled');
@@ -1100,17 +1078,17 @@ export default Dep.extend(/** @lends Class# */{
                     .removeClass('hidden');
             }
         });
-    },
+    }
 
     /**
      * @protected
      */
-    deactivate: function () {
+    deactivate() {
         if (this.$el) {
             this.$el.find(".pagination li").addClass('disabled');
             this.$el.find("a.sort").addClass('disabled');
         }
-    },
+    }
 
     /**
      * Process export.
@@ -1119,7 +1097,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} [url='Export'] An API URL.
      * @param {string[]} [fieldList] A field list.
      */
-    export: function (data, url, fieldList) {
+    export(data, url, fieldList) {
         if (!data) {
             data = {
                 entityType: this.entityType,
@@ -1205,14 +1183,14 @@ export default Dep.extend(/** @lends Class# */{
                     });
             });
         });
-    },
+    }
 
     /**
      * Process a mass-action.
      *
      * @param {string} name An action.
      */
-    massAction: function (name) {
+    massAction(name) {
         let defs = this.massActionDefs[name] || {};
 
         let handler = defs.handler;
@@ -1299,9 +1277,9 @@ export default Dep.extend(/** @lends Class# */{
         else {
             proceed.call(this);
         }
-    },
+    }
 
-    getMassActionSelectionPostData: function () {
+    getMassActionSelectionPostData() {
         let data = {};
 
         if (this.allResultIsChecked) {
@@ -1319,9 +1297,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
-    massActionRecalculateFormula: function () {
+    massActionRecalculateFormula() {
         let ids = false;
 
         let allResultIsChecked = this.allResultIsChecked;
@@ -1380,9 +1358,9 @@ export default Dep.extend(/** @lends Class# */{
                     final();
                 });
         });
-    },
+    }
 
-    massActionRemove: function () {
+    massActionRemove() {
         if (!this.getAcl().check(this.entityType, 'delete')) {
             Espo.Ui.error(this.translate('Access denied'));
 
@@ -1475,9 +1453,9 @@ export default Dep.extend(/** @lends Class# */{
                 Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
             });
         });
-    },
+    }
 
-    massActionPrintPdf: function () {
+    massActionPrintPdf() {
         let maxCount = this.getConfig().get('massPrintPdfMaxCount');
 
         if (maxCount) {
@@ -1522,9 +1500,9 @@ export default Dep.extend(/** @lends Class# */{
                 });
             });
         });
-    },
+    }
 
-    massActionFollow: function () {
+    massActionFollow() {
         let count = this.checkedList.length;
 
         let confirmMsg = this.translate('confirmMassFollow', 'messages')
@@ -1564,9 +1542,9 @@ export default Dep.extend(/** @lends Class# */{
                     );
                 });
         });
-    },
+    }
 
-    massActionUnfollow: function () {
+    massActionUnfollow() {
         let count = this.checkedList.length;
 
         let confirmMsg = this.translate('confirmMassUnfollow', 'messages')
@@ -1621,9 +1599,9 @@ export default Dep.extend(/** @lends Class# */{
                     final(result.count || 0);
                 });
         });
-    },
+    }
 
-    massActionMerge: function () {
+    massActionMerge() {
         if (!this.getAcl().check(this.entityType, 'edit')) {
             this.notify('Access denied', 'error');
 
@@ -1651,9 +1629,9 @@ export default Dep.extend(/** @lends Class# */{
             ids: this.checkedList.join(','),
             collection: this.collection,
         });
-    },
+    }
 
-    massActionMassUpdate: function () {
+    massActionMassUpdate() {
         if (!this.getAcl().check(this.entityType, 'edit')) {
             this.notify('Access denied', 'error');
 
@@ -1740,17 +1718,17 @@ export default Dep.extend(/** @lends Class# */{
                     });
             });
         });
-    },
+    }
 
-    massActionExport: function () {
+    massActionExport() {
         if (this.getConfig().get('exportDisabled') && !this.getUser().isAdmin()) {
             return;
         }
 
         this.export();
-    },
+    }
 
-    massActionUnlink: function () {
+    massActionUnlink() {
         this.confirm({
             message: this.translate('unlinkSelectedRecordsConfirmation', 'messages'),
             confirmText: this.translate('Unlink'),
@@ -1766,9 +1744,9 @@ export default Dep.extend(/** @lends Class# */{
                     this.model.trigger('after:unrelate');
                 });
         });
-    },
+    }
 
-    massActionConvertCurrency: function () {
+    massActionConvertCurrency() {
         let ids = false;
 
         let allResultIsChecked = this.allResultIsChecked;
@@ -1838,7 +1816,7 @@ export default Dep.extend(/** @lends Class# */{
                     });
             });
         });
-    },
+    }
 
     /**
      * Add a mass action.
@@ -1848,7 +1826,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {boolean} [allResult] To make available for all-result.
      * @param {boolean} [toBeginning] Add to the beginning of the list.
      */
-    addMassAction: function (item, allResult, toBeginning) {
+    addMassAction(item, allResult, toBeginning) {
         toBeginning ?
             this.massActionList.unshift(item) :
             this.massActionList.push(item);
@@ -1862,7 +1840,7 @@ export default Dep.extend(/** @lends Class# */{
         if (!this.checkboxesDisabled) {
             this.checkboxes = true;
         }
-    },
+    }
 
     /**
      * Remove a mass action.
@@ -1870,7 +1848,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @param {string} item An action.
      */
-    removeMassAction: function (item) {
+    removeMassAction(item) {
         let index = this.massActionList.indexOf(item);
 
         if (~index) {
@@ -1882,7 +1860,7 @@ export default Dep.extend(/** @lends Class# */{
         if (~index) {
             this.checkAllResultMassActionList.splice(index, 1);
         }
-    },
+    }
 
     /**
      * Remove an all-result mass action.
@@ -1890,18 +1868,16 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @param {string} item An action.
      */
-    removeAllResultMassAction: function (item) {
+    removeAllResultMassAction(item) {
         let index = this.checkAllResultMassActionList.indexOf(item);
 
         if (~index) {
             this.checkAllResultMassActionList.splice(index, 1);
         }
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    setup: function () {
+    /** @inheritDoc */
+    setup() {
         if (typeof this.collection === 'undefined') {
             throw new Error('Collection has not been injected into views/record/list view.');
         }
@@ -2021,9 +1997,9 @@ export default Dep.extend(/** @lends Class# */{
         if (!this.options.skipBuildRows) {
             this.buildRows();
         }
-    },
+    }
 
-    afterRender: function () {
+    afterRender() {
         this.$selectAllCheckbox = this.$el.find('input.select-all');
 
         if (this.allResultIsChecked) {
@@ -2034,12 +2010,12 @@ export default Dep.extend(/** @lends Class# */{
                 this.checkRecord(id);
             });
         }
-    },
+    }
 
     /**
      * @private
      */
-    setupMassActions: function () {
+    setupMassActions() {
         if (this.massActionsDisabled) {
             this.massActionList = [];
             this.checkAllResultMassActionList = [];
@@ -2230,17 +2206,17 @@ export default Dep.extend(/** @lends Class# */{
                 this.removeMassAction(item);
             }
         });
-    },
+    }
 
     /**
      * @protected
      */
-    setupMassActionItems: function () {},
+    setupMassActionItems() {}
 
     /**
      * @protected
      */
-    filterListLayout: function (listLayout) {
+    filterListLayout(listLayout) {
         if (this._cachedFilteredListLayout) {
             return this._cachedFilteredListLayout;
         }
@@ -2273,14 +2249,14 @@ export default Dep.extend(/** @lends Class# */{
         this._cachedFilteredListLayout = filteredListLayout;
 
         return this._cachedFilteredListLayout;
-    },
+    }
 
     /**
      * @protected
      * @param {function(Object[]):void} callback A callback.
      * @private
      */
-    _loadListLayout: function (callback) {
+    _loadListLayout(callback) {
         this.layoutLoadCallbackList.push(callback);
 
         if (this.layoutIsBeingLoaded) {
@@ -2302,14 +2278,14 @@ export default Dep.extend(/** @lends Class# */{
                 this.layoutIsBeingLoaded = false;
             });
         });
-    },
+    }
 
     /**
      * Get a select-attribute list.
      *
      * @param {function(string[]):void} callback A callback.
      */
-    getSelectAttributeList: function (callback) {
+    getSelectAttributeList(callback) {
         if (this.scope === null) {
             callback(null);
 
@@ -2335,13 +2311,13 @@ export default Dep.extend(/** @lends Class# */{
 
             callback(attributeList);
         });
-    },
+    }
 
     /**
      * @protected
      * @return {string[]}
      */
-    fetchAttributeListFromLayout: function () {
+    fetchAttributeListFromLayout() {
         const selectProvider = new SelectProvider(
             this.getHelper().layoutManager,
             this.getHelper().metadata,
@@ -2349,12 +2325,12 @@ export default Dep.extend(/** @lends Class# */{
         );
 
         return selectProvider.getFromLayout(this.entityType, this.listLayout);
-    },
+    }
 
     /**
      * @protected
      */
-    _getHeaderDefs: function () {
+    _getHeaderDefs() {
         let defs = [];
 
         for (let i in this.listLayout) {
@@ -2428,12 +2404,12 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return defs;
-    },
+    }
 
     /**
      * @protected
      */
-    _convertLayout: function (listLayout, model) {
+    _convertLayout(listLayout, model) {
         model = model || this.collection.prepareModel();
 
         let layout = [];
@@ -2501,7 +2477,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return layout;
-    },
+    }
 
     /**
      * Select a record.
@@ -2510,7 +2486,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {JQuery} [$target]
      * @param {boolean} [isSilent] Do not trigger the `check` event.
      */
-    checkRecord: function (id, $target, isSilent) {
+    checkRecord(id, $target, isSilent) {
         if (!this.collection.get(id)) {
             return;
         }
@@ -2529,7 +2505,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.handleAfterCheck(isSilent);
-    },
+    }
 
     /**
      * Unselect a record.
@@ -2538,7 +2514,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {JQuery} [$target]
      * @param {boolean} [isSilent] Do not trigger the `check` event.
      */
-    uncheckRecord: function (id, $target, isSilent) {
+    uncheckRecord(id, $target, isSilent) {
         $target = $target || this.$el.find('.record-checkbox[data-id="' + id + '"]');
 
         if ($target.get(0)) {
@@ -2553,13 +2529,13 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.handleAfterCheck(isSilent);
-    },
+    }
 
     /**
      * @protected
      * @param {boolean} [isSilent]
      */
-    handleAfterCheck: function (isSilent) {
+    handleAfterCheck(isSilent) {
         if (this.checkedList.length) {
             this.showActions();
         }
@@ -2577,14 +2553,14 @@ export default Dep.extend(/** @lends Class# */{
         if (!isSilent) {
             this.trigger('check');
         }
-    },
+    }
 
     /**
      * Get row-actions defs.
      *
      * @return {Object}
      */
-    getRowActionsDefs: function () {
+    getRowActionsDefs() {
         let options = {
             defs: {
                 params: {}
@@ -2603,14 +2579,14 @@ export default Dep.extend(/** @lends Class# */{
             view: this.rowActionsView,
             options: options
         };
-    },
+    }
 
     /**
      * Get selected models.
      *
      * @return {module:model[]}
      */
-    getSelected: function () {
+    getSelected() {
         let list = [];
 
         this.$el.find('input.record-checkbox:checked').each((i, el) => {
@@ -2621,12 +2597,12 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return list;
-    },
+    }
 
     /**
      * @protected
      */
-    getInternalLayoutForModel: function (callback, model) {
+    getInternalLayoutForModel(callback, model) {
         let scope = model.name;
 
         if (this._internalLayout === null) {
@@ -2638,12 +2614,12 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         callback(this._internalLayout[scope]);
-    },
+    }
 
     /**
      * @protected
      */
-    getInternalLayout: function (callback, model) {
+    getInternalLayout(callback, model) {
         if (
             (this.scope === null) &&
             !Array.isArray(this.listLayout)
@@ -2679,7 +2655,7 @@ export default Dep.extend(/** @lends Class# */{
 
             callback(this._internalLayout);
         });
-    },
+    }
 
     /**
      * Compose a cell selector for a layout item.
@@ -2688,16 +2664,16 @@ export default Dep.extend(/** @lends Class# */{
      * @param {Object} item An item.
      * @return {string}
      */
-    getItemEl: function (model, item) {
+    getItemEl(model, item) {
         return this.options.el + ' tr[data-id="' + model.id + '"] ' +
             'td.cell[data-name="' + item.columnName + '"]';
-    },
+    }
 
-    prepareInternalLayout: function (internalLayout, model) {
+    prepareInternalLayout(internalLayout, model) {
         internalLayout.forEach((item) => {
             item.el = this.getItemEl(model, item);
         });
-    },
+    }
 
     /**
      * Build a row.
@@ -2706,7 +2682,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {module:model} model A model.
      * @param {function(module:view):void} [callback] A callback.
      */
-    buildRow: function (i, model, callback) {
+    buildRow(i, model, callback) {
         let key = model.id;
 
         this.rowList.push(key);
@@ -2735,14 +2711,14 @@ export default Dep.extend(/** @lends Class# */{
                 setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
             }, callback);
         }, model);
-    },
+    }
 
     /**
      * Build rows.
      *
      * @param {function():void} [callback] A callback.
      */
-    buildRows: function (callback) {
+    buildRows(callback) {
         this.checkedList = [];
 
         this.rowList = [];
@@ -2795,7 +2771,7 @@ export default Dep.extend(/** @lends Class# */{
                 collection: this.collection,
             }, callbackWrapped);
         }
-    },
+    }
 
     /**
      * Show more records.
@@ -2806,7 +2782,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {JQuery} [$showMore]
      * @param {function(): void} [callback] A callback.
      */
-    showMoreRecords: function (options, collection, $list, $showMore, callback) {
+    showMoreRecords(options, collection, $list, $showMore, callback) {
         collection = collection || this.collection;
         $showMore =  $showMore || this.$el.find('.show-more');
         $list = $list || this.$el.find(this.listContainerEl);
@@ -2923,11 +2899,11 @@ export default Dep.extend(/** @lends Class# */{
             remove: false,
             more: true,
         });
-    },
+    }
 
-    getDomRowItem: function (id) {
+    getDomRowItem(id) {
         return null;
-    },
+    }
 
     /**
      * Compose a row-container HTML.
@@ -2935,14 +2911,14 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} id A record ID.
      * @return {string} HTML.
      */
-    getRowContainerHtml: function (id) {
+    getRowContainerHtml(id) {
         return $('<tr>')
             .attr('data-id', id)
             .addClass('list-row')
             .get(0).outerHTML;
-    },
+    }
 
-    actionQuickView: function (data) {
+    actionQuickView(data) {
         data = data || {};
 
         let id = data.id;
@@ -3001,9 +2977,9 @@ export default Dep.extend(/** @lends Class# */{
                     this.trigger('after:save', model);
                 });
             });
-    },
+    }
 
-    actionQuickEdit: function (data) {
+    actionQuickEdit(data) {
         data = data || {};
 
         let id = data.id;
@@ -3105,7 +3081,7 @@ export default Dep.extend(/** @lends Class# */{
 
         this.getRouter().navigate('#' + scope + '/edit/' + id, {trigger: false});
         this.getRouter().dispatch(scope, 'edit', options);
-    },
+    }
 
     /**
      * Compose a row selector.
@@ -3113,11 +3089,11 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} id A record ID.
      * @return {string}
      */
-    getRowSelector: function (id) {
+    getRowSelector(id) {
         return 'tr[data-id="' + id + '"]';
-    },
+    }
 
-    actionQuickRemove: function (data) {
+    actionQuickRemove(data) {
         data = data || {};
 
         let id = data.id;
@@ -3154,13 +3130,13 @@ export default Dep.extend(/** @lends Class# */{
                     this.collection.push(model);
                 });
         });
-    },
+    }
 
     /**
      * @protected
      * @param {string} id An ID.
      */
-    removeRecordFromList: function (id) {
+    removeRecordFromList(id) {
         this.collection.remove(id);
 
         if (this.collection.total > 0) {
@@ -3186,13 +3162,13 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.removeRowHtml(id);
-    },
+    }
 
     /**
      * @protected
      * @param {string} id An ID.
      */
-    removeRowHtml: function (id) {
+    removeRowHtml(id) {
         this.$el.find(this.getRowSelector(id)).remove();
 
         if (
@@ -3201,18 +3177,18 @@ export default Dep.extend(/** @lends Class# */{
         ) {
             this.reRender();
         }
-    },
+    }
 
     /**
      * @public
      * @param {string} id An ID.
      * @return {boolean}
      */
-    isIdChecked: function (id) {
+    isIdChecked(id) {
         return this.checkedList.indexOf(id) !== -1;
-    },
+    }
 
-    getTableMinWidth: function () {
+    getTableMinWidth() {
         if (!this.listLayout) {
             return;
         }
@@ -3259,5 +3235,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return minWidth;
-    },
-});
+    }
+}
+
+export default ListRecordView;
