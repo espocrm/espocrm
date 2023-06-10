@@ -165,16 +165,6 @@ class Model {
     }
 
     /**
-     * @deprecated Use `getClonedAttributesInstead`.
-     * @return {Object.<string, *>}
-     */
-    toJSON() {
-        console.warn(`model.toJSON is deprecated. Use 'getClonedAttributes' instead.`);
-
-        return this.getClonedAttributes();
-    }
-
-    /**
      * @protected
      * @param {string} [method] HTTP method.
      * @param {Model} model
@@ -733,10 +723,8 @@ class Model {
 
     /**
      * @protected
-     *
      * @param {*} defaultValue
      * @returns {*}
-     * @deprecated
      */
     parseDefaultValue(defaultValue) {
         if (
@@ -986,6 +974,16 @@ class Model {
         if (this.lastSyncPromise && this.lastSyncPromise.getReadyState() < 4) {
             this.lastSyncPromise.abort();
         }
+    }
+
+    /**
+     * @deprecated Use `getClonedAttributesInstead`.
+     * @return {Object.<string, *>}
+     */
+    toJSON() {
+        console.warn(`model.toJSON is deprecated. Use 'getClonedAttributes' instead.`);
+
+        return this.getClonedAttributes();
     }
 }
 
