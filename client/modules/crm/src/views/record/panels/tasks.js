@@ -201,10 +201,8 @@ define('crm:views/record/panels/tasks', ['views/record/panels/relationship'], fu
 
             let model = this.collection.get(id);
 
-            model.save({status: 'Completed'}, {
-                patch: true,
-                success: () => this.collection.fetch(),
-            });
+            model.save({status: 'Completed'}, {patch: true})
+                .then(() => this.collection.fetch());
         },
 
         actionViewRelatedList: function (data) {

@@ -237,22 +237,21 @@ define('crm:views/calendar/modals/edit', ['views/modals/edit'], function (Dep) {
         },
 
         actionRemove: function () {
-            var model = this.getView('edit').model;
+            let model = this.getView('edit').model;
 
             this.confirm(this.translate('removeRecordConfirmation', 'messages'), () => {
-                var $buttons = this.dialog.$el.find('.modal-footer button');
+                let $buttons = this.dialog.$el.find('.modal-footer button');
 
                 $buttons.addClass('disabled');
 
-                model.destroy({
-                    success: () => {
+                model.destroy()
+                    .then(() => {
                         this.trigger('after:destroy', model);
                         this.dialog.close();
-                    },
-                    error: function () {
+                    })
+                    .catch(() => {
                         $buttons.removeClass('disabled');
-                    },
-                });
+                    });
             });
         },
     });

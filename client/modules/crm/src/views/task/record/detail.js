@@ -63,21 +63,10 @@ define('crm:views/task/record/detail', ['views/record/detail'], function (Dep) {
             }
         },
 
-        actionSetCompleted: function (data) {
-            var id = data.id;
-
-            this.model.save({
-                status: 'Completed'
-            }, {
-                patch: true,
-                success: function () {
-                    Espo.Ui.success(this.translate('Saved'));
-                }.bind(this),
-            });
+        actionSetCompleted: function () {
+            this.model.save({status: 'Completed'}, {patch: true})
+                .then(() => Espo.Ui.success(this.translate('Saved')));
 
         },
-
-
     });
 });
-

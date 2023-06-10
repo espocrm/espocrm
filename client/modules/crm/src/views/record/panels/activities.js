@@ -625,13 +625,11 @@ define('crm:views/record/panels/activities',
 
             let model = this.collection.get(id);
 
-            model.save({status: 'Held'}, {
-                patch: true,
-                success: () => {
+            model.save({status: 'Held'}, {patch: true})
+                .then(() => {
                     this.collection.fetch();
                     this.fetchHistory();
-                },
-            });
+                });
         },
 
         actionSetNotHeld: function (data) {
@@ -643,13 +641,11 @@ define('crm:views/record/panels/activities',
 
             let model = this.collection.get(id);
 
-            model.save({status: 'Not Held'}, {
-                patch: true,
-                success: () => {
+            model.save({status: 'Not Held'}, {patch: true})
+                .then(() => {
                     this.collection.fetch();
                     this.fetchHistory();
-                },
-            });
+                });
         },
 
         actionViewRelatedList: function (data) {
