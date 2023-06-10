@@ -26,280 +26,279 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/compose-email', ['views/modals/edit'], function (Dep) {
+import EditModalView from 'views/modals/edit';
 
-    return Dep.extend({
+class ComposeEmailModalView extends EditModalView {
 
-        scope: 'Email',
+    scope = 'Email'
+    layoutName = 'composeSmall'
+    saveDisabled = true
+    fullFormDisabled = true
+    isCollapsable = true
+    wasModified = false
 
-        layoutName: 'composeSmall',
+    shortcutKeys = {
+        /** @this ComposeEmailModalView */
+        'Control+Enter': function (e) {
+            if (this.buttonList.findIndex(item => item.name === 'send' && !item.hidden) === -1) {
+                return;
+            }
 
-        saveDisabled: true,
+            e.stopPropagation();
+            e.preventDefault();
 
-        fullFormDisabled: true,
-
-        isCollapsable: true,
-
-        wasModified: false,
-
-        shortcutKeys: {
-            'Control+Enter': function (e) {
-                if (this.buttonList.findIndex(item => item.name === 'send' && !item.hidden) === -1) {
-                    return;
-                }
-
-                e.stopPropagation();
-                e.preventDefault();
-
-                this.actionSend();
-
-            },
-            'Control+KeyS': function (e) {
-                if (this.buttonList.findIndex(item => item.name === 'saveDraft' && !item.hidden) === -1) {
-                    return;
-                }
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                this.actionSaveDraft();
-            },
-            'Escape': function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-
-                let focusedFieldView = this.getRecordView().getFocusedFieldView();
-
-                if (focusedFieldView) {
-                    this.model.set(focusedFieldView.fetch());
-                }
-
-                if (this.getRecordView().isChanged) {
-                    this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
-                        .then(() => this.actionClose());
-
-                    return;
-                }
-
-                this.actionClose();
-            },
+            this.actionSend();
         },
+        /** @this ComposeEmailModalView */
+        'Control+KeyS': function (e) {
+            if (this.buttonList.findIndex(item => item.name === 'saveDraft' && !item.hidden) === -1) {
+                return;
+            }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+            e.preventDefault();
+            e.stopPropagation();
 
-            this.buttonList.unshift({
-                name: 'saveDraft',
-                text: this.translate('Save Draft', 'labels', 'Email'),
-                title: 'Ctrl+S',
-            });
+            this.actionSaveDraft();
+        },
+        /** @this ComposeEmailModalView */
+        'Escape': function (e) {
+            e.stopPropagation();
+            e.preventDefault();
 
-            this.buttonList.unshift({
-                name: 'send',
-                text: this.translate('Send', 'labels', 'Email'),
-                style: 'primary',
-                title: 'Ctrl+Enter',
-            });
+            let focusedFieldView = this.getRecordView().getFocusedFieldView();
 
-            this.$header = $('<a>')
-                .attr('role', 'button')
-                .attr('tabindex', '0')
-                .attr('data-action', 'fullFormDraft')
-                .text(this.getLanguage().translate('Compose Email'));
+            if (focusedFieldView) {
+                this.model.set(focusedFieldView.fetch());
+            }
 
-            this.events['click a[data-action="fullFormDraft"]'] = () => this.actionFullFormDraft();
-
-            if (
-                this.getConfig().get('emailForceUseExternalClient') ||
-                this.getPreferences().get('emailUseExternalClient') ||
-                !this.getAcl().checkScope('Email', 'create')
-            ) {
-                var attributes = this.options.attributes || {};
-
-                Espo.loader.require('email-helper', EmailHelper => {
-                    this.getRouter().confirmLeaveOut = false;
-
-                    let emailHelper = new EmailHelper();
-
-                    document.location.href = emailHelper
-                        .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
-                });
-
-                this.once('after:render', () => {
-                    this.actionClose();
-                });
+            if (this.getRecordView().isChanged) {
+                this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
+                    .then(() => this.actionClose());
 
                 return;
             }
 
-            this.once('remove', () => {
-                this.dialogIsHidden = false;
+            this.actionClose();
+        },
+    }
+
+    setup() {
+        super.setup();
+
+        this.buttonList.unshift({
+            name: 'saveDraft',
+            text: this.translate('Save Draft', 'labels', 'Email'),
+            title: 'Ctrl+S',
+        });
+
+        this.buttonList.unshift({
+            name: 'send',
+            text: this.translate('Send', 'labels', 'Email'),
+            style: 'primary',
+            title: 'Ctrl+Enter',
+        });
+
+        this.$header = $('<a>')
+            .attr('role', 'button')
+            .attr('tabindex', '0')
+            .attr('data-action', 'fullFormDraft')
+            .text(this.getLanguage().translate('Compose Email'));
+
+        this.events['click a[data-action="fullFormDraft"]'] = () => this.actionFullFormDraft();
+
+        if (
+            this.getConfig().get('emailForceUseExternalClient') ||
+            this.getPreferences().get('emailUseExternalClient') ||
+            !this.getAcl().checkScope('Email', 'create')
+        ) {
+            var attributes = this.options.attributes || {};
+
+            Espo.loader.require('email-helper', EmailHelper => {
+                this.getRouter().confirmLeaveOut = false;
+
+                let emailHelper = new EmailHelper();
+
+                document.location.href = emailHelper
+                    .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
             });
 
-            this.listenTo(this.model, 'change', (m, o) => {
-                if (o.ui) {
-                    this.wasModified = true;
-                }
-            });
-        },
-
-        createRecordView: function (model, callback) {
-            var viewName = this.getMetadata().get('clientDefs.' + model.name + '.recordViews.compose') ||
-                'views/email/record/compose';
-
-            var options = {
-                model: model,
-                el: this.containerSelector + ' .edit-container',
-                type: 'editSmall',
-                layoutName: this.layoutName || 'detailSmall',
-                buttonsDisabled: true,
-                selectTemplateDisabled: this.options.selectTemplateDisabled,
-                removeAttachmentsOnSelectTemplate: this.options.removeAttachmentsOnSelectTemplate,
-                signatureDisabled: this.options.signatureDisabled,
-                appendSignature: this.options.appendSignature,
-                focusForCreate: this.options.focusForCreate,
-                exit: () => {},
-            };
-
-            this.createView('edit', viewName, options, callback);
-        },
-
-        actionSend: function () {
-            var dialog = this.dialog;
-
-            var editView = this.getView('edit');
-
-            var model = editView.model;
-
-            var afterSend = () => {
-                this.dialogIsHidden = false;
-
-                this.trigger('after:save', model);
-                this.trigger('after:send', model);
-
-                dialog.close();
-
-                this.stopListening(editView, 'before:save', beforeSave);
-                this.stopListening(editView, 'error:save', errorSave);
-
-                this.remove();
-            };
-
-            var beforeSave = () => {
-                this.dialogIsHidden = true;
-
-                dialog.hideWithBackdrop();
-
-                editView.setConfirmLeaveOut(false);
-
-                if (!this.forceRemoveIsInitiated) {
-                    this.initiateForceRemove();
-                }
-            };
-
-            var errorSave = () => {
-                this.dialogIsHidden = false;
-
-                if (this.isRendered()) {
-                    dialog.show();
-                }
-            };
-
-            this.listenToOnce(editView, 'after:send', afterSend);
-
-            this.disableButton('send');
-            this.disableButton('saveDraft');
-
-            this.listenToOnce(editView, 'cancel:save', () => {
-                this.enableButton('send');
-                this.enableButton('saveDraft');
-
-                this.stopListening(editView, 'after:send', afterSend);
-
-                this.stopListening(editView, 'before:save', beforeSave);
-                this.stopListening(editView, 'error:save', errorSave);
+            this.once('after:render', () => {
+                this.actionClose();
             });
 
-            this.listenToOnce(editView, 'before:save', beforeSave);
-            this.listenToOnce(editView, 'error:save', errorSave);
+            return;
+        }
 
-            editView.send();
-        },
+        this.once('remove', () => {
+            this.dialogIsHidden = false;
+        });
 
-        actionSaveDraft: function (options) {
-            var editView = this.getView('edit');
+        this.listenTo(this.model, 'change', (m, o) => {
+            if (o.ui) {
+                this.wasModified = true;
+            }
+        });
+    }
 
-            var model = editView.model;
+    createRecordView(model, callback) {
+        let viewName = this.getMetadata().get('clientDefs.' + model.name + '.recordViews.compose') ||
+            'views/email/record/compose';
 
-            this.disableButton('send');
-            this.disableButton('saveDraft');
+        let options = {
+            model: model,
+            el: this.containerSelector + ' .edit-container',
+            type: 'editSmall',
+            layoutName: this.layoutName || 'detailSmall',
+            buttonsDisabled: true,
+            selectTemplateDisabled: this.options.selectTemplateDisabled,
+            removeAttachmentsOnSelectTemplate: this.options.removeAttachmentsOnSelectTemplate,
+            signatureDisabled: this.options.signatureDisabled,
+            appendSignature: this.options.appendSignature,
+            focusForCreate: this.options.focusForCreate,
+            exit: () => {},
+        };
 
-            var afterSave = () => {
-                this.enableButton('send');
-                this.enableButton('saveDraft');
+        this.createView('edit', viewName, options, callback);
+    }
 
-                Espo.Ui.success(this.translate('savedAsDraft', 'messages', 'Email'))
+    actionSend() {
+        let dialog = this.dialog;
 
-                this.trigger('after:save', model);
+        /** @type {module:views/email/record/edit} editView */
+        let editView = this.getRecordView();
 
-                this.$el.find('button[data-name="cancel"]').html(this.translate('Close'));
-            };
+        let model = editView.model;
 
-            editView.once('after:save', afterSave , this);
+        let afterSend = () => {
+            this.dialogIsHidden = false;
 
-            editView.once('cancel:save', () => {
-                this.enableButton('send');
-                this.enableButton('saveDraft');
+            this.trigger('after:save', model);
+            this.trigger('after:send', model);
 
-                editView.off('after:save', afterSave);
-            });
+            dialog.close();
 
-            return editView.saveDraft(options);
-        },
+            this.stopListening(editView, 'before:save', beforeSave);
+            this.stopListening(editView, 'error:save', errorSave);
 
-        initiateForceRemove: function () {
-            this.forceRemoveIsInitiated = true;
+            this.remove();
+        };
 
-            var parentView = this.getParentView();
+        let beforeSave = () => {
+            this.dialogIsHidden = true;
 
-            if (!parentView) {
-                return true;
+            dialog.hideWithBackdrop();
+
+            editView.setConfirmLeaveOut(false);
+
+            if (!this.forceRemoveIsInitiated) {
+                this.initiateForceRemove();
+            }
+        };
+
+        let errorSave = () => {
+            this.dialogIsHidden = false;
+
+            if (this.isRendered()) {
+                dialog.show();
+            }
+        };
+
+        this.listenToOnce(editView, 'after:send', afterSend);
+
+        this.disableButton('send');
+        this.disableButton('saveDraft');
+
+        this.listenToOnce(editView, 'cancel:save', () => {
+            this.enableButton('send');
+            this.enableButton('saveDraft');
+
+            this.stopListening(editView, 'after:send', afterSend);
+
+            this.stopListening(editView, 'before:save', beforeSave);
+            this.stopListening(editView, 'error:save', errorSave);
+        });
+
+        this.listenToOnce(editView, 'before:save', beforeSave);
+        this.listenToOnce(editView, 'error:save', errorSave);
+
+        editView.send();
+    }
+
+    actionSaveDraft(options) {
+        /** @type {module:views/email/record/edit} editView */
+        let editView = this.getRecordView();
+
+        let model = editView.model;
+
+        this.disableButton('send');
+        this.disableButton('saveDraft');
+
+        let afterSave = () => {
+            this.enableButton('send');
+            this.enableButton('saveDraft');
+
+            Espo.Ui.success(this.translate('savedAsDraft', 'messages', 'Email'))
+
+            this.trigger('after:save', model);
+
+            this.$el.find('button[data-name="cancel"]').html(this.translate('Close'));
+        };
+
+        editView.once('after:save', () => afterSave());
+
+        editView.once('cancel:save', () => {
+            this.enableButton('send');
+            this.enableButton('saveDraft');
+
+            editView.off('after:save', afterSave);
+        });
+
+        return editView.saveDraft(options);
+    }
+
+    initiateForceRemove() {
+        this.forceRemoveIsInitiated = true;
+
+        let parentView = this.getParentView();
+
+        if (!parentView) {
+            return true;
+        }
+
+        parentView.once('remove', () => {
+            if (!this.dialogIsHidden) {
+                return;
             }
 
-            parentView.once('remove', () => {
-                if (!this.dialogIsHidden) {
-                    return;
-                }
+            this.remove();
+        });
+    }
 
-                this.remove();
-            });
-        },
+    actionFullFormDraft() {
+        this.actionSaveDraft()
+            .then(() => {
+                this.getRouter().navigate('#Email/edit/' + this.model.id, {trigger: true});
 
-        actionFullFormDraft: function () {
-            this.actionSaveDraft()
-                .then(() => {
+                this.close();
+            })
+            .catch(reason => {
+                if (reason === 'notModified') {
+                    Espo.Ui.notify(false);
+
                     this.getRouter().navigate('#Email/edit/' + this.model.id, {trigger: true});
+                }
+            });
+    }
 
-                    this.close();
-                })
-                .catch(reason => {
-                    if (reason === 'notModified') {
-                        Espo.Ui.notify(false);
+    beforeCollapse() {
+        if (this.wasModified) {
+            this.actionSaveDraft({skipNotModifiedWarning: true});
+        }
 
-                        this.getRouter().navigate('#Email/edit/' + this.model.id, {trigger: true});
-                    }
-                });
-        },
+        this.getRecordView().setConfirmLeaveOut(false);
 
-        beforeCollapse: function () {
-            if (this.wasModified) {
-                this.actionSaveDraft({skipNotModifiedWarning: true});
-            }
+        return super.beforeCollapse();
+    }
+}
 
-            this.getView('edit').setConfirmLeaveOut(false);
-
-            return Dep.prototype.beforeCollapse.call(this);
-        },
-
-    });
-});
+export default ComposeEmailModalView;

@@ -28,51 +28,51 @@
 
 /** @module views/modals/related-records */
 
-import Dep from 'views/modal';
+import ModalView from 'views/modal';
 import SearchManager from 'search-manager';
+import $ from 'lib!jquery';
 
 /**
  * A related-list modal.
- *
- * @class
- * @name Class
- * @extends module:views/modal
  */
-export default Dep.extend(/** @lends Class# */{
+class RelatedListModalView extends ModalView {
 
-    template: 'modals/related-list',
+    template = 'modals/related-list'
 
-    className: 'dialog dialog-record',
+    className = 'dialog dialog-record'
+    searchPanel = true
+    scope = ''
+    noCreateScopeList = ['User', 'Team', 'Role', 'Portal']
+    backdrop = true
+    fixedHeaderHeight = true
+    mandatorySelectAttributeList = null
 
-    searchPanel: true,
-    scope: null,
-    noCreateScopeList: ['User', 'Team', 'Role', 'Portal'],
-    backdrop: true,
-    fixedHeaderHeight: true,
-    mandatorySelectAttributeList: null,
-
-    /**
-     * @inheritDoc
-     */
-    shortcutKeys: {
+    /** @inheritDoc */
+    shortcutKeys = {
+        /** @this RelatedListModalView */
         'Control+Space': function (e) {
             this.handleShortcutKeyCtrlSpace(e);
         },
+        /** @this RelatedListModalView */
         'Control+Slash': function (e) {
             this.handleShortcutKeyCtrlSlash(e);
         },
+        /** @this RelatedListModalView */
         'Control+Comma': function (e) {
             this.handleShortcutKeyCtrlComma(e);
         },
+        /** @this RelatedListModalView */
         'Control+Period': function (e) {
             this.handleShortcutKeyCtrlPeriod(e);
         },
-    },
+    }
 
-    events: {
+    events = {
+        /** @this RelatedListModalView */
         'click button[data-action="createRelated"]': function () {
             this.actionCreateRelated();
         },
+        /** @this RelatedListModalView */
         'click .action': function (e) {
             let $el = $(e.currentTarget);
             let action = $el.data('action');
@@ -83,14 +83,15 @@ export default Dep.extend(/** @lends Class# */{
                 this[method](data, e);
 
                 e.preventDefault();
-            }
-            else {
-                this.trigger('action', action, data, e);
-            }
-        }
-    },
 
-    setup: function () {
+                return;
+            }
+
+            this.trigger('action', action, data, e);
+        }
+    }
+
+    setup() {
         this.primaryFilterName = this.options.primaryFilterName || null;
 
         this.buttonList = [
@@ -296,7 +297,7 @@ export default Dep.extend(/** @lends Class# */{
 
             if (this.panelCollection) {
                 this.listenTo(collection, 'change', (model) => {
-                    var panelModel = this.panelCollection.get(model.id);
+                    let panelModel = this.panelCollection.get(model.id);
 
                     if (panelModel) {
                         panelModel.set(model.attributes);
@@ -310,27 +311,27 @@ export default Dep.extend(/** @lends Class# */{
 
             this.loadList();
         });
-    },
+    }
 
-    setFilter: function (filter) {
+    setFilter(filter) {
         this.searchManager.setPrimary(filter);
-    },
+    }
 
     /**
      * @protected
      * @return {module:views/record/search}
      */
-    getSearchView: function () {
+    getSearchView() {
         return this.getView('search');
-    },
+    }
 
-    loadSearch: function () {
-        var searchManager = this.searchManager =
+    loadSearch() {
+        let searchManager = this.searchManager =
             new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
 
         searchManager.emptyOnReset = true;
 
-        var primaryFilterName = this.primaryFilterName;
+        let primaryFilterName = this.primaryFilterName;
 
         if (primaryFilterName) {
             searchManager.setPrimary(primaryFilterName);
@@ -338,7 +339,7 @@ export default Dep.extend(/** @lends Class# */{
 
         this.collection.where = searchManager.getWhere();
 
-        var filterList = Espo.Utils.clone(this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || []);
+        let filterList = Espo.Utils.clone(this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || []);
 
         if (this.filterList) {
             this.filterList.forEach((item1) => {
@@ -379,9 +380,9 @@ export default Dep.extend(/** @lends Class# */{
                 this.listenTo(view, 'reset', () => {});
             });
         }
-    },
+    }
 
-    loadList: function () {
+    loadList() {
         var viewName =
             this.listViewName ||
             this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'listRelated']) ||
@@ -407,7 +408,7 @@ export default Dep.extend(/** @lends Class# */{
             pagination: this.getConfig().get('listPagination') ||
                 this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||
                 null,
-        }, (view) => {
+        }, view => {
             this.listenToOnce(view, 'select', (model) => {
                 this.trigger('select', model);
 
@@ -434,37 +435,38 @@ export default Dep.extend(/** @lends Class# */{
                 });
 
                 this.collection.fetch();
+
+                return;
             }
-            else {
-                view.getSelectAttributeList((selectAttributeList) => {
-                    if (!~selectAttributeList.indexOf('name')) {
-                        selectAttributeList.push('name');
+
+            view.getSelectAttributeList((selectAttributeList) => {
+                if (!~selectAttributeList.indexOf('name')) {
+                    selectAttributeList.push('name');
+                }
+
+                var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
+                    this.mandatorySelectAttributeList || [];
+
+                mandatorySelectAttributeList.forEach((attribute) => {
+                    if (!~selectAttributeList.indexOf(attribute)) {
+                        selectAttributeList.push(attribute);
                     }
-
-                    var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
-                        this.mandatorySelectAttributeList || [];
-
-                    mandatorySelectAttributeList.forEach((attribute) => {
-                        if (!~selectAttributeList.indexOf(attribute)) {
-                            selectAttributeList.push(attribute);
-                        }
-                    });
-
-                    if (selectAttributeList) {
-                        this.collection.data.select = selectAttributeList.join(',');
-                    }
-
-                    this.listenToOnce(view, 'after:build-rows', () => {
-                        this.wait(false);
-                    });
-
-                    this.collection.fetch();
                 });
-            }
-        });
-    },
 
-    actionUnlinkRelated: function (data) {
+                if (selectAttributeList) {
+                    this.collection.data.select = selectAttributeList.join(',');
+                }
+
+                this.listenToOnce(view, 'after:build-rows', () => {
+                    this.wait(false);
+                });
+
+                this.collection.fetch();
+            });
+        });
+    }
+
+    actionUnlinkRelated(data) {
         let id = data.id;
 
         this.confirm({
@@ -482,9 +484,9 @@ export default Dep.extend(/** @lends Class# */{
                 this.model.trigger('after:unrelate:' + this.link);
             });
         });
-    },
+    }
 
-    actionCreateRelated: function () {
+    actionCreateRelated() {
         let actionName = this.defs.createAction || 'createRelated';
         let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
 
@@ -506,9 +508,9 @@ export default Dep.extend(/** @lends Class# */{
             link: this.link,
             scope: this.scope,
         });
-    },
+    }
 
-    actionSelectRelated: function () {
+    actionSelectRelated() {
         let actionName = this.defs.selectAction || 'selectRelated';
         let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
 
@@ -532,9 +534,9 @@ export default Dep.extend(/** @lends Class# */{
             boolFilterList: this.defs.selectBoolFilterList,
             massSelect: this.defs.massSelect,
         });
-    },
+    }
 
-    actionRemoveRelated: function (data) {
+    actionRemoveRelated(data) {
         let id = data.id;
 
         this.confirm({
@@ -556,13 +558,13 @@ export default Dep.extend(/** @lends Class# */{
                     this.model.trigger('after:unrelate:' + this.link);
                 });
         });
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlSlash: function (e) {
+    handleShortcutKeyCtrlSlash(e) {
         if (!this.searchPanel) {
             return;
         }
@@ -577,13 +579,13 @@ export default Dep.extend(/** @lends Class# */{
         e.stopPropagation();
 
         $search.focus();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlSpace: function (e) {
+    handleShortcutKeyCtrlSpace(e) {
         if (this.createDisabled) {
             return;
         }
@@ -596,29 +598,31 @@ export default Dep.extend(/** @lends Class# */{
         e.stopPropagation();
 
         this.actionCreateRelated();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlComma: function (e) {
+    handleShortcutKeyCtrlComma(e) {
         if (!this.getSearchView()) {
             return;
         }
 
         this.getSearchView().selectPreviousPreset();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlPeriod: function (e) {
+    handleShortcutKeyCtrlPeriod(e) {
         if (!this.getSearchView()) {
             return;
         }
 
         this.getSearchView().selectNextPreset();
-    },
-});
+    }
+}
+
+export default RelatedListModalView;

@@ -28,68 +28,68 @@
 
 /** @module views/modals/select-records */
 
-import Dep from 'views/modal';
+import ModalView from 'views/modal';
 import SearchManager from 'search-manager';
 
 /**
  * A select-records modal.
- *
- * @class
- * @name Class
- * @memberOf module:views/modals/select-records
  */
-export default Dep.extend(/** @lends Class# */{
+class SelectRecordsModal extends ModalView {
 
-    template: 'modals/select-records',
+    template = 'modals/select-records'
 
-    cssName: 'select-modal',
-    className: 'dialog dialog-record',
+    cssName = 'select-modal'
+    className = 'dialog dialog-record'
+    multiple = false
+    header = false
+    createButton = true
+    searchPanel = true
+    scope = ''
+    noCreateScopeList = ['User', 'Team', 'Role', 'Portal']
 
-    multiple: false,
-    header: false,
-    createButton: true,
-    searchPanel: true,
-    scope: null,
-    noCreateScopeList: ['User', 'Team', 'Role', 'Portal'],
-
-    /**
-     * @inheritDoc
-     */
-    shortcutKeys: {
+    /** @inheritDoc */
+    shortcutKeys = {
+        /** @this SelectRecordsModal */
         'Control+Enter': function (e) {
             this.handleShortcutKeyCtrlEnter(e);
         },
+        /** @this SelectRecordsModal */
         'Control+Space': function (e) {
             this.handleShortcutKeyCtrlSpace(e);
         },
+        /** @this SelectRecordsModal */
         'Control+Slash': function (e) {
             this.handleShortcutKeyCtrlSlash(e);
         },
+        /** @this SelectRecordsModal */
         'Control+Comma': function (e) {
             this.handleShortcutKeyCtrlComma(e);
         },
+        /** @this SelectRecordsModal */
         'Control+Period': function (e) {
             this.handleShortcutKeyCtrlPeriod(e);
         },
-    },
+    }
 
-    data: function () {
+    events = {
+        /** @this SelectRecordsModal */
+        'click button[data-action="create"]': function () {
+            this.create();
+        },
+        /** @this SelectRecordsModal */
+        'click .list a': function (e) {
+            e.preventDefault();
+        },
+    }
+
+    data() {
         return {
             createButton: this.createButton,
             createText: this.translate('Create ' + this.scope, 'labels', this.scope),
         };
-    },
+    }
 
-    events: {
-        'click button[data-action="create"]': function () {
-            this.create();
-        },
-        'click .list a': function (e) {
-            e.preventDefault();
-        }
-    },
-
-    setup: function () {
+    setup() {
         this.filters = this.options.filters || {};
         this.boolFilterList = this.options.boolFilterList || [];
         this.primaryFilterName = this.options.primaryFilterName || null;
@@ -109,7 +109,7 @@ export default Dep.extend(/** @lends Class# */{
             {
                 name: 'cancel',
                 label: 'Cancel',
-            }
+            },
         ];
 
         if (this.multiple) {
@@ -187,10 +187,10 @@ export default Dep.extend(/** @lends Class# */{
             this.wait(true);
             this.loadList();
         });
-    },
+    }
 
-    loadSearch: function () {
-        var searchManager = this.searchManager =
+    loadSearch() {
+        let searchManager = this.searchManager =
             new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
 
         searchManager.emptyOnReset = true;
@@ -199,20 +199,20 @@ export default Dep.extend(/** @lends Class# */{
             searchManager.setAdvanced(this.filters);
         }
 
-        var boolFilterList = this.boolFilterList ||
+        let boolFilterList = this.boolFilterList ||
             this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.boolFilterList');
 
         if (boolFilterList) {
-            var d = {};
+            let d = {};
 
-            boolFilterList.forEach((item) => {
+            boolFilterList.forEach(item => {
                 d[item] = true;
             });
 
             searchManager.setBool(d);
         }
 
-        var primaryFilterName = this.primaryFilterName ||
+        let primaryFilterName = this.primaryFilterName ||
             this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.filter');
 
         if (primaryFilterName) {
@@ -228,14 +228,14 @@ export default Dep.extend(/** @lends Class# */{
                 searchManager: searchManager,
                 disableSavePreset: true,
                 filterList: this.filterList,
-            }, (view) => {
+            }, view => {
                 this.listenTo(view, 'reset', () => {});
             });
         }
-    },
+    }
 
-    loadList: function () {
-        var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
+    loadList() {
+        let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
             this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
             'views/record/list';
 
@@ -254,8 +254,8 @@ export default Dep.extend(/** @lends Class# */{
             pagination: this.getConfig().get('listPagination') ||
                 this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||
                 null,
-        }, function (view) {
-            this.listenToOnce(view, 'select', (model) =>{
+        }, view => {
+            this.listenToOnce(view, 'select', model => {
                 this.trigger('select', model);
 
                 this.close();
@@ -277,42 +277,39 @@ export default Dep.extend(/** @lends Class# */{
             }
 
             if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
-                this.listenToOnce(view, 'after:build-rows', () => {
-                    this.wait(false);
-                });
+                this.listenToOnce(view, 'after:build-rows', () => this.wait(false));
 
                 this.collection.fetch();
+
+                return;
             }
-            else {
-                view.getSelectAttributeList((selectAttributeList) => {
-                    if (!~selectAttributeList.indexOf('name')) {
-                        selectAttributeList.push('name');
+
+            view.getSelectAttributeList(selectAttributeList => {
+                if (!~selectAttributeList.indexOf('name')) {
+                    selectAttributeList.push('name');
+                }
+
+                let mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
+                    this.mandatorySelectAttributeList || [];
+
+                mandatorySelectAttributeList.forEach(attribute => {
+                    if (!~selectAttributeList.indexOf(attribute)) {
+                        selectAttributeList.push(attribute);
                     }
-
-                    var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
-                        this.mandatorySelectAttributeList || [];
-
-                    mandatorySelectAttributeList.forEach((attribute) => {
-                        if (!~selectAttributeList.indexOf(attribute)) {
-                            selectAttributeList.push(attribute);
-                        }
-                    });
-
-                    if (selectAttributeList) {
-                        this.collection.data.select = selectAttributeList.join(',');
-                    }
-
-                    this.listenToOnce(view, 'after:build-rows', () => {
-                        this.wait(false);
-                    });
-
-                    this.collection.fetch();
                 });
-            }
-        });
-    },
 
-    create: function () {
+                if (selectAttributeList) {
+                    this.collection.data.select = selectAttributeList.join(',');
+                }
+
+                this.listenToOnce(view, 'after:build-rows', () => this.wait(false));
+
+                this.collection.fetch();
+            });
+        });
+    }
+
+    create() {
         if (this.options.triggerCreateEvent) {
             this.trigger('create');
 
@@ -359,14 +356,14 @@ export default Dep.extend(/** @lends Class# */{
                     });
                 });
             });
-    },
+    }
 
-    actionSelect: function () {
+    actionSelect() {
         if (!this.multiple) {
             return;
         }
 
-        let listView = this.getView('list');
+        let listView = this.getRecordView();
 
         if (listView.allResultIsChecked) {
             this.trigger('select', {
@@ -387,21 +384,29 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.close();
-    },
+    }
 
     /**
      * @protected
      * @return {?module:views/record/search}
      */
-    getSearchView: function () {
+    getSearchView() {
         return this.getView('search');
-    },
+    }
+
+    /**
+     * @protected
+     * @return {module:views/record/list}
+     */
+    getRecordView() {
+        return this.getView('list');
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlSlash: function (e) {
+    handleShortcutKeyCtrlSlash(e) {
         if (!this.searchPanel) {
             return;
         }
@@ -416,13 +421,13 @@ export default Dep.extend(/** @lends Class# */{
         e.stopPropagation();
 
         $search.focus();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlEnter: function (e) {
+    handleShortcutKeyCtrlEnter(e) {
         if (!this.multiple) {
             return;
         }
@@ -435,13 +440,13 @@ export default Dep.extend(/** @lends Class# */{
         e.preventDefault();
 
         this.actionSelect();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlSpace: function (e) {
+    handleShortcutKeyCtrlSpace(e) {
         if (!this.createButton) {
             return;
         }
@@ -450,29 +455,31 @@ export default Dep.extend(/** @lends Class# */{
         e.stopPropagation();
 
         this.create();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlComma: function (e) {
+    handleShortcutKeyCtrlComma(e) {
         if (!this.getSearchView()) {
             return;
         }
 
         this.getSearchView().selectPreviousPreset();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlPeriod: function (e) {
+    handleShortcutKeyCtrlPeriod(e) {
         if (!this.getSearchView()) {
             return;
         }
 
         this.getSearchView().selectNextPreset();
-    },
-});
+    }
+}
+
+export default SelectRecordsModal;

@@ -28,30 +28,28 @@
 
 /** @module views/modals/edit */
 
-import Dep from 'views/modal';
+import ModalView from 'views/modal';
 import Backbone from 'lib!backbone';
 
 /**
  * A quick edit modal.
- *
- * @class
- * @name Class
- * @memberOf module:views/modals/edit
  */
-export default Dep.extend(/** @lends Class# */{
+class EditModalView extends ModalView {
 
-    cssName: 'edit-modal',
-    template: 'modals/edit',
-    saveDisabled: false,
-    fullFormDisabled: false,
-    editView: null,
-    escapeDisabled: true,
-    fitHeight: true,
-    className: 'dialog dialog-record',
-    sideDisabled: false,
-    bottomDisabled: false,
+    template = 'modals/edit'
 
-    shortcutKeys: {
+    cssName = 'edit-modal'
+    saveDisabled = false
+    fullFormDisabled = false
+    editView = null
+    escapeDisabled = true
+    fitHeight = true
+    className = 'dialog dialog-record'
+    sideDisabled = false
+    bottomDisabled = false
+
+    shortcutKeys = {
+        /** @this EditModalView */
         'Control+Enter': function (e) {
             if (this.saveDisabled) {
                 return;
@@ -66,6 +64,7 @@ export default Dep.extend(/** @lends Class# */{
 
             this.actionSave();
         },
+        /** @this EditModalView */
         'Control+KeyS': function (e) {
             if (this.saveDisabled) {
                 return;
@@ -80,6 +79,7 @@ export default Dep.extend(/** @lends Class# */{
 
             this.actionSaveAndContinueEditing();
         },
+        /** @this EditModalView */
         'Escape': function (e) {
             if (this.saveDisabled) {
                 return;
@@ -103,12 +103,13 @@ export default Dep.extend(/** @lends Class# */{
 
             this.actionClose();
         },
+        /** @this EditModalView */
         'Control+Backslash': function (e) {
             this.getRecordView().handleShortcutKeyControlBackslash(e);
         },
-    },
+    }
 
-    setup: function () {
+    setup() {
         this.buttonList = [];
 
         if ('saveDisabled' in this.options) {
@@ -183,13 +184,13 @@ export default Dep.extend(/** @lends Class# */{
 
             this.createRecordView(model);
         });
-    },
+    }
 
     /**
      * @param {module:model} model
      * @param {function} [callback]
      */
-    createRecordView: function (model, callback) {
+    createRecordView(model, callback) {
         let viewName =
             this.editView ||
             this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editSmall']) ||
@@ -225,30 +226,30 @@ export default Dep.extend(/** @lends Class# */{
                     }
                 }
             });
-    },
+    }
 
-    handleRecordViewOptions: function (options) {},
+    handleRecordViewOptions(options) {}
 
     /**
      * @return {module:views/record/edit}
      */
-    getRecordView: function () {
+    getRecordView() {
         return this.getView('edit');
-    },
+    }
 
-    onBackdropClick: function () {
+    onBackdropClick() {
         if (this.getRecordView().isChanged) {
             return;
         }
 
         this.close();
-    },
+    }
 
     /**
      * @protected
      * @return {string}
      */
-    composeHeaderHtml: function () {
+    composeHeaderHtml() {
         let html;
 
         if (!this.id) {
@@ -283,9 +284,9 @@ export default Dep.extend(/** @lends Class# */{
         html = this.getHelper().getScopeColorIconHtml(this.scope) + html;
 
         return html;
-    },
+    }
 
-    actionSave: function (data) {
+    actionSave(data) {
         data = data || {};
 
         let editView = this.getRecordView();
@@ -331,13 +332,13 @@ export default Dep.extend(/** @lends Class# */{
             .catch(() => {
                 $buttons.removeClass('disabled').removeAttr('disabled');
             })
-    },
+    }
 
-    actionSaveAndContinueEditing: function () {
+    actionSaveAndContinueEditing() {
         this.actionSave({bypassClose: true});
-    },
+    }
 
-    actionFullForm: function (dialog) {
+    actionFullForm() {
         var url;
         var router = this.getRouter();
 
@@ -348,8 +349,8 @@ export default Dep.extend(/** @lends Class# */{
         if (!this.id) {
             url = '#' + this.scope + '/create';
 
-            attributes = this.getView('edit').fetch();
-            model = this.getView('edit').model;
+            attributes = this.getRecordView().fetch();
+            model = this.getRecordView().model;
 
             attributes = _.extend(attributes, model.getClonedAttributes());
 
@@ -372,8 +373,8 @@ export default Dep.extend(/** @lends Class# */{
         else {
             url = '#' + this.scope + '/edit/' + this.id;
 
-            attributes = this.getView('edit').fetch();
-            model = this.getView('edit').model;
+            attributes = this.getRecordView().fetch();
+            model = this.getRecordView().model;
 
             attributes = _.extend(attributes, model.getClonedAttributes());
 
@@ -397,5 +398,7 @@ export default Dep.extend(/** @lends Class# */{
 
         this.trigger('leave');
         this.dialog.close();
-    },
-});
+    }
+}
+
+export default EditModalView;

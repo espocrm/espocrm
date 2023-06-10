@@ -28,36 +28,33 @@
 
 /** @module views/modals/detail */
 
-import Dep from 'views/modal';
+import ModalView from 'views/modal';
 import ActionItemSetup from 'helpers/action-item-setup';
+import Backbone from 'lib!backbone';
 
 /**
  * A quick view modal.
- *
- * @class
- * @name Class
- * @memberOf module:views/modals/detail
  */
-export default Dep.extend(/** @lends Class# */{
+class DetailModalView extends ModalView {
 
-    template: 'modals/detail',
+    template = 'modals/detail'
 
-    cssName: 'detail-modal',
-    className: 'dialog dialog-record',
+    cssName = 'detail-modal'
+    className = 'dialog dialog-record'
+    editDisabled = false
+    fullFormDisabled = false
+    detailView = null
+    removeDisabled = true
+    backdrop = true
+    fitHeight = true
+    sideDisabled = false
+    bottomDisabled = false
+    fixedHeaderHeight = true
+    flexibleHeaderFontSize = true
+    duplicateAction = false
 
-    editDisabled: false,
-    fullFormDisabled: false,
-    detailView: null,
-    removeDisabled: true,
-    backdrop: true,
-    fitHeight: true,
-    sideDisabled: false,
-    bottomDisabled: false,
-    fixedHeaderHeight: true,
-    flexibleHeaderFontSize: true,
-    duplicateAction: false,
-
-    shortcutKeys: {
+    shortcutKeys = {
+        /** @this DetailModalView */
         'Control+Space': function (e) {
             if (this.editDisabled) {
                 return;
@@ -82,18 +79,21 @@ export default Dep.extend(/** @lends Class# */{
                         .focus();
                 });
         },
+        /** @this DetailModalView */
         'Control+Backslash': function (e) {
             this.getRecordView().handleShortcutKeyControlBackslash(e);
         },
+        /** @this DetailModalView */
         'Control+ArrowLeft': function (e) {
             this.handleShortcutKeyControlArrowLeft(e);
         },
+        /** @this DetailModalView */
         'Control+ArrowRight': function (e) {
             this.handleShortcutKeyControlArrowRight(e);
         },
-    },
+    }
 
-    setup: function () {
+    setup() {
         this.scope = this.scope || this.options.scope;
         this.id = this.options.id;
 
@@ -113,7 +113,6 @@ export default Dep.extend(/** @lends Class# */{
             this.removeDisabled;
 
         this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
-
         this.layoutName = this.options.layoutName || this.layoutName;
 
         this.setupRecordButtons();
@@ -222,13 +221,10 @@ export default Dep.extend(/** @lends Class# */{
                 label: 'Duplicate',
             });
         }
-    },
+    }
 
-    /**
-     * @private
-     */
-    setupActionItems: function () {
-        /** @var {module:helpers/action-item-setup.Class} */
+    /** @private */
+    setupActionItems() {
         let actionItemSetup = new ActionItemSetup(
             this.getMetadata(),
             this.getHelper(),
@@ -245,17 +241,17 @@ export default Dep.extend(/** @lends Class# */{
             name => this.hideActionItem(name),
             {listenToViewModelSync: true}
         );
-    },
+    }
 
     /**
      * @protected
      */
-    setupAfterModelCreated: function () {},
+    setupAfterModelCreated() {}
 
     /**
      * @protected
      */
-    setupRecordButtons: function () {
+    setupRecordButtons() {
         if (!this.removeDisabled) {
             this.addRemoveButton();
         }
@@ -263,9 +259,9 @@ export default Dep.extend(/** @lends Class# */{
         if (!this.editDisabled) {
             this.addEditButton();
         }
-    },
+    }
 
-    controlRecordButtonsVisibility: function () {
+    controlRecordButtonsVisibility() {
         if (this.getAcl().check(this.model, 'edit')) {
             this.showButton('edit');
         } else {
@@ -277,36 +273,36 @@ export default Dep.extend(/** @lends Class# */{
         } else {
             this.hideActionItem('remove');
         }
-    },
+    }
 
-    addEditButton: function () {
+    addEditButton() {
         this.addButton({
             name: 'edit',
             label: 'Edit',
             title: 'Ctrl+Space',
         }, true);
-    },
+    }
 
-    removeEditButton: function () {
+    removeEditButton() {
         this.removeButton('edit');
-    },
+    }
 
-    addRemoveButton: function () {
+    addRemoveButton() {
         this.addDropdownItem({
             name: 'remove',
             label: 'Remove',
         });
-    },
+    }
 
-    removeRemoveButton: function () {
+    removeRemoveButton() {
         this.removeButton('remove');
-    },
+    }
 
-    getScope: function () {
+    getScope() {
         return this.scope;
-    },
+    }
 
-    createRecordView: function (callback) {
+    createRecordView(callback) {
         let model = this.model;
         let scope = this.getScope();
 
@@ -400,17 +396,17 @@ export default Dep.extend(/** @lends Class# */{
         };
 
         this.createView('record', viewName, options, callback);
-    },
+    }
 
     /**
      * @return {module:views/record/detail}
      */
-    getRecordView: function () {
+    getRecordView() {
         return this.getView('record');
-    },
+    }
 
-    afterRender: function () {
-        Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
         setTimeout(() => {
             this.$el.children(0).scrollTop(0);
@@ -419,10 +415,10 @@ export default Dep.extend(/** @lends Class# */{
         if (!this.navigateButtonsDisabled) {
             this.controlNavigationButtons();
         }
-    },
+    }
 
-    controlNavigationButtons: function () {
-        let recordView = this.getView('record');
+    controlNavigationButtons() {
+        let recordView = this.getRecordView();
 
         if (!recordView) {
             return;
@@ -461,9 +457,9 @@ export default Dep.extend(/** @lends Class# */{
         } else {
              this.disableButton('next');
         }
-    },
+    }
 
-    switchToModelByIndex: function (indexOfRecord) {
+    switchToModelByIndex(indexOfRecord) {
         if (!this.model.collection) {
             return;
         }
@@ -506,9 +502,9 @@ export default Dep.extend(/** @lends Class# */{
 
         this.controlNavigationButtons();
         this.trigger('switch-model', this.model, previousModel);
-    },
+    }
 
-    actionPrevious: function () {
+    actionPrevious() {
         if (!this.model.collection) {
             return;
         }
@@ -520,9 +516,9 @@ export default Dep.extend(/** @lends Class# */{
         let indexOfRecord = this.indexOfRecord - 1;
 
         this.switchToModelByIndex(indexOfRecord);
-    },
+    }
 
-    actionNext: function () {
+    actionNext() {
         if (!this.model.collection) {
             return;
         }
@@ -553,12 +549,12 @@ export default Dep.extend(/** @lends Class# */{
             .then(() => {
                 this.switchToModelByIndex(indexOfRecord);
             });
-    },
+    }
 
     /**
      * @return {Promise}
      */
-    actionEdit: function () {
+    actionEdit() {
         if (this.options.quickEditDisabled) {
             let options = {
                 id: this.id,
@@ -614,10 +610,10 @@ export default Dep.extend(/** @lends Class# */{
                     });
             });
         });
-    },
+    }
 
-    actionRemove: function () {
-        let model = this.getView('record').model;
+    actionRemove() {
+        let model = this.getRecordView().model;
 
         this.confirm(this.translate('removeRecordConfirmation', 'messages'), () => {
             let $buttons = this.dialog.$el.find('.modal-footer button');
@@ -633,9 +629,9 @@ export default Dep.extend(/** @lends Class# */{
                     $buttons.removeClass('disabled').removeAttr('disabled');
                 });
         });
-    },
+    }
 
-    actionFullForm: function () {
+    actionFullForm() {
         let url;
         let router = this.getRouter();
 
@@ -643,12 +639,12 @@ export default Dep.extend(/** @lends Class# */{
 
         url = '#' + scope + '/view/' + this.id;
 
-        var attributes = this.getView('record').fetch();
-        var model = this.getView('record').model;
+        let attributes = this.getRecordView().fetch();
+        let model = this.getRecordView().model;
 
         attributes = _.extend(attributes, model.getClonedAttributes());
 
-        var options = {
+        let options = {
             attributes: attributes,
             returnUrl: Backbone.history.fragment,
             model: this.sourceModel || this.model,
@@ -666,15 +662,13 @@ export default Dep.extend(/** @lends Class# */{
 
         this.trigger('leave');
         this.dialog.close();
-    },
+    }
 
-    actionDuplicate: function () {
+    actionDuplicate() {
         Espo.Ui.notify(' ... ');
 
         Espo.Ajax
-            .postRequest(this.scope + '/action/getDuplicateAttributes', {
-                id: this.model.id,
-            })
+            .postRequest(this.scope + '/action/getDuplicateAttributes', {id: this.model.id})
             .then(attributes => {
                 Espo.Ui.notify(false);
 
@@ -691,13 +685,13 @@ export default Dep.extend(/** @lends Class# */{
 
                 this.getRouter().navigate(url, {trigger: false});
             });
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyControlArrowLeft: function (e) {
+    handleShortcutKeyControlArrowLeft(e) {
         if (!this.model.collection) {
             return;
         }
@@ -714,13 +708,13 @@ export default Dep.extend(/** @lends Class# */{
         e.stopPropagation();
 
         this.actionPrevious();
-    },
+    }
 
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyControlArrowRight: function (e) {
+    handleShortcutKeyControlArrowRight(e) {
         if (!this.model.collection) {
             return;
         }
@@ -737,5 +731,7 @@ export default Dep.extend(/** @lends Class# */{
         e.stopPropagation();
 
         this.actionNext();
-    },
-});
+    }
+}
+
+export default DetailModalView;
