@@ -2,7 +2,26 @@
     "srcDir": ".",
     "srcFiles": [
         "client/lib/espo-libs.min.js",
-        "client/lib/espo.min.js"
+        "client/lib/transpiled/src/loader.js",
+        "client/lib/transpiled/src/loader-init-libs.js",
+        "client/lib/transpiled/src/exceptions.js",
+        "client/lib/transpiled/src/utils.js",
+        "client/lib/transpiled/src/ajax.js",
+        "client/lib/transpiled/src/model.js",
+        "client/lib/transpiled/src/router.js",
+        "client/lib/transpiled/src/collection.js",
+        "client/lib/transpiled/src/controller.js",
+        "client/lib/transpiled/src/cache.js",
+        "client/lib/transpiled/src/metadata.js",
+        "client/lib/transpiled/src/acl.js",
+        "client/lib/transpiled/src/acl-manager.js",
+        "client/lib/transpiled/src/layout-manager.js",
+        "client/lib/transpiled/src/date-time.js",
+        "client/lib/transpiled/src/field-manager.js",
+        "client/lib/transpiled/src/models/settings.js",
+        "client/lib/transpiled/src/models/preferences.js",
+        "client/lib/transpiled/src/metadata.js",
+        "client/lib/transpiled/src/theme-manager.js"
     ],
     "specDir": "frontend/test/spec",
     "specFiles": [

@@ -32,7 +32,6 @@ import Model from 'model';
 import Backbone from 'lib!backbone';
 import _ from 'lib!underscore';
 import Bull from 'lib!bullbone';
-import Controller from 'controller';
 
 const Dep = Backbone.Collection;
 
@@ -541,6 +540,6 @@ const Collection = Dep.extend(/** @lends Collection# */ {
 
 Collection.extend = Bull.View.extend;
 
-_.extend(Controller.prototype, Bull.Events);
+_.extend(Collection.prototype, Bull.Events);
 
 export default Collection;

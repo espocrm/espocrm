@@ -27,10 +27,10 @@
  ************************************************************************/
 
 describe('collection', function () {
-	var collection;
+	let collection;
 
-	beforeEach((done) => {
-		require(['collection'], (Collection) => {
+	beforeEach(done => {
+		Espo.loader.require(['collection'], (Collection) => {
 			collection = new Collection();
 			collection.maxSize = 5;
 
@@ -40,7 +40,7 @@ describe('collection', function () {
 		});
 	});
 
-	let populate = () => {
+	/*let populate = () => {
 		collection.add([
 			{name: '1'},
 			{name: '2'},
@@ -48,8 +48,9 @@ describe('collection', function () {
 			{name: '4'},
 			{name: '5'},
 		]);
+
 		collection.total = 15;
-	};
+	};*/
 
 	it ('#sort should set order params', () => {
 		collection.sort('test', true);
