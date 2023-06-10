@@ -26,51 +26,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-describe('model', function () {
-	var model;
+describe('model', () => {
+	let model;
 
-	beforeEach(function (done) {
-		require(['model', 'utils'], function (ModelBase) {
-			var Model = ModelBase.extend({
-				name: 'some',
-				defs: {
-					fields: {
-						'id': {
-						},
-						'name': {
-							maxLength: 150,
-							required: true
-						},
-						'email': {
-							type: 'email'
-						},
-						'phone': {
-							maxLength: 50,
-							default: '007'
-						}
-					}
-				}
-			});
-			model = new Model();
+	beforeEach(done => {
+		require(['model', 'utils'], ModelBase => {
+			const Model = class extends ModelBase {};
+
+			model = new Model({}, {
+                entityType: 'some',
+                defs: {
+                    fields: {
+                        'id': {
+                        },
+                        'name': {
+                            maxLength: 150,
+                            required: true,
+                        },
+                        'email': {
+                            type: 'email',
+                        },
+                        'phone': {
+                            maxLength: 50,
+                            default: '007'
+                        },
+                    },
+                },
+            });
+
 			done();
 		});
 	});
 
-	it ('should set urlRoot as name', function () {
+	it ('should set urlRoot as name', () => {
 		expect(model.urlRoot).toBe('some');
 	});
 
-	it ('#getFieldType should return field type or null if undefined', function () {
+	it ('#getFieldType should return field type or null if undefined', () => {
 		expect(model.getFieldType('email')).toBe('email');
 		expect(model.getFieldType('name')).toBe(null);
 	});
 
-	it ('#isRequired should return true if field is required and false if not', function () {
+	it ('#isRequired should return true if field is required and false if not', () => {
 		expect(model.isRequired('name')).toBe(true);
 		expect(model.isRequired('email')).toBe(false);
 	});
 
-	it ('should set defaults correctly', function () {
+	it ('should set defaults correctly', () => {
 		model.populateDefaults();
 		expect(model.get('phone')).toBe('007');
 	});
