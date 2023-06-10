@@ -29,7 +29,6 @@
 /** @module model */
 
 import Bull from 'lib!bullbone';
-import Backbone from 'lib!backbone';
 import _ from 'lib!underscore';
 
 /**
@@ -37,7 +36,7 @@ import _ from 'lib!underscore';
  *
  * @event Model#change
  * @param {Model} model A model.
- * @param {Object} o Options.
+ * @param {Object.<string, *>} o Options.
  */
 
 /**
@@ -46,7 +45,7 @@ import _ from 'lib!underscore';
  * @event Model#sync
  * @param {Model} model A model.
  * @param {Object} response Response from backend.
- * @param {Object} o Options.
+ * @param {Object.<string, *>} o Options.
  */
 
 /**
@@ -67,21 +66,36 @@ class Model {
 
     /**
      * A root URL.
+     *
      * @type {string|null}
      */
     urlRoot = null
 
     /**
      * A name.
+     *
      * @type {string|null}
      */
     name = null
 
     /**
      * An entity type.
+     *
      * @type {string|null}
      */
     entityType = null
+
+    /**
+     * A last request promise.
+     *
+     * @type {module:ajax.AjaxPromise|null}
+     */
+    lastSyncPromise = null
+
+    /** @private */
+    _pending
+    /** @private */
+    _changing
 
     /**
      * @param {Object.<string, *>|Model} [attributes]
@@ -95,6 +109,12 @@ class Model {
      */
     constructor(attributes, options) {
         options = options || {};
+
+        /**
+         * An ID attribute.
+         * @type {string}
+         */
+        this.idAttribute = 'id';
 
         /**
          * A record ID.
@@ -157,16 +177,58 @@ class Model {
     /**
      * @protected
      * @param {string} [method] HTTP method.
-     * @param {Model} [model]
-     * @param {Object} [options]
-     * @returns {Promise}
+     * @param {Model} model
+     * @param {Object.<string, *>} [options]
+     * @returns {module:ajax.AjaxPromise|Promise}
      */
     sync(method, model, options) {
-        if (method === 'patch') {
-            options.type = 'PUT';
+        const methodMap = {
+            'create': 'POST',
+            'update': 'PUT',
+            'patch': 'PUT',
+            'delete': 'DELETE',
+            'read': 'GET',
+        };
+
+        let httpMethod = methodMap[method];
+
+        if (!httpMethod) {
+            throw new Error(`Bad request method '${method}'.`);
         }
 
-        return Backbone.sync.call(this, method, model, options);
+        options = options || {};
+
+        let url = this.url();
+
+        if (!url) {
+            throw new Error(`No 'url'.`);
+        }
+
+        const data = model && ['create', 'update', 'patch'].includes(method) ?
+            (options.attributes || model.toJSON()) : null;
+
+        let error = options.error;
+
+        options.error = (xhr, textStatus, errorThrown) => {
+            options.textStatus = textStatus;
+            options.errorThrown = errorThrown;
+
+            if (error) {
+                error.call(options.context, xhr, textStatus, errorThrown);
+            }
+        };
+
+        let stringData = data ? JSON.stringify(data) : null;
+
+        const ajaxPromise = !options.bypassRequest ?
+            Espo.Ajax.request(url, httpMethod, stringData, options) :
+            Promise.resolve();
+
+        options.xhr = ajaxPromise.xhr;
+
+        model.trigger('request', url, httpMethod, data, ajaxPromise, options);
+
+        return ajaxPromise;
     }
 
     /**
@@ -174,25 +236,25 @@ class Model {
      *
      * @param {(string|Object)} attribute An attribute name or a {key => value} object.
      * @param {*} [value] A value or options if the first argument is an object.
-     * @param {{
-     *     silent?: boolean,
-     * }} [options] Options. `silent` won't trigger a `change` event.
+     * @param {{silent?: boolean} & Object.<string, *>} [options] Options. `silent` won't trigger a `change` event.
      * @returns {this}
      * @fires Model#change Unless `{silent: true}`.
      */
     set(attribute, value, options) {
+        if (attribute == null) {
+            return this;
+        }
+
+        let attributes;
+
         if (typeof attribute === 'object') {
-            let o = attribute;
-
-            if ('id' in o) {
-                this.id = o['id'];
-            }
-        }
-        else if (attribute === 'id') {
-            this.id = value;
+            return this.setMultiple(attribute, value);
         }
 
-        return Backbone.Model.prototype.set.call(this, attribute, value, options);
+        attributes = {};
+        attributes[attribute] = value;
+
+        return this.setMultiple(attributes, options);
     }
 
     /**
@@ -201,11 +263,95 @@ class Model {
      * @param {Object.<string, *>} attributes
      * @param {{
      *     silent?: boolean,
-     * }} [options] Options. `silent` won't trigger a `change` event.
+     *     unset?: boolean,
+     * } & Object.<string, *>} [options] Options. `silent` won't trigger a `change` event.
      * @return {this}
+     * @fires Model#change Unless `{silent: true}`.
+     * @copyright Credits to Backbone.js.
      */
     setMultiple(attributes, options) {
-        return this.set(attributes, options);
+        if (this.idAttribute in attributes) {
+            this.id = attributes[this.idAttribute];
+        }
+
+        options = options || {};
+
+        let changes = [];
+        let changing = this._changing;
+
+        this._changing = true;
+
+        if (!changing) {
+            this._previousAttributes = _.clone(this.attributes);
+            this.changed = {};
+        }
+
+        let current = this.attributes;
+        let changed = this.changed;
+        let previous = this._previousAttributes;
+
+        for (let attribute in attributes) {
+            let value = attributes[attribute];
+
+            if (!_.isEqual(current[attribute], value)) {
+                changes.push(attribute);
+            }
+
+            if (!_.isEqual(previous[attribute], value)) {
+                changed[attribute] = value;
+            } else {
+                delete changed[attribute];
+            }
+
+            options.unset ?
+                delete current[attribute] :
+                current[attribute] = value;
+        }
+
+        if (!options.silent) {
+            if (changes.length) {
+                this._pending = options;
+            }
+
+            for (let i = 0; i < changes.length; i++) {
+                this.trigger('change:' + changes[i], this, current[changes[i]], options);
+            }
+        }
+
+        if (changing) {
+            return this;
+        }
+
+        if (!options.silent) {
+            // Changes can be recursively nested within `change` events.
+            while (this._pending) {
+                options = this._pending;
+                this._pending = false;
+
+                this.trigger('change', this, options);
+            }
+        }
+
+        this._pending = false;
+        this._changing = false;
+
+        return this;
+    }
+
+    /**
+     * Unset an attribute.
+     *
+     * @param {string} attribute An attribute.
+     * @param {{silent?: boolean} & Object.<string, *>} [options] Options.
+     * @return {Model}
+     */
+    unset(attribute, options) {
+        options = {...options, unset: true};
+
+        let attributes = {};
+        attributes[attribute] = null;
+
+        return this.setMultiple(attributes, options);
     }
 
     /**
@@ -215,7 +361,7 @@ class Model {
      * @returns {*}
      */
     get(attribute) {
-        if (attribute === 'id' && this.id) {
+        if (attribute === this.idAttribute && this.id) {
             return this.id;
         }
 
@@ -231,25 +377,14 @@ class Model {
     has(attribute) {
         let value = this.get(attribute);
 
-        return (typeof value !== 'undefined');
+        return typeof value !== 'undefined';
     }
 
     /**
-     * Unset an attribute.
-     *
-     * @param {string} attribute
-     * @param {Object} [options] Options.
-     * @return {Model}
-     */
-    unset(attribute, options) {
-        return this.set(attribute, void 0, _.extend({}, options, {unset: true}));
-    }
-
-    /**
-     * Removes all attributes from the model, including the `id` attribute.
+     * Removes all attributes from the model.
      * Fires a `change` event unless `silent` is passed as an option.
      *
-     * @param {Object} [options] Options.
+     * @param {{silent?: boolean} & Object.<string, *>} [options] Options.
      */
     clear(options) {
         let attributes = {};
@@ -258,7 +393,9 @@ class Model {
             attributes[key] = void 0;
         }
 
-        return this.set(attributes, _.extend({}, options, {unset: true}));
+        options = {...options, unset: true};
+
+        return this.set(attributes, options);
     }
 
     /**
@@ -317,13 +454,6 @@ class Model {
     }
 
     /**
-     * @private
-     */
-    _validate() {
-        return true;
-    }
-
-    /**
      * Fetch values from the backend.
      *
      * @param {Object} [options] Options.
@@ -331,7 +461,7 @@ class Model {
      * @fires Model#sync
      */
     fetch(options) {
-        options = _.extend({parse: true}, options);
+        options = {...options, parse: true};
 
         let success = options.success;
 
@@ -351,51 +481,166 @@ class Model {
             this.trigger('sync', this, response, options);
         };
 
-        this.lastXhr = this.sync('read', this, options);
+        this.lastSyncPromise = this.sync('read', this, options);
 
-        return this.lastXhr;
+        return this.lastSyncPromise;
     }
 
     /**
      * Save values to the backend.
      *
-     * @param {Object} [attributes] Attribute values.
-     * @param {Object} [options] Options.
+     * @param {Object.<string, *>} [attributes] Attribute values.
+     * @param {{
+     *     patch?: boolean,
+     *     wait?: boolean,
+     * } & Object.<string, *>} [options] Options.
      * @returns {Promise}
      * @fires Model#sync
+     * @copyright Credits to Backbone.js.
      */
     save(attributes, options) {
-        return Backbone.Model.prototype.save.call(this, attributes, options);
+        options = {...options, parse: true};
+
+        if (attributes && !options.wait) {
+            this.setMultiple(attributes, options);
+        }
+
+        let success = options.success;
+
+        let setAttributes = this.attributes;
+
+        options.success = response => {
+            this.attributes = attributes;
+
+            let responseAttributes = options.parse ?
+                this.parse(response, options) :
+                response;
+
+            if (options.wait) {
+                responseAttributes = {...attributes, ...responseAttributes};
+            }
+
+            if (responseAttributes) {
+                this.setMultiple(responseAttributes, options);
+            }
+
+            if (success) {
+                success.call(options.context, this, response, options);
+            }
+
+            this.trigger('sync', this, response, options);
+        };
+
+        let error = options.error;
+
+        options.error = response => {
+            if (error) {
+                error.call(options.context, this, response, options);
+            }
+
+            this.trigger('error', this, response, options);
+        };
+
+        if (attributes && options.wait) {
+            // Set temporary attributes to properly find new ids.
+            this.attributes =  {...setAttributes, ...attributes};
+        }
+
+        let method = this.isNew() ?
+            'create' :
+            (options.patch ? 'patch' : 'update');
+
+        if (method === 'patch') {
+            options.attributes = attributes;
+        }
+
+        const result = this.sync(method, this, options);
+
+        this.attributes = setAttributes;
+
+        return result;
     }
 
     /**
      * Delete the record in the backend.
      *
-     * @param {{wait: boolean}} [options] Options.
+     * @param {{wait: boolean} & Object.<string, *>} [options] Options.
      * @returns {Promise}
      * @fires Model#sync
+     * @copyright Credits to Backbone.js.
      */
     destroy(options) {
-        return Backbone.Model.prototype.destroy.call(this, options);
+        options = _.clone(options || {});
+
+        let success = options.success;
+
+        const destroy = () => {
+            this.stopListening();
+            this.trigger('destroy', this, this.collection, options);
+        };
+
+        options.success = response => {
+            if (options.wait) {
+                destroy();
+            }
+
+            if (success) {
+                success.call(options.context, this, response, options);
+            }
+
+            if (!this.isNew()) {
+                this.trigger('sync', this, response, options);
+            }
+        };
+
+        if (this.isNew()) {
+            _.defer(options.success);
+
+            if (!options.wait) {
+                destroy();
+            }
+
+            return Promise.resolve();
+        }
+
+        let error = options.error;
+
+        options.error = response => {
+            if (error) {
+                error.call(options.context, this, response, options);
+            }
+
+            this.trigger('error', this, response, options);
+        };
+
+        let result = this.sync('delete', this, options);
+
+        if (!options.wait) {
+            destroy();
+        }
+
+        return result;
     }
 
-    /**
-     * @private
-     */
+    /** @private */
     url() {
-        let base = _.result(this, 'urlRoot');
+        let urlRoot = this.urlRoot;
 
-        if (!base) {
-            throw new Error("No URL.");
+        if (!urlRoot && this.collection) {
+            urlRoot = this.collection.urlRoot
+        }
+
+        if (!urlRoot) {
+            throw new Error("No urlRoot.");
         }
 
         if (this.isNew()) {
-            return base;
+            return urlRoot;
         }
 
-        let id = this.get('id');
+        let id = this.get(this.idAttribute);
 
-        return base.replace(/[^\/]$/, '$&/') + encodeURIComponent(id);
+        return urlRoot.replace(/[^\/]$/, '$&/') + encodeURIComponent(id);
     }
 
     /**
@@ -740,8 +985,8 @@ class Model {
      * Abort the last fetch.
      */
     abortLastFetch() {
-        if (this.lastXhr && this.lastXhr.readyState < 4) {
-            this.lastXhr.abort();
+        if (this.lastSyncPromise && this.lastSyncPromise.getReadyState() < 4) {
+            this.lastSyncPromise.abort();
         }
     }
 }

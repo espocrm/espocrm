@@ -50,34 +50,47 @@ const Ajax = Espo.Ajax = {
      * Request.
      *
      * @param {string} url An URL.
-     * @param {string} type A method.
+     * @param {string} method An HTTP method.
      * @param {any} [data] Data.
-     * @param {Espo.Ajax~Options} [options] Options.
-     * @returns {Promise<any>}
+     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
+     * @returns {AjaxPromise<any>}
      */
-    request: function (url, type, data, options) {
+    request: function (url, method, data, options) {
         options = options || {};
 
-        options.type = type;
+        options.type = method;
         options.url = url;
 
         if (data) {
             options.data = data;
         }
 
-        return new AjaxPromise((resolve, reject) => {
-            $.ajax(options)
+        let promiseWrapper = {};
+
+        let promise = new AjaxPromise((resolve, reject) => {
+            let xhr = $.ajax(options);
+
+            xhr
                 .then((response, status, xhr) => {
-                    let obj = options.fullResponse ?
-                        new XhrWrapper(xhr) :
-                        response;
+                    let obj = options.fullResponse ? new XhrWrapper(xhr) : response;
 
                     resolve(obj);
                 })
-                .fail(xhr => {
-                    reject(xhr);
-                });
+                .fail(xhr => reject(xhr));
+
+            if (promiseWrapper.promise) {
+                promiseWrapper.promise.xhr = xhr;
+
+                return;
+            }
+
+            promiseWrapper.xhr = xhr;
         });
+
+        promiseWrapper.promise = promise;
+        promise.xhr = promise.xhr || promiseWrapper.xhr;
+
+        return promise;
     },
 
     /**
@@ -157,13 +170,63 @@ const Ajax = Espo.Ajax = {
     },
 };
 
-// For bc.
+/**
+ * @memberOf module:ajax
+ */
 class AjaxPromise extends Promise {
+
+    /**
+     * @type {JQueryXHR|null}
+     * @internal
+     */
+    xhr = null
+
+    isAborted = false
+
+    /** @deprecated Use `catch`. */
     fail(...args) {
         return this.catch(args[0]);
     }
+    /** @deprecated Use `then`. */
     done(...args) {
         return this.then(args[0]);
+    }
+
+    /**
+     * Abort the request.
+     */
+    abort() {
+        this.isAborted = true;
+
+        if (this.xhr) {
+            this.xhr.abort();
+        }
+    }
+
+    /**
+     * Get a ready state.
+     *
+     * @return {Number}
+     */
+    getReadyState() {
+        if (!this.xhr) {
+            return 0;
+        }
+
+        return this.xhr.readyState || 0;
+    }
+
+    /**
+     * Get a status code
+     *
+     * @return {Number}
+     */
+    getStatus() {
+        if (!this.xhr) {
+            return 0;
+        }
+
+        return this.xhr.status;
     }
 }
 
@@ -171,6 +234,7 @@ class AjaxPromise extends Promise {
  * @name module:ajax.XhrWrapper
  */
 class XhrWrapper {
+
     /**
      * @param {JQueryXHR} xhr
      */

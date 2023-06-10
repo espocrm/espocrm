@@ -125,8 +125,8 @@ class DetailView extends MainView {
         };
 
         if (
-            this.model.lastXhr &&
-            this.model.lastXhr.status === 403
+            this.model.lastSyncPromise &&
+            this.model.lastSyncPromise.getStatus() === 403
         ) {
             redirect();
 
