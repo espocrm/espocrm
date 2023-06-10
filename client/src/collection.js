@@ -348,6 +348,7 @@ const Collection = Dep.extend(/** @lends Collection# */ {
     /**
      * Parse a response from the backend.
      *
+     * @todo Rename to `handleResponse`.
      * @param {Object} response A response.
      * @param {Object} options Options.
      * @returns {Collection[]}

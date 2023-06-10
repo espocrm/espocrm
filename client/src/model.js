@@ -165,13 +165,13 @@ class Model {
     }
 
     /**
-     * @todo Revise naming.
-     *
-     * @public
+     * @deprecated Use `getClonedAttributesInstead`.
      * @return {Object.<string, *>}
      */
     toJSON() {
-        return Espo.Utils.cloneDeep(this.attributes);
+        console.warn(`model.toJSON is deprecated. Use 'getClonedAttributes' instead.`);
+
+        return this.getClonedAttributes();
     }
 
     /**
@@ -205,7 +205,7 @@ class Model {
         }
 
         const data = model && ['create', 'update', 'patch'].includes(method) ?
-            (options.attributes || model.toJSON()) : null;
+            (options.attributes || model.getClonedAttributes()) : null;
 
         let error = options.error;
 
@@ -461,14 +461,12 @@ class Model {
      * @fires Model#sync
      */
     fetch(options) {
-        options = {...options, parse: true};
+        options = {...options};
 
         let success = options.success;
 
         options.success = response => {
-            let serverAttributes = options.parse ?
-                this.parse(response, options) :
-                response;
+            let serverAttributes = this.handleResponse(response, options);
 
             if (!this.set(serverAttributes, options)) {
                 return false;
@@ -499,7 +497,7 @@ class Model {
      * @copyright Credits to Backbone.js.
      */
     save(attributes, options) {
-        options = {...options, parse: true};
+        options = {...options};
 
         if (attributes && !options.wait) {
             this.setMultiple(attributes, options);
@@ -512,9 +510,7 @@ class Model {
         options.success = response => {
             this.attributes = attributes;
 
-            let responseAttributes = options.parse ?
-                this.parse(response, options) :
-                response;
+            let responseAttributes = this.handleResponse(response, options);
 
             if (options.wait) {
                 responseAttributes = {...attributes, ...responseAttributes};
@@ -644,12 +640,14 @@ class Model {
     }
 
     /**
+     * Handle a response to set
+     *
      * @protected
-     * @param {*} response
-     * @param {Object.<string, *>} options
-     * @return {*}
+     * @param {*} response A response from the backend.
+     * @param {Object.<string, *>} options Options.
+     * @return {*} Attributes.
      */
-    parse(response, options) {
+    handleResponse(response, options) {
         return response;
     }
 
