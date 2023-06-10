@@ -243,7 +243,7 @@ class DetailMiddleRecordView extends View {
      * @todo Remove.
      */
     getView(name) {
-        var view = Dep.prototype.getView.call(this, name);
+        let view = super.getView(name);
 
         if (!view) {
             view = this.getFieldView(name);
