@@ -65,11 +65,18 @@ import _ from 'lib!underscore';
 class Model {
 
     /**
-     * A root URL.
+     * A root URL. An ID will be appended. Used for syncing with backend.
      *
      * @type {string|null}
      */
     urlRoot = null
+
+    /**
+     * A URL. If not empty, then will be used for syncing instead of `urlRoot`.
+     *
+     * @type {string|null}
+     */
+    url = null
 
     /**
      * A name.
@@ -102,9 +109,11 @@ class Model {
      * @param {{
      *     collection?: module:collection,
      *     entityType?: string,
+     *     urlRoot?: string,
+     *     url?: string,
      *     defs?: module:model~defs,
      *     user?: module:models/user,
-     *     dateTime?: module:date-time
+     *     dateTime?: module:date-time,
      * }} [options]
      */
     constructor(attributes, options) {
@@ -155,6 +164,9 @@ class Model {
             this.urlRoot = options.entityType;
         }
 
+        this.urlRoot = options.urlRoot || this.urlRoot;
+        this.url = options.url || this.url;
+
         /** @private */
         this.dateTime = options.dateTime || null;
 
@@ -188,7 +200,7 @@ class Model {
 
         options = options || {};
 
-        let url = this.url();
+        let url = this.composeSyncUrl();
 
         if (!url) {
             throw new Error(`No 'url'.`);
@@ -446,8 +458,8 @@ class Model {
     /**
      * Fetch values from the backend.
      *
-     * @param {Object} [options] Options.
-     * @returns {Promise<Object>}
+     * @param {Object.<string, *>} [options] Options.
+     * @returns {Promise}
      * @fires Model#sync
      */
     fetch(options) {
@@ -456,7 +468,7 @@ class Model {
         let success = options.success;
 
         options.success = response => {
-            let serverAttributes = this.handleResponse(response, options);
+            let serverAttributes = this.prepareAttributes(response, options);
 
             if (!this.set(serverAttributes, options)) {
                 return false;
@@ -500,7 +512,7 @@ class Model {
         options.success = response => {
             this.attributes = attributes;
 
-            let responseAttributes = this.handleResponse(response, options);
+            let responseAttributes = this.prepareAttributes(response, options);
 
             if (options.wait) {
                 responseAttributes = {...attributes, ...responseAttributes};
@@ -608,8 +620,17 @@ class Model {
         return result;
     }
 
-    /** @private */
-    url() {
+    /**
+     * Compose a URL for syncing.
+     *
+     * @protected
+     * @return {string}
+     */
+    composeSyncUrl() {
+        if (this.url) {
+            return this.url;
+        }
+
         let urlRoot = this.urlRoot;
 
         if (!urlRoot && this.collection) {
@@ -630,14 +651,14 @@ class Model {
     }
 
     /**
-     * Handle a response to set
+     * Prepare attributes.
      *
-     * @protected
      * @param {*} response A response from the backend.
      * @param {Object.<string, *>} options Options.
      * @return {*} Attributes.
+     * @internal
      */
-    handleResponse(response, options) {
+    prepareAttributes(response, options) {
         return response;
     }
 
@@ -651,8 +672,10 @@ class Model {
             Espo.Utils.cloneDeep(this.attributes),
             {
                 entityType: this.entityType,
-                dateTime: this.dateTime,
+                urlRoot: this.urlRoot,
+                url: this.url,
                 defs: this.defs,
+                dateTime: this.dateTime,
             }
         );
     }

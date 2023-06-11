@@ -41,8 +41,8 @@ export default Dep.extend({
         return seed;
     },
 
-    parse: function (response) {
-        let list = Dep.prototype.parse.call(this, response);
+    prepareAttributes: function (response) {
+        let list = Dep.prototype.prepareAttributes.call(this, response);
 
         let seed = this.clone();
 

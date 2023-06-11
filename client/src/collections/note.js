@@ -35,10 +35,10 @@ import Dep from 'collection';
 export default Dep.extend(/** @lends Class# */{
 
     /** @inheritDoc */
-    parse: function (response, params) {
+    prepareAttributes: function (response, params) {
         let total = this.total;
 
-        let list = Dep.prototype.parse.call(this, response, params);
+        let list = Dep.prototype.prepareAttributes.call(this, response, params);
 
         if (params.data && params.data.after) {
             if (total >= 0 && response.total >= 0) {

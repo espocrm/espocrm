@@ -29,11 +29,8 @@
 /** @module collection */
 
 import Model from 'model';
-import Backbone from 'lib!backbone';
-import _ from 'lib!underscore';
 import Bull from 'lib!bullbone';
-
-const Dep = Backbone.Collection;
+import _ from 'lib!underscore';
 
 /**
  * On sync with backend.
@@ -53,168 +50,147 @@ const Dep = Backbone.Collection;
  */
 
 /**
- * Add a model or models.
+ * On reset.
  *
- * @function add
- * @memberof Collection#
- * @param {Model|Model[]} models A model or models.
- * @param {Object} [options] Options.
- *
- * @fires Collection#update Unless `{silent: true}`.
+ * @event Collection#reset
+ * @param {Collection} collection A collection.
+ * @param {Object} o Options.
  */
 
 /**
- * Remove a model or models.
+ * A collection.
  *
- * @function remove
- * @memberof Collection#
- * @param {Model|Model[]|string|string[]} models A model, models, ID or IDs.
- * @param {Object} [options] Options.
- *
- * @fires Collection#update Unless `{silent: true}`.
- */
-
-/**
- * Append a model.
- *
- * @function push
- * @memberof Collection#
- * @param {Model} model A model.
- * @param {Object} [options] Options.
- */
-
-/**
- * Remove and return the last model from the collection.
- *
- * @function pop
- * @memberof Collection#
- * @param {Object} [options] Options.
- */
-
-/**
- * @class
- * @extends Backbone.Collection.prototype
  * @mixes Bull.Events
+ * @copyright Credits to Backbone.js.
  */
-const Collection = Dep.extend(/** @lends Collection# */ {
-
-    /**
-     * A number of records.
-     *
-     * @name length
-     * @type {number}
-     * @memberof Collection#
-     */
-
-    /**
-     * Models.
-     *
-     * @name length
-     * @type {Model[]}
-     * @memberof Collection#
-     */
-
-    /**
-     * An API URL.
-     *
-     * @name url
-     * @type {string|null}
-     * @public
-     * @memberof Collection.prototype
-     */
-
-    /**
-     * A name.
-     *
-     * @type {string|null}
-     */
-    name: null,
+class Collection {
 
     /**
      * An entity type.
      *
      * @type {string|null}
      */
-    entityType: null,
+    entityType = null
 
     /**
      * A total number of records.
      *
      * @type {number}
      */
-    total: 0,
+    total = 0
 
     /**
      * A current offset (for pagination).
      *
      * @type {number}
      */
-    offset: 0,
+    offset = 0
 
     /**
      * A max size (for pagination).
      *
      * @type {number}
      */
-    maxSize: 20,
+    maxSize = 20
 
     /**
      * An order.
      *
      * @type {boolean|'asc'|'desc'|null}
      */
-    order: null,
+    order = null
 
     /**
      * An order-by field.
      *
      * @type {string|null}
      */
-    orderBy: null,
+    orderBy = null
 
     /**
      * A where clause.
      *
      * @type {Array.<Object>|null}
      */
-    where: null,
+    where = null
 
     /**
      * @deprecated
      */
-    whereAdditional: null,
+    whereAdditional = null
 
     /**
-     * @type {number}
-     */
-    lengthCorrection: 0,
-
-    /**
-     * @type {number}
-     */
-    maxMaxSize: 0,
-
-    /**
-     * Initialize.
+     * A length correction.
      *
-     * @protected
-     * @param {Model[]} models Models.
+     * @type {number}
+     */
+    lengthCorrection = 0
+
+    /**
+     * A max max-size.
+     *
+     * @type {number}
+     */
+    maxMaxSize = 0
+
+    /**
+     * A where function.
+     *
+     * @type {function(): Object[]}
+     */
+    whereFunction
+
+
+    /**
+     * A last sync request promise.
+     *
+     * @type {module:ajax.AjaxPromise|null}
+     */
+    lastSyncPromise = null
+
+    /**
+     * @param {Model[]|null} [models] Models.
      * @param {{
      *     entityType?: string,
      *     model?: Model.prototype,
      *     defs?: module:model~defs,
      *     order?: 'asc'|'desc'|boolean|null,
      *     orderBy?: string|null,
+     *     urlRoot?: string,
+     *     url?: string,
      * }} options Options.
      */
-    initialize: function (models, options) {
-        options = options || {};
+    constructor(models, options) {
+        options = {...options};
 
-        this.name = options.entityType || options.name || this.name;
-        this.urlRoot = this.urlRoot || this.name;
-        this.url = this.url || this.urlRoot;
+        if (options.model) {
+            this.model = options.model;
+        }
 
-        this.orderBy = this.sortBy = options.orderBy || options.sortBy || this.orderBy || this.sortBy;
+        this._reset();
+
+        if (options.entityType) {
+            this.entityType = options.entityType;
+            /** @deprecated */
+            this.name = this.entityType;
+        }
+
+        /**
+         * A root URL.
+         *
+         * @public
+         * @type {string|null}
+         */
+        this.urlRoot = options.urlRoot || this.urlRoot || this.entityType;
+
+        /**
+         * An URL.
+         *
+         * @type {string|null}
+         */
+        this.url = options.url || this.url || this.urlRoot;
+
+        this.orderBy = options.orderBy || this.orderBy;
         this.order = options.order || this.order;
 
         this.defaultOrder = this.order;
@@ -230,37 +206,438 @@ const Collection = Dep.extend(/** @lends Collection# */ {
          * @type {Model#}
          */
         this.model = options.model || Model;
-    },
+
+        if (models) {
+            this.reset(models, {silent: true, ...options});
+        }
+    }
 
     /**
-     * @private
+     * Add models or a model.
+     *
+     * @param {Model[]|Model} models Models ar a model.
+     * @param {{
+     *     merge?: boolean,
+     *     at?: number,
+     *     silent?: boolean,
+     * }} options Options. `at` – position; `merge` – merge existing models, otherwise, they are ignored.
+     * @return {this}
+     * @fires Collection#update
      */
-    _onModelEvent: function(event, model, collection, options) {
-        if (event === 'sync' && collection !== this) {
-            return;
+    add(models, options) {
+        this.set(models, {merge: false, ...options, ...addOptions});
+
+        return this;
+    }
+
+    /**
+     * Remove models or a model.
+     *
+     * @param {Model[]|Model} models Models ar a model.
+     * @param {{
+     *     silent?: boolean,
+     * }} options Options.
+     * @return {this}
+     * @fires Collection#update
+     */
+    remove(models, options) {
+        options = {...options};
+
+        let singular = !_.isArray(models);
+
+        models = singular ? [models] : models.slice();
+
+        let removed = this._removeModels(models, options);
+
+        if (!options.silent && removed.length) {
+            options.changes = {
+                added: [],
+                merged: [],
+                removed: removed,
+            };
+
+            this.trigger('update', this, options);
         }
 
-        Dep.prototype._onModelEvent.apply(this, arguments);
-    },
+        return this;
+    }
+
+    /**
+     * @protected
+     * @param {Model[]|Model} models Models ar a model.
+     * @param {{
+     *     silent?: boolean,
+     *     at?: number,
+     *     prepare?: boolean,
+     *     add?: boolean,
+     *     merge?: boolean,
+     *     remove?: boolean,
+     *     index?: number,
+     * }} options
+     * @return {Model[]}
+     */
+    set(models, options) {
+        if (models == null) {
+            return [];
+        }
+
+        options = {...setOptions, ...options};
+
+        if (options.prepare && !this._isModel(models)) {
+            models = this.prepareAttributes(models, options) || [];
+        }
+
+        let singular = !_.isArray(models);
+        models = singular ? [models] : models.slice();
+
+        let at = options.at;
+
+        if (at != null) {
+            at = +at;
+        }
+
+        if (at > this.length) {
+            at = this.length;
+        }
+
+        if (at < 0) {
+            at += this.length + 1;
+        }
+
+        let set = [];
+        let toAdd = [];
+        let toMerge = [];
+        let toRemove = [];
+        let modelMap = {};
+
+        let add = options.add;
+        let merge = options.merge;
+        let remove = options.remove;
+
+        let model, i;
+
+        for (i = 0; i < models.length; i++) {
+            model = models[i];
+
+            let existing = this._get(model);
+
+            if (existing) {
+                if (merge && model !== existing) {
+                    let attributes = this._isModel(model) ?
+                        model.attributes :
+                        model;
+
+                    if (options.prepare) {
+                        attributes = existing.prepareAttributes(attributes, options);
+                    }
+
+                    existing.set(attributes, options);
+                    toMerge.push(existing);
+                }
+
+                if (!modelMap[existing.cid]) {
+                    modelMap[existing.cid] = true;
+                    set.push(existing);
+                }
+
+                models[i] = existing;
+            }
+            else if (add) {
+                model = models[i] = this._prepareModel(model, options);
+
+                if (model) {
+                    toAdd.push(model);
+
+                    this._addReference(model, options);
+
+                    modelMap[model.cid] = true;
+                    set.push(model);
+                }
+            }
+        }
+
+        // Remove stale models.
+        if (remove) {
+            for (i = 0; i < this.length; i++) {
+                model = this.models[i];
+
+                if (!modelMap[model.cid]) {
+                    toRemove.push(model);
+                }
+            }
+
+            if (toRemove.length) {
+                this._removeModels(toRemove, options);
+            }
+        }
+
+        let orderChanged = false;
+        let replace = add && remove;
+
+        if (set.length && replace) {
+            orderChanged =
+                this.length !== set.length ||
+                _.some(this.models, (m, index) => {
+                    return m !== set[index];
+                });
+
+            this.models.length = 0;
+            splice(this.models, set, 0);
+
+            this.length = this.models.length;
+        }
+        else if (toAdd.length) {
+            splice(this.models, toAdd, at == null ? this.length : at);
+
+            this.length = this.models.length;
+        }
+
+        if (!options.silent) {
+            for (i = 0; i < toAdd.length; i++) {
+                if (at != null) {
+                    options.index = at + i;
+                }
+
+                model = toAdd[i];
+
+                model.trigger('add', model, this, options);
+            }
+
+            if (orderChanged) {
+                this.trigger('sort', this, options);
+            }
+
+            if (toAdd.length || toRemove.length || toMerge.length) {
+                options.changes = {
+                    added: toAdd,
+                    removed: toRemove,
+                    merged: toMerge
+                };
+
+                this.trigger('update', this, options);
+            }
+        }
+
+        return models;
+    }
 
     /**
      * Reset.
      *
-     * @param {Model[]} [models]
-     * @param {Object} [options]
+     * @param {Model[]|null} [models] Models to replace the collection with.
+     * @param {{
+     *     silent?: boolean,
+     * }} [options]
+     * @return {this}
+     * @fires Collection#reset
      */
-    reset: function (models, options) {
+    reset(models, options) {
         this.lengthCorrection = 0;
 
-        Dep.prototype.reset.call(this, models, options);
-    },
+        options = options ? _.clone(options) : {};
+
+        for (let i = 0; i < this.models.length; i++) {
+            this._removeReference(this.models[i], options);
+        }
+
+        options.previousModels = this.models;
+
+        this._reset();
+
+        if (models) {
+            this.add(models, {silent: true, ...options});
+        }
+
+        if (!options.silent) {
+            this.trigger('reset', this, options);
+        }
+
+        return this;
+    }
+
+    /**
+     * Add a model at the end.
+     *
+     * @param {Model} model A model.
+     * @param {{
+     *     silent?: boolean,
+     * }} options Options
+     * @return {this}
+     */
+    push(model, options) {
+        this.add(model, {at: this.length, ...options});
+
+        return this;
+    }
+
+    /**
+     * Remove and return the last model.
+     *
+     * @param {{
+     *     silent?: boolean,
+     * }} options Options
+     * @return {Model|null}
+     */
+    pop(options) {
+        let model = this.at(this.length - 1);
+
+        if (!model) {
+            return null;
+        }
+
+        this.remove(model, options);
+
+        return model;
+    }
+
+    /**
+     * Add a model to the beginning.
+     *
+     * @param {Model} model A model.
+     * @param {{
+     *     silent?: boolean,
+     * }} options Options
+     * @return {this}
+     */
+    unshift(model, options) {
+        this.add(model, {at: 0, ...options});
+
+        return this;
+    }
+
+    /**
+     * Remove and return the first model.
+     *
+     * @param {{
+     *     silent?: boolean,
+     * }} options Options
+     * @return {Model|null}
+     */
+    shift(options) {
+        let model = this.at(0);
+
+        if (!model) {
+            return null;
+        }
+
+        this.remove(model, options);
+
+        return model;
+    }
+
+    /**
+     * Get a model by an ID.
+     *
+     * @todo Usage to _get.
+     * @param {string} id An ID.
+     * @return {Model|undefined}
+     */
+    get(id) {
+        return this._get(id);
+    }
+
+    /**
+     * Whether a model in the collection.
+     *
+     * @todo Usage to _has.
+     * @param {string} id An ID.
+     * @return {boolean}
+     */
+    has(id) {
+        return this._has(id);
+    }
+
+    /**
+     * Get a model by index.
+     *
+     * @param {number} index An index. Can be negative, then counted from the end.
+     * @return {Model|undefined}
+     */
+    at(index) {
+        if (index < 0) {
+            index += this.length;
+        }
+
+        return this.models[index];
+    }
+
+    /**
+     * Iterates through a collection.
+     *
+     * @param {function(Model)} callback A function.
+     * @param {Object} [context] A context.
+     */
+    forEach(callback, context) {
+        return this.models.forEach(callback, context);
+    }
+
+    /**
+     * Get an index of a model. Returns -1 if not found.
+     *
+     * @param {Model} model A model
+     * @return {number}
+     */
+    indexOf(model) {
+        return this.models.indexOf(model);
+    }
+
+    /**
+     * @private
+     * @param {string|Object.<string, *>|Model} obj
+     * @return {boolean}
+     */
+    _has(obj) {
+        return !!this._get(obj)
+    }
+
+    /**
+     * @private
+     * @param {string|Object.<string, *>|Model} obj
+     * @return {Model|undefined}
+     */
+    _get(obj) {
+        if (obj == null) {
+            return void 0;
+        }
+
+        return this._byId[obj] ||
+            this._byId[this.modelId(obj.attributes || obj)] ||
+            obj.cid && this._byId[obj.cid];
+    }
+
+    /**
+     * @protected
+     * @param {Object.<string, *>} attributes
+     * @return {*}
+     */
+    modelId(attributes) {
+        return attributes['id'];
+    }
+
+    /** @private */
+    _reset() {
+        /**
+         * A number of records.
+         */
+        this.length = 0;
+
+        /**
+         * Models.
+         *
+         * @type {Model[]}
+         */
+        this.models = [];
+
+        /** @private */
+        this._byId  = {};
+    }
 
     /**
      * @param {string} orderBy An order field.
      * @param {bool|null|'desc'|'asc'} [order] True for desc.
      * @returns {Promise}
      */
-    sort: function (orderBy, order) {
+    sort(orderBy, order) {
         this.orderBy = orderBy;
 
         if (order === true) {
@@ -272,43 +649,34 @@ const Collection = Dep.extend(/** @lends Collection# */ {
 
         this.order = order || 'asc';
 
-        if (typeof this.asc !== 'undefined') { // TODO remove in 5.7
-            this.asc = this.order === 'asc';
-            this.sortBy = orderBy;
-        }
-
         return this.fetch();
-    },
+    }
 
     /**
      * Next page.
      */
-    nextPage: function () {
-        var offset = this.offset + this.maxSize;
-
-        this.setOffset(offset);
-    },
+    nextPage() {
+        this.setOffset(this.offset + this.maxSize);
+    }
 
     /**
      * Previous page.
      */
-    previousPage: function () {
-        var offset = this.offset - this.maxSize;
-
-        this.setOffset(offset);
-    },
+    previousPage() {
+        this.setOffset(this.offset - this.maxSize);
+    }
 
     /**
      * First page.
      */
-    firstPage: function () {
+    firstPage() {
         this.setOffset(0);
-    },
+    }
 
     /**
      * Last page.
      */
-    lastPage: function () {
+    lastPage() {
         let offset = this.total - this.total % this.maxSize;
 
         if (offset === this.total) {
@@ -316,14 +684,14 @@ const Collection = Dep.extend(/** @lends Collection# */ {
         }
 
         this.setOffset(offset);
-    },
+    }
 
     /**
      * Set an offset.
      *
      * @param {number} offset Offset.
      */
-    setOffset: function (offset) {
+    setOffset(offset) {
         if (offset < 0) {
             throw new RangeError('offset can not be less than 0');
         }
@@ -334,55 +702,50 @@ const Collection = Dep.extend(/** @lends Collection# */ {
 
         this.offset = offset;
         this.fetch();
-    },
+    }
 
     /**
      * Has more.
      *
      * @return {boolean}
      */
-    hasMore: function () {
+    hasMore() {
         return this.total > this.length || this.total === -1;
-    },
+    }
 
     /**
-     * Parse a response from the backend.
+     * Prepare attributes.
      *
-     * @todo Rename to `handleResponse`.
-     * @param {Object} response A response.
-     * @param {Object} options Options.
-     * @returns {Collection[]}
+     * @protected
+     * @param {*} response A response from the backend.
+     * @param {Object.<string, *>} options Options.
+     * @returns {Object.<string, *>[]}
      */
-    parse: function (response, options) {
+    prepareAttributes(response, options) {
         this.total = response.total;
-
-        if ('additionalData' in response) {
-            this.dataAdditional = response.additionalData;
-        }
-        else {
-            this.dataAdditional = null;
-        }
+        this.dataAdditional = response.additionalData || null;
 
         return response.list;
-    },
+    }
 
     /**
-     * Fetches from the backend.
+     * Fetch from the backend.
      *
-     * @param {Object} [options] Options.
+     * @param {{
+     *     remove?: boolean,
+     *     more?: boolean,
+     * } & Object.<string, *>} [options] Options.
      * @returns {Promise}
-     *
      * @fires Collection#sync Unless `{silent: true}`.
      */
-    fetch: function (options) {
-        options = options || {};
+    fetch(options) {
+        options = {...options};
 
-        options.data = _.extend(options.data || {}, this.data);
+        options.data = {...options.data, ...this.data};
 
         this.offset = options.offset || this.offset;
-        this.orderBy = options.orderBy || options.sortBy || this.orderBy;
+        this.orderBy = options.orderBy || this.orderBy;
         this.order = options.order || this.order;
-
         this.where = options.where || this.where;
 
         let length = this.length + this.lengthCorrection;
@@ -405,57 +768,77 @@ const Collection = Dep.extend(/** @lends Collection# */ {
         options.data.order = this.order;
         options.data.where = this.getWhere();
 
-        if (typeof this.asc !== 'undefined') { // TODO remove in 5.7
-            options.data.asc = this.asc;
-            options.data.sortBy = this.sortBy;
+        options = {prepare: true, ...options};
 
-            delete options.data.orderBy;
-            delete options.data.order;
-        }
+        let success = options.success;
 
-        this.lastXhr = Dep.prototype.fetch.call(this, options);
+        options.success = response => {
+            options.reset ?
+                this.reset(response, options) :
+                this.set(response, options);
 
-        return this.lastXhr;
-    },
+            if (success) {
+                success.call(options.context, this, response, options);
+            }
+
+            this.trigger('sync', this, response, options);
+        };
+
+        let error = options.error;
+
+        options.error = response => {
+            if (error) {
+                error.call(options.context, this, response, options);
+            }
+
+            this.trigger('error', this, response, options);
+        };
+
+        this.lastSyncPromise = Model.prototype.sync.call(this, 'read', this, options);
+
+        return this.lastSyncPromise;
+    }
 
     /**
      * Abort the last fetch.
      */
-    abortLastFetch: function () {
-        if (this.lastXhr && this.lastXhr.readyState < 4) {
-            this.lastXhr.abort();
+    abortLastFetch() {
+        if (this.lastSyncPromise && this.lastSyncPromise.getReadyState() < 4) {
+            this.lastSyncPromise.abort();
         }
-    },
+    }
 
     /**
      * Get a where clause.
      *
      * @returns {Object[]}
      */
-    getWhere: function () {
-        var where = (this.where || []).concat(this.whereAdditional || []);
+    getWhere() {
+        let where = (this.where || []).concat(this.whereAdditional || []);
 
         if (this.whereFunction) {
             where = where.concat(this.whereFunction() || []);
         }
 
         return where;
-    },
+    }
 
     /**
+     * Get an entity type.
+     *
      * @returns {string}
      */
-    getEntityType: function () {
-        return this.name;
-    },
+    getEntityType() {
+        return this.entityType || this.name;
+    }
 
     /**
      * Reset the order to default.
      */
-    resetOrderToDefault: function () {
+    resetOrderToDefault() {
         this.orderBy = this.defaultOrderBy;
         this.order = this.defaultOrder;
-    },
+    }
 
     /**
      * Set an order.
@@ -464,7 +847,7 @@ const Collection = Dep.extend(/** @lends Collection# */ {
      * @param {boolean|'asc'|'desc'|null} [order]
      * @param {boolean} [setDefault]
      */
-    setOrder: function (orderBy, order, setDefault) {
+    setOrder(orderBy, order, setDefault) {
         this.orderBy = orderBy;
         this.order = order;
 
@@ -472,22 +855,25 @@ const Collection = Dep.extend(/** @lends Collection# */ {
             this.defaultOrderBy = orderBy;
             this.defaultOrder = order;
         }
-    },
+    }
 
     /**
      * Clone.
      *
      * @return {Collection}
      */
-    clone: function () {
-        /** @type {Collection} */
-        let collection = Dep.prototype.clone.call(this);
+    clone() {
+        const collection = new this.constructor(this.models, {
+            model: this.model,
+            entityType: this.entityType,
+            defs: this.defs,
+            orderBy: this.orderBy,
+            order: this.order,
+        });
 
         collection.name = this.name;
         collection.urlRoot = this.urlRoot;
         collection.url = this.url;
-        collection.orderBy = this.orderBy;
-        collection.order = this.order;
         collection.defaultOrder = this.defaultOrder;
         collection.defaultOrderBy = this.defaultOrderBy;
         collection.data = Espo.Utils.cloneDeep(this.data);
@@ -497,28 +883,142 @@ const Collection = Dep.extend(/** @lends Collection# */ {
         collection.offset = this.offset;
         collection.maxSize = this.maxSize;
         collection.maxMaxSize = this.maxMaxSize;
-
-        collection.defs = this.defs;
+        collection.whereFunction = this.whereFunction;
 
         return collection;
-    },
-
-    /** @private */
-    _isModel: function(object) {
-        return object instanceof Model;
-    },
+    }
 
     /**
      * Prepare an empty model instance.
      *
      * @return {Model}
      */
-    prepareModel: function () {
+    prepareModel() {
         return this._prepareModel({}, {});
-    },
+    }
+
+    /**
+     * Compose a URL for syncing.
+     *
+     * @protected
+     * @return {string}
+     */
+    composeSyncUrl() {
+        return this.url;
+    }
+
+    /** @private */
+    _isModel(object) {
+        return object instanceof Model;
+    }
+
+    /** @private */
+    _removeModels(models, options) {
+        let removed = [];
+
+        for (let i = 0; i < models.length; i++) {
+            let model = this.get(models[i]);
+
+            if (!model) {
+                continue;
+            }
+
+            let index = this.models.indexOf(model);
+
+            this.models.splice(index, 1);
+            this.length--;
+
+            delete this._byId[model.cid];
+            let id = this.modelId(model.attributes);
+
+            if (id != null) {
+                delete this._byId[id];
+            }
+
+            if (!options.silent) {
+                options.index = index;
+
+                model.trigger('remove', model, this, options);
+            }
+
+            removed.push(model);
+
+            this._removeReference(model, options);
+        }
+
+        return removed;
+    }
+
+    /** @private */
+    _addReference(model) {
+        this._byId[model.cid] = model;
+
+        let id = this.modelId(model.attributes);
+
+        if (id != null) {
+            this._byId[id] = model;
+        }
+
+        model.on('all', this._onModelEvent, this);
+    }
+
+    /** @private */
+    _removeReference(model) {
+        delete this._byId[model.cid];
+
+        let id = this.modelId(model.attributes);
+
+        if (id != null) {
+            delete this._byId[id];
+        }
+
+        if (this === model.collection) {
+            delete model.collection;
+        }
+
+        model.off('all', this._onModelEvent, this);
+    }
+
+    /** @private */
+    _onModelEvent(event, model, collection, options) {
+        if (event === 'sync' && collection !== this) {
+            return;
+        }
+
+        if (!model) {
+            this.trigger.apply(this, arguments);
+
+            return;
+        }
+
+        if ((event === 'add' || event === 'remove') && collection !== this) {
+            return;
+        }
+
+        if (event === 'destroy') {
+            this.remove(model, options);
+        }
+
+        if (event === 'change') {
+            let prevId = this.modelId(model.previousAttributes());
+            let id = this.modelId(model.attributes);
+
+            if (prevId !== id) {
+                if (prevId != null) {
+                    delete this._byId[prevId];
+                }
+
+                if (id != null) {
+                    this._byId[id] = model;
+                }
+            }
+        }
+
+        this.trigger.apply(this, arguments);
+    }
 
     /** @private*/
-    _prepareModel: function(attributes, options) {
+    _prepareModel(attributes, options) {
         if (this._isModel(attributes)) {
             if (!attributes.collection) {
                 attributes.collection = this;
@@ -531,16 +1031,45 @@ const Collection = Dep.extend(/** @lends Collection# */ {
 
         return new Model(attributes, {
             collection: this,
-            dateTime: this.dateTime,
             entityType: this.entityType || this.name,
             defs: this.defs,
             ...options,
         });
-    },
-});
+    }
+}
 
 Collection.extend = Bull.View.extend;
-
 _.extend(Collection.prototype, Bull.Events);
+
+const setOptions = {
+    add: true,
+    remove: true,
+    merge: true,
+};
+
+const addOptions = {
+    add: true,
+    remove: false,
+};
+
+const splice = (array, insert, at) => {
+    at = Math.min(Math.max(at, 0), array.length);
+
+    let tail = Array(array.length - at);
+    let length = insert.length;
+    let i;
+
+    for (i = 0; i < tail.length; i++) {
+        tail[i] = array[i + at];
+    }
+
+    for (i = 0; i < length; i++) {
+        array[i + at] = insert[i];
+    }
+
+    for (i = 0; i < tail.length; i++) {
+        array[i + length + at] = tail[i];
+    }
+};
 
 export default Collection;
