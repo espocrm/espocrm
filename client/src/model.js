@@ -470,9 +470,7 @@ class Model {
         options.success = response => {
             let serverAttributes = this.prepareAttributes(response, options);
 
-            if (!this.set(serverAttributes, options)) {
-                return false;
-            }
+            this.set(serverAttributes, options);
 
             if (success) {
                 success.call(options.context, this, response, options);

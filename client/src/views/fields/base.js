@@ -28,7 +28,7 @@
 
 /** @module views/fields/base */
 
-import Dep from 'view';
+import View from 'view';
 import Select from 'ui/select';
 
 /**
@@ -38,18 +38,15 @@ import Select from 'ui/select';
  *   and specific field type options.
  * @todo Document events.
  *
- * @class
- * @name Class
- * @extends module:view
  */
-export default Dep.extend(/** @lends Class# */ {
+class BaseFieldView extends View {
 
     /**
      * A field type.
      *
      * @type {string}
      */
-    type: 'base',
+    type = 'base'
 
     /**
      * List mode template.
@@ -57,7 +54,7 @@ export default Dep.extend(/** @lends Class# */ {
      * @protected
      * @type {string}
      */
-    listTemplate: 'fields/base/list',
+    listTemplate = 'fields/base/list'
 
     /**
      * List-link mode template.
@@ -65,7 +62,7 @@ export default Dep.extend(/** @lends Class# */ {
      * @protected
      * @type {string}
      */
-    listLinkTemplate: 'fields/base/list-link',
+    listLinkTemplate = 'fields/base/list-link'
 
     /**
      * Detail mode template.
@@ -73,7 +70,7 @@ export default Dep.extend(/** @lends Class# */ {
      * @protected
      * @type {string}
      */
-    detailTemplate: 'fields/base/detail',
+    detailTemplate = 'fields/base/detail'
 
     /**
      * Edit mode template.
@@ -81,7 +78,7 @@ export default Dep.extend(/** @lends Class# */ {
      * @protected
      * @type {string}
      */
-    editTemplate: 'fields/base/edit',
+    editTemplate = 'fields/base/edit'
 
     /**
      * Search mode template.
@@ -89,142 +86,142 @@ export default Dep.extend(/** @lends Class# */ {
      * @protected
      * @type {string}
      */
-    searchTemplate: 'fields/base/search',
+    searchTemplate = 'fields/base/search'
 
     /**
      * @protected
      * @type {string|null}
      */
-    listTemplateContent: null,
+    listTemplateContent = null
 
     /**
      * @protected
      * @type {string|null}
      */
-    detailTemplateContent: null,
+    detailTemplateContent = null
 
     /**
      * @protected
      * @type {string|null}
      */
-    editTemplateContent: null,
+    editTemplateContent = null
 
     /**
      * A validation list. There should be a `validate{Name}` method for each item.
      *
      * @type {string[]}
      */
-    validations: ['required'],
+    validations = ['required']
 
     /**
      * @const
      */
-    MODE_LIST: 'list',
+    MODE_LIST = 'list'
 
     /**
      * @const
      */
-    MODE_LIST_LINK: 'listLink',
+    MODE_LIST_LINK = 'listLink'
 
     /**
      * @const
      */
-    MODE_DETAIL: 'detail',
+    MODE_DETAIL = 'detail'
 
     /**
      * @const
      */
-    MODE_EDIT: 'edit',
+    MODE_EDIT = 'edit'
 
     /**
      * @const
      */
-    MODE_SEARCH: 'search',
+    MODE_SEARCH = 'search'
 
     /**
      * A field name.
      *
      * @type {string}
      */
-    name: null,
+    name = null
 
     /**
      * Definitions.
      *
      * @type {Object}
      */
-    defs: null,
+    defs = null
 
     /**
      * Field params.
      *
      * @type {Object.<string,*>}
      */
-    params: null,
+    params = null
 
     /**
      * A mode.
      *
      * @type {'list'|'listLink'|'detail'|'edit'|'search'}
      */
-    mode: null,
+    mode = null
 
     /**
      * Search params.
      *
      * @type {Object.<string,*>|null}
      */
-    searchParams: null,
+    searchParams = null
 
     /**
      * @private
      */
-    _timeout: null,
+    _timeout = null
 
     /**
      * Inline edit disabled.
      *
      * @type {boolean}
      */
-    inlineEditDisabled: false,
+    inlineEditDisabled = false
 
     /**
      * Field is disabled.
      *
      * @type {boolean}
      */
-    disabled: false,
+    disabled = false
 
     /**
      * Field is read-only.
      *
      * @type {boolean}
      */
-    readOnly: false,
+    readOnly = false
 
     /**
      * @type {string[]|null}
      */
-    attributeList: null,
+    attributeList = null
 
     /**
      * Attribute values before edit.
      *
      * @type {Object.<string,*>|{}}
      */
-    initialAttributes: null,
+    initialAttributes = null
 
     /**
      * @const
      */
-    VALIDATION_POPOVER_TIMEOUT: 3000,
+    VALIDATION_POPOVER_TIMEOUT = 3000
 
     /**
      * @type {(function:boolean)|null}
      * @private
      * @internal
      */
-    validateCallback: null,
+    validateCallback = null
 
     /**
      * An element selector to point validation popovers to.
@@ -232,21 +229,21 @@ export default Dep.extend(/** @lends Class# */ {
      * @type {?string}
      * @protected
      */
-    validationElementSelector: null,
+    validationElementSelector = null
 
     /**
      * A view-record helper.
      *
      * @type {module:view-record-helper|null}
      */
-    recordHelper: null,
+    recordHelper = null
 
     /**
      * @type {JQuery|null}
      * @private
      * @internal
      */
-    $label: null,
+    $label = null
 
     /**
      * A form element.
@@ -254,7 +251,7 @@ export default Dep.extend(/** @lends Class# */ {
      * @type {JQuery|null}
      * @protected
      */
-    $element: null,
+    $element = null
 
     /**
      * Is searchable once a search filter is added (no need to type or selecting anything).
@@ -263,7 +260,7 @@ export default Dep.extend(/** @lends Class# */ {
      * @public
      * @type {boolean}
      */
-    initialSearchIsNotIdle: false,
+    initialSearchIsNotIdle = false
 
     /**
      * An entity type.
@@ -271,32 +268,32 @@ export default Dep.extend(/** @lends Class# */ {
      * @private
      * @type {string|null}
      */
-    entityType: null,
+    entityType = null
 
     /**
      * A last validation message;
      *
      * @type {?string}
      */
-    lastValidationMessage: null,
+    lastValidationMessage = null
 
     /**
      * Is the field required.
      *
      * @returns {boolean}
      */
-    isRequired: function () {
+    isRequired() {
         return this.params.required;
-    },
+    }
 
     /**
      * Get a cell element. Available only after the view is  rendered.
      *
      * @returns {JQuery}
      */
-    get$cell: function () {
+    get$cell() {
         return this.$el.parent();
-    },
+    }
 
     /**
      * Get a cell element. Available only after the view is  rendered.
@@ -304,47 +301,47 @@ export default Dep.extend(/** @lends Class# */ {
      * @deprecated Use `get$cell`.
      * @returns {JQuery}
      */
-    getCellElement: function () {
+    getCellElement() {
         return this.get$cell();
-    },
+    }
 
     /**
      * Is in inline-edit mode.
      *
      * @return {boolean}
      */
-    isInlineEditMode: function () {
+    isInlineEditMode() {
         return !!this._isInlineEditMode;
-    },
+    }
 
     /**
      * Set disabled.
      *
      * @param {boolean} [locked] Won't be able to set back.
      */
-    setDisabled: function (locked) {
+    setDisabled(locked) {
         this.disabled = true;
 
         if (locked) {
             this.disabledLocked = true;
         }
-    },
+    }
 
     /**
      * Set not-disabled.
      */
-    setNotDisabled: function () {
+    setNotDisabled() {
         if (this.disabledLocked) {
             return;
         }
 
         this.disabled = false;
-    },
+    }
 
     /**
      * Set required.
      */
-    setRequired: function () {
+    setRequired() {
         this.params.required = true;
 
         if (this.isEditMode()) {
@@ -357,12 +354,12 @@ export default Dep.extend(/** @lends Class# */ {
                 });
             }
         }
-    },
+    }
 
     /**
      * Set not required.
      */
-    setNotRequired: function () {
+    setNotRequired() {
         this.params.required = false;
         this.get$cell().removeClass('has-error');
 
@@ -376,7 +373,7 @@ export default Dep.extend(/** @lends Class# */ {
                 });
             }
         }
-    },
+    }
 
     /**
      * Set read-only.
@@ -384,7 +381,7 @@ export default Dep.extend(/** @lends Class# */ {
      * @param {boolean} [locked] Won't be able to set back.
      * @return {Promise}
      */
-    setReadOnly: function (locked) {
+    setReadOnly(locked) {
         if (this.readOnlyLocked) {
             return Promise.reject();
         }
@@ -405,59 +402,59 @@ export default Dep.extend(/** @lends Class# */ {
         }
 
         return Promise.resolve();
-    },
+    }
 
     /**
      * Set not read only.
      */
-    setNotReadOnly: function () {
+    setNotReadOnly() {
         if (this.readOnlyLocked) {
             return;
         }
 
         this.readOnly = false;
-    },
+    }
 
     /**
      * Get a label element. Available only after the view is rendered.
      *
      * @return {JQuery}
      */
-    getLabelElement: function () {
+    getLabelElement() {
         if (!this.$label || !this.$label.length) {
             this.$label = this.$el.parent().children('label');
         }
 
         return this.$label;
-    },
+    }
 
     /**
      * Hide field and label. Available only after the view is rendered.
      */
-    hide: function () {
+    hide() {
         this.$el.addClass('hidden');
         let $cell = this.get$cell();
 
         $cell.children('label').addClass('hidden');
         $cell.addClass('hidden-cell');
-    },
+    }
 
     /**
      * Show field and label. Available only after the view is rendered.
      */
-    show: function () {
+    show() {
         this.$el.removeClass('hidden');
 
         let $cell = this.get$cell();
 
         $cell.children('label').removeClass('hidden');
         $cell.removeClass('hidden-cell');
-    },
+    }
 
     /**
      * @inheritDoc
      */
-    data: function () {
+    data() {
         let data = {
             scope: this.model.name,
             name: this.name,
@@ -475,81 +472,81 @@ export default Dep.extend(/** @lends Class# */ {
         }
 
         return data;
-    },
+    }
 
     /**
      * Get a value for display. Is available by using a `{value}` placeholder in templates.
      *
      * @return {*}
      */
-    getValueForDisplay: function () {
+    getValueForDisplay() {
         return this.model.get(this.name);
-    },
+    }
 
     /**
      * Is in list, detail or list-link mode.
      *
      * @returns {boolean}
      */
-    isReadMode: function () {
+    isReadMode() {
         return this.mode === this.MODE_LIST ||
             this.mode === this.MODE_DETAIL ||
             this.mode === this.MODE_LIST_LINK;
-    },
+    }
 
     /**
      * Is in list or list-link mode.
      *
      * @returns {boolean}
      */
-    isListMode: function () {
+    isListMode() {
         return this.mode === this.MODE_LIST || this.mode === this.MODE_LIST_LINK;
-    },
+    }
 
     /**
      * Is in detail mode.
      *
      * @returns {boolean}
      */
-    isDetailMode: function () {
+    isDetailMode() {
         return this.mode === this.MODE_DETAIL;
-    },
+    }
 
     /**
      * Is in edit mode.
      *
      * @returns {boolean}
      */
-    isEditMode: function () {
+    isEditMode() {
         return this.mode === this.MODE_EDIT;
-    },
+    }
 
     /**
      * Is in search mode.
      *
      * @returns {boolean}
      */
-    isSearchMode: function () {
+    isSearchMode() {
         return this.mode === this.MODE_SEARCH;
-    },
+    }
 
     /**
      * Set detail mode.
      *
      * @returns {Promise}
      */
-    setDetailMode: function () {
+    setDetailMode() {
         return this.setMode(this.MODE_DETAIL) || Promise.resolve();
-    },
+    }
 
     /**
      * Set edit mode.
      *
      * @returns {Promise}
      */
-    setEditMode: function () {
+    setEditMode() {
         return this.setMode(this.MODE_EDIT) || Promise.resolve();
-    },
+    }
 
     /**
      * Set a mode.
@@ -557,7 +554,7 @@ export default Dep.extend(/** @lends Class# */ {
      * @internal
      * @returns {Promise}
      */
-    setMode: function (mode) {
+    setMode(mode) {
         let modeIsChanged = this.mode !== mode && this.mode;
         let modeBefore = this.mode;
 
@@ -595,7 +592,7 @@ export default Dep.extend(/** @lends Class# */ {
         }
 
         return Promise.resolve();
-    },
+    }
 
     /**
      * Called on mode change and on value change before re-rendering.
@@ -605,13 +602,13 @@ export default Dep.extend(/** @lends Class# */ {
      * @protected
      * @returns {Promise|undefined}
      */
-    prepare: function () {},
+    prepare() {}
 
     /**
      * @private
      * @returns {Promise}
      */
-    _onModeSet: function () {
+    _onModeSet() {
         if (this.isListMode()) {
             return this.onListModeSet() || Promise.resolve();
         }
@@ -625,7 +622,7 @@ export default Dep.extend(/** @lends Class# */ {
         }
 
         return Promise.resolve();
-    },
+    }
 
     /**
      * Additional initialization for the detail mode.
@@ -633,9 +630,9 @@ export default Dep.extend(/** @lends Class# */ {
      * @protected
      * @returns {Promise|undefined}
      */
-    onDetailModeSet: function () {
+    onDetailModeSet() {
         return this.prepare();
-    },
+    }
 
     /**
      * Additional initialization for the edit mode.
@@ -643,9 +640,9 @@ export default Dep.extend(/** @lends Class# */ {
      * @protected
      * @returns {Promise|undefined}
      */
-    onEditModeSet: function () {
+    onEditModeSet() {
         return this.prepare();
-    },
+    }
 
     /**
      * Additional initialization for the list mode.
@@ -653,14 +650,14 @@ export default Dep.extend(/** @lends Class# */ {
      * @protected
      * @returns {Promise|undefined}
      */
-    onListModeSet: function () {
+    onListModeSet() {
         return this.prepare();
-    },
+    }
 
     /**
      * @inheritDoc
      */
-    init: function () {
+    init() {
         this.validations = Espo.Utils.clone(this.validations);
 
         this.defs = this.options.defs || {};
@@ -860,22 +857,22 @@ export default Dep.extend(/** @lends Class# */ {
                 this.model.set(attributes, {ui: true});
             });
         }
-    },
+    }
 
     /**
      * @inheritDoc
      */
-    setupFinal: function () {
+    setupFinal() {
         this.wait(
             this._onModeSet()
         );
-    },
+    }
 
     /**
      * @internal
      * @private
      */
-    initTooltip: function () {
+    initTooltip() {
         let $a;
 
         this.once('after:render', () => {
@@ -909,14 +906,14 @@ export default Dep.extend(/** @lends Class# */ {
                 preventDestroyOnRender: true,
             }, this);
         });
-    },
+    }
 
     /**
      * Show a required-field sign.
      *
      * @private
      */
-    showRequiredSign: function () {
+    showRequiredSign() {
         var $label = this.getLabelElement();
         var $sign = $label.find('span.required-sign');
 
@@ -928,19 +925,19 @@ export default Dep.extend(/** @lends Class# */ {
         }
 
         $sign.show();
-    },
+    }
 
     /**
      * Hide a required-field sign.
      *
      * @private
      */
-    hideRequiredSign: function () {
+    hideRequiredSign() {
         var $label = this.getLabelElement();
         var $sign = $label.find('span.required-sign');
 
         $sign.hide();
-    },
+    }
 
     /**
      * Get search-params data.
@@ -948,9 +945,9 @@ export default Dep.extend(/** @lends Class# */ {
      * @protected
      * @return {Object.<string,*>}
      */
-    getSearchParamsData: function () {
+    getSearchParamsData() {
         return this.searchParams.data || {};
-    },
+    }
 
     /**
      * Get search values.
@@ -958,9 +955,9 @@ export default Dep.extend(/** @lends Class# */ {
      * @protected
      * @return {Object.<string,*>}
      */
-    getSearchValues: function () {
+    getSearchValues() {
         return this.getSearchParamsData().values || {};
-    },
+    }
 
     /**
      * Get a current search type.
@@ -968,9 +965,9 @@ export default Dep.extend(/** @lends Class# */ {
      * @protected
      * @return {string}
      */
-    getSearchType: function () {
+    getSearchType() {
         return this.getSearchParamsData().type || this.searchParams.type;
-    },
+    }
 
     /**
      * Get the search type list.
@@ -978,15 +975,15 @@ export default Dep.extend(/** @lends Class# */ {
      * @protected
      * @returns {string[]}
      */
-    getSearchTypeList: function () {
+    getSearchTypeList() {
         return this.searchTypeList;
-    },
+    }
 
     /**
      * @private
      * @internal
      */
-    initInlineEdit: function () {
+    initInlineEdit() {
         let $cell = this.get$cell();
 
         let $editLink = $('<a>')
@@ -1031,14 +1028,14 @@ export default Dep.extend(/** @lends Class# */ {
                 $editLink.addClass('hidden');
             }
         });
-    },
+    }
 
     /**
      * Initializes a form element reference.
      *
      * @protected
      */
-    initElement: function () {
+    initElement() {
         this.$element = this.$el.find('[data-name="' + this.name + '"]');
 
         if (!this.$element.length) {
@@ -1054,12 +1051,12 @@ export default Dep.extend(/** @lends Class# */ {
                 this.trigger('change');
             });
         }
-    },
+    }
 
     /**
      * @inheritDoc
      */
-    afterRender: function () {
+    afterRender() {
         if (this.isEditMode() || this.isSearchMode()) {
             this.initElement();
         }
@@ -1083,54 +1080,54 @@ export default Dep.extend(/** @lends Class# */ {
         if (this.isSearchMode()) {
             this.afterRenderSearch();
         }
-    },
+    }
 
     /**
      * Called after the view is rendered in list or read mode.
      *
      * @protected
      */
-    afterRenderRead: function () {},
+    afterRenderRead() {}
 
     /**
      * Called after the view is rendered in list mode.
      *
      * @protected
      */
-    afterRenderList: function () {},
+    afterRenderList() {}
 
     /**
      * Called after the view is rendered in detail mode.
      *
      * @protected
      */
-    afterRenderDetail: function () {},
+    afterRenderDetail() {}
 
     /**
      * Called after the view is rendered in edit mode.
      *
      * @protected
      */
-    afterRenderEdit: function () {},
+    afterRenderEdit() {}
 
     /**
      * Called after the view is rendered in search mode.
      *
      * @protected
      */
-    afterRenderSearch: function () {},
+    afterRenderSearch() {}
 
     /**
      * Initialization.
      */
-    setup: function () {},
+    setup() {}
 
     /**
      * Initialization for search mode.
      *
      * @protected
      */
-    setupSearch: function () {},
+    setupSearch() {}
 
     /**
      * Get list of model attributes that relate to the field.
@@ -1138,16 +1135,16 @@ export default Dep.extend(/** @lends Class# */ {
      *
      * @return {string[]}
      */
-    getAttributeList: function () {
+    getAttributeList() {
         return this.getFieldManager().getAttributes(this.fieldType, this.name);
-    },
+    }
 
     /**
      * Invoke inline-edit saving.
      *
      * @param {{[bypassClose]: boolean}} [options]
      */
-    inlineEditSave: function (options) {
+    inlineEditSave(options) {
         options = options || {}
 
         if (this.recordHelper) {
@@ -1213,23 +1210,23 @@ export default Dep.extend(/** @lends Class# */ {
         if (!options.bypassClose) {
             this.inlineEditClose(true);
         }
-    },
+    }
 
     /**
      * @private
      */
-    removeInlineEditLinks: function () {
+    removeInlineEditLinks() {
         var $cell = this.get$cell();
 
         $cell.find('.inline-save-link').remove();
         $cell.find('.inline-cancel-link').remove();
         $cell.find('.inline-edit-link').addClass('hidden');
-    },
+    }
 
     /**
      * @private
      */
-    addInlineEditLinks: function () {
+    addInlineEditLinks() {
         let $cell = this.get$cell();
 
         let $saveLink = $('<a>')
@@ -1258,14 +1255,14 @@ export default Dep.extend(/** @lends Class# */ {
         $cancelLink.click(() => {
             this.inlineEditClose();
         });
-    },
+    }
 
     /**
      * @private
      */
-    setIsInlineEditMode: function (value) {
+    setIsInlineEditMode(value) {
         this._isInlineEditMode = value;
-    },
+    }
 
     /**
      * Exist inline-edit mode.
@@ -1273,7 +1270,7 @@ export default Dep.extend(/** @lends Class# */ {
      * @param {boolean} [noReset]
      * @return {Promise}
      */
-    inlineEditClose: function (noReset) {
+    inlineEditClose(noReset) {
         this.trigger('inline-edit-off', {noReset: noReset});
 
         this.$el.off('keydown.inline-edit');
@@ -1295,14 +1292,14 @@ export default Dep.extend(/** @lends Class# */ {
         this.trigger('after:inline-edit-off', {noReset: noReset});
 
         return promise;
-    },
+    }
 
     /**
      * Switch to inline-edit mode.
      *
      * @return {Promise}
      */
-    inlineEdit: function () {
+    inlineEdit() {
         this.trigger('edit', this);
 
         this.initialAttributes = this.model.getClonedAttributes();
@@ -1353,12 +1350,12 @@ export default Dep.extend(/** @lends Class# */ {
         this.trigger('inline-edit-on');
 
         return promise;
-    },
+    }
 
     /**
      * @protected
      */
-    focusOnInlineEdit: function () {
+    focusOnInlineEdit() {
         let $element = this.$element && this.$element.length ?
             this.$element :
             this.$el.find('.form-control').first();
@@ -1368,7 +1365,7 @@ export default Dep.extend(/** @lends Class# */ {
         }
 
         $element.first().focus();
-    },
+    }
 
     /**
      * Suspend a validation message.
@@ -1376,11 +1373,11 @@ export default Dep.extend(/** @lends Class# */ {
      * @internal
      * @param {number} [time=200]
      */
-    suspendValidationMessage: function (time) {
+    suspendValidationMessage(time) {
         this.validationMessageSuspended = true;
 
         setTimeout(() => this.validationMessageSuspended = false, time || 200);
-    },
+    }
 
     /**
      * Show a validation message.
@@ -1388,7 +1385,7 @@ export default Dep.extend(/** @lends Class# */ {
      * @param {string} message A message.
      * @param {string|JQuery|Element} [target] A target element or selector.
      */
-    showValidationMessage: function (message, target) {
+    showValidationMessage(message, target) {
         if (this.validationMessageSuspended) {
             return;
         }
@@ -1466,14 +1463,14 @@ export default Dep.extend(/** @lends Class# */ {
             isDestroyed = true;
 
         }, this.VALIDATION_POPOVER_TIMEOUT);
-    },
+    }
 
     /**
      * Validate field values.
      *
      * @return {boolean} True if not valid.
      */
-    validate: function () {
+    validate() {
         this.lastValidationMessage = null;
 
         for (let i in this.validations) {
@@ -1487,23 +1484,23 @@ export default Dep.extend(/** @lends Class# */ {
         }
 
         return false;
-    },
+    }
 
     /**
      * Get a label text.
      *
      * @returns {string}
      */
-    getLabelText: function () {
+    getLabelText() {
         return this.options.labelText || this.translate(this.name, 'fields', this.model.name);
-    },
+    }
 
     /**
      * Validate required.
      *
      * @return {boolean}
      */
-    validateRequired: function () {
+    validateRequired() {
         if (this.isRequired()) {
             if (this.model.get(this.name) === '' || this.model.get(this.name) === null) {
                 var msg = this.translate('fieldIsRequired', 'messages')
@@ -1514,7 +1511,7 @@ export default Dep.extend(/** @lends Class# */ {
                 return true;
             }
         }
-    },
+    }
 
     /**
      * Defines whether the field should have a required-marker rendered.
@@ -1522,23 +1519,23 @@ export default Dep.extend(/** @lends Class# */ {
      * @protected
      * @return {boolean}
      */
-    hasRequiredMarker: function () {
+    hasRequiredMarker() {
         return this.isRequired();
-    },
+    }
 
     /**
      * Fetch field values to the model.
      */
-    fetchToModel: function () {
+    fetchToModel() {
         this.model.set(this.fetch(), {silent: true});
-    },
+    }
 
     /**
      * Fetch field values from DOM.
      *
      * @return {Object.<string, *>}
      */
-    fetch: function () {
+    fetch() {
         if (!this.$element.length) {
             return {};
         }
@@ -1548,14 +1545,14 @@ export default Dep.extend(/** @lends Class# */ {
         data[this.name] = this.$element.val().trim();
 
         return data;
-    },
+    }
 
     /**
      * Fetch search data from DOM.
      *
      * @return {Object.<string, *>|null}
      */
-    fetchSearch: function () {
+    fetchSearch() {
         let value = this.$element.val().toString().trim();
 
         if (value) {
@@ -1566,14 +1563,16 @@ export default Dep.extend(/** @lends Class# */ {
         }
 
         return null;
-    },
+    }
 
     /**
      * Fetch a search type from DOM.
      *
      * @return {string}
      */
-    fetchSearchType: function () {
+    fetchSearchType() {
         return this.$el.find('select.search-type').val();
-    },
-});
+    }
+}
+
+export default BaseFieldView;

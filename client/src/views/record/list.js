@@ -2603,7 +2603,7 @@ class ListRecordView extends View {
      * @protected
      */
     getInternalLayoutForModel(callback, model) {
-        let scope = model.name;
+        let scope = model.entityType;
 
         if (this._internalLayout === null) {
             this._internalLayout = {};
@@ -2752,7 +2752,7 @@ class ListRecordView extends View {
         let count = modelList.length;
         let builtCount = 0;
 
-        modelList.forEach((model) => {
+        modelList.forEach(model => {
             this.buildRow(iteration, model, () => {
                 builtCount++;
 

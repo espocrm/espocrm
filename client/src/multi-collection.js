@@ -58,7 +58,7 @@ export default Collection.extend(/** @lends Class# */{
     },
 
     /** @inheritDoc */
-    parse: function (response) {
+    prepareAttributes: function (response, options) {
         this.total = response.total;
 
         if (!('list' in response)) {

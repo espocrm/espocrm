@@ -343,7 +343,7 @@ class Collection {
                 models[i] = existing;
             }
             else if (add) {
-                model = models[i] = this._prepareModel(model, options);
+                model = models[i] = this._prepareModel(model);
 
                 if (model) {
                     toAdd.push(model);
@@ -894,7 +894,7 @@ class Collection {
      * @return {Model}
      */
     prepareModel() {
-        return this._prepareModel({}, {});
+        return this._prepareModel({});
     }
 
     /**
@@ -1018,7 +1018,7 @@ class Collection {
     }
 
     /** @private*/
-    _prepareModel(attributes, options) {
+    _prepareModel(attributes) {
         if (this._isModel(attributes)) {
             if (!attributes.collection) {
                 attributes.collection = this;
@@ -1033,7 +1033,6 @@ class Collection {
             collection: this,
             entityType: this.entityType || this.name,
             defs: this.defs,
-            ...options,
         });
     }
 }
