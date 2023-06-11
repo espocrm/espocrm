@@ -26,73 +26,68 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/search/filter', ['view'], function (Dep) {
+import View from 'view';
+
+class FilterView extends View {
+
+    template = 'search/filter'
+
+    data() {
+        return {
+            name: this.name,
+            scope: this.model.name,
+            notRemovable: this.options.notRemovable,
+        };
+    }
+
+    setup() {
+        let name = this.name = this.options.name;
+        let type = this.model.getFieldType(name);
+
+        if (type) {
+            let viewName = this.model.getFieldParam(name, 'view') ||
+                this.getFieldManager().getViewName(type);
+
+            this.createView('field', viewName, {
+                mode: 'search',
+                model: this.model,
+                el: this.options.el + ' .field',
+                defs: {
+                    name: name,
+                },
+                searchParams: this.options.params,
+            }, view => {
+                this.listenTo(view, 'change', () => {
+                    this.trigger('change');
+                });
+
+                this.listenTo(view, 'search', () => {
+                    this.trigger('search');
+                });
+            });
+        }
+    }
 
     /**
-     * @class
-     * @name Class
-     * @extends module:view
-     * @memberOf module:views/search/filter
+     * @return {module:views/fields/base}
      */
-    return Dep.extend(/** @lends module:views/search/filter.Class# */{
+    getFieldView() {
+        return this.getView('field');
+    }
 
-        template: 'search/filter',
+    populateDefaults() {
+        let view = this.getView('field');
 
-        data: function () {
-            return {
-                name: this.name,
-                scope: this.model.name,
-                notRemovable: this.options.notRemovable,
-            };
-        },
+        if (!view) {
+            return;
+        }
 
-        setup: function () {
-            let name = this.name = this.options.name;
-            let type = this.model.getFieldType(name);
+        if (!('populateSearchDefaults' in view)) {
+            return;
+        }
 
-            if (type) {
-                let viewName = this.model.getFieldParam(name, 'view') ||
-                    this.getFieldManager().getViewName(type);
+        view.populateSearchDefaults();
+    }
+}
 
-                this.createView('field', viewName, {
-                    mode: 'search',
-                    model: this.model,
-                    el: this.options.el + ' .field',
-                    defs: {
-                        name: name,
-                    },
-                    searchParams: this.options.params,
-                }, (view) => {
-                    this.listenTo(view, 'change', () => {
-                        this.trigger('change');
-                    });
-
-                    this.listenTo(view, 'search', () => {
-                        this.trigger('search');
-                    });
-                });
-            }
-        },
-
-        /**
-         * @return {module:views/fields/base}
-         */
-        getFieldView: function () {
-            return this.getView('field');
-        },
-
-        populateDefaults: function () {
-            let view = this.getView('field');
-
-            if (!view) {
-                return;
-            }
-
-            if (!('populateSearchDefaults' in view)) {
-                return;
-            }
-
-            view.populateSearchDefaults();
-        },
-    });
-});
+export default FilterView;

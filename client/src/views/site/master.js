@@ -26,200 +26,202 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/site/master', ['view'], function (Dep) {
+import View from 'view';
+import $ from 'lib!jquery';
 
-    return Dep.extend({
+class MasterSiteView extends View {
 
-        template: 'site/master',
+    template = 'site/master'
 
-        views: {
-            header: {
-                id: 'header',
-                view: 'views/site/header',
-            },
-            main: {
-                id: 'main',
-                view: false,
-            },
-            footer: {
-                el: 'body > footer',
-                view: 'views/site/footer',
-            },
+    views = {
+        header: {
+            id: 'header',
+            view: 'views/site/header',
         },
-
-        showLoadingNotification: function () {
-            Espo.Ui.notify(' ... ');
+        main: {
+            id: 'main',
+            view: false,
         },
-
-        hideLoadingNotification: function () {
-            this.notify(false);
+        footer: {
+            el: 'body > footer',
+            view: 'views/site/footer',
         },
+    }
 
-        setup: function () {
-            $(window).on('resize.' + this.cid, () => {
-                this.adjustContent();
-            });
-        },
+    showLoadingNotification() {
+        Espo.Ui.notify(' ... ');
+    }
 
-        onRemove: function () {
-            $(window).off('resize.' + this.cid);
-        },
+    hideLoadingNotification() {
+        Espo.Ui.notify(false);
+    }
 
-        afterRender: function () {
-            let params = this.getThemeManager().getParam('params');
-
-            let $body = $('body');
-
-            for (let param in params) {
-                let value = this.getThemeManager().getParam(param);
-
-                $body.attr('data-' + Espo.Utils.camelCaseToHyphen(param), value);
-            }
-
-            var footerView = this.getView('footer');
-
-            if (footerView) {
-                var html = footerView.$el.html() || '';
-
-                if ((html.match(/espocrm/gi) || []).length < 2) {
-                    var text = 'PHAgY2xhc3M9ImNyZWRpdCBzbWFsbCI+JmNvcHk7IDxhIGhyZWY9Imh0dHA6Ly93d3cuZXNwb2Nyb' +
-                        'S5jb20iPkVzcG9DUk08L2E+PC9wPg==';
-
-                    let decText;
-
-                    if (typeof window.atob === "function") {
-                        decText = window.atob(text);
-                    } else if (typeof atob === "function") {
-                        decText = atob(text);
-                    }
-
-                    if (decText) {
-                        footerView.$el.html(decText);
-                    }
-                }
-            }
-
-            this.$content = this.$el.find('> #content');
-
+    setup() {
+        $(window).on('resize.' + this.cid, () => {
             this.adjustContent();
+        });
+    }
 
-            let extensions = this.getHelper().getAppParam('extensions') || [];
+    onRemove() {
+        $(window).off('resize.' + this.cid);
+    }
 
-            if (this.getConfig().get('maintenanceMode')) {
-                this.createView('dialog', 'views/modal', {
-                    templateContent: '<div class="text-danger">{{complexText viewObject.options.message}}</div>',
-                    headerText: this.translate('maintenanceMode', 'fields', 'Settings'),
-                    backdrop: true,
-                    message: this.translate('maintenanceMode', 'messages'),
-                    buttonList: [
-                        {
-                            name: 'close',
-                            label: this.translate('Close'),
-                        }
-                    ],
-                }, (view) => {
-                    view.render();
-                });
-            }
-            else if (this.getHelper().getAppParam('auth2FARequired')) {
-                this.createView('dialog', 'views/modals/auth2fa-required', {}, (view) => {
-                    view.render();
-                });
-            }
-            else if (extensions.length !== 0) {
-                this.processExtensions(extensions);
-            }
-        },
+    afterRender() {
+        let params = this.getThemeManager().getParam('params');
 
-        adjustContent: function () {
-            if (!this.isRendered()) {
-                return;
-            }
+        let $body = $('body');
 
-            if (window.innerWidth < this.getThemeManager().getParam('screenWidthXs')) {
-                this.isSmallScreen = true;
+        for (let param in params) {
+            let value = this.getThemeManager().getParam(param);
 
-                var height = window.innerHeight - this.$content.get(0).getBoundingClientRect().top;
+            $body.attr('data-' + Espo.Utils.camelCaseToHyphen(param), value);
+        }
 
-                var $navbarCollapse = $('#navbar .navbar-body');
+        let footerView = this.getView('footer');
 
-                if ($navbarCollapse.hasClass('in') || $navbarCollapse.hasClass('collapsing')) {
-                    height += $navbarCollapse.height();
+        if (footerView) {
+            let html = footerView.$el.html() || '';
+
+            if ((html.match(/espocrm/gi) || []).length < 2) {
+                let text = 'PHAgY2xhc3M9ImNyZWRpdCBzbWFsbCI+JmNvcHk7IDxhIGhyZWY9Imh0dHA6Ly93d3cuZXNwb2Nyb' +
+                    'S5jb20iPkVzcG9DUk08L2E+PC9wPg==';
+
+                let decText;
+
+                if (typeof window.atob === "function") {
+                    decText = window.atob(text);
+                } else if (typeof atob === "function") {
+                    decText = atob(text);
                 }
 
-                var footerHeight = $('#footer').height() || 26;
-
-                height -= footerHeight;
-
-                if (height <= 0) {
-                    this.$content.css('minHeight', '');
-
-                    return;
+                if (decText) {
+                    footerView.$el.html(decText);
                 }
-
-                this.$content.css('minHeight', height + 'px');
-
-                return;
             }
+        }
 
-            if (this.isSmallScreen) {
-                this.$content.css('minHeight', '');
-            }
+        this.$content = this.$el.find('> #content');
 
-            this.isSmallScreen = false;
-        },
+        this.adjustContent();
 
-        /**
-         * @param {{
-         *     name: string,
-         *     licenseStatus: string,
-         *     licenseStatusMessage:? string,
-         *     notify: boolean,
-         * }[]} list
-         */
-        processExtensions: function (list) {
-            let messageList = [];
+        let extensions = this.getHelper().getAppParam('extensions') || [];
 
-            list.forEach(item => {
-                if (!item.notify) {
-                    return;
-                }
-
-                let message = item.licenseStatusMessage ??
-                    'extensionLicense' +
-                    Espo.Utils.upperCaseFirst(
-                        Espo.Utils.hyphenToCamelCase(item.licenseStatus.toLowerCase())
-                    );
-
-                messageList.push(
-                    this.translate(message, 'messages')
-                        .replace('{name}', item.name)
-                );
-            });
-
-            if (!messageList.length) {
-                return;
-            }
-
-            let message = messageList.join('\n\n');
-
-            message = this.getHelper().transformMarkdownText(message);
-
-            let dialog = new Espo.Ui.Dialog({
-                backdrop: 'static',
+        if (this.getConfig().get('maintenanceMode')) {
+            this.createView('dialog', 'views/modal', {
+                templateContent: '<div class="text-danger">{{complexText viewObject.options.message}}</div>',
+                headerText: this.translate('maintenanceMode', 'fields', 'Settings'),
+                backdrop: true,
+                message: this.translate('maintenanceMode', 'messages'),
                 buttonList: [
                     {
                         name: 'close',
-                        text: this.translate('Close'),
-                        className: 'btn-s-wide',
-                        onClick: () => dialog.close(),
+                        label: this.translate('Close'),
                     }
                 ],
-                className: 'dialog-confirm text-danger',
-                body: message.toString(),
+            }, view => {
+                view.render();
             });
+        }
+        else if (this.getHelper().getAppParam('auth2FARequired')) {
+            this.createView('dialog', 'views/modals/auth2fa-required', {}, (view) => {
+                view.render();
+            });
+        }
+        else if (extensions.length !== 0) {
+            this.processExtensions(extensions);
+        }
+    }
 
-            dialog.show();
-        },
-    });
-});
+    adjustContent() {
+        if (!this.isRendered()) {
+            return;
+        }
+
+        if (window.innerWidth < this.getThemeManager().getParam('screenWidthXs')) {
+            this.isSmallScreen = true;
+
+            let height = window.innerHeight - this.$content.get(0).getBoundingClientRect().top;
+
+            let $navbarCollapse = $('#navbar .navbar-body');
+
+            if ($navbarCollapse.hasClass('in') || $navbarCollapse.hasClass('collapsing')) {
+                height += $navbarCollapse.height();
+            }
+
+            let footerHeight = $('#footer').height() || 26;
+
+            height -= footerHeight;
+
+            if (height <= 0) {
+                this.$content.css('minHeight', '');
+
+                return;
+            }
+
+            this.$content.css('minHeight', height + 'px');
+
+            return;
+        }
+
+        if (this.isSmallScreen) {
+            this.$content.css('minHeight', '');
+        }
+
+        this.isSmallScreen = false;
+    }
+
+    /**
+     * @param {{
+     *     name: string,
+     *     licenseStatus: string,
+     *     licenseStatusMessage:? string,
+     *     notify: boolean,
+     * }[]} list
+     */
+    processExtensions(list) {
+        let messageList = [];
+
+        list.forEach(item => {
+            if (!item.notify) {
+                return;
+            }
+
+            let message = item.licenseStatusMessage ??
+                'extensionLicense' +
+                Espo.Utils.upperCaseFirst(
+                    Espo.Utils.hyphenToCamelCase(item.licenseStatus.toLowerCase())
+                );
+
+            messageList.push(
+                this.translate(message, 'messages')
+                    .replace('{name}', item.name)
+            );
+        });
+
+        if (!messageList.length) {
+            return;
+        }
+
+        let message = messageList.join('\n\n');
+
+        message = this.getHelper().transformMarkdownText(message);
+
+        let dialog = new Espo.Ui.Dialog({
+            backdrop: 'static',
+            buttonList: [
+                {
+                    name: 'close',
+                    text: this.translate('Close'),
+                    className: 'btn-s-wide',
+                    onClick: () => dialog.close(),
+                }
+            ],
+            className: 'dialog-confirm text-danger',
+            body: message.toString(),
+        });
+
+        dialog.show();
+    }
+}
+
+export default MasterSiteView;

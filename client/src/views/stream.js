@@ -26,141 +26,145 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class StreamView extends View {
 
-        template: 'stream',
+    template ='stream'
+    filterList = ['all', 'posts', 'updates']
+    filter = false
 
-        filterList: ['all', 'posts', 'updates'],
-
-        filter: false,
-
-        events: {
-            'click button[data-action="refresh"]': function () {
-                if (!this.hasView('list')) {
-                    return;
-                }
-
-                this.getView('list').showNewRecords();
-            },
-            'click button[data-action="selectFilter"]': function (e) {
-                var data = $(e.currentTarget).data();
-
-                this.actionSelectFilter(data);
-            },
-        },
-
-        data: function () {
-            var filter = this.filter;
-
-            if (filter === false) {
-                filter = 'all';
+    events = {
+        /** @this StreamView */
+        'click button[data-action="refresh"]': function () {
+            if (!this.getRecordView()) {
+                return;
             }
 
-            return {
-                displayTitle: this.options.displayTitle,
-                filterList: this.filterList,
-                filter: filter,
-            };
+            this.getRecordView().showNewRecords();
         },
+        /** @this StreamView */
+        'click button[data-action="selectFilter"]': function (e) {
+            let data = $(e.currentTarget).data();
 
-        setup: function () {
-            this.filter = this.options.filter || this.filter;
+            this.actionSelectFilter(data);
+        },
+    }
 
-            this.wait(true);
+    data() {
+        let filter = this.filter;
 
-            this.getModelFactory().create('Note', (model) => {
+        if (filter === false) {
+            filter = 'all';
+        }
+
+        return {
+            displayTitle: this.options.displayTitle,
+            filterList: this.filterList,
+            filter: filter,
+        };
+    }
+
+    setup() {
+        this.filter = this.options.filter || this.filter;
+
+        this.wait(
+            this.getModelFactory().create('Note', model => {
                 this.createView('createPost', 'views/stream/record/edit', {
                     el: this.options.el + ' .create-post-container',
                     model: model,
                     interactiveMode: true,
-                }, (view) => {
-                    this.listenTo(view, 'after:save', () => {
-                        this.getView('list').showNewRecords();
-                    });
+                }, view => {
+                    this.listenTo(view, 'after:save', () => this.getRecordView().showNewRecords());
                 });
+            })
+        );
+    }
 
-                this.wait(false);
-            });
-        },
+    afterRender() {
+        Espo.Ui.notify(' ... ');
 
-        afterRender: function () {
-            Espo.Ui.notify(' ... ');
+        this.getCollectionFactory().create('Note', collection => {
+            this.collection = collection;
+            collection.url = 'Stream';
 
-            this.getCollectionFactory().create('Note', (collection) => {
-                this.collection = collection;
-                collection.url = 'Stream';
-
-                this.setFilter(this.filter);
-
-                collection.fetch().then(() => {
-                    this.createView('list', 'views/stream/record/list', {
-                        el: this.options.el + ' .list-container',
-                        collection: collection,
-                        isUserStream: true,
-                    }, view => {
-                        view.notify(false);
-
-                        view.render()
-                            .then(view => {
-                                view.$el.find('> .list > .list-group');
-                            });
-                    });
-                });
-            });
-        },
-
-        actionSelectFilter: function (data) {
-            var name = data.name;
-            var filter = name;
-
-            var internalFilter = name;
-
-            if (filter === 'all') {
-                internalFilter = false;
-            }
-
-            this.filter = internalFilter;
             this.setFilter(this.filter);
 
-            this.filterList.forEach((item) => {
-                var $el = this.$el.find('.page-header button[data-action="selectFilter"][data-name="'+item+'"]');
+            collection.fetch().then(() => {
+                this.createView('list', 'views/stream/record/list', {
+                    el: this.options.el + ' .list-container',
+                    collection: collection,
+                    isUserStream: true,
+                }, view => {
+                    view.notify(false);
 
-                if (item === filter) {
-                    $el.addClass('active');
-                } else {
-                    $el.removeClass('active');
-                }
+                    view.render()
+                        .then(view => {
+                            view.$el.find('> .list > .list-group');
+                        });
+                });
             });
+        });
+    }
 
-            var url = '#Stream';
+    /**
+     * @return {module:views/stream/record/list}
+     */
+    getRecordView() {
+        return this.getView('list');
+    }
 
-            if (this.filter) {
-                url += '/' + filter;
+    actionSelectFilter(data) {
+        let name = data.name;
+        let filter = name;
+
+        let internalFilter = name;
+
+        if (filter === 'all') {
+            internalFilter = false;
+        }
+
+        this.filter = internalFilter;
+        this.setFilter(this.filter);
+
+        this.filterList.forEach((item) => {
+            var $el = this.$el.find('.page-header button[data-action="selectFilter"][data-name="'+item+'"]');
+
+            if (item === filter) {
+                $el.addClass('active');
+            } else {
+                $el.removeClass('active');
             }
+        });
 
-            this.getRouter().navigate(url);
+        let url = '#Stream';
 
-            Espo.Ui.notify(' ... ');
+        if (this.filter) {
+            url += '/' + filter;
+        }
 
-            this.listenToOnce(this.collection, 'sync', () => {
-                Espo.Ui.notify(false);
-            });
+        this.getRouter().navigate(url);
 
-            this.collection.reset();
-            this.collection.fetch();
-        },
+        Espo.Ui.notify(' ... ');
 
-        setFilter: function (filter) {
-            this.collection.data.filter = null;
+        this.listenToOnce(this.collection, 'sync', () => {
+            Espo.Ui.notify(false);
+        });
 
-            if (filter) {
-                this.collection.data.filter = filter;
-            }
+        this.collection.reset();
+        this.collection.fetch();
+    }
 
-            this.collection.offset = 0;
-            this.collection.maxSize = this.getConfig().get('recordsPerPage') || this.collection.maxSize;
-        },
-    });
-});
+    setFilter(filter) {
+        this.collection.data.filter = null;
+
+        if (filter) {
+            this.collection.data.filter = filter;
+        }
+
+        this.collection.offset = 0;
+        this.collection.maxSize = this.getConfig().get('recordsPerPage') || this.collection.maxSize;
+    }
+}
+
+export default StreamView;
