@@ -30,6 +30,7 @@
 
 import View from 'view';
 import Select from 'ui/select';
+import $ from 'lib!jquery';
 
 /**
  * A base field view. Can be in different modes. Each mode uses a separate template.
@@ -164,7 +165,7 @@ class BaseFieldView extends View {
      *
      * @type {'list'|'listLink'|'detail'|'edit'|'search'}
      */
-    mode = null
+    mode = 'detail'
 
     /**
      * Search params.
@@ -673,7 +674,7 @@ class BaseFieldView extends View {
         this.recordHelper = this.options.recordHelper;
 
         this.getFieldManager().getParamList(this.type).forEach(d => {
-            var name = d.name;
+            let name = d.name;
 
             if (!(name in this.params)) {
                 this.params[name] = this.model.getFieldParam(this.name, name);
@@ -684,7 +685,7 @@ class BaseFieldView extends View {
             }
         });
 
-        var additionalParamList = ['inlineEditDisabled'];
+        let additionalParamList = ['inlineEditDisabled'];
 
         additionalParamList.forEach((item) => {
             this.params[item] = this.model.getFieldParam(this.name, item) || null;
@@ -736,22 +737,22 @@ class BaseFieldView extends View {
         }
 
         this.on('highlight', () => {
-            var $cell = this.get$cell();
+            let $cell = this.get$cell();
 
             $cell.addClass('highlighted');
             $cell.addClass('transition');
 
             setTimeout(() => {
                 $cell.removeClass('highlighted');
-            }, this.highlightPeriod || 3000);
+            }, 3000);
 
             setTimeout(() => {
                 $cell.removeClass('transition');
-            }, (this.highlightPeriod || 3000) + 2000);
+            }, 3000 + 2000);
         });
 
         this.on('invalid', () => {
-            var $cell = this.get$cell();
+            let $cell = this.get$cell();
 
             $cell.addClass('has-error');
 
@@ -852,7 +853,7 @@ class BaseFieldView extends View {
             });
 
             this.listenTo(this, 'change', () => {
-                var attributes = this.fetch();
+                let attributes = this.fetch();
 
                 this.model.set(attributes, {ui: true});
             });
@@ -914,8 +915,8 @@ class BaseFieldView extends View {
      * @private
      */
     showRequiredSign() {
-        var $label = this.getLabelElement();
-        var $sign = $label.find('span.required-sign');
+        let $label = this.getLabelElement();
+        let $sign = $label.find('span.required-sign');
 
         if ($label.length && !$sign.length) {
             let $text = $label.find('span.label-text');
@@ -933,8 +934,8 @@ class BaseFieldView extends View {
      * @private
      */
     hideRequiredSign() {
-        var $label = this.getLabelElement();
-        var $sign = $label.find('span.required-sign');
+        let $label = this.getLabelElement();
+        let $sign = $label.find('span.required-sign');
 
         $sign.hide();
     }
@@ -1216,7 +1217,7 @@ class BaseFieldView extends View {
      * @private
      */
     removeInlineEditLinks() {
-        var $cell = this.get$cell();
+        let $cell = this.get$cell();
 
         $cell.find('.inline-save-link').remove();
         $cell.find('.inline-cancel-link').remove();
@@ -1390,7 +1391,7 @@ class BaseFieldView extends View {
             return;
         }
 
-        var $el;
+        let $el;
 
         target = target || this.validationElementSelector || '.main-element';
 
@@ -1428,7 +1429,7 @@ class BaseFieldView extends View {
             })
             .popover('show');
 
-        var isDestroyed = false;
+        let isDestroyed = false;
 
         $el.closest('.field').one('mousedown click', () => {
             if (isDestroyed) {
@@ -1503,7 +1504,7 @@ class BaseFieldView extends View {
     validateRequired() {
         if (this.isRequired()) {
             if (this.model.get(this.name) === '' || this.model.get(this.name) === null) {
-                var msg = this.translate('fieldIsRequired', 'messages')
+                let msg = this.translate('fieldIsRequired', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg);
