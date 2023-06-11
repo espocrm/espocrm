@@ -26,195 +26,197 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashlets/abstract/base', ['view'], function (Dep) {
+import View from 'view';
+
+/**
+ * A base dashlet view. All dashlets should extend it.
+ */
+class BaseDashletView extends View {
+
+    /** @type {Object.<string, *>|null}*/
+    optionsData = null
+
+    optionsFields = {
+        title: {
+            type: 'varchar',
+            required: true,
+        },
+        autorefreshInterval: {
+            type: 'enumFloat',
+            options: [0, 0.5, 1, 2, 5, 10],
+        },
+    }
+
+    disabledForReadOnlyActionList = ['options', 'remove']
+    disabledForLockedActionList = ['remove']
+
+    noPadding = false
+
+    actionList = [
+        {
+            name: 'refresh',
+            label: 'Refresh',
+            iconHtml: '<span class="fas fa-sync-alt"></span>',
+        },
+        {
+            name: 'options',
+            label: 'Options',
+            iconHtml: '<span class="fas fa-pencil-alt"></span>',
+        },
+        {
+            name: 'remove',
+            label: 'Remove',
+            iconHtml: '<span class="fas fa-times"></span>',
+        }
+    ]
+
+    buttonList = []
 
     /**
-     * @class
-     * @name Class
-     * @memberOf module:views/dashlets/abstract/base
-     * @extends module:view
+     * Refresh.
      */
-    return Dep.extend(/** @lends module:views/dashlets/abstract/base.Class# */{
+    actionRefresh() {
+        this.render();
+    }
 
-        optionsData: null,
+    /**
+     * Show options.
+     */
+    actionOptions() {}
 
-        /**
-         * Refresh.
-         */
-        actionRefresh: function () {
-            this.render();
-        },
+    init() {
+        this.name = this.options.name || this.name;
+        this.id = this.options.id;
 
-        /**
-         * Show options.
-         */
-        actionOptions: function () {},
+        this.defaultOptions = this.getMetadata().get(['dashlets', this.name, 'options', 'defaults']) ||
+            this.defaultOptions || {};
 
-        optionsFields: {
-            "title": {
-                "type": "varchar",
-                "required": true,
-            },
-            "autorefreshInterval": {
-                "type": "enumFloat",
-                "options": [0, 0.5, 1, 2, 5, 10],
-            },
-        },
+        this.defaultOptions = {
+            title: this.getLanguage().translate(this.name, 'dashlets'),
+            ...this.defaultOptions
+        };
 
-        disabledForReadOnlyActionList: ['options', 'remove'],
+        this.defaultOptions = Espo.Utils.clone(this.defaultOptions);
 
-        disabledForLockedActionList: ['remove'],
+        this.optionsFields = this.getMetadata().get(['dashlets', this.name, 'options', 'fields']) ||
+            this.optionsFields || {};
 
-        init: function () {
-            this.name = this.options.name || this.name;
-            this.id = this.options.id;
+        this.optionsFields = Espo.Utils.clone(this.optionsFields);
 
-            this.defaultOptions = this.getMetadata().get(['dashlets', this.name, 'options', 'defaults']) ||
-                this.defaultOptions || {};
+        this.setupDefaultOptions();
 
-            this.defaultOptions = _.extend({
-                title: this.getLanguage().translate(this.name, 'dashlets'),
-            }, this.defaultOptions);
+        let options = Espo.Utils.cloneDeep(this.defaultOptions);
 
-            this.defaultOptions = Espo.Utils.clone(this.defaultOptions);
+        for (let key in options) {
+            if (typeof options[key] == 'function') {
+                options[key] = options[key].call(this);
+            }
+        }
 
-            this.optionsFields = this.getMetadata().get(['dashlets', this.name, 'options', 'fields']) ||
-                this.optionsFields || {};
-            this.optionsFields = Espo.Utils.clone(this.optionsFields);
+        let storedOptions;
 
-            this.setupDefaultOptions();
+        if (!this.options.readOnly) {
+            storedOptions = this.getPreferences().getDashletOptions(this.id) || {};
+        }
+        else {
+            let allOptions = this.getConfig().get('forcedDashletsOptions') ||
+                this.getConfig().get('dashletsOptions') || {};
 
-            let options = Espo.Utils.cloneDeep(this.defaultOptions);
+            storedOptions = allOptions[this.id] || {};
+        }
 
-            for (let key in options) {
-                if (typeof options[key] == 'function') {
-                    options[key] = options[key].call(this);
+        this.optionsData = _.extend(options, storedOptions);
+
+        if (this.optionsData.autorefreshInterval) {
+            let interval = this.optionsData.autorefreshInterval * 60000;
+
+            let t;
+
+            let process = () => {
+                t = setTimeout(() => {
+                    this.actionRefresh();
+
+                    process();
+                }, interval);
+            };
+
+            process();
+
+            this.once('remove', () => {
+                clearTimeout(t);
+            });
+        }
+
+        this.actionList = Espo.Utils.clone(this.actionList);
+        this.buttonList = Espo.Utils.clone(this.buttonList);
+
+        if (this.options.readOnly) {
+            this.actionList = this.actionList.filter(item => {
+                if (~this.disabledForReadOnlyActionList.indexOf(item.name)) {
+                    return false;
                 }
-            }
 
-            let storedOptions;
+                return true;
+            })
+        }
 
-            if (!this.options.readOnly) {
-                storedOptions = this.getPreferences().getDashletOptions(this.id) || {};
-            }
-            else {
-                let allOptions = this.getConfig().get('forcedDashletsOptions') ||
-                    this.getConfig().get('dashletsOptions') || {};
+        if (this.options.locked) {
+            this.actionList = this.actionList
+                .filter(item => !this.disabledForLockedActionList.includes(item.name));
+        }
 
-                storedOptions = allOptions[this.id] || {};
-            }
+        this.setupActionList();
+        this.setupButtonList();
+    }
 
-            this.optionsData = _.extend(options, storedOptions);
+    /**
+     * Set up default options.
+     */
+    setupDefaultOptions() {}
 
-            if (this.optionsData.autorefreshInterval) {
-                let interval = this.optionsData.autorefreshInterval * 60000;
+    /**
+     * Set up actions.
+     */
+    setupActionList() {}
 
-                let t;
+    /**
+     * Set up buttons.
+     */
+    setupButtonList() {}
 
-                let process = () => {
-                    t = setTimeout(() => {
-                        this.actionRefresh();
+    /**
+     * Has an option.
+     *
+     * @param {string} key
+     * @return {boolean}
+     */
+    hasOption(key) {
+        return key in this.optionsData;
+    }
 
-                        process();
-                    }, interval);
-                };
+    /**
+     * Get an option value.
+     *
+     * @param {string} key
+     * @return {*}
+     */
+    getOption(key) {
+        return this.optionsData[key];
+    }
 
-                process();
+    /**
+     * Get a title.
+     * @return {string|null}
+     */
+    getTitle() {
+        let title = this.getOption('title');
 
-                this.once('remove', () => {
-                    clearTimeout(t);
-                });
-            }
+        if (!title) {
+            title = null;
+        }
 
-            this.actionList = Espo.Utils.clone(this.actionList);
-            this.buttonList = Espo.Utils.clone(this.buttonList);
+        return title;
+    }
+}
 
-            if (this.options.readOnly) {
-                this.actionList = this.actionList.filter(item => {
-                    if (~this.disabledForReadOnlyActionList.indexOf(item.name)) {
-                        return false;
-                    }
-
-                    return true;
-                })
-            }
-
-            if (this.options.locked) {
-                this.actionList = this.actionList
-                    .filter(item => !this.disabledForLockedActionList.includes(item.name));
-            }
-
-            this.setupActionList();
-            this.setupButtonList();
-        },
-
-        actionList: [
-            {
-                name: 'refresh',
-                label: 'Refresh',
-                iconHtml: '<span class="fas fa-sync-alt"></span>',
-            },
-            {
-                name: 'options',
-                label: 'Options',
-                iconHtml: '<span class="fas fa-pencil-alt"></span>',
-            },
-            {
-                name: 'remove',
-                label: 'Remove',
-                iconHtml: '<span class="fas fa-times"></span>',
-            }
-        ],
-
-        buttonList: [],
-
-        /**
-         * Set up default options.
-         */
-        setupDefaultOptions: function () {},
-
-        /**
-         * Set up actions.
-         */
-        setupActionList: function () {},
-
-        /**
-         * Set up buttons.
-         */
-        setupButtonList: function () {},
-
-        /**
-         * Has an option.
-         *
-         * @param {string} key
-         * @return {boolean}
-         */
-        hasOption: function (key) {
-            return key in this.optionsData;
-        },
-
-        /**
-         * Get an option value.
-         *
-         * @param {string} key
-         * @return {*}
-         */
-        getOption: function (key) {
-            return this.optionsData[key];
-        },
-
-        /**
-         * Get a title.
-         * @return {string|null}
-         */
-        getTitle: function () {
-            let title = this.getOption('title');
-
-            if (!title) {
-                title = null;
-            }
-
-            return title;
-        },
-    });
-});
+export default BaseDashletView;
