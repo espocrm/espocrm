@@ -10,10 +10,6 @@
         "key": "underscore"
     },
     {
-        "src": "node_modules/es6-promise/dist/es6-promise.js",
-        "bundle": true
-    },
-    {
         "src": "node_modules/backbone/backbone.js",
         "bundle": true,
         "key": "backbone"

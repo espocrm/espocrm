@@ -52,7 +52,6 @@
     "cropper": "^0.7.9",
     "devbridge-autocomplete": "^1.4.11",
     "dompurify": "^2.2.9",
-    "es6-promise": "^3.0.2",
     "espo-funnel-chart": "github:yurikuzn/espo-funnel-chart#1.1.0",
     "exif-js": "^2.3.0",
     "flotr2": "github:yurikuzn/flotr2#0.1.3",
