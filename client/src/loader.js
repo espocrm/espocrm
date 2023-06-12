@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-(function (_, $) {
+(function () {
 
     let root = this;
 
@@ -46,114 +46,114 @@
     /**
      * A loader. Used for loading and defining AMD modules, resource loading.
      * Handles caching.
-     *
-     * @class
-     * @param {module:cache|null} [cache=null]
-     * @param {int|null} [_cacheTimestamp=null]
      */
-    const Loader = function (cache, _cacheTimestamp) {
-        this._cacheTimestamp = _cacheTimestamp || null;
-        this._cache = cache || null;
-        this._libsConfig = {};
-        this._loadCallbacks = {};
-        this._pathsBeingLoaded = {};
-        this._dataLoaded = {};
-        this._classMap = {};
-        this._loadingSubject = null;
-        this._responseCache = null;
-        this._basePath = '';
+    class Loader {
 
-        this._internalModuleList = [];
-        this._transpiledModuleList = [];
-        this._internalModuleMap = {};
-        this._isDeveloperMode = false;
+        /**
+         * @param {module:cache|null} [cache=null]
+         * @param {int|null} [_cacheTimestamp=null]
+         */
+        constructor(cache, _cacheTimestamp) {
+            this._cacheTimestamp = _cacheTimestamp || null;
+            this._cache = cache || null;
+            this._libsConfig = {};
+            this._loadCallbacks = {};
+            this._pathsBeingLoaded = {};
+            this._dataLoaded = {};
+            this._classMap = {};
+            this._loadingSubject = null;
+            this._responseCache = null;
+            this._basePath = '';
 
-        this._baseUrl = window.location.origin + window.location.pathname;
+            this._internalModuleList = [];
+            this._transpiledModuleList = [];
+            this._internalModuleMap = {};
+            this._isDeveloperMode = false;
 
-        this._isDeveloperModeIsSet = false;
-        this._basePathIsSet = false;
-        this._cacheIsSet = false;
-        this._responseCacheIsSet = false;
-        this._internalModuleListIsSet = false;
-        this._bundleFileMap = {};
-        this._bundleMapping = {};
-        /** @type {Object.<string, string[]>} */
-        this._bundleDependenciesMap = {};
-        /** @type {Object.<string, Promise>} */
-        this._bundlePromiseMap = {};
+            this._baseUrl = window.location.origin + window.location.pathname;
 
-        this._addLibsConfigCallCount = 0;
-        this._addLibsConfigCallMaxCount = 2;
-    };
+            this._isDeveloperModeIsSet = false;
+            this._basePathIsSet = false;
+            this._cacheIsSet = false;
+            this._responseCacheIsSet = false;
+            this._internalModuleListIsSet = false;
+            this._bundleFileMap = {};
+            this._bundleMapping = {};
+            /** @type {Object.<string, string[]>} */
+            this._bundleDependenciesMap = {};
+            /** @type {Object.<string, Promise>} */
+            this._bundlePromiseMap = {};
 
-    _.extend(Loader.prototype, /** @lends Loader.prototype */{
+            this._addLibsConfigCallCount = 0;
+            this._addLibsConfigCallMaxCount = 2;
+        }
 
         /**
          * @param {boolean} isDeveloperMode
          */
-        setIsDeveloperMode: function (isDeveloperMode) {
+        setIsDeveloperMode(isDeveloperMode) {
             if (this._isDeveloperModeIsSet) {
                 throw new Error('Is-Developer-Mode is already set.');
             }
 
             this._isDeveloperMode = isDeveloperMode;
             this._isDeveloperModeIsSet = true;
-        },
+        }
 
         /**
          * @param {string} basePath
          */
-        setBasePath: function (basePath) {
+        setBasePath(basePath) {
             if (this._basePathIsSet) {
                 throw new Error('Base path is already set.');
             }
 
             this._basePath = basePath;
             this._basePathIsSet = true;
-        },
+        }
 
         /**
          * @returns {Number}
          */
-        getCacheTimestamp: function () {
+        getCacheTimestamp() {
             return this._cacheTimestamp;
-        },
+        }
 
         /**
          * @param {Number} cacheTimestamp
          */
-        setCacheTimestamp: function (cacheTimestamp) {
+        setCacheTimestamp(cacheTimestamp) {
             this._cacheTimestamp = cacheTimestamp;
-        },
+        }
 
         /**
          * @param {module:cache} cache
          */
-        setCache: function (cache) {
+        setCache(cache) {
             if (this._cacheIsSet) {
                 throw new Error('Cache is already set');
             }
 
             this._cache = cache;
             this._cacheIsSet = true;
-        },
+        }
 
         /**
          * @param {Cache} responseCache
          */
-        setResponseCache: function (responseCache) {
+        setResponseCache(responseCache) {
             if (this._responseCacheIsSet) {
                 throw new Error('Response-Cache is already set');
             }
 
             this._responseCache = responseCache;
             this._responseCacheIsSet = true;
-        },
+        }
 
         /**
          * @param {string[]} internalModuleList
          */
-        setInternalModuleList: function (internalModuleList) {
+        setInternalModuleList(internalModuleList) {
             if (this._internalModuleListIsSet) {
                 throw new Error('Internal-module-list is already set');
             }
@@ -161,37 +161,37 @@
             this._internalModuleList = internalModuleList;
             this._internalModuleMap = {};
             this._internalModuleListIsSet = true;
-        },
+        }
 
         /**
          * @param {string[]} transpiledModuleList
          */
-        setTranspiledModuleList: function (transpiledModuleList) {
+        setTranspiledModuleList(transpiledModuleList) {
             this._transpiledModuleList = transpiledModuleList;
-        },
+        }
 
         /**
          * @private
          */
-        _getClass: function (name) {
+        _getClass(name) {
             if (name in this._classMap) {
                 return this._classMap[name];
             }
 
             return false;
-        },
+        }
 
         /**
          * @private
          */
-        _setClass: function (name, o) {
+        _setClass(name, o) {
             this._classMap[name] = o;
-        },
+        }
 
         /**
          * @private
          */
-        _nameToPath: function (name) {
+        _nameToPath(name) {
             if (name.indexOf(':') === -1) {
                 return 'client/lib/transpiled/src/' + name + '.js';
             }
@@ -213,7 +213,7 @@
             }
 
             return 'client/custom/modules/' + mod + '/src/' + namePart + '.js';
-        },
+        }
 
         /**
          * @private
@@ -221,7 +221,7 @@
          * @param {string} name
          * @param {string} path
          */
-        _execute: function (script, name, path) {
+        _execute(script, name, path) {
             /** @var {?string} */
             let module = null;
 
@@ -268,18 +268,18 @@
             }
 
             (new Function("'use strict'; " + script))();
-        },
+        }
 
         /**
          * @private
          */
-        _executeLoadCallback: function (subject, o) {
+        _executeLoadCallback(subject, o) {
             if (subject in this._loadCallbacks) {
                 this._loadCallbacks[subject].forEach(callback => callback(o));
 
                 delete this._loadCallbacks[subject];
             }
-        },
+        }
 
         /**
          * Define a module.
@@ -289,7 +289,7 @@
          * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies
          *   passed as parameters. Should return a value to define the module.
          */
-        define: function (subject, dependency, callback) {
+        define(subject, dependency, callback) {
             if (subject) {
                 subject = this._normalizeClassName(subject);
             }
@@ -315,7 +315,7 @@
             this.require(dependency, (...args) => {
                 this._defineProceed(callback, subject, args, indexOfExports);
             });
-        },
+        }
 
         /**
          * @private
@@ -324,7 +324,7 @@
          * @param {Array} args
          * @param {number} indexOfExports
          */
-        _defineProceed: function (callback, subject, args, indexOfExports) {
+        _defineProceed(callback, subject, args, indexOfExports) {
             let o = callback.apply(root, args);
 
             if (!o && indexOfExports === -1) {
@@ -343,7 +343,7 @@
 
             this._setClass(subject, o);
             this._executeLoadCallback(subject, o);
-        },
+        }
 
         /**
          * Require a module or multiple modules.
@@ -352,7 +352,7 @@
          * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies.
          * @param {Function|null} [errorCallback] An error callback.
          */
-        require: function (subject, callback, errorCallback) {
+        require(subject, callback, errorCallback) {
             let list;
 
             if (Object.prototype.toString.call(subject) === '[object Array]') {
@@ -405,23 +405,23 @@
             }
 
             callback.apply(root);
-        },
+        }
 
         /**
          * @private
          */
-        _convertCamelCaseToHyphen: function (string) {
+        _convertCamelCaseToHyphen(string) {
             if (string === null) {
                 return string;
             }
 
             return string.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-        },
+        }
 
         /**
          * @private
          */
-        _normalizeClassName: function (name) {
+        _normalizeClassName(name) {
             if (~name.indexOf('.') && !~name.indexOf('!')) {
                 console.warn(
                     name + ': ' +
@@ -458,23 +458,23 @@
             }
 
             return name;
-        },
+        }
 
         /**
          * @private
          */
-        _addLoadCallback: function (name, callback) {
+        _addLoadCallback(name, callback) {
             if (!(name in this._loadCallbacks)) {
                 this._loadCallbacks[name] = [];
             }
 
             this._loadCallbacks[name].push(callback);
-        },
+        }
 
         /**
          * @private
          */
-        _load: function (name, callback, errorCallback) {
+        _load(name, callback, errorCallback) {
             if (name === 'exports') {
                 callback({});
 
@@ -648,14 +648,14 @@
                             this._handleResponse(dto, cached);
                         });
                 });
-        },
+        }
 
         /**
          * @private
          * @param {string} name
          * @return {Promise}
          */
-        _requireBundle: function (name) {
+        _requireBundle(name) {
             if (this._bundlePromiseMap[name]) {
                 return this._bundlePromiseMap[name];
             }
@@ -683,14 +683,14 @@
             });
 
             return this._bundlePromiseMap[name];
-        },
+        }
 
         /**
          * @private
          * @param {string} name
          * @return {Promise}
          */
-        _addBundle: function (name) {
+        _addBundle(name) {
             let src = this._bundleFileMap[name];
 
             if (!src) {
@@ -719,12 +719,12 @@
 
                 scriptEl.addEventListener('load', () => resolve());
             });
-        },
+        }
 
         /**
          * @private
          */
-        _fetchObject: function (exportsTo, exportsAs) {
+        _fetchObject(exportsTo, exportsAs) {
             let from = root;
 
             if (exportsTo === 'window') {
@@ -743,12 +743,12 @@
             if (exportsAs in from) {
                 return from[exportsAs];
             }
-        },
+        }
 
         /**
          * @private
          */
-        _processCached: function (dto, cached) {
+        _processCached(dto, cached) {
             let name = dto.name;
             let callback = dto.callback;
             let type = dto.type;
@@ -787,12 +787,12 @@
             this._dataLoaded[name] = data;
 
             callback(data);
-        },
+        }
 
         /**
          * @private
          */
-        _processRequest: function (dto) {
+        _processRequest(dto) {
             let name = dto.name;
             let url = dto.url;
             let errorCallback = dto.errorCallback;
@@ -808,32 +808,32 @@
                 local: true,
                 url: url,
             })
-            .then(response => {
-                if (this._cache && !noAppCache && !this._responseCache) {
-                    this._cache.set('a', name, response);
-                }
+                .then(response => {
+                    if (this._cache && !noAppCache && !this._responseCache) {
+                        this._cache.set('a', name, response);
+                    }
 
-                if (this._responseCache) {
-                    this._responseCache.put(url, new Response(response));
-                }
+                    if (this._responseCache) {
+                        this._responseCache.put(url, new Response(response));
+                    }
 
-                this._handleResponse(dto, response);
-            })
-            .catch(() => {
-                if (typeof errorCallback === 'function') {
-                    errorCallback();
+                    this._handleResponse(dto, response);
+                })
+                .catch(() => {
+                    if (typeof errorCallback === 'function') {
+                        errorCallback();
 
-                    return;
-                }
+                        return;
+                    }
 
-                throw new Error("Could not load file '" + path + "'");
-            });
-        },
+                    throw new Error("Could not load file '" + path + "'");
+                });
+        }
 
         /**
          * @private
          */
-        _handleResponse: function (dto, response) {
+        _handleResponse(dto, response) {
             let name = dto.name;
             let callback = dto.callback;
             let type = dto.type;
@@ -872,58 +872,58 @@
             this._dataLoaded[name] = data;
 
             this._executeLoadCallback(name, data);
-        },
+        }
 
         /**
          * @param {Object} data
          * @internal
          */
-        addLibsConfig: function (data) {
+        addLibsConfig(data) {
             if (this._addLibsConfigCallCount === this._addLibsConfigCallMaxCount) {
                 throw new Error("Not allowed to call addLibsConfig.");
             }
 
             this._addLibsConfigCallCount++;
 
-            this._libsConfig = _.extend(this._libsConfig, data);
-        },
+            this._libsConfig = {...this._libsConfig, ...data};
+        }
 
         /**
          * @private
          */
-        _isModuleInternal: function (moduleName) {
+        _isModuleInternal(moduleName) {
             if (!(moduleName in this._internalModuleMap)) {
                 this._internalModuleMap[moduleName] = this._internalModuleList.indexOf(moduleName) !== -1;
             }
 
             return this._internalModuleMap[moduleName];
-        },
+        }
 
         /**
          * @param {string} name A bundle name.
          * @param {string} file A bundle file.
          * @internal
          */
-        mapBundleFile: function (name, file) {
+        mapBundleFile(name, file) {
             this._bundleFileMap[name] = file;
-        },
+        }
 
         /**
          * @param {string} name A bundle name.
          * @param {string[]} list Dependencies.
          * @internal
          */
-        mapBundleDependencies: function (name, list) {
+        mapBundleDependencies(name, list) {
             this._bundleDependenciesMap[name] = list;
-        },
+        }
 
         /**
          * @param {Object.<string, string>} mapping
          * @internal
          */
-        addBundleMapping: function (mapping) {
+        addBundleMapping(mapping) {
             Object.assign(this._bundleMapping, mapping);
-        },
+        }
 
         /**
          * Require a module or multiple modules.
@@ -931,7 +931,7 @@
          * @param {...string} subject A module or modules to require.
          * @returns {Promise<unknown>}
          */
-        requirePromise: function (subject) {
+        requirePromise(subject) {
             return new Promise((resolve, reject) => {
                 this.require(
                     subject,
@@ -939,8 +939,8 @@
                     () => reject()
                 );
             });
-        },
-    });
+        }
+    }
 
     let loader = new Loader();
 
@@ -1141,9 +1141,10 @@
         }
 
         let jsLibsTag = document.querySelector('script[data-name="js-libs"]');
+
         if (jsLibsTag) {
             Espo.loader.addLibsConfig(JSON.parse(jsLibsTag.textContent));
         }
     })();
 
-}).call(window, _, $);
+}).call(window);
