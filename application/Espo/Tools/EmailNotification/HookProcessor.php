@@ -89,7 +89,7 @@ class HookProcessor
     private function processMultiple(CoreEntity $entity): void
     {
         $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
-        $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds');
+        $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds') ?? [];
 
         foreach ($userIdList as $userId) {
             if (
