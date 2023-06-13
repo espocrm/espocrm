@@ -26,33 +26,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @module views/header */
+import View from 'view';
 
-import Dep from 'view';
+class HeaderView extends View {
 
-/**
- * @class Class
- * @extends module:view
- */
-export default Dep.extend(/** @lends Class# */{
+    template = 'header'
 
-    template: 'header',
-
-    data: function () {
+    data() {
         let data = {};
 
-        if ('getHeader' in this.getParentView()) {
-            data.header = this.getParentView().getHeader();
+        if ('getHeader' in this.getParentMainView()) {
+            data.header = this.getParentMainView().getHeader();
         }
 
-        data.scope = this.scope || this.getParentView().scope;
+        data.scope = this.scope || this.getParentMainView().scope;
         data.items = this.getItems();
 
         let dropdown = (data.items || {}).dropdown || [];
 
         data.hasVisibleDropdownItems = false;
-        dropdown.forEach(function (item) {
-            if (!item.hidden) data.hasVisibleDropdownItems = true;
+
+        dropdown.forEach(item => {
+            if (!item.hidden) {
+                data.hasVisibleDropdownItems = true;
+            }
         });
 
         data.noBreakWords = this.options.fontSizeFlexible;
@@ -64,9 +61,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
-    setup: function () {
+    setup() {
         this.scope = this.options.scope;
 
         if (this.model) {
@@ -78,21 +75,22 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.wasRendered = false;
-    },
+    }
 
-    afterRender: function () {
+
+    afterRender() {
         if (this.options.fontSizeFlexible) {
             this.adjustFontSize();
         }
 
         if (this.wasRendered) {
-            this.getParentView().trigger('header-rendered');
+            this.getParentMainView().trigger('header-rendered');
         }
 
         this.wasRendered = true;
-    },
+    }
 
-    adjustFontSize: function (step) {
+    adjustFontSize(step) {
         step = step || 0;
 
         if (!step) {
@@ -152,9 +150,18 @@ export default Dep.extend(/** @lends Class# */{
 
             this.adjustFontSize(step + 1);
         }
-    },
+    }
 
-    getItems: function () {
-        return this.getParentView().getMenu() || {};
-    },
-});
+    getItems() {
+        return this.getParentMainView().getMenu() || {};
+    }
+
+    /**
+     * @return {module:views/main}
+     */
+    getParentMainView() {
+        return this.getParentView();
+    }
+}
+
+export default HeaderView;
