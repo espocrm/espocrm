@@ -42,8 +42,8 @@ use Slim\ResponseEmitter;
  */
 class ClientManager
 {
-    protected string $mainHtmlFilePath = 'html/main.html';
-    protected string $runScript = "app.start();";
+    private string $mainHtmlFilePath = 'html/main.html';
+    private string $runScript = "app.start();";
     private string $favicon = 'client/img/favicon.ico';
     private string $favicon196 = 'client/img/favicon196x196.png';
     private string $basePath = '';
@@ -59,7 +59,6 @@ class ClientManager
         private DevModeJsFileListProvider $devModeJsFileListProvider,
         private Module $module
     ) {
-
         $this->nonce = Util::generateKey();
     }
 
@@ -207,12 +206,13 @@ class ClientManager
             'internalModuleList' => Json::encode($internalModuleList),
             'applicationDescription' => $this->config->get('applicationDescription') ?? self::APP_DESCRIPTION,
             'nonce' => $this->nonce,
-            'jsLibs' => Json::encode($jsLibs),
             'loaderParams' => Json::encode([
                 'basePath' => $this->basePath,
                 'cacheTimestamp' => $loaderCacheTimestamp,
                 'internalModuleList' => $internalModuleList,
                 'transpiledModuleList' => $this->getTranspiledModuleList(),
+                'libsConfig' => (object) $jsLibs,
+                'aliasMap' => $this->getAliasMap(),
             ]),
         ];
 
@@ -240,8 +240,8 @@ class ClientManager
     {
         if ($this->isDeveloperMode()) {
             return array_merge(
-                $this->getDeveloperModeBundleLibFileList(),
                 $this->metadata->get(['app', 'client', 'developerModeScriptList']) ?? [],
+                $this->getDeveloperModeBundleLibFileList(),
             );
         }
 
@@ -258,17 +258,17 @@ class ClientManager
 
     private function isDeveloperMode(): bool
     {
-        return $this->config->get('isDeveloperMode');
+        return (bool) $this->config->get('isDeveloperMode');
     }
 
     private function useCache(): bool
     {
-        return $this->config->get('useCache');
+        return (bool) $this->config->get('useCache');
     }
 
     private function useCacheInDeveloperMode(): bool
     {
-        return $this->config->get('useCacheInDeveloperMode');
+        return (bool) $this->config->get('useCacheInDeveloperMode');
     }
 
     private function getCacheTimestamp(): int
@@ -358,5 +358,20 @@ class ClientManager
             fn ($item) => Util::fromCamelCase($item, '-'),
             $modules
         );
+    }
+
+    private function getAliasMap(): object
+    {
+        $map = (object) [];
+
+        foreach ($this->metadata->get(['app', 'jsLibs'], []) as $key => $item) {
+            $id = $item['amdId'] ?? null;
+
+            if ($id) {
+                $map->$id = 'lib!' . $key;
+            }
+        }
+
+        return $map;
     }
 }

@@ -5,7 +5,7 @@
         "key": "jquery"
     },
     {
-        "src": "node_modules/underscore/underscore.js",
+        "src": "node_modules/underscore/underscore-umd.js",
         "bundle": true,
         "key": "underscore"
     },
@@ -20,22 +20,27 @@
         "key": "handlebars"
     },
     {
-        "src": "node_modules/bullbone/dist/bullbone.js",
+        "src": "node_modules/bullbone/dist/bullbone.umd.js",
         "bundle": true,
         "key": "bullbone"
     },
     {
         "src": "node_modules/js-base64/base64.js",
         "bundle": true,
-        "key": "Base64"
+        "key": "Base64",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/moment/moment.js",
-        "bundle": true
+        "bundle": true,
+        "key": "moment",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/moment-timezone/moment-timezone.js",
-        "bundle": true
+        "bundle": true,
+        "key": "moment-timezone",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/moment-timezone-data-build/build/moment-timezone-data.js",
@@ -43,11 +48,15 @@
     },
     {
         "src": "node_modules/timepicker/jquery.timepicker.js",
-        "bundle": true
+        "bundle": true,
+        "key": "timepicker",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js",
-        "bundle": true
+        "bundle": true,
+        "key": "autocomplete",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/jquery-textcomplete/dist/jquery.textcomplete.js",
@@ -60,7 +69,9 @@
     },
     {
         "src": "node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
-        "bundle": true
+        "bundle": true,
+        "key": "bootstrap-datepicker",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/marked/lib/marked.umd.js",
@@ -78,26 +89,26 @@
     },
     {
         "src": "node_modules/jquery-ui-espo/dist/jquery-ui.js",
-        "bundle": true
+        "bundle": true,
+        "suppressAmd": true
     },
     {
         "src": "node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.js",
-        "bundle": true
+        "bundle": true,
+        "suppressAmd": true
     },
     {
         "name": "gridstack",
-        "files": [
-            {
-                "src": "node_modules/gridstack/dist/gridstack-jq.js"
-            }
-        ],
+        "src": "node_modules/gridstack/dist/gridstack-jq.js",
         "bundle": true,
-        "key": "gridstack"
+        "key": "gridstack",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/selectize/dist/js/standalone/selectize.js",
         "bundle": true,
-        "key": "Selectize"
+        "key": "Selectize",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/autonumeric/dist/autoNumeric.js",

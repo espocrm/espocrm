@@ -24,14 +24,10 @@
             },
             "exportsTo": {
                 "anyOf": [
-                    {
-                        "type": "string"
-                    },
-                    {
-                        "enum": ["window", "$.fn"]
-                    }
+                    {"type": "string"},
+                    {"enum": ["window", "$.fn"]}
                 ],
-                "description": "To where the lib is exported. Use dots to define a path."
+                "description": "If the lib exposes itself w/o a module, to where the lib is exported. Use dots to define a path."
             },
             "exportsAs": {
                 "type": "string",
@@ -40,6 +36,18 @@
             "sourceMap": {
                 "type": "boolean",
                 "description": "Whether the source map file is available."
+            },
+            "expose": {
+                "type": "boolean",
+                "description": "To expose to the window global. To be used for backward compatibility reasons."
+            },
+            "exposeAs": {
+                "type": "string",
+                "description": "A name to expose by. By default, matches the lib name."
+            },
+            "amdId": {
+                "type": "string",
+                "description": "An AMD ID. If the module uses a named define function, specify that name."
             }
         }
     }

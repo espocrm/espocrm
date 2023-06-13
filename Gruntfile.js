@@ -44,7 +44,13 @@ module.exports = grunt => {
 
     const originalLibDir = 'client/lib/original';
 
-    let bundleFileMap = {'client/lib/espo-libs.min.js': buildUtils.getPreparedBundleLibList(libs)};
+    let libsBundleFileList = [
+        'client/src/namespace.js',
+        'client/src/loader.js',
+        ...buildUtils.getPreparedBundleLibList(libs),
+    ];
+
+    let bundleFileMap = {'client/lib/espo-libs.min.js': libsBundleFileList};
 
     for (let name in bundleConfig.chunks) {
         let namePart = 'espo-' + name;

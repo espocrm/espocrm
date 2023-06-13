@@ -28,14 +28,15 @@
 
 /** @module view */
 
-import Bull from 'lib!bullbone';
+import {View as BullView} from 'lib!bullbone';
 
 /**
  * A base view. All views should extend this class.
  *
  * @see {@link https://docs.espocrm.com/development/view/}
+ * @mixes Bull.Events
  */
-class View extends Bull.View {
+class View extends BullView {
 
     /**
      * @callback module:view~actionHandlerCallback

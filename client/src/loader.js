@@ -38,9 +38,21 @@
      * A callback with resolved dependencies passed as parameters.
      *   Should return a value to define a module.
      *
-     * @callback Espo.Loader~requireCallback
+     * @callback Loader~requireCallback
      * @param {...any} arguments Resolved dependencies.
      * @returns {*}
+     */
+
+    /**
+     * @typedef Loader~libData
+     * @type {Object}
+     * @property {string} [exportsTo] Exports to.
+     * @property {string} [exportsAs] Exports as.
+     * @property {boolean} [sourceMap] Has a source map.
+     * @property {boolean} [expose] To expose to global.
+     * @property {string} [exposeAs] To expose to global as.
+     * @property {string} [path] A path.
+     * @property {string} [devPath] A path in developer mode.
      */
 
     /**
@@ -56,12 +68,14 @@
         constructor(cache, _cacheTimestamp) {
             this._cacheTimestamp = _cacheTimestamp || null;
             this._cache = cache || null;
+            /** @type {Object.<string, Loader~libData>} */
             this._libsConfig = {};
             this._loadCallbacks = {};
             this._pathsBeingLoaded = {};
             this._dataLoaded = {};
-            this._classMap = {};
-            this._loadingSubject = null;
+            this._definedMap = {};
+            this._aliasMap = {};
+            this._contextId = null;
             this._responseCache = null;
             this._basePath = '';
 
@@ -172,31 +186,48 @@
 
         /**
          * @private
+         * @param {string} id
          */
-        _getClass(name) {
-            if (name in this._classMap) {
-                return this._classMap[name];
+        _get(id) {
+            if (id in this._definedMap) {
+                return this._definedMap[id];
             }
 
-            return false;
+            return void 0;
         }
 
         /**
          * @private
+         * @param {string} id
+         * @param {*} value
          */
-        _setClass(name, o) {
-            this._classMap[name] = o;
+        _set(id, value) {
+            this._definedMap[id] = value;
+
+            if (id.slice(0, 4) === 'lib!') {
+                let libName = id.slice(4);
+
+                const libsData = this._libsConfig[libName];
+
+                if (libsData && libsData.expose) {
+                    let key = libsData.exposeAs || libName;
+
+                    window[key] = value;
+                }
+            }
         }
 
         /**
          * @private
+         * @param {string} id
+         * @return {string}
          */
-        _nameToPath(name) {
-            if (name.indexOf(':') === -1) {
-                return 'client/lib/transpiled/src/' + name + '.js';
+        _idToPath(id) {
+            if (id.indexOf(':') === -1) {
+                return 'client/lib/transpiled/src/' + id + '.js';
             }
 
-            let arr = name.split(':');
+            let arr = id.split(':');
             let namePart = arr[1];
             let mod = arr[0];
 
@@ -218,25 +249,25 @@
         /**
          * @private
          * @param {string} script
-         * @param {string} name
+         * @param {string} id
          * @param {string} path
          */
-        _execute(script, name, path) {
+        _execute(script, id, path) {
             /** @var {?string} */
             let module = null;
 
-            let colonIndex = name.indexOf(':');
+            let colonIndex = id.indexOf(':');
 
             if (colonIndex > 0) {
-                module = name.substring(0, colonIndex);
+                module = id.substring(0, colonIndex);
             }
 
             let noStrictMode = false;
 
-            if (!module && name.indexOf('lib!') === 0) {
+            if (!module && id.indexOf('lib!') === 0) {
                 noStrictMode = true;
 
-                let realName = name.substring(4);
+                let realName = id.substring(4);
 
                 let libsData = this._libsConfig[realName] || {};
 
@@ -272,100 +303,117 @@
 
         /**
          * @private
+         * @param {string} id
+         * @param {*} value
          */
-        _executeLoadCallback(subject, o) {
-            if (subject in this._loadCallbacks) {
-                this._loadCallbacks[subject].forEach(callback => callback(o));
-
-                delete this._loadCallbacks[subject];
+        _executeLoadCallback(id, value) {
+            if (!(id in this._loadCallbacks)) {
+                return;
             }
+
+            this._loadCallbacks[id].forEach(callback => callback(value));
+
+            delete this._loadCallbacks[id];
         }
 
         /**
          * Define a module.
          *
-         * @param {string} subject A module name to be defined.
-         * @param {string[]} dependency A dependency list.
-         * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies
+         * @param {string|null} id A module name to be defined.
+         * @param {string[]} dependencyIds A dependency list.
+         * @param {Loader~requireCallback} callback A callback with resolved dependencies
          *   passed as parameters. Should return a value to define the module.
          */
-        define(subject, dependency, callback) {
-            if (subject) {
-                subject = this._normalizeClassName(subject);
+        define(id, dependencyIds, callback) {
+            if (id) {
+                id = this._normalizeClassName(id);
             }
 
-            if (this._loadingSubject) {
-                subject = subject || this._loadingSubject;
+            if (this._contextId) {
+                id = id || this._contextId;
 
-                this._loadingSubject = null;
+                this._contextId = null;
             }
 
-            if (this._getClass(subject)) {
+            let existing = this._get(id);
+
+            if (typeof existing !== 'undefined') {
                 return;
             }
 
-            if (!dependency) {
-                this._defineProceed(callback, subject, [], -1);
+            if (!dependencyIds) {
+                this._defineProceed(callback, id, [], -1);
 
                 return;
             }
 
-            let indexOfExports = dependency.indexOf('exports');
+            let indexOfExports = dependencyIds.indexOf('exports');
 
-            this.require(dependency, (...args) => {
-                this._defineProceed(callback, subject, args, indexOfExports);
+            if (Array.isArray(dependencyIds)) {
+                dependencyIds = dependencyIds.map(item => this._normalizePath(item, id));
+            }
+
+            this.require(dependencyIds, (...args) => {
+                this._defineProceed(callback, id, args, indexOfExports);
             });
         }
 
         /**
          * @private
          * @param {function} callback
-         * @param {string} subject
+         * @param {string} id
          * @param {Array} args
          * @param {number} indexOfExports
          */
-        _defineProceed(callback, subject, args, indexOfExports) {
-            let o = callback.apply(root, args);
+        _defineProceed(callback, id, args, indexOfExports) {
+            let value = callback.apply(root, args);
 
-            if (!o && indexOfExports === -1) {
+            if (typeof value === 'undefined' && indexOfExports === -1 && id) {
                 if (this._cache) {
-                    this._cache.clear('a', subject);
+                    this._cache.clear('a', id);
                 }
 
-                throw new Error("Could not load '" + subject + "'");
+                throw new Error("Could not load '" + id + "'");
             }
 
             if (indexOfExports !== -1) {
                 let exports = args[indexOfExports];
 
-                o = ('default' in exports) ? exports.default : exports;
+                value = ('default' in exports) ? exports.default : exports;
             }
 
-            this._setClass(subject, o);
-            this._executeLoadCallback(subject, o);
+            if (!id) {
+                console.error(value);
+                // Libs can define w/o id and set to the root.
+                // Not supposed to happen as should be suppressed by require.amd = false;
+                return;
+            }
+
+            this._set(id, value);
+            this._executeLoadCallback(id, value);
         }
 
         /**
          * Require a module or multiple modules.
          *
-         * @param {string|string[]} subject A module or modules to require.
-         * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies.
+         * @param {string|string[]} id A module or modules to require.
+         * @param {Loader~requireCallback} callback A callback with resolved dependencies.
          * @param {Function|null} [errorCallback] An error callback.
          */
-        require(subject, callback, errorCallback) {
+        require(id, callback, errorCallback) {
             let list;
 
-            if (Object.prototype.toString.call(subject) === '[object Array]') {
-                list = subject;
+            if (Object.prototype.toString.call(id) === '[object Array]') {
+                list = id;
 
                 list.forEach((item, i) => {
                     list[i] = this._normalizeClassName(item);
                 });
             }
-            else if (subject) {
-                subject = this._normalizeClassName(subject);
+            else if (id) {
+                id = this._normalizeClassName(id);
 
-                list = [subject];
+                list = [id];
             }
             else {
                 list = [];
@@ -419,10 +467,61 @@
         }
 
         /**
+         * @param {string} path
+         * @param {string} id
+         * @private
+         */
+        _normalizePath(path, id) {
+            if (path.at(0) !== '.') {
+                return path;
+            }
+
+            if (path.slice(0, 2) !== './' && path.slice(0, 3) !== '../') {
+                return path;
+            }
+
+            let outputPath = path;
+
+            let dirParts = id.split('/').slice(0, -1);
+
+            if (path.slice(0, 2) === './') {
+                outputPath = dirParts.join('/') + '/' + path.slice(2);
+            }
+
+            let parts = outputPath.split('/');
+
+            let up = 0;
+
+            for (let part of parts) {
+                if (part === '..') {
+                    up++;
+
+                    continue;
+                }
+
+                break;
+            }
+
+            if (!up) {
+                return outputPath;
+            }
+
+            if (up) {
+                outputPath = dirParts.slice(0, -up).join('/') + '/' + outputPath.slice(3 * up);
+            }
+
+            return outputPath;
+        }
+
+        /**
          * @private
          */
         _normalizeClassName(name) {
-            if (~name.indexOf('.') && !~name.indexOf('!')) {
+            if (name in this._aliasMap) {
+                name = this._aliasMap[name];
+            }
+
+            if (~name.indexOf('.') && !~name.indexOf('!') && !name.slice(-3) === '.js') {
                 console.warn(
                     name + ': ' +
                     'class name should use slashes for a directory separator and hyphen format.'
@@ -484,7 +583,6 @@
             let dataType, type, path, exportsTo, exportsAs;
 
             let realName = name;
-
             let noAppCache = false;
 
             if (name.indexOf('lib!') === 0) {
@@ -495,31 +593,49 @@
                 path = realName;
 
                 exportsTo = 'window';
-                exportsAs = realName;
+                exportsAs = null;
 
-                if (realName in this._libsConfig) {
-                    let libData = this._libsConfig[realName] || {};
+
+                let isDefinedLib = realName in this._libsConfig;
+
+                if (isDefinedLib) {
+                    const libData = this._libsConfig[realName] || {};
 
                     path = libData.path || path;
 
-                    if (this._isDeveloperMode) {
-                        path = libData.devPath || path;
+                    if (this._isDeveloperMode && libData.devPath) {
+                        path = libData.devPath;
                     }
 
-                    exportsTo = libData.exportsTo || exportsTo;
-                    exportsAs = libData.exportsAs || exportsAs;
+                    path = (this._isDeveloperMode ? libData.devPath : libData.path) || path;
+                    exportsTo = libData.exportsTo || null;
+                    exportsAs = libData.exportsAs || null;
+                }
+
+                if (isDefinedLib && !exportsTo) {
+                    type = 'amd';
                 }
 
                 if (path.indexOf(':') !== -1) {
                     console.error(`Not allowed path '${path}'.`);
+
                     throw new Error();
                 }
 
                 noAppCache = true;
 
-                let obj = this._fetchObject(exportsTo, exportsAs);
+                let obj = void 0;
 
-                if (obj) {
+                if (exportsTo && exportsAs) {
+                    obj = this._fetchObject(exportsTo, exportsAs);
+                }
+
+
+                if (typeof obj === 'undefined' && name in this._definedMap) {
+                    obj = this._definedMap[name];
+                }
+
+                if (typeof obj !== 'undefined') {
                     callback(obj);
 
                     return;
@@ -534,20 +650,21 @@
 
                 if (path.indexOf(':') !== -1) {
                     console.error(`Not allowed path '${path}'.`);
+
                     throw new Error();
                 }
             }
             else {
                 dataType = 'script';
-                type = 'class';
+                type = 'amd';
 
                 if (!name || name === '') {
                     throw new Error("Can not load empty class name");
                 }
 
-                let classObj = this._getClass(name);
+                let classObj = this._get(name);
 
-                if (classObj) {
+                if (typeof classObj !== 'undefined') {
                     callback(classObj);
 
                     return;
@@ -557,9 +674,9 @@
                     let bundleName = this._bundleMapping[name];
 
                     this._requireBundle(bundleName).then(() => {
-                        let classObj = this._getClass(name);
+                        let classObj = this._get(name);
 
-                        if (!classObj) {
+                        if (typeof classObj === 'undefined') {
                             let msg = `Could not obtain class '${name}' from bundle '${bundleName}'.`;
                             console.error(msg);
 
@@ -572,7 +689,7 @@
                     return;
                 }
 
-                path = this._nameToPath(name);
+                path = this._idToPath(name);
             }
 
             if (name in this._dataLoaded) {
@@ -749,31 +866,31 @@
          * @private
          */
         _processCached(dto, cached) {
-            let name = dto.name;
+            let id = dto.name;
             let callback = dto.callback;
             let type = dto.type;
             let dataType = dto.dataType;
             let exportsAs = dto.exportsAs;
             let exportsTo = dto.exportsTo;
 
-            if (type === 'class') {
-                this._loadingSubject = name;
+            if (type === 'amd') {
+                this._contextId = id;
             }
 
             if (dataType === 'script') {
-                this._execute(cached, name, dto.path);
+                this._execute(cached, id, dto.path);
             }
 
-            if (type === 'class') {
-                let classObj = this._getClass(name);
+            if (type === 'amd') {
+                let value = this._get(id);
 
-                if (classObj) {
-                    callback(classObj);
+                if (typeof value !== 'undefined') {
+                    callback(value);
 
                     return;
                 }
 
-                this._addLoadCallback(name, callback);
+                this._addLoadCallback(id, callback);
 
                 return;
             }
@@ -784,7 +901,7 @@
                 data = this._fetchObject(exportsTo, exportsAs);
             }
 
-            this._dataLoaded[name] = data;
+            this._dataLoaded[id] = data;
 
             callback(data);
         }
@@ -793,13 +910,14 @@
          * @private
          */
         _processRequest(dto) {
-            let name = dto.name;
+            let id = dto.name;
             let url = dto.url;
             let errorCallback = dto.errorCallback;
             let path = dto.path;
             let useCache = dto.useCache;
             let noAppCache = dto.noAppCache;
 
+            // @todo Use `fetch`.
             $.ajax({
                 type: 'GET',
                 cache: useCache,
@@ -810,7 +928,7 @@
             })
                 .then(response => {
                     if (this._cache && !noAppCache && !this._responseCache) {
-                        this._cache.set('a', name, response);
+                        this._cache.set('a', id, response);
                     }
 
                     if (this._responseCache) {
@@ -834,48 +952,58 @@
          * @private
          */
         _handleResponse(dto, response) {
-            let name = dto.name;
+            let id = dto.name;
             let callback = dto.callback;
             let type = dto.type;
             let dataType = dto.dataType;
             let exportsAs = dto.exportsAs;
             let exportsTo = dto.exportsTo;
 
-            this._addLoadCallback(name, callback);
+            this._addLoadCallback(id, callback);
 
-            if (type === 'class') {
-                this._loadingSubject = name;
+            if (type === 'amd') {
+                this._contextId = id;
+            }
+
+            let isLib = id.slice(0, 4) === 'lib!';
+
+            if (isLib && exportsAs) {
+                define.amd = false;
             }
 
             if (dataType === 'script') {
-                this._execute(response, name, dto.path);
+                this._execute(response, id, dto.path);
             }
 
-            let data;
+            if (isLib && exportsAs) {
+                define.amd = true;
+            }
 
-            if (type === 'class') {
-                data = this._getClass(name);
+            let result;
 
-                if (data && typeof data === 'function') {
-                    this._executeLoadCallback(name, data);
+            if (type === 'amd') {
+                result = this._get(id);
+
+                if (typeof result !== 'undefined') {
+                    this._executeLoadCallback(id, result);
                 }
 
                 return;
             }
 
-            data = response;
+            result = response;
 
             if (exportsTo && exportsAs) {
-                data = this._fetchObject(exportsTo, exportsAs);
+                result = this._fetchObject(exportsTo, exportsAs);
             }
 
-            this._dataLoaded[name] = data;
+            this._dataLoaded[id] = result;
 
-            this._executeLoadCallback(name, data);
+            this._executeLoadCallback(id, result);
         }
 
         /**
-         * @param {Object} data
+         * @param {Object.<string, Loader~libData>} data
          * @internal
          */
         addLibsConfig(data) {
@@ -886,6 +1014,13 @@
             this._addLibsConfigCallCount++;
 
             this._libsConfig = {...this._libsConfig, ...data};
+        }
+
+        /**
+         * @param {Object.<string, string>} map
+         */
+        setAliasMap(map) {
+            this._aliasMap = map;
         }
 
         /**
@@ -926,15 +1061,23 @@
         }
 
         /**
+         * @param {string} id
+         * @internal
+         */
+        setContextId(id) {
+            this._contextId = id;
+        }
+
+        /**
          * Require a module or multiple modules.
          *
-         * @param {...string} subject A module or modules to require.
+         * @param {...string} id A module or modules to require.
          * @returns {Promise<unknown>}
          */
-        requirePromise(subject) {
+        requirePromise(id) {
             return new Promise((resolve, reject) => {
                 this.require(
-                    subject,
+                    id,
                     (...args) => resolve(...args),
                     () => reject()
                 );
@@ -994,54 +1137,40 @@
         },
 
         /**
-         * @param {string[]} internalModuleList
-         */
-        setInternalModuleList: function (internalModuleList) {
-            loader.setInternalModuleList(internalModuleList);
-        },
-
-        /**
-         * @param {string[]} transpiledModuleList
-         */
-        setTranspiledModuleList: function (transpiledModuleList) {
-            loader.setTranspiledModuleList(transpiledModuleList);
-        },
-
-        /**
          * Define a module.
          *
-         * @param {string} subject A module name to be defined.
-         * @param {string[]} dependency A dependency list.
-         * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies
+         * @param {string} id A module name to be defined.
+         * @param {string[]} dependencyIds A dependency list.
+         * @param {Loader~requireCallback} callback A callback with resolved dependencies
          *   passed as parameters. Should return a value to define the module.
          */
-        define: function (subject, dependency, callback) {
-            loader.define(subject, dependency, callback);
+        define: function (id, dependencyIds, callback) {
+            loader.define(id, dependencyIds, callback);
         },
 
         /**
          * Require a module or multiple modules.
          *
-         * @param {string|string[]} subject A module or modules to require.
-         * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies.
+         * @param {string|string[]} id A module or modules to require.
+         * @param {Loader~requireCallback} callback A callback with resolved dependencies.
          * @param {Function|null} [errorCallback] An error callback.
          */
-        require: function (subject, callback, errorCallback) {
-            loader.require(subject, callback, errorCallback);
+        require: function (id, callback, errorCallback) {
+            loader.require(id, callback, errorCallback);
         },
 
         /**
          * Require a module or multiple modules.
          *
-         * @param {string|string[]} subject A module or modules to require.
+         * @param {string|string[]} id A module or modules to require.
          * @returns {Promise<unknown>}
          */
-        requirePromise: function (subject) {
-            return loader.requirePromise(subject);
+        requirePromise: function (id) {
+            return loader.requirePromise(id);
         },
 
         /**
-         * @param {Object} data
+         * @param {Object.<string, Loader~libData>} data
          * @internal
          */
         addLibsConfig: function (data) {
@@ -1073,24 +1202,32 @@
         addBundleMapping: function (mapping) {
             loader.addBundleMapping(mapping);
         },
+
+        /**
+         * @param {string} id
+         * @internal
+         */
+        setContextId: function (id) {
+            loader.setContextId(id);
+        },
     };
 
     /**
      * Require a module or multiple modules.
      *
-     * @param {string|string[]} subject A module or modules to require.
-     * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies.
+     * @param {string|string[]} id A module or modules to require.
+     * @param {Loader~requireCallback} callback A callback with resolved dependencies.
      * @param {Object} [context] A context.
      * @param {Function|null} [errorCallback] An error callback.
      *
      * @deprecated Use `Espo.loader.require` instead.
      */
-    root.require = Espo.require = function (subject, callback, context, errorCallback) {
+    root.require = Espo.require = function (id, callback, context, errorCallback) {
         if (context) {
             callback = callback.bind(context);
         }
 
-        loader.require(subject, callback, errorCallback);
+        loader.require(id, callback, errorCallback);
     };
 
     /**
@@ -1101,50 +1238,56 @@
      * 2. `(dependencyList, callback)` – Unnamed, with dependencies.
      * 3. `(moduleName, dependencyList, callback)` – Named.
      *
-     * @param {string|string[]|Espo.Loader~requireCallback} arg1 A module name to be defined,
+     * @param {string|string[]|Loader~requireCallback} arg1 A module name to be defined,
      *   a dependency list or a callback.
-     * @param {string[]|Espo.Loader~requireCallback} [arg2] A dependency list or a callback with resolved
+     * @param {string[]|Loader~requireCallback} [arg2] A dependency list or a callback with resolved
      *   dependencies.
-     * @param {Espo.Loader~requireCallback} [arg3] A callback with resolved dependencies.
+     * @param {Loader~requireCallback} [arg3] A callback with resolved dependencies.
      */
     root.define = Espo.define = function (arg1, arg2, arg3) {
-        let subject = null;
-        let dependency = null;
+        let id = null;
+        let depIds = null;
         let callback;
 
         if (typeof arg1 === 'function') {
             callback = arg1;
         }
         else if (typeof arg1 !== 'undefined' && typeof arg2 === 'function') {
-            dependency = arg1;
+            if (Array.isArray(arg1)) {
+                depIds = arg1;
+            } else {
+                id = arg1;
+                depIds = [];
+            }
+
             callback = arg2;
         }
         else {
-            subject = arg1;
-            dependency = arg2;
+            id = arg1;
+            depIds = arg2;
             callback = arg3;
         }
 
-        loader.define(subject, dependency, callback);
+        loader.define(id, depIds, callback);
     };
 
+    root.define.amd = true;
+
     (() => {
-        let loaderParamsTag = document.querySelector('script[data-name="loader-params"]');
+        const loaderParamsTag = document.querySelector('script[data-name="loader-params"]');
 
-        if (loaderParamsTag) {
-            let params = JSON.parse(loaderParamsTag.textContent);
-
-            Espo.loader.setCacheTimestamp(params.cacheTimestamp);
-            Espo.loader.setBasePath(params.basePath);
-            Espo.loader.setInternalModuleList(params.internalModuleList);
-            Espo.loader.setTranspiledModuleList(params.transpiledModuleList);
+        if (!loaderParamsTag) {
+            return;
         }
 
-        let jsLibsTag = document.querySelector('script[data-name="js-libs"]');
+        const params = JSON.parse(loaderParamsTag.textContent);
 
-        if (jsLibsTag) {
-            Espo.loader.addLibsConfig(JSON.parse(jsLibsTag.textContent));
-        }
+        loader.setCacheTimestamp(params.cacheTimestamp);
+        loader.setBasePath(params.basePath);
+        loader.setInternalModuleList(params.internalModuleList);
+        loader.setTranspiledModuleList(params.transpiledModuleList);
+        loader.addLibsConfig(params.libsConfig);
+        loader.setAliasMap(params.aliasMap);
     })();
 
 }).call(window);

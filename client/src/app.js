@@ -32,7 +32,7 @@ import Espo from 'lib!espo';
 import $ from 'lib!jquery';
 import Backbone from 'lib!backbone';
 import _ from 'lib!underscore';
-import Bull from 'lib!bullbone';
+import {Events, View as BullView, Factory as BullFactory} from 'lib!bullbone';
 import Base64 from 'lib!base64';
 import Ui from 'ui';
 import Utils from 'utils';
@@ -811,7 +811,7 @@ class App  {
             return 'client/custom/modules/' + mod + '/' + getResourceInnerPath(type, path);
         };
 
-        this.viewFactory = new Bull.Factory({
+        this.viewFactory = new BullFactory({
             useCache: false,
             defaultViewName: 'views/base',
             helper: helper,
@@ -1400,8 +1400,8 @@ class App  {
  * @property {Number|null} [cacheTimestamp] A cache timestamp.
  */
 
-_.extend(App.prototype, Bull.Events);
+_.extend(App.prototype, Events);
 
-App.extend = Bull.View.extend;
+App.extend = BullView.extend;
 
 export default App;

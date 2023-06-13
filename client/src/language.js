@@ -28,7 +28,7 @@
 
 /** @module language */
 
-import Bull from 'lib!bullbone';
+import {Events} from 'lib!bullbone';
 
 /**
  * A language.
@@ -322,6 +322,6 @@ class Language {
     }
 }
 
-_.extend(Language.prototype, Bull.Events);
+_.extend(Language.prototype, Events);
 
 export default Language;

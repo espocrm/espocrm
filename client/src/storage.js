@@ -28,8 +28,6 @@
 
 /** @module storage */
 
-import Bull from 'lib!bullbone';
-
 /**
  * A storage. Data is saved across browser sessions, has no expiration time.
  */

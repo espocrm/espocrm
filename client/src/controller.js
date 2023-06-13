@@ -29,7 +29,7 @@
 /** @module controller */
 
 import Exceptions from 'exceptions';
-import Bull from 'lib!bullbone';
+import {Events, View as BullView} from 'lib!bullbone';
 import _ from 'lib!underscore';
 
 /**
@@ -612,8 +612,8 @@ class Controller {
 }
 
 /** For backward compatibility. */
-Controller.extend = Bull.View.extend;
+Controller.extend = BullView.extend;
 
-_.extend(Controller.prototype, Bull.Events);
+_.extend(Controller.prototype, Events);
 
 export default Controller;

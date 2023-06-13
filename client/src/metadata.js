@@ -28,7 +28,7 @@
 
 /** @module metadata */
 
-import Bull from 'lib!bullbone';
+import {Events} from 'lib!bullbone';
 
 /**
  * Application metadata.
@@ -261,6 +261,6 @@ class Metadata {
     }
 }
 
-_.extend(Metadata.prototype, Bull.Events);
+_.extend(Metadata.prototype, Events);
 
 export default Metadata;

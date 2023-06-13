@@ -28,7 +28,7 @@
 
 /** @module view-record-helper */
 
-import Bull from 'lib!bullbone';
+import {Events} from 'lib!bullbone';
 
 class ViewRecordHelper {
 
@@ -207,6 +207,6 @@ class ViewRecordHelper {
     }
 }
 
-_.extend(ViewRecordHelper.prototype, Bull.Events);
+_.extend(ViewRecordHelper.prototype, Events);
 
 export default ViewRecordHelper;

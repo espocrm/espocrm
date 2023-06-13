@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Bull from 'lib!bullbone';
+import {Events} from 'lib!bullbone';
 
 /**
  * @mixes Bull.Events
@@ -49,6 +49,6 @@ class WorkingTimeRangeHandler {
     }
 }
 
-_.extend(WorkingTimeRangeHandler.prototype, Bull.Events);
+_.extend(WorkingTimeRangeHandler.prototype, Events);
 
 export default WorkingTimeRangeHandler;

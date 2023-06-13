@@ -9,7 +9,6 @@
     "vis": {
         "path": "client/modules/crm/lib/vis.js",
         "devPath": "client/modules/crm/lib/original/vis.js",
-        "exportsAs": "vis",
         "sourceMap": true
     }
 }

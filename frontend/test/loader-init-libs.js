@@ -26,47 +26,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.loader.addLibsConfig(
-    {
-        "espo": {
-            "exportsTo": "window",
-            "exportsAs": "Espo"
-        },
-        "jquery": {
-            "exportsTo": "window",
-            "exportsAs": "$"
-        },
-        "backbone": {
-            "exportsTo": "window",
-            "exportsAs": "Backbone"
-        },
-        "bullbone": {
-            "exportsTo": "window",
-            "exportsAs": "Bull"
-        },
-        "handlebars": {
-            "exportsTo": "window",
-            "exportsAs": "Handlebars"
-        },
-        "underscore": {
-            "exportsTo": "window",
-            "exportsAs": "_"
-        },
-        "marked": {
-            "exportsTo": "window",
-            "exportsAs": "marked"
-        },
-        "dompurify": {
-            "exportsTo": "window",
-            "exportsAs": "DOMPurify"
-        },
-        "base64": {
-            "exportsTo": "window",
-            "exportsAs": "Base64"
-        },
-        "moment": {
-            "exportsTo": "window",
-            "exportsAs": "moment"
-        }
+Espo.loader.addLibsConfig({
+    "espo": {
+        "exportsTo": "window",
+        "exportsAs": "Espo"
+    },
+    "jquery": {
+        "expose": true,
+        "exposeAs": "$",
+        "amdId": "jquery"
+    },
+    "backbone": {
+        "exportsTo": "window",
+        "exportsAs": "Backbone"
+    },
+    "bullbone": {
+        "expose": true,
+        "exposeAs": "Bull",
+        "amdId": "bullbone"
+    },
+    "handlebars": {
+        "expose": true,
+        "exposeAs": "Handlebars"
+    },
+    "underscore": {
+        "expose": true,
+        "exposeAs": "_",
+        "amdId": "underscore"
+    },
+    "marked": {},
+    "dompurify": {
+        "expose": true,
+        "exposeAs": "DOMPurify"
+    },
+    "base64": {
+        "exportsTo": "window",
+        "exportsAs": "Base64"
+    },
+    "moment": {
+        "expose": true
     }
-);
+});

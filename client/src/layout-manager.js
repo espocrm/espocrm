@@ -28,7 +28,7 @@
 
 /** @module layout-manager */
 
-import Bull from 'lib!bullbone';
+import {Events} from 'lib!bullbone';
 
 /**
  * A layout manager.
@@ -276,6 +276,6 @@ class LayoutManager {
     }
 }
 
-_.extend(LayoutManager.prototype, Bull.Events);
+_.extend(LayoutManager.prototype, Events);
 
 export default LayoutManager;

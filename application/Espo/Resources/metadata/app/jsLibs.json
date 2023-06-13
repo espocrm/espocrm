@@ -1,4 +1,44 @@
 {
+    "espo": {
+        "exportsTo": "window",
+        "exportsAs": "Espo"
+    },
+    "jquery": {
+        "expose": true,
+        "exposeAs": "$",
+        "amdId": "jquery"
+    },
+    "backbone": {
+        "exportsTo": "window",
+        "exportsAs": "Backbone"
+    },
+    "bullbone": {
+        "expose": true,
+        "exposeAs": "Bull",
+        "amdId": "bullbone"
+    },
+    "handlebars": {
+        "expose": true,
+        "exposeAs": "Handlebars"
+    },
+    "underscore": {
+        "expose": true,
+        "exposeAs": "_",
+        "amdId": "underscore"
+    },
+    "marked": {},
+    "dompurify": {
+        "expose": true,
+        "exposeAs": "DOMPurify"
+    },
+    "base64": {
+        "exportsTo": "window",
+        "exportsAs": "Base64"
+    },
+    "moment": {
+        "exportsTo": "window",
+        "exportsAs": "moment"
+    },
     "Flotr": {
         "path": "client/lib/flotr2.js",
         "devPath": "client/lib/original/flotr2.js",
@@ -26,22 +66,30 @@
         "exportsTo": "$.fn",
         "exportsAs": "textcomplete"
     },
+    "autocomplete": {
+        "exportsTo": "$.fn",
+        "exportsAs": "autocomplete"
+    },
+    "timepicker": {
+        "exportsTo": "$.fn",
+        "exportsAs": "timepicker"
+    },
+    "bootstrap-datepicker": {
+        "exportsTo": "$.fn",
+        "exportsAs": "datepicker"
+    },
     "Selectize": {
         "path": "client/lib/selectize.js",
         "devPath": "client/lib/original/selectize.js",
         "exportsTo": "window",
         "exportsAs": "Selectize"
     },
-    "autonumeric": {
-        "exportsTo": "window",
-        "exportsAs": "AutoNumeric"
-    },
+    "autonumeric": {},
     "cronstrue": {
         "path": "client/lib/cronstrue-i18n.js",
         "devPath": "client/lib/original/cronstrue-i18n.js",
-        "exportsTo": "window",
-        "exportsAs": "cronstrue",
-        "sourceMap": true
+        "sourceMap": true,
+        "amdId": "cronstrue"
     },
     "Cropper": {
         "path": "client/lib/cropper.js",
@@ -61,8 +109,7 @@
     "exif": {
         "path": "client/lib/exif.js",
         "devPath": "client/lib/original/exif.js",
-        "exportsTo": "window",
-        "exportsAs": "EXIF",
+        "amdId": "exif-js",
         "sourceMap": true
     },
     "JsBarcode": {

@@ -28,7 +28,7 @@
 
 /** @module model */
 
-import Bull from 'lib!bullbone';
+import {Events, View as BullView} from 'lib!bullbone';
 import _ from 'lib!underscore';
 
 /**
@@ -1008,8 +1008,8 @@ class Model {
     }
 }
 
-Model.extend = Bull.View.extend;
+Model.extend = BullView.extend;
 
-_.extend(Model.prototype, Bull.Events);
+_.extend(Model.prototype, Events);
 
 export default Model;

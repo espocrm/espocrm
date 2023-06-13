@@ -15,12 +15,11 @@
             "files": [
                 "src/namespace.js",
                 "src/loader.js",
-                "src/loader-init-libs.js",
                 "src/exceptions.js",
                 "src/utils.js"
             ],
             "patterns": [
-                "src/!(pre-loader).js",
+                "src/!(pre-loader|namespace|loader).js",
                 "src/ui/**/*.js",
                 "src/views/*.js",
                 "src/views/site/*.js",
