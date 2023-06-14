@@ -47,7 +47,7 @@
             },
             "amdId": {
                 "type": "string",
-                "description": "An AMD ID. If the module uses a named define function, specify that name."
+                "description": "An AMD ID. Needs to be specified if the module uses a named define function or other 3rd party modules require that ID."
             }
         }
     }
