@@ -29,16 +29,11 @@
 /** @module multi-collection */
 
 import Collection from 'collection';
-import Backbone from 'lib!backbone';
 
 /**
  * A collection that can contain entities of different entity types.
- *
- * @class
- * @name Class
- * @extends module:collection
  */
-export default Collection.extend(/** @lends Class# */{
+class MultiCollection extends Collection {
 
     /**
      * A model seed map.
@@ -46,19 +41,10 @@ export default Collection.extend(/** @lends Class# */{
      * @public
      * @type {Object.<string, module:model>}
      */
-    seeds: null,
+    seeds = null
 
     /** @inheritDoc */
-    initialize: function (models, options) {
-        options = options || {};
-
-        this.data = {};
-
-        Backbone.Collection.prototype.initialize.call(this, options);
-    },
-
-    /** @inheritDoc */
-    prepareAttributes: function (response, options) {
+    prepareAttributes(response, options) {
         this.total = response.total;
 
         if (!('list' in response)) {
@@ -81,14 +67,16 @@ export default Collection.extend(/** @lends Class# */{
 
             return model;
         });
-    },
+    }
 
     /** @inheritDoc */
-    clone: function () {
-        let collection = Collection.prototype.clone.call(this);
+    clone() {
+        let collection = super.clone();
 
         collection.seeds = this.seeds;
 
         return collection;
-    },
-});
+    }
+}
+
+export default MultiCollection;

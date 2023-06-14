@@ -158,7 +158,7 @@ class Collection {
      *     orderBy?: string|null,
      *     urlRoot?: string,
      *     url?: string,
-     * }} options Options.
+     * }} [options] Options.
      */
     constructor(models, options) {
         options = {...options};

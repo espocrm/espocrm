@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Dep from 'collection';
+import Collection from 'collection';
 
-export default Dep.extend({
+class TreeCollection extends Collection {
 
-    createSeed: function () {
+    createSeed() {
         let seed = new this.constructor();
 
         seed.url = this.url;
@@ -39,10 +39,10 @@ export default Dep.extend({
         seed.entityType = this.entityType;
 
         return seed;
-    },
+    }
 
-    prepareAttributes: function (response) {
-        let list = Dep.prototype.prepareAttributes.call(this, response);
+    prepareAttributes(response, options) {
+        let list = super.prepareAttributes(response, options);
 
         let seed = this.clone();
 
@@ -78,16 +78,15 @@ export default Dep.extend({
                 }
 
                 d.childCollection = c;
-
             });
         };
 
         f(list, 0);
 
         return list;
-    },
+    }
 
-    fetch: function (options) {
+    fetch(options) {
         options = options || {};
         options.data = options.data || {};
 
@@ -97,6 +96,8 @@ export default Dep.extend({
 
         options.data.maxDepth = this.maxDepth;
 
-        return Dep.prototype.fetch.call(this, options);
-    },
-});
+        return super.fetch(options);
+    }
+}
+
+export default TreeCollection;
