@@ -48,8 +48,7 @@
      */
 
     /**
-     * @typedef Loader~libData
-     * @type {Object}
+     * @typedef {Object} Loader~libData
      * @property {string} [exportsTo] Exports to.
      * @property {string} [exportsAs] Exports as.
      * @property {boolean} [sourceMap] Has a source map.
@@ -60,20 +59,19 @@
      */
 
     /**
-     * @typedef Loader~dto
-     * @type {{
-     *     path?: string|null,
-     *     callback: function(value): void,
-     *     errorCallback?: function|null,
-     *     dataType: 'script'|'text',
-     *     id: string,
-     *     type: 'amd'|'lib'|'res',
-     *     exportsTo: string|null,
-     *     exportsAs: string|null,
-     *     url?: string,
-     *     noAppCache: boolean,
-     *     useCache?: boolean,
-     * }}
+     * @typedef {Object} Loader~dto
+     * @property {string} path
+     * @property {function(value): void} callback
+     * @property {function|null} [errorCallback]
+     * @property {'script'|'text'} dataType
+     * @property {string} id
+     * @property {'amd'|'lib'|'res'} type
+     * @property {string|null} exportsTo
+     * @property {string|null} exportsAs
+     * @property {string} [url]
+     * @property {boolean} [noAppCache]
+     * @property {boolean} [useCache]
+     * @property {boolean} [suppressAmd]
      */
 
     /**
@@ -602,6 +600,7 @@
 
             let realName = id;
             let noAppCache = false;
+            let suppressAmd = false;
 
             if (id.indexOf('lib!') === 0) {
                 dataType = 'script';
@@ -631,6 +630,14 @@
 
                 if (isDefinedLib && !exportsTo) {
                     type = 'amd';
+                }
+
+                if (!isDefinedLib && id.slice(-3) === '.js') {
+                    suppressAmd = true;
+                }
+
+                if (exportsAs) {
+                    suppressAmd = true;
                 }
 
                 if (path.indexOf(':') !== -1) {
@@ -675,7 +682,7 @@
                 type = 'amd';
 
                 if (!id || id === '') {
-                    throw new Error("Can not load empty class name");
+                    throw new Error("Can't load with empty module ID.");
                 }
 
                 let classObj = this._get(id);
@@ -725,6 +732,7 @@
                 errorCallback: errorCallback,
                 exportsAs: exportsAs,
                 exportsTo: exportsTo,
+                suppressAmd: suppressAmd,
             };
 
             if (this._cache && !this._responseCache) {
@@ -978,6 +986,7 @@
             let dataType = dto.dataType;
             let exportsAs = dto.exportsAs;
             let exportsTo = dto.exportsTo;
+            let suppressAmd = dto.suppressAmd;
 
             this._addLoadCallback(id, callback);
 
@@ -985,9 +994,7 @@
                 this._contextId = id;
             }
 
-            let isLib = id.slice(0, 4) === 'lib!';
-
-            if (isLib && exportsAs) {
+            if (suppressAmd) {
                 define.amd = false;
             }
 
@@ -995,7 +1002,7 @@
                 this._execute(response, id, dto.path);
             }
 
-            if (isLib && exportsAs) {
+            if (suppressAmd) {
                 define.amd = true;
             }
 
