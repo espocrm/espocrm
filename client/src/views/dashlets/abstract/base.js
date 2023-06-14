@@ -217,6 +217,13 @@ class BaseDashletView extends View {
 
         return title;
     }
+
+    /**
+     * @return {module:views/dashlet}
+     */
+    getContainerView() {
+        return this.getParentView();
+    }
 }
 
 export default BaseDashletView;
