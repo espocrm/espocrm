@@ -90,12 +90,12 @@
     {
         "src": "node_modules/jquery-ui-espo/dist/jquery-ui.js",
         "bundle": true,
-        "suppressAmd": true
+        "suppressAmd": true,
+        "key": "jquery-ui"
     },
     {
         "src": "node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.js",
-        "bundle": true,
-        "suppressAmd": true
+        "bundle": true
     },
     {
         "name": "gridstack",

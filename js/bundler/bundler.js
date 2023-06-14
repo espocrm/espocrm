@@ -58,8 +58,9 @@ class Bundler {
      *   name: string,
      *   files?: string[],
      *   patterns: string[],
-     *   lookupPatterns?: string[],
      *   ignoreFiles?: string[],
+     *   lookupPatterns?: string[],
+     *   ignoreFullPathFiles?: string[],
      *   dependentOn?: string[],
      *   libs: {
      *     src?: string,
@@ -75,11 +76,15 @@ class Bundler {
      * }}
      */
     bundle(params) {
-        let files = []
+        let ignoreFullPathFiles = params.ignoreFullPathFiles ?? [];
+        let files = params.files ?? [];
+        let ignoreFiles = params.ignoreFiles ?? [];
+
+        let fullPathFiles = []
             .concat(this.#normalizePaths(params.files || []))
-            .concat(this.#obtainFiles(params.patterns, params.files))
+            .concat(this.#obtainFiles(params.patterns, [...files, ...ignoreFiles]))
             // @todo Check if working.
-            .filter(file => !params.ignoreFiles.includes(file));
+            .filter(file => !ignoreFullPathFiles.includes(file));
 
         let allFiles = this.#obtainFiles(params.lookupPatterns || params.patterns);
 
@@ -92,10 +97,10 @@ class Bundler {
 
         let sortedFiles = this.#sortFiles(
             params.name,
-            files,
+            fullPathFiles,
             allFiles,
             ignoreLibs,
-            params.ignoreFiles || [],
+            ignoreFullPathFiles,
             notBundledModules,
             params.dependentOn || null,
         );
@@ -132,7 +137,7 @@ class Bundler {
      */
     #obtainFiles(patterns, ignoreFiles) {
         let files = [];
-        ignoreFiles = ignoreFiles || [];
+        ignoreFiles = this.#normalizePaths(ignoreFiles || []);
 
         this.#normalizePaths(patterns).forEach(pattern => {
             let itemFiles = globSync(pattern, {})

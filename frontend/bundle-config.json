@@ -13,13 +13,16 @@
     "chunks": {
         "main": {
             "files": [
-                "src/namespace.js",
-                "src/loader.js",
                 "src/exceptions.js",
                 "src/utils.js"
             ],
+            "ignoreFiles": [
+                "src/namespace.js",
+                "src/loader.js",
+                "src/pre-loader.js"
+            ],
             "patterns": [
-                "src/!(pre-loader|namespace|loader).js",
+                "src/*.js",
                 "src/ui/**/*.js",
                 "src/views/*.js",
                 "src/views/site/*.js",
@@ -114,6 +117,11 @@
         "extra": {
             "patterns": [
                 "src/**/*.js"
+            ],
+            "ignoreFiles": [
+                "src/namespace.js",
+                "src/loader.js",
+                "src/pre-loader.js"
             ],
             "noDuplicates": true
         }
