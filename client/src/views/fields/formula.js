@@ -31,17 +31,12 @@ define('views/fields/formula', ['views/fields/text'], function (Dep) {
     return Dep.extend({
 
         detailTemplate: 'fields/formula/detail',
-
         editTemplate: 'fields/formula/edit',
 
         height: 300,
-
         maxLineDetailCount: 80,
-
         maxLineEditCount: 200,
-
         insertDisabled: false,
-
         checkSyntaxDisabled: false,
 
         events: {
