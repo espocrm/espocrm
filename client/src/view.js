@@ -113,7 +113,7 @@ class View extends BullView {
         timeout = timeout || 2000;
 
         if (!type) {
-            timeout = null;
+            timeout = void 0;
         }
 
         let text = this.getLanguage().translate(label, 'labels', scope);
@@ -333,17 +333,7 @@ class View extends BullView {
      * @returns {Promise<any>}
      */
     ajaxRequest(url, type, data, options) {
-        options = options || {};
-
-        options.type = type;
-        options.url = url;
-        options.context = this;
-
-        if (data) {
-            options.data = data;
-        }
-
-        return $.ajax(options);
+        return Espo.Ajax.request(url, type, data, options);
     }
 
     /**
@@ -356,45 +346,7 @@ class View extends BullView {
      * @returns {Promise<any>}
      */
     ajaxPostRequest(url, data, options) {
-        if (data) {
-            data = JSON.stringify(data);
-        }
-
-        return this.ajaxRequest(url, 'POST', data, options);
-    }
-
-    /**
-     * PATCH request.
-     *
-     * @deprecated Use `Espo.Ajax.patchRequest`.
-     * @param {string} url An URL.
-     * @param {any} [data] Data.
-     * @param {Object} [options] Options.
-     * @returns {Promise<any>}
-     */
-    ajaxPatchRequest(url, data, options) {
-        if (data) {
-            data = JSON.stringify(data);
-        }
-
-        return this.ajaxRequest(url, 'PATCH', data, options);
-    }
-
-    /**
-     * PUT request.
-     *
-     * @deprecated Use `Espo.Ajax.putRequest`.
-     * @param {string} url An URL.
-     * @param {any} [data] Data.
-     * @param {Object} [options] Options.
-     * @returns {Promise<any>}
-     */
-    ajaxPutRequest(url, data, options) {
-        if (data) {
-            data = JSON.stringify(data);
-        }
-
-        return this.ajaxRequest(url, 'PUT', data, options);
+        return Espo.Ajax.postRequest(url, data, options);
     }
 
     /**
@@ -407,24 +359,7 @@ class View extends BullView {
      * @returns {Promise<any>}
      */
     ajaxGetRequest(url, data, options) {
-        return this.ajaxRequest(url, 'GET', data, options);
-    }
-
-    /**
-     * DELETE request.
-     *
-     * @deprecated Use `Espo.Ajax.deleteRequest`.
-     * @param {string} url An URL.
-     * @param {any} [data] Data.
-     * @param {Object} [options] Options.
-     * @returns {Promise<any>}
-     */
-    ajaxDeleteRequest(url, data, options) {
-        if (data) {
-            data = JSON.stringify(data);
-        }
-
-        return this.ajaxRequest(url, 'DELETE', data, options);
+        return Espo.Ajax.getRequest(url, data, options);
     }
 
     /**
