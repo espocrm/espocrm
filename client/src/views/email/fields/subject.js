@@ -32,17 +32,8 @@ define('views/email/fields/subject', ['views/fields/varchar'], function (Dep) {
 
         listLinkTemplate: 'email/fields/subject/list-link',
 
-        events: {
-            'click [data-action="showAttachments"]': function (e) {
-                e.stopPropagation();
-
-                this.showAttachments();
-            },
-            ...Dep.prototype.events,
-        },
-
         data: function () {
-            var data = Dep.prototype.data.call(this);
+            let data = Dep.prototype.data.call(this);
 
             data.isRead = (this.model.get('sentById') === this.getUser().id) || this.model.get('isRead');
             data.isImportant = this.model.has('isImportant') && this.model.get('isImportant');
@@ -63,6 +54,7 @@ define('views/email/fields/subject', ['views/fields/varchar'], function (Dep) {
                     data.isNotEmpty = true;
                 }
             }
+
             return data;
         },
 
@@ -76,6 +68,12 @@ define('views/email/fields/subject', ['views/fields/varchar'], function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            this.events['click [data-action="showAttachments"]'] = e => {
+                e.stopPropagation();
+
+                this.showAttachments();
+            }
 
             this.listenTo(this.model, 'change', () => {
                 if (this.mode === 'list' || this.mode === 'listLink') {

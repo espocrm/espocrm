@@ -31,23 +31,17 @@ define('views/modals/last-viewed', ['views/modal', 'search-manager'], function (
     return Dep.extend({
 
         header: false,
-
         scope: 'ActionHistoryRecord',
-
         className: 'dialog dialog-record',
-
         template: 'modals/last-viewed',
-
         backdrop: true,
-
-        events: _.extend({
-            'click .list .cell > a': function () {
-                this.close();
-            },
-        }, Dep.prototype.events),
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            this.events['click .list .cell > a'] = () => {
+                this.close();
+            };
 
             this.$header = $('<a>')
                 .attr('href', '#LastViewed')

@@ -30,32 +30,32 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
 
     return Dep.extend({
 
-        events: _.extend({
-            'paste textarea': function (e) {
-                if (!e.originalEvent.clipboardData) {
-                    return;
-                }
-
-                let text = e.originalEvent.clipboardData.getData('text/plain');
-
-                if (!text) {
-                    return;
-                }
-
-                text = text.trim();
-
-                if (!text) {
-                    return;
-                }
-
-                this.handlePastedText(text, e.originalEvent);
-            }
-        }, Dep.prototype.events),
-
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.events['paste textarea'] = e => this.handlePaste(e);
+
             this.insertedImagesData = {};
+        },
+
+        handlePaste: function (e) {
+            if (!e.originalEvent.clipboardData) {
+                return;
+            }
+
+            let text = e.originalEvent.clipboardData.getData('text/plain');
+
+            if (!text) {
+                return;
+            }
+
+            text = text.trim();
+
+            if (!text) {
+                return;
+            }
+
+            this.handlePastedText(text, e.originalEvent);
         },
 
         afterRenderEdit: function () {

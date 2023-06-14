@@ -33,14 +33,11 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
         template: 'stream/panel',
 
         postingMode: false,
-
         postDisabled: false,
-
         relatedListFiltersDisabled: true,
-
         layoutName: null,
 
-        events: _.extend({
+        additionalEvents: {
             'focus textarea[data-name="post"]': function (e) {
                 this.enablePostingMode(true);
             },
@@ -83,10 +80,10 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             'click .action[data-action="preview"]': function () {
                 this.preview();
             },
-        }, Dep.prototype.events),
+        },
 
         data: function () {
-            var data = Dep.prototype.data.call(this);
+            let data = Dep.prototype.data.call(this);
 
             data.postDisabled = this.postDisabled;
             data.placeholderText = this.placeholderText;
@@ -173,14 +170,17 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
         },
 
         setup: function () {
-            this.scope = this.model.name;
+            this.events = {
+                ...this.additionalEvents,
+                ...this.events,
+            };
 
+            this.scope = this.model.name;
             this.filter = this.getStoredFilter();
 
             this.setupTitle();
 
             this.placeholderText = this.translate('writeYourCommentHere', 'messages');
-
             this.allowInternalNotes = false;
 
             if (!this.getUser().isPortal()) {

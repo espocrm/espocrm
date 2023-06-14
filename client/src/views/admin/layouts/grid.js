@@ -33,15 +33,10 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
         template: 'admin/layouts/grid',
 
         dataAttributeList: null,
-
         panels: null,
-
         columnCount: 2,
-
         panelDataAttributeList: ['panelName', 'style'],
-
         panelDataAttributesDefs: {},
-
         panelDynamicLogicDefs: null,
 
         data: function () {
@@ -62,7 +57,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
             '<a role="button" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>' +
             '</li>',
 
-        events: _.extend({
+        additionalEvents: {
             'click #layout a[data-action="addPanel"]': function () {
                 this.addPanel();
                 this.setIsChanged();
@@ -233,15 +228,19 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
                     });
                 });
             }
-        }, Dep.prototype.events),
+        },
 
         normalizeDisabledItemList: function () {
-            $('#layout ul.cells.disabled > li').each((i, el) => {
-            });
+            //$('#layout ul.cells.disabled > li').each((i, el) => {});
         },
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            this.events = {
+                ...this.additionalEvents,
+                ...this.events,
+            };
 
             this.panelsData = {};
 
