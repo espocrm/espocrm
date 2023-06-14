@@ -28,35 +28,35 @@
 
 /** @module acl */
 
+import {View as BullView} from 'lib!bullbone';
+
 /**
  * Internal class for access checking. Can be extended to customize access checking
  * for a specific scope.
- *
- * @class
- * @param {module:models/user} user A user.
- * @param {string} scope A scope.
- * @param {Object} params Parameters.
  */
-const Class = function (user, scope, params) {
-    this.user = user || null;
-    this.scope = scope;
-
-    params = params || {};
-
-    this.aclAllowDeleteCreated = params.aclAllowDeleteCreated;
-    this.teamsFieldIsForbidden = params.teamsFieldIsForbidden;
-    this.forbiddenFieldList = params.forbiddenFieldList;
-};
-
-_.extend(Class.prototype, /** @lends Class# */ {
+class Acl {
 
     /**
-     * A user.
-     *
-     * @type {module:models/user}
-     * @protected
+     * @param {module:models/user} user A user.
+     * @param {string} scope A scope.
+     * @param {Object} params Parameters.
      */
-    user: null,
+    constructor(user, scope, params) {
+        /**
+         * A user.
+         *
+         * @type {module:models/user|null}
+         * @protected
+         */
+        this.user = user || null;
+        this.scope = scope;
+
+        params = params || {};
+
+        this.aclAllowDeleteCreated = params.aclAllowDeleteCreated;
+        this.teamsFieldIsForbidden = params.teamsFieldIsForbidden;
+        this.forbiddenFieldList = params.forbiddenFieldList;
+    }
 
     /**
      * Get a user.
@@ -64,24 +64,24 @@ _.extend(Class.prototype, /** @lends Class# */ {
      * @returns {module:models/user}
      * @protected
      */
-    getUser: function () {
+    getUser() {
         return this.user;
-    },
+    }
 
     /**
      * Check access to a scope.
      *
-     * @param {string|boolean|Object} data Access data.
+     * @param {string|boolean|Object.<string, string>} data Access data.
      * @param {module:acl-manager~action|null} [action=null] An action.
      * @param {boolean} [precise=false] To return `null` if `inTeam == null`.
      * @param {Object|null} [entityAccessData=null] Entity access data. `inTeam`, `isOwner`.
      * @returns {boolean|null} True if has access.
      */
-    checkScope: function (data, action, precise, entityAccessData) {
+    checkScope(data, action, precise, entityAccessData) {
         entityAccessData = entityAccessData || {};
 
-        var inTeam = entityAccessData.inTeam;
-        var isOwner = entityAccessData.isOwner;
+        let inTeam = entityAccessData.inTeam;
+        let isOwner = entityAccessData.isOwner;
 
         if (this.getUser().isAdmin()) {
             if (data === false) {
@@ -140,7 +140,7 @@ _.extend(Class.prototype, /** @lends Class# */ {
             }
         }
 
-        var result = false;
+        let result = false;
 
         if (value === 'team') {
             result = inTeam;
@@ -168,19 +168,19 @@ _.extend(Class.prototype, /** @lends Class# */ {
         }
 
         return result;
-    },
+    }
 
     /**
      * Check access to model (entity).
      *
      * @param {module:model} model A model.
-     * @param {Object|string|null} data Access data.
+     * @param {Object.<string, string>|string|null} data Access data.
      * @param {module:acl-manager~action|null} [action=null] Action to check.
      * @param {boolean} [precise=false] To return `null` if not enough data is set in a model.
      *   E.g. the `teams` field is not yet loaded.
      * @returns {boolean|null} True if has access, null if not clear.
      */
-    checkModel: function (model, data, action, precise) {
+    checkModel(model, data, action, precise) {
         if (this.getUser().isAdmin()) {
             return true;
         }
@@ -191,18 +191,18 @@ _.extend(Class.prototype, /** @lends Class# */ {
         };
 
         return this.checkScope(data, action, precise, entityAccessData);
-    },
+    }
 
     /**
      * Check `delete` access to model.
      *
      * @param {module:model} model A model.
-     * @param {Object|string|null} data Access data.
+     * @param {Object.<string, string>|string|null} data Access data.
      * @param {boolean} [precise=false] To return `null` if not enough data is set in a model.
      *   E.g. the `teams` field is not yet loaded.
      * @returns {boolean} True if has access.
      */
-    checkModelDelete: function (model, data, precise) {
+    checkModelDelete(model, data, precise) {
         let result = this.checkModel(model, data, 'delete', precise);
 
         if (result) {
@@ -213,7 +213,7 @@ _.extend(Class.prototype, /** @lends Class# */ {
             return false;
         }
 
-        var d = data || {};
+        let d = data || {};
 
         if (d.read === 'no') {
             return false;
@@ -237,7 +237,7 @@ _.extend(Class.prototype, /** @lends Class# */ {
         }
 
         return result;
-    },
+    }
 
     /**
      * Check if a user is owner to a model.
@@ -245,7 +245,7 @@ _.extend(Class.prototype, /** @lends Class# */ {
      * @param {module:model} model A model.
      * @returns {boolean|null} True if owner. Null if not clear.
      */
-    checkIsOwner: function (model) {
+    checkIsOwner(model) {
         let result = false;
 
         if (model.hasField('assignedUser')) {
@@ -282,7 +282,7 @@ _.extend(Class.prototype, /** @lends Class# */ {
         }
 
         return result;
-    },
+    }
 
     /**
      * Check if a user in a team of a model.
@@ -290,7 +290,7 @@ _.extend(Class.prototype, /** @lends Class# */ {
      * @param {module:model} model A model.
      * @returns {boolean|null} True if in a team. Null if not clear.
      */
-    checkInTeam: function (model) {
+    checkInTeam(model) {
         var userTeamIdList = this.getUser().getTeamIdList();
 
         if (!model.has('teamsIds')) {
@@ -301,9 +301,9 @@ _.extend(Class.prototype, /** @lends Class# */ {
             return null;
         }
 
-        var teamIdList = model.getTeamIdList();
+        let teamIdList = model.getTeamIdList();
 
-        var inTeam = false;
+        let inTeam = false;
 
         userTeamIdList.forEach(id => {
             if (~teamIdList.indexOf(id)) {
@@ -312,10 +312,9 @@ _.extend(Class.prototype, /** @lends Class# */ {
         });
 
         return inTeam;
-    },
+    }
+}
 
-});
+Acl.extend = BullView.extend;
 
-Class.extend = Bull.View.extend;
-
-export default Class;
+export default Acl;

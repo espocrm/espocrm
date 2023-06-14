@@ -28,17 +28,13 @@
 
 /** @module acl-portal-manager */
 
-import Dep from 'acl-manager';
+import AclManager from 'acl-manager';
 import AclPortal from 'acl-portal';
 
 /**
- * Portal access checking.
- *
- * @class
- * @name Class
- * @extends module:acl-manager
+ * An access checking class for a specific scope for portals.
  */
-export default Dep.extend(/** @lends Class# */{
+class AclPortalManager extends AclManager {
 
     /**
      * Check if a user in an account of a model.
@@ -46,9 +42,9 @@ export default Dep.extend(/** @lends Class# */{
      * @param {module:model} model A model.
      * @returns {boolean|null} True if in an account, null if not clear.
      */
-    checkInAccount: function (model) {
+    checkInAccount(model) {
         return this.getImplementation(model.name).checkInAccount(model);
-    },
+    }
 
     /**
      * Check if a user is a contact-owner to a model.
@@ -56,14 +52,15 @@ export default Dep.extend(/** @lends Class# */{
      * @param {module:model} model A model.
      * @returns {boolean|null} True if in a contact-owner, null if not clear.
      */
-    checkIsOwnContact: function (model) {
+    checkIsOwnContact(model) {
         return this.getImplementation(model.name).checkIsOwnContact(model);
-    },
+    }
 
     /**
-     * @inheritDoc
+     * @param {string} scope A scope.
+     * @returns {module:acl-portal}
      */
-    getImplementation: function (scope) {
+    getImplementation(scope) {
         if (!(scope in this.implementationHash)) {
             let implementationClass = AclPortal;
 
@@ -76,5 +73,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return this.implementationHash[scope];
-    },
-});
+    }
+}
+
+export default AclPortalManager;

@@ -28,32 +28,16 @@
 
 /** @module acl-portal */
 
-import Dep from 'acl';
+import Acl from 'acl';
 
 /**
  * Internal class for portal access checking. Can be extended to customize access checking
  * for a specific scope.
- *
- * @class
- * @name Class
- * @extends Dep
  */
-export default Dep.extend(/** @lends Class# */{
+class AclPortal extends Acl {
 
     /** @inheritDoc */
-    user: null,
-
-    /**
-     * @inheritDoc
-     */
-    getUser: function () {
-        return this.user;
-    },
-
-    /**
-     * @inheritDoc
-     */
-    checkScope: function (data, action, precise, entityAccessData) {
+    checkScope(data, action, precise, entityAccessData) {
         entityAccessData = entityAccessData || {};
 
         let inAccount = entityAccessData.inAccount;
@@ -157,12 +141,10 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return result;
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    checkModel: function (model, data, action, precise) {
+    /** @inheritDoc */
+    checkModel(model, data, action, precise) {
         if (this.getUser().isAdmin()) {
             return true;
         }
@@ -174,12 +156,10 @@ export default Dep.extend(/** @lends Class# */{
         };
 
         return this.checkScope(data, action, precise, entityAccessData);
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    checkIsOwner: function (model) {
+    /** @inheritDoc */
+    checkIsOwner(model) {
         if (model.hasField('createdBy')) {
             if (this.getUser().id === model.get('createdById')) {
                 return true;
@@ -187,7 +167,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return false;
-    },
+    }
 
     /**
      * Check if a user in an account of a model.
@@ -195,7 +175,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {module:model} model A model.
      * @returns {boolean|null} True if in an account, null if not clear.
      */
-    checkInAccount: function (model) {
+    checkInAccount(model) {
         let accountIdList = this.getUser().getLinkMultipleIdList('accounts');
 
         if (!accountIdList.length) {
@@ -239,7 +219,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return result;
-    },
+    }
 
     /**
      * Check if a user is a contact-owner to a model.
@@ -247,7 +227,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {module:model} model A model.
      * @returns {boolean|null} True if in a contact-owner, null if not clear.
      */
-    checkIsOwnContact: function (model) {
+    checkIsOwnContact(model) {
         let contactId = this.getUser().get('contactId');
 
         if (!contactId) {
@@ -289,5 +269,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return result;
-    },
-});
+    }
+}
+
+export default AclPortal;

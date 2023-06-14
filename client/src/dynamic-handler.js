@@ -28,6 +28,8 @@
 
 /** @module dynamic-handler */
 
+import {View as BullView} from 'lib!bullbone';
+
 /**
  * A dynamic handler. To be extended by a specific handler.
  */
@@ -82,6 +84,6 @@ class DynamicHandler {
     }
 }
 
-DynamicHandler.extend = Bull.View.extend;
+DynamicHandler.extend = BullView.extend;
 
 export default DynamicHandler;

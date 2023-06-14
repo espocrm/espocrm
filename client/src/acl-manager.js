@@ -30,24 +30,7 @@
 
 import Acl from 'acl';
 import Utils from 'utils';
-
-/**
- * Access checking.
- *
- * @class
- * @name Class
- * @param {module:models/user} user A user.
- * @param {Object} implementationClassMap `acl` implementations.
- * @param {boolean} aclAllowDeleteCreated Allow a user to delete records they created regardless a
- *   role access level.
- */
-const Class = function (user, implementationClassMap, aclAllowDeleteCreated) {
-    this.setEmpty();
-
-    this.user = user || null;
-    this.implementationClassMap = implementationClassMap || {};
-    this.aclAllowDeleteCreated = aclAllowDeleteCreated;
-};
+import {View as BullView} from 'lib!bullbone';
 
 /**
  * An action.
@@ -55,19 +38,34 @@ const Class = function (user, implementationClassMap, aclAllowDeleteCreated) {
  * @typedef {'create'|'read'|'edit'|'delete'|'stream'} module:acl-manager~action
  */
 
-_.extend(Class.prototype, /** @lends Class# */{
+/**
+ * An access checking class for a specific scope.
+ */
+class AclManager {
 
     /** @protected */
-    data: null,
-    /** @protected */
-    user: null,
-    /** @protected */
-    fieldLevelList: ['yes', 'no'],
+    data = null
+    fieldLevelList = ['yes', 'no']
+
+    /**
+     * @param {module:models/user} user A user.
+     * @param {Object} implementationClassMap `acl` implementations.
+     * @param {boolean} aclAllowDeleteCreated Allow a user to delete records they created regardless a
+     *   role access level.
+     */
+    constructor(user, implementationClassMap, aclAllowDeleteCreated) {
+        this.setEmpty();
+
+        /** @protected */
+        this.user = user || null;
+        this.implementationClassMap = implementationClassMap || {};
+        this.aclAllowDeleteCreated = aclAllowDeleteCreated;
+    }
 
     /**
      * @protected
      */
-    setEmpty: function () {
+    setEmpty() {
         this.data = {
             table: {},
             fieldTable:  {},
@@ -78,7 +76,7 @@ _.extend(Class.prototype, /** @lends Class# */{
         this.forbiddenFieldsCache = {};
         this.implementationClassMap = {};
         this.forbiddenAttributesCache = {};
-    },
+    }
 
     /**
      * Get an `acl` implementation.
@@ -87,7 +85,7 @@ _.extend(Class.prototype, /** @lends Class# */{
      * @param {string} scope A scope.
      * @returns {module:acl}
      */
-    getImplementation: function (scope) {
+    getImplementation(scope) {
         if (!(scope in this.implementationHash)) {
             let implementationClass = Acl;
 
@@ -107,35 +105,35 @@ _.extend(Class.prototype, /** @lends Class# */{
         }
 
         return this.implementationHash[scope];
-    },
+    }
 
     /**
      * @protected
      */
-    getUser: function () {
+    getUser() {
         return this.user;
-    },
+    }
 
     /**
      * @internal
      */
-    set: function (data) {
+    set(data) {
         data = data || {};
 
         this.data = data;
         this.data.table = this.data.table || {};
         this.data.fieldTable = this.data.fieldTable || {};
         this.data.attributeTable = this.data.attributeTable || {};
-    },
+    }
 
     /**
      * @deprecated Use `getPermissionLevel`.
      *
      * @returns {string|null}
      */
-    get: function (name) {
+    get(name) {
         return this.data[name] || null;
-    },
+    }
 
     /**
      * Get a permission level.
@@ -143,7 +141,7 @@ _.extend(Class.prototype, /** @lends Class# */{
      * @param {string} permission A permission name.
      * @returns {'yes'|'all'|'team'|'no'}
      */
-    getPermissionLevel: function (permission) {
+    getPermissionLevel(permission) {
         let permissionKey = permission;
 
         if (permission.substr(-10) !== 'Permission') {
@@ -151,7 +149,7 @@ _.extend(Class.prototype, /** @lends Class# */{
         }
 
         return this.data[permissionKey] || 'no';
-    },
+    }
 
     /**
      * Get access level to a scope action.
@@ -160,7 +158,7 @@ _.extend(Class.prototype, /** @lends Class# */{
      * @param {module:acl-manager~action} action An action.
      * @returns {'yes'|'all'|'team'|'no'|null}
      */
-    getLevel: function (scope, action) {
+    getLevel(scope, action) {
         if (!(scope in this.data.table)) {
             return null;
         }
@@ -170,16 +168,16 @@ _.extend(Class.prototype, /** @lends Class# */{
         }
 
         return this.data.table[scope][action];
-    },
+    }
 
     /**
      * Clear access data.
      *
      * @internal
      */
-    clear: function () {
+    clear() {
         this.setEmpty();
-    },
+    }
 
     /**
      * Check whether a scope has ACL.
@@ -187,7 +185,7 @@ _.extend(Class.prototype, /** @lends Class# */{
      * @param {string} scope A scope.
      * @returns {boolean}
      */
-    checkScopeHasAcl: function (scope) {
+    checkScopeHasAcl(scope) {
         var data = (this.data.table || {})[scope];
 
         if (typeof data === 'undefined') {
@@ -195,7 +193,7 @@ _.extend(Class.prototype, /** @lends Class# */{
         }
 
         return true;
-    },
+    }
 
     /**
      * Check access to a scope.
@@ -205,7 +203,7 @@ _.extend(Class.prototype, /** @lends Class# */{
      * @param {boolean} [precise=false] Deprecated. Not used.
      * @returns {boolean} True if has access.
      */
-    checkScope: function (scope, action, precise) {
+    checkScope(scope, action, precise) {
         let data = (this.data.table || {})[scope];
 
         if (typeof data === 'undefined') {
@@ -213,7 +211,7 @@ _.extend(Class.prototype, /** @lends Class# */{
         }
 
         return this.getImplementation(scope).checkScope(data, action, precise);
-    },
+    }
 
     /**
      * Check access to a model.
@@ -224,7 +222,7 @@ _.extend(Class.prototype, /** @lends Class# */{
      *   E.g. the `teams` field is not yet loaded.
      * @returns {boolean|null} True if has access, null if not clear.
      */
-    checkModel: function (model, action, precise) {
+    checkModel(model, action, precise) {
         var scope = model.name;
 
         // todo move this to custom acl
@@ -257,7 +255,7 @@ _.extend(Class.prototype, /** @lends Class# */{
         }
 
         return impl.checkModel(model, data, action, precise);
-    },
+    }
 
     /**
      * Check access to a scope or a model.
@@ -268,13 +266,13 @@ _.extend(Class.prototype, /** @lends Class# */{
      *   E.g. the `teams` field is not yet loaded.
      * @returns {boolean|null} {boolean|null} True if has access, null if not clear.
      */
-    check: function (subject, action, precise) {
+    check(subject, action, precise) {
         if (typeof subject === 'string') {
             return this.checkScope(subject, action, precise);
         }
 
         return this.checkModel(subject, action, precise);
-    },
+    }
 
     /**
      * Check if a user is owner to a model.
@@ -282,9 +280,9 @@ _.extend(Class.prototype, /** @lends Class# */{
      * @param {module:model} model A model.
      * @returns {boolean|null} True if owner, null if not clear.
      */
-    checkIsOwner: function (model) {
+    checkIsOwner(model) {
         return this.getImplementation(model.name).checkIsOwner(model);
-    },
+    }
 
     /**
      * Check if a user in a team of a model.
@@ -292,9 +290,9 @@ _.extend(Class.prototype, /** @lends Class# */{
      * @param {module:model} model A model.
      * @returns {boolean|null} True if in a team, null if not clear.
      */
-    checkInTeam: function (model) {
+    checkInTeam(model) {
         return this.getImplementation(model.name).checkInTeam(model);
-    },
+    }
 
     /**
      * Check an assignment permission to a user.
@@ -302,9 +300,9 @@ _.extend(Class.prototype, /** @lends Class# */{
      * @param {module:models/user} user A user.
      * @returns {boolean} True if has access.
      */
-    checkAssignmentPermission: function (user) {
+    checkAssignmentPermission(user) {
         return this.checkPermission('assignmentPermission', user);
-    },
+    }
 
     /**
      * Check a user permission to a user.
@@ -312,9 +310,9 @@ _.extend(Class.prototype, /** @lends Class# */{
      * @param {module:models/user} user A user.
      * @returns {boolean} True if has access.
      */
-    checkUserPermission: function (user) {
+    checkUserPermission(user) {
         return this.checkPermission('userPermission', user);
-    },
+    }
 
     /**
      * Check a specific permission to a user.
@@ -323,7 +321,7 @@ _.extend(Class.prototype, /** @lends Class# */{
      * @param {module:models/user} user A user.
      * @returns {boolean} True if has access.
      */
-    checkPermission: function (permission, user) {
+    checkPermission(permission, user) {
         if (this.getUser().isAdmin()) {
             return true;
         }
@@ -365,7 +363,7 @@ _.extend(Class.prototype, /** @lends Class# */{
         }
 
         return false;
-    },
+    }
 
     /**
      * Get a list of forbidden fields for an entity type.
@@ -375,7 +373,7 @@ _.extend(Class.prototype, /** @lends Class# */{
      * @param {'yes'|'no'} [thresholdLevel='no'] A threshold level.
      * @returns {string[]} A forbidden field list.
      */
-    getScopeForbiddenFieldList: function (scope, action, thresholdLevel) {
+    getScopeForbiddenFieldList(scope, action, thresholdLevel) {
         action = action || 'read';
         thresholdLevel = thresholdLevel || 'no';
 
@@ -409,7 +407,7 @@ _.extend(Class.prototype, /** @lends Class# */{
         this.forbiddenFieldsCache[key] = fieldList;
 
         return Utils.clone(fieldList);
-    },
+    }
 
     /**
      * Get a list of forbidden attributes for an entity type.
@@ -419,7 +417,7 @@ _.extend(Class.prototype, /** @lends Class# */{
      * @param {'yes'|'no'} [thresholdLevel='no'] A threshold level.
      * @returns {string[]} A forbidden attribute list.
      */
-    getScopeForbiddenAttributeList: function (scope, action, thresholdLevel) {
+    getScopeForbiddenAttributeList(scope, action, thresholdLevel) {
         action = action || 'read';
         thresholdLevel = thresholdLevel || 'no';
 
@@ -454,7 +452,7 @@ _.extend(Class.prototype, /** @lends Class# */{
         this.forbiddenAttributesCache[key] = attributeList;
 
         return Utils.clone(attributeList);
-    },
+    }
 
     /**
      * Check an assignment permission to a team.
@@ -462,13 +460,13 @@ _.extend(Class.prototype, /** @lends Class# */{
      * @param {string} teamId A team ID.
      * @returns {boolean} True if has access.
      */
-    checkTeamAssignmentPermission: function (teamId) {
+    checkTeamAssignmentPermission(teamId) {
         if (this.get('assignmentPermission') === 'all') {
             return true;
         }
 
         return !!~this.getUser().getLinkMultipleIdList('teams').indexOf(teamId);
-    },
+    }
 
     /**
      * Check access to a field.
@@ -477,11 +475,11 @@ _.extend(Class.prototype, /** @lends Class# */{
      * @param {'read'|'edit'} [action='read'] An action.
      * @returns {boolean} True if has access.
      */
-    checkField: function (scope, field, action) {
+    checkField(scope, field, action) {
         return !~this.getScopeForbiddenFieldList(scope, action).indexOf(field);
-    },
-});
+    }
+}
 
-Class.extend = Bull.View.extend;
+AclManager.extend = BullView.extend;
 
-export default Class;
+export default AclManager;

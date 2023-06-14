@@ -28,115 +28,115 @@
 
 /** @module action-handler */
 
+import {View as BullView} from 'lib!bullbone';
+
 /**
  * An action handler. To be extended by specific action handlers.
- *
- * @constructor
- * @param {module:view} view A view.
- * @memberOf module:action-handler
  */
-const ActionHandler = function (view) {
-    /**
-     * @memberof ActionHandler#
-     * @protected
-     */
-    this.view = view;
-};
+class ActionHandler {
 
-_.extend(ActionHandler.prototype, /** @lends ActionHandler# */{
+    /**
+     * @param {module:view} view A view.
+     */
+    constructor(view) {
+        /**
+         * @protected
+         */
+        this.view = view;
+    }
 
     /**
      * @deprecated Use `this.view`.
      */
-    getConfig: function () {
+    getConfig() {
         return this.view.getConfig();
-    },
+    }
 
     /**
      * @deprecated Use `this.view`.
      */
-    getMetadata: function () {
+    getMetadata() {
         return this.view.getMetadata();
-    },
+    }
 
     /**
      * @deprecated Use `this.view`.
      */
-    getAcl: function () {
+    getAcl() {
         return this.view.getAcl();
-    },
+    }
 
     /**
      * @deprecated Use `this.view`.
      */
-    getUser: function () {
+    getUser() {
         return this.view.getUser();
-    },
+    }
 
     /**
      * @deprecated Use `this.view`.
      */
-    getRouter: function () {
+    getRouter() {
         return this.view.getRouter();
-    },
+    }
 
     /**
      * @deprecated Use `this.view`.
      */
-    getHelper: function () {
+    getHelper() {
         return this.view.getHelper();
-    },
+    }
 
     /**
      * @deprecated Use `this.view`.
      */
-    getLanguage: function () {
+    getLanguage() {
         return this.view.getLanguage();
-    },
+    }
 
     /**
      * @deprecated Use `this.view`.
      */
-    getModelFactory: function () {
+    getModelFactory() {
         return this.view.getModelFactory();
-    },
+    }
 
     /**
      * @deprecated Use `this.view`.
      */
-    getCollectionFactory: function () {
+    getCollectionFactory() {
         return this.view.getCollectionFactory();
-    },
+    }
 
     /**
      * @deprecated Use `Espo.Ajax`.
      */
-    ajaxPostRequest: function () {
+    ajaxPostRequest() {
         return Espo.Ajax.postRequest.apply(this.view, arguments);
-    },
+    }
 
     /**
      * @deprecated Use `Espo.Ajax`.
      */
-    ajaxPutRequest: function () {
+    ajaxPutRequest() {
         return Espo.Ajax.putRequest.apply(this.view, arguments);
-    },
+    }
 
     /**
      * @deprecated Use `Espo.Ajax`.
      */
-    ajaxGetRequest: function () {
+    ajaxGetRequest() {
         return Espo.Ajax.getRequest.apply(this.view, arguments);
-    },
+    }
 
     /**
      * @deprecated Use `this.view`.
      */
-    confirm: function () {
+    confirm() {
         return this.view.confirm.apply(this.view, arguments);
-    },
-});
+    }
+}
 
-ActionHandler.extend = Bull.View.extend;
+ActionHandler.extend = BullView.extend;
 
 export default ActionHandler;
